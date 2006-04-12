@@ -1,0 +1,19 @@
+dvisvgm-0.4.3
+- basic \special support
+- added unit tests based on CxxTest (http://cxxtest.sourceforge.net)
+
+dvisvgm-0.4.2
+- added SVG transformation options
+- some bugfixes in command line frontend and TFM handling
+- code refactorings to improve modularity and extensibility
+
+dvisvgm-0.4.1:
+- added option -b to specify the bounding box
+- added a manual page 
+
+dvisvgm-0.4:
+Added a glyph tracing module that vectorizes Metafont's bitmap output
+if no corresponding Type 1 font file is available.
+
+dvisvgm-0.3:
+Inititial public release with basic conversion functionality.

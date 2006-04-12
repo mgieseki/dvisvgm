@@ -1,0 +1,318 @@
+.\" dvisvgm.1
+.\"                                                                
+.\" This file is part of dvisvgm -- the DVI to SVG converter       
+.\" Copyright (C) 2005  Martin Gieseking <martin.gieseking@uos.de> 
+.\"                                                                
+.\" This program is free software; you can redistribute it and/or  
+.\" modify it under the terms of the GNU General Public License    
+.\" as published by the Free Software Foundation; either version 2 
+.\" of the License, or (at your option) any later version.         
+.\"                                                                
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of 
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+.\" GNU General Public License for more details.                   
+.\"                                                                
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; if not, write to the Free Software    
+.\" Foundation, Inc., 51 Franklin Street, Fifth Floor,             
+.\" Boston, MA 02110-1301, USA.                                    
+.\" $ID$
+
+.TH dvisvgm 1 "@DATE@" "Version @VERSION@"
+.SH NAME
+dvisvgm \- converts DVI files to Scalable Vector Graphics (SVG)
+
+.SH SYNOPSIS
+\fBdvisvgm\fP
+.RI [ options ]
+.IR file [.dvi]
+
+.SH DESCRIPTION
+The program \fBdvisvgm\fP generates an
+.SM SVG
+file from a given
+.SM DVI 
+file.
+.SM DVI
+is the device independent output format produced by TeX.
+Output from 
+.B groff
+can be converted to 
+.SM DVI
+using 
+.BR grodvi .
+
+The recent version of
+\fBdvisvgm\fP
+provides basic conversion functionality. Currently only one
+page can be converted even if the 
+.SM DVI
+file is made up of multiple pages. You can select the page to be
+processed with option \-\^p. \fBdvisvgm\fP should properly convert 
+all pages that are made up of fonts and rules only.
+\fB\especial\fP commands are ignored by the current version.
+
+As 
+.SM SVG
+is a vector based graphics format \fBdvisvgm\fP tries to convert the glyph 
+outlines of all used fonts into scalable path descriptions. The fastest 
+way to do that is extracting the path information from 
+.SM PFB 
+(PostScript Type 1) files. So if \fBdvisvgm\fP is able to find a
+.SM PFB
+file for a used font it will read the necessary information from it.
+
+Because TeX's main source for font descriptions is \fBMetafont\fP
+which produces bitmap output, not all obtainable TeX fonts are available in
+.SM
+PFB
+format. In these cases \fBdvisvgm\fP tries to vectorize Metafont's output 
+by tracing the glyph bitmaps. The results are not as perfect as most 
+(manually optimized)
+.SM PFB
+outlines but are nonetheless really nice in most cases (thanks to the \fBpotrace\fP
+library).
+
+.SH OPTIONS
+.TP
+.B \-\^b, \-\-bbox-format=fmt
+Sets the bounding box of the generated graphic to the specified format. 
+The argument \fIfmt\fP is argument a case-insensitive string that denotes the paper size. 
+Following size names are supported:
+.RS
+
+International DIN/ISO paper sizes:
+.RS
+\fBA\fP\fIn\fP, \fBB\fP\fIn\fP, \fBC\fP\fIn\fP, \fBD\fP\fIn\fP, where \fIn\fP is a non-negative 
+integer, e.g. \fIA4\fP or \fIa4\fP for DIN/ISO A4 format (210mm \[mu] 297mm).
+.RE
+
+North American paper sizes:
+.RS
+\fBinvoice\fP, \fBexecutive\fP, \fBlegal\fP, \fBletter\fP, \fBledger\fP
+.RE
+
+Special bounding box sizes:
+.RS
+\fBdvi\fP  \- the page size stored in the DVI file will be used
+.TP
+\fBmin\fP  \- the minimal bounding box will be computed and assigned
+.TP
+\fBnone\fP \- no bounding box will be assigned
+.RE
+
+The default page orientation for DIN/ISO and American paper sizes is \fIportrait\fP,
+i.e. width < height. Appending \fB\-landscape\fP or simply \fB\-l\fP to the format
+string switches to \fIlandscape\fP mode (width > height). For symmetry reasons you can 
+also explicitly add \fB\-portrait\fP or \fB\-p\fP to indicate the default portrait format.
+Note that these suffixes are part of the size string and not separate options. Thus 
+they must directly follow the above mentioned size specifiers without additional blanks.
+Furthermore, the orientation suffixes can't be used with \fBdvi\fP, \fBmin\fP and \fBnone\fP.
+
+This option only affects the bounding box and doesn't transform the page content. Hence if 
+you choose a landscape format the page won't be rotated.
+.RE
+.TP
+.B
+\fB\-c\fP, \-\-scale=sx[,sy]
+Scales page content horizontally by \fIsx\fP and vertically by \fIsy\fP. This option is equivalent 
+to \-TS\fIsx\fP,\fIsy\fP.
+.\".TP
+.\".B \-\^f, \-\-fonts[=filename]
+.\"When this option is given, all fonts are written to a separate SVG file and not appended to
+.\"the main output. This file is named like the main SVG file with an additional suffix 
+.\"\fI-fonts\fP (see example below). The optional argument can be used to vary the font file's name.
+.\"
+.\"Unfortunately most recent SVG renderers including Adobe's SVG plugin and Apache's Batik browser 
+.\"doesn't process referenced external font files properly. Avoiding this options therefore leads to
+.\"more portable output at the moment.
+.\"
+.\"This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
+.TP
+.B \-\^m, \-\-mag=factor
+Sets the maginfication factor used for Metafont calls prior tracing the glyphs.
+The larger this value the better the tracing results. Nevertheless 
+large magnification values can cause Metafont arithmetic errors due to number 
+overflows. So use this option with care. The default setting usually produces 
+nice results.
+.TP
+.B \-\^o, \-\-output=file
+Sets name of output file.
+.TP 
+.B \-\^p, \-\-page=number
+With this option you can choose the page to be processed. Please consider 
+that the parameter of this option denotes the actual page count and not the
+number printed on that page. This is because the latter can be ambiguous, i.e.
+different pages may have the same page number (e.g. in cases where multiple 
+DVI files have been merged). 
+If this option is omitted, the first page will be selected.
+.TP
+.B \-\^r, \-\-rotate=angle
+Rotates page content clockwise by \fIangle\fP degrees around the page center.
+This option is equivalent to \-TR\fIangle\fP.
+
+.TP 
+.B \-\^s, \-\-stdout           
+Don't write output to a file but redirect it to \fBstdout\fP. 
+.TP
+.B \-\^S \-\-specials
+Enable processing of \fB\especial\fP commands. The recent version of \fBdvisvgm\fP
+doesn't evaluate \especials so the default behavior is to ignore them. Option \fB\-S\fP
+was implemented for debugging purposes. It forces the processing of \especial commands which
+will merely lead to warning messages.
+.TP
+.B \-\^t, \-\-translate=tx[,ty]
+Translates (moves) page content in direction of vector (\fItx\fP,\fIty\fP). This option is 
+equivalent to \-TT\fItx\fP,\fIty\fP.
+.TP
+.B \-\^T, \-\-transform=commands
+Applies a sequence of transformations to the SVG content. Each transformation is described
+by a \fIcommand\fP that begins with a capital letter followed by a list of comma-separated 
+parameters. Following transformation commands are supported:
+.RS
+.PD 0
+.TP
+\fBT\fP \fItx\fP[,\fIty\fP]
+Translates (moves) page in direction of vector (\fItx\fP,\fIty\fP). If \fIty\fP is omitted,
+\fIty\fP=0 is assumed.
+The expected unit length of \fItx\fP and \fIty\fP are TeX points (1pt = 1/72.27in). However, there 
+are several constants defined to simplify the unit conversion (see below).
+
+.TP
+\fBS\fP \fIsx\fP[,\fIsy\fP]
+Scales page horizontally by \fIsx\fP and vertically by \fIsy\fP. If \fIsy\fP is omitted
+\fIsy\fP = \fIsx\fP is assumed.
+
+.TP
+\fBR\fP \fIangle\fP[,\fIx\fP,\fIy\fP]
+Rotates page clockwise by \fIangle\fP degrees around point (\fIx\fP,\fIy\fP). If the optional
+arguments \fIx\fP and \fIy\fP are omitted the page will be rotated around its center depending on
+the chosen page format. When option \fB-bnone\fP is given, the rotation center is origin (0,0).
+
+.TP
+\fBKX\fP \fIangle\fP
+Skews page along the \fIx\fP-axis by \fIangle\fP degrees. Argument \fIangle\fP can take any value
+except 90+180\fIk\fP, where \fIk\fP is an integer.
+
+.TP
+\fBKY\fP \fIangle\fP
+Skews page along the \fIy\fP-axis by \fIangle\fP degrees. Argument \fIangle\fP can take any value
+except 90+180\fIk\fP, where \fIk\fP is an integer.
+
+.TP
+\fBFH\fP [\fIy\fP]
+Mirrors (flips) page at the horizontal line through point (0,y). Omitting the optional argument
+leads to \fIy\fP=h/2, where \fIh\fP denotes the page height (see \fIpre-defined constants\fP below).
+
+.TP
+\fBFV\fP [\fIx\fP]
+Mirrors (flips) page at the vertical line through point (x,0). Omitting the optional argument
+leads to \fIx\fP=w/2, where \fIw\fP denotes the page width (see \fIpre-defined constants\fP below).
+
+.TP
+\fBM\fP \fIm1\fP,...,\fIm6\fP
+Applies a transformation described by the 3\[mu]3 matrix 
+((\fIm1\fP,\fIm2\fP,\fIm3\fP),(\fIm4\fP,\fIm5\fP,\fIm6\fP),(0,0,1)), where the inner triples denote
+the rows.
+.RE
+
+.RS
+All commands are "executed" in the order of their appearance. Multiple commands can optionally be 
+separated by spaces. In this case the whole transformation string has to be enclosed in double 
+quotes. All parameters are expressions of floating point type. You can either give plain numbers 
+or arithmetic terms combined by the operators \fB+\fP (addition), \fB\-\fP (substraction), 
+\fB*\fP (multiplication), \fB/\fP (division) or \fB%\fP (modulo) with common associativity and 
+precedence rules. Parentheses may be used as well.
+
+Additionally, some pre-defined constants are provided:
+.RS
+.TP
+\fBux\fP \- horizontal position of upper left page corner in TeX point units
+.TP
+\fBuy\fP \- vertical position of upper left page corner in TeX point units
+.TP
+\fBh\fP \- page height in TeX point units (0 in case of \fB-bnone\fP) 
+.TP
+\fBw\fP \- page width in TeX point units (0 in case of \fB-bnone\fP)
+.RE
+Furthermore, you can use the length constants \fBpt\fP, \fBmm\fP, \fBcm\fP and \fBin\fP, e.g.
+2cm or 1.6in. Thus, option -TT1in,0R45 moves the page content 1 inch to the right and rotates it
+by 45 degrees around the page center afterwards.
+
+For single transformations you can also use options \fB\-c\fP, \fB\-t\fP and \fB\-r\fP. Note that 
+the order in which these options are given is not significant, i.e. you can't use them to describe
+transformation sequences. They are simply independent shorthand options for common transformations. 
+.RE
+
+.TP
+.B \-\^v, \-\-verbosity=level  
+.RS
+Controls the type of messages printed during a \fBdvisvgm\fP run:
+.RS
+.TP
+\fB0\fP \- no message output
+.TP
+\fB1\fP \- informal output only
+.TP
+\fB2\fP \- warning messages only
+.TP
+\fB4\fP \- error messages only
+.RE
+By adding these values you can combine the categories. The default level is 7, i.e. all 
+messages are printed.
+.RE
+
+.TP
+.B \-\^z, \-\-zip[=level]      
+Creates a compressed 
+.SM SVG 
+file with suffix .svgz. The optional argument specifies the compression level. 
+Valid values are in the range of 1 to 9 (default is 3). Larger values cause 
+better compression results but take more computation time.
+If \fB\-f\fP is given in conjunction with \fB\-z\fP the font file will be compressed too.
+
+This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
+
+.SH EXAMPLES
+.TP
+.B dvisvgm file
+Converts first page of \fIfile.dvi\fP to \fIfile.svg\fP.
+.TP
+.B dvisvgm \-z file
+Converts first page of \fIfile.dvi\fP to \fIfile.svgz\fP with default compression level 3.
+.TP
+.B dvisvgm \-p5 \-z9 \-ba4\-l \-onewfile file
+Converts fifth page of \fIfile.dvi\fP to \fInewfile.svgz\fP with maximum compression level 9.
+The bounding box is set to DIN/ISO A4 in landscape format.
+.TP
+.B dvisvgm \-\-transform="R20,w/3,2h/5 T1cm,1cm S2,3" file
+Converts first page of \fIfile.dvi\fP to \fIfile.svg\fP where three transformations are applied.
+
+.SH ENVIRONMENT
+\fBdvisvgm\fP uses the \fBkpathsea\fP library for locating the 
+files that it opens. Hence, the environment variables described in 
+the library's documentation influence the converter.
+
+.SH FILES
+The location of the following files is determined by the kpathsea library.
+To check the actual kpathsea configuration you can use the kpsewhich utility.
+.TP
+.B *.pfb
+PostScript Type 1 font files
+.TP
+.B *.mf 
+Metafont input files
+.TP
+.B *.tfm
+TeX font metric files
+
+.SH "SEE ALSO"
+.BR tex "(1), " mf "(1), " grodvi "(1), " potrace "(1), "
+and the \fB"kpathsea library"\fP info documentation.
+
+.SH VERSION
+@VERSION@
+
+.SH AUTHOR
+Martin Gieseking <@PACKAGE_BUGREPORT@>

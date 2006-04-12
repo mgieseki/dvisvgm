@@ -1,0 +1,195 @@
+/***********************************************************************
+** Calculator.cpp                                                     **
+**                                                                    **
+** This file is part of dvisvgm -- the DVI to SVG converter           **
+** Copyright (C) 2005-2006 Martin Gieseking <martin.gieseking@uos.de> **
+**                                                                    **
+** This program is free software; you can redistribute it and/or      **
+** modify it under the terms of the GNU General Public License        **
+** as published by the Free Software Foundation; either version 2     **
+** of the License, or (at your option) any later version.             **
+**                                                                    **
+** This program is distributed in the hope that it will be useful,    **
+** but WITHOUT ANY WARRANTY; without even the implied warranty of     **
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      **
+** GNU General Public License for more details.                       **
+**                                                                    **
+** You should have received a copy of the GNU General Public License  **
+** along with this program; if not, write to the Free Software        **
+** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
+** Boston, MA 02110-1301, USA.                                        **
+***********************************************************************/
+// $Id: Calculator.cpp,v 1.9 2006/01/05 16:05:05 mgieseki Exp $
+
+#include <cmath>
+#include <sstream>
+#include "Calculator.h"
+
+using namespace std;
+
+// token types
+const char END    = 0;
+const char NUMBER = 1;
+const char NAME   = 2;
+
+
+#include <iostream>
+
+
+/** Evaluates a given arithmetic expressions and returns its value.
+ *  The evaluator is implemented as a recursive descendent parser.
+ *  @param is reads expression from this stream
+ *  @return expression value */
+double Calculator::eval (istream &is) {
+	double ret = expr(is, false);
+	if (lookAhead(is) > 0)
+		throw CalculatorException("expression syntax error");
+   return ret;
+}
+
+
+/** Evaluates a given arithmetic expressions and returns its value.
+ *  @param expr expression to evaluate
+ *  @return expression value */
+double Calculator::eval (const string &expr) {
+	istringstream iss;
+	iss.str(expr);
+	return eval(iss);
+}
+
+
+/** Evaluates the root rule of the expression grammar. */
+double Calculator::expr (istream &is, bool skip) { // expr:
+   double left = term(is, skip);
+   while (1)
+      switch (lookAhead(is)) {
+         case '+': left += term(is, true); break;  // term '+' term => $1 + $3
+         case '-': left -= term(is, true); break;  // term '-' term => $1 - $3
+         default : return left;                    // term => $1
+      }
+}
+
+
+double Calculator::term (istream &is, bool skip) { // term:
+   double left = prim(is, skip);
+   while (1)
+      switch (lookAhead(is)) {
+         case '*': left *= prim(is, true); break;  // prim '*' prim => $1 * $3
+         case '/': {                               // prim '/' prim => $1 / $3
+				double denom = prim(is, true);
+				if (denom == 0)
+					throw CalculatorException("division by zero");
+				left /= denom;
+				break;
+			}
+			case '%': {                               // prim '%' prim => $1 mod $3
+				double denom = prim(is, true);
+				if (denom == 0)
+					throw CalculatorException("division by zero");
+				left -= denom*floor(left/denom);
+				break;
+			}
+         default:                                  // prim => $1
+				return left;
+      }
+}
+
+
+double Calculator::prim (istream &is, bool skip) { // prim:
+   if (skip)
+      lex(is);
+   switch (lookAhead(is)) {
+      case NUMBER: {                               // NUMBER => $1
+			lex(is);
+			double ret = numValue;
+			if (lookAhead(is) == NAME) {              // NUMBER NAME => $1 * $2
+				lex(is);
+				ret *= getVariable(strValue);
+			}
+			return ret;
+		}
+		case NAME: {                                 // NAME => getVariable($1)
+			lex(is);
+			return getVariable(strValue);
+		}
+      case '-':                                    // '-' prim => -$2
+			return -prim(is, true);
+      case '(': {                                  // '(' expr ')' => $2
+         double e = expr(is, true);
+         if (lookAhead(is) != ')')
+				throw CalculatorException("')' expected");
+         lex(is);
+         return e;
+      }
+      default:
+			throw CalculatorException("primary expression expected");
+   }
+}
+
+
+/** Determines type of next token without swallowing it. That means 
+ *  the same token will be read again next time. */
+char Calculator::lookAhead (istream &is) {
+   while (isspace(is.peek()))  // skip whitespace
+      is.get();
+   if (is.eof())
+      return END;
+   char c = is.peek();
+   if (isdigit(c) || c == '.')
+      return NUMBER;
+   if (isalpha(c))
+      return NAME;
+   return c;
+}
+
+
+/** Reads next token and returns its type. The token value is either assigned
+ *  to the object members numValue or strValue depending on the type. The token
+ *  type is represented by a unique integer. In contrast to method 'lookAhead'
+ *  lex consumes the read token.
+ *  @param is next token is read from this stream
+ *  @return token type */
+char Calculator::lex (istream &is) {
+	char tokenType = lookAhead(is);
+   switch (tokenType) {
+      case NUMBER:
+         is >> numValue;
+         break;
+      case NAME: {
+         strValue = "";
+         while (isalpha(is.peek()))
+            strValue += char(is.get());
+         break;
+		}
+		default:
+			tokenType = is.get();
+   }
+   return tokenType;
+}
+
+
+/** Returns the value of a previously defined variable. If there
+ *  is no variable of the given name, a CalculatorException is thrown. */
+double Calculator::getVariable (const string &name) const {
+	map<string,double>::const_iterator it = variables.find(name);
+	if (it == variables.end())
+		throw CalculatorException("undefined variable '" + name + "'");
+	return it->second;
+}
+
+
+#if 0
+int main (int argc, char **argv) {
+   istringstream iss;
+   string s = argv[1];
+   iss.str(s);
+   Calculator c;
+	c.setVariable("v", 3);
+	try {
+   	cout << c.eval(iss) << endl;
+	}
+	catch (const CalculatorException &e) {
+		cout << e.getMessage() << endl;
+	}
+}
+#endif

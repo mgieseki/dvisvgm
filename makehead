@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+foreach $fname(@ARGV) {
+	open FILE, $fname;
+	@lines = <FILE>;
+	close FILE;
+	$content = join('', @lines);
+	$content =~ s#^\n*/\*.*?\*/(\n*//.*?\n+)*\n*##s; # remove old header
+	open FILE, ">$fname.new";
+	open HEADER, "header.txt";
+	while (<HEADER>) {
+		s/\$FILENAME/$fname/s;
+		s/^(.*?)\$FILL\((\d+?)\)(.*?)$/fill_line($1,$2,$3)/e;
+		print FILE $_;
+	}
+	print FILE $content;
+	close HEADER;
+	close FILE;
+	unlink $fname;
+	rename "$fname.new", $fname;
+}
+
+sub fill_line {
+	($text1, $len, $text2) = @_;
+	$diff = $len - length($text1) - length($text2) - 1;
+	$diff = $len < 0 ? 0 : $diff;
+	$spaces = ' ' x $diff;
+	return $text1.$spaces.$text2;
+}
