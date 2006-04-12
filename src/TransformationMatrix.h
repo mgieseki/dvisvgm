@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: TransformationMatrix.h,v 1.6 2006/01/05 16:05:06 mgieseki Exp $
+// $Id$
 
 #ifndef TRANSFORMATIONMATRIX_H
 #define TRANSFORMATIONMATRIX_H

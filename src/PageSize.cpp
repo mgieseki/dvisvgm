@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: PageSize.cpp,v 1.7 2006/01/06 13:32:41 mgieseki Exp $
+// $Id$
 
 #include <algorithm>
 #include <cctype>

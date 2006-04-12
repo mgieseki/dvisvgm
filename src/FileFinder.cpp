@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: FileFinder.cpp,v 1.2 2006/01/05 16:05:05 mgieseki Exp $
+// $Id$
 
 #include <fstream>
 #include "FileFinder.h"

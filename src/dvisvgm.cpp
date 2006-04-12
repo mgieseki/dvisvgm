@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: dvisvgm.cpp,v 1.19 2006/01/05 16:05:06 mgieseki Exp $
+// $Id$
 
 #include <cmath>
 #include <fstream>

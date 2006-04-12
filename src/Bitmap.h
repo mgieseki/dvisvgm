@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: Bitmap.h,v 1.11 2006/01/05 16:05:05 mgieseki Exp $
+// $Id$
 
 #ifndef BITMAP_H
 #define BITMAP_H

@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: BoundingBox.h,v 1.5 2006/01/05 16:05:05 mgieseki Exp $
+// $Id$
 
 #ifndef BOUNDINGBOX_H
 #define BOUNDINGBOX_H

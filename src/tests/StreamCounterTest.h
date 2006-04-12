@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: StreamCounterTest.h,v 1.2 2006/01/06 14:25:17 mgieseki Exp $
+// $Id$
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>

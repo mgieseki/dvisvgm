@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: Calculator.h,v 1.4 2006/01/05 16:05:05 mgieseki Exp $
+// $Id$
 
 #ifndef CALCULATOR_H
 #define CALCULATOR_H

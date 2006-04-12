@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: types.h,v 1.5 2006/01/05 16:05:06 mgieseki Exp $
+// $Id$
 
 #ifndef TYPES_H
 #define TYPES_H
