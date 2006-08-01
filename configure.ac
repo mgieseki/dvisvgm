@@ -6,7 +6,7 @@
 AC_PREREQ(2.59)
 AC_INIT(dvisvgm, 0.4.3, martin.gieseking@uos.de)
 DATE="August 2006"
-AC_REVISION($Revision: 1.9 $)
+AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
