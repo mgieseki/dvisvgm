@@ -1,6 +1,10 @@
 dvisvgm-0.4.3
+- processing of multiple pages is possible now
+- added option -f to write font definitions to a separate file
+- dvisvgm can now be used together with freetype version >= 2.1.1 (API changes caused compiler errors)
 - basic \special support
-- added unit tests based on CxxTest (http://cxxtest.sourceforge.net)
+- internal optimizations
+- added some unit tests based on CxxTest (http://cxxtest.sourceforge.net)
 
 dvisvgm-0.4.2
 - added SVG transformation options

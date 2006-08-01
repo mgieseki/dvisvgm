@@ -198,30 +198,37 @@ bool FontEngine::setCharSize (int ptSize) {
 }
 
 
-// Callback functions used by traceOutline 
+// OLDFREETYPE is set by configure if freetype version < 2.1.1
+// (handles API change)
+#ifdef OLDFREETYPE
+	#define VECTORPTR FT_Vector*
+#else
+	#define VECTORPTR const FT_Vector*
+#endif
 
-static int moveto (FT_Vector *to, void *user) {
+// Callback functions used by traceOutline 
+static int moveto (VECTORPTR to, void *user) {
 	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
 	commands->moveTo(to->x, to->y);
 	return 0;
 }
 
 
-static int lineto (FT_Vector *to, void *user) {
+static int lineto (VECTORPTR to, void *user) {
 	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
 	commands->lineTo(to->x, to->y);
 	return 0;
 }
 
 
-static int conicto (FT_Vector *control, FT_Vector *to, void *user) {
+static int conicto (VECTORPTR control, VECTORPTR to, void *user) {
 	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
 	commands->conicTo(control->x, control->y, to->x, to->y);
 	return 0;
 }
 
 
-static int cubicto (FT_Vector *control1, FT_Vector *control2, FT_Vector *to, void *user) {
+static int cubicto (VECTORPTR control1, VECTORPTR control2, VECTORPTR to, void *user) {
 	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
 	commands->cubicTo(control1->x, control1->y, control2->x, control2->y, to->x, to->y);
 	return 0;

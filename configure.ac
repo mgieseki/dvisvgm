@@ -1,11 +1,11 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2006 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(dvisvgm, 0.4.2, martin.gieseking@uos.de)
-DATE="September 2005"
+AC_INIT(dvisvgm, 0.4.3, martin.gieseking@uos.de)
+DATE="August 2006"
 AC_REVISION($Revision: 1.9 $)
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
@@ -29,26 +29,26 @@ case $host in
 	;;
 esac
 
-# Checks for libraries.
+# Check for libraries.
 AC_CHECK_LIB(freetype, FT_Init_FreeType)
 AC_CHECK_LIB(m, sqrt) # required to pass potrace check
 AC_CHECK_LIB(potrace, potrace_trace)
 AC_CHECK_LIB(z, gzopen)
 AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
 
-# Checks for header files.
+# Check for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS([libintl.h stdlib.h string.h strings.h unistd.h])
 
-# Checks for typedefs, structures, and compiler characteristics.
+# Check for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
-# Checks for library functions.
+# Check for library functions.
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
@@ -108,6 +108,18 @@ if test "$withval" != no; then
 		LDFLAGS="$LDFLAGS -L$ZLIB_DIR/lib"
 	fi
 fi
+
+# Check freetype version
+AC_MSG_CHECKING([for freetype version >= 2.1.1])
+AC_RUN_IFELSE(
+	[AC_LANG_PROGRAM(
+		[[#include <ft2build.h>]]
+		[[return FREETYPE_MAJOR*10000+FREETYPE_MINOR*100+FREETYPE_PATCH >= 20101;]])],
+		AC_MSG_RESULT([yes]), 
+		AC_MSG_RESULT([no]) 
+		CPPFLAGS="$CPPFLAGS -DOLDFREETYPE")
+#		AC_MSG_ERROR([dvisvgm needs freetype version >= 2.1.1]))
+
 
 AC_SUBST(DATE EXTRA_LIBS)
 AC_OUTPUT(Makefile src/Makefile doc/dvisvgm.1 doc/Makefile)
