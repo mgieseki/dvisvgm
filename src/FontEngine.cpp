@@ -264,4 +264,3 @@ bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, boo
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
 }
-

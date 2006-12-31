@@ -110,14 +110,14 @@ if test "$withval" != no; then
 fi
 
 # Check freetype version
-AC_MSG_CHECKING([for freetype version >= 2.1.1])
-AC_RUN_IFELSE(
-	[AC_LANG_PROGRAM(
-		[[#include <ft2build.h>]]
-		[[return FREETYPE_MAJOR*10000+FREETYPE_MINOR*100+FREETYPE_PATCH >= 20101;]])],
-		AC_MSG_RESULT([yes]), 
-		AC_MSG_RESULT([no]) 
-		CPPFLAGS="$CPPFLAGS -DOLDFREETYPE")
+#AC_MSG_CHECKING([for freetype version >= 2.1.1])
+#AC_RUN_IFELSE(
+#	[AC_LANG_PROGRAM(
+#		[[#include <ft2build.h>]]
+#		[[return FREETYPE_MAJOR*10000+FREETYPE_MINOR*100+FREETYPE_PATCH >= 20101;]])],
+#		AC_MSG_RESULT([yes]), 
+#		AC_MSG_RESULT([no]) 
+#		CPPFLAGS="$CPPFLAGS -DOLDFREETYPE")
 #		AC_MSG_ERROR([dvisvgm needs freetype version >= 2.1.1]))
 
 

@@ -64,7 +64,7 @@ CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS = -I/usr/include/freetype2 -DOLDFREETYPE
+CPPFLAGS = -I/usr/include/freetype2
 CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2

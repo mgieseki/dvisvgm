@@ -204,3 +204,4 @@ int main (int argc, char *argv[]) {
 	return dvisvgm(argc, argv);
 #endif
 }
+

@@ -25,6 +25,8 @@
 #include <string>
 #include "KPSFileFinder.h"
 
+
+namespace KPS {
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
 #else
@@ -32,7 +34,9 @@
 		#include <kpathsea/kpathsea.h>
 	}
 #endif
+}
 
+using namespace KPS;
 
 KPSFileFinder::KPSFileFinder (const char *progname) {
 #ifndef MIKTEX

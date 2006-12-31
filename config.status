@@ -510,7 +510,7 @@ s,@am__untar@,${AMTAR} xf -,;t t
 s,@CXX@,g++,;t t
 s,@CXXFLAGS@,-g -O2,;t t
 s,@LDFLAGS@,,;t t
-s,@CPPFLAGS@,-I/usr/include/freetype2 -DOLDFREETYPE,;t t
+s,@CPPFLAGS@,-I/usr/include/freetype2,;t t
 s,@ac_ct_CXX@,g++,;t t
 s,@EXEEXT@,,;t t
 s,@OBJEXT@,o,;t t
@@ -543,7 +543,7 @@ s,@CPP@,gcc -E,;t t
 s,@EGREP@,grep -E,;t t
 s,@LIBOBJS@,,;t t
 s,@FREETYPE_CONFIG@,/usr/bin/freetype-config,;t t
-s,@DATE@,August 2006,;t t
+s,@DATE@,December 2006,;t t
 s,@EXTRA_LIBS@,,;t t
 s,@LTLIBOBJS@,,;t t
 CEOF

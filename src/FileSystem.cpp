@@ -36,6 +36,7 @@ using namespace std;
 	#include <windows.h>
   	const char *FileSystem::DEVNULL = "nul";
   	const char FileSystem::PATHSEP = '\\';
+	#define unlink _unlink
 #else
   	#include <sys/stat.h>
   	const char *FileSystem::DEVNULL = "/dev/null";
@@ -44,7 +45,7 @@ using namespace std;
 
 
 bool FileSystem::remove (string fname) {
-	return _unlink(fname.c_str()) == 0;
+	return unlink(fname.c_str()) == 0;
 }
 
 
