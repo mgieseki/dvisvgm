@@ -22,8 +22,12 @@
 // $Id$
 
 #include <fstream>
-#include <unistd.h>
 #include "FileSystem.h"
+
+#ifdef __GNUC__
+#include <unistd.h>
+#endif
+
 
 using namespace std;
 
@@ -40,7 +44,7 @@ using namespace std;
 
 
 bool FileSystem::remove (string fname) {
-	return unlink(fname.c_str()) == 0;
+	return _unlink(fname.c_str()) == 0;
 }
 
 
@@ -51,7 +55,7 @@ bool FileSystem::rename (string oldname, string newname) {
 
 UInt64 FileSystem::filesize (string fname) {
 #ifdef __WIN32__
-	// unfortunately stat doesn't work properly under Windows
+	// unfortunately, stat doesn't work properly under Windows
 	// so we have to use this freaky code
 	WIN32_FILE_ATTRIBUTE_DATA attr;
 	GetFileAttributesExA(fname.c_str(), GetFileExInfoStandard, &attr);

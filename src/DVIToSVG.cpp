@@ -204,11 +204,13 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 		
 	FORALL(usedChars, UsedCharsMap::const_iterator, i) {
 		string filename = i->first + ".pfb";
+#ifndef MIKTEX
 		if (fontMap) {			
 			const char *mappedName = fontMap->lookup(i->first);
 			if (mappedName)
 				filename = string(mappedName) + ".pfb";
 		}
+#endif
 		const char *path = FileFinder::lookup(filename, getFileFinder());  // path to pfb file
 		CharmapTranslator *cmt = svgActions->getCharmapTranslator(i->first);
 		if (path) {

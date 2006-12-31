@@ -51,26 +51,26 @@ int Message::level = Message::MESSAGES | Message::WARNINGS | Message::ERRORS;
 
 /** Returns the stream for usual messages. */
 ostream& Message::mstream (bool prefix) {
-	ostream &os = (level & MESSAGES) ? cerr : nullStream;
+	ostream *os = (level & MESSAGES) ? &cerr : &nullStream;
 	if (prefix)
-		os << "MESSAGE: ";
-	return os;
+		*os << "MESSAGE: ";
+	return *os;
 }
 
 
 /** Returns the stream for warning messages. */
 ostream& Message::wstream (bool prefix) {
-	ostream &os = (level & WARNINGS) ? cerr : nullStream;
+	ostream *os = (level & WARNINGS) ? &cerr : &nullStream;
 	if (prefix)
-		os << "WARNING: ";
-	return os;
+		*os << "WARNING: ";
+	return *os;
 }
 
 
 /** Returns the stream for error messages. */
 ostream& Message::estream (bool prefix) {
-	ostream &os = (level & ERRORS) ? cerr : nullStream;
+	ostream *os = (level & ERRORS) ? &cerr : &nullStream;
 	if (prefix)
-		os << "ERROR: ";
-	return os;
+		*os << "ERROR: ";
+	return *os;
 }

@@ -41,7 +41,7 @@ static int my_tolower (int c) {
  *  @param width contains the page width when function returns 
  *  @param height contains the page height when function returns */
 static void computeASize (int n, double &width, double &height) {
-	double sqrt2 = sqrt(2);
+	double sqrt2 = sqrt(2.0);
 	height = floor(1189.0/pow(sqrt2, n)+0.5);
 	width  = floor(height/sqrt2+0.5);
 }

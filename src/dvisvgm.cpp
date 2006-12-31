@@ -44,6 +44,11 @@
 #define EMAIL ""
 #endif
 
+#ifdef MIKTEX
+#include <miktex/app.h>
+#include <miktex/core.h>
+#endif
+
 using namespace std;
 
 
@@ -101,7 +106,7 @@ static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
 	dvisvg.setTransformation(oss.str());
 }
 
-int main (int argc, char *argv[]) {
+static int dvisvgm (int argc, char *argv[]) {
 	struct gengetopt_args_info args;
 	if (cmdline_parser(argc, argv, &args))
 		return 1;
@@ -176,4 +181,26 @@ int main (int argc, char *argv[]) {
 	if (!args.stdout_given)
 		delete out;
 	return 0;
+}
+
+
+int main (int argc, char *argv[]) {
+#ifdef MIKTEX
+	try {
+		MiKTeX::App::Application app;
+		app.Init(argv[0]);
+		int ret = dvisvgm(argc, argv);
+		app.Finalize();
+		return ret;
+	}
+	catch (const MiKTeX::Core::MiKTeXException &e) {
+		MiKTeX::Core::Utils::PrintException(e);
+		return 1;
+	}
+	catch (const exception &e) {
+		MiKTeX::Core::Utils::PrintException(e);
+	}
+#else
+	return dvisvgm(argc, argv);
+#endif
 }

@@ -30,7 +30,7 @@
 using namespace std;
 
 static double deg2rad (double deg) {
-   const double PI = acos(-1);
+   const double PI = acos(-1.0);
    return PI*deg/180.0;
 }
 

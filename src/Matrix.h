@@ -24,6 +24,12 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+
 class TransformationMatrix
 {
 	public:

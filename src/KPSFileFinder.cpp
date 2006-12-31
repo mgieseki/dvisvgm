@@ -21,43 +21,27 @@
 ***********************************************************************/
 // $Id$
 
+#include <iostream>
 #include <string>
 #include "KPSFileFinder.h"
 
-#ifdef MIKTEX
-extern "C" {
-	__stdcall int miktex_initialize ();
-	__stdcall int miktex_uninitialize ();
-}
-#endif
-
-// unfortunately the original kpathsea headers are not C++-ready so 
-// we have to wrap them with some ugly code
-namespace kps {
 #ifdef MIKTEX	
-	#include "miktex-kps.h"
+	#include <kpathsea/kpathsea.h>
 #else
 	extern "C" {
 		#include <kpathsea/kpathsea.h>
 	}
 #endif
-}
 
 
 KPSFileFinder::KPSFileFinder (const char *progname) {
-#ifdef MIKTEX
-	miktex_initialize();
-	kpse_set_program_name(progname, NULL); // empty macro can be omitted
-#else
-	kps::kpse_set_program_name(progname, NULL);
+#ifndef MIKTEX
+	kpse_set_program_name(progname, NULL);
 #endif
 }
 
 
 KPSFileFinder::~KPSFileFinder () {
-#if MIKTEX
-	miktex_uninitialize();
-#endif
 }
 
 
@@ -65,21 +49,22 @@ const char* KPSFileFinder::lookup (const std::string &fname) const {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
 		return 0;
+
 	std::string ext = fname.substr(pos+1);
-	kps::kpse_file_format_type formatType;
+	kpse_file_format_type formatType;
 	if (ext == "tfm")
-		formatType = kps::kpse_tfm_format;
+		formatType = kpse_tfm_format;
 	else if (ext == "pfb")
-		formatType = kps::kpse_type1_format;
+		formatType = kpse_type1_format;
 	else if (ext == "mf")
 #ifdef MIKTEX
-		formatType = kps::kpse_miscfonts_format;  // this is a bug, I think
+		formatType = kpse_miscfonts_format;  // this is a bug, I think
 #else
-		formatType = kps::kpse_mf_format;
+		formatType = kpse_mf_format;
 #endif
 	else if (ext == "ttf")
-		formatType = kps::kpse_truetype_format;
+		formatType = kpse_truetype_format;
 	else 
 		return 0;
-	return kps::kpse_find_file(fname.c_str(), formatType, 0);
+	return kpse_find_file(fname.c_str(), formatType, 0);
 }

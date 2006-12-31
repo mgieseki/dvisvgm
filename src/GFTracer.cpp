@@ -28,10 +28,13 @@
 #include "FileFinder.h"
 #include "GFTracer.h"
 
+#ifdef __MSVC__
+#include <potracelib.h>
+#else
 extern "C" {
 #include <potracelib.h>
 }
-
+#endif
 
 using namespace std;
 
