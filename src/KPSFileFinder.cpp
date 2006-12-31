@@ -26,17 +26,16 @@
 #include "KPSFileFinder.h"
 
 
-namespace KPS {
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
 #else
-	extern "C" {
-		#include <kpathsea/kpathsea.h>
+	namespace KPS {
+		extern "C" {
+			#include <kpathsea/kpathsea.h>
+		}
 	}
+	using namespace KPS;
 #endif
-}
-
-using namespace KPS;
 
 KPSFileFinder::KPSFileFinder (const char *progname) {
 #ifndef MIKTEX
