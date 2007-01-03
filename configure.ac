@@ -32,7 +32,7 @@ esac
 # Check for libraries.
 AC_CHECK_LIB(freetype, FT_Init_FreeType)
 AC_CHECK_LIB(m, sqrt) # required to pass potrace check
-AC_CHECK_LIB(potrace, potrace_trace)
+#AC_CHECK_LIB(potrace, potrace_trace)
 AC_CHECK_LIB(z, gzopen)
 AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
 
@@ -65,12 +65,12 @@ AC_ARG_WITH(freetype,[  --with-freetype=DIR     location of the FreeType2 librar
 			FREETYPE_DIR=$withval
 		fi
 	 fi])
-AC_ARG_WITH(potrace,[  --with-potrace=DIR      location of the potrace library],
-	[if test "$withval" != no; then
-		if test "$withval" != yes; then
-			POTRACE_DIR=$withval
-		fi
-	fi])
+#AC_ARG_WITH(potrace,[  --with-potrace=DIR      location of the potrace library],
+#	[if test "$withval" != no; then
+#		if test "$withval" != yes; then
+#			POTRACE_DIR=$withval
+#		fi
+#	fi])
 AC_ARG_WITH(zlib,[  --with-zlib=DIR         location of the zlib library],
 	[if test "$withval" != no; then
 		if test "$withval" != yes; then
@@ -122,4 +122,4 @@ fi
 
 
 AC_SUBST(DATE EXTRA_LIBS)
-AC_OUTPUT(Makefile src/Makefile doc/dvisvgm.1 doc/Makefile)
+AC_OUTPUT(Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile)

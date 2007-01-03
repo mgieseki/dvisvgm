@@ -102,7 +102,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lz -lpotrace -lm -lfreetype -lkpathsea 
+LIBS = -lz -lm -lfreetype -lkpathsea 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run makeinfo
 OBJEXT = o
@@ -160,7 +160,7 @@ sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = src doc
+SUBDIRS = potracelib src doc
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

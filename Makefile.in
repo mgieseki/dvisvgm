@@ -160,7 +160,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = src doc
+SUBDIRS = potracelib src doc
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

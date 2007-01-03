@@ -125,7 +125,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lz -lpotrace -lm -lfreetype -lkpathsea 
+LIBS = -lz -lm -lfreetype -lkpathsea 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run makeinfo
 OBJEXT = o
@@ -186,7 +186,7 @@ noinst_LIBRARIES = libdvisvgm.a
 dvisvgm_SOURCES = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 							  dvisvgm.cpp gzstream.cpp
 
-dvisvgm_LDADD = $(noinst_LIBRARIES) 
+dvisvgm_LDADD = $(noinst_LIBRARIES)  ../potracelib/libpotrace.a
 dvisvgm_DEPENDENCIES = 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
    DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h FontEmitter.h \

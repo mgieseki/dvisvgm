@@ -186,7 +186,7 @@ noinst_LIBRARIES = libdvisvgm.a
 dvisvgm_SOURCES = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 							  dvisvgm.cpp gzstream.cpp
 
-dvisvgm_LDADD = $(noinst_LIBRARIES) @EXTRA_LIBS@
+dvisvgm_LDADD = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
 dvisvgm_DEPENDENCIES = @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
    DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h FontEmitter.h \

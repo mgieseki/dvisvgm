@@ -26,9 +26,6 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
 
-/* Define to 1 if you have the `potrace' library (-lpotrace). */
-#define HAVE_LIBPOTRACE 1
-
 /* Define to 1 if you have the `z' library (-lz). */
 #define HAVE_LIBZ 1
 
