@@ -1,6 +1,6 @@
 dvisvgm-0.4.3
 - problem with changed freetype API (freetype version >= 2.2.1) has been fixed
-- added support for MiKTeX 2.5
+- updated MiKTeX support to version 2.5 
 - minor code improvements
 - some unit tests based on CxxTest (http://cxxtest.sourceforge.net) have been added
 

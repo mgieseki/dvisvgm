@@ -29,6 +29,7 @@
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
 #else
+	// unfortunately, kpathsea is not C++-ready, so we have to wrap it with some ugly code
 	namespace KPS {
 		extern "C" {
 			#include <kpathsea/kpathsea.h>
