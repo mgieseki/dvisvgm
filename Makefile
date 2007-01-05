@@ -160,7 +160,7 @@ sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = potracelib src doc
+SUBDIRS = potracelib src doc rpm
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -352,7 +352,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/doc
+	$(mkdir_p) $(distdir)/doc $(distdir)/rpm
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

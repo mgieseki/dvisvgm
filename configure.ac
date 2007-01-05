@@ -1,5 +1,5 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005-2006 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
 
@@ -122,4 +122,4 @@ fi
 
 
 AC_SUBST(DATE EXTRA_LIBS)
-AC_OUTPUT(Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile)
+AC_OUTPUT(Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile rpm/dvisvgm.spec rpm/Makefile)

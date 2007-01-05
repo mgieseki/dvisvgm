@@ -4,5 +4,5 @@
 ## Process this file with automake.
 
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = potracelib src doc
+SUBDIRS = potracelib src doc rpm
 

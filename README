@@ -22,6 +22,8 @@ DEPENDENCIES
    * potracelib (http://potrace.sourceforge.net)
      Peter Selinger's bitmap tracing library is utilized to
      vectorize Metafont's bitmap output.
+	  potracelib is now part of the dvisvgm source tarball, so
+	  you don't need to create the library seperately any longer.
 
    * zlib (http://www.zlib.org)
      Compressed SVG files are produced by using functions
@@ -35,7 +37,7 @@ COMPILATION
  Quick installation info:
    * type "./configure"
    * type "make"
-   * type "make install" as root
+   * type "make install" as root (or "sudo make install")
 
  For generic configuration instructions see the file INSTALL.
 
@@ -48,91 +50,23 @@ COMPILATION
  The tracer module calls Metafont in case of lacking TFM or PFB files
  via a system call. Please ensure that Metafont is installed and
  reachable over the search path.
-
+ 
  To build Windows binaries I recommend MinGW in conjunction
  with MSYS (http://www.mingw.org). If executed within MSYS
  the configure script assumes that you want to build dvisvgm
- for MikTeX. In this case the necessary import libraries for
- the MikTeX DLLs will be created and linked. If not already done,
- add the MikTeX bin directory to your search path, otherwise the
+ for MiKTeX. In this case the necessary import libraries for
+ the MiKTeX DLLs will be created and linked. If not already done,
+ add the MiKTeX bin directory to your search path, otherwise the
  required DLLs won't be found while running dvisvgm.
 
  If you don't like compiling the sources yourself, you can
- download precompiled executables for Windows and MikTeX
+ download precompiled executables for Windows and MiKTeX
  from sourceforge.net instead (see below).
 
 
 USAGE
-
- The user interface is very simple yet. Just specify the DVI
- file and the converter creates an SVG file with the same name
- but extension .svg. When choosing the -z option a compressed
- SVG file with extension .svgz will be written. The optional
- parameter specifies the compression level (valid values are
- 1 to 9, default is 3). Larger values cause better compression
- results but take more computation time.
-
- Currently only a single page can be converted. If the -p option
- is omitted, the first page is choosen. Please consider that the
- parameter of option -p denotes the actual page count and not the
- number printed on that page. This is because the latter can be
- ambiguous (e.g. in cases where multiple dvi files have been merged).
-
-
- Usage: dvisvgm [OPTIONS] dvifile
-
-  -h, --help             print help and exit
-  -V, --version          print version and exit
-  -b, --bbox=format      sets size/format of bounding box  (default=`dvi')
-  -m, --mag=factor       magnification of Metafont output  (default=`4')
-  -o, --output=filename  set name of output file
-  -p, --page=number      choose page to convert  (default=`1')
-  -s, --stdout           write SVG output to stdout
-  -v, --verbosity=level  set verbosity level (0-7)  (default=`7')
-  -z, --zip[=level]      create compressed SVG (.svgz) file  (default=`3')
-
- Option -b sets the bounding box of the generated graphic to the specified size/format. 
- The format argument is a case-insensitive string that denotes the paper size. Following 
- size names are supported:
-
- International DIN/ISO paper sizes:
-   An, Bn, Cn, Dn, where n is a non-negative integer, e.g. A4 or a4 for 
-   DIN/ISO A4 format (210mm × 297mm).
-
- North American paper sizes:
-   invoice, executive, legal, letter, ledger
-
- Special bounding box sizes:
-   dvi  - the page size stored in the DVI file will be used
-   min  - the minimal bounding box will be computed and assigned
-   none - no bounding box will be assigned
-
- The default page orientation for DIN/ISO and American paper sizes is portrait, 
- i.e. width < height. Appending -landscape or simply -l to the format string switches 
- to landscape mode (width > height). For symmetry reasons you can also explicitly add 
- -portrait or -p to indicate the default portrait format. Note that these suffixes
- are part of the size string and not separate options. Thus they must directly follow 
- the above mentioned size specifiers without additional blanks. Furthermore, the 
- orientation suffixes can't be used with dvi, min and none.
-
- This option only affects the bounding box and doesn't transform the page content. 
- Hence if you choose a landscape format the page won't be rotated.
-
-
- Option -m selects the magnification factor used when Metafont is called
- prior to trace a font's glyphs. The larger this value the better the
- tracing results. Nevertheless large magnification values can cause
- Metafont arithmetic errors due to number overflows. So use this
- option with care. The dafault setting usually produces nice results.
-
-
- Option -v controls the type of messages printed while a dvisvgm run:
-    0 - no message output
-    1 - informal output only
-    2 - warning messages only
-    4 - error messages only
- By adding these values you can combine the categories. Default is 7,
- i.e. all messages are printed.
+ Information about the command-line interface and the available options
+ can be found in the manual page.
 
 
 ADDITIONAL INFORMATION
