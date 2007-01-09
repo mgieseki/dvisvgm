@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>dvisvgm by Martin Gieseking</title>
+		<link rel="stylesheet" type="text/css" href="dvisvgm.css">
+	</head>
+	<body>
+		<table cellpadding="5" cellspacing="0" width="100%">
+			<tr>
+				<td class="header">&nbsp;Welcome to the Home of <span class="dvisvgm">dvisvgm</span></td>
+				<td class="header" align="right">
+<!--					<img src="english.jpg" border="0">
+					<a href="index-de.html"><img src="german.jpg" border="0"></a> -->
+				</td>
+			</tr>
+			<tr><td class="navig" colspan="2">
+				<b>Home</b>
+				<a href="examples.html">Examples</a>
+				<a href="options.html">Options</a>
+				<a href="down.html">Downloads</a>
+				<a href="links.html">Links</a>
+			</td></tr>
+		</table>
+		<table width="80%" align="center">
+			<tr><td class="main">
+				<h1>What is <i>dvisvgm</i>?</h1>
+				The command line utility <i>dvisvgm</i> is a tool for <a href="http://www.ctan.org">TeX/LaTeX</a> users.
+				It	converts DVI files to the XML-based Scalable Vector Graphics format.<br>
+				SVG files can be displayed with 
+				<a href="http://www.adobe.com/svg/viewer/install/main.html">Adobe's SVG browser plug-in</a> or the 
+				Java-based <a href="http://xml.apache.org/batik">Batik</a> Squiggle viewer for example.
+				<h1>Current Version</h1>
+				The current version 0.4.3 provides basic conversion functionality.
+				<ul>
+					<li>Converts all pages that are made up of fonts only. Embedded \specials are currently ignored.
+					Another limitation is the processing of only one page (can be selected on the command line).</li>
+					<li>Glyph outlines of all used fonts are embedded in the generated SVG file (corresponding 
+					PFB files must be installed).</li>
+					<li>Glyph outlines of fonts that are not available as PFB (PostScript Type 1) files 
+					will be computed by tracing METAFONT's generic bitmap font output (GF files).</li>					
+					<li>Optionally creates (compressed) SVGZ files.</li>
+					<li>Options for applying SVG transformations.</li>
+					<li>The converter was successfully tested on various Linux (<a href="http://www.tug.org/tetex">teTeX</a>) 
+					and Windows (<a href="http://www.miktex.org">MiKTeX 2.5</a>) systems.
+					<li>See <a href="manpage.html" target="_blank">manual page</a> for a complete list of options.</li>
+				</ul>
+				<h1>Planned Features</h1>
+				<ul>
+					<li><span class="itemhead">Font Mapping</span><br>
+					Some font families, e.g. the lmodern fonts, use different names for files and fonts.
+					In these cases <i>dvisvgm</i> doesn't find the potentially available PFB files. Using font maps
+					will solve this problem.
+					
+					<li><span class="itemhead">Output of multiple pages</span><br> 
+					The core functions for processing arbitrary DVI page sequences are already implemented 
+					but not reliable yet.</li>
+
+					<li><span class="itemhead">Evaluation of \specials</span><br>
+					<i>dvisvgm</i> will support selected \special commands which are embedded by various
+					LaTeX packages, e.g. to reference external images or to describe colors, text rotation or hyperlinks. 
+					</li>
+				</ul>
+				<h1>Author and License</h1>
+				<i>dvisvgm</i> is developed by Martin Gieseking and published under the 
+				<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>.
+			</td></tr>
+		</table>
+		<table width="80%" align="center">
+			<tr>
+				<td align="right">
+					<a href="http://www.vim.org"><img src="vim_created.gif" border="0"></a>
+					<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=145640&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
