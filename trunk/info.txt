@@ -1,5 +1,5 @@
 to create build scripts and additional helper files call:
 autoconf
-automake
+automake --add-missing
 autoheader
 aclocal

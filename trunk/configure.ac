@@ -4,7 +4,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(dvisvgm, 0.4.3, martin.gieseking@uos.de)
+AC_INIT([dvisvgm],[0.4.3],[martin.gieseking@uos.de])
 DATE="December 2006"
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src)
@@ -122,4 +122,5 @@ fi
 
 
 AC_SUBST(DATE EXTRA_LIBS)
-AC_OUTPUT(Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile rpm/dvisvgm.spec rpm/Makefile)
+AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile rpm/dvisvgm.spec rpm/Makefile])
+AC_OUTPUT
