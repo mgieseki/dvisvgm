@@ -94,13 +94,13 @@ DIST_SOURCES = $(libdvisvgm_a_SOURCES) $(dvisvgm_SOURCES) \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run aclocal-1.9
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run tar
-AUTOCONF = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run automake-1.9
+AMTAR = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run tar
+AUTOCONF = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run automake-1.9
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -127,7 +127,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lz -lm -lfreetype -lkpathsea 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/trunk/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/mgieseki/develop/cpp/dvisvgm/missing --run makeinfo
 OBJEXT = o
 PACKAGE = dvisvgm
 PACKAGE_BUGREPORT = martin.gieseking@uos.de
@@ -169,7 +169,7 @@ host_os = linux-gnu
 host_vendor = pc
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /home/mgieseki/develop/cpp/dvisvgm/trunk/install-sh
+install_sh = /home/mgieseki/develop/cpp/dvisvgm/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
@@ -222,9 +222,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  src/Makefile
+	  $(AUTOMAKE) --gnu  src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

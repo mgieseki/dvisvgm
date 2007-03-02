@@ -113,7 +113,7 @@ void DVIReader::error (string msg) const {
 int DVIReader::executeCommand () {
    /* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
    doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
-	DVI commands because they only differ in the size of their parameters. */
+	DVI commands because they only differ in length of their parameters. */
 	static const DVICommand commands[] = {
 		{&DVIReader::cmdSetChar, 1}, {&DVIReader::cmdSetChar, 2}, {&DVIReader::cmdSetChar, 3}, {&DVIReader::cmdSetChar, 4}, // 128-131
 		{&DVIReader::cmdSetRule, 0},                                                                                        // 132
