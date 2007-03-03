@@ -476,7 +476,7 @@ void DVIReader::cmdFontNum (int len) {
 
 
 void DVIReader::cmdFontDef (int len) {
-	UInt32 fontnum  = readUnsigned(len);   // number to which the font is assigned to
+	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
 	UInt32 scale    = readUnsigned(4);     // scale factor of font in DVI units
 	UInt32 dsize    = readUnsigned(4);     // design size of font in DVI units

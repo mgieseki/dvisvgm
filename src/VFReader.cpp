@@ -25,12 +25,6 @@
 
 using namespace std;
 
-struct VFCommand 
-{
-	void (VFReader::*method)(int);
-	int numBytes;
-};
-
 void VFReader::setFileFinder (FileFinder *ff) {
 	fileFinder = ff;
 }
@@ -42,6 +36,12 @@ VFReader::VFReader (istream &is) : in(is) {
 VFReader::~VFReader () {
 }
 
+
+VFActions* VFReader::replaceActions (VFActions *a) {
+	VFActions *ret = actions;
+	actions = a;
+	return ret;
+}
 
 
 /** Reads an unsigned integer from assigned input stream. 
@@ -99,7 +99,7 @@ int VFReader::executeCommand () {
 	if (opcode >= 0 && opcode <= 241)
 		cmdShortChar(opcode);
 	else if (opcode >= 243 && opcode <= 246)
-		cmdFontDef(opcode-243);
+		cmdFontDef(opcode-243+1);
 	else
 		switch (opcode) {
 			case 242: cmdLongChar(); break;
@@ -114,6 +114,15 @@ int VFReader::executeCommand () {
 	return opcode;
 }
 
+bool VFReader::executeAll () {
+  	in.clear();   // reset all status bits
+	if (!in)
+		return false;
+	in.seekg(0);  // move file pointer to first byte of the input stream
+	while (!in.eof() && executeCommand() != 248); // stop reading after post (248)
+	return true;
+
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -126,6 +135,8 @@ void VFReader::cmdPre () {
 	UInt32 ds  = readUnsigned(4);  // design size
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
+   if (actions)
+      actions->preamble(cmt, cs, ds);
 }
 
 
@@ -134,7 +145,8 @@ void VFReader::cmdLongChar () {
 	UInt32 cc  = readUnsigned(4); // character code
 	UInt32 tfm = readUnsigned(4); // character width from corresponding TFM file
 	UInt8 *dvi = new UInt8[pl];   // DVI subroutine
-	defineChar(cc, dvi);          // call template method for user actions
+   if (actions)
+   	actions->defineChar(cc, dvi);          // call template method for user actions
 }
 
 
@@ -145,11 +157,13 @@ void VFReader::cmdShortChar (int pl) {
 	UInt32 tfm = readUnsigned(3); // character width from corresponding TFM file
 	UInt8 *dvi = new UInt8[pl];   // DVI subroutine
 	defineChar(cc, dvi);          // call template method for user actions
+   if (actions)
+   	actions->defineChar(cc, dvi);          // call template method for user actions
 }
 
 
 void VFReader::cmdFontDef (int len) {
-	UInt32 fontnum  = readUnsigned(len);   // number to which the font is assigned to
+	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
 	UInt32 scale    = readUnsigned(4);     // scale factor of font in DVI units
 	UInt32 dsize    = readUnsigned(4);     // design size of font in DVI units
@@ -157,9 +171,9 @@ void VFReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	if (fontInfoMap.find(fontnum) == fontInfoMap.end())  // font not defined yet?
-		fontInfoMap[fontnum] = new FontInfo(fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
-	if (actions)
-		actions->defineFont(fontnum, fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
+   if (fontManager)
+      fontManager->addFont(fontnum, fontname, checksum, dsize, scale);
+   if (actions)
+      actions->defineFont(fontnum, fontname, checksum, dsize, scale);
 }
 
