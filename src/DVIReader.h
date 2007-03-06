@@ -119,7 +119,7 @@ class DVIReader
 	private:
 		istream &in;
 		DVIActions *actions;
-		bool inPage;         // true if after bop 
+		bool inPage;         // true if between bop and eop
 		UInt16 totalPages;   // total number of pages in dvi file
 		int currFontNum;     // current font number
 		double scaleFactor;  // 1 dvi unit = scaleFactor * TeX points

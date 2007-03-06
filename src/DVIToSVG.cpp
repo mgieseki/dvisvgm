@@ -79,12 +79,12 @@ DVIToSVG::~DVIToSVG () {
 }
 
 /** Starts the conversion process. 
- *  @return number of pages written */
+ *  @return number of processed pages */
 int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	executePostamble();    // collect scaling and font information
 	if (firstPage > getTotalPages()) {
 		ostringstream oss;
-		oss << "file consists only of " << getTotalPages() << " page(s)";
+		oss << "file contains only " << getTotalPages() << " page(s)";
 		throw DVIException(oss.str());
 	}	
 	if (firstPage < 0)
