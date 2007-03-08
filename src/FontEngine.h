@@ -46,11 +46,8 @@ struct FEGlyphCommands
 };
 
 
-/** This class provides methods to handle font files and font data. It's a wrapper
- *  for the fantastic Freetype font library.
- *  @author Martin Gieseking 
- *  @version $Revision: 1.2 $, $Date: 2006/01/05 16:05:06 $ 
- */
+/** This class provides methods to handle font files and font data. 
+ *  It's a wrapper for the Freetype font library. */
 class FontEngine
 {
    public:

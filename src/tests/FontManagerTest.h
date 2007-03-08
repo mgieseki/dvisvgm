@@ -1,8 +1,8 @@
 /***********************************************************************
-** StreamCounterTest.h                                                **
+** FontManagerTest.h                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2006 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: StreamCounterTest.h 4 2006-04-12 10:58:30Z mgieseki $
+// $Id$
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
