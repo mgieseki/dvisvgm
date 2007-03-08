@@ -116,10 +116,10 @@ class PhysicalFontImpl : public PhysicalFont
 
 	private:
 		mutable TFM *_tfm;
-		UInt32 checksum;
-		string _name; ///< fontname
-		double dsize; ///< design size in TeX point units
-		double ssize; ///< scaled size
+		string _name;    ///< fontname
+		UInt32 checksum; ///< cheksum to be compared with TFM checksum
+		double dsize;    ///< design size in TeX point units
+		double ssize;    ///< scaled size
 };
 
 
@@ -173,10 +173,10 @@ class VirtualFontImpl : public VirtualFont
 	private:
 		map<int,int> num2id;
 		mutable TFM *_tfm;
-		UInt32 checksum;
-		string _name; ///< fontname
-		double dsize; ///< design size in TeX point units
-		double ssize; ///< scaled size
+		string _name;    ///< fontname
+		UInt32 checksum; ///< cheksum to be compared with TFM checksum
+		double dsize;    ///< design size in TeX point units
+		double ssize;    ///< scaled size
 };
 
 

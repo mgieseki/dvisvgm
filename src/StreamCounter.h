@@ -76,21 +76,25 @@ class StreamCounter
 			  countingBuf(new CountingStreamBuf<C,T>(stream.rdbuf()))
 		{
 			stream.rdbuf(countingBuf);
+			valid = true;
 		}
 		
 		~StreamCounter () {
-			targetStream.rdbuf(targetBuf);
+			if (valid)
+				targetStream.rdbuf(targetBuf);
 			delete countingBuf;
 		}
 
 		UInt64 count () const {return countingBuf->count();}
 		void reset ()         {countingBuf->reset();}
+		void invalidate ()    {valid = false;}
 	
 	protected:
 		StreamCounter (const StreamCounter &csf);
 		StreamCounter operator = (const StreamCounter &csf);
 			
 	private:
+		bool                      valid; ///< true if target stream is valid
 		std::basic_ios<C,T>       &targetStream;
 		std::basic_streambuf<C,T> *targetBuf;
 		CountingStreamBuf<C,T>    *countingBuf;
