@@ -1,3 +1,7 @@
+dvisvgm-0.5
+- added support for virtual fonts (vf files)
+- redesigned font handling
+
 dvisvgm-0.4.3
 - problem with changed freetype API (freetype version >= 2.2.1) has been fixed
 - updated MiKTeX support to version 2.5 

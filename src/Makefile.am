@@ -2,6 +2,7 @@
 ## Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de>
 ##
 ## Process this file with automake.
+## $Id$
 
 bin_PROGRAMS         = dvisvgm
 noinst_LIBRARIES     = libdvisvgm.a

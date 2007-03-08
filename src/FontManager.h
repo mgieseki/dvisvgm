@@ -40,6 +40,11 @@ class Font;
 class TFM;
 class VirtualFont;
 
+/** This class provides methods for an easy DVI font handling. 
+ *  DVI and VF files use local font numbers to reference fonts. For SVG output
+ *  we need a single list with unique IDs of all physical fonts. Characters of
+ *  virtual fonts are completely replaced by their DVI description so they don't
+ *  appear anywhere in the output. */
 class FontManager
 {
    public:
@@ -57,12 +62,11 @@ class FontManager
 		const vector<Font*>& getFonts () const {return fonts;}
 
    private:
-		map<UInt32,int>  num2index;
-		map<string, int> name2index;
-		vector<Font*>    fonts;
-		vector<TFM*>     tfms;
-		stack<const VirtualFont*> vfStack;
-		int selectedFontID;
+		map<UInt32,int>  num2index;        ///< DVI font number -> fontID
+		map<string, int> name2index;       ///< fontname -> fontID
+		vector<Font*>    fonts;            ///< all registered Fonts (index == fontID)
+		stack<const VirtualFont*> vfStack; ///< stack of currently processed virtual fonts
+		int selectedFontID;                ///< fontID of active font
 };
 
 

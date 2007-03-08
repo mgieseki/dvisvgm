@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: VFReader.cpp 16 2007-01-05 20:28:01Z mgieseki $
+// $Id$
 
 #include "VFReader.h"
 

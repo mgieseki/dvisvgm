@@ -2,11 +2,12 @@
 # Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
+# $Id$
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[0.4.3],[martin.gieseking@uos.de])
-DATE="December 2006"
-AC_REVISION($Revision$)
+AC_INIT([dvisvgm],[0.5],[martin.gieseking@uos.de])
+DATE="March 2007"
+AC_REVISION($Revision: 25 $)
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE

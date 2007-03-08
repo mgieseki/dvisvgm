@@ -41,8 +41,6 @@ FontManager::FontManager ()
 FontManager::~FontManager () {
 	FORALL(fonts, vector<Font*>::iterator, i)
 		delete *i;
-/*	FORALL(tfms, vector<TFM*>::iterator, i)
-		delete *i;*/
 }
 
 
@@ -129,13 +127,13 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 		}
 		if (newfont) {
 			fonts.push_back(newfont);
-			tfms.push_back(0);
 			num2index[fontnum] = newid;
 		}
 	}
 }
 
 
+//@@ do we need this?
 const Font* FontManager::selectFont (int n) {
 	int id = fontID(n);
 	if (id < 0)
@@ -145,12 +143,17 @@ const Font* FontManager::selectFont (int n) {
 }
 
 
+/** Enters a new virtual font frame. 
+ *  This method must be called before processing a VF character.
+ *  @param vf virtual font */
 void FontManager::enterVF (const VirtualFont *vf) {
 	if (vf)
 		vfStack.push(vf);
 }
 
-
+/** Leaves a previously entered virtual font frame. 
+ *  This method must be called after processing a VF character.
+ *  @throw FontException if there is no VF frame to leave */
 void FontManager::leaveVF () {
 	if (vfStack.empty())
 		throw FontException(""); // @@
