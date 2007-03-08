@@ -1,25 +1,4 @@
-/***********************************************************************
-** test-all.cpp                                                       **
-**                                                                    **
-** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
-**                                                                    **
-** This program is free software; you can redistribute it and/or      **
-** modify it under the terms of the GNU General Public License        **
-** as published by the Free Software Foundation; either version 2     **
-** of the License, or (at your option) any later version.             **
-**                                                                    **
-** This program is distributed in the hope that it will be useful,    **
-** but WITHOUT ANY WARRANTY; without even the implied warranty of     **
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      **
-** GNU General Public License for more details.                       **
-**                                                                    **
-** You should have received a copy of the GNU General Public License  **
-** along with this program; if not, write to the Free Software        **
-** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
-** Boston, MA 02110-1301, USA.                                        **
-***********************************************************************/
-// $Id$
+/* Generated file, do not edit */
 
 #ifndef CXXTEST_RUNNING
 #define CXXTEST_RUNNING
@@ -60,6 +39,25 @@ public:
  TestDescription_CalculatorTest_test_exceptions() : CxxTest::RealTestDescription( Tests_CalculatorTest, suiteDescription_CalculatorTest, 53, "test_exceptions" ) {}
  void runTest() { suite_CalculatorTest.test_exceptions(); }
 } testDescription_CalculatorTest_test_exceptions;
+
+#include "tests/FontManagerTest.h"
+
+static FontManagerTest suite_FontManagerTest;
+
+static CxxTest::List Tests_FontManagerTest = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_FontManagerTest( "tests/FontManagerTest.h", 29, "FontManagerTest", suite_FontManagerTest, Tests_FontManagerTest );
+
+static class TestDescription_FontManagerTest_test_fontID : public CxxTest::RealTestDescription {
+public:
+ TestDescription_FontManagerTest_test_fontID() : CxxTest::RealTestDescription( Tests_FontManagerTest, suiteDescription_FontManagerTest, 39, "test_fontID" ) {}
+ void runTest() { suite_FontManagerTest.test_fontID(); }
+} testDescription_FontManagerTest_test_fontID;
+
+static class TestDescription_FontManagerTest_test_getFont : public CxxTest::RealTestDescription {
+public:
+ TestDescription_FontManagerTest_test_getFont() : CxxTest::RealTestDescription( Tests_FontManagerTest, suiteDescription_FontManagerTest, 46, "test_getFont" ) {}
+ void runTest() { suite_FontManagerTest.test_getFont(); }
+} testDescription_FontManagerTest_test_getFont;
 
 #include "tests/StreamCounterTest.h"
 

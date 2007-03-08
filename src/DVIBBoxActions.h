@@ -22,8 +22,8 @@
 // $Id$
 
 #include "BoundingBox.h"
-#include "FontInfo.h"
 #include "DVIActions.h"
+#include "Font.h"
 
 #ifndef DVIBBOXACTIONS_H
 #define DVIBBOXACTIONS_H
@@ -33,11 +33,11 @@ class DVIBBoxActions : public DVIActions
    public:
       DVIBBoxActions (BoundingBox &bb) : bbox(bb) {}
 		
-		void setChar (double x, double y, unsigned c, const FontInfo *fi) {
-			if (fi) {
-				double w = fi->charWidth(c);
-				double h = fi->charHeight(c);
-				double d = fi->charDepth(c);
+		void setChar (double x, double y, unsigned c, const Font *font) {
+			if (font) {
+				double w = font->charWidth(c);
+				double h = font->charHeight(c);
+				double d = font->charDepth(c);
 				BoundingBox charbox(x, y-h, x+w, y+d);
 				bbox.embed(charbox);
 			}

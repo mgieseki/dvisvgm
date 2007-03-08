@@ -30,7 +30,8 @@
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "FileFinder.h"
-#include "FontInfo.h"
+#include "Font.h"
+#include "FontManager.h"
 #include "FontMap.h"
 #include "Message.h"
 #include "PageSize.h"
@@ -125,11 +126,13 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	styleElement->addAttribute("type", "text/css");
 	svgElement->append(styleElement);
 	ostringstream style;
-	FORALL(getFontInfoMap(), ConstIterator, i) {
-		const char *fontname = i->second->getFontName().c_str();
-		style << "text.f" << i->first << ' '
-			   << "{font-family:" << fontname
-				<< ";font-size:"   << i->second->getScaledSize() << "}\n";
+	FORALL(getFontManager()->getFonts(), vector<Font*>::const_iterator, i) {
+//	FORALL(getFontInfoMap(), ConstIterator, i) {
+//		const char *fontname = i->second->getFontName().c_str();
+		style << "text.f"        << getFontManager()->fontID(*i) << ' '
+			   << "{font-family:" << (*i)->name()
+				<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+//				<< ";font-size:"   << i->second->getScaledSize() << "}\n";
 	}
 /*	if (separateFonts)
 		FORALL(getFontInfoMap(), ConstIterator, i) {
@@ -189,9 +192,9 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	if (!svgElement)
 		return; 
 
-	map<string, FontInfo*> nameToFontInfoMap;
-	FORALL(getFontInfoMap(), ConstIterator, i)
-		nameToFontInfoMap[i->second->getFontName()] = i->second;
+//	map<string, FontInfo*> nameToFontInfoMap;
+//	FORALL(getFontInfoMap(), ConstIterator, i)
+//		nameToFontInfoMap[i->second->getFontName()] = i->second;
 
 	if (!getActions())  // no dvi actions => no chars written => no fonts to embed
 		return;
@@ -218,7 +221,8 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			emitter.emitFont(i->second, i->first);
 		}
 		else {
-			const TFM *tfm = nameToFontInfoMap[i->first]->getTFM();
+//			const TFM *tfm = nameToFontInfoMap[i->first]->getTFM();
+			const TFM *tfm = getFontManager()->getFont(i->first)->getTFM();
 			SVGFontTraceEmitter emitter(i->first, tfm, *cmt, defs, getFileFinder());
 			emitter.setMag(mag);
 			if (emitter.emitFont(i->second, i->first) > 0)

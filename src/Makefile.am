@@ -10,16 +10,16 @@ dvisvgm_SOURCES      = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 							  dvisvgm.cpp gzstream.cpp
 							  
 dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
-dvisvgm_DEPENDENCIES = @EXTRA_LIBS@
+dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
-   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h FontEmitter.h \
-	FontEngine.h FontGlyph.h FontInfo.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
+   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h Font.h FontEmitter.h \
+	FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
 	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h XMLDocTypeNode.h XMLDocument.h XMLNode.h \
 	XMLString.h Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp \
-	DVIToSVG.cpp DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp FontEngine.cpp FontGlyph.cpp FontInfo.cpp \
-	FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
+	DVIToSVG.cpp DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
+  	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
 	PageSize.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp XMLDocument.cpp \
 	XMLNode.cpp XMLString.cpp
 
@@ -48,7 +48,8 @@ check_PROGRAMS = test-all
 TESTS = test-all
 
 # the tests that should be executed are described in the following header files
-test_all_headers = tests/CalculatorTest.h tests/StreamCounterTest.h tests/PageSizeTest.h
+test_all_headers = tests/CalculatorTest.h tests/FontManagerTest.h tests/StreamCounterTest.h \
+						 tests/PageSizeTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 
 test_all_LDADD        = $(noinst_LIBRARIES)

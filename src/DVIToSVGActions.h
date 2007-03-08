@@ -44,7 +44,7 @@ class DVIToSVGActions : public DVIActions
 	public:
 		DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem);
 		~DVIToSVGActions ();
-		void setChar (double x, double y, unsigned c, const FontInfo *fi);
+		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void moveToX (double x) {xmoved = true;}
 		void moveToY (double y) {ymoved = true;}

@@ -36,12 +36,6 @@ using std::map;
 using std::stack;
 using std::string;
 
-struct DVIPosition
-{
-	int h, v;
-	int x, w, y, z;
-};
-
 struct DVIException : public MessageException
 {
 	DVIException (const string &msg) : MessageException(msg) {}
@@ -49,14 +43,23 @@ struct DVIException : public MessageException
 
 class DVIActions;
 class FileFinder;
-class FontInfo;
+class FontManager;
+//class FontInfo;
 
 class DVIReader
 {
+	struct DVIPosition
+	{
+		int h, v;
+		int x, w, y, z;
+		DVIPosition () {reset();}
+		void reset ()  {h = v = x = w = y = z = 0;}
+	};
+
 	protected:
-		typedef map<int,FontInfo*> FontInfoMap;
-		typedef map<int,FontInfo*>::iterator Iterator;
-		typedef map<int,FontInfo*>::const_iterator ConstIterator;
+//		typedef map<int,FontInfo*> FontInfoMap;
+//		typedef map<int,FontInfo*>::iterator Iterator;
+//		typedef map<int,FontInfo*>::const_iterator ConstIterator;
 	
 	public:
 		DVIReader (istream &is, DVIActions *a=0);
@@ -68,14 +71,14 @@ class DVIReader
 		void executePostamble ();
 		bool executePage (unsigned n);
 		bool isInPostamble () const               {return inPostamble;}
-		const FontInfo* getFontInfo () const;
+//		const FontInfo* getFontInfo () const;
 		double getXPos () const;
 		double getYPos () const;
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const         {return currFontNum;}
 		unsigned getTotalPages () const           {return totalPages;}
-		const FontInfoMap& getFontInfoMap() const {return fontInfoMap;}
+//		const FontInfoMap& getFontInfoMap() const {return fontInfoMap;}
 		DVIActions* getActions () const           {return actions;}
 		DVIActions* replaceActions (DVIActions *a);
 
@@ -84,7 +87,9 @@ class DVIReader
 		UInt32 readUnsigned (int bytes);
 		Int32 readSigned (int bytes);
 		string readString (int length);
-		const FileFinder* getFileFinder () const {return fileFinder;}
+		void putChar (UInt32 c, bool moveCursor);
+		const FileFinder* getFileFinder () const   {return fileFinder;}
+		const FontManager* getFontManager () const {return fontManager;}
 		
 		// the following methods represent the DVI commands 
 		// they are called by executeCommand and should not be used directly
@@ -127,9 +132,10 @@ class DVIReader
 		Int32 prevBop;       // pointer to previous bop
 		UInt32 pageHeight, pageWidth;  // page height and width in dvi units
 		DVIPosition currPos;
-		stack<DVIPosition> posStack;	
-		FontInfoMap fontInfoMap;
-		FileFinder* fileFinder;
+		stack<DVIPosition> posStack;
+		FontManager *fontManager;
+//		FontInfoMap fontInfoMap;
+		FileFinder *fileFinder;
 };
 
 #endif

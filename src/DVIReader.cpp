@@ -28,8 +28,10 @@
 #include "types.h"
 #include "DVIActions.h"
 #include "DVIReader.h"
-#include "FontInfo.h"
+#include "Font.h"
+#include "FontManager.h"
 #include "Message.h"
+#include "macros.h"
 
 using namespace std;
 
@@ -39,28 +41,32 @@ struct DVICommand
 	int numBytes;
 };
 
-void DVIReader::setFileFinder (FileFinder *ff) {
-	fileFinder = ff;
-}
-
 DVIReader::DVIReader (istream &is, DVIActions *a) : in(is), actions(a) {
 	inPage = false;
 	pageHeight = pageWidth = 0;
 	scaleFactor = 0.0;
 	inPostamble = false;
+	fontManager = new FontManager;
 }
 
 
 DVIReader::~DVIReader () {
-	for (map<int, FontInfo*>::iterator i=fontInfoMap.begin(); i != fontInfoMap.end(); ++i)
-		delete i->second;
+	delete fontManager;
+/*	for (map<int, FontInfo*>::iterator i=fontInfoMap.begin(); i != fontInfoMap.end(); ++i)
+		delete i->second;*/
+}
+
+
+void DVIReader::setFileFinder (FileFinder *ff) {
+	fileFinder = ff;
 }
 
 
 DVIActions* DVIReader::replaceActions (DVIActions *a) {
-	DVIActions *ret = actions;
+	SHOW(a);
+	DVIActions *prev_actions = actions;
 	actions = a;
-	return ret;
+	return prev_actions;
 }
 
 
@@ -159,6 +165,7 @@ int DVIReader::executeCommand () {
 	return opcode;
 }
 
+
 /** Executes all DVI commands from the preamble to postpost. */
 bool DVIReader::executeDocument () {
 	in.clear();   // reset all status bits
@@ -225,6 +232,7 @@ void DVIReader::executePostamble () {
 }
 
 
+#if 0
 /** Returns the FontInfo for a given font number. 
  *  @param num number of font 
  *  @return assigned FontInfo or 0 if font number is undefined */
@@ -234,6 +242,7 @@ const FontInfo* DVIReader::getFontInfo () const {
 		return it->second;
 	return 0;
 }
+#endif
 
 /** Returns the current x coordinate in TeX point units. 
  *  This is the horizontal position where the next output would be placed. */
@@ -308,8 +317,8 @@ void DVIReader::cmdBop (int) {
 	Int32 c[10];
 	for (int i=0; i < 10; i++)
 		c[i] = readSigned(4);
-	readSigned(4);                 // pointer to peceeding bop (-1 in case of first page)
-	currPos.h = currPos.v = currPos.x = currPos.y = currPos.w = currPos.z = 0;
+	readSigned(4);        // pointer to peceeding bop (-1 in case of first page)
+	currPos.reset();      // set all DVI registers to 0
 	while (!posStack.empty())
 		posStack.pop();
 	currFontNum = 0;
@@ -343,62 +352,82 @@ void DVIReader::cmdPop (int) {
 		DVIPosition prevPos = currPos;
 		currPos = posStack.top();
 		posStack.pop();
-		if (actions && prevPos.h != currPos.h)
-			actions->moveToX(currPos.h*scaleFactor);
-		if (actions && prevPos.v != currPos.v)
-			actions->moveToY(currPos.v*scaleFactor);
+		if (actions) {
+			if (prevPos.h != currPos.h)
+				actions->moveToX(currPos.h*scaleFactor);
+			if (prevPos.v != currPos.v)
+				actions->moveToY(currPos.v*scaleFactor);
+		}
 	}
 }
 
 
-/** Reads and executes set_char_x command. Puts a character at the current 
- *  position and advances the cursor. 
- *  @param c character to set */
-void DVIReader::cmdSetChar0 (UInt32 c) {
-	if (inPage) {
-		FontInfo *fontInfo = fontInfoMap[currFontNum];
+/** Helper function that actually sets/puts a charater. It is called by the
+ *  cmdSetChar and cmdPutChar methods.
+ * @param c character to typeset
+ * @param moveCursor if true, register h is increased by the character width 
+ * @throw DVIException if method is called ouside a bop/eop pair */
+void DVIReader::putChar (UInt32 c, bool moveCursor) {
+	if (inPage) {   
+		const Font *font = fontManager->getFont(currFontNum);
+		const VirtualFont *vf = dynamic_cast<const VirtualFont*>(font);
+		if (vf) {    // is current font a virtual font?
+//			UInt8 *dvi = vf->getDVI(c); // get DVI snippet that describes character c
+			fontManager->enterVF(vf);   // new font number context
+			DVIPosition pos = currPos;  // save current cursor position
+			currPos.x = currPos.y = currPos.w = currPos.z = 0;
+			int fontnum = currFontNum;  // save current font number
+//			currFontNum = vf->firstFontNum();
+//			execute(dvi);               // execute DVI snippet
+			currFontNum = fontnum;      // restore previous font number
+			currPos = pos;              // restore previous cursor position
+			fontManager->leaveVF();     // restore previous font number context
+		}
 		if (actions)
-			actions->setChar(currPos.h*scaleFactor, currPos.v*scaleFactor, c, fontInfo);
-		currPos.h += UInt32(fontInfo->charWidth(c) / scaleFactor * fontInfo->scaleFactor() + 0.5);
-//		fontInfo->setCharUsed(c);
+			actions->setChar(currPos.h*scaleFactor, currPos.v*scaleFactor, c, font);
+		if (moveCursor)
+			currPos.h += UInt32(font->charWidth(c) / scaleFactor * font->scaleFactor() + 0.5);
 	}
 	else
-		throw DVIException("set_char outside of page");
+		throw DVIException("set_char or put_char outside page");
+}
+
+/** Reads and executes set_char_x command. Puts a character at the current 
+ *  position and advances the cursor. 
+ *  @param c character to set 
+ *  @throw DVIException if method is called ouside a bop/eop pair */
+void DVIReader::cmdSetChar0 (UInt32 c) {
+	putChar(c, true);
 }
 
 
 /** Reads and executes setx command. Puts a character at the current 
  *  position and advances the cursor. 
- *  @param len number of parameter bytes (possible values: 1-4) */
+ *  @param len number of parameter bytes (possible values: 1-4)
+ *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetChar (int len) {	
    // According to the dvi specification all character codes are unsigned 
    // except len == 4. At the moment all char codes are treated as unsigned...
 	UInt32 c = readUnsigned(len); // if len == 4 c may be signed
-	cmdSetChar0(c);
+	putChar(c, true);
 }
 
 
 /** Reads and executes putx command. Puts a character at the current 
  *  position but doesn't change the cursor position. 
- *  @param len number of parameter bytes (possible values: 1-4) */
+ *  @param len number of parameter bytes (possible values: 1-4)
+ *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutChar (int len) {
    // According to the dvi specification all character codes are unsigned 
    // except len == 4. At the moment all char codes are treated as unsigned...
-	if (inPage) {
-		Int32 c = readUnsigned(len);
-		if (actions) {
-			FontInfo *fontInfo = fontInfoMap[currFontNum];
-			actions->setChar(currPos.h*scaleFactor, currPos.v*scaleFactor, c, fontInfo);
-		}
-//		fontInfoMap[currFontNum]->setCharUsed(c);
-	}
-	else
-		throw DVIException("put_char outside of page");
+	Int32 c = readUnsigned(len);
+	putChar(c, false);
 }
 
 
 /** Reads and executes set_rule command. Puts a solid rectangle at the current 
- *  position and updates the cursor position. */
+ *  position and updates the cursor position. 
+ *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
 	if (inPage) {
 		int height = readSigned(4);
@@ -415,7 +444,8 @@ void DVIReader::cmdSetRule (int) {
 
 
 /** Reads and executes set_rule command. Puts a solid rectangle at the current 
- *  position but leaves the cursor position unchanged. */
+ *  position but leaves the cursor position unchanged. 
+ *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
 	if (inPage) {
 		int height = readSigned(4);
@@ -454,27 +484,34 @@ void DVIReader::cmdXXX (int len) {
 }
 
 
+/** Selects a previously defined font by its number. 
+ * @param num font number 
+ * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	if (fontInfoMap.find(num) == fontInfoMap.end()) {
+	const Font *font = fontManager->selectFont(num);
+	if (!font) {
 		ostringstream oss;
 		oss << "font number " << num << " undefined";
 		throw DVIException(oss.str());
 	}
-	else {
-		currFontNum = num;
-		fontInfoMap[num]->readTFM(fileFinder);  // read font metrics if necessary
-		if (actions)
-			actions->setFont(num);
-	}
+	currFontNum = num;
+	if (actions)
+		actions->setFont(fontManager->fontID(num));  // all actions get a recomputed font number
+	//		fontInfoMap[num]->readTFM(fileFinder);  // read font metrics if necessary
 }
 
 
+/** Selects a previously defined font.
+ * @param len size of font number variable (in bytes) 
+ * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum (int len) {
 	UInt32 num = readUnsigned(len);
 	cmdFontNum0(num);	
 }
 
 
+/** Defines a new font. 
+ * @param len size of font number variable (in bytes) */
 void DVIReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
@@ -484,9 +521,10 @@ void DVIReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	if (fontInfoMap.find(fontnum) == fontInfoMap.end())  // font not defined yet?
-		fontInfoMap[fontnum] = new FontInfo(fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
-	if (actions)
-		actions->defineFont(fontnum, fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
+	fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
+//	if (fontInfoMap.find(fontnum) == fontInfoMap.end())  // font not defined yet?
+//		fontInfoMap[fontnum] = new FontInfo(fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
+	if (actions) 
+		actions->defineFont(fontManager->fontID(fontnum), fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
 }
 

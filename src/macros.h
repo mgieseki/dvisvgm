@@ -42,4 +42,7 @@
 		return obj.write(os);                                         \
 	}
 
+#include <iostream>
+#define SHOW(x) std::cerr << __FILE__ ", " << __LINE__ << ": " << #x << "=" << (x) << std::endl
+
 #endif

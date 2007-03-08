@@ -24,8 +24,8 @@
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
 #include "DVIReader.h"
-#include "FontInfo.h"
 #include "DVIToSVGActions.h"
+#include "Font.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -57,8 +57,9 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
  *  @param x horizontal position of left bounding box edge 
  *  @param y vertical position of the character's baseline 
  *  @param c character code relative to the current font */
-void DVIToSVGActions::setChar (double x, double y, unsigned c, const FontInfo *fontInfo) {
-	const string &fontname = fontInfo->getFontName();
+void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
+	SHOW(c);
+	string fontname = font->name();
 	const CharmapTranslator *cmt = charmapTranslatorMap[fontname];
 	usedCharsMap[fontname].insert(c);
 	XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	

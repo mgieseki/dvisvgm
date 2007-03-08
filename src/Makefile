@@ -57,10 +57,10 @@ am_libdvisvgm_a_OBJECTS = Bitmap.$(OBJEXT) BoundingBox.$(OBJEXT) \
 	Calculator.$(OBJEXT) CharmapTranslator.$(OBJEXT) \
 	DVIReader.$(OBJEXT) DVIToSVG.$(OBJEXT) \
 	DVIToSVGActions.$(OBJEXT) FileFinder.$(OBJEXT) \
-	FileSystem.$(OBJEXT) FontEngine.$(OBJEXT) FontGlyph.$(OBJEXT) \
-	FontInfo.$(OBJEXT) FontMap.$(OBJEXT) GFReader.$(OBJEXT) \
-	GFTracer.$(OBJEXT) KPSFileFinder.$(OBJEXT) Message.$(OBJEXT) \
-	MetafontWrapper.$(OBJEXT) PageSize.$(OBJEXT) \
+	FileSystem.$(OBJEXT) Font.$(OBJEXT) FontEngine.$(OBJEXT) \
+	FontGlyph.$(OBJEXT) FontManager.$(OBJEXT) FontMap.$(OBJEXT) \
+	GFReader.$(OBJEXT) GFTracer.$(OBJEXT) KPSFileFinder.$(OBJEXT) \
+	Message.$(OBJEXT) MetafontWrapper.$(OBJEXT) PageSize.$(OBJEXT) \
 	SVGFontEmitter.$(OBJEXT) SVGFontTraceEmitter.$(OBJEXT) \
 	TFM.$(OBJEXT) TransformationMatrix.$(OBJEXT) \
 	XMLDocument.$(OBJEXT) XMLNode.$(OBJEXT) XMLString.$(OBJEXT)
@@ -132,15 +132,15 @@ OBJEXT = o
 PACKAGE = dvisvgm
 PACKAGE_BUGREPORT = martin.gieseking@uos.de
 PACKAGE_NAME = dvisvgm
-PACKAGE_STRING = dvisvgm 0.4.3
+PACKAGE_STRING = dvisvgm 0.5
 PACKAGE_TARNAME = dvisvgm
-PACKAGE_VERSION = 0.4.3
+PACKAGE_VERSION = 0.5
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = 
-VERSION = 0.4.3
+VERSION = 0.5
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 ac_ct_RANLIB = ranlib
@@ -187,15 +187,15 @@ dvisvgm_SOURCES = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 							  dvisvgm.cpp gzstream.cpp
 
 dvisvgm_LDADD = $(noinst_LIBRARIES)  ../potracelib/libpotrace.a
-dvisvgm_DEPENDENCIES = 
+dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
-   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h FontEmitter.h \
-	FontEngine.h FontGlyph.h FontInfo.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
+   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h Font.h FontEmitter.h \
+	FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
 	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h XMLDocTypeNode.h XMLDocument.h XMLNode.h \
 	XMLString.h Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp \
-	DVIToSVG.cpp DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp FontEngine.cpp FontGlyph.cpp FontInfo.cpp \
-	FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
+	DVIToSVG.cpp DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
+  	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
 	PageSize.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp XMLDocument.cpp \
 	XMLNode.cpp XMLString.cpp
 
@@ -205,7 +205,9 @@ EXTRA_DIST = miktex-kps.h miktex-core.def miktex-kps.def options.ggo getopt.h ge
 TESTS = test-all
 
 # the tests that should be executed are described in the following header files
-test_all_headers = tests/CalculatorTest.h tests/StreamCounterTest.h tests/PageSizeTest.h
+test_all_headers = tests/CalculatorTest.h tests/FontManagerTest.h tests/StreamCounterTest.h \
+						 tests/PageSizeTest.h
+
 test_all_SOURCES = $(test_all_headers) test-all.cpp 
 test_all_LDADD = $(noinst_LIBRARIES)
 test_all_DEPENDENCIES = $(noinst_LIBRARIES)
@@ -222,9 +224,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/Makefile
+	  $(AUTOMAKE) --foreign  src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -297,9 +299,10 @@ include ./$(DEPDIR)/DVIToSVG.Po
 include ./$(DEPDIR)/DVIToSVGActions.Po
 include ./$(DEPDIR)/FileFinder.Po
 include ./$(DEPDIR)/FileSystem.Po
+include ./$(DEPDIR)/Font.Po
 include ./$(DEPDIR)/FontEngine.Po
 include ./$(DEPDIR)/FontGlyph.Po
-include ./$(DEPDIR)/FontInfo.Po
+include ./$(DEPDIR)/FontManager.Po
 include ./$(DEPDIR)/FontMap.Po
 include ./$(DEPDIR)/GFReader.Po
 include ./$(DEPDIR)/GFTracer.Po

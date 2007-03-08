@@ -26,6 +26,9 @@
 #include "KPSFileFinder.h"
 
 
+const char *KPSFileFinder::progname = 0;
+
+
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
 #else
@@ -38,7 +41,7 @@
 	using namespace KPS;
 #endif
 
-KPSFileFinder::KPSFileFinder (const char *progname) {
+KPSFileFinder::KPSFileFinder () {
 #ifndef MIKTEX
 	kpse_set_program_name(progname, NULL);
 #endif
@@ -60,6 +63,8 @@ const char* KPSFileFinder::lookup (const std::string &fname) const {
 		formatType = kpse_tfm_format;
 	else if (ext == "pfb")
 		formatType = kpse_type1_format;
+	else if (ext == "vf")
+		formatType = kpse_vf_format;
 	else if (ext == "mf")
 #ifdef MIKTEX
 		formatType = kpse_miscfonts_format;  // this is a bug, I think

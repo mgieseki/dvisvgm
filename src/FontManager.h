@@ -26,100 +26,46 @@
 
 #include <map>
 #include <string>
+#include <stack>
+#include <vector>
+#include "types.h"
 
 using std::map;
 using std::string;
+using std::stack;
+using std::vector;
 
-struct Font
-{
-	virtual ~Font () {}
-	virtual Font* clone () const =0;
-	virtual bool isVirtual () const =0;
-	virtual double charWidth (int c) const =0;
-	virtual double charDepth (int c) const =0;
-	virtual double charHeight (int c) const =0;
-};
-
-
-class FontBase : public Font
-{
-	public:
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-
-	protected:
-		TFM* getTFM () const {return tfm;}
-
-	private:
-		TFM *tfm;
-};
-
-
-class PhysicalFont : public FontBase
-{
-	enum Type {MF, PFB, TTF};
-	public:
-		PhysicalFont (string name, Type type);
-		Font* clone () const     {return PhysicalFontRef(*this);}
-		bool isVirtual () const  {return false;}
-};
-
-
-class PhysicalFontRef : public Font
-{
-	public:
-		PhysicalFontRef (PhysicalFont &pf) : pfont(pf) {}
-		bool isVirtual () const {return false;}
-
-	private:
-		PhysicalFont &pfont;
-};
-
-class VirtualFontRef;
-
-class VirtualFont : public Font
-{
-	public:
-		VirtualFont (string name);
-		~VirtualFont ();
-		Font* clone () const    {return new VirtualFontRef(*this);}
-		bool isVirtual () const {return true;}
-		void setChar (int c, DVIReader &dviReader) const;
-
-	private:
-		map<int, Font*> fontDefs;
-		map<int, Byte*> charDefs;
-};
-
-
-class VirtualFontRef : public Font
-{
-	public:
-		VirtualFontRef (VirtualFont &vf) : vfont(vf) {}
-		bool isVirtual () const {return true;}
-	private:
-		VirtualFont &vfont;
-};
-
-////////////////////////////////////////////////////////
-
+class FileFinder;
+class Font;
 class TFM;
+class VirtualFont;
 
 class FontManager
 {
    public:
       FontManager ();
       ~FontManager ();
-		int addFont (int n, string name);
+		void registerFont (UInt32 fontnum, string fontname, UInt32 checksum, double dsize, double scale);
+		const Font* selectFont (int n);
 		const Font* getFont (int n) const;
-		int getIndex (int n) const;
+		const Font* getFont (string name) const;
+		int fontID (int n) const;
+		int fontID (Font *font) const;
+		int fontID (string name) const;
+		void enterVF (const VirtualFont *vf);
+		void leaveVF ();
+		const vector<Font*>& getFonts () const {return fonts;}
 
    private:
-		map<int,int>   num2index;
-		map<name, int> name2index;
-		vector<Font*>  fonts;
-		vector<TFM*>   tfms;
+		map<UInt32,int>  num2index;
+		map<string, int> name2index;
+		vector<Font*>    fonts;
+		vector<TFM*>     tfms;
+		stack<const VirtualFont*> vfStack;
+		int selectedFontID;
 };
+
+
+
 
 #endif

@@ -138,7 +138,8 @@ static int dvisvgm (int argc, char *argv[]) {
 		StreamCounter<char> sc(*out);
 		Message::level = args.verbosity_arg;
 		DVIToSVG dvisvg(ifs, *out);
-		KPSFileFinder kps(argv[0]);
+		KPSFileFinder::progname = argv[0];
+		KPSFileFinder kps;
 		dvisvg.setFileFinder(&kps);
 		dvisvg.setMetafontMag(args.mag_arg);
 		dvisvg.setProcessSpecials(args.specials_flag);

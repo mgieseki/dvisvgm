@@ -74,3 +74,4 @@ ostream& Message::estream (bool prefix) {
 		*os << "ERROR: ";
 	return *os;
 }
+

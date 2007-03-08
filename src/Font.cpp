@@ -21,9 +21,90 @@
 ***********************************************************************/
 // $Id$
 
+#include <iostream>
 #include "Font.h"
+#include "KPSFileFinder.h"
+#include "TFM.h"
 
 using namespace std;
 
 
+static TFM* create_tfm (string name) {
+	KPSFileFinder ff;
+	TFM *tfm = TFM::createFromFile(name.c_str(), &ff);
+	if (tfm)
+		return tfm;
+	throw FontException("can't find "+name+".tfm");
+}
 
+
+
+Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
+	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
+}
+
+
+Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ssize) {
+	return new VirtualFontImpl(name, checksum, dsize, ssize);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type) 
+	: _tfm(0), _name(name), checksum(cs), dsize(ds), ssize(ss)
+{
+}
+
+
+PhysicalFontImpl::~PhysicalFontImpl () {
+	delete _tfm;
+}
+
+
+const TFM* PhysicalFontImpl::getTFM () const {
+	if (!_tfm) 
+		_tfm = create_tfm(_name);
+	return _tfm;
+}
+
+
+double PhysicalFontImpl::charWidth (int c) const  {return getTFM()->getCharWidth(c);} 
+double PhysicalFontImpl::charDepth (int c) const  {return getTFM()->getCharDepth(c);} 
+double PhysicalFontImpl::charHeight (int c) const {return getTFM()->getCharHeight(c);} 
+
+//////////////////////////////////////////////////////////////////////////////
+
+VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss) 
+	: _tfm(0), _name(name), checksum(cs), dsize(ds), ssize(ss)
+{
+}
+
+
+VirtualFontImpl::~VirtualFontImpl () {
+	delete _tfm;
+}
+
+
+const TFM* VirtualFontImpl::getTFM () const {
+	if (!_tfm) 
+		_tfm = create_tfm(_name);
+	return _tfm;
+}
+
+
+double VirtualFontImpl::charWidth (int c) const  {return getTFM()->getCharWidth(c);} 
+double VirtualFontImpl::charDepth (int c) const  {return getTFM()->getCharDepth(c);} 
+double VirtualFontImpl::charHeight (int c) const {return getTFM()->getCharHeight(c);} 
+
+
+int VirtualFontImpl::fontID (int n) const {
+	return 0; // @@
+}
+
+int VirtualFontImpl::firstFontNum () const {
+	return 0; // @@
+}
+
+UInt8* VirtualFontImpl::getDVI (int c) const {
+	return 0; // @@
+}

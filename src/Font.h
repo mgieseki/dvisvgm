@@ -27,6 +27,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "MessageException.h"
 #include "types.h"
 
 using std::map;
@@ -43,8 +44,8 @@ struct Font
 	virtual ~Font () {}
 	virtual Font* clone (double ds, double sc) const =0;
 	virtual string name () const =0;
-	virtual double scaledSize () const =0;
 	virtual double designSize () const =0;
+	virtual double scaledSize () const =0;
 	virtual double scaleFactor () const        {return scaledSize()/designSize();}
 	virtual double charWidth (int c) const =0;
 	virtual double charDepth (int c) const =0;
@@ -57,33 +58,19 @@ struct Font
 struct PhysicalFont : public Font
 {
 	enum Type {MF, PFB, TTF};
-	static Font* create (string name, PhysicalFont::Type type);
+	static Font* create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 };
 
 
 /** Interface for all virtual fonts. */
 struct VirtualFont : public Font
 {
-	static Font* create (string name);
+	static Font* create (string name, UInt32 checksum, double dsize, double ssize);
 	virtual int fontID (int n) const =0;
 	virtual int firstFontNum () const =0;
 	virtual UInt8* getDVI (int c) const =0;
 };
 
-
-class TFM;
-class TFMFont : public Font
-{
-	public:
-		TFMFont (string name);
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-		const TFM* getTFM () const  {return tfm;}
-
-	private:
-		TFM *tfm;
-};
 
 
 class PhysicalFontProxy : public PhysicalFont
@@ -110,12 +97,29 @@ class PhysicalFontProxy : public PhysicalFont
 };
 
 
-class PhysicalFontImpl : public PhysicalFont, public TFMFont
+class PhysicalFontImpl : public PhysicalFont
 {
+	friend class PhysicalFont;
 	public:
-		PhysicalFontImpl (string name, Type type);
+		~PhysicalFontImpl ();
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
-		string name () const;
+		double designSize () const      {return dsize;}
+		double scaledSize () const      {return ssize;}
+		double charWidth (int c) const;
+		double charDepth (int c) const;
+		double charHeight (int c) const;
+		const TFM* getTFM () const;
+		string name () const            {return _name;}
+
+	protected:
+		PhysicalFontImpl (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+
+	private:
+		mutable TFM *_tfm;
+		UInt32 checksum;
+		string _name; ///< fontname
+		double dsize; ///< design size in TeX point units
+		double ssize; ///< scaled size
 };
 
 
@@ -146,19 +150,39 @@ class VirtualFontProxy : public VirtualFont
 };
 
 
-class VirtualFontImpl : public VirtualFont, public TFMFont
+class VirtualFontImpl : public VirtualFont
 {
+	friend class VirtualFont;
 	public:
+		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
-		string name () const;
+		double designSize () const      {return dsize;}
+		double scaledSize () const      {return ssize;}
+		double charWidth (int c) const;
+		double charDepth (int c) const;
+		double charHeight (int c) const;
+		string name () const            {return _name;}
 		int fontID (int n) const;
 		int firstFontNum () const;
 		UInt8* getDVI (int c) const;
+		const TFM* getTFM () const;
+
+	protected:
+		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
+
 	private:
 		map<int,int> num2id;
-//		vector<Byte*> charDefs;
+		mutable TFM *_tfm;
+		UInt32 checksum;
+		string _name; ///< fontname
+		double dsize; ///< design size in TeX point units
+		double ssize; ///< scaled size
 };
 
 
+struct FontException : public MessageException
+{
+	FontException (string msg) : MessageException(msg) {}
+};
 
 #endif

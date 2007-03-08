@@ -30,12 +30,12 @@
 
 using std::string;
 
-class FontInfo;
+class Font;
 
 struct DVIActions
 {
 	virtual ~DVIActions () {}
-	virtual void setChar (double x, double y, unsigned c, const FontInfo *fi) {}
+	virtual void setChar (double x, double y, unsigned c, const Font *f) {}
 	virtual void setRule (double x, double y, double height, double width) {}
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
