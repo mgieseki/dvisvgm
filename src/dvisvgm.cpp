@@ -154,7 +154,7 @@ static int dvisvgm (int argc, char *argv[]) {
 		try {
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 				if (!args.stdout_given) {
-					sc->invalidate(); // output buffer is no longer valid
+					sc.invalidate(); // output buffer is no longer valid
 					delete out;       // close file stream and force writing
 				}
 				out = 0;

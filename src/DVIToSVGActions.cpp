@@ -58,7 +58,6 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
  *  @param y vertical position of the character's baseline 
  *  @param c character code relative to the current font */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
-	SHOW(c);
 	string fontname = font->name();
 	const CharmapTranslator *cmt = charmapTranslatorMap[fontname];
 	usedCharsMap[fontname].insert(c);

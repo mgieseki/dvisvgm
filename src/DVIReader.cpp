@@ -63,7 +63,6 @@ void DVIReader::setFileFinder (FileFinder *ff) {
 
 
 DVIActions* DVIReader::replaceActions (DVIActions *a) {
-	SHOW(a);
 	DVIActions *prev_actions = actions;
 	actions = a;
 	return prev_actions;

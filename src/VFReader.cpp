@@ -21,15 +21,16 @@
 ***********************************************************************/
 // $Id$
 
+#include <sstream>
+#include "FontManager.h"
+#include "VFActions.h"
 #include "VFReader.h"
 
 using namespace std;
 
-void VFReader::setFileFinder (FileFinder *ff) {
-	fileFinder = ff;
-}
 
-VFReader::VFReader (istream &is) : in(is) {
+VFReader::VFReader (istream &is) 
+	: in(is), actions(0), fontManager(0) {
 }
 
 
@@ -83,7 +84,7 @@ string VFReader::readString (int length) {
 
 UInt8* VFReader::readBytes (int n, UInt8 *buf) {
 	if (n > 0)
-		in.read(buf, n);
+		in.read((char*)buf, n);
 	return buf;
 }
 
@@ -131,12 +132,20 @@ void VFReader::cmdPre () {
 	UInt32 i   = readUnsigned(1);  // identification number (should be 2)
 	UInt32 k   = readUnsigned(1);  // length of following comment 
 	string cmt = readString(k);    // comment
-	UInt32 cs  = readUnsigned(4);  // check sum
-	UInt32 ds  = readUnsigned(4);  // design size
+	UInt32 cs  = readUnsigned(4);  // check sum to be compared with TFM cecksum
+	UInt32 ds  = readUnsigned(4);  // design size (same as TFM design size)
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
    if (actions)
       actions->preamble(cmt, cs, ds);
+}
+
+
+void VFReader::cmdPost () {
+	UInt32 byte;
+	while ((readUnsigned(1)) == 248); // skip fill bytes
+	if (actions)
+		actions->postamble();
 }
 
 
@@ -156,7 +165,6 @@ void VFReader::cmdShortChar (int pl) {
 	UInt32 cc  = readUnsigned(1); // character code
 	UInt32 tfm = readUnsigned(3); // character width from corresponding TFM file
 	UInt8 *dvi = new UInt8[pl];   // DVI subroutine
-	defineChar(cc, dvi);          // call template method for user actions
    if (actions)
    	actions->defineChar(cc, dvi);          // call template method for user actions
 }
@@ -165,15 +173,15 @@ void VFReader::cmdShortChar (int pl) {
 void VFReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
-	UInt32 scale    = readUnsigned(4);     // scale factor of font in DVI units
-	UInt32 dsize    = readUnsigned(4);     // design size of font in DVI units
+	UInt32 ssize    = readUnsigned(4);     // scaled size of font relative to design size
+	UInt32 dsize    = readUnsigned(4);     // design size of font (same as TFM design size)
 	UInt32 pathlen  = readUnsigned(1);     // length of font path
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
    if (fontManager)
-      fontManager->addFont(fontnum, fontname, checksum, dsize, scale);
+      fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
    if (actions)
-      actions->defineFont(fontnum, fontname, checksum, dsize, scale);
+      actions->defineFont(fontnum, fontname, checksum, dsize, ssize);
 }
 

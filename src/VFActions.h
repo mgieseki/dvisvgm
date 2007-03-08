@@ -1,5 +1,5 @@
 /***********************************************************************
-** DVIReader.h                                                        **
+** VFActions.h                                                        **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
@@ -19,58 +19,23 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: DVIReader.h 16 2007-01-05 20:28:01Z mgieseki $
+// $Id$
 
-#ifndef VFREADER_H
-#define VFREADER_H
+#ifndef VFACTIONS_H
+#define VFACTIONS_H
 
-#include <istream>
-#include <map>
-#include <stack>
 #include <string>
-#include "MessageException.h"
 #include "types.h"
 
-using std::istream;
-using std::map;
-using std::stack;
 using std::string;
 
-struct VFException : public MessageException
+struct VFActions
 {
-	VFException (const string &msg) : MessageException(msg) {}
-};
-
-
-class FontManager;
-
-class VFReader
-{
-	public:
-		VFReader (istream &is);
-		virtual ~VFReader ();
-		VFActions* replaceActions (VFActions *a);
-		bool executeAll ();
-
-	protected:
-		int executeCommand ();
-		UInt32 readUnsigned (int bytes);
-		Int32 readSigned (int bytes);
-		string readString (int length);
-		UInt8* readBytes (int n, UInt8 *buf);
-		
-		// the following methods represent the VF commands 
-		// they are called by executeCommand and should not be used directly
-		void cmdPre ();
-		void cmdPost ();
-		void cmdShortChar (int pl);
-		void cmdLongChar ();
-		void cmdFontDef (int len);
-		
-	private:
-		istream &in;
-		VFActions *actions;
-		FontManager *fontManager;
+	virtual ~VFActions () {}
+	virtual void preamble (string comment, UInt32 checksum, double dsize);
+	virtual void postamble ();
+	virtual void defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
+	virtual void defineChar (UInt32 c, UInt8 *dvi);
 };
 
 #endif
