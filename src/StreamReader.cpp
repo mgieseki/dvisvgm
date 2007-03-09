@@ -1,5 +1,5 @@
 /***********************************************************************
-** TFM.h                                                              **
+** StreamReader.cpp                                                   **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
@@ -21,40 +21,53 @@
 ***********************************************************************/
 // $Id$
 
-#ifndef TFM_H
-#define TFM_H
+#include "StreamReader.h"
+#include "macros.h"
 
-#include <istream>
-#include <vector>
-#include "types.h"
+using namespace std;
 
-class FileFinder;
-
-class TFM
+StreamReader::StreamReader (istream &s) 
+	: is(&s)
 {
-   public:
-		TFM ();
-		TFM (std::istream &is);
-		static TFM* createFromFile (const char *fname);
-		static void setMetafontMag (double m) {mag = m;}
-		UInt16 getChecksum () const           {return checksum;}
-		double getDesignSize () const;
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		
-	protected:
-		bool readFromStream (std::istream &is);
+}
 
-   private:
-		UInt16 checksum;
-		UInt16 firstChar, lastChar;		
-		FixWord designSize; // design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  charInfoTable; // 
-		std::vector<FixWord> widthTable;    // character widths in design size units
-		std::vector<FixWord> heightTable;   // character widths in design size units
-		std::vector<FixWord> depthTable;    // character widths in design size units
-		static double mag;  // magnification used when Metafont is called
-};
+/** Reads an unsigned integer from assigned input stream. 
+ *  @param bytes number of bytes to read (max. 4)
+ *  @return read integer */
+UInt32 StreamReader::readUnsigned (int bytes) {
+	UInt32 ret = 0;
+	for (int i=bytes-1; i >= 0 && !is->eof(); i--) {
+		UInt32 b = is->get();
+		ret |= b << (8*i);
+	}
+	return ret;
+}
 
-#endif
+
+/** Reads an signed integer from assigned input stream. 
+ *  @param bytes number of bytes to read (max. 4)
+ *  @return read integer */
+UInt32 StreamReader::readSigned (int bytes) {
+	Int32 ret = is->get();
+	if (ret & 128)        // negative value?
+		ret |= 0xffffff00;
+	for (int i=bytes-2; i >= 0 && !is->eof(); i--) 
+		ret = (ret << 8) | is->get();
+	return ret;
+}
+
+
+string StreamReader::readString (int length) {
+	if (!is)
+		throw StreamReaderException("no stream assigned");
+	char *buf = new char[length+1];
+	if (length > 0)
+		is->get(buf, length+1);  // reads 'length' bytes (pos. length+1 is set to 0)
+	else
+		*buf = 0;
+	string ret = buf;
+	delete [] buf;
+	return ret;
+}
+
+

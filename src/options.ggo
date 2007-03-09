@@ -14,7 +14,7 @@ section "SVG output options"
 option "bbox-format"    b "set format of bounding box"               string typestr="fmt"      default="min" no
 option "output"         o "set name of output file"                  string typestr="filename"               no
 option "stdout"         s "write SVG output to stdout"                                                       no
-option "zip"            z "create compressed .svgz file"             int    typestr="level"    default="3"   no argoptional
+option "zip"            z "create compressed .svgz file"             int    typestr="level"    default="9"   no argoptional
 
 section "SVG transformations"
 option "rotate"         r "rotate page content clockwise"            double typestr="angle"                  no

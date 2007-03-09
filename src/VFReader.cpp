@@ -1,5 +1,5 @@
 /***********************************************************************
-** VFReader.cpp                                                      **
+** VFReader.cpp                                                       **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
@@ -30,7 +30,7 @@ using namespace std;
 
 
 VFReader::VFReader (istream &is) 
-	: in(is), actions(0), fontManager(0) {
+	: StreamReader(is), actions(0), fontManager(0) {
 }
 
 
@@ -44,85 +44,75 @@ VFActions* VFReader::replaceActions (VFActions *a) {
 	return ret;
 }
 
-
-/** Reads an unsigned integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
- *  @return read integer */
-UInt32 VFReader::readUnsigned (int bytes) {
-	UInt32 ret = 0;
-	for (int i=bytes-1; i >= 0 && !in.eof(); i--) {
-		UInt32 b = in.get();
-		ret |= b << (8*i);
-	}
-	return ret;
-}
-
-
-/** Reads an signed integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
- *  @return read integer */
-Int32 VFReader::readSigned (int bytes) {
-	Int32 ret = in.get();
-	if (ret & 128)        // negative value?
-		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !in.eof(); i--) 
-		ret = (ret << 8) | in.get();
-	return ret;
-}
-
-
-string VFReader::readString (int length) {
-	char *buf = new char[length+1];
-	if (length > 0)
-		in.get(buf, length+1);  // reads 'bytes' bytes (pos. length+1 is set to 0)
-	else
-		*buf = 0;
-	string ret = buf;
-	delete [] buf;
-	return ret;
-}
-
 UInt8* VFReader::readBytes (int n, UInt8 *buf) {
 	if (n > 0)
-		in.read((char*)buf, n);
+		in().read((char*)buf, n);
 	return buf;
 }
 
 
-/** Reads a single VF command from the current position of the input stream and calls the
- *  corresponding cmdFOO method.  
- *  @return opcode of the executed command */
-int VFReader::executeCommand () {
-	int opcode = in.get();
-	if (!in || opcode < 0)  // at end of file
-		throw VFException("invalid file");
 
-	if (opcode >= 0 && opcode <= 241)
+/** Reads a single VF command from the current position of the input stream and calls the
+ *  corresponding cmdFOO method. The execution can be influenced by a function of type ApproveOpcode.
+ *  It takes an opcode and returns true if the command is supposed to be executed.
+ *  @param approve function to approve invocation of the action assigned to command
+ *  @return opcode of the executed command */
+int VFReader::executeCommand (ApproveAction approve) {
+	int opcode = in().get();	
+	if (!in() || opcode < 0)  // at end of file
+		throw VFException("invalid file");
+	
+	bool approved = !approve || approve(opcode);
+	VFActions *act = actions;
+	if (!approved)
+		replaceActions(0);   // disable actions
+	
+	if (opcode >= 0 && opcode <= 241)          // short character definition?
 		cmdShortChar(opcode);
-	else if (opcode >= 243 && opcode <= 246)
+	else if (opcode >= 243 && opcode <= 246)   // font definition?
 		cmdFontDef(opcode-243+1);
-	else
+	else {
 		switch (opcode) {
-			case 242: cmdLongChar(); break;
-			case 247: cmdPre();      break;
-			case 248: cmdPost();     break;
-			default : {
+			case 242: cmdLongChar(); break;      // long character definition
+			case 247: cmdPre();      break;      // preamble
+			case 248: cmdPost();     break;      // postamble
+			default : {                          // invalid opcode
 				ostringstream oss; 
 				oss << "undefined VF command (opcode " << opcode << ')';
+				replaceActions(act);              // reenable actions
 				throw VFException(oss.str());
 			}
 		}
+	}
+	replaceActions(act); // reenable actions
 	return opcode;
 }
 
+
 bool VFReader::executeAll () {
-  	in.clear();   // reset all status bits
-	if (!in)
+  	in().clear();   // reset all status bits
+	if (!in())
 		return false;
-	in.seekg(0);  // move file pointer to first byte of the input stream
-	while (!in.eof() && executeCommand() != 248); // stop reading after post (248)
+	in().seekg(0);  // move file pointer to first byte of the input stream
+	while (!in().eof() && executeCommand() != 248); // stop reading after post (248)
 	return true;
 
+}
+
+
+/// Returns true if op indicates the preamble or a font definition
+static bool is_pre_or_fontdef (int op) {
+  return op > 242;
+}  
+
+
+bool VFReader::executePreambleAndFontDefs () {
+	in().clear();
+	if (!in())
+		return false;
+	in().seekg(0);  // move file pointer to first byte of the input stream
+	int opcode = 0;
+	while (!in().eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -150,23 +140,23 @@ void VFReader::cmdPost () {
 
 
 void VFReader::cmdLongChar () {
-	UInt32 pl  = readUnsigned(4); // packet length (length of DVI subroutine)
-	UInt32 cc  = readUnsigned(4); // character code
-	UInt32 tfm = readUnsigned(4); // character width from corresponding TFM file
-	UInt8 *dvi = new UInt8[pl];   // DVI subroutine
+	UInt32 pl  = readUnsigned(4);          // packet length (length of DVI subroutine)
+	UInt32 cc  = readUnsigned(4);          // character code
+	UInt32 tfm = readUnsigned(4);          // character width from corresponding TFM file
+	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
    if (actions)
-   	actions->defineChar(cc, dvi);          // call template method for user actions
+   	actions->defineChar(cc, dvi);       // call template method for user actions
 }
 
 
 /** Reads and executes short_char_x command.
  *  @param pl packet length (length of DVI subroutine) */
 void VFReader::cmdShortChar (int pl) {
-	UInt32 cc  = readUnsigned(1); // character code
-	UInt32 tfm = readUnsigned(3); // character width from corresponding TFM file
-	UInt8 *dvi = new UInt8[pl];   // DVI subroutine
+	UInt32 cc  = readUnsigned(1);          // character code
+	UInt32 tfm = readUnsigned(3);          // character width from corresponding TFM file
+	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
    if (actions)
-   	actions->defineChar(cc, dvi);          // call template method for user actions
+   	actions->defineChar(cc, dvi);       // call template method for user actions
 }
 
 

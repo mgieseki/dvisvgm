@@ -30,8 +30,7 @@ using namespace std;
 
 
 static TFM* create_tfm (string name) {
-	KPSFileFinder ff;
-	TFM *tfm = TFM::createFromFile(name.c_str(), &ff);
+	TFM *tfm = TFM::createFromFile(name.c_str());
 	if (tfm)
 		return tfm;
 	throw FontException("can't find "+name+".tfm");

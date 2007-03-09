@@ -23,8 +23,8 @@
 
 #include <fstream>
 #include "CharmapTranslator.h"
-#include "FileFinder.h"
 #include "FontEngine.h"
+#include "KPSFileFinder.h"
 #include "macros.h"
 
 using namespace std;
@@ -46,8 +46,8 @@ static bool valid_unicode (UInt32 unicode) {
 }
 
 
-CharmapTranslator::CharmapTranslator (const char *fontname, const FileFinder *fileFinder) {
-	setFont(fontname, fileFinder);
+CharmapTranslator::CharmapTranslator (const char *fontname) {
+	setFont(fontname);
 }
 
 
@@ -56,11 +56,11 @@ CharmapTranslator::CharmapTranslator (const FontEngine &fe) {
 }
 
 
-void CharmapTranslator::setFont (const char *fontname, const FileFinder *fileFinder) {
+void CharmapTranslator::setFont (const char *fontname) {
 	translationMap.clear();
 	
 	string filename = string(fontname) + ".pfb";
-	if (const char *path = FileFinder::lookup(filename, fileFinder)) {
+	if (const char *path = KPSFileFinder::find(filename)) {
 		FontEngine fe;
 		fe.setFont(path);
 		fe.buildTranslationMap(translationMap);

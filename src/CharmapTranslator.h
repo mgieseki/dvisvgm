@@ -40,9 +40,9 @@ class CharmapTranslator
 	typedef map<UInt32,UInt32>::const_iterator ConstIterator;
    public:
 		CharmapTranslator () {}
-      CharmapTranslator (const char *fontname, const FileFinder *fileFinder);
+      CharmapTranslator (const char *fontname);
 		CharmapTranslator (const FontEngine &fe);
-		void setFont (const char *fontname, const FileFinder *fileFinder);
+		void setFont (const char *fontname);
 		UInt32 unicode (UInt32 customCode) const;
 
    private:

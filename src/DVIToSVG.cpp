@@ -29,10 +29,10 @@
 #include "DVIBBoxActions.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
-#include "FileFinder.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "FontMap.h"
+#include "KPSFileFinder.h"
 #include "Message.h"
 #include "PageSize.h"
 #include "SVGFontEmitter.h"
@@ -214,7 +214,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				filename = string(mappedName) + ".pfb";
 		}
 #endif
-		const char *path = FileFinder::lookup(filename, getFileFinder());  // path to pfb file
+		const char *path = KPSFileFinder::find(filename);  // path to pfb file
 		CharmapTranslator *cmt = svgActions->getCharmapTranslator(i->first);
 		if (path) {
 			SVGFontEmitter emitter(path, *cmt, defs);
@@ -223,7 +223,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 		else {
 //			const TFM *tfm = nameToFontInfoMap[i->first]->getTFM();
 			const TFM *tfm = getFontManager()->getFont(i->first)->getTFM();
-			SVGFontTraceEmitter emitter(i->first, tfm, *cmt, defs, getFileFinder());
+			SVGFontTraceEmitter emitter(i->first, tfm, *cmt, defs);
 			emitter.setMag(mag);
 			if (emitter.emitFont(i->second, i->first) > 0)
 				Message::mstream() << endl;

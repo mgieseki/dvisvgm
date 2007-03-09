@@ -19,7 +19,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id: DVIReader.h 16 2007-01-05 20:28:01Z mgieseki $
+// $Id$
 
 #ifndef VFREADER_H
 #define VFREADER_H
@@ -29,6 +29,7 @@
 #include <stack>
 #include <string>
 #include "MessageException.h"
+#include "StreamReader.h"
 #include "types.h"
 
 using std::istream;
@@ -44,19 +45,21 @@ struct VFException : public MessageException
 
 class FontManager;
 
-class VFReader
+class VFReader : public StreamReader
 {
+	typedef bool (*ApproveAction)(int);
 	public:
 		VFReader (istream &is);
 		virtual ~VFReader ();
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();
+		bool executePreambleAndFontDefs ();
 
 	protected:
-		int executeCommand ();
-		UInt32 readUnsigned (int bytes);
-		Int32 readSigned (int bytes);
-		string readString (int length);
+		int executeCommand (ApproveAction approve=0);
+//		UInt32 readUnsigned (int bytes);
+//		Int32 readSigned (int bytes);
+//		string readString (int length);
 		UInt8* readBytes (int n, UInt8 *buf);
 		
 		// the following methods represent the VF commands 
@@ -68,7 +71,6 @@ class VFReader
 		void cmdFontDef (int len);
 		
 	private:
-		istream &in;
 		VFActions *actions;
 		FontManager *fontManager;
 };

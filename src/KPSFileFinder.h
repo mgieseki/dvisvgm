@@ -30,10 +30,13 @@
 class KPSFileFinder : public FileFinder
 {
    public:
-      KPSFileFinder ();
-      ~KPSFileFinder ();
+      KPSFileFinder (const char *pn=0);
 		const char* lookup (const std::string &fname) const;
+		static const char* find (const std::string &fname);
 		static const char *progname;
+
+	private:
+		static bool initialized;
 };
 
 #endif

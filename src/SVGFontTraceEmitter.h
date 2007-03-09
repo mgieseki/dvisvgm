@@ -42,7 +42,7 @@ class XMLElementNode;
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const string &fname, const TFM *metrics, const CharmapTranslator &cmt, XMLElementNode *n, const FileFinder *ff);
+      SVGFontTraceEmitter (const string &fname, const TFM *metrics, const CharmapTranslator &cmt, XMLElementNode *n);
       ~SVGFontTraceEmitter ();
 		int emitFont (std::string id="") const;
 		int emitFont (const set<int> &usedChars, string id="") const;
@@ -62,7 +62,6 @@ class SVGFontTraceEmitter : public FontEmitter
 		const CharmapTranslator &charmapTranslator;
 		XMLElementNode *rootNode; 
 		mutable XMLElementNode *glyphNode;
-		const FileFinder *fileFinder;
 };
 
 #endif

@@ -33,7 +33,7 @@ class FileFinder;
 class MetafontWrapper
 {
    public:
-      MetafontWrapper (const string &fontname, const FileFinder *ff);
+      MetafontWrapper (const string &fontname);
 		int call (const string &mode, double mag);
 		int make (const string &mode, double mag);
 		bool success () const;
@@ -42,7 +42,6 @@ class MetafontWrapper
 		
    private:
 		string fontname;
-		const FileFinder *fileFinder;
 };
 
 #endif

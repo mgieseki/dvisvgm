@@ -25,7 +25,6 @@
 #include <fstream>
 #include <sstream>
 #include "FontGlyph.h"
-#include "FileFinder.h"
 #include "GFTracer.h"
 
 #ifdef __MSVC__

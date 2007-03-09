@@ -25,25 +25,25 @@
 #include <cctype>
 #include <fstream>
 #include <sstream>
-#include "FileFinder.h"
 #include "FileSystem.h"
+#include "KPSFileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
 
 using namespace std;
 
 
-MetafontWrapper::MetafontWrapper (const string &fname, const FileFinder *ff) 
-	: fontname(fname), fileFinder(ff)
+MetafontWrapper::MetafontWrapper (const string &fname) 
+	: fontname(fname)
 {
 }
 
 
 /** This helper function tries to find the mf file for a given fontname. */
-static const char* lookup (string fontname, const FileFinder *fileFinder) {
+static const char* lookup (string fontname) {
 	// try to find file with exact fontname
 	string mfname = fontname+".mf";
-	if (const char *path = FileFinder::lookup(mfname, fileFinder))
+	if (const char *path = KPSFileFinder::find(mfname))
 		return path;
 	
 	// lookup fontname with trailing numbers stripped
@@ -52,7 +52,7 @@ static const char* lookup (string fontname, const FileFinder *fileFinder) {
 	while (pos >= 0 && isdigit(fontname[pos]))
 		pos--;
 	mfname = fontname.substr(0, pos+1)+".mf";
-	if (const char *path = FileFinder::lookup(mfname, fileFinder))
+	if (const char *path = KPSFileFinder::find(mfname))
 		return path;
 	// not found either => give up
 	return 0;
@@ -66,7 +66,7 @@ static const char* lookup (string fontname, const FileFinder *fileFinder) {
  *  @param mag magnification factor
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
-	if (!lookup(fontname, fileFinder))
+	if (!lookup(fontname))
 		return 1;     // mf file not available => no need to call the "slow" Metafont
 	
 	FileSystem::remove(fontname+".gf");	

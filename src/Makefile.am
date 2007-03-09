@@ -16,14 +16,14 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
    DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h Font.h FontEmitter.h \
 	FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
-	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h SVGFontEmitter.h \
+	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h StreamReader.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h VFReader.h XMLDocTypeNode.h XMLDocument.h \
 	XMLNode.h XMLString.h \
-	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp \
-	DVIToSVG.cpp DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
+	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp DVIToSVG.cpp \
+	DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
   	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
-	PageSize.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp VFReader.cpp \
-	XMLDocument.cpp XMLNode.cpp XMLString.cpp
+	PageSize.cpp StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp \
+	VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
 EXTRA_DIST = miktex-kps.h miktex-core.def miktex-kps.def options.ggo getopt.h getopt.c getopt1.c 
 

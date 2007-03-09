@@ -22,7 +22,6 @@
 // $Id$
 
 #include "DVIReader.h"
-#include "FileFinder.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "KPSFileFinder.h"
@@ -107,19 +106,17 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 		int newid = fonts.size();      // the new font gets this ID
 		map<string,int>::iterator it = name2index.find(name);
 		if (it != name2index.end()) {  // font with same name already registered?
-			SHOW(it->second);
 			Font *font = fonts[it->second];
 			newfont = font->clone(dsize, ssize);
 		}
 		else {
-			KPSFileFinder fileFinder;
-			if (fileFinder.lookup(name+".pfb"))
+			if (KPSFileFinder::find(name+".pfb"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-			else if (fileFinder.lookup(name+".ttf"))
+			else if (KPSFileFinder::find(name+".ttf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-			else if (fileFinder.lookup(name+".vf"))
+			else if (KPSFileFinder::find(name+".vf"))
 				newfont = VirtualFont::create(name, checksum, dsize, ssize);
-			else if (fileFinder.lookup(name+".mf"))
+			else if (KPSFileFinder::find(name+".mf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
 			else 
 				throw FontException("font " + name + " not found");

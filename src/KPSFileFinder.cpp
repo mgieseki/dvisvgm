@@ -24,9 +24,10 @@
 #include <iostream>
 #include <string>
 #include "KPSFileFinder.h"
-
+#include "macros.h"
 
 const char *KPSFileFinder::progname = 0;
+bool KPSFileFinder::initialized = false;
 
 
 #ifdef MIKTEX	
@@ -41,18 +42,17 @@ const char *KPSFileFinder::progname = 0;
 	using namespace KPS;
 #endif
 
-KPSFileFinder::KPSFileFinder () {
+KPSFileFinder::KPSFileFinder (const char *pn) {
+	initialized = true;
 #ifndef MIKTEX
+	if (pn)
+		progname = pn;
 	kpse_set_program_name(progname, NULL);
 #endif
 }
 
 
-KPSFileFinder::~KPSFileFinder () {
-}
-
-
-const char* KPSFileFinder::lookup (const std::string &fname) const {
+static const char* do_find (const std::string &fname) {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
 		return 0;
@@ -76,4 +76,17 @@ const char* KPSFileFinder::lookup (const std::string &fname) const {
 	else 
 		return 0;
 	return kpse_find_file(fname.c_str(), formatType, 0);
+}
+
+
+const char* KPSFileFinder::find (const std::string &fname) {
+	if (!initialized) {
+		kpse_set_program_name(progname, NULL);
+		initialized = true;
+	}
+	return do_find(fname);
+}
+
+const char* KPSFileFinder::lookup (const std::string &fname) const {
+	return do_find(fname);
 }

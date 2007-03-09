@@ -106,6 +106,7 @@ static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
 	dvisvg.setTransformation(oss.str());
 }
 
+
 static int dvisvgm (int argc, char *argv[]) {
 	struct gengetopt_args_info args;
 	if (cmdline_parser(argc, argv, &args))
@@ -139,8 +140,7 @@ static int dvisvgm (int argc, char *argv[]) {
 		Message::level = args.verbosity_arg;
 		DVIToSVG dvisvg(ifs, *out);
 		KPSFileFinder::progname = argv[0];
-		KPSFileFinder kps;
-		dvisvg.setFileFinder(&kps);
+//		dvisvg.setFileFinder(&kps);
 		dvisvg.setMetafontMag(args.mag_arg);
 		dvisvg.setProcessSpecials(args.specials_flag);
 //		dvisvg.setDrawBoundingBox(args.draw_bbox_given);

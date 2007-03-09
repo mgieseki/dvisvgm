@@ -24,14 +24,13 @@
 #ifndef DVIREADER_H
 #define DVIREADER_H
 
-#include <istream>
 #include <map>
 #include <stack>
 #include <string>
 #include "MessageException.h"
+#include "StreamReader.h"
 #include "types.h"
 
-using std::istream;
 using std::map;
 using std::stack;
 using std::string;
@@ -44,9 +43,8 @@ struct DVIException : public MessageException
 class DVIActions;
 class FileFinder;
 class FontManager;
-//class FontInfo;
 
-class DVIReader
+class DVIReader : public StreamReader
 {
 	struct DVIPosition
 	{
@@ -65,7 +63,7 @@ class DVIReader
 		DVIReader (istream &is, DVIActions *a=0);
 		virtual ~DVIReader ();
 		
-		void setFileFinder (FileFinder *ff);
+//		void setFileFinder (FileFinder *ff);
 		bool executeDocument ();
 		bool executeAllPages ();
 		void executePostamble ();
@@ -84,11 +82,11 @@ class DVIReader
 
 	protected:
 		int executeCommand ();
-		UInt32 readUnsigned (int bytes);
-		Int32 readSigned (int bytes);
-		string readString (int length);
+//		UInt32 readUnsigned (int bytes);
+//		Int32 readSigned (int bytes);
+//		string readString (int length);
 		void putChar (UInt32 c, bool moveCursor);
-		const FileFinder* getFileFinder () const   {return fileFinder;}
+//		const FileFinder* getFileFinder () const   {return fileFinder;}
 		const FontManager* getFontManager () const {return fontManager;}
 		
 		// the following methods represent the DVI commands 
@@ -122,7 +120,6 @@ class DVIReader
 		void cmdPostPost (int len);
 		
 	private:
-		istream &in;
 		DVIActions *actions;
 		bool inPage;         // true if between bop and eop
 		UInt16 totalPages;   // total number of pages in dvi file
@@ -135,7 +132,7 @@ class DVIReader
 		stack<DVIPosition> posStack;
 		FontManager *fontManager;
 //		FontInfoMap fontInfoMap;
-		FileFinder *fileFinder;
+//		FileFinder *fileFinder;
 };
 
 #endif

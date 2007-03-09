@@ -41,7 +41,10 @@ struct DVICommand
 	int numBytes;
 };
 
-DVIReader::DVIReader (istream &is, DVIActions *a) : in(is), actions(a) {
+
+DVIReader::DVIReader (istream &is, DVIActions *a) 
+	: StreamReader(is), actions(a) 
+{
 	inPage = false;
 	pageHeight = pageWidth = 0;
 	scaleFactor = 0.0;
@@ -52,14 +55,13 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : in(is), actions(a) {
 
 DVIReader::~DVIReader () {
 	delete fontManager;
-/*	for (map<int, FontInfo*>::iterator i=fontInfoMap.begin(); i != fontInfoMap.end(); ++i)
-		delete i->second;*/
 }
 
 
+/*
 void DVIReader::setFileFinder (FileFinder *ff) {
 	fileFinder = ff;
-}
+}*/
 
 
 DVIActions* DVIReader::replaceActions (DVIActions *a) {
@@ -69,13 +71,14 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
 }
 
 
+#if 0
 /** Reads an unsigned integer from assigned input stream. 
  *  @param bytes number of bytes to read (max. 4)
  *  @return read integer */
 UInt32 DVIReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
-	for (int i=bytes-1; i >= 0 && !in.eof(); i--) {
-		UInt32 b = in.get();
+	for (int i=bytes-1; i >= 0 && !in().eof(); i--) {
+		UInt32 b = in().get();
 		ret |= b << (8*i);
 	}
 	return ret;
@@ -86,11 +89,11 @@ UInt32 DVIReader::readUnsigned (int bytes) {
  *  @param bytes number of bytes to read (max. 4)
  *  @return read integer */
 Int32 DVIReader::readSigned (int bytes) {
-	Int32 ret = in.get();
+	Int32 ret = in().get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !in.eof(); i--) 
-		ret = (ret << 8) | in.get();
+	for (int i=bytes-2; i >= 0 && !in().eof(); i--) 
+		ret = (ret << 8) | in().get();
 	return ret;
 }
 
@@ -98,17 +101,18 @@ Int32 DVIReader::readSigned (int bytes) {
 string DVIReader::readString (int bytes) {
 	char *buf = new char[bytes+1];
 	if (bytes > 0)
-		in.get(buf, bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
+		in().get(buf, bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
 	else
 		*buf = 0;
 	string ret = buf;
 	delete [] buf;
 	return ret;
 }
+#endif
 
 /*
 void DVIReader::error (string msg) const {
-	Message::estream() << msg << endl;
+	Message::ein() << msg << endl;
 }*/
 
 
@@ -143,8 +147,8 @@ int DVIReader::executeCommand () {
 		{&DVIReader::cmdPre, 0},     {&DVIReader::cmdPost, 0},    {&DVIReader::cmdPostPost, 0}                              // 247-249
 	};
 	
-	int opcode = in.get();
-	if (!in || opcode < 0)  // at end of file
+	int opcode = in().get();
+	if (!in() || opcode < 0)  // at end of file
 		throw DVIException("invalid file");
 	if (opcode >= 0 && opcode <= 127)
 		cmdSetChar0(opcode);
@@ -167,21 +171,21 @@ int DVIReader::executeCommand () {
 
 /** Executes all DVI commands from the preamble to postpost. */
 bool DVIReader::executeDocument () {
-	in.clear();   // reset all status bits
-	if (!in)
+	in().clear();   // reset all status bits
+	if (!in())
 		return false;
-	in.seekg(0);  // move file pointer to first byte of the input stream
-	while (!in.eof() && executeCommand() != 249); // stop reading after postpost (249)
+	in().seekg(0);  // move file pointer to first byte of the input stream
+	while (!in().eof() && executeCommand() != 249); // stop reading after postpost (249)
 	return true;
 }
 
 
 bool DVIReader::executeAllPages () {
-	in.clear();   // reset all status bits
-	if (!in)
+	in().clear();   // reset all status bits
+	if (!in())
 		return false;
-	in.seekg(0);  // move file pointer to first byte of the input stream
-	while (!in.eof() && executeCommand() != 248); //@@ stop reading when postamble (248) is reached
+	in().seekg(0);  // move file pointer to first byte of the input stream
+	while (!in().eof() && executeCommand() != 248); //@@ stop reading when postamble (248) is reached
 	return true;
 }
 
@@ -189,26 +193,26 @@ bool DVIReader::executeAllPages () {
 /** Reads and executes the commands of a single page. 
  *  This methods stops reading after the page's eop command has been executed. */
 bool DVIReader::executePage (unsigned n) {
-	in.clear();
-	if (!in)
+	in().clear();    // reset all status bits
+	if (!in())
 		throw DVIException("invalid DVI file");
-	in.seekg(-1, ios_base::end);    // stream pointer to last byte
-	while (in.peek() == 223) 
-		in.seekg(-1, ios_base::cur); // skip fill bytes
-	in.seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
+	in().seekg(-1, ios_base::end);    // stream pointer to last byte
+	while (in().peek() == 223) 
+		in().seekg(-1, ios_base::cur); // skip fill bytes
+	in().seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = readUnsigned(4);     // pointer to begin of postamble
-	in.seekg(q, ios_base::beg);     // now on begin of postamble
+	in().seekg(q, ios_base::beg);     // now on begin of postamble
 	if (executeCommand() != 248)    // execute postamble command but not the fontdefs
 		return false;
 	if (n < 1 || n > totalPages) 
 		return false;
-	in.seekg(prevBop, ios_base::beg); // now on last bop
+	in().seekg(prevBop, ios_base::beg); // now on last bop
 	inPostamble = false;              // we jumped out of the postamble
 	unsigned pageCount = totalPages;
 	for (; pageCount > n && prevBop > 0; pageCount--) {
-		in.seekg(41, ios_base::cur);   // skip bop and 10*4 \count bytes => now on pointer to prev bop
+		in().seekg(41, ios_base::cur);   // skip bop and 10*4 \count bytes => now on pointer to prev bop
 		prevBop = readSigned(4);
-		in.seekg(prevBop, ios_base::beg);
+		in().seekg(prevBop, ios_base::beg);
 	}
 	while (pageCount == n && executeCommand() != 140); // 140 == eop
 	return true;
@@ -217,16 +221,16 @@ bool DVIReader::executePage (unsigned n) {
 
 /** Reads and executes the commands of the postamble. */
 void DVIReader::executePostamble () {
-	in.clear();
-	if (!in)
+	in().clear();  // reset all status bits
+	if (!in())
 		throw DVIException("invalid DVI file");
-	in.seekg(-1, ios_base::end);    // stream pointer to last byte
-	while (in.peek() == 223) 
-		in.seekg(-1, ios_base::cur); // skip fill bytes
+	in().seekg(-1, ios_base::end);    // stream pointer to last byte
+	while (in().peek() == 223) 
+		in().seekg(-1, ios_base::cur); // skip fill bytes
 
-	in.seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
+	in().seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = readUnsigned(4);     // pointer to begin of postamble
-	in.seekg(q, ios_base::beg);     // now on begin of postamble
+	in().seekg(q, ios_base::beg);     // now on begin of postamble
 	while (executeCommand() != 249);   // read all commands until postpost (= 249) is reached
 }
 

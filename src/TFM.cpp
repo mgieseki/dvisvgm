@@ -24,7 +24,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "FileFinder.h"
+#include "KPSFileFinder.h"
 #include "MetafontWrapper.h"
 #include "TFM.h"
 
@@ -43,19 +43,6 @@ static UInt32 read_unsigned (istream &is, int n) {
 	}
 	return ret;
 }
-
-#if 0
-/** Reads a single signed integer value of given size (max. 4 bytes). 
- *  @param n number of bytes to be read */
-static Int32 read_signed (istream &is, int bytes) {
-	Int32 ret = is.get();
-	if (ret & 128)        // negative value?
-		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !is.eof(); i--) 
-		ret = (ret << 8) | is.get();
-	return ret;
-}
-#endif
 
 
 /** Reads a sequence of n TFM words (4 Bytes each). 
@@ -86,15 +73,15 @@ TFM::TFM (istream &is) {
 }
 
 
-TFM* TFM::createFromFile (const char *fontname, FileFinder *fileFinder) {
+TFM* TFM::createFromFile (const char *fontname) {
 	string filename = string(fontname) + ".tfm";
-	if (const char *path = FileFinder::lookup(filename, fileFinder)) {
+	if (const char *path = KPSFileFinder::find(filename)) {
 		ifstream ifs(path, ios_base::binary);
 		return new TFM(ifs);
 	}
 
 	// tfm file not found => try to run Metafont and create it
-	MetafontWrapper mf(fontname, fileFinder);
+	MetafontWrapper mf(fontname);
 	mf.make("ljfour", mag);
 	ifstream ifs(filename.c_str());
 	if (ifs)

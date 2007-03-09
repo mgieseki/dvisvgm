@@ -101,7 +101,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 
 void DVIToSVGActions::defineFont (int num, const string &path, const string &name, double ds, double sc) {
 	if (charmapTranslatorMap.find(name) == charmapTranslatorMap.end()) 
-		charmapTranslatorMap[name] = new CharmapTranslator(name.c_str(), fileFinder);
+		charmapTranslatorMap[name] = new CharmapTranslator(name.c_str());
 }
 
 

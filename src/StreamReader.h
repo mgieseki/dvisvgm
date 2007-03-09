@@ -1,5 +1,5 @@
 /***********************************************************************
-** TFM.h                                                              **
+** StreamReader.h                                                     **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
@@ -21,40 +21,39 @@
 ***********************************************************************/
 // $Id$
 
-#ifndef TFM_H
-#define TFM_H
+#ifndef STREAMREADER_H
+#define STREAMREADER_H
 
 #include <istream>
-#include <vector>
+#include <string>
+#include "MessageException.h"
 #include "types.h"
 
-class FileFinder;
+using std::istream;
+using std::string;
 
-class TFM
+class StreamReader
 {
    public:
-		TFM ();
-		TFM (std::istream &is);
-		static TFM* createFromFile (const char *fname);
-		static void setMetafontMag (double m) {mag = m;}
-		UInt16 getChecksum () const           {return checksum;}
-		double getDesignSize () const;
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		
+		StreamReader (istream &s);
+		virtual ~StreamReader () {}
+		void assignStream (istream &s) {is = &s;}
+		UInt32 readUnsigned (int n);
+		UInt32 readSigned (int n);
+		string readString (int length);
+		int readByte ()     {return is->get();}
+
 	protected:
-		bool readFromStream (std::istream &is);
+		istream& in () {return *is;}
 
    private:
-		UInt16 checksum;
-		UInt16 firstChar, lastChar;		
-		FixWord designSize; // design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  charInfoTable; // 
-		std::vector<FixWord> widthTable;    // character widths in design size units
-		std::vector<FixWord> heightTable;   // character widths in design size units
-		std::vector<FixWord> depthTable;    // character widths in design size units
-		static double mag;  // magnification used when Metafont is called
+		istream *is;
+};
+
+
+struct StreamReaderException : public MessageException
+{
+	StreamReaderException (const string &msg) : MessageException(msg) {}
 };
 
 #endif

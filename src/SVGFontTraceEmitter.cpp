@@ -38,10 +38,9 @@
 using namespace std;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const string &fname, const TFM *metrics,
-		                                    const CharmapTranslator &cmt, XMLElementNode *n, const FileFinder *ff)
+SVGFontTraceEmitter::SVGFontTraceEmitter (const string &fname, const TFM *metrics, const CharmapTranslator &cmt, XMLElementNode *n)
 	: gfTracer(0), in(0), fontname(fname), tfm(metrics), mag(4.0), 
-	  charmapTranslator(cmt), rootNode(n), glyphNode(0), fileFinder(ff)
+	  charmapTranslator(cmt), rootNode(n), glyphNode(0)
 {
 }
 
@@ -55,7 +54,7 @@ SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 
 bool SVGFontTraceEmitter::checkTracer () const {
 	if (!gfTracer) {
-		MetafontWrapper mf(fontname, fileFinder);
+		MetafontWrapper mf(fontname);
 		mf.make("ljfour", mag); // call Metafont if necessary
 		if (mf.success() && tfm) {
 			in = new ifstream((fontname+".gf").c_str(), ios_base::binary);
