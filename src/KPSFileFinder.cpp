@@ -84,6 +84,8 @@ const char* KPSFileFinder::find (const std::string &fname) {
 		kpse_set_program_name(progname, NULL);
 		initialized = true;
 	}
+//	SHOW(kpse_make_tex(kpse_mf_format, "tctt1095"));
+	SHOW(kpse_fontmap_lookup("cork-lmr10"));
 	return do_find(fname);
 }
 

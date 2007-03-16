@@ -55,7 +55,7 @@ struct Font
 
 
 /** Interface for all physical fonts. */
-struct PhysicalFont : public Font
+struct PhysicalFont : public virtual Font
 {
 	enum Type {MF, PFB, TTF};
 	static Font* create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
@@ -63,7 +63,7 @@ struct PhysicalFont : public Font
 
 
 /** Interface for all virtual fonts. */
-struct VirtualFont : public Font
+struct VirtualFont : public virtual Font
 {
 	static Font* create (string name, UInt32 checksum, double dsize, double ssize);
 	virtual int fontID (int n) const =0;
@@ -71,6 +71,27 @@ struct VirtualFont : public Font
 	virtual UInt8* getDVI (int c) const =0;
 };
 
+
+class TFMFont : public virtual Font
+{
+	public:
+		TFMFont (string name, UInt32 checksum, double dsize, double ssize);
+		~TFMFont ();
+		const TFM* getTFM () const;
+		string name () const        {return fontname;}
+		double designSize () const  {return dsize;}
+		double scaledSize () const  {return ssize;}
+		double charWidth (int c) const;
+		double charDepth (int c) const;
+		double charHeight (int c) const;
+
+	private:
+		mutable TFM *tfm;
+		string fontname; 
+		UInt32 checksum; ///< cheksum to be compared with TFM checksum
+		double dsize;    ///< design size in TeX point units
+		double ssize;    ///< scaled size
+};
 
 
 class PhysicalFontProxy : public PhysicalFont
@@ -97,29 +118,14 @@ class PhysicalFontProxy : public PhysicalFont
 };
 
 
-class PhysicalFontImpl : public PhysicalFont
+class PhysicalFontImpl : public PhysicalFont, public TFMFont
 {
 	friend class PhysicalFont;
 	public:
-		~PhysicalFontImpl ();
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
-		double designSize () const      {return dsize;}
-		double scaledSize () const      {return ssize;}
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-		const TFM* getTFM () const;
-		string name () const            {return _name;}
 
 	protected:
 		PhysicalFontImpl (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
-
-	private:
-		mutable TFM *_tfm;
-		string _name;    ///< fontname
-		UInt32 checksum; ///< cheksum to be compared with TFM checksum
-		double dsize;    ///< design size in TeX point units
-		double ssize;    ///< scaled size
 };
 
 
@@ -150,33 +156,20 @@ class VirtualFontProxy : public VirtualFont
 };
 
 
-class VirtualFontImpl : public VirtualFont
+class VirtualFontImpl : public VirtualFont, public TFMFont
 {
 	friend class VirtualFont;
 	public:
-		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
-		double designSize () const      {return dsize;}
-		double scaledSize () const      {return ssize;}
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-		string name () const            {return _name;}
 		int fontID (int n) const;
 		int firstFontNum () const;
 		UInt8* getDVI (int c) const;
-		const TFM* getTFM () const;
 
 	protected:
 		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
 
 	private:
 		map<int,int> num2id;
-		mutable TFM *_tfm;
-		string _name;    ///< fontname
-		UInt32 checksum; ///< cheksum to be compared with TFM checksum
-		double dsize;    ///< design size in TeX point units
-		double ssize;    ///< scaled size
 };
 
 

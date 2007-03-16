@@ -9,6 +9,7 @@ purpose "This program converts DVI files to Scalable Vector Graphics (SVG)"
 
 section "Input options"
 option "page"           p "choose page to convert"                   int    typestr="number"   default="1"   no
+option "map-file"       m "set font map file name"                   string typestr="filename" default="dvipdfm.map" no
 
 section "SVG output options"
 option "bbox-format"    b "set format of bounding box"               string typestr="fmt"      default="min" no
@@ -23,7 +24,8 @@ option "translate"      t "shift page content"                       string type
 option "transform"      T "transform page content"                   string typestr="commands"               no
 
 section "Processing options"
-option "mag"            m "magnification of Metafont output"         double typestr="factor"   default="4"   no
+option "mag"            M "magnification of Metafont output"         double typestr="factor"   default="4"   no
+option "no-mktexmf"     n "don't try to create missing fonts"        flag   off
 option "specials"       S "process \\specials"                       flag   off
 
 section "Message options"

@@ -21,10 +21,12 @@
 ***********************************************************************/
 // $Id$
 
+#include <cstdlib>
 #include "DVIReader.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "KPSFileFinder.h"
+#include "Message.h"
 #include "TFM.h"
 #include "macros.h"
 
@@ -118,8 +120,19 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 				newfont = VirtualFont::create(name, checksum, dsize, ssize);
 			else if (KPSFileFinder::find(name+".mf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-			else 
-				throw FontException("font " + name + " not found");
+			else {
+#ifdef MIKTEX
+				const string MKTEXMF = "makemf";
+#else
+				const string MKTEXMF = "mktexmf";
+#endif
+				Message::mstream() << "running " << MKTEXMF << " for " << name << endl;
+				system((MKTEXMF + " " + name + ".mf").c_str());
+				if (KPSFileFinder::find(name+".mf"))
+					newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
+				else					
+					throw FontException("font " + name + " not found");
+			}
 			name2index[name] = newid;
 		}
 		if (newfont) {

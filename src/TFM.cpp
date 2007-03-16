@@ -25,6 +25,7 @@
 #include <fstream>
 #include <vector>
 #include "KPSFileFinder.h"
+#include "Message.h"
 #include "MetafontWrapper.h"
 #include "TFM.h"
 
@@ -75,19 +76,21 @@ TFM::TFM (istream &is) {
 
 TFM* TFM::createFromFile (const char *fontname) {
 	string filename = string(fontname) + ".tfm";
-	if (const char *path = KPSFileFinder::find(filename)) {
-		ifstream ifs(path, ios_base::binary);
-		return new TFM(ifs);
+	const char *path = KPSFileFinder::find(filename);
+	if (!path) {
+		// tfm file not found => try to run Metafont and create it
+#ifdef MIKTEX
+		const string mktfm = "maketfm";
+#else
+		const string mktfm = "mktextfm";
+#endif
+		Message::mstream() << "running " << mktfm << " for " << fontname << endl;
+		system((mktfm + " " + fontname).c_str());
+		path = KPSFileFinder::find(fontname);
 	}
-
-	// tfm file not found => try to run Metafont and create it
-	MetafontWrapper mf(fontname);
-	mf.make("ljfour", mag);
-	ifstream ifs(filename.c_str());
+	ifstream ifs(path, ios_base::binary);
 	if (ifs)
-		return new TFM(ifs);	
-	
-	// Metafont or mf file not found => give up
+		return new TFM(ifs);
 	return 0;
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************
-** FontMap.h                                                          **
+** FontManagerTest.h                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
@@ -21,35 +21,48 @@
 ***********************************************************************/
 // $Id$
 
-#ifndef FONTMAP_H
-#define FONTMAP_H
+#include <cxxtest/TestSuite.h>
+#include <sstream>
+#include "FontMap.h"
 
-#include <istream>
-#include <map>
-#include <ostream>
-#include <string>
+using std::istringstream;
 
-using std::istream;
-using std::map;
-using std::ostream;
-using std::string;
-
-class FontMap
+class FontMapTest : public CxxTest::TestSuite
 {
-	typedef map<string,string>::const_iterator ConstIterator;
-   public:
-//      FontMap (const string &fname, bool dir=false);
-		FontMap () {}     
-      FontMap (istream &is);
-		void read (istream &is);
-		void clear ()    {fontMap.clear();}
-		ostream& write (ostream &os) const;
-//		bool readMapFile (const string &fname);
-//		bool readMapDir (const string &dirname);
-		const char* lookup(const string &fontname) const;
+	public:
+		void test_split () {
+			string str = 
+//				"cork-anttb cork-antt anttb\n"
+//				"cork-anttbcap cork-anttcap anttb\n"
+//				"cmr10 ot1 -r\n"
+//				"ptmro8r 8r Times-Roman -s 0.167\n"
+				"pncbo8r 8r pncb8a -s 0.167\n";
+			istringstream iss(str);
+			fm.clear();
+			fm.read(iss);			
+			TS_ASSERT_EQUALS();
+		}
 
-   private:
-		map<string,string> fontMap;
+		void test_fontID () {
+			TS_ASSERT_EQUALS(fm.fontID(10), 0);
+			TS_ASSERT_EQUALS(fm.fontID(11), 1);
+			TS_ASSERT_EQUALS(fm.fontID(9), 2);
+			TS_ASSERT_EQUALS(fm.fontID(1), -1);
+		}
+
+		void test_getFont () {
+			const Font *f1 = fm.getFont(10);
+			TS_ASSERT(f1);
+			TS_ASSERT_EQUALS(f1->name(), "cmr10");
+			TS_ASSERT(dynamic_cast<const PhysicalFontImpl*>(f1));
+			
+			const Font *f2 = fm.getFont(11);
+			TS_ASSERT(f2);
+			TS_ASSERT(f1 != f2);
+			TS_ASSERT_EQUALS(f2->name(), "cmr10");
+			TS_ASSERT(dynamic_cast<const PhysicalFontProxy*>(f2));
+		}
+
+	private:
+		FontMap *fm;
 };
-
-#endif

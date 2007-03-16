@@ -21,21 +21,41 @@
 ***********************************************************************/
 // $Id$
 
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include "Font.h"
 #include "KPSFileFinder.h"
+#include "Message.h"
 #include "TFM.h"
 
 using namespace std;
 
 
-static TFM* create_tfm (string name) {
-	TFM *tfm = TFM::createFromFile(name.c_str());
-	if (tfm)
-		return tfm;
-	throw FontException("can't find "+name+".tfm");
+TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
+	: tfm(0), fontname(name), checksum(cs), dsize(ds), ssize(ss)
+{
 }
 
+
+TFMFont::~TFMFont () {
+	delete tfm;
+}
+
+
+const TFM* TFMFont::getTFM () const {
+	if (!tfm) {
+		tfm = TFM::createFromFile(fontname.c_str());
+		if (!tfm)
+			throw FontException("can't find "+fontname+".tfm");
+	}
+	return tfm;
+}
+
+
+double TFMFont::charWidth (int c) const  {getTFM()->getCharWidth(c);}
+double TFMFont::charDepth (int c) const  {getTFM()->getCharDepth(c);}
+double TFMFont::charHeight (int c) const {getTFM()->getCharHeight(c);}
 
 
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
@@ -50,50 +70,17 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type) 
-	: _tfm(0), _name(name), checksum(cs), dsize(ds), ssize(ss)
+	: TFMFont(name, cs, ds, ss)
 {
 }
 
-
-PhysicalFontImpl::~PhysicalFontImpl () {
-	delete _tfm;
-}
-
-
-const TFM* PhysicalFontImpl::getTFM () const {
-	if (!_tfm) 
-		_tfm = create_tfm(_name);
-	return _tfm;
-}
-
-
-double PhysicalFontImpl::charWidth (int c) const  {return getTFM()->getCharWidth(c);} 
-double PhysicalFontImpl::charDepth (int c) const  {return getTFM()->getCharDepth(c);} 
-double PhysicalFontImpl::charHeight (int c) const {return getTFM()->getCharHeight(c);} 
 
 //////////////////////////////////////////////////////////////////////////////
 
 VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss) 
-	: _tfm(0), _name(name), checksum(cs), dsize(ds), ssize(ss)
+	: TFMFont(name, cs, ds, ss)
 {
 }
-
-
-VirtualFontImpl::~VirtualFontImpl () {
-	delete _tfm;
-}
-
-
-const TFM* VirtualFontImpl::getTFM () const {
-	if (!_tfm) 
-		_tfm = create_tfm(_name);
-	return _tfm;
-}
-
-
-double VirtualFontImpl::charWidth (int c) const  {return getTFM()->getCharWidth(c);} 
-double VirtualFontImpl::charDepth (int c) const  {return getTFM()->getCharDepth(c);} 
-double VirtualFontImpl::charHeight (int c) const {return getTFM()->getCharHeight(c);} 
 
 
 int VirtualFontImpl::fontID (int n) const {

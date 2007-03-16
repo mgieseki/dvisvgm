@@ -36,9 +36,9 @@ StreamReader::StreamReader (istream &s)
  *  @return read integer */
 UInt32 StreamReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
-	for (int i=bytes-1; i >= 0 && !is->eof(); i--) {
+	for (bytes--; bytes >= 0 && !is->eof(); bytes--) {
 		UInt32 b = is->get();
-		ret |= b << (8*i);
+		ret |= b << (8*bytes);
 	}
 	return ret;
 }
@@ -51,7 +51,7 @@ UInt32 StreamReader::readSigned (int bytes) {
 	Int32 ret = is->get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !is->eof(); i--) 
+	for (bytes-=2; bytes >= 0 && !is->eof(); bytes--) 
 		ret = (ret << 8) | is->get();
 	return ret;
 }

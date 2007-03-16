@@ -25,19 +25,26 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <fstream>
+#include <iostream>
 #include <vector>
 #include "FontMap.h"
 
 using namespace std;
 
 
-static vector<string>& split (char *str, vector<string> &res, unsigned max) {
-	if (str)
-		while (*str && res.size() < max) {
+/** Helper function: splits a given line of text into several parts. 
+ * @param str pointer to line buffer (must be writable) 
+ * @param parts the parts are written to this vector 
+ * @param max_parts maximal number of parts to be stored (0 = no limit) 
+ * @return number of extracted parts */
+static int split (char *str, vector<string> *parts, unsigned max_parts=0) {
+	if (str && parts) {
+		parts->clear();
+		while (*str && (max_parts == 0 || parts->size() < max_parts)) {
 			char *l = str;
-			while (*l == ' ' || *l == '\t')  // skip spaces
+			while (*l == ' ' || *l == '\t')  // skip leading spaces
 				l++;
-			if (*l && *l != '#') {  // begin of entry found?
+			if (*l && *l != '%') {  // begin of entry found?
 				char *r = l;
 				while (*r && *r != ' ' && *r != '\t')
 					r++;
@@ -46,22 +53,59 @@ static vector<string>& split (char *str, vector<string> &res, unsigned max) {
 					*r = 0;        // mark end of entry
 					str = r+1;     // next possible entry starts here
 				}
-				res.push_back(l);
+				parts->push_back(l);
 			}
 			else
 				*str = 0;         // terminate
 		}
-	return res;
+		return parts->size();
+	}
+	return 0;
 }
 
 
+/*
 FontMap::FontMap (const string &fname, bool dir) {
 	if (dir)
 		readMapDir(fname);
 	else
 		readMapFile(fname);
+}*/
+
+
+FontMap::FontMap (istream &is) {
+	read(is);
 }
 
+
+void FontMap::read (istream &is) {
+	char buf[256];
+	while (is) {
+		is.getline(buf, 256);
+		vector<string> parts;
+		if (split(buf, &parts, 10) < 2)
+			continue;
+
+//		cout << '[' << parts[0] << "] -> [" << parts[1] << ']' << endl;
+		int target_index = 0;
+		if (parts.size() == 2 && parts[1][0] != '-')
+			target_index = 1;
+		else if (parts.size() > 2)
+			target_index = (parts[2][0] == '-') ? 1 : 2;
+		// skip names that map to themselves
+		if (target_index > 0 && parts[0] != parts[target_index])
+			fontMap[parts[0]] = parts[target_index];
+	}
+}
+
+
+ostream& FontMap::write (ostream &os) const {
+	for (map<string,string>::const_iterator i=fontMap.begin(); i != fontMap.end(); ++i)
+		os << i->first << " -> " << i->second << endl;
+	return os;
+}
+
+#if 0
 
 #include <iostream>
 bool FontMap::readMapFile (const string &fname) {
@@ -102,6 +146,7 @@ bool FontMap::readMapDir (const string &dirname) {
 	return false;
 }
 
+#endif
 
 const char* FontMap::lookup (const string &fontname) const {
 	ConstIterator it = fontMap.find(fontname);
