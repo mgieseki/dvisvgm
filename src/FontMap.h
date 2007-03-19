@@ -32,11 +32,10 @@
 using std::istream;
 using std::map;
 using std::ostream;
-using std::string;
 
 class FontMap
 {
-	typedef map<string,string>::const_iterator ConstIterator;
+	typedef map<std::string,std::string>::const_iterator ConstIterator;
    public:
 //      FontMap (const string &fname, bool dir=false);
 		FontMap () {}     
@@ -46,10 +45,10 @@ class FontMap
 		ostream& write (ostream &os) const;
 //		bool readMapFile (const string &fname);
 //		bool readMapDir (const string &dirname);
-		const char* lookup(const string &fontname) const;
+		const char* lookup(const std::string &fontname) const;
 
    private:
-		map<string,string> fontMap;
+		map<std::string,std::string> fontMap;
 };
 
 #endif

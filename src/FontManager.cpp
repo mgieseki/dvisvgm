@@ -126,7 +126,10 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 		}
 		if (newfont) {
 			fonts.push_back(newfont);
-			num2index[fontnum] = newid;
+			if (vfStack.empty())
+				num2index[fontnum] = newid;
+			else
+				vfStack.top()->assignFontID(fontnum, newid);
 		}
 	}
 }

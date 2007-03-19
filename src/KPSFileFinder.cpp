@@ -41,6 +41,7 @@ static const char* mktex (const std::string &fname);
 
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
+	#include <miktex/core.h>
 #else
 	// unfortunately, kpathsea is not C++-ready, so we have to wrap it with some ugly code
 	namespace KPS {
@@ -120,10 +121,10 @@ static const char* mktex (const std::string &fname) {
 	std::string base = fname.substr(0, pos);
 	const char *path = 0;
 #ifdef MIKTEX
-	const char *toolname = (ext == "tfm" ? MIKTEX_MAKETFM_EXE : MIKTEX_MAKEMF_EXE);
-	const char *toolpath = Find(toolname, FileType::EXE, fname);
+	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
+	const char *toolpath = find_file(toolname);
 	if (toolpath) {
-   	Process::Run(toolname, fname.c_str());
+		MiKTeX::Core::Process::Run(toolname, fname.c_str());
 		path = find_file(fname);
 	}
 

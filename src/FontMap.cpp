@@ -21,9 +21,9 @@
 ***********************************************************************/
 // $Id$
 
-#include <dirent.h>
-#include <errno.h>
-#include <sys/stat.h>
+//#include <dirent.h>
+//#include <errno.h>
+//#include <sys/stat.h>
 #include <fstream>
 #include <iostream>
 #include <vector>

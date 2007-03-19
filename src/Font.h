@@ -69,6 +69,7 @@ struct VirtualFont : public virtual Font
 	virtual int fontID (int n) const =0;
 	virtual int firstFontNum () const =0;
 	virtual UInt8* getDVI (int c) const =0;
+	virtual void assignFontID (int fontnum, int id) =0;
 };
 
 
@@ -144,6 +145,7 @@ class VirtualFontProxy : public VirtualFont
 		double charDepth (int c) const    {return vf->charDepth(c);} 
 		double charHeight (int c) const   {return vf->charHeight(c);} 
 		const TFM* getTFM () const        {return vf->getTFM();}
+		void assignFontID (int fontnum, int id) {}
 
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}
@@ -164,6 +166,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 		int fontID (int n) const;
 		int firstFontNum () const;
 		UInt8* getDVI (int c) const;
+		void assignFontID (int fontnum, int id);
 
 	protected:
 		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);

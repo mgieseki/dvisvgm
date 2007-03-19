@@ -53,9 +53,9 @@ const TFM* TFMFont::getTFM () const {
 }
 
 
-double TFMFont::charWidth (int c) const  {getTFM()->getCharWidth(c);}
-double TFMFont::charDepth (int c) const  {getTFM()->getCharDepth(c);}
-double TFMFont::charHeight (int c) const {getTFM()->getCharHeight(c);}
+double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c);}
+double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
+double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
 
 
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
