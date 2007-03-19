@@ -43,7 +43,7 @@ MetafontWrapper::MetafontWrapper (const string &fname)
 static const char* lookup (string fontname) {
 	// try to find file with exact fontname
 	string mfname = fontname+".mf";
-	if (const char *path = KPSFileFinder::find(mfname))
+	if (const char *path = KPSFileFinder::lookup(mfname))
 		return path;
 	
 	// lookup fontname with trailing numbers stripped
@@ -52,7 +52,7 @@ static const char* lookup (string fontname) {
 	while (pos >= 0 && isdigit(fontname[pos]))
 		pos--;
 	mfname = fontname.substr(0, pos+1)+".mf";
-	if (const char *path = KPSFileFinder::find(mfname))
+	if (const char *path = KPSFileFinder::lookup(mfname))
 		return path;
 	// not found either => give up
 	return 0;

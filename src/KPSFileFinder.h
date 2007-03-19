@@ -25,18 +25,17 @@
 #define KPSFILEFINDER_H
 
 #include <string>
-#include "FileFinder.h"
+#include "FontMap.h"
 
-class KPSFileFinder : public FileFinder
+class KPSFileFinder
 {
    public:
-      KPSFileFinder (const char *pn=0);
-		const char* lookup (const std::string &fname) const;
-		static const char* find (const std::string &fname);
+		static const char* lookup (const std::string &fname);
 		static const char *progname;
 
 	private:
 		static bool initialized;
+		static FontMap fontmap;
 };
 
 #endif

@@ -112,27 +112,16 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 			newfont = font->clone(dsize, ssize);
 		}
 		else {
-			if (KPSFileFinder::find(name+".pfb"))
+			if (KPSFileFinder::lookup(name+".pfb"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-			else if (KPSFileFinder::find(name+".ttf"))
+			else if (KPSFileFinder::lookup(name+".ttf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-			else if (KPSFileFinder::find(name+".vf"))
+			else if (KPSFileFinder::lookup(name+".vf"))
 				newfont = VirtualFont::create(name, checksum, dsize, ssize);
-			else if (KPSFileFinder::find(name+".mf"))
+			else if (KPSFileFinder::lookup(name+".mf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-			else {
-#ifdef MIKTEX
-				const string MKTEXMF = "makemf";
-#else
-				const string MKTEXMF = "mktexmf";
-#endif
-				Message::mstream() << "running " << MKTEXMF << " for " << name << endl;
-				system((MKTEXMF + " " + name + ".mf").c_str());
-				if (KPSFileFinder::find(name+".mf"))
-					newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-				else					
-					throw FontException("font " + name + " not found");
-			}
+			else
+				throw FontException("font " + name + " not found");
 			name2index[name] = newid;
 		}
 		if (newfont) {

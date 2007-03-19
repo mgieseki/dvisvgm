@@ -76,18 +76,7 @@ TFM::TFM (istream &is) {
 
 TFM* TFM::createFromFile (const char *fontname) {
 	string filename = string(fontname) + ".tfm";
-	const char *path = KPSFileFinder::find(filename);
-	if (!path) {
-		// tfm file not found => try to run Metafont and create it
-#ifdef MIKTEX
-		const string mktfm = "maketfm";
-#else
-		const string mktfm = "mktextfm";
-#endif
-		Message::mstream() << "running " << mktfm << " for " << fontname << endl;
-		system((mktfm + " " + fontname).c_str());
-		path = KPSFileFinder::find(fontname);
-	}
+	const char *path = KPSFileFinder::lookup(filename);
 	ifstream ifs(path, ios_base::binary);
 	if (ifs)
 		return new TFM(ifs);

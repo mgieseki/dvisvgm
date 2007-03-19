@@ -14,13 +14,13 @@ dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
-   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileFinder.h FileSystem.h Font.h FontEmitter.h \
+   DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileSystem.h Font.h FontEmitter.h \
 	FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
 	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h StreamReader.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h VFReader.h XMLDocTypeNode.h XMLDocument.h \
 	XMLNode.h XMLString.h \
 	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp DVIToSVG.cpp \
-	DVIToSVGActions.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
+	DVIToSVGActions.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
   	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
 	PageSize.cpp StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp \
 	VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp

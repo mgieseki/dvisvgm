@@ -214,7 +214,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				filename = string(mappedName) + ".pfb";
 		}
 #endif
-		const char *path = KPSFileFinder::find(filename);  // path to pfb file
+		const char *path = KPSFileFinder::lookup(filename);  // path to pfb file
 		CharmapTranslator *cmt = svgActions->getCharmapTranslator(i->first);
 		if (path) {
 			SVGFontEmitter emitter(path, *cmt, defs);

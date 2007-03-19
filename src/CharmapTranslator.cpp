@@ -60,7 +60,7 @@ void CharmapTranslator::setFont (const char *fontname) {
 	translationMap.clear();
 	
 	string filename = string(fontname) + ".pfb";
-	if (const char *path = KPSFileFinder::find(filename)) {
+	if (const char *path = KPSFileFinder::lookup(filename)) {
 		FontEngine fe;
 		fe.setFont(path);
 		fe.buildTranslationMap(translationMap);
