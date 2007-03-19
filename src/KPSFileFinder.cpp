@@ -29,7 +29,7 @@
 #include "macros.h"
 
 
-// static members
+// static members of KPSFileFinder
 const char *KPSFileFinder::progname = 0;
 bool KPSFileFinder::initialized = false;
 FontMap KPSFileFinder::fontmap;
@@ -93,7 +93,7 @@ static const char* find_mapped_file (std::string fname, const FontMap &fontmap) 
 	if (pos == std::string::npos) 
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
-	const std::string base = fname.substr(0, pos-1);
+	const std::string base = fname.substr(0, pos);
 	const char *mapped_name = fontmap.lookup(base);
 	if (mapped_name) {
 		fname = std::string(mapped_name) + "." + ext;
@@ -117,7 +117,7 @@ static const char* mktex (const std::string &fname) {
 	if (ext != "tfm" && ext != "mf")
 		return 0;
 
-	std::string base = fname.substr(0, pos-1);
+	std::string base = fname.substr(0, pos);
 	const char *path = 0;
 #ifdef MIKTEX
 	const char *toolname = (ext == "tfm" ? MIKTEX_MAKETFM_EXE : MIKTEX_MAKEMF_EXE);
@@ -154,17 +154,17 @@ const char* KPSFileFinder::lookup (const std::string &fname) {
 		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
-//		kpse_make_tex_discard_errors = true; 
-//		const char *path = kpse_make_tex(kpse_tfm_format, "ecrm10");
+		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
 #if 1
 		const char *mapfile = find_file("dvipdfm.map");
 		std::ifstream ifs(mapfile);
 		fontmap.read(ifs);
+//		fontmap.write(std::cout);
 #endif
 		initialized = true;
 	}
-	const char *path = find_file(fname);
+	const char *path;
 	if ((path = find_file(fname)) || (path = find_mapped_file(fname, fontmap)) || (path = mktex(fname))) 
 		return path;
 	return 0;
