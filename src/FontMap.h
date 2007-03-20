@@ -24,6 +24,7 @@
 #ifndef FONTMAP_H
 #define FONTMAP_H
 
+#include <cstring>
 #include <istream>
 #include <map>
 #include <ostream>
@@ -41,6 +42,7 @@ class FontMap
 		FontMap () {}     
       FontMap (istream &is);
 		void read (istream &is);
+		void readdir (const std::string &dirname);
 		void clear ()    {fontMap.clear();}
 		ostream& write (ostream &os) const;
 //		bool readMapFile (const string &fname);

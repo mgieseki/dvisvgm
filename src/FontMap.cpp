@@ -27,6 +27,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "Directory.h"
 #include "FontMap.h"
 
 using namespace std;
@@ -105,27 +106,20 @@ ostream& FontMap::write (ostream &os) const {
 	return os;
 }
 
-#if 0
 
-#include <iostream>
-bool FontMap::readMapFile (const string &fname) {
-	char buf[256];
-	ifstream ifs(fname.c_str());
-	if (!ifs)
-		return false;
-
-	while (ifs) {
-		ifs.getline(buf, 256);
-		vector<string> columns;
-		split(buf, columns, 2);
-		if (columns.size() >= 2 && columns[0][0] != '#') 
-			fontMap[columns[0]] = columns[1];
+void FontMap::readdir (const string &dirname) {
+	Directory dir(dirname);
+	while (const char *fname = dir.read('f')) {
+		if (strlen(fname) >= 4 && strcmp(fname+strlen(fname)-4, ".map") == 0) {
+			string path = dirname + "/" + fname;
+			ifstream ifs(path.c_str());
+			read(ifs);
+		}
 	}
-	return true;
 }
 
-
-bool FontMap::readMapDir (const string &dirname) {
+#if 0
+bool FontMap::readdir (const string &dirname) {
 	DIR *dir = opendir(dirname.c_str());
 	if (dir) {
 		errno = 0;
@@ -135,8 +129,10 @@ bool FontMap::readMapDir (const string &dirname) {
 			string path = string(dirname) + "/" + fname;
 			struct stat stats;
 			stat(path.c_str(), &stats);
-			if (S_ISDIR(stats.st_mode) && fname.size() > 3 && fname.substr(fname.size()-4) == ".map")
-				readMapFile(path);
+			if (S_ISDIR(stats.st_mode) && fname.size() > 3 && fname.substr(fname.size()-4) == ".map") {
+				ifstream ifs(path.c_str());
+				read(ifs);
+			}
 			else if (errno != 0)
 				return false;
 		}
@@ -145,7 +141,6 @@ bool FontMap::readMapDir (const string &dirname) {
 	}
 	return false;
 }
-
 #endif
 
 const char* FontMap::lookup (const string &fontname) const {

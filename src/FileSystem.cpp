@@ -74,3 +74,4 @@ string FileSystem::adaptPathSeperators (string path) {
 			path[i] = '/';
 	return path;
 }
+

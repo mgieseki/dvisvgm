@@ -42,6 +42,7 @@ static const char* mktex (const std::string &fname);
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
 	#include <miktex/core.h>
+	#include "Directory.h"
 #else
 	// unfortunately, the kpathsea headers are not C++-ready,
 	// so we have to wrap it with some ugly code
@@ -82,6 +83,7 @@ static const char* find_file (const std::string &fname) {
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
 		return 0;
+	SHOW(fname);
 	return kpse_find_file(fname.c_str(), it->second, 0);
 }
 
@@ -152,7 +154,22 @@ static const char* mktex (const std::string &fname) {
  *  @return path to file on success, 0 otherwise */
 const char* KPSFileFinder::lookup (const std::string &fname) {
 	if (!initialized) {
-#ifndef MIKTEX
+#ifdef MIKTEX
+		char rootdir[_MAX_PATH];
+		char searchpath[_MAX_PATH + 100];
+		for (unsigned i = MiKTeX::Core::SesGetSession()->GetNumberOfTEXMFRoots()); i > 0; --i) {
+			const char * rootdir = GetSession()->GetRootDirectory(r).Get();
+			size_t len = strlen(rootdir);
+			// strip trailing slash
+			if (len > 0 && rootdir[len-1] == '/' || rootdir[len-1] == '\\')
+				rootdir[len-1] = 0;
+			len = _MAX_PATH + 100;
+			Utils::ReplaceString(searchpath, &len, "%R\\dvipdfm//", "%R", rootdir);
+			SHOW(searchpath);
+//			if (miktex_find_file(config_file_name, szSearchPath, szConfigFile)) {
+//			}
+		}
+#else
 		kpse_set_program_name(progname, NULL);
 		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
@@ -160,10 +177,14 @@ const char* KPSFileFinder::lookup (const std::string &fname) {
 		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
 #if 1
-		const char *mapfile = find_file("dvipdfm.map"); // @@ evaluate -m option
-		std::ifstream ifs(mapfile);
-		fontmap.read(ifs);
-//		fontmap.write(std::cout);
+		const char *fname = "fonts.map"; // dvipdfm.map
+		const char *mapfile = find_file(fname); // @@ evaluate -m option
+		if (mapfile) {
+			SHOW(mapfile);
+			std::ifstream ifs(mapfile);
+			fontmap.read(ifs);
+//			fontmap.write(std::cout);
+		}
 #endif
 		initialized = true;
 	}
