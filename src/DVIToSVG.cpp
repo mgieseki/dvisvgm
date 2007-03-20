@@ -221,7 +221,6 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			emitter.emitFont(i->second, i->first);
 		}
 		else {
-//			const TFM *tfm = nameToFontInfoMap[i->first]->getTFM();
 			const TFM *tfm = getFontManager()->getFont(i->first)->getTFM();
 			SVGFontTraceEmitter emitter(i->first, tfm, *cmt, defs);
 			emitter.setMag(mag);

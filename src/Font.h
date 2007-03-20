@@ -35,6 +35,7 @@ using std::string;
 using std::vector;
 
 
+class FontManager;
 class TFM;
 
 
@@ -54,6 +55,27 @@ struct Font
 };
 
 
+/** Empty font without any glyphs. Instances of this class are used
+ *  if no physical or virtual font file can be found.
+ *  The metric values returned by the member functions are based on cmr10. */
+struct EmptyFont : public Font
+{
+	public:
+		EmptyFont (string name) : fontname(name) {}
+		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
+		string name () const                     {return fontname;}
+		double designSize () const               {return 10;}    // cmr10 design size in pt
+		double scaledSize () const               {return 10;}    // cmr10 scaled size in pt
+		double charWidth (int c) const           {return 9.164;} // width of cmr10's 'M' in pt
+		double charHeight (int c) const          {return 6.833;} // height of cmr10's 'M' in pt
+		double charDepth (int c) const           {return 0;}
+		const TFM* getTFM () const               {return 0;}
+
+	private:
+		string fontname;
+};
+
+
 /** Interface for all physical fonts. */
 struct PhysicalFont : public virtual Font
 {
@@ -63,13 +85,16 @@ struct PhysicalFont : public virtual Font
 
 
 /** Interface for all virtual fonts. */
-struct VirtualFont : public virtual Font
+class VirtualFont : public virtual Font
 {
-	static Font* create (string name, UInt32 checksum, double dsize, double ssize);
-	virtual int fontID (int n) const =0;
-	virtual int firstFontNum () const =0;
-	virtual UInt8* getDVI (int c) const =0;
-	virtual void assignFontID (int fontnum, int id) =0;
+	friend class FontManager;
+	public:
+		static Font* create (string name, UInt32 checksum, double dsize, double ssize);
+		virtual int fontID (int n) const =0;
+		virtual int firstFontNum () const =0;
+		virtual UInt8* getDVI (int c) const =0;
+	protected:
+		virtual void assignFontID (int fontnum, int id) =0;
 };
 
 
@@ -145,11 +170,11 @@ class VirtualFontProxy : public VirtualFont
 		double charDepth (int c) const    {return vf->charDepth(c);} 
 		double charHeight (int c) const   {return vf->charHeight(c);} 
 		const TFM* getTFM () const        {return vf->getTFM();}
-		void assignFontID (int fontnum, int id) {}
 
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : vf(proxy.vf), dsize(ds), ssize(ss) {}
+		void assignFontID (int fontnum, int id) {}
 
 	private:
 		const VirtualFont *vf;
@@ -166,10 +191,10 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 		int fontID (int n) const;
 		int firstFontNum () const;
 		UInt8* getDVI (int c) const;
-		void assignFontID (int fontnum, int id);
 
 	protected:
 		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
+		void assignFontID (int fontnum, int id);
 
 	private:
 		map<int,int> num2id;

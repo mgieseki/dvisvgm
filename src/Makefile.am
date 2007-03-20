@@ -51,8 +51,8 @@ check_PROGRAMS = test-all
 TESTS = test-all
 
 # the tests that should be executed are described in the following header files
-test_all_headers = tests/CalculatorTest.h tests/FontManagerTest.h tests/StreamCounterTest.h \
-						 tests/PageSizeTest.h
+test_all_headers = tests/CalculatorTest.h tests/FontManagerTest.h tests/KPSFileFinderTest.h \
+						 tests/StreamCounterTest.h tests/PageSizeTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 
 test_all_LDADD        = $(noinst_LIBRARIES)

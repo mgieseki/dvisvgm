@@ -140,7 +140,6 @@ static int dvisvgm (int argc, char *argv[]) {
 		Message::level = args.verbosity_arg;
 		DVIToSVG dvisvg(ifs, *out);
 		KPSFileFinder::progname = argv[0];
-//		dvisvg.setFileFinder(&kps);
 		dvisvg.setMetafontMag(args.mag_arg);
 		dvisvg.setProcessSpecials(args.specials_flag);
 //		dvisvg.setDrawBoundingBox(args.draw_bbox_given);
@@ -148,8 +147,6 @@ static int dvisvgm (int argc, char *argv[]) {
 		for (char *c=args.bbox_format_arg; *c; c++)
 			*c = tolower(*c);
 		dvisvg.setPageSize(args.bbox_format_arg);
-//		FontMap fontMap("map", true);
-//		dvisvg.setFontMap(&fontMap);
 		
 		try {
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
@@ -198,11 +195,11 @@ int main (int argc, char *argv[]) {
 	}
 	catch (const MiKTeX::Core::MiKTeXException &e) {
 		MiKTeX::Core::Utils::PrintException(e);
-		return 1;
 	}
 	catch (const exception &e) {
 		MiKTeX::Core::Utils::PrintException(e);
 	}
+	return 1;
 #else
 	return dvisvgm(argc, argv);
 #endif

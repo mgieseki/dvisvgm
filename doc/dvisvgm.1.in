@@ -130,12 +130,22 @@ to \-TS\fIsx\fP,\fIsy\fP.
 .\"
 .\"This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
 .TP
-.B \-\^m, \-\-mag=factor
+.B \-\^m, \-\-map-file=file
+Sets the map file that is used to look up renamed fonts. \fBdvisvgm\fP doesn't provide
+its own map file but tries to read dvipdfm.map instead (see dvipdfm manual for further
+information). Use option \-m to select a different file.
+.TP
+.B \-\^M, \-\-mag=factor
 Sets the maginfication factor used for Metafont calls prior tracing the glyphs.
 The larger this value the better the tracing results. Nevertheless 
 large magnification values can cause Metafont arithmetic errors due to number 
 overflows. So use this option with care. The default setting usually produces 
 nice results.
+.TP
+.B \-\^n, \-\-no-mktexmf
+Suppresses the generation of missing font files. If \fBdvisvgm\fP can't find a font file
+through the kpathsea lookup mechanism, it calls the external tools mktextfm or mktexmf by 
+default. Option \-n disables these calls.
 .TP
 .B \-\^o, \-\-output=file
 Sets name of output file.
@@ -268,7 +278,7 @@ messages are printed.
 Creates a compressed 
 .SM SVG 
 file with suffix .svgz. The optional argument specifies the compression level. 
-Valid values are in the range of 1 to 9 (default is 3). Larger values cause 
+Valid values are in the range of 1 to 9 (default is 9). Larger values cause 
 better compression results but take more computation time.
 If \fB\-f\fP is given in conjunction with \fB\-z\fP the font file will be compressed too.
 
@@ -280,10 +290,10 @@ This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
 Converts first page of \fIfile.dvi\fP to \fIfile.svg\fP.
 .TP
 .B dvisvgm \-z file
-Converts first page of \fIfile.dvi\fP to \fIfile.svgz\fP with default compression level 3.
+Converts first page of \fIfile.dvi\fP to \fIfile.svgz\fP with default compression level 9.
 .TP
-.B dvisvgm \-p5 \-z9 \-ba4\-l \-onewfile file
-Converts fifth page of \fIfile.dvi\fP to \fInewfile.svgz\fP with maximum compression level 9.
+.B dvisvgm \-p5 \-z3 \-ba4\-l \-onewfile file
+Converts fifth page of \fIfile.dvi\fP to \fInewfile.svgz\fP with compression level 3.
 The bounding box is set to DIN/ISO A4 in landscape format.
 .TP
 .B dvisvgm \-\-transform="R20,w/3,2h/5 T1cm,1cm S2,3" file
@@ -296,19 +306,28 @@ the library's documentation influence the converter.
 
 .SH FILES
 The location of the following files is determined by the kpathsea library.
-To check the actual kpathsea configuration you can use the kpsewhich utility.
+To check the actual kpathsea configuration you can use the \fBkpsewhich\fP utility.
 .TP
-.B *.pfb
-PostScript Type 1 font files
+.B *.map
+Font map files
 .TP
 .B *.mf 
 Metafont input files
 .TP
+.B *.pfb
+PostScript Type 1 font files
+.TP
 .B *.tfm
 TeX font metric files
+.TP
+.B *.ttf
+TrueType font files
+.TP
+.B *.vf
+Virtual font files
 
 .SH "SEE ALSO"
-.BR tex "(1), " mf "(1), " grodvi "(1), " potrace "(1), "
+.BR tex "(1), " mf "(1), " mktexmf "(1), " grodvi "(1), " potrace "(1), "
 and the \fB"kpathsea library"\fP info documentation.
 
 .SH VERSION

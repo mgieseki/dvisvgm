@@ -121,21 +121,24 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 			else if (KPSFileFinder::lookup(name+".mf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
 			else
-				throw FontException("font " + name + " not found");
+				newfont = new EmptyFont(name);
+//				throw FontException("font " + name + " not found");
 			name2index[name] = newid;
 		}
 		if (newfont) {
 			fonts.push_back(newfont);
-			if (vfStack.empty())
+			if (vfStack.empty())  // register font referenced in dvi file?
 				num2index[fontnum] = newid;
-			else
-				vfStack.top()->assignFontID(fontnum, newid);
+			else {  // register font referenced in vf file
+				VirtualFont *top = const_cast<VirtualFont*>(vfStack.top());
+				top->assignFontID(fontnum, newid);
+			}
 		}
 	}
 }
 
 
-//@@ do we need this?
+//@@ do we need this method?
 const Font* FontManager::selectFont (int n) {
 	int id = fontID(n);
 	if (id < 0)

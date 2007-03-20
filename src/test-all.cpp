@@ -1,25 +1,4 @@
-/***********************************************************************
-** test-all.cpp                                                       **
-**                                                                    **
-** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
-**                                                                    **
-** This program is free software; you can redistribute it and/or      **
-** modify it under the terms of the GNU General Public License        **
-** as published by the Free Software Foundation; either version 2     **
-** of the License, or (at your option) any later version.             **
-**                                                                    **
-** This program is distributed in the hope that it will be useful,    **
-** but WITHOUT ANY WARRANTY; without even the implied warranty of     **
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      **
-** GNU General Public License for more details.                       **
-**                                                                    **
-** You should have received a copy of the GNU General Public License  **
-** along with this program; if not, write to the Free Software        **
-** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
-** Boston, MA 02110-1301, USA.                                        **
-***********************************************************************/
-// $Id$
+/* Generated file, do not edit */
 
 #ifndef CXXTEST_RUNNING
 #define CXXTEST_RUNNING
@@ -79,6 +58,37 @@ public:
  TestDescription_FontManagerTest_test_getFont() : CxxTest::RealTestDescription( Tests_FontManagerTest, suiteDescription_FontManagerTest, 46, "test_getFont" ) {}
  void runTest() { suite_FontManagerTest.test_getFont(); }
 } testDescription_FontManagerTest_test_getFont;
+
+#include "tests/KPSFileFinderTest.h"
+
+static KPSFileFinderTest suite_KPSFileFinderTest;
+
+static CxxTest::List Tests_KPSFileFinderTest = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_KPSFileFinderTest( "tests/KPSFileFinderTest.h", 30, "KPSFileFinderTest", suite_KPSFileFinderTest, Tests_KPSFileFinderTest );
+
+static class TestDescription_KPSFileFinderTest_test_findBaseFile : public CxxTest::RealTestDescription {
+public:
+ TestDescription_KPSFileFinderTest_test_findBaseFile() : CxxTest::RealTestDescription( Tests_KPSFileFinderTest, suiteDescription_KPSFileFinderTest, 33, "test_findBaseFile" ) {}
+ void runTest() { suite_KPSFileFinderTest.test_findBaseFile(); }
+} testDescription_KPSFileFinderTest_test_findBaseFile;
+
+static class TestDescription_KPSFileFinderTest_test_findMappedFile : public CxxTest::RealTestDescription {
+public:
+ TestDescription_KPSFileFinderTest_test_findMappedFile() : CxxTest::RealTestDescription( Tests_KPSFileFinderTest, suiteDescription_KPSFileFinderTest, 40, "test_findMappedFile" ) {}
+ void runTest() { suite_KPSFileFinderTest.test_findMappedFile(); }
+} testDescription_KPSFileFinderTest_test_findMappedFile;
+
+static class TestDescription_KPSFileFinderTest_test_mktexmf : public CxxTest::RealTestDescription {
+public:
+ TestDescription_KPSFileFinderTest_test_mktexmf() : CxxTest::RealTestDescription( Tests_KPSFileFinderTest, suiteDescription_KPSFileFinderTest, 58, "test_mktexmf" ) {}
+ void runTest() { suite_KPSFileFinderTest.test_mktexmf(); }
+} testDescription_KPSFileFinderTest_test_mktexmf;
+
+static class TestDescription_KPSFileFinderTest_test_findUnavailableFile : public CxxTest::RealTestDescription {
+public:
+ TestDescription_KPSFileFinderTest_test_findUnavailableFile() : CxxTest::RealTestDescription( Tests_KPSFileFinderTest, suiteDescription_KPSFileFinderTest, 66, "test_findUnavailableFile" ) {}
+ void runTest() { suite_KPSFileFinderTest.test_findUnavailableFile(); }
+} testDescription_KPSFileFinderTest_test_findUnavailableFile;
 
 #include "tests/StreamCounterTest.h"
 

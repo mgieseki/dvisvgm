@@ -43,7 +43,8 @@ static const char* mktex (const std::string &fname);
 	#include <kpathsea/kpathsea.h>
 	#include <miktex/core.h>
 #else
-	// unfortunately, kpathsea is not C++-ready, so we have to wrap it with some ugly code
+	// unfortunately, the kpathsea headers are not C++-ready,
+	// so we have to wrap it with some ugly code
 	namespace KPS {
 		extern "C" {
 			#include <kpathsea/kpathsea.h>
@@ -69,13 +70,14 @@ static const char* find_file (const std::string &fname) {
 		types["pfb"] = kpse_type1_format;
 		types["vf"]  = kpse_vf_format;
 #ifdef MIKTEX
-		types["mf"] = kpse_miscfonts_format;  // this is a bug, I think
+		types["mf"]  = kpse_miscfonts_format;  // this is a bug, I think
+		types["exe"] = kpse_program_binary_format;
 #else
-		types["mf"] = kpse_mf_format;
+		types["mf"]  = kpse_mf_format;
 #endif
 		types["ttf"] = kpse_truetype_format;
-		types["exe"] = kpse_program_binary_format;
 		types["map"] = kpse_fontmap_format;
+		types["sty"] = kpse_tex_format;
 	}
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
@@ -158,7 +160,7 @@ const char* KPSFileFinder::lookup (const std::string &fname) {
 		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
 #if 1
-		const char *mapfile = find_file("dvipdfm.map");
+		const char *mapfile = find_file("dvipdfm.map"); // @@ evaluate -m option
 		std::ifstream ifs(mapfile);
 		fontmap.read(ifs);
 //		fontmap.write(std::cout);

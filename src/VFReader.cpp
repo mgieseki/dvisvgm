@@ -22,6 +22,7 @@
 // $Id$
 
 #include <sstream>
+#include "Font.h"
 #include "FontManager.h"
 #include "VFActions.h"
 #include "VFReader.h"
@@ -170,7 +171,7 @@ void VFReader::cmdFontDef (int len) {
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
    if (fontManager)
-      fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
+		fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
    if (actions)
       actions->defineFont(fontnum, fontname, checksum, dsize, ssize);
 }

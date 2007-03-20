@@ -57,6 +57,7 @@ double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c);}
 double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
 double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
 
+//////////////////////////////////////////////////////////////////////////////
 
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
@@ -93,4 +94,9 @@ int VirtualFontImpl::firstFontNum () const {
 
 UInt8* VirtualFontImpl::getDVI (int c) const {
 	return 0; // @@
+}
+
+
+void VirtualFontImpl::assignFontID (int fontnum, int id) {
+	// @@
 }

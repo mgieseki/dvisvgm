@@ -494,13 +494,12 @@ void DVIReader::cmdFontNum0 (int num) {
 	const Font *font = fontManager->selectFont(num);
 	if (!font) {
 		ostringstream oss;
-		oss << "font number " << num << " undefined";
+		oss << "undefined font number " << num;
 		throw DVIException(oss.str());
 	}
 	currFontNum = num;
 	if (actions)
 		actions->setFont(fontManager->fontID(num));  // all actions get a recomputed font number
-	//		fontInfoMap[num]->readTFM(fileFinder);  // read font metrics if necessary
 }
 
 
