@@ -25,7 +25,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "FileFinder.h"
 #include "GFTracer.h"
 #include "macros.h"
 #include "Message.h"

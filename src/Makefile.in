@@ -55,7 +55,7 @@ libdvisvgm_a_AR = $(AR) $(ARFLAGS)
 libdvisvgm_a_LIBADD =
 am_libdvisvgm_a_OBJECTS = Bitmap.$(OBJEXT) BoundingBox.$(OBJEXT) \
 	Calculator.$(OBJEXT) CharmapTranslator.$(OBJEXT) \
-	DVIReader.$(OBJEXT) DVIToSVG.$(OBJEXT) \
+	Directory.$(OBJEXT) DVIReader.$(OBJEXT) DVIToSVG.$(OBJEXT) \
 	DVIToSVGActions.$(OBJEXT) FileSystem.$(OBJEXT) Font.$(OBJEXT) \
 	FontEngine.$(OBJEXT) FontGlyph.$(OBJEXT) FontManager.$(OBJEXT) \
 	FontMap.$(OBJEXT) GFReader.$(OBJEXT) GFTracer.$(OBJEXT) \
@@ -189,13 +189,13 @@ dvisvgm_SOURCES = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 
 dvisvgm_LDADD = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
-libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h DVIActions.h \
+libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h Directory.h DVIActions.h \
    DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileSystem.h Font.h FontEmitter.h \
 	FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h KPSFileFinder.h macros.h \
 	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h StreamReader.h SVGFontEmitter.h \
-	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h VFReader.h XMLDocTypeNode.h XMLDocument.h \
-	XMLNode.h XMLString.h \
-	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp DVIReader.cpp DVIToSVG.cpp \
+	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h VFActions.h VFReader.h XMLDocTypeNode.h \
+	XMLDocument.h XMLNode.h XMLString.h \
+	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp Directory.cpp DVIReader.cpp DVIToSVG.cpp \
 	DVIToSVGActions.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
   	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
 	PageSize.cpp StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp \
@@ -207,7 +207,7 @@ EXTRA_DIST = miktex-kps.h miktex-core.def miktex-kps.def options.ggo getopt.h ge
 TESTS = test-all
 
 # the tests that should be executed are described in the following header files
-test_all_headers = tests/CalculatorTest.h tests/FontManagerTest.h tests/KPSFileFinderTest.h \
+test_all_headers = tests/CalculatorTest.h tests/DirectoryTest.h tests/FontManagerTest.h tests/KPSFileFinderTest.h \
 						 tests/StreamCounterTest.h tests/PageSizeTest.h
 
 test_all_SOURCES = $(test_all_headers) test-all.cpp 
@@ -226,9 +226,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/Makefile
+	  $(AUTOMAKE) --foreign  src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -299,6 +299,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DVIReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DVIToSVG.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DVIToSVGActions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Directory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FileSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Font.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FontEngine.Po@am__quote@

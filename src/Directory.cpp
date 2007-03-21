@@ -1,23 +1,45 @@
-/************************************************
-* Directory.cpp                                *
-*                                               *
-* This file is part of dvisvgm                  *
-* Copyright (c) 2005 by Martin Gieseking        *
-************************************************/
+/***********************************************************************
+** Directory.cpp                                                      **
+**                                                                    **
+** This file is part of dvisvgm -- the DVI to SVG converter           **
+** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+**                                                                    **
+** This program is free software; you can redistribute it and/or      **
+** modify it under the terms of the GNU General Public License        **
+** as published by the Free Software Foundation; either version 2     **
+** of the License, or (at your option) any later version.             **
+**                                                                    **
+** This program is distributed in the hope that it will be useful,    **
+** but WITHOUT ANY WARRANTY; without even the implied warranty of     **
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      **
+** GNU General Public License for more details.                       **
+**                                                                    **
+** You should have received a copy of the GNU General Public License  **
+** along with this program; if not, write to the Free Software        **
+** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
+** Boston, MA 02110-1301, USA.                                        **
+***********************************************************************/
 // $Id$
 
+
 #include "Directory.h"
-#include "macros.h"
 
 using namespace std;
 
 #ifdef __WIN32__
-#include <windows.h>
+	#include <windows.h>
+#else
+	#include <errno.h>
+	#include <sys/stat.h>
 #endif
 
 
 Directory::Directory () {
+#if __WIN32__
 	handle = INVALID_HANDLE_VALUE;
+#else
+	dir = 0;
+#endif
 }
 
 
@@ -30,9 +52,13 @@ Directory::~Directory () {
 }
 
 
-bool Directory::open (const string &dirname) {
-	firstread = true;
+bool Directory::open (const string &dname) {
+	dirname = dname;
 #ifdef __WIN32__
+	firstread = true;
+	if (dname[dname.length()-1] == '/' || dname[dname.length()-1] == '\\')
+		dname = dname.substr(0, dname.length()-1);
+	dname += "/*";
 	handle = FindFirstFile(dirname.c_str(), &fileData);
 	return handle != INVALID_HANDLE_VALUE;
 #else
@@ -51,6 +77,9 @@ void Directory::close () {
 }
 
 
+/** Reads first/next directory entry. 
+ *  @param type type of entry to return (a: file or dir, f: file, d: dir) 
+ *  @return name of entry */
 const char* Directory::read (char type) {
 #ifdef __WIN32__
 	if (handle == INVALID_HANDLE_VALUE)
@@ -70,17 +99,21 @@ const char* Directory::read (char type) {
 #else
 	if (!dir)
 		return 0;
-	if (dirent = readdir(dir))
-		return dirent->d_name;
+	while (dirent = readdir(dir)) {
+		string path = string(dirname) + "/" + dirent->d_name;
+		struct stat stats;
+		stat(path.c_str(), &stats);
+		if (S_ISDIR(stats.st_mode)) {
+			if (type == 'a' || type == 'd')
+				return dirent->d_name;
+		}
+		else if (type == 'a' || type == 'f')
+			return dirent->d_name;
+	}
+	closedir(dir);
+	dir = 0;
 	return 0;
 #endif
 }
 
-#if 0
-#include <iostream>
-int main () {
-	Directory dir("c:/develop/*");
-	while (const char *name = dir.read('d'))
-		cout << name << endl;
-}	
-#endif
+

@@ -1,0 +1,10 @@
+Martin Gieseking <martin.gieseking@uos.de>
+	author of dvisvgm 
+
+Peter Selinger <selinger at users.sourceforge.net>
+	author of the potrace library
+
+Deepak Bandyopadhyay, Lutz Kettner
+	authors of gzstream library
+	dvisvgm uses a slightly modified version
+

@@ -83,7 +83,6 @@ static const char* find_file (const std::string &fname) {
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
 		return 0;
-	SHOW(fname);
 	return kpse_find_file(fname.c_str(), it->second, 0);
 }
 
@@ -177,10 +176,9 @@ const char* KPSFileFinder::lookup (const std::string &fname) {
 		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
 #if 1
-		const char *fname = "fonts.map"; // dvipdfm.map
+		const char *fname = "dvipdfm.map";
 		const char *mapfile = find_file(fname); // @@ evaluate -m option
 		if (mapfile) {
-			SHOW(mapfile);
 			std::ifstream ifs(mapfile);
 			fontmap.read(ifs);
 //			fontmap.write(std::cout);

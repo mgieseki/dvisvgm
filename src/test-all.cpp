@@ -40,6 +40,25 @@ public:
  void runTest() { suite_CalculatorTest.test_exceptions(); }
 } testDescription_CalculatorTest_test_exceptions;
 
+#include "tests/DirectoryTest.h"
+
+static DirectoryTest suite_DirectoryTest;
+
+static CxxTest::List Tests_DirectoryTest = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_DirectoryTest( "tests/DirectoryTest.h", 32, "DirectoryTest", suite_DirectoryTest, Tests_DirectoryTest );
+
+static class TestDescription_DirectoryTest_test_dirs : public CxxTest::RealTestDescription {
+public:
+ TestDescription_DirectoryTest_test_dirs() : CxxTest::RealTestDescription( Tests_DirectoryTest, suiteDescription_DirectoryTest, 35, "test_dirs" ) {}
+ void runTest() { suite_DirectoryTest.test_dirs(); }
+} testDescription_DirectoryTest_test_dirs;
+
+static class TestDescription_DirectoryTest_test_file : public CxxTest::RealTestDescription {
+public:
+ TestDescription_DirectoryTest_test_file() : CxxTest::RealTestDescription( Tests_DirectoryTest, suiteDescription_DirectoryTest, 48, "test_file" ) {}
+ void runTest() { suite_DirectoryTest.test_file(); }
+} testDescription_DirectoryTest_test_file;
+
 #include "tests/FontManagerTest.h"
 
 static FontManagerTest suite_FontManagerTest;
