@@ -32,15 +32,16 @@
 // static members of KPSFileFinder
 const char *KPSFileFinder::progname = 0;
 bool KPSFileFinder::initialized = false;
-FontMap KPSFileFinder::fontmap;
+FontMap *KPSFileFinder::fontmap = 0;
 
 // prototypes of static functions 
 static const char* find_file (const std::string &fname);
-static const char* find_mapped_file (std::string fname, const FontMap &fontmap);
+static const char* find_mapped_file (std::string fname);
 static const char* mktex (const std::string &fname);
 
 #ifdef MIKTEX	
 	#include <kpathsea/kpathsea.h>
+	#include <miktex/app.h>
 	#include <miktex/core.h>
 	#include "Directory.h"
 #else
@@ -90,15 +91,14 @@ static const char* find_file (const std::string &fname) {
 /** Checks whether the given file is mapped to a different name and if the 
  *  file can be found under this name. 
  *  @param fname name of file to look up
- *  @param fontmap font map to use 
  *  @return file path on success, 0 otherwise */
-static const char* find_mapped_file (std::string fname, const FontMap &fontmap) {
+static const char* find_mapped_file (std::string fname) {
 	size_t pos = fname.rfind('.');
-	if (pos == std::string::npos) 
+	if (pos == std::string::npos || !KPSFileFinder::fontmap) 
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
-	const char *mapped_name = fontmap.lookup(base);
+	const char *mapped_name = KPSFileFinder::lookup(base);
 	if (mapped_name) {
 		fname = std::string(mapped_name) + "." + ext;
 		const char *path;
@@ -144,30 +144,18 @@ static const char* mktex (const std::string &fname) {
 
 
 /** Searches a file in the TeX tree. 
- *  If the file doesn't exist, maximal two further steps are applied:
+ *  If the file doesn't exist, maximal two further steps are applied
+ *  (if "extended" is true):
  *  - checks whether the filename is mapped to a different name and returns
  *    the path to that name
  *  - in case of tfm or mf files: invokes the external mktextfm/mktexmf tool
  *    to create the missing file
- *  @param fname name of file to look up 
+ *  @param fname name of file to look up
+ *  @param extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
-const char* KPSFileFinder::lookup (const std::string &fname) {
+const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
 	if (!initialized) {
 #ifdef MIKTEX
-		char rootdir[_MAX_PATH];
-		char searchpath[_MAX_PATH + 100];
-		for (unsigned i = MiKTeX::Core::SesGetSession()->GetNumberOfTEXMFRoots()); i > 0; --i) {
-			const char * rootdir = GetSession()->GetRootDirectory(r).Get();
-			size_t len = strlen(rootdir);
-			// strip trailing slash
-			if (len > 0 && rootdir[len-1] == '/' || rootdir[len-1] == '\\')
-				rootdir[len-1] = 0;
-			len = _MAX_PATH + 100;
-			Utils::ReplaceString(searchpath, &len, "%R\\dvipdfm//", "%R", rootdir);
-			SHOW(searchpath);
-//			if (miktex_find_file(config_file_name, szSearchPath, szConfigFile)) {
-//			}
-		}
 #else
 		kpse_set_program_name(progname, NULL);
 		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
@@ -175,19 +163,19 @@ const char* KPSFileFinder::lookup (const std::string &fname) {
 		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
 		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
-#if 1
+#if 0
 		const char *fname = "dvipdfm.map";
 		const char *mapfile = find_file(fname); // @@ evaluate -m option
 		if (mapfile) {
 			std::ifstream ifs(mapfile);
-			fontmap.read(ifs);
+			fontmap->read(ifs);
 //			fontmap.write(std::cout);
 		}
 #endif
 		initialized = true;
 	}
 	const char *path;
-	if ((path = find_file(fname)) || (path = find_mapped_file(fname, fontmap)) || (path = mktex(fname))) 
+	if ((path = find_file(fname)) || (extended  && (path = find_mapped_file(fname)) || (path = mktex(fname)))) 
 		return path;
 	return 0;
 }

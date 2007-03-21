@@ -36,9 +36,9 @@ class Directory
 {
    public:
 		Directory ();
-      Directory (const std::string &path);
+      Directory (std::string path);
 		~Directory ();
-		bool open (const std::string &path);
+		bool open (std::string path);
 		void close ();
 		const char* read (char type='a');
 		std::string getEntry () const;

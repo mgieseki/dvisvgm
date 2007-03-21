@@ -43,7 +43,7 @@ Directory::Directory () {
 }
 
 
-Directory::Directory (const string &dirname) {
+Directory::Directory (string dirname) {
 	open(dirname);
 }
 
@@ -52,14 +52,14 @@ Directory::~Directory () {
 }
 
 
-bool Directory::open (const string &dname) {
+bool Directory::open (string dname) {
 	dirname = dname;
 #ifdef __WIN32__
 	firstread = true;
 	if (dname[dname.length()-1] == '/' || dname[dname.length()-1] == '\\')
 		dname = dname.substr(0, dname.length()-1);
-	dname += "/*";
-	handle = FindFirstFile(dirname.c_str(), &fileData);
+	dname += "\\*";
+	handle = FindFirstFile(dname.c_str(), &fileData);
 	return handle != INVALID_HANDLE_VALUE;
 #else
 	dir = opendir(dirname.c_str());
