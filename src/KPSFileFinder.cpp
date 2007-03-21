@@ -31,6 +31,7 @@
 
 // static members of KPSFileFinder
 const char *KPSFileFinder::progname = 0;
+bool KPSFileFinder::mktexEnabled = true;
 bool KPSFileFinder::initialized = false;
 FontMap *KPSFileFinder::fontmap = 0;
 
@@ -114,7 +115,7 @@ static const char* find_mapped_file (std::string fname) {
  *  @return file path on success, 0 otherwise */
 static const char* mktex (const std::string &fname) {
 	size_t pos = fname.rfind('.');
-	if (pos == std::string::npos)
+	if (!KPSFileFinder::mktexEnabled || pos == std::string::npos)
 		return 0;
 
 	std::string ext  = fname.substr(pos+1);  // file extension
@@ -155,22 +156,12 @@ static const char* mktex (const std::string &fname) {
  *  @return path to file on success, 0 otherwise */
 const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
 	if (!initialized) {
-#ifdef MIKTEX
-#else
+#ifndef MIKTEX
 		kpse_set_program_name(progname, NULL);
 		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
 		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
-#endif
-#if 0
-		const char *fname = "dvipdfm.map";
-		const char *mapfile = find_file(fname); // @@ evaluate -m option
-		if (mapfile) {
-			std::ifstream ifs(mapfile);
-			fontmap->read(ifs);
-//			fontmap.write(std::cout);
-		}
 #endif
 		initialized = true;
 	}

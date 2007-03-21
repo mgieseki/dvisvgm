@@ -32,6 +32,7 @@ class KPSFileFinder
    public:
 		static const char* lookup (const std::string &fname, bool extended=true);
 		static const char *progname;
+		static bool mktexEnabled;
 		static FontMap *fontmap;
 
 	private:

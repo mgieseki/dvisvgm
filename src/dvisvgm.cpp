@@ -186,21 +186,39 @@ int main (int argc, char *argv[]) {
 	FontMap fontMap;
 	KPSFileFinder::fontmap = &fontMap;
 	KPSFileFinder::progname = argv[0];
+	KPSFileFinder::mktexEnabled = !args.no_mktexmf_flag;
 #ifdef MIKTEX
 	try {
 		// initialize MiKTeX
 		MiKTeX::App::Application app;
 		app.Init(argv[0]);
-		// read dvipdfm mapfiles
-		MiKTeX::Core::Session *session = app.GetSession();
-		for (unsigned i=session->GetNumberOfTEXMFRoots(); i > 0; i--) {
-			string rootdir = session->GetRootDirectory(i-1).Get();
-			// strip trailing slash
-			size_t len = rootdir.length();
-			if (len > 0 && (rootdir[len-1] == '/' || rootdir[len-1] == '\\'))
-				rootdir = rootdir.substr(0, len-1);
-			rootdir += "\\dvipdfm\\config";
-			fontMap.readdir(rootdir);
+#endif
+		if (args.map_file_given) {
+			// try to read user font map file
+			const char *mappath = 0;
+			ifstream ifs(args.map_file_arg);
+			if (ifs)
+				fontMap.read(ifs);
+			else if ((mappath = KPSFileFinder::lookup(args.map_file_arg, false))) {
+				ifstream ifs(mappath);
+				fontMap.read(ifs);
+			}
+			else
+				Message::wstream(true) << "map file '" << args.map_file_arg << "' not found\n";
+		}
+		else {
+#ifdef MIKTEX
+			// read dvipdfm mapfiles
+			MiKTeX::Core::Session *session = app.GetSession();
+			for (unsigned i=session->GetNumberOfTEXMFRoots(); i > 0; i--) {
+				string rootdir = session->GetRootDirectory(i-1).Get();
+				// strip trailing slash
+				size_t len = rootdir.length();
+				if (len > 0 && (rootdir[len-1] == '/' || rootdir[len-1] == '\\'))
+					rootdir = rootdir.substr(0, len-1);
+				rootdir += "\\dvipdfm\\config";
+				fontMap.readdir(rootdir);
+			}
 		}
 		// MiKTeX preparations complete => call dvisvgm
 		int ret = dvisvgm(args);
@@ -215,14 +233,14 @@ int main (int argc, char *argv[]) {
 	}
 	return 1;
 #else
-	const char *fname = "dvipdfm.map";
-	const char *mapfile = KPSFileFinder::lookup(fname, false); // @@ evaluate -m option
-	if (mapfile) {
-		std::ifstream ifs(mapfile);
-		fontmap->read(ifs);
-		fontMap.read();
+		const char *fname = "dvipdfm.map";
+		const char *mapfile = KPSFileFinder::lookup(fname, false); // @@ evaluate -m option
+		if (mapfile) {
+			std::ifstream ifs(mapfile);
+			fontmap->read(ifs);
+			fontMap.read();
+		}
 	}
 	return dvisvgm(args);
 #endif
 }
-
