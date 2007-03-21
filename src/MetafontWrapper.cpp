@@ -38,7 +38,7 @@ MetafontWrapper::MetafontWrapper (const string &fname)
 {
 }
 
-
+#if 0
 /** This helper function tries to find the mf file for a given fontname. */
 static const char* lookup (string fontname) {
 	// try to find file with exact fontname
@@ -57,6 +57,7 @@ static const char* lookup (string fontname) {
 	// not found either => give up
 	return 0;
 }	
+#endif
 
 
 /** Calls Metafont and evaluates the logfile. If a gf file was successfully
@@ -66,7 +67,7 @@ static const char* lookup (string fontname) {
  *  @param mag magnification factor
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
-	if (!lookup(fontname))
+	if (!KPSFileFinder::lookup(fontname+".mf"))
 		return 1;     // mf file not available => no need to call the "slow" Metafont
 	
 	FileSystem::remove(fontname+".gf");	
@@ -123,7 +124,7 @@ void MetafontWrapper::removeOutputFiles () {
 
 
 void MetafontWrapper::removeOutputFiles (const string &fontname) {
-	FileSystem::remove(fontname+".gf");
-	FileSystem::remove(fontname+".log");
-	FileSystem::remove(fontname+".tfm");
+	const char *ext[] = {"gf", "log", "tfm", 0};
+	for (const char **p = ext; *p; ++p)
+		FileSystem::remove(fontname + "." + *p);
 }

@@ -39,7 +39,7 @@ class FontManager;
 class TFM;
 
 
-/** Base interface for all font classes. */
+/** Abstract base for all font classes. */
 struct Font
 {
 	virtual ~Font () {}
@@ -198,6 +198,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 
 	private:
 		map<int,int> num2id;
+		map<UInt32, UInt8*> charDefs;
 };
 
 

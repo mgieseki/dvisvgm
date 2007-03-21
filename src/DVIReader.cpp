@@ -58,62 +58,12 @@ DVIReader::~DVIReader () {
 }
 
 
-/*
-void DVIReader::setFileFinder (FileFinder *ff) {
-	fileFinder = ff;
-}*/
-
 
 DVIActions* DVIReader::replaceActions (DVIActions *a) {
 	DVIActions *prev_actions = actions;
 	actions = a;
 	return prev_actions;
 }
-
-
-#if 0
-/** Reads an unsigned integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
- *  @return read integer */
-UInt32 DVIReader::readUnsigned (int bytes) {
-	UInt32 ret = 0;
-	for (int i=bytes-1; i >= 0 && !in().eof(); i--) {
-		UInt32 b = in().get();
-		ret |= b << (8*i);
-	}
-	return ret;
-}
-
-
-/** Reads an signed integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
- *  @return read integer */
-Int32 DVIReader::readSigned (int bytes) {
-	Int32 ret = in().get();
-	if (ret & 128)        // negative value?
-		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !in().eof(); i--) 
-		ret = (ret << 8) | in().get();
-	return ret;
-}
-
-
-string DVIReader::readString (int bytes) {
-	char *buf = new char[bytes+1];
-	if (bytes > 0)
-		in().get(buf, bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
-	else
-		*buf = 0;
-	string ret = buf;
-	delete [] buf;
-	return ret;
-}
-#endif
-
-/*
-void DVIReader::error (string msg) const {
-	Message::ein() << msg << endl;
-}*/
 
 
 /** Reads a single DVI command from the current position of the input stream and calls the
@@ -196,18 +146,18 @@ bool DVIReader::executePage (unsigned n) {
 	in().clear();    // reset all status bits
 	if (!in())
 		throw DVIException("invalid DVI file");
-	in().seekg(-1, ios_base::end);    // stream pointer to last byte
+	in().seekg(-1, ios_base::end);      // stream pointer to last byte
 	while (in().peek() == 223) 
-		in().seekg(-1, ios_base::cur); // skip fill bytes
-	in().seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
-	UInt32 q = readUnsigned(4);     // pointer to begin of postamble
-	in().seekg(q, ios_base::beg);     // now on begin of postamble
-	if (executeCommand() != 248)    // execute postamble command but not the fontdefs
+		in().seekg(-1, ios_base::cur);   // skip fill bytes
+	in().seekg(-4, ios_base::cur);      // now on first byte of q (pointer to begin of postamble)
+	UInt32 q = readUnsigned(4);         // pointer to begin of postamble
+	in().seekg(q, ios_base::beg);       // now on begin of postamble
+	if (executeCommand() != 248)        // execute postamble command but not the fontdefs
 		return false;
 	if (n < 1 || n > totalPages) 
 		return false;
 	in().seekg(prevBop, ios_base::beg); // now on last bop
-	inPostamble = false;              // we jumped out of the postamble
+	inPostamble = false;                // we jumped out of the postamble
 	unsigned pageCount = totalPages;
 	for (; pageCount > n && prevBop > 0; pageCount--) {
 		in().seekg(41, ios_base::cur);   // skip bop and 10*4 \count bytes => now on pointer to prev bop
@@ -229,23 +179,11 @@ void DVIReader::executePostamble () {
 		in().seekg(-1, ios_base::cur); // skip fill bytes
 
 	in().seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
-	UInt32 q = readUnsigned(4);     // pointer to begin of postamble
+	UInt32 q = readUnsigned(4);       // pointer to begin of postamble
 	in().seekg(q, ios_base::beg);     // now on begin of postamble
-	while (executeCommand() != 249);   // read all commands until postpost (= 249) is reached
+	while (executeCommand() != 249);  // read all commands until postpost (= 249) is reached
 }
 
-
-#if 0
-/** Returns the FontInfo for a given font number. 
- *  @param num number of font 
- *  @return assigned FontInfo or 0 if font number is undefined */
-const FontInfo* DVIReader::getFontInfo () const {
-	map<int,FontInfo*>::const_iterator it = fontInfoMap.find(currFontNum);
-	if (it != fontInfoMap.end())
-		return it->second;
-	return 0;
-}
-#endif
 
 /** Returns the current x coordinate in TeX point units. 
  *  This is the horizontal position where the next output would be placed. */
@@ -375,6 +313,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		const Font *font = fontManager->getFont(currFontNum);
 		const VirtualFont *vf = dynamic_cast<const VirtualFont*>(font);
 		if (vf) {    // is current font a virtual font?
+			SHOW("virtual font");
 //			UInt8 *dvi = vf->getDVI(c); // get DVI snippet that describes character c
 			fontManager->enterVF(vf);   // new font number context
 			DVIPosition pos = currPos;  // save current cursor position

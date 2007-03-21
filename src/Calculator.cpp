@@ -177,19 +177,3 @@ double Calculator::getVariable (const string &name) const {
 	return it->second;
 }
 
-
-#if 0
-int main (int argc, char **argv) {
-   istringstream iss;
-   string s = argv[1];
-   iss.str(s);
-   Calculator c;
-	c.setVariable("v", 3);
-	try {
-   	cout << c.eval(iss) << endl;
-	}
-	catch (const CalculatorException &e) {
-		cout << e.getMessage() << endl;
-	}
-}
-#endif

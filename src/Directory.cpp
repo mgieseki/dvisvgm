@@ -99,7 +99,7 @@ const char* Directory::read (char type) {
 #else
 	if (!dir)
 		return 0;
-	while (dirent = readdir(dir)) {
+	while ((dirent = readdir(dir))) {
 		string path = string(dirname) + "/" + dirent->d_name;
 		struct stat stats;
 		stat(path.c_str(), &stats);

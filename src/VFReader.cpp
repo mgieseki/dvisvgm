@@ -78,9 +78,9 @@ int VFReader::executeCommand (ApproveAction approve) {
 			case 247: cmdPre();      break;      // preamble
 			case 248: cmdPost();     break;      // postamble
 			default : {                          // invalid opcode
+				replaceActions(act);              // reenable actions
 				ostringstream oss; 
 				oss << "undefined VF command (opcode " << opcode << ')';
-				replaceActions(act);              // reenable actions
 				throw VFException(oss.str());
 			}
 		}
@@ -112,8 +112,8 @@ bool VFReader::executePreambleAndFontDefs () {
 	if (!in())
 		return false;
 	in().seekg(0);  // move file pointer to first byte of the input stream
-	int opcode = 0;
 	while (!in().eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,6 @@ void VFReader::cmdPre () {
 
 
 void VFReader::cmdPost () {
-	UInt32 byte;
 	while ((readUnsigned(1)) == 248); // skip fill bytes
 	if (actions)
 		actions->postamble();
@@ -170,9 +169,10 @@ void VFReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-   if (fontManager)
+   if (fontManager) {
 		fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
-   if (actions)
-      actions->defineFont(fontnum, fontname, checksum, dsize, ssize);
+	   if (actions)
+   	   actions->defineFont(fontManager->fontID(fontnum), fontname, checksum, dsize, ssize);
+	}
 }
 
