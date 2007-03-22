@@ -35,6 +35,7 @@ struct FileSystem
 	static bool rename (string oldname, string newname);
 	static UInt64 filesize (string fname);
 	static string adaptPathSeperators (string path);
+	static string getcwd ();
 	static const char* DEVNULL;
 	static const char PATHSEP;
 };

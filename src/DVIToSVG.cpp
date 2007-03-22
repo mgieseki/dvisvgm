@@ -31,7 +31,6 @@
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "FontManager.h"
-#include "FontMap.h"
 #include "KPSFileFinder.h"
 #include "Message.h"
 #include "PageSize.h"
@@ -69,7 +68,6 @@ DVIToSVG::DVIToSVG (istream &is, ostream &os)
 	replaceActions(new DVIToSVGActions(*this, svgElement));
 	processSpecials = false;
 	doctypeNode = 0;
-	fontMap = 0;
 	mag = 4;
 }
 
@@ -207,13 +205,6 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 		
 	FORALL(usedChars, UsedCharsMap::const_iterator, i) {
 		string filename = i->first + ".pfb";
-#ifndef MIKTEX
-		if (fontMap) {			
-			const char *mappedName = fontMap->lookup(i->first);
-			if (mappedName)
-				filename = string(mappedName) + ".pfb";
-		}
-#endif
 		const char *path = KPSFileFinder::lookup(filename);  // path to pfb file
 		CharmapTranslator *cmt = svgActions->getCharmapTranslator(i->first);
 		if (path) {

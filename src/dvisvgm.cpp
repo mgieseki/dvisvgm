@@ -32,7 +32,6 @@
 #include "gzstream.h"
 #include "DVIToSVG.h"
 #include "FileSystem.h"
-#include "FontMap.h"
 #include "Message.h"
 #include "KPSFileFinder.h"
 #include "StreamCounter.h"
@@ -67,7 +66,7 @@ static string remove_path (string fname) {
 }
 
 
-static string check_suffix (string fname, string suffix) {
+static string ensure_suffix (string fname, string suffix) {
 	unsigned dotpos = remove_path(fname).rfind('.');
 	if (dotpos == string::npos) {
 		dotpos = fname.length();
@@ -107,12 +106,26 @@ static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
 }
 
 
-static int dvisvgm (struct gengetopt_args_info args) {
+static int dvisvgm (int argc, char *argv[]) {
+	struct gengetopt_args_info args;
+	if (cmdline_parser(argc, argv, &args))
+		return 1;
+	if (args.inputs_num < 1 || args.help_given) {
+		show_help();
+		return 0;
+	}
+	if (args.stdout_given && args.zip_given) {
+		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
+		return 1;
+	}
+	KPSFileFinder::progname = argv[0];
+	KPSFileFinder::mktexEnabled = !args.no_mktexmf_flag;
+
 	double start_time = get_time();
 	
-	string dvifile = check_suffix(args.inputs[0], "dvi");
+	string dvifile = ensure_suffix(args.inputs[0], "dvi");
 	string svgfile = args.output_given ? args.output_arg : remove_suffix(remove_path(dvifile));
-	svgfile = check_suffix(svgfile, args.zip_given ? "svgz" : "svg");	
+	svgfile = ensure_suffix(svgfile, args.zip_given ? "svgz" : "svg");	
 	
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
 	ostream *out = 0;		
@@ -129,7 +142,6 @@ static int dvisvgm (struct gengetopt_args_info args) {
 		DVIToSVG dvisvg(ifs, *out);
 		dvisvg.setMetafontMag(args.mag_arg);
 		dvisvg.setProcessSpecials(args.specials_flag);
-//		dvisvg.setDrawBoundingBox(args.draw_bbox_given);
 		set_trans(dvisvg, args);
 		for (char *c=args.bbox_format_arg; *c; c++)
 			*c = tolower(*c);
@@ -138,7 +150,7 @@ static int dvisvgm (struct gengetopt_args_info args) {
 		try {
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 				if (!args.stdout_given) {
-					sc.invalidate(); // output buffer is no longer valid
+					sc.invalidate();  // output buffer is no longer valid
 					delete out;       // close file stream and force writing
 				}
 				out = 0;
@@ -161,9 +173,9 @@ static int dvisvgm (struct gengetopt_args_info args) {
 		}
 	}
    else if (!ifs)
-      Message::estream() << "can't open file '" << dvifile << " for reading'\n";
+      Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
 	else if (!*out)
-      Message::estream() << "can't open file '" << svgfile << " for writing'\n";
+      Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
 	
 	if (!args.stdout_given)
 		delete out;
@@ -172,56 +184,12 @@ static int dvisvgm (struct gengetopt_args_info args) {
 
 
 int main (int argc, char *argv[]) {
-	struct gengetopt_args_info args;
-	if (cmdline_parser(argc, argv, &args))
-		return 1;
-	if (args.inputs_num < 1 || args.help_given) {
-		show_help();
-		return 0;
-	}
-	if (args.stdout_given && args.zip_given) {
-		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
-		return 1;
-	}
-	FontMap fontMap;
-	KPSFileFinder::fontmap = &fontMap;
-	KPSFileFinder::progname = argv[0];
-	KPSFileFinder::mktexEnabled = !args.no_mktexmf_flag;
 #ifdef MIKTEX
 	try {
-		// initialize MiKTeX
 		MiKTeX::App::Application app;
 		app.Init(argv[0]);
-#endif
-		if (args.map_file_given) {
-			// try to read user font map file
-			const char *mappath = 0;
-			ifstream ifs(args.map_file_arg);
-			if (ifs)
-				fontMap.read(ifs);
-			else if ((mappath = KPSFileFinder::lookup(args.map_file_arg, false))) {
-				ifstream ifs(mappath);
-				fontMap.read(ifs);
-			}
-			else
-				Message::wstream(true) << "map file '" << args.map_file_arg << "' not found\n";
-		}
-		else {
-#ifdef MIKTEX
-			// read dvipdfm mapfiles
-			MiKTeX::Core::Session *session = app.GetSession();
-			for (unsigned i=session->GetNumberOfTEXMFRoots(); i > 0; i--) {
-				string rootdir = session->GetRootDirectory(i-1).Get();
-				// strip trailing slash
-				size_t len = rootdir.length();
-				if (len > 0 && (rootdir[len-1] == '/' || rootdir[len-1] == '\\'))
-					rootdir = rootdir.substr(0, len-1);
-				rootdir += "\\dvipdfm\\config";
-				fontMap.readdir(rootdir);
-			}
-		}
-		// MiKTeX preparations complete => call dvisvgm
-		int ret = dvisvgm(args);
+		KPSFileFinder::app = &app;
+		int ret = dvisvgm(argc, argv);
 		app.Finalize();
 		return ret;
 	}
@@ -233,14 +201,6 @@ int main (int argc, char *argv[]) {
 	}
 	return 1;
 #else
-		const char *fname = "dvipdfm.map";
-		const char *mapfile = KPSFileFinder::lookup(fname, false); // @@ evaluate -m option
-		if (mapfile) {
-			std::ifstream ifs(mapfile);
-			fontmap->read(ifs);
-			fontMap.read();
-		}
-	}
-	return dvisvgm(args);
+	return dvisvgm(argc, argv);
 #endif
 }

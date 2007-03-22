@@ -65,6 +65,7 @@ class DVIReader : public StreamReader
 		
 //		void setFileFinder (FileFinder *ff);
 		bool executeDocument ();
+		bool executeAll ();
 		bool executeAllPages ();
 		void executePostamble ();
 		bool executePage (unsigned n);

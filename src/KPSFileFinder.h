@@ -27,16 +27,25 @@
 #include <string>
 #include "FontMap.h"
 
+#ifdef MIKTEX
+class MiKTeX::App::Application app;
+#endif
+
+
 class KPSFileFinder
 {
    public:
 		static const char* lookup (const std::string &fname, bool extended=true);
 		static const char *progname;
+		static const char *usermap;
 		static bool mktexEnabled;
-		static FontMap *fontmap;
+#ifdef MIKTEX
+		MiKTeX::App::Application *app;
+#endif
 
 	private:
 		static bool initialized;
+		static FontMap fontmap;
 };
 
 #endif

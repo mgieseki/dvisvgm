@@ -119,6 +119,17 @@ int DVIReader::executeCommand () {
 }
 
 
+/** Executes all DVI commands read from the input stream. */
+bool DVIReader::executeAll () {
+	if (!in())
+		return false;
+	in().seekg(0);
+	while (!in().eof())
+		executeCommand();
+	return true;
+}
+
+
 /** Executes all DVI commands from the preamble to postpost. */
 bool DVIReader::executeDocument () {
 	in().clear();   // reset all status bits

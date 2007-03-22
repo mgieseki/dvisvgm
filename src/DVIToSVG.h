@@ -32,7 +32,6 @@ using std::istream;
 using std::ostream;
 
 class CharmapTranslator;
-class FontMap;
 class XMLDocument;
 class XMLDocTypeNode;
 class XMLElementNode;
@@ -43,7 +42,6 @@ class DVIToSVG : public DVIReader
       DVIToSVG (istream &is, ostream &os);
 		~DVIToSVG ();
 		int convert (unsigned firstPage, unsigned lastPage);
-		void setFontMap (FontMap *fm)     {fontMap = fm;}
 		void setMetafontMag (double m);
 		void setPageSize (string name)    {pageSizeName = name;}
 		void setProcessSpecials (bool ps);
@@ -58,7 +56,6 @@ class DVIToSVG : public DVIReader
    private:
 		ostream &out;
 		double mag;              //< magnification factor of Metafont output
-		FontMap *fontMap;
 		XMLDocument *svgDocument;
 		XMLDocTypeNode *doctypeNode;
 		XMLElementNode *svgElement;

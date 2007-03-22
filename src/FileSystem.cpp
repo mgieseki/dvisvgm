@@ -31,9 +31,9 @@
 
 using namespace std;
 
-
 #ifdef __WIN32__
 	#include <windows.h>
+	#include <direct.h>
   	const char *FileSystem::DEVNULL = "nul";
   	const char FileSystem::PATHSEP = '\\';
 	#define unlink _unlink
@@ -75,3 +75,12 @@ string FileSystem::adaptPathSeperators (string path) {
 	return path;
 }
 
+
+string FileSystem::getcwd () {
+	char buf[1024];
+#ifdef __WIN32__
+	return adaptPathSeperators(_getcwd(buf, 1024));
+#else
+	return ::getcwd(buf, 1024);
+#endif
+}

@@ -51,7 +51,7 @@ class FontManagerTest : public CxxTest::TestSuite
 			
 			const Font *f2 = fm.getFont(11);
 			TS_ASSERT(f2);
-			TS_ASSERT(f1 != f2);
+			TS_ASSERT_DIFFERS(f1, f2);
 			TS_ASSERT_EQUALS(f2->name(), "cmr10");
 			TS_ASSERT(dynamic_cast<const PhysicalFontProxy*>(f2));
 		}

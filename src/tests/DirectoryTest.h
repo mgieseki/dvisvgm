@@ -23,7 +23,9 @@
 
 #include <cxxtest/TestSuite.h>
 #include <set>
+#include <unistd.h>
 #include "Directory.h"
+#include "FileSystem.h"
 #include "macros.h"
 
 using std::set;
@@ -33,19 +35,27 @@ class DirectoryTest : public CxxTest::TestSuite
 {
 	public:
 		void test_dirs () {
-			const char *dirs_to_find[] = {"tests", 0};
+			const char *dirs_to_find[] = {"doc", "rpm", "src", 0};
 			set<string> found_dirs;
-			Directory dir(".");
-			while (const char *dname = dir.read('d')) {
-				if (dname[0] != '.') 
-					found_dirs.insert(dname);
-			}
-			for (const char **p=dirs_to_find; *p; ++p)
+			Directory dir("..");
+			while (const char *dname = dir.read('d'))
+				found_dirs.insert(dname);
+			for (const char **p=dirs_to_find; *p; ++p) {
 				TS_ASSERT(found_dirs.find(*p) != found_dirs.end());
+			}
 		}
 
 
 		void test_file () {
+			// Skip this test if test-all is executed outside the original src directory.
+			// This is necessary to make "make distcheck" happy.
+			string cwd = FileSystem::getcwd();
+			unsigned pos = cwd.find("dvisvgm/src");
+			if (pos != cwd.length()-11) {
+				TS_WARN("DirectoryTest::test_file skipped");
+				return;
+			}
+
 			const char *files_to_find[] = {
 				"Bitmap.cpp", "BoundingBox.cpp", "Calculator.cpp", "CharmapTranslator.cpp", 
 				"Directory.cpp", "DVIReader.cpp", "DVIToSVG.cpp", "DVIToSVGActions.cpp", 
@@ -60,9 +70,9 @@ class DirectoryTest : public CxxTest::TestSuite
 			Directory dir(".");
 			while (const char *fname = dir.read('f'))
 				found_files.insert(fname);
-			for (const char **p=files_to_find; *p; ++p)
+			for (const char **p=files_to_find; *p; ++p) {
 				TS_ASSERT(found_files.find(*p) != found_files.end());
-
+			}
 			TS_ASSERT(found_files.find("tests") == found_files.end());
 		}
 };
