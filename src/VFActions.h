@@ -32,10 +32,10 @@ using std::string;
 struct VFActions
 {
 	virtual ~VFActions () {}
-	virtual void preamble (string comment, UInt32 checksum, double dsize);
-	virtual void postamble ();
-	virtual void defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
-	virtual void defineChar (UInt32 c, UInt8 *dvi);
+	virtual void preamble (string comment, UInt32 checksum, double dsize) {}
+	virtual void postamble () {}
+	virtual void defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {}
+	virtual void defineChar (UInt32 c, UInt8 *dvi, UInt32 dvisize) {}
 };
 
 #endif

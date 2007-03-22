@@ -49,11 +49,12 @@ class VFReader : public StreamReader
 {
 	typedef bool (*ApproveAction)(int);
 	public:
-		VFReader (istream &is);
+		VFReader (istream &is, FontManager *fm);
 		virtual ~VFReader ();
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();
 		bool executePreambleAndFontDefs ();
+		bool executeCharDefs ();
 
 	protected:
 		int executeCommand (ApproveAction approve=0);

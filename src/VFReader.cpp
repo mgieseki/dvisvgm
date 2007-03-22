@@ -26,12 +26,13 @@
 #include "FontManager.h"
 #include "VFActions.h"
 #include "VFReader.h"
+#include "macros.h"
 
 using namespace std;
 
 
-VFReader::VFReader (istream &is) 
-	: StreamReader(is), actions(0), fontManager(0) {
+VFReader::VFReader (istream &is, FontManager *fm) 
+	: StreamReader(is), actions(0), fontManager(fm) {
 }
 
 
@@ -68,7 +69,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 	if (!approved)
 		replaceActions(0);   // disable actions
 	
-	if (opcode >= 0 && opcode <= 241)          // short character definition?
+	if (opcode <= 241)      // short character definition?
 		cmdShortChar(opcode);
 	else if (opcode >= 243 && opcode <= 246)   // font definition?
 		cmdFontDef(opcode-243+1);
@@ -97,14 +98,12 @@ bool VFReader::executeAll () {
 	in().seekg(0);  // move file pointer to first byte of the input stream
 	while (!in().eof() && executeCommand() != 248); // stop reading after post (248)
 	return true;
-
 }
 
 
 /// Returns true if op indicates the preamble or a font definition
-static bool is_pre_or_fontdef (int op) {
-  return op > 242;
-}  
+static bool is_pre_or_fontdef (int op) {return op > 242;}  
+static bool is_chardef (int op)        {return op < 243;}
 
 
 bool VFReader::executePreambleAndFontDefs () {
@@ -113,6 +112,16 @@ bool VFReader::executePreambleAndFontDefs () {
 		return false;
 	in().seekg(0);  // move file pointer to first byte of the input stream
 	while (!in().eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
+	return true;
+}
+
+
+bool VFReader::executeCharDefs () {
+	in().clear();
+	if (!in())
+		return false;
+	in().seekg(0);
+	while (!in().eof() && executeCommand(is_chardef) < 243); // stop reading after last char definition
 	return true;
 }
 
@@ -144,8 +153,9 @@ void VFReader::cmdLongChar () {
 	UInt32 cc  = readUnsigned(4);          // character code
 	UInt32 tfm = readUnsigned(4);          // character width from corresponding TFM file
 	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
+	readBytes(pl, dvi);
    if (actions)
-   	actions->defineChar(cc, dvi);       // call template method for user actions
+   	actions->defineChar(cc, dvi, pl);   // call template method for user actions
 }
 
 
@@ -155,8 +165,9 @@ void VFReader::cmdShortChar (int pl) {
 	UInt32 cc  = readUnsigned(1);          // character code
 	UInt32 tfm = readUnsigned(3);          // character width from corresponding TFM file
 	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
+	readBytes(pl, dvi);
    if (actions)
-   	actions->defineChar(cc, dvi);       // call template method for user actions
+   	actions->defineChar(cc, dvi, pl);   // call template method for user actions
 }
 
 

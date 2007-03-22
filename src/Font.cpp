@@ -23,11 +23,14 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include "Font.h"
 #include "KPSFileFinder.h"
 #include "Message.h"
 #include "TFM.h"
+#include "VFReader.h"
+#include "macros.h"
 
 using namespace std;
 
@@ -84,6 +87,17 @@ VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss)
 }
 
 
+VirtualFontImpl::~VirtualFontImpl () {
+	for (map<UInt32, DVIVector*>::iterator i=charDefs.begin(); i != charDefs.end(); ++i)
+		delete i->second;
+}
+
+void VirtualFontImpl::read (VFReader &vfr) {
+	vfr.replaceActions(this);
+	vfr.executeAll();
+}
+
+
 int VirtualFontImpl::fontID (int n) const {
 	return 0; // @@
 }
@@ -100,3 +114,31 @@ UInt8* VirtualFontImpl::getDVI (int c) const {
 void VirtualFontImpl::assignFontID (int fontnum, int id) {
 	// @@
 }
+
+
+void VirtualFontImpl::defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {
+/*	SHOW(name);
+	if (fontManager) {
+		fontManager->enterVF(this);
+		fontManager->registerFont(fontnum, name, checksum, dsize, ssize);
+		fontManager->leaveVF();
+	}*/
+}
+
+
+void VirtualFontImpl::defineChar (UInt32 c, UInt8 *dvi, UInt32 dvisize) {
+	DVIVector *dvivec = new DVIVector(dvi, dvi+dvisize);
+	charDefs[c] = dvivec;
+}
+
+/*
+void VirtualFontImpl::readFontDefs () {
+	vfReader.replaceActions(this);
+	vfReader.executePreambleAndFontDefs();
+}
+
+
+void VirtualFontImpl::readCharDefs () {
+//	vfReader.replaceActions(this);
+//	vfReader.executeCharDefs();
+}*/

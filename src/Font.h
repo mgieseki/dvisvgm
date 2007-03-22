@@ -28,6 +28,8 @@
 #include <string>
 #include <vector>
 #include "MessageException.h"
+#include "VFActions.h"
+#include "VFReader.h"
 #include "types.h"
 
 using std::map;
@@ -35,7 +37,6 @@ using std::string;
 using std::vector;
 
 
-class FontManager;
 class TFM;
 
 
@@ -90,9 +91,11 @@ class VirtualFont : public virtual Font
 	friend class FontManager;
 	public:
 		static Font* create (string name, UInt32 checksum, double dsize, double ssize);
+		virtual void read (VFReader &vfr) =0; 
 		virtual int fontID (int n) const =0;
 		virtual int firstFontNum () const =0;
 		virtual UInt8* getDVI (int c) const =0;
+
 	protected:
 		virtual void assignFontID (int fontnum, int id) =0;
 };
@@ -160,6 +163,7 @@ class VirtualFontProxy : public VirtualFont
 	friend class VirtualFontImpl;
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
+		void read (VFReader &vfr)         {}
 		string name () const              {return vf->name();}
 		int fontID (int n) const          {return vf->fontID(n);}
 		int firstFontNum () const         {return vf->firstFontNum();}
@@ -183,11 +187,14 @@ class VirtualFontProxy : public VirtualFont
 };
 
 
-class VirtualFontImpl : public VirtualFont, public TFMFont
+class VirtualFontImpl : public VirtualFont, public TFMFont, protected VFActions
 {
 	friend class VirtualFont;
+	typedef vector<UInt8> DVIVector;
 	public:
+		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
+		void read (VFReader &vfr);
 		int fontID (int n) const;
 		int firstFontNum () const;
 		UInt8* getDVI (int c) const;
@@ -195,10 +202,15 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 	protected:
 		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
 		void assignFontID (int fontnum, int id);
+//		void readFontDefs ();
+//		void readCharDefs ();
+		// VFAction methods
+		void defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
+		void defineChar (UInt32 c, UInt8 *dvi, UInt32 dvisize);
 
 	private:
 		map<int,int> num2id;
-		map<UInt32, UInt8*> charDefs;
+		map<UInt32, DVIVector*> charDefs;
 };
 
 

@@ -324,7 +324,6 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		const Font *font = fontManager->getFont(currFontNum);
 		const VirtualFont *vf = dynamic_cast<const VirtualFont*>(font);
 		if (vf) {    // is current font a virtual font?
-			SHOW("virtual font");
 //			UInt8 *dvi = vf->getDVI(c); // get DVI snippet that describes character c
 			fontManager->enterVF(vf);   // new font number context
 			DVIPosition pos = currPos;  // save current cursor position

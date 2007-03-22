@@ -22,12 +22,14 @@
 // $Id$
 
 #include <cstdlib>
+#include <fstream>
 #include "DVIReader.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "KPSFileFinder.h"
 #include "Message.h"
 #include "TFM.h"
+#include "VFReader.h"
 #include "macros.h"
 
 using namespace std;
@@ -116,8 +118,16 @@ void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, do
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
 			else if (KPSFileFinder::lookup(name+".ttf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-			else if (KPSFileFinder::lookup(name+".vf"))
+			else if (const char *path = KPSFileFinder::lookup(name+".vf")) {
+				SHOW(path);
 				newfont = VirtualFont::create(name, checksum, dsize, ssize);
+				VirtualFont *vf = dynamic_cast<VirtualFont*>(newfont);
+				enterVF(vf);
+				ifstream ifs(path, ios::binary);
+				VFReader vfReader(ifs, this);
+				vf->read(vfReader);
+				leaveVF();
+			}
 			else if (KPSFileFinder::lookup(name+".mf"))
 				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
 			else
