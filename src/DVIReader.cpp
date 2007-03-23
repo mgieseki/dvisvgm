@@ -266,6 +266,7 @@ void DVIReader::cmdPostPost (int) {
 
 /** Reads and executes Begin-Of-Page command. */
 void DVIReader::cmdBop (int) {
+	fontManager->write(cout);
 	Int32 c[10];
 	for (int i=0; i < 10; i++)
 		c[i] = readSigned(4);
@@ -472,10 +473,10 @@ void DVIReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
-//	if (fontInfoMap.find(fontnum) == fontInfoMap.end())  // font not defined yet?
-//		fontInfoMap[fontnum] = new FontInfo(fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
-	if (actions) 
-		actions->defineFont(fontManager->fontID(fontnum), fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
+	if (fontManager) {
+		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
+		if (actions) 
+			actions->defineFont(id, fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
+	}
 }
 

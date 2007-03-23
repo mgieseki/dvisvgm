@@ -28,7 +28,7 @@
 #include "FontMap.h"
 
 #ifdef MIKTEX
-class MiKTeX::App::Application app;
+#include <miktex/app.h>
 #endif
 
 
@@ -40,7 +40,7 @@ class KPSFileFinder
 		static const char *usermap;
 		static bool mktexEnabled;
 #ifdef MIKTEX
-		MiKTeX::App::Application *app;
+		static MiKTeX::App::Application *app;
 #endif
 
 	private:

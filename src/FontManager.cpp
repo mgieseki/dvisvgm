@@ -52,10 +52,16 @@ FontManager::~FontManager () {
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (int n) const {
 	if (vfStack.empty()) {
-		map<UInt32,int>::const_iterator it = num2index.find(n);
-		return (it == num2index.end()) ? -1 : it->second;
+		Num2IdMap::const_iterator it = num2id.find(n);
+		return (it == num2id.end()) ? -1 : it->second;
 	}
-	return vfStack.top()->fontID(n);
+	const VirtualFont *vf = vfStack.top();
+	VfNum2IdMap::const_iterator vit = vfnum2id.find(vfStack.top());
+	if (vit == vfnum2id.end())
+		return -1;
+	const Num2IdMap &num2id = vit->second;
+	Num2IdMap::const_iterator it = num2id.find(n);
+	return (it == num2id.end()) ? -1 : it->second;
 }
 
 
@@ -68,10 +74,32 @@ int FontManager::fontID (Font *font) const {
 
 
 int FontManager::fontID (string name) const {
-	map<string,int>::const_iterator it = name2index.find(name);
-	if (it == name2index.end())
+	map<string,int>::const_iterator it = name2id.find(name);
+	if (it == name2id.end())
 		return -1;
 	return it->second;
+}
+
+
+int FontManager::fontnum (int id) const {
+	if (id < 0 || id > fonts.size())
+		return -1;
+	Font *font = fonts[id];
+	if (vfStack.empty()) {
+		FORALL(num2id, Num2IdMap::const_iterator, i)
+			if (i->second == id)
+				return i->first;
+	}
+	else {
+		VfNum2IdMap::const_iterator it = vfnum2id.find(vfStack.top());
+		if (it == vfnum2id.end())
+			return -1;
+		const Num2IdMap &num2id = it->second;
+		FORALL(num2id, Num2IdMap::const_iterator, i)
+			if (i->second == id)
+				return i->first;
+	}
+	return -1;
 }
 
 
@@ -98,53 +126,51 @@ const Font* FontManager::getFont (string name) const {
  *  @param name fontname, e.g. cmr10 
  *  @param checksum checksum to be compared with TFM checksum
  *  @param dsize design size in TeX point units
- *  @param ssize scaled size in TeX point units */
-void FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
-/*	SHOW(name);
-	SHOW(checksum);
-	SHOW(dsize);
-	SHOW(ssize); */
+ *  @param ssize scaled size in TeX point units 
+ *  @return id of registered font */
+int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);
-	if (id < 0) {
-		Font *newfont = 0;
-		int newid = fonts.size();      // the new font gets this ID
-		map<string,int>::iterator it = name2index.find(name);
-		if (it != name2index.end()) {  // font with same name already registered?
-			Font *font = fonts[it->second];
-			newfont = font->clone(dsize, ssize);
-		}
-		else {
-			if (KPSFileFinder::lookup(name+".pfb"))
-				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-			else if (KPSFileFinder::lookup(name+".ttf"))
-				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-			else if (const char *path = KPSFileFinder::lookup(name+".vf")) {
-				SHOW(path);
-				newfont = VirtualFont::create(name, checksum, dsize, ssize);
-				VirtualFont *vf = dynamic_cast<VirtualFont*>(newfont);
-				enterVF(vf);
-				ifstream ifs(path, ios::binary);
-				VFReader vfReader(ifs, this);
-				vf->read(vfReader);
-				leaveVF();
-			}
-			else if (KPSFileFinder::lookup(name+".mf"))
-				newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-			else
-				newfont = new EmptyFont(name);
-//				throw FontException("font " + name + " not found");
-			name2index[name] = newid;
-		}
-		if (newfont) {
-			fonts.push_back(newfont);
-			if (vfStack.empty())  // register font referenced in dvi file?
-				num2index[fontnum] = newid;
-			else {  // register font referenced in vf file
-				VirtualFont *top = const_cast<VirtualFont*>(vfStack.top());
-				top->assignFontID(fontnum, newid);
-			}
-		}
+	if (id >= 0)
+		return id;
+
+	Font *newfont = 0;
+	int newid = fonts.size();      // the new font gets this ID
+	const char *fontpath=0;
+	Name2IdMap::iterator it = name2id.find(name);
+	if (it != name2id.end()) {  // font with same name already registered?
+		Font *font = fonts[it->second];
+		newfont = font->clone(dsize, ssize);
 	}
+	else {
+		if ((fontpath = KPSFileFinder::lookup(name+".pfb")))
+			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
+		else if ((fontpath = KPSFileFinder::lookup(name+".ttf")))
+			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
+		else if ((fontpath = KPSFileFinder::lookup(name+".vf")))
+			newfont = VirtualFont::create(name, checksum, dsize, ssize);
+		else if ((fontpath = KPSFileFinder::lookup(name+".mf")))
+			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
+		else
+			newfont = new EmptyFont(name);
+		//				throw FontException("font " + name + " not found");
+		name2id[name] = newid;
+	}
+	fonts.push_back(newfont);
+	if (vfStack.empty())  // register font referenced in dvi file?
+		num2id[fontnum] = newid;
+	else {  // register font referenced in vf file
+		VirtualFont *vf = const_cast<VirtualFont*>(vfStack.top());
+		vfnum2id[vf][fontnum] = newid;
+	}
+	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(newfont)) {
+		// read vf file and register its fonts
+		enterVF(vf);
+		ifstream ifs(fontpath, ios::binary);
+		VFReader vfReader(ifs, this);
+		vf->read(vfReader);
+		leaveVF();
+	}
+	return newid;
 }
 
 
@@ -166,6 +192,7 @@ void FontManager::enterVF (const VirtualFont *vf) {
 		vfStack.push(vf);
 }
 
+
 /** Leaves a previously entered virtual font frame. 
  *  This method must be called after processing a VF character.
  *  @throw FontException if there is no VF frame to leave */
@@ -173,4 +200,41 @@ void FontManager::leaveVF () {
 	if (vfStack.empty())
 		throw FontException(""); // @@
 	vfStack.pop();
+}
+
+
+ostream& FontManager::write (ostream &os, Font *font, int level) {
+#if 1
+	if (font) {
+		int id = -1;
+		for (int i=0; i < fonts.size() && id < 0; i++)
+			if (fonts[i] == font)
+				id = i;
+
+		VirtualFont *vf = dynamic_cast<VirtualFont*>(font);
+		for (int j=0; j < level+1; j++)
+			os << "  ";
+		os << "id " << id 
+			<< " fontnum " << fontnum(id) << " "
+			<< (vf ? "VF" : "PF") << " " 
+			<< font->name() 
+			<< endl;
+		
+		if (vf) {
+			enterVF(vf);
+			const Num2IdMap &num2id = vfnum2id.find(vf)->second;
+			FORALL(num2id, Num2IdMap::const_iterator, i) {
+				Font *font = fonts[i->second];
+				write(os, font, level+1);
+			}
+			leaveVF();
+		}
+	}
+	else {
+		for (int i=0; i < fonts.size(); i++)
+			write(os, fonts[i], level);
+		os << endl;
+	}
+#endif
+	return os;
 }

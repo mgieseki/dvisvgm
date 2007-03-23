@@ -36,6 +36,9 @@ bool KPSFileFinder::mktexEnabled = true;
 bool KPSFileFinder::initialized = false;
 const char *KPSFileFinder::usermap = 0;
 FontMap KPSFileFinder::fontmap;
+#ifdef MIKTEX
+MiKTeX::App::Application *KPSFileFinder::app;
+#endif
 
 
 // prototypes of static functions 
@@ -68,8 +71,16 @@ static const char* find_file (const std::string &fname) {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
 		return 0;  // no extension => no search
-
 	const std::string ext  = fname.substr(pos+1);  // file extension
+#ifdef MIKTEX
+	// exe files can't be found via MiKTeX's kpathsea emulation, so they have to get a special treatment
+	if (ext == "exe") {
+		MiKTeX::Core::PathName path;
+		if (KPSFileFinder::app->GetSession()->FindFile(fname.c_str(), MiKTeX::Core::FileType::EXE, path))
+			return path.Get();
+		return 0;
+	}	
+#endif
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
 		types["tfm"] = kpse_tfm_format;
@@ -77,7 +88,7 @@ static const char* find_file (const std::string &fname) {
 		types["vf"]  = kpse_vf_format;
 #ifdef MIKTEX
 		types["mf"]  = kpse_miscfonts_format;  // this is a bug, I think
-		types["exe"] = kpse_program_binary_format;
+//		types["exe"] = kpse_program_binary_format; // not implemented in MiKTeX
 #else
 		types["mf"]  = kpse_mf_format;
 #endif
@@ -131,8 +142,14 @@ static const char* mktex (const std::string &fname) {
 	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
 	const char *toolpath = find_file(toolname);
 	if (toolpath) {
-		MiKTeX::Core::Process::Run(toolname, fname.c_str());
-		path = find_file(fname);
+		try {
+			MiKTeX::Core::Process::Run(toolname, fname.c_str());
+			path = find_file(fname);
+		}
+		catch (const MiKTeX::Core::MiKTeXException &e) {
+			// makeFOO failed to build font file
+			path = 0;
+		}
 	}
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
@@ -159,9 +176,9 @@ static void init_fontmap (FontMap &fontmap) {
 	else {
 #ifdef MIKTEX
 		// read all dvipdfm mapfiles
-		MiKTeX::Core::Session *session = app->GetSession();
+		MiKTeX::Core::Session *session = KPSFileFinder::app->GetSession();
 		for (unsigned i=session->GetNumberOfTEXMFRoots(); i > 0; i--) {
-			string dir = session->GetRootDirectory(i-1).Get();
+			std::string dir = session->GetRootDirectory(i-1).Get();
 			// strip trailing slash
 			size_t len = dir.length();
 			if (len > 0 && (dir[len-1] == '/' || dir[len-1] == '\\'))

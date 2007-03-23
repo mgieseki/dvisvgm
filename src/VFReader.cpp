@@ -181,9 +181,9 @@ void VFReader::cmdFontDef (int len) {
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
    if (fontManager) {
-		fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
+		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
 	   if (actions)
-   	   actions->defineFont(fontManager->fontID(fontnum), fontname, checksum, dsize, ssize);
+   	   actions->defineFont(id, fontname, checksum, dsize, ssize);
 	}
 }
 
