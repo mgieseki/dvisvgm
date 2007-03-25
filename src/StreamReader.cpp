@@ -31,6 +31,14 @@ StreamReader::StreamReader (istream &s)
 {
 }
 
+
+istream& StreamReader::replaceStream (istream &in) {
+	istream &ret = *is;
+	is = &in;
+	return ret;
+}
+
+
 /** Reads an unsigned integer from assigned input stream. 
  *  @param bytes number of bytes to read (max. 4)
  *  @return read integer */
@@ -47,7 +55,7 @@ UInt32 StreamReader::readUnsigned (int bytes) {
 /** Reads an signed integer from assigned input stream. 
  *  @param bytes number of bytes to read (max. 4)
  *  @return read integer */
-UInt32 StreamReader::readSigned (int bytes) {
+Int32 StreamReader::readSigned (int bytes) {
 	Int32 ret = is->get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
@@ -68,6 +76,13 @@ string StreamReader::readString (int length) {
 	string ret = buf;
 	delete [] buf;
 	return ret;
+}
+
+
+vector<UInt8>& StreamReader::readBytes (int n, vector<UInt8> &bytes) {
+	if (n > 0)
+		in().read((char*)&bytes[0], n);
+	return bytes;
 }
 
 

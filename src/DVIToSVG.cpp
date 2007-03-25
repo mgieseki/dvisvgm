@@ -125,12 +125,11 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	svgElement->append(styleElement);
 	ostringstream style;
 	FORALL(getFontManager()->getFonts(), vector<Font*>::const_iterator, i) {
-//	FORALL(getFontInfoMap(), ConstIterator, i) {
-//		const char *fontname = i->second->getFontName().c_str();
-		style << "text.f"        << getFontManager()->fontID(*i) << ' '
-			   << "{font-family:" << (*i)->name()
-				<< ";font-size:"   << (*i)->scaledSize() << "}\n";
-//				<< ";font-size:"   << i->second->getScaledSize() << "}\n";
+		if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
+			style << "text.f"        << getFontManager()->fontID(*i) << ' '
+					<< "{font-family:" << (*i)->name()
+					<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+		}
 	}
 /*	if (separateFonts)
 		FORALL(getFontInfoMap(), ConstIterator, i) {
@@ -189,11 +188,6 @@ bool DVIToSVG::computeBoundingBox (int page) {
 void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	if (!svgElement)
 		return; 
-
-//	map<string, FontInfo*> nameToFontInfoMap;
-//	FORALL(getFontInfoMap(), ConstIterator, i)
-//		nameToFontInfoMap[i->second->getFontName()] = i->second;
-
 	if (!getActions())  // no dvi actions => no chars written => no fonts to embed
 		return;
 	

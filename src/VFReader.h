@@ -44,12 +44,14 @@ struct VFException : public MessageException
 
 
 class FontManager;
+class VFActions;
+
 
 class VFReader : public StreamReader
 {
 	typedef bool (*ApproveAction)(int);
 	public:
-		VFReader (istream &is, FontManager *fm);
+		VFReader (istream &is);
 		virtual ~VFReader ();
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();
@@ -58,10 +60,6 @@ class VFReader : public StreamReader
 
 	protected:
 		int executeCommand (ApproveAction approve=0);
-//		UInt32 readUnsigned (int bytes);
-//		Int32 readSigned (int bytes);
-//		string readString (int length);
-		UInt8* readBytes (int n, UInt8 *buf);
 		
 		// the following methods represent the VF commands 
 		// they are called by executeCommand and should not be used directly
@@ -72,8 +70,8 @@ class VFReader : public StreamReader
 		void cmdFontDef (int len);
 		
 	private:
-		VFActions *actions;
-		FontManager *fontManager;
+		VFActions *actions; ///< actions to execute when reading a VF command
+		double    designSize; ///< design size of currently read VF
 };
 
 #endif

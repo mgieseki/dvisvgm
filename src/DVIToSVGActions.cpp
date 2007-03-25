@@ -35,6 +35,7 @@ using namespace std;
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
 	: dviReader(reader),
      xmoved(false), ymoved(false), processSpecials(false), pageCount(0), 
+	  currentFont(-1),
 	  svgElement(svgelem), pageElement(0), styleElement(0), charElement(0),
 	  fileFinder(0), transMatrix(0)
 {
@@ -58,6 +59,10 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
  *  @param y vertical position of the character's baseline 
  *  @param c character code relative to the current font */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
+	if (dynamic_cast<const VirtualFont*>(font))
+		return;
+	x *= BP;
+	y *= BP;
 	string fontname = font->name();
 	const CharmapTranslator *cmt = charmapTranslatorMap[fontname];
 	usedCharsMap[fontname].insert(c);
@@ -89,6 +94,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
  *  @param height length of the vertical edges 
  *  @param width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
+	x *= BP;
+	y *= BP;
+	height *= BP;
+	width  *= BP;
 	// (x,y) is the lower left corner of the rectangle
 	XMLElementNode *rect = new XMLElementNode("rect");
 	rect->addAttribute("x", x);
@@ -109,13 +118,16 @@ void DVIToSVGActions::defineFont (int num, const string &path, const string &nam
  *  font must be previously defined.
  *  @param num unique number of the font in the DVI file */
 void DVIToSVGActions::setFont (int num) {
-	styleElement = new XMLElementNode("text");
-	styleElement->addAttribute("class", string("f") + XMLString(num));
-	styleElement->addAttribute("x", XMLString(dviReader.getXPos()));
-	styleElement->addAttribute("y", XMLString(dviReader.getYPos()));
-	pageElement->append(styleElement);
-	charElement = 0;  // force creating a new charElement when adding next char
-	xmoved = ymoved = false;
+	if (num != currentFont) {
+		styleElement = new XMLElementNode("text");
+		styleElement->addAttribute("class", string("f") + XMLString(num));
+		styleElement->addAttribute("x", XMLString(dviReader.getXPos()*BP));
+		styleElement->addAttribute("y", XMLString(dviReader.getYPos()*BP));
+		pageElement->append(styleElement);
+		charElement = 0;  // force creating a new charElement when adding next char
+		xmoved = ymoved = false;
+		currentFont = num;
+	}
 }
 
 

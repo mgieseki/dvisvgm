@@ -36,7 +36,6 @@ using namespace std;
 
 
 FontManager::FontManager () 
-	: selectedFontID(-1)
 {
 }
 
@@ -65,7 +64,7 @@ int FontManager::fontID (int n) const {
 }
 
 
-int FontManager::fontID (Font *font) const {
+int FontManager::fontID (const Font *font) const {
 	for (unsigned i=0; i < fonts.size(); i++)
 		if (fonts[i] == font)
 			return i;
@@ -103,20 +102,39 @@ int FontManager::fontnum (int id) const {
 }
 
 
+int FontManager::vfFirstFontNum (VirtualFont *vf) const {
+	VfFirstFontMap::const_iterator it = vfFirstFontMap.find(vf);
+	return (it == vfFirstFontMap.end()) ? -1 : it->second;
+}
+
+
 /** Returns a previously registered font.
  *  @param n local font number, as used in DVI and VF files 
  *  @return pointer to font if font was found, 0 otherwise */
-const Font* FontManager::getFont (int n) const {
+Font* FontManager::getFont (int n) const {
 	int id = fontID(n);
 	return (id < 0) ? 0 : fonts[id];
 }
 
 
-const Font* FontManager::getFont (string name) const {
+Font* FontManager::getFont (string name) const {
 	int id = fontID(name);
 	if (id < 0)
 		return 0;
 	return fonts[id];
+}
+
+
+Font* FontManager::getFontById (int id) const {
+	if (id < 0 || id >= fonts.size())
+		return 0;
+	return fonts[id];
+}
+
+
+/** Returns the current active virtual font. */
+VirtualFont* FontManager::getVF () const {
+	return vfStack.empty() ? 0 : vfStack.top();
 }
 
 
@@ -142,13 +160,13 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		newfont = font->clone(dsize, ssize);
 	}
 	else {
-		if ((fontpath = KPSFileFinder::lookup(name+".pfb")))
+		if (KPSFileFinder::lookup(name+".pfb"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-		else if ((fontpath = KPSFileFinder::lookup(name+".ttf")))
+		else if (KPSFileFinder::lookup(name+".ttf"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-		else if ((fontpath = KPSFileFinder::lookup(name+".vf")))
+		else if (KPSFileFinder::lookup(name+".vf"))
 			newfont = VirtualFont::create(name, checksum, dsize, ssize);
-		else if ((fontpath = KPSFileFinder::lookup(name+".mf")))
+		else if (KPSFileFinder::lookup(name+".mf"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
 		else
 			newfont = new EmptyFont(name);
@@ -161,40 +179,23 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 	else {  // register font referenced in vf file
 		VirtualFont *vf = const_cast<VirtualFont*>(vfStack.top());
 		vfnum2id[vf][fontnum] = newid;
-	}
-	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(newfont)) {
-		// read vf file and register its fonts
-		enterVF(vf);
-		ifstream ifs(fontpath, ios::binary);
-		VFReader vfReader(ifs, this);
-		vf->read(vfReader);
-		leaveVF();
+		if (vfFirstFontMap.find(vf) == vfFirstFontMap.end()) // first fontdef of VF?
+			vfFirstFontMap[vf] = fontnum;
 	}
 	return newid;
-}
-
-
-//@@ do we need this method?
-const Font* FontManager::selectFont (int n) {
-	int id = fontID(n);
-	if (id < 0)
-		return 0;
-	selectedFontID = id;
-	return fonts[id];
 }
 
 
 /** Enters a new virtual font frame. 
  *  This method must be called before processing a VF character.
  *  @param vf virtual font */
-void FontManager::enterVF (const VirtualFont *vf) {
+void FontManager::enterVF (VirtualFont *vf) {
 	if (vf)
 		vfStack.push(vf);
 }
 
 
 /** Leaves a previously entered virtual font frame. 
- *  This method must be called after processing a VF character.
  *  @throw FontException if there is no VF frame to leave */
 void FontManager::leaveVF () {
 	if (vfStack.empty())
@@ -203,8 +204,14 @@ void FontManager::leaveVF () {
 }
 
 
+void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
+	if (!vfStack.empty() && dvi)
+		vfStack.top()->assignChar(c, dvi);
+}
+
+
 ostream& FontManager::write (ostream &os, Font *font, int level) {
-#if 1
+#if 0
 	if (font) {
 		int id = -1;
 		for (int i=0; i < fonts.size() && id < 0; i++)

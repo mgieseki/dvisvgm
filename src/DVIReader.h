@@ -29,6 +29,7 @@
 #include <string>
 #include "MessageException.h"
 #include "StreamReader.h"
+#include "VFActions.h"
 #include "types.h"
 
 using std::map;
@@ -40,55 +41,52 @@ struct DVIException : public MessageException
 	DVIException (const string &msg) : MessageException(msg) {}
 };
 
+struct InvalidDVIFileException : public DVIException
+{
+	InvalidDVIFileException(const string &msg) : DVIException(msg) {}
+};
+
 class DVIActions;
 class FileFinder;
 class FontManager;
 
-class DVIReader : public StreamReader
+class DVIReader : public StreamReader, protected VFActions
 {
 	struct DVIPosition
 	{
-		int h, v;
-		int x, w, y, z;
+		double h, v;
+		double x, w, y, z;
 		DVIPosition () {reset();}
-		void reset ()  {h = v = x = w = y = z = 0;}
+		void reset ()  {h = v = x = w = y = z = 0.0;}
 	};
 
-	protected:
-//		typedef map<int,FontInfo*> FontInfoMap;
-//		typedef map<int,FontInfo*>::iterator Iterator;
-//		typedef map<int,FontInfo*>::const_iterator ConstIterator;
-	
 	public:
 		DVIReader (istream &is, DVIActions *a=0);
 		virtual ~DVIReader ();
 		
-//		void setFileFinder (FileFinder *ff);
 		bool executeDocument ();
-		bool executeAll ();
+		void executeAll ();
 		bool executeAllPages ();
 		void executePostamble ();
 		bool executePage (unsigned n);
 		bool isInPostamble () const               {return inPostamble;}
-//		const FontInfo* getFontInfo () const;
 		double getXPos () const;
 		double getYPos () const;
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const         {return currFontNum;}
 		unsigned getTotalPages () const           {return totalPages;}
-//		const FontInfoMap& getFontInfoMap() const {return fontInfoMap;}
 		DVIActions* getActions () const           {return actions;}
 		DVIActions* replaceActions (DVIActions *a);
 
 	protected:
 		int executeCommand ();
-//		UInt32 readUnsigned (int bytes);
-//		Int32 readSigned (int bytes);
-//		string readString (int length);
 		void putChar (UInt32 c, bool moveCursor);
-//		const FileFinder* getFileFinder () const   {return fileFinder;}
 		const FontManager* getFontManager () const {return fontManager;}
+
+		// VFAction methods
+		void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
+		void defineVFChar (UInt32 c, vector<UInt8> *dvi);
 		
 		// the following methods represent the DVI commands 
 		// they are called by executeCommand and should not be used directly
@@ -128,12 +126,10 @@ class DVIReader : public StreamReader
 		double scaleFactor;  // 1 dvi unit = scaleFactor * TeX points
 		bool inPostamble;    // true if stream pointer is inside the postamble
 		Int32 prevBop;       // pointer to previous bop
-		UInt32 pageHeight, pageWidth;  // page height and width in dvi units
+		double pageHeight, pageWidth;  // page height and width in TeX points
 		DVIPosition currPos;
 		stack<DVIPosition> posStack;
 		FontManager *fontManager;
-//		FontInfoMap fontInfoMap;
-//		FileFinder *fileFinder;
 };
 
 #endif

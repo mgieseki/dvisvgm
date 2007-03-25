@@ -23,7 +23,6 @@
 
 #include <sstream>
 #include "Font.h"
-#include "FontManager.h"
 #include "VFActions.h"
 #include "VFReader.h"
 #include "macros.h"
@@ -31,8 +30,14 @@
 using namespace std;
 
 
-VFReader::VFReader (istream &is, FontManager *fm) 
-	: StreamReader(is), actions(0), fontManager(fm) {
+/** Converts a TFM fix point value to double. */
+inline static double fix2double (FixWord fix) {
+	return double(fix)/(1 << 20);
+}
+
+
+VFReader::VFReader (istream &is) 
+	: StreamReader(is), actions(0) {
 }
 
 
@@ -45,13 +50,6 @@ VFActions* VFReader::replaceActions (VFActions *a) {
 	actions = a;
 	return ret;
 }
-
-UInt8* VFReader::readBytes (int n, UInt8 *buf) {
-	if (n > 0)
-		in().read((char*)buf, n);
-	return buf;
-}
-
 
 
 /** Reads a single VF command from the current position of the input stream and calls the
@@ -133,7 +131,8 @@ void VFReader::cmdPre () {
 	UInt32 k   = readUnsigned(1);  // length of following comment 
 	string cmt = readString(k);    // comment
 	UInt32 cs  = readUnsigned(4);  // check sum to be compared with TFM cecksum
-	UInt32 ds  = readUnsigned(4);  // design size (same as TFM design size)
+	UInt32 ds  = readUnsigned(4);  // design size (same as TFM design size) (fix_word)
+	designSize = fix2double(ds);
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
    if (actions)
@@ -150,40 +149,45 @@ void VFReader::cmdPost () {
 
 void VFReader::cmdLongChar () {
 	UInt32 pl  = readUnsigned(4);          // packet length (length of DVI subroutine)
-	UInt32 cc  = readUnsigned(4);          // character code
-	UInt32 tfm = readUnsigned(4);          // character width from corresponding TFM file
-	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
-	readBytes(pl, dvi);
-   if (actions)
-   	actions->defineChar(cc, dvi, pl);   // call template method for user actions
+	if (actions) {
+		UInt32 cc  = readUnsigned(4);       // character code
+		UInt32 tfm = readUnsigned(4);       // character width from corresponding TFM file
+		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
+		readBytes(pl, *dvi);
+		actions->defineVFChar(cc, dvi);       // call template method for user actions
+	}
+	else
+		in().seekg(8+pl, ios::cur);    // skip remaining char definition bytes
 }
 
 
 /** Reads and executes short_char_x command.
  *  @param pl packet length (length of DVI subroutine) */
 void VFReader::cmdShortChar (int pl) {
-	UInt32 cc  = readUnsigned(1);          // character code
-	UInt32 tfm = readUnsigned(3);          // character width from corresponding TFM file
-	UInt8 *dvi = new UInt8[pl];            // DVI subroutine
-	readBytes(pl, dvi);
-   if (actions)
-   	actions->defineChar(cc, dvi, pl);   // call template method for user actions
+	if (actions) {
+		UInt32 cc  = readUnsigned(1);   // character code
+		UInt32 tfm = readUnsigned(3);   // character width from corresponding TFM file
+		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
+		readBytes(pl, *dvi);
+		actions->defineVFChar(cc, dvi);   // call template method for user actions
+	}
+	else
+		in().seekg(4+pl, ios::cur);     // skip char definition bytes
 }
 
 
 void VFReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
-	UInt32 ssize    = readUnsigned(4);     // scaled size of font relative to design size
-	UInt32 dsize    = readUnsigned(4);     // design size of font (same as TFM design size)
+	UInt32 ssize    = readUnsigned(4);     // scaled size of font relative to design size (fix_word)
+	UInt32 dsize    = readUnsigned(4);     // design size of font (same as TFM design size) (fix_word)
 	UInt32 pathlen  = readUnsigned(1);     // length of font path
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-   if (fontManager) {
-		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize, ssize);
-	   if (actions)
-   	   actions->defineFont(id, fontname, checksum, dsize, ssize);
+	if (actions) {
+		double ss = fix2double(ssize);
+		double ds = fix2double(dsize);
+		actions->defineVFFont(fontnum, fontpath, fontname, checksum, ds, ss*designSize);
 	}
 }
-

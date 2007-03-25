@@ -26,21 +26,24 @@
 
 #include <istream>
 #include <string>
+#include <vector>
 #include "MessageException.h"
 #include "types.h"
 
 using std::istream;
 using std::string;
+using std::vector;
 
 class StreamReader
 {
    public:
 		StreamReader (istream &s);
 		virtual ~StreamReader () {}
-		void assignStream (istream &s) {is = &s;}
+		istream& replaceStream (istream &s);
 		UInt32 readUnsigned (int n);
-		UInt32 readSigned (int n);
+		Int32 readSigned (int n);
 		string readString (int length);
+		vector<UInt8>& readBytes (int n, vector<UInt8> &bytes);
 		int readByte ()     {return is->get();}
 
 	protected:

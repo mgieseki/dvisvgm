@@ -74,8 +74,19 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type) 
-	: TFMFont(name, cs, ds, ss)
+	: TFMFont(name, cs, ds, ss), filetype(type)
 {
+}
+
+
+const char* PhysicalFontImpl::path () const {
+	string ext;
+	switch (filetype) {
+		case PFB: ext = "pfb"; break;
+		case TTF: ext = "ttf"; break;
+		case MF : ext = "mf";  break;
+	}
+	return KPSFileFinder::lookup(name()+"."+ext);
 }
 
 
@@ -88,57 +99,29 @@ VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss)
 
 
 VirtualFontImpl::~VirtualFontImpl () {
+	// delete dvi vectors received by VFReaderAction 
 	for (map<UInt32, DVIVector*>::iterator i=charDefs.begin(); i != charDefs.end(); ++i)
 		delete i->second;
 }
 
-void VirtualFontImpl::read (VFReader &vfr) {
-	vfr.replaceActions(this);
-	vfr.executeAll();
+
+const char* VirtualFontImpl::path () const {
+	return KPSFileFinder::lookup(name()+".vf");
 }
 
 
-int VirtualFontImpl::fontID (int n) const {
-	return 0; // @@
-}
-
-int VirtualFontImpl::firstFontNum () const {
-	return 0; // @@
-}
-
-UInt8* VirtualFontImpl::getDVI (int c) const {
-	return 0; // @@
+void VirtualFontImpl::assignChar (UInt32 c, DVIVector *dvi) {
+	if (dvi) {
+		if (charDefs.find(c) == charDefs.end())
+			charDefs[c] = dvi;
+		else
+			delete dvi;
+	}
 }
 
 
-void VirtualFontImpl::assignFontID (int fontnum, int id) {
-	// @@
+const vector<UInt8>* VirtualFontImpl::getDVI (int c) const {
+	map<UInt32,DVIVector*>::const_iterator it = charDefs.find(c);
+	return (it == charDefs.end() ? 0 : it->second);
 }
 
-
-void VirtualFontImpl::defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {
-/*	SHOW(name);
-	if (fontManager) {
-		fontManager->enterVF(this);
-		fontManager->registerFont(fontnum, name, checksum, dsize, ssize);
-		fontManager->leaveVF();
-	}*/
-}
-
-
-void VirtualFontImpl::defineChar (UInt32 c, UInt8 *dvi, UInt32 dvisize) {
-	DVIVector *dvivec = new DVIVector(dvi, dvi+dvisize);
-	charDefs[c] = dvivec;
-}
-
-/*
-void VirtualFontImpl::readFontDefs () {
-	vfReader.replaceActions(this);
-	vfReader.executePreambleAndFontDefs();
-}
-
-
-void VirtualFontImpl::readCharDefs () {
-//	vfReader.replaceActions(this);
-//	vfReader.executeCharDefs();
-}*/

@@ -53,6 +53,7 @@ struct Font
 	virtual double charDepth (int c) const =0;
 	virtual double charHeight (int c) const =0;
 	virtual const TFM* getTFM () const =0;
+	virtual const char* path () const =0;
 };
 
 
@@ -71,6 +72,7 @@ struct EmptyFont : public Font
 		double charHeight (int c) const          {return 6.833;} // height of cmr10's 'M' in pt
 		double charDepth (int c) const           {return 0;}
 		const TFM* getTFM () const               {return 0;}
+		const char* path () const                {return 0;}
 
 	private:
 		string fontname;
@@ -90,14 +92,14 @@ class VirtualFont : public virtual Font
 {
 	friend class FontManager;
 	public:
+		typedef vector<UInt8> DVIVector;
+	
+	public:
 		static Font* create (string name, UInt32 checksum, double dsize, double ssize);
-		virtual void read (VFReader &vfr) =0; 
-		virtual int fontID (int n) const =0;
-		virtual int firstFontNum () const =0;
-		virtual UInt8* getDVI (int c) const =0;
-
+		virtual const DVIVector* getDVI (int c) const =0;
+	
 	protected:
-		virtual void assignFontID (int fontnum, int id) =0;
+		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;
 };
 
 
@@ -135,6 +137,7 @@ class PhysicalFontProxy : public PhysicalFont
 		double charDepth (int c) const  {return pf->charDepth(c);} 
 		double charHeight (int c) const {return pf->charHeight(c);} 
 		const TFM* getTFM () const      {return pf->getTFM();}
+		const char* path () const       {return pf->path();}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -152,9 +155,13 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 	friend class PhysicalFont;
 	public:
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
+		const char* path () const;
 
 	protected:
 		PhysicalFontImpl (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+
+	private:
+		Type filetype;
 };
 
 
@@ -163,23 +170,21 @@ class VirtualFontProxy : public VirtualFont
 	friend class VirtualFontImpl;
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
-		void read (VFReader &vfr)         {}
 		string name () const              {return vf->name();}
-		int fontID (int n) const          {return vf->fontID(n);}
-		int firstFontNum () const         {return vf->firstFontNum();}
-		UInt8* getDVI (int c) const       {return vf->getDVI(c);}
+		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
 		double designSize () const        {return dsize;}
 		double scaledSize () const        {return ssize;}
 		double charWidth (int c) const    {return vf->charWidth(c);} 
 		double charDepth (int c) const    {return vf->charDepth(c);} 
 		double charHeight (int c) const   {return vf->charHeight(c);} 
 		const TFM* getTFM () const        {return vf->getTFM();}
+		const char* path () const         {return vf->path();}
 
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : vf(proxy.vf), dsize(ds), ssize(ss) {}
-		void assignFontID (int fontnum, int id) {}
-
+		void assignChar (UInt32 c, DVIVector *dvi) {delete dvi;}
+	
 	private:
 		const VirtualFont *vf;
 		double dsize;  ///< design size in TeX point units
@@ -187,30 +192,21 @@ class VirtualFontProxy : public VirtualFont
 };
 
 
-class VirtualFontImpl : public VirtualFont, public TFMFont, protected VFActions
+class VirtualFontImpl : public VirtualFont, public TFMFont
 {
 	friend class VirtualFont;
-	typedef vector<UInt8> DVIVector;
 	public:
 		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
-		void read (VFReader &vfr);
-		int fontID (int n) const;
-		int firstFontNum () const;
-		UInt8* getDVI (int c) const;
+		const DVIVector* getDVI (int c) const;
+		const char* path () const;
 
 	protected:
 		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
-		void assignFontID (int fontnum, int id);
-//		void readFontDefs ();
-//		void readCharDefs ();
-		// VFAction methods
-		void defineFont (UInt32 fontnum, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
-		void defineChar (UInt32 c, UInt8 *dvi, UInt32 dvisize);
+		void assignChar (UInt32 c, DVIVector *dvi);
 
 	private:
-		map<int,int> num2id;
-		map<UInt32, DVIVector*> charDefs;
+		map<UInt32, DVIVector*> charDefs; ///< dvi subroutines defining the characters
 };
 
 

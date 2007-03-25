@@ -32,9 +32,10 @@
 using std::map;
 using std::set;
 
-class DVIReader;
 class CharmapTranslator;
+class DVIReader;
 class FileFinder;
+class Font;
 class XMLElementNode;
 
 class DVIToSVGActions : public DVIActions
@@ -66,6 +67,7 @@ class DVIToSVGActions : public DVIActions
 		bool xmoved, ymoved;
 		bool processSpecials;
 		int pageCount;
+		int currentFont;
 		XMLElementNode *svgElement, *pageElement, *styleElement, *charElement;
 		CharmapTranslatorMap charmapTranslatorMap;
 		FileFinder *fileFinder;

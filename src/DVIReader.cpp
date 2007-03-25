@@ -31,6 +31,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "Message.h"
+#include "VectorStream.h"
 #include "macros.h"
 
 using namespace std;
@@ -99,7 +100,7 @@ int DVIReader::executeCommand () {
 	
 	int opcode = in().get();
 	if (!in() || opcode < 0)  // at end of file
-		throw DVIException("invalid file");
+		throw InvalidDVIFileException("invalid file");
 	if (opcode >= 0 && opcode <= 127)
 		cmdSetChar0(opcode);
 	else if (opcode >= 171 && opcode <= 234)
@@ -120,13 +121,17 @@ int DVIReader::executeCommand () {
 
 
 /** Executes all DVI commands read from the input stream. */
-bool DVIReader::executeAll () {
-	if (!in())
-		return false;
-	in().seekg(0);
-	while (!in().eof())
-		executeCommand();
-	return true;
+void DVIReader::executeAll () {
+	int opcode = 0;
+	while (!in().eof() && opcode >= 0) {
+		try {
+			opcode = executeCommand();
+		}
+		catch (const InvalidDVIFileException &e) {
+			// end of stream reached
+			opcode = -1;
+		}
+	}
 }
 
 
@@ -199,21 +204,21 @@ void DVIReader::executePostamble () {
 /** Returns the current x coordinate in TeX point units. 
  *  This is the horizontal position where the next output would be placed. */
 double DVIReader::getXPos () const {
-	return currPos.h*scaleFactor;
+	return currPos.h;
 }
 
 /** Returns the current y coordinate in TeX point units. 
  *  This is the vertical position where the next output would be placed. */
 double DVIReader::getYPos () const {
-	return currPos.v*scaleFactor;
+	return currPos.v;
 }
 
 double DVIReader::getPageHeight () const {
-	return pageHeight*scaleFactor;
+	return pageHeight;
 }
 
 double DVIReader::getPageWidth () const {
-	return pageWidth*scaleFactor;
+	return pageWidth;
 }
 
 /////////////////////////////////////		
@@ -229,6 +234,7 @@ void DVIReader::cmdPre (int) {
 	if (i != 2)
 		throw DVIException("invalid identification value in DVI preamble");
 	// 1 dviunit * num/den == multiples of 0.0000001m
+	// 1 dviunit * scaleFactor: length of 1 dviunit in TeX points * mag/1000
 	scaleFactor = num/25400000.0*7227.0/den*mag/1000.0;
 	if (actions)
 		actions->preamble(cmt);
@@ -241,11 +247,15 @@ void DVIReader::cmdPost (int) {
 	UInt32 num = readUnsigned(4);  
 	UInt32 den = readUnsigned(4);
 	UInt32 mag = readUnsigned(4);
-	pageHeight = readUnsigned(4);  // height of tallest page
-	pageWidth  = readUnsigned(4);  // width of widest page
+	pageHeight = readUnsigned(4);  // height of tallest page in dvi units
+	pageWidth  = readUnsigned(4);  // width of widest page in dvi units
 	readUnsigned(2);               // max. stack depth
 	totalPages = readUnsigned(2);  // total number of pages
+	// 1 dviunit * num/den == multiples of 0.0000001m
+	// 1 dviunit * scaleFactor: length of 1 dviunit in TeX points * mag/1000
 	scaleFactor = num/25400000.0*7227.0/den*mag/1000.0;
+	pageHeight *= scaleFactor;     // to pt units
+	pageWidth *= scaleFactor;
 	inPostamble = true;
 	if (actions)
 		actions->postamble();
@@ -266,7 +276,6 @@ void DVIReader::cmdPostPost (int) {
 
 /** Reads and executes Begin-Of-Page command. */
 void DVIReader::cmdBop (int) {
-	fontManager->write(cout);
 	Int32 c[10];
 	for (int i=0; i < 10; i++)
 		c[i] = readSigned(4);
@@ -307,9 +316,9 @@ void DVIReader::cmdPop (int) {
 		posStack.pop();
 		if (actions) {
 			if (prevPos.h != currPos.h)
-				actions->moveToX(currPos.h*scaleFactor);
+				actions->moveToX(currPos.h);
 			if (prevPos.v != currPos.v)
-				actions->moveToY(currPos.v*scaleFactor);
+				actions->moveToY(currPos.v);
 		}
 	}
 }
@@ -322,28 +331,43 @@ void DVIReader::cmdPop (int) {
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (inPage) {   
-		const Font *font = fontManager->getFont(currFontNum);
-		const VirtualFont *vf = dynamic_cast<const VirtualFont*>(font);
+		Font *font = fontManager->getFont(currFontNum);
+		VirtualFont *vf = dynamic_cast<VirtualFont*>(font);
 		if (vf) {    // is current font a virtual font?
-//			UInt8 *dvi = vf->getDVI(c); // get DVI snippet that describes character c
-			fontManager->enterVF(vf);   // new font number context
-			DVIPosition pos = currPos;  // save current cursor position
-			currPos.x = currPos.y = currPos.w = currPos.z = 0;
-			int fontnum = currFontNum;  // save current font number
-//			currFontNum = vf->firstFontNum();
-//			execute(dvi);               // execute DVI snippet
-			currFontNum = fontnum;      // restore previous font number
-			currPos = pos;              // restore previous cursor position
-			fontManager->leaveVF();     // restore previous font number context
+			vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
+			if (dvi) {
+				DVIPosition pos = currPos;  // save current cursor position
+				currPos.x = currPos.y = currPos.w = currPos.z = 0;
+				int save_fontnum = currFontNum;  // save current font number
+				fontManager->enterVF(vf);   // new font number context
+				cmdFontNum0(fontManager->vfFirstFontNum(vf));
+				double save_scale = scaleFactor;
+				scaleFactor = vf->scaledSize()/(1 << 20);
+				
+				VectorInputStream<UInt8> vis(*dvi);
+				istream &is = replaceStream(vis);
+				try {
+					executeAll();            // execute DVI fragment
+				}
+				catch (const DVIException &e) {
+//					Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
+				}
+				replaceStream(is);          // restore previous input stream
+				scaleFactor = save_scale;   // restore previous scale factor
+				fontManager->leaveVF();     // restore previous font number context
+				cmdFontNum0(save_fontnum);  // restore previous font number
+				currPos = pos;              // restore previous cursor position
+			}
 		}
 		if (actions)
-			actions->setChar(currPos.h*scaleFactor, currPos.v*scaleFactor, c, font);
+			actions->setChar(currPos.h, currPos.v, c, font);
 		if (moveCursor)
-			currPos.h += UInt32(font->charWidth(c) / scaleFactor * font->scaleFactor() + 0.5);
+			currPos.h += font->charWidth(c) * font->scaleFactor();
 	}
 	else
 		throw DVIException("set_char or put_char outside page");
 }
+
 
 /** Reads and executes set_char_x command. Puts a character at the current 
  *  position and advances the cursor. 
@@ -383,13 +407,13 @@ void DVIReader::cmdPutChar (int len) {
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
 	if (inPage) {
-		int height = readSigned(4);
-		int width  = readSigned(4);
+		double height = scaleFactor*readSigned(4);
+		double width  = scaleFactor*readSigned(4);
 		if (actions && height > 0 && width > 0) 
-			actions->setRule(currPos.h*scaleFactor, currPos.v*scaleFactor, height*scaleFactor, width*scaleFactor);
+			actions->setRule(currPos.h, currPos.v, height, width);
 		currPos.h += width;
 		if (actions && (height <= 0 || width <= 0))
-			actions->moveToX(currPos.h*scaleFactor);	
+			actions->moveToX(currPos.h);	
 	}
 	else
 		throw DVIException("set_rule outside of page");
@@ -401,10 +425,10 @@ void DVIReader::cmdSetRule (int) {
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
 	if (inPage) {
-		int height = readSigned(4);
-		int width  = readSigned(4);
+		double height = scaleFactor*readSigned(4);
+		double width  = scaleFactor*readSigned(4);
 		if (actions && height > 0 && width > 0) 
-			actions->setRule(currPos.h*scaleFactor, currPos.v*scaleFactor, height*scaleFactor, width*scaleFactor);
+			actions->setRule(currPos.h, currPos.v, height, width);
 	}
 	else
 		throw DVIException("put_rule outside of page");
@@ -413,16 +437,16 @@ void DVIReader::cmdPutRule (int) {
 
 void DVIReader::cmdNop (int)       {}
 
-void DVIReader::cmdRight (int len) {currPos.h += readSigned(len); if (actions) actions->moveToX(currPos.h*scaleFactor);}
-void DVIReader::cmdDown (int len)  {currPos.v += readSigned(len); if (actions) actions->moveToY(currPos.v*scaleFactor);}
-void DVIReader::cmdX0 (int)        {currPos.h += currPos.x;       if (actions) actions->moveToX(currPos.h*scaleFactor);}
-void DVIReader::cmdY0 (int)        {currPos.v += currPos.y;       if (actions) actions->moveToY(currPos.v*scaleFactor);}
-void DVIReader::cmdW0 (int)        {currPos.h += currPos.w;       if (actions) actions->moveToX(currPos.h*scaleFactor);}
-void DVIReader::cmdZ0 (int)        {currPos.v += currPos.z;       if (actions) actions->moveToY(currPos.v*scaleFactor);}
-void DVIReader::cmdX (int len)     {currPos.x = readSigned(len);  cmdX0(0);}
-void DVIReader::cmdY (int len)     {currPos.y = readSigned(len);  cmdY0(0);}
-void DVIReader::cmdW (int len)     {currPos.w = readSigned(len);  cmdW0(0);}
-void DVIReader::cmdZ (int len)     {currPos.z = readSigned(len);  cmdZ0(0);}
+void DVIReader::cmdRight (int len) {currPos.h += scaleFactor*readSigned(len); if (actions) actions->moveToX(currPos.h);}
+void DVIReader::cmdDown (int len)  {currPos.v += scaleFactor*readSigned(len); if (actions) actions->moveToY(currPos.v);}
+void DVIReader::cmdX0 (int)        {currPos.h += currPos.x;                   if (actions) actions->moveToX(currPos.h);}
+void DVIReader::cmdY0 (int)        {currPos.v += currPos.y;                   if (actions) actions->moveToY(currPos.v);}
+void DVIReader::cmdW0 (int)        {currPos.h += currPos.w;                   if (actions) actions->moveToX(currPos.h);}
+void DVIReader::cmdZ0 (int)        {currPos.v += currPos.z;                   if (actions) actions->moveToY(currPos.v);}
+void DVIReader::cmdX (int len)     {currPos.x = scaleFactor*readSigned(len);  cmdX0(0);}
+void DVIReader::cmdY (int len)     {currPos.y = scaleFactor*readSigned(len);  cmdY0(0);}
+void DVIReader::cmdW (int len)     {currPos.w = scaleFactor*readSigned(len);  cmdW0(0);}
+void DVIReader::cmdZ (int len)     {currPos.z = scaleFactor*readSigned(len);  cmdZ0(0);}
 
 
 void DVIReader::cmdXXX (int len) {
@@ -441,15 +465,17 @@ void DVIReader::cmdXXX (int len) {
  * @param num font number 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	const Font *font = fontManager->selectFont(num);
-	if (!font) {
+	int id = fontManager->fontID(num);
+	if (const Font *font = fontManager->getFont(num)) {
+		currFontNum = num;
+		if (actions && !dynamic_cast<const VirtualFont*>(font))
+			actions->setFont(fontManager->fontID(num));  // all actions get a recomputed font number
+	}
+	else {
 		ostringstream oss;
 		oss << "undefined font number " << num;
 		throw DVIException(oss.str());
 	}
-	currFontNum = num;
-	if (actions)
-		actions->setFont(fontManager->fontID(num));  // all actions get a recomputed font number
 }
 
 
@@ -467,16 +493,46 @@ void DVIReader::cmdFontNum (int len) {
 void DVIReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
-	UInt32 scale    = readUnsigned(4);     // scale factor of font in DVI units
+	UInt32 ssize    = readUnsigned(4);     // scaled size of font in DVI units
 	UInt32 dsize    = readUnsigned(4);     // design size of font in DVI units
 	UInt32 pathlen  = readUnsigned(1);     // length of font path
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
 	if (fontManager) {
-		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, scale*scaleFactor);
+		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, ssize*scaleFactor);
+		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(fontManager->getFontById(id))) {
+			// read vf file and register its fonts
+			fontManager->enterVF(vf);
+			ifstream ifs(vf->path(), ios::binary);
+			VFReader vfReader(ifs);
+			vfReader.replaceActions(this);
+			vfReader.executeAll();			
+			fontManager->leaveVF();
+		}
 		if (actions) 
-			actions->defineFont(id, fontpath, fontname, dsize*scaleFactor, scale*scaleFactor);
+			actions->defineFont(id, fontpath, fontname, dsize*scaleFactor, ssize*scaleFactor);
 	}
 }
 
+
+/** This template method is called by the VFReader after reading a font definition from a VF file.
+ *  @param fontnum local font number 
+ *  @param name font name
+ *  @param checksum checksum to be compared with TFM checksum 
+ *  @param dsize design size in TeX point units
+ *  @param ssize scaled size in TeX point units */
+void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {
+	const VirtualFont *vf = fontManager->getVF();
+	int id = fontManager->registerFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
+	if (actions)
+		actions->defineFont(id, path, name, dsize, ssize * vf->scaleFactor());
+}
+
+
+/** This template method is called by the VFReader after reading a character definition from a VF file.
+ *  @param c character number
+ *  @param dvi DVI fragment describing the character */
+void DVIReader::defineVFChar (UInt32 c, vector<UInt8> *dvi) {
+	fontManager->assignVfChar(c, dvi);
+}

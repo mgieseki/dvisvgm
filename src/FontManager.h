@@ -26,6 +26,7 @@
 
 #include <map>
 #include <ostream>
+#include <set>
 #include <string>
 #include <stack>
 #include <vector>
@@ -33,6 +34,7 @@
 
 using std::map;
 using std::ostream;
+using std::set;
 using std::string;
 using std::stack;
 using std::vector;
@@ -51,31 +53,35 @@ class FontManager
 {
 	typedef map<UInt32,int> Num2IdMap;
 	typedef map<string,int> Name2IdMap;
-	typedef map<const VirtualFont*,Num2IdMap> VfNum2IdMap;
-	typedef stack<const VirtualFont*> VfStack;
+	typedef map<VirtualFont*,Num2IdMap> VfNum2IdMap;
+	typedef map<VirtualFont*, UInt32> VfFirstFontMap;
+	typedef stack<VirtualFont*> VfStack;
    public:
       FontManager ();
       ~FontManager ();
 		int registerFont (UInt32 fontnum, string fontname, UInt32 checksum, double dsize, double scale);
-		const Font* selectFont (int n);
-		const Font* getFont (int n) const;
-		const Font* getFont (string name) const;
+		Font* getFont (int n) const;
+		Font* getFont (string name) const;
+		Font* getFontById (int id) const;
+		VirtualFont* getVF () const;
 		int fontID (int n) const;
-		int fontID (Font *font) const;
+		int fontID (const Font *font) const;
 		int fontID (string name) const;
 		int fontnum (int id) const;
-		void enterVF (const VirtualFont *vf);
+		int vfFirstFontNum (VirtualFont *vf) const;
+		void enterVF (VirtualFont *vf);
 		void leaveVF ();
+		void assignVfChar (int c, vector<UInt8> *dvi);
 		const vector<Font*>& getFonts () const {return fonts;}
 		ostream& write (ostream &os, Font *font=0, int level=0);
 
    private:
-		vector<Font*> fonts;     ///< all registered Fonts (index == fontID)
+		vector<Font*> fonts;     ///< all registered Fonts (indexed by fontID)
 		Num2IdMap     num2id;    ///< DVI font number -> fontID
 		Name2IdMap    name2id;   ///< fontname -> fontID
 		VfNum2IdMap   vfnum2id;
 		VfStack       vfStack;   ///< stack of currently processed virtual fonts
-		int selectedFontID;      ///< fontID of active font
+		VfFirstFontMap vfFirstFontMap; ///< VF -> local font number of first font defined in VF
 };
 
 #endif

@@ -32,7 +32,7 @@ template <typename T>
 struct VectorStreamBuffer : public std::streambuf
 {
 	VectorStreamBuffer (std::vector<T> &source) {
-	  	setg(&source[0], &source[0], &source[0]+source.size());
+	  	setg((char*)&source[0], (char*)&source[0], (char*)&source[0]+source.size());
 	}
 };
 
