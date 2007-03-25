@@ -37,7 +37,7 @@ struct VFActions
 	virtual ~VFActions () {}
 	virtual void preamble (string comment, UInt32 checksum, double dsize) {}
 	virtual void postamble () {}
-	virtual void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {}
+	virtual void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {}
 	virtual void defineVFChar (UInt32 c, vector<UInt8> *dvi) {}
 };
 

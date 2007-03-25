@@ -465,7 +465,6 @@ void DVIReader::cmdXXX (int len) {
  * @param num font number 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	int id = fontManager->fontID(num);
 	if (const Font *font = fontManager->getFont(num)) {
 		currFontNum = num;
 		if (actions && !dynamic_cast<const VirtualFont*>(font))
@@ -522,7 +521,7 @@ void DVIReader::cmdFontDef (int len) {
  *  @param checksum checksum to be compared with TFM checksum 
  *  @param dsize design size in TeX point units
  *  @param ssize scaled size in TeX point units */
-void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize) {
+void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
 	const VirtualFont *vf = fontManager->getVF();
 	int id = fontManager->registerFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 	if (actions)

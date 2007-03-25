@@ -85,7 +85,7 @@ class DVIReader : public StreamReader, protected VFActions
 		const FontManager* getFontManager () const {return fontManager;}
 
 		// VFAction methods
-		void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, UInt32 dsize, UInt32 ssize);
+		void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize);
 		void defineVFChar (UInt32 c, vector<UInt8> *dvi);
 		
 		// the following methods represent the DVI commands 
