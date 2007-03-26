@@ -31,17 +31,23 @@ class FontManagerTest : public CxxTest::TestSuite
 	public:
 		FontManagerTest () {
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
-			fm.registerFont(11, "cmr10", 1274110073, 20, 10);
-			fm.registerFont( 9, "cmr10", 1274110073, 30, 10);
+			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
+			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
 		}
 
 
-		void test_fontID () {
+		void test_fontID1 () {
 			TS_ASSERT_EQUALS(fm.fontID(10), 0);
 			TS_ASSERT_EQUALS(fm.fontID(11), 1);
 			TS_ASSERT_EQUALS(fm.fontID(9), 2);
 			TS_ASSERT_EQUALS(fm.fontID(1), -1);
 		}
+
+
+		void test_font_ID2 () {
+			TS_ASSERT_EQUALS(fm.fontID("cmr10"), 0);
+		}
+
 
 		void test_getFont () {
 			const Font *f1 = fm.getFont(10);
@@ -54,7 +60,19 @@ class FontManagerTest : public CxxTest::TestSuite
 			TS_ASSERT_DIFFERS(f1, f2);
 			TS_ASSERT_EQUALS(f2->name(), "cmr10");
 			TS_ASSERT(dynamic_cast<const PhysicalFontProxy*>(f2));
+			TS_ASSERT_EQUALS(f2->uniqueFont(), f1);
 		}
+
+		void test_getFontById () {
+			TS_ASSERT_EQUALS(fm.getFont(10), fm.getFontById(0));
+			TS_ASSERT_EQUALS(fm.getFont("cmr10"), fm.getFontById(0));
+		}
+
+/*
+		void test_enterVF_leaveVF () {
+			fm.enterVF(0);
+			TS_ASSERT_THROWS(fm.leaveVF(), FontException);
+		}*/
 
 	private:
 		FontManager fm;

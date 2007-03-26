@@ -71,7 +71,7 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
  *  corresponding cmdFOO method.  
  *  @return opcode of the executed command */
 int DVIReader::executeCommand () {
-   /* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
+   /* Each cmdFOO command reads the necessary number of bytes from the stream, so executeCommand
    doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
 	DVI commands because they only differ in length of their parameters. */
 	static const DVICommand commands[] = {
@@ -336,10 +336,10 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		if (vf) {    // is current font a virtual font?
 			vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
 			if (dvi) {
-				DVIPosition pos = currPos;  // save current cursor position
+				DVIPosition pos = currPos;       // save current cursor position
 				currPos.x = currPos.y = currPos.w = currPos.z = 0;
 				int save_fontnum = currFontNum;  // save current font number
-				fontManager->enterVF(vf);   // new font number context
+				fontManager->enterVF(vf);        // new font number context
 				cmdFontNum0(fontManager->vfFirstFontNum(vf));
 				double save_scale = scaleFactor;
 				scaleFactor = vf->scaledSize()/(1 << 20);
@@ -373,7 +373,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
  *  position and advances the cursor. 
  *  @param c character to set 
  *  @throw DVIException if method is called ouside a bop/eop pair */
-void DVIReader::cmdSetChar0 (UInt32 c) {
+void DVIReader::cmdSetChar0 (int c) {
 	putChar(c, true);
 }
 
@@ -502,7 +502,7 @@ void DVIReader::cmdFontDef (int len) {
 		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, ssize*scaleFactor);
 		Font *font = fontManager->getFontById(id);
 		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
-			// read vf file and register its fonts
+			// read vf file, register its font and character definitions
 			fontManager->enterVF(vf);
 			ifstream ifs(vf->path(), ios::binary);
 			VFReader vfReader(ifs);

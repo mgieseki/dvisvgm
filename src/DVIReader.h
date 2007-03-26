@@ -90,7 +90,7 @@ class DVIReader : public StreamReader, protected VFActions
 		
 		// the following methods represent the DVI commands 
 		// they are called by executeCommand and should not be used directly
-		void cmdSetChar0 (UInt32 c);
+		void cmdSetChar0 (int c);
 		void cmdSetChar (int len);
 		void cmdPutChar (int len);
 		void cmdSetRule (int len);

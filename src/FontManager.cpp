@@ -23,13 +23,10 @@
 
 #include <cstdlib>
 #include <fstream>
-#include "DVIReader.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "KPSFileFinder.h"
 #include "Message.h"
-#include "TFM.h"
-#include "VFReader.h"
 #include "macros.h"
 
 using namespace std;
@@ -165,9 +162,10 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			newfont = VirtualFont::create(name, checksum, dsize, ssize);
 		else if (KPSFileFinder::lookup(name+".mf"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-		else
+		else {
 			newfont = new EmptyFont(name);
-		//				throw FontException("font " + name + " not found");
+			Message::wstream(true) << "font '" << name << "' not found\n";
+		}
 		name2id[name] = newid;
 	}
 	fonts.push_back(newfont);
@@ -195,9 +193,8 @@ void FontManager::enterVF (VirtualFont *vf) {
 /** Leaves a previously entered virtual font frame. 
  *  @throw FontException if there is no VF frame to leave */
 void FontManager::leaveVF () {
-	if (vfStack.empty())
-		throw FontException(""); // @@
-	vfStack.pop();
+	if (!vfStack.empty())
+		vfStack.pop();
 }
 
 
