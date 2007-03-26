@@ -43,8 +43,8 @@ struct DVIActions
 	virtual void setRule (double x, double y, double height, double width) {}
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
-	virtual void defineFont (int num, const string &path, const string &name, double ds, double sc) {}
-	virtual void setFont (int num) {}
+	virtual void defineFont (int num, const Font *font) {}
+	virtual void setFont (int num, const Font *font) {}
 	virtual void special (const string &s) {}
 	virtual void preamble (const string &cmt) {}
 	virtual void postamble () {}

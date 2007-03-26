@@ -23,6 +23,7 @@
 
 #include <fstream>
 #include "CharmapTranslator.h"
+#include "Font.h"
 #include "FontEngine.h"
 #include "KPSFileFinder.h"
 #include "macros.h"
@@ -46,8 +47,8 @@ static bool valid_unicode (UInt32 unicode) {
 }
 
 
-CharmapTranslator::CharmapTranslator (const char *fontname) {
-	setFont(fontname);
+CharmapTranslator::CharmapTranslator (const Font *font) {
+	setFont(font);
 }
 
 
@@ -56,11 +57,12 @@ CharmapTranslator::CharmapTranslator (const FontEngine &fe) {
 }
 
 
-void CharmapTranslator::setFont (const char *fontname) {
+void CharmapTranslator::setFont (const Font *font) {
 	translationMap.clear();
 	
-	string filename = string(fontname) + ".pfb";
-	if (const char *path = KPSFileFinder::lookup(filename)) {
+	const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(font);
+	if (pf && pf->type() != PhysicalFont::MF) {
+		const char *path = font->path();
 		FontEngine fe;
 		fe.setFont(path);
 		fe.buildTranslationMap(translationMap);

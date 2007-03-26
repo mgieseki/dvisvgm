@@ -54,7 +54,6 @@ int FontManager::fontID (int n) const {
 		Num2IdMap::const_iterator it = num2id.find(n);
 		return (it == num2id.end()) ? -1 : it->second;
 	}
-	const VirtualFont *vf = vfStack.top();
 	VfNum2IdMap::const_iterator vit = vfnum2id.find(vfStack.top());
 	if (vit == vfnum2id.end())
 		return -1;
@@ -81,9 +80,8 @@ int FontManager::fontID (string name) const {
 
 
 int FontManager::fontnum (int id) const {
-	if (id < 0 || id > fonts.size())
+	if (id < 0 || size_t(id) > fonts.size())
 		return -1;
-	Font *font = fonts[id];
 	if (vfStack.empty()) {
 		FORALL(num2id, Num2IdMap::const_iterator, i)
 			if (i->second == id)
@@ -126,7 +124,7 @@ Font* FontManager::getFont (string name) const {
 
 
 Font* FontManager::getFontById (int id) const {
-	if (id < 0 || id >= fonts.size())
+	if (id < 0 || size_t(id) >= fonts.size())
 		return 0;
 	return fonts[id];
 }
@@ -153,7 +151,6 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 
 	Font *newfont = 0;
 	int newid = fonts.size();      // the new font gets this ID
-	const char *fontpath=0;
 	Name2IdMap::iterator it = name2id.find(name);
 	if (it != name2id.end()) {  // font with same name already registered?
 		Font *font = fonts[it->second];

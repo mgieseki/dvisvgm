@@ -19,8 +19,8 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h D
 	Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h StreamReader.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TransformationMatrix.h types.h VectorStream.h VFActions.h VFReader.h \
 	XMLDocTypeNode.h XMLDocument.h XMLNode.h XMLString.h \
-	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp Directory.cpp DVIReader.cpp DVIToSVG.cpp \
-	DVIToSVGActions.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
+	Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp Directory.cpp DVIActions.cpp DVIReader.cpp \
+	DVIToSVG.cpp DVIToSVGActions.cpp FileSystem.cpp Font.cpp FontEngine.cpp FontGlyph.cpp \
   	FontManager.cpp FontMap.cpp GFReader.cpp GFTracer.cpp KPSFileFinder.cpp Message.cpp MetafontWrapper.cpp \
 	PageSize.cpp StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TransformationMatrix.cpp \
 	VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp

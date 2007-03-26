@@ -193,25 +193,29 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	
 	XMLElementNode *defs = new XMLElementNode("defs");
 	svgElement->append(defs);
-	typedef const map<string, set<int> > UsedCharsMap;
+	typedef const map<const Font*, set<int> > UsedCharsMap;
 	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(getActions());
 	UsedCharsMap &usedChars = svgActions->getUsedChars();
 		
 	FORALL(usedChars, UsedCharsMap::const_iterator, i) {
-		string filename = i->first + ".pfb";
-		const char *path = KPSFileFinder::lookup(filename);  // path to pfb file
-		CharmapTranslator *cmt = svgActions->getCharmapTranslator(i->first);
-		if (path) {
-			SVGFontEmitter emitter(path, *cmt, defs);
-			emitter.emitFont(i->second, i->first);
+		const Font *font = i->first;
+		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
+			CharmapTranslator *cmt = svgActions->getCharmapTranslator(font);
+			if (ph_font->type() == PhysicalFont::MF) {
+				SVGFontTraceEmitter emitter(font, *cmt, defs);
+				emitter.setMag(mag);
+				if (emitter.emitFont(i->second, font->name()) > 0)
+					Message::mstream() << endl;
+			}
+			else if (const char *path = font->path()) { // path to pfb/ttf file
+				SVGFontEmitter emitter(path, *cmt, defs);
+				emitter.emitFont(i->second, font->name());
+			}
+			else
+				Message::wstream(true) << "can't embed font '" << font->name() << "'";
 		}
-		else {
-			const TFM *tfm = getFontManager()->getFont(i->first)->getTFM();
-			SVGFontTraceEmitter emitter(i->first, tfm, *cmt, defs);
-			emitter.setMag(mag);
-			if (emitter.emitFont(i->second, i->first) > 0)
-				Message::mstream() << endl;
-		}
+		else
+			Message::wstream(true) << "can't embed font '" << font->name() << "'";
 	}
 }
 

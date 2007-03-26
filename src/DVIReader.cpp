@@ -359,7 +359,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 				currPos = pos;              // restore previous cursor position
 			}
 		}
-		if (actions)
+		else if (actions)
 			actions->setChar(currPos.h, currPos.v, c, font);
 		if (moveCursor)
 			currPos.h += font->charWidth(c) * font->scaleFactor();
@@ -465,10 +465,10 @@ void DVIReader::cmdXXX (int len) {
  * @param num font number 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	if (const Font *font = fontManager->getFont(num)) {
+	if (Font *font = fontManager->getFont(num)) {
 		currFontNum = num;
-		if (actions && !dynamic_cast<const VirtualFont*>(font))
-			actions->setFont(fontManager->fontID(num));  // all actions get a recomputed font number
+		if (actions && !dynamic_cast<VirtualFont*>(font))
+			actions->setFont(fontManager->fontID(num), font);  // all actions get a recomputed font number
 	}
 	else {
 		ostringstream oss;
@@ -500,7 +500,8 @@ void DVIReader::cmdFontDef (int len) {
 	string fontname = readString(namelen);
 	if (fontManager) {
 		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, ssize*scaleFactor);
-		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(fontManager->getFontById(id))) {
+		Font *font = fontManager->getFontById(id);
+		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
 			// read vf file and register its fonts
 			fontManager->enterVF(vf);
 			ifstream ifs(vf->path(), ios::binary);
@@ -510,7 +511,7 @@ void DVIReader::cmdFontDef (int len) {
 			fontManager->leaveVF();
 		}
 		if (actions) 
-			actions->defineFont(id, fontpath, fontname, dsize*scaleFactor, ssize*scaleFactor);
+			actions->defineFont(id, font);
 	}
 }
 
@@ -522,10 +523,11 @@ void DVIReader::cmdFontDef (int len) {
  *  @param dsize design size in TeX point units
  *  @param ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
-	const VirtualFont *vf = fontManager->getVF();
+	VirtualFont *vf = fontManager->getVF();
 	int id = fontManager->registerFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
+	const Font *font = fontManager->getFontById(id);
 	if (actions)
-		actions->defineFont(id, path, name, dsize, ssize * vf->scaleFactor());
+		actions->defineFont(id, font);
 }
 
 

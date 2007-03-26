@@ -45,6 +45,7 @@ struct Font
 {
 	virtual ~Font () {}
 	virtual Font* clone (double ds, double sc) const =0;
+	virtual const Font* uniqueFont () const =0;
 	virtual string name () const =0;
 	virtual double designSize () const =0;
 	virtual double scaledSize () const =0;
@@ -65,6 +66,7 @@ struct EmptyFont : public Font
 	public:
 		EmptyFont (string name) : fontname(name) {}
 		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
+		const Font* uniqueFont () const                {return this;}
 		string name () const                     {return fontname;}
 		double designSize () const               {return 10;}    // cmr10 design size in pt
 		double scaledSize () const               {return 10;}    // cmr10 scaled size in pt
@@ -84,6 +86,7 @@ struct PhysicalFont : public virtual Font
 {
 	enum Type {MF, PFB, TTF};
 	static Font* create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+	virtual Type type () const =0;
 };
 
 
@@ -130,6 +133,7 @@ class PhysicalFontProxy : public PhysicalFont
 	friend class PhysicalFontImpl;
 	public:
 		Font* clone (double ds, double sc) const {return new PhysicalFontProxy(*this, ds, sc);}
+		const Font* uniqueFont () const {return pf;}
 		string name () const            {return pf->name();}
 		double designSize () const      {return dsize;}
 		double scaledSize () const      {return ssize;}
@@ -138,6 +142,7 @@ class PhysicalFontProxy : public PhysicalFont
 		double charHeight (int c) const {return pf->charHeight(c);} 
 		const TFM* getTFM () const      {return pf->getTFM();}
 		const char* path () const       {return pf->path();}
+		Type type () const              {return pf->type();}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -155,7 +160,9 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 	friend class PhysicalFont;
 	public:
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
+		const Font* uniqueFont () const {return this;}
 		const char* path () const;
+		Type type () const {return filetype;}
 
 	protected:
 		PhysicalFontImpl (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
@@ -170,6 +177,7 @@ class VirtualFontProxy : public VirtualFont
 	friend class VirtualFontImpl;
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
+		const Font* uniqueFont () const   {return vf;}
 		string name () const              {return vf->name();}
 		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
 		double designSize () const        {return dsize;}
@@ -198,6 +206,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 	public:
 		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
+		const Font* uniqueFont () const   {return this;}
 		const DVIVector* getDVI (int c) const;
 		const char* path () const;
 

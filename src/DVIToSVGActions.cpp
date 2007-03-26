@@ -59,13 +59,11 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
  *  @param y vertical position of the character's baseline 
  *  @param c character code relative to the current font */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
-	if (dynamic_cast<const VirtualFont*>(font))
-		return;
 	x *= BP;
 	y *= BP;
-	string fontname = font->name();
-	const CharmapTranslator *cmt = charmapTranslatorMap[fontname];
-	usedCharsMap[fontname].insert(c);
+	font = font->uniqueFont();
+	const CharmapTranslator *cmt = charmapTranslatorMap[font];
+	usedCharsMap[font].insert(c);
 	XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	
 
 	// create a new tspan element with positioning information
@@ -108,16 +106,18 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 }
 
 
-void DVIToSVGActions::defineFont (int num, const string &path, const string &name, double ds, double sc) {
-	if (charmapTranslatorMap.find(name) == charmapTranslatorMap.end()) 
-		charmapTranslatorMap[name] = new CharmapTranslator(name.c_str());
+void DVIToSVGActions::defineFont (int num, const Font *font) {
+	font = font->uniqueFont();
+	if (charmapTranslatorMap.find(font) == charmapTranslatorMap.end()) {
+		charmapTranslatorMap[font] = new CharmapTranslator(font);
+	}
 }
 
 
 /** This method is called when a "set font" command was found in the DVI file. The
  *  font must be previously defined.
  *  @param num unique number of the font in the DVI file */
-void DVIToSVGActions::setFont (int num) {
+void DVIToSVGActions::setFont (int num, const Font *font) {
 	if (num != currentFont) {
 		styleElement = new XMLElementNode("text");
 		styleElement->addAttribute("class", string("f") + XMLString(num));
@@ -165,8 +165,8 @@ void DVIToSVGActions::beginPage (Int32 *c) {
 }
 
 
-CharmapTranslator* DVIToSVGActions::getCharmapTranslator (string fontname) const {
-	CharmapTranslatorMap::const_iterator it = charmapTranslatorMap.find(fontname);
+CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) const {
+	CharmapTranslatorMap::const_iterator it = charmapTranslatorMap.find(font);
 	if (it != charmapTranslatorMap.end())
 		return it->second;
 	return 0;

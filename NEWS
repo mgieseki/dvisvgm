@@ -4,6 +4,8 @@ dvisvgm-0.5
 - evaluation of dvipdfm's map file to find font files with differing 
   names (e.g. cork-lmr10 => lmr10)
 - automatic invocation of mktexmf etc. in case of missing font files (tfm, mf)
+- command-line option -m has been renamed to -M
+- added command-line options -m/--map-file and -n/--no-mktexmf
 - memory bug in StreamCounter class has been fixed
 - added sources of Peter Selinger's potrace library (part of potrace, http://potrace.sourceforge.net) 
   to simplify the build process

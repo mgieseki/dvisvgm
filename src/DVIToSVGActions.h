@@ -40,8 +40,8 @@ class XMLElementNode;
 
 class DVIToSVGActions : public DVIActions
 {
-	typedef map<string, CharmapTranslator*> CharmapTranslatorMap;
-	typedef map<string, set<int> > UsedCharsMap;
+	typedef map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
+	typedef map<const Font*, set<int> > UsedCharsMap;
 	public:
 		DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem);
 		~DVIToSVGActions ();
@@ -49,8 +49,8 @@ class DVIToSVGActions : public DVIActions
 		void setRule (double x, double y, double height, double width);
 		void moveToX (double x) {xmoved = true;}
 		void moveToY (double y) {ymoved = true;}
-		void defineFont (int num, const string &path, const string &name, double ds, double sc);
-		void setFont (int num);
+		void defineFont (int num, const Font *font);
+		void setFont (int num, const Font *font);
 		void special (const string &s);
 		void preamble (const string &cmt);
 		void postamble ();
@@ -60,7 +60,7 @@ class DVIToSVGActions : public DVIActions
 		void setFileFinder (FileFinder *ff) {fileFinder = ff;}
 		void setProcessSpecials (bool ps)   {processSpecials = ps;}
 		void setTransformation (const TransformationMatrix &tm);
-		CharmapTranslator* getCharmapTranslator (string fontname) const;
+		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 
 	private:
 		const DVIReader &dviReader;

@@ -35,6 +35,7 @@ using std::set;
 using std::string;
 
 class FileFinder;
+class Font;
 class GFTracer;
 class TFM;
 class XMLElementNode;
@@ -42,7 +43,7 @@ class XMLElementNode;
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const string &fname, const TFM *metrics, const CharmapTranslator &cmt, XMLElementNode *n);
+      SVGFontTraceEmitter (const Font *font, const CharmapTranslator &cmt, XMLElementNode *n);
       ~SVGFontTraceEmitter ();
 		int emitFont (std::string id="") const;
 		int emitFont (const set<int> &usedChars, string id="") const;
@@ -56,8 +57,7 @@ class SVGFontTraceEmitter : public FontEmitter
    private:
 		mutable GFTracer *gfTracer;
 		mutable std::istream *in;
-		string fontname;
-		const TFM *tfm;
+		const Font *font;
 		double mag;
 		const CharmapTranslator &charmapTranslator;
 		XMLElementNode *rootNode; 

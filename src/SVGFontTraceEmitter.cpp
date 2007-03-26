@@ -25,6 +25,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "Font.h"
 #include "GFTracer.h"
 #include "macros.h"
 #include "Message.h"
@@ -37,8 +38,8 @@
 using namespace std;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const string &fname, const TFM *metrics, const CharmapTranslator &cmt, XMLElementNode *n)
-	: gfTracer(0), in(0), fontname(fname), tfm(metrics), mag(4.0), 
+SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const CharmapTranslator &cmt, XMLElementNode *n)
+	: gfTracer(0), in(0), font(f), mag(4.0), 
 	  charmapTranslator(cmt), rootNode(n), glyphNode(0)
 {
 }
@@ -47,17 +48,17 @@ SVGFontTraceEmitter::SVGFontTraceEmitter (const string &fname, const TFM *metric
 SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 	delete gfTracer;
 	delete in;
-	MetafontWrapper::removeOutputFiles(fontname);
+	MetafontWrapper::removeOutputFiles(font->name());
 }
 
 
 bool SVGFontTraceEmitter::checkTracer () const {
 	if (!gfTracer) {
-		MetafontWrapper mf(fontname);
+		MetafontWrapper mf(font->name());
 		mf.make("ljfour", mag); // call Metafont if necessary
-		if (mf.success() && tfm) {
-			in = new ifstream((fontname+".gf").c_str(), ios_base::binary);
-			gfTracer = new GFTracer(*in, 1000.0/tfm->getDesignSize()); // 1000 units per em
+		if (mf.success() && font->getTFM()) {
+			in = new ifstream((font->name()+".gf").c_str(), ios_base::binary);
+			gfTracer = new GFTracer(*in, 1000.0/font->getTFM()->getDesignSize()); // 1000 units per em
 		}
 		else 
 			return false;  // Metafont failed
@@ -82,11 +83,11 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, string id) const {
 		return 0;
 
 	if (!checkTracer()) {
-		Message::wstream(true) << "unable to find " << fontname << ".mf, can't embed font\n";
+		Message::wstream(true) << "unable to find " << font->name() << ".mf, can't embed font\n";
 		return 0;
 	}
 
-	Message::mstream() << "tracing glyphs of " << fontname << endl;
+	Message::mstream() << "tracing glyphs of " << font->name() << endl;
 	XMLElementNode *fontNode = new XMLElementNode("font");
 	if (id != "")
 		fontNode->addAttribute("id", id);
@@ -109,6 +110,7 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, string id) const {
 
 
 bool SVGFontTraceEmitter::emitGlyph (int c) const {
+	const TFM *tfm = font->getTFM();
 	if (!checkTracer() || !tfm)
 		return false;
 
