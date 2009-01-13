@@ -64,8 +64,8 @@ void CharmapTranslator::setFont (const Font *font) {
 	if (pf && pf->type() != PhysicalFont::MF) {
 		const char *path = font->path();
 		FontEngine fe;
-		fe.setFont(path);
-		fe.buildTranslationMap(translationMap);
+		if (fe.setFont(path))
+			fe.buildTranslationMap(translationMap);
 	}
 }
 
