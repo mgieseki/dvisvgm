@@ -1,8 +1,8 @@
-/* Copyright (C) 2001-2005 Peter Selinger.
-   This file is part of potrace. It is free software and it is covered
+/* Copyright (C) 2001-2007 Peter Selinger.
+   This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
-/* $Id: decompose.c,v 1.8 2005/03/06 06:35:51 selinger Exp $ */
+/* $Id: decompose.c 146 2007-04-09 00:43:46Z selinger $ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,10 +55,30 @@ static void clear_bm_with_bbox(potrace_bitmap_t *bm, bbox_t *bbox) {
 /* ---------------------------------------------------------------------- */
 /* auxiliary functions */
 
-/* return a "random" value which deterministically depends on x,y */
+/* deterministically and efficiently hash (x,y) into a pseudo-random bit */
 static inline int detrand(int x, int y) {
-  srand(x+123456789*y);
-  return rand();
+  unsigned int z;
+  static const unsigned char t[256] = { 
+    /* non-linear sequence: constant term of inverse in GF(8), 
+       mod x^8+x^4+x^3+x+1 */
+    0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 
+    0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 
+    0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 
+    1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 
+    0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 
+    0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 
+    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 
+    1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 
+    0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 
+    1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 
+  };
+
+  /* 0x04b3e375 and 0x05a8ef93 are chosen to contain every possible
+     5-bit sequence */
+  z = ((0x04b3e375 * x) ^ y) * 0x05a8ef93;
+  z = t[z & 0xff] ^ t[(z>>8) & 0xff] ^ t[(z>>16) & 0xff] ^ t[(z>>24) & 0xff];
+  return z & 1;
 }
 
 /* return the "majority" value of bitmap bm at intersection (x,y). We
@@ -193,8 +213,8 @@ static path_t *findpath(potrace_bitmap_t *bm, int x0, int y0, int sign, int turn
   while (1) {
     /* add point to path */
     if (len>=size) {
-      size+=100;
-      size*=1.3;
+      size += 100;
+      size = (int)(1.3 * size);
       pt1 = (point_t *)realloc(pt, size * sizeof(point_t));
       if (!pt1) {
 	goto error;
@@ -223,7 +243,7 @@ static path_t *findpath(potrace_bitmap_t *bm, int x0, int y0, int sign, int turn
       if (turnpolicy == POTRACE_TURNPOLICY_RIGHT
 	  || (turnpolicy == POTRACE_TURNPOLICY_BLACK && sign == '+')
 	  || (turnpolicy == POTRACE_TURNPOLICY_WHITE && sign == '-')
-	  || (turnpolicy == POTRACE_TURNPOLICY_RANDOM && (detrand(x,y) & 1))
+	  || (turnpolicy == POTRACE_TURNPOLICY_RANDOM && detrand(x,y))
 	  || (turnpolicy == POTRACE_TURNPOLICY_MAJORITY && majority(bm, x, y))
 	  || (turnpolicy == POTRACE_TURNPOLICY_MINORITY && !majority(bm, x, y))) {
 	tmp = dirx;              /* right turn */

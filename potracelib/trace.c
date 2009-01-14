@@ -1,8 +1,8 @@
-/* Copyright (C) 2001-2005 Peter Selinger.
-   This file is part of potrace. It is free software and it is covered
+/* Copyright (C) 2001-2007 Peter Selinger.
+   This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
-/* $Id: trace.c,v 1.10 2005/02/27 01:54:08 selinger Exp $ */
+/* $Id: trace.c 147 2007-04-09 00:44:09Z selinger $ */
 /* transform jaggy paths into smooth curves */
 
 #include <stdio.h>
@@ -22,14 +22,6 @@
 #define COS179 -0.999847695156	 /* the cosine of 179 degrees */
 
 /* ---------------------------------------------------------------------- */
-/* some useful macros. Note: the "mod" macro works correctly for
-   negative a. Also note that the test for a>=n, while redundant,
-   speeds up the mod function by 70% in the average case (significant
-   since the program spends about 16% of its time here - or 40%
-   without the test). The "floordiv" macro returns the largest integer
-   <= a/n, and again this works correctly for negative a, as long as
-   a,n are integers and n>0. */
-
 #define SAFE_MALLOC(var, n, typ) \
   if ((var = (typ *)malloc((n)*sizeof(typ))) == NULL) goto malloc_error 
 
@@ -313,13 +305,13 @@ static int calc_sums(privpath_t *pp) {
    satisfy xprod(constraint[0], cur) >= 0 and xprod(constraint[1],
    cur) <= 0. */
 
-/* Remark for potrace 1.1: the current implementation of calc_lon is
-   more complex than the implementation found in potrace 1.0, but it
+/* Remark for Potrace 1.1: the current implementation of calc_lon is
+   more complex than the implementation found in Potrace 1.0, but it
    is considerably faster. The introduction of the "nc" data structure
    means that we only have to test the constraints for "corner"
    points. On a typical input file, this speeds up the calc_lon
    function by a factor of 31.2, thereby decreasing its time share
-   within the overall potrace algorithm from 72.6% to 7.82%, and
+   within the overall Potrace algorithm from 72.6% to 7.82%, and
    speeding up the overall algorithm by a factor of 3.36. On another
    input file, calc_lon was sped up by a factor of 6.7, decreasing its
    time share from 51.4% to 13.61%, and speeding up the overall
@@ -1138,14 +1130,14 @@ static int opticurve(privpath_t *pp, double opttolerance) {
   j = m;
   for (i=om-1; i>=0; i--) {
     if (pt[j]==j-1) {
-      pp->ocurve.tag[i]    = pp->curve.tag[mod(j,m)];
-      pp->ocurve.c[i][0]   = pp->curve.c[mod(j,m)][0];
-      pp->ocurve.c[i][1]   = pp->curve.c[mod(j,m)][1];
-      pp->ocurve.c[i][2]   = pp->curve.c[mod(j,m)][2];
-      pp->ocurve.vertex[i] = pp->curve.vertex[mod(j,m)];
-      pp->ocurve.alpha[i]  = pp->curve.alpha[mod(j,m)];
-      pp->ocurve.alpha0[i] = pp->curve.alpha0[mod(j,m)];
-      pp->ocurve.beta[i]   = pp->curve.beta[mod(j,m)];
+      pp->ocurve.tag[i]     = pp->curve.tag[mod(j,m)];
+      pp->ocurve.c[i][0]    = pp->curve.c[mod(j,m)][0];
+      pp->ocurve.c[i][1]    = pp->curve.c[mod(j,m)][1];
+      pp->ocurve.c[i][2]    = pp->curve.c[mod(j,m)][2];
+      pp->ocurve.vertex[i]  = pp->curve.vertex[mod(j,m)];
+      pp->ocurve.alpha[i]   = pp->curve.alpha[mod(j,m)];
+      pp->ocurve.alpha0[i]  = pp->curve.alpha0[mod(j,m)];
+      pp->ocurve.beta[i]    = pp->curve.beta[mod(j,m)];
       s[i] = t[i] = 1.0;
     } else {
       pp->ocurve.tag[i] = POTRACE_CURVETO;
