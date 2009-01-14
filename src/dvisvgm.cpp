@@ -53,7 +53,7 @@ using namespace std;
 
 static void show_help () {
    cmdline_parser_print_help();
-   cout << "\nCopyright (C) 2005-2007 Martin Gieseking" EMAIL "\n\n";
+   cout << "\nCopyright (C) 2005-2009 Martin Gieseking" EMAIL "\n\n";
 }
 
 
