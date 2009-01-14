@@ -95,6 +95,7 @@ static const char* find_file (const std::string &fname) {
 		types["ttf"] = kpse_truetype_format;
 		types["map"] = kpse_fontmap_format;
 		types["sty"] = kpse_tex_format;
+		types["enc"] = kpse_enc_format;
 	}
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
