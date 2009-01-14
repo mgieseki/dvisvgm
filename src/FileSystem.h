@@ -31,9 +31,9 @@ using std::string;
 
 struct FileSystem
 {
-	static bool remove (string fname);
-	static bool rename (string oldname, string newname);
-	static UInt64 filesize (string fname);
+	static bool remove (const string &fname);
+	static bool rename (const string &oldname, const string &newname);
+	static UInt64 filesize (const string &fname);
 	static string adaptPathSeperators (string path);
 	static string getcwd ();
 	static const char* DEVNULL;

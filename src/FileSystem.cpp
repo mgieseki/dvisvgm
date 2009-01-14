@@ -44,17 +44,17 @@ using namespace std;
 #endif
 
 
-bool FileSystem::remove (string fname) {
+bool FileSystem::remove (const string &fname) {
 	return unlink(fname.c_str()) == 0;
 }
 
 
-bool FileSystem::rename (string oldname, string newname) {
+bool FileSystem::rename (const string &oldname, const string &newname) {
 	return ::rename(oldname.c_str(), newname.c_str()) == 0;
 }
 
 
-UInt64 FileSystem::filesize (string fname) {
+UInt64 FileSystem::filesize (const string &fname) {
 #ifdef __WIN32__
 	// unfortunately, stat doesn't work properly under Windows
 	// so we have to use this freaky code
