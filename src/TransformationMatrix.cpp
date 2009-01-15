@@ -229,8 +229,6 @@ TransformationMatrix& TransformationMatrix::parse (istream &is, Calculator &calc
 				double v[6];
 				for (int i=0; i < 6; i++)
 					v[i] = getArgument(is, calc, i%4 ? 0 : 1, i==0, i==0);
-				for (int i=6; i < 9; i++)
-					v[i] = i%4 ? 0 : 1;
 				TransformationMatrix tm(v);
 				rmultiply(tm);
             break;
