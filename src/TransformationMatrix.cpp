@@ -164,11 +164,12 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
 	string expr;
 	while (is && !isupper(is.peek()) && is.peek() != ',')
 		expr += is.get();
-   if (expr.length() == 0)
+   if (expr.length() == 0) {
       if (optional)
          return def;
       else
          throw ParserException("parameter expected");
+	}
 	return calc.eval(expr);
 }
 
@@ -226,9 +227,12 @@ TransformationMatrix& TransformationMatrix::parse (istream &is, Calculator &calc
             break;
 			}
 			case 'M': {
-				double v[6];
+				double v[9];
 				for (int i=0; i < 6; i++)
-					v[i] = getArgument(is, calc, i%4 ? 0 : 1, i==0, i==0);
+					v[i] = getArgument(is, calc, i%4 ? 0 : 1, i!=0, i!=0);
+				// third row (0, 0, 1)
+				v[6] = v[7] = 0;
+				v[8] = 1;
 				TransformationMatrix tm(v);
 				rmultiply(tm);
             break;
