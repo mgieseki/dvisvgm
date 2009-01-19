@@ -359,7 +359,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 			}
 		}
 		else if (actions)
-			actions->setChar(currPos.h, currPos.v, c, font);
+			actions->setChar(currPos.h, currPos.v, fontManager->decodeChar(c), font);
 		if (moveCursor)
 			currPos.h += font->charWidth(c) * font->scaleFactor();
 	}
@@ -464,7 +464,7 @@ void DVIReader::cmdXXX (int len) {
  * @param num font number 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	if (Font *font = fontManager->getFont(num)) {
+	if (Font *font = fontManager->setFont(num)) {
 		currFontNum = num;
 		if (actions && !dynamic_cast<VirtualFont*>(font))
 			actions->setFont(fontManager->fontID(num), font);  // all actions get a recomputed font number

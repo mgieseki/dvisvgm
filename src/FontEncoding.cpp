@@ -36,6 +36,12 @@ static bool valid_name_char (char c);
 
 FontEncoding::FontEncoding (const string &encname) : _encname(encname) 
 {
+	read();
+}
+
+
+const char* FontEncoding::path () const {
+	return KPSFileFinder::lookup(_encname+".enc");
 }
 
 
@@ -43,9 +49,8 @@ FontEncoding::FontEncoding (const string &encname) : _encname(encname)
 /** Search for suitable enc-file and read its encoding information. 
  *  The file contents must be a valid PostScript vector with 256 entries. */
 void FontEncoding::read () {
-	const char *path = KPSFileFinder::lookup(_encname+".enc");
-	if (path) {
-		ifstream ifs(path);
+	if (const char *p = path()) {
+		ifstream ifs(p);
 		read(ifs);
 	}
 	else
@@ -89,8 +94,6 @@ void FontEncoding::read (istream &is) {
 	// remove trailing .notdef names
 	for (n--; n > 0 && _table[n] == ""; n--);	
 	_table.resize(n+1);
-	for (unsigned i=0; i < _table.size(); i++)
-		cout << i << ": " << _table[i] << endl;  // @@
 }
 
 
@@ -121,8 +124,8 @@ static bool valid_name_char (char c) {
 }
 
 
-string FontEncoding::getEntry (UInt32 c) const {
-	if (c >= 0 && c < _table.size())
+string FontEncoding::getEntry (int c) const {
+	if (c >= 0 && (size_t)c < _table.size())
 		return _table[c];
 	return 0;
 }

@@ -25,6 +25,7 @@
 #include <fstream>
 #include "Font.h"
 #include "FontEncoding.h"
+#include "FontEngine.h"
 #include "FontManager.h"
 #include "KPSFileFinder.h"
 #include "Message.h"
@@ -33,10 +34,11 @@
 using namespace std;
 
 
-FontManager::FontManager () 
+static bool build_decoding_vector (const Font *font, const map<string, FontEncoding*> &encmap, vector<int> &v);
+
+
+FontManager::FontManager ()
 {
-	FontEncoding enc("base-MinionPro-ab"); // @@
-	enc.read(); // @@
 }
 
 
@@ -74,7 +76,7 @@ int FontManager::fontID (const Font *font) const {
 }
 
 
-int FontManager::fontID (string name) const {
+int FontManager::fontID (const string &name) const {
 	map<string,int>::const_iterator it = _name2id.find(name);
 	if (it == _name2id.end())
 		return -1;
@@ -118,11 +120,31 @@ Font* FontManager::getFont (int n) const {
 }
 
 
-Font* FontManager::getFont (string name) const {
+Font* FontManager::getFont (const string &name) const {
 	int id = fontID(name);
 	if (id < 0)
 		return 0;
 	return _fonts[id];
+}
+
+
+Font* FontManager::setFont (int n) {
+	if (Font *font = getFont(n)) {
+		build_decoding_vector(font, _encMap, _decVec);
+/*		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
+			EncodingMap::iterator it = _encMap.find(encname);
+			if (it != _encMap.end())
+				_currentEnc = it->second;
+		}*/
+		return font;
+	}
+	return 0;
+}
+
+
+Font* FontManager::setFont (const string &name) {
+	int id = fontID(name);
+	return (id < 0 ? 0 : setFont(id));
 }
 
 
@@ -174,10 +196,9 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		}
 		_name2id[name] = newid;
 
-
-		if (const char *encname = KPSFileFinder::lookupEncName(name)) {
-			_encMap[name] = new FontEncoding(encname);
-		}
+		const char *encname = KPSFileFinder::lookupEncName(name);
+		if (encname && _encMap.find(name) == _encMap.end()) 
+			_encMap[encname] = new FontEncoding(encname);
 	}
 	_fonts.push_back(newfont);
 	if (_vfStack.empty())  // register font referenced in dvi file?
@@ -196,8 +217,10 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
  *  This method must be called before processing a VF character.
  *  @param vf virtual font */
 void FontManager::enterVF (VirtualFont *vf) {
-	if (vf) 
+	if (vf) {
 		_vfStack.push(vf);
+		_decVec.clear();  // virtual fonts use standard encoding
+	}
 }
 
 
@@ -215,7 +238,11 @@ void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
 }
 
 
-int FontManager::decodeChar (int c) {
+int FontManager::decodeChar (int c) const {
+	if (_decVec.size() == 0)
+		return c;
+	if (c >= 0 && (size_t)c < _decVec.size())
+		return _decVec[c];
 	return 0;
 }
 
@@ -253,4 +280,22 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 	}
 #endif
 	return os;
+}
+
+static bool build_decoding_vector (const Font *font, const map<string, FontEncoding*> &encmap, vector<int> &v) {
+	if (font) {
+		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
+			map<string, FontEncoding*>::const_iterator it = encmap.find(encname);
+			if (it != encmap.end()) {
+				const FontEncoding *enc = it->second;
+				v.resize(enc->size());
+				FontEngine fe;
+				fe.setFont(font->path());
+				for (int i=0; i < enc->size(); i++)
+					v[i] = fe.getCharByGlyphName(enc->getEntry(i).c_str());
+				return true;
+			}
+		}
+	}
+	return false;
 }

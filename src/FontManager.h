@@ -63,15 +63,17 @@ class FontManager
       ~FontManager ();
 		int registerFont (UInt32 fontnum, string fontname, UInt32 checksum, double dsize, double scale);
 		Font* getFont (int n) const;
-		Font* getFont (string name) const;
+		Font* getFont (const string &name) const;
 		Font* getFontById (int id) const;
+		Font* setFont (int n);
+		Font* setFont (const string &name);
 		VirtualFont* getVF () const;
 		int fontID (int n) const;
 		int fontID (const Font *font) const;
-		int fontID (string name) const;
+		int fontID (const string &name) const;
 		int fontnum (int id) const;
 		int vfFirstFontNum (VirtualFont *vf) const;
-		int decodeChar (int c);
+		int decodeChar (int c) const;
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
 		void assignVfChar (int c, vector<UInt8> *dvi);
@@ -86,6 +88,7 @@ class FontManager
 		VfStack        _vfStack;   ///< stack of currently processed virtual fonts
 		VfFirstFontMap _vfFirstFontMap; ///< VF -> local font number of first font defined in VF
 		EncodingMap    _encMap;    ///< encname -> encoding table
+		vector<int>    _decVec;    ///< decoding vector for current font
 };
 
 #endif

@@ -35,7 +35,10 @@ class FontEncoding
       FontEncoding (const std::string &name);
 		void read ();
 		void read (std::istream &is);
-		std::string getEntry (UInt32 c) const;		
+		int size () const                  {return _table.size();}
+		std::string getEntry (int c) const;		
+		std::string name () const          {return _encname;}
+		const char* path () const;
 
    private:
 		std::string _encname;

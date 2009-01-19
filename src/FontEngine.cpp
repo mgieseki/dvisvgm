@@ -34,53 +34,73 @@ using namespace std;
 
 
 FontEngine::FontEngine () {
-	currentFace = 0;
-	currentChar = currentGlyphIndex = 0;
-	horDeviceRes = vertDeviceRes = 300;
-   if (FT_Init_FreeType(&library))
+	_currentFace = 0;
+	_currentChar = _currentGlyphIndex = 0;
+	_horDeviceRes = _vertDeviceRes = 300;
+   if (FT_Init_FreeType(&_library))
       Message::estream(true) << "FontEngine: error initializing FreeType library\n";
 }
 
 
 FontEngine::~FontEngine () {
-   if (currentFace && FT_Done_Face(currentFace))
+   if (_currentFace && FT_Done_Face(_currentFace))
       Message::estream(true) << "FontEngine: error removing glyph\n";
-   if (FT_Done_FreeType(library))
+   if (FT_Done_FreeType(_library))
       Message::estream(true) << "FontEngine: error removing FreeType library\n";
 }
    
 
 void FontEngine::setDeviceResolution (int x, int y) {
-	horDeviceRes = x;
-	vertDeviceRes = y;
+	_horDeviceRes = x;
+	_vertDeviceRes = y;
 }
 
 
+/** Builds a table that maps glyph indexes to char codes. 
+ * @param face font face to be used
+ * @param reverseMap the resulting map */
+static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
+	UInt32 glyphIndex;
+	UInt32 charcode = FT_Get_First_Char(face, &glyphIndex);
+	while (glyphIndex) {
+//		if (reverseMap.find(glyphIndex) == reverseMap.end())
+			reverseMap[glyphIndex] = charcode;
+		charcode = FT_Get_Next_Char(face, charcode, &glyphIndex);
+	}
+}
+
+
+/** Sets the font to be used. 
+ * @param fname path to font file
+ * @param ptSize font size in point units 
+ * @return true on success */
 bool FontEngine::setFont (const string &fname, int ptSize) {
-	if (FT_New_Face(library, fname.c_str(), 0, &currentFace)) {
+	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << endl;
       return false;
    }
-	if (ptSize && FT_Set_Char_Size(currentFace, 0, ptSize*64, horDeviceRes, vertDeviceRes)) {
+	if (ptSize && FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
 		Message::estream(true) << "FontEngine: error setting character size\n";
       return false;
    }  
    // look for a custom character map
-   for (int i=0; i < currentFace->num_charmaps; i++) {
-      FT_CharMap charmap = currentFace->charmaps[i];
+   for (int i=0; i < _currentFace->num_charmaps; i++) {
+      FT_CharMap charmap = _currentFace->charmaps[i];
       if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) {
-         FT_Set_Charmap(currentFace, charmap);
+         FT_Set_Charmap(_currentFace, charmap);
          break;
       }
    }
+	build_reverse_map(_currentFace, _reverseMap);
 	return true;
 }
 
 
+
 void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const {
 	FT_CharMap unicodeMap=0, customMap=0;
-   for (int i=0; i < currentFace->num_charmaps; i++) {		
-      FT_CharMap charmap = currentFace->charmaps[i];
+   for (int i=0; i < _currentFace->num_charmaps; i++) {		
+      FT_CharMap charmap = _currentFace->charmaps[i];
       if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) 
 			customMap = charmap;
 		else if (charmap->encoding == FT_ENCODING_UNICODE) 
@@ -90,57 +110,52 @@ void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const
 		return;
 
 	map<UInt32,UInt32> reverseMap;
-	UInt32 glyphIndex;
-	UInt32 charcode = FT_Get_First_Char(currentFace, &glyphIndex);
-	while (glyphIndex) {
-		if (reverseMap.find(glyphIndex) == reverseMap.end())
-			reverseMap[glyphIndex] = charcode;
-		charcode = FT_Get_Next_Char(currentFace, charcode, &glyphIndex);
-	}
+	build_reverse_map(_currentFace, reverseMap);
 
-	FT_Set_Charmap(currentFace, unicodeMap);
-	charcode = FT_Get_First_Char(currentFace, &glyphIndex);
+	FT_Set_Charmap(_currentFace, unicodeMap);
+	UInt32 glyphIndex;
+	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyphIndex);
 	while (glyphIndex) {
 		translationMap[reverseMap[glyphIndex]] = charcode;
-		charcode = FT_Get_Next_Char(currentFace, charcode, &glyphIndex);
+		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyphIndex);
 	}
-	FT_Set_Charmap(currentFace, customMap);
+	FT_Set_Charmap(_currentFace, customMap);
 }
 
 
 const char* FontEngine::getFamilyName () const {
-	return currentFace ? currentFace->family_name : 0;
+	return _currentFace ? _currentFace->family_name : 0;
 }
 
 const char* FontEngine::getStyleName () const {
-	return currentFace ? currentFace->style_name : 0;
+	return _currentFace ? _currentFace->style_name : 0;
 }
 
 int FontEngine::getUnitsPerEM () const {
-	return currentFace ? currentFace->units_per_EM : 0;
+	return _currentFace ? _currentFace->units_per_EM : 0;
 }
 
 int FontEngine::getAscender () const {
-	return currentFace ? currentFace->ascender : 0;
+	return _currentFace ? _currentFace->ascender : 0;
 }
 
 int FontEngine::getDescender () const {
-	return currentFace ? currentFace->descender : 0;
+	return _currentFace ? _currentFace->descender : 0;
 }
 
 int FontEngine::getHAdvance () const {
-	if (currentFace) {
-		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(currentFace, ft_sfnt_os2));
+	if (_currentFace) {
+		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
 		return table ? table->xAvgCharWidth : 0;
 	}
 	return 0;
 }
 
 int FontEngine::getHAdvance (unsigned int c) const {
-	if (currentFace) {
-		int index = FT_Get_Char_Index(currentFace, (FT_ULong)c);
-		FT_Load_Glyph(currentFace, index, FT_LOAD_NO_SCALE);
-		return currentFace->glyph->metrics.horiAdvance;	
+	if (_currentFace) {
+		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)c);
+		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
+		return _currentFace->glyph->metrics.horiAdvance;	
 	}
 	return 0;
 }
@@ -148,45 +163,52 @@ int FontEngine::getHAdvance (unsigned int c) const {
 
 /** Get first available character of the current font face. */
 int FontEngine::getFirstChar () const {
-	if (currentFace) 
-		return currentChar = FT_Get_First_Char(currentFace, &currentGlyphIndex);
+	if (_currentFace) 
+		return _currentChar = FT_Get_First_Char(_currentFace, &_currentGlyphIndex);
 	return 0;
 }
 
 
 /** Get the next available character of the current font face. */
 int FontEngine::getNextChar () const {
-	if (currentFace && currentGlyphIndex) 
-		return currentChar = FT_Get_Next_Char(currentFace, currentChar, &currentGlyphIndex);
+	if (_currentFace && _currentGlyphIndex) 
+		return _currentChar = FT_Get_Next_Char(_currentFace, _currentChar, &_currentGlyphIndex);
 	return getFirstChar();		
 }
 
 
+/** Returns the glyph name for a given charater code. 
+ * @param c char code 
+ * @return glyph name */
 string FontEngine::getGlyphName (unsigned int c) const {
-	if (currentFace && FT_HAS_GLYPH_NAMES(currentFace)) {
+	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
 		char buf[256];
-		int index = FT_Get_Char_Index(currentFace, c);
-		FT_Get_Glyph_Name(currentFace, index, buf, 256);
+		int index = FT_Get_Char_Index(_currentFace, c);
+		FT_Get_Glyph_Name(_currentFace, index, buf, 256);
 		return string(buf);
 	}
 	return "";
 }
 
 
+/** Returns the character code for a given glyph name. 
+ * @param name glyph name
+ * @return char code or 0 if name couldn't be found */
 int FontEngine::getCharByGlyphName (const char *name) const {
-	int c=0;
-	if (currentFace && FT_HAS_GLYPH_NAMES(currentFace)) {
-		c = FT_Get_Name_Index(currentFace, (FT_String*)name);
+	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace))	{
+		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
+		map<UInt32, UInt32>::const_iterator it = _reverseMap.find(index);
+		if (it != _reverseMap.end())
+			return it->second;
 	}
-	return c;
+	return 0;
 }
-
 
 
 vector<int> FontEngine::getPanose () const {
 	vector<int> panose(10);
-	if (currentFace) {
-		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(currentFace, ft_sfnt_os2));
+	if (_currentFace) {
+		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
 		if (table) 
 			for (int i=0; i < 10; i++)
 				panose[i] = table->panose[i];
@@ -196,8 +218,8 @@ vector<int> FontEngine::getPanose () const {
 
 
 bool FontEngine::setCharSize (int ptSize) {
-	if (currentFace) {
-		if (FT_Set_Char_Size(currentFace, 0, ptSize*64, horDeviceRes, vertDeviceRes)) {
+	if (_currentFace) {
+		if (FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
 			Message::estream(true) << "FontEngine: error setting character size\n";
 		   return false;
       }
@@ -255,18 +277,18 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *               the plain TrueType units are used. 
  *  @return false on errors */
 bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale) const {
-	if (currentFace) {
-		int index = FT_Get_Char_Index(currentFace, (FT_ULong)chr);
-		if (FT_Load_Glyph(currentFace, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
+	if (_currentFace) {
+		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)chr);
+		if (FT_Load_Glyph(_currentFace, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
 			Message::estream(true) << "can't load glyph " << int(chr) << endl;
          return false;
       }
 
-		if (currentFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
+		if (_currentFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
 			Message::estream(true) << "no outlines found in glyph " << int(chr) << endl;
 			return false;
 		}
-		FT_Outline outline = currentFace->glyph->outline;
+		FT_Outline outline = _currentFace->glyph->outline;
 		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
 		FT_Outline_Decompose(&outline, &funcs, &commands);
 		return true;

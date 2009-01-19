@@ -91,17 +91,11 @@ void FontMap::read (istream &is) {
 	char buf[256];
 	while (is) {
 		is.getline(buf, 256);
-//		cout << buf << endl; // @@
 		vector<string> parts;
 		split(buf, &parts, 3);
 		if (remove_options(&parts) < 2)
 			continue;
-
-		// @@ SHOW
-/*		for (int i=0; i < parts.size(); i++)
-			cout << '[' << parts[i] << ']';
-		cout << endl; */
-		
+	
 		if (parts[1] == "default" || parts[1] == "none")
 			parts[1] = "";
 		if ((parts.size() == 2 && parts[1] == "") || (parts.size() == 3 && parts[1] == "" && parts[0] == parts[2]))
@@ -109,8 +103,6 @@ void FontMap::read (istream &is) {
 
 		_fontMap[parts[0]].fontname = parts[parts.size() == 2 ? 0 : 2];
 		_fontMap[parts[0]].encname  = parts[1];
-//		SHOW(_fontMap[parts[0]].fontname);
-//		SHOW(_fontMap[parts[0]].encname);
 	}
 }
 

@@ -74,10 +74,11 @@ class FontEngine
 		void buildTranslationMap (map<UInt32,UInt32> &translationMap) const;
 
    private:
-		int horDeviceRes, vertDeviceRes;
-		mutable unsigned int currentChar, currentGlyphIndex;
-		FT_Face currentFace;
-      FT_Library library;
+		int _horDeviceRes, _vertDeviceRes;
+		mutable unsigned int _currentChar, _currentGlyphIndex;
+		FT_Face             _currentFace;
+      FT_Library          _library;
+		map<UInt32, UInt32> _reverseMap;
 };
 
 #endif
