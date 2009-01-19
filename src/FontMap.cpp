@@ -21,12 +21,10 @@
 ***********************************************************************/
 // $Id$
 
-//#include <dirent.h>
-//#include <errno.h>
-//#include <sys/stat.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "debug.h"
 #include "Directory.h"
 #include "FontMap.h"
 
@@ -65,13 +63,18 @@ static int split (char *str, vector<string> *parts, unsigned max_parts=0) {
 }
 
 
-/*
-FontMap::FontMap (const string &fname, bool dir) {
-	if (dir)
-		readMapDir(fname);
-	else
-		readMapFile(fname);
-}*/
+/** Strips dvipdfm map-file options off previously collected 'parts' */
+static int remove_options (vector<string> *parts) {
+	if (parts) {
+		vector<string>::iterator it=parts->begin();
+		while (it != parts->end() && (*it)[0] != '-')
+			++it;
+		while (it != parts->end())
+			parts->erase(it);
+		return parts->size();
+	}
+	return 0;
+}
 
 
 FontMap::FontMap (istream &is) {
@@ -79,30 +82,42 @@ FontMap::FontMap (istream &is) {
 }
 
 
+/** Reads the font mapping information from the given stream. 
+ *  The information must be given in the map-file format of dvipdfm:
+ *  <font name> [<encoding>|default|none] [<map target>] [options]
+ *  The optional dvipdfm-parameters -r, -e and -s are ignored. 
+ *  @todo implement encoding support */
 void FontMap::read (istream &is) {
 	char buf[256];
 	while (is) {
 		is.getline(buf, 256);
+//		cout << buf << endl; // @@
 		vector<string> parts;
-		if (split(buf, &parts, 10) < 2)
+		split(buf, &parts, 3);
+		if (remove_options(&parts) < 2)
 			continue;
 
-//		cout << '[' << parts[0] << "] -> [" << parts[1] << ']' << endl;
-		int target_index = 0;
-		if (parts.size() == 2 && parts[1][0] != '-')
-			target_index = 1;
-		else if (parts.size() > 2)
-			target_index = (parts[2][0] == '-') ? 1 : 2;
-		// skip names that map to themselves
-		if (target_index > 0 && parts[0] != parts[target_index])
-			fontMap[parts[0]] = parts[target_index];
+		// @@ SHOW
+/*		for (int i=0; i < parts.size(); i++)
+			cout << '[' << parts[i] << ']';
+		cout << endl; */
+		
+		if (parts[1] == "default" || parts[1] == "none")
+			parts[1] = "";
+		if ((parts.size() == 2 && parts[1] == "") || (parts.size() == 3 && parts[1] == "" && parts[0] == parts[2]))
+			continue;
+
+		_fontMap[parts[0]].fontname = parts[parts.size() == 2 ? 0 : 2];
+		_fontMap[parts[0]].encname  = parts[1];
+//		SHOW(_fontMap[parts[0]].fontname);
+//		SHOW(_fontMap[parts[0]].encname);
 	}
 }
 
 
 ostream& FontMap::write (ostream &os) const {
-	for (map<string,string>::const_iterator i=fontMap.begin(); i != fontMap.end(); ++i)
-		os << i->first << " -> " << i->second << endl;
+	for (map<string,MapEntry>::const_iterator i=_fontMap.begin(); i != _fontMap.end(); ++i)
+		os << i->first << " -> " << i->second.fontname << endl;
 	return os;
 }
 
@@ -118,35 +133,20 @@ void FontMap::readdir (const string &dirname) {
 	}
 }
 
-#if 0
-bool FontMap::readdir (const string &dirname) {
-	DIR *dir = opendir(dirname.c_str());
-	if (dir) {
-		errno = 0;
-		struct dirent *de;
-		while ((de = readdir(dir)) != 0) {
-			string fname = de->d_name;
-			string path = string(dirname) + "/" + fname;
-			struct stat stats;
-			stat(path.c_str(), &stats);
-			if (S_ISDIR(stats.st_mode) && fname.size() > 3 && fname.substr(fname.size()-4) == ".map") {
-				ifstream ifs(path.c_str());
-				read(ifs);
-			}
-			else if (errno != 0)
-				return false;
-		}
-		closedir(dir);
-		return true;
-	}
-	return false;
-}
-#endif
 
 const char* FontMap::lookup (const string &fontname) const {
-	ConstIterator it = fontMap.find(fontname);
-	if (it == fontMap.end())
+	ConstIterator it = _fontMap.find(fontname);
+	if (it == _fontMap.end())
 		return 0;
-	return it->second.c_str();
+	return it->second.fontname.c_str();
 }
 
+
+/** Returns the name of the assigned encoding for a given font. 
+ *  @return name of encoding, 0 if there is no encoding assigned */
+const char* FontMap::encoding (const std::string &fontname) const {
+	ConstIterator it = _fontMap.find(fontname);
+	if (it == _fontMap.end() || it->second.encname == "")
+		return 0;
+	return it->second.encname.c_str();
+}

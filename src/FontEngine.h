@@ -70,6 +70,7 @@ class FontEngine
 		int getNextChar () const;
 		vector<int> getPanose () const;
 		string getGlyphName (unsigned int c) const;
+		int getCharByGlyphName (const char *name) const;
 		void buildTranslationMap (map<UInt32,UInt32> &translationMap) const;
 
    private:

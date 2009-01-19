@@ -36,21 +36,29 @@ using std::ostream;
 
 class FontMap
 {
-	typedef map<std::string,std::string>::const_iterator ConstIterator;
+	struct MapEntry 
+	{
+		std::string fontname; ///< target font name
+		std::string encname;  ///< name of font encoding
+	};
+
+	typedef map<std::string,MapEntry>::const_iterator ConstIterator;
+
    public:
 //      FontMap (const string &fname, bool dir=false);
 		FontMap () {}     
       FontMap (istream &is);
 		void read (istream &is);
 		void readdir (const std::string &dirname);
-		void clear ()    {fontMap.clear();}
+		void clear ()    {_fontMap.clear();}
 		ostream& write (ostream &os) const;
 //		bool readMapFile (const string &fname);
 //		bool readMapDir (const string &dirname);
 		const char* lookup(const std::string &fontname) const;
+		const char* encoding (const std::string &fontname) const;
 
    private:
-		map<std::string,std::string> fontMap;
+		map<std::string,MapEntry> _fontMap;
 };
 
 #endif

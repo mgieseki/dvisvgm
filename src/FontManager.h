@@ -41,6 +41,7 @@ using std::vector;
 
 class FileFinder;
 class Font;
+class FontEncoding;
 class TFM;
 class VirtualFont;
 
@@ -55,6 +56,7 @@ class FontManager
 	typedef map<string,int> Name2IdMap;
 	typedef map<VirtualFont*,Num2IdMap> VfNum2IdMap;
 	typedef map<VirtualFont*, UInt32> VfFirstFontMap;
+	typedef map<string,FontEncoding*> EncodingMap;
 	typedef stack<VirtualFont*> VfStack;
    public:
       FontManager ();
@@ -69,19 +71,21 @@ class FontManager
 		int fontID (string name) const;
 		int fontnum (int id) const;
 		int vfFirstFontNum (VirtualFont *vf) const;
+		int decodeChar (int c);
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
 		void assignVfChar (int c, vector<UInt8> *dvi);
-		const vector<Font*>& getFonts () const {return fonts;}
+		const vector<Font*>& getFonts () const {return _fonts;}
 		ostream& write (ostream &os, Font *font=0, int level=0);
 
    private:
-		vector<Font*> fonts;     ///< all registered Fonts (indexed by fontID)
-		Num2IdMap     num2id;    ///< DVI font number -> fontID
-		Name2IdMap    name2id;   ///< fontname -> fontID
-		VfNum2IdMap   vfnum2id;
-		VfStack       vfStack;   ///< stack of currently processed virtual fonts
-		VfFirstFontMap vfFirstFontMap; ///< VF -> local font number of first font defined in VF
+		vector<Font*>  _fonts;     ///< all registered Fonts (indexed by fontID)
+		Num2IdMap      _num2id;    ///< DVI font number -> fontID
+		Name2IdMap     _name2id;   ///< fontname -> fontID
+		VfNum2IdMap    _vfnum2id;
+		VfStack        _vfStack;   ///< stack of currently processed virtual fonts
+		VfFirstFontMap _vfFirstFontMap; ///< VF -> local font number of first font defined in VF
+		EncodingMap    _encMap;    ///< encname -> encoding table
 };
 
 #endif

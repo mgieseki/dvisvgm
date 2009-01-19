@@ -163,7 +163,7 @@ int FontEngine::getNextChar () const {
 
 
 string FontEngine::getGlyphName (unsigned int c) const {
-	if (currentFace) {
+	if (currentFace && FT_HAS_GLYPH_NAMES(currentFace)) {
 		char buf[256];
 		int index = FT_Get_Char_Index(currentFace, c);
 		FT_Get_Glyph_Name(currentFace, index, buf, 256);
@@ -171,6 +171,16 @@ string FontEngine::getGlyphName (unsigned int c) const {
 	}
 	return "";
 }
+
+
+int FontEngine::getCharByGlyphName (const char *name) const {
+	int c=0;
+	if (currentFace && FT_HAS_GLYPH_NAMES(currentFace)) {
+		c = FT_Get_Name_Index(currentFace, (FT_String*)name);
+	}
+	return c;
+}
+
 
 
 vector<int> FontEngine::getPanose () const {

@@ -160,6 +160,8 @@ static const char* mktex (const std::string &fname) {
 }
 
 
+/** Initializes a font map by reading the map file(s). 
+ *  @param fontmap font map to be initialized */
 static void init_fontmap (FontMap &fontmap) {
 	if (KPSFileFinder::usermap) {
 		// try to read user font map file
@@ -201,7 +203,7 @@ static void init_fontmap (FontMap &fontmap) {
 }
 
 
-/** Searches a file in the TeX tree. 
+/** Searches a file in the TeX directory tree. 
  *  If the file doesn't exist, maximal two further steps are applied
  *  (if "extended" is true):
  *  - checks whether the filename is mapped to a different name and returns
@@ -229,3 +231,24 @@ const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
 	return 0;
 }
 
+
+/** Returns the path to the corresponding encoding file for a given font file. 
+ *  @param fname name of the font file
+ *  @return path to encoding file on success, 0 otherwise */
+const char* KPSFileFinder::lookupEncFile (std::string fname) {
+	if (const char *encname = lookupEncName(fname)) {
+		fname = std::string(encname) + ".enc";
+		const char *path = find_file(fname);
+		if (path)
+			return path;
+	}
+	return 0;
+}
+
+
+const char* KPSFileFinder::lookupEncName (std::string fname) {
+	size_t pos = fname.rfind('.');
+	if (pos != std::string::npos)
+		fname = fname.substr(0, pos); // strip extension
+	return fontmap.encoding(fname);
+}

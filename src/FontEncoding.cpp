@@ -30,42 +30,98 @@
 
 using namespace std;
 
+static string read_entry (InputBuffer &in);
+static bool valid_name_char (char c);
 
-FontEncoding::FontEncoding (const string &name) : _name(name) 
+
+FontEncoding::FontEncoding (const string &encname) : _encname(encname) 
 {
 }
 
 
-FontEncoding::~FontEncoding () {
-}
 
-/** Search for suitable enc-file and read its encoding information. */
+/** Search for suitable enc-file and read its encoding information. 
+ *  The file contents must be a valid PostScript vector with 256 entries. */
 void FontEncoding::read () {
-	const char *path = KPSFileFinder::lookup(_name+".enc");
+	const char *path = KPSFileFinder::lookup(_encname+".enc");
 	if (path) {
 		ifstream ifs(path);
 		read(ifs);
 	}
 	else
-		Message::mstream(true) << "encoding file '" << _name << ".enc' not found";
+		Message::mstream(true) << "encoding file '" << _encname << ".enc' not found";
 }
 
 
 /** Read encoding information from stream. */
 void FontEncoding::read (istream &is) {
 	StreamInputBuffer in(is, 256);
-	bool loop = true;
-	while (!in.eof() && loop) {
+	_table.resize(256);
+	
+	// find beginning of vector
+	while (!in.eof()) {
 		in.skipSpace();
 		if (in.peek() == '%') 
 			in.skipUntil("\n");
-		else
-			loop = false;
+		else 
+			if (in.get() == '[')
+				break;
 	}
+	
+	// read vector entries
+	int n=0;
+	while (!in.eof()) {
+		in.skipSpace();
+		if (in.peek() == '%') 
+			in.skipUntil("\n");
+		else if (in.peek() == ']') {
+			in.get();
+			break;
+		}
+		else {
+			string entry = read_entry(in);
+			if (entry == ".notdef")
+				entry = "";
+			if (entry.length() > 0 && n < 256)
+				_table[n++] = entry;
+		}
+	}
+	// remove trailing .notdef names
+	for (n--; n > 0 && _table[n] == ""; n--);	
+	_table.resize(n+1);
+	for (unsigned i=0; i < _table.size(); i++)
+		cout << i << ": " << _table[i] << endl;  // @@
 }
 
 
-UInt32 FontEncoding::decode (UInt32 c) const {
+static string read_entry (InputBuffer &in) {
+	string entry;
+	bool accept_slashes=true;
+	while (!in.eof() && ((in.peek() == '/' && accept_slashes) || valid_name_char(in.peek()))) {
+		if (in.peek() != '/')
+			accept_slashes = false;
+		entry += in.get();
+	}
+	if (entry.length() > 1) {
+		// strip leading slashes 
+		// According to the PostScript specification, a single slash without further 
+		// following characters is a valid name.
+		size_t n=0;
+		while (n < entry.length() && entry[n] == '/')
+			n++;
+		entry = entry.substr(n);
+	}
+	return entry;
+}
+
+
+static bool valid_name_char (char c) {
+	const char *delimiters = "<>(){}[]/~%";
+	return isprint(c) && !isspace(c) && !strchr(delimiters, c);
+}
+
+
+string FontEncoding::getEntry (UInt32 c) const {
 	if (c >= 0 && c < _table.size())
 		return _table[c];
 	return 0;

@@ -33,14 +33,13 @@ class FontEncoding
 {
    public:
       FontEncoding (const std::string &name);
-      ~FontEncoding ();
 		void read ();
 		void read (std::istream &is);
-		UInt32 decode (UInt32 c) const;		
+		std::string getEntry (UInt32 c) const;		
 
    private:
-		std::string _name;
-		std::vector<UInt32> _table;
+		std::string _encname;
+		std::vector<std::string> _table;
 };
 
 #endif
