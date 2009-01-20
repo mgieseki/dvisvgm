@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include "debug.h"
 #include "InputBuffer.h"
 
 using namespace std;

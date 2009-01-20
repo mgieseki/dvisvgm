@@ -124,9 +124,9 @@ static bool valid_name_char (char c) {
 }
 
 
-string FontEncoding::getEntry (int c) const {
+const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())
-		return _table[c];
+		return _table[c].c_str();
 	return 0;
 }
 

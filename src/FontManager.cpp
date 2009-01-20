@@ -34,9 +34,6 @@
 using namespace std;
 
 
-static bool build_decoding_vector (const Font *font, const map<string, FontEncoding*> &encmap, vector<int> &v);
-
-
 FontManager::FontManager ()
 {
 }
@@ -128,26 +125,6 @@ Font* FontManager::getFont (const string &name) const {
 }
 
 
-Font* FontManager::setFont (int n) {
-	if (Font *font = getFont(n)) {
-		build_decoding_vector(font, _encMap, _decVec);
-/*		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
-			EncodingMap::iterator it = _encMap.find(encname);
-			if (it != _encMap.end())
-				_currentEnc = it->second;
-		}*/
-		return font;
-	}
-	return 0;
-}
-
-
-Font* FontManager::setFont (const string &name) {
-	int id = fontID(name);
-	return (id < 0 ? 0 : setFont(id));
-}
-
-
 Font* FontManager::getFontById (int id) const {
 	if (id < 0 || size_t(id) >= _fonts.size())
 		return 0;
@@ -217,10 +194,8 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
  *  This method must be called before processing a VF character.
  *  @param vf virtual font */
 void FontManager::enterVF (VirtualFont *vf) {
-	if (vf) {
+	if (vf) 
 		_vfStack.push(vf);
-		_decVec.clear();  // virtual fonts use standard encoding
-	}
 }
 
 
@@ -238,13 +213,17 @@ void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
 }
 
 
-int FontManager::decodeChar (int c) const {
-	if (_decVec.size() == 0)
-		return c;
-	if (c >= 0 && (size_t)c < _decVec.size())
-		return _decVec[c];
+FontEncoding* FontManager::encoding (const Font *font) const {
+	if (font) {
+		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
+			map<string,FontEncoding*>::const_iterator it = _encMap.find(encname);
+			if (it != _encMap.end())
+				return it->second;
+		}
+	}
 	return 0;
 }
+
 
 ostream& FontManager::write (ostream &os, Font *font, int level) {
 #if 0
@@ -282,20 +261,3 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 	return os;
 }
 
-static bool build_decoding_vector (const Font *font, const map<string, FontEncoding*> &encmap, vector<int> &v) {
-	if (font) {
-		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
-			map<string, FontEncoding*>::const_iterator it = encmap.find(encname);
-			if (it != encmap.end()) {
-				const FontEncoding *enc = it->second;
-				v.resize(enc->size());
-				FontEngine fe;
-				fe.setFont(font->path());
-				for (int i=0; i < enc->size(); i++)
-					v[i] = fe.getCharByGlyphName(enc->getEntry(i).c_str());
-				return true;
-			}
-		}
-	}
-	return false;
-}

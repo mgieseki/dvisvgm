@@ -21,8 +21,10 @@
 ***********************************************************************/
 // $Id$
 
+#include "FontEncoding.h"
 #include "FontEngine.h"
 #include "FontGlyph.h"
+#include "Message.h"
 #include "Pair.h"
 #include "macros.h"
 
@@ -154,10 +156,19 @@ void Glyph::addCommand (GlyphCommand *cmd) {
 		commands.push_back(cmd);
 }
 
-void Glyph::read (char c, const FontEngine &fontEngine) {
+
+void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine) {
 	Commands commands(*this);
-	fontEngine.traceOutline(c, commands, false);
+	if (encoding) {
+		if (const char *name = encoding->getEntry(c))
+			fontEngine.traceOutline(name, commands, false);
+		else
+			Message::wstream(true) << "no encoding for char #" << int(c) << endl;
+	}
+	else
+		fontEngine.traceOutline(c, commands, false);
 }
+
 
 void Glyph::writeSVGCommands (ostream &os) const {
 	FORALL (commands, ConstIterator, i)

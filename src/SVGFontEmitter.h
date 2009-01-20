@@ -32,26 +32,28 @@ using std::set;
 using std::string;
 
 class CharmapTranslator;
+class FontEncoding;
 class XMLElementNode;
 
 class SVGFontEmitter : public FontEmitter
 {
    public:
-      SVGFontEmitter (const string &fname, const CharmapTranslator &cmt, XMLElementNode *n);
+      SVGFontEmitter (const string &fname, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *n);
 		void readFontFile (const string &fname);
 		int emitFont (string id="") const;
 		int emitFont (const set<int> &usedChars, string id="") const;
 		bool emitGlyph (int c) const;
-		const XMLElementNode* getGlyphNode () const {return glyphNode;}
+		const XMLElementNode* getGlyphNode () const {return _glyphNode;}
 		
 	protected:
 		int emitFont (const set<int> *usedCharsm, string id) const;
 
    private:
-		FontEngine fontEngine;
-		const CharmapTranslator &charmapTranslator;
-		XMLElementNode *rootNode;          // 
-		mutable XMLElementNode *glyphNode; // current <glyph ...>-node
+		FontEngine _fontEngine;
+		const CharmapTranslator &_charmapTranslator;
+		XMLElementNode *_rootNode;          // 
+		mutable XMLElementNode *_glyphNode; // current <glyph ...>-node
+		FontEncoding *_encoding;  ///< encoding of current font
 };
 
 #endif

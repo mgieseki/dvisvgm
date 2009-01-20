@@ -31,15 +31,15 @@
 
 using namespace std;
 
-SVGFontEmitter::SVGFontEmitter (const string &fname, const CharmapTranslator &cmt, XMLElementNode *root) 
-	: charmapTranslator(cmt), rootNode(root)
+SVGFontEmitter::SVGFontEmitter (const string &fname, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *root) 
+	: _charmapTranslator(cmt), _rootNode(root), _encoding(enc)
 {
-	fontEngine.setFont(fname);
+	_fontEngine.setFont(fname);
 }
 
 
 void SVGFontEmitter::readFontFile (const string &fname) {
-	fontEngine.setFont(fname);
+	_fontEngine.setFont(fname);
 }
 
 
@@ -60,19 +60,19 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, string id) const {
 	XMLElementNode *fontNode = new XMLElementNode("font");
 	if (id != "")
 		fontNode->addAttribute("id", id);
-	fontNode->addAttribute("horiz-adv", XMLString(fontEngine.getHAdvance()));
-	rootNode->append(fontNode);
+	fontNode->addAttribute("horiz-adv", XMLString(_fontEngine.getHAdvance()));
+	_rootNode->append(fontNode);
 	
 	XMLElementNode *faceNode = new XMLElementNode("font-face");
-	faceNode->addAttribute("font-family", id != "" ? id : fontEngine.getFamilyName());
-	faceNode->addAttribute("units-per-em", XMLString(fontEngine.getUnitsPerEM()));
-	faceNode->addAttribute("ascent", XMLString(fontEngine.getAscender()));
-	faceNode->addAttribute("descent", XMLString(fontEngine.getDescender()));
+	faceNode->addAttribute("font-family", id != "" ? id : _fontEngine.getFamilyName());
+	faceNode->addAttribute("units-per-em", XMLString(_fontEngine.getUnitsPerEM()));
+	faceNode->addAttribute("ascent", XMLString(_fontEngine.getAscender()));
+	faceNode->addAttribute("descent", XMLString(_fontEngine.getDescender()));
 	fontNode->append(faceNode);
 	
 #if 0
 	// build panose-1 string
-	vector<int> panose = fontEngine.getPanose();
+	vector<int> panose = _fontEngine.getPanose();
 	if (panose.size() > 0) {
 		string panstr;
 		FORALL(panose, vector<int>::iterator, i) {
@@ -85,24 +85,24 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, string id) const {
 #endif
 	FORALL(*usedChars, set<int>::const_iterator, i) {			
 		emitGlyph(*i);  // create new glyphNode
-		fontNode->append(glyphNode);
+		fontNode->append(_glyphNode);
 	}
 	return usedChars->size();
 }
 
 
 bool SVGFontEmitter::emitGlyph (int c) const {
-	glyphNode = new XMLElementNode("glyph");
-	glyphNode->addAttribute("unicode", XMLString(charmapTranslator.unicode(c), false));
-	glyphNode->addAttribute("glyph-name", fontEngine.getGlyphName(c));
-	glyphNode->addAttribute("horiz-adv-x", XMLString(fontEngine.getHAdvance(c)));
+	_glyphNode = new XMLElementNode("glyph");
+	_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
+	_glyphNode->addAttribute("glyph-name", _fontEngine.getGlyphName(c));
+	_glyphNode->addAttribute("horiz-adv-x", XMLString(_fontEngine.getHAdvance(c)));
 	ostringstream path;
 	Glyph glyph;
-	glyph.read(c, fontEngine);
+	glyph.read(c, _encoding, _fontEngine);
 	glyph.closeOpenPaths();
 //	glyph.optimizeCommands();
 	glyph.writeSVGCommands(path);
-	glyphNode->addAttribute("d", path.str());
+	_glyphNode->addAttribute("d", path.str());
 	return true;
 }
 

@@ -58,6 +58,7 @@ class FontEngine
 		bool setCharSize (int ptSize);
 		bool getGlyphMetrics (unsigned char chr, int &width, int &height, int &depth) const;
 		bool traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale=true) const;
+		bool traceOutline (const char *name, FEGlyphCommands &commands, bool scale) const;
 		const char* getFamilyName () const;
 		const char* getStyleName () const;
 		int getUnitsPerEM () const;
@@ -78,7 +79,6 @@ class FontEngine
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face             _currentFace;
       FT_Library          _library;
-		map<UInt32, UInt32> _reverseMap;
 };
 
 #endif

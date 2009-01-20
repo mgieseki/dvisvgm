@@ -36,8 +36,8 @@ class FontEncoding
 		void read ();
 		void read (std::istream &is);
 		int size () const                  {return _table.size();}
-		std::string getEntry (int c) const;		
 		std::string name () const          {return _encname;}
+		const char* getEntry (int c) const;		
 		const char* path () const;
 
    private:

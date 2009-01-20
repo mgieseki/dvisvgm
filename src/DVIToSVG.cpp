@@ -208,7 +208,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 					Message::mstream() << endl;
 			}
 			else if (const char *path = font->path()) { // path to pfb/ttf file
-				SVGFontEmitter emitter(path, *cmt, defs);
+				SVGFontEmitter emitter(path, getFontManager()->encoding(font), *cmt, defs);
 				emitter.emitFont(i->second, font->name());
 			}
 			else

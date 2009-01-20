@@ -24,9 +24,7 @@
 #ifndef INPUTBUFFER_H
 #define INPUTBUFFER_H
 
-#include <algorithm>
 #include <istream>
-#include <iostream>
 #include <string>
 #include <ostream>
 

@@ -114,6 +114,7 @@ class GlyphClosePath : public GlyphCommand
 };
 
 
+class FontEncoding;
 class FontEngine;
 
 class Glyph
@@ -126,7 +127,7 @@ class Glyph
 		void clear ();
 		void closeOpenPaths ();
 		void optimizeCommands ();
-		void read (char c, const FontEngine &fontEngine);
+		void read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine);
 		void writeSVGCommands (ostream &os) const;
 		void forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam=0);
 	private:

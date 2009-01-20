@@ -37,6 +37,7 @@ using std::string;
 using std::vector;
 
 
+class FontEncoding;
 class TFM;
 
 
@@ -67,14 +68,14 @@ struct EmptyFont : public Font
 		EmptyFont (string name) : fontname(name) {}
 		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
 		const Font* uniqueFont () const                {return this;}
-		string name () const                     {return fontname;}
-		double designSize () const               {return 10;}    // cmr10 design size in pt
-		double scaledSize () const               {return 10;}    // cmr10 scaled size in pt
-		double charWidth (int c) const           {return 9.164;} // width of cmr10's 'M' in pt
-		double charHeight (int c) const          {return 6.833;} // height of cmr10's 'M' in pt
-		double charDepth (int c) const           {return 0;}
-		const TFM* getTFM () const               {return 0;}
-		const char* path () const                {return 0;}
+		string name () const            {return fontname;}
+		double designSize () const      {return 10;}    // cmr10 design size in pt
+		double scaledSize () const      {return 10;}    // cmr10 scaled size in pt
+		double charWidth (int c) const  {return 9.164;} // width of cmr10's 'M' in pt
+		double charHeight (int c) const {return 6.833;} // height of cmr10's 'M' in pt
+		double charDepth (int c) const  {return 0;}
+		const TFM* getTFM () const      {return 0;}
+		const char* path () const       {return 0;}
 
 	private:
 		string fontname;
@@ -133,16 +134,16 @@ class PhysicalFontProxy : public PhysicalFont
 	friend class PhysicalFontImpl;
 	public:
 		Font* clone (double ds, double sc) const {return new PhysicalFontProxy(*this, ds, sc);}
-		const Font* uniqueFont () const {return pf;}
-		string name () const            {return pf->name();}
-		double designSize () const      {return dsize;}
-		double scaledSize () const      {return ssize;}
-		double charWidth (int c) const  {return pf->charWidth(c);} 
-		double charDepth (int c) const  {return pf->charDepth(c);} 
-		double charHeight (int c) const {return pf->charHeight(c);} 
-		const TFM* getTFM () const      {return pf->getTFM();}
-		const char* path () const       {return pf->path();}
-		Type type () const              {return pf->type();}
+		const Font* uniqueFont () const       {return pf;}
+		string name () const                  {return pf->name();}
+		double designSize () const            {return dsize;}
+		double scaledSize () const            {return ssize;}
+		double charWidth (int c) const        {return pf->charWidth(c);} 
+		double charDepth (int c) const        {return pf->charDepth(c);} 
+		double charHeight (int c) const       {return pf->charHeight(c);} 
+		const TFM* getTFM () const            {return pf->getTFM();}
+		const char* path () const             {return pf->path();}
+		Type type () const                    {return pf->type();}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -177,16 +178,16 @@ class VirtualFontProxy : public VirtualFont
 	friend class VirtualFontImpl;
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
-		const Font* uniqueFont () const   {return vf;}
-		string name () const              {return vf->name();}
+		const Font* uniqueFont () const       {return vf;}
+		string name () const                  {return vf->name();}
 		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
-		double designSize () const        {return dsize;}
-		double scaledSize () const        {return ssize;}
-		double charWidth (int c) const    {return vf->charWidth(c);} 
-		double charDepth (int c) const    {return vf->charDepth(c);} 
-		double charHeight (int c) const   {return vf->charHeight(c);} 
-		const TFM* getTFM () const        {return vf->getTFM();}
-		const char* path () const         {return vf->path();}
+		double designSize () const            {return dsize;}
+		double scaledSize () const            {return ssize;}
+		double charWidth (int c) const        {return vf->charWidth(c);} 
+		double charDepth (int c) const        {return vf->charDepth(c);} 
+		double charHeight (int c) const       {return vf->charHeight(c);} 
+		const TFM* getTFM () const            {return vf->getTFM();}
+		const char* path () const             {return vf->path();}
 
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}

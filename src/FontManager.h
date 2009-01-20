@@ -65,8 +65,6 @@ class FontManager
 		Font* getFont (int n) const;
 		Font* getFont (const string &name) const;
 		Font* getFontById (int id) const;
-		Font* setFont (int n);
-		Font* setFont (const string &name);
 		VirtualFont* getVF () const;
 		int fontID (int n) const;
 		int fontID (const Font *font) const;
@@ -78,6 +76,7 @@ class FontManager
 		void leaveVF ();
 		void assignVfChar (int c, vector<UInt8> *dvi);
 		const vector<Font*>& getFonts () const {return _fonts;}
+		FontEncoding* encoding (const Font *font) const;
 		ostream& write (ostream &os, Font *font=0, int level=0);
 
    private:
@@ -88,7 +87,6 @@ class FontManager
 		VfStack        _vfStack;   ///< stack of currently processed virtual fonts
 		VfFirstFontMap _vfFirstFontMap; ///< VF -> local font number of first font defined in VF
 		EncodingMap    _encMap;    ///< encname -> encoding table
-		vector<int>    _decVec;    ///< decoding vector for current font
 };
 
 #endif

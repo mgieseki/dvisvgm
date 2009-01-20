@@ -91,7 +91,6 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
          break;
       }
    }
-	build_reverse_map(_currentFace, _reverseMap);
 	return true;
 }
 
@@ -191,9 +190,9 @@ string FontEngine::getGlyphName (unsigned int c) const {
 }
 
 
-/** Returns the character code for a given glyph name. 
+/* Returns the character code for a given glyph name. 
  * @param name glyph name
- * @return char code or 0 if name couldn't be found */
+ * @return char code or 0 if name couldn't be found 
 int FontEngine::getCharByGlyphName (const char *name) const {
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace))	{
 		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
@@ -202,7 +201,7 @@ int FontEngine::getCharByGlyphName (const char *name) const {
 			return it->second;
 	}
 	return 0;
-}
+}*/
 
 
 vector<int> FontEngine::getPanose () const {
@@ -271,6 +270,37 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *  This function takes all these outline segments and processes them by calling
  *  the corresponding functions. The functions must be provided in form of a 
  *  FEGlyphCommands object. 
+ *  @param index index of the glyph that will be traced 
+ *  @param commands the drawing commands to be executed
+ *  @param scale if true the current pt size will be considered otherwise the plain TrueType units are used. 
+ *  @return false on errors */
+static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, bool scale) {
+	if (face) {
+		if (FT_Load_Glyph(face, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
+			Message::estream(true) << "can't load glyph " << int(index) << endl;
+         return false;
+      }
+
+		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
+			Message::estream(true) << "no outlines found in glyph " << int(index) << endl;
+			return false;
+		}
+		FT_Outline outline = face->glyph->outline;
+		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
+		FT_Outline_Decompose(&outline, &funcs, &commands);
+		return true;
+	}
+	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
+	return false;
+}
+
+
+
+/** Traces the outline of a glyph by calling the corresponding "drawing" functions.
+ *  Each glyph is composed of straight lines, quadratic (conic) or cubic Bézier curves.
+ *  This function takes all these outline segments and processes them by calling
+ *  the corresponding functions. The functions must be provided in form of a 
+ *  FEGlyphCommands object. 
  *  @param chr the glyph of this character will be traced 
  *  @param commands the drawing commands to be executed
  *  @param scale if true the current pt size will be considered otherwise
@@ -278,20 +308,18 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *  @return false on errors */
 bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale) const {
 	if (_currentFace) {
-		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)chr);
-		if (FT_Load_Glyph(_currentFace, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
-			Message::estream(true) << "can't load glyph " << int(chr) << endl;
-         return false;
-      }
+		int index = FT_Get_Char_Index(_currentFace, chr);
+		return trace_outline(_currentFace, index, commands, scale);
+	}
+	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
+	return false;
+}
 
-		if (_currentFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
-			Message::estream(true) << "no outlines found in glyph " << int(chr) << endl;
-			return false;
-		}
-		FT_Outline outline = _currentFace->glyph->outline;
-		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
-		FT_Outline_Decompose(&outline, &funcs, &commands);
-		return true;
+
+bool FontEngine::traceOutline (const char *name, FEGlyphCommands &commands, bool scale) const {
+	if (_currentFace) {
+		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
+		return trace_outline(_currentFace, index, commands, scale);
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
