@@ -96,12 +96,14 @@ bool SVGFontEmitter::emitGlyph (int c) const {
 	_glyphNode = new XMLElementNode("glyph");
 	_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
 	int advance;
-	const char *name;
-	if (_encoding && (name = _encoding->getEntry(c)))
-		advance = _fontEngine.getHAdvance(name);
+	string name;
+	if (_encoding && _encoding->getEntry(c)) {
+		advance = _fontEngine.getHAdvance(_encoding->getEntry(c));
+		name = _encoding->getEntry(c);
+	}
 	else {
 		advance = _fontEngine.getHAdvance(c);
-	   name = _fontEngine.getGlyphName(c).c_str();
+	   name = _fontEngine.getGlyphName(c);
 	}
 	_glyphNode->addAttribute("horiz-adv-x", XMLString(advance));
 	_glyphNode->addAttribute("glyph-name", name);
