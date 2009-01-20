@@ -24,6 +24,7 @@
 #include <sstream>
 #include "macros.h"
 #include "CharmapTranslator.h"
+#include "FontEncoding.h"
 #include "FontGlyph.h"
 #include "SVGFontEmitter.h"
 #include "XMLNode.h"
@@ -94,8 +95,16 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, string id) const {
 bool SVGFontEmitter::emitGlyph (int c) const {
 	_glyphNode = new XMLElementNode("glyph");
 	_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
-	_glyphNode->addAttribute("glyph-name", _fontEngine.getGlyphName(c));
-	_glyphNode->addAttribute("horiz-adv-x", XMLString(_fontEngine.getHAdvance(c)));
+	int advance;
+	const char *name;
+	if (_encoding && (name = _encoding->getEntry(c)))
+		advance = _fontEngine.getHAdvance(name);
+	else {
+		advance = _fontEngine.getHAdvance(c);
+	   name = _fontEngine.getGlyphName(c).c_str();
+	}
+	_glyphNode->addAttribute("horiz-adv-x", XMLString(advance));
+	_glyphNode->addAttribute("glyph-name", name);
 	ostringstream path;
 	Glyph glyph;
 	glyph.read(c, _encoding, _fontEngine);

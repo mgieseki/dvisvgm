@@ -66,6 +66,7 @@ class FontEngine
 		int getDescender () const;
 		int getHAdvance () const;
 		int getHAdvance (unsigned int c) const;
+		int getHAdvance (const char *name) const;
 //		int getVAdvance () const;
 		int getFirstChar () const;
 		int getNextChar () const;

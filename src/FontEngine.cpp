@@ -160,6 +160,16 @@ int FontEngine::getHAdvance (unsigned int c) const {
 }
 
 
+int FontEngine::getHAdvance (const char *name) const {
+	if (_currentFace && name) {
+		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
+		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
+		return _currentFace->glyph->metrics.horiAdvance;	
+	}
+	return 0;
+}
+
+
 /** Get first available character of the current font face. */
 int FontEngine::getFirstChar () const {
 	if (_currentFace) 
