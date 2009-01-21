@@ -54,7 +54,7 @@ void FontEncoding::read () {
 		read(ifs);
 	}
 	else
-		Message::mstream(true) << "encoding file '" << _encname << ".enc' not found";
+		Message::mstream(true) << "encoding file '" << _encname << ".enc' not found\n";
 }
 
 
@@ -87,7 +87,7 @@ void FontEncoding::read (istream &is) {
 			string entry = read_entry(in);
 			if (entry == ".notdef")
 				entry = "";
-			if (entry.length() > 0 && n < 256)
+			if (n < 256)
 				_table[n++] = entry;
 		}
 	}
@@ -126,7 +126,7 @@ static bool valid_name_char (char c) {
 
 const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())
-		return _table[c].c_str();
+		return _table[c] != "" ? _table[c].c_str() : 0;
 	return 0;
 }
 

@@ -163,7 +163,7 @@ void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngin
 		if (const char *name = encoding->getEntry(c))
 			fontEngine.traceOutline(name, commands, false);
 		else
-			Message::wstream(true) << "no encoding for char #" << int(c) << endl;
+			Message::wstream(true) << "no encoding for char #" << int(c) << " in '" << encoding->name() << "'\n";
 	}
 	else
 		fontEngine.traceOutline(c, commands, false);

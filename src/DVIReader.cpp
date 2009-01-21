@@ -486,6 +486,31 @@ void DVIReader::cmdFontNum (int len) {
 }
 
 
+/** Helper function to handle a font definition.
+ *  @param fontnum local font number 
+ *  @param name font name
+ *  @param checksum checksum to be compared with TFM checksum 
+ *  @param ds design size in TeX point units
+ *  @param ss scaled size in TeX point units */
+void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
+	if (fontManager) {
+		int id = fontManager->registerFont(fontnum, name, cs, ds, ss);
+		Font *font = fontManager->getFontById(id);
+		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
+			// read vf file, register its font and character definitions
+			fontManager->enterVF(vf);
+			ifstream ifs(vf->path(), ios::binary);
+			VFReader vfReader(ifs);
+			vfReader.replaceActions(this);
+			vfReader.executeAll();			
+			fontManager->leaveVF();
+		}
+		if (actions)
+			actions->defineFont(id, font);
+	}
+}
+
+
 /** Defines a new font. 
  * @param len size of font number variable (in bytes) */
 void DVIReader::cmdFontDef (int len) {
@@ -497,21 +522,8 @@ void DVIReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	if (fontManager) {
-		int id = fontManager->registerFont(fontnum, fontname, checksum, dsize*scaleFactor, ssize*scaleFactor);
-		Font *font = fontManager->getFontById(id);
-		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
-			// read vf file, register its font and character definitions
-			fontManager->enterVF(vf);
-			ifstream ifs(vf->path(), ios::binary);
-			VFReader vfReader(ifs);
-			vfReader.replaceActions(this);
-			vfReader.executeAll();			
-			fontManager->leaveVF();
-		}
-		if (actions) 
-			actions->defineFont(id, font);
-	}
+	
+	defineFont(fontnum, fontname, checksum, dsize*scaleFactor, ssize*scaleFactor);
 }
 
 
@@ -522,11 +534,8 @@ void DVIReader::cmdFontDef (int len) {
  *  @param dsize design size in TeX point units
  *  @param ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
-	VirtualFont *vf = fontManager->getVF();
-	int id = fontManager->registerFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
-	const Font *font = fontManager->getFontById(id);
-	if (actions)
-		actions->defineFont(id, font);
+	VirtualFont *vf = fontManager->getVF();	
+	defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 }
 
 

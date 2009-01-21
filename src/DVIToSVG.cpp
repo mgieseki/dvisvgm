@@ -212,10 +212,10 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				emitter.emitFont(i->second, font->name());
 			}
 			else
-				Message::wstream(true) << "can't embed font '" << font->name() << "'";
+				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}
 		else
-			Message::wstream(true) << "can't embed font '" << font->name() << "'";
+			Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 	}
 }
 

@@ -82,6 +82,7 @@ class DVIReader : public StreamReader, protected VFActions
 	protected:
 		int executeCommand ();
 		void putChar (UInt32 c, bool moveCursor);
+		void defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss);
 		const FontManager* getFontManager () const {return fontManager;}
 
 		// VFAction methods
