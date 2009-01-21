@@ -146,11 +146,11 @@ DPair TransformationMatrix::operator * (const DPair &p) const {
 
 
 /** Gets a parameter for the transformation command.
- *  @param is parameter chars are read from this stream
- *  @param  calc parameters can be arithmetic expressions, so we need a calculator to evaluate them
- *  @param  def default value if parameter is optional
- *  @param  optional true if parameter is optional
- *  @param  leadingComma true first non-blank must be a comma
+ *  @param[in] is parameter chars are read from this stream
+ *  @param[in] calc parameters can be arithmetic expressions, so we need a calculator to evaluate them
+ *  @param[in] def default value if parameter is optional
+ *  @param[in] optional true if parameter is optional
+ *  @param[in] leadingComma true first non-blank must be a comma
  *  @return value of argument */
 static double getArgument (istream &is, Calculator &calc, double def, bool optional, bool leadingComma) {
 	while (isspace(is.peek()))

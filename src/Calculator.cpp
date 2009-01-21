@@ -38,7 +38,7 @@ const char NAME   = 2;
 
 /** Evaluates a given arithmetic expressions and returns its value.
  *  The evaluator is implemented as a recursive descendent parser.
- *  @param is reads expression from this stream
+ *  @param[in] is reads expression from this stream
  *  @return expression value */
 double Calculator::eval (istream &is) {
 	double ret = expr(is, false);
@@ -49,7 +49,7 @@ double Calculator::eval (istream &is) {
 
 
 /** Evaluates a given arithmetic expressions and returns its value.
- *  @param expr expression to evaluate
+ *  @param[in] expr expression to evaluate
  *  @return expression value */
 double Calculator::eval (const string &expr) {
 	istringstream iss;
@@ -147,7 +147,7 @@ char Calculator::lookAhead (istream &is) {
  *  to the object members numValue or strValue depending on the type. The token
  *  type is represented by a unique integer. In contrast to method 'lookAhead'
  *  lex consumes the read token.
- *  @param is next token is read from this stream
+ *  @param[in] is next token is read from this stream
  *  @return token type */
 char Calculator::lex (istream &is) {
 	char tokenType = lookAhead(is);
@@ -169,7 +169,9 @@ char Calculator::lex (istream &is) {
 
 
 /** Returns the value of a previously defined variable. If there
- *  is no variable of the given name, a CalculatorException is thrown. */
+ *  is no variable of the given name, a CalculatorException is thrown. 
+ *  @param[in] name name of variable
+ *  @return assigned value */
 double Calculator::getVariable (const string &name) const {
 	map<string,double>::const_iterator it = variables.find(name);
 	if (it == variables.end())

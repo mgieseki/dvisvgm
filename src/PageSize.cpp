@@ -37,9 +37,9 @@ static int my_tolower (int c) {
 
 
 /** Computes width and height of ISO/DIN An in millimeters. 
- *  @param n the A level (e.g. n=4 => DIN A4) 
- *  @param width contains the page width when function returns 
- *  @param height contains the page height when function returns */
+ *  @param[in]  n the A level (e.g. n=4 => DIN A4) 
+ *  @param[out] width contains the page width when function returns 
+ *  @param[out] height contains the page height when function returns */
 static void computeASize (int n, double &width, double &height) {
 	double sqrt2 = sqrt(2.0);
 	height = floor(1189.0/pow(sqrt2, n)+0.5);
@@ -48,9 +48,9 @@ static void computeASize (int n, double &width, double &height) {
 
 
 /** Computes width and height of ISO/DIN Bn in millimeters. 
- *  @param n the B level (e.g. n=4 => DIN B4) 
- *  @param width contains the page width when function returns 
- *  @param height contains the page height when function returns */
+ *  @param[in]  n the B level (e.g. n=4 => DIN B4) 
+ *  @param[out] width contains the page width when function returns 
+ *  @param[out] height contains the page height when function returns */
 static void computeBSize (int n, double &width, double &height) {
 	double w, h;
 	computeASize(n, width, height);
@@ -61,9 +61,9 @@ static void computeBSize (int n, double &width, double &height) {
 
 
 /** Computes width and height of ISO/DIN Cn in millimeters. 
- *  @param n the C level (e.g. n=4 => DIN C4) 
- *  @param width contains the page width when function returns 
- *  @param height contains the page height when function returns */
+ *  @param[in] n the C level (e.g. n=4 => DIN C4) 
+ *  @param[out] width contains the page width when function returns 
+ *  @param[out] height contains the page height when function returns */
 static void computeCSize (int n, double &width, double &height) {
 	double w, h;
 	computeASize(n, width, height);
@@ -74,9 +74,9 @@ static void computeCSize (int n, double &width, double &height) {
 
 
 /** Computes width and height of ISO/DIN Dn in millimeters. 
- *  @param n the D level (e.g. n=4 => DIN D4) 
- *  @param width contains the page width when function returns 
- *  @param height contains the page height when function returns */
+ *  @param[in] n the D level (e.g. n=4 => DIN D4) 
+ *  @param[out] width contains the page width when function returns 
+ *  @param[out] height contains the page height when function returns */
 static void computeDSize (int n, double &width, double &height) {
 	double w, h;
 	computeASize(n, width, height);
@@ -87,7 +87,7 @@ static void computeDSize (int n, double &width, double &height) {
 
 
 /** Constructs a PageSize object of given size. 
- *  @param name specifies the page size, e.g. "A4" or "letter" */
+ *  @param[in] name specifies the page size, e.g. "A4" or "letter" */
 PageSize::PageSize (string name) : width(0), height(0) {
 	resize(name);
 }

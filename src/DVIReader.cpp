@@ -157,7 +157,9 @@ bool DVIReader::executeAllPages () {
 
 
 /** Reads and executes the commands of a single page. 
- *  This methods stops reading after the page's eop command has been executed. */
+ *  This methods stops reading after the page's eop command has been executed. 
+ *  @param[in] n number of page to be executed
+ *  @returns true if page was read successfully */
 bool DVIReader::executePage (unsigned n) {
 	in().clear();    // reset all status bits
 	if (!in())
@@ -326,8 +328,8 @@ void DVIReader::cmdPop (int) {
 
 /** Helper function that actually sets/puts a charater. It is called by the
  *  cmdSetChar and cmdPutChar methods.
- * @param c character to typeset
- * @param moveCursor if true, register h is increased by the character width 
+ * @param[in] c character to typeset
+ * @param[in] moveCursor if true, register h is increased by the character width 
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (inPage) {   
@@ -370,7 +372,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 
 /** Reads and executes set_char_x command. Puts a character at the current 
  *  position and advances the cursor. 
- *  @param c character to set 
+ *  @param[in] c character to set 
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetChar0 (int c) {
 	putChar(c, true);
@@ -379,7 +381,7 @@ void DVIReader::cmdSetChar0 (int c) {
 
 /** Reads and executes setx command. Puts a character at the current 
  *  position and advances the cursor. 
- *  @param len number of parameter bytes (possible values: 1-4)
+ *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetChar (int len) {	
    // According to the dvi specification all character codes are unsigned 
@@ -391,7 +393,7 @@ void DVIReader::cmdSetChar (int len) {
 
 /** Reads and executes putx command. Puts a character at the current 
  *  position but doesn't change the cursor position. 
- *  @param len number of parameter bytes (possible values: 1-4)
+ *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutChar (int len) {
    // According to the dvi specification all character codes are unsigned 
@@ -461,7 +463,7 @@ void DVIReader::cmdXXX (int len) {
 
 
 /** Selects a previously defined font by its number. 
- * @param num font number 
+ * @param[in] num font number 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
 	if (Font *font = fontManager->getFont(num)) {
@@ -478,7 +480,7 @@ void DVIReader::cmdFontNum0 (int num) {
 
 
 /** Selects a previously defined font.
- * @param len size of font number variable (in bytes) 
+ * @param[in] len size of font number variable (in bytes) 
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum (int len) {
 	UInt32 num = readUnsigned(len);
@@ -487,11 +489,11 @@ void DVIReader::cmdFontNum (int len) {
 
 
 /** Helper function to handle a font definition.
- *  @param fontnum local font number 
- *  @param name font name
- *  @param checksum checksum to be compared with TFM checksum 
- *  @param ds design size in TeX point units
- *  @param ss scaled size in TeX point units */
+ *  @param[in] fontnum local font number 
+ *  @param[in] name font name
+ *  @param[in] checksum checksum to be compared with TFM checksum 
+ *  @param[in] ds design size in TeX point units
+ *  @param[in] ss scaled size in TeX point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
 	if (fontManager) {
 		int id = fontManager->registerFont(fontnum, name, cs, ds, ss);
@@ -512,7 +514,7 @@ void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, doubl
 
 
 /** Defines a new font. 
- * @param len size of font number variable (in bytes) */
+ * @param[in] len size of font number variable (in bytes) */
 void DVIReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
 	UInt32 checksum = readUnsigned(4);     // font checksum (to be compared with corresponding TFM checksum)
@@ -528,11 +530,11 @@ void DVIReader::cmdFontDef (int len) {
 
 
 /** This template method is called by the VFReader after reading a font definition from a VF file.
- *  @param fontnum local font number 
- *  @param name font name
- *  @param checksum checksum to be compared with TFM checksum 
- *  @param dsize design size in TeX point units
- *  @param ssize scaled size in TeX point units */
+ *  @param[in] fontnum local font number 
+ *  @param[in] name font name
+ *  @param[in] checksum checksum to be compared with TFM checksum 
+ *  @param[in] dsize design size in TeX point units
+ *  @param[in] ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
 	VirtualFont *vf = fontManager->getVF();	
 	defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
@@ -540,8 +542,8 @@ void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 c
 
 
 /** This template method is called by the VFReader after reading a character definition from a VF file.
- *  @param c character number
- *  @param dvi DVI fragment describing the character */
+ *  @param[in] c character number
+ *  @param[in] dvi DVI fragment describing the character */
 void DVIReader::defineVFChar (UInt32 c, vector<UInt8> *dvi) {
 	fontManager->assignVfChar(c, dvi);
 }

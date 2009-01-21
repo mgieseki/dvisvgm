@@ -70,8 +70,8 @@ ostream& XMLDocument::write (ostream &os) const {
  *  the completely written nodes. The output stops when a stop node is reached
  *  (this node won't be printed at all). If a node was only partly emitted, i.e.
  *  its child was the stop node, a further call of emit will continue the output.
- *  @param os stream to which the output is sent to
- *  @param stopElement node where emitting stops (if 0 the whole tree will be emitted)
+ *  @param[in] os stream to which the output is written
+ *  @param[in] stopElement node where emitting stops (if 0 the whole tree will be emitted)
  *  @return true if node was completely emitted */
 bool XMLDocument::emit (ostream& os, XMLNode *stopNode) {
 	if (rootElement) {  // no root element => no output

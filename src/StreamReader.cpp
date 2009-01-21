@@ -40,7 +40,7 @@ istream& StreamReader::replaceStream (istream &in) {
 
 
 /** Reads an unsigned integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
+ *  @param[in] bytes number of bytes to read (max. 4)
  *  @return read integer */
 UInt32 StreamReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
@@ -53,7 +53,7 @@ UInt32 StreamReader::readUnsigned (int bytes) {
 
 
 /** Reads an signed integer from assigned input stream. 
- *  @param bytes number of bytes to read (max. 4)
+ *  @param[in] bytes number of bytes to read (max. 4)
  *  @return read integer */
 Int32 StreamReader::readSigned (int bytes) {
 	Int32 ret = is->get();

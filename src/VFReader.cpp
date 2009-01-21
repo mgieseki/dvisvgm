@@ -55,7 +55,7 @@ VFActions* VFReader::replaceActions (VFActions *a) {
 /** Reads a single VF command from the current position of the input stream and calls the
  *  corresponding cmdFOO method. The execution can be influenced by a function of type ApproveOpcode.
  *  It takes an opcode and returns true if the command is supposed to be executed.
- *  @param approve function to approve invocation of the action assigned to command
+ *  @param[in] approve function to approve invocation of the action assigned to command
  *  @return opcode of the executed command */
 int VFReader::executeCommand (ApproveAction approve) {
 	int opcode = in().get();	
@@ -162,7 +162,7 @@ void VFReader::cmdLongChar () {
 
 
 /** Reads and executes short_char_x command.
- *  @param pl packet length (length of DVI subroutine) */
+ *  @param[in] pl packet length (length of DVI subroutine) */
 void VFReader::cmdShortChar (int pl) {
 	if (actions) {
 		UInt32 cc  = readUnsigned(1);   // character code

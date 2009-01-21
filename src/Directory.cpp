@@ -78,7 +78,7 @@ void Directory::close () {
 
 
 /** Reads first/next directory entry. 
- *  @param type type of entry to return (a: file or dir, f: file, d: dir) 
+ *  @param[in] type type of entry to return (a: file or dir, f: file, d: dir) 
  *  @return name of entry */
 const char* Directory::read (char type) {
 #ifdef __WIN32__

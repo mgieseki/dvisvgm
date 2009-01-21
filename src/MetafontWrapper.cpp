@@ -63,8 +63,8 @@ static const char* lookup (string fontname) {
 /** Calls Metafont and evaluates the logfile. If a gf file was successfully
  *  generated the dpi value is stripped from the filename
  *  (e.g. cmr10.600gf => cmr10.gf). This makes life easier...
- *  @param mode Metafont mode, e.g. "ljfour"
- *  @param mag magnification factor
+ *  @param[in] mode Metafont mode, e.g. "ljfour"
+ *  @param[in] mag magnification factor
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
 	if (!KPSFileFinder::lookup(fontname+".mf"))

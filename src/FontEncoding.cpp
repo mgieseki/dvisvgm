@@ -124,6 +124,9 @@ static bool valid_name_char (char c) {
 }
 
 
+/** Returns an entry of the encoding table.
+ * @param[in] c character code 
+ * @return character name assigned to charcter code c*/
 const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())
 		return _table[c] != "" ? _table[c].c_str() : 0;

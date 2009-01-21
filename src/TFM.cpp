@@ -35,7 +35,8 @@ double TFM::mag = 1;
 
 
 /** Reads a single unsigned integer value of given size (max. 4 bytes). 
- *  @param n number of bytes to be read */
+ *  @param[in] is characters are read from this stream
+ *  @param[in] n number of bytes to be read */
 static UInt32 read_unsigned (istream &is, int n) {
 	UInt32 ret = 0;
 	for (int i=n-1; i >= 0 && !is.eof(); i--) {
@@ -47,6 +48,9 @@ static UInt32 read_unsigned (istream &is, int n) {
 
 
 /** Reads a sequence of n TFM words (4 Bytes each). 
+ *  @param[in]  is reads from this stream
+ *  @param[out] v the read words
+ *  @param[in]  n number of words to be read
  *  @return dynamically allocated array containing the read words 
  *          (must be deleted by the caller) */
 template <typename T>

@@ -49,7 +49,7 @@ FontManager::~FontManager () {
 
 
 /** Returns a unique ID that identifies the font. 
- *  @param n local font number, as used in DVI and VF files 
+ *  @param[in] n local font number, as used in DVI and VF files 
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (int n) const {
 	if (_vfStack.empty()) {
@@ -109,7 +109,7 @@ int FontManager::vfFirstFontNum (VirtualFont *vf) const {
 
 
 /** Returns a previously registered font.
- *  @param n local font number, as used in DVI and VF files 
+ *  @param[in] n local font number, as used in DVI and VF files 
  *  @return pointer to font if font was found, 0 otherwise */
 Font* FontManager::getFont (int n) const {
 	int id = fontID(n);
@@ -140,11 +140,11 @@ VirtualFont* FontManager::getVF () const {
 
 /** Registers a new font to be managed by the FontManager. If there is
  *  already a registered font assigned to number n, nothing happens.
- *  @param fontnum local font number, as used in DVI and VF files 
- *  @param name fontname, e.g. cmr10 
- *  @param checksum checksum to be compared with TFM checksum
- *  @param dsize design size in TeX point units
- *  @param ssize scaled size in TeX point units 
+ *  @param[in] fontnum local font number, as used in DVI and VF files 
+ *  @param[in] name fontname, e.g. cmr10 
+ *  @param[in] checksum checksum to be compared with TFM checksum
+ *  @param[in] dsize design size in TeX point units
+ *  @param[in] ssize scaled size in TeX point units 
  *  @return id of registered font */
 int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);
@@ -192,7 +192,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 
 /** Enters a new virtual font frame. 
  *  This method must be called before processing a VF character.
- *  @param vf virtual font */
+ *  @param[in] vf virtual font */
 void FontManager::enterVF (VirtualFont *vf) {
 	if (vf) 
 		_vfStack.push(vf);
@@ -207,12 +207,18 @@ void FontManager::leaveVF () {
 }
 
 
+/** Assigns a sequence of DVI commands to a char code. 
+ * @param[in] c character code
+ * @param[in] dvi points to vector with DVI commands */
 void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
 	if (!_vfStack.empty() && dvi)
 		_vfStack.top()->assignChar(c, dvi);
 }
 
 
+/** Returns the encoding of a given font.
+ * @param[in] font font whose encoding will be returned
+ * @return pointer to encoding object, or 0 if there is no encoding defined */
 FontEncoding* FontManager::encoding (const Font *font) const {
 	if (font) {
 		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {

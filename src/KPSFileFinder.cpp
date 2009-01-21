@@ -65,7 +65,7 @@ static void init_fontmap (FontMap &fontmap);
 
 /** Determines filetype by the filename extension and calls kpse_find_file
  *  to actually look up the file. 
- *  @param fname name of file to look up
+ *  @param[in] fname name of file to look up
  *  @return file path on success, 0 otherwise */
 static const char* find_file (const std::string &fname) {
 	size_t pos = fname.rfind('.');
@@ -106,7 +106,8 @@ static const char* find_file (const std::string &fname) {
 
 /** Checks whether the given file is mapped to a different name and if the 
  *  file can be found under this name. 
- *  @param fname name of file to look up
+ *  @param[in] fname name of file to look up
+ *  @param[in] fontmap font mappings
  *  @return file path on success, 0 otherwise */
 static const char* find_mapped_file (std::string fname, const FontMap &fontmap) {
 	size_t pos = fname.rfind('.');
@@ -126,7 +127,7 @@ static const char* find_mapped_file (std::string fname, const FontMap &fontmap) 
 
 
 /** Runs external mktexFOO tool to create missing tfm or mf file.
- *  @param fname name of file to build
+ *  @param[in] fname name of file to build
  *  @return file path on success, 0 otherwise */
 static const char* mktex (const std::string &fname) {
 	size_t pos = fname.rfind('.');
@@ -161,7 +162,7 @@ static const char* mktex (const std::string &fname) {
 
 
 /** Initializes a font map by reading the map file(s). 
- *  @param fontmap font map to be initialized */
+ *  @param[in,out] fontmap font map to be initialized */
 static void init_fontmap (FontMap &fontmap) {
 	if (KPSFileFinder::usermap) {
 		// try to read user font map file
@@ -210,8 +211,8 @@ static void init_fontmap (FontMap &fontmap) {
  *    the path to that name
  *  - in case of tfm or mf files: invokes the external mktextfm/mktexmf tool
  *    to create the missing file
- *  @param fname name of file to look up
- *  @param extended if true, use fontmap lookup and mktexFOO calls
+ *  @param[in] fname name of file to look up
+ *  @param[in] extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
 const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
 	if (!initialized) {
@@ -233,7 +234,7 @@ const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
 
 
 /** Returns the path to the corresponding encoding file for a given font file. 
- *  @param fname name of the font file
+ *  @param[in] fname name of the font file
  *  @return path to encoding file on success, 0 otherwise */
 const char* KPSFileFinder::lookupEncFile (std::string fname) {
 	if (const char *encname = lookupEncName(fname)) {

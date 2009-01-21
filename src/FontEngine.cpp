@@ -57,22 +57,22 @@ void FontEngine::setDeviceResolution (int x, int y) {
 
 
 /** Builds a table that maps glyph indexes to char codes. 
- * @param face font face to be used
- * @param reverseMap the resulting map */
+ * @param[in] face font face to be used
+ * @param[out] reverseMap the resulting map */
 static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
 	UInt32 glyphIndex;
 	UInt32 charcode = FT_Get_First_Char(face, &glyphIndex);
 	while (glyphIndex) {
 //		if (reverseMap.find(glyphIndex) == reverseMap.end())
-			reverseMap[glyphIndex] = charcode;
+		reverseMap[glyphIndex] = charcode;
 		charcode = FT_Get_Next_Char(face, charcode, &glyphIndex);
 	}
 }
 
 
 /** Sets the font to be used. 
- * @param fname path to font file
- * @param ptSize font size in point units 
+ * @param[in] fname path to font file
+ * @param[in] ptSize font size in point units 
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int ptSize) {
 	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
@@ -187,7 +187,7 @@ int FontEngine::getNextChar () const {
 
 
 /** Returns the glyph name for a given charater code. 
- * @param c char code 
+ * @param[in] c char code 
  * @return glyph name */
 string FontEngine::getGlyphName (unsigned int c) const {
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
@@ -280,9 +280,9 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *  This function takes all these outline segments and processes them by calling
  *  the corresponding functions. The functions must be provided in form of a 
  *  FEGlyphCommands object. 
- *  @param index index of the glyph that will be traced 
- *  @param commands the drawing commands to be executed
- *  @param scale if true the current pt size will be considered otherwise the plain TrueType units are used. 
+ *  @param[in] index index of the glyph that will be traced 
+ *  @param[in] commands the drawing commands to be executed
+ *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used. 
  *  @return false on errors */
 static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, bool scale) {
 	if (face) {
@@ -311,10 +311,10 @@ static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, b
  *  This function takes all these outline segments and processes them by calling
  *  the corresponding functions. The functions must be provided in form of a 
  *  FEGlyphCommands object. 
- *  @param chr the glyph of this character will be traced 
- *  @param commands the drawing commands to be executed
- *  @param scale if true the current pt size will be considered otherwise
- *               the plain TrueType units are used. 
+ *  @param[in] chr the glyph of this character will be traced 
+ *  @param[in] commands the drawing commands to be executed
+ *  @param[in] scale if true the current pt size will be considered otherwise
+ *                   the plain TrueType units are used. 
  *  @return false on errors */
 bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale) const {
 	if (_currentFace) {

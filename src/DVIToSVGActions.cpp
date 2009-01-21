@@ -55,9 +55,10 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
 
 /** This method is called when a "set char" command was found in the DVI file. 
  *  It draws a character of the current font.
- *  @param x horizontal position of left bounding box edge 
- *  @param y vertical position of the character's baseline 
- *  @param c character code relative to the current font */
+ *  @param[in] x horizontal position of left bounding box edge 
+ *  @param[in] y vertical position of the character's baseline 
+ *  @param[in] c character code relative to the current font 
+ *  @param[in] font font to be used */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
 	x *= BP;
 	y *= BP;
@@ -87,10 +88,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 
 /** This method is called when a "set rule" or "put rule" command was found in the 
  *  DVI file. It draws a solid unrotated rectangle.
- *  @param x horizontal position of left edge 
- *  @param y vertical position of bottom(!) edge 
- *  @param height length of the vertical edges 
- *  @param width length of the horizontal edges */
+ *  @param[in] x horizontal position of left edge 
+ *  @param[in] y vertical position of bottom(!) edge 
+ *  @param[in] height length of the vertical edges 
+ *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
 	x *= BP;
 	y *= BP;
@@ -116,7 +117,8 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
 
 /** This method is called when a "set font" command was found in the DVI file. The
  *  font must be previously defined.
- *  @param num unique number of the font in the DVI file */
+ *  @param[in] num unique number of the font in the DVI file 
+ *  @param[in] font pointer to the font object */
 void DVIToSVGActions::setFont (int num, const Font *font) {
 	if (num != currentFont) {
 		styleElement = new XMLElementNode("text");
@@ -140,7 +142,7 @@ void DVIToSVGActions::special (const string &s) {
 
 
 /** This method is called when the DVI preamble was read 
- *  @param cmt preamble comment text. */
+ *  @param[in] cmt preamble comment text. */
 void DVIToSVGActions::preamble (const string &cmt) {
 }
 
@@ -150,8 +152,8 @@ void DVIToSVGActions::postamble () {
 
 
 /** This method is called when a "begin of page (bop)" command was found in the DVI file. 
- *  @param c array with 10 components representing \count0 ... \count9. c[0] contains the
- *           current (printed) page number (may differ from page count) */
+ *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
+ *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (Int32 *c) {
 	pageCount++;
 	pageElement = new XMLElementNode("g");

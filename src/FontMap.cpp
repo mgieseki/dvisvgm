@@ -32,9 +32,9 @@ using namespace std;
 
 
 /** Helper function: splits a given line of text into several parts. 
- * @param str pointer to line buffer (must be writable) 
- * @param parts the parts are written to this vector 
- * @param max_parts maximal number of parts to be stored (0 = no limit) 
+ * @param[in]  str pointer to line buffer (must be writable) 
+ * @param[out] parts the parts are written to this vector 
+ * @param[in]  max_parts maximal number of parts to be stored (0 = no limit) 
  * @return number of extracted parts */
 static int split (char *str, vector<string> *parts, unsigned max_parts=0) {
 	if (str && parts) {
@@ -63,17 +63,16 @@ static int split (char *str, vector<string> *parts, unsigned max_parts=0) {
 }
 
 
-/** Strips dvipdfm map-file options off previously collected 'parts' */
-static int remove_options (vector<string> *parts) {
-	if (parts) {
-		vector<string>::iterator it=parts->begin();
-		while (it != parts->end() && (*it)[0] != '-')
-			++it;
-		while (it != parts->end())
-			parts->erase(it);
-		return parts->size();
-	}
-	return 0;
+/** Strips dvipdfm map-file options off previously collected 'parts' 
+ * @param[in,out] parts vector of strings
+ * @return number of remaining elements in vector */
+static int remove_options (vector<string> &parts) {
+	vector<string>::iterator it=parts.begin();
+	while (it != parts.end() && (*it)[0] != '-')
+		++it;
+	while (it != parts.end())
+		parts.erase(it);
+	return parts.size();
 }
 
 
@@ -86,7 +85,7 @@ FontMap::FontMap (istream &is) {
  *  The information must be given in the map-file format of dvipdfm:
  *  <font name> [<encoding>|default|none] [<map target>] [options]
  *  The optional dvipdfm-parameters -r, -e and -s are ignored. 
- *  @todo implement encoding support */
+ *  @param[in] is map file data is read from this stream */
 void FontMap::read (istream &is) {
 	char buf[256];
 	while (is) {
@@ -126,6 +125,9 @@ void FontMap::readdir (const string &dirname) {
 }
 
 
+/** Returns name of font that is mapped to a given font. 
+ * @param[in] fontname name of font whose mapped name is retrieved
+ * @returns name of mapped font */
 const char* FontMap::lookup (const string &fontname) const {
 	ConstIterator it = _fontMap.find(fontname);
 	if (it == _fontMap.end())
@@ -135,8 +137,9 @@ const char* FontMap::lookup (const string &fontname) const {
 
 
 /** Returns the name of the assigned encoding for a given font. 
+ *  @param[in] fontname name of font whose encoding is returned
  *  @return name of encoding, 0 if there is no encoding assigned */
-const char* FontMap::encoding (const std::string &fontname) const {
+const char* FontMap::encoding (const string &fontname) const {
 	ConstIterator it = _fontMap.find(fontname);
 	if (it == _fontMap.end() || it->second.encname == "")
 		return 0;
