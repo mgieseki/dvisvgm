@@ -1,3 +1,11 @@
+dvisvgm-0.6
+- added support for varying font encodings
+- updated MikTeX support using the COM interface
+- fixed incomplete handling of nested virtual fonts
+- fixed a font handling bug that could cause segmentation faults
+- fixed bug in matrix transformation code
+- updated bundled potrace library to version 1.8
+
 dvisvgm-0.5
 - redesigned and improved font handling
 - added support for virtual fonts

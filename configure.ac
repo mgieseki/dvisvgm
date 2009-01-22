@@ -1,13 +1,11 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
-# $Id$
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[0.5],[martin.gieseking@uos.de])
-DATE="March 2007"
-AC_REVISION($Revision: 25 $)
+AC_INIT([dvisvgm],[0.6],[martin.gieseking@uos.de])
+DATE="January 2009"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -17,6 +15,7 @@ AC_PROG_CXX
 AC_PROG_CC
 
 AC_PROG_RANLIB
+AC_LANG(C)
 
 # Check whether MikTeX import libraries should be linked
 AC_CANONICAL_HOST
@@ -26,13 +25,38 @@ case $host in
 		EXTRA_LIBS="miktex-core.a miktex-kps.a"
 	;;
 	*)
-		AC_CHECK_LIB(kpathsea, kpse_find_file)
+		AC_CHECK_HEADER([kpathsea/kpathsea.h], , 
+			[AC_MSG_ERROR([please install the kpathsea development package])])
+		AC_CHECK_LIB(kpathsea, kpse_find_file, , 
+			[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
+
+		AC_MSG_CHECKING([kpathsea version])
+#		AC_CHANGE_FLAGS([$KPATHSEA_CFLAGS], [$KPATHSEA_LDFLAGS], [-lkpathsea])
+		AC_TRY_RUN([#include <stdio.h>
+  			#include <kpathsea/kpathsea.h>
+			extern char *kpathsea_version_string;
+			int main() {
+				FILE *f;
+				f = fopen("conftestval", "w");
+				if(!f) exit(1);
+				fprintf(f, "%s\n", kpathsea_version_string);
+				fclose(f);
+    			exit(0);
+			}], 
+			[kpseversion=`cat conftestval`], [kpseversion=], [kpseversion=unknown])
+#		AC_RESTORE_FLAGS
+		AC_MSG_RESULT("$kpseversion")
+		if test -z "$kpseversion"; then
+	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
+		fi
 	;;
 esac
 
 # Check for libraries.
-AC_CHECK_LIB(freetype, FT_Init_FreeType)
-AC_CHECK_LIB(m, sqrt) # required to pass potrace check
+AC_CHECK_LIB(freetype, FT_Init_FreeType, , 
+	[AC_MSG_ERROR([freetype library not found, please install it first])])
+
+#AC_CHECK_LIB(m, sqrt) # required to pass potrace check
 #AC_CHECK_LIB(potrace, potrace_trace)
 AC_CHECK_LIB(z, gzopen)
 AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
@@ -88,7 +112,7 @@ if test "$withval" != no; then
 	fi
 	
 	if test -n "$FREETYPE_CONFIG"; then
-		CPPFLAGS=`$FREETYPE_CONFIG --cflags`
+		CPPFLAGS=`$CPPFLAGS $FREETYPE_CONFIG --cflags`
 		if test -n "$FREETYPE_DIR"; then
 			CPPFLAGS="$CPPFLAGS -I$FREETYPE_DIR/include"
 		fi
@@ -110,18 +134,8 @@ if test "$withval" != no; then
 	fi
 fi
 
-# Check freetype version
-#AC_MSG_CHECKING([for freetype version >= 2.1.1])
-#AC_RUN_IFELSE(
-#	[AC_LANG_PROGRAM(
-#		[[#include <ft2build.h>]]
-#		[[return FREETYPE_MAJOR*10000+FREETYPE_MINOR*100+FREETYPE_PATCH >= 20101;]])],
-#		AC_MSG_RESULT([yes]), 
-#		AC_MSG_RESULT([no]) 
-#		CPPFLAGS="$CPPFLAGS -DOLDFREETYPE")
-#		AC_MSG_ERROR([dvisvgm needs freetype version >= 2.1.1]))
 
-
-AC_SUBST(DATE EXTRA_LIBS)
+AC_SUBST(DATE)
+AC_SUBST(EXTRA_LIBS)
 AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile rpm/dvisvgm.spec rpm/Makefile])
 AC_OUTPUT

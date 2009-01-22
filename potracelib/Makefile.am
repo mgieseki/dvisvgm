@@ -1,3 +1,4 @@
+VERSION=1.8
 noinst_LIBRARIES = libpotrace.a
 libpotrace_a_SOURCES = curve.c curve.h trace.c trace.h decompose.c	\
  decompose.h potracelib.c potracelib.h lists.h auxiliary.h bitmap.h	\
