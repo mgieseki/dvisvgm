@@ -92,7 +92,7 @@ void FontMap::read (istream &is) {
 		is.getline(buf, 256);
 		vector<string> parts;
 		split(buf, &parts, 3);
-		if (remove_options(&parts) < 2)
+		if (remove_options(parts) < 2)
 			continue;
 	
 		if (parts[1] == "default" || parts[1] == "none")
