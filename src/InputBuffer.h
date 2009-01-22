@@ -19,7 +19,6 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #ifndef INPUTBUFFER_H
 #define INPUTBUFFER_H

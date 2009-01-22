@@ -19,11 +19,9 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #include <algorithm>
 #include <cstring>
-#include "debug.h"
 #include "InputBuffer.h"
 
 using namespace std;

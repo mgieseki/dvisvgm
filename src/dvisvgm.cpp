@@ -2,7 +2,7 @@
 ** dvisvgm.cpp                                                        **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,7 +19,6 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #include <cmath>
 #include <fstream>
@@ -112,8 +111,6 @@ static int dvisvgm (int argc, char *argv[]) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
 	}
-	KPSFileFinder::progname = argv[0];
-	KPSFileFinder::mktexEnabled = !args.no_mktexmf_flag;
 	
 	double start_time = get_time();
 	
@@ -142,7 +139,7 @@ static int dvisvgm (int argc, char *argv[]) {
 		dvisvg.setPageSize(args.bbox_format_arg);
 		
 		try {
-			KPSFileFinder::initialize();
+			KPSFileFinder::initialize(argv[0], !args.no_mktexmf_flag);
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 				if (!args.stdout_given) {
 					sc.invalidate();  // output buffer is no longer valid

@@ -2,7 +2,7 @@
 ** KPSFileFinder.cpp                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,7 +19,6 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #include <cstdlib>
 #include <iostream>
@@ -30,9 +29,7 @@
 #include "Message.h"
 #include "macros.h"
 
-
 // static members of KPSFileFinder
-const char *KPSFileFinder::progname = 0;
 bool KPSFileFinder::mktexEnabled = true;
 bool KPSFileFinder::initialized = false;
 const char *KPSFileFinder::usermap = 0;
@@ -61,8 +58,10 @@ static void init_fontmap (FontMap &fontmap);
 	using namespace KPS;
 #endif
 
-void KPSFileFinder::initialize () {
+
+void KPSFileFinder::initialize (const char *progname, bool enable_mktexmf) {
 	if (!initialized) {
+		mktexEnabled = enable_mktexmf;
 #ifdef MIKTEX				
 		if (FAILED(CoInitialize(0)))
 			throw MessageException("COM library could not be initialized\n");			
@@ -86,6 +85,7 @@ void KPSFileFinder::finalize () {
 #ifdef MIKTEX
 	miktex_session = 0;  // avoid automatic calling of Release() after CoUninitialize()
 	CoUninitialize();
+	initialized = false;
 #endif
 }
 
@@ -122,7 +122,6 @@ static const char* find_file (const std::string &fname) {
 		types["pfb"] = kpse_type1_format;
 		types["vf"]  = kpse_vf_format;
 		types["mf"]  = kpse_mf_format;
-
 		types["ttf"] = kpse_truetype_format;
 		types["map"] = kpse_fontmap_format;
 		types["sty"] = kpse_tex_format;
@@ -131,7 +130,13 @@ static const char* find_file (const std::string &fname) {
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
 		return 0;
-	return kpse_find_file(fname.c_str(), it->second, 0);
+	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
+		static std::string buf;
+		buf = path;
+		std::free(path);
+		return buf.c_str();
+	}
+	return 0;
 #endif
 }
 

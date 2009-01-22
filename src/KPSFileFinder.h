@@ -2,7 +2,7 @@
 ** KPSFileFinder.h                                                    **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,7 +19,6 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #ifndef KPSFILEFINDER_H
 #define KPSFILEFINDER_H
@@ -38,7 +37,7 @@ class KPSFileFinder
 		static bool mktexEnabled;
 	
 		///@todo make protected
-		static void initialize ();
+		static void initialize (const char *progname, bool enable_mktexmf);
 		static void finalize ();
 
 	private:
