@@ -43,13 +43,7 @@
 #define EMAIL ""
 #endif
 
-#ifdef MIKTEX
-#include <miktex/app.h>
-#include <miktex/core.h>
-#endif
-
 using namespace std;
-
 
 static void show_help () {
    cmdline_parser_print_help();
@@ -120,7 +114,7 @@ static int dvisvgm (int argc, char *argv[]) {
 	}
 	KPSFileFinder::progname = argv[0];
 	KPSFileFinder::mktexEnabled = !args.no_mktexmf_flag;
-
+	
 	double start_time = get_time();
 	
 	string dvifile = ensure_suffix(args.inputs[0], "dvi");
@@ -148,6 +142,7 @@ static int dvisvgm (int argc, char *argv[]) {
 		dvisvg.setPageSize(args.bbox_format_arg);
 		
 		try {
+			KPSFileFinder::initialize();
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 				if (!args.stdout_given) {
 					sc.invalidate();  // output buffer is no longer valid
@@ -164,6 +159,7 @@ static int dvisvgm (int argc, char *argv[]) {
 					<< (args.stdout_given ? "<stdout>" : svgfile)
 					<< " in " << (get_time()-start_time) << " seconds\n";
 			}
+			KPSFileFinder::finalize();
 		}
 		catch (DVIException &e) {
 			Message::estream() << "DVI error: " << e.getMessage() << endl;
@@ -184,23 +180,5 @@ static int dvisvgm (int argc, char *argv[]) {
 
 
 int main (int argc, char *argv[]) {
-#ifdef MIKTEX
-	try {
-		MiKTeX::App::Application app;
-		app.Init(argv[0]);
-		KPSFileFinder::app = &app;
-		int ret = dvisvgm(argc, argv);
-		app.Finalize();
-		return ret;
-	}
-	catch (const MiKTeX::Core::MiKTeXException &e) {
-		MiKTeX::Core::Utils::PrintException(e);
-	}
-	catch (const exception &e) {
-		MiKTeX::Core::Utils::PrintException(e);
-	}
-	return 1;
-#else
 	return dvisvgm(argc, argv);
-#endif
 }

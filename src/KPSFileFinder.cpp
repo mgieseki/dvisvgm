@@ -36,10 +36,6 @@ bool KPSFileFinder::mktexEnabled = true;
 bool KPSFileFinder::initialized = false;
 const char *KPSFileFinder::usermap = 0;
 FontMap KPSFileFinder::fontmap;
-#ifdef MIKTEX
-MiKTeX::App::Application *KPSFileFinder::app;
-#endif
-
 
 // prototypes of static functions 
 static const char* find_file (const std::string &fname);
@@ -48,9 +44,11 @@ static const char* mktex (const std::string &fname);
 static void init_fontmap (FontMap &fontmap);
 
 #ifdef MIKTEX	
-	#include <kpathsea/kpathsea.h>
-	#include <miktex/app.h>
-	#include <miktex/core.h>
+	#include "MessageException.h"
+	#import <MiKTeX207-session.tlb>
+	using namespace MiKTeXSession2_7;	
+	
+	static ISession2Ptr miktex_session;
 #else
 	// unfortunately, the kpathsea headers are not C++-ready,
 	// so we have to wrap it with some ugly code
@@ -61,6 +59,34 @@ static void init_fontmap (FontMap &fontmap);
 	}
 	using namespace KPS;
 #endif
+
+void KPSFileFinder::initialize () {
+	if (!initialized) {
+#ifdef MIKTEX				
+		if (FAILED(CoInitialize(0)))
+			throw MessageException("COM library could not be initialized\n");			
+
+		HRESULT hres = miktex_session.CreateInstance(L"MiKTeX.Session");
+		if (FAILED(hres))
+			throw MessageException("MiKTeX.Session could not be initialized");
+#else
+		kpse_set_program_name(progname, NULL);
+		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
+		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
+		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
+		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools		
+#endif
+		init_fontmap(fontmap);
+		initialized = true;
+	}
+}
+
+void KPSFileFinder::finalize () {
+#ifdef MIKTEX
+	CoUninitialize ();
+#endif
+}
+
 
 
 /** Determines filetype by the filename extension and calls kpse_find_file
@@ -73,25 +99,36 @@ static const char* find_file (const std::string &fname) {
 		return 0;  // no extension => no search
 	const std::string ext  = fname.substr(pos+1);  // file extension
 #ifdef MIKTEX
+	_bstr_t path;
+	static string ret;
+	try {
+		if (miktex_session->FindFile(fname.c_str(), path.GetAddress())) {
+			ret = path;
+			return ret.c_str();
+		}
+	}
+	catch (_com_error e) {
+		throw MessageException((const char*)e.Description());
+	}
+	return 0;		
+
 	// exe files can't be found via MiKTeX's kpathsea emulation, so they have to get a special treatment
-	if (ext == "exe") {
+/*	if (ext == "exe") {
 		MiKTeX::Core::PathName path;
 		if (KPSFileFinder::app->GetSession()->FindFile(fname.c_str(), MiKTeX::Core::FileType::EXE, path))
 			return path.Get();
 		return 0;
-	}	
-#endif
+	}	*/
+
+#else
+		
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
 		types["tfm"] = kpse_tfm_format;
 		types["pfb"] = kpse_type1_format;
 		types["vf"]  = kpse_vf_format;
-#ifdef MIKTEX
-		types["mf"]  = kpse_miscfonts_format;  // this is a bug, I think
-//		types["exe"] = kpse_program_binary_format; // not implemented in MiKTeX
-#else
 		types["mf"]  = kpse_mf_format;
-#endif
+
 		types["ttf"] = kpse_truetype_format;
 		types["map"] = kpse_fontmap_format;
 		types["sty"] = kpse_tex_format;
@@ -101,6 +138,7 @@ static const char* find_file (const std::string &fname) {
 	if (it == types.end())
 		return 0;
 	return kpse_find_file(fname.c_str(), it->second, 0);
+#endif
 }
 
 
@@ -143,7 +181,7 @@ static const char* mktex (const std::string &fname) {
 #ifdef MIKTEX
 	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
 	const char *toolpath = find_file(toolname);
-	if (toolpath) {
+/*	if (toolpath) {
 		try {
 			MiKTeX::Core::Process::Run(toolname, fname.c_str());
 			path = find_file(fname);
@@ -152,7 +190,8 @@ static const char* mktex (const std::string &fname) {
 			// makeFOO failed to build font file
 			path = 0;
 		}
-	}
+	} */
+	path = 0; // @@
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
@@ -179,16 +218,23 @@ static void init_fontmap (FontMap &fontmap) {
 	}
 	else {
 #ifdef MIKTEX
-		// read all dvipdfm mapfiles
-		MiKTeX::Core::Session *session = KPSFileFinder::app->GetSession();
-		for (unsigned i=session->GetNumberOfTEXMFRoots(); i > 0; i--) {
-			std::string dir = session->GetRootDirectory(i-1).Get();
-			// strip trailing slash
-			size_t len = dir.length();
-			if (len > 0 && (dir[len-1] == '/' || dir[len-1] == '\\'))
-				dir = dir.substr(0, len-1);
-			dir += "\\dvipdfm\\config";
-			fontmap.readdir(dir);
+		try {
+			MiKTeXSetupInfo info = miktex_session->GetMiKTeXSetupInfo();	
+			
+			// read all dvipdfm mapfiles		
+			for (unsigned i=0; i < info.numRoots; i++) {
+				_bstr_t bdir = miktex_session->GetRootDirectory(i);
+				string dir = (const char*)bdir;				
+				// strip trailing slash
+				size_t len = dir.length();
+				if (len > 0 && (dir[len-1] == '/' || dir[len-1] == '\\'))
+					dir = dir.substr(0, len-1);
+				dir += "\\dvipdfm\\config";
+				fontmap.readdir(dir);
+			}
+		}
+		catch (_com_error e) {
+			throw MessageException((const char*)e.Description());
 		}
 #else
 		const char *fname = "dvipdfm.map";
@@ -215,17 +261,6 @@ static void init_fontmap (FontMap &fontmap) {
  *  @param[in] extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
 const char* KPSFileFinder::lookup (const std::string &fname, bool extended) {
-	if (!initialized) {
-#ifndef MIKTEX
-		kpse_set_program_name(progname, NULL);
-		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
-		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
-		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
-		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
-#endif
-		initialized = true;
-		init_fontmap(fontmap);
-	}
 	const char *path;
 	if ((path = find_file(fname)) || (extended  && (path = find_mapped_file(fname, fontmap)) || (path = mktex(fname)))) 
 		return path;
@@ -242,7 +277,7 @@ const char* KPSFileFinder::lookupEncFile (std::string fname) {
 		const char *path = find_file(fname);
 		if (path)
 			return path;
-	}
+	}	
 	return 0;
 }
 
