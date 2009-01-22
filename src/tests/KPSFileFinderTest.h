@@ -2,7 +2,7 @@
 ** KPSFileFinderTest.h                                                **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,7 +19,6 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #include <cxxtest/TestSuite.h>
 #include <fstream>
@@ -30,6 +29,14 @@ using std::ifstream;
 class KPSFileFinderTest : public CxxTest::TestSuite
 {
 	public:
+		KPSFileFinderTest () {
+			KPSFileFinder::initialize("", 0);
+		}
+
+		~KPSFileFinderTest () {
+			KPSFileFinder::finalize();
+		}
+
 		void test_findBaseFile () {
 			const char *path = KPSFileFinder::lookup("cmr10.tfm");
 			TS_ASSERT(path);
@@ -40,27 +47,29 @@ class KPSFileFinderTest : public CxxTest::TestSuite
 		void test_findMappedFile () {
 			// mapped base tfm file => should be resolved by kpathsea
 			// circle10.tfm is usually mapped to lcircle.tfm
-			const char *path = KPSFileFinder::lookup("circle10.tfm");
-			TS_ASSERT(path);
-			ifstream ifs(path);
-			TS_ASSERT(ifs);
+			if (const char *path = KPSFileFinder::lookup("circle10.tfm")) {
+				TS_ASSERT(path);
+				ifstream ifs(path);
+				TS_ASSERT(ifs);
+			}
 
 			// mapped lm font => should be resolved using dvisvgm's FontMap
 			// cork-lmr10 is usually mapped to lmr10
 			bool have_lmodern = KPSFileFinder::lookup("lmodern.sty");
 			if (have_lmodern) {  // package lmodern installed?
-				path = KPSFileFinder::lookup("cork-lmr10.pfb");
-				ifstream ifs(path);
-				TS_ASSERT(ifs);
+				if (const char *path = KPSFileFinder::lookup("cork-lmr10.pfb")) {
+					ifstream ifs(path);
+					TS_ASSERT(ifs);
+				}
 			}
 		}
 
 		void test_mktexmf () {
 			// ensure availability of ec font => call mktexmf if necessary
-			const char *path = KPSFileFinder::lookup("ecrm2000.mf");
-			TS_ASSERT(path);
-			ifstream ifs(path);
-			TS_ASSERT(ifs);
+			if (const char *path = KPSFileFinder::lookup("ecrm2000.mf")) {
+				ifstream ifs(path);
+				TS_ASSERT(ifs);
+			}
 		}
 
 		void test_findUnavailableFile () {

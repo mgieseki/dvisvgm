@@ -2,7 +2,7 @@
 ** FontManagerTest.h                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
-** Copyright (C) 2005-2007 Martin Gieseking <martin.gieseking@uos.de> **
+** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
 **                                                                    **
 ** This program is free software; you can redistribute it and/or      **
 ** modify it under the terms of the GNU General Public License        **
@@ -19,20 +19,26 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor,                 **
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
-// $Id$
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
 #include "Font.h"
 #include "FontManager.h"
+#include "KPSFileFinder.h"
 
 class FontManagerTest : public CxxTest::TestSuite
 {
 	public:
+
 		FontManagerTest () {
+			KPSFileFinder::initialize("", 0);
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
+		}
+
+		~FontManagerTest () {
+			KPSFileFinder::finalize();
 		}
 
 
@@ -68,11 +74,6 @@ class FontManagerTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(fm.getFont("cmr10"), fm.getFontById(0));
 		}
 
-/*
-		void test_enterVF_leaveVF () {
-			fm.enterVF(0);
-			TS_ASSERT_THROWS(fm.leaveVF(), FontException);
-		}*/
 
 	private:
 		FontManager fm;
