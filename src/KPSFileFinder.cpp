@@ -84,7 +84,8 @@ void KPSFileFinder::initialize () {
 
 void KPSFileFinder::finalize () {
 #ifdef MIKTEX
-	CoUninitialize ();
+	miktex_session = 0;  // avoid automatic calling of Release() after CoUninitialize()
+	CoUninitialize();
 #endif
 }
 
@@ -112,14 +113,6 @@ static const char* find_file (const std::string &fname) {
 		throw MessageException((const char*)e.Description());
 	}
 	return 0;		
-
-	// exe files can't be found via MiKTeX's kpathsea emulation, so they have to get a special treatment
-/*	if (ext == "exe") {
-		MiKTeX::Core::PathName path;
-		if (KPSFileFinder::app->GetSession()->FindFile(fname.c_str(), MiKTeX::Core::FileType::EXE, path))
-			return path.Get();
-		return 0;
-	}	*/
 
 #else
 		
@@ -181,18 +174,11 @@ static const char* mktex (const std::string &fname) {
 	const char *path = 0;
 #ifdef MIKTEX
 	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
-	const char *toolpath = find_file(toolname);
-/*	if (toolpath) {
-		try {
-			MiKTeX::Core::Process::Run(toolname, fname.c_str());
-			path = find_file(fname);
-		}
-		catch (const MiKTeX::Core::MiKTeXException &e) {
-			// makeFOO failed to build font file
-			path = 0;
-		}
-	} */
-	path = 0; // @@
+	const char *toolpath = find_file(toolname);	
+	if (toolpath) {
+		system((string(toolpath) + " " + fname).c_str());
+		path = find_file(fname);
+	}	
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
