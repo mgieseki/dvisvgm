@@ -174,7 +174,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		_name2id[name] = newid;
 
 		const char *encname = KPSFileFinder::lookupEncName(name);
-		if (encname && _encMap.find(name) == _encMap.end()) 
+		if (encname && _encMap.find(encname) == _encMap.end()) 
 			_encMap[encname] = new FontEncoding(encname);
 	}
 	_fonts.push_back(newfont);

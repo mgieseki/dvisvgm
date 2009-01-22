@@ -504,7 +504,7 @@ void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, doubl
 			ifstream ifs(vf->path(), ios::binary);
 			VFReader vfReader(ifs);
 			vfReader.replaceActions(this);
-			vfReader.executeAll();			
+			vfReader.executeAll();
 			fontManager->leaveVF();
 		}
 		if (actions)
