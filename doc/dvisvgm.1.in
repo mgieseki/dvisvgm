@@ -307,6 +307,9 @@ the library's documentation influence the converter.
 The location of the following files is determined by the kpathsea library.
 To check the actual kpathsea configuration you can use the \fBkpsewhich\fP utility.
 .TP
+.B *.enc
+Font encoding files
+.TP
 .B *.map
 Font map files
 .TP
