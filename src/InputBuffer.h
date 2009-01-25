@@ -23,6 +23,7 @@
 #ifndef INPUTBUFFER_H
 #define INPUTBUFFER_H
 
+#include <algorithm>
 #include <istream>
 #include <string>
 #include <ostream>
@@ -65,7 +66,6 @@ class StreamInputBuffer : public InputBuffer
 		bool skipUntil (const char *s, bool consume=true);
 		void skipSpace ();
 		bool eof () const {return *_bufptr == 0 && *_buf2 == 0;}
-		void write (std::ostream &os) const;
 
 	protected:
 		void fillBuffer (char *buf);

@@ -20,7 +20,6 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#include <algorithm>
 #include <cstring>
 #include "InputBuffer.h"
 
@@ -117,16 +116,6 @@ void StreamInputBuffer::fillBuffer (char *buf) {
 	memset(buf+ofs, 0, _bufsize-ofs);
 }
 
-
-void StreamInputBuffer::write (ostream &os) const {
-	os << "1==============================================\n"
-		<< "size: " << strlen(_buf1) << endl
-		<< _buf1
-		<< "\n2==============================================\n"
-		<< "size: " << strlen(_buf2) << endl
-		<< _buf2
-		<< "\n#=============================================\n";
-}
 
 ///////////////////////////////////////////////
 
