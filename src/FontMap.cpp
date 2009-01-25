@@ -28,6 +28,126 @@
 
 using namespace std;
 
+enum FontMapFieldType {FM_ERROR=0, FM_NONE, FM_NAME, FM_PS_CODE, FM_HEADER, FM_ENC, FM_FONT};
+
+
+static char* str_tolower (char *str) {
+	for (char *p=str; *p; p++)
+		*p = tolower(*p);
+	return str;
+}
+
+
+static void skip_space (char* &str) {
+	while (*str && isspace(*str))
+		str++;
+}
+
+
+static inline char* get_extension (char *fname) {
+	if (char* p=strrchr(fname, '.'))
+		return p+1;
+	return 0;
+}
+
+
+static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false) {
+	skip_space(first);
+	if (!name_only) {
+		if (*first == '"') {
+			last = first+1;
+			while (*last && *last != '"')
+				last++;
+			if (*last == 0)  // quote not closed => skip invalid line
+				return FM_ERROR;
+			return FM_PS_CODE;
+		}
+		else if (*first == '<') {
+			bool eval_prefix = true;
+			FontMapFieldType type=FM_HEADER;
+			first++;
+			if (isspace(*first)) {
+				first++;
+				eval_prefix = false;
+			}
+			else if (*first == '<' || *first == '[') {
+				type = (*first == '<') ? FM_FONT : FM_ENC;
+				first++;
+			}
+			if (read_entry(first, last, true) != FM_NAME)
+				return FM_ERROR;
+			if (type == FM_HEADER) {
+				const char *ext = str_tolower(get_extension(first));
+				if (strcmp(ext, "enc")==0)
+					return FM_ENC;
+				if (strcmp(ext, "pfb")==0 || strcmp(ext, "pfa")==0)
+					return FM_FONT;
+			}
+			return type;
+		}
+	}
+	last = first;
+	while (*last && !isspace(*last))
+		last++;
+	*last = 0;
+	return (first < last) ? FM_NAME : FM_NONE;
+}
+
+
+void FontMap::readPsMap (istream &is) {
+	char buf[512];
+	while (is && !is.eof()) {
+		is.getline(buf, 512);
+		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
+			continue;
+		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
+		MapEntry entry;
+		while (last < end && *first) {
+			last = first;
+			switch (read_entry(first, last)) {
+				case FM_NAME:
+					cout  << "name: " << first << endl; break;
+				case FM_ENC:
+					cout  << "enc: " << first << endl; break;
+				case FM_FONT:
+					cout  << "font: " << first << endl; break;
+				case FM_ERROR:
+					continue;
+				default:
+					break;
+			}
+			first = last+1;
+		}
+		cout << "--------------------------------\n";
+	}
+}
+
+
+void FontMap::readPdfMap (istream &is) {
+	char buf[512];
+	while (is && !is.eof()) {
+		is.getline(buf, 512);
+		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
+			continue;
+		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
+		vector<string> fields(3);
+		for (int i=0; i < 3 && last < end && *first; i++) {
+			FontMapFieldType type = read_entry(first, last, true);
+			if (*first == '-')
+				break;
+			if (type == FM_NAME)
+				fields[i] = first;
+		}
+		if (fields[1] == "default" || fields[1] == "none")
+			fields[1] = "";
+		if ((fields.size() == 2 && fields[1] == "") || (fields.size() == 3 && fields[1] == "" && fields[0] == fields[2]))
+			continue;
+
+		_fontMap[fields[0]].fontname = fields[fields.size() == 2 ? 0 : 2];
+		_fontMap[fields[0]].encname  = fields[1];
+	}
+}
+
 
 /** Helper function: splits a given line of text into several parts. 
  * @param[in]  str pointer to line buffer (must be writable) 
@@ -71,6 +191,19 @@ static int remove_options (vector<string> &parts) {
 	while (it != parts.end())
 		parts.erase(it);
 	return parts.size();
+}
+
+
+FontMap::FontMap (const char *fname) {
+	if (fname) {
+		ifstream ifs(fname);
+		if (ifs) {
+			if (strstr(fname, "dvipdfm"))
+				readPdfMap(ifs);
+			else
+				readPsMap(ifs);
+		}
+	}
 }
 
 

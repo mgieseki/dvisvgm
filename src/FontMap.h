@@ -44,8 +44,8 @@ class FontMap
 	typedef map<std::string,MapEntry>::const_iterator ConstIterator;
 
    public:
-//      FontMap (const string &fname, bool dir=false);
 		FontMap () {}     
+		FontMap (const char *fname);
       FontMap (istream &is);
 		void read (istream &is);
 		void readdir (const std::string &dirname);
@@ -55,6 +55,10 @@ class FontMap
 //		bool readMapDir (const string &dirname);
 		const char* lookup(const std::string &fontname) const;
 		const char* encoding (const std::string &fontname) const;
+
+	protected:
+		void readPsMap (istream &is);
+		void readPdfMap (istream &is);
 
    private:
 		map<std::string,MapEntry> _fontMap;
