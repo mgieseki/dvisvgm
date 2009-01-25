@@ -26,7 +26,7 @@
 #include "FontEncoding.h"
 #include "FontEngine.h"
 #include "FontManager.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 #include "macros.h"
 
@@ -158,13 +158,13 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		newfont = font->clone(dsize, ssize);
 	}
 	else {
-		if (KPSFileFinder::lookup(name+".pfb"))
+		if (FileFinder::lookup(name+".pfb"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-		else if (KPSFileFinder::lookup(name+".ttf"))
+		else if (FileFinder::lookup(name+".ttf"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-		else if (KPSFileFinder::lookup(name+".vf"))
+		else if (FileFinder::lookup(name+".vf"))
 			newfont = VirtualFont::create(name, checksum, dsize, ssize);
-		else if (KPSFileFinder::lookup(name+".mf"))
+		else if (FileFinder::lookup(name+".mf"))
 			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
 		else {
 			newfont = new EmptyFont(name);
@@ -172,7 +172,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		}
 		_name2id[name] = newid;
 
-		const char *encname = KPSFileFinder::lookupEncName(name);
+		const char *encname = FileFinder::lookupEncName(name);
 		if (encname && _encMap.find(encname) == _encMap.end()) 
 			_encMap[encname] = new FontEncoding(encname);
 	}
@@ -219,7 +219,7 @@ void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
  * @return pointer to encoding object, or 0 if there is no encoding defined */
 FontEncoding* FontManager::encoding (const Font *font) const {
 	if (font) {
-		if (const char *encname = KPSFileFinder::lookupEncName(font->name())) {
+		if (const char *encname = FileFinder::lookupEncName(font->name())) {
 			map<string,FontEncoding*>::const_iterator it = _encMap.find(encname);
 			if (it != _encMap.end())
 				return it->second;

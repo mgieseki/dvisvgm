@@ -25,7 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include "Font.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 #include "TFM.h"
 #include "VFReader.h"
@@ -85,7 +85,7 @@ const char* PhysicalFontImpl::path () const {
 		case TTF: ext = "ttf"; break;
 		case MF : ext = "mf";  break;
 	}
-	return KPSFileFinder::lookup(name()+"."+ext);
+	return FileFinder::lookup(name()+"."+ext);
 }
 
 
@@ -105,7 +105,7 @@ VirtualFontImpl::~VirtualFontImpl () {
 
 
 const char* VirtualFontImpl::path () const {
-	return KPSFileFinder::lookup(name()+".vf");
+	return FileFinder::lookup(name()+".vf");
 }
 
 

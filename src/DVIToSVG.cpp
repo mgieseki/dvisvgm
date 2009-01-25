@@ -30,7 +30,7 @@
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "FontManager.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 #include "PageSize.h"
 #include "SVGFontEmitter.h"

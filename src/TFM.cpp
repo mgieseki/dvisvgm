@@ -23,7 +23,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
 #include "TFM.h"
@@ -79,7 +79,7 @@ TFM::TFM (istream &is) {
 
 TFM* TFM::createFromFile (const char *fontname) {
 	string filename = string(fontname) + ".tfm";
-	const char *path = KPSFileFinder::lookup(filename);
+	const char *path = FileFinder::lookup(filename);
 	ifstream ifs(path, ios_base::binary);
 	if (ifs)
 		return new TFM(ifs);

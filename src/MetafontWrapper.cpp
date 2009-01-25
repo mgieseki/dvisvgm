@@ -25,7 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include "FileSystem.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
 
@@ -42,7 +42,7 @@ MetafontWrapper::MetafontWrapper (const string &fname)
 static const char* lookup (string fontname) {
 	// try to find file with exact fontname
 	string mfname = fontname+".mf";
-	if (const char *path = KPSFileFinder::lookup(mfname))
+	if (const char *path = FileFinder::lookup(mfname))
 		return path;
 	
 	// lookup fontname with trailing numbers stripped
@@ -51,7 +51,7 @@ static const char* lookup (string fontname) {
 	while (pos >= 0 && isdigit(fontname[pos]))
 		pos--;
 	mfname = fontname.substr(0, pos+1)+".mf";
-	if (const char *path = KPSFileFinder::lookup(mfname))
+	if (const char *path = FileFinder::lookup(mfname))
 		return path;
 	// not found either => give up
 	return 0;
@@ -66,7 +66,7 @@ static const char* lookup (string fontname) {
  *  @param[in] mag magnification factor
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
-	if (!KPSFileFinder::lookup(fontname+".mf"))
+	if (!FileFinder::lookup(fontname+".mf"))
 		return 1;     // mf file not available => no need to call the "slow" Metafont
 	
 	FileSystem::remove(fontname+".gf");	

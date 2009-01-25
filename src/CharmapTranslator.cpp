@@ -24,7 +24,7 @@
 #include "CharmapTranslator.h"
 #include "Font.h"
 #include "FontEngine.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "macros.h"
 
 using namespace std;

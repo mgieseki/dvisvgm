@@ -23,7 +23,7 @@
 #include <fstream>
 #include "FontEncoding.h"
 #include "InputBuffer.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 #include "Message.h"
 
 using namespace std;
@@ -39,7 +39,7 @@ FontEncoding::FontEncoding (const string &encname) : _encname(encname)
 
 
 const char* FontEncoding::path () const {
-	return KPSFileFinder::lookup(_encname+".enc");
+	return FileFinder::lookup(_encname+".enc");
 }
 
 

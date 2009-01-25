@@ -20,17 +20,29 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef FILEFINDER_H
-#define FILEFINDER_H
+#ifndef KPSFILEFINDER_H
+#define KPSFILEFINDER_H
 
 #include <string>
+#include "FontMap.h"
 
 class FileFinder
 {
    public:
-		virtual ~FileFinder () {}
-		virtual const char* lookup (const std::string &fname) const =0;
-		static const char* lookup (const std::string &fname, const FileFinder *ff);
+		static const char* lookup (const std::string &fname, bool extended=true);
+		static const char* lookupEncFile (std::string fontname);
+		static const char* lookupEncName (std::string fname);
+		static const char *progname;
+		static const char *usermap;
+		static bool mktexEnabled;
+	
+		///@todo make protected
+		static void initialize (const char *progname, bool enable_mktexmf);
+		static void finalize ();
+
+	private:
+		static bool initialized;
+		static FontMap fontmap;
 };
 
 #endif
