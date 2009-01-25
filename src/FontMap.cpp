@@ -38,12 +38,6 @@ static char* str_tolower (char *str) {
 }
 
 
-static void skip_space (char* &str) {
-	while (*str && isspace(*str))
-		str++;
-}
-
-
 static inline char* get_extension (char *fname) {
 	if (char* p=strrchr(fname, '.'))
 		return p+1;
@@ -51,8 +45,14 @@ static inline char* get_extension (char *fname) {
 }
 
 
+/** Reads a single line entry. 
+ *  @param[in,out] first pointer to first char of entry 
+ *  @param[in,out] last  pointer to last char of entry
+ *  @param[in] name_only true, if special meanings of \" and < should be ignored  
+ *  @return entry type */
 static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false) {
-	skip_space(first);
+	while (*first && isspace(*first))
+		first++;
 	if (!name_only) {
 		if (*first == '"') {
 			last = first+1;
@@ -94,6 +94,8 @@ static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=fa
 }
 
 
+/** Read map file in dvips format.
+ *  @param[in] is data is read from this stream */
 void FontMap::readPsMap (istream &is) {
 	char buf[512];
 	while (is && !is.eof()) {
@@ -123,6 +125,10 @@ void FontMap::readPsMap (istream &is) {
 }
 
 
+/** Read map file in dvipdfm format.
+ *  <font name> [<encoding>|default|none] [<map target>] [options]
+ *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored. 
+ *  @param[in] is data is read from this stream */
 void FontMap::readPdfMap (istream &is) {
 	char buf[512];
 	while (is && !is.eof()) {
