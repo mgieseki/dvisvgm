@@ -30,19 +30,28 @@ using std::ostream;
 
 class Bitmap
 {
+	public:
+		struct ForAllData {
+			virtual ~ForAllData() {}
+			virtual void pixel (int x, int y, bool set, Bitmap &bm) {}
+			virtual void pixel (int x, int y, bool set, const Bitmap &bm) {}
+		};
+
    public:
       Bitmap ();
 		Bitmap (int minx, int maxx, int miny , int maxy);
       ~Bitmap ();
 		void resize (int minx, int maxx, int miny , int maxy);
 		void setBits(int r, int c, int n);
-		const UInt8* operator[] (int r) const {return bytes+r*bpr;}
-		int getHeight () const                {return rows;}
-		int getWidth () const                 {return cols;}
-		int getXShift () const                {return xShift;}
-		int getYShift () const                {return yShift;}
-		int bytesPerRow () const              {return bpr;}
-		bool isEmpty () const                 {return (!rows && !cols) || !bytes;}
+		const UInt8* operator[] (int r) const {return _bytes+r*_bpr;}
+		int height () const                   {return _rows;}
+		int width () const                    {return _cols;}
+		int xshift () const                   {return _xshift;}
+		int yshift () const                   {return _yshift;}
+		int bytesPerRow () const              {return _bpr;}
+		bool empty () const                   {return (!_rows && !_cols) || !_bytes;}
+		void bbox (int &w, int &h) const;
+		void forAllPixels (ForAllData &data) const;
 		
 		template <typename T>
 		int copy (T* &target, bool vflip=false) const;
@@ -50,27 +59,27 @@ class Bitmap
 		ostream& write (ostream &os) const;
 
    private:
-		int rows, cols;   // 
-		int xShift, yShift;
-		int bpr;          // number of bytes per row
-		UInt8 *bytes;
+		int _rows, _cols;     ///< number of rows, columns
+		int _xshift, _yshift; ///< horizontal/vertical shift
+		int _bpr;             ///< number of bytes per row
+		UInt8 *_bytes;
 };
 
 
 /** Copies the bitmap to a new target area and reorganize the bits. 
- *  @param target points to first T of new bitmap (must be deleted after usage)
- *  @param vflip true if the new bitmap should be flipped vertically 
+ *  @param[out] target points to first T of new bitmap (must be deleted after usage)
+ *  @param[in]  vflip true if the new bitmap should be flipped vertically 
  *  @return number of Ts per row */
 template <typename T>
 int Bitmap::copy (T* &target, bool vflip) const {
 	const int s = sizeof(T);
-	const int tpr = bpr/s + (bpr%s ? 1 : 0); // number of Ts per row
-	target = new T[rows*tpr];
-	for (int r=0; r < rows; r++) {
-		int targetrow = vflip ? rows-r-1 : r;
-		for (int b=0; b < bpr; b++) {
+	const int tpr = _bpr/s + (_bpr%s ? 1 : 0); // number of Ts per row
+	target = new T[_rows*tpr];
+	for (int r=0; r < _rows; r++) {
+		int targetrow = vflip ? _rows-r-1 : r;
+		for (int b=0; b < _bpr; b++) {
 			T &t = target[targetrow*tpr + b/s];
-			T chunk = bytes[r*bpr+b] << (8*(s-1-b%s));
+			T chunk = _bytes[r*_bpr+b] << (8*(s-1-b%s));
 			if (b % s == 0)
 				t = chunk;
 			else

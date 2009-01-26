@@ -40,7 +40,7 @@ struct CharInfo
 		: dx(dxx), dy(dyy), width(w), location(p) {}
 	
 	Int32 dx, dy;
-	Int32 width;
+	Int32 width;  // 2^24 * (true width)/(design size)
 	UInt32 location;
 };
 
@@ -171,17 +171,18 @@ bool GFReader::executeChar (UInt8 c) {
 }
 
 
-/*
 bool GFReader::executeAllChars () {
 	in.clear();
 	if (charInfoMap.empty())
-		executePostamble();          // read character infos
-	if (in && valid)
-		FORALL(charInfoMap, Iterator, i) {
-			in.seekg(i->second->location, ios_base::beg);
-			while (valid && executeCommand() != 69);  // execute all commands until eoc is reached
-		}	
-}*/
+		executePostamble();   // read character infos
+	in.clear();
+	if (in && valid) {
+		in.seekg(0);
+		while (valid && executeCommand() != 248); // execute all commands until postamble is reached
+		return valid;
+	}
+	return false;
+}
 
 
 bool GFReader::executePostamble () {
@@ -223,6 +224,7 @@ double GFReader::getCharWidth (UInt32 c) const {
 ///////////////////////
 
 
+/** Reads the preamble. */
 void GFReader::cmdPre (int) {
 	UInt32 i = readUnsigned(1);
 	if (i == 131) {
@@ -237,6 +239,7 @@ void GFReader::cmdPre (int) {
 }
 
 
+/** Reads the postamble. */
 void GFReader::cmdPost (int) {
 	readUnsigned(4);               // pointer to byte after final eoc
 	designSize = readUnsigned(4);  // design size of font in points
@@ -248,6 +251,7 @@ void GFReader::cmdPost (int) {
 }
 
 
+/** Reads trailing bytes at end of stream. */
 void GFReader::cmdPostPost (int) {
 	readUnsigned(4);   // pointer to begin of postamble
 	UInt32 i = readUnsigned(1);
@@ -260,20 +264,28 @@ void GFReader::cmdPostPost (int) {
 }
 
 
-void GFReader::cmdPaint0 (int pixels) {
-	if (penDown)                      // set pixels?
-		bitmap.setBits(y, x, pixels);
-	x += pixels;
-	penDown = !penDown;               // inverse pen state
+/** Inverts "paint color" (black to white or vice versa) of n pixels
+ *  and advances the cursor by n. 
+ *  @param[in] n number of pixels to be inverted */
+void GFReader::cmdPaint0 (int n) {
+	if (penDown)                    // set pixels?
+		bitmap.setBits(y, x, n);
+	x += n;
+	penDown = !penDown;             // inverse pen state
 }
 
 
+/** Inverts "paint color" (black to white or vice versa) of n pixels
+ *  and advances the cursor by n. The number n of pixels is read from
+ *  the input stream.
+ *  @param[in] len size of n in bytes */
 void GFReader::cmdPaint (int len) {
 	UInt32 pixels = readUnsigned(len);
 	cmdPaint0(pixels);
 }
 
 
+/** Beginning of character (generic format). */
 void GFReader::cmdBoc (int) {
 	currentChar = readSigned(4);
 	readSigned(4);  // pointer to previous boc with same c mod 256
@@ -289,6 +301,7 @@ void GFReader::cmdBoc (int) {
 }
 
 
+/** Beginning of character (compact format). */
 void GFReader::cmdBoc1 (int) {
 	currentChar = readUnsigned(1);
 	UInt32 dx = readUnsigned(1);
@@ -305,11 +318,16 @@ void GFReader::cmdBoc1 (int) {
 }
 
 
+/** End of character. */
 void GFReader::cmdEoc (int) {
 	endChar(currentChar);
 }
 
 
+/** Moves cursor to the beginning of a following row and sets 
+ *  paint color to white. 
+ *  @param[in] len if 0: move to next row, otherwise: number of bytes to read. 
+ *                 The read value denotes the number of rows to be skipped.  */
 void GFReader::cmdSkip (int len) {
 	if (len == 0)
 		y--;
@@ -320,6 +338,9 @@ void GFReader::cmdSkip (int len) {
 }
 
 
+/** Moves cursor to pixel number 'col' in the next row and sets
+ *  the paint color to black. 
+ *  @param[in] col pixel/column number */
 void GFReader::cmdNewRow (int col) {
 	x = minX + col ;
 	y--;
@@ -340,10 +361,12 @@ void GFReader::cmdYYY (int) {
 }
 
 
+/** Does nothing. */
 void GFReader::cmdNop (int) {
 }
 
 
+/** Reads character locator (part of postamble) */
 void GFReader::cmdCharLoc0 (int) {	
 	UInt8 c  = readUnsigned(1); // character code mod 256
 	UInt8 dm = readUnsigned(1); // 
@@ -355,6 +378,7 @@ void GFReader::cmdCharLoc0 (int) {
 }
 
 
+/** Reads character locator (part of postamble) */
 void GFReader::cmdCharLoc (int) {
 	UInt32 c = readUnsigned(1); // character code mod 256
 	Int32 dx = readSigned(4);   // horizontal escapement (scaled pixel units)

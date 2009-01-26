@@ -20,47 +20,57 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <cstdlib>
 #include <iostream>
 #include "Bitmap.h"
 
 using namespace std;
 
 Bitmap::Bitmap () 
-	: rows(0), cols(0), xShift(0), yShift(0), bpr(0), bytes(0)
+	: _rows(0), _cols(0), _xshift(0), _yshift(0), _bpr(0), _bytes(0)
 {
 }
 
 
+/** Constructs a Bitmap */
 Bitmap::Bitmap (int minx, int maxx, int miny , int maxy) 
-	: bytes(0)
+	: _bytes(0)
 {
 	resize(minx, maxx, miny, maxy);
 }
 
 
 Bitmap::~Bitmap () {
-	delete [] bytes;
+	delete [] _bytes;
 }
 
 
+/** Resizes the bitmap and clears all pixels.
+ *  @param[in] minx index of leftmost pixel column
+ *  @param[in] maxx index of rightmost pixel column
+ *  @param[in] miny index of bottom row
+ *  @param[in] maxy index of top row */
 void Bitmap::resize (int minx, int maxx, int miny , int maxy) {
-	rows = maxy-miny+1;
-	cols = maxx-minx+1;
-	xShift = minx;
-	yShift = miny;
-	bpr  = cols/8 + (cols % 8 ? 1 : 0);
-	delete [] bytes;
-	bytes = new UInt8[rows*bpr];
-	for (UInt8 *p=bytes+rows*bpr-1; p >= bytes; p--)
+	_rows = abs(maxy-miny)+1;
+	_cols = abs(maxx-minx)+1;
+	_xshift = minx;
+	_yshift = miny;
+	_bpr  = _cols/8 + (_cols % 8 ? 1 : 0);  // bytes per row
+	delete [] _bytes;
+	_bytes = new UInt8[_rows*_bpr];
+	for (UInt8 *p=_bytes+_rows*_bpr-1; p >= _bytes; p--)
 		*p = 0;
 }
 
 
-/** Sets n pixels of row r starting at pixel c. */
+/** Sets n pixels of row r to 1 starting at pixel c. 
+ *  @param[in] r number of row
+ *  @param[in] c number of column (pixel)
+ *  @param[in] n number of bits to be set */
 void Bitmap::setBits (int r, int c, int n) {
-	r -= yShift;
-	c -= xShift;
-	UInt8 *byte = bytes + r*bpr + c/8;// + (c%8 ? 1 : 0);
+	r -= _yshift;
+	c -= _xshift;
+	UInt8 *byte = _bytes + r*_bpr + c/8;// + (c%8 ? 1 : 0);
 	while (n > 0) {
 		int b = 7 - c%8;            // number of leftmost bit in current byte to be set
 		int m = min(n, b+1);        // number of bits to be set in current byte
@@ -74,15 +84,50 @@ void Bitmap::setBits (int r, int c, int n) {
 }
 
 
+void Bitmap::forAllPixels (ForAllData &data) const {
+	for (int r=_rows-1; r >= 0 ; r--) {
+		for (int c=0; c < _bpr; c++) {
+			UInt8 byte = _bytes[r*_bpr+c];
+			for (int b=7; b >= 0; b--) {
+				data.pixel(8*c+(7-b), r, byte & (1 << b), *this);
+			}
+		}
+	}
+}
+
+
+struct BBoxData : public Bitmap::ForAllData
+{
+	BBoxData () : maxx(0), maxy(0) {}
+	void pixel (int x, int y, bool set, const Bitmap &bm) {
+		if (set) {
+			maxx = max(maxx, x);
+			maxy = max(maxy, y);
+		}
+	}
+	int maxx, maxy;
+};
+
+
+void Bitmap::bbox (int &w, int &h) const {
+	BBoxData data;
+	forAllPixels(data);
+	w = data.maxx+1;
+	h = data.maxy+1;
+}
+
+
 ostream& Bitmap::write (ostream &os) const {
-	for (int r=rows-1; r >= 0 ; r--) {
-		for (int c=0; c < bpr; c++) {
-			UInt8 byte = bytes[r*bpr+c];
+#if 0
+	for (int r=_rows-1; r >= 0 ; r--) {
+		for (int c=0; c < _bpr; c++) {
+			UInt8 byte = _bytes[r*_bpr+c];
 			for (int b=128; b; b>>=1) 
 				os << (byte & b ? '*' : '-');
 			os << ' ';
 		}
 		os << endl;
 	}
-	return os;
+#endif
+	return os;	
 }

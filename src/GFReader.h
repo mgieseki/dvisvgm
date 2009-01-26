@@ -45,6 +45,7 @@ class GFReader
       GFReader (istream &is);
       virtual ~GFReader ();
 		bool executeChar (UInt8 c);
+		bool executeAllChars ();
 		bool executePostamble ();
 		virtual void preamble (const string &str) {}
 		virtual void postamble () {}
