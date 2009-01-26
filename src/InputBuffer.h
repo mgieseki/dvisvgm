@@ -89,7 +89,7 @@ class StringInputBuffer : public InputBuffer
 		char peek () const      {return _pos < _str.length() ? _str[_pos] : 0;}
 		char peek (int n) const {return _pos+n < _str.length() ? _str[_pos+n] : 0;} 
 		bool check (const char *s, bool consume=true);
-		void skip (unsigned n)  {_pos += std::min(n, _str.length()-_pos);}
+		void skip (size_t n)    {_pos += std::min(n, _str.length()-_pos);}
 		bool skipUntil (const char *s, bool consume=true);
 		void skipSpace ();
 		bool eof () const       {return _pos >= _str.length();}
