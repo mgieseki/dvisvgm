@@ -35,8 +35,7 @@ using std::string;
 
 class FileFinder;
 class Font;
-class GFTracer;
-class TFM;
+class GFGlyphTracer;
 class XMLElementNode;
 
 class SVGFontTraceEmitter : public FontEmitter
@@ -54,7 +53,7 @@ class SVGFontTraceEmitter : public FontEmitter
 		bool checkTracer () const;
 
    private:
-		mutable GFTracer *gfTracer;
+		mutable GFGlyphTracer *gfTracer;
 		mutable std::istream *in;
 		const Font *font;
 		double mag;

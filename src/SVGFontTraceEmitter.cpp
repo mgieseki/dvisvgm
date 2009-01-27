@@ -25,7 +25,7 @@
 #include <sstream>
 #include <string>
 #include "Font.h"
-#include "GFTracer.h"
+#include "GFGlyphTracer.h"
 #include "macros.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
@@ -57,7 +57,7 @@ bool SVGFontTraceEmitter::checkTracer () const {
 		mf.make("ljfour", mag); // call Metafont if necessary
 		if (mf.success() && font->getTFM()) {
 			in = new ifstream((font->name()+".gf").c_str(), ios_base::binary);
-			gfTracer = new GFTracer(*in, 1000.0/font->getTFM()->getDesignSize()); // 1000 units per em
+			gfTracer = new GFGlyphTracer(*in, 1000.0/font->getTFM()->getDesignSize()); // 1000 units per em
 		}
 		else 
 			return false;  // Metafont failed

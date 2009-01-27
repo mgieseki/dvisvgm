@@ -39,12 +39,8 @@ using namespace std;
 
 
 GFTracer::GFTracer (istream &is, double upp) 
-	: GFReader(is), unitsPerPoint(upp)
+	: GFReader(is), _unitsPerPoint(upp)
 {
-}
-
-
-GFTracer::~GFTracer () {
 }
 
 
@@ -70,27 +66,23 @@ void GFTracer::endChar (UInt32 c) {
 	if (!state || state->status == POTRACE_STATUS_INCOMPLETE)
 		Message::wstream(true) << "error while tracing character\n";
 	else {
-		glyph.clear();
-		double hsf = unitsPerPoint/getHPixelsPerPoint();  // horizontal scale factor
-		double vsf = unitsPerPoint/getVPixelsPerPoint();  // vertical scale factor
+		double hsf = _unitsPerPoint/getHPixelsPerPoint();  // horizontal scale factor
+		double vsf = _unitsPerPoint/getVPixelsPerPoint();  // vertical scale factor
 		for (potrace_path_t *path = state->plist; path; path = path->next) {
 			potrace_dpoint_t &p = path->curve.c[path->curve.n-1][2]; // start/end point
-			glyph.addCommand(new GlyphMoveTo(LPair(hsf*(p.x+bitmap.xshift()), vsf*(p.y+bitmap.yshift()))));
+			moveTo(hsf*(p.x+bitmap.xshift()), vsf*(p.y+bitmap.yshift()));
 			for (int i=0; i < path->curve.n; i++) {
 				if (path->curve.tag[i] == POTRACE_CURVETO) {
-					LPair p1(hsf*(path->curve.c[i][0].x+bitmap.xshift()), vsf*(path->curve.c[i][0].y+bitmap.yshift()));
-					LPair p2(hsf*(path->curve.c[i][1].x+bitmap.xshift()), vsf*(path->curve.c[i][1].y+bitmap.yshift()));
-					LPair p3(hsf*(path->curve.c[i][2].x+bitmap.xshift()), vsf*(path->curve.c[i][2].y+bitmap.yshift()));
-					glyph.addCommand(new GlyphCubicTo(p1, p2, p3));
+					curveTo(hsf*(path->curve.c[i][0].x+bitmap.xshift()), vsf*(path->curve.c[i][0].y+bitmap.yshift()),
+							  hsf*(path->curve.c[i][1].x+bitmap.xshift()), vsf*(path->curve.c[i][1].y+bitmap.yshift()),
+							  hsf*(path->curve.c[i][2].x+bitmap.xshift()), vsf*(path->curve.c[i][2].y+bitmap.yshift()));
 				}
 				else {
-					LPair p2(hsf*(path->curve.c[i][1].x+bitmap.xshift()), vsf*(path->curve.c[i][1].y+bitmap.yshift()));
-					LPair p3(hsf*(path->curve.c[i][2].x+bitmap.xshift()), vsf*(path->curve.c[i][2].y+bitmap.yshift()));
-					glyph.addCommand(new GlyphLineTo(p2));
-					glyph.addCommand(
-							i == path->curve.n-1 
-							? (GlyphCommand*)new GlyphClosePath() 
-						   : (GlyphCommand*)new GlyphLineTo(p3));
+					lineTo(hsf*(path->curve.c[i][1].x+bitmap.xshift()), vsf*(path->curve.c[i][1].y+bitmap.yshift()));
+					if (i == path->curve.n-1)
+						closePath();
+					else
+						lineTo(hsf*(path->curve.c[i][2].x+bitmap.xshift()), vsf*(path->curve.c[i][2].y+bitmap.yshift()));
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /***********************************************************************
-** GFTracer.h                                                         **
+** GFGlyphTracer.cpp                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,26 +20,38 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef GFTRACER_H
-#define GFTRACER_H
+#include "GFGlyphTracer.h"
+#include "Pair.h"
 
-#include <istream>
-#include "GFReader.h"
+using namespace std;
 
-class GFTracer : public GFReader
-{
-   public:
-      GFTracer (std::istream &is, double upp);
-      virtual ~GFTracer () {}
-		virtual void moveTo (double x, double y) {}
-		virtual void lineTo (double x, double y) {}
-		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {}
-		virtual void closePath () {}
-		void beginChar (UInt32 c);
-		void endChar (UInt32 c);
 
-	private:
-		double _unitsPerPoint; // 
-};
+void GFGlyphTracer::moveTo (double x, double y) {
+	LPair p(x, y);
+	_glyph.addCommand(new GlyphMoveTo(p));
+}
 
-#endif
+
+void GFGlyphTracer::lineTo (double x, double y) {
+	LPair p(x, y);
+	_glyph.addCommand(new GlyphLineTo(p));
+}
+
+
+void GFGlyphTracer::curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {
+	LPair p1(c1x, c1y);
+	LPair p2(c2x, c2y);
+	LPair p3(x, y);
+	_glyph.addCommand(new GlyphCubicTo(p1, p2, p3));
+}
+
+
+void GFGlyphTracer::closePath () {
+	_glyph.addCommand(new GlyphClosePath());
+}
+
+
+void GFGlyphTracer::endChar (UInt32 c) {
+	_glyph.clear();
+	GFTracer::endChar(c);
+}

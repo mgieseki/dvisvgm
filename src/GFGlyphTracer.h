@@ -1,5 +1,5 @@
 /***********************************************************************
-** GFTracer.h                                                         **
+** GFGlyphTracer.h                                                    **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,26 +20,25 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef GFTRACER_H
-#define GFTRACER_H
+#ifndef GFGLYPHTRACER_H
+#define GFGLYPHTRACER_H
 
-#include <istream>
-#include "GFReader.h"
+#include "FontGlyph.h"
+#include "GFTracer.h"
 
-class GFTracer : public GFReader
+class GFGlyphTracer : public GFTracer
 {
    public:
-      GFTracer (std::istream &is, double upp);
-      virtual ~GFTracer () {}
-		virtual void moveTo (double x, double y) {}
-		virtual void lineTo (double x, double y) {}
-		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {}
-		virtual void closePath () {}
-		void beginChar (UInt32 c);
+      GFGlyphTracer (istream &is, double upp) : GFTracer(is, upp) {}
+		void moveTo (double x, double y);
+		void lineTo (double x, double y);
+		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
+		void closePath ();
 		void endChar (UInt32 c);
+		const Glyph& getGlyph () const {return _glyph;}
 
-	private:
-		double _unitsPerPoint; // 
+   private:
+		Glyph _glyph;
 };
 
 #endif
