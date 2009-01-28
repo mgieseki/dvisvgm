@@ -139,7 +139,7 @@ static int dvisvgm (int argc, char *argv[]) {
 		dvisvg.setPageSize(args.bbox_format_arg);
 		
 		try {
-			FileFinder::initialize(argv[0], !args.no_mktexmf_flag);
+			FileFinder::init(argv[0], !args.no_mktexmf_flag);
 			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 				if (!args.stdout_given) {
 					sc.invalidate();  // output buffer is no longer valid
@@ -156,7 +156,6 @@ static int dvisvgm (int argc, char *argv[]) {
 					<< (args.stdout_given ? "<stdout>" : svgfile)
 					<< " in " << (get_time()-start_time) << " seconds\n";
 			}
-			FileFinder::finalize();
 		}
 		catch (DVIException &e) {
 			Message::estream() << "DVI error: " << e.getMessage() << endl;
