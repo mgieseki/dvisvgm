@@ -88,7 +88,7 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, string id) const {
 
 	Message::mstream() << "tracing glyphs of " << font->name() << endl;
 	XMLElementNode *fontNode = new XMLElementNode("font");
-	if (id != "")
+	if (!id.empty())
 		fontNode->addAttribute("id", id);
 //	fontNode->addAttribute("horiz-adv", XMLString(0));
 	rootNode->append(fontNode);

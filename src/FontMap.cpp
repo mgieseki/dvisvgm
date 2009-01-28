@@ -70,7 +70,7 @@ void FontMap::readPsMap (istream &is) {
 			last = first;
 			switch (read_entry(first, last)) {
 				case FM_NAME:
-					if (name == "")
+					if (name.empty())
 						name = first; 
 					break;
 				case FM_ENC:
@@ -84,7 +84,7 @@ void FontMap::readPsMap (istream &is) {
 			}
 			first = last+1;
 		}
-		if (name != "" && (name != entry.fontname || entry.encname != "") && (entry.fontname != "" || entry.encname != "")) {
+		if (!name.empty() && (name != entry.fontname || !entry.encname.empty()) && (entry.fontname != "" || entry.encname != "")) {
 			size_t len;
 			if ((len = entry.encname.length()) > 4 && entry.encname.substr(len-4) == ".enc")
 				entry.encname = entry.encname.substr(0, len-4);
@@ -118,11 +118,11 @@ void FontMap::readPdfMap (istream &is) {
 			first = last+1;
 		}
 		if (fields[1] == "default" || fields[1] == "none")
-			fields[1] = "";
+			fields[1].clear();
 
 		if (fields.size() < 2)
 			continue;
-		if ((fields.size() == 2 && fields[1] == "") || (fields.size() == 3 && fields[1] == "" && fields[0] == fields[2]))
+		if ((fields.size() == 2 && fields[1].empty()) || (fields.size() == 3 && fields[1].empty() && fields[0] == fields[2]))
 			continue;
 
 		_fontMap[fields[0]].fontname = fields[fields.size() == 2 ? 0 : 2];
@@ -260,8 +260,8 @@ void FontMap::read (istream &is) {
 			continue;
 	
 		if (parts[1] == "default" || parts[1] == "none")
-			parts[1] = "";
-		if ((parts.size() == 2 && parts[1] == "") || (parts.size() == 3 && parts[1] == "" && parts[0] == parts[2]))
+			parts[1].clear();
+		if ((parts.size() == 2 && parts[1].empty()) || (parts.size() == 3 && parts[1].empty() && parts[0] == parts[2]))
 			continue;
 
 		_fontMap[parts[0]].fontname = parts[parts.size() == 2 ? 0 : 2];
@@ -305,7 +305,7 @@ const char* FontMap::lookup (const string &fontname) const {
  *  @return name of encoding, 0 if there is no encoding assigned */
 const char* FontMap::encoding (const string &fontname) const {
 	ConstIterator it = _fontMap.find(fontname);
-	if (it == _fontMap.end() || it->second.encname == "")
+	if (it == _fontMap.end() || it->second.encname.empty())
 		return 0;
 	return it->second.encname.c_str();
 }

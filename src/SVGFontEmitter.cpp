@@ -58,13 +58,13 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, string id) const {
 		return 0;
 
 	XMLElementNode *fontNode = new XMLElementNode("font");
-	if (id != "")
+	if (!id.empty())
 		fontNode->addAttribute("id", id);
 	fontNode->addAttribute("horiz-adv", XMLString(_fontEngine.getHAdvance()));
 	_rootNode->append(fontNode);
 	
 	XMLElementNode *faceNode = new XMLElementNode("font-face");
-	faceNode->addAttribute("font-family", id != "" ? id : _fontEngine.getFamilyName());
+	faceNode->addAttribute("font-family", !id.empty() ? id : _fontEngine.getFamilyName());
 	faceNode->addAttribute("units-per-em", XMLString(_fontEngine.getUnitsPerEM()));
 	faceNode->addAttribute("ascent", XMLString(_fontEngine.getAscender()));
 	faceNode->addAttribute("descent", XMLString(_fontEngine.getDescender()));

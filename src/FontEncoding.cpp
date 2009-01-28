@@ -84,13 +84,13 @@ void FontEncoding::read (istream &is) {
 		else {
 			string entry = read_entry(in);
 			if (entry == ".notdef")
-				entry = "";
+				entry.clear();
 			if (n < 256)
 				_table[n++] = entry;
 		}
 	}
 	// remove trailing .notdef names
-	for (n--; n > 0 && _table[n] == ""; n--);	
+	for (n--; n > 0 && _table[n].empty(); n--);	
 	_table.resize(n+1);
 }
 
@@ -127,7 +127,7 @@ static bool valid_name_char (char c) {
  * @return character name assigned to charcter code c*/
 const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())
-		return _table[c] != "" ? _table[c].c_str() : 0;
+		return !_table[c].empty() ? _table[c].c_str() : 0;
 	return 0;
 }
 

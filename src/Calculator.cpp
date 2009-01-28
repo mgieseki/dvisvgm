@@ -155,7 +155,7 @@ char Calculator::lex (istream &is) {
          is >> numValue;
          break;
       case NAME: {
-         strValue = "";
+         strValue.clear();
          while (isalpha(is.peek()))
             strValue += char(is.get());
          break;

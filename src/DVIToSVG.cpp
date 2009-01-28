@@ -89,7 +89,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		firstPage = 1;
 	
 	computeBoundingBox(firstPage);
-	if (transCmds != "") {
+	if (!transCmds.empty()) {
 		Calculator calc;
 		calc.setVariable("ux", boundingBox.minX());
 		calc.setVariable("uy", boundingBox.minY());
