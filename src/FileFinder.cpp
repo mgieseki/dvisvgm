@@ -140,7 +140,7 @@ const char* FileFinder::Impl::findFile (const std::string &fname) {
 		return 0;
 	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
 		// In the current version of libkpathsea, each call of kpse_find_file produces 
-		// a memory leak since the path buffer is not freed. I don't think we can't do
+		// a memory leak since the path buffer is not freed. I don't think we can do
 		// anything against it here...
 		static std::string buf;
 		buf = path;
@@ -209,19 +209,18 @@ void FileFinder::Impl::initFontMap () {
 	if (_usermapname) {
 		// try to read user font map file
 		const char *mappath = 0;
-		std::ifstream ifs(_usermapname);
-		if (ifs)
-			_fontmap.read(ifs);
-		else if ((mappath = findFile(_usermapname))) {
-			std::ifstream ifs(mappath);
-			_fontmap.read(ifs);
+		if (!_fontmap.read(_usermapname)) {
+			if ((mappath = findFile(_usermapname)))
+				_fontmap.read(mappath);
+			else
+				Message::wstream(true) << "map file '" << _usermapname << "' not found\n";
 		}
-		else
-			Message::wstream(true) << "map file '" << _usermapname << "' not found\n";
 	}
 	else {
+		const char *mapfiles[] = {"ps2pk.map", "psfonts.map", "dvipdfm.map", 0};
 #ifdef MIKTEX
-		try {
+		// @@ check if this can really be removed
+/*		try {
 			MiKTeXSetupInfo info = miktex_session->GetMiKTeXSetupInfo();	
 			
 			// read all dvipdfm mapfiles		
@@ -238,16 +237,14 @@ void FileFinder::Impl::initFontMap () {
 		}
 		catch (_com_error e) {
 			throw MessageException((const char*)e.Description());
-		}
+		} */
 #else
-		const char *fname = "dvipdfm.map";
-		const char *mapfile = FileFinder::lookup(fname, false);
-		if (mapfile) {
-			std::ifstream ifs(mapfile);
-			_fontmap.read(ifs);
-		}
-		else
-			Message::wstream(true) << "default map file '" << fname << "' not found";
+		const char *mf=0;
+		for (const char **p=mapfiles; *p && !mf; p++)
+			if ((mf = FileFinder::lookup(*p, false)))
+				_fontmap.read(mf);
+		if (!mf)
+			Message::wstream(true) << "none of the default map files could be found";
 #endif
 	}
 }

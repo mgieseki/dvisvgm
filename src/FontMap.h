@@ -45,14 +45,12 @@ class FontMap
 
    public:
 		FontMap () {}     
-		FontMap (const char *fname);
+		FontMap (const std::string &fname);
       FontMap (istream &is);
-		void read (istream &is);
+		bool read (const std::string &fname);
 		void readdir (const std::string &dirname);
 		void clear ()    {_fontMap.clear();}
 		ostream& write (ostream &os) const;
-//		bool readMapFile (const string &fname);
-//		bool readMapDir (const string &dirname);
 		const char* lookup(const std::string &fontname) const;
 		const char* encoding (const std::string &fontname) const;
 

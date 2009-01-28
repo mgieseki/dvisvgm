@@ -53,6 +53,17 @@ class FontMapTest : public CxxTest::TestSuite
 			ifstream ifs(fname);
 			if (ifs) {
 				FontMap fm(fname);
+				TS_ASSERT_EQUALS(strcmp(fm.lookup("MyriadPro-Bold-8t"), "MyriadPro-Bold"), 0);
+				TS_ASSERT_EQUALS(strcmp(fm.lookup("cmbsy8"), "cmbsy7"), 0);
+				// entry without mapped name
+				TS_ASSERT_EQUALS(fm.lookup("msam10"), (const char*)0);
+				TS_ASSERT_EQUALS(fm.lookup("msbm10"), (const char*)0);
+				TS_ASSERT_EQUALS(fm.lookup("msbm10"), (const char*)0);
+				TS_ASSERT_EQUALS(fm.lookup("i don't exist"), (const char*)0);
+
+				TS_ASSERT_EQUALS(strcmp(fm.encoding("MyriadPro-Bold-8t"), "my-lf-t1"), 0);
+				TS_ASSERT_EQUALS(fm.encoding("cmbsy8"), (const char*)0);
+
 			}
 		}
 };
