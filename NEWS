@@ -1,3 +1,9 @@
+dvisvgm-0.6.1
+- added support for dvips map files
+- removed dependency on dvipdfm map file (now ps2pk.map, psfonts.map or dvipdfm.map is used by default)
+- fixed compilation bug (id #2535497)
+- some internal refactorings
+
 dvisvgm-0.6
 - added support for varying font encodings
 - updated MikTeX support using the COM interface

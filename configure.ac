@@ -4,7 +4,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[0.6],[martin.gieseking@uos.de])
+AC_INIT([dvisvgm],[0.6.1],[martin.gieseking@uos.de])
 DATE="January 2009"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
@@ -48,28 +48,6 @@ case $host in
 		AC_MSG_RESULT("$kpseversion")
 		if test -z "$kpseversion"; then
 	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
-		fi
-
-		#check whether dvipdfm.map is available
-		AC_MSG_CHECKING([dvipdfm.map])
-		AC_TRY_RUN([#include <stdio.h>
-			#include <kpathsea/kpathsea.h>
-			int main (int argc, char *argv[]) {
-				const char *path;
-				kpse_set_program_name(argv[0], 0);
-				if (path=kpse_find_file("dvipdfm.map", kpse_fontmap_format, 0))	{
-					FILE *f;
-					f = fopen("conftestval", "w");
-					if (!f) exit(1);
-					fprintf(f, "%s\n", path);
-					fclose(f);
-				}
-				exit(0);
-			}],
-			[mappath=`cat conftestval`], [mappath=], [mappath=unknown])
-		AC_MSG_RESULT("$mappath")
-		if test -z "$mappath"; then
-			AC_MSG_ERROR([This version of dvisvgm needs a working dvipdfm installation])
 		fi
 	;;
 esac

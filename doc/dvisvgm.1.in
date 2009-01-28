@@ -130,9 +130,11 @@ to \-TS\fIsx\fP,\fIsy\fP.
 .\"This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
 .TP
 .B \-\^m, \-\-map-file=file
-Sets the map file that is used to look up renamed fonts. \fBdvisvgm\fP doesn't provide
-its own map file but tries to read dvipdfm.map instead (see dvipdfm manual for further
-information). Use option \-m to select a different file.
+Sets the map file that is used to look up font names and encodings. \fBdvisvgm\fP doesn't provide
+its own map file but tries to use available ones coming with \fBdvips\fP or \fBdvipdfm\fP. If 
+option \-m is not given dvisvgm looks for ps2pk.map, psfonts.map and dvipdfm.map (in this order).
+Use option \-m to manually specify a map file. For further information about the file format see 
+the manuals of \fBdvips\fP and \fBdvipdfm\fP. 
 .TP
 .B \-\^M, \-\-mag=factor
 Sets the maginfication factor used for Metafont calls prior tracing the glyphs.
