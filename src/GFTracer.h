@@ -29,6 +29,7 @@
 class GFTracer : public GFReader
 {
    public:
+      GFTracer (std::istream &is);
       GFTracer (std::istream &is, double upp);
       virtual ~GFTracer () {}
 		virtual void moveTo (double x, double y) {}
@@ -39,7 +40,7 @@ class GFTracer : public GFReader
 		void endChar (UInt32 c);
 
 	private:
-		double _unitsPerPoint; // 
+		double _unitsPerPoint; ///< target units per TeX point
 };
 
 #endif

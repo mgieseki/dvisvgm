@@ -66,6 +66,7 @@ class GFReader
 		UInt32 readUnsigned (int bytes);
 		string readString (int len);
 		int executeCommand ();
+		istream& getInputStream () const {return in;}
 
 		void cmdPre (int);
 		void cmdPost (int);

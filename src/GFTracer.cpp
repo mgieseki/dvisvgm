@@ -38,6 +38,15 @@ extern "C" {
 using namespace std;
 
 
+GFTracer::GFTracer (istream &is) 
+	: GFReader(is), _unitsPerPoint(0.0)
+{
+}
+
+
+/** Constructs a new GFTracer. 
+ *  @param[in] is GF file is read from this stream
+ *  @param[in] upp target units per TeX point */
 GFTracer::GFTracer (istream &is, double upp) 
 	: GFReader(is), _unitsPerPoint(upp)
 {
@@ -66,8 +75,11 @@ void GFTracer::endChar (UInt32 c) {
 	if (!state || state->status == POTRACE_STATUS_INCOMPLETE)
 		Message::wstream(true) << "error while tracing character\n";
 	else {
-		double hsf = _unitsPerPoint/getHPixelsPerPoint();  // horizontal scale factor
-		double vsf = _unitsPerPoint/getVPixelsPerPoint();  // vertical scale factor
+		double hsf=1.0, vsf=1.0; // horizontal a d vertical scale factor
+		if (_unitsPerPoint != 0.0) {
+			hsf = _unitsPerPoint/getHPixelsPerPoint();  // horizontal scale factor
+			vsf = _unitsPerPoint/getVPixelsPerPoint();  // vertical scale factor
+		}
 		for (potrace_path_t *path = state->plist; path; path = path->next) {
 			potrace_dpoint_t &p = path->curve.c[path->curve.n-1][2]; // start/end point
 			moveTo(hsf*(p.x+bitmap.xshift()), vsf*(p.y+bitmap.yshift()));
