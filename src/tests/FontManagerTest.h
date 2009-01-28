@@ -24,23 +24,17 @@
 #include <sstream>
 #include "Font.h"
 #include "FontManager.h"
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 
 class FontManagerTest : public CxxTest::TestSuite
 {
 	public:
 
 		FontManagerTest () {
-			KPSFileFinder::initialize("", 0);
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
 		}
-
-		~FontManagerTest () {
-			KPSFileFinder::finalize();
-		}
-
 
 		void test_fontID1 () {
 			TS_ASSERT_EQUALS(fm.fontID(10), 0);

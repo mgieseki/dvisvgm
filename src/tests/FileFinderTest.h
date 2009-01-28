@@ -1,5 +1,5 @@
 /***********************************************************************
-** KPSFileFinderTest.h                                                **
+** FileFinderTest.h                                                   **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -22,23 +22,16 @@
 
 #include <cxxtest/TestSuite.h>
 #include <fstream>
-#include "KPSFileFinder.h"
+#include "FileFinder.h"
 
 using std::ifstream;
 
-class KPSFileFinderTest : public CxxTest::TestSuite
+class FileFinderTest : public CxxTest::TestSuite
 {
 	public:
-		KPSFileFinderTest () {
-			KPSFileFinder::initialize("", 0);
-		}
-
-		~KPSFileFinderTest () {
-			KPSFileFinder::finalize();
-		}
 
 		void test_findBaseFile () {
-			const char *path = KPSFileFinder::lookup("cmr10.tfm");
+			const char *path = FileFinder::lookup("cmr10.tfm");
 			TS_ASSERT(path);
 			ifstream ifs(path);
 			TS_ASSERT(ifs);
@@ -47,7 +40,7 @@ class KPSFileFinderTest : public CxxTest::TestSuite
 		void test_findMappedFile () {
 			// mapped base tfm file => should be resolved by kpathsea
 			// circle10.tfm is usually mapped to lcircle.tfm
-			if (const char *path = KPSFileFinder::lookup("circle10.tfm")) {
+			if (const char *path = FileFinder::lookup("circle10.tfm")) {
 				TS_ASSERT(path);
 				ifstream ifs(path);
 				TS_ASSERT(ifs);
@@ -55,9 +48,9 @@ class KPSFileFinderTest : public CxxTest::TestSuite
 
 			// mapped lm font => should be resolved using dvisvgm's FontMap
 			// cork-lmr10 is usually mapped to lmr10
-			bool have_lmodern = KPSFileFinder::lookup("lmodern.sty");
+			bool have_lmodern = FileFinder::lookup("lmodern.sty");
 			if (have_lmodern) {  // package lmodern installed?
-				if (const char *path = KPSFileFinder::lookup("cork-lmr10.pfb")) {
+				if (const char *path = FileFinder::lookup("cork-lmr10.pfb")) {
 					ifstream ifs(path);
 					TS_ASSERT(ifs);
 				}
@@ -66,14 +59,14 @@ class KPSFileFinderTest : public CxxTest::TestSuite
 
 		void test_mktexmf () {
 			// ensure availability of ec font => call mktexmf if necessary
-			if (const char *path = KPSFileFinder::lookup("ecrm2000.mf")) {
+			if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
 				ifstream ifs(path);
 				TS_ASSERT(ifs);
 			}
 		}
 
 		void test_findUnavailableFile () {
-			const char *path = KPSFileFinder::lookup("not-available.xyz");
+			const char *path = FileFinder::lookup("not-available.xyz");
 			TS_ASSERT(!path);
 		}
 };

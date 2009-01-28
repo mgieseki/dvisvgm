@@ -29,17 +29,6 @@
 #include "Message.h"
 #include "macros.h"
 
-// static members of FileFinder
-bool FileFinder::mktexEnabled = true;
-bool FileFinder::initialized = false;
-const char *FileFinder::usermap = 0;
-FontMap FileFinder::fontmap;
-
-// prototypes of static functions 
-static const char* find_file (const std::string &fname);
-static const char* find_mapped_file (std::string fname, const FontMap &fontmap);
-static const char* mktex (const std::string &fname);
-static void init_fontmap (FontMap &fontmap);
 
 #ifdef MIKTEX	
 	#include "MessageException.h"
@@ -58,35 +47,54 @@ static void init_fontmap (FontMap &fontmap);
 	using namespace KPS;
 #endif
 
+// ---------------------------------------------------
+// static member variables of FileFinder::Impl
 
-void FileFinder::initialize (const char *progname, bool enable_mktexmf) {
-	if (!initialized) {
-		mktexEnabled = enable_mktexmf;
+FileFinder::Impl* FileFinder::Impl::_instance = 0;
+const char *FileFinder::Impl::_progname = 0;
+bool FileFinder::Impl::_mktex_enabled = false;
+FontMap FileFinder::Impl::_fontmap;
+const char *FileFinder::Impl::_usermapname = 0;
+
+// ---------------------------------------------------
+
+
+FileFinder::Impl::Impl ()
+{
 #ifdef MIKTEX				
-		if (FAILED(CoInitialize(0)))
-			throw MessageException("COM library could not be initialized\n");			
+	if (FAILED(CoInitialize(0)))
+		throw MessageException("COM library could not be initialized\n");			
 
-		HRESULT hres = miktex_session.CreateInstance(L"MiKTeX.Session");
-		if (FAILED(hres))
-			throw MessageException("MiKTeX.Session could not be initialized");
+	HRESULT hres = miktex_session.CreateInstance(L"MiKTeX.Session");
+	if (FAILED(hres))
+		throw MessageException("MiKTeX.Session could not be initialized");
 #else
-		kpse_set_program_name(progname, NULL);
-		// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
-		kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
-		kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
-		kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools		
+	kpse_set_program_name(_progname, NULL);
+	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
+	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
+	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
+	kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools		
 #endif
-		init_fontmap(fontmap);
-		initialized = true;
-	}
 }
 
-void FileFinder::finalize () {
+
+
+FileFinder::Impl::~Impl () {
+	delete _instance;
 #ifdef MIKTEX
 	miktex_session = 0;  // avoid automatic calling of Release() after CoUninitialize()
 	CoUninitialize();
-	initialized = false;
 #endif
+}
+
+
+
+FileFinder::Impl& FileFinder::Impl::instance () {
+	if (!_instance) {
+		_instance = new FileFinder::Impl;
+		_instance->initFontMap();
+	}
+	return *_instance;
 }
 
 
@@ -95,7 +103,7 @@ void FileFinder::finalize () {
  *  to actually look up the file. 
  *  @param[in] fname name of file to look up
  *  @return file path on success, 0 otherwise */
-static const char* find_file (const std::string &fname) {
+const char* FileFinder::Impl::findFile (const std::string &fname) {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
 		return 0;  // no extension => no search
@@ -131,6 +139,9 @@ static const char* find_file (const std::string &fname) {
 	if (it == types.end())
 		return 0;
 	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
+		// In the current version of libkpathsea, each call of kpse_find_file produces 
+		// a memory leak since the path buffer is not freed. I don't think we can't do
+		// anything against it here...
 		static std::string buf;
 		buf = path;
 		std::free(path);
@@ -146,17 +157,17 @@ static const char* find_file (const std::string &fname) {
  *  @param[in] fname name of file to look up
  *  @param[in] fontmap font mappings
  *  @return file path on success, 0 otherwise */
-static const char* find_mapped_file (std::string fname, const FontMap &fontmap) {
+const char* FileFinder::Impl::findMappedFile (std::string fname) {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos) 
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
-	const char *mapped_name = fontmap.lookup(base);
+	const char *mapped_name = _fontmap.lookup(base);
 	if (mapped_name) {
 		fname = std::string(mapped_name) + "." + ext;
 		const char *path;
-		if ((path = find_file(fname)) || (path = mktex(fname)))
+		if ((path = findFile(fname)) || (path = mktex(fname)))
 			return path;
 	}
 	return 0;
@@ -166,9 +177,9 @@ static const char* find_mapped_file (std::string fname, const FontMap &fontmap) 
 /** Runs external mktexFOO tool to create missing tfm or mf file.
  *  @param[in] fname name of file to build
  *  @return file path on success, 0 otherwise */
-static const char* mktex (const std::string &fname) {
+const char* FileFinder::Impl::mktex (const std::string &fname) {
 	size_t pos = fname.rfind('.');
-	if (!FileFinder::mktexEnabled || pos == std::string::npos)
+	if (!_mktex_enabled || pos == std::string::npos)
 		return 0;
 
 	std::string ext  = fname.substr(pos+1);  // file extension
@@ -194,19 +205,19 @@ static const char* mktex (const std::string &fname) {
 
 /** Initializes a font map by reading the map file(s). 
  *  @param[in,out] fontmap font map to be initialized */
-static void init_fontmap (FontMap &fontmap) {
-	if (FileFinder::usermap) {
+void FileFinder::Impl::initFontMap () {
+	if (_usermapname) {
 		// try to read user font map file
 		const char *mappath = 0;
-		std::ifstream ifs(FileFinder::usermap);
+		std::ifstream ifs(_usermapname);
 		if (ifs)
-			fontmap.read(ifs);
-		else if ((mappath = find_file(FileFinder::usermap))) {
+			_fontmap.read(ifs);
+		else if ((mappath = findFile(_usermapname))) {
 			std::ifstream ifs(mappath);
-			fontmap.read(ifs);
+			_fontmap.read(ifs);
 		}
 		else
-			Message::wstream(true) << "map file '" << FileFinder::usermap << "' not found\n";
+			Message::wstream(true) << "map file '" << _usermapname << "' not found\n";
 	}
 	else {
 #ifdef MIKTEX
@@ -222,7 +233,7 @@ static void init_fontmap (FontMap &fontmap) {
 				if (len > 0 && (dir[len-1] == '/' || dir[len-1] == '\\'))
 					dir = dir.substr(0, len-1);
 				dir += "\\dvipdfm\\config";
-				fontmap.readdir(dir);
+				_fontmap.readdir(dir);
 			}
 		}
 		catch (_com_error e) {
@@ -233,7 +244,7 @@ static void init_fontmap (FontMap &fontmap) {
 		const char *mapfile = FileFinder::lookup(fname, false);
 		if (mapfile) {
 			std::ifstream ifs(mapfile);
-			fontmap.read(ifs);
+			_fontmap.read(ifs);
 		}
 		else
 			Message::wstream(true) << "default map file '" << fname << "' not found";
@@ -252,9 +263,9 @@ static void init_fontmap (FontMap &fontmap) {
  *  @param[in] fname name of file to look up
  *  @param[in] extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
-const char* FileFinder::lookup (const std::string &fname, bool extended) {
+const char* FileFinder::Impl::lookup (const std::string &fname, bool extended) {
 	const char *path;
-	if ((path = find_file(fname)) || (extended  && (path = find_mapped_file(fname, fontmap)) || (path = mktex(fname)))) 
+	if ((path = findFile(fname)) || (extended  && (path = findMappedFile(fname)) || (path = mktex(fname)))) 
 		return path;
 	return 0;
 }
@@ -263,10 +274,10 @@ const char* FileFinder::lookup (const std::string &fname, bool extended) {
 /** Returns the path to the corresponding encoding file for a given font file. 
  *  @param[in] fname name of the font file
  *  @return path to encoding file on success, 0 otherwise */
-const char* FileFinder::lookupEncFile (std::string fname) {
+const char* FileFinder::Impl::lookupEncFile (std::string fname) {
 	if (const char *encname = lookupEncName(fname)) {
 		fname = std::string(encname) + ".enc";
-		const char *path = find_file(fname);
+		const char *path = findFile(fname);
 		if (path)
 			return path;
 	}	
@@ -274,9 +285,9 @@ const char* FileFinder::lookupEncFile (std::string fname) {
 }
 
 
-const char* FileFinder::lookupEncName (std::string fname) {
+const char* FileFinder::Impl::lookupEncName (std::string fname) {
 	size_t pos = fname.rfind('.');
 	if (pos != std::string::npos)
 		fname = fname.substr(0, pos); // strip extension
-	return fontmap.encoding(fname);
+	return _fontmap.encoding(fname);
 }

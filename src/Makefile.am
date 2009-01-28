@@ -52,7 +52,7 @@ check_PROGRAMS = test-all
 TESTS = test-all
 
 # the tests that should be executed are implemented in the following header files
-test_all_headers = tests/CalculatorTest.h tests/DirectoryTest.h tests/FontManagerTest.h tests/KPSFileFinderTest.h \
+test_all_headers = tests/CalculatorTest.h tests/DirectoryTest.h tests/FontManagerTest.h tests/FileFinderTest.h \
 						 tests/StreamCounterTest.h tests/PageSizeTest.h tests/VectorStreamTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 

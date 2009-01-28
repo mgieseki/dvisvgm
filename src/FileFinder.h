@@ -28,21 +28,51 @@
 
 class FileFinder
 {
+	class Impl
+	{
+		public:
+			const char* lookup (const std::string &fname, bool extended);
+			const char* lookupEncFile (std::string fontname);
+			const char* lookupEncName (std::string fname);
+			static Impl& instance ();
+			static void setProgname (const char *progname) {_progname = progname;}
+			static void enableMktex (bool enable)          {_mktex_enabled = enable;}
+
+		protected:
+			Impl ();
+			~Impl ();
+			const char* findFile (const std::string &fname);
+			const char* findMappedFile (std::string fname);			
+			const char* mktex (const std::string &fname);
+			void initFontMap ();
+
+		private:
+			static Impl *_instance;
+			static const char *_progname;
+			static bool _mktex_enabled;
+		   static FontMap _fontmap;
+			static const char *_usermapname;
+	};
+
    public:
-		static const char* lookup (const std::string &fname, bool extended=true);
-		static const char* lookupEncFile (std::string fontname);
-		static const char* lookupEncName (std::string fname);
-		static const char *progname;
-		static const char *usermap;
-		static bool mktexEnabled;
-	
-		///@todo make protected
-		static void initialize (const char *progname, bool enable_mktexmf);
-		static void finalize ();
+		static const char* lookup (const std::string &fname, bool extended=true) {
+			return Impl::instance().lookup(fname, extended);
+		}
+
+		static const char* lookupEncFile (std::string fontname) {
+			return Impl::instance().lookupEncFile(fontname);
+		}
+
+		static const char* lookupEncName (std::string fname) {
+			return Impl::instance().lookupEncName(fname);
+		}
+			
+		static const void init (const char *progname, bool enable_mktexmf) {
+			Impl::setProgname(progname);
+			Impl::enableMktex(enable_mktexmf);
+		}
 
 	private:
-		static bool initialized;
-		static FontMap fontmap;
 };
 
 #endif

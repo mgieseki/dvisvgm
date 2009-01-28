@@ -59,7 +59,7 @@ class DirectoryTest : public CxxTest::TestSuite
 				"Bitmap.cpp", "BoundingBox.cpp", "Calculator.cpp", "CharmapTranslator.cpp", 
 				"Directory.cpp", "DVIReader.cpp", "DVIToSVG.cpp", "DVIToSVGActions.cpp", 
 				"FileSystem.cpp", "Font.cpp", "FontEngine.cpp", "FontGlyph.cpp", "FontManager.cpp", 
-				"FontMap.cpp", "GFReader.cpp", "GFTracer.cpp", "KPSFileFinder.cpp", "Message.cpp", 
+				"FontMap.cpp", "GFReader.cpp", "GFTracer.cpp", "FileFinder.cpp", "Message.cpp", 
 				"MetafontWrapper.cpp", "PageSize.cpp", "StreamReader.cpp", "SVGFontEmitter.cpp", 
 				"SVGFontTraceEmitter.cpp", "TFM.cpp", "TransformationMatrix.cpp", "VFReader.cpp", 
 				"XMLDocument.cpp", "XMLNode.cpp", "XMLString.cpp",
