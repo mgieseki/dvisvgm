@@ -31,6 +31,107 @@ using namespace std;
 enum FontMapFieldType {FM_ERROR=0, FM_NONE, FM_NAME, FM_PS_CODE, FM_HEADER, FM_ENC, FM_FONT};
 
 
+static char* str_tolower (char *str);
+static inline char* get_extension (char *fname);
+static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false);
+
+
+
+FontMap::FontMap (const char *fname) {
+	if (fname) {
+		ifstream ifs(fname);
+		if (ifs) {
+			if (strstr(fname, "dvipdfm"))
+				readPdfMap(ifs);
+			else
+				readPsMap(ifs);
+		}
+	}
+}
+
+
+FontMap::FontMap (istream &is) {
+	readPdfMap(is);
+}
+
+
+/** Read map file in dvips format.
+ *  @param[in] is data is read from this stream */
+void FontMap::readPsMap (istream &is) {
+	char buf[512];
+	while (is && !is.eof()) {
+		is.getline(buf, 512);
+		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
+			continue;
+		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
+		MapEntry entry;
+		string name;
+		while (last < end && *first) {
+			last = first;
+			switch (read_entry(first, last)) {
+				case FM_NAME:
+					if (name == "")
+						name = first; 
+					break;
+				case FM_ENC:
+					entry.encname = first; break;
+				case FM_FONT:
+					entry.fontname = first; break;
+				case FM_ERROR:
+					continue;
+				default:
+					break;
+			}
+			first = last+1;
+		}
+		if (name != "" && (name != entry.fontname || entry.encname != "") && (entry.fontname != "" || entry.encname != "")) {
+			size_t len;
+			if ((len = entry.encname.length()) > 4 && entry.encname.substr(len-4) == ".enc")
+				entry.encname = entry.encname.substr(0, len-4);
+			if ((len = entry.fontname.length()) > 4 && entry.fontname[len-4] == '.')
+				entry.fontname = entry.fontname.substr(0, len-4);
+			_fontMap[name] = entry;
+			cout << name << ", " << entry.encname << ", " << entry.fontname << endl;
+		}
+	}
+}
+
+
+/** Read map file in dvipdfm format.
+ *  <font name> [<encoding>|default|none] [<map target>] [options]
+ *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored. 
+ *  @param[in] is data is read from this stream */
+void FontMap::readPdfMap (istream &is) {
+	char buf[512];
+	while (is && !is.eof()) {
+		is.getline(buf, 512);
+		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
+			continue;
+		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
+		vector<string> fields;
+		for (int i=0; i < 3 && last < end && *first; i++) {
+			FontMapFieldType type = read_entry(first, last, true);
+			if (*first == '-')
+				break;
+			if (type == FM_NAME)
+				fields.push_back(first);
+			first = last+1;
+		}
+		if (fields[1] == "default" || fields[1] == "none")
+			fields[1] = "";
+
+		if (fields.size() < 2)
+			continue;
+		if ((fields.size() == 2 && fields[1] == "") || (fields.size() == 3 && fields[1] == "" && fields[0] == fields[2]))
+			continue;
+
+		_fontMap[fields[0]].fontname = fields[fields.size() == 2 ? 0 : 2];
+		_fontMap[fields[0]].encname  = fields[1];
+	}
+}
+
+
+
 static char* str_tolower (char *str) {
 	for (char *p=str; *p; p++)
 		*p = tolower(*p);
@@ -45,12 +146,14 @@ static inline char* get_extension (char *fname) {
 }
 
 
+
+
 /** Reads a single line entry. 
  *  @param[in,out] first pointer to first char of entry 
  *  @param[in,out] last  pointer to last char of entry
  *  @param[in] name_only true, if special meanings of \" and < should be ignored  
  *  @return entry type */
-static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false) {
+static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
 	while (*first && isspace(*first))
 		first++;
 	if (!name_only) {
@@ -94,65 +197,6 @@ static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=fa
 }
 
 
-/** Read map file in dvips format.
- *  @param[in] is data is read from this stream */
-void FontMap::readPsMap (istream &is) {
-	char buf[512];
-	while (is && !is.eof()) {
-		is.getline(buf, 512);
-		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
-			continue;
-		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
-		MapEntry entry;
-		while (last < end && *first) {
-			last = first;
-			switch (read_entry(first, last)) {
-				case FM_NAME:
-					cout  << "name: " << first << endl; break;
-				case FM_ENC:
-					cout  << "enc: " << first << endl; break;
-				case FM_FONT:
-					cout  << "font: " << first << endl; break;
-				case FM_ERROR:
-					continue;
-				default:
-					break;
-			}
-			first = last+1;
-		}
-		cout << "--------------------------------\n";
-	}
-}
-
-
-/** Read map file in dvipdfm format.
- *  <font name> [<encoding>|default|none] [<map target>] [options]
- *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored. 
- *  @param[in] is data is read from this stream */
-void FontMap::readPdfMap (istream &is) {
-	char buf[512];
-	while (is && !is.eof()) {
-		is.getline(buf, 512);
-		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
-			continue;
-		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
-		vector<string> fields(3);
-		for (int i=0; i < 3 && last < end && *first; i++) {
-			FontMapFieldType type = read_entry(first, last, true);
-			if (*first == '-')
-				break;
-			if (type == FM_NAME)
-				fields[i] = first;
-		}
-		if (fields[1] == "default" || fields[1] == "none")
-			fields[1] = "";
-		if ((fields.size() == 2 && fields[1] == "") || (fields.size() == 3 && fields[1] == "" && fields[0] == fields[2]))
-			continue;
-
-		_fontMap[fields[0]].fontname = fields[fields.size() == 2 ? 0 : 2];
-		_fontMap[fields[0]].encname  = fields[1];
-	}
-}
 
 
 /** Helper function: splits a given line of text into several parts. 
@@ -199,23 +243,6 @@ static int remove_options (vector<string> &parts) {
 	return parts.size();
 }
 
-
-FontMap::FontMap (const char *fname) {
-	if (fname) {
-		ifstream ifs(fname);
-		if (ifs) {
-			if (strstr(fname, "dvipdfm"))
-				readPdfMap(ifs);
-			else
-				readPsMap(ifs);
-		}
-	}
-}
-
-
-FontMap::FontMap (istream &is) {
-	read(is);
-}
 
 
 /** Reads the font mapping information from the given stream. 

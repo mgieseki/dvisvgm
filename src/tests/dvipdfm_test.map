@@ -1,0 +1,1010 @@
+% /var/lib/texmf/fonts/map/dvipdfm/updmap/dvipdfm_dl14.map: maintained by the script updmap.
+%   Don't change this file directly. Edit texmf/web2c/updmap.cfg
+%   and run updmap to recreate this file.
+% A log of the updmap run that has created this file is available here:
+%   /var/lib/texmf/web2c/updmap.log
+bchbc8a
+bchbi8r 8r bchbi8a
+bchbi8v t5 bchbi8v
+bchbo8r 8r bchb8a -s .167
+bchbo8v t5 bchb8v -s 0.194
+bchr8r 8r bchr8a
+bchr8v t5 bchr8v
+bchrc8a
+bchri8r 8r bchri8a
+bchri8v t5 bchri8v
+bchro8r 8r bchr8a -s .167
+bchro8v t5 bchr8v -s 0.194
+cmb10 -r
+cmbsy10o default cmbsy10 -s .167 -r
+cmbsy10 -r
+cmbsy5 -r
+cmbsy6 default cmbsy7 -r
+cmbsy7 -r
+cmbsy8 default cmbsy7 -r
+cmbsy9 default cmbsy10 -r
+cmbx10 -r
+cmbx12 -r
+cmbx5 -r
+cmbx6 -r
+cmbx7 -r
+cmbx8 -r
+cmbx9 -r
+cmbxi10f default cmbxti10 -s -0.25 -r
+cmbxsl10 -r
+cmbxti10 -r
+cmbxti12 default cmbxti10 -r
+cmbxti7 default cmbxti10 -r
+cmcb10 -r
+cmcbx10 -r
+cmcbx12 -r
+cmcbx5 -r
+cmcbx6 -r
+cmcbx7 -r
+cmcbx8 -r
+cmcbx9 -r
+cmcbxsl10 default cmcbxsl1 -r
+cmcbxti10 default cmcbxti1 -r
+cmccsc10 -r
+cmccsc8 -r
+cmccsc9 -r
+cmcinch default cmcinch7 -r
+cmcitt10 -r
+cmcsc10 -r
+cmcsc8 default cmcsc10 -r
+cmcsc9 default cmcsc10 -r
+cmcsl10 -r
+cmcsl12 -r
+cmcsl8 -r
+cmcsl9 -r
+cmcsltt10 default cmcsltt1 -r
+cmcss10 -r
+cmcss12 -r
+cmcss17 -r
+cmcss8 -r
+cmcss9 -r
+cmcssbx10 default cmcssbx1 -r
+cmcssdc10 default cmcssdc1 -r
+cmcssi10 -r
+cmcssi12 -r
+cmcssi17 -r
+cmcssi8 -r
+cmcssi9 -r
+cmcssq8 -r
+cmcssqi8 -r
+cmcti10 -r
+cmcti12 -r
+cmcti7 -r
+cmcti8 -r
+cmcti9 -r
+cmctt10 -r
+cmctt12 -r
+cmctt8 -r
+cmctt9 -r
+cmcu10 -r
+cmcyr10 -r
+cmcyr12 -r
+cmcyr17 -r
+cmcyr5 -r
+cmcyr6 -r
+cmcyr7 -r
+cmcyr8 -r
+cmcyr9 -r
+cmdunh10 -r
+cmex10 -r
+cmex7 default fmex7
+cmex8 default fmex8
+cmex9 default fmex9
+cmff10 -r
+cmfi10 -r
+cmfib8 -r
+cminch -r
+cmitt10 -r
+cmitt12 default cmitt10 -r
+cmitt9 default cmitt10 -r
+cmmi10o default cmmi10 -s .167 -r
+cmmi10 -r
+cmmi12 -r
+cmmi5 -r
+cmmi6 -r
+cmmi7 -r
+cmmi8 -r
+cmmi9 -r
+cmmib10o default cmmib10 -s .167 -r
+cmmib10 -r
+cmmib5 -r
+cmmib6 default cmmib7 -r
+cmmib7 -r
+cmmib8 default cmmib7 -r
+cmmib9 default cmmib10 -r
+cmr10 -r
+cmr12 -r
+cmr17 -r
+cmr5 -r
+cmr6 -r
+cmr7 -r
+cmr8 -r
+cmr9 -r
+cmsl10 -r
+cmsl12 -r
+cmsl6 default cmsl8 -r
+cmsl8 -r
+cmsl9 -r
+cmsltt10 -r
+cmsltt9 default cmsltt10 -r
+cmss10 -r
+cmss12 -r
+cmss17 -r
+cmss8 -r
+cmss9 -r
+cmssbx10 -r
+cmssbxo10 default cmssbx10 -s .212 -r
+cmssdc10 -r
+cmssi10 -r
+cmssi12 -r
+cmssi17 -r
+cmssi8 -r
+cmssi9 -r
+cmssq8 -r
+cmssqi8 -r
+cmsy10o default cmsy10 -s .167 -r
+cmsy10 -r
+cmsy5 -r
+cmsy6 -r
+cmsy7 -r
+cmsy8 -r
+cmsy9 -r
+cmtcsc10 -r
+cmtex10 -r
+cmtex8 -r
+cmtex9 -r
+cmti10 -r
+cmti12 -r
+cmti7 -r
+cmti8 -r
+cmti9 -r
+cmtt10 -r
+cmtt12 -r
+cmtt8 -r
+cmtt9 -r
+cmu10 -r
+cmvtt10o default cmvtt10 -s .167 -r
+cmvtt10 -r
+comic8b 8b ComicSansMS8b
+comicbd8b 8b ComicSansMSBold8b
+comicbdo8b 8b ComicSansMSBoldItalic8b
+comico8b 8b ComicSansMSItalic8b
+csb10
+csbx10
+csbx12
+csbx5
+csbx6
+csbx7
+csbx8
+csbx9
+csbxsl10
+csbxti10
+cscsc10
+csdunh10
+csff10
+csfi10
+csfib8
+csinch
+csitt10
+csr10
+csr12
+csr17
+csr5
+csr6
+csr7
+csr8
+csr9
+cssl10
+cssl12
+cssl8
+cssl9
+cssltt10
+csss10
+csss12
+csss17
+csss8
+csss9
+csssbx10
+csssdc10
+csssi10
+csssi12
+csssi17
+csssi8
+csssi9
+csssq8
+csssqi8
+cstcsc10
+csti10
+csti12
+csti7
+csti8
+csti9
+cstt10
+cstt12
+cstt8
+cstt9
+csu10
+csvtt10
+dsrom10
+dsrom12
+dsrom8
+dsss10
+dsss12
+dsss8
+euex10 -r
+euex7 default euex10 -r
+euex8 default euex10 -r
+euex9 default euex10 -r
+eufb10 -r
+eufb5 -r
+eufb6 default eufb7 -r
+eufb7 -r
+eufb8 default eufb7 -r
+eufb9 default eufb10 -r
+eufm10 -r
+eufm5 -r
+eufm6 default eufm7 -r
+eufm7 -r
+eufm8 default eufm7 -r
+eufm9 default eufm10 -r
+eurb10 -r
+eurb5 -r
+eurb6 default eurb7 -r
+eurb7 -r
+eurb8 default eurb7 -r
+eurb9 default eurb10 -r
+eurm10 -r
+eurm5 -r
+eurm6 default eurm7 -r
+eurm7 -r
+eurm8 default eurm7 -r
+eurm9 default eurm10 -r
+eusb10 -r
+eusb5 -r
+eusb6 default eusb7 -r
+eusb7 -r
+eusb8 default eusb7 -r
+eusb9 default eusb10 -r
+eusm10 -r
+eusm5 -r
+eusm6 default eusm7 -r
+eusm7 -r
+eusm8 default eusm7 -r
+eusm9 default eusm10 -r
+ex-anttb antt-ex anttb
+ex-anttcb antt-ex anttcb
+ex-anttcl antt-ex anttcl
+ex-anttcm antt-ex anttcm
+ex-anttcr antt-ex anttcr
+ex-anttl antt-ex anttl
+ex-anttm antt-ex anttm
+ex-anttr antt-ex anttr
+exp-anttb antt-exp anttb
+exp-anttbi antt-exp anttbi
+exp-anttcb antt-exp anttcb
+exp-anttcbi antt-exp anttcbi
+exp-anttcl antt-exp anttcl
+exp-anttcli antt-exp anttcli
+exp-anttcm antt-exp anttcm
+exp-anttcmi antt-exp anttcmi
+exp-anttcr antt-exp anttcr
+exp-anttcri antt-exp anttcri
+exp-anttl antt-exp anttl
+exp-anttli antt-exp anttli
+exp-anttm antt-exp anttm
+exp-anttmi antt-exp anttmi
+exp-anttr antt-exp anttr
+exp-anttri antt-exp anttri
+favb8v t5 ArevSans-Bold-T5
+favbi8v t5 ArevSans-BoldOblique-T5
+favr8v t5 ArevSans-Roman-T5
+favri8v t5 ArevSans-Oblique-T5
+feybl10
+feybo10
+feybr10
+feyml10
+feymo10
+feymr10
+fplmb
+fplmbb
+fplmbi
+fplmr
+fplmri
+fplrc8v t5 fplrc8v
+Inuit
+Inuitb
+Inuitbo
+Inuito
+jthb8v t5d Tahoma-Bold
+jthr8v t5d Tahoma
+jvnb8v t5d Verdana-Bold
+jvnbi8v t5d Verdana-BoldItalic
+jvnr8v t5d Verdana
+jvnri8v t5d Verdana-Italic
+l7x-lmb10 lm-l7x lmb10
+l7x-lmbo10 lm-l7x lmbo10
+l7x-lmbx10 lm-l7x lmbx10
+l7x-lmbx12 lm-l7x lmbx12
+l7x-lmbx5 lm-l7x lmbx5
+l7x-lmbx6 lm-l7x lmbx6
+l7x-lmbx7 lm-l7x lmbx7
+l7x-lmbx8 lm-l7x lmbx8
+l7x-lmbx9 lm-l7x lmbx9
+l7x-lmbxi10 lm-l7x lmbxi10
+l7x-lmbxo10 lm-l7x lmbxo10
+l7x-lmcsc10 lm-l7x lmcsc10
+l7x-lmcsco10 lm-l7x lmcsco10
+l7x-lmdunh10 lm-l7x lmdunh10
+l7x-lmduno10 lm-l7x lmduno10
+l7x-lmr10 lm-l7x lmr10
+l7x-lmr12 lm-l7x lmr12
+l7x-lmr17 lm-l7x lmr17
+l7x-lmr5 lm-l7x lmr5
+l7x-lmr6 lm-l7x lmr6
+l7x-lmr7 lm-l7x lmr7
+l7x-lmr8 lm-l7x lmr8
+l7x-lmr9 lm-l7x lmr9
+l7x-lmri10 lm-l7x lmri10
+l7x-lmri12 lm-l7x lmri12
+l7x-lmri7 lm-l7x lmri7
+l7x-lmri8 lm-l7x lmri8
+l7x-lmri9 lm-l7x lmri9
+l7x-lmro10 lm-l7x lmro10
+l7x-lmro12 lm-l7x lmro12
+l7x-lmro17 lm-l7x lmro17
+l7x-lmro8 lm-l7x lmro8
+l7x-lmro9 lm-l7x lmro9
+l7x-lmss10 lm-l7x lmss10
+l7x-lmss12 lm-l7x lmss12
+l7x-lmss17 lm-l7x lmss17
+l7x-lmss8 lm-l7x lmss8
+l7x-lmss9 lm-l7x lmss9
+l7x-lmssbo10 lm-l7x lmssbo10
+l7x-lmssbx10 lm-l7x lmssbx10
+l7x-lmssdc10 lm-l7x lmssdc10
+l7x-lmssdo10 lm-l7x lmssdo10
+l7x-lmsso10 lm-l7x lmsso10
+l7x-lmsso12 lm-l7x lmsso12
+l7x-lmsso17 lm-l7x lmsso17
+l7x-lmsso8 lm-l7x lmsso8
+l7x-lmsso9 lm-l7x lmsso9
+l7x-lmssq8 lm-l7x lmssq8
+l7x-lmssqbo8 lm-l7x lmssqbo8
+l7x-lmssqbx8 lm-l7x lmssqbx8
+l7x-lmssqo8 lm-l7x lmssqo8
+l7x-lmtcsc10 lm-l7x lmtcsc10
+l7x-lmtcso10 lm-l7x lmtcso10
+l7x-lmtk10 lm-l7x lmtk10
+l7x-lmtko10 lm-l7x lmtko10
+l7x-lmtl10 lm-l7x lmtl10
+l7x-lmtlc10 lm-l7x lmtlc10
+l7x-lmtlco10 lm-l7x lmtlco10
+l7x-lmtlo10 lm-l7x lmtlo10
+l7x-lmtt10 lm-l7x lmtt10
+l7x-lmtt12 lm-l7x lmtt12
+l7x-lmtt8 lm-l7x lmtt8
+l7x-lmtt9 lm-l7x lmtt9
+l7x-lmtti10 lm-l7x lmtti10
+l7x-lmtto10 lm-l7x lmtto10
+l7x-lmu10 lm-l7x lmu10
+l7x-lmvtk10 lm-l7x lmvtk10
+l7x-lmvtko10 lm-l7x lmvtko10
+l7x-lmvtl10 lm-l7x lmvtl10
+l7x-lmvtlo10 lm-l7x lmvtlo10
+l7x-lmvtt10 lm-l7x lmvtt10
+l7x-lmvtto10 lm-l7x lmvtto10
+l7x-qbkbi q-l7x qbkbi
+l7x-qbkbi-sc q-l7x-sc qbkbi
+l7x-qbkb q-l7x qbkb
+l7x-qbkb-sc q-l7x-sc qbkb
+l7x-qbkri q-l7x qbkri
+l7x-qbkri-sc q-l7x-sc qbkri
+l7x-qbkr q-l7x qbkr
+l7x-qbkr-sc q-l7x-sc qbkr
+l7x-qcsbi q-l7x qcsbi
+l7x-qcsbi-sc q-l7x-sc qcsbi
+l7x-qcsb q-l7x qcsb
+l7x-qcsb-sc q-l7x-sc qcsb
+l7x-qcsri q-l7x qcsri
+l7x-qcsri-sc q-l7x-sc qcsri
+l7x-qcsr q-l7x qcsr
+l7x-qcsr-sc q-l7x-sc qcsr
+l7x-qplbi q-l7x qplbi
+l7x-qplbi-sc q-l7x-sc qplbi
+l7x-qplb q-l7x qplb
+l7x-qplb-sc q-l7x-sc qplb
+l7x-qplri q-l7x qplri
+l7x-qplri-sc q-l7x-sc qplri
+l7x-qplr q-l7x qplr
+l7x-qplr-sc q-l7x-sc qplr
+l7x-qtmbi q-l7x qtmbi
+l7x-qtmbi-sc q-l7x-sc qtmbi
+l7x-qtmb q-l7x qtmb
+l7x-qtmb-sc q-l7x-sc qtmb
+l7x-qtmri q-l7x qtmri
+l7x-qtmri-sc q-l7x-sc qtmri
+l7x-qtmr q-l7x qtmr
+l7x-qtmr-sc q-l7x-sc qtmr
+lasy10 -r
+lasy5 -r
+lasy6 -r
+lasy7 -r
+lasy8 -r
+lasy9 -r
+lasyb10 -r
+lcircle10 default lcircle1 -r
+lcirclew10 default lcirclew -r
+lcmss8 -r
+lcmssb8 -r
+lcmssi8 -r
+line10 -r
+linew10 -r
+lmbsy10 lm-mathsy lmbsy10
+lmbsy5 lm-mathsy lmbsy5
+lmbsy7 lm-mathsy lmbsy7
+lmex10 lm-mathex lmex10
+lmmi10 lm-mathit lmmi10
+lmmi12 lm-mathit lmmi12
+lmmi5 lm-mathit lmmi5
+lmmi6 lm-mathit lmmi6
+lmmi7 lm-mathit lmmi7
+lmmi8 lm-mathit lmmi8
+lmmi9 lm-mathit lmmi9
+lmmib10 lm-mathit lmmib10
+lmmib5 lm-mathit lmmib5
+lmmib7 lm-mathit lmmib7
+lmsy10 lm-mathsy lmsy10
+lmsy5 lm-mathsy lmsy5
+lmsy6 lm-mathsy lmsy6
+lmsy7 lm-mathsy lmsy7
+lmsy8 lm-mathsy lmsy8
+lmsy9 lm-mathsy lmsy9
+logo10
+logo8
+logo9
+logobf10
+logod10
+logosl10
+logosl8
+logosl9
+lprb8v t5uni PalatinoLinotype-Bold
+lprbi8v t5uni PalatinoLinotype-BoldItalic
+lprr8v t5uni PalatinoLinotype-Roman
+lprri8v t5uni PalatinoLinotype-Italic
+ma1b8v t5d Arial-BoldMT
+ma1bi8v t5d Arial-BoldItalicMT
+ma1r8v t5d ArialMT
+ma1ri8v t5d Arial-ItalicMT
+manfnt
+mcrb8v t5d CourierNewPS-BoldMT
+mcrbi8v t5d CourierNewPS-BoldItalicMT
+mcrr8v t5d CourierNewPSMT
+mcrri8v t5d CourierNewPS-ItalicMT
+mi-anttbi antt-mi anttbi
+mi-anttcbi antt-mi anttcbi
+mi-anttcli antt-mi anttcli
+mi-anttcmi antt-mi anttcmi
+mi-anttcri antt-mi anttcri
+mi-anttli antt-mi anttli
+mi-anttmi antt-mi anttmi
+mi-anttri antt-mi anttri
+mnsb8v t5d TimesNewRomanPS-BoldMT
+mnsbi8v t5d TimesNewRomanPS-BoldItalicMT
+mnsr8v t5d TimesNewRomanPSMT
+mnsri8v t5d TimesNewRomanPS-ItalicMT
+msam10 -r
+msam5 -r
+msam6 default msam7 -r
+msam7 -r
+msam8 default msam7 -r
+msam9 default msam10 -r
+msbm10
+msbm5
+msbm6 default msbm7
+msbm7
+msbm8 default msbm7
+msbm9 default msbm10
+mtex texmext blex
+mtsy default blsy
+MyriadPro-Bold-7m my-lf-oml MyriadPro-Bold
+MyriadPro-Bold-7t my-lf-ot1 MyriadPro-Bold
+MyriadPro-Bold-8c my-lf-ts1 MyriadPro-Bold
+MyriadPro-Bold-8t my-lf-t1 MyriadPro-Bold
+MyriadPro-BoldIt-7m my-lf-oml MyriadPro-BoldIt
+MyriadPro-BoldIt-7t my-lf-ot1 MyriadPro-BoldIt
+MyriadPro-BoldIt-8c my-lf-ts1 MyriadPro-BoldIt
+MyriadPro-BoldIt-8t my-lf-t1 MyriadPro-BoldIt
+MyriadPro-BoldIt-k my-lf-lgr MyriadPro-BoldIt
+MyriadPro-BoldIt-OSF-7m my-osf-oml MyriadPro-BoldIt
+MyriadPro-BoldIt-OSF-7t my-osf-ot1 MyriadPro-BoldIt
+MyriadPro-BoldIt-OSF-8c my-osf-ts1 MyriadPro-BoldIt
+MyriadPro-BoldIt-OSF-8t my-osf-t1 MyriadPro-BoldIt
+MyriadPro-Bold-k my-lf-lgr MyriadPro-Bold
+MyriadPro-Bold-OSF-7m my-osf-oml MyriadPro-Bold
+MyriadPro-Bold-OSF-7t my-osf-ot1 MyriadPro-Bold
+MyriadPro-Bold-OSF-8c my-osf-ts1 MyriadPro-Bold
+MyriadPro-Bold-OSF-8t my-osf-t1 MyriadPro-Bold
+MyriadPro-It-7m my-lf-oml MyriadPro-It
+MyriadPro-It-7t my-lf-ot1 MyriadPro-It
+MyriadPro-It-8c my-lf-ts1 MyriadPro-It
+MyriadPro-It-8t my-lf-t1 MyriadPro-It
+MyriadPro-It-k my-lf-lgr MyriadPro-It
+MyriadPro-It-OSF-7m my-osf-oml MyriadPro-It
+MyriadPro-It-OSF-7t my-osf-ot1 MyriadPro-It
+MyriadPro-It-OSF-8c my-osf-ts1 MyriadPro-It
+MyriadPro-It-OSF-8t my-osf-t1 MyriadPro-It
+MyriadPro-Regular-7m my-lf-oml MyriadPro-Regular
+MyriadPro-Regular-7t my-lf-ot1 MyriadPro-Regular
+MyriadPro-Regular-8c my-lf-ts1 MyriadPro-Regular
+MyriadPro-Regular-8t my-lf-t1 MyriadPro-Regular
+MyriadPro-Regular-k my-lf-lgr MyriadPro-Regular
+MyriadPro-Regular-OSF-7m my-osf-oml MyriadPro-Regular
+MyriadPro-Regular-OSF-7t my-osf-ot1 MyriadPro-Regular
+MyriadPro-Regular-OSF-8c my-osf-ts1 MyriadPro-Regular
+MyriadPro-Regular-OSF-8t my-osf-t1 MyriadPro-Regular
+omding
+omsea1
+omsea1b
+omsea2
+omsea2b
+omsea3
+omsea3b
+omseco
+omsecob
+omsecobi
+omsecoi
+omsecx
+omsecxb
+omsecxbi
+omsecxi
+omsecy
+omsecyb
+omsecybi
+omsecyi
+omsegr
+omsegrb
+omsegrbi
+omsegri
+omseha
+omsehab
+omsehe
+omseheb
+omseip
+omseipb
+omseipbi
+omseipi
+omsela
+omselab
+omselabi
+omselai
+omseti
+omsetib
+pagd8r 8r uagd8a
+pagdo8r 8r uagdo8a
+pagk8r 8r uagk8a
+pagko8r 8r uagko8a
+pbkd8r 8r ubkd8a
+pbkdi8r 8r ubkdi8a
+pbkdo8r 8r ubkd8a -s .167
+pbkl8r 8r ubkl8a
+pbkli8r 8r ubkli8a
+pbklo8r 8r ubkl8a -s .167
+pbsi8r 8r BrushScriptX-Italic
+pccsc10
+pcmi10
+pcr10
+pcr5
+pcr6
+pcr7
+pcr8
+pcr9
+pcrb8r 8r ucrb8a
+pcrbo8r 8r ucrbo8a
+pcrr8r 8r ucrr8a
+pcrr8rn 8r ucrr8a -e .85
+pcrro8r 8r ucrro8a
+pcsl10
+pcslc9
+pcti10
+phvb8r 8r uhvb8a
+phvb8rn 8r uhvb8ac
+phvbo8r 8r uhvbo8a
+phvbo8rn 8r uhvbo8ac
+phvr8r 8r uhvr8a
+phvr8rn 8r uhvr8ac
+phvro8r 8r uhvro8a
+phvro8rn 8r uhvro8ac
+plb10 plrm plb10
+plbsy10 plms plbsy10
+plbx10 plrm plbx10
+plbx12 plrm plbx12
+plbx5 plrm plbx5
+plbx6 plrm plbx6
+plbx7 plrm plbx7
+plbx8 plrm plbx8
+plbx9 plrm plbx9
+plbxsl10 plrm plbxsl10
+plbxti10 plit plbxti10
+plcsc10 plsc plcsc10
+pldunh10 plrm pldunh10
+plex10 plme plex10
+plex9 plme plex9
+plff10 plrm plff10
+plfi10 plit plfi10
+plfib8 plrm plfib8
+plinch plin plinch
+plitt10 plitt plitt10
+plmi10 plmi plmi10
+plmi12 plmi plmi12
+plmi5 plmi plmi5
+plmi6 plmi plmi6
+plmi7 plmi plmi7
+plmi8 plmi plmi8
+plmi9 plmi plmi9
+plmib10 plmi plmib10
+plr10 plrm plr10
+plr12 plrm plr12
+plr17 plrm plr17
+plr5 plsc plr5
+plr6 plrm plr6
+plr7 plrm plr7
+plr8 plrm plr8
+plr9 plrm plr9
+plsl10 plrm plsl10
+plsl12 plrm plsl12
+plsl8 plrm plsl8
+plsl9 plrm plsl9
+plsltt10 pltt plsltt10
+plss10 plrm plss10
+plss12 plrm plss12
+plss17 plrm plss17
+plss8 plrm plss8
+plss9 plrm plss9
+plssbi10 plrm plssbi10
+plssbx10 plrm plssbx10
+plssdc10 plrm plssdc10
+plssi10 plrm plssi10
+plssi12 plrm plssi12
+plssi17 plrm plssi17
+plssi8 plrm plssi8
+plssi9 plrm plssi9
+plssq8 plrm plssq8
+plssqi8 plrm plssqi8
+plsy10 plms plsy10
+plsy5 plms plsy5
+plsy6 plms plsy6
+plsy7 plms plsy7
+plsy8 plms plsy8
+plsy9 plms plsy9
+pltcsc10 pltt pltcsc10
+pltex10 plte pltex10
+pltex8 plte pltex8
+pltex9 plte pltex9
+plti10 plit plti10
+plti12 plit plti12
+plti7 plit plti7
+plti8 plit plti8
+plti9 plit plti9
+pltt10 pltt pltt10
+pltt12 pltt pltt12
+pltt8 pltt pltt8
+pltt9 pltt pltt9
+plu10 plit plu10
+plvtt10 plrm plvtt10
+pncb8r 8r uncb8a
+pncbi8r 8r uncbi8a
+pncbo8r 8r uncb8a -s .167
+pncr8r 8r uncr8a
+pncri8r 8r uncri8a
+pncro8r 8r uncr8a -s .167
+pplb8r 8r uplb8a
+pplbi8r 8r uplbi8a
+pplbij8r 8r fplbij8a
+pplbj8r 8r fplbj8a
+pplbo8r 8r uplb8a -s .167
+pplbu8r 8r uplbi8a -s -.1763
+pplr8r 8r uplr8a
+pplr8rn 8r uplr8a -e .82
+pplrc8r 8r fplrc8a
+pplri8r 8r uplri8a
+pplrij8r 8r fplrij8a
+pplro8r 8r uplr8a -s .167
+pplrr8re 8r uplr8a -e 1.2
+pplru8r 8r uplri8a -s -.1763
+psyr default usyr
+psyro default usyr -s .167
+ptmb8r 8r utmb8a
+ptmbi8r 8r utmbi8a
+ptmbo8r 8r utmb8a -s .167
+ptmr8r 8r utmr8a
+ptmr8rn 8r utmr8a -e .82
+ptmri8r 8r utmri8a
+ptmro8r 8r utmr8a -s .167
+ptmrr8re 8r utmr8a -e 1.2
+putb8r 8r putb8a
+putb8v t5 putb8v
+putb8x
+putbi8r 8r putbi8a
+putbi8v t5 putbi8v
+putbo8r 8r putb8a -s .167
+putbo8v t5 putb8v -s 0.194
+putr8r 8r putr8a
+putr8v t5 putr8v
+putr8x
+putri8r 8r putri8a
+putri8v t5 putri8v
+putro8r 8r putr8a -s .167
+putro8v t5 putr8v -s 0.194
+pxbex
+pxbexa
+pxbmia
+pxbsy
+pxbsya
+pxbsyb
+pxbsyc
+pxex
+pxexa
+pxmia
+pxsy
+pxsya
+pxsyb
+pxsyc
+pzcmi8r 8r uzcmi8a
+pzdr default uzdr
+qcrbi qcr qcrbi
+qcrb qcr qcrb
+qcrri qcr qcrri
+qcrr qcr qcrr
+qhvbi qhv qhvbi
+qhvb qhv qhvb
+qhvcbi qhv qhvcbi
+qhvcb qhv qhvcb
+qhvcri qhv qhvcri
+qhvcr qhv qhvcr
+qhvri qhv qhvri
+qhvr qhv qhvr
+qzcmi qzc qzcmi
+stmary10
+stmary5
+stmary6
+stmary7
+stmary8
+stmary9
+sy-anttbz antt-sy anttbi
+sy-anttcbz antt-sy anttcbi
+sy-anttclz antt-sy anttcli
+sy-anttcmz antt-sy anttcmi
+sy-anttcrz antt-sy anttcri
+sy-anttlz antt-sy anttli
+sy-anttmz antt-sy anttmi
+sy-anttrz antt-sy anttri
+sy default usyr
+t1xbtt
+t1xbttsc
+t1xbttsl default t1xbtt -s .167
+t1xtt
+t1xttsc
+t1xttsl default t1xtt -s .167
+tcxbtt
+tcxbttsl default tcxbtt -s .167
+tcxtt
+tcxttsl default tcxtt -s .167
+tmbi108r 8r utmbi8a
+tmbo108r 8r utmb8a -s .167
+tmbu108r 8r utmbi8a -s -.277
+tmrb108r 8r utmb8a
+tmri108r 8r utmri8a
+tmrm108r 8r utmr8a
+tmro108r 8r utmr8a -s .167
+tmui108r 8r utmri8a -s -.277
+txbex
+txbexa
+txbmia
+txbsy
+txbsya
+txbsyb
+txbsyc
+txbtt
+txbtt8v t5 txbtt8v
+txbttsc
+txbttsc8v t5 txbttsc8v
+txbttsl8v t5 txbtt8v -s 0.167
+txbttsl default txbtt -s .167
+txex
+txexa
+txmia
+txsy
+txsya
+txsyb
+txsyc
+txtt
+txtt8v t5 txtt8v
+txttsc
+txttsc8v t5 txttsc8v
+txttsl8v t5 txtt8v -s 0.167
+txttsl default txtt -s .167
+uagd8v t5 uagd8v
+uagdo8v t5 uagdo8v
+uagk8v t5 uagk8v
+uagko8v t5 uagko8v
+ubkd8v t5 ubkd8v
+ubkdi8v t5 ubkdi8v
+ubkdo8v t5 ubkd8v -s 0.277
+ubkl8v t5 ubkl8v
+ubkli8v t5 ubkli8v
+ubklo8v t5 ubkl8v -s 0.277
+ucrb8v t5 ucrb8v
+ucrbo8v t5 ucrbo8v
+ucrr8v t5 ucrr8v
+ucrro8v t5 ucrro8v
+ugqb8v t5 ugqb8v
+ugqbo8v t5 ugqb8v -s 0.194
+uhvb8v t5 uhvb8v
+uhvbo8v t5 uhvbo8v
+uhvr8v t5 uhvr8v
+uhvro8v t5 uhvro8v
+umvs default marvosym
+uncb8v t5 uncb8v
+uncbi8v t5 uncbi8v
+uncbo8v t5 uncb8v -s 0.277
+uncr8v t5 uncr8v
+uncri8v t5 uncri8v
+uncro8v t5 uncr8v -s 0.277
+uplb8v t5 uplb8v
+uplbi8v t5 uplbi8v
+uplbo8v t5 uplb8v -s 0.277
+uplr8v t5 uplr8v
+uplri8v t5 uplri8v
+uplro8v t5 uplr8v -s 0.277
+utmb8v t5 utmb8v
+utmbi8v t5 utmbi8v
+utmbo8v t5 utmb8v -s 0.277
+utmr8v t5 utmr8v
+utmri8v t5 utmri8v
+utmro8v t5 utmr8v -s 0.277
+uzcmi8v t5 uzcmi8v
+vnb10
+vnbx10
+vnbx12
+vnbx5
+vnbx6
+vnbx7
+vnbx8
+vnbx9
+vnbxsl10
+vnbxti10
+vncccsc10 t5 CMConcreteSmallCaps8v
+vnccr10 t5 CMConcrete8v
+vnccsl10 t5 CMConcreteSlanted8v
+vnccti10 t5 CMConcreteItalic8v
+vncmbr10 t5 vncmbr10
+vncmbr17 t5 vncmbr17
+vncmbr8 t5 vncmbr8
+vncmbr9 t5 vncmbr9
+vncmbrbx10 t5 vncmbrbx10
+vncmbrsl10 t5 vncmbrsl10
+vncmbrsl17 t5 vncmbrsl17
+vncmbrsl8 t5 vncmbrsl8
+vncmbrsl9 t5 vncmbrsl9
+vncmsltl10 t5 vncmsltl10
+vncmtl10 t5 vncmtl10
+vncsc10
+vndunh10
+vnff10
+vnfi10
+vnfib8
+vnitt10
+vnr10
+vnr12
+vnr17
+vnr5
+vnr6
+vnr7
+vnr8
+vnr9
+vnsl10
+vnsl12
+vnsl8
+vnsl9
+vnsltt10
+vnss10
+vnss12
+vnss17
+vnss8
+vnss9
+vnssbx10
+vnssdc10
+vnssi10
+vnssi12
+vnssi17
+vnssi8
+vnssi9
+vnssq8
+vnssqi8
+vntcsc10
+vnti10
+vnti12
+vnti7
+vnti8
+vnti9
+vntt10
+vntt12
+vntt8
+vntt9
+vnu10
+vnvtt10
+wasy10
+wasy5
+wasy6
+wasy7
+wasy8
+wasy9
+wasyb10
+wncy-anttb antt-wncy anttb
+wncy-anttbi antt-wncy anttbi
+wncy-anttcb antt-wncy anttcb
+wncy-anttcbi antt-wncy anttcbi
+wncy-anttcl antt-wncy anttcl
+wncy-anttcli antt-wncy anttcli
+wncy-anttcm antt-wncy anttcm
+wncy-anttcmi antt-wncy anttcmi
+wncy-anttcr antt-wncy anttcr
+wncy-anttcri antt-wncy anttcri
+wncy-anttl antt-wncy anttl
+wncy-anttli antt-wncy anttli
+wncy-anttm antt-wncy anttm
+wncy-anttmi antt-wncy anttmi
+wncy-anttr antt-wncy anttr
+wncy-anttri antt-wncy anttri
+wncyb10
+wncyb5 default wncyb10
+wncyb6 default wncyb10
+wncyb7 default wncyb10
+wncyb8 default wncyb10
+wncyb9 default wncyb10
+wncyi10
+wncyi5 default wncyi10
+wncyi6 default wncyi10
+wncyi7 default wncyi10
+wncyi8 default wncyi10
+wncyi9 default wncyi10
+wncyr10
+wncyr5 default wncyr10
+wncyr6 default wncyr10
+wncyr7 default wncyr10
+wncyr8 default wncyr10
+wncyr9 default wncyr10
+wncysc10
+wncyss10
+wncyss8 default wncyss10
+wncyss9 default wncyss10
+xyatip10 -r
+xyatip11 default xyatip10 -e 1.1 -r
+xyatip12 default xyatip10 -e 1.2 -r
+xybsql10 -r
+xybtip10 -r
+xybtip11 default xybtip10 -e 1.1 -r
+xybtip12 default xybtip10 -e 1.2 -r
+xycirc10 -r
+xycmat10 -r
+xycmat11 default xycmat10 -e 1.1 -r
+xycmat12 default xycmat10 -e 1.2 -r
+xycmbt10 -r
+xycmbt11 default xycmbt10 -e 1.1 -r
+xycmbt12 default xycmbt10 -e 1.2 -r
+xydash10 -r
+xyeuat10 -r
+xyeuat11 default xyeuat10 -e 1.1 -r
+xyeuat12 default xyeuat10 -e 1.2 -r
+xyeubt10 -r
+xyeubt11 default xyeubt10 -e 1.1 -r
+xyeubt12 default xyeubt10 -e 1.2 -r
+yfrak
+ygoth
+yswab
+zd default uzdr
