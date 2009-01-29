@@ -190,10 +190,10 @@ const char* FileFinder::Impl::mktex (const std::string &fname) {
 	const char *path = 0;
 #ifdef MIKTEX
 	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
-	const char *toolpath = find_file(toolname);	
+	const char *toolpath = findFile(toolname);	
 	if (toolpath) {
 		system((string(toolpath) + " " + fname).c_str());
-		path = find_file(fname);
+		path = findFile(fname);
 	}	
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
@@ -218,34 +218,12 @@ void FileFinder::Impl::initFontMap () {
 	}
 	else {
 		const char *mapfiles[] = {"ps2pk.map", "psfonts.map", "dvipdfm.map", 0};
-#ifdef MIKTEX
-		// @@ check if this can really be removed
-/*		try {
-			MiKTeXSetupInfo info = miktex_session->GetMiKTeXSetupInfo();	
-			
-			// read all dvipdfm mapfiles		
-			for (unsigned i=0; i < info.numRoots; i++) {
-				_bstr_t bdir = miktex_session->GetRootDirectory(i);
-				string dir = (const char*)bdir;				
-				// strip trailing slash
-				size_t len = dir.length();
-				if (len > 0 && (dir[len-1] == '/' || dir[len-1] == '\\'))
-					dir = dir.substr(0, len-1);
-				dir += "\\dvipdfm\\config";
-				_fontmap.readdir(dir);
-			}
-		}
-		catch (_com_error e) {
-			throw MessageException((const char*)e.Description());
-		} */
-#else
 		const char *mf=0;
 		for (const char **p=mapfiles; *p && !mf; p++)
 			if ((mf = FileFinder::lookup(*p, false)))
 				_fontmap.read(mf);
 		if (!mf)
 			Message::wstream(true) << "none of the default map files could be found";
-#endif
 	}
 }
 
