@@ -44,9 +44,38 @@
 
 using namespace std;
 
+
+/** Simple private auto pointer class to simplify pointer handling in main function. */
+template <typename T>
+class Pointer
+{
+	public:
+		Pointer (T *p=0, bool free=true) : _p(p), _free(free) {}
+		Pointer (const Pointer &p) : _p(p._p), _free(p._free) {p._p = 0;}
+		~Pointer ()       {if (_free) delete _p;}
+		T& operator * ()  {return *_p;}
+		void operator = (const Pointer &p) {_p=p._p; _free=p._free; p._p=0;}
+		void release () {
+			if (_free) delete _p;
+			_p=0;
+		}
+
+	private:
+		mutable T *_p;
+		bool _free; ///< delete pointer in destructor?
+};
+
+
 static void show_help () {
    cmdline_parser_print_help();
    cout << "\nCopyright (C) 2005-2009 Martin Gieseking" EMAIL "\n\n";
+}
+
+
+static char* tolower (char *str) {
+	for (char *p=str; *p; ++p)
+		*p = tolower(*p);
+	return str;
 }
 
 
@@ -119,58 +148,56 @@ static int dvisvgm (int argc, char *argv[]) {
 	svgfile = ensure_suffix(svgfile, args.zip_given ? "svgz" : "svg");	
 	
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
-	ostream *out = 0;		
-   if (args.stdout_given) 
-		out = &cout;
-	else if (args.zip_given) 
-		out = new ogzstream(svgfile.c_str(), args.zip_arg);
-	else 
-		out = new ofstream(svgfile.c_str(), ios_base::binary);
-	
-	if (ifs && *out) {
-		StreamCounter<char> sc(*out);
-		Message::level = args.verbosity_arg;
-		DVIToSVG dvisvg(ifs, *out);
-		dvisvg.setMetafontMag(args.mag_arg);
-		dvisvg.setProcessSpecials(args.specials_flag);
-		set_trans(dvisvg, args);
-		for (char *c=args.bbox_format_arg; *c; c++)
-			*c = tolower(*c);
-		dvisvg.setPageSize(args.bbox_format_arg);
+   if (!ifs)
+      Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
+	else {
+		Pointer<ostream> out;
+		if (args.stdout_given) 
+			out = Pointer<ostream>(&cout, false);
+		else if (args.zip_given) 
+			out = Pointer<ostream>(new ogzstream(svgfile.c_str(), args.zip_arg));
+		else 
+			out = Pointer<ostream>(new ofstream(svgfile.c_str(), ios_base::binary));
 		
-		try {
-			FileFinder::init(argv[0], !args.no_mktexmf_flag);
-			if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
-				if (!args.stdout_given) {
-					sc.invalidate();  // output buffer is no longer valid
-					delete out;       // close file stream and force writing
+		if (!*out)
+      	Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
+		else {
+			StreamCounter<char> sc(*out);
+			Message::level = args.verbosity_arg;
+			DVIToSVG dvisvg(ifs, *out);
+			dvisvg.setMetafontMag(args.mag_arg);
+			dvisvg.setProcessSpecials(args.specials_flag);
+			set_trans(dvisvg, args);
+			tolower(args.bbox_format_arg);
+			dvisvg.setPageSize(args.bbox_format_arg);
+			
+			try {
+				FileFinder::init(argv[0], !args.no_mktexmf_flag);
+				if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
+					if (!args.stdout_given)
+						sc.invalidate();  // output buffer is no longer valid
+					// valgrind issues an invalid conditional jump/move in the deflate function of libz here.
+					// According to libz FAQ #36 this is not a bug but intended behavior.
+					out.release();       // force writing
+					const char *pstr = pages == 1 ? "" : "s";
+					UInt64 nbytes = args.stdout_given ? sc.count() : FileSystem::filesize(svgfile);
+					Message::mstream() << pages << " page" << pstr; 
+					Message::mstream() << " (" << nbytes << " bytes";
+					if (args.zip_given)
+						Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
+					Message::mstream() << ") written to " 
+						<< (args.stdout_given ? "<stdout>" : svgfile)
+						<< " in " << (get_time()-start_time) << " seconds\n";
 				}
-				out = 0;
-				const char *pstr = pages == 1 ? "" : "s";
-				UInt64 nbytes = args.stdout_given ? sc.count() : FileSystem::filesize(svgfile);
-				Message::mstream() << pages << " page" << pstr; 
-				Message::mstream() << " (" << nbytes << " bytes";
-				if (args.zip_given)
-					Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
-				Message::mstream() << ") written to " 
-					<< (args.stdout_given ? "<stdout>" : svgfile)
-					<< " in " << (get_time()-start_time) << " seconds\n";
+			}
+			catch (DVIException &e) {
+				Message::estream() << "DVI error: " << e.getMessage() << endl;
+			}
+			catch (MessageException &e) {
+				Message::estream(true) << e.getMessage() << endl;
 			}
 		}
-		catch (DVIException &e) {
-			Message::estream() << "DVI error: " << e.getMessage() << endl;
-		}
-		catch (MessageException &e) {
-			Message::estream(true) << e.getMessage() << endl;
-		}
 	}
-   else if (!ifs)
-      Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
-	else if (!*out)
-      Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
-	
-	if (!args.stdout_given)
-		delete out;
 	return 0;
 }
 
