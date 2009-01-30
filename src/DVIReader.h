@@ -124,6 +124,7 @@ class DVIReader : public StreamReader, protected VFActions
 		UInt16 totalPages;   // total number of pages in dvi file
 		int currFontNum;     // current font number
 		double scaleFactor;  // 1 dvi unit = scaleFactor * TeX points
+		UInt32 mag;          // magnification factor * 1000
 		bool inPostamble;    // true if stream pointer is inside the postamble
 		Int32 prevBop;       // pointer to previous bop
 		double pageHeight, pageWidth;  // page height and width in TeX points

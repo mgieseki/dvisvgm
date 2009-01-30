@@ -1,3 +1,5 @@
+- fixed \magnificaton bug (dvi magnification factor is now applied properly)
+
 dvisvgm-0.6.1
 - added support for dvips map files
 - removed dependency on dvipdfm map file (now ps2pk.map, psfonts.map or dvipdfm.map is used by default)

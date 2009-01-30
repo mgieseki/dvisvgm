@@ -229,7 +229,7 @@ void DVIReader::cmdPre (int) {
 	UInt32 i   = readUnsigned(1);  // identification number (should be 2)
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
-	UInt32 mag = readUnsigned(4);  // magnification
+	mag = readUnsigned(4);         // magnification
 	UInt32 k   = readUnsigned(1);  // length of following comment 
 	string cmt = readString(k);    // comment
 	if (i != 2)
@@ -247,7 +247,7 @@ void DVIReader::cmdPost (int) {
 	prevBop    = readUnsigned(4);  // pointer to previous bop
 	UInt32 num = readUnsigned(4);  
 	UInt32 den = readUnsigned(4);
-	UInt32 mag = readUnsigned(4);
+	mag = readUnsigned(4);
 	pageHeight = readUnsigned(4);  // height of tallest page in dvi units
 	pageWidth  = readUnsigned(4);  // width of widest page in dvi units
 	readUnsigned(2);               // max. stack depth
@@ -359,10 +359,11 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 				currPos = pos;              // restore previous cursor position
 			}
 		}
-		else if (actions)
+		else if (actions) {
 			actions->setChar(currPos.h, currPos.v, c, font);
+		}
 		if (moveCursor)
-			currPos.h += font->charWidth(c) * font->scaleFactor();
+			currPos.h += font->charWidth(c) * font->scaleFactor() * mag/1000.0;
 	}
 	else
 		throw DVIException("set_char or put_char outside page");
