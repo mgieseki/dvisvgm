@@ -189,12 +189,10 @@ const char* FileFinder::Impl::mktex (const std::string &fname) {
 	std::string base = fname.substr(0, pos);
 	const char *path = 0;
 #ifdef MIKTEX
-	const char *toolname = (ext == "tfm" ? "maketfm.exe" : "makemf.exe");
-	const char *toolpath = findFile(toolname);	
-	if (toolpath) {
-		system((string(toolpath) + " " + fname).c_str());
-		path = findFile(fname);
-	}	
+	// maketfm and makemf are located in miktex/bin which is in the search PATH	
+	string toolname = (ext == "tfm" ? "maketfm" : "makemf");		
+	system((toolname+".exe "+fname).c_str());
+	path = findFile(fname);	
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
