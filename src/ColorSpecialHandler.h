@@ -32,7 +32,7 @@ using std::vector;
 
 class ColorSpecialHandler : public SpecialHandler
 {
-	typedef vector<double> RGB;
+	typedef vector<float> RGB;
 
    public:
 		bool process (istream &is);
