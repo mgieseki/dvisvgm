@@ -38,6 +38,7 @@ class SpecialManager
 	typedef map<string,SpecialHandler*>::const_iterator ConstIterator;
 
    public:
+		SpecialManager () {}
       ~SpecialManager ();
 		void registerHandler (SpecialHandler *handler);
 		bool process (const string &special);

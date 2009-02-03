@@ -35,6 +35,7 @@ class CharmapTranslator;
 class DVIReader;
 class FileFinder;
 class Font;
+class SpecialManager;
 class XMLElementNode;
 
 class DVIToSVGActions : public DVIActions
@@ -46,8 +47,8 @@ class DVIToSVGActions : public DVIActions
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
-		void moveToX (double x) {xmoved = true;}
-		void moveToY (double y) {ymoved = true;}
+		void moveToX (double x) {_xmoved = true;}
+		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);
 		void setFont (int num, const Font *font);
 		void special (const string &s);
@@ -55,23 +56,21 @@ class DVIToSVGActions : public DVIActions
 		void postamble ();
 		void beginPage (Int32 *c);
 		void endPage ();
-		const UsedCharsMap& getUsedChars () const {return usedCharsMap;}
-		void setFileFinder (FileFinder *ff) {fileFinder = ff;}
-		void setProcessSpecials (bool ps)   {processSpecials = ps;}
+		const UsedCharsMap& getUsedChars () const {return _usedCharsMap;}
+		void setProcessSpecials (bool ps);
 		void setTransformation (const TransformationMatrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 
 	private:
-		const DVIReader &dviReader;
-		bool xmoved, ymoved;
-		bool processSpecials;
-		int pageCount;
-		int currentFont;
+		const DVIReader &_dviReader;
+		SpecialManager *_specialManager;
+		bool _xmoved, _ymoved;
+		int _pageCount;
+		int _currentFont;
 		XMLElementNode *svgElement, *pageElement, *styleElement, *charElement;
-		CharmapTranslatorMap charmapTranslatorMap;
-		FileFinder *fileFinder;
-		UsedCharsMap usedCharsMap;
-		TransformationMatrix *transMatrix;
+		CharmapTranslatorMap _charmapTranslatorMap;
+		UsedCharsMap _usedCharsMap;
+		TransformationMatrix *_transMatrix;
 };
 
 

@@ -25,6 +25,8 @@
 #include "DVIReader.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
+#include "SpecialManager.h"
+#include "ColorSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -32,25 +34,40 @@ using namespace std;
 
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: dviReader(reader),
-     xmoved(false), ymoved(false), processSpecials(false), pageCount(0), 
-	  currentFont(-1),
+	: _dviReader(reader), _specialManager(0),
 	  svgElement(svgelem), pageElement(0), styleElement(0), charElement(0),
-	  fileFinder(0), transMatrix(0)
+	  _transMatrix(0)
 {
+	_xmoved = _ymoved = false;
+	_currentFont = -1;
+	_pageCount = 0;
 }
 
 
 DVIToSVGActions::~DVIToSVGActions () {
-	delete transMatrix;
-	FORALL (charmapTranslatorMap, CharmapTranslatorMap::iterator, i)
+	delete _transMatrix;
+	delete _specialManager;
+	FORALL (_charmapTranslatorMap, CharmapTranslatorMap::iterator, i)
 		delete i->second;
 }
 
 
-void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
-	transMatrix = new TransformationMatrix(matrix);
+void DVIToSVGActions::setProcessSpecials (bool enable) {
+	if (!enable) {
+		delete _specialManager;
+		_specialManager = 0;
+	}
+	else if (!_specialManager) {
+		_specialManager = new SpecialManager;
+		_specialManager->registerHandler(new ColorSpecialHandler);
+	}
 }
+
+
+void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
+	_transMatrix = new TransformationMatrix(matrix);
+}
+
 
 /** This method is called when a "set char" command was found in the DVI file. 
  *  It draws a character of the current font.
@@ -62,21 +79,21 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	x *= BP;
 	y *= BP;
 	font = font->uniqueFont();
-	const CharmapTranslator *cmt = charmapTranslatorMap[font];
-	usedCharsMap[font].insert(c);
+	const CharmapTranslator *cmt = _charmapTranslatorMap[font];
+	_usedCharsMap[font].insert(c);
 	XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	
 
 	// create a new tspan element with positioning information
 	// if "cursor" was moved
-	if (xmoved || ymoved) {
+	if (_xmoved || _ymoved) {
 		charElement = new XMLElementNode("tspan");
-		if (xmoved)
+		if (_xmoved)
 			charElement->addAttribute("x", XMLString(x));
-		if (ymoved)
+		if (_ymoved)
 			charElement->addAttribute("y", XMLString(y));
 		charElement->append(textNode);
 		styleElement->append(charElement);
-		xmoved = ymoved = false;
+		_xmoved = _ymoved = false;
 	}
 	else if (charElement) // no explicit cursor movement => append text to existing node
 		charElement->append(textNode);
@@ -108,8 +125,8 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 
 void DVIToSVGActions::defineFont (int num, const Font *font) {
 	font = font->uniqueFont();
-	if (charmapTranslatorMap.find(font) == charmapTranslatorMap.end()) {
-		charmapTranslatorMap[font] = new CharmapTranslator(font);
+	if (_charmapTranslatorMap.find(font) == _charmapTranslatorMap.end()) {
+		_charmapTranslatorMap[font] = new CharmapTranslator(font);
 	}
 }
 
@@ -119,24 +136,31 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
  *  @param[in] num unique number of the font in the DVI file 
  *  @param[in] font pointer to the font object */
 void DVIToSVGActions::setFont (int num, const Font *font) {
-	if (num != currentFont) {
+	if (num != _currentFont) {
 		styleElement = new XMLElementNode("text");
 		styleElement->addAttribute("class", string("f") + XMLString(num));
-		styleElement->addAttribute("x", XMLString(dviReader.getXPos()*BP));
-		styleElement->addAttribute("y", XMLString(dviReader.getYPos()*BP));
+		styleElement->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
+		styleElement->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
 		pageElement->append(styleElement);
 		charElement = 0;  // force creating a new charElement when adding next char
-		xmoved = ymoved = false;
-		currentFont = num;
+		_xmoved = _ymoved = false;
+		_currentFont = num;
 	}
 }
 
 
-/** This method is called when a "special" command was found in the DVI file. */
+/** This method is called when a "special" command was found in the DVI file. 
+ *  @param[in] s the special expression */
 void DVIToSVGActions::special (const string &s) {
-	if (!processSpecials) 
-		return;
-	Message::wstream(true) << "\\special ignored: " << s << endl;
+	if (_specialManager) {
+		try {
+			_specialManager->process(s);
+			// @@ output message in case of unsupported specials?
+		}
+		catch (const SpecialException &e) {
+			Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << endl;
+		}
+	}
 }
 
 
@@ -154,24 +178,25 @@ void DVIToSVGActions::postamble () {
  *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (Int32 *c) {
-	pageCount++;
+	_pageCount++;
 	pageElement = new XMLElementNode("g");
-	pageElement->addAttribute("id", string("page")+XMLString(int(pageCount)));
-	if (transMatrix)
-		pageElement->addAttribute("transform", transMatrix->getSVG());
+	pageElement->addAttribute("id", string("page")+XMLString(int(_pageCount)));
+	if (_transMatrix)
+		pageElement->addAttribute("transform", _transMatrix->getSVG());
 	svgElement->append(pageElement);
 	ostringstream oss;
 	Message::mstream() << '[' << c[0];
-	xmoved = ymoved = false;
+	_xmoved = _ymoved = false;
 }
 
 
 CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) const {
-	CharmapTranslatorMap::const_iterator it = charmapTranslatorMap.find(font);
-	if (it != charmapTranslatorMap.end())
+	CharmapTranslatorMap::const_iterator it = _charmapTranslatorMap.find(font);
+	if (it != _charmapTranslatorMap.end())
 		return it->second;
 	return 0;
 }
+
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {

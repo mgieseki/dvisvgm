@@ -35,7 +35,7 @@ class ColorSpecialHandler : public SpecialHandler
 	typedef vector<float> RGB;
 
    public:
-		bool process (istream &is);
+		void process (istream &is);
 		const char* prefix () const {return "color";}
 
 	private:

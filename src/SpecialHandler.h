@@ -25,16 +25,22 @@
 
 #include <istream>
 #include <string>
+#include "MessageException.h"
 
 using std::istream;
 using std::string;
+
+struct SpecialException : public MessageException
+{
+	SpecialException (const string &msg) : MessageException(msg) {}
+};
 
 
 struct SpecialHandler
 {
 	virtual ~SpecialHandler () {}
 	virtual const char* prefix () const=0;
-	virtual bool process (istream &in)=0;
+	virtual void process (istream &in)=0;
 };
 
 #endif

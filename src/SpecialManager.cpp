@@ -43,6 +43,9 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 }
 
 
+/** Looks for an appropriate handler for a given special prefix.
+ *  @param[in] prefix the special prefix, e.g. "color" or "em"
+ *  @return in case of success: pointer to handler, 0 otherwise */
 SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 	ConstIterator it = _handlers.find(prefix);
 	if (it != _handlers.end())
@@ -51,11 +54,17 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 }
 
 
+/** Executes a special command. 
+ *  @param[in] special the special expression 
+ *  @return true if a special handler was found 
+ *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special) {
 	istringstream iss(special);
 	string prefix;
 	iss >> prefix;
-	if (SpecialHandler *handler = findHandler(prefix))
-		return handler->process(iss);
+	if (SpecialHandler *handler = findHandler(prefix)) {
+		handler->process(iss);
+		return true;
+	}
 	return false;
 }
