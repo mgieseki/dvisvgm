@@ -37,6 +37,7 @@ class FileFinder
 			static Impl& instance ();
 			static void setProgname (const char *progname) {_progname = progname;}
 			static void enableMktex (bool enable)          {_mktex_enabled = enable;}
+			static void setUserFontMap (const char *fname) {_usermapname = fname;}
 
 		protected:
 			Impl ();
@@ -72,7 +73,9 @@ class FileFinder
 			Impl::enableMktex(enable_mktexmf);
 		}
 
-	private:
+		static void setUserFontMap (const char *fname) {
+			Impl::setUserFontMap(fname);
+		}
 };
 
 #endif

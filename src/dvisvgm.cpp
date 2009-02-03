@@ -140,6 +140,8 @@ static int dvisvgm (int argc, char *argv[]) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
 	}
+	if (args.map_file_given)
+		FileFinder::setUserFontMap(args.map_file_arg);
 	
 	double start_time = get_time();
 	
@@ -166,7 +168,7 @@ static int dvisvgm (int argc, char *argv[]) {
 			Message::level = args.verbosity_arg;
 			DVIToSVG dvisvg(ifs, *out);
 			dvisvg.setMetafontMag(args.mag_arg);
-			dvisvg.setProcessSpecials(args.specials_flag);
+			dvisvg.setProcessSpecials(!args.no_specials_given);
 			set_trans(dvisvg, args);
 			tolower(args.bbox_format_arg);
 			dvisvg.setPageSize(args.bbox_format_arg);

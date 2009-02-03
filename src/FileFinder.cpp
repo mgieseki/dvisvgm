@@ -238,7 +238,7 @@ void FileFinder::Impl::initFontMap () {
  *  @return path to file on success, 0 otherwise */
 const char* FileFinder::Impl::lookup (const std::string &fname, bool extended) {
 	const char *path;
-	if ((path = findFile(fname)) || (extended  && (path = findMappedFile(fname)) || (path = mktex(fname)))) 
+	if ((path = findFile(fname)) || (extended  && ((path = findMappedFile(fname)) || (path = mktex(fname)))))
 		return path;
 	return 0;
 }
