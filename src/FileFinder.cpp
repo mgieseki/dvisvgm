@@ -21,7 +21,6 @@
 ***********************************************************************/
 
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
 #include <map>
 #include <string>
@@ -78,7 +77,6 @@ FileFinder::Impl::Impl ()
 }
 
 
-
 FileFinder::Impl::~Impl () {
 	delete _instance;
 #ifdef MIKTEX
@@ -88,7 +86,6 @@ FileFinder::Impl::~Impl () {
 }
 
 
-
 FileFinder::Impl& FileFinder::Impl::instance () {
 	if (!_instance) {
 		_instance = new FileFinder::Impl;
@@ -96,7 +93,6 @@ FileFinder::Impl& FileFinder::Impl::instance () {
 	}
 	return *_instance;
 }
-
 
 
 /** Determines filetype by the filename extension and calls kpse_find_file
@@ -204,25 +200,28 @@ const char* FileFinder::Impl::mktex (const std::string &fname) {
 /** Initializes a font map by reading the map file(s). 
  *  @param[in,out] fontmap font map to be initialized */
 void FileFinder::Impl::initFontMap () {
-	if (_usermapname) {
+	const char *usermapname = _usermapname;
+	if (usermapname && *usermapname == '+') // read additional map entries?
+		usermapname++;
+	if (usermapname) {		
 		// try to read user font map file
 		const char *mappath = 0;
-		if (!_fontmap.read(_usermapname)) {
-			if ((mappath = findFile(_usermapname)))
+		if (!_fontmap.read(usermapname)) {
+			if ((mappath = findFile(usermapname)))
 				_fontmap.read(mappath);
 			else
-				Message::wstream(true) << "map file '" << _usermapname << "' not found\n";
+				Message::wstream(true) << "map file '" << usermapname << "' not found\n";
 		}
 	}
-	else {
-		const char *mapfiles[] = {"ps2pk.map", "psfonts.map", "dvipdfm.map", 0};
+	if (!usermapname || *_usermapname == '+') {
+		const char *mapfiles[] = {"psfonts.map", "ps2pk.map", "dvipdfm.map", 0};
 		const char *mf=0;
 		for (const char **p=mapfiles; *p && !mf; p++)
-			if ((mf = FileFinder::lookup(*p, false)))
+			if ((mf = findFile(*p))!=0)
 				_fontmap.read(mf);
 		if (!mf)
 			Message::wstream(true) << "none of the default map files could be found";
-	}
+	}	
 }
 
 
