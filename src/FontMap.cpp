@@ -199,7 +199,7 @@ static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
 
 ostream& FontMap::write (ostream &os) const {
 	for (map<string,MapEntry>::const_iterator i=_fontMap.begin(); i != _fontMap.end(); ++i)
-		os << i->first << " -> " << i->second.fontname << endl;
+		os << i->first << " -> " << i->second.fontname << " [" << i->second.encname << "]\n";
 	return os;
 }
 
