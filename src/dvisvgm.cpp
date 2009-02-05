@@ -168,13 +168,13 @@ static int dvisvgm (int argc, char *argv[]) {
 			Message::level = args.verbosity_arg;
 			DVIToSVG dvisvg(ifs, *out);
 			dvisvg.setMetafontMag(args.mag_arg);
-			dvisvg.setProcessSpecials(!args.no_specials_given);
+			dvisvg.setProcessSpecials(args.no_specials_given ? (args.no_specials_arg ? args.no_specials_arg : "*") : 0);
 			set_trans(dvisvg, args);
 			tolower(args.bbox_format_arg);
 			dvisvg.setPageSize(args.bbox_format_arg);
 			
 			try {
-				FileFinder::init(argv[0], !args.no_mktexmf_flag);
+				FileFinder::init(argv[0], !args.no_mktexmf_given);
 				if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
 					if (!args.stdout_given)
 						sc.invalidate();  // output buffer is no longer valid

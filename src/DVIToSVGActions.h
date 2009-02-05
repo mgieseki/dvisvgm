@@ -57,7 +57,7 @@ class DVIToSVGActions : public DVIActions
 		void beginPage (Int32 *c);
 		void endPage ();
 		const UsedCharsMap& getUsedChars () const {return _usedCharsMap;}
-		void setProcessSpecials (bool ps);
+		void setProcessSpecials (const char *ignorelist);
 		void setTransformation (const TransformationMatrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 

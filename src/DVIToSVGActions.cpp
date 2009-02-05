@@ -20,6 +20,8 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <cstring>
+#include <set>
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
 #include "DVIReader.h"
@@ -52,14 +54,47 @@ DVIToSVGActions::~DVIToSVGActions () {
 }
 
 
-void DVIToSVGActions::setProcessSpecials (bool enable) {
-	if (!enable) {
+/** Enables or disables processing of specials. If ignorelist == 0, all 
+ *  supported special handlers are loaded. To disable selected sets of specials,
+ *  the corresponding prefixes can be given separated by non alpha-numeric characters,
+ *  e.g. "color, ps, em" or "color: ps em" etc.
+ *  A single "*" in the ignore list disables all specials.
+ *  @param[in] ignorelist list of special prefixes to ignore */
+void DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
+	if (ignorelist && strcmp(ignorelist, "*") == 0) {
 		delete _specialManager;
 		_specialManager = 0;
 	}
 	else if (!_specialManager) {
+		// extract prefixes from ignorelist
+		set<string> prefix_set;
+		if (ignorelist) {
+			const char *first=ignorelist;
+			while (*first) {
+				while (*first && !isalnum(*first))
+					first++;
+				const char *last=first;
+				while (*last && isalnum(*last))
+					last++;
+				if (*first)
+					prefix_set.insert(string(first, last-first));
+				first = last;
+			}
+		}
+		// add special handlers
 		_specialManager = new SpecialManager;
-		_specialManager->registerHandler(new ColorSpecialHandler);
+		SpecialHandler *handlers[] = {
+			new ColorSpecialHandler,
+			0
+		};
+		for (SpecialHandler **p=handlers; *p; p++) {
+			if (prefix_set.find((*p)->prefix()) != prefix_set.end()) {
+				_specialManager->registerHandler(*p);
+			SHOW((*p)->prefix());
+			}
+			else
+				delete *p;
+		}
 	}
 }
 

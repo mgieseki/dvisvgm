@@ -43,7 +43,7 @@ class DVIToSVG : public DVIReader
 		int convert (unsigned firstPage, unsigned lastPage);
 		void setMetafontMag (double m);
 		void setPageSize (string name)    {pageSizeName = name;}
-		void setProcessSpecials (bool ps);
+		void setProcessSpecials (const char *ignorelist=0);
 		void setTransformation (const string &cmds) {transCmds = cmds;}
 	
 	protected:
@@ -60,7 +60,6 @@ class DVIToSVG : public DVIReader
 		XMLElementNode *svgElement;
 		string pageSizeName;
 		string transCmds;
-		bool processSpecials;
 		BoundingBox boundingBox; //< bounding box of current page
 };
 

@@ -65,7 +65,6 @@ DVIToSVG::DVIToSVG (istream &is, ostream &os)
 	svgDocument = 0;
 	svgElement = new XMLElementNode("svg");
 	replaceActions(new DVIToSVGActions(*this, svgElement));
-	processSpecials = false;
 	doctypeNode = 0;
 	mag = 4;
 }
@@ -219,10 +218,16 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 }
 
 
-void DVIToSVG::setProcessSpecials (bool ps) {
+/** Enables or disables processing of specials. If ignorelist == 0, all 
+ *  supported special handlers are loaded. To disable selected sets of specials,
+ *  the corresponding prefixes can be given separated by non alpha-numeric characters,
+ *  e.g. "color, ps, em" or "color: ps em" etc.
+ *  A single "*" in the ignore list disables all specials.
+ *  @param[in] ignorelist list of special prefixes to ignore */
+void DVIToSVG::setProcessSpecials (const char *ignorelist) {
 	DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(getActions());
 	if (actions) 
-		actions->setProcessSpecials(ps);
+		actions->setProcessSpecials(ignorelist);
 }
 		
 
