@@ -21,7 +21,6 @@
 ***********************************************************************/
 
 #include <cstring>
-#include <set>
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
 #include "DVIReader.h"
@@ -66,21 +65,12 @@ void DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
 		_specialManager = 0;
 	}
 	else if (!_specialManager) {
-		// extract prefixes from ignorelist
-		set<string> prefix_set;
-		if (ignorelist) {
-			const char *first=ignorelist;
-			while (*first) {
-				while (*first && !isalnum(*first))
-					first++;
-				const char *last=first;
-				while (*last && isalnum(*last))
-					last++;
-				if (*first)
-					prefix_set.insert(string(first, last-first));
-				first = last;
-			}
-		}
+		string ign = ignorelist;
+		FORALL(ign, string::iterator, it)
+			if (!isalnum(*it))
+				*it = '%';
+		ign = "%"+ign+"%";
+		
 		// add special handlers
 		_specialManager = new SpecialManager;
 		SpecialHandler *handlers[] = {
@@ -88,10 +78,8 @@ void DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
 			0
 		};
 		for (SpecialHandler **p=handlers; *p; p++) {
-			if (prefix_set.find((*p)->prefix()) != prefix_set.end()) {
+			if (ign.find("%"+string((*p)->prefix())+"%") != string::npos)
 				_specialManager->registerHandler(*p);
-			SHOW((*p)->prefix());
-			}
 			else
 				delete *p;
 		}
