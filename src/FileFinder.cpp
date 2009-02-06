@@ -214,7 +214,7 @@ void FileFinder::Impl::initFontMap () {
 		}
 	}
 	if (!usermapname || *_usermapname == '+') {
-		const char *mapfiles[] = {"psfonts.map", "ps2pk.map", "dvipdfm.map", 0};
+		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
 		const char *mf=0;
 		for (const char **p=mapfiles; *p && !mf; p++)
 			if ((mf = findFile(*p))!=0)
