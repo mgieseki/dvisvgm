@@ -24,6 +24,7 @@
 #define SPECIALMANAGER_H
 
 #include <map>
+#include <ostream>
 #include <string>
 
 using std::map;
@@ -41,7 +42,9 @@ class SpecialManager
 		SpecialManager () {}
       ~SpecialManager ();
 		void registerHandler (SpecialHandler *handler);
+		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		bool process (const string &special);
+		void writeHandlerInfo (std::ostream &os) const;
 
 	protected:
 		SpecialManager (const SpecialManager &) {}

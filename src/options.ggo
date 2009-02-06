@@ -28,5 +28,6 @@ option "no-specials"    S "don't process [selected] specials"        string type
 
 section "Message options"
 option "help"           h "print this help and exit"                                                         no
+option "list-specials"  - "print supported special sets and exit"                                            no
 option "verbosity"      v "set verbosity level (0-7)"                int    typestr="level"    default="7"   no
 option "version"        V "print version and exit"                                                           no

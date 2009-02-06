@@ -132,9 +132,11 @@ to \-TS\fIsx\fP,\fIsy\fP.
 .B \-\^m, \-\-map-file=file
 Sets the map file that is used to look up font names and encodings. \fBdvisvgm\fP doesn't provide
 its own map file but tries to use available ones coming with \fBdvips\fP or \fBdvipdfm\fP. If 
-option \-m is not given dvisvgm looks for ps2pk.map, psfonts.map and dvipdfm.map (in this order).
-Use option \-m to manually specify a map file. For further information about the file format see 
-the manuals of \fBdvips\fP and \fBdvipdfm\fP. 
+option \-m is not given dvisvgm looks for ps2pk.map, dvipdfm.map, and psfonts.map (in this order).
+Without further options, the file specified by option \-\^m will be used instead of the 
+default maps. If you want \fBdvisgvm\fP to load the given file additionally to the default maps, add a 
+leading '+' to the file/path, e.g. \-\-map-file=+myfonts.map.
+For further information about the file format see the manuals of \fBdvips\fP and \fBdvipdfm\fP. 
 .TP
 .B \-\^M, \-\-mag=factor
 Sets the maginfication factor used for Metafont calls prior tracing the glyphs.
@@ -167,11 +169,16 @@ This option is equivalent to \-TR\fIangle\fP.
 .B \-\^s, \-\-stdout           
 Don't write output to a file but redirect it to \fBstdout\fP. 
 .TP
-.B \-\^S \-\-specials
-Enable processing of \fB\especial\fP commands. The recent version of \fBdvisvgm\fP
-doesn't evaluate \especials so the default behavior is to ignore them. Option \fB\-S\fP
-was implemented for debugging purposes. It forces the processing of \especial commands which
-will merely lead to warning messages.
+.B \-\^S, \-\-no-specials[=prefixes]
+Disable processing of \fB\especial\fP commands embedded into the DVI file. The recent 
+version of \fBdvisvgm\fP supports color \especials only. All other \especial statements are 
+silently ignored.
+.TP
+.B \-\-list-specials
+Prints a list of registered special handlers and exits. Each handler processes a set of special
+statements belonging to the same category. The categories are identified by the
+prefix of the special statements. It's usually a leading word
+separated from the rest of the statement by a colon or a blank, e.g. \fIcolor\fP or \fIps\fP.
 .TP
 .B \-\^t, \-\-translate=tx[,ty]
 Translates (moves) page content in direction of vector (\fItx\fP,\fIty\fP). This option is 
@@ -339,3 +346,4 @@ and the \fB"kpathsea library"\fP info documentation.
 
 .SH AUTHOR
 Martin Gieseking <@PACKAGE_BUGREPORT@>
+

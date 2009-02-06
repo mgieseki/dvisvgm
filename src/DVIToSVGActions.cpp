@@ -58,32 +58,24 @@ DVIToSVGActions::~DVIToSVGActions () {
  *  the corresponding prefixes can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
- *  @param[in] ignorelist list of special prefixes to ignore */
-void DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
-	if (ignorelist && strcmp(ignorelist, "*") == 0) {
-		delete _specialManager;
+ *  @param[in] ignorelist list of special prefixes to ignore 
+ *  @return the SpecialManager that handles special statements */
+const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
+	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
+		delete _specialManager;  // then we don't need a SpecialManager
 		_specialManager = 0;
 	}
-	else if (!_specialManager) {
-		string ign = ignorelist;
-		FORALL(ign, string::iterator, it)
-			if (!isalnum(*it))
-				*it = '%';
-		ign = "%"+ign+"%";
-		
+	else {
 		// add special handlers
-		_specialManager = new SpecialManager;
 		SpecialHandler *handlers[] = {
-			new ColorSpecialHandler,
+			new ColorSpecialHandler,  // handles color specials
 			0
 		};
-		for (SpecialHandler **p=handlers; *p; p++) {
-			if (ign.find("%"+string((*p)->prefix())+"%") != string::npos)
-				_specialManager->registerHandler(*p);
-			else
-				delete *p;
-		}
+		delete _specialManager;      // delete current SpecialManager
+		_specialManager = new SpecialManager;
+		_specialManager->registerHandlers(handlers, ignorelist);
 	}
+	return _specialManager;
 }
 
 

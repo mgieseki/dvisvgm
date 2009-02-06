@@ -31,6 +31,7 @@ using std::istream;
 using std::ostream;
 
 class CharmapTranslator;
+class SpecialManager;
 class XMLDocument;
 class XMLDocTypeNode;
 class XMLElementNode;
@@ -43,7 +44,7 @@ class DVIToSVG : public DVIReader
 		int convert (unsigned firstPage, unsigned lastPage);
 		void setMetafontMag (double m);
 		void setPageSize (string name)    {pageSizeName = name;}
-		void setProcessSpecials (const char *ignorelist=0);
+		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
 		void setTransformation (const string &cmds) {transCmds = cmds;}
 	
 	protected:

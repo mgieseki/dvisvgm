@@ -20,6 +20,7 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <iomanip>
 #include <sstream>
 #include "SpecialHandler.h"
 #include "SpecialManager.h"
@@ -35,10 +36,36 @@ SpecialManager::~SpecialManager () {
 }
 
 
+/** Registers a single special handler.
+ *  @param[in] pointer to handler to be registered */
 void SpecialManager::registerHandler (SpecialHandler *handler) {
 	if (handler) {
 		delete findHandler(handler->prefix());
 		_handlers[handler->prefix()] = handler;
+	}
+}
+
+
+/** Registers a multiple special handlers. 
+ *  If ignorelist == 0, all given handlers are registered. To exclude selected sets of 
+ *  specials, the corresponding prefixes can be given separated by non alpha-numeric characters,
+ *  e.g. "color, ps, em" or "color: ps em" etc.
+ *  @param[in] handlers pointer to zero-terminated array of handlers to be registered 
+ *  @param[in] ignorelist list of special prefixes to be ignored */
+void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ignorelist) {
+	if (handlers) {
+		string ign = ignorelist ? ignorelist : "";
+		FORALL(ign, string::iterator, it)
+			if (!isalnum(*it))
+				*it = '%';
+		ign = "%"+ign+"%";
+
+		for (; *handlers; handlers++) {
+			if (ign.find("%"+string((*handlers)->prefix())+"%") == string::npos)
+				registerHandler(*handlers);
+			else
+				delete *handlers;
+		}
 	}
 }
 
@@ -67,4 +94,16 @@ bool SpecialManager::process (const string &special) {
 		return true;
 	}
 	return false;
+}
+
+
+void SpecialManager::writeHandlerInfo (ostream &os) const {
+//	os << setw(10) << left << "prefix" << setw(80) << " description" << endl;
+//	os << left << "-----------------------------------------------\n";
+	FORALL(_handlers, ConstIterator, it) {
+		os << setw(10) << left << it->second->prefix() << ' ';
+		if (it->second->info())
+			os << it->second->info();
+		os << endl;
+	}
 }

@@ -33,6 +33,7 @@
 #include "FileSystem.h"
 #include "Message.h"
 #include "FileFinder.h"
+#include "SpecialManager.h"
 #include "StreamCounter.h"
 
 #ifdef HAVE_CONFIG_H
@@ -132,6 +133,14 @@ static int dvisvgm (int argc, char *argv[]) {
 	struct gengetopt_args_info args;
 	if (cmdline_parser(argc, argv, &args))
 		return 1;
+
+	if (args.list_specials_given) {
+		DVIToSVG dvisvg(cin, cout);
+		if (const SpecialManager *sm = dvisvg.setProcessSpecials())
+			sm->writeHandlerInfo(cout);
+		return 0;
+	}
+
 	if (args.inputs_num < 1 || args.help_given) {
 		show_help();
 		return 0;
@@ -143,6 +152,7 @@ static int dvisvgm (int argc, char *argv[]) {
 	if (args.map_file_given)
 		FileFinder::setUserFontMap(args.map_file_arg);
 	
+
 	double start_time = get_time();
 	
 	string dvifile = ensure_suffix(args.inputs[0], "dvi");
@@ -167,8 +177,9 @@ static int dvisvgm (int argc, char *argv[]) {
 			StreamCounter<char> sc(*out);
 			Message::level = args.verbosity_arg;
 			DVIToSVG dvisvg(ifs, *out);
+			const char *ignore_specials = args.no_specials_given ? (args.no_specials_arg ? args.no_specials_arg : "*") : 0;
+			dvisvg.setProcessSpecials(ignore_specials);
 			dvisvg.setMetafontMag(args.mag_arg);
-			dvisvg.setProcessSpecials(args.no_specials_given ? (args.no_specials_arg ? args.no_specials_arg : "*") : 0);
 			set_trans(dvisvg, args);
 			tolower(args.bbox_format_arg);
 			dvisvg.setPageSize(args.bbox_format_arg);

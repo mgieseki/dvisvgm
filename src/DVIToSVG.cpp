@@ -59,6 +59,7 @@ static string datetime () {
 	return timestr;
 }
 
+
 DVIToSVG::DVIToSVG (istream &is, ostream &os) 
 	: DVIReader(is), out(os)
 {
@@ -224,10 +225,9 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
  *  @param[in] ignorelist list of special prefixes to ignore */
-void DVIToSVG::setProcessSpecials (const char *ignorelist) {
+const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 	DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(getActions());
-	if (actions) 
-		actions->setProcessSpecials(ignorelist);
+	return (actions ? actions->setProcessSpecials(ignorelist) : 0);
 }
 		
 
