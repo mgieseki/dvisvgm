@@ -149,7 +149,7 @@ DPair TransformationMatrix::operator * (const DPair &p) const {
  *  @param[in] calc parameters can be arithmetic expressions, so we need a calculator to evaluate them
  *  @param[in] def default value if parameter is optional
  *  @param[in] optional true if parameter is optional
- *  @param[in] leadingComma true first non-blank must be a comma
+ *  @param[in] leadingComma true if first non-blank must be a comma
  *  @return value of argument */
 static double getArgument (istream &is, Calculator &calc, double def, bool optional, bool leadingComma) {
 	while (isspace(is.peek()))
@@ -182,7 +182,7 @@ TransformationMatrix& TransformationMatrix::parse (istream &is, Calculator &calc
 		switch (cmd) {
 			case 'T': {
 				double tx = getArgument(is, calc, 0, false, false);
-				double ty = getArgument(is, calc, 0, false, true);
+				double ty = getArgument(is, calc, 0, true, true);
 				translate(tx, ty);
             break;
 			}
