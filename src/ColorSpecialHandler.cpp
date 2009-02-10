@@ -33,19 +33,18 @@ using namespace std;
 /** Approximates a CMYK color by an RGB triple. The component values
  *  are expected to be normalized, i.e. 0 <= cmyk[i],rgb[j] <= 1.
  *  @param[in]  cmyk color in CMYK space
- *  @param[out] rgb  RGB approximation */
-static void cmyk_to_rgb (const vector<float> &cmyk, vector<float> &rgb) {
-	for (int i=0; i < 3; i++)
-		rgb[i] = 1.0-min(1.0f, cmyk[i]+cmyk[3]);
+ *  @param[out] c  RGB approximation */
+static void cmyk_to_rgb (const vector<float> &cmyk, Color &c) {
+	c.setRGB(1.0f-min(1.0f, cmyk[0]+cmyk[3]),	1.0f-min(1.0f, cmyk[1]+cmyk[3]),	1.0f-min(1.0f, cmyk[2]+cmyk[3]));
 }
 
 
 /** Converts a color given in HSB coordinates to RGB. 
  *  @param[in]  hsb color in HSB space
- *  @param[out] rgb color in RGB space */
-static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
-	if (hsb[1] == 0) 
-		rgb[0] = rgb[1] = rgb[2] = hsb[2];
+ *  @param[out] c   color in RGB space */
+static void hsb_to_rgb (const vector<float> &hsb, Color &c) {
+	if (hsb[1] == 0)
+	  	c.setRGB(hsb[2], hsb[2], hsb[2]);	
 	else {
 		float h = hsb[0]-floor(hsb[0]);
 		int i = 6*h;
@@ -54,12 +53,12 @@ static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
 		float q = hsb[2]*(1-hsb[1]*f);
 		float t = hsb[2]*(1-hsb[1]*(1-f));
 		switch (i) {
-			case 0 : rgb[0]=hsb[2]; rgb[1]=t; rgb[2]=p; break;
-			case 1 : rgb[0]=q; rgb[1]=hsb[2]; rgb[2]=p; break;
-			case 2 : rgb[0]=p; rgb[1]=hsb[2]; rgb[2]=t; break;
-			case 3 : rgb[0]=p; rgb[1]=q; rgb[2]=hsb[2]; break;
-			case 4 : rgb[0]=t; rgb[1]=p; rgb[2]=hsb[2]; break;
-			case 5 : rgb[0]=hsb[2]; rgb[1]=p; rgb[2]=q; break;
+			case 0 : c.setRGB(hsb[2], t, p); break;
+			case 1 : c.setRGB(q, hsb[2], p); break;
+			case 2 : c.setRGB(p, hsb[2], t); break;
+			case 3 : c.setRGB(p, q, hsb[2]); break;
+			case 4 : c.setRGB(t, p, hsb[2]); break;
+			case 5 : c.setRGB(hsb[2], p, q); break;
 			default: ;  // prevent compiler warning
 		}
 	}
@@ -68,10 +67,9 @@ static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
 
 /** Converts a gray value to RGB. 
  *  @param[in]  gray normalized gray value (0 <= gray <= 1) 
- *  @param[out] rgb resulting RGB triple */
-static void gray_to_rgb (const float gray, vector<float> &rgb) {
-	for (int i=0; i < 3; i++)
-		rgb[i] = gray;
+ *  @param[out] c    resulting RGB triple */
+static void gray_to_rgb (const float gray, Color &c) {
+	c.setRGB(gray, gray, gray);
 }
 
 
@@ -95,7 +93,7 @@ static void read_floats (istream &is, vector<float> &v) {
 }
 
 
-static bool color_constant (const string &c, vector<float> &rgb) {
+static bool color_constant (const string &name, Color &c) {
 	// converted color constants from color.pro
 	const struct {
 		const char *name;
@@ -175,15 +173,13 @@ static bool color_constant (const string &c, vector<float> &rgb) {
 	int first=0, last=68-1;
 	while (first <= last) {
 		int mid = first+(last-first)/2;
-		int cmp = strcmp(constants[mid].name, c.c_str());
+		int cmp = strcmp(constants[mid].name, name.c_str());
 		if (cmp > 0)
 			last = mid-1;
 		else if (cmp < 0)
 			first = mid+1;
 		else {
-			rgb[0] = constants[mid].rgb[0];
-			rgb[1] = constants[mid].rgb[1];
-			rgb[2] = constants[mid].rgb[2];
+			c.setRGB(constants[mid].rgb[0], constants[mid].rgb[1], constants[mid].rgb[2]);
 			return true;
 		}			
 	}
@@ -198,26 +194,29 @@ static bool color_constant (const string &c, vector<float> &rgb) {
  *  Examples: rgb 1 0.5 0, gray 0.5 
  *  @param[in]  model if model != "" this value specifies the model, otherwise it's read from the stream
  *  @param[in]  is stream to be read from
- *  @param[out] resulting RGB triple 
+ *  @param[out] c  resulting RGB triple 
  *  @return true if statement has successfully been read */
-static void read_color (string model, istream &is, vector<float> &rgb) {
+static void read_color (string model, istream &is, Color &c) {
 	if (model.empty())
 		is >> model;
-	if (model == "rgb")
+	if (model == "rgb") {
+		vector<float> rgb(3);
 		read_floats(is, rgb);
+		c.setRGB(rgb[0], rgb[1], rgb[2]);
+	}
 	else if (model == "cmyk") {
 		vector<float> cmyk(4);
 		read_floats(is, cmyk);
-		cmyk_to_rgb(cmyk, rgb);
+		cmyk_to_rgb(cmyk, c);
 	}
 	else if (model == "hsb") {
 		vector<float> hsb(3);
 		read_floats(is, hsb);
-		hsb_to_rgb(hsb, rgb);
+		hsb_to_rgb(hsb, c);
 	}
 	else if (model == "gray") 
-		gray_to_rgb(read_float(is), rgb);
-	else if (!color_constant(model, rgb))
+		gray_to_rgb(read_float(is), c);
+	else if (!color_constant(model, c))
 		throw SpecialException("unknown color statement");
 }
 
@@ -225,20 +224,20 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 void ColorSpecialHandler::process (istream &is) {
 	string cmd;
 	is >> cmd;
-	vector<float> rgb(3);
+	Color color;
 	if (cmd == "push") {            // color push <model> <params>
-		read_color("", is, rgb); 		
-		_colorStack.push(rgb);
+		read_color("", is, color); 		
+		_colorStack.push(color);
 	}
 	else if (cmd == "pop") {
 		if (!_colorStack.empty())  // color pop
 		_colorStack.pop();
 	}
 	else {                         // color <model> <params>
-		read_color(cmd, is, rgb);
+		read_color(cmd, is, color);
 		while (!_colorStack.empty())
 			_colorStack.pop();
-		_colorStack.push(rgb);
+		_colorStack.push(color);
 	}
 }
 
