@@ -1,0 +1,16 @@
+syntax: glob
+*.a
+*.o
+*.Po
+*.log
+*.aux
+*.toc
+cmdline.*
+Makefile
+Makefile.in
+autom4te.*
+dvisvgm
+aclocal.*
+missing
+./config.*
+configure
