@@ -33,11 +33,13 @@
 
 using namespace std;
 
+DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
+	root = r;
+	page = font = text = 0;
+}
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0),
-	  svgElement(svgelem), pageElement(0), styleElement(0), charElement(0),
-	  _transMatrix(0)
+	: _dviReader(reader), _specialManager(0), _nodes(svgelem), _transMatrix(0) 
 {
 	_xmoved = _ymoved = false;
 	_currentFont = -1;
@@ -101,19 +103,19 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	// create a new tspan element with positioning information
 	// if "cursor" was moved
 	if (_xmoved || _ymoved) {
-		charElement = new XMLElementNode("tspan");
+		_nodes.text = new XMLElementNode("tspan");
 		if (_xmoved)
-			charElement->addAttribute("x", XMLString(x));
+			_nodes.text->addAttribute("x", XMLString(x));
 		if (_ymoved)
-			charElement->addAttribute("y", XMLString(y));
-		charElement->append(textNode);
-		styleElement->append(charElement);
+			_nodes.text->addAttribute("y", XMLString(y));
+		_nodes.text->append(textNode);
+		_nodes.font->append(_nodes.text);
 		_xmoved = _ymoved = false;
 	}
-	else if (charElement) // no explicit cursor movement => append text to existing node
-		charElement->append(textNode);
+	else if (_nodes.text) // no explicit cursor movement => append text to existing node
+		_nodes.text->append(textNode);
 	else                  // no tspan node and no cursor movement
-		styleElement->append(textNode);
+		_nodes.font->append(textNode);
 }
 
 
@@ -134,7 +136,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	pageElement->append(rect);
+	_nodes.page->append(rect);
 }
 
 
@@ -152,12 +154,12 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
  *  @param[in] font pointer to the font object */
 void DVIToSVGActions::setFont (int num, const Font *font) {
 	if (num != _currentFont) {
-		styleElement = new XMLElementNode("text");
-		styleElement->addAttribute("class", string("f") + XMLString(num));
-		styleElement->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
-		styleElement->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
-		pageElement->append(styleElement);
-		charElement = 0;  // force creating a new charElement when adding next char
+		_nodes.font = new XMLElementNode("text");
+		_nodes.font->addAttribute("class", string("f") + XMLString(num));
+		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
+		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
+		_nodes.page->append(_nodes.font);
+		_nodes.text = 0;  // force creating a new _nodes.text when adding next char
 		_xmoved = _ymoved = false;
 		_currentFont = num;
 	}
@@ -169,7 +171,7 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 void DVIToSVGActions::special (const string &s) {
 	if (_specialManager) {
 		try {
-			_specialManager->process(s);
+			_specialManager->process(s, this);
 			// @@ output message in case of unsupported specials?
 		}
 		catch (const SpecialException &e) {
@@ -194,11 +196,11 @@ void DVIToSVGActions::postamble () {
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (Int32 *c) {
 	_pageCount++;
-	pageElement = new XMLElementNode("g");
-	pageElement->addAttribute("id", string("page")+XMLString(int(_pageCount)));
+	_nodes.page = new XMLElementNode("g");
+	_nodes.page->addAttribute("id", string("page")+XMLString(int(_pageCount)));
 	if (_transMatrix)
-		pageElement->addAttribute("transform", _transMatrix->getSVG());
-	svgElement->append(pageElement);
+		_nodes.page->addAttribute("transform", _transMatrix->getSVG());
+	_nodes.root->append(_nodes.page);
 	ostringstream oss;
 	Message::mstream() << '[' << c[0];
 	_xmoved = _ymoved = false;
@@ -218,3 +220,9 @@ void DVIToSVGActions::endPage () {
 	Message::mstream() << ']';
 }
 
+
+void DVIToSVGActions::setColor (const vector<float> &color) {
+	cout << color[0] << ", "
+	     << color[1] << ", "
+	     << color[2] << endl;
+}

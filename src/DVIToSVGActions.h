@@ -26,6 +26,7 @@
 #include <map>
 #include <set>
 #include "DVIActions.h"
+#include "SpecialActions.h"
 #include "TransformationMatrix.h"
 
 using std::map;
@@ -38,8 +39,13 @@ class Font;
 class SpecialManager;
 class XMLElementNode;
 
-class DVIToSVGActions : public DVIActions
+class DVIToSVGActions : public DVIActions, public SpecialActions
 {
+	struct Nodes
+	{
+		Nodes (XMLElementNode *r);
+		XMLElementNode *root, *page, *font, *text;
+	};
 	typedef map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
 	typedef map<const Font*, set<int> > UsedCharsMap;
 	public:
@@ -47,6 +53,7 @@ class DVIToSVGActions : public DVIActions
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
+		void setColor (const vector<float> &color);
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);
@@ -67,7 +74,8 @@ class DVIToSVGActions : public DVIActions
 		bool _xmoved, _ymoved;
 		int _pageCount;
 		int _currentFont;
-		XMLElementNode *svgElement, *pageElement, *styleElement, *charElement;
+		Nodes _nodes;
+//		XMLElementNode *svgElement, *pageElement, *styleElement, *charElement;
 		CharmapTranslatorMap _charmapTranslatorMap;
 		UsedCharsMap _usedCharsMap;
 		TransformationMatrix *_transMatrix;

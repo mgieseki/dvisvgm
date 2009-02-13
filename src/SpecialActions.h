@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialHandler.h                                                   **
+** SpecialActions.h                                                   **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,29 +20,16 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALHANDLER_H
-#define SPECIALHANDLER_H
+#ifndef SPECIALACTIONS_H
+#define SPECIALACTIONS_H
 
-#include <istream>
-#include <string>
-#include "MessageException.h"
-#include "SpecialActions.h"
+#include <vector>
+#include "Color.h"
 
-using std::istream;
-using std::string;
-
-struct SpecialException : public MessageException
+struct SpecialActions
 {
-	SpecialException (const string &msg) : MessageException(msg) {}
-};
-
-
-struct SpecialHandler
-{
-	virtual ~SpecialHandler () {}
-	virtual const char* prefix () const=0;
-	virtual void process (istream &in, SpecialActions *actions)=0;
-	virtual const char* info () const {return 0;}
+	virtual ~SpecialActions () {}
+	virtual void setColor (const std::vector<float> &color) =0;
 };
 
 #endif

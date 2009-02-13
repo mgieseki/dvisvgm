@@ -85,12 +85,12 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
  *  @param[in] special the special expression 
  *  @return true if a special handler was found 
  *  @throw SpecialException in case of errors during special processing */
-bool SpecialManager::process (const string &special) {
+bool SpecialManager::process (const string &special, SpecialActions *actions) {
 	istringstream iss(special);
 	string prefix;
 	iss >> prefix;
 	if (SpecialHandler *handler = findHandler(prefix)) {
-		handler->process(iss);
+		handler->process(iss, actions);
 		return true;
 	}
 	return false;

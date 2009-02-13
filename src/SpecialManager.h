@@ -30,6 +30,7 @@
 using std::map;
 using std::string;
 
+class SpecialActions;
 class SpecialHandler;
 
 class SpecialManager
@@ -43,7 +44,7 @@ class SpecialManager
       ~SpecialManager ();
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
-		bool process (const string &special);
+		bool process (const string &special, SpecialActions *actions);
 		void writeHandlerInfo (std::ostream &os) const;
 
 	protected:
