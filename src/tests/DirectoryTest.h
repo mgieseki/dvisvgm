@@ -34,7 +34,7 @@ class DirectoryTest : public CxxTest::TestSuite
 {
 	public:
 		void test_dirs () {
-			const char *dirs_to_find[] = {"doc", "rpm", "src", 0};
+			const char *dirs_to_find[] = {"doc", "src", 0};
 			set<string> found_dirs;
 			Directory dir("..");
 			while (const char *dname = dir.read('d'))
