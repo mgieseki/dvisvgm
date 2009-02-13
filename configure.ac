@@ -123,10 +123,10 @@ if test "$withval" != no; then
 		fi
 	fi
 
-	if test -n "$POTRACE_DIR"; then
-		CPPFLAGS="$CPPFLAGS -I$POTRACE_DIR -I$POTRACE_DIR/include"
-		LDFLAGS="$LDFLAGS -L$POTRACE_DIR/lib"
-	fi
+#	if test -n "$POTRACE_DIR"; then
+#		CPPFLAGS="$CPPFLAGS -I$POTRACE_DIR -I$POTRACE_DIR/include"
+#		LDFLAGS="$LDFLAGS -L$POTRACE_DIR/lib"
+#	fi
 
 	if test -n "$ZLIB_DIR"; then
 		CPPFLAGS="$CPPFLAGS -I$ZLIB_DIR -I$ZLIB_DIR/include"
@@ -137,5 +137,5 @@ fi
 
 AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
-AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile rpm/dvisvgm.spec rpm/Makefile])
+AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile])
 AC_OUTPUT
