@@ -2,9 +2,14 @@ syntax: glob
 *.a
 *.o
 *.Po
+*.dvi
 *.log
+*.tex
+*.svg
 *.aux
 *.toc
+*.tar.*
+*.swp
 cmdline.*
 Makefile
 Makefile.in
@@ -14,3 +19,9 @@ aclocal.*
 missing
 ./config.*
 configure
+depcomp
+doc/dvisvgm.1
+install-sh
+src/test-all.cpp
+stamp-h1
+
