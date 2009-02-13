@@ -219,6 +219,11 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 		gray_to_rgb(read_float(is), rgb);
 	else if (!color_constant(model, rgb))
 		throw SpecialException("unknown color statement");
+	if (rgb[0] > 1 || rgb[1] > 1 || rgb[2] > 1) {
+		ostringstream oss;
+		oss << "invalid RGB value (" << rgb[0] << ',' << rgb[1] << ',' << rgb[2] << ')';
+		throw SpecialException(oss.str());
+	}
 }
 
 
