@@ -25,7 +25,6 @@
 
 #include <stack>
 #include <vector>
-#include "Color.h"
 #include "SpecialHandler.h"
 
 using std::stack;
@@ -33,13 +32,15 @@ using std::vector;
 
 class ColorSpecialHandler : public SpecialHandler
 {
+	typedef vector<float> RGB;
+
    public:
-		void process (istream &is);
+		void process (istream &is, SpecialActions *actions);
 		const char* prefix () const {return "color";}
 		const char* info () const   {return "complete support of color specials";}
 
 	private:
-		stack<Color> _colorStack;
+		stack<RGB> _colorStack;
 };
 
 #endif
