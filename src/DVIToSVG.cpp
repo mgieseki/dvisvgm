@@ -50,6 +50,11 @@
 
 using namespace std;
 
+// static class variables
+bool DVIToSVG::CREATE_STYLE=true;
+
+
+/** Returns time stamp of current date/time. */
 static string datetime () {
 	time_t t;
 	time(&t);
@@ -119,17 +124,18 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		"\"-//W3C//DTD SVG 1.1//EN\"\n"
 		"  \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\""));
 
-	XMLElementNode *styleElement = new XMLElementNode("style");
-	styleElement->addAttribute("type", "text/css");
-	svgElement->append(styleElement);
-	ostringstream style;
-	FORALL(getFontManager()->getFonts(), vector<Font*>::const_iterator, i) {
-		if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-			style << "text.f"        << getFontManager()->fontID(*i) << ' '
-					<< "{font-family:" << (*i)->name()
-					<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+	if (CREATE_STYLE) {
+		XMLElementNode *styleElement = new XMLElementNode("style");
+		styleElement->addAttribute("type", "text/css");
+		svgElement->append(styleElement);
+		ostringstream style;
+		FORALL(getFontManager()->getFonts(), vector<Font*>::const_iterator, i) {
+			if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
+				style << "text.f"        << getFontManager()->fontID(*i) << ' '
+						<< "{font-family:" << (*i)->name()
+						<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+			}
 		}
-	}
 /*	if (separateFonts)
 		FORALL(getFontInfoMap(), ConstIterator, i) {
 			const char *fontname = i->second->getFontName().c_str();
@@ -137,8 +143,9 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 				      "src:url(" << sepFontFile << "#" << fontname << ")}\n";
 		}
 */	
-	XMLCDataNode *cdataNode = new XMLCDataNode(style.str());
-	styleElement->append(cdataNode);
+		XMLCDataNode *cdataNode = new XMLCDataNode(style.str());
+		styleElement->append(cdataNode);
+	}
 	if (executePage(firstPage)) {  // @@ 
 		Message::mstream() << endl;
 		embedFonts(svgElement);

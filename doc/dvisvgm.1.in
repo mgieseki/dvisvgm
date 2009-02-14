@@ -169,6 +169,11 @@ This option is equivalent to \-TR\fIangle\fP.
 .B \-\^s, \-\-stdout           
 Don't write output to a file but redirect it to \fBstdout\fP. 
 .TP
+.B \-\-no-style
+By default, dvisvgm uses CSS styles and class attributes to reference fonts because it's more
+compact than repeatedly set the complete font information in each text element. However, if you 
+prefer direct font references, the default behavior can be disabled with option \-\-no-style.
+.TP
 .B \-\^S, \-\-no-specials[=prefixes]
 Disable processing of \fB\especial\fP commands embedded into the DVI file. The recent 
 version of \fBdvisvgm\fP supports color \especials only. All other \especial statements are 

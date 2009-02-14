@@ -55,13 +55,16 @@ class DVIToSVG : public DVIReader
 
    private:
 		ostream &out;
-		double mag;              //< magnification factor of Metafont output
+		double mag;              ///< magnification factor of Metafont output
 		XMLDocument *svgDocument;
 		XMLDocTypeNode *doctypeNode;
 		XMLElementNode *svgElement;
 		string pageSizeName;
 		string transCmds;
-		BoundingBox boundingBox; //< bounding box of current page
+		BoundingBox boundingBox; ///< bounding box of current page
+
+	public:
+		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?
 };
 
 #endif

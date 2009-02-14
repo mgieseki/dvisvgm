@@ -24,6 +24,7 @@
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
 #include "DVIReader.h"
+#include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "SpecialManager.h"
@@ -161,7 +162,12 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
 void DVIToSVGActions::setFont (int num, const Font *font) {
 	if (num != _currentFont) {
 		_nodes.font = new XMLElementNode("text");
-		_nodes.font->addAttribute("class", string("f") + XMLString(num));
+		if (DVIToSVG::CREATE_STYLE || !font)
+			_nodes.font->addAttribute("class", string("f") + XMLString(num));
+		else {
+			_nodes.font->addAttribute("font-family", font->name());
+			_nodes.font->addAttribute("font-size", font->scaledSize());
+		}
 		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
 		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
 		_nodes.page->append(_nodes.font);
