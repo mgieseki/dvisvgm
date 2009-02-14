@@ -40,7 +40,7 @@
 #include "config.h"
 #define EMAIL " <" PACKAGE_BUGREPORT ">"
 #else
-#define EMAIL ""
+#define EMAIL "Martin Gieseking <martin.gieseking@uos.de>"
 #endif
 
 using namespace std;
@@ -134,6 +134,10 @@ static int dvisvgm (int argc, char *argv[]) {
 	if (cmdline_parser(argc, argv, &args))
 		return 1;
 
+	if (args.version_given) {
+		cout << PACKAGE_NAME " " PACKAGE_VERSION << endl;
+		return 0;
+	}
 	if (args.list_specials_given) {
 		DVIToSVG dvisvg(cin, cout);
 		if (const SpecialManager *sm = dvisvg.setProcessSpecials())
