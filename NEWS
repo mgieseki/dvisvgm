@@ -1,7 +1,10 @@
-dvisvgm-0.6.2
+dvisvgm-0.7
 - basic support for evaluation of specials has been added
-- evaluation of color specials added
+- evaluation of color specials has been added
 - renamed command-line option -S to --no-specials and inverted previous behavior
+- selected special sets can be disabled by optional arguments to --no-specials
+  (currently only color specials)
+- added option --no-style (see manpage for further details)
 - added optional '+' flag to option --map-file (see manpage for further details)
 - fixed \magnificaton bug (dvi magnification factor is now applied properly)
 - fixed buggy call of maketfm/makemf in Windows/MiKTeX version
