@@ -1,15 +1,22 @@
+dvisvgm-0.6.2
+- basic support for evaluation of specials has been added
+- evaluation of color specials added
+- renamed command-line option -S to --no-specials and inverted previous behavior
+- added optional '+' flag to option --map-file (see manpage for further details)
 - fixed \magnificaton bug (dvi magnification factor is now applied properly)
 - fixed buggy call of maketfm/makemf in Windows/MiKTeX version
+- fixed buggy evaluation of command-line argument -m/--map-file
+- several internal code improvements
 
 dvisvgm-0.6.1
 - added support for dvips map files
-- removed dependency on dvipdfm map file (now ps2pk.map, psfonts.map or dvipdfm.map is used by default)
+- removed dependency on dvipdfm's map file (now ps2pk.map, psfonts.map or dvipdfm.map is used by default)
 - fixed compilation bug #2535497
 - some internal refactorings
 
 dvisvgm-0.6
 - added support for varying font encodings
-- updated MikTeX support using the COM interface
+- updated MiKTeX support using its COM interface
 - fixed incomplete handling of nested virtual fonts
 - fixed a font handling bug that could cause segmentation faults
 - fixed bug in matrix transformation code
