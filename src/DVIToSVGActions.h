@@ -41,6 +41,25 @@ class XMLElementNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {
+	template <typename T>
+	class Property
+	{
+		public:
+			Property (const T &val) : _val(val), _changed(false) {}
+			Property (const  Property &p) : _val(p._val), _changed(false) {}
+			bool operator == (const Property &p) const {return _val == p._val;}
+			bool operator != (const Property &p) const {return _val != p._val;}
+			void operator = (const Property &p)        {_val = p._val; _changed = false;}
+			bool changed () const                      {return _changed;}
+			void set (const T &val)                    {if (val != _val) {_val=val; _changed=true;}}
+			const T& get () const                      {return _val;}
+			void changed (bool c)                      {_changed=c;}
+
+		private:
+			T _val;
+			bool _changed;
+	};
+
 	struct Nodes
 	{
 		Nodes (XMLElementNode *r);
@@ -48,12 +67,13 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 	};
 	typedef map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
 	typedef map<const Font*, set<int> > UsedCharsMap;
+
 	public:
 		DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem);
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
-		void setColor (const vector<float> &color);
+		void setColor (const vector<float> &color) {_color.set(color);}
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);
@@ -72,6 +92,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		const DVIReader &_dviReader;
 		SpecialManager *_specialManager;
 		bool _xmoved, _ymoved;
+		Property<Color> _color;
 		int _pageCount;
 		int _currentFont;
 		Nodes _nodes;

@@ -39,7 +39,8 @@ DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
 }
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0), _nodes(svgelem), _transMatrix(0) 
+	: _dviReader(reader), _specialManager(0), _color(Color(0,0,0)), 
+	_nodes(svgelem), _transMatrix(0) 
 {
 	_xmoved = _ymoved = false;
 	_currentFont = -1;
@@ -102,15 +103,18 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 
 	// create a new tspan element with positioning information
 	// if "cursor" was moved
-	if (_xmoved || _ymoved) {
+	if (_xmoved || _ymoved || _color.changed()) {
 		_nodes.text = new XMLElementNode("tspan");
 		if (_xmoved)
 			_nodes.text->addAttribute("x", XMLString(x));
 		if (_ymoved)
 			_nodes.text->addAttribute("y", XMLString(y));
+		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != Color(0,0,0))
+			_nodes.text->addAttribute("fill", _color.get().css());
 		_nodes.text->append(textNode);
 		_nodes.font->append(_nodes.text);
 		_xmoved = _ymoved = false;
+		_color.changed(false);
 	}
 	else if (_nodes.text) // no explicit cursor movement => append text to existing node
 		_nodes.text->append(textNode);
@@ -136,6 +140,8 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
+	if (_color.get() != Color(0,0,0))
+		rect->addAttribute("fill", _color.get().css());
 	_nodes.page->append(rect);
 }
 
@@ -160,6 +166,7 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
 		_nodes.page->append(_nodes.font);
 		_nodes.text = 0;  // force creating a new _nodes.text when adding next char
+		_color.changed(true); 
 		_xmoved = _ymoved = false;
 		_currentFont = num;
 	}
@@ -221,8 +228,3 @@ void DVIToSVGActions::endPage () {
 }
 
 
-void DVIToSVGActions::setColor (const vector<float> &color) {
-	cout << color[0] << ", "
-	     << color[1] << ", "
-	     << color[2] << endl;
-}
