@@ -42,17 +42,27 @@ static string translate (unsigned c) {
 }
 
 
-XMLString::XMLString (const string &str) {
-	FORALL(str, string::const_iterator, i)
-		*this += translate(*i);
+XMLString::XMLString (const string &str, bool plain) {
+	if (plain)
+		*this = str;
+	else {
+		FORALL(str, string::const_iterator, i)
+			*this += translate(*i);
+	}
 }
 
 
-XMLString::XMLString (const char *str) {
-	if (str)
-		while (*str)
-			*this += translate(*str++);
+XMLString::XMLString (const char *str, bool plain) {
+	if (str) {
+		if (plain)
+			*this = str;
+		else {
+			while (*str)
+				*this += translate(*str++);
+		}
+	}
 }
+
 
 XMLString::XMLString (int n, bool cast) {
 	if (cast) {

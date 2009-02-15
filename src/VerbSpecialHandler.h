@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** VerbSpecialHandler.h                                               **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,22 +20,17 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#ifndef VERBSPECIALHANDLER_H
+#define VERBSPECIALHANDLER_H
 
-#include <string>
-#include <vector>
-#include "Color.h"
+#include "SpecialHandler.h"
 
-class XMLElementNode;
-
-struct SpecialActions
+class VerbSpecialHandler : public SpecialHandler
 {
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const std::vector<float> &color) =0;
-	virtual void appendInPage (XMLElementNode *node) =0;
+   public:
+		const char* prefix () const {return "verb";}
+		const char* info () const   {return "support of verbatim SVG embeddings";}
+		void process (istream &in, SpecialActions *actions);
 };
 
 #endif
