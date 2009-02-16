@@ -2,6 +2,7 @@ syntax: glob
 *.a
 *.o
 *.Po
+*.obj
 *.dvi
 *.log
 *.tex
@@ -10,6 +11,7 @@ syntax: glob
 *.toc
 *.tar.*
 *.swp
+.svn
 cmdline.*
 Makefile
 Makefile.in
