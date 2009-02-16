@@ -36,18 +36,10 @@ class XMLString : public string
 {
    public:
 		XMLString () : string() {}
-		XMLString (const char *str);
-      XMLString (const string &str);
+		XMLString (const char *str, bool plain=false);
+      XMLString (const string &str, bool plain=false);
 		XMLString (int n, bool cast=true);
 		XMLString (double x);
-	
-/*		template <typename T> 
-		explicit XMLString (T t) {
-			stringstream ss;
-			ss << t;
-			ss >> *this;
-		}*/
-	
 //		ostream& write (ostream &os) const;
 };
 

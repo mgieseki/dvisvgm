@@ -29,6 +29,7 @@
 #include "Font.h"
 #include "SpecialManager.h"
 #include "ColorSpecialHandler.h"
+#include "VerbSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -73,6 +74,7 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 		// add special handlers
 		SpecialHandler *handlers[] = {
 			new ColorSpecialHandler,  // handles color specials
+			new VerbSpecialHandler,  // handles verb(atim) specials
 			0
 		};
 		delete _specialManager;      // delete current SpecialManager
@@ -234,3 +236,7 @@ void DVIToSVGActions::endPage () {
 }
 
 
+void DVIToSVGActions::appendInPage (XMLElementNode *node) {
+	if (node && _nodes.page)
+		_nodes.page->append(node);
+}

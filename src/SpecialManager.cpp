@@ -88,7 +88,9 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 bool SpecialManager::process (const string &special, SpecialActions *actions) {
 	istringstream iss(special);
 	string prefix;
-	iss >> prefix;
+	int c;
+	while (isalnum(c=iss.get()))
+		prefix += c;
 	if (SpecialHandler *handler = findHandler(prefix)) {
 		handler->process(iss, actions);
 		return true;

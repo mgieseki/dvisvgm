@@ -74,6 +74,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setColor (const vector<float> &color) {_color.set(color);}
+		void appendInPage (XMLElementNode *node);
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);
@@ -87,6 +88,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		const SpecialManager* setProcessSpecials (const char *ignorelist);
 		void setTransformation (const TransformationMatrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
+		int getX() const {return _dviReader.getXPos();}
+		int getY() const {return _dviReader.getYPos();}
 
 	private:
 		const DVIReader &_dviReader;

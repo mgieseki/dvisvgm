@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** VerbSpecialHandler.cpp                                             **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,22 +20,26 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#include <iterator>
+#include "debug.h"
+#include "VerbSpecialHandler.h"
+#include "XMLNode.h"
 
-#include <string>
-#include <vector>
-#include "Color.h"
+using namespace std;
 
-class XMLElementNode;
 
-struct SpecialActions
-{
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const std::vector<float> &color) =0;
-	virtual void appendInPage (XMLElementNode *node) =0;
-};
-
-#endif
+void VerbSpecialHandler::process (istream &is, SpecialActions *actions) {
+	if (actions) {
+		string str;
+		while (is && !is.eof()) {
+			char c = is.get();
+			if (isprint(c))
+				str += c;
+		}
+		XMLElementNode *group = new XMLElementNode("g");
+		group->addAttribute("x", actions->getX());
+		group->addAttribute("y", actions->getY());
+		group->append(new XMLTextNode(str)); // plain copy
+		actions->appendInPage(group);
+	}
+}
