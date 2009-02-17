@@ -135,7 +135,7 @@ TransformationMatrix& TransformationMatrix::rmultiply (const TransformationMatri
 
 
 DPair TransformationMatrix::operator * (const DPair &p) const {
-   double pp[] = {p.getX(), p.getY(), 1};
+   double pp[] = {p.x(), p.y(), 1};
    double ret[]= {0, 0};
    for (int i=0; i < 2; i++)
       for (int j=0; j < 3; j++)

@@ -28,7 +28,8 @@
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "SpecialManager.h"
-#include "ColorSpecialHandler.h"
+#include "SpecialColorHandler.h"
+#include "SpecialEmHandler.h"
 #include "VerbSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -73,7 +74,8 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
-			new ColorSpecialHandler,  // handles color specials
+			new SpecialColorHandler,  // handles color specials
+			new SpecialEmHandler,  // handles emTeX specials
 			new VerbSpecialHandler,  // handles verb(atim) specials
 			0
 		};

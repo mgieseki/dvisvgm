@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** SpecialColorHandler.h                                              **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,30 +20,27 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#ifndef COLORSPECIALHANDLER_H
+#define COLORSPECIALHANDLER_H
 
-#include <string>
+#include <stack>
 #include <vector>
-#include "Color.h"
+#include "SpecialHandler.h"
 
-class XMLElementNode;
+using std::stack;
+using std::vector;
 
-struct SpecialActions
+class SpecialColorHandler : public SpecialHandler
 {
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const std::vector<float> &color) =0;
-	virtual void appendInPage (XMLElementNode *node) =0;
+	typedef vector<float> RGB;
+
+   public:
+		void process (istream &is, SpecialActions *actions);
+		const char* prefix () const {return "color";}
+		const char* info () const   {return "complete support of color specials";}
+
+	private:
+		stack<RGB> _colorStack;
 };
 
-
-struct SpecialNullActions : SpecialActions
-{
-	int getX() const {return 0;}
-	int getY() const {return 0;}
-	void setColor (const std::vector<float> &color) {}
-	void appendInPage (XMLElementNode *node) {}
-};
 #endif

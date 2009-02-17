@@ -22,12 +22,12 @@
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
-#include "ColorSpecialHandler.h"
+#include "SpecialColorHandler.h"
 #include "SpecialActions.h"
 
 class ColorSpecialTest : public CxxTest::TestSuite
 {
-	struct SetColor : SpecialActions
+	struct SetColor : SpecialNullActions
 	{
 		void setColor (const vector<float> &c) {color = c;}
 		bool equals (float r, float g, float b) {return color[0]==r && color[1]==g && color[2]==b;}
@@ -84,6 +84,6 @@ class ColorSpecialTest : public CxxTest::TestSuite
 		}
 
 	private:
-		ColorSpecialHandler handler;
+		SpecialColorHandler handler;
 		SetColor actions;
 };

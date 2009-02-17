@@ -1,5 +1,5 @@
 /***********************************************************************
-** ColorSpecialHandler.cpp                                            **
+** SpecialColorHandler.cpp                                            **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -25,7 +25,7 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
-#include "ColorSpecialHandler.h"
+#include "SpecialColorHandler.h"
 
 using namespace std;
 
@@ -227,7 +227,7 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 }
 
 
-void ColorSpecialHandler::process (istream &is, SpecialActions *actions) {
+void SpecialColorHandler::process (istream &is, SpecialActions *actions) {
 	string cmd;
 	is >> cmd;
 	vector<float> rgb(3);

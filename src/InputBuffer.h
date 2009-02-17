@@ -45,6 +45,11 @@ struct InputBuffer
 	virtual bool skipUntil (const char *s, bool consume=true) =0;
 	virtual void skipSpace () =0;
 	virtual bool eof () const =0;
+	virtual int getInt ();
+	virtual double getDouble ();
+	virtual string getWord ();
+	virtual char getPunct ();
+
 //	void write (std::ostream &os) const;
 };
 

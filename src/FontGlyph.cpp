@@ -57,7 +57,7 @@ void GlyphCommand::writeSVGCommand (ostream &os) const {
 	FORALL(params, ConstIterator, i) {
 		if (i != params.begin())
 			os << ' ';
-		os << i->getX() << ' ' << i->getY();
+		os << i->x() << ' ' << i->y();
 	}
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************
-** ColorSpecialHandler.h                                              **
+** SpecialEmHandler.h                                                 **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,27 +20,38 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef COLORSPECIALHANDLER_H
-#define COLORSPECIALHANDLER_H
+#ifndef SPECIALEMHANDLER_H
+#define SPECIALEMHANDLER_H
 
-#include <stack>
-#include <vector>
+#include <list>
+#include <map>
+#include "Pair.h"
 #include "SpecialHandler.h"
 
-using std::stack;
-using std::vector;
 
-class ColorSpecialHandler : public SpecialHandler
+class SpecialEmHandler : public SpecialHandler
 {
-	typedef vector<float> RGB;
+	struct Line {
+		Line (int pp1, int pp2, char cc1, char cc2, double w) : p1(pp1), p2(pp2), c1(cc1), c2(cc2), width(w) {}
+		int p1, p2;   ///< point numbers of line ends
+		char c1, c2;  ///< cut type of line ends (h, v or p)
+		double width; ///< line width
+	};
 
    public:
-		void process (istream &is, SpecialActions *actions);
-		const char* prefix () const {return "color";}
-		const char* info () const   {return "complete support of color specials";}
+      SpecialEmHandler ();
+		const char* prefix () const {return "em";}
+		const char* info () const  {return "partial evaluation of emTeX specials";}
+		void process (istream &in, SpecialActions *actions);
 
-	private:
-		stack<RGB> _colorStack;
+	protected:
+		void reset ();
+
+   private:
+		std::map<int, DPair> _points; ///< points defined by special em:point
+		std::list<Line> _lines;       ///< list of lines with undefined end points
+		double _linewidth;            ///< global line width
+		DPair _pos;                   ///< current position of "graphic cursor"
 };
 
 #endif
