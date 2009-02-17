@@ -35,12 +35,6 @@
 
 using namespace std;
 
-struct DVICommand 
-{
-	void (DVIReader::*method)(int);
-	int numBytes;
-};
-
 
 DVIReader::DVIReader (istream &is, DVIActions *a) 
 	: StreamReader(is), actions(a) 
@@ -70,6 +64,11 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
  *  corresponding cmdFOO method.  
  *  @return opcode of the executed command */
 int DVIReader::executeCommand () {
+	struct DVICommand {
+		void (DVIReader::*method)(int);
+		int numBytes;
+	};
+
    /* Each cmdFOO command reads the necessary number of bytes from the stream, so executeCommand
    doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
 	DVI commands because they only differ in length of their parameters. */
@@ -112,8 +111,7 @@ int DVIReader::executeCommand () {
 	else {
 		int offset = opcode <= 170 ? 128 : 235-(170-128+1);
 		const DVICommand &cmd = commands[opcode-offset];
-		if (cmd.method)
-			(this->*cmd.method)(cmd.numBytes);
+		(this->*cmd.method)(cmd.numBytes);
 	}
 	return opcode;
 }
