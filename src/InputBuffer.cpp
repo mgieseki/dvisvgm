@@ -25,6 +25,49 @@
 
 using namespace std;
 
+int InputBuffer::getInt () {
+	int ret=0;
+	int fac=1;
+	skipSpace();
+	if (peek() == '-') {
+		fac = -1;
+		get();
+	}
+	while (isdigit(peek()))
+		ret = ret*10 + (get()-'0');
+	return fac*ret;
+}
+
+
+double InputBuffer::getDouble () {
+	double ret=getInt();
+	if (peek() == '.') {
+		get();
+		double frac=0;
+		for (double u=10; isdigit(peek()); u*=10) 
+			frac += (get()-'0')/u;
+		ret += frac;
+	}
+	return ret;
+}
+
+
+string InputBuffer::getWord () {
+	string ret;
+	skipSpace();
+	while (isalpha(peek()))
+		ret += get();
+	return ret;
+}
+
+char InputBuffer::getPunct () {
+	skipSpace();
+	if (ispunct(peek()))
+		return get();
+	return 0;
+}
+
+//////////////////////////////////////////
 
 StreamInputBuffer::StreamInputBuffer (istream &is, int bufsize)
 	: _is(is), _bufsize(bufsize), _buf1(new char[_bufsize]), _buf2(new char[_bufsize]), _bufptr(_buf1), _line(1), _col(1)

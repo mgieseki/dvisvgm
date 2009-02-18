@@ -1,5 +1,5 @@
 /***********************************************************************
-** ColorSpecialHandler.h                                              **
+** SpecialColorHandler.h                                              **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -30,7 +30,7 @@
 using std::stack;
 using std::vector;
 
-class ColorSpecialHandler : public SpecialHandler
+class SpecialColorHandler : public SpecialHandler
 {
 	typedef vector<float> RGB;
 

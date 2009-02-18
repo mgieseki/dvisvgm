@@ -10,7 +10,9 @@ syntax: glob
 *.aux
 *.toc
 *.tar.*
+*.zip
 *.swp
+*.exe
 .svn
 cmdline.*
 Makefile
@@ -23,7 +25,8 @@ missing
 configure
 depcomp
 doc/dvisvgm.1
+doc/*.pdf
 install-sh
 src/test-all.cpp
 stamp-h1
-
+a.out

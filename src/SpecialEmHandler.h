@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** SpecialEmHandler.h                                                 **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,30 +20,37 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#ifndef SPECIALEMHANDLER_H
+#define SPECIALEMHANDLER_H
 
-#include <string>
-#include <vector>
-#include "Color.h"
+#include <list>
+#include <map>
+#include "Pair.h"
+#include "SpecialHandler.h"
 
-class XMLElementNode;
 
-struct SpecialActions
+class SpecialEmHandler : public SpecialHandler
 {
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const std::vector<float> &color) =0;
-	virtual void appendInPage (XMLElementNode *node) =0;
+	struct Line {
+		Line (int pp1, int pp2, char cc1, char cc2, double w) : p1(pp1), p2(pp2), c1(cc1), c2(cc2), width(w) {}
+		int p1, p2;   ///< point numbers of line ends
+		char c1, c2;  ///< cut type of line ends (h, v or p)
+		double width; ///< line width
+	};
+
+   public:
+      SpecialEmHandler ();
+		const char* prefix () const {return "em";}
+		const char* info () const  {return "partial evaluation of emTeX specials";}
+		void process (istream &in, SpecialActions *actions);
+		void endPage ();
+
+   private:
+		std::map<int, DPair> _points; ///< points defined by special em:point
+		std::list<Line> _lines;       ///< list of lines with undefined end points
+		double _linewidth;            ///< global line width
+		DPair _pos;                   ///< current position of "graphic cursor"
+		SpecialActions *_actions;     
 };
 
-
-struct SpecialNullActions : SpecialActions
-{
-	int getX() const {return 0;}
-	int getY() const {return 0;}
-	void setColor (const std::vector<float> &color) {}
-	void appendInPage (XMLElementNode *node) {}
-};
 #endif

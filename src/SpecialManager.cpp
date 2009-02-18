@@ -99,6 +99,12 @@ bool SpecialManager::process (const string &special, SpecialActions *actions) {
 }
 
 
+void SpecialManager::notifyEndPage () {
+	FORALL(_handlers, Iterator, it)
+		it->second->endPage();
+}
+
+
 void SpecialManager::writeHandlerInfo (ostream &os) const {
 //	os << setw(10) << left << "prefix" << setw(80) << " description" << endl;
 //	os << left << "-----------------------------------------------\n";

@@ -45,6 +45,7 @@ class SpecialManager
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		bool process (const string &special, SpecialActions *actions);
+		void notifyEndPage ();
 		void writeHandlerInfo (std::ostream &os) const;
 
 	protected:

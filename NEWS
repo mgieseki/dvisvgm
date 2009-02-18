@@ -1,3 +1,5 @@
+- added partial support of emTeX specials
+
 dvisvgm-0.7
 - basic support for evaluation of specials has been added
 - evaluation of color specials has been added

@@ -12,6 +12,9 @@ pdf-dvi:
 	dvipdfm -s 2- dvisvgm
 	rm -f dvisvgm.dvi
 
+dvi:
+	groff -Tdvi -man dvisvgm.1 >dvisvgm.dvi
+
 html:
 	groff -Thtml -man dvisvgm.1 >dvisvgm.html
 

@@ -41,8 +41,9 @@ struct SpecialHandler
 {
 	virtual ~SpecialHandler () {}
 	virtual const char* prefix () const=0;
+	virtual const char* info () const=0;
 	virtual void process (istream &in, SpecialActions *actions)=0;
-	virtual const char* info () const {return 0;}
+	virtual void endPage () {}
 };
 
 #endif

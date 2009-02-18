@@ -23,6 +23,7 @@
 #ifndef PAIR_H
 #define PAIR_H
 
+#include <cmath>
 #include <ostream>
 #include "macros.h"
 
@@ -30,26 +31,30 @@ template <typename T>
 class Pair
 {
    public:
-      Pair (T xx=0, T yy=0) : x(xx), y(yy) {}
-		Pair operator += (const Pair &p)        {x += p.x; y += p.y; return *this;}
-		Pair operator -= (const Pair &p)        {x -= p.x; y -= p.y; return *this;}
-		Pair operator *= (T c)                  {x *= c;   y *= c;   return *this;}
-		Pair operator /= (T c)                  {x /= c;   y /= c;   return *this;}
-		bool operator == (const Pair &p) const  {return x == p.x && y == p.y;}
-		bool operator != (const Pair &p) const  {return x != p.x || y != p.y;}
-		T getX () const                         {return x;}
-		T getY () const                         {return y;}
-		std::ostream& write (std::ostream &os) const {return os << '(' << x << ',' << y << ')';}
+      Pair (T x=0, T y=0) : _x(x), _y(y) {}
+		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
+		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
+		Pair operator *= (T c)                 {_x *= c;   _y *= c;   return *this;}
+		Pair operator /= (T c)                 {_x /= c;   _y /= c;   return *this;}
+      Pair ortho () const                    {return Pair(-_y, _x);}
+      double length () const                 {return std::sqrt(_x*_x + _y*_y);}
+		bool operator == (const Pair &p) const {return _x == p._x && y == p._y;}
+		bool operator != (const Pair &p) const {return _x != p._x || y != p._y;}
+		T x () const                           {return _x;}
+		T y () const                           {return _y;}
+		void x (const T &xx)                   {_x = xx;}
+		void y (const T &yy)                   {_y = yy;}
+		std::ostream& write (std::ostream &os) const {return os << '(' << _x << ',' << _y << ')';}
 
    private:
-		T x, y;
+		T _x, _y;
 };
 
 
 struct LPair : public Pair<long>
 {
-   LPair (long xx=0, long yy=0) : Pair<long>(xx, yy) {}
-	explicit LPair (double xx, double yy) : Pair<long>(long(xx+0.5), long(yy+0.5)) {}
+   LPair (long x=0, long y=0) : Pair<long>(x, y) {}
+	explicit LPair (double x, double y) : Pair<long>(long(x+0.5), long(y+0.5)) {}
 };
 
 typedef Pair<double> DPair;

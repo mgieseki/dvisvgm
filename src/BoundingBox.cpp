@@ -93,10 +93,10 @@ void BoundingBox::transform (const TransformationMatrix &tm) {
 	DPair lr = tm * DPair(ulx, uly);
 	DPair ll = tm * DPair(ulx, lry);
 	DPair ur = tm * DPair(lrx, uly);
-	ulx = min(min(ul.getX(), lr.getX()), min(ur.getX(), ll.getX()));
-	uly = min(min(ul.getY(), lr.getY()), min(ur.getY(), ll.getY()));
-	lrx = max(max(ul.getX(), lr.getX()), max(ur.getX(), ll.getX()));
-	lry = max(max(ul.getY(), lr.getY()), max(ur.getY(), ll.getY()));
+	ulx = min(min(ul.x(), lr.x()), min(ur.x(), ll.x()));
+	uly = min(min(ul.y(), lr.y()), min(ur.y(), ll.y()));
+	lrx = max(max(ul.x(), lr.x()), max(ur.x(), ll.x()));
+	lry = max(max(ul.y(), lr.y()), max(ur.y(), ll.y()));
 }
 
 
