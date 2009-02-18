@@ -42,7 +42,7 @@ DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
 }
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0), _color(Color(0,0,0)), 
+	: _dviReader(reader), _specialManager(0), _color("000000"), 
 	_nodes(svgelem), _transMatrix(0) 
 {
 	_xmoved = _ymoved = false;
@@ -114,8 +114,8 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 			_nodes.text->addAttribute("x", XMLString(x));
 		if (_ymoved)
 			_nodes.text->addAttribute("y", XMLString(y));
-		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != Color(0,0,0))
-			_nodes.text->addAttribute("fill", _color.get().css());
+		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != "000000")
+			_nodes.text->addAttribute("fill", "#"+_color.get());
 		_nodes.text->append(textNode);
 		_nodes.font->append(_nodes.text);
 		_xmoved = _ymoved = false;
@@ -145,8 +145,8 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	if (_color.get() != Color(0,0,0))
-		rect->addAttribute("fill", _color.get().css());
+	if (_color.get() != "000000")
+		rect->addAttribute("fill", "#"+_color.get());
 	_nodes.page->append(rect);
 }
 

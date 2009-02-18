@@ -12,7 +12,7 @@ dvisvgm_SOURCES      = cmdline.h gzstream.h cmdline.c StreamCounter.h \
 dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
-libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h Color.h \
+libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h Calculator.h CharmapTranslator.h \
    Directory.h DVIActions.h DVIBBoxActions.h DVIReader.h DVIToSVG.h DVIToSVGActions.h FileSystem.h Font.h \
 	FontEmitter.h FontEncoding.h FontEngine.h FontGlyph.h FontManager.h FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h \
 	InputBuffer.h FileFinder.h macros.h Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h \

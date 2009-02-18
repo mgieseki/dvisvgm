@@ -24,8 +24,6 @@
 #define SPECIALACTIONS_H
 
 #include <string>
-#include <vector>
-#include "Color.h"
 
 class XMLElementNode;
 
@@ -34,7 +32,8 @@ struct SpecialActions
 	virtual ~SpecialActions () {}
 	virtual int getX() const =0;
 	virtual int getY() const =0;
-	virtual void setColor (const std::vector<float> &color) =0;
+	virtual void setColor (const std::string &color) =0;
+	virtual std::string getColor () const =0;
 	virtual void appendInPage (XMLElementNode *node) =0;
 };
 
@@ -43,7 +42,8 @@ struct SpecialNullActions : SpecialActions
 {
 	int getX() const {return 0;}
 	int getY() const {return 0;}
-	void setColor (const std::vector<float> &color) {}
+	void setColor (const std::string &color) {}
+	std::string getColor () const {return "";}
 	void appendInPage (XMLElementNode *node) {}
 };
 #endif

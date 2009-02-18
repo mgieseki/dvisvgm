@@ -20,6 +20,7 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <sstream>
 #include "SpecialEmHandler.h"
 #include "InputBuffer.h"
 #include "XMLNode.h"
@@ -77,7 +78,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("x2", p2.x());
 		node->addAttribute("y2", p2.y());
 		node->addAttribute("stroke-width", lw);
-		node->addAttribute("stroke", "black");
+		node->addAttribute("stroke", "#"+actions->getColor());
 	}
 	else {
 		// draw polygon
@@ -92,6 +93,8 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		    << q22.x() << ',' << q22.y() << ' '
 		    << q21.x() << ',' << q21.y();			 
 		node->addAttribute("points", oss.str());
+		if (actions->getColor() != "000000")
+			node->addAttribute("fill", "#"+actions->getColor());
 	}
 	actions->appendInPage(node);
 }

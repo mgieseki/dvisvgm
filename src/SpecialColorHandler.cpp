@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <iomanip>
 #include <sstream>
 #include <vector>
 #include "SpecialColorHandler.h"
@@ -227,6 +228,14 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 }
 
 
+static string rgb_string (const vector<float> &rgb) {
+	ostringstream oss;
+	for (int i=0; i < 3; i++)
+		oss << setbase(16) << setfill('0') << setw(2) << (int)floor(255*rgb[i]+0.5);
+	return oss.str();
+}
+
+
 void SpecialColorHandler::process (istream &is, SpecialActions *actions) {
 	string cmd;
 	is >> cmd;
@@ -246,6 +255,6 @@ void SpecialColorHandler::process (istream &is, SpecialActions *actions) {
 		_colorStack.push(rgb);
 	}
 	if (actions && !_colorStack.empty())
-		actions->setColor(_colorStack.top());
+		actions->setColor(rgb_string(_colorStack.top()));
 }
 
