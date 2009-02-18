@@ -38,7 +38,7 @@ struct SpecialActions
 };
 
 
-struct SpecialNullActions : SpecialActions
+struct SpecialEmptyActions : SpecialActions
 {
 	int getX() const {return 0;}
 	int getY() const {return 0;}

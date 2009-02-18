@@ -27,52 +27,51 @@
 
 class ColorSpecialTest : public CxxTest::TestSuite
 {
-	struct SetColor : SpecialNullActions
+	struct SetColor : SpecialEmptyActions
 	{
-		void setColor (const vector<float> &c) {color = c;}
-		bool equals (float r, float g, float b) {return color[0]==r && color[1]==g && color[2]==b;}
-		vector<float> color;
+		SetColor () : color("000000") {}
+		void setColor (const std::string &c) {color = c;}
+		bool equals (const string &c) {return color == c;}
+		string color;
 	};
 
 	public:
 		void test_rgb () {
 			std::istringstream iss("rgb 1 0 1");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(1, 0, 1));
+			TS_ASSERT(actions.equals("ff00ff"));
 		}
 
 		void test_hsb () {
 			std::istringstream iss("hsb 1 0.5 1");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(1, 0.5, 0.5));
+			TS_ASSERT(actions.equals("ff8080"));
 		}
 
 		void test_cmyk () {
 			std::istringstream iss("cmyk 0.1 0.2 0.4 0.6");
 			handler.process(iss, &actions);
-			TS_ASSERT_DELTA(actions.color[0], 0.3, 0.0001);
-		  	TS_ASSERT_DELTA(actions.color[1], 0.2, 0.0001);
-			TS_ASSERT_DELTA(actions.color[2], 0.0, 0.0001);
+			TS_ASSERT(actions.equals("4c3300"));
 		}
 
 		void test_stack () {
 			std::istringstream iss("push rgb 1 0 0");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(1, 0, 0));
+			TS_ASSERT(actions.equals("ff0000"));
 			iss.clear();
 			iss.str("push Blue");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(0, 0, 1));
+			TS_ASSERT(actions.equals("0000ff"));
 			iss.clear();
 			iss.str("pop");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(1, 0, 0));
+			TS_ASSERT(actions.equals("ff0000"));
 		}
 
 		void test_constant () {
 			std::istringstream iss("RedViolet");
 			handler.process(iss, &actions);
-			TS_ASSERT(actions.equals(0.59, 0, 0.66));
+			TS_ASSERT(actions.equals("9600a8"));
 		}
 
 		void test_errors () {

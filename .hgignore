@@ -14,6 +14,7 @@ syntax: glob
 *.swp
 *.exe
 .svn
+.deps
 cmdline.*
 Makefile
 Makefile.in
@@ -27,6 +28,6 @@ depcomp
 doc/dvisvgm.1
 doc/*.pdf
 install-sh
-src/test-all.cpp
+src/test-all*
 stamp-h1
 a.out

@@ -1,4 +1,5 @@
-- added partial support of emTeX specials
+- evaluation of a subset of emTeX specials has been added
+- specials for embedding raw SVG snippets has been added
 
 dvisvgm-0.7
 - basic support for evaluation of specials has been added
