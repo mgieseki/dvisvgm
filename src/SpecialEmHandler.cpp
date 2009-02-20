@@ -78,7 +78,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("x2", p2.x());
 		node->addAttribute("y2", p2.y());
 		node->addAttribute("stroke-width", lw);
-		node->addAttribute("stroke", "#"+actions->getColor());
+		node->addAttribute("stroke", actions->getColor().rgbString());
 	}
 	else {
 		// draw polygon
@@ -93,8 +93,8 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		    << q22.x() << ',' << q22.y() << ' '
 		    << q21.x() << ',' << q21.y();			 
 		node->addAttribute("points", oss.str());
-		if (actions->getColor() != "000000")
-			node->addAttribute("fill", "#"+actions->getColor());
+		if (actions->getColor() != 0)
+			node->addAttribute("fill", actions->getColor().rgbString());
 	}
 	actions->appendInPage(node);
 }

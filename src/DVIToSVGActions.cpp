@@ -29,8 +29,9 @@
 #include "Font.h"
 #include "SpecialManager.h"
 #include "SpecialColorHandler.h"
+#include "SpecialDvisvgmHandler.h"
 #include "SpecialEmHandler.h"
-#include "VerbSpecialHandler.h"
+#include "SpecialHtmlHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -42,7 +43,7 @@ DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
 }
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0), _color("000000"), 
+	: _dviReader(reader), _specialManager(0), _color(0), 
 	_nodes(svgelem), _transMatrix(0) 
 {
 	_xmoved = _ymoved = false;
@@ -74,9 +75,10 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
-			new SpecialColorHandler,  // handles color specials
-			new SpecialEmHandler,  // handles emTeX specials
-			new VerbSpecialHandler,  // handles verb(atim) specials
+			new SpecialColorHandler,    // handles color specials
+			new SpecialDvisvgmHandler,  // handles raw SVG embeddings 
+			new SpecialEmHandler,       // handles emTeX specials
+			new SpecialHtmlHandler,       // handles emTeX specials
 			0
 		};
 		delete _specialManager;      // delete current SpecialManager
@@ -114,8 +116,8 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 			_nodes.text->addAttribute("x", XMLString(x));
 		if (_ymoved)
 			_nodes.text->addAttribute("y", XMLString(y));
-		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != "000000")
-			_nodes.text->addAttribute("fill", "#"+_color.get());
+		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != 0)
+			_nodes.text->addAttribute("fill", _color.get().rgbString());
 		_nodes.text->append(textNode);
 		_nodes.font->append(_nodes.text);
 		_xmoved = _ymoved = false;
@@ -145,8 +147,8 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	if (_color.get() != "000000")
-		rect->addAttribute("fill", "#"+_color.get());
+	if (_color.get() != 0)
+		rect->addAttribute("fill", _color.get().rgbString());
 	_nodes.page->append(rect);
 }
 

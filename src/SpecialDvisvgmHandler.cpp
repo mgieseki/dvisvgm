@@ -1,5 +1,5 @@
 /***********************************************************************
-** VerbSpecialHandler.h                                               **
+** SpecialDvisvgmHandler.cpp                                          **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,17 +20,26 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef VERBSPECIALHANDLER_H
-#define VERBSPECIALHANDLER_H
+#include <iterator>
+#include "debug.h"
+#include "SpecialDvisvgmHandler.h"
+#include "XMLNode.h"
 
-#include "SpecialHandler.h"
+using namespace std;
 
-class VerbSpecialHandler : public SpecialHandler
-{
-   public:
-		const char* prefix () const {return "verb";}
-		const char* info () const   {return "support of verbatim SVG embeddings";}
-		void process (istream &in, SpecialActions *actions);
-};
 
-#endif
+void SpecialDvisvgmHandler::process (istream &is, SpecialActions *actions) {
+	if (actions) {
+		string str;
+		while (is && !is.eof()) {
+			char c = is.get();
+			if (isprint(c))
+				str += c;
+		}
+		XMLElementNode *group = new XMLElementNode("g");
+		group->addAttribute("x", actions->getX());
+		group->addAttribute("y", actions->getY());
+		group->append(new XMLTextNode(str)); // plain copy
+		actions->appendInPage(group);
+	}
+}

@@ -1,5 +1,6 @@
 - evaluation of a subset of emTeX specials has been added
 - specials for embedding raw SVG snippets has been added
+- fixed bug in color handler
 
 dvisvgm-0.7
 - basic support for evaluation of specials has been added

@@ -73,8 +73,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
-		void setColor (const std::string &color) {_color.set(color);}
-		std::string getColor () const            {return _color.get();}
+		void setColor (const Color &color)  {_color.set(color);}
+		Color getColor () const             {return _color.get();}
 		void appendInPage (XMLElementNode *node);
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
@@ -96,7 +96,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		const DVIReader &_dviReader;
 		SpecialManager *_specialManager;
 		bool _xmoved, _ymoved;
-		Property<std::string> _color;
+		Property<Color> _color;
 		int _pageCount;
 		int _currentFont;
 		Nodes _nodes;

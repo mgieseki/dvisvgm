@@ -297,6 +297,48 @@ If \fB\-f\fP is given in conjunction with \fB\-z\fP the font file will be compre
 
 This option cannot be combined with \fB\-s\fP or \fB\-\-stdout\fP, respectively.
 
+.SH SUPPORT OF SPECIALS
+dvisvgm supports several sets of special commands that can be used to enrich DVI files with additional 
+features, like color, graphics or hyperlinks. The evaluation of special
+commands is done by various handlers, where each handler is responsible for all special statements 
+of the same command set, i.e. commands beginning with the same prefix. To get a list of actually provided 
+special handlers, use option \-\-list-specials (see above).
+
+.TP
+.B color
+Statements of this command set provide instructions to change the text/paint color. For an overview of the 
+exact syntax, see the documentation of \fBdvips\fP, for instance.
+.TP
+.B dvisvgm
+dvisvgm offers its own small set of specials. The following list gives a small overview. Angle brackets in
+argument lists indicate variable textual elements and are not part of the special statement.
+.RS
+.TP
+.B dvisvgm:raw <text>
+Embeds an arbitrary sequence of characters into the SVG output. dvisvgm does not perform any validation here, 
+thus the user of this special has to ensure that the resulting SVG is still valid.
+.TP
+.B dvisvgm:rawg <text>
+Same as above but encloses the raw text by an SVG group element (<g>...</g>) specifying the current 
+position coordinates and the color. So the embedded SVG snippets can relate to these settings. 
+.TP
+.B dvisvgm:img <width> <height> <file>
+Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
+can be used here. However, dvisvgm doesn't check the file format or the file name suffix.
+.RE
+.TP
+.B em
+These specials were introduced with the emTeX distribution by Eberhard Mattes. They provide line drawing 
+statements, instructions for embedding MSP, PCX, and BMP image files, as well as two PCL commands. 
+dvisvgm supports only the line drawing statements, all other em specials are silently ignored.
+A description of the command syntax can be found in the DVI driver documentation coming with emTeX (see CTAN).
+.TP
+.B html
+The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in 
+.SM DVI 
+files. dvisvgm converts them to corresponding SVG elements.
+
+
 .SH EXAMPLES
 .TP
 .B dvisvgm file
