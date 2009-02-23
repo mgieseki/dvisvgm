@@ -65,6 +65,7 @@ class DVIToSVG : public DVIReader
 
 	public:
 		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?
+		static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
 };
 
 #endif

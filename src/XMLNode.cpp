@@ -61,11 +61,25 @@ void XMLElementNode::append (XMLNode *child) {
 	if (!textNode1 || children.empty()) 
 		children.push_back(child);
 	else {
-		XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back());
-		if (textNode2)
+		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
 			textNode2->append(textNode1);  // merge two consecutive text nodes
 		else
 			children.push_back(child);
+	}
+}
+
+
+void XMLElementNode::prepend (XMLNode *child) {
+	if (!child)
+		return;
+	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
+	if (!textNode1 || children.empty()) 
+		children.push_front(child);
+	else {
+		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
+			textNode2->prepend(textNode1);  // merge two consecutive text nodes
+		else
+			children.push_front(child);
 	}
 }
 
@@ -133,8 +147,7 @@ bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 //////////////////////
 
 void XMLTextNode::append (XMLNode *node) {
-	XMLTextNode *tn = dynamic_cast<XMLTextNode*>(node);
-	if (tn)
+	if (XMLTextNode *tn = dynamic_cast<XMLTextNode*>(node))
 		append(tn);
 	else
 		delete node;
@@ -145,6 +158,14 @@ void XMLTextNode::append (XMLTextNode *node) {
 	if (node) 
 		text += node->text;
 	delete node;
+}
+
+
+void XMLTextNode::prepend (XMLNode *node) {
+	if (XMLTextNode *tn = dynamic_cast<XMLTextNode*>(node))
+		prepend(tn);
+	else
+		delete node;
 }
 
 

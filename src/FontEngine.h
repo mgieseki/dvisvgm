@@ -69,6 +69,7 @@ class FontEngine
 //		int getVAdvance () const;
 		int getFirstChar () const;
 		int getNextChar () const;
+		int getCharSize () const {return _ptSize;}
 		vector<int> getPanose () const;
 		string getGlyphName (unsigned int c) const;
 		int getCharByGlyphName (const char *name) const;
@@ -79,6 +80,7 @@ class FontEngine
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face             _currentFace;
       FT_Library          _library;
+		int                 _ptSize;
 };
 
 #endif

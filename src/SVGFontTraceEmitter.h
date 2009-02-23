@@ -41,25 +41,27 @@ class XMLElementNode;
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const Font *font, const CharmapTranslator &cmt, XMLElementNode *n);
+      SVGFontTraceEmitter (const Font *font, int fontID, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
       ~SVGFontTraceEmitter ();
-		int emitFont (std::string id="") const;
-		int emitFont (const set<int> &usedChars, string id="") const;
+		int emitFont (const char *id) const;
+		int emitFont (const set<int> &usedChars, const char *id) const;
 		bool emitGlyph (int c) const;
-		void setMag (double m) {mag = m;}
+		void setMag (double m) {_mag = m;}
 
 	protected:
-		int emitFont (const set<int> *usedChars, string id) const;
+		int emitFont (const set<int> *usedChars, const char *id) const;
 		bool checkTracer () const;
 
    private:
-		mutable GFGlyphTracer *gfTracer;
-		mutable std::istream *in;
-		const Font *font;
-		double mag;
-		const CharmapTranslator &charmapTranslator;
-		XMLElementNode *rootNode; 
-		mutable XMLElementNode *glyphNode;
+		mutable GFGlyphTracer *_gfTracer;
+		mutable std::istream *_in;
+		const Font *_font;
+		int _fontID;
+		double _mag;
+		const CharmapTranslator &_charmapTranslator;
+		XMLElementNode *_rootNode; 
+		mutable XMLElementNode *_glyphNode;
+		bool _useFonts;
 };
 
 #endif

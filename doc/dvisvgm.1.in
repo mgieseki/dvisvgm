@@ -168,11 +168,16 @@ This option is equivalent to \-TR\fIangle\fP.
 .TP 
 .B \-\^s, \-\-stdout           
 Don't write output to a file but redirect it to \fBstdout\fP. 
+.TP.
+.B \-\-no-fonts
+If this option is given, dvisvgm doesn't create font elements but uses paths instead. The 
+resulting SVG file is usually bigger but concurrently more compatible with most applications that 
+don't support SVG fonts yet. 
 .TP
-.B \-\-no-style
+.B \-\-no-styles
 By default, dvisvgm uses CSS styles and class attributes to reference fonts because it's more
 compact than repeatedly set the complete font information in each text element. However, if you 
-prefer direct font references, the default behavior can be disabled with option \-\-no-style.
+prefer direct font references, the default behavior can be disabled with option \-\-no-styles.
 .TP
 .B \-\^S, \-\-no-specials[=prefixes]
 Disable processing of \fB\especial\fP commands embedded into the DVI file. The recent 
@@ -310,7 +315,7 @@ Statements of this command set provide instructions to change the text/paint col
 exact syntax, see the documentation of \fBdvips\fP, for instance.
 .TP
 .B dvisvgm
-dvisvgm offers its own small set of specials. The following list gives a small overview. Angle brackets in
+dvisvgm offers its own small set of specials. The following list gives a brief overview. Angle brackets in
 argument lists indicate variable textual elements and are not part of the special statement.
 .RS
 .TP

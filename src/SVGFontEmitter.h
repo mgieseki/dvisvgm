@@ -23,12 +23,10 @@
 #ifndef SVGFONTDEFEMITTER_H
 #define SVGFONTDEFEMITTER_H
 
-#include <string>
+
 #include "FontEmitter.h"
 #include "FontEngine.h"
 
-using std::set;
-using std::string;
 
 class CharmapTranslator;
 class FontEncoding;
@@ -37,22 +35,24 @@ class XMLElementNode;
 class SVGFontEmitter : public FontEmitter
 {
    public:
-      SVGFontEmitter (const string &fname, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *n);
-		void readFontFile (const string &fname);
-		int emitFont (string id="") const;
-		int emitFont (const set<int> &usedChars, string id="") const;
+      SVGFontEmitter (const Font *font, int fontID, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
+		int emitFont (const char *id) const;
+		int emitFont (const std::set<int> &usedChars, const char *id) const;
 		bool emitGlyph (int c) const;
 		const XMLElementNode* getGlyphNode () const {return _glyphNode;}
 		
 	protected:
-		int emitFont (const set<int> *usedCharsm, string id) const;
+		int emitFont (const std::set<int> *usedCharsm, const char *id) const;
 
    private:
+		const Font *_font;
 		FontEngine _fontEngine;
+		int _fontID;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode;          // 
 		mutable XMLElementNode *_glyphNode; // current <glyph ...>-node
 		FontEncoding *_encoding;  ///< encoding of current font
+		bool _useFonts;  ///< create font elements or draw paths?
 };
 
 #endif

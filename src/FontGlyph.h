@@ -44,7 +44,8 @@ class GlyphCommand
 		virtual GlyphCommand* combine (GlyphCommand &cmd) {return 0;}
 		virtual const vector<LPair>& getParams () const    {return params;}
 		virtual LPair getParam (int n) const;
-		virtual void writeSVGCommand (ostream &os) const;
+		virtual void writeSVGCommand (ostream &os, double sx=1, double sy=1) const;
+
 	protected:
 		typedef vector<LPair>::iterator Iterator;
 		typedef vector<LPair>::const_iterator ConstIterator;
@@ -52,64 +53,57 @@ class GlyphCommand
 };
 
 
-class GlyphMoveTo : public GlyphCommand
+struct GlyphMoveTo : public GlyphCommand
 {
-	public:
-		GlyphMoveTo (const LPair &p) : GlyphCommand(p) {}
-		char getSVGPathCommand () const {return 'M';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphMoveTo (const LPair &p) : GlyphCommand(p) {}
+	char getSVGPathCommand () const {return 'M';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphLineTo : public GlyphCommand
+struct GlyphLineTo : public GlyphCommand
 {	
-	public:
-		GlyphLineTo (const LPair &p) : GlyphCommand(p) {}
-		char getSVGPathCommand () const {return 'L';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphLineTo (const LPair &p) : GlyphCommand(p) {}
+	char getSVGPathCommand () const {return 'L';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphConicTo : public GlyphCommand
+struct GlyphConicTo : public GlyphCommand
 {
-	public:
-		GlyphConicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
-		char getSVGPathCommand () const {return 'Q';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphConicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
+	char getSVGPathCommand () const {return 'Q';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphShortConicTo : public GlyphCommand
+struct GlyphShortConicTo : public GlyphCommand
 {
-	public:
-		GlyphShortConicTo (const LPair &p) : GlyphCommand(p) {}
-		char getSVGPathCommand () const {return 'T';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphShortConicTo (const LPair &p) : GlyphCommand(p) {}
+	char getSVGPathCommand () const {return 'T';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphCubicTo : public GlyphCommand
+struct GlyphCubicTo : public GlyphCommand
 {
-	public:
-		GlyphCubicTo (const LPair &p1, const LPair &p2, const LPair &p3) : GlyphCommand(p1, p2, p3) {}
-		char getSVGPathCommand () const {return 'C';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphCubicTo (const LPair &p1, const LPair &p2, const LPair &p3) : GlyphCommand(p1, p2, p3) {}
+	char getSVGPathCommand () const {return 'C';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphShortCubicTo : public GlyphCommand
+struct GlyphShortCubicTo : public GlyphCommand
 {
-	public:
-		GlyphShortCubicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
-		char getSVGPathCommand () const {return 'S';}
-		GlyphCommand* combine (GlyphCommand &cmd);
+	GlyphShortCubicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
+	char getSVGPathCommand () const {return 'S';}
+	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
-class GlyphClosePath : public GlyphCommand
+struct GlyphClosePath : public GlyphCommand
 {
-	public:
-		char getSVGPathCommand () const {return 'Z';}
+	char getSVGPathCommand () const {return 'Z';}
 };
 
 
@@ -127,8 +121,9 @@ class Glyph
 		void closeOpenPaths ();
 		void optimizeCommands ();
 		void read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine);
-		void writeSVGCommands (ostream &os) const;
+		void writeSVGCommands (ostream &os, double sx, double sy) const;
 		void forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam=0);
+
 	private:
 		list<GlyphCommand*> commands;
 };

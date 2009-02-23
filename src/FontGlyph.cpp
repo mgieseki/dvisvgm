@@ -52,12 +52,12 @@ LPair GlyphCommand::getParam (int n) const {
 	return LPair();
 }
 
-void GlyphCommand::writeSVGCommand (ostream &os) const {
+void GlyphCommand::writeSVGCommand (ostream &os, double sx, double sy) const {
 	os << getSVGPathCommand();
 	FORALL(params, ConstIterator, i) {
 		if (i != params.begin())
 			os << ' ';
-		os << i->x() << ' ' << i->y();
+		os << (i->x()*sx) << ' ' << (i->y()*sy);
 	}
 }
 
@@ -169,9 +169,9 @@ void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngin
 }
 
 
-void Glyph::writeSVGCommands (ostream &os) const {
+void Glyph::writeSVGCommands (ostream &os, double sx, double sy) const {
 	FORALL (commands, ConstIterator, i)
-		(*i)->writeSVGCommand(os);
+		(*i)->writeSVGCommand(os, sx, sy);
 }
 
 void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {

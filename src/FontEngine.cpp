@@ -36,6 +36,7 @@ FontEngine::FontEngine () {
 	_currentFace = 0;
 	_currentChar = _currentGlyphIndex = 0;
 	_horDeviceRes = _vertDeviceRes = 300;
+	_ptSize = 0;
    if (FT_Init_FreeType(&_library))
       Message::estream(true) << "FontEngine: error initializing FreeType library\n";
 }
@@ -90,6 +91,7 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
          break;
       }
    }
+	_ptSize = ptSize;
 	return true;
 }
 
@@ -231,6 +233,7 @@ bool FontEngine::setCharSize (int ptSize) {
 			Message::estream(true) << "FontEngine: error setting character size\n";
 		   return false;
       }
+		_ptSize = ptSize;
       return true;
 	}
 	Message::wstream(true) << "FontEngine: can't set char size, no font face selected\n";

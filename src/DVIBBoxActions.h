@@ -34,9 +34,9 @@ class DVIBBoxActions : public DVIActions
 		
 		void setChar (double x, double y, unsigned c, const Font *font) {
 			if (font) {
-				x *= BP;
-				y *= BP;
-				double s = font->scaleFactor() * BP;
+			/*	x *= BP;
+				y *= BP;*/
+				double s = font->scaleFactor(); // * BP;
 				double w = s*font->charWidth(c);
 				double h = s*font->charHeight(c);
 				double d = s*font->charDepth(c);
@@ -46,10 +46,10 @@ class DVIBBoxActions : public DVIActions
 		}
 		
 		void setRule (double x, double y, double height, double width) {
-			x *= BP; // TeX points to PostScript points ("big points")
+/*			x *= BP; // TeX points to PostScript points ("big points")
 			y *= BP;
 			height *= BP;
-			width  *= BP;
+			width  *= BP; */
 			BoundingBox rect(x, y+height, x+width, y);
 			bbox.embed(rect);
 		}

@@ -27,6 +27,7 @@
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
+#include "FontManager.h"
 #include "SpecialManager.h"
 #include "SpecialColorHandler.h"
 #include "SpecialDvisvgmHandler.h"
@@ -101,32 +102,57 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
  *  @param[in] c character code relative to the current font 
  *  @param[in] font font to be used */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
-	x *= BP;
-	y *= BP;
+/*	x *= BP;
+	y *= BP; */
 	font = font->uniqueFont();
 	const CharmapTranslator *cmt = _charmapTranslatorMap[font];
 	_usedCharsMap[font].insert(c);
-	XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	
 
-	// create a new tspan element with positioning information
-	// if "cursor" was moved
-	if (_xmoved || _ymoved || _color.changed()) {
-		_nodes.text = new XMLElementNode("tspan");
-		if (_xmoved)
-			_nodes.text->addAttribute("x", XMLString(x));
-		if (_ymoved)
-			_nodes.text->addAttribute("y", XMLString(y));
-		if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != 0)
-			_nodes.text->addAttribute("fill", _color.get().rgbString());
-		_nodes.text->append(textNode);
-		_nodes.font->append(_nodes.text);
-		_xmoved = _ymoved = false;
-		_color.changed(false);
+	if (DVIToSVG::USE_FONTS) {
+		XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	
+
+		// create a new tspan element with positioning information
+		// if "cursor" was moved
+		if (_xmoved || _ymoved || (_color.changed() && _color.get() != 0)) {
+			_nodes.text = new XMLElementNode("tspan");
+			if (_xmoved)
+				_nodes.text->addAttribute("x", XMLString(x));
+			if (_ymoved)
+				_nodes.text->addAttribute("y", XMLString(y));
+			if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != 0)
+				_nodes.text->addAttribute("fill", _color.get().rgbString());
+			_nodes.text->append(textNode);
+			_nodes.font->append(_nodes.text);
+			_xmoved = _ymoved = false;
+			_color.changed(false);
+		}
+		else if (_nodes.text) // no explicit cursor movement => append text to existing node
+			_nodes.text->append(textNode);
+		else                  // no tspan node and no cursor movement
+			_nodes.font->append(textNode);
 	}
-	else if (_nodes.text) // no explicit cursor movement => append text to existing node
-		_nodes.text->append(textNode);
-	else                  // no tspan node and no cursor movement
-		_nodes.font->append(textNode);
+	else {
+		if (_color.changed()) {
+			if (_color.get() == 0) 
+				_nodes.text = 0;
+			else {
+				_nodes.text = new XMLElementNode("g");
+				_nodes.text->addAttribute("fill", _color.get().rgbString());
+				_nodes.page->append(_nodes.text);
+			}
+			_color.changed(false);
+		}
+		ostringstream oss;
+		oss << '#' << _dviReader.getFontManager()->fontID(font) << c;		
+		XMLElementNode *use = new XMLElementNode("use");
+		use->addAttribute("x", XMLString(x));
+		use->addAttribute("y", XMLString(y));
+		use->addAttribute("xlink:href", oss.str());
+		if (_nodes.text)
+			_nodes.text->append(use);
+		else
+			_nodes.page->append(use);
+	}
 }
 
 
@@ -137,10 +163,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
  *  @param[in] height length of the vertical edges 
  *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
-	x *= BP;
+/*	x *= BP;
 	y *= BP;
 	height *= BP;
-	width  *= BP;
+	width  *= BP; */
 	// (x,y) is the lower left corner of the rectangle
 	XMLElementNode *rect = new XMLElementNode("rect");
 	rect->addAttribute("x", x);
@@ -166,7 +192,7 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
  *  @param[in] num unique number of the font in the DVI file 
  *  @param[in] font pointer to the font object */
 void DVIToSVGActions::setFont (int num, const Font *font) {
-	if (num != _currentFont) {
+	if (num != _currentFont && DVIToSVG::USE_FONTS) {
 		_nodes.font = new XMLElementNode("text");
 		if (DVIToSVG::CREATE_STYLE || !font)
 			_nodes.font->addAttribute("class", string("f") + XMLString(num));
@@ -174,8 +200,10 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 			_nodes.font->addAttribute("font-family", font->name());
 			_nodes.font->addAttribute("font-size", font->scaledSize());
 		}
-		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
-		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
+//		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
+//		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
+		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()));
+		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()));
 		_nodes.page->append(_nodes.font);
 		_nodes.text = 0;  // force creating a new _nodes.text when adding next char
 		_color.changed(true); 

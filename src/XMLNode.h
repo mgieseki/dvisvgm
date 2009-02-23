@@ -33,13 +33,13 @@ using std::map;
 using std::ostream;
 using std::string;
 
-class XMLNode
+struct XMLNode
 {
-   public:
-      virtual ~XMLNode () {}
-		virtual ostream& write (ostream &os) const =0;
-		virtual bool emit (ostream &os, XMLNode *stopElement);
-		virtual void append (XMLNode *child) {}
+	virtual ~XMLNode () {}
+	virtual ostream& write (ostream &os) const =0;
+	virtual bool emit (ostream &os, XMLNode *stopElement);
+	virtual void append (XMLNode *child) {}
+	virtual void prepend (XMLNode *child) {}
 };
 
 
@@ -53,6 +53,7 @@ class XMLElementNode : public XMLNode
 		void addAttribute (const string &name, const string &value);
 		void addAttribute (const string &name, double value);
 		void append (XMLNode *child);
+		void prepend (XMLNode *child);
 		ostream& write (ostream &os) const;
 		bool emit (ostream &os, XMLNode *stopElement);
 	private:
@@ -69,6 +70,7 @@ class XMLTextNode : public XMLNode
 		XMLTextNode (const string &str) : text(str) {}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
+		void prepend (XMLNode *child);
 		ostream& write (ostream &os) const {return os << text;}
 	private:
 		string text;

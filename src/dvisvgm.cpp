@@ -156,7 +156,8 @@ static int dvisvgm (int argc, char *argv[]) {
 	if (args.map_file_given)
 		FileFinder::setUserFontMap(args.map_file_arg);
 	
-	DVIToSVG::CREATE_STYLE = !args.no_style_given;
+	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
+	DVIToSVG::USE_FONTS = !args.no_fonts_given;
 	
 
 	double start_time = get_time();

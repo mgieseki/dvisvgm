@@ -13,7 +13,8 @@ section "SVG output options"
 option "bbox-format"    b "set format of bounding box"               string typestr="fmt"      default="min" no
 option "output"         o "set name of output file"                  string typestr="filename"               no
 option "stdout"         s "write SVG output to stdout"                                                       no
-option "no-style"       - "don't use styles to reference fonts"                                              no
+option "no-fonts"       n "draw glyphs by using path elements"                                               no
+option "no-styles"      - "don't use styles to reference fonts"                                              no
 option "zip"            z "create compressed .svgz file"             int    typestr="level"    default="9"   no argoptional
 
 section "SVG transformations"
@@ -24,7 +25,7 @@ option "transform"      T "transform page content"                   string type
 
 section "Processing options"
 option "mag"            M "magnification of Metafont output"         double typestr="factor"   default="4"   no
-option "no-mktexmf"     n "don't try to create missing fonts"                                                no
+option "no-mktexmf"     - "don't try to create missing fonts"                                                no
 option "no-specials"    S "don't process [selected] specials"        string typestr="prefixes"               no argoptional
 
 section "Message options"
