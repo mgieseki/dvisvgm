@@ -22,15 +22,42 @@
 
 #include <iomanip>
 #include <sstream>
-#include "SpecialHandler.h"
 #include "SpecialManager.h"
 #include "macros.h"
 
 using namespace std;
 
 
+UnprefixedSpecialHandler::~UnprefixedSpecialHandler () {
+	FORALL(_handlers, Iterator, it)
+		delete *it;
+}
+
+
+bool UnprefixedSpecialHandler::process (const char *prefix, istream &in, SpecialActions *actions) {
+	bool processed=false;
+	for (Iterator it=_handlers.begin(); it != _handlers.end() && !processed; ++it)
+		processed = (*it)->process(prefix, in, actions);
+	return processed;
+}
+
+
+void UnprefixedSpecialHandler::endPage () {
+	FORALL(_handlers, Iterator, it)
+		(*it)->endPage();
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+SpecialManager::SpecialManager () : _uphandler(0)
+{
+}
+
 
 SpecialManager::~SpecialManager () {
+	delete _uphandler;
 	FORALL(_handlers, Iterator, it)
 		delete it->second;
 }
@@ -40,18 +67,22 @@ SpecialManager::~SpecialManager () {
  *  @param[in] pointer to handler to be registered */
 void SpecialManager::registerHandler (SpecialHandler *handler) {
 	if (handler) {
-		delete findHandler(handler->prefix());
-		_handlers[handler->prefix()] = handler;
+		if (handler->prefix()) {
+			delete findHandler(handler->prefix());
+			_handlers[handler->prefix()] = handler;
+		}
+		else 
+			unprefixedHandler()->registerHandler(handler);
 	}
 }
 
 
 /** Registers a multiple special handlers. 
  *  If ignorelist == 0, all given handlers are registered. To exclude selected sets of 
- *  specials, the corresponding prefixes can be given separated by non alpha-numeric characters,
+ *  specials, the corresponding names can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  @param[in] handlers pointer to zero-terminated array of handlers to be registered 
- *  @param[in] ignorelist list of special prefixes to be ignored */
+ *  @param[in] ignorelist list of special names to be ignored */
 void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ignorelist) {
 	if (handlers) {
 		string ign = ignorelist ? ignorelist : "";
@@ -61,7 +92,7 @@ void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ig
 		ign = "%"+ign+"%";
 
 		for (; *handlers; handlers++) {
-			if (ign.find("%"+string((*handlers)->prefix())+"%") == string::npos)
+			if (ign.find("%"+string((*handlers)->name())+"%") == string::npos)
 				registerHandler(*handlers);
 			else
 				delete *handlers;
@@ -83,6 +114,7 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 
 /** Executes a special command. 
  *  @param[in] special the special expression 
+ *  @param[in] actions actions the special handlers can perform
  *  @return true if a special handler was found 
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, SpecialActions *actions) {
@@ -91,11 +123,11 @@ bool SpecialManager::process (const string &special, SpecialActions *actions) {
 	int c;
 	while (isalnum(c=iss.get()))
 		prefix += c;
-	if (SpecialHandler *handler = findHandler(prefix)) {
-		handler->process(iss, actions);
-		return true;
-	}
-	return false;
+	if (ispunct(c)) // also add seperation character to identifying prefix
+		prefix += c;
+	if (SpecialHandler *handler = findHandler(prefix))
+		return handler->process(prefix.c_str(), iss, actions);
+	return unprefixedHandler()->process(prefix.c_str(), iss, actions);
 }
 
 
@@ -106,12 +138,17 @@ void SpecialManager::notifyEndPage () {
 
 
 void SpecialManager::writeHandlerInfo (ostream &os) const {
-//	os << setw(10) << left << "prefix" << setw(80) << " description" << endl;
-//	os << left << "-----------------------------------------------\n";
 	FORALL(_handlers, ConstIterator, it) {
-		os << setw(10) << left << it->second->prefix() << ' ';
+		os << setw(10) << left << it->second->name() << ' ';
 		if (it->second->info())
 			os << it->second->info();
 		os << endl;
 	}
+}
+
+
+UnprefixedSpecialHandler* SpecialManager::unprefixedHandler () {
+	if (!_uphandler)
+		_uphandler = new UnprefixedSpecialHandler;
+	return _uphandler;
 }

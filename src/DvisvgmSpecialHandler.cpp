@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialColorHandler.h                                              **
+** DvisvgmSpecialHandler.cpp                                          **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,27 +20,27 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef COLORSPECIALHANDLER_H
-#define COLORSPECIALHANDLER_H
+#include <iterator>
+#include "debug.h"
+#include "DvisvgmSpecialHandler.h"
+#include "XMLNode.h"
 
-#include <stack>
-#include <vector>
-#include "SpecialHandler.h"
+using namespace std;
 
-using std::stack;
-using std::vector;
 
-class SpecialColorHandler : public SpecialHandler
-{
-	typedef vector<float> RGB;
-
-   public:
-		void process (istream &is, SpecialActions *actions);
-		const char* prefix () const {return "color";}
-		const char* info () const   {return "complete support of color specials";}
-
-	private:
-		stack<RGB> _colorStack;
-};
-
-#endif
+bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+	if (actions) {
+		string str;
+		while (is && !is.eof()) {
+			char c = is.get();
+			if (isprint(c))
+				str += c;
+		}
+		XMLElementNode *group = new XMLElementNode("g");
+		group->addAttribute("x", actions->getX());
+		group->addAttribute("y", actions->getY());
+		group->append(new XMLTextNode(str)); // plain copy
+		actions->appendInPage(group);
+	}
+	return true;
+}

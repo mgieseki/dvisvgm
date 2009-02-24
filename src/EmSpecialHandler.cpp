@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialEmHandler.cpp                                               **
+** EmSpecialHandler.cpp                                               **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -21,14 +21,14 @@
 ***********************************************************************/
 
 #include <sstream>
-#include "SpecialEmHandler.h"
+#include "EmSpecialHandler.h"
 #include "InputBuffer.h"
 #include "XMLNode.h"
 
 using namespace std;
 
 
-SpecialEmHandler::SpecialEmHandler () : _linewidth(0.4), _actions(0) {
+EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4), _actions(0) {
 }
 
 
@@ -128,7 +128,7 @@ static double read_length (InputBuffer &in) {
 }
 
 
-void SpecialEmHandler::process (istream &is, SpecialActions *actions) {
+bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	// em:moveto => move graphic cursor to dvi cursor
 	// em:lineto => draw line from graphic cursor to dvi cursor, move graphic cursor to dvi cursor
 	// em:linewidth <w> => set line width to <w>
@@ -145,61 +145,61 @@ void SpecialEmHandler::process (istream &is, SpecialActions *actions) {
 	// supported length units: pt, pc, in, bp, cm, mm, dd, cc, sp 
 	// default line width: 0.4pt
 	
-	if (!actions)
-		return;
-
-	_actions = actions;  // save pointer to SpecialActions for later use in endPage
-	StreamInputBuffer in(is, 128);
-	string cmd = in.getWord();
-	if (cmd == "moveto")
-		_pos = DPair(actions->getX(), actions->getY());
-	else if (cmd == "lineto") {
-		DPair p(actions->getX(), actions->getY());
-		create_line(_pos, p, 'p', 'p', _linewidth, actions);
-		_pos = p;
-	}
-	else if (cmd == "linewidth")
-		_linewidth = read_length(in);
-	else if (cmd == "point") {
-		DPair p(actions->getX(), actions->getY());
-		int n = in.getInt();
-		if (in.getPunct() == ',') {
-			p.x(in.getDouble());
+	if (actions) {
+		_actions = actions;  // save pointer to SpecialActions for later use in endPage
+		StreamInputBuffer in(is, 128);
+		string cmd = in.getWord();
+		if (cmd == "moveto")
+			_pos = DPair(actions->getX(), actions->getY());
+		else if (cmd == "lineto") {
+			DPair p(actions->getX(), actions->getY());
+			create_line(_pos, p, 'p', 'p', _linewidth, actions);
+			_pos = p;
+		}
+		else if (cmd == "linewidth")
+			_linewidth = read_length(in);
+		else if (cmd == "point") {
+			DPair p(actions->getX(), actions->getY());
+			int n = in.getInt();
+			if (in.getPunct() == ',') {
+				p.x(in.getDouble());
+				if (in.getPunct() == ',')
+					p.y(in.getDouble());
+			}
+			_points[n] = p;
+		}
+		else if (cmd == "line") {
+			int n1 = in.getInt();
+			int c1 = 'p';
+			if (isalpha(in.peek())) 
+				c1 = in.get();
+			in.getPunct();
+			int n2 = in.getInt();
+			int c2 = 'p';
+			if (isalpha(in.peek())) 
+				c2 = in.get();
+			double lw = _linewidth;
 			if (in.getPunct() == ',')
-				p.y(in.getDouble());
-		}
-		_points[n] = p;
-	}
-	else if (cmd == "line") {
-		int n1 = in.getInt();
-		int c1 = 'p';
-		if (isalpha(in.peek())) 
-			c1 = in.get();
-		in.getPunct();
-		int n2 = in.getInt();
-		int c2 = 'p';
-		if (isalpha(in.peek())) 
-			c2 = in.get();
-		double lw = _linewidth;
-		if (in.getPunct() == ',')
-			lw = read_length(in);
-		map<int,DPair>::iterator it1=_points.find(n1);
-		map<int,DPair>::iterator it2=_points.find(n2);
-		if (it1 != _points.end() && it2 != _points.end())
-			create_line(it1->second, it2->second, c1, c2, lw, actions);
-		else {
-			// Line endpoints havn't necessarily to be defined before
-			// a line definition. If a point wasn't defined yet we push the line
-			// in a wait list and process the lines at the end of the page.
-			_lines.push_back(Line(n1, n2, c1, c2, lw));
+				lw = read_length(in);
+			map<int,DPair>::iterator it1=_points.find(n1);
+			map<int,DPair>::iterator it2=_points.find(n2);
+			if (it1 != _points.end() && it2 != _points.end())
+				create_line(it1->second, it2->second, c1, c2, lw, actions);
+			else {
+				// Line endpoints havn't necessarily to be defined before
+				// a line definition. If a point wasn't defined yet we push the line
+				// in a wait list and process the lines at the end of the page.
+				_lines.push_back(Line(n1, n2, c1, c2, lw));
+			}
 		}
 	}
+	return true;
 }
 
 
 /** This method is called at the end of a DVI page. Here we have to draw all pending
  *   lines that are still in the line list. All line endpoints must be defined until here. */
-void SpecialEmHandler::endPage () {
+void EmSpecialHandler::endPage () {
 	if (_actions) {
 		FORALL(_lines, list<Line>::iterator, it) {
 			map<int,DPair>::iterator pit1=_points.find(it->p1);

@@ -24,12 +24,10 @@
 #define SPECIALHANDLER_H
 
 #include <istream>
-#include <string>
+#include <list>
 #include "MessageException.h"
 #include "SpecialActions.h"
 
-using std::istream;
-using std::string;
 
 struct SpecialException : public MessageException
 {
@@ -42,8 +40,10 @@ struct SpecialHandler
 	virtual ~SpecialHandler () {}
 	virtual const char* prefix () const=0;
 	virtual const char* info () const=0;
-	virtual void process (istream &in, SpecialActions *actions)=0;
+	virtual const char* name () const {return prefix();}
+	virtual bool process (const char *prefix, std::istream &in, SpecialActions *actions)=0;
 	virtual void endPage () {}
 };
+
 
 #endif

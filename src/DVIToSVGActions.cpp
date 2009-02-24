@@ -29,10 +29,10 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "SpecialManager.h"
-#include "SpecialColorHandler.h"
-#include "SpecialDvisvgmHandler.h"
-#include "SpecialEmHandler.h"
-#include "SpecialHtmlHandler.h"
+#include "ColorSpecialHandler.h"
+#include "DvisvgmSpecialHandler.h"
+#include "EmSpecialHandler.h"
+#include "HtmlSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -76,10 +76,10 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
-			new SpecialColorHandler,    // handles color specials
-			new SpecialDvisvgmHandler,  // handles raw SVG embeddings 
-			new SpecialEmHandler,       // handles emTeX specials
-			new SpecialHtmlHandler,       // handles emTeX specials
+			new ColorSpecialHandler,    // handles color specials
+			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
+			new EmSpecialHandler,       // handles emTeX specials
+			new HtmlSpecialHandler,     // handles emTeX specials
 			0
 		};
 		delete _specialManager;      // delete current SpecialManager

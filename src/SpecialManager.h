@@ -26,35 +26,60 @@
 #include <map>
 #include <ostream>
 #include <string>
-
-using std::map;
-using std::string;
+#include "SpecialHandler.h"
 
 class SpecialActions;
-class SpecialHandler;
+
+
+class UnprefixedSpecialHandler : public SpecialHandler
+{
+	friend class SpecialManager;
+	typedef std::list<SpecialHandler*> HandlerList;
+	typedef HandlerList::iterator Iterator;
+	typedef HandlerList::const_iterator ConstIterator;
+
+	public:
+		~UnprefixedSpecialHandler ();
+		const char* prefix () const {return 0;}
+		const char* info () const   {return 0;}
+		const char* name () const   {return 0;}
+		void registerHandler (SpecialHandler *handler) {_handlers.push_back(handler);}
+		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
+		void endPage ();		
+
+	protected:
+		UnprefixedSpecialHandler () {}
+		const HandlerList& handlers () const {return _handlers;}
+
+	private:
+		HandlerList _handlers;
+};
+
 
 class SpecialManager
 {
-	typedef map<string,SpecialHandler*> HandlerMap;
-	typedef map<string,SpecialHandler*>::iterator Iterator;
-	typedef map<string,SpecialHandler*>::const_iterator ConstIterator;
+	typedef std::map<string,SpecialHandler*> HandlerMap;
+	typedef HandlerMap::iterator Iterator;
+	typedef HandlerMap::const_iterator ConstIterator;
 
    public:
-		SpecialManager () {}
+		SpecialManager ();
       ~SpecialManager ();
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
-		bool process (const string &special, SpecialActions *actions);
+		bool process (const std::string &special, SpecialActions *actions);
 		void notifyEndPage ();
 		void writeHandlerInfo (std::ostream &os) const;
 
 	protected:
 		SpecialManager (const SpecialManager &) {}
 		void operator = (const SpecialManager &) {}
-		SpecialHandler* findHandler (const string &prefix) const;
+		SpecialHandler* findHandler (const std::string &prefix) const;
+		UnprefixedSpecialHandler* unprefixedHandler ();
 
    private:
 		HandlerMap _handlers;
+		UnprefixedSpecialHandler *_uphandler;
 };
 
 #endif

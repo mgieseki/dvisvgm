@@ -22,7 +22,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
-#include "SpecialColorHandler.h"
+#include "ColorSpecialHandler.h"
 #include "SpecialActions.h"
 
 class ColorSpecialTest : public CxxTest::TestSuite
@@ -38,51 +38,51 @@ class ColorSpecialTest : public CxxTest::TestSuite
 	public:
 		void test_rgb () {
 			std::istringstream iss("rgb 1 0 1");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0xff00ff));
 		}
 
 		void test_hsb () {
 			std::istringstream iss("hsb 1 0.5 1");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0xff8080));
 		}
 
 		void test_cmyk () {
 			std::istringstream iss("cmyk 0.1 0.2 0.4 0.6");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0x4c3300));
 		}
 
 		void test_stack () {
 			std::istringstream iss("push rgb 1 0 0");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0xff0000));
 			iss.clear();
 			iss.str("push Blue");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0x0000ff));
 			iss.clear();
 			iss.str("pop");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0xff0000));
 		}
 
 		void test_constant () {
 			std::istringstream iss("RedViolet");
-			handler.process(iss, &actions);
+			handler.process(0, iss, &actions);
 			TS_ASSERT(actions.equals(0x9600a8));
 		}
 
 		void test_errors () {
 			std::istringstream iss("UnknownColor");
-			TS_ASSERT_THROWS(handler.process(iss, &actions), SpecialException);
+			TS_ASSERT_THROWS(handler.process(0, iss, &actions), SpecialException);
 			iss.clear();
 			iss.str("rgb 0 0.3 3.1");
-			TS_ASSERT_THROWS(handler.process(iss, &actions), SpecialException);
+			TS_ASSERT_THROWS(handler.process(0, iss, &actions), SpecialException);
 		}
 
 	private:
-		SpecialColorHandler handler;
+		ColorSpecialHandler handler;
 		SetColor actions;
 };
