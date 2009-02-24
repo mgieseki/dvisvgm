@@ -68,7 +68,6 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			elem->addAttribute("r", _penwidth/2.0);
 		}
 		else {
-			ostringstream oss;
 			if (_points.size() == 2 || (!fill && _points.front() != _points.back())) {
 				elem = new XMLElementNode("polyline");
 				elem->addAttribute("fill", "none");
@@ -83,7 +82,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 				elem = new XMLElementNode("polygon");
 				elem->addAttribute("fill", fill ? color.rgbString() : "none");
 			}
-
+			ostringstream oss;
 			FORALL(_points, list<DPair>::iterator, it) {
 				if (it != _points.begin())
 					oss << ' ';
@@ -92,6 +91,13 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			elem->addAttribute("points", oss.str());
 			elem->addAttribute("stroke", "black");
 			elem->addAttribute("stroke-width", XMLString(_penwidth));
+		}
+		if (ddist > 0)
+			elem->addAttribute("stroke-dasharray", XMLString(ddist));
+		else if (ddist < 0) {
+			ostringstream oss;
+			oss << _penwidth << ' ' << -ddist;
+			elem->addAttribute("stroke-dasharray", oss.str());
 		}
 		actions->appendInPage(elem);
 	}

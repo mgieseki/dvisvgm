@@ -342,7 +342,10 @@ A description of the command syntax can be found in the DVI driver documentation
 The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in 
 .SM DVI 
 files. dvisvgm converts them to corresponding SVG elements.
-
+.TP
+.B tpic
+The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
+eepic and tplot, use these specials to describe graphics. 
 
 .SH EXAMPLES
 .TP
