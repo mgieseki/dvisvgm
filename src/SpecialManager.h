@@ -75,11 +75,11 @@ class SpecialManager
 		SpecialManager (const SpecialManager &) {}
 		void operator = (const SpecialManager &) {}
 		SpecialHandler* findHandler (const std::string &prefix) const;
-		UnprefixedSpecialHandler* unprefixedHandler ();
+		UnprefixedSpecialHandler* unprefixedHandler () const;
 
    private:
 		HandlerMap _handlers;
-		UnprefixedSpecialHandler *_uphandler;
+		mutable UnprefixedSpecialHandler *_uphandler;
 };
 
 #endif

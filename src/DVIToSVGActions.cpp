@@ -33,6 +33,7 @@
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
 #include "HtmlSpecialHandler.h"
+#include "TpicSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -80,6 +81,7 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
 			new EmSpecialHandler,       // handles emTeX specials
 			new HtmlSpecialHandler,     // handles emTeX specials
+			new TpicSpecialHandler,     // handles emTeX specials
 			0
 		};
 		delete _specialManager;      // delete current SpecialManager

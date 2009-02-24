@@ -1,6 +1,7 @@
 dvisvgm-0.7.1
 - evaluation of a subset of emTeX specials has been added
-- specials for embedding raw SVG snippets has been added
+- specials for embedding of raw SVG snippets has been added
+- evaluation of TPIC specials has been added
 - added option -n, --no-fonts (replaces fonts by paths)
 - fixed bug in color handler
 

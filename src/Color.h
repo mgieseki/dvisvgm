@@ -15,6 +15,7 @@ class Color
 		operator UInt32 () const              {return _rgb;}
 		void set (UInt8 r, UInt8 g, UInt8 b)  {_rgb = (r << 16) | (g << 8) | b;}
 		void set (float r, float g, float b);
+		void operator *= (double c);
 		std::string rgbString () const;
 
 	private:

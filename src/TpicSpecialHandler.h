@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialHandler.h                                                   **
+** TpicSpecialHandler.h                                               **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,30 +20,30 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALHANDLER_H
-#define SPECIALHANDLER_H
+#ifndef TPICSPECIALHANDLER_H
+#define TPICSPECIALHANDLER_H
 
-#include <istream>
-#include <list>
-#include "MessageException.h"
-#include "SpecialActions.h"
+#include "Pair.h"
+#include "SpecialHandler.h"
 
-
-struct SpecialException : public MessageException
+class TpicSpecialHandler : public SpecialHandler
 {
-	SpecialException (const string &msg) : MessageException(msg) {}
+	public:
+		TpicSpecialHandler ();
+		const char* prefix () const {return 0;}
+		const char* info () const   {return "TPIC specials";}
+		const char* name () const   {return "tpic";}
+		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+		void endPage ();
+
+	protected:
+		void reset ();
+		void drawLines (bool fill, double ddist, SpecialActions *actions);
+
+   private:
+		double _penwidth; ///< pen width in TeX point units
+		double _fill;     ///< fill intensity [0,1]; if < 0, we don't fill anything
+		std::list<DPair> _points;
 };
-
-
-struct SpecialHandler
-{
-	virtual ~SpecialHandler () {}
-	virtual const char* prefix () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const {return prefix();}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-	virtual void endPage () {}
-};
-
 
 #endif

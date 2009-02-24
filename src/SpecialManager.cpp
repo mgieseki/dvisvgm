@@ -138,7 +138,14 @@ void SpecialManager::notifyEndPage () {
 
 
 void SpecialManager::writeHandlerInfo (ostream &os) const {
-	FORALL(_handlers, ConstIterator, it) {
+	typedef map<string, SpecialHandler*> SortMap;
+	SortMap m;
+	FORALL(_handlers, ConstIterator, it)
+		m[it->second->name()] = it->second;
+	FORALL(unprefixedHandler()->handlers(), list<SpecialHandler*>::const_iterator, it)
+		m[(*it)->name()] = *it;	
+	
+	FORALL(m, SortMap::iterator, it) {
 		os << setw(10) << left << it->second->name() << ' ';
 		if (it->second->info())
 			os << it->second->info();
@@ -147,7 +154,7 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 }
 
 
-UnprefixedSpecialHandler* SpecialManager::unprefixedHandler () {
+UnprefixedSpecialHandler* SpecialManager::unprefixedHandler () const {
 	if (!_uphandler)
 		_uphandler = new UnprefixedSpecialHandler;
 	return _uphandler;

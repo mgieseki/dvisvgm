@@ -16,6 +16,16 @@ void Color::set (float r, float g, float b) {
 }
 
 
+void Color::operator *= (double c) {
+	UInt32 rgb=0;
+	for (int i=0; i < 3; i++) {
+		rgb |= UInt32(floor((_rgb & 0xff)*c+0.5)) << (8*i);
+		_rgb >>= 8;
+	}
+	_rgb = rgb;
+}
+
+
 string Color::rgbString () const {
 	ostringstream oss;
 	oss << '#';
