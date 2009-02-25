@@ -35,7 +35,7 @@ struct SpecialActions
 	virtual int getY() const =0;
 	virtual void setColor (const Color &color) =0;
 	virtual Color getColor () const =0;
-	virtual void appendInPage (XMLElementNode *node) =0;
+	virtual void appendToPage (XMLElementNode *node) =0;
 };
 
 
@@ -45,7 +45,7 @@ struct SpecialEmptyActions : SpecialActions
 	int getY() const {return 0;}
 	void setColor (const Color &color) {}
 	Color getColor () const {return 0;}
-	void appendInPage (XMLElementNode *node) {}
+	void appendToPage (XMLElementNode *node) {}
 };
 
 

@@ -75,7 +75,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void setRule (double x, double y, double height, double width);
 		void setColor (const Color &color)  {_color.set(color);}
 		Color getColor () const             {return _color.get();}
-		void appendInPage (XMLElementNode *node);
+		void appendToPage (XMLElementNode *node);
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);

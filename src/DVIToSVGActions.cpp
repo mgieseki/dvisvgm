@@ -271,7 +271,7 @@ void DVIToSVGActions::endPage () {
 }
 
 
-void DVIToSVGActions::appendInPage (XMLElementNode *node) {
+void DVIToSVGActions::appendToPage (XMLElementNode *node) {
 	if (node && _nodes.page)
 		_nodes.page->append(node);
 }

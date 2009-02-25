@@ -40,7 +40,7 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 		group->addAttribute("x", actions->getX());
 		group->addAttribute("y", actions->getY());
 		group->append(new XMLTextNode(str)); // plain copy
-		actions->appendInPage(group);
+		actions->appendToPage(group);
 	}
 	return true;
 }

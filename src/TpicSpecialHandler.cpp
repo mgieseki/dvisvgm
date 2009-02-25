@@ -99,7 +99,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			oss << _penwidth << ' ' << -ddist;
 			elem->addAttribute("stroke-dasharray", oss.str());
 		}
-		actions->appendInPage(elem);
+		actions->appendToPage(elem);
 	}
 	reset();	
 }

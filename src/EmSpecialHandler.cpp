@@ -96,7 +96,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		if (actions->getColor() != 0)
 			node->addAttribute("fill", actions->getColor().rgbString());
 	}
-	actions->appendInPage(node);
+	actions->appendToPage(node);
 }
 
 
