@@ -137,5 +137,5 @@ fi
 
 AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
-AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.1 doc/Makefile])
+AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile doc/dvisvgm.txt doc/Makefile])
 AC_OUTPUT
