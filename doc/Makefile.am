@@ -3,18 +3,19 @@ EXTRA_DIST = $(man_MANS)
 
 dvisvgm.1: dvisvgm.txt
 	a2x -dmanpage -fmanpage dvisvgm.txt
+	sed '/^\.nr an-break-flag 1/{N;N;d}' -i dvisvgm.1
 
 dvisvgm.pdf: dvisvgm.1
-	groff -Tps -man dvisvgm.1 >dvisvgm.ps
+	man -l -Tps dvisvgm.1 >dvisvgm.ps
 	ps2pdf dvisvgm.ps dvisvgm.pdf
 	rm -f dvisvgm.ps
 
-pdf-dvi: dvisvgm.dvi
+dvi-pdf: dvisvgm.dvi
 	dvipdfm dvisvgm
 	rm -f dvisvgm.dvi
 
 dvisvgm.dvi: dvisvgm.1
-	groff -Tdvi -man dvisvgm.1 >dvisvgm.dvi
+	man -Tdvi dvisvgm.1 >dvisvgm.dvi
 
 dvisvgm.html: dvisvgm.txt
 	asciidoc --unsafe -dmanpage dvisvgm.txt

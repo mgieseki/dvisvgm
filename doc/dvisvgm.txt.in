@@ -24,24 +24,24 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-The program dvisvgm generates an SVG file from a given DVI file.
+The program *dvisvgm* generates an SVG file from a given DVI file.
 DVI is the device independent output format produced by TeX and some other
 typesetting systems. Output from groff can be converted to DVI using grodvi.
 
-The recent version of dvisvgm provides advanced conversion functionality but currently 
+The recent version of *dvisvgm* provides advanced conversion functionality but currently 
 only one page can be converted even if the DVI file is made up of multiple pages. 
-You can select the page to be processed with option -p. dvisvgm should properly convert 
+You can select the page to be processed with option *-p*. *dvisvgm* should properly convert 
 all pages that are made up of fonts and rules only. Additionally, some
 sets of specials are understood as well. For a more detailed overview, see
 section *support of specials* below.
 
-Since SVG is a vector based graphics format, dvisvgm tries to convert the glyph 
+Since SVG is a vector based graphics format, *dvisvgm* tries to convert the glyph 
 outlines of all used fonts into scalable path descriptions. The fastest way to do that 
-is to extract the path information from PFB (PostScript Type 1) files. So if dvisvgm is able 
+is to extract the path information from PFB (PostScript Type 1) files. So if *dvisvgm* is able 
 to find a PFB file for a used font, it will read the necessary information from it.
 
 Because TeX's main source for font descriptions is Metafont which produces bitmap output, 
-not all obtainable TeX fonts are available in PFB format. In these cases dvisvgm tries 
+not all obtainable TeX fonts are available in PFB format. In these cases *dvisvgm* tries 
 to vectorize Metafont's output by tracing the glyph bitmaps. The results are not as perfect 
 as most (manually optimized) PFB outlines but are nonetheless really nice in most cases.
 
@@ -54,16 +54,16 @@ The argument fmt is argument a case-insensitive string that denotes the paper si
 Following size names are supported:
  
  *International DIN/ISO paper sizes*;;
- A'n', B 'n', C 'n', D 'n', where 'n' is a non-negative integer, e.g. A4 or a4 for DIN/ISO A4 
+ A__n__, B__n__, C__n__, D__n__, where 'n' is a non-negative integer, e.g. A4 or a4 for DIN/ISO A4 
  format (210mm &#215; 297mm).
  
  *North American paper sizes*;;
    invoice, executive, legal, letter, ledger
  
  *Special bounding box sizes*;;
-   - *dvi*: the page size stored in the DVI file will be used
-   - *min*: the minimal bounding box will be computed and assigned
-   - *none*: no bounding box will be assigned
+   *dvi*:: the page size stored in the DVI file will be used
+   *min*:: the minimal bounding box will be computed and assigned
+   *none*:: no bounding box will be assigned
  
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
@@ -82,16 +82,16 @@ you choose a landscape format the page won't be rotated.
 
 *-c, --scale*='sx'[,'sy']::
 Scales page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent 
-to -TS'x','y'.
+to *-TS*__sx__,__sy__.
 
 
 *-m, --map-file*='file'::
 Sets the map file that is used to look up font names and encodings. *dvisvgm* doesn't provide
 its own map file but tries to use available ones coming with *dvips* or *dvipdfm*. If 
-option -m is not given dvisvgm looks for ps2pk.map, dvipdfm.map, and psfonts.map (in this order).
-Without further options, the file specified by option -m will be used instead of the 
+option *-m* is not given *dvisvgm* looks for +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order).
+Without further options, the file specified by option *-m* will be used instead of the 
 default maps. If you want *dvisgvm* to load the given file additionally to the default maps, add a 
-leading '\+' to the file/path, e.g. --map-file=\+myfonts.map.
+leading '\+' to the file/path, e.g. `--map-file=\+myfonts.map`.
 For further information about the file format see the manuals of *dvips* and *dvipdfm*. 
 
 
@@ -104,15 +104,15 @@ nice results.
 
 
 *-n, --no-fonts*::
-If this option is given, dvisvgm doesn't create font elements but uses paths instead. The
+If this option is given, *dvisvgm* doesn't create font elements but uses paths instead. The
 resulting SVG file is usually bigger but concurrently more compatible with most applications that
 don't support SVG fonts yet.
 
 
 *--no-styles*::
-By default, dvisvgm uses CSS styles and class attributes to reference fonts because it's more
+By default, *dvisvgm* uses CSS styles and class attributes to reference fonts because it's more
 compact than repeatedly set the complete font information in each text element. However, if you 
-prefer direct font references, the default behavior can be disabled with option --no-styles.
+prefer direct font references, the default behavior can be disabled with option *--no-styles*.
 
 
 *--no-mktexmf*::
@@ -136,7 +136,7 @@ If this option is omitted, the first page will be selected.
 
 *-r, --rotate*='angle'::
 Rotates page content clockwise by 'angle' degrees around the page center.
-This option is equivalent to -TR'angle'.
+This option is equivalent to *-TR*'angle'.
 
 
 *-s, --stdout*::
@@ -158,7 +158,7 @@ separated from the rest of the statement by a colon or a blank, e.g. 'color' or 
 
 *-t, --translate*='tx'[,'ty']::
 Translates (moves) page content in direction of vector ('tx','ty'). This option is 
-equivalent to -TT'tx','ty'.
+equivalent to *-TT*'tx','ty'.
 
 
 *-T, --transform*='commands'::
@@ -190,16 +190,16 @@ parameters. Following transformation commands are supported:
     except 90+180'k', where 'k' is an integer.
   
   *FH* ['y'];;
-  Mirrors (flips) page at the horizontal line through point (0,y). Omitting the optional argument
-  leads to 'y'=h/2, where 'h' denotes the page height (see 'pre-defined constants' below).
+  Mirrors (flips) page at the horizontal line through point (0,'y'). Omitting the optional argument
+  leads to 'y'='h'/2, where 'h' denotes the page height (see 'pre-defined constants' below).
   
   *FV* ['x'];;
-  Mirrors (flips) page at the vertical line through point (x,0). Omitting the optional argument
-  leads to 'x'=w/2, where 'w' denotes the page width (see 'pre-defined constants' below).
+  Mirrors (flips) page at the vertical line through point ('x',0). Omitting the optional argument
+  leads to 'x'='w'/2, where 'w' denotes the page width (see 'pre-defined constants' below).
   
   *M* 'm1',...,'m6';;
   Applies a transformation described by the 3&#215;3 matrix 
-  (('m1','m2','m3'),('m4','m5','m6'),(0,0,1)), where the inner triples denote
+  \(('m1','m2','m3'),('m4','m5','m6'),(0,0,1)), where the inner triples denote
   the rows.
 
 +
@@ -214,10 +214,10 @@ precedence rules. Parentheses may be used as well.
 
 Additionally, some pre-defined constants are provided:
 
-ux:: horizontal position of upper left page corner in TeX point units
-uy:: vertical position of upper left page corner in TeX point units
-h:: page height in TeX point units (0 in case of *-bnone*)
-w:: page width in TeX point units (0 in case of *-bnone*)
+*ux*:: horizontal position of upper left page corner in TeX point units
+*uy*:: vertical position of upper left page corner in TeX point units
+*h*:: page height in TeX point units (0 in case of *-bnone*)
+*w*:: page width in TeX point units (0 in case of *-bnone*)
 
 Furthermore, you can use the length constants *pt*, *mm*, *cm* and *in*, e.g.
 +2cm+ or +1.6in+. Thus, option +-TT1in,0R45+ moves the page content 1 inch to the right and rotates it
@@ -231,7 +231,7 @@ transformation sequences. They are simply independent shorthand options for comm
 +
 
 *-v, --verbosity*='level'::
-Controls the type of messages printed during a dvisvgm run:
+Controls the type of messages printed during a *dvisvgm* run:
   *0*;; no message output
   *1*;; informal output only
   *2*;; warning messages only
@@ -253,19 +253,19 @@ CAUTION: This option cannot be combined with *-s, --stdout*.
 
 SUPPORT OF SPECIALS
 -------------------
-dvisvgm supports several sets of special commands that can be used to enrich DVI files with additional 
+*dvisvgm* supports several sets of special commands that can be used to enrich DVI files with additional 
 features, like color, graphics or hyperlinks. The evaluation of special commands is done by various handlers, 
 where each handler is responsible for all special statements of the same command set, i.e. commands beginning 
-with the same prefix. To get a list of actually provided special handlers, use option --list-specials (see above).
+with the same prefix. To get a list of actually provided special handlers, use option *--list-specials* (see above).
 
 *color*::
 Statements of this command set provide instructions to change the text/paint color. For an overview of the 
 exact syntax, see the documentation of *dvips*, for instance.
 
 *dvisvgm*::
-dvisvgm offers its own small set of specials. The following list gives a brief overview. 
+*dvisvgm* offers its own small set of specials. The following list gives a brief overview. 
   *dvisvgm:raw* 'text';;
-  Embeds an arbitrary sequence of characters into the SVG output. dvisvgm does not perform any validation here, 
+  Embeds an arbitrary sequence of characters into the SVG output. *dvisvgm* does not perform any validation here, 
   thus the user of this special has to ensure that the resulting SVG is still valid.
  
   *dvisvgm:rawg* 'text';;
@@ -274,17 +274,17 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
  
   *dvisvgm:img* 'width' 'height' 'file';;
   Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
-  can be used here. However, dvisvgm doesn't check the file format or the file name suffix.
+  can be used here. However, *dvisvgm* doesn't check the file format or the file name suffix.
 
 *em*::
 These specials were introduced with the emTeX distribution by Eberhard Mattes. They provide line drawing 
 statements, instructions for embedding MSP, PCX, and BMP image files, as well as two PCL commands. 
-dvisvgm supports only the line drawing statements, all other em specials are silently ignored.
+*dvisvgm* supports only the line drawing statements, all other em specials are silently ignored.
 A description of the command syntax can be found in the DVI driver documentation coming with emTeX (see CTAN).
 
 *html*::
 The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files. 
-dvisvgm converts them to corresponding SVG elements.
+*dvisvgm* converts them to corresponding SVG elements.
 
 *tpic*::
 The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
@@ -321,7 +321,7 @@ ENVIRONMENT
 files that it opens. Hence, the environment variables described in
 the library's documentation influence the converter.
 
-The pre-compiled Windows version of dvisvgm requires a working installation of MiKTeX 2.7 or above.
+The pre-compiled Windows version of *dvisvgm* requires a working installation of MiKTeX 2.7 or above.
 
 FILES
 -----
