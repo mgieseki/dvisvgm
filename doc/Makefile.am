@@ -4,22 +4,24 @@ EXTRA_DIST = $(man_MANS)
 dvisvgm.1: dvisvgm.txt
 	a2x -dmanpage -fmanpage dvisvgm.txt
 
-pdf:
+dvisvgm.pdf: dvisvgm.1
 	groff -Tps -man dvisvgm.1 >dvisvgm.ps
 	ps2pdf dvisvgm.ps dvisvgm.pdf
 	rm -f dvisvgm.ps
 
-pdf-dvi:
-	groff -Tdvi -man dvisvgm.1 >dvisvgm.dvi
-	dvipdfm -s 2- dvisvgm
+pdf-dvi: dvisvgm.dvi
+	dvipdfm dvisvgm
 	rm -f dvisvgm.dvi
 
-dvi:
+dvisvgm.dvi: dvisvgm.1
 	groff -Tdvi -man dvisvgm.1 >dvisvgm.dvi
 
-html:
-	asciidoc -dmanpage dvisvgm.txt
-#	groff -Thtml -man dvisvgm.1 >dvisvgm.html
+dvisvgm.html: dvisvgm.txt
+	asciidoc --unsafe -dmanpage dvisvgm.txt
+
+html: dvisvgm.html
+man: dvisvgm.1
+pdf: dvisvgm.pdf
 
 clean:
 	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.1 dvisvgm.txt

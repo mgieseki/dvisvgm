@@ -5,9 +5,9 @@
 
 dvisvgm(1)
 ==========
-Martin Gieseking <martin.gieseking@uos.de>
+Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
-:man version: 0.7.1
+:man version: @VERSION@
 :man manual: dvisvgm Manual
 :icons: 1
 :iconsdir: .
@@ -33,7 +33,7 @@ only one page can be converted even if the DVI file is made up of multiple pages
 You can select the page to be processed with option -p. dvisvgm should properly convert 
 all pages that are made up of fonts and rules only. Additionally, some
 sets of specials are understood as well. For a more detailed overview, see
-below.
+section *support of specials* below.
 
 Since SVG is a vector based graphics format, dvisvgm tries to convert the glyph 
 outlines of all used fonts into scalable path descriptions. The fastest way to do that 
@@ -61,9 +61,9 @@ Following size names are supported:
    invoice, executive, legal, letter, ledger
  
  *Special bounding box sizes*;;
-   dvi::  the page size stored in the DVI file will be used
-   min::  the minimal bounding box will be computed and assigned
-   none:: no bounding box will be assigned
+   - *dvi*: the page size stored in the DVI file will be used
+   - *min*: the minimal bounding box will be computed and assigned
+   - *none*: no bounding box will be assigned
  
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
@@ -214,10 +214,10 @@ precedence rules. Parentheses may be used as well.
 
 Additionally, some pre-defined constants are provided:
 
-*ux*:: horizontal position of upper left page corner in TeX point units
-*uy*:: vertical position of upper left page corner in TeX point units
-*h*:: page height in TeX point units (0 in case of *-bnone*) 
-*w*:: page width in TeX point units (0 in case of *-bnone*)
+ux:: horizontal position of upper left page corner in TeX point units
+uy:: vertical position of upper left page corner in TeX point units
+h:: page height in TeX point units (0 in case of *-bnone*)
+w:: page width in TeX point units (0 in case of *-bnone*)
 
 Furthermore, you can use the length constants *pt*, *mm*, *cm* and *in*, e.g.
 +2cm+ or +1.6in+. Thus, option +-TT1in,0R45+ moves the page content 1 inch to the right and rotates it
@@ -349,12 +349,12 @@ SourceForge project site::: http://sourceforge.net/projects/dvisvgm
 
 VERSION
 -------
-0.7.1
+@VERSION@
 
 
 AUTHOR
 ------
-Written by Martin Gieseking <martin.gieseking@uos.de>
+Written by {author} <{email}>
 
 
 COPYING
