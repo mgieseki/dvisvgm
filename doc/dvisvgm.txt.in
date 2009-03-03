@@ -113,7 +113,7 @@ nice results.
 *-n, --no-fonts*::
 If this option is given, *dvisvgm* doesn't create font elements but uses paths instead. The
 resulting SVG file is usually bigger but concurrently more compatible with most applications that
-don't support SVG fonts yet.
+don't support SVG fonts yet. This option implies *--no-styles*.
 
 
 *-S, --no-specials*[='names']::

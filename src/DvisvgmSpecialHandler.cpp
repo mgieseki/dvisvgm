@@ -26,42 +26,47 @@
 #include "SpecialActions.h"
 #include "XMLNode.h"
 #include "XMLString.h"
-#include "debug.h"
 
 using namespace std;
 
 
-static void replace_variables (string &str, SpecialActions *actions) {
-	struct Variables {
-		const char *var;
-		XMLString val;
+/** Replaces constants of the form {?name} by their corresponding value. 
+ *  @param[in,out] str text to expand 
+ *  @param[in] actions interfcae to the world outside the special handler */
+static void expand_constants (string &str, SpecialActions *actions) {
+	struct Constant {
+		const char *name;
+		XMLString  val;
 	} 
-	variables[] = {
+	constants[] = {
 		{"x", XMLString(actions->getX())},
 		{"y", XMLString(actions->getY())},
 		{"color", actions->getColor().rgbString()},
 		{0, ""}
 	};
-	for (Variables *p=variables; p->var; p++) {
-		const string search = string("{?")+p->var+"}";
-		size_t pos = str.find(search);
+	for (const Constant *p=constants; p->name; p++) {
+		const string pattern = string("{?")+p->name+"}";
+		size_t pos = str.find(pattern);
 		while (pos != string::npos) {
-			str.replace(pos, strlen(p->var)+3, p->val);
-			pos = str.find(search, pos+p->val.length());
+			str.replace(pos, strlen(p->name)+3, p->val);
+			pos = str.find(pattern, pos+p->val.length());  // look for further matches
 		}
 	}
 }
 
 
-
-static void raw (StreamInputBuffer &in, SpecialActions *actions, bool group) {
+/** Inserts raw text into the SVG tree. 
+ *  @param[in,out] in the raw text is read from this input buffer
+ *  @param[in] actions interfcae to the world outside the special handler 
+ *  @param[in] group true if the text should be wrapped by a group element */
+static void raw (StreamInputBuffer &in, SpecialActions *actions, bool group=false) {
 	string str;
 	while (!in.eof()) {
 		char c = in.get();
 		if (isprint(c))
 			str += c;
 	}
-	replace_variables(str, actions);
+	expand_constants(str, actions);
 	if (!str.empty()) {
 		XMLNode *node = new XMLTextNode(str);
 		if (group) {
@@ -85,19 +90,22 @@ static void update_bbox (double w, double h, SpecialActions *actions) {
 }
 
 
-
+/** Evaluates and executes a dvisvgm special statement.
+ *  @param[in] prefix special prefix read by the SpecialManager
+ *  @param[in] is the special statement is read from this stream 
+ *  @param[in,out] in the raw text is read from this input buffer */
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (actions) {
 		StreamInputBuffer in(is);
 		string cmd = in.getWord();
 		if (cmd == "raw")               // raw <text>
-			raw(in, actions, false);
+			raw(in, actions);
 		else if (cmd == "bbox") {       // bbox <width> <height>
 			double w = in.getDouble();
 			double h = in.getDouble();
 			update_bbox(w, h, actions);
 		}
-		else if (cmd == "img") {
+		else if (cmd == "img") {        // img <width> <height> <file>
 			double w = in.getDouble();
 			double h = in.getDouble();
 			string f = in.getString();
@@ -113,5 +121,4 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 	}
 	return true;
 }
-
 
