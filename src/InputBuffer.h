@@ -28,9 +28,6 @@
 #include <string>
 #include <ostream>
 
-using std::istream;
-using std::string;
-
 
 struct InputBuffer
 {
@@ -47,8 +44,9 @@ struct InputBuffer
 	virtual bool eof () const =0;
 	virtual int getInt ();
 	virtual double getDouble ();
-	virtual string getWord ();
+	virtual std::string getWord ();
 	virtual char getPunct ();
+	virtual std::string getString ();
 
 //	void write (std::ostream &os) const;
 };
@@ -57,7 +55,7 @@ struct InputBuffer
 class StreamInputBuffer : public InputBuffer
 {
 	public:
-		StreamInputBuffer (istream &is, int bufsize=1024);
+		StreamInputBuffer (std::istream &is, int bufsize=1024);
 		~StreamInputBuffer ();
 		int pos () const {return _bufptr-_buf1;}
 		int line () const {return _line;}
@@ -76,7 +74,7 @@ class StreamInputBuffer : public InputBuffer
 		void fillBuffer (char *buf);
 
 	private:
-		istream &_is;
+		std::istream &_is;
 		const int _bufsize;
 		char *_buf1;
 		char *_buf2;
@@ -88,7 +86,7 @@ class StreamInputBuffer : public InputBuffer
 class StringInputBuffer : public InputBuffer
 {
 	public:
-		StringInputBuffer (string &str);
+		StringInputBuffer (std::string &str);
 		int pos () const        {return _pos;}
 		char get ()             {return _pos < _str.length() ? _str[_pos++] : 0;}
 		char peek () const      {return _pos < _str.length() ? _str[_pos] : 0;}
@@ -100,7 +98,7 @@ class StringInputBuffer : public InputBuffer
 		bool eof () const       {return _pos >= _str.length();}
 
 	private:
-		string &_str;
+		std::string &_str;
 		size_t _pos;
 };
 

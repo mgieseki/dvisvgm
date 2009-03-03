@@ -38,7 +38,7 @@ class DVIReader;
 class FileFinder;
 class Font;
 class SpecialManager;
-class XMLElementNode;
+class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {
@@ -77,7 +77,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void setBgColor (const Color &color);
 		void setColor (const Color &color)  {_color.set(color);}
 		Color getColor () const             {return _color.get();}
-		void appendToPage (XMLElementNode *node);
+		void appendToPage (XMLNode *node);
 		void moveToX (double x) {_xmoved = true;}
 		void moveToY (double y) {_ymoved = true;}
 		void defineFont (int num, const Font *font);

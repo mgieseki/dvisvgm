@@ -27,7 +27,7 @@
 #include "BoundingBox.h"
 #include "Color.h"
 
-class XMLElementNode;
+class XMLNode;
 
 struct SpecialActions
 {
@@ -37,7 +37,7 @@ struct SpecialActions
 	virtual void setColor (const Color &color) =0;
 	virtual Color getColor () const =0;
 	virtual void setBgColor (const Color &color) =0;
-	virtual void appendToPage (XMLElementNode *node) =0;
+	virtual void appendToPage (XMLNode *node) =0;
 	virtual BoundingBox& bbox () =0;
 };
 
@@ -50,7 +50,7 @@ class SpecialEmptyActions : public SpecialActions
 		void setColor (const Color &color) {}
 		void setBgColor (const Color &color) {}
 		Color getColor () const {return 0;}
-		void appendToPage (XMLElementNode *node) {}
+		void appendToPage (XMLNode *node) {}
 		BoundingBox& bbox () {return _bbox;}
 
 	private:

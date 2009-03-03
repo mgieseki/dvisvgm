@@ -67,6 +67,15 @@ char InputBuffer::getPunct () {
 	return 0;
 }
 
+
+string InputBuffer::getString () {
+	string ret;
+	skipSpace();
+	while (!eof() && !isspace(peek()))
+		ret += get();
+	return ret;
+}
+
 //////////////////////////////////////////
 
 StreamInputBuffer::StreamInputBuffer (istream &is, int bufsize)

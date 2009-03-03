@@ -85,6 +85,13 @@ Scales page content horizontally by 'sx' and vertically by 'sy'. This option is 
 to *-TS*__sx__,__sy__.
 
 
+*--list-specials*::
+Prints a list of registered special handlers and exits. Each handler processes a set of special
+statements belonging to the same category. The categories are identified by the
+prefix of the special statements. It's usually a leading word
+separated from the rest of the statement by a colon or a blank, e.g. 'color' or 'ps'.
+
+
 *-m, --map-file*='file'::
 Sets the map file that is used to look up font names and encodings. *dvisvgm* doesn't provide
 its own map file but tries to use available ones coming with *dvips* or *dvipdfm*. If 
@@ -107,6 +114,15 @@ nice results.
 If this option is given, *dvisvgm* doesn't create font elements but uses paths instead. The
 resulting SVG file is usually bigger but concurrently more compatible with most applications that
 don't support SVG fonts yet.
+
+
+*-S, --no-specials*[='names']::
+Disable processing of special commands that are embedded in the DVI file. If no further
+parameter is given, all specials are ignored. To selectively disable sets of specials,
+an optional comma-separated list of names can be appended to this option. A 'name' is a unique 
+identifier referencing a special handler. Option *--list-specials* lists all currently available 
+handlers and their names. 
+All unsupported special statements are silently ignored.
 
 
 *--no-styles*::
@@ -141,19 +157,6 @@ This option is equivalent to *-TR*'angle'.
 
 *-s, --stdout*::
 Don't write output to a file but redirect it to *stdout*.
-
-
-*-S, --no-specials*[='prefixes']::
-Disable processing of special commands embedded into the DVI file. The recent 
-version of *dvisvgm* supports color specials only. All other special statements are 
-silently ignored.
-
-
-*--list-specials*::
-Prints a list of registered special handlers and exits. Each handler processes a set of special
-statements belonging to the same category. The categories are identified by the
-prefix of the special statements. It's usually a leading word
-separated from the rest of the statement by a colon or a blank, e.g. 'color' or 'ps'.
 
 
 *-t, --translate*='tx'[,'ty']::
@@ -266,15 +269,19 @@ exact syntax, see the documentation of *dvips*, for instance.
 *dvisvgm* offers its own small set of specials. The following list gives a brief overview. 
   *dvisvgm:raw* 'text';;
   Embeds an arbitrary sequence of characters into the SVG output. *dvisvgm* does not perform any validation here, 
-  thus the user of this special has to ensure that the resulting SVG is still valid.
- 
-  *dvisvgm:rawg* 'text';;
-  Same as above but encloses the raw text by an SVG group element (+<g>+...+</g>+) specifying the current 
-  position coordinates and the color. So the embedded SVG snippets can relate to these settings. 
+  thus the user of this special has to ensure that the resulting SVG is still valid. The parameter 'text' may
+  contain the macros *{?x}*, *{?y}*, and *{?color}* which are expanded to the current 'x' or 'y' coordinate
+  and the current color, respectively.
  
   *dvisvgm:img* 'width' 'height' 'file';;
   Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
-  can be used here. However, *dvisvgm* doesn't check the file format or the file name suffix.
+  can be used here. However, *dvisvgm* doesn't check the file format or the file name suffix. The lengths 'width'
+  and 'height' must be given in TeX point units (1in = 72.27pt).
+ 
+  *dvisvgm:bbox* 'width' 'height';;
+  Updates the bounding box of the current page by embedding a virtual rectangle of given 'width' and 'height'
+  relative to the current DVI drawing position. This command should be used in conjunction with
+  *raw* to update the viewport of the page properly.
 
 *em*::
 These specials were introduced with the emTeX distribution by Eberhard Mattes. They provide line drawing 
@@ -282,9 +289,9 @@ statements, instructions for embedding MSP, PCX, and BMP image files, as well as
 *dvisvgm* supports only the line drawing statements, all other em specials are silently ignored.
 A description of the command syntax can be found in the DVI driver documentation coming with emTeX (see CTAN).
 
-*html*::
-The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files. 
-*dvisvgm* converts them to corresponding SVG elements.
+// *html*::
+// The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files. 
+// *dvisvgm* converts them to corresponding SVG elements.
 
 *tpic*::
 The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
@@ -347,11 +354,6 @@ Project home page::: http://dvisvgm.sourceforge.net
 SourceForge project site::: http://sourceforge.net/projects/dvisvgm
 
 
-VERSION
--------
-@VERSION@
-
-
 AUTHOR
 ------
 Written by {author} <{email}>
@@ -359,8 +361,7 @@ Written by {author} <{email}>
 
 COPYING
 -------
-Copyright (C) 2005-2009 Martin Gieseking. Free use of this software is
-granted under the terms of the GNU General Public License (GPL) version 2
-or later.
+Copyright (C) 2005-2009 by Martin Gieseking. Free use of this software is
+granted under the terms of the GNU General Public License (GPL) version 2.
 
 // vim: set syntax=asciidoc: 
