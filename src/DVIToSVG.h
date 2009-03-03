@@ -23,12 +23,9 @@
 #ifndef DVITOSVG_H
 #define DVITOSVG_H
 
-#include <ostream>
-#include "BoundingBox.h"
+#include <iostream>
 #include "DVIReader.h"
 
-using std::istream;
-using std::ostream;
 
 class CharmapTranslator;
 class SpecialManager;
@@ -39,29 +36,27 @@ class XMLElementNode;
 class DVIToSVG : public DVIReader
 {
    public:
-      DVIToSVG (istream &is, ostream &os);
+      DVIToSVG (std::istream &is, std::ostream &os);
 		~DVIToSVG ();
 		int convert (unsigned firstPage, unsigned lastPage);
 		void setMetafontMag (double m);
-		void setPageSize (string name)    {pageSizeName = name;}
+		void setPageSize (string name)    {_pageSizeName = name;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
-		void setTransformation (const string &cmds) {transCmds = cmds;}
+		void setTransformation (const string &cmds) {_transCmds = cmds;}
 	
 	protected:
 		DVIToSVG (const DVIToSVG &);
 		DVIToSVG operator = (const DVIToSVG &);
 		void embedFonts (XMLElementNode *svgElement);
-		bool computeBoundingBox (int page);
 
    private:
-		ostream &out;
-		double mag;              ///< magnification factor of Metafont output
+		std::ostream &_out;       ///< DVI output is written to this stream
+		double _mag;              ///< magnification factor of Metafont output
 		XMLDocument *svgDocument;
 		XMLDocTypeNode *doctypeNode;
 		XMLElementNode *svgElement;
-		string pageSizeName;
-		string transCmds;
-		BoundingBox boundingBox; ///< bounding box of current page
+		string _pageSizeName;
+		string _transCmds;
 
 	public:
 		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?

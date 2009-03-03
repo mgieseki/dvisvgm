@@ -23,6 +23,7 @@
 #include <sstream>
 #include "EmSpecialHandler.h"
 #include "InputBuffer.h"
+#include "SpecialActions.h"
 #include "XMLNode.h"
 
 using namespace std;
@@ -79,6 +80,9 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("y2", p2.y());
 		node->addAttribute("stroke-width", lw);
 		node->addAttribute("stroke", actions->getColor().rgbString());
+		// update bounding box
+		actions->bbox().embed(p1);
+		actions->bbox().embed(p2);
 	}
 	else {
 		// draw polygon
@@ -95,6 +99,11 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("points", oss.str());
 		if (actions->getColor() != 0)
 			node->addAttribute("fill", actions->getColor().rgbString());
+		// update bounding box
+		actions->bbox().embed(q11);
+		actions->bbox().embed(q12);
+		actions->bbox().embed(q21);
+		actions->bbox().embed(q22);
 	}
 	actions->appendToPage(node);
 }

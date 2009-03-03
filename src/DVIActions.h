@@ -27,9 +27,11 @@
 #include "Message.h"
 #include "types.h"
 
-using std::string;
 
+class BoundingBox;
 class Font;
+class SpecialManager;
+
 
 struct DVIActions
 {
@@ -44,11 +46,13 @@ struct DVIActions
 	virtual void moveToY (double y) {}
 	virtual void defineFont (int num, const Font *font) {}
 	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const string &s) {}
-	virtual void preamble (const string &cmt) {}
+	virtual void special (const std::string &s) {}
+	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
 	virtual void beginPage (Int32 *c) {}
 	virtual void endPage () {}
+	virtual BoundingBox& bbox () =0;
+	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
 };
 
 #endif

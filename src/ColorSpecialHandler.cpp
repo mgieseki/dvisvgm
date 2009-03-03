@@ -27,6 +27,7 @@
 #include <sstream>
 #include <vector>
 #include "ColorSpecialHandler.h"
+#include "SpecialActions.h"
 
 using namespace std;
 
@@ -232,15 +233,19 @@ bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActio
 	string cmd;
 	is >> cmd;
 	vector<float> rgb(3);
-	if (cmd == "push") {            // color push <model> <params>
+	if (cmd == "push") {             // color push <model> <params>
 		read_color("", is, rgb); 		
 		_colorStack.push(rgb);
 	}
 	else if (cmd == "pop") {
-		if (!_colorStack.empty())  // color pop
-		_colorStack.pop();
+		if (!_colorStack.empty())     // color pop
+			_colorStack.pop();
 	}
-	else {                         // color <model> <params>
+	else if (cmd == "background") {  // color background <model> <params>
+		read_color("", is, rgb);
+		actions->setBgColor(rgb);
+	}
+	else {                           // color <model> <params>
 		read_color(cmd, is, rgb);
 		while (!_colorStack.empty())
 			_colorStack.pop();

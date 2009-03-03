@@ -25,11 +25,10 @@
 
 #include <ostream>
 #include <string>
+#include "Pair.h"
 #include "macros.h"
 #include "types.h"
 
-using std::ostream;
-using std::string;
 
 class TransformationMatrix;
 
@@ -38,18 +37,21 @@ class BoundingBox
    public:
       BoundingBox ();
 		BoundingBox (double ulxx, double ulyy, double lrxx, double lryy);
+		BoundingBox (const DPair &p1, const DPair &p2);
 		void embed (double x, double y);
 		void embed (const BoundingBox &bb);
-		double minX () const       {return ulx;}
-		double minY () const       {return uly;}
-		double maxX () const       {return lrx;}
-		double maxY () const       {return lry;}
-		double width () const      {return lrx-ulx;}
-		double height () const     {return lry-uly;}
+		void embed (const DPair &p) {embed(p.x(), p.y());}
+		void embed (const DPair &c, double r);
+		double minX () const        {return ulx;}
+		double minY () const        {return uly;}
+		double maxX () const        {return lrx;}
+		double maxY () const        {return lry;}
+		double width () const       {return lrx-ulx;}
+		double height () const      {return lry-uly;}
 		void operator += (const BoundingBox &bb);
 		void transform (const TransformationMatrix &tm);
-		string toSVGViewBox () const;
-		ostream& write (ostream &os) const;
+		std::string toSVGViewBox () const;
+		std::ostream& write (std::ostream &os) const;
 
    private:
 		double ulx, uly; //< coordinates of upper left vertex (in TeX point units)

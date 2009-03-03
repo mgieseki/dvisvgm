@@ -3,7 +3,6 @@
 #include <sstream>
 #include "Color.h"
 
-#include "debug.h"
 using namespace std;
 
 static inline UInt8 float_to_byte (float v) {

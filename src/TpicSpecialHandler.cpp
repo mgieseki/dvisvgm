@@ -66,6 +66,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			elem->addAttribute("cx", p.x()+actions->getX());
 			elem->addAttribute("cy", p.y()+actions->getY());
 			elem->addAttribute("r", _penwidth/2.0);
+			actions->bbox().embed(p, _penwidth/2.0);
 		}
 		else {
 			if (_points.size() == 2 || (!fill && _points.front() != _points.back())) {
@@ -86,7 +87,10 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			FORALL(_points, list<DPair>::iterator, it) {
 				if (it != _points.begin())
 					oss << ' ';
-				oss << it->x()+actions->getX() << ',' << it->y()+actions->getY();
+				double x = it->x()+actions->getX();
+			  	double y = it->y()+actions->getY();
+				oss << x << ',' << y;
+				actions->bbox().embed(x, y);
 			}
 			elem->addAttribute("points", oss.str());
 			elem->addAttribute("stroke", "black");

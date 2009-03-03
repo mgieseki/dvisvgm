@@ -24,7 +24,6 @@
 #include <sstream>
 #include <string>
 #include "BoundingBox.h"
-#include "Pair.h"
 #include "TransformationMatrix.h"
 
 using namespace std;
@@ -39,6 +38,14 @@ BoundingBox::BoundingBox ()
 BoundingBox::BoundingBox (double ulxx, double ulyy, double lrxx, double lryy)
 	: ulx(min(ulxx,lrxx)), uly(min(ulyy,lryy)), 
 	  lrx(max(ulxx,lrxx)), lry(max(ulyy,lryy)), 
+	  valid(true)
+{
+}
+
+
+BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
+	: ulx(min(p1.x(), p2.x())), uly(min(p1.y(), p2.y())),
+	  lrx(max(p1.x(), p2.x())), lry(max(p1.y(), p2.y())),
 	  valid(true)
 {
 }
@@ -77,6 +84,11 @@ void BoundingBox::embed (const BoundingBox &bb) {
 			valid = true;
 		}
 	}
+}
+
+
+void BoundingBox::embed (const DPair &c, double r) {
+	embed(BoundingBox(c.x()-r, c.y()-r, c.x()+r, c.y()+r));
 }
 
 

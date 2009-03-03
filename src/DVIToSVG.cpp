@@ -25,7 +25,6 @@
 #include <fstream>
 #include "Calculator.h"
 #include "CharmapTranslator.h"
-#include "DVIBBoxActions.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
@@ -67,13 +66,13 @@ static string datetime () {
 
 
 DVIToSVG::DVIToSVG (istream &is, ostream &os) 
-	: DVIReader(is), out(os)
+	: DVIReader(is), _out(os)
 {
 	svgDocument = 0;
 	svgElement = new XMLElementNode("svg");
 	replaceActions(new DVIToSVGActions(*this, svgElement));
 	doctypeNode = 0;
-	mag = 4;
+	_mag = 4;
 }
 
 
@@ -95,27 +94,6 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	if (firstPage < 0)
 		firstPage = 1;
 	
-	computeBoundingBox(firstPage);
-	if (!transCmds.empty()) {
-		Calculator calc;
-		calc.setVariable("ux", boundingBox.minX());
-		calc.setVariable("uy", boundingBox.minY());
-		calc.setVariable("w", boundingBox.width());
-		calc.setVariable("h", boundingBox.height());
-		calc.setVariable("pt", 1);
-		calc.setVariable("in", 72.27);
-		calc.setVariable("cm", 72.27/2.54);
-		calc.setVariable("mm", 72.27/25.4);
-		TransformationMatrix matrix(transCmds, calc);
-		static_cast<DVIToSVGActions*>(getActions())->setTransformation(matrix);
-		if (pageSizeName == "min")
-			boundingBox.transform(matrix);
-	}
-	if (boundingBox.width() > 0) {
-		svgElement->addAttribute("width", XMLString(boundingBox.width())); 		
-		svgElement->addAttribute("height", XMLString(boundingBox.height()));
-		svgElement->addAttribute("viewBox", boundingBox.toSVGViewBox());
-	}
 	svgElement->addAttribute("version", "1.1");
 	svgElement->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	svgElement->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -139,58 +117,66 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 						<< ";font-size:"   << (*i)->scaledSize() << "}\n";
 			}
 		}
-/*	if (separateFonts)
-		FORALL(getFontInfoMap(), ConstIterator, i) {
-			const char *fontname = i->second->getFontName().c_str();
-			style << "@font-face {font-family:" << fontname << ";"
-				      "src:url(" << sepFontFile << "#" << fontname << ")}\n";
-		}
-*/	
 		XMLCDataNode *cdataNode = new XMLCDataNode(style.str());
 		styleElement->append(cdataNode);
 	}
 	if (executePage(firstPage)) {  // @@ 
 		Message::mstream() << endl;
 		embedFonts(svgElement);
-		//svgDocument->emit(out, 0);
-		svgDocument->write(out);
+
+		// set bounding box and apply page transformations
+		if (getActions()) {
+			BoundingBox &bbox = getActions()->bbox();
+			if (!_transCmds.empty()) {
+				Calculator calc;
+				calc.setVariable("ux", bbox.minX());
+				calc.setVariable("uy", bbox.minY());
+				calc.setVariable("w", bbox.width());
+				calc.setVariable("h", bbox.height()); 
+				calc.setVariable("pt", 1);
+				calc.setVariable("in", 72.27);
+				calc.setVariable("cm", 72.27/2.54);
+				calc.setVariable("mm", 72.27/25.4);
+				TransformationMatrix matrix(_transCmds, calc);
+				static_cast<DVIToSVGActions*>(getActions())->setTransformation(matrix);
+				if (_pageSizeName == "min")
+					bbox.transform(matrix);
+			}
+			if (string("dvi none min").find(_pageSizeName) == string::npos) {
+				// set explicitly given page format
+				PageSize size(_pageSizeName);
+				if (size.valid()) {
+					// convention: DVI position (0,0) equals (1in, 1in) relative 
+   				// to the upper left vertex of the page (see DVI specification)
+ 		 			const double border = -72.27;
+		 			bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
+				}
+				else
+					Message::wstream(true) << "invalid page format '" << _pageSizeName << "'\n";
+			}
+			else if (_pageSizeName == "dvi") {
+				// center page content
+				double dx = (getPageWidth()-bbox.width())/2;
+				double dy = (getPageHeight()-bbox.height())/2;
+				bbox += BoundingBox(-dx, -dy, dx, dy);
+			}
+			if (bbox.width() > 0) {
+				svgElement->addAttribute("width", XMLString(bbox.width())); 		
+				svgElement->addAttribute("height", XMLString(bbox.height()));
+				svgElement->addAttribute("viewBox", bbox.toSVGViewBox());
+
+				Message::mstream() << "\npage size: " << bbox.width() << "pt"
+					" x " << bbox.height() << "pt"
+					" (" << bbox.width()/72.27*25.4 << "mm"
+					" x " << bbox.height()/72.27*25.4 << "mm)\n";
+			}
+		}
+		svgDocument->write(_out);
 	}
 	delete svgDocument;
 	svgDocument = 0;
 	
-	if (boundingBox.width() > 0) 
-		Message::mstream() << "\npage size: " << boundingBox.width() << "pt"
-			   " x " << boundingBox.height() << "pt"
-		  	 	" (" << boundingBox.width()/72.27*25.4 << "mm"
-		   	" x " << boundingBox.height()/72.27*25.4 << "mm)\n";
 	return 1; // @@
-}
-
-
-bool DVIToSVG::computeBoundingBox (int page) {
-	if (pageSizeName == "dvi" || pageSizeName == "min") {
-		DVIActions *svgActions  = replaceActions(new DVIBBoxActions(boundingBox));
-		executePage(page);
-		delete replaceActions(svgActions);
-		if (pageSizeName == "dvi") {
-			// center page content
-			double dx = (getPageWidth()-boundingBox.width())/2;
-			double dy = (getPageHeight()-boundingBox.height())/2;
-			boundingBox += BoundingBox(-dx, -dy, dx, dy);
-		}
-	}
-	else if (pageSizeName != "none") {
-		PageSize pageSize(pageSizeName);
-		if (pageSize.valid()) {
-			// convention: DVI position (0,0) equals (1in, 1in) relative 
-			// to the upper left vertex of the page (see DVI specification)
-			const double border = -72.27;
-			boundingBox = BoundingBox(border, border, pageSize.widthInPT()+border, pageSize.heightInPT()+border);
-		}
-		else
-			Message::wstream(true) << "invalid page format '" << pageSizeName << "'\n";
-	}
-	return boundingBox.width() > 0 && boundingBox.height() > 0;
 }
 
 
@@ -214,7 +200,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			CharmapTranslator *cmt = svgActions->getCharmapTranslator(font);
 			if (ph_font->type() == PhysicalFont::MF) {
 				SVGFontTraceEmitter emitter(font, getFontManager()->fontID(font), *cmt, defs, USE_FONTS);
-				emitter.setMag(mag);
+				emitter.setMag(_mag);
 				if (emitter.emitFont(i->second, font->name().c_str()) > 0)
 					Message::mstream() << endl;
 			}
@@ -238,12 +224,11 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
  *  A single "*" in the ignore list disables all specials.
  *  @param[in] ignorelist list of special prefixes to ignore */
 const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
-	DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(getActions());
-	return (actions ? actions->setProcessSpecials(ignorelist) : 0);
+	return (getActions() ? getActions()->setProcessSpecials(ignorelist) : 0);
 }
 		
 
 void DVIToSVG::setMetafontMag (double m) {
-	mag = m;
+	_mag = m;
 	TFM::setMetafontMag(m);
 }

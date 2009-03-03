@@ -29,13 +29,19 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "SpecialManager.h"
+#include "XMLNode.h"
+#include "XMLString.h"
+
+///////////////////////////////////
+// special handlers
+
 #include "ColorSpecialHandler.h"
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
-#include "HtmlSpecialHandler.h"
+//#include "HtmlSpecialHandler.h"
 #include "TpicSpecialHandler.h"
-#include "XMLNode.h"
-#include "XMLString.h"
+///////////////////////////////////
+
 
 using namespace std;
 
@@ -43,6 +49,7 @@ DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
 	root = r;
 	page = font = text = 0;
 }
+
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
 	: _dviReader(reader), _specialManager(0), _color(0), 
@@ -80,8 +87,8 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 			new ColorSpecialHandler,    // handles color specials
 			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
 			new EmSpecialHandler,       // handles emTeX specials
-			new HtmlSpecialHandler,     // handles emTeX specials
-			new TpicSpecialHandler,     // handles emTeX specials
+//			new HtmlSpecialHandler,     // handles hyperref specials
+			new TpicSpecialHandler,     // handles tpic specials
 			0
 		};
 		delete _specialManager;      // delete current SpecialManager
@@ -155,6 +162,19 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		else
 			_nodes.page->append(use);
 	}
+
+	// update bounding box
+	if (font) {
+		/*	x *= BP;
+			y *= BP;*/
+		double s = font->scaleFactor(); // * BP;
+		double w = s*font->charWidth(c);
+		double h = s*font->charHeight(c);
+		double d = s*font->charDepth(c);
+		BoundingBox charbox(x, y-h, x+w, y+d);
+		_bbox.embed(charbox);
+	}
+
 }
 
 
@@ -178,14 +198,17 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	if (_color.get() != 0)
 		rect->addAttribute("fill", _color.get().rgbString());
 	_nodes.page->append(rect);
+	
+	// update bounding box
+	BoundingBox bb(x, y+height, x+width, y);
+	_bbox.embed(bb);
 }
 
 
 void DVIToSVGActions::defineFont (int num, const Font *font) {
 	font = font->uniqueFont();
-	if (_charmapTranslatorMap.find(font) == _charmapTranslatorMap.end()) {
+	if (_charmapTranslatorMap.find(font) == _charmapTranslatorMap.end())
 		_charmapTranslatorMap[font] = new CharmapTranslator(font);
-	}
 }
 
 
@@ -253,6 +276,7 @@ void DVIToSVGActions::beginPage (Int32 *c) {
 	ostringstream oss;
 	Message::mstream() << '[' << c[0];
 	_xmoved = _ymoved = false;
+	_bbox = BoundingBox();  // clear bounding box
 }
 
 
@@ -274,4 +298,9 @@ void DVIToSVGActions::endPage () {
 void DVIToSVGActions::appendToPage (XMLElementNode *node) {
 	if (node && _nodes.page)
 		_nodes.page->append(node);
+}
+
+
+void DVIToSVGActions::setBgColor (const Color &color) {
+	// @@
 }

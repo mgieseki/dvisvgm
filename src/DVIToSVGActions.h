@@ -25,6 +25,7 @@
 
 #include <map>
 #include <set>
+#include "BoundingBox.h"
 #include "DVIActions.h"
 #include "SpecialActions.h"
 #include "TransformationMatrix.h"
@@ -73,6 +74,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
+		void setBgColor (const Color &color);
 		void setColor (const Color &color)  {_color.set(color);}
 		Color getColor () const             {return _color.get();}
 		void appendToPage (XMLElementNode *node);
@@ -89,18 +91,19 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		const SpecialManager* setProcessSpecials (const char *ignorelist);
 		void setTransformation (const TransformationMatrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
-		int getX() const {return _dviReader.getXPos();}
-		int getY() const {return _dviReader.getYPos();}
+		int getX() const     {return _dviReader.getXPos();}
+		int getY() const     {return _dviReader.getYPos();}
+		BoundingBox& bbox () {return _bbox;}
 
 	private:
 		const DVIReader &_dviReader;
 		SpecialManager *_specialManager;
+		BoundingBox _bbox;
 		bool _xmoved, _ymoved;
 		Property<Color> _color;
 		int _pageCount;
 		int _currentFont;
 		Nodes _nodes;
-//		XMLElementNode *svgElement, *pageElement, *styleElement, *charElement;
 		CharmapTranslatorMap _charmapTranslatorMap;
 		UsedCharsMap _usedCharsMap;
 		TransformationMatrix *_transMatrix;

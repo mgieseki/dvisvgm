@@ -27,6 +27,7 @@
 #include <vector>
 #include "SpecialHandler.h"
 
+
 class ColorSpecialHandler : public SpecialHandler
 {
 	typedef std::vector<float> RGB;

@@ -26,7 +26,9 @@
 #include <istream>
 #include <list>
 #include "MessageException.h"
-#include "SpecialActions.h"
+
+
+class SpecialActions;
 
 
 struct SpecialException : public MessageException
