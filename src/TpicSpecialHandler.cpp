@@ -20,6 +20,7 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <cmath>
 #include <cstring>
 #include <sstream>
 #include "Color.h"
@@ -31,9 +32,6 @@
 #include "types.h"
 
 using namespace std;
-
-#define cmd_id(c1,c2) ((c1 << 8) | c2)
-
 
 
 TpicSpecialHandler::TpicSpecialHandler () {
@@ -72,6 +70,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			if (_points.size() == 2 || (!fill && _points.front() != _points.back())) {
 				elem = new XMLElementNode("polyline");
 				elem->addAttribute("fill", "none");
+				elem->addAttribute("stroke-linecap", "round");
 			}
 			else {
 				if (_points.front() == _points.back())
@@ -108,6 +107,67 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 	reset();	
 }
 
+
+void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
+	if (actions) {
+		const double PI2 = 4*asin(1);
+		angle1 *= -1; 
+		angle2 *= -1; 
+		if (fabs(angle1) > PI2) {
+			int n = angle1/PI2;
+			angle1 = angle1 - n*PI2;
+			angle2 = angle2 - n*PI2;
+		}
+
+		double x = cx + actions->getX();
+		double y = cy + actions->getY();
+		XMLElementNode *elem=0;
+		if (fabs(angle1-angle2) >= PI2) {  // closed ellipse?
+			elem = new XMLElementNode("ellipse");
+			elem->addAttribute("cx", XMLString(x));
+			elem->addAttribute("cy", XMLString(y));
+			elem->addAttribute("rx", XMLString(rx));
+			elem->addAttribute("ry", XMLString(ry));
+		}	
+		else {
+			if (angle1 < 0)
+				angle1 = PI2+angle1;
+			if (angle2 < 0)
+				angle2 = PI2+angle2;
+			elem = new XMLElementNode("path");
+			int large_arg = fabs(angle1-angle2) > PI2/2 ? 0 : 1;
+			int sweep = angle1 > angle2 ? 0 : 1;
+			if (angle1 > angle2) {
+				large_arg = 1-large_arg;
+				sweep = 1-sweep;
+			}
+			ostringstream oss;
+			oss << 'M' << x+rx*cos(angle1) << ',' << y+ry*sin(-angle1)
+				 << 'A' << rx << ',' << ry 
+				 << " 0 " 
+				 << large_arg << ' ' << sweep << ' '
+				 << x+rx*cos(angle2) << ',' << y-ry*sin(angle2);
+			if (_fill >= 0)
+				oss << 'Z';
+			elem->addAttribute("d", oss.str());
+		}
+		elem->addAttribute("stroke-width", _penwidth);
+		elem->addAttribute("stroke", actions->getColor().rgbString());
+		elem->addAttribute("stroke-linecap", "round");
+		elem->addAttribute("fill", "none");
+		if (_fill >= 0) {
+			Color color=actions->getColor();
+			color *= _fill;
+			elem->addAttribute("fill", color.rgbString());
+		}
+		else
+			elem->addAttribute("fill", "none");
+		actions->appendToPage(elem);
+	}
+}
+
+
+#define cmd_id(c1,c2) ((c1 << 8) | c2)
 
 bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!prefix || strlen(prefix) != 2)
@@ -151,10 +211,30 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			break;
 		case cmd_id('s','p'): // draw quadratic splines through recorded points
 			break;
-		case cmd_id('a','r'): // draw elliptical arc
+		case cmd_id('a','r'): { // draw elliptical arc
+			double cx = in.getDouble()*PT;
+			double cy = in.getDouble()*PT;
+			double rx = in.getDouble()*PT;
+			double ry = in.getDouble()*PT;
+			double a1 = in.getDouble();
+			double a2 = in.getDouble();
+			drawArc(cx, cy, rx, ry, a1, a2, actions);
 			break;
-		case cmd_id('i','a'): // fill elliptical arc
+		}
+		case cmd_id('i','a'): { // fill elliptical arc
+			double cx = in.getDouble()*PT;
+			double cy = in.getDouble()*PT;
+			double rx = in.getDouble()*PT;
+			double ry = in.getDouble()*PT;
+			double a1 = in.getDouble();
+			double a2 = in.getDouble();
+			if (_fill < 0)
+				_fill = 1;
+			drawArc(cx, cy, rx, ry, a1, a2, actions);
+			if (_fill < 0)
+				_fill = -1;
 			break;
+		}
 		default:
 			return false;
 	}

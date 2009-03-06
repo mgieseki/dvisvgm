@@ -39,6 +39,7 @@ class TpicSpecialHandler : public SpecialHandler
 	protected:
 		void reset ();
 		void drawLines (bool fill, double ddist, SpecialActions *actions);
+		void drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions);
 
    private:
 		double _penwidth; ///< pen width in TeX point units
