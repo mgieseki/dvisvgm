@@ -23,6 +23,7 @@
 #ifndef TPICSPECIALHANDLER_H
 #define TPICSPECIALHANDLER_H
 
+#include <list>
 #include "Pair.h"
 #include "SpecialHandler.h"
 
@@ -39,12 +40,13 @@ class TpicSpecialHandler : public SpecialHandler
 	protected:
 		void reset ();
 		void drawLines (bool fill, double ddist, SpecialActions *actions);
+		void drawSplines (double ddist, SpecialActions *actions);
 		void drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions);
 
    private:
 		double _penwidth; ///< pen width in TeX point units
 		double _fill;     ///< fill intensity [0,1]; if < 0, we don't fill anything
-		std::list<DPair> _points;
+		std::vector<DPair> _points;
 };
 
 #endif

@@ -56,7 +56,7 @@ void TpicSpecialHandler::reset () {
  *  @param[in] ddist dash/dot distance of line in TeX point units
  *                   (0:solid line, >0:dashed line, <0:dotted line) */
 void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *actions) {
-	if (actions) {
+	if (actions && _points.size() > 0) {
 		XMLElementNode *elem=0;
 		if (_points.size() == 1) {
 			const DPair &p = _points.back();
@@ -83,7 +83,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 				elem->addAttribute("fill", fill ? color.rgbString() : "none");
 			}
 			ostringstream oss;
-			FORALL(_points, list<DPair>::iterator, it) {
+			FORALL(_points, vector<DPair>::iterator, it) {
 				if (it != _points.begin())
 					oss << ' ';
 				double x = it->x()+actions->getX();
@@ -105,6 +105,65 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 		actions->appendToPage(elem);
 	}
 	reset();	
+}
+
+
+void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
+	if (actions && _points.size() > 0) {
+		const size_t size = _points.size();
+		if (size < 3) 
+			drawLines(false, ddist, actions);
+		else {
+			double x = actions->getX();
+			double y = actions->getY();
+			DPair p(x,y);
+			ostringstream oss;
+			oss << 'M' << x+_points[0].x() << ',' << y+_points[0].y();
+			DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
+			oss << 'L' << mid.x() << ',' << mid.y();
+			actions->bbox().embed(p+_points[0]);
+			for (size_t i=1; i < size-1; i++) {
+				const DPair p0 = p+_points[i-1];
+				const DPair p1 = p+_points[i];
+				const DPair p2 = p+_points[i+1];
+				mid = p1+(p2-p1)/2.0;
+				oss << 'Q' << p1.x() << ',' << p1.y() 
+					 << ' ' << mid.x() << ',' << mid.y();
+				actions->bbox().embed(mid);
+				actions->bbox().embed((p0+p1*6.0+p2)/8.0);
+			}
+			if (_points[0] == _points[size-1])  // closed path?
+				oss << 'Z';
+			else {
+				oss << 'L' << x+_points[size-1].x() << ',' << y+_points[size-1].y();
+				actions->bbox().embed(p+_points[size-1]);
+			}
+
+			Color color = actions->getColor();
+			color *= _fill;
+			XMLElementNode *path = new XMLElementNode("path");
+			if (_fill >= 0) {
+				if (_points[0] != _points[size-1])
+					oss << 'Z';
+				path->addAttribute("fill", color.rgbString());
+			}
+			else
+				path->addAttribute("fill", "none");
+
+			path->addAttribute("d", oss.str());
+			path->addAttribute("stroke", actions->getColor().rgbString());
+			path->addAttribute("stroke-width", XMLString(_penwidth));
+			if (ddist > 0)
+				path->addAttribute("stroke-dasharray", XMLString(ddist));
+			else if (ddist < 0) {
+				ostringstream oss;
+				oss << _penwidth << ' ' << -ddist;
+				path->addAttribute("stroke-dasharray", oss.str());
+			}
+			actions->appendToPage(path);
+		}
+	}
+	reset();
 }
 
 
@@ -163,6 +222,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		else
 			elem->addAttribute("fill", "none");
 		actions->appendToPage(elem);
+		actions->bbox().embed(BoundingBox(cx-rx, cy-ry, cx+rx, cy+ry));
 	}
 }
 
@@ -209,8 +269,11 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 		case cmd_id('d','t'): // as fp but draw dotted lines
 			drawLines(_fill >= 0, -in.getDouble()*72.27, actions);
 			break;
-		case cmd_id('s','p'): // draw quadratic splines through recorded points
+		case cmd_id('s','p'): { // draw quadratic splines through recorded points
+			double ddist = in.getDouble();
+			drawSplines(ddist, actions);
 			break;
+		}
 		case cmd_id('a','r'): { // draw elliptical arc
 			double cx = in.getDouble()*PT;
 			double cy = in.getDouble()*PT;
