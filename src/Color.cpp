@@ -5,6 +5,10 @@
 
 using namespace std;
 
+const Color Color::BLACK(0);
+const Color Color::WHITE(UInt8(255), UInt8(255), UInt8(255));
+
+
 static inline UInt8 float_to_byte (float v) {
 	return floor(255*v+0.5);
 }

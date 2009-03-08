@@ -35,6 +35,7 @@
 ///////////////////////////////////
 // special handlers
 
+#include "BgColorSpecialHandler.h"
 #include "ColorSpecialHandler.h"
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
@@ -52,7 +53,7 @@ DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
 
 
 DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0), _color(0), 
+	: _dviReader(reader), _specialManager(0), _color(Color::BLACK), _bgcolor(Color::WHITE),
 	_nodes(svgelem), _transMatrix(0) 
 {
 	_xmoved = _ymoved = false;
@@ -84,6 +85,7 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
+			new BgColorSpecialHandler,  // handles background color special
 			new ColorSpecialHandler,    // handles color specials
 			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
 			new EmSpecialHandler,       // handles emTeX specials
@@ -122,13 +124,13 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 
 		// create a new tspan element with positioning information
 		// if "cursor" was moved
-		if (_xmoved || _ymoved || (_color.changed() && _color.get() != 0)) {
+		if (_xmoved || _ymoved || (_color.changed() && _color.get() != Color::BLACK)) {
 			_nodes.text = new XMLElementNode("tspan");
 			if (_xmoved)
 				_nodes.text->addAttribute("x", XMLString(x));
 			if (_ymoved)
 				_nodes.text->addAttribute("y", XMLString(y));
-			if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != 0)
+			if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != Color::BLACK)
 				_nodes.text->addAttribute("fill", _color.get().rgbString());
 			_nodes.text->append(textNode);
 			_nodes.font->append(_nodes.text);
@@ -142,7 +144,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	}
 	else {
 		if (_color.changed()) {
-			if (_color.get() == 0) 
+			if (_color.get() == Color::BLACK) 
 				_nodes.text = 0;
 			else {
 				_nodes.text = new XMLElementNode("g");
@@ -195,7 +197,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	if (_color.get() != 0)
+	if (_color.get() != Color::BLACK)
 		rect->addAttribute("fill", _color.get().rgbString());
 	_nodes.page->append(rect);
 	
@@ -291,6 +293,15 @@ CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) cons
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
 	_specialManager->notifyEndPage();
+	if (_bgcolor != Color::WHITE) {
+		XMLElementNode *r = new XMLElementNode("rect");
+		r->addAttribute("x", _bbox.minX());
+		r->addAttribute("y", _bbox.minY());
+		r->addAttribute("width", _bbox.width());
+		r->addAttribute("height", _bbox.height());
+		r->addAttribute("fill", _bgcolor.rgbString());
+		_nodes.page->prepend(r);
+	}
 	Message::mstream() << ']';
 }
 
@@ -302,5 +313,5 @@ void DVIToSVGActions::appendToPage (XMLNode *node) {
 
 
 void DVIToSVGActions::setBgColor (const Color &color) {
-	// @@
+	_bgcolor = color;
 }

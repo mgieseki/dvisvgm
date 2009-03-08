@@ -230,29 +230,35 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 
 
 bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	string cmd;
-	is >> cmd;
 	vector<float> rgb(3);
-	if (cmd == "push") {             // color push <model> <params>
-		read_color("", is, rgb); 		
-		_colorStack.push(rgb);
-	}
-	else if (cmd == "pop") {
-		if (!_colorStack.empty())     // color pop
-			_colorStack.pop();
-	}
-	else if (cmd == "background") {  // color background <model> <params>
+	if (prefix && strcmp(prefix, "background") == 0) {
 		read_color("", is, rgb);
 		actions->setBgColor(rgb);
 	}
-	else {                           // color <model> <params>
-		read_color(cmd, is, rgb);
-		while (!_colorStack.empty())
-			_colorStack.pop();
-		_colorStack.push(rgb);
+	else {
+		string cmd;
+		is >> cmd;
+		if (cmd == "push") {             // color push <model> <params>
+			read_color("", is, rgb); 		
+			_colorStack.push(rgb);
+		}
+		else if (cmd == "pop") {
+			if (!_colorStack.empty())     // color pop
+				_colorStack.pop();
+		}
+		else {                           // color <model> <params>
+			read_color(cmd, is, rgb);
+			while (!_colorStack.empty())
+				_colorStack.pop();
+			_colorStack.push(rgb);
+		}
+		if (actions) {
+		  	if (_colorStack.empty())
+				actions->setColor(Color::BLACK);
+			else
+				actions->setColor(_colorStack.top());
+		}
 	}
-	if (actions && !_colorStack.empty())
-		actions->setColor(_colorStack.top());
 	return true;
 }
 

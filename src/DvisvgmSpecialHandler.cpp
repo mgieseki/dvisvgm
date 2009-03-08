@@ -73,7 +73,7 @@ static void raw (StreamInputBuffer &in, SpecialActions *actions, bool group=fals
 			XMLElementNode *g = new XMLElementNode("g");
 			g->addAttribute("x", actions->getX());
 			g->addAttribute("y", actions->getY());
-			if (actions->getColor() != 0)
+			if (actions->getColor() != Color::BLACK)
 				g->addAttribute("fill", actions->getColor().rgbString());
 			g->append(node);
 			node = g;

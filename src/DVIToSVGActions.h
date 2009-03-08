@@ -101,6 +101,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		BoundingBox _bbox;
 		bool _xmoved, _ymoved;
 		Property<Color> _color;
+		Color _bgcolor;
 		int _pageCount;
 		int _currentFont;
 		Nodes _nodes;

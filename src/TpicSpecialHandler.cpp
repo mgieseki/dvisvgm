@@ -130,7 +130,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 				oss << 'Q' << p1.x() << ',' << p1.y() 
 					 << ' ' << mid.x() << ',' << mid.y();
 				actions->bbox().embed(mid);
-				actions->bbox().embed((p0+p1*6.0+p2)/8.0);
+				actions->bbox().embed((p0+p1*6.0+p2)/8.0, _penwidth);
 			}
 			if (_points[0] == _points[size-1])  // closed path?
 				oss << 'Z';

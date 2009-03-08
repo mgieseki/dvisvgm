@@ -97,7 +97,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		    << q22.x() << ',' << q22.y() << ' '
 		    << q21.x() << ',' << q21.y();			 
 		node->addAttribute("points", oss.str());
-		if (actions->getColor() != 0)
+		if (actions->getColor() != Color::BLACK)
 			node->addAttribute("fill", actions->getColor().rgbString());
 		// update bounding box
 		actions->bbox().embed(q11);
