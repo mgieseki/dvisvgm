@@ -22,6 +22,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include "SpecialActions.h"
 #include "SpecialManager.h"
 #include "macros.h"
 

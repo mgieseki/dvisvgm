@@ -169,7 +169,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {
-		const double PI2 = 4*asin(1);
+		const double PI2 = 4*asin(1.0);
 		angle1 *= -1; 
 		angle2 *= -1; 
 		if (fabs(angle1) > PI2) {

@@ -22,11 +22,12 @@
 
 #include "BgColorSpecialHandler.h"
 #include "ColorSpecialHandler.h"
+#include "SpecialActions.h"
 
 using namespace std;
 
 
-bool BgColorSpecialHandler::process (const char *prefix, std::istream &is, SpecialActions *actions) {
+bool BgColorSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	ColorSpecialHandler csh;
 	return csh.process(prefix, is, actions);
 }
