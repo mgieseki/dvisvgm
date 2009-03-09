@@ -102,6 +102,7 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 
 
 void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
+	delete _transMatrix;
 	_transMatrix = new TransformationMatrix(matrix);
 }
 
@@ -272,11 +273,7 @@ void DVIToSVGActions::beginPage (Int32 *c) {
 	_pageCount++;
 	_nodes.page = new XMLElementNode("g");
 	_nodes.page->addAttribute("id", string("page")+XMLString(int(_pageCount)));
-	if (_transMatrix)
-		_nodes.page->addAttribute("transform", _transMatrix->getSVG());
 	_nodes.root->append(_nodes.page);
-	ostringstream oss;
-	Message::mstream() << '[' << c[0];
 	_xmoved = _ymoved = false;
 	_bbox = BoundingBox();  // clear bounding box
 }
@@ -293,6 +290,8 @@ CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) cons
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
 	_specialManager->notifyEndPage();
+	if (_transMatrix)
+		_nodes.page->addAttribute("transform", _transMatrix->getSVG());
 	if (_bgcolor != Color::WHITE) {
 		XMLElementNode *r = new XMLElementNode("rect");
 		r->addAttribute("x", _bbox.minX());
@@ -302,7 +301,6 @@ void DVIToSVGActions::endPage () {
 		r->addAttribute("fill", _bgcolor.rgbString());
 		_nodes.page->prepend(r);
 	}
-	Message::mstream() << ']';
 }
 
 

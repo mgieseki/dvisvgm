@@ -124,59 +124,71 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		Message::mstream() << endl;
 		embedFonts(svgElement);
 
-		// set bounding box and apply page transformations
-		if (getActions()) {
-			BoundingBox &bbox = getActions()->bbox();
-			if (!_transCmds.empty()) {
-				Calculator calc;
-				calc.setVariable("ux", bbox.minX());
-				calc.setVariable("uy", bbox.minY());
-				calc.setVariable("w", bbox.width());
-				calc.setVariable("h", bbox.height()); 
-				calc.setVariable("pt", 1);
-				calc.setVariable("in", 72.27);
-				calc.setVariable("cm", 72.27/2.54);
-				calc.setVariable("mm", 72.27/25.4);
-				TransformationMatrix matrix(_transCmds, calc);
-				static_cast<DVIToSVGActions*>(getActions())->setTransformation(matrix);
-				if (_pageSizeName == "min")
-					bbox.transform(matrix);
-			}
-			if (string("dvi none min").find(_pageSizeName) == string::npos) {
-				// set explicitly given page format
-				PageSize size(_pageSizeName);
-				if (size.valid()) {
-					// convention: DVI position (0,0) equals (1in, 1in) relative 
-   				// to the upper left vertex of the page (see DVI specification)
- 		 			const double border = -72.27;
-		 			bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
-				}
-				else
-					Message::wstream(true) << "invalid page format '" << _pageSizeName << "'\n";
-			}
-			else if (_pageSizeName == "dvi") {
-				// center page content
-				double dx = (getPageWidth()-bbox.width())/2;
-				double dy = (getPageHeight()-bbox.height())/2;
-				bbox += BoundingBox(-dx, -dy, dx, dy);
-			}
-			if (bbox.width() > 0) {
-				svgElement->addAttribute("width", XMLString(bbox.width())); 		
-				svgElement->addAttribute("height", XMLString(bbox.height()));
-				svgElement->addAttribute("viewBox", bbox.toSVGViewBox());
-
-				Message::mstream() << "\npage size: " << bbox.width() << "pt"
-					" x " << bbox.height() << "pt"
-					" (" << bbox.width()/72.27*25.4 << "mm"
-					" x " << bbox.height()/72.27*25.4 << "mm)\n";
-			}
-		}
 		svgDocument->write(_out);
 	}
 	delete svgDocument;
 	svgDocument = 0;
 	
 	return 1; // @@
+}
+
+
+/** This template method is called by parent class DVIReader before 
+ *  executing the BOP actions. 
+ *  @param[in] c contains information about the page (page number etc.) */
+void DVIToSVG::beginPage (Int32 *c) {
+	Message::mstream() << '[' << c[0];
+}
+
+/** This template method is called by parent class DVIReader before
+ *  executing the EOP actions. */
+void DVIToSVG::endPage () {
+	Message::mstream() << ']';
+	// set bounding box and apply page transformations
+	BoundingBox &bbox = getActions()->bbox();
+	if (!_transCmds.empty()) {
+		Calculator calc;
+		calc.setVariable("ux", bbox.minX());
+		calc.setVariable("uy", bbox.minY());
+		calc.setVariable("w", bbox.width());
+		calc.setVariable("h", bbox.height()); 
+		calc.setVariable("pt", 1);
+		calc.setVariable("in", 72.27);
+		calc.setVariable("cm", 72.27/2.54);
+		calc.setVariable("mm", 72.27/25.4);
+		TransformationMatrix matrix(_transCmds, calc);
+		static_cast<DVIToSVGActions*>(getActions())->setTransformation(matrix);
+		if (_pageSizeName == "min")
+			bbox.transform(matrix);
+	}
+	if (string("dvi none min").find(_pageSizeName) == string::npos) {
+		// set explicitly given page format
+		PageSize size(_pageSizeName);
+		if (size.valid()) {
+			// convention: DVI position (0,0) equals (1in, 1in) relative 
+			// to the upper left vertex of the page (see DVI specification)
+			const double border = -72.27;
+			bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
+		}
+		else
+			Message::wstream(true) << "invalid page format '" << _pageSizeName << "'\n";
+	}
+	else if (_pageSizeName == "dvi") {
+		// center page content
+		double dx = (getPageWidth()-bbox.width())/2;
+		double dy = (getPageHeight()-bbox.height())/2;
+		bbox += BoundingBox(-dx, -dy, dx, dy);
+	}
+	if (bbox.width() > 0) {
+		svgElement->addAttribute("width", XMLString(bbox.width())); 		
+		svgElement->addAttribute("height", XMLString(bbox.height()));
+		svgElement->addAttribute("viewBox", bbox.toSVGViewBox());
+
+		Message::mstream() << "\npage size: " << bbox.width() << "pt"
+			" x " << bbox.height() << "pt"
+			" (" << bbox.width()/72.27*25.4 << "mm"
+			" x " << bbox.height()/72.27*25.4 << "mm)\n";
+	}
 }
 
 

@@ -83,6 +83,8 @@ class DVIReader : public StreamReader, protected VFActions
 		int executeCommand ();
 		void putChar (UInt32 c, bool moveCursor);
 		void defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss);
+		virtual void beginPage (Int32 *c) {}
+		virtual void endPage () {}
 
 		// VFAction methods
 		void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize);
