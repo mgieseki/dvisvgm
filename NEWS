@@ -1,3 +1,6 @@
+dvisvgm-0.7.2
+- if option --no-fonts is used, all glyph sizes are now computed correctly
+
 dvisvgm-0.7.1
 - evaluation of a subset of emTeX specials has been added
 - specials for embedding of raw SVG snippets have been added

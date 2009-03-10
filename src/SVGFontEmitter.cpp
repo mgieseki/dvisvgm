@@ -75,21 +75,14 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) const {
 	}
 	else {
 		fontNode = _rootNode;
-	}
-	
 #if 0
-	// build panose-1 string
-	vector<int> panose = _fontEngine.getPanose();
-	if (panose.size() > 0) {
-		string panstr;
-		FORALL(panose, vector<int>::iterator, i) {
-			panstr += XMLString(*i);
-			if (i+1 != panose.end())
-				panstr += " ";
+		if (usedChars && _font && !usedChars->empty()) {
+			ostringstream oss;
+			oss << _font->name() << ", " << _font->scaledSize() << "pt"; 
+			fontNode->append(new XMLCommentNode(oss.str()));
 		}
-		faceNode->addAttribute("panose-1", panstr);
-	}
 #endif
+	}
 	FORALL(*usedChars, set<int>::const_iterator, i) {			
 		emitGlyph(*i);  // create new glyphNode
 		fontNode->append(_glyphNode);

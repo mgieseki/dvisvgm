@@ -140,6 +140,7 @@ void DVIToSVG::beginPage (Int32 *c) {
 	Message::mstream() << '[' << c[0];
 }
 
+
 /** This template method is called by parent class DVIReader before
  *  executing the EOP actions. */
 void DVIToSVG::endPage () {

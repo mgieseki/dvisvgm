@@ -66,7 +66,7 @@ struct EmptyFont : public Font
 	public:
 		EmptyFont (string name) : fontname(name) {}
 		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
-		const Font* uniqueFont () const                {return this;}
+		const Font* uniqueFont () const {return this;}
 		string name () const            {return fontname;}
 		double designSize () const      {return 10;}    // cmr10 design size in pt
 		double scaledSize () const      {return 10;}    // cmr10 scaled size in pt

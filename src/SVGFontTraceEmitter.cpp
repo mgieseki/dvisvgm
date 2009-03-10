@@ -103,8 +103,16 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) co
 		//	faceNode->addAttribute("descent", XMLString(0));  // @@
 		fontNode->append(faceNode);
 	}
-	else 
+	else {
 		fontNode = _rootNode;
+#if 0
+		if (usedChars && _font && !usedChars->empty()) {
+			ostringstream oss;
+			oss << _font->name() << ", " << _font->scaledSize() << "pt"; 
+			fontNode->append(new XMLCommentNode(oss.str()));
+		}
+#endif
+	}
 
 	FORALL(*usedChars, set<int>::const_iterator, i) {			
 		emitGlyph(*i);  // create new glyphNode

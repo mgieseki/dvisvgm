@@ -116,7 +116,15 @@ void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
 /*	x *= BP;
 	y *= BP; */
-	font = font->uniqueFont();
+	if (DVIToSVG::USE_FONTS) {
+		// If we use SVG fonts there is no need to record all font name/char/size combinations
+		// because the SVG font mechanism handles this automatically. It's sufficient to
+		// record font names and chars. The various font sizes can be ignored here.
+		// For a given font object, Font::uniqueFont() returns the same unique font object for
+		// all fonts with the same name.
+		font = font->uniqueFont();
+	}
+
 	const CharmapTranslator *cmt = _charmapTranslatorMap[font];
 	_usedCharsMap[font].insert(c);
 
