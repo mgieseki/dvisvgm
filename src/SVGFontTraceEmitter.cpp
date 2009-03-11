@@ -26,6 +26,7 @@
 #include <sstream>
 #include <string>
 #include "Font.h"
+#include "FontManager.h"
 #include "GFGlyphTracer.h"
 #include "macros.h"
 #include "Message.h"
@@ -38,8 +39,8 @@
 using namespace std;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, int fontID, const CharmapTranslator &cmt, XMLElementNode *n, bool uf)
-	: _gfTracer(0), _in(0), _font(f), _fontID(fontID), _mag(4.0), 
+SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf)
+	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _mag(4.0), 
 	  _charmapTranslator(cmt), _rootNode(n), _glyphNode(0), _useFonts(uf)
 {
 }
@@ -99,8 +100,6 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) co
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
 		faceNode->addAttribute("font-family", id);
 		faceNode->addAttribute("units-per-em", XMLString(1000));
-		//	faceNode->addAttribute("ascent", XMLString(0)); // @@
-		//	faceNode->addAttribute("descent", XMLString(0));  // @@
 		fontNode->append(faceNode);
 	}
 	else {
@@ -122,6 +121,9 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) co
 }
 
 
+/** Creates the SVG definition of a single glyph.
+ *  @param[in] c character code of the glyph
+ *  @param[in] duplicate true if the glyph is already included in different size */
 bool SVGFontTraceEmitter::emitGlyph (int c) const {
 	const TFM *tfm = _font->getTFM();
 	if (!checkTracer() || !tfm)
@@ -132,6 +134,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) const {
 		Message::mstream() << '#' << c;
 	else
 		Message::mstream() << char(c);
+
 	_gfTracer->executeChar(c);
 	ostringstream path;
 	const Glyph &glyph = _gfTracer->getGlyph();
@@ -143,7 +146,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) const {
 	}
 	else {
 		ostringstream oss;
-		oss << _fontID << c;
+		oss << 'g' << _fontManager.fontID(_font) << c;
 		_glyphNode = new XMLElementNode("path");		
 		_glyphNode->addAttribute("id", oss.str());
 		sx = _font->scaledSize()/1000.0; // 1000 units per em

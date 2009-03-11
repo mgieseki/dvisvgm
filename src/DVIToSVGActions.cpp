@@ -163,7 +163,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 			_color.changed(false);
 		}
 		ostringstream oss;
-		oss << '#' << _dviReader.getFontManager()->fontID(font) << c;		
+		oss << "#g" << _dviReader.getFontManager().fontID(font) << c;		
 		XMLElementNode *use = new XMLElementNode("use");
 		use->addAttribute("x", XMLString(x));
 		use->addAttribute("y", XMLString(y));

@@ -38,9 +38,6 @@ struct FontEmitter
 
 	/** Emits a single glyph. */
 	virtual bool emitGlyph (int c) const =0;
-
-	/** Template method that should be called if a glyph was emitted. */
-//	virtual void glyphEmitted (int c) const {}
 };
 
 #endif

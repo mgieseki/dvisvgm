@@ -77,7 +77,7 @@ class DVIReader : public StreamReader, protected VFActions
 		unsigned getTotalPages () const           {return totalPages;}
 		DVIActions* getActions () const           {return actions;}
 		DVIActions* replaceActions (DVIActions *a);
-		const FontManager* getFontManager () const {return fontManager;}
+		const FontManager& getFontManager () const {return *fontManager;}
 
 	protected:
 		int executeCommand ();

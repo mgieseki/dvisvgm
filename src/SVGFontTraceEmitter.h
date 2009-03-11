@@ -25,38 +25,36 @@
 
 #include <istream>
 #include <set>
-#include <string>
 #include "CharmapTranslator.h"
 #include "FontEmitter.h"
 #include "XMLNode.h"
 
-using std::set;
-using std::string;
 
 class FileFinder;
 class Font;
+class FontManager;
 class GFGlyphTracer;
 class XMLElementNode;
 
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const Font *font, int fontID, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
+      SVGFontTraceEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
       ~SVGFontTraceEmitter ();
 		int emitFont (const char *id) const;
-		int emitFont (const set<int> &usedChars, const char *id) const;
+		int emitFont (const std::set<int> &usedChars, const char *id) const;
 		bool emitGlyph (int c) const;
 		void setMag (double m) {_mag = m;}
 
 	protected:
-		int emitFont (const set<int> *usedChars, const char *id) const;
+		int emitFont (const std::set<int> *usedChars, const char *id) const;
 		bool checkTracer () const;
 
    private:
 		mutable GFGlyphTracer *_gfTracer;
 		mutable std::istream *_in;
 		const Font *_font;
-		int _fontID;
+		const FontManager &_fontManager;
 		double _mag;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode; 

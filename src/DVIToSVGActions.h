@@ -87,7 +87,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void postamble ();
 		void beginPage (Int32 *c);
 		void endPage ();
-		const UsedCharsMap& getUsedChars () const {return _usedCharsMap;}
+		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist);
 		void setTransformation (const TransformationMatrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
@@ -106,7 +106,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		int _currentFont;
 		Nodes _nodes;
 		CharmapTranslatorMap _charmapTranslatorMap;
-		UsedCharsMap _usedCharsMap;
+		mutable UsedCharsMap _usedCharsMap;
 		TransformationMatrix *_transMatrix;
 };
 

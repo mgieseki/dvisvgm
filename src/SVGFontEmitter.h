@@ -29,13 +29,13 @@
 
 
 class CharmapTranslator;
-class FontEncoding;
+class FontManager;
 class XMLElementNode;
 
 class SVGFontEmitter : public FontEmitter
 {
    public:
-      SVGFontEmitter (const Font *font, int fontID, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
+      SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
 		int emitFont (const char *id) const;
 		int emitFont (const std::set<int> &usedChars, const char *id) const;
 		bool emitGlyph (int c) const;
@@ -47,11 +47,10 @@ class SVGFontEmitter : public FontEmitter
    private:
 		const Font *_font;
 		FontEngine _fontEngine;
-		int _fontID;
+		const FontManager &_fontManager;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode;          // 
 		mutable XMLElementNode *_glyphNode; // current <glyph ...>-node
-		FontEncoding *_encoding;  ///< encoding of current font
 		bool _useFonts;  ///< create font elements or draw paths?
 };
 

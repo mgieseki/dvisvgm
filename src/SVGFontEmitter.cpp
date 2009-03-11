@@ -26,7 +26,7 @@
 #include "Font.h"
 #include "FontEncoding.h"
 #include "FontEngine.h"
-#include "FontEngine.h"
+#include "FontManager.h"
 #include "FontGlyph.h"
 #include "SVGFontEmitter.h"
 #include "XMLNode.h"
@@ -34,12 +34,11 @@
 
 using namespace std;
 
-SVGFontEmitter::SVGFontEmitter (const Font *font, int fontID, FontEncoding *enc, const CharmapTranslator &cmt, XMLElementNode *root, bool uf) 
-	: _charmapTranslator(cmt), _rootNode(root), _encoding(enc), _useFonts(uf)
+SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *root, bool uf) 
+	: _fontManager(fm), _charmapTranslator(cmt), _rootNode(root), _useFonts(uf)
 {
 	_font = font;
 	_fontEngine.setFont(font->path());
-	_fontID = fontID;
 }
 
 
@@ -83,7 +82,7 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) const {
 		}
 #endif
 	}
-	FORALL(*usedChars, set<int>::const_iterator, i) {			
+	FORALL(*usedChars, set<int>::const_iterator, i) {
 		emitGlyph(*i);  // create new glyphNode
 		fontNode->append(_glyphNode);
 	}
@@ -93,14 +92,15 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) const {
 
 bool SVGFontEmitter::emitGlyph (int c) const {
 	double sx=1.0, sy=1.0;
+	FontEncoding *encoding = _fontManager.encoding(_font);
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
 		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
 		int advance;
 		string name;
-		if (_encoding && _encoding->getEntry(c)) {
-			advance = _fontEngine.getHAdvance(_encoding->getEntry(c));
-			name = _encoding->getEntry(c);
+		if (encoding && encoding->getEntry(c)) {
+			advance = _fontEngine.getHAdvance(encoding->getEntry(c));
+			name = encoding->getEntry(c);
 		}
 		else {
 			advance = _fontEngine.getHAdvance(c);
@@ -111,7 +111,7 @@ bool SVGFontEmitter::emitGlyph (int c) const {
 	}
 	else {
 		ostringstream oss;
-		oss << _fontID << c;
+		oss << 'g' << _fontManager.fontID(_font) << c;
 		_glyphNode = new XMLElementNode("path");
 		_glyphNode->addAttribute("id" , oss.str());
 		sx = double(_font->scaledSize())/_fontEngine.getUnitsPerEM();
@@ -119,7 +119,7 @@ bool SVGFontEmitter::emitGlyph (int c) const {
 	}
 	ostringstream path;
 	Glyph glyph;
-	glyph.read(c, _encoding, _fontEngine);
+	glyph.read(c, encoding, _fontEngine);
 	glyph.closeOpenPaths();
 //	glyph.optimizeCommands();
 	glyph.writeSVGCommands(path, sx, sy);

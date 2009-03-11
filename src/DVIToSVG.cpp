@@ -38,6 +38,7 @@
 #include "TFM.h"
 #include "XMLDocument.h"
 #include "XMLDocTypeNode.h"
+#include "XMLNode.h"
 #include "XMLString.h"
 
 
@@ -110,9 +111,9 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		styleElement->addAttribute("type", "text/css");
 		svgElement->append(styleElement);
 		ostringstream style;
-		FORALL(getFontManager()->getFonts(), vector<Font*>::const_iterator, i) {
+		FORALL(getFontManager().getFonts(), vector<Font*>::const_iterator, i) {
 			if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-				style << "text.f"        << getFontManager()->fontID(*i) << ' '
+				style << "text.f"        << getFontManager().fontID(*i) << ' '
 						<< "{font-family:" << (*i)->name()
 						<< ";font-size:"   << (*i)->scaledSize() << "}\n";
 			}
@@ -193,6 +194,17 @@ void DVIToSVG::endPage () {
 }
 
 
+static void collect_chars (map<const Font*, set<int> > &fm) {
+	typedef const map<const Font*, set<int> > UsedCharsMap;
+	FORALL(fm, UsedCharsMap::const_iterator, it) {
+		if (it->first->uniqueFont() != it->first) {
+			FORALL(it->second, set<int>::iterator, cit)
+				fm[it->first->uniqueFont()].insert(*cit);
+		}
+	}
+}
+
+
 /** Adds the font information to the SVG tree. 
  *  @param[in] svgElement the font nodes are added to this node */
 void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
@@ -203,26 +215,49 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	
 	XMLElementNode *defs = new XMLElementNode("defs");
 	svgElement->prepend(defs);
-	typedef const map<const Font*, set<int> > UsedCharsMap;
+	typedef map<const Font*, set<int> > UsedCharsMap;
 	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(getActions());
 	UsedCharsMap &usedChars = svgActions->getUsedChars();
 		
-	FORALL(usedChars, UsedCharsMap::const_iterator, i) {
-		const Font *font = i->first;
+	collect_chars(usedChars);
+
+	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
+		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
 			CharmapTranslator *cmt = svgActions->getCharmapTranslator(font);
-			if (ph_font->type() == PhysicalFont::MF) {
-				SVGFontTraceEmitter emitter(font, getFontManager()->fontID(font), *cmt, defs, USE_FONTS);
-				emitter.setMag(_mag);
-				if (emitter.emitFont(i->second, font->name().c_str()) > 0)
-					Message::mstream() << endl;
+			// If the same character is used in various sizes we don't want to embed the complete (lengthy) path 
+			// description multiple times because they would only differ by a scale factor. Thus it's better to 
+			// reference the already embedded path together with a transformation attribute and let the SVG renderer 
+			// scale the glyph properly. This is only necessary if we don't want to use font but path elements. 
+			if (font != font->uniqueFont()) {
+				FORALL(it->second, set<int>::iterator, cit) {
+					ostringstream oss;
+					XMLElementNode *use = new XMLElementNode("use");
+					oss << 'g' << getFontManager().fontID(font) << *cit;
+					use->addAttribute("id", oss.str());
+					oss.str("");
+					oss << "#g" << getFontManager().fontID(font->uniqueFont()) << *cit;
+					use->addAttribute("xlink:href", oss.str());
+					oss.str("");
+					oss << "scale(" << (font->scaledSize()/font->uniqueFont()->scaledSize()) << ')';
+					use->addAttribute("transform", oss.str());
+					defs->append(use);
+				}
 			}
-			else if (font->path()) { // path to pfb/ttf file
-				SVGFontEmitter emitter(font, getFontManager()->fontID(font), getFontManager()->encoding(font), *cmt, defs, USE_FONTS);
-				emitter.emitFont(i->second, font->name().c_str());
+			else {
+				if (ph_font->type() == PhysicalFont::MF) {
+					SVGFontTraceEmitter emitter(font, getFontManager(), *cmt, defs, USE_FONTS);
+					emitter.setMag(_mag);
+					if (emitter.emitFont(it->second, font->name().c_str()) > 0)
+						Message::mstream() << endl;
+				}
+				else if (font->path()) { // path to pfb/ttf file
+					SVGFontEmitter emitter(font, getFontManager(), *cmt, defs, USE_FONTS);
+					emitter.emitFont(it->second, font->name().c_str());
+				}
+				else
+					Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 			}
-			else
-				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}
 		else
 			Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
