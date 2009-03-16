@@ -29,33 +29,37 @@
 
 using namespace std;
 
-GlyphCommand::GlyphCommand (const LPair &p) : params(1) {
-	params[0] = p;
+GlyphCommand::GlyphCommand (const LPair &p) : _params(1) {
+	_params[0] = p;
 }
 
-GlyphCommand::GlyphCommand (const LPair &p1, const LPair &p2) : params(2) {
-	params[0] = p1;
-	params[1] = p2;
+
+GlyphCommand::GlyphCommand (const LPair &p1, const LPair &p2) : _params(2) {
+	_params[0] = p1;
+	_params[1] = p2;
 }
 
-GlyphCommand::GlyphCommand (const LPair &p1, const LPair &p2, const LPair &p3) : params(3) {
-	params[0] = p1;
-	params[1] = p2;
-	params[2] = p3;
+
+GlyphCommand::GlyphCommand (const LPair &p1, const LPair &p2, const LPair &p3) : _params(3) {
+	_params[0] = p1;
+	_params[1] = p2;
+	_params[2] = p3;
 }
 
-LPair GlyphCommand::getParam (int n) const {
+
+LPair GlyphCommand::param (int n) const {
 	if (n < 0)
-		n = params.size() + n;
-	if (n >= 0 && unsigned(n) < params.size())
-		return params[n];
+		n = _params.size() + n;
+	if (n >= 0 && unsigned(n) < _params.size())
+		return _params[n];
 	return LPair();
 }
 
+
 void GlyphCommand::writeSVGCommand (ostream &os, double sx, double sy) const {
 	os << getSVGPathCommand();
-	FORALL(params, ConstIterator, i) {
-		if (i != params.begin())
+	FORALL(_params, ConstIterator, i) {
+		if (i != _params.begin())
 			os << ' ';
 		os << (i->x()*sx) << ' ' << (i->y()*sy);
 	}
@@ -63,10 +67,10 @@ void GlyphCommand::writeSVGCommand (ostream &os, double sx, double sy) const {
 
 
 GlyphCommand* GlyphMoveTo::combine (GlyphCommand &cmd) {
-	if (cmd.getSVGPathCommand() == 'M' && params.size() == 1) 
+	if (cmd.getSVGPathCommand() == 'M' && _params.size() == 1) 
 		return &cmd;
 	if (cmd.getSVGPathCommand() == 'L') {
-		params.insert(params.end(), cmd.getParams().begin(), cmd.getParams().end());
+		_params.insert(_params.end(), cmd.params().begin(), cmd.params().end());
 		return this;
 	}
 	return 0;
@@ -75,7 +79,7 @@ GlyphCommand* GlyphMoveTo::combine (GlyphCommand &cmd) {
 
 GlyphCommand* GlyphLineTo::combine (GlyphCommand &cmd) {
 	if (cmd.getSVGPathCommand() == 'L') {
-		params.insert(params.end(), cmd.getParams().begin(), cmd.getParams().end());
+		_params.insert(_params.end(), cmd.params().begin(), cmd.params().end());
 		return this;
 	}
 	return 0;
@@ -91,24 +95,14 @@ GlyphCommand* GlyphCubicTo::combine (GlyphCommand &cmd) {
 		if (e1 == b2 && c2 == e1*2-c1) 
 			return new GlyphShortCubicTo(cmd.getParam(-2), cmd.getParam(-1));	
 		else {
-			params.insert(params.end(), cmd.getParams().begin(), cmd.getParams().end());
+			_params.insert(_params.end(), cmd.getParams().begin(), cmd.getParams().end());
 			return this;		
 		}
 	}*/
 	return 0;
 }
 
-GlyphCommand* GlyphConicTo::combine (GlyphCommand &cmd) {
-	return 0;
-}
 
-GlyphCommand* GlyphShortCubicTo::combine (GlyphCommand &cmd) {
-	return 0;
-}
-
-GlyphCommand* GlyphShortConicTo::combine (GlyphCommand &cmd) {
-	return 0;
-}
 ///////////////////////////
 
 
@@ -138,44 +132,44 @@ class Commands : public FEGlyphCommands {
 
 
 Glyph::~Glyph () {
-	FORALL(commands, Iterator, i)
+	FORALL(_commands, Iterator, i)
 		delete *i;
 }
 
 
 void Glyph::clear () {
-	FORALL(commands, Iterator, i)
+	FORALL(_commands, Iterator, i)
 		delete *i;
-	commands.clear();
+	_commands.clear();
 }
 
 
 void Glyph::addCommand (GlyphCommand *cmd) {
 	if (cmd)
-		commands.push_back(cmd);
+		_commands.push_back(cmd);
 }
 
 
 void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine) {
-	Commands commands(*this);
+	Commands _commands(*this);
 	if (encoding) {
 		if (const char *name = encoding->getEntry(c))
-			fontEngine.traceOutline(name, commands, false);
+			fontEngine.traceOutline(name, _commands, false);
 		else
 			Message::wstream(true) << "no encoding for char #" << int(c) << " in '" << encoding->name() << "'\n";
 	}
 	else
-		fontEngine.traceOutline(c, commands, false);
+		fontEngine.traceOutline(c, _commands, false);
 }
 
 
 void Glyph::writeSVGCommands (ostream &os, double sx, double sy) const {
-	FORALL (commands, ConstIterator, i)
+	FORALL (_commands, ConstIterator, i)
 		(*i)->writeSVGCommand(os, sx, sy);
 }
 
 void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {
-	FORALL(commands, Iterator, i)
+	FORALL(_commands, Iterator, i)
 		f(*i, userParam);
 }
 
@@ -186,31 +180,31 @@ void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {
  *	 This method detects all open paths and adds the missing closePath statement. */
 void Glyph::closeOpenPaths () {
 	GlyphCommand *prevCommand = 0;
-	FORALL(commands, Iterator, i) {
+	FORALL(_commands, Iterator, i) {
 		if ((*i)->getSVGPathCommand() == 'M' && prevCommand && prevCommand->getSVGPathCommand() != 'Z') {
 			prevCommand = *i;
-			commands.insert(i, new GlyphClosePath);
+			_commands.insert(i, new GlyphClosePath);
 			++i; // skip inserted closePath command in next iteration step
 		}
 		else
 			prevCommand = *i;
 	}
-	if (!commands.empty())
-		commands.push_back(new GlyphClosePath);
+	if (!_commands.empty())
+		_commands.push_back(new GlyphClosePath);
 }
 
 
 /** Optimizes the glyph's outline description by using command sequences with less parameters.
- *  TrueType and Type1 fonts only support 3 drawing commands (moveto, lineto, conicto/cubicto).
+ *  TrueType and Type1 fonts only support 3 drawing _commands (moveto, lineto, conicto/cubicto).
  *  In the case of successive bezier curve sequences, control points or tangent slopes are ofted 
  *  identical so the path description contains redundant information. SVG provides short form bezier 
- *  commands that reuse previously given parameters. 
- *  This method detects such command sequences and replaces them by short form curve commands. */
+ *  _commands that reuse previously given parameters. 
+ *  This method detects such command sequences and replaces them by short form curve _commands. */
 void Glyph::optimizeCommands () {
 #if 0
-	Iterator i1=commands.begin();
-	Iterator i2=commands.begin();
-	for (++i2; i2 != commands.end(); ++i2) {
+	Iterator i1=_commands.begin();
+	Iterator i2=_commands.begin();
+	for (++i2; i2 != _commands.end(); ++i2) {
 		if ((*i1)->getSVGPathCommand() == 'C' && (*i2)->getSVGPathCommand() == 'C') { // cubic bezier curve sequence?
 			const LPair &p0 = i1->
 			long x1, y1;    // end point of previous cubic bezier curve
@@ -220,7 +214,7 @@ void Glyph::optimizeCommands () {
 			if (x1 == x2 && y1 == y2 && cx2 == rcx1 && cy2 == rcy1) {
 				delete *i1;
 				i1 = i2;
-				i2 = commands.erase(i2);
+				i2 = _commands.erase(i2);
 				i2.insert(new GlyphShortCubicTo(...));
 			}
 		}

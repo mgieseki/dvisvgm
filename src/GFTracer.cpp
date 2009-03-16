@@ -54,7 +54,6 @@ GFTracer::GFTracer (istream &is, double upp)
 
 
 void GFTracer::beginChar (UInt32 c) {
-//	cerr << '[' << c;
 }
 
 

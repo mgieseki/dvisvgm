@@ -24,12 +24,13 @@ option "translate"      t "shift page content"                       string type
 option "transform"      T "transform page content"                   string typestr="commands"               no
 
 section "Processing options"
+option "cache"          C "set cache directory"                      string typestr="dir"                    no
 option "mag"            M "magnification of Metafont output"         double typestr="factor"   default="4"   no
 option "no-mktexmf"     - "don't try to create missing fonts"                                                no
 option "no-specials"    S "don't process [selected] specials"        string typestr="prefixes"               no argoptional
 
 section "Message options"
 option "help"           h "print this help and exit"                                                         no
-option "list-specials"  - "print supported special sets and exit"                                            no
+option "list-specials"  l "print supported special sets and exit"                                            no
 option "verbosity"      v "set verbosity level (0-7)"                int    typestr="level"    default="7"   no
 option "version"        V "print version and exit"                                                           no

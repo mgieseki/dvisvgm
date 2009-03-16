@@ -1,5 +1,5 @@
 /***********************************************************************
-** FileSystem.h                                                       **
+** FontCache.h                                                        **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,26 +20,21 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#ifndef FONTCACHE_H
+#define FONTCACHE_H
 
-#include <string>
-#include "types.h"
-
-using std::string;
-
-struct FileSystem
+class FontCache
 {
-	static bool remove (const string &fname);
-	static bool rename (const string &oldname, const string &newname);
-	static UInt64 filesize (const string &fname);
-	static string adaptPathSeperators (string path);
-	static string getcwd ();
-	bool exists (const char *file);
-	static bool mkdir (const char *dir);
-	static const char* userdir ();
-	static const char* DEVNULL;
-	static const char PATHSEP;
+   public:
+      FontCache (const char *fontname);
+      ~FontCache ();
+		bool read (const char *fname);
+		void write (const char *fname);
+		const FontGlyph* get (int c) const;
+		void set (int c, const FontGlyph &glyph);
+
+   private:
+		map<int, FontGlyph> _glyphs;
 };
 
 #endif

@@ -85,6 +85,13 @@ Scales page content horizontally by 'sx' and vertically by 'sy'. This option is 
 to *-TS*__sx__,__sy__.
 
 
+*-C, --cache*='dir'::
+To speed up the conversion process of bitmap fonts, *dvisvgm* saves intermediate conversion
+information in cache files. By default, these files are stored in $HOME/.dvisvgm/cache. If you prefer 
+a different location use option *--cache* to overwrite the default. Furthermore, it is also possible 
+to disable the font caching mechanism completely with option *--cache=none*.
+
+
 *--list-specials*::
 Prints a list of registered special handlers and exits. Each handler processes a set of special
 statements belonging to the same category. The categories are identified by the
@@ -260,6 +267,11 @@ SUPPORT OF SPECIALS
 features, like color, graphics or hyperlinks. The evaluation of special commands is done by various handlers, 
 where each handler is responsible for all special statements of the same command set, i.e. commands beginning 
 with the same prefix. To get a list of actually provided special handlers, use option *--list-specials* (see above).
+
+*bgcolor*::
+Special statement for changing the background/page color. Since SVG 1.1 doesn't support background colors,
+*dvisvgm* inserts a rectangle of the chosen color. In the current version, this rectangle always gets the size
+of the minimal bounding box.
 
 *color*::
 Statements of this command set provide instructions to change the text/paint color. For an overview of the 

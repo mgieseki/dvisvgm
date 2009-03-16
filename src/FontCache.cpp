@@ -1,5 +1,5 @@
 /***********************************************************************
-** FileSystem.h                                                       **
+** FontCache.cpp                                                      **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,26 +20,35 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#include <fstream>
+#include "FontCache.h"
+#include "FontGlyph.h"
 
-#include <string>
-#include "types.h"
+using namespace std;
 
-using std::string;
+enum 
 
-struct FileSystem
-{
-	static bool remove (const string &fname);
-	static bool rename (const string &oldname, const string &newname);
-	static UInt64 filesize (const string &fname);
-	static string adaptPathSeperators (string path);
-	static string getcwd ();
-	bool exists (const char *file);
-	static bool mkdir (const char *dir);
-	static const char* userdir ();
-	static const char* DEVNULL;
-	static const char PATHSEP;
-};
+FontCache::FontCache () {
+}
 
-#endif
+
+void FontCache::set (int c, const list<GlyphCommand*> &cmds) {
+	
+}
+
+
+FontGlyph* glyph (int c) const {
+	if (_glyphdata.find(c) == _glyphdata.end())
+		return 0;
+	FORALL ();
+}
+
+
+void FontCache::write (const char *fname) {
+	ofstream ofs(fname, ios::binary);
+	if (ofs) {
+		FORALL (_glyphdata, ) {
+
+		}
+	}
+}

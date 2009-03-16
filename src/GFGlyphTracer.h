@@ -29,16 +29,22 @@
 class GFGlyphTracer : public GFTracer
 {
    public:
-      GFGlyphTracer (istream &is, double upp) : GFTracer(is, upp) {}
+      GFGlyphTracer (istream &is, double upp);
+		~GFGlyphTracer ();
 		void moveTo (double x, double y);
 		void lineTo (double x, double y);
 		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
 		void closePath ();
 		void endChar (UInt32 c);
-		const Glyph& getGlyph () const {return _glyph;}
+		const Glyph& getGlyph () const {return *_glyph;}
+		Glyph* transferGlyph ();
+
+	public:
+		static const char *CACHE_PATH; ///< absolute path to font cache (0 = no chaching)
 
    private:
-		Glyph _glyph;
+		Glyph *_glyph;
+		bool _transfered;
 };
 
 #endif

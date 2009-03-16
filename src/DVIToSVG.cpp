@@ -198,7 +198,7 @@ static void collect_chars (map<const Font*, set<int> > &fm) {
 	typedef const map<const Font*, set<int> > UsedCharsMap;
 	FORALL(fm, UsedCharsMap::const_iterator, it) {
 		if (it->first->uniqueFont() != it->first) {
-			FORALL(it->second, set<int>::iterator, cit)
+			FORALL(it->second, set<int>::const_iterator, cit)
 				fm[it->first->uniqueFont()].insert(*cit);
 		}
 	}
@@ -230,7 +230,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			// reference the already embedded path together with a transformation attribute and let the SVG renderer 
 			// scale the glyph properly. This is only necessary if we don't want to use font but path elements. 
 			if (font != font->uniqueFont()) {
-				FORALL(it->second, set<int>::iterator, cit) {
+				FORALL(it->second, set<int>::const_iterator, cit) {
 					ostringstream oss;
 					XMLElementNode *use = new XMLElementNode("use");
 					oss << 'g' << getFontManager().fontID(font) << *cit;

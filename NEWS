@@ -1,4 +1,5 @@
 dvisvgm-0.7.2
+- font caching has been added (speeds up embedding of bitmap fonts)
 - if option --no-fonts is used, all glyph sizes are now computed correctly
 
 dvisvgm-0.7.1

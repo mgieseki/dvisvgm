@@ -42,14 +42,14 @@ class GlyphCommand
 		virtual ~GlyphCommand () {}
 		virtual char getSVGPathCommand () const =0;
 		virtual GlyphCommand* combine (GlyphCommand &cmd) {return 0;}
-		virtual const vector<LPair>& getParams () const    {return params;}
-		virtual LPair getParam (int n) const;
+		virtual const vector<LPair>& params () const      {return _params;}
+		virtual LPair param (int n) const;
 		virtual void writeSVGCommand (ostream &os, double sx=1, double sy=1) const;
 
 	protected:
 		typedef vector<LPair>::iterator Iterator;
 		typedef vector<LPair>::const_iterator ConstIterator;
-		vector<LPair> params;
+		vector<LPair> _params;
 };
 
 
@@ -73,7 +73,6 @@ struct GlyphConicTo : public GlyphCommand
 {
 	GlyphConicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
 	char getSVGPathCommand () const {return 'Q';}
-	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
@@ -81,7 +80,6 @@ struct GlyphShortConicTo : public GlyphCommand
 {
 	GlyphShortConicTo (const LPair &p) : GlyphCommand(p) {}
 	char getSVGPathCommand () const {return 'T';}
-	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
@@ -97,7 +95,6 @@ struct GlyphShortCubicTo : public GlyphCommand
 {
 	GlyphShortCubicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}
 	char getSVGPathCommand () const {return 'S';}
-	GlyphCommand* combine (GlyphCommand &cmd);
 };
 
 
@@ -125,7 +122,7 @@ class Glyph
 		void forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam=0);
 
 	private:
-		list<GlyphCommand*> commands;
+		list<GlyphCommand*> _commands;
 };
 
 #endif

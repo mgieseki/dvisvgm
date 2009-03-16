@@ -20,6 +20,7 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <cstdlib>
 #include <fstream>
 #include "FileSystem.h"
 
@@ -31,12 +32,13 @@
 using namespace std;
 
 #ifdef __WIN32__
-	#include <windows.h>
 	#include <direct.h>
+	#include <windows.h>
   	const char *FileSystem::DEVNULL = "nul";
   	const char FileSystem::PATHSEP = '\\';
 	#define unlink _unlink
 #else
+	#include <pwd.h>
   	#include <sys/stat.h>
   	const char *FileSystem::DEVNULL = "/dev/null";
   	const char FileSystem::PATHSEP = '/';
@@ -62,8 +64,7 @@ UInt64 FileSystem::filesize (const string &fname) {
 	return (static_cast<UInt64>(attr.nFileSizeHigh) << (8*sizeof(attr.nFileSizeLow))) | attr.nFileSizeLow;
 #else
 	struct stat attr;
-	stat(fname.c_str(), &attr);
-	return attr.st_size;
+	return (stat(fname.c_str(), &attr) == 0) ? attr.st_size : 0;
 #endif
 }
 
@@ -81,5 +82,50 @@ string FileSystem::getcwd () {
 	return adaptPathSeperators(_getcwd(buf, 1024));
 #else
 	return ::getcwd(buf, 1024);
+#endif
+}
+
+
+
+const char* FileSystem::userdir () {
+#ifdef __WIN32__
+	const char *drive=getenv("HOMEDRIVE");	
+	const char *path=getenv("HOMEPATH");
+	if (drive && path) {
+		static string ret = string(drive)+path;
+		if (!ret.empty())
+			return ret.c_str();
+	}
+	return 0;
+#else
+	const char *dir=getenv("HOME");
+	if (!dir) {
+		if (const char *user=getenv("USER")) {
+			if (struct passwd *pw=getpwnam(user))
+				dir = pw->pw_dir;
+		}
+	}
+	return dir;
+#endif
+}
+
+
+bool FileSystem::mkdir (const char *dir) {
+#ifdef __WIN32__
+	int ret=_mkdir(dir);
+#else
+	int ret=::mkdir(dir, 0664);
+#endif
+	return ret == 0;
+}
+
+
+/** Checks if a file or directory exits. */
+bool FileSystem::exists (const char *fname) {
+#ifdef __WIN32__
+	return GetFileAttributes(fname) != INVALID_FILE_ATTRIBUTES;
+#else
+	struct stat attr;
+	return stat(fname, &attr) == 0;
 #endif
 }
