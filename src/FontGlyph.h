@@ -109,8 +109,9 @@ class FontEngine;
 
 class Glyph
 {
-	typedef list<GlyphCommand*>::iterator Iterator;
-	typedef list<GlyphCommand*>::const_iterator ConstIterator;
+	typedef list<GlyphCommand*> CommandList;
+	typedef CommandList::iterator Iterator;
+	typedef CommandList::const_iterator ConstIterator;
 	public:
 		~Glyph ();
 		void addCommand(GlyphCommand *cmd);
@@ -120,9 +121,11 @@ class Glyph
 		void read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine);
 		void writeSVGCommands (ostream &os, double sx, double sy) const;
 		void forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam=0);
+		bool empty () const {return _commands.empty();}
+		const CommandList& commands () const {return _commands;}
 
 	private:
-		list<GlyphCommand*> _commands;
+		CommandList _commands;
 };
 
 #endif

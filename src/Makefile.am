@@ -14,15 +14,15 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CharmapTranslator.h Color.h \
 	ColorSpecialHandler.h Directory.h DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h \
-	EmSpecialHandler.h FileSystem.h Font.h FontEmitter.h FontEncoding.h FontEngine.h FontGlyph.h FontManager.h \
+	EmSpecialHandler.h FileSystem.h Font.h FontCache.h FontEmitter.h FontEncoding.h FontEngine.h FontGlyph.h FontManager.h \
 	FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h InputBuffer.h FileFinder.h macros.h Message.h MessageException.h \
 	MetafontWrapper.h PageSize.h Pair.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h SVGFontEmitter.h \
 	SVGFontTraceEmitter.h TFM.h TpicSpecialHandler.h TransformationMatrix.h types.h VectorStream.h VFActions.h VFReader.h \
 	XMLDocTypeNode.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp Color.cpp ColorSpecialHandler.cpp \
 	Directory.cpp DVIActions.cpp DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp \
-	FileSystem.cpp Font.cpp FontEncoding.cpp FontEngine.cpp FontGlyph.cpp FontManager.cpp FontMap.cpp GFReader.cpp GFGlyphTracer.cpp \
-	GFTracer.cpp InputBuffer.cpp FileFinder.cpp Message.cpp MetafontWrapper.cpp PageSize.cpp SpecialManager.cpp \
+	FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontGlyph.cpp FontManager.cpp FontMap.cpp GFReader.cpp \
+	GFGlyphTracer.cpp GFTracer.cpp InputBuffer.cpp FileFinder.cpp Message.cpp MetafontWrapper.cpp PageSize.cpp SpecialManager.cpp \
 	StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TpicSpecialHandler.cpp TransformationMatrix.cpp VFReader.cpp \
 	XMLDocument.cpp XMLNode.cpp XMLString.cpp
 

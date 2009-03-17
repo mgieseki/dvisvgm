@@ -248,8 +248,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				if (ph_font->type() == PhysicalFont::MF) {
 					SVGFontTraceEmitter emitter(font, getFontManager(), *cmt, defs, USE_FONTS);
 					emitter.setMag(_mag);
-					if (emitter.emitFont(it->second, font->name().c_str()) > 0)
-						Message::mstream() << endl;
+					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else if (font->path()) { // path to pfb/ttf file
 					SVGFontEmitter emitter(font, getFontManager(), *cmt, defs, USE_FONTS);

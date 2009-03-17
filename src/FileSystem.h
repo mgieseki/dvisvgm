@@ -35,7 +35,7 @@ struct FileSystem
 	static UInt64 filesize (const string &fname);
 	static string adaptPathSeperators (string path);
 	static string getcwd ();
-	bool exists (const char *file);
+	static bool exists (const char *file);
 	static bool mkdir (const char *dir);
 	static const char* userdir ();
 	static const char* DEVNULL;

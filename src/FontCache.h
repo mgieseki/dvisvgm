@@ -23,18 +23,28 @@
 #ifndef FONTCACHE_H
 #define FONTCACHE_H
 
+#include <iostream>
+#include <map>
+#include "FontGlyph.h"
+
 class FontCache
 {
+	typedef std::map<int, const Glyph*> GlyphMap;
    public:
-      FontCache (const char *fontname);
+		FontCache ();
       ~FontCache ();
-		bool read (const char *fname);
-		void write (const char *fname);
-		const FontGlyph* get (int c) const;
-		void set (int c, const FontGlyph &glyph);
+		bool read (const char *fontname, const char *dir);
+		bool read (const char *fontname, std::istream &is);
+		bool write (const char *fontname, const char *dir) const;
+		bool write (const char *fontname, std::ostream &os) const;
+		const Glyph* getGlyph (int c) const;
+		void setGlyph (int c, const Glyph *glyph);
+		void clear ();
 
    private:
-		map<int, FontGlyph> _glyphs;
+		const static UInt8 VERSION = 1;
+		GlyphMap _glyphs;
+		bool _changed;
 };
 
 #endif

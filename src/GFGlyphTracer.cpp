@@ -25,8 +25,6 @@
 
 using namespace std;
 
-const char *GFGlyphTracer::CACHE_PATH = 0;
-
 
 GFGlyphTracer::GFGlyphTracer (istream &is, double upp) : GFTracer(is, upp)
 {

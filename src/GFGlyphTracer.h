@@ -39,9 +39,6 @@ class GFGlyphTracer : public GFTracer
 		const Glyph& getGlyph () const {return *_glyph;}
 		Glyph* transferGlyph ();
 
-	public:
-		static const char *CACHE_PATH; ///< absolute path to font cache (0 = no chaching)
-
    private:
 		Glyph *_glyph;
 		bool _transfered;

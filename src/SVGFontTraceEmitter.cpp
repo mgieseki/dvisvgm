@@ -26,6 +26,7 @@
 #include <sstream>
 #include <string>
 #include "Font.h"
+#include "FontCache.h"
 #include "FontManager.h"
 #include "GFGlyphTracer.h"
 #include "macros.h"
@@ -38,31 +39,43 @@
 
 using namespace std;
 
+const char *SVGFontTraceEmitter::CACHE_PATH = 0;
+
 
 SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf)
-	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _mag(4.0), 
+	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _cache(0), _mag(4.0), 
 	  _charmapTranslator(cmt), _rootNode(n), _glyphNode(0), _useFonts(uf)
 {
+	if (CACHE_PATH && _font) {
+		_cache = new FontCache;
+		_cache->read(_font->name().c_str(), CACHE_PATH);
+	}
 }
 
 
 SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 	delete _gfTracer;
 	delete _in;
+	if (_cache && _font)
+		_cache->write(_font->name().c_str(), CACHE_PATH);
+	delete _cache;
 	MetafontWrapper::removeOutputFiles(_font->name());
 }
 
 
-bool SVGFontTraceEmitter::checkTracer () const {
+bool SVGFontTraceEmitter::prepareTracer () const {
 	if (!_gfTracer) {
 		MetafontWrapper mf(_font->name());
 		mf.make("ljfour", _mag); // call Metafont if necessary
 		if (mf.success() && _font->getTFM()) {
 			_in = new ifstream((_font->name()+".gf").c_str(), ios_base::binary);
 			_gfTracer = new GFGlyphTracer(*_in, 1000.0/_font->getTFM()->getDesignSize()); // 1000 units per em
+			Message::mstream() << "tracing glyphs of " << _font->name() << endl;
 		}
-		else 
+		else {
+			Message::wstream(true) << "unable to find " << _font->name() << ".mf, can't embed font\n";
 			return false;  // Metafont failed
+		}
 	}
 	return true;
 }
@@ -82,13 +95,6 @@ int SVGFontTraceEmitter::emitFont (const set<int> &usedChars, const char *id) co
 int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) const {
 	if (!usedChars || usedChars->empty())
 		return 0;
-
-	if (!checkTracer()) {
-		Message::wstream(true) << "unable to find " << _font->name() << ".mf, can't embed font\n";
-		return 0;
-	}
-
-	Message::mstream() << "tracing glyphs of " << _font->name() << endl;
 
 	XMLElementNode *fontNode=0;
 	if (_useFonts) {
@@ -117,6 +123,8 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) co
 		emitGlyph(*i);  // create new glyphNode
 		fontNode->append(_glyphNode);
 	}
+	if (_gfTracer)
+		Message::mstream() << endl;
 	return usedChars->size();
 }
 
@@ -126,18 +134,26 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) co
  *  @param[in] duplicate true if the glyph is already included in different size */
 bool SVGFontTraceEmitter::emitGlyph (int c) const {
 	const TFM *tfm = _font->getTFM();
-	if (!checkTracer() || !tfm)
+	if (!tfm)
 		return false;
 
-	Message::mstream() << '[';
-	if (c <= 32 || c >= 127)
-		Message::mstream() << '#' << c;
+	ostringstream oss;
+	oss << '[';
+	if (isprint(c))
+		oss << char(c);
 	else
-		Message::mstream() << char(c);
+		oss << '#' << c;
 
-	_gfTracer->executeChar(c);
+	const Glyph *glyph = _cache ? _cache->getGlyph(c) : 0;
+	if (!glyph && prepareTracer()) {
+		Message::mstream() << oss.str();
+		_gfTracer->executeChar(c);
+		glyph = &_gfTracer->getGlyph();
+		if (_cache)
+			_cache->setGlyph(c, _gfTracer->transferGlyph());
+	}
+
 	ostringstream path;
-	const Glyph &glyph = _gfTracer->getGlyph();
 	double sx=1.0, sy=1.0;
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
@@ -152,9 +168,10 @@ bool SVGFontTraceEmitter::emitGlyph (int c) const {
 		sx = _font->scaledSize()/1000.0; // 1000 units per em
 		sy = -sx;
 	}
-	glyph.writeSVGCommands(path, sx, sy);
+	glyph->writeSVGCommands(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
-	Message::mstream() << ']';
+	if (_gfTracer)
+		Message::mstream() << ']';
 	return true;
 }
 

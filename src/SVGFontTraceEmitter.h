@@ -32,6 +32,7 @@
 
 class FileFinder;
 class Font;
+class FontCache;
 class FontManager;
 class GFGlyphTracer;
 class XMLElementNode;
@@ -46,15 +47,19 @@ class SVGFontTraceEmitter : public FontEmitter
 		bool emitGlyph (int c) const;
 		void setMag (double m) {_mag = m;}
 
+	public:
+		static const char *CACHE_PATH;
+
 	protected:
 		int emitFont (const std::set<int> *usedChars, const char *id) const;
-		bool checkTracer () const;
+		bool prepareTracer () const;
 
    private:
 		mutable GFGlyphTracer *_gfTracer;
 		mutable std::istream *_in;
 		const Font *_font;
 		const FontManager &_fontManager;
+		FontCache *_cache;
 		double _mag;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode; 

@@ -35,6 +35,7 @@
 #include "FileFinder.h"
 #include "SpecialManager.h"
 #include "StreamCounter.h"
+#include "SVGFontTraceEmitter.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -129,6 +130,28 @@ static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
 }
 
 
+static void set_cache_dir (const gengetopt_args_info &args) {
+	if (args.cache_given) {
+		if (strcmp(args.cache_arg, "none") == 0) 
+			SVGFontTraceEmitter::CACHE_PATH = 0;
+		else if (FileSystem::exists(args.cache_arg))
+			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg;
+		else
+			Message::wstream(true) << "cache directory " << args.cache_arg << " does not exist (caching disabled)" << endl;
+	}
+	else {
+		const char *userdir = FileSystem::userdir();
+		if (userdir) {
+			static string path = userdir;
+			path += "/.dvisvgm";
+			if (!FileSystem::exists(path.c_str()))
+				FileSystem::mkdir(path.c_str());
+			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
+		}
+	}
+}
+
+
 static int dvisvgm (int argc, char *argv[]) {
 	struct gengetopt_args_info args;
 	if (cmdline_parser(argc, argv, &args))
@@ -155,10 +178,10 @@ static int dvisvgm (int argc, char *argv[]) {
 	}
 	if (args.map_file_given)
 		FileFinder::setUserFontMap(args.map_file_arg);
-	
+	set_cache_dir(args);
+
 	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
 	DVIToSVG::USE_FONTS = !args.no_fonts_given;
-	
 
 	double start_time = get_time();
 	

@@ -114,7 +114,7 @@ bool FileSystem::mkdir (const char *dir) {
 #ifdef __WIN32__
 	int ret=_mkdir(dir);
 #else
-	int ret=::mkdir(dir, 0664);
+	int ret=::mkdir(dir, 0776);
 #endif
 	return ret == 0;
 }
