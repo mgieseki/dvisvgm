@@ -59,15 +59,15 @@ static void write_unsigned (UInt32 value, int bytes, ostream &os) {
 
 
 static inline void write_signed (Int32 value, int bytes, ostream &os) {
-	if (value < 0)
-		value |= 0x80 << (bytes-1);
+//	if (value < 0)
+//		value |= 0x80 << (bytes-1);
 	write_unsigned((UInt32)value, bytes, os);
 }
 
 
-static LPair read_pair (istream &is) {
-	long x = read_signed(4, is);
-	long y = read_signed(4, is);
+static LPair read_pair (int bytes, istream &is) {
+	long x = read_signed(bytes, is);
+	long y = read_signed(bytes, is);
 	return LPair(x, y);
 }
 
@@ -127,6 +127,30 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 }
 
 
+/** Returns the minimal number of bytes needed to store the given value. */
+static int max_int_size (Int32 value) {
+	Int32 limit = 0x7f;
+	for (int i=1; i <= 4; i++) {
+		if ((value < 0  && -value <= limit+1) || (value >= 0 && value <= limit))
+			return i;
+		limit = (limit << 8) | 0xff;
+	}
+	return 4;
+}
+
+
+/** Returns the minimal number of bytes needed to store the biggest 
+ *  pair component of the given vector. */
+static int max_int_size (const vector<LPair> &pairs) {
+	int ret=0;
+	FORALL(pairs, vector<LPair>::const_iterator, it) {
+		ret = max(ret, max_int_size(it->x()));		
+		ret = max(ret, max_int_size(it->y()));		
+	}
+	return ret;
+}
+
+
 bool FontCache::write (const char *fontname, ostream &os) const {
 	if (!_changed)
 		return true;
@@ -141,11 +165,13 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 			write_unsigned(it->first, 4, os);
 			write_unsigned(it->second->commands().size(), 2, os);
 			FORALL(it->second->commands(), list<GlyphCommand*>::const_iterator, cit) {
-				write_unsigned((*cit)->getSVGPathCommand(), 1, os);
 				const vector<LPair> &params = (*cit)->params();
+				int bytes = max_int_size(params);
+				UInt8 cmdchar = (bytes << 4) | ((*cit)->getSVGPathCommand() - 'A');
+				write_unsigned(cmdchar, 1, os);
 				for (size_t i=0; i < params.size(); i++) {
-					write_signed(params[i].x(), 4, os);
-					write_signed(params[i].y(), 4, os);
+					write_signed(params[i].x(), bytes, os);
+					write_signed(params[i].y(), bytes, os);
 				}
 			}
 		}
@@ -184,36 +210,38 @@ bool FontCache::read (const char *fontname, istream &is) {
 			UInt16 s = read_unsigned(2, is);
 			Glyph *glyph = new Glyph;
 			while (s-- > 0) {
-				UInt8 cmdchar = read_unsigned(1, is);
+				UInt8 cmdval = read_unsigned(1, is);
+				UInt8 cmdchar = (cmdval & 0x0f) + 'A';
+				int bytes = cmdval >> 4;
 				GlyphCommand *cmd=0;
 				switch (cmdchar) {
 					case 'C': {
-						LPair p1 = read_pair(is);
-						LPair p2 = read_pair(is);
-						LPair p3 = read_pair(is);
+						LPair p1 = read_pair(bytes, is);
+						LPair p2 = read_pair(bytes, is);
+						LPair p3 = read_pair(bytes, is);
 						cmd = new GlyphCubicTo(p1, p2, p3);					
 						break;
 					}
 					case 'L':
-						cmd = new GlyphLineTo(read_pair(is));
+						cmd = new GlyphLineTo(read_pair(bytes, is));
 						break;
 					case 'M': 
-						cmd = new GlyphMoveTo(read_pair(is));
+						cmd = new GlyphMoveTo(read_pair(bytes, is));
 						break;
 					case 'Q': {
-						LPair p1 = read_pair(is);
-						LPair p2 = read_pair(is);
+						LPair p1 = read_pair(bytes, is);
+						LPair p2 = read_pair(bytes, is);
 						cmd = new GlyphConicTo(p1, p2);
 						break;
 					}
 					case 'S': {
-						LPair p1 = read_pair(is);
-						LPair p2 = read_pair(is);
+						LPair p1 = read_pair(bytes, is);
+						LPair p2 = read_pair(bytes, is);
 						cmd = new GlyphShortCubicTo(p1, p2);
 						break;
 					}
 					case 'T':
-						cmd = new GlyphShortConicTo(read_pair(is));
+						cmd = new GlyphShortConicTo(read_pair(bytes, is));
 						break;
 					case 'Z':
 						cmd = new GlyphClosePath();
