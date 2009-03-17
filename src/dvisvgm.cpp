@@ -36,6 +36,7 @@
 #include "SpecialManager.h"
 #include "StreamCounter.h"
 #include "SVGFontTraceEmitter.h"
+#include "debug.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -130,8 +131,8 @@ static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
 }
 
 
-static void set_cache_dir (const gengetopt_args_info &args) {
-	if (args.cache_given) {
+static bool set_cache_dir (const gengetopt_args_info &args) {
+	if (args.cache_given && strcmp(args.cache_arg, "?") != 0) {
 		if (strcmp(args.cache_arg, "none") == 0) 
 			SVGFontTraceEmitter::CACHE_PATH = 0;
 		else if (FileSystem::exists(args.cache_arg))
@@ -147,8 +148,13 @@ static void set_cache_dir (const gengetopt_args_info &args) {
 			if (!FileSystem::exists(path.c_str()))
 				FileSystem::mkdir(path.c_str());
 			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
+		}		
+		if (args.cache_given && strcmp(args.cache_arg, "?") == 0) {
+			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
+			return false;
 		}
 	}
+	return true;
 }
 
 
@@ -168,17 +174,20 @@ static int dvisvgm (int argc, char *argv[]) {
 		return 0;
 	}
 
+	if (!set_cache_dir(args))
+		return 0;
+
 	if (args.inputs_num < 1 || args.help_given) {
 		show_help();
 		return 0;
 	}
+
 	if (args.stdout_given && args.zip_given) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
 	}
 	if (args.map_file_given)
 		FileFinder::setUserFontMap(args.map_file_arg);
-	set_cache_dir(args);
 
 	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
 	DVIToSVG::USE_FONTS = !args.no_fonts_given;
