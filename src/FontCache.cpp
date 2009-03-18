@@ -59,8 +59,6 @@ static void write_unsigned (UInt32 value, int bytes, ostream &os) {
 
 
 static inline void write_signed (Int32 value, int bytes, ostream &os) {
-//	if (value < 0)
-//		value |= 0x80 << (bytes-1);
 	write_unsigned((UInt32)value, bytes, os);
 }
 
@@ -82,6 +80,7 @@ FontCache::~FontCache () {
 }
 
 
+/** Removes all data from the cache. This does not affect the cache files. */
 void FontCache::clear () {
 	FORALL(_glyphs, GlyphMap::iterator, it)
 		delete it->second;
@@ -89,6 +88,9 @@ void FontCache::clear () {
 }
 
 
+/** Assigns glyph data to a character and adds it to the cache. 
+ *  @param[in] c character code
+ *  @param[in] glyph font glyph data */
 void FontCache::setGlyph (int c, const Glyph *glyph) {
 	if (!glyph || glyph->empty())
 		delete glyph;
@@ -105,12 +107,19 @@ void FontCache::setGlyph (int c, const Glyph *glyph) {
 }
 
 
+/** Returns the corresponding glyph data to a given character of the current font.
+ *  @param[in] c character code 
+ *  @return font glyph data (0 if no matching data was found) */
 const Glyph* FontCache::getGlyph (int c) const {
 	GlyphMap::const_iterator it = _glyphs.find(c);
 	return (it != _glyphs.end()) ? it->second : 0;
 }
 
 
+/** Writes the current cache data to a file.
+ *  @param[in] fontname name of current font 
+ *  @param[in] dir directory where the cache file should go 
+ *  @return true if writing was successful */
 bool FontCache::write (const char *fontname, const char *dir) const {
 	if (!_changed)
 		return true;
@@ -151,6 +160,10 @@ static int max_int_size (const vector<LPair> &pairs) {
 }
 
 
+/** Writes the current cache data to a stream.
+ *  @param[in] fontname name of current font 
+ *  @param[in] os output stream 
+ *  @return true if writing was successful */
 bool FontCache::write (const char *fontname, ostream &os) const {
 	if (!_changed)
 		return true;
@@ -167,7 +180,7 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 			FORALL(it->second->commands(), list<GlyphCommand*>::const_iterator, cit) {
 				const vector<LPair> &params = (*cit)->params();
 				int bytes = max_int_size(params);
-				UInt8 cmdchar = (bytes << 4) | ((*cit)->getSVGPathCommand() - 'A');
+				UInt8 cmdchar = (bytes << 5) | ((*cit)->getSVGPathCommand() - 'A');
 				write_unsigned(cmdchar, 1, os);
 				for (size_t i=0; i < params.size(); i++) {
 					write_signed(params[i].x(), bytes, os);
@@ -181,6 +194,10 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 }
 
 
+/** Reads font glyph information from a file.
+ *  @param[in] fontname name of font data to read
+ *  @param[in] dir directory where the cache files are located 
+ *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, const char *dir) {
 	clear();
 	if (fontname && strlen(fontname) > 0) {
@@ -195,6 +212,10 @@ bool FontCache::read (const char *fontname, const char *dir) {
 }
 
 
+/** Reads font glyph information from a stream.
+ *  @param[in] fontname name of font data to read
+ *  @param[in] dir input stream
+ *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, istream &is) {
 	clear();
 	if (is) {
@@ -211,8 +232,8 @@ bool FontCache::read (const char *fontname, istream &is) {
 			Glyph *glyph = new Glyph;
 			while (s-- > 0) {
 				UInt8 cmdval = read_unsigned(1, is);
-				UInt8 cmdchar = (cmdval & 0x0f) + 'A';
-				int bytes = cmdval >> 4;
+				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+				int bytes = cmdval >> 5;
 				GlyphCommand *cmd=0;
 				switch (cmdchar) {
 					case 'C': {
