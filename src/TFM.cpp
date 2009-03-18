@@ -30,8 +30,6 @@
 
 using namespace std;
 
-double TFM::mag = 1;
-
 
 /** Reads a single unsigned integer value of given size (max. 4 bytes). 
  *  @param[in] is characters are read from this stream
@@ -67,7 +65,7 @@ static double fix2double (FixWord fix) {
 }
 
 
-TFM::TFM () : checksum(0), firstChar(0), lastChar(0), designSize(0)
+TFM::TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0)
 {
 }
 
@@ -90,8 +88,8 @@ TFM* TFM::createFromFile (const char *fontname) {
 bool TFM::readFromStream (istream &is) {
 	is.seekg(2, ios_base::beg);        // skip file size
 	UInt16 lh = read_unsigned(is, 2);  // length of header in 4 byte words
-	firstChar = read_unsigned(is, 2);  // smalles character code in font
-	lastChar  = read_unsigned(is, 2);  // largest character code in font
+	_firstChar= read_unsigned(is, 2);  // smalles character code in font
+	_lastChar = read_unsigned(is, 2);  // largest character code in font
 	UInt16 nw = read_unsigned(is, 2);  // number of words in width table
 	UInt16 nh = read_unsigned(is, 2);  // number of words in height table
 	UInt16 nd = read_unsigned(is, 2);  // number of words in depth table
@@ -102,46 +100,46 @@ bool TFM::readFromStream (istream &is) {
 //	UInt16 np = read_unsigned(is, 2);  // number of font parameter words 
 	
 	is.seekg(10, ios_base::cur);       // move to header
-	checksum = read_unsigned(is, 4);
-	designSize = read_unsigned(is, 4);
+	_checksum = read_unsigned(is, 4);
+	_designSize = read_unsigned(is, 4);
 	is.seekg(24+lh*4, ios_base::beg);  // move to char info table
-	read_words(is, charInfoTable, lastChar-firstChar+1);
-	read_words(is, widthTable, nw);
-	read_words(is, heightTable, nh);
-	read_words(is, depthTable, nd);
+	read_words(is, _charInfoTable, _lastChar-_firstChar+1);
+	read_words(is, _widthTable, nw);
+	read_words(is, _heightTable, nh);
+	read_words(is, _depthTable, nd);
 	return true;
 }
 
 
 /** Returns the design size of this font in TeX point units. */
 double TFM::getDesignSize () const {
-	return fix2double(designSize);
+	return fix2double(_designSize);
 }
 
 
 /** Returns the width of char c in TeX point units. */
 double TFM::getCharWidth (int c) const {
-	if (c < firstChar || c > lastChar || unsigned(c-firstChar) >= charInfoTable.size())
+	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
 		return 0;   
-	int index = (charInfoTable[c-firstChar] >> 24) & 0xFF;
-	return fix2double(widthTable[index]) * fix2double(designSize);
+	int index = (_charInfoTable[c-_firstChar] >> 24) & 0xFF;
+	return fix2double(_widthTable[index]) * fix2double(_designSize);
 }
 
 
 /** Returns the height of char c in TeX point units. */
 double TFM::getCharHeight (int c) const {
-	if (c < firstChar || c > lastChar || unsigned(c-firstChar) >= charInfoTable.size())
+	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
 		return 0;   
-	int index = (charInfoTable[c-firstChar] >> 20) & 0x0F;
-	return fix2double(heightTable[index]) * fix2double(designSize);
+	int index = (_charInfoTable[c-_firstChar] >> 20) & 0x0F;
+	return fix2double(_heightTable[index]) * fix2double(_designSize);
 }
 
 
 /** Returns the depth of char c in TeX point units. */
 double TFM::getCharDepth (int c) const {
-	if (c < firstChar || c > lastChar || unsigned(c-firstChar) >= charInfoTable.size())
+	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
 		return 0;   
-	int index = (charInfoTable[c-firstChar] >> 16) & 0x0F;
-	return fix2double(depthTable[index]) * fix2double(designSize);
+	int index = (_charInfoTable[c-_firstChar] >> 16) & 0x0F;
+	return fix2double(_depthTable[index]) * fix2double(_designSize);
 }
 

@@ -277,5 +277,5 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 
 void DVIToSVG::setMetafontMag (double m) {
 	_mag = m;
-	TFM::setMetafontMag(m);
+//	TFM::setMetafontMag(m);
 }

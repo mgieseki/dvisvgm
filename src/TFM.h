@@ -35,25 +35,25 @@ class TFM
 		TFM ();
 		TFM (std::istream &is);
 		static TFM* createFromFile (const char *fname);
-		static void setMetafontMag (double m) {mag = m;}
-		UInt16 getChecksum () const           {return checksum;}
 		double getDesignSize () const;
 		double getCharWidth (int c) const;
 		double getCharHeight (int c) const;
 		double getCharDepth (int c) const;
+		UInt16 getChecksum () const {return _checksum;}
+		UInt16 firstChar () const   {return _firstChar;}
+		UInt16 lastChar () const    {return _lastChar;}
 		
 	protected:
 		bool readFromStream (std::istream &is);
 
    private:
-		UInt16 checksum;
-		UInt16 firstChar, lastChar;		
-		FixWord designSize; // design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  charInfoTable; // 
-		std::vector<FixWord> widthTable;    // character widths in design size units
-		std::vector<FixWord> heightTable;   // character widths in design size units
-		std::vector<FixWord> depthTable;    // character widths in design size units
-		static double mag;  // magnification used when Metafont is called
+		UInt16 _checksum;
+		UInt16 _firstChar, _lastChar;		
+		FixWord _designSize;  ///< design size of the font in TeX points (7227 pt = 254 cm)
+		std::vector<UInt32>  _charInfoTable;  
+		std::vector<FixWord> _widthTable;    ///< character widths in design size units
+		std::vector<FixWord> _heightTable;   ///< character height in design size units
+		std::vector<FixWord> _depthTable;    ///< character depth in design size units
 };
 
 #endif
