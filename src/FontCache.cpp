@@ -116,7 +116,8 @@ const Glyph* FontCache::getGlyph (int c) const {
 }
 
 
-/** Writes the current cache data to a file.
+/** Writes the current cache data to a file (only if anything changed after 
+ *  the last call of read()).
  *  @param[in] fontname name of current font 
  *  @param[in] dir directory where the cache file should go 
  *  @return true if writing was successful */
@@ -160,7 +161,8 @@ static int max_int_size (const vector<LPair> &pairs) {
 }
 
 
-/** Writes the current cache data to a stream.
+/** Writes the current cache data to a stream (only if anything changed after 
+ *  the last call of read()).
  *  @param[in] fontname name of current font 
  *  @param[in] os output stream 
  *  @return true if writing was successful */

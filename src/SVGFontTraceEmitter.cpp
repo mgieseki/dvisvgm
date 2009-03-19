@@ -49,9 +49,12 @@ SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, 
 {
 	if (CACHE_PATH && _font) {
 		_cache = new FontCache;
-		if (TRACE_ALL && prepareTracer())
+		if (TRACE_ALL && prepareTracer()) {
 			traceAllGlyphs();
-		_cache->read(_font->name().c_str(), CACHE_PATH);
+			_cache->write(_font->name().c_str(), CACHE_PATH);
+		}
+		else
+			_cache->read(_font->name().c_str(), CACHE_PATH);
 	}
 }
 
