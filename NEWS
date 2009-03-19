@@ -1,5 +1,10 @@
 dvisvgm-0.7.2
 - font caching has been added (speeds up embedding of bitmap fonts)
+- added option --trace-all that enables tracing of all glyphs of all
+  bitmap fonts used in the currect DVI file. Even glyphs that are currently
+  not needed are considered. This avoids multiple calls of Metafont for the 
+  same fonts. In combination with the new caching functionality this can 
+  drastically increase the speed of successive dvisvgm calls.
 - if option --no-fonts is used, all glyph sizes are now computed correctly
 
 dvisvgm-0.7.1

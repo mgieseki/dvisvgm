@@ -28,6 +28,7 @@ option "cache"          C "set cache directory"                      string type
 option "mag"            M "magnification of Metafont output"         double typestr="factor"   default="4"   no
 option "no-mktexmf"     - "don't try to create missing fonts"                                                no
 option "no-specials"    S "don't process [selected] specials"        string typestr="prefixes"               no argoptional
+option "trace-all"      a "trace all glyphs of used bitmap fonts"                                            no
 
 section "Message options"
 option "help"           h "print this help and exit"                                                         no

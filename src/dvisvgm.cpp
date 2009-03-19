@@ -145,6 +145,7 @@ static bool set_cache_dir (const gengetopt_args_info &args) {
 		if (userdir) {
 			static string path = userdir;
 			path += "/.dvisvgm";
+			path = FileSystem::adaptPathSeperators(path);
 			if (!FileSystem::exists(path.c_str()))
 				FileSystem::mkdir(path.c_str());
 			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
@@ -191,6 +192,7 @@ static int dvisvgm (int argc, char *argv[]) {
 
 	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
 	DVIToSVG::USE_FONTS = !args.no_fonts_given;
+	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given;
 
 	double start_time = get_time();
 	

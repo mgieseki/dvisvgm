@@ -93,7 +93,7 @@ to disable the font caching mechanism completely with option *--cache=none*. The
 *--cache=?* prints the default cache directory and exits the program.
 
 
-*--list-specials*::
+*-l, --list-specials*::
 Prints a list of registered special handlers and exits. Each handler processes a set of special
 statements belonging to the same category. The categories are identified by the
 prefix of the special statements. It's usually a leading word
@@ -166,6 +166,18 @@ This option is equivalent to *-TR*'angle'.
 *-s, --stdout*::
 Don't write output to a file but redirect it to *stdout*.
 
+
+*-a, --trace-all*::
+This option forces dvisvgm not to trace just the actually needed glyphs but to trace all 
+glyphs of the bitmap fonts used in a DVI file. Since the tracing results are stored in 
+the font cache, all following conversions (without option *--trace-all*) of DVI files using 
+these fonts will be much faster. By default, only the actually referenced glyphs 
+are traced and added to the cache during a DVI conversion.
++
+[NOTE]
+This option only takes affect if font caching is active. Thus, *--trace-all* cannot be 
+combined with option *--cache=none*.
++
 
 *-t, --translate*='tx'[,'ty']::
 Translates (moves) page content in direction of vector ('tx','ty'). This option is 

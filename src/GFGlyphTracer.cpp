@@ -26,6 +26,7 @@
 using namespace std;
 
 
+
 GFGlyphTracer::GFGlyphTracer (istream &is, double upp) : GFTracer(is, upp)
 {
 	_glyph = new Glyph;

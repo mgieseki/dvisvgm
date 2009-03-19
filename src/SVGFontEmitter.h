@@ -36,13 +36,13 @@ class SVGFontEmitter : public FontEmitter
 {
    public:
       SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
-		int emitFont (const char *id) const;
-		int emitFont (const std::set<int> &usedChars, const char *id) const;
-		bool emitGlyph (int c) const;
+		int emitFont (const char *id);
+		int emitFont (const std::set<int> &usedChars, const char *id);
+		bool emitGlyph (int c);
 		const XMLElementNode* getGlyphNode () const {return _glyphNode;}
 		
 	protected:
-		int emitFont (const std::set<int> *usedCharsm, const char *id) const;
+		int emitFont (const std::set<int> *usedCharsm, const char *id);
 
    private:
 		const Font *_font;

@@ -34,6 +34,7 @@
 
 using namespace std;
 
+
 SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *root, bool uf) 
 	: _fontManager(fm), _charmapTranslator(cmt), _rootNode(root), _useFonts(uf)
 {
@@ -43,17 +44,17 @@ SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const C
 
 
 
-int SVGFontEmitter::emitFont (const char *id) const {
+int SVGFontEmitter::emitFont (const char *id) {
 	return emitFont(0, id);
 }
 
 
-int SVGFontEmitter::emitFont (const set<int> &usedChars, const char *id) const {
+int SVGFontEmitter::emitFont (const set<int> &usedChars, const char *id) {
 	return emitFont(&usedChars, id);
 }
 
 
-int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) const {
+int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 	if (!usedChars || usedChars->empty())
 		return 0;
 
@@ -90,7 +91,7 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) const {
 }
 
 
-bool SVGFontEmitter::emitGlyph (int c) const {
+bool SVGFontEmitter::emitGlyph (int c) {
 	double sx=1.0, sy=1.0;
 	FontEncoding *encoding = _fontManager.encoding(_font);
 	if (_useFonts) {

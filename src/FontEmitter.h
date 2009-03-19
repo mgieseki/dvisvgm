@@ -31,13 +31,13 @@ struct FontEmitter
 	virtual ~FontEmitter () {}
 
 	/** Emits all glyphs of the font. */
-	virtual int emitFont (const char *id) const =0;
+	virtual int emitFont (const char *id) =0;
 
 	/** Emits selected glyphs of the font. */
-	virtual int emitFont (const std::set<int> &usedChars, const char *id) const =0;
+	virtual int emitFont (const std::set<int> &usedChars, const char *id) =0;
 
 	/** Emits a single glyph. */
-	virtual bool emitGlyph (int c) const =0;
+	virtual bool emitGlyph (int c) =0;
 };
 
 #endif

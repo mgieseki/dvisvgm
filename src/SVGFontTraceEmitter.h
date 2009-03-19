@@ -42,28 +42,30 @@ class SVGFontTraceEmitter : public FontEmitter
    public:
       SVGFontTraceEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
       ~SVGFontTraceEmitter ();
-		int emitFont (const char *id) const;
-		int emitFont (const std::set<int> &usedChars, const char *id) const;
-		bool emitGlyph (int c) const;
+		int emitFont (const char *id);
+		int emitFont (const std::set<int> &usedChars, const char *id);
+		bool emitGlyph (int c);
 		void setMag (double m) {_mag = m;}
 
 	public:
 		static const char *CACHE_PATH;
+		static bool TRACE_ALL;
 
 	protected:
-		int emitFont (const std::set<int> *usedChars, const char *id) const;
-		bool prepareTracer () const;
+		int emitFont (const std::set<int> *usedChars, const char *id);
+		bool prepareTracer ();
+		void traceAllGlyphs ();
 
    private:
-		mutable GFGlyphTracer *_gfTracer;
-		mutable std::istream *_in;
+		GFGlyphTracer *_gfTracer;
+		std::istream *_in;
 		const Font *_font;
 		const FontManager &_fontManager;
 		FontCache *_cache;
 		double _mag;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode; 
-		mutable XMLElementNode *_glyphNode;
+		XMLElementNode *_glyphNode;
 		bool _useFonts;
 };
 
