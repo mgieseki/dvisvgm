@@ -27,6 +27,7 @@
 #include "FileSystem.h"
 #include "FontCache.h"
 #include "FontGlyph.h"
+#include "gzstream.h"
 #include "types.h"
 
 using namespace std;
@@ -46,7 +47,7 @@ static Int32 read_signed (int bytes, istream &is) {
 	Int32 ret = is.get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (bytes-=2; bytes >= 0 && !is.eof(); bytes--) 
+	for (bytes-=2; bytes >= 0 && !is.eof(); bytes--)
 		ret = (ret << 8) | is.get();
 	return ret;
 }
@@ -88,7 +89,7 @@ void FontCache::clear () {
 }
 
 
-/** Assigns glyph data to a character and adds it to the cache. 
+/** Assigns glyph data to a character and adds it to the cache.
  *  @param[in] c character code
  *  @param[in] glyph font glyph data */
 void FontCache::setGlyph (int c, const Glyph *glyph) {
@@ -108,7 +109,7 @@ void FontCache::setGlyph (int c, const Glyph *glyph) {
 
 
 /** Returns the corresponding glyph data to a given character of the current font.
- *  @param[in] c character code 
+ *  @param[in] c character code
  *  @return font glyph data (0 if no matching data was found) */
 const Glyph* FontCache::getGlyph (int c) const {
 	GlyphMap::const_iterator it = _glyphs.find(c);
@@ -116,10 +117,10 @@ const Glyph* FontCache::getGlyph (int c) const {
 }
 
 
-/** Writes the current cache data to a file (only if anything changed after 
+/** Writes the current cache data to a file (only if anything changed after
  *  the last call of read()).
- *  @param[in] fontname name of current font 
- *  @param[in] dir directory where the cache file should go 
+ *  @param[in] fontname name of current font
+ *  @param[in] dir directory where the cache file should go
  *  @return true if writing was successful */
 bool FontCache::write (const char *fontname, const char *dir) const {
 	if (!_changed)
@@ -130,7 +131,8 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 			dir = FileSystem::getcwd().c_str();
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
-		ofstream ofs(oss.str().c_str(), ios::binary);
+		ogzstream ofs(oss.str().c_str(),	9, ios::binary|ios::out);
+//		ofstream ofs(oss.str().c_str(), ios::binary);
 		return write(fontname, ofs);
 	}
 	return false;
@@ -149,22 +151,22 @@ static int max_int_size (Int32 value) {
 }
 
 
-/** Returns the minimal number of bytes needed to store the biggest 
+/** Returns the minimal number of bytes needed to store the biggest
  *  pair component of the given vector. */
 static int max_int_size (const vector<LPair> &pairs) {
 	int ret=0;
 	FORALL(pairs, vector<LPair>::const_iterator, it) {
-		ret = max(ret, max_int_size(it->x()));		
-		ret = max(ret, max_int_size(it->y()));		
+		ret = max(ret, max_int_size(it->x()));
+		ret = max(ret, max_int_size(it->y()));
 	}
 	return ret;
 }
 
 
-/** Writes the current cache data to a stream (only if anything changed after 
+/** Writes the current cache data to a stream (only if anything changed after
  *  the last call of read()).
- *  @param[in] fontname name of current font 
- *  @param[in] os output stream 
+ *  @param[in] fontname name of current font
+ *  @param[in] os output stream
  *  @return true if writing was successful */
 bool FontCache::write (const char *fontname, ostream &os) const {
 	if (!_changed)
@@ -198,7 +200,7 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 
 /** Reads font glyph information from a file.
  *  @param[in] fontname name of font data to read
- *  @param[in] dir directory where the cache files are located 
+ *  @param[in] dir directory where the cache files are located
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, const char *dir) {
 	clear();
@@ -207,7 +209,8 @@ bool FontCache::read (const char *fontname, const char *dir) {
 			dir = FileSystem::getcwd().c_str();
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
-		ifstream ifs(oss.str().c_str(), ios::binary);
+//		ifstream ifs(oss.str().c_str(), ios::binary);
+		igzstream ifs(oss.str().c_str(),	9, ios::binary|ios::in);
 		return read(fontname, ifs);
 	}
 	return false;
@@ -223,10 +226,12 @@ bool FontCache::read (const char *fontname, istream &is) {
 	if (is) {
 		if (read_unsigned(1, is) != VERSION)
 			return false;
-		string fname;		
+		string fname;
 		while (!is.eof() && is.peek() != 0)
 			fname += is.get();
 		is.get(); // skip 0-byte
+		if (fname != fontname)
+			return false;
 		UInt32 num_glyphs = read_unsigned(4, is);
 		while (num_glyphs-- > 0) {
 			UInt32 c = read_unsigned(4, is);
@@ -242,13 +247,13 @@ bool FontCache::read (const char *fontname, istream &is) {
 						LPair p1 = read_pair(bytes, is);
 						LPair p2 = read_pair(bytes, is);
 						LPair p3 = read_pair(bytes, is);
-						cmd = new GlyphCubicTo(p1, p2, p3);					
+						cmd = new GlyphCubicTo(p1, p2, p3);
 						break;
 					}
 					case 'L':
 						cmd = new GlyphLineTo(read_pair(bytes, is));
 						break;
-					case 'M': 
+					case 'M':
 						cmd = new GlyphMoveTo(read_pair(bytes, is));
 						break;
 					case 'Q': {
