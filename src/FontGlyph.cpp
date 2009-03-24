@@ -211,7 +211,8 @@ void Glyph::closeOpenPaths () {
  *  commands that reuse previously given parameters. 
  *  This method detects such command sequences and replaces them by their short form. */
 void Glyph::optimizeCommands () {	
-	LPair cp;            // current point
+	LPair fp;            // first point of current path
+	LPair cp;            // current point (where path drawing continues)
 	ConstIterator prev;  // preceding command
 	LPair pstore[2];
 	FORALL(_commands, Iterator, it) {
@@ -219,6 +220,12 @@ void Glyph::optimizeCommands () {
 		const vector<LPair> &params = (*it)->params();
 		GlyphCommand *new_command = 0;
 		switch (cmd) {
+			case 'M':
+				fp = params[0];  // record first point of path
+				break;
+			case 'Z':
+				cp = fp;
+				break;
 			case 'L':
 				if (params[0].x() == cp.x())
 					new_command = new GlyphVerticalLineTo(params[0]);
@@ -226,8 +233,7 @@ void Glyph::optimizeCommands () {
 					new_command = new GlyphHorizontalLineTo(params[0]);
 				break;
 			case 'C':
-			case 'S':
-				if (cmd == 'C' && ((*prev)->getSVGPathCommand() == 'C' || (*prev)->getSVGPathCommand() == 'S')) {
+				if ((*prev)->getSVGPathCommand() == 'C' || (*prev)->getSVGPathCommand() == 'S') {
 					if (params[0] == pstore[1]*2-pstore[0])  // is first control point reflection of previous second control point?
 						new_command = new GlyphShortCubicTo(params[1], params[2]);
 				}
@@ -235,16 +241,18 @@ void Glyph::optimizeCommands () {
 				pstore[1] = params[2]; // curve endpoint
 				break;
 			case 'Q':
-			case 'T':
-				if (cmd == 'Q' && ((*prev)->getSVGPathCommand() == 'Q' || (*prev)->getSVGPathCommand() == 'T')) {
+				if ((*prev)->getSVGPathCommand() == 'Q' || (*prev)->getSVGPathCommand() == 'T') {
 					if (params[0] == pstore[1]*2-pstore[0])
 						new_command = new GlyphShortConicTo(params[1]);
 				}
-				pstore[0] = params[0]; // strore control point and
+				// [pass through]
+			case 'S':
+			case 'T':
+				pstore[0] = params[0]; // store (second) control point and
 				pstore[1] = params[1]; // curve endpoint
 				break;
 		}
-		// replace current command by shorter form
+		// replace current command by shorthand form
 		if (new_command) {
 			delete *it;
 			*it = new_command;
