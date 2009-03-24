@@ -6,6 +6,7 @@ dvisvgm-0.7.2
   same fonts. In combination with the new caching functionality this can 
   drastically increase the speed of successive dvisvgm calls.
 - if option --no-fonts is used, all glyph sizes are now computed correctly
+- use shorthand path commands in SVG fonts if possible
 
 dvisvgm-0.7.1
 - evaluation of a subset of emTeX specials has been added

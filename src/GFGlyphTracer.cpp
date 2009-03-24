@@ -73,6 +73,7 @@ void GFGlyphTracer::endChar (UInt32 c) {
 	else
 		_glyph->clear();
 	GFTracer::endChar(c);
+	_glyph->optimizeCommands();
 }
 
 

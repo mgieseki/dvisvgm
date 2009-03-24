@@ -69,6 +69,22 @@ struct GlyphLineTo : public GlyphCommand
 };
 
 
+struct GlyphHorizontalLineTo : public GlyphLineTo
+{
+	GlyphHorizontalLineTo (const LPair &p) : GlyphLineTo(LPair(p.x(), 0)) {}
+	char getSVGPathCommand () const {return 'H';}
+	void writeSVGCommand (ostream &os, double sx=1, double sy=1) const;
+};
+
+
+struct GlyphVerticalLineTo : public GlyphLineTo
+{
+	GlyphVerticalLineTo (const LPair &p) : GlyphLineTo(LPair(0, p.y())) {}
+	char getSVGPathCommand () const {return 'V';}
+	void writeSVGCommand (ostream &os, double sx=1, double sy=1) const;
+};
+
+
 struct GlyphConicTo : public GlyphCommand
 {
 	GlyphConicTo (const LPair &p1, const LPair &p2) : GlyphCommand(p1, p2) {}

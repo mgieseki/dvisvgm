@@ -108,7 +108,7 @@ void FontCache::setGlyph (int c, const Glyph *glyph) {
 }
 
 
-/** Returns the corresponding glyph data to a given character of the current font.
+/** Returns the corresponding glyph data of a given character of the current font.
  *  @param[in] c character code
  *  @return font glyph data (0 if no matching data was found) */
 const Glyph* FontCache::getGlyph (int c) const {
@@ -131,7 +131,7 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 			dir = FileSystem::getcwd().c_str();
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
-		ogzstream ofs(oss.str().c_str(),	9, ios::binary|ios::out);
+		ogzstream ofs(oss.str().c_str(), 9, ios::binary|ios::out);
 //		ofstream ofs(oss.str().c_str(), ios::binary);
 		return write(fontname, ofs);
 	}
@@ -210,7 +210,7 @@ bool FontCache::read (const char *fontname, const char *dir) {
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
 //		ifstream ifs(oss.str().c_str(), ios::binary);
-		igzstream ifs(oss.str().c_str(),	9, ios::binary|ios::in);
+		igzstream ifs(oss.str().c_str(), 9, ios::binary|ios::in);
 		return read(fontname, ifs);
 	}
 	return false;
@@ -250,6 +250,9 @@ bool FontCache::read (const char *fontname, istream &is) {
 						cmd = new GlyphCubicTo(p1, p2, p3);
 						break;
 					}
+					case 'H':
+						cmd = new GlyphHorizontalLineTo(read_pair(bytes, is));
+						break;
 					case 'L':
 						cmd = new GlyphLineTo(read_pair(bytes, is));
 						break;
@@ -270,6 +273,9 @@ bool FontCache::read (const char *fontname, istream &is) {
 					}
 					case 'T':
 						cmd = new GlyphShortConicTo(read_pair(bytes, is));
+						break;
+					case 'V':
+						cmd = new GlyphVerticalLineTo(read_pair(bytes, is));
 						break;
 					case 'Z':
 						cmd = new GlyphClosePath();

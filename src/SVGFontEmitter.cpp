@@ -122,7 +122,7 @@ bool SVGFontEmitter::emitGlyph (int c) {
 	Glyph glyph;
 	glyph.read(c, encoding, _fontEngine);
 	glyph.closeOpenPaths();
-//	glyph.optimizeCommands();
+	glyph.optimizeCommands();
 	glyph.writeSVGCommands(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
 	return true;

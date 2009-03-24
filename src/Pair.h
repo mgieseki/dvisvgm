@@ -34,8 +34,8 @@ class Pair
       Pair (T x=0, T y=0) : _x(x), _y(y) {}
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
 		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
-		Pair operator *= (T c)                 {_x *= c;   _y *= c;   return *this;}
-		Pair operator /= (T c)                 {_x /= c;   _y /= c;   return *this;}
+		Pair operator *= (T c)                 {_x *= c; _y *= c; return *this;}
+		Pair operator /= (T c)                 {_x /= c; _y /= c; return *this;}
       Pair ortho () const                    {return Pair(-_y, _x);}
       double length () const                 {return std::sqrt(_x*_x + _y*_y);}
 		bool operator == (const Pair &p) const {return _x == p._x && _y == p._y;}
@@ -55,6 +55,8 @@ struct LPair : public Pair<long>
 {
    LPair (long x=0, long y=0) : Pair<long>(x, y) {}
 	explicit LPair (double x, double y) : Pair<long>(long(x+0.5), long(y+0.5)) {}
+	LPair (const Pair<long> &p) : Pair<long>(p) {}
+	operator Pair<long> () {return *this;}
 };
 
 typedef Pair<double> DPair;
@@ -74,4 +76,5 @@ IMPLEMENT_ARITHMETIC_OPERATOR2(Pair<T>, T, /)
 template <typename T>
 IMPLEMENT_OUTPUT_OPERATOR(Pair<T>)
 
+IMPLEMENT_ARITHMETIC_OPERATOR2(LPair, long, *)
 #endif

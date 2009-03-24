@@ -78,11 +78,21 @@ GlyphCommand* GlyphMoveTo::combine (GlyphCommand &cmd) {
 
 
 GlyphCommand* GlyphLineTo::combine (GlyphCommand &cmd) {
-	if (cmd.getSVGPathCommand() == 'L') {
+	if (cmd.getSVGPathCommand() == getSVGPathCommand()) {
 		_params.insert(_params.end(), cmd.params().begin(), cmd.params().end());
 		return this;
 	}
 	return 0;
+}
+
+
+void GlyphHorizontalLineTo::writeSVGCommand (ostream &os, double sx, double sy) const {
+	os << getSVGPathCommand() << _params[0].x()*sx;
+}
+
+
+void GlyphVerticalLineTo::writeSVGCommand (ostream &os, double sx, double sy) const {
+	os << getSVGPathCommand() << _params[0].y()*sy;
 }
 
 
@@ -195,31 +205,54 @@ void Glyph::closeOpenPaths () {
 
 
 /** Optimizes the glyph's outline description by using command sequences with less parameters.
- *  TrueType and Type1 fonts only support 3 drawing _commands (moveto, lineto, conicto/cubicto).
+ *  TrueType and Type1 fonts only support 3 drawing commands (moveto, lineto, conicto/cubicto).
  *  In the case of successive bezier curve sequences, control points or tangent slopes are ofted 
  *  identical so the path description contains redundant information. SVG provides short form bezier 
- *  _commands that reuse previously given parameters. 
- *  This method detects such command sequences and replaces them by short form curve _commands. */
-void Glyph::optimizeCommands () {
-#if 0
-	Iterator i1=_commands.begin();
-	Iterator i2=_commands.begin();
-	for (++i2; i2 != _commands.end(); ++i2) {
-		if ((*i1)->getSVGPathCommand() == 'C' && (*i2)->getSVGPathCommand() == 'C') { // cubic bezier curve sequence?
-			const LPair &p0 = i1->
-			long x1, y1;    // end point of previous cubic bezier curve
-			long x2, y2;    // start point of previous cubic bezier curve	
-			long cx1, cy1; // second control point of previous cubic bezier curve
-			long cx2, cy2; // first control point of current cubic bezier curve
-			if (x1 == x2 && y1 == y2 && cx2 == rcx1 && cy2 == rcy1) {
-				delete *i1;
-				i1 = i2;
-				i2 = _commands.erase(i2);
-				i2.insert(new GlyphShortCubicTo(...));
-			}
+ *  commands that reuse previously given parameters. 
+ *  This method detects such command sequences and replaces them by their short form. */
+void Glyph::optimizeCommands () {	
+	LPair cp;            // current point
+	ConstIterator prev;  // preceding command
+	LPair pstore[2];
+	FORALL(_commands, Iterator, it) {
+		char cmd = (*it)->getSVGPathCommand();
+		const vector<LPair> &params = (*it)->params();
+		GlyphCommand *new_command = 0;
+		switch (cmd) {
+			case 'L':
+				if (params[0].x() == cp.x())
+					new_command = new GlyphVerticalLineTo(params[0]);
+				else if (params[0].y() == cp.y())
+					new_command = new GlyphHorizontalLineTo(params[0]);
+				break;
+			case 'C':
+			case 'S':
+				if (cmd == 'C' && ((*prev)->getSVGPathCommand() == 'C' || (*prev)->getSVGPathCommand() == 'S')) {
+					if (params[0] == pstore[1]*2-pstore[0])  // is first control point reflection of previous second control point?
+						new_command = new GlyphShortCubicTo(params[1], params[2]);
+				}
+				pstore[0] = params[1]; // store second control point and
+				pstore[1] = params[2]; // curve endpoint
+				break;
+			case 'Q':
+			case 'T':
+				if (cmd == 'Q' && ((*prev)->getSVGPathCommand() == 'Q' || (*prev)->getSVGPathCommand() == 'T')) {
+					if (params[0] == pstore[1]*2-pstore[0])
+						new_command = new GlyphShortConicTo(params[1]);
+				}
+				pstore[0] = params[0]; // strore control point and
+				pstore[1] = params[1]; // curve endpoint
+				break;
 		}
-		else if ((*i1)->getSVGPathCommand() == 'Q' && (*i2)->getSVGPathCommand() == 'Q') { // conic/quadratic bezier curve sequence?
+		// replace current command by shorter form
+		if (new_command) {
+			delete *it;
+			*it = new_command;
+			new_command = 0;
 		}
+		// update current point
+		if (!params.empty())
+			cp = params[params.size()-1];
+		prev = it;
 	}
-#endif
 }
