@@ -50,7 +50,7 @@ GlyphCommand::GlyphCommand (const LPair &p1, const LPair &p2, const LPair &p3) :
 LPair GlyphCommand::param (int n) const {
 	if (n < 0)
 		n = _params.size() + n;
-	if (n >= 0 && unsigned(n) < _params.size())
+	if (n >= 0 && size_t(n) < _params.size())
 		return _params[n];
 	return LPair();
 }
@@ -142,11 +142,11 @@ class Commands : public FEGlyphCommands {
 
 
 Glyph::~Glyph () {
-	FORALL(_commands, Iterator, i)
-		delete *i;
+	clear();
 }
 
 
+/** Removes all path commands from the glyph and frees the allocated objects. */
 void Glyph::clear () {
 	FORALL(_commands, Iterator, i)
 		delete *i;
@@ -154,6 +154,8 @@ void Glyph::clear () {
 }
 
 
+/** Appends a new path command to the current glyph. 
+ *  @param[in] cmd command to append */
 void Glyph::addCommand (GlyphCommand *cmd) {
 	if (cmd)
 		_commands.push_back(cmd);
@@ -173,11 +175,20 @@ void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngin
 }
 
 
+/** Writes an SVG representation of the path commands to a stream. The parameters
+ *  can be scaled by the given factors.
+ *  @param[in] os output stream
+ *  @param[in] sx horizontal scale factor 
+ *  @param[in] sy vertical scale factor */
 void Glyph::writeSVGCommands (ostream &os, double sx, double sy) const {
 	FORALL (_commands, ConstIterator, i)
 		(*i)->writeSVGCommand(os, sx, sy);
 }
 
+
+/** Calls a function for all path sections/commands. 
+ *  @param[in] f function to be called
+ *  @param[in] userParam parameter passed to function f */
 void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {
 	FORALL(_commands, Iterator, i)
 		f(*i, userParam);
@@ -259,8 +270,8 @@ void Glyph::optimizeCommands () {
 			new_command = 0;
 		}
 		// update current point
-		if (!params.empty())
-			cp = params[params.size()-1];
+		if (!(*it)->params().empty())
+			cp = (*it)->param(-1);
 		prev = it;
 	}
 }
