@@ -163,6 +163,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	if (!tfm)
 		return false;
 
+	bool write_info=false;
 	const Glyph *glyph = _cache ? _cache->getGlyph(c) : 0;
 	if (!glyph && prepareTracer()) {
 		write_char_info(c, Message::wstream());
@@ -170,6 +171,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 		glyph = &_gfTracer->getGlyph();
 		if (_cache)
 			_cache->setGlyph(c, _gfTracer->transferGlyph());
+		write_info = true;
 	}
 
 	ostringstream path;
@@ -189,7 +191,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	}
 	glyph->writeSVGCommands(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
-	if (!TRACE_ALL && _gfTracer)
+	if (write_info)
 		Message::mstream() << ']';
 	return true;
 }
