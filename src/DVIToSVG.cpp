@@ -73,7 +73,6 @@ DVIToSVG::DVIToSVG (istream &is, ostream &os)
 	svgElement = new XMLElementNode("svg");
 	replaceActions(new DVIToSVGActions(*this, svgElement));
 	doctypeNode = 0;
-	_mag = 4;
 }
 
 
@@ -247,7 +246,6 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			else {
 				if (ph_font->type() == PhysicalFont::MF) {
 					SVGFontTraceEmitter emitter(font, getFontManager(), *cmt, defs, USE_FONTS);
-					emitter.setMag(_mag);
 					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else if (font->path()) { // path to pfb/ttf file
@@ -275,7 +273,3 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 }
 		
 
-void DVIToSVG::setMetafontMag (double m) {
-	_mag = m;
-//	TFM::setMetafontMag(m);
-}

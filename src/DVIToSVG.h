@@ -39,7 +39,6 @@ class DVIToSVG : public DVIReader
       DVIToSVG (std::istream &is, std::ostream &os);
 		~DVIToSVG ();
 		int convert (unsigned firstPage, unsigned lastPage);
-		void setMetafontMag (double m);
 		void setPageSize (string name)    {_pageSizeName = name;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
 		void setTransformation (const string &cmds) {_transCmds = cmds;}
@@ -53,7 +52,6 @@ class DVIToSVG : public DVIReader
 
    private:
 		std::ostream &_out;       ///< DVI output is written to this stream
-		double _mag;              ///< magnification factor of Metafont output
 		XMLDocument *svgDocument;
 		XMLDocTypeNode *doctypeNode;
 		XMLElementNode *svgElement;

@@ -159,7 +159,7 @@ static bool set_cache_dir (const gengetopt_args_info &args) {
 }
 
 
-static int dvisvgm (int argc, char *argv[]) {
+int main (int argc, char *argv[]) {
 	struct gengetopt_args_info args;
 	if (cmdline_parser(argc, argv, &args))
 		return 1;
@@ -193,6 +193,7 @@ static int dvisvgm (int argc, char *argv[]) {
 	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
 	DVIToSVG::USE_FONTS = !args.no_fonts_given;
 	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given;
+	SVGFontTraceEmitter::METAFONT_MAG = args.mag_arg;
 
 	double start_time = get_time();
 	
@@ -220,7 +221,6 @@ static int dvisvgm (int argc, char *argv[]) {
 			DVIToSVG dvisvg(ifs, *out);
 			const char *ignore_specials = args.no_specials_given ? (args.no_specials_arg ? args.no_specials_arg : "*") : 0;
 			dvisvg.setProcessSpecials(ignore_specials);
-			dvisvg.setMetafontMag(args.mag_arg);
 			set_trans(dvisvg, args);
 			tolower(args.bbox_format_arg);
 			dvisvg.setPageSize(args.bbox_format_arg);
@@ -255,7 +255,3 @@ static int dvisvgm (int argc, char *argv[]) {
 	return 0;
 }
 
-
-int main (int argc, char *argv[]) {
-	return dvisvgm(argc, argv);
-}

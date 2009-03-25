@@ -217,10 +217,11 @@ void Glyph::closeOpenPaths () {
 
 /** Optimizes the glyph's outline description by using command sequences with less parameters.
  *  TrueType and Type1 fonts only support 3 drawing commands (moveto, lineto, conicto/cubicto).
- *  In the case of successive bezier curve sequences, control points or tangent slopes are ofted 
- *  identical so the path description contains redundant information. SVG provides short form bezier 
- *  commands that reuse previously given parameters. 
- *  This method detects such command sequences and replaces them by their short form. */
+ *  In the case of successive bezier curve sequences, control points or tangent slopes are often
+ *  identical so that the path description contains redundant information. SVG provides shorthand 
+ *  curve commands that need less parameters because they reuse previously given arguments.
+ *  This method detects such command sequences and replaces them by their short form. It does not
+ *  recompute the whole paths to reduce the number of necessary line/curve segments. */
 void Glyph::optimizeCommands () {	
 	LPair fp;            // first point of current path
 	LPair cp;            // current point (where path drawing continues)
@@ -245,7 +246,7 @@ void Glyph::optimizeCommands () {
 				break;
 			case 'C':
 				if ((*prev)->getSVGPathCommand() == 'C' || (*prev)->getSVGPathCommand() == 'S') {
-					if (params[0] == pstore[1]*2-pstore[0])  // is first control point reflection of previous second control point?
+					if (params[0] == pstore[1]*2-pstore[0])  // is first control point reflection of preceding second control point?
 						new_command = new GlyphShortCubicTo(params[1], params[2]);
 				}
 				pstore[0] = params[1]; // store second control point and

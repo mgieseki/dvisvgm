@@ -41,10 +41,11 @@ using namespace std;
 
 const char *SVGFontTraceEmitter::CACHE_PATH = 0;
 bool SVGFontTraceEmitter::TRACE_ALL = false;
+double SVGFontTraceEmitter::METAFONT_MAG = 4;
 
 
 SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf)
-	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _cache(0), _mag(4.0), 
+	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _cache(0),
 	  _charmapTranslator(cmt), _rootNode(n), _glyphNode(0), _useFonts(uf)
 {
 	if (CACHE_PATH && _font) {
@@ -74,7 +75,7 @@ SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 bool SVGFontTraceEmitter::prepareTracer () {
 	if (!_gfTracer) {
 		MetafontWrapper mf(_font->name());
-		mf.make("ljfour", _mag); // call Metafont if necessary
+		mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
 		if (mf.success() && _font->getTFM()) {
 			_in = new ifstream((_font->name()+".gf").c_str(), ios_base::binary);
 			_gfTracer = new GFGlyphTracer(*_in, 1000.0/_font->getTFM()->getDesignSize()); // 1000 units per em

@@ -45,11 +45,11 @@ class SVGFontTraceEmitter : public FontEmitter
 		int emitFont (const char *id);
 		int emitFont (const std::set<int> &usedChars, const char *id);
 		bool emitGlyph (int c);
-		void setMag (double m) {_mag = m;}
 
 	public:
 		static const char *CACHE_PATH;
 		static bool TRACE_ALL;
+		static double METAFONT_MAG;
 
 	protected:
 		int emitFont (const std::set<int> *usedChars, const char *id);
@@ -62,7 +62,6 @@ class SVGFontTraceEmitter : public FontEmitter
 		const Font *_font;
 		const FontManager &_fontManager;
 		FontCache *_cache;
-		double _mag;
 		const CharmapTranslator &_charmapTranslator;
 		XMLElementNode *_rootNode; 
 		XMLElementNode *_glyphNode;
