@@ -27,10 +27,11 @@ missing
 doc/dvisvgm.txt
 doc/dvisvgm.xml
 doc/dvisvgm.html
-configure
-depcomp
 doc/dvisvgm.1
 doc/*.pdf
+doxy
+configure
+depcomp
 install-sh
 src/test-all*
 stamp-h1
