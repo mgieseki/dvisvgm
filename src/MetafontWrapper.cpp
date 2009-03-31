@@ -28,12 +28,13 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
+#include "debug.h"
 
 using namespace std;
 
 
 MetafontWrapper::MetafontWrapper (const string &fname) 
-	: fontname(fname)
+	: _fontname(fname)
 {
 }
 
@@ -66,30 +67,30 @@ static const char* lookup (string fontname) {
  *  @param[in] mag magnification factor
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
-	if (!FileFinder::lookup(fontname+".mf"))
+	if (!FileFinder::lookup(_fontname+".mf"))
 		return 1;     // mf file not available => no need to call the "slow" Metafont
 	
-	FileSystem::remove(fontname+".gf");	
+	FileSystem::remove(_fontname+".gf");	
 	ostringstream oss;
 	oss << "mf \"\\mode=" << mode  << ";"
 		    "mag:=" << mag << ";"
 		    "batchmode;"
-		    "input " << fontname << "\" >" << FileSystem::DEVNULL;
-	Message::mstream() << "running Metafont for " << fontname << endl;
+		    "input " << _fontname << "\" >" << FileSystem::DEVNULL;
+	Message::mstream() << "running Metafont for " << _fontname << endl;
 	int ret = system(oss.str().c_str());
 
 	// try to read Metafont's logfile and get name of created GF file
-	ifstream ifs((fontname+".log").c_str());
+	ifstream ifs((_fontname+".log").c_str());
 	if (ifs) {	
 		char buf[128];
 		while (ifs) {		
 			ifs.getline(buf, 128);
 			string line = buf;
 			if (line.substr(0, 17) == "Output written on") {
-				unsigned pos = line.find("gf ", 15);
+				size_t pos = line.find("gf ", 18+_fontname.length());
 				if (pos != string::npos) {
 					string gfname = line.substr(18, pos-16);  // GF filename found
-					FileSystem::rename(gfname, fontname+".gf");
+					FileSystem::rename(gfname, _fontname+".gf");
 				}
 				break;
 			}
@@ -101,29 +102,33 @@ int MetafontWrapper::call (const string &mode, double mag) {
 
 /** Calls Metafont if output files (tfm and gf) don't already exist. */
 int MetafontWrapper::make (const string &mode, double mag) {
-//	ifstream tfm((fontname+".tfm").c_str());
-	ifstream gf((fontname+".gf").c_str());
-	if (gf) // @@ distinguish between gf and tfm
+	ifstream tfm((_fontname+".tfm").c_str());
+	ifstream gf((_fontname+".gf").c_str());
+	if (gf && tfm) // @@ distinguish between gf and tfm
 		return 0;
 	return call(mode, mag);
 }
 
 
 bool MetafontWrapper::success () const {
-	ifstream tfm((fontname+".tfm").c_str());
-	ifstream gf((fontname+".gf").c_str());
+	ifstream tfm((_fontname+".tfm").c_str());
+	ifstream gf((_fontname+".gf").c_str());
 	return tfm && gf;
 }
 
 
-/** Remove all files created by a Metafont call (tfm, gf, log). */
-void MetafontWrapper::removeOutputFiles () {
-	removeOutputFiles(fontname);
+/** Remove all files created by a Metafont call (tfm, gf, log). 
+ *  @param[in] keepGF if true, GF files won't be removed */
+void MetafontWrapper::removeOutputFiles (bool keepGF) {
+	removeOutputFiles(_fontname, keepGF);
 }
 
 
-void MetafontWrapper::removeOutputFiles (const string &fontname) {
-	const char *ext[] = {"gf", "log", "tfm", 0};
-	for (const char **p = ext; *p; ++p)
+/** Remove all files created by a Metafont call for a given font (tfm, gf, log). 
+ *  @param[in] fontname name of font whose temporary files should be removed
+ *  @param[in] keepGF if true, GF files will be kept */
+void MetafontWrapper::removeOutputFiles (const string &fontname, bool keepGF) {
+	const char *ext[] = {"gf", "tfm", "log", 0};
+	for (const char **p = keepGF ? ext+2 : ext; *p; ++p)
 		FileSystem::remove(fontname + "." + *p);
 }

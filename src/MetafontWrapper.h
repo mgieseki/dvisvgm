@@ -36,11 +36,11 @@ class MetafontWrapper
 		int call (const string &mode, double mag);
 		int make (const string &mode, double mag);
 		bool success () const;
-		void removeOutputFiles ();
-		static void removeOutputFiles (const string &fontname);
+		void removeOutputFiles (bool keepGF=false);
+		static void removeOutputFiles (const string &fontname, bool keepGF=false);
 		
    private:
-		string fontname;
+		string _fontname;
 };
 
 #endif
