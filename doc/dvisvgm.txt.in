@@ -361,6 +361,7 @@ The location of the following files is determined by the kpathsea library.
 To check the actual kpathsea configuration you can use the *kpsewhich* utility.
 
 **.enc*:: Font encoding files
+**.fgd*:: Font glyph data files (cache files created by dvisvgm)
 **.map*:: Font map files
 **.mf*::  Metafont input files
 **.pfb*:: PostScript Type 1 font files

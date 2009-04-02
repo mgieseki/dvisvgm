@@ -36,7 +36,6 @@
 #include "SpecialManager.h"
 #include "StreamCounter.h"
 #include "SVGFontTraceEmitter.h"
-#include "debug.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

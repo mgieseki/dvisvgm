@@ -28,7 +28,6 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
-#include "debug.h"
 
 using namespace std;
 
