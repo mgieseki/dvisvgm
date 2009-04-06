@@ -180,11 +180,13 @@ static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
 			if (read_entry(first, last, true) != FM_NAME)
 				return FM_ERROR;
 			if (type == FM_HEADER) {
-				const char *ext = str_tolower(get_extension(first));
-				if (strcmp(ext, "enc")==0)
-					return FM_ENC;
-				if (strcmp(ext, "pfb")==0 || strcmp(ext, "pfa")==0)
-					return FM_FONT;
+				if (char *ext = get_extension(first)) {
+					ext = str_tolower(ext);
+					if (strcmp(ext, "enc")==0)
+						return FM_ENC;
+					if (strcmp(ext, "pfb")==0 || strcmp(ext, "pfa")==0)
+						return FM_FONT;
+				}
 			}
 			return type;
 		}
