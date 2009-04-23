@@ -264,15 +264,16 @@ void Glyph::optimizeCommands () {
 				pstore[1] = params[1]; // curve endpoint
 				break;
 		}
+		// update current point
+		if (!(*it)->params().empty())
+			cp = (*it)->param(-1);
+
 		// replace current command by shorthand form
 		if (new_command) {
 			delete *it;
 			*it = new_command;
 			new_command = 0;
 		}
-		// update current point
-		if (!(*it)->params().empty())
-			cp = (*it)->param(-1);
 		prev = it;
 	}
 }
