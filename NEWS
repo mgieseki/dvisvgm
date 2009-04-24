@@ -1,3 +1,8 @@
+dvisvgm-0.7.3
+- fixed bug in font map reader that could cause a segmentation fault
+- fixed bug in creation of shorthand path drawing commands
+- fixed bug in TPIC special handler
+
 dvisvgm-0.7.2
 - font caching has been added (speeds up embedding of bitmap fonts)
 - added option --trace-all that enables tracing of all glyphs of all
