@@ -224,6 +224,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		actions->appendToPage(elem);
 		actions->bbox().embed(BoundingBox(cx-rx, cy-ry, cx+rx, cy+ry));
 	}
+	reset();
 }
 
 
