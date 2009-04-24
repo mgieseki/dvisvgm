@@ -42,7 +42,7 @@ class FontCache
 		void clear ();
 
    private:
-		const static UInt8 VERSION = 1;
+		const static UInt8 VERSION = 2;
 		GlyphMap _glyphs;
 		bool _changed;
 };
