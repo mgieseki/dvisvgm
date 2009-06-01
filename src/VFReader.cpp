@@ -147,16 +147,16 @@ void VFReader::cmdPost () {
 
 
 void VFReader::cmdLongChar () {
-	UInt32 pl  = readUnsigned(4);          // packet length (length of DVI subroutine)
+	UInt32 pl  = readUnsigned(4);      // packet length (length of DVI subroutine)
 	if (actions) {
-		UInt32 cc  = readUnsigned(4);       // character code
-		UInt32 tfm = readUnsigned(4);       // character width from corresponding TFM file
+		UInt32 cc  = readUnsigned(4);   // character code
+		readUnsigned(4);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
-		actions->defineVFChar(cc, dvi);       // call template method for user actions
+		actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
 	else
-		in().seekg(8+pl, ios::cur);    // skip remaining char definition bytes
+		in().seekg(8+pl, ios::cur);     // skip remaining char definition bytes
 }
 
 
@@ -165,10 +165,10 @@ void VFReader::cmdLongChar () {
 void VFReader::cmdShortChar (int pl) {
 	if (actions) {
 		UInt32 cc  = readUnsigned(1);   // character code
-		UInt32 tfm = readUnsigned(3);   // character width from corresponding TFM file
+		readUnsigned(3);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
-		actions->defineVFChar(cc, dvi);   // call template method for user actions
+		actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
 	else
 		in().seekg(4+pl, ios::cur);     // skip char definition bytes
