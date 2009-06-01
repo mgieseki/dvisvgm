@@ -24,8 +24,8 @@
 #define GFREADER_H
 
 #include <istream>
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
 #include "Bitmap.h"
 #include "types.h"
@@ -53,7 +53,6 @@ class GFReader
 		virtual void endChar (UInt32 c) {}
 		virtual void special (string str) {}
 		virtual void numspecial (Int32 y) {}
-		virtual void error (string msg) const;
 		const Bitmap& getBitmap () const {return bitmap;}
 		double getDesignSize () const;
 		double getHPixelsPerPoint () const;

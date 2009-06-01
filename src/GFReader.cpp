@@ -20,7 +20,6 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#include <cstdarg>
 #include <iostream>
 #include "GFReader.h"
 #include "Message.h"
@@ -52,16 +51,6 @@ static inline double fix2double (Int32 fix) {
 
 static inline double scaled2double (Int32 scaled) {
 	return double(scaled)/(1 << 16);
-}
-
-
-static void emitError (const GFReader &reader, const char *msg, ...) {
-	va_list va;
-	va_start(va, msg);
-	char buf[256];
-	vsprintf(buf, msg, va);
-	va_end(va);
-	reader.error(buf);
 }
 
 
@@ -109,11 +98,6 @@ string GFReader::readString (int bytes) {
 }
 
 
-void GFReader::error (string msg) const {
-	Message::estream(true) << msg << endl;
-}
-
-
 /** Reads a single GF command from the current position of the input stream and calls the
  *  corresponding cmdFOO method.  
  *  @return opcode of the executed command */
@@ -135,7 +119,7 @@ int GFReader::executeCommand () {
 	
 	int opcode = in.get();
 	if (opcode < 0) { // at end of file
-		error("unexpected end of file");
+		Message::estream(true) << "unexpected end of file\n";
 		return 249;   // postpost opcode => stop further reading
 	}
 	if (opcode >= 0 && opcode <= 63)
@@ -143,7 +127,7 @@ int GFReader::executeCommand () {
 	else if (opcode >= 74 && opcode <= 238)
 		cmdNewRow(opcode-74);
 	else if (opcode >= 250) {
-		emitError(*this, "undefined GF command (opcode %d)", opcode);
+		Message::estream(true) << "undefined GF command (opcode " << opcode << ")\n";
 		valid = false;
 	}
 	else {
@@ -233,7 +217,7 @@ void GFReader::cmdPre (int) {
 		preamble(s);
 	}
 	else {
-		error ("invalid identification number in GF preamble");
+		Message::estream(true) << "invalid identification number in GF preamble\n";
 		valid = false;
 	}
 }
@@ -258,7 +242,7 @@ void GFReader::cmdPostPost (int) {
 	if (i == 131) 
 		while (readUnsigned(1) == 223); // skip fill bytes
 	else {
-		error ("invalid identification number in GF preamble");
+		Message::estream(true) << "invalid identification number in GF preamble\n";
 		valid = false;
 	}
 }
