@@ -56,7 +56,7 @@ TESTS = test-all
 # the tests that should be executed are implemented in the following header files
 test_all_headers = tests/CalculatorTest.h tests/ColorSpecialTest.h tests/DirectoryTest.h tests/FontManagerTest.h \
 						 tests/FontMapTest.h tests/FileFinderTest.h tests/StreamCounterTest.h tests/PageSizeTest.h\
-						 tests/VectorStreamTest.h
+						 tests/SplittedCharInputBufferTest.h tests/VectorStreamTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 
 test_all_LDADD        = $(noinst_LIBRARIES)
