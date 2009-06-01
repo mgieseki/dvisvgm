@@ -224,7 +224,6 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		actions->appendToPage(elem);
 		actions->bbox().embed(BoundingBox(cx-rx, cy-ry, cx+rx, cy+ry));
 	}
-	reset();
 }
 
 
@@ -306,3 +305,8 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 }
 
 
+int TpicSpecialHandler::prefixes (const char **p[]) const {
+	static const char *pfx[] = {"ar", "bk", "da", "dt", "fp", "ia", "ip", "pa", "pn", "sh", "sp", "tx", "wh"};
+	*p = pfx;
+	return 13;
+}

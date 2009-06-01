@@ -222,3 +222,10 @@ void EmSpecialHandler::endPage () {
 	_lines.clear();
 	_points.clear();
 }
+		
+
+int EmSpecialHandler::prefixes (const char **p[]) const {
+	static const char *pfx[] = {"em:"};
+	*p = pfx;
+	return 1;
+}

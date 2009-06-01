@@ -262,3 +262,9 @@ bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActio
 	return true;
 }
 
+
+int ColorSpecialHandler::prefixes (const char **p[]) const {
+	static const char *pfx[] = {"color"};
+	*p = pfx;
+	return 1;
+}

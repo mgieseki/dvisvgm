@@ -33,16 +33,16 @@ class SpecialActions;
 
 struct SpecialException : public MessageException
 {
-	SpecialException (const string &msg) : MessageException(msg) {}
+	SpecialException (const std::string &msg) : MessageException(msg) {}
 };
 
 
 struct SpecialHandler
 {
 	virtual ~SpecialHandler () {}
-	virtual const char* prefix () const=0;
+	virtual int prefixes (const char **p[]) const=0;
 	virtual const char* info () const=0;
-	virtual const char* name () const {return prefix();}
+	virtual const char* name () const=0;
 	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
 	virtual void endPage () {}
 };

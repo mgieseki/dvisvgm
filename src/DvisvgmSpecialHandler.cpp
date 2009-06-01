@@ -95,6 +95,7 @@ static void update_bbox (double w, double h, SpecialActions *actions) {
  *  @param[in] is the special statement is read from this stream 
  *  @param[in,out] in the raw text is read from this input buffer */
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+	SHOW(prefix);
 	if (actions) {
 		StreamInputBuffer in(is);
 		string cmd = in.getWord();
@@ -122,3 +123,9 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 	return true;
 }
 
+
+int DvisvgmSpecialHandler::prefixes (const char **p[]) const {
+	static const char *pfx[] = {"dvisvgm:"};
+	*p = pfx;
+	return 1;
+}

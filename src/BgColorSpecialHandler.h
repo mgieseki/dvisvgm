@@ -27,7 +27,7 @@
 
 struct BgColorSpecialHandler : SpecialHandler
 {
-	const char* prefix () const {return "background";}
+	int prefixes (const char **p[]) const;
 	const char* info () const   {return "background color special";}
 	const char* name () const   {return "bgcolor";}
 	bool process (const char *prefix, std::istream &is, SpecialActions *actions);

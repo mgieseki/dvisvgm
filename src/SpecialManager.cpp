@@ -29,51 +29,29 @@
 using namespace std;
 
 
-UnprefixedSpecialHandler::~UnprefixedSpecialHandler () {
-	FORALL(_handlers, Iterator, it)
+SpecialManager::~SpecialManager () {
+	unregisterHandlers();
+}
+
+
+void SpecialManager::unregisterHandlers () {
+	FORALL(_pool, vector<SpecialHandler*>::iterator, it)
 		delete *it;
 }
 
 
-bool UnprefixedSpecialHandler::process (const char *prefix, istream &in, SpecialActions *actions) {
-	bool processed=false;
-	for (Iterator it=_handlers.begin(); it != _handlers.end() && !processed; ++it)
-		processed = (*it)->process(prefix, in, actions);
-	return processed;
-}
-
-
-void UnprefixedSpecialHandler::endPage () {
-	FORALL(_handlers, Iterator, it)
-		(*it)->endPage();
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-
-
-SpecialManager::SpecialManager () : _uphandler(0)
-{
-}
-
-
-SpecialManager::~SpecialManager () {
-	delete _uphandler;
-	FORALL(_handlers, Iterator, it)
-		delete it->second;
-}
-
-
-/** Registers a single special handler.
+/** Registers a single special handler. This method doesn't check if a 
+ *  handler of the same class is already registered.
  *  @param[in] pointer to handler to be registered */
 void SpecialManager::registerHandler (SpecialHandler *handler) {
 	if (handler) {
-		if (handler->prefix()) {
-			delete findHandler(handler->prefix());
-			_handlers[handler->prefix()] = handler;
+		// get array of prefixes this handler is responsible for
+		const char **pfx;
+		_pool.push_back(handler);
+		if (int n = handler->prefixes(&pfx)) { 
+			for (int i=0; i < n; i++)
+				_handlers[pfx[i]] = handler;
 		}
-		else 
-			unprefixedHandler()->registerHandler(handler);
 	}
 }
 
@@ -128,7 +106,7 @@ bool SpecialManager::process (const string &special, SpecialActions *actions) {
 		prefix += c;
 	if (SpecialHandler *handler = findHandler(prefix))
 		return handler->process(prefix.c_str(), iss, actions);
-	return unprefixedHandler()->process(prefix.c_str(), iss, actions);
+	return false;
 }
 
 
@@ -143,8 +121,6 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 	SortMap m;
 	FORALL(_handlers, ConstIterator, it)
 		m[it->second->name()] = it->second;
-	FORALL(unprefixedHandler()->handlers(), list<SpecialHandler*>::const_iterator, it)
-		m[(*it)->name()] = *it;	
 	
 	FORALL(m, SortMap::iterator, it) {
 		os << setw(10) << left << it->second->name() << ' ';
@@ -154,9 +130,3 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 	}
 }
 
-
-UnprefixedSpecialHandler* SpecialManager::unprefixedHandler () const {
-	if (!_uphandler)
-		_uphandler = new UnprefixedSpecialHandler;
-	return _uphandler;
-}

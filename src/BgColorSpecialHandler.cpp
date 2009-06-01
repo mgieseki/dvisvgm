@@ -31,3 +31,10 @@ bool BgColorSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 	ColorSpecialHandler csh;
 	return csh.process(prefix, is, actions);
 }
+
+
+int BgColorSpecialHandler::prefixes (const char **p[]) const {
+	static const char *pfx[] = {"background"};
+	*p = pfx;
+	return 1;
+}
