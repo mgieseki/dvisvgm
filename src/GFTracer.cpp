@@ -61,15 +61,17 @@ void GFTracer::endChar (UInt32 c) {
 	const Bitmap &bitmap = getBitmap();
 	if (bitmap.empty())
 		return;
+
 	// prepare potrace's bitmap structure
+	vector<potrace_word> buffer;
 	potrace_bitmap_t pobitmap;
 	pobitmap.w = bitmap.width();
 	pobitmap.h = bitmap.height();
-	pobitmap.dy = bitmap.copy(pobitmap.map);
+	pobitmap.dy = bitmap.copy(buffer);
+	pobitmap.map = &buffer[0];
 	potrace_param_t *param = potrace_param_default();
 	potrace_state_t *state = potrace_trace(param, &pobitmap);
 	potrace_param_free(param);
-	delete [] pobitmap.map;
 
 	if (!state || state->status == POTRACE_STATUS_INCOMPLETE)
 		Message::wstream(true) << "error while tracing character\n";
