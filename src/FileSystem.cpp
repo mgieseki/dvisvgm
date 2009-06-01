@@ -21,6 +21,7 @@
 ***********************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include "FileSystem.h"
 
@@ -38,8 +39,10 @@ using namespace std;
   	const char FileSystem::PATHSEP = '\\';
 	#define unlink _unlink
 #else
+	#include <dirent.h>
 	#include <pwd.h>
   	#include <sys/stat.h>
+  	#include <sys/types.h>
   	const char *FileSystem::DEVNULL = "/dev/null";
   	const char FileSystem::PATHSEP = '/';
 #endif
@@ -68,6 +71,7 @@ UInt64 FileSystem::filesize (const string &fname) {
 #endif
 }
 
+
 string FileSystem::adaptPathSeperators (string path) {
 	for (unsigned i=0; i < path.length(); i++)
 		if (path[i] == PATHSEP)
@@ -86,7 +90,23 @@ string FileSystem::getcwd () {
 }
 
 
+/** Changes the work directory. 
+ *  @param[in] path to new work directory 
+ *  @return true on success */
+bool FileSystem::chdir (const char *dir) {
+	bool success = false;
+	if (dir) {
+#ifdef __WIN32__
+		success = (_chdir(dir) == 0);
+#else
+		success = (chdir(dir) == 0);
+#endif	
+	}
+	return success;
+}
 
+
+/** Returns the user's home directory. */
 const char* FileSystem::userdir () {
 #ifdef __WIN32__
 	const char *drive=getenv("HOMEDRIVE");	
@@ -110,18 +130,112 @@ const char* FileSystem::userdir () {
 }
 
 
-bool FileSystem::mkdir (const char *dir) {
+/** Private wrapper function for mkdir: creates a single folder.
+ *  @param[in] dir folder name
+ *  @return true on success */
+static bool s_mkdir (const char *dir) {
+	bool success = true;
+	if (!FileSystem::exists(dir)) {
 #ifdef __WIN32__
-	int ret=_mkdir(dir);
+		success = (_mkdir(dir) == 0);
 #else
-	int ret=::mkdir(dir, 0776);
+		success = (mkdir(dir, 0776) == 0);
 #endif
-	return ret == 0;
+	}
+	return success;
+}
+
+
+static bool inline s_rmdir (const char *dir) {
+#ifdef __WIN32__
+	return (_rmdir(dir) == 0);
+#else
+	return (rmdir(dir) == 0);
+#endif
+}
+
+
+/** Removes leading and trailing whitespace from a string. */
+static string trim (const string &str) {
+	int first=0, last=str.length()-1;
+	while (isspace(str[first]))
+		first++;
+	while (isspace(str[last]))
+		last--;
+	return str.substr(first, last-first+1);
+}
+
+
+/** Creates a new folder relative to the current work directory. If necessary, 
+ *  the parent folders are also created. 
+ *  @param[in] dir single folder name or path to folder 
+ *  @return true if folder(s) could be created */
+bool FileSystem::mkdir (const char *dir) {
+	bool success = false;
+	if (dir) {
+		success = true;
+		const string dirstr = adaptPathSeperators(trim(dir));
+		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++) 
+			success &= s_mkdir(dirstr.substr(0, pos).c_str());
+		success &= s_mkdir(dirstr.c_str());
+	}
+	return success;
+}
+
+
+/** Removes a directory and its contents. 
+ *  @param[in] dirname path to directory 
+ *  @return true on success */
+bool FileSystem::rmdir (const char *dirname) {
+	bool ok = false;
+	if (dirname && isDirectory(dirname)) {
+		ok = true;
+#ifdef __WIN32__
+		WIN32_FIND_DATA data; 
+		HANDLE h = FindFirstFile(dirname, &data);
+		bool ready = (h == INVALID_HANDLE_VALUE);
+		while (!ready && ok) {
+			const char *fname = data.cFileName;
+			string path = string(dirname) + "/" + fname;			
+			if (isDirectory(path.c_str())) {
+				if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
+					ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
+			}
+			else if (isFile(path.c_str()))
+				ok = remove(path);
+			else
+				ok = false;
+			ready = !FindNextFile(h, &data);				
+		}
+		FindClose(h);
+#else
+		if (DIR *dir = opendir(dirname)) {
+			struct dirent *ent;
+			while ((ent = readdir(dir)) && ok) {
+				const char *fname = ent->d_name;
+				string path = string(fname) + "/" + fname;
+				if (isDirectory(path.c_str())) {
+				  	if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
+						ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
+				}
+				else if (isFile(path.c_str()))
+					ok = remove(path);
+				else
+					ok = false;
+			}
+			closedir(dir);
+		}		
+#endif
+		ok = s_rmdir(dirname);
+	}
+	return ok;
 }
 
 
 /** Checks if a file or directory exits. */
 bool FileSystem::exists (const char *fname) {
+	if (!fname)
+		return false;
 #ifdef __WIN32__
 	return GetFileAttributes(fname) != INVALID_FILE_ATTRIBUTES;
 #else
@@ -129,3 +243,32 @@ bool FileSystem::exists (const char *fname) {
 	return stat(fname, &attr) == 0;
 #endif
 }
+
+
+/** Returns true if 'fname' references a directory. */
+bool FileSystem::isDirectory (const char *fname) {
+	if (!fname)
+		return false;
+#ifdef __WIN32__
+	return GetFileAttributes(fname) & FILE_ATTRIBUTE_DIRECTORY;
+#else
+	struct stat attr;
+	return stat(fname, &attr) == 0 && S_ISDIR(attr.st_mode);
+#endif
+}
+
+
+/** Returns true if 'fname' references a file. */
+bool FileSystem::isFile (const char *fname) {
+	if (!fname)
+		return false;
+#ifdef __WIN32__
+	ifstream ifs(fname);
+	return ifs;
+#else
+	struct stat attr;
+	return stat(fname, &attr) == 0 && S_ISREG(attr.st_mode);
+#endif
+}
+
+
