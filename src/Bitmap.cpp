@@ -23,25 +23,18 @@
 #include <cstdlib>
 #include <iostream>
 #include "Bitmap.h"
+#include "macros.h"
 
 using namespace std;
 
-Bitmap::Bitmap () 
-	: _rows(0), _cols(0), _xshift(0), _yshift(0), _bpr(0), _bytes(0)
+Bitmap::Bitmap () : _rows(0), _cols(0), _xshift(0), _yshift(0), _bpr(0), _bytes(0)
 {
 }
 
 
 /** Constructs a Bitmap */
-Bitmap::Bitmap (int minx, int maxx, int miny , int maxy) 
-	: _bytes(0)
-{
+Bitmap::Bitmap (int minx, int maxx, int miny , int maxy) {
 	resize(minx, maxx, miny, maxy);
-}
-
-
-Bitmap::~Bitmap () {
-	delete [] _bytes;
 }
 
 
@@ -56,10 +49,9 @@ void Bitmap::resize (int minx, int maxx, int miny , int maxy) {
 	_xshift = minx;
 	_yshift = miny;
 	_bpr  = _cols/8 + (_cols % 8 ? 1 : 0);  // bytes per row
-	delete [] _bytes;
-	_bytes = new UInt8[_rows*_bpr];
-	for (UInt8 *p=_bytes+_rows*_bpr-1; p >= _bytes; p--)
-		*p = 0;
+	_bytes.resize(_rows*_bpr);
+	FORALL(_bytes, vector<UInt8>::iterator, it)
+		*it = 0;
 }
 
 
@@ -70,7 +62,7 @@ void Bitmap::resize (int minx, int maxx, int miny , int maxy) {
 void Bitmap::setBits (int r, int c, int n) {
 	r -= _yshift;
 	c -= _xshift;
-	UInt8 *byte = _bytes + r*_bpr + c/8;// + (c%8 ? 1 : 0);
+	UInt8 *byte = &_bytes[r*_bpr + c/8];// + (c%8 ? 1 : 0);
 	while (n > 0) {
 		int b = 7 - c%8;            // number of leftmost bit in current byte to be set
 		int m = min(n, b+1);        // number of bits to be set in current byte

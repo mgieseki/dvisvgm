@@ -24,9 +24,9 @@
 #define BITMAP_H
 
 #include <ostream>
+#include <vector>
 #include "types.h"
 
-using std::ostream;
 
 class Bitmap
 {
@@ -40,29 +40,28 @@ class Bitmap
    public:
       Bitmap ();
 		Bitmap (int minx, int maxx, int miny , int maxy);
-      ~Bitmap ();
 		void resize (int minx, int maxx, int miny , int maxy);
 		void setBits(int r, int c, int n);
-		const UInt8* operator[] (int r) const {return _bytes+r*_bpr;}
+		const UInt8* operator[] (int r) const {return &_bytes[r*_bpr];}
 		int height () const                   {return _rows;}
 		int width () const                    {return _cols;}
 		int xshift () const                   {return _xshift;}
 		int yshift () const                   {return _yshift;}
 		int bytesPerRow () const              {return _bpr;}
-		bool empty () const                   {return (!_rows && !_cols) || !_bytes;}
+		bool empty () const                   {return (!_rows && !_cols) || _bytes.empty();}
 		void bbox (int &w, int &h) const;
 		void forAllPixels (ForAllData &data) const;
 		
 		template <typename T>
-		int copy (T* &target, bool vflip=false) const;
+		int copy (std::vector<T> &target, bool vflip=false) const;
 			
-		ostream& write (ostream &os) const;
+		std::ostream& write (std::ostream &os) const;
 
    private:
 		int _rows, _cols;     ///< number of rows, columns
 		int _xshift, _yshift; ///< horizontal/vertical shift
 		int _bpr;             ///< number of bytes per row
-		UInt8 *_bytes;
+		std::vector<UInt8> _bytes;
 };
 
 
@@ -71,10 +70,10 @@ class Bitmap
  *  @param[in]  vflip true if the new bitmap should be flipped vertically 
  *  @return number of Ts per row */
 template <typename T>
-int Bitmap::copy (T* &target, bool vflip) const {
+int Bitmap::copy (std::vector<T> &target, bool vflip) const {
 	const int s = sizeof(T);
 	const int tpr = _bpr/s + (_bpr%s ? 1 : 0); // number of Ts per row
-	target = new T[_rows*tpr];
+	target.resize(_rows*tpr);
 	for (int r=0; r < _rows; r++) {
 		int targetrow = vflip ? _rows-r-1 : r;
 		for (int b=0; b < _bpr; b++) {
