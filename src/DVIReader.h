@@ -26,28 +26,25 @@
 #include <map>
 #include <stack>
 #include <string>
+#include "FontManager.h"
 #include "MessageException.h"
 #include "StreamReader.h"
 #include "VFActions.h"
 #include "types.h"
 
-using std::map;
-using std::stack;
-using std::string;
 
 struct DVIException : public MessageException
 {
-	DVIException (const string &msg) : MessageException(msg) {}
+	DVIException (const std::string &msg) : MessageException(msg) {}
 };
 
 struct InvalidDVIFileException : public DVIException
 {
-	InvalidDVIFileException(const string &msg) : DVIException(msg) {}
+	InvalidDVIFileException(const std::string &msg) : DVIException(msg) {}
 };
 
 class DVIActions;
 class FileFinder;
-class FontManager;
 
 class DVIReader : public StreamReader, protected VFActions
 {
@@ -61,33 +58,34 @@ class DVIReader : public StreamReader, protected VFActions
 
 	public:
 		DVIReader (istream &is, DVIActions *a=0);
-		virtual ~DVIReader ();
 		
 		bool executeDocument ();
 		void executeAll ();
 		bool executeAllPages ();
 		void executePostamble ();
 		bool executePage (unsigned n);
-		bool isInPostamble () const               {return inPostamble;}
+		bool executePages (unsigned first, unsigned last);
+		bool isInPostamble () const                {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
 		double getPageWidth () const;
 		double getPageHeight () const;
-		int getCurrentFontNumber () const         {return currFontNum;}
-		unsigned getTotalPages () const           {return totalPages;}
-		DVIActions* getActions () const           {return actions;}
+		int getCurrentFontNumber () const          {return _currFontNum;}
+		size_t getCurrentPageNumber () const       {return _currPageNum;}
+		size_t getTotalPages () const              {return _totalPages;}
+		DVIActions* getActions () const            {return _actions;}
 		DVIActions* replaceActions (DVIActions *a);
-		const FontManager& getFontManager () const {return *fontManager;}
+		const FontManager& getFontManager () const {return _fontManager;}
 
 	protected:
 		int executeCommand ();
 		void putChar (UInt32 c, bool moveCursor);
-		void defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss);
+		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
 		virtual void beginPage (Int32 *c) {}
 		virtual void endPage () {}
 
 		// VFAction methods
-		void defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize);
+		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize);
 		void defineVFChar (UInt32 c, vector<UInt8> *dvi);
 		
 		// the following methods represent the DVI commands 
@@ -121,18 +119,19 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPostPost (int len);
 		
 	private:
-		DVIActions *actions;
-		bool inPage;         // true if between bop and eop
-		UInt16 totalPages;   // total number of pages in dvi file
-		int currFontNum;     // current font number
-		double scaleFactor;  // 1 dvi unit = scaleFactor * TeX points
-		UInt32 mag;          // magnification factor * 1000
-		bool inPostamble;    // true if stream pointer is inside the postamble
-		Int32 prevBop;       // pointer to previous bop
-		double pageHeight, pageWidth;  // page height and width in TeX points
-		DVIPosition currPos;
-		stack<DVIPosition> posStack;
-		FontManager *fontManager;
+		DVIActions *_actions;
+		bool _inPage;        // true if between bop and eop
+		size_t _totalPages;  // total number of pages in dvi file
+		size_t _currPageNum; // current page number
+		int _currFontNum;    // current font number
+		double _scaleFactor; // 1 dvi unit = scaleFactor * TeX points
+		UInt32 _mag;         // magnification factor * 1000
+		bool _inPostamble;   // true if stream pointer is inside the postamble
+		Int32 _prevBop;      // pointer to previous bop
+		double _pageHeight, _pageWidth;  // page height and width in TeX points
+		DVIPosition _currPos;
+		std::stack<DVIPosition> _posStack;
+		FontManager _fontManager;
 };
 
 #endif
