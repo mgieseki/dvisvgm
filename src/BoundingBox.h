@@ -30,7 +30,7 @@
 #include "types.h"
 
 
-class TransformationMatrix;
+class Matrix;
 
 class BoundingBox
 {
@@ -49,7 +49,7 @@ class BoundingBox
 		double width () const       {return lrx-ulx;}
 		double height () const      {return lry-uly;}
 		void operator += (const BoundingBox &bb);
-		void transform (const TransformationMatrix &tm);
+		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;
 

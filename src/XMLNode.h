@@ -53,9 +53,13 @@ class XMLElementNode : public XMLNode
 		void addAttribute (const string &name, const string &value);
 		void addAttribute (const string &name, double value);
 		void append (XMLNode *child);
+		void append (const string &str);
 		void prepend (XMLNode *child);
+		bool hasAttribute (const string &name) const;
 		ostream& write (ostream &os) const;
 		bool emit (ostream &os, XMLNode *stopElement);
+		bool empty () const  {return children.empty();}
+
 	private:
 		string name;          // element name (<name a1="v1" .. an="vn">...</name>)
 		AttribMap attributes; 
@@ -70,8 +74,10 @@ class XMLTextNode : public XMLNode
 		XMLTextNode (const string &str) : text(str) {}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
+		void append (const string &str);
 		void prepend (XMLNode *child);
 		ostream& write (ostream &os) const {return os << text;}
+
 	private:
 		string text;
 };
@@ -82,6 +88,7 @@ class XMLCommentNode : public XMLNode
 	public:
 		XMLCommentNode (const string &str) : text(str) {}
 		ostream& write (ostream &os) const {return os << "<!--" << text << "-->\n";}
+
 	private:
 		string text;
 };
@@ -95,6 +102,7 @@ class XMLDeclarationNode : public XMLNode
 		void append (XMLDeclarationNode *child);
 		ostream& write (ostream &os) const;
 		bool emit (ostream &os, XMLNode *stopElement);
+
 	private:
 		string name;
 		string params;
@@ -108,6 +116,7 @@ class XMLCDataNode : public XMLNode
 	public:
 		XMLCDataNode (const string &d) : data(d) {}
 		ostream& write (ostream &os) const;
+
 	private:
 		string data;
 };

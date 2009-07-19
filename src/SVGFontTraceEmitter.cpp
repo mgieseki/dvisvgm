@@ -33,6 +33,7 @@
 #include "Message.h"
 #include "MetafontWrapper.h"
 #include "SVGFontTraceEmitter.h"
+#include "SVGTree.h"
 #include "TFM.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -44,9 +45,9 @@ bool SVGFontTraceEmitter::TRACE_ALL = false;
 double SVGFontTraceEmitter::METAFONT_MAG = 4;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf)
+SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf)
 	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _cache(0),
-	  _charmapTranslator(cmt), _rootNode(n), _glyphNode(0), _useFonts(uf)
+	  _charmapTranslator(cmt), _svg(svg), _glyphNode(0), _useFonts(uf)
 {
 	if (CACHE_PATH && _font) {
 		_cache = new FontCache;
@@ -118,28 +119,24 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) {
 		fontNode = new XMLElementNode("font");
 		if (id && strlen(id) > 0)
 			fontNode->addAttribute("id", id);
-		_rootNode->append(fontNode);
+		_svg.appendToDefs(fontNode);
 
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
 		faceNode->addAttribute("font-family", id);
 		faceNode->addAttribute("units-per-em", XMLString(1000));
 		fontNode->append(faceNode);
+		FORALL(*usedChars, set<int>::const_iterator, i) {			
+			emitGlyph(*i);  // create new glyphNode
+			fontNode->append(_glyphNode);
+		}
 	}
 	else {
-		fontNode = _rootNode;
-#if 0
-		if (usedChars && _font && !usedChars->empty()) {
-			ostringstream oss;
-			oss << _font->name() << ", " << _font->scaledSize() << "pt"; 
-			fontNode->append(new XMLCommentNode(oss.str()));
+		FORALL(*usedChars, set<int>::const_iterator, i) {			
+			emitGlyph(*i);  // create new glyphNode
+			_svg.appendToDefs(_glyphNode);
 		}
-#endif
 	}
-
-	FORALL(*usedChars, set<int>::const_iterator, i) {			
-		emitGlyph(*i);  // create new glyphNode
-		fontNode->append(_glyphNode);
-	}
+	
 	if (_gfTracer)
 		Message::mstream() << endl;
 	return usedChars->size();

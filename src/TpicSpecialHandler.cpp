@@ -25,6 +25,7 @@
 #include <sstream>
 #include "Color.h"
 #include "InputBuffer.h"
+#include "InputReader.h"
 #include "SpecialActions.h"
 #include "TpicSpecialHandler.h"
 #include "XMLNode.h"
@@ -234,7 +235,8 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 		return false;
 
 	const double PT=0.07227; // factor for milli-inch to TeX points
-	StreamInputBuffer in(is);
+	StreamInputBuffer ib(is);
+	BufferInputReader in(ib);
 	switch (cmd_id(prefix[0], prefix[1])) {
 		case cmd_id('p','n'): // set pen width in milli-inches
 			_penwidth = in.getDouble()*PT;

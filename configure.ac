@@ -4,8 +4,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[0.7.3],[martin.gieseking@uos.de])
-DATE="April 2009"
+AC_INIT([dvisvgm],[0.8],[martin.gieseking@uos.de])
+DATE="June 2009"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -49,6 +49,12 @@ case $host in
 		if test -z "$kpseversion"; then
 	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
 		fi
+
+#		AC_CHECK_HEADER([ghostscript/iapi.h], 
+#			AC_CHECK_LIB(gs, gsapi_new_instance, 
+#				[AC_DEFINE(HAVE_GS, 1, [Set to 1 if Ghostscript development files are installed]) LDFLAGS="$LDFLAGS -lgs"], 
+#				[AC_MSG_WARN([PostScript support disabled])]),
+#			[AC_MSG_WARN([PostScript support disabled])])
 	;;
 esac
 
@@ -56,8 +62,7 @@ esac
 AC_CHECK_LIB(freetype, FT_Init_FreeType, , 
 	[AC_MSG_ERROR([freetype library not found, please install it first])])
 
-#AC_CHECK_LIB(m, sqrt) # required to pass potrace check
-#AC_CHECK_LIB(potrace, potrace_trace)
+AC_CHECK_LIB(dl, dlopen, , LDFLAGS="$LDFLAGS -ldl")
 AC_CHECK_LIB(z, gzopen)
 AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
 

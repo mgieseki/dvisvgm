@@ -35,21 +35,22 @@ class Font;
 class FontCache;
 class FontManager;
 class GFGlyphTracer;
+class SVGTree;
 class XMLElementNode;
 
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *n, bool uf);
+      SVGFontTraceEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf);
       ~SVGFontTraceEmitter ();
 		int emitFont (const char *id);
 		int emitFont (const std::set<int> &usedChars, const char *id);
 		bool emitGlyph (int c);
 
 	public:
-		static const char *CACHE_PATH;
-		static bool TRACE_ALL;
-		static double METAFONT_MAG;
+		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
+		static bool TRACE_ALL;         ///< if true, not only the actually used, but all font glyphs are traced
+		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
 	protected:
 		int emitFont (const std::set<int> *usedChars, const char *id);
@@ -63,7 +64,7 @@ class SVGFontTraceEmitter : public FontEmitter
 		const FontManager &_fontManager;
 		FontCache *_cache;
 		const CharmapTranslator &_charmapTranslator;
-		XMLElementNode *_rootNode; 
+		SVGTree &_svg;
 		XMLElementNode *_glyphNode;
 		bool _useFonts;
 };

@@ -69,6 +69,14 @@ void XMLElementNode::append (XMLNode *child) {
 }
 
 
+void XMLElementNode::append (const string &str) {
+	if (children.empty() || !dynamic_cast<XMLTextNode*>(children.back()))
+		children.push_back(new XMLTextNode(str));
+	else
+		static_cast<XMLTextNode*>(children.back())->append(str);
+}
+
+
 void XMLElementNode::prepend (XMLNode *child) {
 	if (!child)
 		return;
@@ -144,6 +152,11 @@ bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 }
 
 
+bool XMLElementNode::hasAttribute (const string &name) const {
+	return attributes.find(name) != attributes.end();
+}
+	
+
 //////////////////////
 
 void XMLTextNode::append (XMLNode *node) {
@@ -158,6 +171,11 @@ void XMLTextNode::append (XMLTextNode *node) {
 	if (node) 
 		text += node->text;
 	delete node;
+}
+
+
+void XMLTextNode::append (const string &str) {
+	text += str;
 }
 
 

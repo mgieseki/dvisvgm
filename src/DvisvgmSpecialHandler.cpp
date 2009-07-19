@@ -23,6 +23,7 @@
 #include <cstring>
 #include "DvisvgmSpecialHandler.h"
 #include "InputBuffer.h"
+#include "InputReader.h"
 #include "SpecialActions.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -59,7 +60,7 @@ static void expand_constants (string &str, SpecialActions *actions) {
  *  @param[in,out] in the raw text is read from this input buffer
  *  @param[in] actions interfcae to the world outside the special handler 
  *  @param[in] group true if the text should be wrapped by a group element */
-static void raw (StreamInputBuffer &in, SpecialActions *actions, bool group=false) {
+static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 	string str;
 	while (!in.eof()) {
 		char c = in.get();
@@ -97,7 +98,8 @@ static void update_bbox (double w, double h, SpecialActions *actions) {
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	SHOW(prefix);
 	if (actions) {
-		StreamInputBuffer in(is);
+		StreamInputBuffer ib(is);
+		BufferInputReader in(ib);
 		string cmd = in.getWord();
 		if (cmd == "raw")               // raw <text>
 			raw(in, actions);

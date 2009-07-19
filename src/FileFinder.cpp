@@ -130,6 +130,7 @@ const char* FileFinder::Impl::findFile (const std::string &fname) {
 		types["map"] = kpse_fontmap_format;
 		types["sty"] = kpse_tex_format;
 		types["enc"] = kpse_enc_format;
+		types["pro"] = kpse_tex_ps_header_format;
 	}
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())

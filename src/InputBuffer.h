@@ -35,22 +35,8 @@ struct InputBuffer
 	virtual int get () =0;
 	virtual int peek () const =0;
 	virtual int peek (size_t n) const =0;
-	virtual bool check (char c) const {return peek() == c;}
-	virtual bool check (const char *s, bool consume=true);
-	virtual int compare (const char *s, bool consume=true);
-	virtual void skip (size_t n);
-	virtual bool skipUntil (const char *s, bool consume=true);
-	virtual void skipSpace ();
 	virtual bool eof () const =0;
-	virtual int getInt ();
-	virtual bool parseInt (int &val, bool accept_sign=true);
-	virtual bool parseInt (int base, int &val);
-	virtual char parseDouble (double &val);
-	virtual double getDouble ();
-	virtual std::string getWord ();
-	virtual char getPunct ();
-	virtual std::string getString ();
-	virtual operator bool () const {return !eof();}
+//	virtual void skip (size_t n);
 };
 
 
@@ -83,13 +69,13 @@ class StringInputBuffer : public InputBuffer
 {
 	public:
 		StringInputBuffer (std::string &str) : _str(str), _pos(0) {}
-		int pos () const        {return _pos;}
+//		int pos () const        {return _pos;}
 		int get ()              {return _pos < _str.length() ? _str[_pos++] : -1;}
 		int peek () const       {return _pos < _str.length() ? _str[_pos] : -1;}
 		int peek (size_t n) const {return _pos+n < _str.length() ? _str[_pos+n] : -1;} 
-		void skip (size_t n)    {_pos += std::min(n, _str.length()-_pos);}
+//		void skip (size_t n)    {_pos += std::min(n, _str.length()-_pos);}
 		bool eof () const       {return _pos >= _str.length();}
-		bool check (const char *s, bool consume=true);
+//		bool check (const char *s, bool consume=true);
 
 	private:
 		std::string &_str;
@@ -114,15 +100,15 @@ class CharInputBuffer : public InputBuffer
 		int peek () const         {return _size > 0 ? *_pos : -1;}
 		int peek (size_t n) const {return _size >= (size_t)n ? _pos[n] : -1;}
 
-		void skip (size_t n) {
+/*		void skip (size_t n) {
 			if ((n = std::min(n, _size)) >= _size) {
 				_pos += n;
 				_size -= n;
 			}			
 		}
-
+*/
 		bool eof () const      {return _size <= 0;}
-		bool check (const char *s, bool consume=true);
+//		bool check (const char *s, bool consume=true);
 	
 	private:
 		const char *_pos;
@@ -137,9 +123,9 @@ class SplittedCharInputBuffer : public InputBuffer
 		int get ();
 		int peek () const;
 		int peek (size_t n) const;
-		void skip (size_t n); 
+//		void skip (size_t n); 
 		bool eof () const {return _size[_index] == 0;}
-		bool check (const char *s, bool consume=true);
+//		bool check (const char *s, bool consume=true);
 
 	private:
 		const char *_buf[2];

@@ -20,38 +20,264 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include "FileFinder.h"
+#include "InputReader.h"
+#include "Message.h"
 #include "PSInterpreter.h"
+#include "psdefs.psc"
 
 using namespace std;
 
 
-PSInterpreter::PSInterpreter () {
+const char *PSInterpreter::GSARGS[] = {
+	"gs",            // dummy name 
+	"-q",            // be quiet, suppress gs banner
+	"-dSAFER",       // disallow writing of files
+	"-dNODISPLAY",   // we don't need a display device
+	"-dNOPAUSE",     // keep going 
+	"-dNOPROMPT",   
+	"-dNOBIND",   
+//	"-sstdout=-",     // keep going 
+//	"-dSHORTERRORS", // Adobe-like error messages (starting with "%%[")
+};
+
+
+PSInterpreter::PSInterpreter (PSActions *actions) 
+	: _gs(7, GSARGS, this), _mode(PS_NONE), _actions(actions), _inError(false)
+{
+	_gs.set_stdio(input, output, error);
+	_initialized = false;
 }
 
 
-void PSInterpreter::read (istream &is) {
-	struct ObjectPattern {
-		char *pattern;
-		void (PSInterpreter::*handler)(void);
+/** Executes a chunk of PostScript code.
+ *  @param[in] str buffer containing the code 
+ *  @param[in] len number of characters in buffer 
+ *  @param[in] flush If true, a final 'flush' is sent which forces the 
+ *  	output buffer to be written immediately.*/
+void PSInterpreter::execute (const char *str, size_t len, bool flush) {
+	if (!_initialized) {
+		// Before executing any random PS code redefine some operators and run
+		// initializing PS code. This cannot be done in the constructor because we
+		// need the completely initialized PSInterpreter object here.
+		_initialized = true;
+		execute(PSDEFS);
+	}
+	if (_mode != PS_QUIT) {
+		int status;
+		if (_mode == PS_NONE) {
+			_gs.run_string_begin(0, &status);
+			_mode = PS_RUNNING;
+		}
+		const char *p=str;
+		// feed Ghostscript with code chunks that are not larger than 64KB
+		// => see documentation of gsapi_run_string_foo()
+		while (PS_RUNNING && len > 0) {
+			size_t chunksize = min(len, (size_t)0xffff);
+			_gs.run_string_continue(p, chunksize, 0, &status);
+			p += chunksize;
+			len -= chunksize;
+			if (status == -101) { // e_Quit
+				_gs.exit();
+				_mode = PS_QUIT; 
+			}
+			else if (status <= -100) {
+				_gs.exit();
+				_mode = PS_QUIT;
+				throw PSException("fatal PostScript error");
+			}
+		}
+		if (flush) {
+			// force writing contents of output buffer
+			_gs.run_string_continue(" flush ", 7, 0, &status);		
+		}
+	}
+}
+
+
+void PSInterpreter::execute (istream &is) {
+	char buf[4096];
+	while (is && !is.eof()) {
+		is.read(buf, 4096);
+		execute(buf, is.gcount(), false);
+	}
+	execute(" ", 1);
+}
+
+
+/** This callback function handles input from stdin to Ghostscript. Currently not needed.
+ *  @param[in] inst pointer to calling instance of PSInterpreter 
+ *  @param[in] buf takes the read characters 
+ *  @param[in] len size of buffer buf 
+ *  @return number of read characters */
+int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
+	return 0;
+}
+
+
+/** This callback function handles output from Ghostscript to stdout. It looks for
+ *  emitted commands staring with "dvi." and executes them by calling method callActions.
+ *  Ghostscript sends the text in chunks by several calls of this function.
+ *  Unfortunately, the PostScript specification wants error messages also to be sent to stdout 
+ *  instead of stderr. Thus, we must collect and concatenate the chunks until an evaluable text 
+ *  snippet is completely received. Furthermore, error messages have to be recognized and to be
+ *  filtered out.
+ *  @param[in] inst pointer to calling instance of PSInterpreter 
+ *  @param[in] buf contains the characters to be output 
+ *  @param[in] len number of characters in buf 
+ *  @return number of processed characters (equals 'len') */
+int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
+	PSInterpreter *self = static_cast<PSInterpreter*>(inst);
+	if (self && self->_actions) {
+		const size_t MAXLEN = 512;    // maximal line length (longer lines are of no interest)
+		const char *end = buf+len-1;  // last position of buf
+		for (const char *first=buf, *last=buf; first <= end; last++, first=last) {
+			// move first and last to begin and end of the next line, respectively
+			while (last <= end && *last != '\n')
+				last++;
+
+			size_t linelength = last-first+1;
+			if (linelength > MAXLEN)  // skip long lines since they don't contain any relevant information
+				continue;
+
+			vector<char> &linebuf = self->_linebuf;  // just a shorter name...
+			if ((*last == '\n' || !self->active())) {
+				if (linelength + linebuf.size() > 5) {  // prefix "dvi." plus final newline
+					SplittedCharInputBuffer ib(&linebuf[0], linebuf.size(), first, linelength);
+					BufferInputReader in(ib);
+					in.skipSpace();
+					if (self->_inError) {
+						if (in.check("dvi.enderror")) {
+							// @@
+							self->_errorMessage.clear();
+							self->_inError = false;
+						}
+						else
+							self->_errorMessage += string(first, linelength);
+					}
+					if (in.check("dvi.")) {
+						if (in.check("beginerror"))  // all following output belongs to an error message
+							self->_inError = true;
+						else
+							self->callActions(in);
+					}
+				}
+				linebuf.clear();
+			}
+			else { // no line end found => 
+				// save remaining characters and prepend them to the next incoming chunk of characters
+				linelength--;         // last == end+1 => linelength is 1 too large
+				if (linebuf.size() + linelength > MAXLEN)
+					linebuf.clear();   // don't care for long lines
+				else {
+					size_t currsize = linebuf.size();
+					linebuf.resize(currsize+linelength);
+					memcpy(&linebuf[currsize], first, linelength);
+				}
+			}
+		}
+	}
+	return len;
+}
+
+
+/** Converts a vector of strings to a vector of doubles. 
+ * @param[in] str the strings to be converted
+ * @param[out] d the resulting doubles */
+static void str2double (const vector<string> &str, vector<double> &d) {
+	for (size_t i=0; i < str.size(); i++) {
+		istringstream iss(str[i]);
+		iss >> d[i];
+	}
+}
+
+
+/** Evaluates a command emitted by Ghostscript and invokes the corresponding 
+ *  method of interface class PSActions. 
+ *  @param[in] cib buffer with a single command */
+void PSInterpreter::callActions (InputReader &ib) {
+	static const struct Operator {
+		const char *name; // name of operator
+		int pcount;       // number of parameters (< 0 : variable number of parameters)
+		void (PSActions::*op)(vector<double> &p);
+	} operators [] = {
+		{"clip",          0, &PSActions::clip},
+		{"closepath",     0, &PSActions::closepath},
+		{"curveto",       6, &PSActions::curveto},
+		{"eoclip",        0, &PSActions::eoclip},
+		{"eofill",        0, &PSActions::eofill},
+		{"fill",          0, &PSActions::fill},
+		{"grestore",      0, &PSActions::grestore},
+		{"gsave",         0, &PSActions::gsave},
+		{"initclip",      0, &PSActions::initclip},
+		{"lineto",        2, &PSActions::lineto},
+		{"moveto",        2, &PSActions::moveto},
+		{"newpath",       0, &PSActions::newpath},
+		{"rotate",        1, &PSActions::rotate},
+		{"scale",         2, &PSActions::scale},
+		{"setcmykcolor",  4, &PSActions::setcmykcolor},
+		{"setdash",      -1, &PSActions::setdash},
+		{"setgray",       1, &PSActions::setgray},
+		{"sethsbcolor",   3, &PSActions::sethsbcolor},
+		{"setlinecap",    1, &PSActions::setlinecap},
+		{"setlinejoin",   1, &PSActions::setlinejoin},
+		{"setlinewidth",  1, &PSActions::setlinewidth},
+		{"setmatrix",     6, &PSActions::setmatrix},
+		{"setmiterlimit", 1, &PSActions::setmiterlimit},
+		{"setrgbcolor",   3, &PSActions::setrgbcolor},
+		{"stroke",        0, &PSActions::stroke},
+		{"translate",     2, &PSActions::translate},
 	};
-	ObjectPattern patterns[] = {
-		{"-?\\d+", PSInterpreter::doInteger},
-		{"\\[.*?\\]", PSInterpreter::doArray},
-		
-		
-	while (!is.eof) {
-		char c = is.peekg();
-		if (c == '-' || (c >= '0' && c <= 9))
-			opStack.push(readNumber());
-		else if (isalpha(c))
-			doOperator(readOperator());
-		else if (c == '/')
-			readName();
-		else if (c == '[')
-			readArray();
-		else if (c == '(')
-			opStack.push(readString());
-		else
-			throw PSException("unexpected token", line, col);
-	}		
+	if (_actions) {
+		ib.skipSpace();
+		// binary search
+		int first=0, last=sizeof(operators)/sizeof(Operator)-1;
+		while (first <= last) {
+			int mid = first+(last-first)/2;
+			int cmp = ib.compare(operators[mid].name);
+			if (cmp > 0)
+				last = mid-1;
+			else if (cmp < 0)
+				first = mid+1;
+			else {
+				// collect parameters and call handler
+				vector<string> params;
+				int pcount = operators[mid].pcount;
+				if (pcount < 0) {
+					ib.skipSpace();
+					while (!ib.eof()) {
+						params.push_back(ib.getString());
+						ib.skipSpace();
+					}
+				}
+				else {
+					for (int i=0; i < pcount; i++) {
+						ib.skipSpace();
+						params.push_back(ib.getString());
+					}
+				}
+				vector<double> v(params.size());
+				str2double(params, v);
+				(_actions->*operators[mid].op)(v);
+			}			
+		}
+	}
 }
+
+
+/** This callback function handles output from Ghostscript to stderr. 
+ *  @param[in] inst pointer to calling instance of PSInterpreter 
+ *  @param[in] buf contains the characters to be output 
+ *  @param[in] len number of chars in buf 
+ *  @return number of processed characters */
+int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) {
+	ostringstream oss;
+	oss << "PostScript error:\n";
+	oss.write(buf, len);
+	return len;
+}
+

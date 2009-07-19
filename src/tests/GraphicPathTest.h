@@ -1,5 +1,5 @@
 /***********************************************************************
-** TransformationMatrix.h                                             **
+** GraphicPathTest.h                                                  **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,44 +20,50 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef TRANSFORMATIONMATRIX_H
-#define TRANSFORMATIONMATRIX_H
+#include <cxxtest/TestSuite.h>
+#include <sstream>
+#include "GraphicPath.h"
 
-#include <istream>
-#include <string>
-#include "MessageException.h"
-#include "Pair.h"
+using std::ostringstream;
 
-using std::istream;
-using std::string;
-
-struct ParserException : public MessageException
+class GraphicPathTest : public CxxTest::TestSuite
 {
-	ParserException (const string &msg) : MessageException(msg) {}
+	public:
+		void test_svg () {
+			GraphicPath<int> path;
+			path.moveto(0,0);
+			path.lineto(10,10);
+			path.cubicto(20,20,30,30,40,40);
+			path.closepath();
+			ostringstream oss;
+			path.writeSVG(oss);
+			TS_ASSERT_EQUALS(oss.str(), "M0 0L10 10C20 20 30 30 40 40Z");
+		}
+
+		void test_optimize () {
+			GraphicPath<int> path;
+			path.moveto(0,0);
+			path.lineto(10,0);
+			path.lineto(10,20);
+			ostringstream oss;
+			path.writeSVG(oss);
+			TS_ASSERT_EQUALS(oss.str(), "M0 0H10V20");
+		}
+
+		void test_transform () {
+			GraphicPath<double> path;
+			path.moveto(0,0);
+			path.lineto(1,0);
+			path.lineto(1,1);
+			path.lineto(0,1);
+			path.closepath();
+			Matrix m(1);
+			m.scale(2,2);
+			m.translate(10, 100);
+			m.rotate(90);
+			path.transform(m);
+			ostringstream oss;
+			path.writeSVG(oss);
+			TS_ASSERT_EQUALS(oss.str(), "M-100 10V12H-102V10Z");
+		}
 };
-
-class Calculator;
-
-class TransformationMatrix
-{
-   public:
-		TransformationMatrix (const string &cmds, Calculator &calc);
-		TransformationMatrix (double d=0);
-      TransformationMatrix (double v[]);
-		TransformationMatrix& parse (istream &is, Calculator &c);
-		TransformationMatrix& parse (const string &cmds, Calculator &c);
-		TransformationMatrix& rmultiply (const TransformationMatrix &tm);
-		TransformationMatrix& translate (double tx, double ty);
-		TransformationMatrix& scale (double sx, double sy);
-		TransformationMatrix& rotate (double arc);
-		TransformationMatrix& xskew (double arc);
-		TransformationMatrix& yskew (double arc);
-		TransformationMatrix& flip (bool h, double a);
-		DPair operator * (const DPair &p) const;
-		string getSVG () const;
-		
-   private:
-		double values[3][3];
-};
-
-#endif

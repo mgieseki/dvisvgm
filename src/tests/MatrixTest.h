@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** MatrixTest.h                                                       **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,50 +20,55 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
-
-#include <string>
-#include "BoundingBox.h"
-#include "Color.h"
+#include <cxxtest/TestSuite.h>
+#include <sstream>
 #include "Matrix.h"
 
-class XMLNode;
+using std::ostringstream;
 
-struct SpecialActions
-{
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const Color &color) =0;
-	virtual Color getColor () const =0;
-	virtual void setMatrix (const Matrix &m) =0;
-	virtual const Matrix& getMatrix () const =0;
-	virtual void setBgColor (const Color &color) =0;
-	virtual void appendToPage (XMLNode *node) =0;
-	virtual void appendToDefs (XMLNode *node) =0;
-	virtual BoundingBox& bbox () =0;
-};
-
-
-class SpecialEmptyActions : public SpecialActions
+class MatrixTest : public CxxTest::TestSuite
 {
 	public:
-		int getX() const {return 0;}
-		int getY() const {return 0;}
-		void setColor (const Color &color) {}
-		void setBgColor (const Color &color) {}
-		Color getColor () const {return 0;}
-		void setMatrix (const Matrix &m) {}
-		const Matrix& getMatrix () const {return _matrix;}
-		void appendToPage (XMLNode *node) {}
-		void appendToDefs (XMLNode *node) {}
-		BoundingBox& bbox () {return _bbox;}
+		void test_svg () {
+			double v1[] = {1,2,3,4,5,6,7,8,9};
+			Matrix m1(v1);
+			ostringstream oss;
+			m1.write(oss);
+			TS_ASSERT_EQUALS(oss.str(), "((1,2,3),(4,5,6),(7,8,9))");
+			TS_ASSERT_EQUALS(m1.getSVG(), "matrix(1 4 2 5 3 6)");
 
-	private:
-		BoundingBox _bbox;
-		Matrix _matrix;
+			double v2[] = {1,2};
+			Matrix m2(v2, 2);
+			oss.str("");
+			m2.write(oss);
+			TS_ASSERT_EQUALS(oss.str(), "((1,2,0),(0,1,0),(0,0,1))");
+			TS_ASSERT_EQUALS(m2.getSVG(), "matrix(1 0 2 1 0 0)");
+		}
+
+
+		void test_transpose () {
+			double v[] = {1,2,3,4,5,6,7,8,9};
+			Matrix m(v);
+			m.transpose();
+			ostringstream oss;
+			m.write(oss);
+			TS_ASSERT_EQUALS(oss.str(), "((1,4,7),(2,5,8),(3,6,9))");
+			TS_ASSERT_EQUALS(m.getSVG(), "matrix(1 2 4 5 7 8)");
+		}
+
+		
+		void test_checks () {
+			Matrix m(1);
+			TS_ASSERT(m.isIdentity());
+			double tx, ty;
+			TS_ASSERT(m.isTranslation(tx, ty));
+			TS_ASSERT_EQUALS(tx, 0);
+			TS_ASSERT_EQUALS(ty, 0);
+			m.translate(1,2);
+			TS_ASSERT(m.isTranslation(tx, ty));
+			TS_ASSERT_EQUALS(tx, 1);
+			TS_ASSERT_EQUALS(ty, 2);
+			m.scale(2, 2);
+			TS_ASSERT(!m.isTranslation(tx, ty));
+		}
 };
-
-
-#endif

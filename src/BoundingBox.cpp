@@ -24,7 +24,7 @@
 #include <sstream>
 #include <string>
 #include "BoundingBox.h"
-#include "TransformationMatrix.h"
+#include "Matrix.h"
 
 using namespace std;
 
@@ -100,7 +100,7 @@ void BoundingBox::operator += (const BoundingBox &bb) {
 }
 
 
-void BoundingBox::transform (const TransformationMatrix &tm) {
+void BoundingBox::transform (const Matrix &tm) {
 	DPair ul = tm * DPair(lrx, lry);
 	DPair lr = tm * DPair(ulx, uly);
 	DPair ll = tm * DPair(ulx, lry);

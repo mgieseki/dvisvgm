@@ -1,5 +1,5 @@
 /***********************************************************************
-** SpecialActions.h                                                   **
+** Ghostscript.h                                                      **
 **                                                                    **
 ** This file is part of dvisvgm -- the DVI to SVG converter           **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> **
@@ -20,50 +20,45 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#ifndef GHOSTSCRIPT_H
+#define GHOSTSCRIPT_H
 
-#include <string>
-#include "BoundingBox.h"
-#include "Color.h"
-#include "Matrix.h"
+#include "DLLoader.h"
 
-class XMLNode;
+#if defined(__WIN32__) && !defined(_Windows)
+	#define _Windows
+#endif
 
-struct SpecialActions
-{
-	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
-	virtual void setColor (const Color &color) =0;
-	virtual Color getColor () const =0;
-	virtual void setMatrix (const Matrix &m) =0;
-	virtual const Matrix& getMatrix () const =0;
-	virtual void setBgColor (const Color &color) =0;
-	virtual void appendToPage (XMLNode *node) =0;
-	virtual void appendToDefs (XMLNode *node) =0;
-	virtual BoundingBox& bbox () =0;
-};
+#include "iapi.h"
 
 
-class SpecialEmptyActions : public SpecialActions
+/** Wrapper class of (a subset of) the Ghostscript API. */
+class Ghostscript : public DLLoader
 {
 	public:
-		int getX() const {return 0;}
-		int getY() const {return 0;}
-		void setColor (const Color &color) {}
-		void setBgColor (const Color &color) {}
-		Color getColor () const {return 0;}
-		void setMatrix (const Matrix &m) {}
-		const Matrix& getMatrix () const {return _matrix;}
-		void appendToPage (XMLNode *node) {}
-		void appendToDefs (XMLNode *node) {}
-		BoundingBox& bbox () {return _bbox;}
+		typedef int (GSDLLCALLPTR Stdin) (void *caller, char *buf, int len);
+		typedef int (GSDLLCALLPTR Stdout) (void *caller, const char *str, int len); 
+		typedef int (GSDLLCALLPTR Stderr) (void *caller, const char *str, int len);  
+
+	public:
+		Ghostscript (int argc, const char **argv, void *caller=0);
+		~Ghostscript ();
+		int revision (gsapi_revision_t *r);
+		int set_stdio (Stdin in, Stdout out, Stderr err);  
+		int run_string_begin (int user_errors, int *pexit_code);
+		int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code);
+		int run_string_end (int user_errors, int *pexit_code); 
+		int exit (); 
+		static bool available ();
+
+	protected:
+		Ghostscript (const Ghostscript &gs) {}
+		int init_with_args (int argc, char **argv);
+		int new_instance (void **psinst, void *caller);
+		void delete_instance (); 
 
 	private:
-		BoundingBox _bbox;
-		Matrix _matrix;
+		void *_inst; ///< Ghostscript handle needed to call the gsapi_foo functions
 };
-
 
 #endif

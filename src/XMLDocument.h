@@ -30,6 +30,7 @@ class XMLDocument
    public:
       XMLDocument (XMLElementNode *root=0);
       ~XMLDocument ();
+		void clear ();
 		void append (XMLNode *node);
 		void setRootNode (XMLElementNode *root);
 		const XMLElementNode* getRootElement () const {return rootElement;}

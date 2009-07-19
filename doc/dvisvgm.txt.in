@@ -318,6 +318,14 @@ A description of the command syntax can be found in the DVI driver documentation
 // The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files. 
 // *dvisvgm* converts them to corresponding SVG elements.
 
+*ps*::
+The DVI driver dvips introduced a small but powerful set of specials to embed PostScript code into DVI files.
+One aim of *dvisvgm* is to support all these specials in conjunction with arbitrary PostScript code. Since PostScript 
+is a rather complex language, *dvisvgm* does not try to implement its own PostScript interpreter but uses Ghostscript 
+which is dynamically linked during runtime. For this reason, the Ghostscript shared library or DLL must be installed and
+reachable through the PATH environment variable. If the Ghostscript library cannot be found, the evaluation of PostScript
+specials is disabled.
+
 *tpic*::
 The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
 eepic and tplot, use these specials to describe graphics. 

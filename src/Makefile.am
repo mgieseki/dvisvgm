@@ -13,20 +13,20 @@ dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CharmapTranslator.h Color.h \
-	ColorSpecialHandler.h Directory.h DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h \
-	EmSpecialHandler.h FileSystem.h Font.h FontCache.h FontEmitter.h FontEncoding.h FontEngine.h FontGlyph.h FontManager.h \
-	FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h InputBuffer.h FileFinder.h macros.h Message.h MessageException.h \
-	MetafontWrapper.h PageSize.h Pair.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h SVGFontEmitter.h \
-	SVGFontTraceEmitter.h TFM.h TpicSpecialHandler.h TransformationMatrix.h types.h VectorStream.h VFActions.h VFReader.h \
-	XMLDocTypeNode.h XMLDocument.h XMLNode.h XMLString.h \
+	ColorSpecialHandler.h Directory.h DLLoader.h DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h \
+	EmSpecialHandler.h FileSystem.h Font.h FontCache.h FontEmitter.h FontEncoding.h FontEngine.h FontGlyph.h \
+	FontManager.h FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h GraphicPath.h InputBuffer.h InputReader.h FileFinder.h \
+	macros.h Matrix.h Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h PSInterpreter.h PsSpecialHandler.h SpecialActions.h \
+	SpecialHandler.h SpecialManager.h StreamReader.h SVGFontEmitter.h SVGFontTraceEmitter.h SVGTree.h TpicSpecialHandler.h TFM.h types.h \
+	VectorStream.h VFActions.h VFReader.h XMLDocTypeNode.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp Color.cpp ColorSpecialHandler.cpp \
-	Directory.cpp DVIActions.cpp DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp \
-	FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontGlyph.cpp FontManager.cpp FontMap.cpp GFReader.cpp \
-	GFGlyphTracer.cpp GFTracer.cpp InputBuffer.cpp FileFinder.cpp Message.cpp MetafontWrapper.cpp PageSize.cpp SpecialManager.cpp \
-	StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp TFM.cpp TpicSpecialHandler.cpp TransformationMatrix.cpp VFReader.cpp \
-	XMLDocument.cpp XMLNode.cpp XMLString.cpp
+	Directory.cpp DLLoader.cpp DVIActions.cpp DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp \
+	FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontGlyph.cpp FontManager.cpp FontMap.cpp \
+	GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp InputBuffer.cpp InputReader.cpp FileFinder.cpp Matrix.cpp \
+	Message.cpp MetafontWrapper.cpp PageSize.cpp PSInterpreter.cpp PsSpecialHandler.cpp SpecialManager.cpp StreamReader.cpp SVGFontEmitter.cpp \
+	SVGFontTraceEmitter.cpp SVGTree.cpp TFM.cpp TpicSpecialHandler.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
-EXTRA_DIST = miktex-kps.h miktex-core.def miktex-kps.def options.ggo getopt.h getopt.c getopt1.c 
+EXTRA_DIST = options.ggo getopt.h getopt.c getopt1.c psdefs.psc iapi.h ierrors.h
 
 AM_CXXFLAGS = -I../potracelib -I../../potracelib -Wall
 
@@ -45,6 +45,15 @@ cmdline.c: options.ggo
 	dlltool -d $< -l $@ -U
 
 
+# Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter
+psdefs.psc: psdefs.ps
+	if test -f $<; then \
+		ps2c PSInterpreter::PSDEFS $< >$@; \
+	fi
+
+psdefs.ps: ;
+
+
 ## rules and macros for the unit test environment
 ## CxxTest (http://cxxtest.sourceforge.net) must be installed if you want to build 
 ## and run the tests!
@@ -55,8 +64,8 @@ TESTS = test-all
 
 # the tests that should be executed are implemented in the following header files
 test_all_headers = tests/CalculatorTest.h tests/ColorSpecialTest.h tests/DirectoryTest.h tests/FontManagerTest.h \
-						 tests/FontMapTest.h tests/FileFinderTest.h tests/StreamCounterTest.h tests/PageSizeTest.h\
-						 tests/SplittedCharInputBufferTest.h tests/VectorStreamTest.h
+	tests/FontMapTest.h tests/FileFinderTest.h tests/GraphicPathTest.h tests/MatrixTest.h tests/StreamCounterTest.h \
+	tests/PageSizeTest.h tests/SplittedCharInputBufferTest.h tests/StreamInputBufferTest.h tests/VectorStreamTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 
 test_all_LDADD        = $(noinst_LIBRARIES)

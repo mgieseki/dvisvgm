@@ -29,14 +29,15 @@
 #include "FontManager.h"
 #include "FontGlyph.h"
 #include "SVGFontEmitter.h"
+#include "SVGTree.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
 using namespace std;
 
 
-SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, XMLElementNode *root, bool uf) 
-	: _fontManager(fm), _charmapTranslator(cmt), _rootNode(root), _useFonts(uf)
+SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf) 
+	: _fontManager(fm), _charmapTranslator(cmt), _svg(svg), _useFonts(uf)
 {
 	_font = font;
 	_fontEngine.setFont(font->path());
@@ -64,7 +65,7 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 		if (id && strlen(id) > 0)
 			fontNode->addAttribute("id", id);
 		fontNode->addAttribute("horiz-adv", XMLString(_fontEngine.getHAdvance()));
-		_rootNode->append(fontNode);
+		_svg.appendToDefs(fontNode);
 
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
 		faceNode->addAttribute("font-family", (id && strlen(id) > 0) ? id : _fontEngine.getFamilyName());
@@ -72,20 +73,16 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 		faceNode->addAttribute("ascent", XMLString(_fontEngine.getAscender()));
 		faceNode->addAttribute("descent", XMLString(_fontEngine.getDescender()));
 		fontNode->append(faceNode);
+		FORALL(*usedChars, set<int>::const_iterator, i) {
+			emitGlyph(*i);  // create new glyphNode
+			fontNode->append(_glyphNode);
+		}
 	}
 	else {
-		fontNode = _rootNode;
-#if 0
-		if (usedChars && _font && !usedChars->empty()) {
-			ostringstream oss;
-			oss << _font->name() << ", " << _font->scaledSize() << "pt"; 
-			fontNode->append(new XMLCommentNode(oss.str()));
+		FORALL(*usedChars, set<int>::const_iterator, i) {
+			emitGlyph(*i);  // create new glyphNode
+			_svg.appendToDefs(_glyphNode);
 		}
-#endif
-	}
-	FORALL(*usedChars, set<int>::const_iterator, i) {
-		emitGlyph(*i);  // create new glyphNode
-		fontNode->append(_glyphNode);
 	}
 	return usedChars->size();
 }

@@ -23,12 +23,13 @@
 #include <fstream>
 #include "FontEncoding.h"
 #include "InputBuffer.h"
+#include "InputReader.h"
 #include "FileFinder.h"
 #include "Message.h"
 
 using namespace std;
 
-static string read_entry (InputBuffer &in);
+static string read_entry (InputReader &in);
 static bool valid_name_char (char c);
 
 
@@ -58,7 +59,8 @@ void FontEncoding::read () {
 
 /** Read encoding information from stream. */
 void FontEncoding::read (istream &is) {
-	StreamInputBuffer in(is, 256);
+	StreamInputBuffer ib(is, 256);
+	BufferInputReader in(ib);
 	_table.resize(256);
 	
 	// find beginning of vector
@@ -95,7 +97,7 @@ void FontEncoding::read (istream &is) {
 }
 
 
-static string read_entry (InputBuffer &in) {
+static string read_entry (InputReader &in) {
 	string entry;
 	bool accept_slashes=true;
 	while (!in.eof() && ((in.peek() == '/' && accept_slashes) || valid_name_char(in.peek()))) {

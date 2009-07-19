@@ -5,6 +5,7 @@ syntax: glob
 *.obj
 *.dvi
 *.log
+*.lpro
 *.tex
 *.svg
 *.svgz

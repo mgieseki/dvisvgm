@@ -28,6 +28,7 @@
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "FontManager.h"
+#include "Ghostscript.h"
 #include "SpecialManager.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -40,31 +41,24 @@
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
 //#include "HtmlSpecialHandler.h"
+#include "PsSpecialHandler.h"
 #include "TpicSpecialHandler.h"
 ///////////////////////////////////
 
 
 using namespace std;
 
-DVIToSVGActions::Nodes::Nodes (XMLElementNode *r) {
-	root = r;
-	page = font = text = 0;
-}
 
-
-DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem) 
-	: _dviReader(reader), _specialManager(0), _color(Color::BLACK), _bgcolor(Color::WHITE),
-	_nodes(svgelem), _transMatrix(0) 
+DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, SVGTree &svg) 
+	: _svg(svg), _dviReader(reader), _pageMatrix(0), _bgcolor(Color::WHITE)
 {
-	_xmoved = _ymoved = false;
-	_currentFont = -1;
+	_currentFontNum = -1;
 	_pageCount = 0;
 }
 
 
 DVIToSVGActions::~DVIToSVGActions () {
-	delete _transMatrix;
-	delete _specialManager;
+	delete _pageMatrix;
 	FORALL (_charmapTranslatorMap, CharmapTranslatorMap::iterator, i)
 		delete i->second;
 }
@@ -79,12 +73,12 @@ DVIToSVGActions::~DVIToSVGActions () {
  *  @return the SpecialManager that handles special statements */
 const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
 	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
-		delete _specialManager;  // then we don't need a SpecialManager
-		_specialManager = 0;
+		_specialManager.unregisterHandlers();
 	}
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
+			0,                          // placeholder for PsSpecialHandler
 			new BgColorSpecialHandler,  // handles background color special
 			new ColorSpecialHandler,    // handles color specials
 			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
@@ -93,17 +87,21 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 			new TpicSpecialHandler,     // handles tpic specials
 			0
 		};
-		delete _specialManager;      // delete current SpecialManager
-		_specialManager = new SpecialManager;
-		_specialManager->registerHandlers(handlers, ignorelist);
+		SpecialHandler **p = handlers;
+		if (Ghostscript::available())
+			*p = new PsSpecialHandler;
+		else
+			p++;
+		_specialManager.unregisterHandlers();
+		_specialManager.registerHandlers(p, ignorelist);
 	}
-	return _specialManager;
+	return &_specialManager;
 }
 
 
-void DVIToSVGActions::setTransformation (const TransformationMatrix &matrix) {
-	delete _transMatrix;
-	_transMatrix = new TransformationMatrix(matrix);
+void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
+	delete _pageMatrix;
+	_pageMatrix = new Matrix(matrix);
 }
 
 
@@ -124,55 +122,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		// all fonts with the same name.
 		font = font->uniqueFont();
 	}
-
-	const CharmapTranslator *cmt = _charmapTranslatorMap[font];
 	_usedCharsMap[font].insert(c);
 
-	if (DVIToSVG::USE_FONTS) {
-		XMLTextNode *textNode = new XMLTextNode(XMLString(cmt->unicode(c), false));	
-
-		// create a new tspan element with positioning information
-		// if "cursor" was moved
-		if (_xmoved || _ymoved || (_color.changed() && _color.get() != Color::BLACK)) {
-			_nodes.text = new XMLElementNode("tspan");
-			if (_xmoved)
-				_nodes.text->addAttribute("x", XMLString(x));
-			if (_ymoved)
-				_nodes.text->addAttribute("y", XMLString(y));
-			if ((_color.changed() ||_xmoved || _ymoved) && _color.get() != Color::BLACK)
-				_nodes.text->addAttribute("fill", _color.get().rgbString());
-			_nodes.text->append(textNode);
-			_nodes.font->append(_nodes.text);
-			_xmoved = _ymoved = false;
-			_color.changed(false);
-		}
-		else if (_nodes.text) // no explicit cursor movement => append text to existing node
-			_nodes.text->append(textNode);
-		else                  // no tspan node and no cursor movement
-			_nodes.font->append(textNode);
-	}
-	else {
-		if (_color.changed()) {
-			if (_color.get() == Color::BLACK) 
-				_nodes.text = 0;
-			else {
-				_nodes.text = new XMLElementNode("g");
-				_nodes.text->addAttribute("fill", _color.get().rgbString());
-				_nodes.page->append(_nodes.text);
-			}
-			_color.changed(false);
-		}
-		ostringstream oss;
-		oss << "#g" << _dviReader.getFontManager().fontID(font) << c;		
-		XMLElementNode *use = new XMLElementNode("use");
-		use->addAttribute("x", XMLString(x));
-		use->addAttribute("y", XMLString(y));
-		use->addAttribute("xlink:href", oss.str());
-		if (_nodes.text)
-			_nodes.text->append(use);
-		else
-			_nodes.page->append(use);
-	}
+	const CharmapTranslator *cmt = _charmapTranslatorMap[font->uniqueFont()];
+	_svg.appendChar(c, x, y, _dviReader.getFontManager(), *cmt);
 
 	// update bounding box
 	if (font) {
@@ -183,9 +136,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		double h = s*font->charHeight(c);
 		double d = s*font->charDepth(c);
 		BoundingBox charbox(x, y-h, x+w, y+d);
+		if (!getMatrix().isIdentity())
+			charbox.transform(getMatrix());
 		_bbox.embed(charbox);
 	}
-
 }
 
 
@@ -206,12 +160,16 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	if (_color.get() != Color::BLACK)
-		rect->addAttribute("fill", _color.get().rgbString());
-	_nodes.page->append(rect);
+	if (!getMatrix().isIdentity())
+		rect->addAttribute("transform", getMatrix().getSVG());
+	if (getColor() != Color::BLACK)
+		rect->addAttribute("fill", _svg.getColor().rgbString());
+	_svg.appendToPage(rect);
 	
 	// update bounding box
 	BoundingBox bb(x, y+height, x+width, y);
+	if (!getMatrix().isIdentity())
+		bb.transform(getMatrix());
 	_bbox.embed(bb);
 }
 
@@ -225,41 +183,23 @@ void DVIToSVGActions::defineFont (int num, const Font *font) {
 
 /** This method is called when a "set font" command was found in the DVI file. The
  *  font must be previously defined.
- *  @param[in] num unique number of the font in the DVI file 
- *  @param[in] font pointer to the font object */
+ *  @param[in] num unique number of the font in the DVI file (not necessarily equal to the DVI font number)
+ *  @param[in] font pointer to the font object (always represents a physical font and never a virtual font) */
 void DVIToSVGActions::setFont (int num, const Font *font) {
-	if (num != _currentFont && DVIToSVG::USE_FONTS) {
-		_nodes.font = new XMLElementNode("text");
-		if (DVIToSVG::CREATE_STYLE || !font)
-			_nodes.font->addAttribute("class", string("f") + XMLString(num));
-		else {
-			_nodes.font->addAttribute("font-family", font->name());
-			_nodes.font->addAttribute("font-size", font->scaledSize());
-		}
-//		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()*BP));
-//		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()*BP));
-		_nodes.font->addAttribute("x", XMLString(_dviReader.getXPos()));
-		_nodes.font->addAttribute("y", XMLString(_dviReader.getYPos()));
-		_nodes.page->append(_nodes.font);
-		_nodes.text = 0;  // force creating a new _nodes.text when adding next char
-		_color.changed(true); 
-		_xmoved = _ymoved = false;
-		_currentFont = num;
-	}
+	_currentFontNum = num;
+	_svg.setFont(num, font);
 }
 
 
 /** This method is called when a "special" command was found in the DVI file. 
  *  @param[in] s the special expression */
 void DVIToSVGActions::special (const string &s) {
-	if (_specialManager) {
-		try {
-			_specialManager->process(s, this);
-			// @@ output message in case of unsupported specials?
-		}
-		catch (const SpecialException &e) {
-			Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << endl;
-		}
+	try {
+		_specialManager.process(s, this);
+		// @@ output message in case of unsupported specials?
+	}
+	catch (const SpecialException &e) {
+		Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << endl;
 	}
 }
 
@@ -278,28 +218,26 @@ void DVIToSVGActions::postamble () {
  *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (Int32 *c) {
-	_pageCount++;
-	_nodes.page = new XMLElementNode("g");
-	_nodes.page->addAttribute("id", string("page")+XMLString(int(_pageCount)));
-	_nodes.root->append(_nodes.page);
-	_xmoved = _ymoved = false;
+	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
 }
 
 
 CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) const {
-	CharmapTranslatorMap::const_iterator it = _charmapTranslatorMap.find(font);
-	if (it != _charmapTranslatorMap.end())
-		return it->second;
+	if (font) {
+		CharmapTranslatorMap::const_iterator it = _charmapTranslatorMap.find(font->uniqueFont());
+		if (it != _charmapTranslatorMap.end())
+			return it->second;
+	}
 	return 0;
 }
 
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
-	_specialManager->notifyEndPage();
-	if (_transMatrix)
-		_nodes.page->addAttribute("transform", _transMatrix->getSVG());
+	_specialManager.notifyEndPage();
+	if (_pageMatrix)
+		_svg.transformPage(*_pageMatrix);
 	if (_bgcolor != Color::WHITE) {
 		XMLElementNode *r = new XMLElementNode("rect");
 		r->addAttribute("x", _bbox.minX());
@@ -307,17 +245,12 @@ void DVIToSVGActions::endPage () {
 		r->addAttribute("width", _bbox.width());
 		r->addAttribute("height", _bbox.height());
 		r->addAttribute("fill", _bgcolor.rgbString());
-		_nodes.page->prepend(r);
+		_svg.prependToPage(r);
 	}
-}
-
-
-void DVIToSVGActions::appendToPage (XMLNode *node) {
-	if (node && _nodes.page)
-		_nodes.page->append(node);
 }
 
 
 void DVIToSVGActions::setBgColor (const Color &color) {
 	_bgcolor = color;
 }
+

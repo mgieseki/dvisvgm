@@ -27,59 +27,37 @@
 #include <set>
 #include "BoundingBox.h"
 #include "DVIActions.h"
+#include "Matrix.h"
 #include "SpecialActions.h"
-#include "TransformationMatrix.h"
+#include "SpecialManager.h"
+#include "SVGTree.h"
 
-using std::map;
-using std::set;
 
 class CharmapTranslator;
 class DVIReader;
 class FileFinder;
 class Font;
-class SpecialManager;
 class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {
-	template <typename T>
-	class Property
-	{
-		public:
-			Property (const T &val) : _val(val), _changed(false) {}
-			Property (const  Property &p) : _val(p._val), _changed(false) {}
-			bool operator == (const Property &p) const {return _val == p._val;}
-			bool operator != (const Property &p) const {return _val != p._val;}
-			void operator = (const Property &p)        {_val = p._val; _changed = false;}
-			bool changed () const                      {return _changed;}
-			void set (const T &val)                    {if (val != _val) {_val=val; _changed=true;}}
-			const T& get () const                      {return _val;}
-			void changed (bool c)                      {_changed=c;}
-
-		private:
-			T _val;
-			bool _changed;
-	};
-
-	struct Nodes
-	{
-		Nodes (XMLElementNode *r);
-		XMLElementNode *root, *page, *font, *text;
-	};
-	typedef map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
-	typedef map<const Font*, set<int> > UsedCharsMap;
-
+	typedef std::map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
+	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
+	
 	public:
-		DVIToSVGActions (const DVIReader &reader, XMLElementNode *svgelem);
+		DVIToSVGActions (const DVIReader &reader, SVGTree &svg);
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setBgColor (const Color &color);
-		void setColor (const Color &color)  {_color.set(color);}
-		Color getColor () const             {return _color.get();}
-		void appendToPage (XMLNode *node);
-		void moveToX (double x) {_xmoved = true;}
-		void moveToY (double y) {_ymoved = true;}
+		void setColor (const Color &color)              {_svg.setColor(color);}
+		void setMatrix (const Matrix &m)                {_svg.setMatrix(m);}
+		const Matrix& getMatrix () const                {return _svg.getMatrix();}
+		Color getColor () const                         {return _svg.getColor();}
+		void appendToPage (XMLNode *node)               {_svg.appendToPage(node);}
+		void appendToDefs (XMLNode *node)               {_svg.appendToDefs(node);}
+		void moveToX (double x)                         {_svg.setX(x);}
+		void moveToY (double y)                         {_svg.setY(y);}
 		void defineFont (int num, const Font *font);
 		void setFont (int num, const Font *font);
 		void special (const string &s);
@@ -89,25 +67,23 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void endPage ();
 		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist);
-		void setTransformation (const TransformationMatrix &tm);
+		void setPageMatrix (const Matrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 		int getX() const     {return _dviReader.getXPos();}
 		int getY() const     {return _dviReader.getYPos();}
 		BoundingBox& bbox () {return _bbox;}
 
 	private:
+		SVGTree &_svg;
 		const DVIReader &_dviReader;
-		SpecialManager *_specialManager;
+		SpecialManager _specialManager;
 		BoundingBox _bbox;
-		bool _xmoved, _ymoved;
-		Property<Color> _color;
-		Color _bgcolor;
 		int _pageCount;
-		int _currentFont;
-		Nodes _nodes;
+		int _currentFontNum;
 		CharmapTranslatorMap _charmapTranslatorMap;
 		mutable UsedCharsMap _usedCharsMap;
-		TransformationMatrix *_transMatrix;
+		Matrix *_pageMatrix;  // transformation of whole page
+		Color _bgcolor;
 };
 
 

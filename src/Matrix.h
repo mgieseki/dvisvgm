@@ -23,88 +23,68 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <istream>
 #include <string>
 #include <vector>
+#include "MessageException.h"
+#include "Pair.h"
 
-using std::string;
-using std::vector;
 
-class TransformationMatrix
+struct ParserException : public MessageException
 {
-	public:
-		TransformationMatrix (const string &cmds);
-		
-	protected:
-		void operator = (double *v);
-		static TransformationMatrix& translation (TransformationMatrix &m, double tx, double ty);
-		static TransformationMatrix& rotation (TransformationMatrix &m, double arc);
-		static TransformationMatrix& scaling (TransformationMatrix &m, double sx, double sy);
-		static TransformationMatrix& skewing (TransformationMatrix &m, double );
-		
-	private:
-		double values[9];
+	ParserException (const std::string &msg) : MessageException(msg) {}
 };
 
+class Calculator;
 
-template <typename T>
 class Matrix
 {
    public:
-      Matrix (int r) : values(r), rows(r) {}
-		T& operator () (int r, int c=0) const   {return values[rows*r+c];}
-		Matrix& operator += (const Matrix &m);
-		Matrix& operator -= (const Matrix &m);
-		Matrix& operator *= (const Matrix &m);
-		Matrix& operator *= (const T &c);
-		Matrix& operator /= (const T &c);
-
-   private:		
-		vector<T> values;
-		int rows;
+		Matrix (const std::string &cmds, Calculator &calc);
+		Matrix (double d=0);
+      Matrix (double v[], size_t size=9);
+      Matrix (const std::vector<double> &v);
+		Matrix& set (double v[], size_t size);
+      Matrix& set (const std::vector<double> &v);
+		Matrix& transpose ();
+		Matrix& parse (std::istream &is, Calculator &c);
+		Matrix& parse (const std::string &cmds, Calculator &c);
+		Matrix& lmultiply (const Matrix &tm);
+		Matrix& rmultiply (const Matrix &tm);
+		Matrix& translate (double tx, double ty);
+		Matrix& scale (double sx, double sy);
+		Matrix& rotate (double deg);
+		Matrix& xskew (double deg);
+		Matrix& yskew (double deg);
+		Matrix& flip (bool h, double a);
+		DPair operator * (const DPair &p) const;
+		bool operator == (const Matrix &m) const;
+		bool operator != (const Matrix &m) const;
+		bool isIdentity() const;
+		bool isTranslation (double &tx, double &ty) const;
+		std::string getSVG () const;
+		std::ostream& write (std::ostream &os) const;
+		
+   private:
+		double values[3][3];  // row x col
 };
 
 
-template <typename T>
-Matrix& Matrix<T>::operator += (const Matrix &m) {
-	for (int i=0; i < values.size(); i++)
-		values[i] += m.values[i];
-	return *this;
-}
+struct TranslationMatrix : public Matrix
+{
+	TranslationMatrix (double tx, double ty);
+};
 
 
-template <typename T>
-Matrix& Matrix<T>::operator -= (const Matrix &m) {
-	for (int i=0; i < values.size(); i++)
-		values[i] -= m.values[i];
-	return *this;
-}
+struct ScalingMatrix : public Matrix
+{
+	ScalingMatrix (double sx, double sy);
+};
 
 
-template <typename T>
-Matrix& Matrix<T>::operator *= (const T &c) {
-	for (int i=0; i < values.size(); i++)
-		values[i] *= c;
-	return *this;
-}
-
-
-template <typename T>
-Matrix& Matrix<T>::operator /= (const T &c) {
-	for (int i=0; i < values.size(); i++)
-		values[i] /= c;
-	return *this;
-}
-
-
-template <typename T>
-Matrix& Matrix<T>::operator *= (const Matrix &m) {
-	Matrix<T> res(rows);
-	for (int i=0; i < rows; i++)
-		for (int j=0; j < rows; j++)
-			for (int k=0; k < rows; k++)
-				res(i,j) += (*this)(i,k) * m(k,j);
-	return *this = res;
-}
-
+struct RotationMatrix : public Matrix
+{
+	RotationMatrix (double deg);
+};
 
 #endif

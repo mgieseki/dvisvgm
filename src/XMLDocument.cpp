@@ -30,10 +30,18 @@ XMLDocument::XMLDocument (XMLElementNode *root)
 {
 }
 
+
 XMLDocument::~XMLDocument () {
+	clear();
+}
+
+
+void XMLDocument::clear () {
 	delete rootElement;
+	rootElement = 0;
 	FORALL(nodes, list<XMLNode*>::iterator, i) 
 		delete *i;
+	nodes.clear();
 }
 
 
@@ -48,6 +56,7 @@ void XMLDocument::append (XMLNode *node) {
 	else
 		nodes.push_back(node);
 }
+
 
 void XMLDocument::setRootNode (XMLElementNode *root) {
 	delete rootElement;

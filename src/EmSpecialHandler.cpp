@@ -23,6 +23,7 @@
 #include <sstream>
 #include "EmSpecialHandler.h"
 #include "InputBuffer.h"
+#include "InputReader.h"
 #include "SpecialActions.h"
 #include "XMLNode.h"
 
@@ -109,7 +110,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 }
 
 
-static double read_length (InputBuffer &in) {
+static double read_length (InputReader &in) {
 	struct Unit {
 		const char *name;
 		double factor;
@@ -156,7 +157,8 @@ bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	
 	if (actions) {
 		_actions = actions;  // save pointer to SpecialActions for later use in endPage
-		StreamInputBuffer in(is, 128);
+		StreamInputBuffer ib(is, 128);
+		BufferInputReader in(ib);
 		string cmd = in.getWord();
 		if (cmd == "moveto")
 			_pos = DPair(actions->getX(), actions->getY());

@@ -25,13 +25,11 @@
 
 #include <iostream>
 #include "DVIReader.h"
+#include "SVGTree.h"
 
 
-class CharmapTranslator;
 class SpecialManager;
-class XMLDocument;
-class XMLDocTypeNode;
-class XMLElementNode;
+
 
 class DVIToSVG : public DVIReader
 {
@@ -41,7 +39,7 @@ class DVIToSVG : public DVIReader
 		int convert (unsigned firstPage, unsigned lastPage);
 		void setPageSize (string name)    {_pageSizeName = name;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
-		void setTransformation (const string &cmds) {_transCmds = cmds;}
+		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
 	
 	protected:
 		DVIToSVG (const DVIToSVG &);
@@ -51,12 +49,10 @@ class DVIToSVG : public DVIReader
 		void embedFonts (XMLElementNode *svgElement);
 
    private:
+		SVGTree _svg;
 		std::ostream &_out;       ///< DVI output is written to this stream
-		XMLDocument *svgDocument;
-		XMLDocTypeNode *doctypeNode;
-		XMLElementNode *svgElement;
-		string _pageSizeName;
-		string _transCmds;
+		std::string _pageSizeName;
+		std::string _transCmds;
 
 	public:
 		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?
