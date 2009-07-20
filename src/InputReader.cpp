@@ -219,12 +219,41 @@ char InputReader::getPunct () {
 }
 
 
-string InputReader::getString () {
+string InputReader::getString (char quotechar) {
 	string ret;
 	skipSpace();
-	while (!eof() && !isspace(peek()))
-		ret += get();
+	if (quotechar == 0) {
+		while (!eof() && !isspace(peek()) && isprint(peek()))
+			ret += get();
+	}
+	else if (peek() == quotechar) {
+		get();
+		while (!eof() && peek() != quotechar)
+			ret += get();
+		get();
+	}
 	return ret;
+}
+
+
+int InputReader::parseAttributes (map<string,string> &attr) {
+	bool ready=false;
+	while (!eof() && !ready) {
+		string key;
+		skipSpace();
+		while (isalnum(peek()))
+			key += get();
+		skipSpace();
+		if (peek() == '=') {
+			get();
+			skipSpace();
+			string val = getString();
+			attr[key] = val;
+		}
+		else
+			ready = true;
+	}
+	return attr.size();
 }
 
 //////////////////////////////////////////

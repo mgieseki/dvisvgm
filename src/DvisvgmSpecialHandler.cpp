@@ -96,7 +96,6 @@ static void update_bbox (double w, double h, SpecialActions *actions) {
  *  @param[in] is the special statement is read from this stream 
  *  @param[in,out] in the raw text is read from this input buffer */
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	SHOW(prefix);
 	if (actions) {
 		StreamInputBuffer ib(is);
 		BufferInputReader in(ib);

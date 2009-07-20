@@ -37,3 +37,4 @@ install-sh
 src/test-all*
 stamp-h1
 a.out
+test*.*

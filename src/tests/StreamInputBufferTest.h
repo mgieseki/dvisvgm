@@ -171,4 +171,17 @@ class StreamInputBufferTest : public CxxTest::TestSuite
 			TS_ASSERT(!in.parseDouble(d));
 			TS_ASSERT_EQUALS(in.get(), '-');
 		}
+
+
+		void test_attribs () {
+			istringstream iss("aaa=1 bbb=2 ccc=3 d e"); 
+			StreamInputBuffer buffer(iss, 10);
+			BufferInputReader in(buffer);
+			map<string,string> attr;
+			int s = in.parseAttributes(attr);
+			TS_ASSERT_EQUALS(s, 3);
+			TS_ASSERT_EQUALS(attr["aaa"], "1");
+			TS_ASSERT_EQUALS(attr["bbb"], "2");
+			TS_ASSERT_EQUALS(attr["ccc"], "3");
+		}
 };

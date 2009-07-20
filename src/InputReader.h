@@ -24,6 +24,7 @@
 #define INPUTREADER_H
 
 #include <istream>
+#include <map>
 #include <string>
 #include "InputBuffer.h"
 
@@ -47,7 +48,8 @@ struct InputReader
 	virtual double getDouble ();
 	virtual std::string getWord ();
 	virtual char getPunct ();
-	virtual std::string getString ();
+	virtual std::string getString (char quotechar=0);
+	virtual int parseAttributes (std::map<std::string,std::string> &attr);
 	virtual operator bool () const {return !eof();}
 };
 
