@@ -177,12 +177,12 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 	else {
 		const double BP = 72.27/72.0;
 		map<string,string>::const_iterator it;
-		// coordinates of lower left and upper right vertex in PostScript points (bp)
+		// coordinates of lower left and upper right vertex (result in TeX pt)
 		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*BP : 0;
 		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*BP : 0;
 		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*BP : 0;
 		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*BP : 0;
-		// actual width and height in 10th of PostScript points
+		// actual width and height (result in 10th of TeX points)
 		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)*BP : 0;
 		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)*BP : 0;
 		
@@ -207,13 +207,11 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 			matrix.translate(-llx, -lly).scale(sx, -sy).translate(x, y);
 			_xmlnode = new XMLElementNode("g");
 			_xmlnode->addAttribute("transform", matrix.getSVG());
-			_xmlnode->addAttribute("id", fname);
 			set_current_pos(_psi, _actions);
 			_psi.execute(ifs);
 			_actions->appendToPage(_xmlnode);
 			_xmlnode = 0;
-			BoundingBox bbox(llx, lly, w, h);
-			bbox.transform(matrix);
+			BoundingBox bbox(x, y, w, h);
 			_actions->bbox().embed(bbox);
 		}
 	}
