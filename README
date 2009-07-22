@@ -13,6 +13,12 @@ DEPENDENCIES
      This library is used to extract glyph outlines
      from PFB files.
 
+	* Ghostscript (http://pages.cs.wisc.edu/~ghost)
+     The PostScript special handler requires the Ghostscript
+	  library libgs.so (Linux) or gswin32.dll (Windows) to be
+	  installed. If available, it's loaded dynamicially during 
+	  runtime. 
+
    * kpathsea
      This library is part of the Web2C package and is
      usually installed in conjunction with a TeX distribution.

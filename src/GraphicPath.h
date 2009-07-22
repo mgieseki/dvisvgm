@@ -30,6 +30,7 @@
 #include "Pair.h"
 #include "Matrix.h"
 
+
 template <typename T>
 class GraphicPath
 {
@@ -171,7 +172,7 @@ class GraphicPath
 			iterate(actions, false);
 		}
 
-		void transform (Matrix &matrix) {
+		void transform (const Matrix &matrix) {
 			FORALL(_commands, Iterator, it)
 				it->transform(matrix);
 		}
@@ -237,73 +238,4 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 	}
 }
 
-#if 0
-/** Optimizes the glyph's outline description by using command sequences with less parameters.
- *  TrueType and Type1 fonts only support 3 drawing commands (moveto, lineto, conicto/cubicto).
- *  In the case of successive bezier curve sequences, control points or tangent slopes are often
- *  identical so that the path description contains redundant information. SVG provides shorthand 
- *  curve commands that need less parameters because they reuse previously given arguments.
- *  This method detects such command sequences and replaces them by their short form. It does not
- *  recompute the whole paths to reduce the number of necessary line/curve segments. */
-template <typename T>
-void GraphicPath<T>::optimizeCommands () {	
-	Point fp;            // first point of current path
-	Point cp;            // current point (where path drawing continues)
-	ConstIterator prev;  // pointer to preceding command
-	Point pstore[2];
-	FORALL(_commands, Iterator, it) {
-		const Point *params = it->params;
-		switch (it->type) {
-			case Command::MOVETO:
-				fp = params[0];  // record first point of path
-				break;
-			case Command::CLOSEPATH:
-				cp = fp;
-				break;
-			case Command::LINETO:
-				if (params[0].x() == cp.x()) {
-					it->type = Command::VLINETO;
-					it->params[0] = params[0];
-				}
-				else if (params[0].y() == cp.y()) {
-					it->type = Command::HLINETO;
-					it->params[0] = params[0];
-				}
-				break;
-			case Command::CUBICTO:
-				if (prev->type == Command::CUBICTO || prev->type == Command::SHORTCUBICTO) {
-					if (params[0] == pstore[1]*2-pstore[0]) { // is first control point reflection of preceding second control point?
-						it->type = Command::SHORTCUBICTO;
-						it->params[0] = params[1];
-						it->params[1] = params[2];
-					}
-				}
-				pstore[0] = params[1]; // store second control point and
-				pstore[1] = params[2]; // curve endpoint
-				break;
-			case Command::CONICTO:
-				if (prev->type == Command::CUBICTO || prev->type == Command::SHORTCONICTO) {
-					if (params[0] == pstore[1]*2-pstore[0]) {
-						it->type = Command::SHORTCONICTO;
-						it->params[0] = params[1];
-					}
-				}
-				// [pass through]
-			case Command::SHORTCONICTO:
-			case Command::SHORTCUBICTO:
-				pstore[0] = params[0]; // store (second) control point and
-				pstore[1] = params[1]; // curve endpoint
-				break;
-			default:
-				// avoid compiler warnings concerning unhandled enum cases
-				break;
-		}
-		// update current point
-		const int np = it->numParams();
-		if (np > 0)
-			cp = it->params[np-1];
-		prev = it;
-	}
-}
-#endif
 #endif

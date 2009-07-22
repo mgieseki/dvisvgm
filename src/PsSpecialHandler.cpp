@@ -64,7 +64,6 @@ void PsSpecialHandler::initialize () {
 		_linewidth = 1;
 		_linecap = _linejoin = 0;
 		_miterlimit = 4;
-		_numClips = 0;
 		_xmlnode = 0;
 
 		// execute dvips prologue/header files
@@ -211,7 +210,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 			_psi.execute(ifs);
 			_actions->appendToPage(_xmlnode);
 			_xmlnode = 0;
-			BoundingBox bbox(x, y, w, h);
+			BoundingBox bbox(x, y, x+w, x+h);
 			_actions->bbox().embed(bbox);
 		}
 	}
@@ -220,8 +219,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 ///////////////////////////////////////////////////////
 
 void PsSpecialHandler::gsave (std::vector<double> &p) {
-	if (!_clipStack.empty())
-		_clipStack.push(_clipStack.top());
+	_clipStack.dup();
 }
 
 
@@ -251,10 +249,18 @@ void PsSpecialHandler::closepath (std::vector<double> &p) {
 }
 
 
+/** Draws the current path recorded by previously executed path commands (moveto, lineto,...). 
+ *  @param[in] p not used */
 void PsSpecialHandler::stroke (std::vector<double> &p) {
 	if (!_path.empty()) {
+		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
+		if (!_actions->getMatrix().isIdentity()) {
+			_path.transform(_actions->getMatrix());
+			if (!_xmlnode)
+				bbox.transform(_actions->getMatrix());
+		}
 
 		ostringstream oss;
 		_path.writeSVG(oss);
@@ -262,11 +268,6 @@ void PsSpecialHandler::stroke (std::vector<double> &p) {
 		path->addAttribute("d", oss.str());
 		path->addAttribute("stroke", _actions->getColor().rgbString());
 		path->addAttribute("fill", "none");
-		if (!_actions->getMatrix().isIdentity()) {
-			path->addAttribute("transform", _actions->getMatrix().getSVG());
-			if (!_xmlnode)
-				bbox.transform(_actions->getMatrix());
-		}
 		if (_linewidth != 1)
 			path->addAttribute("stroke-width", XMLString(_linewidth));
 		if (_miterlimit != 4) 
@@ -275,8 +276,13 @@ void PsSpecialHandler::stroke (std::vector<double> &p) {
 			path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
 		if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
 			path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
-		if (!_clipStack.empty() && _clipStack.top() > 0)
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.top())+XMLString(")"));
+		if (_clipStack.top()) {
+			// assign clipping path and clip bounding box
+			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
+			BoundingBox clipbox;
+			_clipStack.top()->computeBBox(clipbox);
+			bbox.intersect(clipbox);
+		}
 		if (_dashpattern.size() > 0) {
 			ostringstream oss;
 			for (size_t i=0; i < _dashpattern.size(); i++) {
@@ -304,8 +310,14 @@ void PsSpecialHandler::stroke (std::vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (std::vector<double> &p, bool evenodd) {
 	if (!_path.empty()) {
+		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
+		if (!_actions->getMatrix().isIdentity()) {
+			_path.transform(_actions->getMatrix());
+			if (!_xmlnode)
+				bbox.transform(_actions->getMatrix());
+		}
 
 		ostringstream oss;
 		_path.writeSVG(oss);
@@ -313,13 +325,13 @@ void PsSpecialHandler::fill (std::vector<double> &p, bool evenodd) {
 		path->addAttribute("d", oss.str());
 		if (_actions->getColor() != Color::BLACK)
 			path->addAttribute("fill", _actions->getColor().rgbString());
-		if (!_actions->getMatrix().isIdentity()) {
-			path->addAttribute("transform", _actions->getMatrix().getSVG());
-			if (!_xmlnode)
-				bbox.transform(_actions->getMatrix());
+		if (_clipStack.top()) {
+			// assign clipping path and clip bounding box
+			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
+			BoundingBox clipbox;
+			_clipStack.top()->computeBBox(clipbox);
+			bbox.intersect(clipbox);
 		}
-		if (!_clipStack.empty() && _clipStack.top() > 0)
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.top())+XMLString(")"));
 		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 			path->addAttribute("fill-rule", "evenodd");
 		if (_xmlnode)
@@ -332,10 +344,10 @@ void PsSpecialHandler::fill (std::vector<double> &p, bool evenodd) {
 	}
 }
 
-
+/** Clears the current clipping path. 
+ *  @param[in] p not used */
 void PsSpecialHandler::initclip (std::vector<double> &p) {
-	if (!_clipStack.empty())
-		_clipStack.top() = 0;
+	_clipStack.push();  // push empty path
 }
 
 
@@ -345,6 +357,8 @@ void PsSpecialHandler::initclip (std::vector<double> &p) {
 void PsSpecialHandler::clip (std::vector<double> &p, bool evenodd) {
 	// when this method is called, _path contains the clipping path
 	if (!_path.empty()) {
+		if (!_actions->getMatrix().isIdentity())
+			_path.transform(_actions->getMatrix());
 		ostringstream oss;
 		_path.writeSVG(oss);
 		XMLElementNode *path = new XMLElementNode("path");
@@ -352,19 +366,17 @@ void PsSpecialHandler::clip (std::vector<double> &p, bool evenodd) {
 		if (evenodd)
 			path->addAttribute("clip-rule", "evenodd");
 
+		_clipStack.push(_path);
+
 		XMLElementNode *clip = new XMLElementNode("clipPath");
-		clip->addAttribute("id", XMLString("clip")+XMLString(++_numClips));
+		clip->addAttribute("id", XMLString("clip")+XMLString(_clipStack.topID()));
 		clip->append(path);
 		_actions->appendToDefs(clip);
-
-		if (_clipStack.empty())
-			_clipStack.push(_numClips);
-		else
-			_clipStack.top() = _numClips;
 	}
 }
 
 
+/** Clears current path */
 void PsSpecialHandler::newpath (std::vector<double> &p) {
 	_path.newpath();
 }
@@ -451,4 +463,24 @@ void PsSpecialHandler::setdash (vector<double> &p) {
 	for (size_t i=0; i < p.size()-1; i++)
 		_dashpattern.push_back(p[i]*1.00375);
 	_dashoffset = p.back()*1.00375;
+}
+
+////////////////////////////////////////////
+
+void PsSpecialHandler::ClippingStack::push () {
+	if (!_stack.empty())
+		_stack.push(0);
+}
+
+
+void PsSpecialHandler::ClippingStack::push (Path &path) {
+	if (!path.empty()) {
+		_paths.push_back(path);
+		_stack.push(_paths.size());
+	}
+}
+
+void PsSpecialHandler::ClippingStack::dup () {
+	if (!_stack.empty())
+		_stack.push(_stack.top());
 }

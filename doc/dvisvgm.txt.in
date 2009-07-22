@@ -150,11 +150,9 @@ Sets the name of the output file.
 
 
 *-p, --page*='number'::
-With this option you can choose the page to be processed. Please consider
-that the parameter of this option denotes the actual page count and not the
-number printed on that page. This is because the latter can be ambiguous, i.e.
-different pages may have the same page number (e.g. in cases where multiple
-DVI files have been merged).
+With this option you can choose the page to be processed. Please consider that the parameter 
+of this option don't refer to the page numbers printed on the page. Instead the physical page 
+count is expected, where the first page always gets number 1.
 If this option is omitted, the first page will be selected.
 
 
@@ -319,12 +317,14 @@ A description of the command syntax can be found in the DVI driver documentation
 // *dvisvgm* converts them to corresponding SVG elements.
 
 *ps*::
-The DVI driver dvips introduced a small but powerful set of specials to embed PostScript code into DVI files.
-One aim of *dvisvgm* is to support all these specials in conjunction with arbitrary PostScript code. Since PostScript 
-is a rather complex language, *dvisvgm* does not try to implement its own PostScript interpreter but uses Ghostscript 
-which is dynamically linked during runtime. For this reason, the Ghostscript shared library or DLL must be installed and
-reachable through the PATH environment variable. If the Ghostscript library cannot be found, the evaluation of PostScript
-specials is disabled.
+The famous DVI driver *dvips* introduced its own set of specials in order to embed PostScript code into DVI files,
+which greatly improves the capabilities of DVI documents. One aim of *dvisvgm* is to completely evaluate the
+PostScript code and to convert a large amount of it to SVG. 
+Since PostScript is a rather complex language, *dvisvgm* does not try to implement its own PostScript interpreter but uses 
+Ghostscript instead. The Ghostscript shared library (libgs.so on Linux systems, gsdll32.dll on Windows) is loaded dynamically 
+during runtime. For this reason, it must be installed and reachable through the PATH environment variable. If the Ghostscript 
+library cannot be found, the evaluation of PostScript specials is disabled. Use option *--list-specials* to check whether 
+PS support is available, i.e. the entry 'ps' is present.
 
 *tpic*::
 The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
@@ -362,6 +362,7 @@ files that it opens. Hence, the environment variables described in
 the library's documentation influence the converter.
 
 The pre-compiled Windows version of *dvisvgm* requires a working installation of MiKTeX 2.7 or above.
+To enable evaluation of PostScript specials, the original Ghostscript DLL must be present. 
 
 FILES
 -----
@@ -373,6 +374,7 @@ To check the actual kpathsea configuration you can use the *kpsewhich* utility.
 **.map*:: Font map files
 **.mf*::  Metafont input files
 **.pfb*:: PostScript Type 1 font files
+**.pro*:: PostScript header/prologue files
 **.tfm*:: TeX font metric files
 **.ttf*:: TrueType font files
 **.vf*::  Virtual font files

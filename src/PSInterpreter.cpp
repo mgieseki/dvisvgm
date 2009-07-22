@@ -23,6 +23,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include "FileFinder.h"
 #include "InputReader.h"
@@ -60,6 +61,9 @@ PSInterpreter::PSInterpreter (PSActions *actions)
  *  @param[in] flush If true, a final 'flush' is sent which forces the 
  *  	output buffer to be written immediately.*/
 void PSInterpreter::execute (const char *str, size_t len, bool flush) {
+//	cout << "\n{\n";
+//	cout.write(str, len);
+//	cout << "\n}\n";
 	if (!_initialized) {
 		// Before executing any random PS code redefine some operators and run
 		// initializing PS code. This cannot be done in the constructor because we
@@ -255,10 +259,13 @@ void PSInterpreter::callActions (InputReader &ib) {
 					}
 				}
 				else {
+//					cout << operators[mid].name << " ";
 					for (int i=0; i < pcount; i++) {
 						ib.skipSpace();
 						params.push_back(ib.getString());
+//						cout << params.back() << " ";
 					}
+//					cout << endl;
 				}
 				vector<double> v(params.size());
 				str2double(params, v);

@@ -33,6 +33,23 @@ class XMLElementNode;
 
 class PsSpecialHandler : public SpecialHandler, protected PSActions
 {
+	class ClippingStack
+	{
+		typedef GraphicPath<double> Path;
+		public:
+			void push ();
+			void push (Path &path);
+			void dup ();
+			void pop ()    {_stack.pop();}
+			bool empty ()  {return _stack.empty();}
+			Path* top ()   {return (!_stack.empty() && _stack.top()) ? &_paths[_stack.top()-1] : 0;}
+			int topID ()   {return _stack.empty() ? 0 : _stack.top();}
+
+		private:
+			std::vector<Path> _paths;
+			std::stack<int> _stack;
+	};
+
 	public:
 		PsSpecialHandler ();
 		const char* name () const   {return "ps";}
@@ -84,9 +101,9 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		unsigned _linecap  : 2;     ///< current line cap (0=butt, 1=round, 2=projecting square)
 		unsigned _linejoin : 2;     ///< current line join (0=miter, 1=round, 2=bevel)
 		int _dashoffset;            ///< current dash offset
-		int _numClips;              ///< number of clipping paths
-		std::stack<int> _clipStack;
 		std::vector<int> _dashpattern;
+		ClippingStack _clipStack; 
 };
+
 
 #endif
