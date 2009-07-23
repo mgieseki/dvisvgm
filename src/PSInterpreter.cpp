@@ -42,8 +42,6 @@ const char *PSInterpreter::GSARGS[] = {
 	"-dNOPAUSE",     // keep going 
 	"-dNOPROMPT",   
 	"-dNOBIND",   
-//	"-sstdout=-",     // keep going 
-//	"-dSHORTERRORS", // Adobe-like error messages (starting with "%%[")
 };
 
 
@@ -61,9 +59,6 @@ PSInterpreter::PSInterpreter (PSActions *actions)
  *  @param[in] flush If true, a final 'flush' is sent which forces the 
  *  	output buffer to be written immediately.*/
 void PSInterpreter::execute (const char *str, size_t len, bool flush) {
-//	cout << "\n{\n";
-//	cout.write(str, len);
-//	cout << "\n}\n";
 	if (!_initialized) {
 		// Before executing any random PS code redefine some operators and run
 		// initializing PS code. This cannot be done in the constructor because we
@@ -202,12 +197,13 @@ static void str2double (const vector<string> &str, vector<double> &d) {
 
 /** Evaluates a command emitted by Ghostscript and invokes the corresponding 
  *  method of interface class PSActions. 
- *  @param[in] cib buffer with a single command */
-void PSInterpreter::callActions (InputReader &ib) {
+ *  @param[in] in reader pointing to the next command */
+void PSInterpreter::callActions (InputReader &in) {
+	// array of currently supported operators (must be ascendingly sorted)
 	static const struct Operator {
 		const char *name; // name of operator
 		int pcount;       // number of parameters (< 0 : variable number of parameters)
-		void (PSActions::*op)(vector<double> &p);
+		void (PSActions::*op)(vector<double> &p);  // operation handler
 	} operators [] = {
 		{"clip",          0, &PSActions::clip},
 		{"closepath",     0, &PSActions::closepath},
@@ -237,12 +233,12 @@ void PSInterpreter::callActions (InputReader &ib) {
 		{"translate",     2, &PSActions::translate},
 	};
 	if (_actions) {
-		ib.skipSpace();
+		in.skipSpace();
 		// binary search
 		int first=0, last=sizeof(operators)/sizeof(Operator)-1;
 		while (first <= last) {
 			int mid = first+(last-first)/2;
-			int cmp = ib.compare(operators[mid].name);
+			int cmp = in.compare(operators[mid].name);
 			if (cmp > 0)
 				last = mid-1;
 			else if (cmp < 0)
@@ -251,21 +247,18 @@ void PSInterpreter::callActions (InputReader &ib) {
 				// collect parameters and call handler
 				vector<string> params;
 				int pcount = operators[mid].pcount;
-				if (pcount < 0) {
-					ib.skipSpace();
-					while (!ib.eof()) {
-						params.push_back(ib.getString());
-						ib.skipSpace();
+				if (pcount < 0) {       // variable number of parameters?
+					in.skipSpace();
+					while (!in.eof()) {  // read all available parameters
+						params.push_back(in.getString());
+						in.skipSpace();
 					}
 				}
-				else {
-//					cout << operators[mid].name << " ";
+				else {                  // fixed number of parameters
 					for (int i=0; i < pcount; i++) {
-						ib.skipSpace();
-						params.push_back(ib.getString());
-//						cout << params.back() << " ";
+						in.skipSpace();
+						params.push_back(in.getString());
 					}
-//					cout << endl;
 				}
 				vector<double> v(params.size());
 				str2double(params, v);

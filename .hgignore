@@ -17,6 +17,7 @@ syntax: glob
 *.exe
 .svn
 .deps
+callgrind.*
 cmdline.*
 Makefile
 Makefile.in
@@ -25,6 +26,7 @@ dvisvgm
 aclocal.*
 missing
 ./config.*
+doc/buildman
 doc/dvisvgm.txt
 doc/dvisvgm.xml
 doc/dvisvgm.html
@@ -35,6 +37,9 @@ configure
 depcomp
 install-sh
 src/test-all*
+src/samples
+src/psdefs.psc
+svg2vml
 stamp-h1
 a.out
 test*.*
