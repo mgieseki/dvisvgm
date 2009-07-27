@@ -42,9 +42,9 @@ class Matrix
    public:
 		Matrix (const std::string &cmds, Calculator &calc);
 		Matrix (double d=0);
-      Matrix (double v[], size_t size=9);
+      Matrix (double v[], unsigned size=9);
       Matrix (const std::vector<double> &v);
-		Matrix& set (double v[], size_t size);
+		Matrix& set (double v[], unsigned size);
       Matrix& set (const std::vector<double> &v);
 		Matrix& transpose ();
 		Matrix& parse (std::istream &is, Calculator &c);

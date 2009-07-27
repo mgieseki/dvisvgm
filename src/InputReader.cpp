@@ -59,7 +59,7 @@ bool InputReader::skipUntil (const char *s, bool consume) {
  *  @param[in] consume if true, the characters of the matched string are skipped 
  *  @return true if s matches */
 bool InputReader::check (const char *s, bool consume) {
-	size_t count = 0;
+	unsigned count = 0;
 	for (const char *p=s; *p; p++) {
 		if (peek(count++) != *p)
 			return false;
@@ -71,7 +71,7 @@ bool InputReader::check (const char *s, bool consume) {
 
 
 int InputReader::compare (const char *s, bool consume) {
-	size_t count = 0;
+	unsigned count = 0;
 	for (const char *p=s; *p; p++) {
 		int c = peek(count++);
 		if (c != *p)
@@ -259,7 +259,7 @@ int InputReader::parseAttributes (map<string,string> &attr) {
 //////////////////////////////////////////
 
 
-int StreamInputReader::peek (size_t n) const {
+int StreamInputReader::peek (unsigned n) const {
 	if (n == 0)
 		return peek();
 	vector<char> chars(n);

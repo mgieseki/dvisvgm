@@ -71,8 +71,8 @@ class DVIReader : public StreamReader, protected VFActions
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const          {return _currFontNum;}
-		size_t getCurrentPageNumber () const       {return _currPageNum;}
-		size_t getTotalPages () const              {return _totalPages;}
+		unsigned getCurrentPageNumber () const     {return _currPageNum;}
+		unsigned getTotalPages () const            {return _totalPages;}
 		DVIActions* getActions () const            {return _actions;}
 		DVIActions* replaceActions (DVIActions *a);
 		const FontManager& getFontManager () const {return _fontManager;}
@@ -121,8 +121,8 @@ class DVIReader : public StreamReader, protected VFActions
 	private:
 		DVIActions *_actions;
 		bool _inPage;        // true if between bop and eop
-		size_t _totalPages;  // total number of pages in dvi file
-		size_t _currPageNum; // current page number
+		unsigned _totalPages;  // total number of pages in dvi file
+		unsigned _currPageNum; // current page number
 		int _currFontNum;    // current font number
 		double _scaleFactor; // 1 dvi unit = scaleFactor * TeX points
 		UInt32 _mag;         // magnification factor * 1000

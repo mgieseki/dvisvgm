@@ -27,7 +27,7 @@
 using namespace std;
 
 
-StreamInputBuffer::StreamInputBuffer (istream &is, size_t bufsize)
+StreamInputBuffer::StreamInputBuffer (istream &is, unsigned bufsize)
 	: _is(is), _bufsize(bufsize), _buf1(new UInt8[_bufsize]), _buf2(new UInt8[_bufsize]), _bufptr(_buf1)
 {
 	_size1 = fillBuffer(_buf1);
@@ -65,7 +65,7 @@ int StreamInputBuffer::peek () const {
 
 
 /** Returns the n-th next character without skipping it. */
-int StreamInputBuffer::peek (size_t n) const {
+int StreamInputBuffer::peek (unsigned n) const {
 	if (pos()+n < _size1)
 		return *(_bufptr+n);
 	if (pos()+n < _size1+_size2)
@@ -88,7 +88,7 @@ int StreamInputBuffer::fillBuffer (UInt8 *buf) {
 
 ///////////////////////////////////////////////
 
-SplittedCharInputBuffer::SplittedCharInputBuffer (const char *buf1, size_t s1, const char *buf2, size_t s2) {
+SplittedCharInputBuffer::SplittedCharInputBuffer (const char *buf1, unsigned s1, const char *buf2, unsigned s2) {
 	_buf[0] = buf1;
 	_buf[1] = buf2;
 	_size[0] = buf1 ? s1 : 0;
@@ -113,7 +113,7 @@ int SplittedCharInputBuffer::peek () const {
 }
 
 
-int SplittedCharInputBuffer::peek (size_t n) const {
+int SplittedCharInputBuffer::peek (unsigned n) const {
 	if (n < _size[_index])
 		return _buf[_index][n];
 	n -= _size[_index];

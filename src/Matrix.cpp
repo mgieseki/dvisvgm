@@ -53,7 +53,7 @@ Matrix::Matrix (double d) {
  *  Expects that array v consists of 'size' elements. If size is less than 9, the 
  *  remaining matrix components will be set to those of the identity matrix.
  *  @param v array containing the matrix components */
-Matrix::Matrix (double v[], size_t size) {
+Matrix::Matrix (double v[], unsigned size) {
 	set(v, size);
 }
 
@@ -72,21 +72,21 @@ Matrix::Matrix (const string &cmds, Calculator &calc) {
 }
 
 
-Matrix& Matrix::set (double v[], size_t size) {
+Matrix& Matrix::set (double v[], unsigned size) {
 	size = min(size, 9u);
-	for (size_t i=0; i < size; i++)
+	for (unsigned i=0; i < size; i++)
 		values[i/3][i%3] = v[i];
-	for (size_t i=size; i < 9; i++)
+	for (unsigned i=size; i < 9; i++)
 		values[i/3][i%3] = (i%4 ? 0 : 1);
 	return *this;
 }
 
 
 Matrix& Matrix::set (const vector<double> &v) {
-	size_t size = min(v.size(), 9u);
-	for (size_t i=0; i < size; i++)
+	unsigned size = min((unsigned)v.size(), 9u);
+	for (unsigned i=0; i < size; i++)
 		values[i/3][i%3] = v[i];
-	for (size_t i=size; i < 9; i++)
+	for (unsigned i=size; i < 9; i++)
 		values[i/3][i%3] = (i%4 ? 0 : 1);
 	return *this;
 }

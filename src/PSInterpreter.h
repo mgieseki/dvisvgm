@@ -89,19 +89,6 @@ class PSInterpreter
 
 		void callActions (InputReader &cib);
 
-#if 0
-		// PS operation handlers
-		void closepath (std::vector<std::string> &p);
-		void curveto (std::vector<std::string> &p);
-		void newpath (std::vector<std::string> &p);
-		void fill (std::vector<std::string> &p);
-		void lineto (std::vector<std::string> &p);
-		void moveto (std::vector<std::string> &p);
-		void rotate (std::vector<std::string> &p);
-		void scale (std::vector<std::string> &p);
-		void stroke (std::vector<std::string> &p);
-		void translate (std::vector<std::string> &p);
-#endif		
    private:
 		Ghostscript _gs;
 		Mode _mode;                  ///< current execution mode
