@@ -22,8 +22,6 @@
 
 #include "DLLoader.h"
 
-using namespace std;
-
 
 DLLoader::DLLoader (const char *dlname) {
 #ifdef __WIN32__

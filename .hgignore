@@ -33,6 +33,10 @@ doc/dvisvgm.html
 doc/dvisvgm.1
 doc/*.pdf
 doxy
+vc/Debug
+vc/Release
+vc/freetype
+vc/zlib*
 configure
 depcomp
 install-sh

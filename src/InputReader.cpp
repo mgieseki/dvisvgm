@@ -177,7 +177,7 @@ char InputReader::parseDouble (double &val) {
 		get(); // skip 'e'
 		int exp;
 		parseInt(exp);
-		val *= pow(10, exp);
+		val *= pow(10.0, exp);
 		is_float = true;
 	}
 	return is_float ? 'f' : 'i';

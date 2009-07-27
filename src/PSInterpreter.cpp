@@ -146,7 +146,7 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 			vector<char> &linebuf = self->_linebuf;  // just a shorter name...
 			if ((*last == '\n' || !self->active())) {
 				if (linelength + linebuf.size() > 5) {  // prefix "dvi." plus final newline
-					SplittedCharInputBuffer ib(&linebuf[0], linebuf.size(), first, linelength);
+					SplittedCharInputBuffer ib(linebuf.size() > 0 ? &linebuf[0] : 0, linebuf.size(), first, linelength);
 					BufferInputReader in(ib);
 					in.skipSpace();
 					if (self->_inError) {
