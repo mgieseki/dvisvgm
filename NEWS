@@ -1,6 +1,6 @@
 dvisvgm-0.8
 - experimental evaluation of PostScript specials has been added (requires 
-  a recent version of the Ghostscript shared library libgs.so or gswin32.dll)
+  a recent version of the Ghostscript shared library libgs.so or gsdll32.dll)
 - several code improvements and refactorings
 - fixed compilation bug occured when using GCC 4.4.x
 

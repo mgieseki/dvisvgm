@@ -15,7 +15,7 @@ DEPENDENCIES
 
 	* Ghostscript (http://pages.cs.wisc.edu/~ghost)
      The PostScript special handler requires the Ghostscript
-	  library libgs.so (Linux) or gswin32.dll (Windows) to be
+	  library libgs.so (Linux) or gsdll32.dll (Windows) to be
 	  installed. If available, it's loaded dynamicially during 
 	  runtime. 
 
