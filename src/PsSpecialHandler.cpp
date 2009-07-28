@@ -20,6 +20,7 @@
 ** Boston, MA 02110-1301, USA.                                        **
 ***********************************************************************/
 
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -176,43 +177,68 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 	else {
 		const double BP = 72.27/72.0;
 		map<string,string>::const_iterator it;
-		// coordinates of lower left and upper right vertex (result in TeX pt)
+		// coordinates of lower left and upper right vertex (result in TeX points)
 		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*BP : 0;
 		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*BP : 0;
 		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*BP : 0;
 		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*BP : 0;
+
 		// actual width and height (result in 10th of TeX points)
 		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)*BP : 0;
 		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)*BP : 0;
+
+		// user transformations (default values chosen according to dvips manual)
+		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second)*BP : 0;
+		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*BP : 0;
+		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second)*BP : 612*BP;
+		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second)*BP : 792*BP;
+		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second)*BP : 100;
+		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second)*BP : 100;
+		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second)*BP : 0;
 		
 		double x=_actions->getX(), y=_actions->getY();
-		double w=(urx-llx)*BP, h=(ury-lly)*BP;  // width and height of (E)PS image in TeX pt
-		if (w <= 0 || h <= 0) 
-			Message::wstream(true) << "no valid bounding box parameters for file '" << fname << "' given\n";
-		else {
-			double sx=1, sy=1;
-			if (rwi != 0 || rhi != 0) {
-				sx = rwi/10/w;
-				sy = rhi/10/h;
-				if (sx == 0)
-					sx = sy;
-				else if (sy == 0)
-					sy = sx;
-				w *= sx;
-				h *= sy;
-			}
-			
-			Matrix matrix(1);
-			matrix.translate(-llx, -lly).scale(sx, -sy).translate(x, y);
-			_xmlnode = new XMLElementNode("g");
-			_xmlnode->addAttribute("transform", matrix.getSVG());
-			set_current_pos(_psi, _actions);
-			_psi.execute(ifs);
-			_actions->appendToPage(_xmlnode);
-			_xmlnode = 0;
-			BoundingBox bbox(x, y, x+w, x+h);
-			_actions->bbox().embed(bbox);
+		double w=(urx-llx)*BP, h=(ury-lly)*BP;  // width and height of (E)PS image in TeX points
+		if (w <= 0)
+			w = hsize;
+		if (h <= 0)
+			h = vsize;  
+		h *= -1;  	// must be negative to get the bounding box right
+
+		double sx=1, sy=1;
+		if (rwi != 0 || rhi != 0) {
+			sx = rwi/10/w;
+			sy = rhi/10/fabs(h);
+			if (sx == 0)
+				sx = sy;
+			else if (sy == 0)
+				sy = sx;
 		}
+		w *= sx;
+		h *= sy;
+
+		Matrix usertrans(1);  // transformations given by the user
+		if (hscale != 100 || vscale != 100)
+			usertrans.scale(hscale/100, vscale/100);
+		if (angle != 0)
+			usertrans.rotate(angle);
+		if (hoffset != 0 || voffset != 0)
+			usertrans.translate(hoffset, voffset);
+
+		Matrix trans(1);  // final transformation to position the graphic correctly
+		trans.translate(-llx, -lly).rmultiply(usertrans).scale(sx, -sy).translate(x, y);
+
+		_xmlnode = new XMLElementNode("g");
+		_xmlnode->addAttribute("transform", trans.getSVG());
+		set_current_pos(_psi, _actions);
+		_psi.execute(ifs);
+		_actions->appendToPage(_xmlnode);
+		_xmlnode = 0;
+
+		// adapt bounding box
+		BoundingBox bbox(x, y, x+w, y+h);
+		bbox.transform(usertrans);
+		bbox.write(cout) << endl;
+		_actions->bbox().embed(bbox);
 	}
 }
 
