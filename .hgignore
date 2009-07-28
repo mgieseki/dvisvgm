@@ -4,6 +4,7 @@ syntax: glob
 *.Po
 *.obj
 *.dvi
+*.lib
 *.log
 *.lpro
 *.tex

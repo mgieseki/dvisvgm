@@ -17,10 +17,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\$(ConfigurationName)\potrace"
+			IntermediateDirectory="$(SolutionDir)\$(ConfigurationName)\potrace"
 			ConfigurationType="4"
 			CharacterSet="2"
+			BuildLogFile="$(TargetDir)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\develop\cpp\dvisvgm\vc\potrace"
+				AdditionalIncludeDirectories="..\vc\potrace"
 				PreprocessorDefinitions="HAVE_CONFIG_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\potrace.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -79,11 +81,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)\potracelib"
-			IntermediateDirectory="potracelib"
+			OutputDirectory="$(SolutionDir)\$(ConfigurationName)\potrace"
+			IntermediateDirectory="$(SolutionDir)\$(ConfigurationName)\potrace"
 			ConfigurationType="4"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(TargetDir)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
