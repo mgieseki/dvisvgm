@@ -73,7 +73,7 @@ UInt64 FileSystem::filesize (const string &fname) {
 
 
 string FileSystem::adaptPathSeperators (string path) {
-	for (unsigned i=0; i < path.length(); i++)
+	for (size_t i=0; i < path.length(); i++)
 		if (path[i] == PATHSEP)
 			path[i] = '/';
 	return path;

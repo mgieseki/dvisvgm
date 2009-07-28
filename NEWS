@@ -1,13 +1,13 @@
 dvisvgm-0.8.1
 - added evaluation of more psfile parameters
 - fixed computation of bounding box in psfile special
-- fixed compilation errors occured on x64 systems
+- fixed compilation errors and a conversion bug occurred on x64 systems
 
 dvisvgm-0.8
 - experimental evaluation of PostScript specials has been added (requires 
   a recent version of the Ghostscript shared library libgs.so or gsdll32.dll)
 - several code improvements and refactorings
-- fixed compilation bug occured when using GCC 4.4.x
+- fixed compilation bug occurred when using GCC 4.4.x
 
 dvisvgm-0.7.3
 - fixed bug in font map reader that could cause a segmentation fault

@@ -65,7 +65,7 @@ int FontManager::fontID (int n) const {
 
 
 int FontManager::fontID (const Font *font) const {
-	for (unsigned i=0; i < _fonts.size(); i++)
+	for (size_t i=0; i < _fonts.size(); i++)
 		if (_fonts[i] == font)
 			return i;
 	return -1;

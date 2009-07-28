@@ -151,7 +151,7 @@ int FontEngine::getHAdvance () const {
 	return 0;
 }
 
-int FontEngine::getHAdvance (unsigned int c) const {
+int FontEngine::getHAdvance (unsigned c) const {
 	if (_currentFace) {
 		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)c);
 		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
@@ -190,7 +190,7 @@ int FontEngine::getNextChar () const {
 /** Returns the glyph name for a given charater code. 
  * @param[in] c char code 
  * @return glyph name */
-string FontEngine::getGlyphName (unsigned int c) const {
+string FontEngine::getGlyphName (unsigned c) const {
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
 		char buf[256];
 		int index = FT_Get_Char_Index(_currentFace, c);

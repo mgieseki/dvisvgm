@@ -139,7 +139,7 @@ int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
  *  @param[in] length number of characters in buffer 
  *  @param[in] user_errors if non-negative, the default PS error values will be generated, otherwise this value is returned 
  *  @param[out] pexit_code takes the PS error code */
-int Ghostscript::run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code) {
+int Ghostscript::run_string_continue (const char *str, unsigned length, int user_errors, int *pexit_code) {
 	if (PFN_gsapi_run_string_continue fn = (PFN_gsapi_run_string_continue)loadFunction("gsapi_run_string_continue"))
 		return fn(_inst, str, length, user_errors, pexit_code);
 	*pexit_code = 0;

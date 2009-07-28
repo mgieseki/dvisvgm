@@ -83,15 +83,15 @@ static char* tolower (char *str) {
 
 static string remove_path (string fname) {
 	fname = FileSystem::adaptPathSeperators(fname);
-	unsigned slashpos = fname.rfind('/');
+	size_t slashpos = fname.rfind('/');
 	if (slashpos == string::npos)
 		return fname;
 	return fname.substr(slashpos+1);
 }
 
 
-static string ensure_suffix (string fname, string suffix) {
-	unsigned dotpos = remove_path(fname).rfind('.');
+static string ensure_suffix (string fname, const string &suffix) {
+	size_t dotpos = remove_path(fname).rfind('.');
 	if (dotpos == string::npos) {
 		dotpos = fname.length();
 		fname += "."+suffix;		
@@ -101,7 +101,7 @@ static string ensure_suffix (string fname, string suffix) {
 
 
 static string remove_suffix (string fname) {
-	unsigned dotpos = fname.rfind('.');
+	size_t dotpos = fname.rfind('.');
 	if (dotpos == string::npos) 
 		return fname;
 	return fname.substr(0, dotpos);
