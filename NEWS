@@ -1,3 +1,8 @@
+dvisvgm-0.8.1
+- added evaluation of more psfile parameters
+- fixed computation of bounding box in psfile special
+- fixed compilation errors occured on x64 systems
+
 dvisvgm-0.8
 - experimental evaluation of PostScript specials has been added (requires 
   a recent version of the Ghostscript shared library libgs.so or gsdll32.dll)

@@ -1,0 +1,36 @@
+#!/usr/bin/php
+<?php
+
+$ps = file_get_contents($argv[2]);
+
+if (preg_match('/%+ps2c-header\s*(.*?)\s*%+ps2c-header/s', $ps, $m)) {
+	$header = explode("\n", $m[1]);
+	$header = preg_replace('/^%+(.*)$/', '$1', $header);
+	$header = implode("\n", $header);
+	echo "$header\n\n";
+}
+
+$ps = preg_replace('/%.*\n/', '', $ps);
+$ps = preg_replace('/\s+/', ' ', $ps);
+$ps = preg_replace('/\s\(/', '(', $ps);
+$ps = preg_replace('/\)\s/', ')', $ps);
+$ps = preg_replace('#\s*([\[\]{}/])\s*#', '$1', $ps);
+
+
+echo "const char *$argv[1] = \n";
+
+$line = "";
+for ($i=0; $i < strlen($ps); $i++) {
+	if (strpos('"\\', $ps{$i}) !== false)
+		$line .= '\\';
+	$line .= $ps{$i};
+	
+	$len = strlen($line);
+	if (($len > 0 && $len % 80 == 0) || $i+1 == strlen($ps)) {
+		echo "\"$line\"";
+		if ($i+1 == strlen($ps))
+			echo ";";
+		echo "\n";
+		$line = "";
+	}	
+}
