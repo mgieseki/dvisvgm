@@ -53,3 +53,5 @@ const char *PSInterpreter::PSDEFS =
 "mod 0 eq{(\\n)print}if}for pop pop}def/.handleerror errordict/handleerror get de"
 "f errordict begin/handleerror{0(beginerror)prcmd .handleerror 0(enderror)prcmd}d"
 "ef end ";
+
+// vim: set syntax=cpp:

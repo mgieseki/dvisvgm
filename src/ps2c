@@ -34,3 +34,4 @@ for ($i=0; $i < strlen($ps); $i++) {
 		$line = "";
 	}	
 }
+echo "\n// vim: set syntax=cpp:\n";
