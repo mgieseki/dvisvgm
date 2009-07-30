@@ -23,6 +23,7 @@
 #ifndef GHOSTSCRIPT_H
 #define GHOSTSCRIPT_H
 
+#include <string>
 #include "DLLoader.h"
 
 #if defined(__WIN32__) && !defined(_Windows)
@@ -41,15 +42,17 @@ class Ghostscript : public DLLoader
 		typedef int (GSDLLCALLPTR Stderr) (void *caller, const char *str, int len);  
 
 	public:
+		Ghostscript ();
 		Ghostscript (int argc, const char **argv, void *caller=0);
 		~Ghostscript ();
-		int revision (gsapi_revision_t *r);
+		bool available ();
+		bool revision (gsapi_revision_t *r);
+		std::string revision ();
 		int set_stdio (Stdin in, Stdout out, Stderr err);  
 		int run_string_begin (int user_errors, int *pexit_code);
 		int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code);
 		int run_string_end (int user_errors, int *pexit_code); 
 		int exit (); 
-		static bool available ();
 
 	protected:
 		Ghostscript (const Ghostscript &gs) {}

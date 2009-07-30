@@ -21,8 +21,10 @@
 ***********************************************************************/
 
 #include <cstring>
+#include <sstream>
 #include "Ghostscript.h"
 
+#include "debug.h"
 using namespace std;
 
 #ifdef __WIN32__
@@ -30,6 +32,13 @@ using namespace std;
 #else
 #define GS_DL_NAME "libgs.so"
 #endif
+
+
+/** Loads the Ghostscript library but does not create an instance. This
+ *  constructor should only be used to call available() and revision(). */
+Ghostscript::Ghostscript () : DLLoader(GS_DL_NAME), _inst(0)
+{
+}
 
 
 /** Tries to load the shared library and to initialize Ghostscript. 
@@ -59,17 +68,28 @@ Ghostscript::~Ghostscript () {
 
 /** Returns true if Ghostscript library was found and can be loaded. */
 bool Ghostscript::available () {
-	return DLLoader(GS_DL_NAME).loaded();
+	return loaded();
 }
 
 
 /** Retrieves version information about Ghostscript. 
- * @param[out] r takes the revision information (see GS API documentation for further details) */
-int Ghostscript::revision (gsapi_revision_t *r) {
+ * @param[out] r takes the revision information (see GS API documentation for further details) 
+ * @return true on success  */
+bool Ghostscript::revision (gsapi_revision_t *r) {
 	if (PFN_gsapi_revision fn = (PFN_gsapi_revision)loadFunction("gsapi_revision"))
-		return fn(r, sizeof(gsapi_revision_t));
-   memset(r, 0, sizeof(gsapi_revision_t));
-	return 0;
+		return (fn(r, sizeof(gsapi_revision_t)) == 0);
+	return false;
+}
+
+
+string Ghostscript::revision () {
+	gsapi_revision_t r;
+	if (revision(&r)) {
+		ostringstream oss;
+		oss << r.product << ' ' << (r.revision/100) << '.' << (r.revision%100);
+		return oss.str();
+	}
+	return "";
 }
 
 
@@ -154,5 +174,4 @@ int Ghostscript::run_string_end (int user_errors, int *pexit_code) {
 	*pexit_code = 0;
 	return 0;
 }
-
 

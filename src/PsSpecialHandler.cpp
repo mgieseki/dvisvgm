@@ -93,6 +93,12 @@ int PsSpecialHandler::prefixes (const char **p[]) const {
 }
 
 
+const char* PsSpecialHandler::info () const {
+	static string str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
+	return str.c_str();
+}
+
+
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!actions)
 		return true;

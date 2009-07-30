@@ -88,7 +88,7 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 			0
 		};
 		SpecialHandler **p = handlers;
-		if (Ghostscript::available())
+		if (Ghostscript().available())
 			*p = new PsSpecialHandler;
 		else
 			p++;
