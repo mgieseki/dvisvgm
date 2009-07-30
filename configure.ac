@@ -8,7 +8,12 @@ AC_INIT([dvisvgm],[0.8.1],[martin.gieseking@uos.de])
 DATE="June 2009"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
+
+AH_TEMPLATE([TARGET_SYSTEM], [The machine triplet of the target system])
+AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -18,7 +23,6 @@ AC_PROG_RANLIB
 AC_LANG(C)
 
 # Check whether MikTeX import libraries should be linked
-AC_CANONICAL_HOST
 case $host in 
 	*-mingw32* | *-windows*)
 		CPPFLAGS="$CPPFLAGS -DMIKTEX"
