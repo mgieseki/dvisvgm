@@ -24,7 +24,6 @@
 #include <sstream>
 #include "Ghostscript.h"
 
-#include "debug.h"
 using namespace std;
 
 #ifdef __WIN32__
