@@ -27,3 +27,5 @@ test_all_DEPENDENCIES = ../src/libdvisvgm.a
 test-all.cpp: $(test_all_headers)
 	cxxtestgen --error-printer -o $@ $(test_all_headers)
 
+CLEANFILES = test-all.cpp
+
