@@ -54,24 +54,4 @@ psdefs.psc: psdefs.ps
 psdefs.ps: ;
 
 
-## rules and macros for the unit test environment
-## CxxTest (http://cxxtest.sourceforge.net) must be installed if you want to build 
-## and run the tests!
-check_PROGRAMS = test-all
-
-# "test-all" should be automatically executed when calling "make check"
-TESTS = test-all
-
-# the tests that should be executed are implemented in the following header files
-test_all_headers = tests/CalculatorTest.h tests/ColorSpecialTest.h tests/DirectoryTest.h tests/FontManagerTest.h \
-	tests/FontMapTest.h tests/FileFinderTest.h tests/GraphicPathTest.h tests/MatrixTest.h tests/StreamCounterTest.h \
-	tests/PageSizeTest.h tests/SplittedCharInputBufferTest.h tests/StreamInputBufferTest.h tests/VectorStreamTest.h
-
-test_all_SOURCES      = $(test_all_headers) test-all.cpp 
-test_all_LDADD        = $(noinst_LIBRARIES)
-test_all_DEPENDENCIES = $(noinst_LIBRARIES)
-
-# use CxxTest to create the complete testing application
-test-all.cpp: $(test_all_headers)
-	cxxtestgen.pl --error-printer -o $@ $(test_all_headers)
 

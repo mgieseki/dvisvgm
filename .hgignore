@@ -41,9 +41,9 @@ vc/zlib*
 configure
 depcomp
 install-sh
-src/test-all*
 src/samples
 src/psdefs.psc
+tests/test-all*
 svg2vml
 stamp-h1
 a.out

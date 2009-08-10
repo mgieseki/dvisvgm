@@ -5,5 +5,5 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = LICENSE
-SUBDIRS = potracelib src doc 
+SUBDIRS = potracelib src tests doc 
 
