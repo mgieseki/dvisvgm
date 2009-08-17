@@ -4,7 +4,7 @@
 ## Process this file with automake.
 
 
-AM_CXXFLAGS = -I../src -Wall
+AM_CXXFLAGS = -I../src -I../../src -Wall
 
 ## rules and macros for the unit test environment
 ## CxxTest (http://cxxtest.sourceforge.net) must be installed if you want to build 
