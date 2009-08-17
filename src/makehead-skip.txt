@@ -19,3 +19,5 @@ potracelib.h
 progress.h
 trace.c
 trace.h
+iapi.h
+ierrors.h

@@ -398,6 +398,7 @@ Written by {author} <{email}>
 COPYING
 -------
 Copyright (C) 2005-2009 by Martin Gieseking. Free use of this software is
-granted under the terms of the GNU General Public License (GPL) version 2.
+granted under the terms of the GNU General Public License (GPL) version 3 
+or, (at your option) any later version.
 
 // vim: set syntax=asciidoc: 

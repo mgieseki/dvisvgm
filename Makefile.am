@@ -4,6 +4,6 @@
 ## Process this file with automake.
 
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = LICENSE
+EXTRA_DIST = COPYING
 SUBDIRS = potracelib src tests doc 
 
