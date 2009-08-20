@@ -43,6 +43,7 @@ depcomp
 install-sh
 src/samples
 src/psdefs.psc
+src/CommandLine.*
 tests/test-all*
 svg2vml
 stamp-h1

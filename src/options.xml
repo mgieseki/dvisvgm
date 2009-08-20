@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<cmdline class="CommandLine">
+	<program>
+		<name>dvisvgm</name>
+		<version from-config="yes"/>
+		<author from-config="yes"/>
+		<usage>[options] dvifile</usage>
+	</program>
+	<options>
+		<section title="Input options">
+			<option long="page" short="p">
+				<arg type="unsigned" name="number" default="1"/>
+				<description>choose page to convert</description>
+			</option>
+			<option long="map-file" short="m">
+				<arg type="string" name="[+]filename"/>
+				<description>set [additional] font map file name</description>
+			</option>
+		</section>
+		<section title="SVG output options">
+			<option long="bbox-format" short="b">
+				<arg type="string" name="fmt" default="min"/>
+				<description>set format of bounding box</description>
+			</option>
+			<option long="output" short="o">
+				<arg type="string" name="filename"/>
+				<description>set name of output file</description>
+			</option>
+			<option long="stdout" short="s">
+				<description>write SVG output to stdout</description>
+			</option>
+			<option long="no-fonts" short="n">
+				<description>draw glyphs by using path elements</description>
+			</option>
+			<option long="no-styles">
+				<description>don't use styles to reference fonts</description>
+			</option>
+			<option long="zip" short="z">
+				<arg type="int" name="level" default="9"/>
+				<description>create compressed .svgz file</description>
+			</option>
+		</section>
+		<section title="SVG transformations">
+			<option long="rotate" short="r">
+				<arg type="double" name="angle"/>
+				<description>rotate page content clockwise</description>
+			</option>
+			<option long="scale" short="c">
+				<arg type="string" name="sx[,sy]"/>
+				<description>scale page content</description>
+			</option>
+			<option long="translate" short="t">
+				<arg type="string" name="tx[,ty]"/>
+				<description>shift page content</description>
+			</option>
+			<option long="transform" short="T">
+				<arg type="string" name="commands"/>
+				<description>transform page content</description>
+			</option>
+		</section>
+		<section title="Processing options">
+			<option long="cache" short="c">
+				<arg type="string" name="dir"/>
+				<description>set cache directory</description>
+			</option>
+			<option long="mag" short="M">
+				<arg type="double" name="factor" default="4"/>
+				<description>magnification of Metafont output</description>
+			</option>
+			<option long="no-mktexmf">
+				<description>don't try to create missing fonts</description>
+			</option>
+			<option long="no-specials" short="S">
+				<arg type="string" name="prefixes"/>
+				<description>don't process [selected] specials</description>
+			</option>
+			<option long="trace-all" short="a">
+				<description>trace all glyphs of used bitmap fonts</description>
+			</option>
+		</section>
+		<section title="Message options">
+			<option long="help" short="h">
+				<description>print this help and exit</description>
+			</option>
+			<option long="list-specials" short="l">
+				<description>print supported special sets and exit</description>
+			</option>
+			<option long="verbosity" short="v">
+				<arg type="unsigned" name="level" default="7"/>
+				<description>set verbosity level (0-7)</description>
+			</option>
+			<option long="version" short="V">
+				<description>print version and exit</description>
+			</option>
+		</section>
+	</options>
+</cmdline>
