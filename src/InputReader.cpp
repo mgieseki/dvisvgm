@@ -110,6 +110,16 @@ bool InputReader::parseInt (int &val, bool accept_sign) {
 }
 
 
+bool InputReader::parseUInt (unsigned &val) {
+	val = 0;
+	if (!isdigit(peek()))
+		return false;
+	while (isdigit(peek()))
+		val += val*10 + (get()-'0');
+	return true;
+}
+
+
 bool InputReader::parseInt (int base, int &val) {
 	if (base < 2 || base > 32)
 		return false;
