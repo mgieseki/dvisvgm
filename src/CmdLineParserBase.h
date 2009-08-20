@@ -22,6 +22,7 @@
 #define CMDLINEPARSERBASE_H
 
 #include <string>
+#include <vector>
 
 class InputReader;
 
@@ -55,11 +56,14 @@ class CmdLineParserBase
 		};
 
 	public:
-		CmdLineParserBase (int argc, char **argv);
-		virtual void printHelp () const  {}
+		virtual void help () const  {}
 		virtual int numOptions () const  {return 0;}
+		virtual int numFiles () const    {return _files.size();}
+		virtual const char* file (int n) {n >= 0 && n < _files.size() ? _files[n].c_str() : 0;}
+		virtual void status () const;
 
 	protected:
+		CmdLineParserBase (int argc, char **argv) : _argc(argc), _argv(argv) {}
 		void parse ();
 		void out (const char *str) const;
 		void error (const Option &opt, bool longopt, const char *msg) const;
@@ -76,6 +80,7 @@ class CmdLineParserBase
 	private:
 		int _argc;
 		char **_argv;
+		std::vector<std::string> _files;  ///< filename parameters
 };
 
 #endif
