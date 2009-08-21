@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include "debug.h"
 
 class InputReader;
 
@@ -32,7 +33,7 @@ class CmdLineParserBase
 		struct Option;
 
 		struct OptionHandler {
-			virtual void operator () (InputReader &ir, const Option &opt, bool longopt) const=0;
+			virtual void operator () (CmdLineParserBase *obj, InputReader &ir, const Option &opt, bool longopt) const=0;
 		};
 
 		template <typename T>
@@ -41,32 +42,38 @@ class CmdLineParserBase
 				typedef void (T::*LocalHandler)(InputReader &ir, const Option &opt, bool longopt);
 
 			public:
-				OptionHandlerImpl (T &obj, LocalHandler handler) : _obj(obj), _handler(handler) {}
-				void operator () (InputReader &ir, const Option &opt, bool longopt) const {(_obj.*_handler)(ir, opt, longopt);}
-
+				OptionHandlerImpl (LocalHandler handler) : _handler(handler) {}
+				
+				void operator () (CmdLineParserBase *obj, InputReader &ir, const Option &opt, bool longopt) const {
+					if (T *tobj = dynamic_cast<T*>(obj))
+						(tobj->*_handler)(ir, opt, longopt);
+				}
+				
 			private:
-				T& _obj;
-				void (T::*_handler)(InputReader &ir, const Option &opt, bool longopt);
+				LocalHandler _handler;
 		};
 
 		struct Option {
+			~Option () {delete handler;}
 			char shortname;
 			const char *longname;
-			const OptionHandler& handler;
+			const OptionHandler *handler;
 		};
 
 	public:
+		virtual void parse (int argc, char **argv, bool printErrors=true);
 		virtual void help () const  {}
-		virtual int numOptions () const  {return 0;}
-		virtual int numFiles () const    {return _files.size();}
-		virtual const char* file (int n) {n >= 0 && n < _files.size() ? _files[n].c_str() : 0;}
+		virtual int numOptions () const     {return 0;}
+		virtual int numFiles () const       {return _files.size();}
+		virtual const char* file (size_t n) {return (n >= 0 && n < _files.size()) ? _files[n].c_str() : 0;}
 		virtual void status () const;
+		virtual bool error () const         {return _error;}
 
 	protected:
-		CmdLineParserBase (int argc, char **argv) : _argc(argc), _argv(argv) {}
-		void parse ();
-		void out (const char *str) const;
-		void error (const Option &opt, bool longopt, const char *msg) const;
+		CmdLineParserBase () : _error(false) {}
+		CmdLineParserBase (const CmdLineParserBase &cmd) {}
+		virtual void init ();
+		virtual void error (const Option &opt, bool longopt, const char *msg) const;
 		bool checkArgPrefix (InputReader &ir, const Option &opt, bool longopt) const;
 		bool checkNoArg (InputReader &ir, const Option &opt, bool longopt) const;
 		bool getIntArg (InputReader &ir, const Option &opt, bool longopt, int &arg) const;
@@ -78,8 +85,8 @@ class CmdLineParserBase
 		virtual const Option* options () const {return 0;}
 
 	private:
-		int _argc;
-		char **_argv;
+		bool _printErrors;    ///< if true, print error messages
+		mutable bool _error;  ///< error occured while parsing options
 		std::vector<std::string> _files;  ///< filename parameters
 };
 

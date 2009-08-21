@@ -24,15 +24,23 @@
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "Message.h"
+#include "debug.h"
 
 using namespace std;
 
-/** Parses all options given on the command line. */
-void CmdLineParserBase::parse () {
-	for (int i=1; i < _argc; i++) {
-		CharInputBuffer ib(_argv[i], strlen(_argv[i]));
+void CmdLineParserBase::init () {
+	_error = false;
+	_files.clear();
+}
+
+/** Parses all options given on the command line. 
+ *  @param[in] printErrors enable/disable printing of error messages */
+void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
+	init();
+	_printErrors = printErrors;
+	for (int i=1; i < argc; i++) {
+		CharInputBuffer ib(argv[i], strlen(argv[i]));
 		BufferInputReader ir(ib);
-		const Option *opt;
 		if (ir.peek() == '-') {
 			ir.get();
 			if (ir.peek() == '-') {
@@ -42,27 +50,28 @@ void CmdLineParserBase::parse () {
 				while (isalnum(ir.peek()) || ir.peek() == '-')
 					longname += ir.get();
 				if (const Option *opt = option(longname))
-					opt->handler(ir, *opt, true);
-				else
-					Message::estream(false) << "unknown option --" << longname << endl;
+					(*opt->handler)(this, ir, *opt, true);
+				else {
+					if (printErrors)
+						Message::estream(false) << "unknown option --" << longname << endl;
+					_error = true;
+				}
 			}
 			else {
 				// scan short option
 				char shortname = ir.get();
 				if (const Option *opt = option(shortname))
-					opt->handler(ir, *opt, false);
-				else
-					Message::estream(false) << "unknown option -" << shortname << endl;
+					(*opt->handler)(this, ir, *opt, false);
+				else {
+					if (printErrors)
+						Message::estream(false) << "unknown option -" << shortname << endl;
+					_error = true;
+				}
 			}
 		}
 		else
-			_files.push_back(_argv[i]);
+			_files.push_back(argv[i]);
 	}
-}
-
-
-void CmdLineParserBase::out (const char *str) const {
-	cout << str;
 }
 
 
@@ -71,19 +80,22 @@ void CmdLineParserBase::out (const char *str) const {
  *  @param[in] longopt the long option name was scanned 
  *  @param[in] msg message to be printed */
 void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg) const {
-	Message::estream(false) << "commandline option ";
-	if (longopt)
-		Message::estream(false) << "--" << opt.longname;
-	else
-		Message::estream(false) << '-' << opt.shortname;
-	Message::estream(false) << ": " << msg << endl;
+	if (_printErrors) {
+		Message::estream(false) << "commandline option ";
+		if (longopt)
+			Message::estream(false) << "--" << opt.longname;
+		else
+			Message::estream(false) << '-' << opt.shortname;
+		Message::estream(false) << ": " << msg << endl;
+	}
+	_error = true;
 }
 
 
 /** Lists the scanned filenames. Just for debugging purposes. */
 void CmdLineParserBase::status () const {
 	cout << "file names:\n";
-	for (int i=0; i < _files.size(); i++)
+	for (size_t i=0; i < _files.size(); i++)
 		cout << "  " << _files[i] << endl;
 	cout << endl;
 }

@@ -11,13 +11,14 @@ AM_CXXFLAGS = -I../src -I../../src -Wall
 ## and run the tests!
 check_PROGRAMS = test-all
 
-# "test-all" should be automatically executed when calling "make check"
+# "test-all" should automatically be executed when calling "make check"
 TESTS = test-all
 
 # the tests to be executed are implemented in the following header files
-test_all_headers = CalculatorTest.h ColorSpecialTest.h DirectoryTest.h FontManagerTest.h \
-	FontMapTest.h FileFinderTest.h GraphicPathTest.h MatrixTest.h StreamCounterTest.h \
-	PageSizeTest.h SplittedCharInputBufferTest.h StreamInputBufferTest.h VectorStreamTest.h
+test_all_headers = CalculatorTest.h ColorSpecialTest.h CommandLineTest.h DirectoryTest.h \
+	FontManagerTest.h FontMapTest.h FileFinderTest.h GraphicPathTest.h MatrixTest.h \
+   StreamCounterTest.h PageSizeTest.h SplittedCharInputBufferTest.h StreamInputBufferTest.h \
+	VectorStreamTest.h
 
 test_all_SOURCES      = $(test_all_headers) test-all.cpp 
 test_all_LDADD        = ../src/libdvisvgm.a

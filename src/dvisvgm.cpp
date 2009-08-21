@@ -25,8 +25,8 @@
 #include <string>
 #include <sys/timeb.h>
 #include <time.h>
-#include "cmdline.h"
 #include "gzstream.h"
+#include "CommandLine.h"
 #include "DVIToSVG.h"
 #include "FileSystem.h"
 #include "Message.h"
@@ -66,16 +66,10 @@ class Pointer
 };
 
 
-static void show_help () {
-   cmdline_parser_print_help();
+static void show_help (const CommandLine &cmd) {
+	cout << PACKAGE_STRING "\n\n";
+	cmd.help();
    cout << "\nCopyright (C) 2005-2009 Martin Gieseking" EMAIL "\n\n";
-}
-
-
-static char* tolower (char *str) {
-	for (char *p=str; *p; ++p)
-		*p = tolower(*p);
-	return str;
 }
 
 
@@ -114,28 +108,28 @@ static double get_time () {
 }
 
 
-static void set_trans (DVIToSVG &dvisvg, const gengetopt_args_info &args) {
+static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 	ostringstream oss;
-	if (args.rotate_given)
-		oss << 'R' << args.rotate_arg << ",w/2,h/2";
-	if (args.translate_given)
-		oss << 'T' << args.translate_arg;
-	if (args.scale_given)
-		oss << 'S' << args.scale_arg;
-	if (args.transform_given)
-		oss << args.transform_arg;
+	if (args.rotate_given())
+		oss << 'R' << args.rotate_arg() << ",w/2,h/2";
+	if (args.translate_given())
+		oss << 'T' << args.translate_arg();
+	if (args.scale_given())
+		oss << 'S' << args.scale_arg();
+	if (args.transform_given())
+		oss << args.transform_arg();
 	dvisvg.setTransformation(oss.str());
 }
 
 
-static bool set_cache_dir (const gengetopt_args_info &args) {
-	if (args.cache_given && strcmp(args.cache_arg, "?") != 0) {
-		if (strcmp(args.cache_arg, "none") == 0) 
+static bool set_cache_dir (const CommandLine &args) {
+	if (args.cache_given() && args.cache_arg() != "?") {
+		if (args.cache_arg() == "none") 
 			SVGFontTraceEmitter::CACHE_PATH = 0;
-		else if (FileSystem::exists(args.cache_arg))
-			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg;
+		else if (FileSystem::exists(args.cache_arg().c_str()))
+			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg().c_str();
 		else
-			Message::wstream(true) << "cache directory " << args.cache_arg << " does not exist (caching disabled)" << endl;
+			Message::wstream(true) << "cache directory " << args.cache_arg() << " does not exist (caching disabled)" << endl;
 	}
 	else {
 		const char *userdir = FileSystem::userdir();
@@ -147,7 +141,7 @@ static bool set_cache_dir (const gengetopt_args_info &args) {
 				FileSystem::mkdir(path.c_str());
 			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
 		}		
-		if (args.cache_given && strcmp(args.cache_arg, "?") == 0) {
+		if (args.cache_given() && args.cache_arg() == "?") {
 			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
 			return false;
 		}
@@ -157,15 +151,16 @@ static bool set_cache_dir (const gengetopt_args_info &args) {
 
 
 int main (int argc, char *argv[]) {
-	struct gengetopt_args_info args;
-	if (cmdline_parser(argc, argv, &args))
+	CommandLine args;
+	args.parse(argc, argv);
+	if (args.error())
 		return 1;
 
-	if (args.version_given) {
-		cout << PACKAGE_NAME " " PACKAGE_VERSION << endl;
+	if (args.version_given()) {
+		cout << PACKAGE_STRING "\n";
 		return 0;
 	}
-	if (args.list_specials_given) {
+	if (args.list_specials_given()) {
 		DVIToSVG dvisvg(cin, cout);
 		if (const SpecialManager *sm = dvisvg.setProcessSpecials())
 			sm->writeHandlerInfo(cout);
@@ -175,38 +170,38 @@ int main (int argc, char *argv[]) {
 	if (!set_cache_dir(args))
 		return 0;
 
-	if (args.inputs_num < 1 || args.help_given) {
-		show_help();
+	if (args.numFiles() < 1 || args.help_given()) {
+		show_help(args);
 		return 0;
 	}
 
-	if (args.stdout_given && args.zip_given) {
+	if (args.stdout_given() && args.zip_given()) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
 	}
-	if (args.map_file_given)
-		FileFinder::setUserFontMap(args.map_file_arg);
+	if (args.map_file_given())
+		FileFinder::setUserFontMap(args.map_file_arg().c_str());
 
-	DVIToSVG::CREATE_STYLE = !args.no_styles_given;
-	DVIToSVG::USE_FONTS = !args.no_fonts_given;
-	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given;
-	SVGFontTraceEmitter::METAFONT_MAG = args.mag_arg;
+	DVIToSVG::CREATE_STYLE = !args.no_styles_given();
+	DVIToSVG::USE_FONTS = !args.no_fonts_given();
+	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given();
+	SVGFontTraceEmitter::METAFONT_MAG = args.mag_arg();
 
 	double start_time = get_time();
 	
-	string dvifile = ensure_suffix(args.inputs[0], "dvi");
-	string svgfile = args.output_given ? args.output_arg : remove_suffix(remove_path(dvifile));
-	svgfile = ensure_suffix(svgfile, args.zip_given ? "svgz" : "svg");	
+	string dvifile = ensure_suffix(args.file(0), "dvi");
+	string svgfile = args.output_given() ? args.output_arg() : remove_suffix(remove_path(dvifile));
+	svgfile = ensure_suffix(svgfile, args.zip_given() ? "svgz" : "svg");	
 	
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
    if (!ifs)
       Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
 	else {
 		Pointer<ostream> out;
-		if (args.stdout_given) 
+		if (args.stdout_given()) 
 			out = Pointer<ostream>(&cout, false);
-		else if (args.zip_given) 
-			out = Pointer<ostream>(new ogzstream(svgfile.c_str(), args.zip_arg));
+		else if (args.zip_given()) 
+			out = Pointer<ostream>(new ogzstream(svgfile.c_str(), args.zip_arg()));
 		else 
 			out = Pointer<ostream>(new ofstream(svgfile.c_str(), ios_base::binary));
 		
@@ -214,30 +209,29 @@ int main (int argc, char *argv[]) {
       	Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
 		else {
 			StreamCounter<char> sc(*out);
-			Message::level = args.verbosity_arg;
+			Message::level = args.verbosity_arg();
 			DVIToSVG dvisvg(ifs, *out);
-			const char *ignore_specials = args.no_specials_given ? (args.no_specials_arg ? args.no_specials_arg : "*") : 0;
+			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
 			dvisvg.setProcessSpecials(ignore_specials);
 			set_trans(dvisvg, args);
-			tolower(args.bbox_format_arg);
-			dvisvg.setPageSize(args.bbox_format_arg);
+			dvisvg.setPageSize(args.bbox_format_arg());
 			
 			try {
-				FileFinder::init(argv[0], !args.no_mktexmf_given);
-				if (int pages = dvisvg.convert(args.page_arg, args.page_arg)) {
-					if (!args.stdout_given)
+				FileFinder::init(argv[0], !args.no_mktexmf_given());
+				if (int pages = dvisvg.convert(args.page_arg(), args.page_arg())) {
+					if (!args.stdout_given())
 						sc.invalidate();  // output buffer is no longer valid
 					// valgrind issues an invalid conditional jump/move in the deflate function of libz here.
 					// According to libz FAQ #36 this is not a bug but intended behavior.
 					out.release();       // force writing
 					const char *pstr = pages == 1 ? "" : "s";
-					UInt64 nbytes = args.stdout_given ? sc.count() : FileSystem::filesize(svgfile);
+					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
 					Message::mstream() << pages << " page" << pstr; 
 					Message::mstream() << " (" << nbytes << " bytes";
-					if (args.zip_given)
+					if (args.zip_given())
 						Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
 					Message::mstream() << ") written to " 
-						<< (args.stdout_given ? "<stdout>" : svgfile)
+						<< (args.stdout_given() ? "<stdout>" : svgfile)
 						<< " in " << (get_time()-start_time) << " seconds\n";
 				}
 			}
