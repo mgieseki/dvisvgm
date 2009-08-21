@@ -1,3 +1,9 @@
+dvisvgm-0.8.2
+- changed license of dvisvgm to GPL version 3 or later
+- replaced getopt-based commandline parser by own implementation
+  in order to simplify future internationalizations
+- fixed memory bug in fontmap reader
+
 dvisvgm-0.8.1
 - added evaluation of more psfile parameters
 - fixed computation of bounding box in psfile special
