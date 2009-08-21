@@ -115,7 +115,7 @@ void FontMap::readPdfMap (istream &is) {
 				fields.push_back(first);
 			first = last+1;
 		}
-		if (fields[1] == "default" || fields[1] == "none")
+		if (fields.size() > 1 && (fields[1] == "default" || fields[1] == "none"))
 			fields[1].clear();
 
 		if (fields.size() < 2)
