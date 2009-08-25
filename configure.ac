@@ -53,22 +53,30 @@ case $host in
 		if test -z "$kpseversion"; then
 	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
 		fi
-
-#		AC_CHECK_HEADER([ghostscript/iapi.h], 
-#			AC_CHECK_LIB(gs, gsapi_new_instance, 
-#				[AC_DEFINE(HAVE_GS, 1, [Set to 1 if Ghostscript development files are installed]) LDFLAGS="$LDFLAGS -lgs"], 
-#				[AC_MSG_WARN([PostScript support disabled])]),
-#			[AC_MSG_WARN([PostScript support disabled])])
 	;;
 esac
+
+# Check how to link Ghostscript
+HAVE_GS_DEVEL=0
+AC_CHECK_HEADER([ghostscript/iapi.h], 
+	AC_CHECK_LIB(gs, gsapi_new_instance, 
+		[AC_DEFINE(HAVE_GS_DEVEL, 1, [Set to 1 if Ghostscript development files are installed]) HAVE_GS_DEVEL=1]))
+
+if test "$HAVE_GS_DEVEL" == 1; then
+	LDFLAGS="$LDFLAGS -lgs"
+else
+	AC_CHECK_LIB(dl, dlopen, 
+	   LDFLAGS="$LDFLAGS -ldl", 
+		[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
+		 AC_MSG_WARN(PostScript support disabled)])
+fi
 
 # Check for libraries.
 AC_CHECK_LIB(freetype, FT_Init_FreeType, , 
 	[AC_MSG_ERROR([freetype library not found, please install it first])])
 
-AC_CHECK_LIB(dl, dlopen, , LDFLAGS="$LDFLAGS -ldl")
 AC_CHECK_LIB(z, gzopen)
-AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
+#AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
 
 # Check for header files.
 AC_HEADER_DIRENT

@@ -21,18 +21,48 @@
 #ifndef GHOSTSCRIPT_H
 #define GHOSTSCRIPT_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string>
-#include "DLLoader.h"
+#if HAVE_GS_DEVEL
+   #include <ghostscript/iapi.h>
+#else
+   #include "DLLoader.h"
+   #include "iapi.h"
+#endif
 
 #if defined(__WIN32__) && !defined(_Windows)
 	#define _Windows
 #endif
 
-#include "iapi.h"
+#if DISABLE_GS
+struct Ghostscript
+{
+	typedef int (GSDLLCALLPTR Stdin) (void *caller, char *buf, int len);
+	typedef int (GSDLLCALLPTR Stdout) (void *caller, const char *str, int len); 
+	typedef int (GSDLLCALLPTR Stderr) (void *caller, const char *str, int len);  
 
+	Ghostscript () {}
+	Ghostscript (int argc, const char **argv, void *caller=0) {}
+	bool available () {return false;}
+	bool revision (gsapi_revision_t *r) {return false;}
+	std::string revision () {return "";}
+	int set_stdio (Stdin in, Stdout out, Stderr err) {return 0;}
+	int run_string_begin (int user_errors, int *pexit_code) {return 0;}
+	int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code) {return 0;}
+	int run_string_end (int user_errors, int *pexit_code) {return 0;}
+	int exit () {return 0;}
+};
+
+#else
 
 /** Wrapper class of (a subset of) the Ghostscript API. */
-class Ghostscript : public DLLoader
+class Ghostscript 
+#if !HAVE_GS_DEVEL
+: public DLLoader
+#endif
 {
 	public:
 		typedef int (GSDLLCALLPTR Stdin) (void *caller, char *buf, int len);
@@ -61,5 +91,7 @@ class Ghostscript : public DLLoader
 	private:
 		void *_inst; ///< Ghostscript handle needed to call the gsapi_foo functions
 };
+
+#endif  // DISABLE_GS
 
 #endif

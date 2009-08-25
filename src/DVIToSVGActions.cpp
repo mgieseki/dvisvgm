@@ -18,6 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <cstring>
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
@@ -39,7 +43,9 @@
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
 //#include "HtmlSpecialHandler.h"
-#include "PsSpecialHandler.h"
+#if !DISABLE_GS
+	#include "PsSpecialHandler.h"
+#endif
 #include "TpicSpecialHandler.h"
 ///////////////////////////////////
 
@@ -86,9 +92,11 @@ const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelis
 			0
 		};
 		SpecialHandler **p = handlers;
+#if !DISABLE_GS
 		if (Ghostscript().available())
 			*p = new PsSpecialHandler;
 		else
+#endif
 			p++;
 		_specialManager.unregisterHandlers();
 		_specialManager.registerHandlers(p, ignorelist);

@@ -18,23 +18,29 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
+#include "Ghostscript.h"
+#if !DISABLE_GS
+
 #include <cstring>
 #include <sstream>
-#include "Ghostscript.h"
 
 using namespace std;
 
 #ifdef __WIN32__
-#define GS_DL_NAME "gsdll32.dll"
+	#define GS_DL_NAME "gsdll32.dll"
 #else
-#define GS_DL_NAME "libgs.so"
+	#define GS_DL_NAME "libgs.so"
 #endif
 
 
 /** Loads the Ghostscript library but does not create an instance. This
  *  constructor should only be used to call available() and revision(). */
-Ghostscript::Ghostscript () : DLLoader(GS_DL_NAME), _inst(0)
+Ghostscript::Ghostscript () 
+#if !HAVE_GS_DEVEL
+: DLLoader(GS_DL_NAME)
+#endif
 {
+	_inst = 0;
 }
 
 
@@ -42,8 +48,10 @@ Ghostscript::Ghostscript () : DLLoader(GS_DL_NAME), _inst(0)
  * @param[in] argc number of parameters in array argv
  * @param[in] argv parameters passed to Ghostscript 
  * @param[in] caller this parameter is passed to all callback functions */
-Ghostscript::Ghostscript (int argc, const char **argv, void *caller) 
+Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
+#if !HAVE_GS_DEVEL
 	: DLLoader(GS_DL_NAME)
+#endif
 {
 	int status = new_instance(&_inst, caller);
 	if (status < 0) 
@@ -65,7 +73,11 @@ Ghostscript::~Ghostscript () {
 
 /** Returns true if Ghostscript library was found and can be loaded. */
 bool Ghostscript::available () {
+#if HAVE_GS_DEVEL
+	return true;
+#else
 	return loaded();
+#endif
 }
 
 
@@ -73,9 +85,13 @@ bool Ghostscript::available () {
  * @param[out] r takes the revision information (see GS API documentation for further details) 
  * @return true on success  */
 bool Ghostscript::revision (gsapi_revision_t *r) {
+#if HAVE_GS_DEVEL
+	return (gsapi_revision(r, sizeof(gsapi_revision_t)) == 0);
+#else
 	if (PFN_gsapi_revision fn = (PFN_gsapi_revision)loadFunction("gsapi_revision"))
 		return (fn(r, sizeof(gsapi_revision_t)) == 0);
 	return false;
+#endif
 }
 
 
@@ -95,26 +111,38 @@ string Ghostscript::revision () {
  *  @param[out] psinst handle of newly created instance (or 0 on error)
  *  @param[in] caller pointer forwarded to callback functions */
 int Ghostscript::new_instance (void **psinst, void *caller) {
+#if HAVE_GS_DEVEL
+	return gsapi_new_instance(psinst, caller);
+#else
 	if (PFN_gsapi_new_instance fn = (PFN_gsapi_new_instance)loadFunction("gsapi_new_instance"))
 		return fn(psinst, caller);
    *psinst = 0;
 	return 0;
+#endif
 }
 
 
 /** Destroys the current instance of Ghostscript. This method is called by the destructor
  *  and should not be used elsewhere. */
 void Ghostscript::delete_instance () {
+#if HAVE_GS_DEVEL
+	gsapi_delete_instance(_inst);
+#else
 	if (PFN_gsapi_delete_instance fn = (PFN_gsapi_delete_instance)loadFunction("gsapi_delete_instance"))
 		fn(_inst);
+#endif
 }
 
 
 /** Exits the interpreter. Must be called before destroying the GS instance. */
 int Ghostscript::exit () {
+#if HAVE_GS_DEVEL
+	return gsapi_exit(_inst);
+#else
 	if (PFN_gsapi_exit fn = (PFN_gsapi_exit)loadFunction("gsapi_exit"))
 		return fn(_inst);
 	return 0;
+#endif
 }
 
 
@@ -123,9 +151,13 @@ int Ghostscript::exit () {
  * @param[in] out pointer to stdout handler
  * @param[in] err pointer to stderr handler */
 int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
+#if HAVE_GS_DEVEL
+	return gsapi_set_stdio(_inst, in, out, err);
+#else
 	if (PFN_gsapi_set_stdio fn = (PFN_gsapi_set_stdio)loadFunction("gsapi_set_stdio"))
 		return fn(_inst, in, out, err);
 	return 0;
+#endif
 }
 
 
@@ -134,18 +166,26 @@ int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
  *  @param[in] argc number of paramters
  *  @param[in] argv parameters passed to Ghostscript */
 int Ghostscript::init_with_args (int argc, char **argv) {
+#if HAVE_GS_DEVEL
+	return gsapi_init_with_args(_inst, argc, argv);
+#else
 	if (PFN_gsapi_init_with_args fn = (PFN_gsapi_init_with_args)loadFunction("gsapi_init_with_args"))
 		return fn(_inst, argc, argv);
 	return 0;
+#endif
 }
 
 
 /** Tells Ghostscript that several calls of run_string_continue will follow. */
 int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
+#if HAVE_GS_DEVEL
+	return gsapi_run_string_begin(_inst, user_errors, pexit_code);
+#else
 	if (PFN_gsapi_run_string_begin fn = (PFN_gsapi_run_string_begin)loadFunction("gsapi_run_string_begin"))
 		return fn(_inst, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;
+#endif
 }
 
 
@@ -157,18 +197,27 @@ int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
  *  @param[in] user_errors if non-negative, the default PS error values will be generated, otherwise this value is returned 
  *  @param[out] pexit_code takes the PS error code */
 int Ghostscript::run_string_continue (const char *str, unsigned length, int user_errors, int *pexit_code) {
+#if HAVE_GS_DEVEL
+	return gsapi_run_string_continue(_inst, str, length, user_errors, pexit_code);
+#else
 	if (PFN_gsapi_run_string_continue fn = (PFN_gsapi_run_string_continue)loadFunction("gsapi_run_string_continue"))
 		return fn(_inst, str, length, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;
+#endif
 }
 
 
 /** Terminates the successive code feeding. Must be called after the last call of run_string_continue. */
 int Ghostscript::run_string_end (int user_errors, int *pexit_code) {
+#if HAVE_GS_DEVEL
+	return gsapi_run_string_end(_inst, user_errors, pexit_code);
+#else
 	if (PFN_gsapi_run_string_end fn = (PFN_gsapi_run_string_end)loadFunction("gsapi_run_string_end"))
 		return fn(_inst, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;
+#endif
 }
 
+#endif  // !DISABLE_GS
