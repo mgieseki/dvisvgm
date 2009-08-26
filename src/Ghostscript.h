@@ -26,7 +26,7 @@
 #endif
 
 #include <string>
-#if HAVE_GS_DEVEL
+#if HAVE_LIBGS
    #include <ghostscript/iapi.h>
 #else
    #include "DLLoader.h"
@@ -60,7 +60,7 @@ struct Ghostscript
 
 /** Wrapper class of (a subset of) the Ghostscript API. */
 class Ghostscript 
-#if !HAVE_GS_DEVEL
+#if !HAVE_LIBGS
 : public DLLoader
 #endif
 {
