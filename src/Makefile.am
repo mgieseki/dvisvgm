@@ -9,7 +9,7 @@ noinst_LIBRARIES     = libdvisvgm.a
 dvisvgm_SOURCES      = gzstream.h StreamCounter.h \
 							  dvisvgm.cpp gzstream.cpp
 							  
-dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
+dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CharmapTranslator.h CmdLineParserBase.h Color.h \
@@ -28,7 +28,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 
 EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h
 
-AM_CXXFLAGS = -I../potracelib -I../../potracelib -Wall
+AM_CXXFLAGS = -Wall
 
 # the commandline parser is generated from options.xml by opt2cpp
 CommandLine.cpp: options.xml

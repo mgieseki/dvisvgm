@@ -53,22 +53,64 @@ case $host in
 		if test -z "$kpseversion"; then
 	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
 		fi
-
-#		AC_CHECK_HEADER([ghostscript/iapi.h], 
-#			AC_CHECK_LIB(gs, gsapi_new_instance, 
-#				[AC_DEFINE(HAVE_GS, 1, [Set to 1 if Ghostscript development files are installed]) LDFLAGS="$LDFLAGS -lgs"], 
-#				[AC_MSG_WARN([PostScript support disabled])]),
-#			[AC_MSG_WARN([PostScript support disabled])])
 	;;
 esac
+
+
+# Check how to link potracelib
+HAVE_LIBPOTRACE=1
+AC_CHECK_HEADER([potracelib.h], 
+	[AC_CHECK_LIB(m, sqrt) # required to pass potrace check
+	 AC_CHECK_LIB(potrace, potrace_trace, , HAVE_LIBPOTRACE=0)], HAVE_LIBPOTRACE=0)
+
+if test "$HAVE_LIBPOTRACE" -eq 0; then
+	AM_CPPFLAGS="$AM_CXXFLAGS -I../potracelib -I../../potracelib"
+	EXTRA_LIBS="$EXTRA_LIBS ../potracelib/libpotrace.a "
+	AC_MSG_NOTICE([Using bundled potrace library])
+fi
+
+
+# Check how to link Ghostscript
+HAVE_LIBGS=1
+AC_CHECK_HEADER([ghostscript/iapi.h], 
+	AC_CHECK_LIB(gs, gsapi_new_instance, , HAVE_LIBGS=0), HAVE_LIBGS=0)
+
+if test "$HAVE_LIBGS" -eq 0; then
+	AC_CHECK_LIB(dl, dlopen, ,
+		[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
+		 AC_MSG_WARN(PostScript support disabled)])
+else
+	# query Ghostscript version
+	AC_MSG_CHECKING([Ghostscript version])
+	AC_TRY_RUN([#include <stdio.h>
+		#include <ghostscript/iapi.h>
+		int main () {
+			gsapi_revision_t r;
+			if (gsapi_revision(&r, sizeof(gsapi_revision_t)) == 0) {
+				FILE *f; 
+				f = fopen("gsversion", "w");
+				if (!f) exit(1);
+				fprintf(f, "%d\n", r.revision);
+				fclose(f);
+				exit(0);
+			}
+		}],
+		[gsversion=`cat gsversion|cut -c1-3`], [gsversion=], [gsversion=unknown])
+	AC_MSG_RESULT("$gsversion")
+	if test "$gsversion" -lt 831; then
+		# current Ghostscript API was introduced in version 8.31
+		# older versions are not supported
+		AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
+		AC_MSG_WARN([Ghostscript version < 8.31; PostScript support disabled])
+	fi
+fi
 
 # Check for libraries.
 AC_CHECK_LIB(freetype, FT_Init_FreeType, , 
 	[AC_MSG_ERROR([freetype library not found, please install it first])])
 
-AC_CHECK_LIB(dl, dlopen, , LDFLAGS="$LDFLAGS -ldl")
 AC_CHECK_LIB(z, gzopen)
-AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
+#AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
 
 # Check for header files.
 AC_HEADER_DIRENT
@@ -146,5 +188,7 @@ fi
 
 AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
+AC_SUBST(AM_CPPFLAGS)
+AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
 AC_OUTPUT
