@@ -1,0 +1,41 @@
+diff -r 618333cc6178 Makefile.am
+--- a/Makefile.am	Mon Aug 24 12:49:11 2009 +0200
++++ b/Makefile.am	Mon Aug 24 13:12:38 2009 +0200
+@@ -5,5 +5,5 @@
+ 
+ AUTOMAKE_OPTIONS = foreign
+ EXTRA_DIST = COPYING
+-SUBDIRS = potracelib src tests doc 
++SUBDIRS = src tests doc 
+ 
+diff -r 618333cc6178 configure.ac
+--- a/configure.ac	Mon Aug 24 12:49:11 2009 +0200
++++ b/configure.ac	Mon Aug 24 13:12:38 2009 +0200
+@@ -146,5 +146,5 @@
+ 
+ AC_SUBST(DATE)
+ AC_SUBST(EXTRA_LIBS)
+-AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
++AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
+ AC_OUTPUT
+diff -r 618333cc6178 src/Makefile.am
+--- a/src/Makefile.am	Mon Aug 24 12:49:11 2009 +0200
++++ b/src/Makefile.am	Mon Aug 24 13:12:38 2009 +0200
+@@ -9,7 +9,7 @@
+ dvisvgm_SOURCES      = gzstream.h StreamCounter.h \
+ 							  dvisvgm.cpp gzstream.cpp
+ 							  
+-dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../potracelib/libpotrace.a
++dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ -lpotrace
+ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
+ 
+ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CharmapTranslator.h CmdLineParserBase.h Color.h \
+@@ -28,7 +28,7 @@
+ 
+ EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h
+ 
+-AM_CXXFLAGS = -I../potracelib -I../../potracelib -Wall
++AM_CXXFLAGS = -Wall
+ 
+ # the commandline parser is generated from options.xml by opt2cpp
+ CommandLine.cpp: options.xml

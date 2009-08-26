@@ -1,20 +1,31 @@
 Name:           dvisvgm
-Version:        0.8.1
-Release:        4%{?dist}
+Version:        0.8.2
+Release:        1%{?dist}
 Summary:        A DVI to SVG converter
 
 Group:          Applications/Publishing
-License:        GPLv2+
+License:        GPLv3+
 URL:            http://dvisvgm.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 
 # Patch to use potrace library provided by separate package
-Patch0:         dvisvgm-0.8.1-potrace.patch
+Patch0:         dvisvgm-potrace.patch
+# Patch to include Ghostscript header files from ghostscript-devel
+Patch1:         dvisvgm-gs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  automake kpathsea-devel freetype-devel potrace-devel zlib-devel 
-Requires:       texlive-texmf texlive-dvips texlive-fonts ghostscript
+BuildRequires:  automake freetype-devel ghostscript-devel potrace-devel zlib-devel 
+Requires:       ghostscript
+
+%if 0%{?rhel} == 4 || 0%{?rhel} == 5
+BuildRequires:  tetex-fonts
+Requires:       tetex-fonts tetex-dvips
+%else
+BuildRequires:  kpathsea-devel
+Requires:       texlive-texmf texlive-dvips texlive-fonts
+%endif
+
 
 %description
 dvisvgm is a command line utility that converts DVI files, as created by 
@@ -28,11 +39,13 @@ so that the generated SVG is freely scalable without loss of quality.
 
 %prep
 %setup -q
-%patch0 -p 1 -b .orig
+%patch0 -p1
+%patch1 -p1
 autoreconf
 # Remove bundled potracelib
 rm -rf potracelib
-
+# Remove bundled Ghostscript API headers
+rm -f src/iapi.h src/ierrors.h
 
 %build
 %configure
@@ -50,12 +63,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS LICENSE NEWS README
+%doc AUTHORS COPYING NEWS README
 %{_bindir}/dvisvgm
 %{_mandir}/man1/dvisvgm.1.*
 
 
 %changelog
+* Mon Aug 24 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.2-1
+- updated to latest upstream release
+- use Ghostscript API headers from ghostscript-devel
+- conditional Requires and BuildRequires to satisfy F-11 and EL5
+
+* Wed Aug 12 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.1-5
+- adapted Build and BuildRequires to requirements of EL5
+
 * Tue Aug 03 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.1-4
 - removed bundled potrace library in prep section
 
