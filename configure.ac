@@ -35,7 +35,6 @@ case $host in
 			[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
 
 		AC_MSG_CHECKING([kpathsea version])
-#		AC_CHANGE_FLAGS([$KPATHSEA_CFLAGS], [$KPATHSEA_LDFLAGS], [-lkpathsea])
 		AC_TRY_RUN([#include <stdio.h>
   			#include <kpathsea/kpathsea.h>
 			extern char *kpathsea_version_string;
@@ -97,6 +96,7 @@ else
 		}],
 		[gsversion=`cat gsversion|cut -c1-3`], [gsversion=], [gsversion=unknown])
 	AC_MSG_RESULT("$gsversion")
+	rm -f gsversion > /dev/null
 	if test "$gsversion" -lt 831; then
 		# current Ghostscript API was introduced in version 8.31
 		# older versions are not supported
@@ -141,19 +141,13 @@ AC_ARG_WITH(freetype,[  --with-freetype=DIR     location of the FreeType2 librar
 			FREETYPE_DIR=$withval
 		fi
 	 fi])
-#AC_ARG_WITH(potrace,[  --with-potrace=DIR      location of the potrace library],
-#	[if test "$withval" != no; then
-#		if test "$withval" != yes; then
-#			POTRACE_DIR=$withval
-#		fi
-#	fi])
+
 AC_ARG_WITH(zlib,[  --with-zlib=DIR         location of the zlib library],
 	[if test "$withval" != no; then
 		if test "$withval" != yes; then
 			ZLIB_DIR=$withval
 		fi
 	fi])
-
 
 if test "$withval" != no; then
 	if test -n "$FREETYPE_DIR"; then
@@ -173,11 +167,6 @@ if test "$withval" != no; then
 			LDFLAGS="$LDFLAGS -L$FREETYPE_DIR/lib"
 		fi
 	fi
-
-#	if test -n "$POTRACE_DIR"; then
-#		CPPFLAGS="$CPPFLAGS -I$POTRACE_DIR -I$POTRACE_DIR/include"
-#		LDFLAGS="$LDFLAGS -L$POTRACE_DIR/lib"
-#	fi
 
 	if test -n "$ZLIB_DIR"; then
 		CPPFLAGS="$CPPFLAGS -I$ZLIB_DIR -I$ZLIB_DIR/include"

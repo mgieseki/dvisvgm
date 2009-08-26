@@ -25,7 +25,6 @@
 #include <cstring>
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
-#include "DVIReader.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
@@ -35,26 +34,11 @@
 #include "XMLNode.h"
 #include "XMLString.h"
 
-///////////////////////////////////
-// special handlers
-
-#include "BgColorSpecialHandler.h"
-#include "ColorSpecialHandler.h"
-#include "DvisvgmSpecialHandler.h"
-#include "EmSpecialHandler.h"
-//#include "HtmlSpecialHandler.h"
-#if !DISABLE_GS
-	#include "PsSpecialHandler.h"
-#endif
-#include "TpicSpecialHandler.h"
-///////////////////////////////////
-
-
 using namespace std;
 
 
-DVIToSVGActions::DVIToSVGActions (const DVIReader &reader, SVGTree &svg) 
-	: _svg(svg), _dviReader(reader), _pageMatrix(0), _bgcolor(Color::WHITE)
+DVIToSVGActions::DVIToSVGActions (const DVIToSVG &dvisvg, SVGTree &svg) 
+	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;
@@ -65,43 +49,6 @@ DVIToSVGActions::~DVIToSVGActions () {
 	delete _pageMatrix;
 	FORALL (_charmapTranslatorMap, CharmapTranslatorMap::iterator, i)
 		delete i->second;
-}
-
-
-/** Enables or disables processing of specials. If ignorelist == 0, all 
- *  supported special handlers are loaded. To disable selected sets of specials,
- *  the corresponding prefixes can be given separated by non alpha-numeric characters,
- *  e.g. "color, ps, em" or "color: ps em" etc.
- *  A single "*" in the ignore list disables all specials.
- *  @param[in] ignorelist list of special prefixes to ignore 
- *  @return the SpecialManager that handles special statements */
-const SpecialManager* DVIToSVGActions::setProcessSpecials (const char *ignorelist) {
-	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
-		_specialManager.unregisterHandlers();
-	}
-	else {
-		// add special handlers
-		SpecialHandler *handlers[] = {
-			0,                          // placeholder for PsSpecialHandler
-			new BgColorSpecialHandler,  // handles background color special
-			new ColorSpecialHandler,    // handles color specials
-			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
-			new EmSpecialHandler,       // handles emTeX specials
-//			new HtmlSpecialHandler,     // handles hyperref specials
-			new TpicSpecialHandler,     // handles tpic specials
-			0
-		};
-		SpecialHandler **p = handlers;
-#if !DISABLE_GS
-		if (Ghostscript().available())
-			*p = new PsSpecialHandler;
-		else
-#endif
-			p++;
-		_specialManager.unregisterHandlers();
-		_specialManager.registerHandlers(p, ignorelist);
-	}
-	return &_specialManager;
 }
 
 
@@ -131,7 +78,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	_usedCharsMap[font].insert(c);
 
 	const CharmapTranslator *cmt = _charmapTranslatorMap[font->uniqueFont()];
-	_svg.appendChar(c, x, y, _dviReader.getFontManager(), *cmt);
+	_svg.appendChar(c, x, y, _dvisvg.getFontManager(), *cmt);
 
 	// update bounding box
 	if (font) {
@@ -201,7 +148,7 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
  *  @param[in] s the special expression */
 void DVIToSVGActions::special (const string &s) {
 	try {
-		_specialManager.process(s, this);
+		_dvisvg.specialManager().process(s, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
@@ -241,7 +188,6 @@ CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) cons
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
-	_specialManager.notifyEndPage();
 	if (_pageMatrix)
 		_svg.transformPage(*_pageMatrix);
 	if (_bgcolor != Color::WHITE) {

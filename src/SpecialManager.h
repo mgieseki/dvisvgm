@@ -42,7 +42,7 @@ class SpecialManager
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		void unregisterHandlers ();
-		bool process (const std::string &special, SpecialActions *actions);
+		bool process (const std::string &special, SpecialActions *actions) const;
 		void notifyEndPage ();
 		void writeHandlerInfo (std::ostream &os) const;
 

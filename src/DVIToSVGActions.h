@@ -32,7 +32,7 @@
 
 
 class CharmapTranslator;
-class DVIReader;
+class DVIToSVG;
 class FileFinder;
 class Font;
 class XMLNode;
@@ -43,7 +43,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
 	
 	public:
-		DVIToSVGActions (const DVIReader &reader, SVGTree &svg);
+		DVIToSVGActions (const DVIToSVG &dvisvg, SVGTree &svg);
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
@@ -64,17 +64,15 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void beginPage (Int32 *c);
 		void endPage ();
 		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
-		const SpecialManager* setProcessSpecials (const char *ignorelist);
 		void setPageMatrix (const Matrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
-		int getX() const     {return _dviReader.getXPos();}
-		int getY() const     {return _dviReader.getYPos();}
+		int getX() const     {return _dvisvg.getXPos();}
+		int getY() const     {return _dvisvg.getYPos();}
 		BoundingBox& bbox () {return _bbox;}
 
 	private:
 		SVGTree &_svg;
-		const DVIReader &_dviReader;
-		SpecialManager _specialManager;
+		const DVIToSVG &_dvisvg;
 		BoundingBox _bbox;
 		int _pageCount;
 		int _currentFontNum;

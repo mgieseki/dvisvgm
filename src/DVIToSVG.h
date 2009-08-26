@@ -23,10 +23,8 @@
 
 #include <iostream>
 #include "DVIReader.h"
+#include "SpecialManager.h"
 #include "SVGTree.h"
-
-
-class SpecialManager;
 
 
 class DVIToSVG : public DVIReader
@@ -37,6 +35,7 @@ class DVIToSVG : public DVIReader
 		int convert (unsigned firstPage, unsigned lastPage);
 		void setPageSize (string name)    {_pageSizeName = name;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
+		const SpecialManager& specialManager () const {return _specialManager;}
 		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
 	
 	protected:
@@ -51,6 +50,7 @@ class DVIToSVG : public DVIReader
 		std::ostream &_out;       ///< DVI output is written to this stream
 		std::string _pageSizeName;
 		std::string _transCmds;
+		SpecialManager _specialManager;
 
 	public:
 		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?

@@ -98,8 +98,6 @@ const char* PsSpecialHandler::info () const {
 
 
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	if (!actions)
-		return true;
 	if (!_initialized)
 		initialize();
 	_actions = actions;
@@ -127,11 +125,13 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
-		StreamInputReader in(is);
-		string fname = in.getString(in.peek() == '"' ? '"' : 0);
-		map<string,string> attr;
-		in.parseAttributes(attr);
-		psfile(fname, attr);
+		if (_actions) {
+			StreamInputReader in(is);
+			string fname = in.getString(in.peek() == '"' ? '"' : 0);
+			map<string,string> attr;
+			in.parseAttributes(attr);
+			psfile(fname, attr);
+		}
 	}
 	else if (strcmp(prefix, "ps::") == 0) {
 		if (is.peek() != '[') {
@@ -282,7 +282,7 @@ void PsSpecialHandler::closepath (std::vector<double> &p) {
 /** Draws the current path recorded by previously executed path commands (moveto, lineto,...). 
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (std::vector<double> &p) {
-	if (!_path.empty()) {
+	if (!_path.empty() && _actions) {
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
@@ -339,7 +339,7 @@ void PsSpecialHandler::stroke (std::vector<double> &p) {
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (std::vector<double> &p, bool evenodd) {
-	if (!_path.empty()) {
+	if (!_path.empty() && _actions) {
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
@@ -386,7 +386,7 @@ void PsSpecialHandler::initclip (std::vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (std::vector<double> &p, bool evenodd) {
 	// when this method is called, _path contains the clipping path
-	if (!_path.empty()) {
+	if (!_path.empty() && _actions) {
 		if (!_actions->getMatrix().isIdentity())
 			_path.transform(_actions->getMatrix());
 		ostringstream oss;
@@ -413,22 +413,24 @@ void PsSpecialHandler::newpath (std::vector<double> &p) {
 
 
 void PsSpecialHandler::setmatrix (std::vector<double> &p) {
-	// Ensure vector p has 6 elements. If necessary, add missing ones
-	// using corresponding values of the identity matrix.
-	if (p.size() < 6) {
-		p.resize(6);
-		for (int i=p.size(); i < 6; i++)
-			p[i] = (i%3 ? 0 : 1);
+	if (_actions) {
+		// Ensure vector p has 6 elements. If necessary, add missing ones
+		// using corresponding values of the identity matrix.
+		if (p.size() < 6) {
+			p.resize(6);
+			for (int i=p.size(); i < 6; i++)
+				p[i] = (i%3 ? 0 : 1);
+		}
+		// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
+		// Since PS uses left multiplications, we must transpose and reorder 
+		// the matrix to ((a,c,e),(b,d,f),(0,0,1)). This is done by the
+		// following swaps.
+		swap(p[1], p[2]);  // => (a, c, b, d, e, f)
+		swap(p[2], p[4]);  // => (a, c, e, d, b, f)
+		swap(p[3], p[4]);  // => (a, c, e, b, d, f)
+		Matrix m(p);
+		_actions->setMatrix(m);
 	}
-	// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
-	// Since PS uses left multiplications, we must transpose and reorder 
-	// the matrix to ((a,c,e),(b,d,f),(0,0,1)). This is done by the
-	// following swaps.
-	swap(p[1], p[2]);  // => (a, c, b, d, e, f)
-	swap(p[2], p[4]);  // => (a, c, e, d, b, f)
-	swap(p[3], p[4]);  // => (a, c, e, b, d, f)
-	Matrix m(p);
-	_actions->setMatrix(m);
 }
 
 
@@ -438,51 +440,64 @@ void PsSpecialHandler::setmatrix (std::vector<double> &p) {
 
 
 void PsSpecialHandler::scale (std::vector<double> &p) {
-	Matrix m = _actions->getMatrix();
-	ScalingMatrix s(p[0], p[1]);
-	m.lmultiply(s);
-	_actions->setMatrix(m);
+	if (_actions) {
+		Matrix m = _actions->getMatrix();
+		ScalingMatrix s(p[0], p[1]);
+		m.lmultiply(s);
+		_actions->setMatrix(m);
+	}
 }
 
 
 void PsSpecialHandler::translate (std::vector<double> &p) {
-	Matrix m = _actions->getMatrix();
-	TranslationMatrix t(p[0], p[1]);
-	m.lmultiply(t);
-	_actions->setMatrix(m);
+	if (_actions) {
+		Matrix m = _actions->getMatrix();
+		TranslationMatrix t(p[0], p[1]);
+		m.lmultiply(t);
+		_actions->setMatrix(m);
+	}
 }
 
 
 void PsSpecialHandler::rotate (std::vector<double> &p) {
-	Matrix m = _actions->getMatrix();
-	RotationMatrix r(p[0]);
-	m.lmultiply(r);
-	_actions->setMatrix(m);
+	if (_actions) {
+		Matrix m = _actions->getMatrix();
+		RotationMatrix r(p[0]);
+		m.lmultiply(r);
+		_actions->setMatrix(m);
+	}
 }
 
 void PsSpecialHandler::setgray (std::vector<double> &p) {
-	Color c;
-	c.setGray((float)p[0]);
-	_actions->setColor(c);
+	if (_actions) {
+		Color c;
+		c.setGray((float)p[0]);
+		_actions->setColor(c);
+	}
 }
 
 
 void PsSpecialHandler::setrgbcolor (std::vector<double> &p) {
-	_actions->setColor(Color((float)p[0], (float)p[1], (float)p[2]));
+	if (_actions)
+		_actions->setColor(Color((float)p[0], (float)p[1], (float)p[2]));
 }
 
 
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
-	Color c;
-	c.setCMYK(p[0], p[1], p[2], p[3]);
-	_actions->setColor(c);
+	if (_actions) {
+		Color c;
+		c.setCMYK(p[0], p[1], p[2], p[3]);
+		_actions->setColor(c);
+	}
 }
 
 
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
-	Color c;
-	c.setHSB(p[0], p[1], p[2]);
-	_actions->setColor(c);
+	if (_actions) {
+		Color c;
+		c.setHSB(p[0], p[1], p[2]);
+		_actions->setColor(c);
+	}
 }
 
 

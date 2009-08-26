@@ -94,7 +94,7 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
  *  @param[in] actions actions the special handlers can perform
  *  @return true if a special handler was found 
  *  @throw SpecialException in case of errors during special processing */
-bool SpecialManager::process (const string &special, SpecialActions *actions) {
+bool SpecialManager::process (const string &special, SpecialActions *actions) const {
 	istringstream iss(special);
 	string prefix;
 	int c;
