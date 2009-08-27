@@ -123,13 +123,13 @@ static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 
 
 static bool set_cache_dir (const CommandLine &args) {
-	if (args.cache_given() && args.cache_arg() != "?") {
+	if (args.cache_given() && !args.cache_arg().empty()) {
 		if (args.cache_arg() == "none") 
 			SVGFontTraceEmitter::CACHE_PATH = 0;
 		else if (FileSystem::exists(args.cache_arg().c_str()))
 			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg().c_str();
 		else
-			Message::wstream(true) << "cache directory " << args.cache_arg() << " does not exist (caching disabled)" << endl;
+			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)" << endl;
 	}
 	else {
 		const char *userdir = FileSystem::userdir();
@@ -141,7 +141,7 @@ static bool set_cache_dir (const CommandLine &args) {
 				FileSystem::mkdir(path.c_str());
 			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
 		}		
-		if (args.cache_given() && args.cache_arg() == "?") {
+		if (args.cache_given() && args.cache_arg().empty()) {
 			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
 			return false;
 		}

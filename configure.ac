@@ -4,7 +4,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[0.8.2],[martin.gieseking@uos.de])
+AC_INIT([dvisvgm],[0.8.3],[martin.gieseking@uos.de])
 DATE="August 2009"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
@@ -96,10 +96,11 @@ else
 		}],
 		[gsversion=`cat gsversion|cut -c1-3`], [gsversion=], [gsversion=unknown])
 	AC_MSG_RESULT("$gsversion")
-	rm -f gsversion > /dev/null
+	rm -f gsversion >/dev/null
 	if test "$gsversion" -lt 831; then
 		# current Ghostscript API was introduced in version 8.31
 		# older versions are not supported
+		LIBS=`echo $LIBS | sed "s/-lgs //" $LIBS`
 		AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
 		AC_MSG_WARN([Ghostscript version < 8.31; PostScript support disabled])
 	fi

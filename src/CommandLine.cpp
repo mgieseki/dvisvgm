@@ -93,7 +93,7 @@ void CommandLine::help () const {
    puts("  -t, --translate=tx[,ty]       shift page content");
    puts("  -T, --transform=commands      transform page content");
    puts("\nProcessing options:");
-   puts("  -C, --cache=dir               set cache directory");
+   puts("  -C, --cache[=dir]             set/print path of cache directory");
    puts("  -M, --mag=factor              magnification of Metafont output (default: 4)");
    puts("      --no-mktexmf              don't try to create missing fonts");
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
@@ -176,7 +176,7 @@ void CommandLine::handle_transform(InputReader &ir, const Option &opt, bool long
 
 
 void CommandLine::handle_cache(InputReader &ir, const Option &opt, bool longopt) {
-   if (getStringArg(ir, opt, longopt, _cache_arg))
+   if (ir.eof() || getStringArg(ir, opt, longopt, _cache_arg))
       _cache_given = true;
 }
 

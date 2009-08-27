@@ -2,6 +2,7 @@ dvisvgm-0.8.3
 - improved checks for Ghostscript and potrace library in configure script
 - external Ghostscript and potrace development files are used if available
 - PostScript header/prologue files are now loaded regardless of converted page
+- replaced command-line option variant --cache=? by --cache
 
 dvisvgm-0.8.2
 - changed license of dvisvgm to GPL version 3 or later

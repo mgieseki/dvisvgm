@@ -80,7 +80,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
  *  @param[in] msg message to be printed */
 void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg) const {
 	if (_printErrors) {
-		Message::estream(false) << "commandline option ";
+		Message::estream(false) << "command line option ";
 		if (longopt)
 			Message::estream(false) << "--" << opt.longname;
 		else
