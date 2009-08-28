@@ -374,6 +374,7 @@ void PsSpecialHandler::fill (std::vector<double> &p, bool evenodd) {
 	}
 }
 
+
 /** Clears the current clipping path. 
  *  @param[in] p not used */
 void PsSpecialHandler::initclip (std::vector<double> &p) {
@@ -509,6 +510,7 @@ void PsSpecialHandler::setdash (vector<double> &p) {
 		_dashpattern.push_back(p[i]*1.00375);
 	_dashoffset = p.back()*1.00375;
 }
+
 
 ////////////////////////////////////////////
 

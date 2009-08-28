@@ -170,7 +170,12 @@ int main (int argc, char *argv[]) {
 	if (!set_cache_dir(args))
 		return 0;
 
-	if (args.numFiles() < 1 || args.help_given()) {
+	if (argc > 1 && args.numFiles() < 1) {
+		Message::estream(true) << "no input file given" << endl;
+		return 1;
+	}
+		  
+	if (argc == 1 || args.help_given()) {
 		show_help(args);
 		return 0;
 	}

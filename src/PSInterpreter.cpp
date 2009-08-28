@@ -135,7 +135,6 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 			// move first and last to begin and end of the next line, respectively
 			while (last <= end && *last != '\n')
 				last++;
-
 			size_t linelength = last-first+1;
 			if (linelength > MAXLEN)  // skip long lines since they don't contain any relevant information
 				continue;
@@ -143,7 +142,7 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 			vector<char> &linebuf = self->_linebuf;  // just a shorter name...
 			if ((*last == '\n' || !self->active())) {
 				if (linelength + linebuf.size() > 5) {  // prefix "dvi." plus final newline
-					SplittedCharInputBuffer ib(linebuf.size() > 0 ? &linebuf[0] : 0, linebuf.size(), first, linelength);
+					SplittedCharInputBuffer ib(linebuf.empty() ? 0 : &linebuf[0], linebuf.size(), first, linelength);
 					BufferInputReader in(ib);
 					in.skipSpace();
 					if (self->_inError) {

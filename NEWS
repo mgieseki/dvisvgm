@@ -1,4 +1,6 @@
 dvisvgm-0.8.3
+- added basic evaluation of the PostScript "show" operator
+  (handles PSTricks Type 3 fonts properly now)
 - improved checks for Ghostscript and potrace library in configure script
 - external Ghostscript and potrace development files are used if available
 - PostScript header/prologue files are now loaded regardless of converted page
