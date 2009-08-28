@@ -1,5 +1,5 @@
 Name:           dvisvgm
-Version:        0.8.2
+Version:        0.8.3
 Release:        1%{?dist}
 Summary:        A DVI to SVG converter
 
@@ -65,9 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Aug 24 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.2-1
+* Mon Aug 24 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.3-1
 - updated to latest upstream release
-- conditional Requires and BuildRequires to satisfy F-11 and EL5
+- conditional Requires and BuildRequires to satisfy F-xx and EL5
 
 * Wed Aug 12 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.1-5
 - adapted Build and BuildRequires to requirements of EL5
