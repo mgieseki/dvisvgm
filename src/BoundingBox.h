@@ -40,6 +40,7 @@ class BoundingBox
 		void embed (const BoundingBox &bb);
 		void embed (const DPair &p) {embed(p.x(), p.y());}
 		void embed (const DPair &c, double r);
+		void expand (double m);
 		void intersect (const BoundingBox &bbox);
 		double minX () const        {return ulx;}
 		double minY () const        {return uly;}

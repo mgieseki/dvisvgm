@@ -285,6 +285,7 @@ void PsSpecialHandler::stroke (std::vector<double> &p) {
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
+		bbox.expand(_linewidth/2);
 		if (!_actions->getMatrix().isIdentity()) {
 			_path.transform(_actions->getMatrix());
 			if (!_xmlnode)

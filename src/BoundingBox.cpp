@@ -90,6 +90,14 @@ void BoundingBox::embed (const DPair &c, double r) {
 }
 
 
+void BoundingBox::expand (double m) {
+	ulx -= m;
+	uly -= m;
+	lrx += m;
+	lry += m;
+}
+
+
 void BoundingBox::intersect (const BoundingBox &bbox) {
 	ulx = max(ulx, bbox.ulx);
 	uly = max(uly, bbox.uly);
