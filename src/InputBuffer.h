@@ -22,6 +22,7 @@
 #define INPUTBUFFER_H
 
 #include <algorithm>
+#include <cstring>
 #include <istream>
 #include <string>
 #include <ostream>
@@ -91,9 +92,16 @@ class CharInputBuffer : public InputBuffer
 			}
 		}
 
-		int peek () const           {return _size > 0 ? *_pos : -1;}
-		int peek (unsigned n) const {return _size >= n ? _pos[n] : -1;}
-		bool eof () const           {return _size <= 0;}
+
+		void assign (const char *buf, unsigned size) {
+			_pos = buf; 
+			_size = size;
+		}
+
+		void assign (const char *buf) {assign(buf, strlen(buf));}
+		int peek () const             {return _size > 0 ? *_pos : -1;}
+		int peek (unsigned n) const   {return _size >= n ? _pos[n] : -1;}
+		bool eof () const             {return _size <= 0;}
 	
 	private:
 		const char *_pos;

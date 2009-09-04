@@ -56,6 +56,7 @@ class CmdLineParserBase
 			~Option () {delete handler;}
 			char shortname;
 			const char *longname;
+			char argmode;  // mode of option argument: '\0'=none, 'o'=optional, 'r'=required
 			const OptionHandler *handler;
 		};
 

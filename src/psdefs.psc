@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-const char *PSInterpreter::PSDEFS = 
+const char *PSInterpreter::PSDEFS =
 "3 dict dup begin/Install{matrix setmatrix}def/HWResolution[72.27 72.27]def/PageS"
 "ize[10000 10000]def end setpagedevice/:gsave systemdict/gsave get def/:grestore "
 "systemdict/grestore get def/@dodraw true store/prval{dup type/stringtype eq{prin"

@@ -70,14 +70,15 @@ class StreamInputReader : public InputReader
 class BufferInputReader : public InputReader
 {
 	public:
-		BufferInputReader (InputBuffer &ib) : _ib(ib) {}
-		int get ()                  {return _ib.get();}
-		int peek () const           {return _ib.peek();}
-		int peek (unsigned n) const {return _ib.peek(n);}
-		bool eof () const           {return _ib.eof();}
+		BufferInputReader (InputBuffer &ib) : _ib(&ib) {}
+		void assign (InputBuffer &ib) {_ib = &ib;}
+		int get ()                    {return _ib->get();}
+		int peek () const             {return _ib->peek();}
+		int peek (unsigned n) const   {return _ib->peek(n);}
+		bool eof () const             {return _ib->eof();}
 
 	private:
-		InputBuffer &_ib;
+		InputBuffer *_ib;
 };
 
 #endif

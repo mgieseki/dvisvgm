@@ -24,6 +24,7 @@
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "Message.h"
+#include "debug.h"
 
 using namespace std;
 
@@ -37,39 +38,62 @@ void CmdLineParserBase::init () {
 void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 	init();
 	_printErrors = printErrors;
+	bool filesOnly = false;  // 
 	for (int i=1; i < argc; i++) {
 		CharInputBuffer ib(argv[i], strlen(argv[i]));
 		BufferInputReader ir(ib);
-		if (ir.peek() == '-') {
+		if (filesOnly || ir.peek() != '-') 
+			_files.push_back(argv[i]);
+		else {
 			ir.get();
 			if (ir.peek() == '-') {
 				// scan long option
 				ir.get();
-				string longname;
-				while (isalnum(ir.peek()) || ir.peek() == '-')
-					longname += ir.get();
-				if (const Option *opt = option(longname))
-					(*opt->handler)(this, ir, *opt, true);
+				if (ir.eof())  // "--" only
+					filesOnly = true;  // treat all following options as filenames
 				else {
-					if (printErrors)
-						Message::estream(false) << "unknown option --" << longname << endl;
-					_error = true;
+					string longname;
+					while (isalnum(ir.peek()) || ir.peek() == '-')
+						longname += ir.get();
+					if (const Option *opt = option(longname))
+						(*opt->handler)(this, ir, *opt, true);
+					else if (!_error) {
+						if (printErrors)
+							Message::estream(false) << "unknown option --" << longname << endl;
+						_error = true;
+					}
 				}
 			}
 			else {
-				// scan short option
-				char shortname = ir.get();
-				if (const Option *opt = option(shortname))
-					(*opt->handler)(this, ir, *opt, false);
-				else {
-					if (printErrors)
-						Message::estream(false) << "unknown option -" << shortname << endl;
-					_error = true;
+				// scan short option(s)
+				bool combined = false;  // multiple short options combined, e.g -abc
+				do {
+					int shortname = ir.get();
+					if (const Option *opt = option(shortname)) {
+						if (!combined || opt->argmode == 0) {
+							if (opt->argmode == 'r' && strlen(argv[i]) == 2) { // required argument separated by whitespace?
+								if (i+1 < argc && argv[i+1][0] != '-')
+									ib.assign(argv[++i]);
+							}
+							(*opt->handler)(this, ir, *opt, false);
+							if (opt->argmode == 0)
+								combined = true;
+						}
+						else {
+							if (printErrors)
+								Message::estream(false) << "option -" << char(shortname) << " must be given separately\n";
+							_error = true;
+						}
+					}
+					else if (shortname > 0) {
+						if (printErrors)
+							Message::estream(false) << "unknown option -" << shortname << endl;
+						_error = true;
+					}
 				}
+				while (!_error && combined && !ir.eof());
 			}
 		}
-		else
-			_files.push_back(argv[i]);
 	}
 }
 
@@ -80,7 +104,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
  *  @param[in] msg message to be printed */
 void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg) const {
 	if (_printErrors) {
-		Message::estream(false) << "command line option ";
+		Message::estream(false) << "option ";
 		if (longopt)
 			Message::estream(false) << "--" << opt.longname;
 		else
@@ -100,7 +124,7 @@ void CmdLineParserBase::status () const {
 }
 
 
-/** Returns the option triple of a given short option name. 
+/** Returns the option information of a given short option name. 
  *  If the option name can't be found 0 is returned.
  *  @param[in] longname long version of the option without leading hyphen (e.g. p, not -p) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) const {
@@ -112,21 +136,44 @@ const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) cons
 }
 
 
-/** Returns the option triple of a given long option name.
- *  If the option name can't be found 0 is returned.
+/** Returns the option information of a given long option name.
+ *  Parameter 'longname' hasn't to be the complete long option name. The function looks up
+ *  all options that start with 'longname'. If a unique or an exact match was found, it's returned.
+ *  Otherwise, the return value is 0.
  *  @param[in] longname long version of the option without leading hyphens (e.g. param, not --param) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (const string &longname) const {
 	const Option *opts = options();
-	for (int i=0; i < numOptions(); i++)
-		if (opts[i].longname == longname)
-			return &opts[i];
-	return 0;
+	vector<const Option*> matches;  // all matching options
+	size_t len = longname.length();
+	for (int i=0; i < numOptions(); i++) {
+		if (string(opts[i].longname, len) == longname) {
+			if (len == strlen(opts[i].longname))  // exact match?
+				return &opts[i];
+			matches.push_back(&opts[i]);
+		}
+	}
+	switch (matches.size()) {
+		default:
+			if (_printErrors) {
+				Message::estream(false) << "option --" << longname << " is ambiguous (";
+				for (size_t i=0; i < matches.size(); i++) {
+					if (i > 0)
+						Message::estream(false) << ", ";
+					Message::estream(false) << matches[i]->longname;
+				}
+				Message::estream(false) << ")\n";
+			}
+			_error = true;
+
+		case 0 : return 0;
+		case 1 : return matches[0];
+	}
 }
 
 
 /** Returns true if a valid separator between option and argument was found.
- *  Arguments of long options are preceeded by a '='. The argument of a short option
- *  direcly follows the option without a separation character.
+ *  Arguments of long options are preceded by a '='. The argument of a short option
+ *  directly follows the option without a separation character.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
  *  @param[in]  longopt true if the long option name was given */
