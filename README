@@ -13,11 +13,16 @@ DEPENDENCIES
      This library is used to extract glyph outlines
      from PFB files.
 
-	* Ghostscript (http://pages.cs.wisc.edu/~ghost)
+   * Ghostscript (http://pages.cs.wisc.edu/~ghost)
      The PostScript special handler requires the Ghostscript
-	  library libgs.so (Linux) or gsdll32.dll (Windows) to be
-	  installed. If available, it's loaded dynamicially during 
-	  runtime. 
+     library libgs.so (Linux) or gsdll32.dll (Windows) to be
+     installed. If the configure script finds the corresponing 
+     Ghostscript development files on the system, it directly 
+     links against libgs.so. Otherwise, the library is looked up 
+     at runtime and PostScript support is enabled only if libgs.so 
+     could be found. 
+     Due to incompatible API changes, dvisvgm requires 
+     Ghostscript 8.31 or later.
 
    * kpathsea
      This library is part of the Web2C package and is
@@ -28,8 +33,8 @@ DEPENDENCIES
    * potracelib (http://potrace.sourceforge.net)
      Peter Selinger's bitmap tracing library is utilized to
      vectorize Metafont's bitmap output.
-	  potracelib is now part of the dvisvgm source tarball, so
-	  you don't need to create the library seperately any longer.
+     potracelib is now part of the dvisvgm source tarball, so
+     you don't need to create the library seperately any longer.
 
    * zlib (http://www.zlib.org)
      Compressed SVG files are produced by using functions
@@ -55,7 +60,7 @@ COMPILATION
 
  The tracer module calls Metafont in case of lacking TFM or PFB files
  via a system call. Please ensure that Metafont is installed and
- reachable over the search path.
+ reachable through the search path.
  
  To build Windows binaries I recommend MinGW in conjunction
  with MSYS (http://www.mingw.org). If executed within MSYS

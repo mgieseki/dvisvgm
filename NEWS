@@ -1,3 +1,8 @@
+dvisvgm-0.8.4
+- improved command line parser to be more POSIX-compliant
+- fixed clipping bug in PostScript handler
+- fixed bug in computation of bounding box
+
 dvisvgm-0.8.3
 - added basic evaluation of the PostScript "show" operator
   (handles PSTricks Type 3 fonts properly now)
