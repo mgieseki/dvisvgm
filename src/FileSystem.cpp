@@ -22,6 +22,7 @@
 #include <cstring>
 #include <fstream>
 #include "FileSystem.h"
+#include "debug.h"
 
 #ifdef __GNUC__
 #include <unistd.h>
@@ -189,8 +190,9 @@ bool FileSystem::rmdir (const char *dirname) {
 	if (dirname && isDirectory(dirname)) {
 		ok = true;
 #ifdef __WIN32__
+		string pattern = string(dirname) + "/*";
 		WIN32_FIND_DATA data; 
-		HANDLE h = FindFirstFile(dirname, &data);
+		HANDLE h = FindFirstFile(pattern.c_str(), &data);
 		bool ready = (h == INVALID_HANDLE_VALUE);
 		while (!ready && ok) {
 			const char *fname = data.cFileName;
@@ -273,11 +275,12 @@ bool FileSystem::isFile (const char *fname) {
 int FileSystem::collect (const char *dirname, vector<string> &entries) {
 	entries.clear();
 #ifdef __WIN32__
+	string pattern = string(dirname) + "/*";
 	WIN32_FIND_DATA data;
-	HANDLE h = FindFirstFile(dirname, &data);
+	HANDLE h = FindFirstFile(pattern.c_str(), &data);
 	bool ready = (h == INVALID_HANDLE_VALUE);
 	while (!ready) {
-		string fname = ent->d_name;
+		string fname = data.cFileName;
 		string path = string(dirname)+"/"+fname;
 		string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
 		if (fname != "." && fname != "..")

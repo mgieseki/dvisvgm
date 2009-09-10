@@ -304,7 +304,7 @@ bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
 			if ((*it)[0] == 'f' && it->length() > 5 && it->substr(it->length()-4) == ".fgd") {
 				FontInfo info;
 				string path = string(dirname)+"/"+(it->substr(1));
-				ifstream ifs(path.c_str());
+				ifstream ifs(path.c_str(), ios::binary);
 				if (fontinfo(ifs, info))
 					infos.push_back(info);
 			}
