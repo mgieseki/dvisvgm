@@ -44,12 +44,9 @@ void SpecialManager::unregisterHandlers () {
 void SpecialManager::registerHandler (SpecialHandler *handler) {
 	if (handler) {
 		// get array of prefixes this handler is responsible for
-		const char **pfx;
 		_pool.push_back(handler);
-		if (int n = handler->prefixes(&pfx)) { 
-			for (int i=0; i < n; i++)
-				_handlers[pfx[i]] = handler;
-		}
+		for (const char **p=handler->prefixes(); *p; ++p)
+			_handlers[*p] = handler;
 	}
 }
 

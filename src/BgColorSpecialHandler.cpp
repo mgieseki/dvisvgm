@@ -31,8 +31,7 @@ bool BgColorSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 }
 
 
-int BgColorSpecialHandler::prefixes (const char **p[]) const {
-	static const char *pfx[] = {"background"};
-	*p = pfx;
-	return 1;
+const char** BgColorSpecialHandler::prefixes () const {
+	static const char *pfx[] = {"background", 0};
+	return pfx;
 }

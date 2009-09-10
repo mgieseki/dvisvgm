@@ -38,7 +38,7 @@ struct SpecialException : public MessageException
 struct SpecialHandler
 {
 	virtual ~SpecialHandler () {}
-	virtual int prefixes (const char **p[]) const=0;
+	virtual const char** prefixes () const=0;
 	virtual const char* info () const=0;
 	virtual const char* name () const=0;
 	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;

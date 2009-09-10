@@ -328,4 +328,3 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 	return &_specialManager;
 }
 
-

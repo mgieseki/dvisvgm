@@ -84,13 +84,6 @@ void PsSpecialHandler::initialize () {
 }
 
 
-int PsSpecialHandler::prefixes (const char **p[]) const {
-	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\""};
-	*p = pfx;
-	return 7;
-}
-
-
 const char* PsSpecialHandler::info () const {
 	static string str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
 	return str.c_str();
@@ -531,3 +524,10 @@ void PsSpecialHandler::ClippingStack::dup () {
 	if (!_stack.empty())
 		_stack.push(_stack.top());
 }
+		
+
+const char** PsSpecialHandler::prefixes () const {
+	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", 0};
+	return pfx;
+}
+

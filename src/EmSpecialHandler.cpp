@@ -224,8 +224,7 @@ void EmSpecialHandler::endPage () {
 }
 		
 
-int EmSpecialHandler::prefixes (const char **p[]) const {
-	static const char *pfx[] = {"em:"};
-	*p = pfx;
-	return 1;
+const char** EmSpecialHandler::prefixes () const {
+	static const char *pfx[] = {"em:", 0};
+	return pfx;
 }

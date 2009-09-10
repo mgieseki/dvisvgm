@@ -32,9 +32,9 @@ class ColorSpecialHandler : public SpecialHandler
 
    public:
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		int prefixes (const char **p[]) const;
 		const char* name () const   {return "color";}
 		const char* info () const   {return "complete support of color specials";}
+		const char** prefixes () const;
 
 	private:
 		std::stack<RGB> _colorStack;

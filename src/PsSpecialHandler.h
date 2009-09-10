@@ -52,7 +52,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		PsSpecialHandler ();
 		const char* name () const   {return "ps";}
 		const char* info () const;
-		int prefixes (const char **p[]) const;
+		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 
 	protected:	

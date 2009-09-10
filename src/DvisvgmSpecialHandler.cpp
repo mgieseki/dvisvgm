@@ -123,8 +123,7 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 }
 
 
-int DvisvgmSpecialHandler::prefixes (const char **p[]) const {
-	static const char *pfx[] = {"dvisvgm:"};
-	*p = pfx;
-	return 1;
+const char** DvisvgmSpecialHandler::prefixes () const {
+	static const char *pfx[] = {"dvisvgm:", 0};
+	return pfx;
 }

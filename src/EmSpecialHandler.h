@@ -40,7 +40,7 @@ class EmSpecialHandler : public SpecialHandler
       EmSpecialHandler ();
 		const char* name () const   {return "em";}
 		const char* info () const   {return "line drawing statements of the emTeX special set";}
-		int prefixes (const char **p[]) const;
+		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
 		void endPage ();
 

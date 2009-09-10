@@ -30,6 +30,7 @@
 using namespace std;
 
 
+
 /** Approximates a CMYK color by an RGB triple. The component values
  *  are expected to be normalized, i.e. 0 <= cmyk[i],rgb[j] <= 1.
  *  @param[in]  cmyk color in CMYK space
@@ -261,8 +262,8 @@ bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActio
 }
 
 
-int ColorSpecialHandler::prefixes (const char **p[]) const {
-	static const char *pfx[] = {"color"};
-	*p = pfx;
-	return 1;
+const char** ColorSpecialHandler::prefixes () const {
+	static const char *pfx[] = {"color", 0};
+	return pfx;
 }
+

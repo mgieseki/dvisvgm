@@ -31,7 +31,7 @@ class TpicSpecialHandler : public SpecialHandler
 		TpicSpecialHandler ();
 		const char* info () const   {return "TPIC specials";}
 		const char* name () const   {return "tpic";}
-		int prefixes (const char **p[]) const;
+		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 		void endPage ();
 
