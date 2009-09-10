@@ -270,3 +270,35 @@ bool FileSystem::isFile (const char *fname) {
 }
 
 
+int FileSystem::collect (const char *dirname, vector<string> &entries) {
+	entries.clear();
+#ifdef __WIN32__
+	WIN32_FIND_DATA data;
+	HANDLE h = FindFirstFile(dirname, &data);
+	bool ready = (h == INVALID_HANDLE_VALUE);
+	while (!ready) {
+		string fname = ent->d_name;
+		string path = string(dirname)+"/"+fname;
+		string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
+		if (fname != "." && fname != "..")
+			entries.push_back(typechar+fname);		
+		ready = !FindNextFile(h, &data);
+	}
+	FindClose(h);
+#else
+	if (DIR *dir = opendir(dirname)) {
+		struct dirent *ent;
+		while ((ent = readdir(dir))) {
+			string fname = ent->d_name;
+			string path = string(dirname)+"/"+fname;
+			string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
+			if (fname != "." && fname != "..")
+				entries.push_back(typechar+fname);
+		}
+		closedir(dir);
+	}
+#endif
+	return entries.size();
+}
+
+

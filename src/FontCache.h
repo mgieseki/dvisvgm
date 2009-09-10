@@ -22,12 +22,24 @@
 #define FONTCACHE_H
 
 #include <iostream>
+#include <string>
 #include <map>
 #include "FontGlyph.h"
 
 class FontCache
 {
 	typedef std::map<int, const Glyph*> GlyphMap;
+
+	public:
+		struct FontInfo
+		{
+			std::string name; // fontname
+			UInt16 version;
+			UInt32 numchars;  // number of characters
+			UInt32 numbytes;  // number of bytes
+			UInt32 numcmds;   // number of path commands
+		};
+
    public:
 		FontCache ();
       ~FontCache ();
@@ -39,8 +51,12 @@ class FontCache
 		void setGlyph (int c, const Glyph *glyph);
 		void clear ();
 
+		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos);
+		static bool fontinfo (std::istream &is, FontInfo &info);
+		static void fontinfo (const char *dirname, ostream &os);
+
    private:
-		const static UInt8 VERSION = 2;
+		const static UInt8 VERSION = 3;
 		GlyphMap _glyphs;
 		bool _changed;
 };

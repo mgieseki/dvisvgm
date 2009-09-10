@@ -21,11 +21,12 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 #include "FileSystem.h"
 #include "FontCache.h"
 #include "FontGlyph.h"
-#include "gzstream.h"
+//#include "gzstream.h"
 #include "types.h"
 
 using namespace std;
@@ -129,8 +130,8 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 			dir = FileSystem::getcwd().c_str();
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
-		ogzstream ofs(oss.str().c_str(), 9, ios::binary|ios::out);
-//		ofstream ofs(oss.str().c_str(), ios::binary);
+//		ogzstream ofs(oss.str().c_str(), 9, ios::binary|ios::out);
+		ofstream ofs(oss.str().c_str(), ios::binary);
 		return write(fontname, ofs);
 	}
 	return false;
@@ -207,8 +208,8 @@ bool FontCache::read (const char *fontname, const char *dir) {
 			dir = FileSystem::getcwd().c_str();
 		ostringstream oss;
 		oss << dir << '/' << fontname << ".fgd";
-//		ifstream ifs(oss.str().c_str(), ios::binary);
-		igzstream ifs(oss.str().c_str(), 9, ios::binary|ios::in);
+		ifstream ifs(oss.str().c_str(), ios::binary);
+//		igzstream ifs(oss.str().c_str(), 9, ios::binary|ios::in);
 		return read(fontname, ifs);
 	}
 	return false;
@@ -232,8 +233,8 @@ bool FontCache::read (const char *fontname, istream &is) {
 			return false;
 		UInt32 num_glyphs = read_unsigned(4, is);
 		while (num_glyphs-- > 0) {
-			UInt32 c = read_unsigned(4, is);
-			UInt16 s = read_unsigned(2, is);
+			UInt32 c = read_unsigned(4, is);  // character code
+			UInt16 s = read_unsigned(2, is);  // number of path commands
 			Glyph *glyph = new Glyph;
 			while (s-- > 0) {
 				UInt8 cmdval = read_unsigned(1, is);
@@ -287,4 +288,98 @@ bool FontCache::read (const char *fontname, istream &is) {
 		return true;
 	}
 	return false;
+}
+
+
+/** Collects font cache information. 
+ *  @param[in]  dirname path to font cache directory 
+ *  @param[out] infos the collected data 
+ *  @return true on success */
+bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
+	infos.clear();
+	if (dirname) {
+		vector<string> fnames;
+		FileSystem::collect(dirname, fnames);
+		FORALL(fnames, vector<string>::iterator, it) {
+			if ((*it)[0] == 'f' && it->length() > 5 && it->substr(it->length()-4) == ".fgd") {
+				FontInfo info;
+				string path = string(dirname)+"/"+(it->substr(1));
+				ifstream ifs(path.c_str());
+				if (fontinfo(ifs, info))
+					infos.push_back(info);
+			}
+		}
+	}
+	return infos.size() > 0;
+}
+
+
+/** Collects font cache information of a single font. 
+ *  @param[in]  is input stream of the cache file 
+ *  @param[out] info the collected data 
+ *  @return true on success */
+bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
+	info.name.clear();
+	info.numchars = info.numbytes = info.numcmds = 0;
+	if (is) {
+		if ((info.version = read_unsigned(1, is)) != VERSION)
+			return false;
+		while (!is.eof() && is.peek() != 0) 
+			info.name += is.get();
+		is.get(); // skip 0-byte
+		info.numchars = read_unsigned(4, is);
+		for (UInt32 i=0; i < info.numchars; i++) {
+			read_unsigned(4, is);  // character code
+			UInt16 s = read_unsigned(2, is);  // number of path commands
+			while (s-- > 0) {
+				UInt8 cmdval = read_unsigned(1, is);
+				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+				int bytes = cmdval >> 5;
+				int bc = 0;
+				switch (cmdchar) {
+					case 'C': bc = 6*bytes; break;
+					case 'H':
+					case 'L':
+					case 'M':
+					case 'T':
+					case 'V': bc = 2*bytes; break;
+					case 'Q':
+					case 'S': bc = 4*bytes; break;
+					case 'Z': break;
+					default : return false;
+				}
+				info.numbytes += bc+1; // command length + command
+				info.numcmds++;
+				is.seekg(bc, ios_base::cur);
+			}
+			info.numbytes += 6; // number of path commands + char code
+		}
+		info.numbytes += 6+info.name.length(); // version + 0-byte + fontname + number of chars
+	}
+	return true;
+}
+
+
+/** Collects font cache information and write it to a stream. 
+ *  @param[in] dirname path to font cache directory 
+ *  @param[in] os output is written to this stream */
+void FontCache::fontinfo (const char *dirname, ostream &os) {
+	vector<FontInfo> infos;
+	if (fontinfo(dirname, infos)) {
+		os << "cache format version " << infos[0].version << endl;
+		typedef map<string,FontInfo*> SortMap;
+		SortMap sortmap;
+		FORALL(infos, vector<FontInfo>::iterator, it)
+			sortmap[it->name] = &(*it);
+
+		FORALL(sortmap, SortMap::iterator, it) {
+			os << setw(10) << left  << it->second->name
+				<< setw(5)  << right << it->second->numchars << " chars"
+				<< setw(10) << right << it->second->numcmds  << " cmds"
+				<< setw(10) << right << it->second->numbytes << " bytes"
+				<< endl;
+		}
+	}
+	else
+		os << "cache is empty\n";
 }

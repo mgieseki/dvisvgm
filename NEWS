@@ -1,5 +1,6 @@
 dvisvgm-0.8.4
 - improved command line parser to be more POSIX-compliant
+- option --cache prints more information about the cached fonts
 - fixed clipping bug in PostScript handler
 - fixed bug in computation of bounding box
 

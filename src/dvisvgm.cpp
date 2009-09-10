@@ -29,6 +29,7 @@
 #include "CommandLine.h"
 #include "DVIToSVG.h"
 #include "FileSystem.h"
+#include "FontCache.h"
 #include "Message.h"
 #include "FileFinder.h"
 #include "SpecialManager.h"
@@ -143,6 +144,7 @@ static bool set_cache_dir (const CommandLine &args) {
 		}		
 		if (args.cache_given() && args.cache_arg().empty()) {
 			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
+			FontCache::fontinfo(SVGFontTraceEmitter::CACHE_PATH, cout);
 			return false;
 		}
 	}

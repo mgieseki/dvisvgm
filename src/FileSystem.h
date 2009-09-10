@@ -22,21 +22,21 @@
 #define FILESYSTEM_H
 
 #include <string>
+#include <vector>
 #include "types.h"
-
-using std::string;
 
 struct FileSystem
 {
-	static bool remove (const string &fname);
-	static bool rename (const string &oldname, const string &newname);
-	static UInt64 filesize (const string &fname);
-	static string adaptPathSeperators (string path);
-	static string getcwd ();
+	static bool remove (const std::string &fname);
+	static bool rename (const std::string &oldname, const std::string &newname);
+	static UInt64 filesize (const std::string &fname);
+	static std::string adaptPathSeperators (std::string path);
+	static std::string getcwd ();
 	static bool chdir (const char *dir);
 	static bool exists (const char *file);
 	static bool mkdir (const char *dir);
 	static bool rmdir (const char *fname);
+	static int collect (const char *dirname, std::vector<std::string> &entries);
 	static bool isDirectory (const char *fname);
 	static bool isFile (const char *fname);
 	static const char* userdir ();
