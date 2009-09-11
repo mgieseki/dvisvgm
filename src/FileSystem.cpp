@@ -22,7 +22,6 @@
 #include <cstring>
 #include <fstream>
 #include "FileSystem.h"
-#include "debug.h"
 
 #ifdef __GNUC__
 #include <unistd.h>

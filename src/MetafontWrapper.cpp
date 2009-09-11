@@ -27,34 +27,50 @@
 #include "Message.h"
 #include "MetafontWrapper.h"
 
+#ifdef __WIN32__
+#include <windows.h>
+#endif
+
 using namespace std;
+
+
+static int execute (const char *cmd, const char *params) {
+#ifdef __WIN32__
+	SECURITY_ATTRIBUTES sa;
+	ZeroMemory(&sa, sizeof(sa));
+	sa.nLength = sizeof(sa);
+	sa.bInheritHandle = true;
+
+	STARTUPINFO si;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	si.dwFlags = STARTF_USESTDHANDLES;
+	HANDLE devnull = CreateFile("nul", GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, &sa, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+	si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+	si.hStdOutput = devnull;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&pi, sizeof(pi));
+
+	string cmdline = string("\"")+cmd+"\" "+params;
+	CreateProcess(NULL, (LPSTR)cmdline.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
+	WaitForSingleObject(pi.hProcess, INFINITE);
+	DWORD exitcode = -1;
+	GetExitCodeProcess(pi.hProcess, &exitcode);
+	CloseHandle(devnull);
+	return exitcode;
+#else
+	ostringstream oss;
+	oss << cmd << ' ' << params << " >" << FileSystem::DEVNULL;
+	return system(oss.str().c_str());
+#endif
+}
 
 
 MetafontWrapper::MetafontWrapper (const string &fname) 
 	: _fontname(fname)
 {
 }
-
-#if 0
-/** This helper function tries to find the mf file for a given fontname. */
-static const char* lookup (string fontname) {
-	// try to find file with exact fontname
-	string mfname = fontname+".mf";
-	if (const char *path = FileFinder::lookup(mfname))
-		return path;
-	
-	// lookup fontname with trailing numbers stripped
-	// (this will find the mf files of ec fonts)
-	int pos = fontname.length()-1;
-	while (pos >= 0 && isdigit(fontname[pos]))
-		pos--;
-	mfname = fontname.substr(0, pos+1)+".mf";
-	if (const char *path = FileFinder::lookup(mfname))
-		return path;
-	// not found either => give up
-	return 0;
-}	
-#endif
 
 
 /** Calls Metafont and evaluates the logfile. If a gf file was successfully
@@ -65,16 +81,21 @@ static const char* lookup (string fontname) {
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
 	if (!FileFinder::lookup(_fontname+".mf"))
-		return 1;     // mf file not available => no need to call the "slow" Metafont
-	
+		return 1;     // mf file not available => no need to call the "slow" Metafont	
 	FileSystem::remove(_fontname+".gf");	
+
+#ifdef __WIN32__	
+	const char *cmd = FileFinder::lookup("mf.exe", false);
+#else
+	const char *cmd = "mf";
+#endif
 	ostringstream oss;
-	oss << "mf \"\\mode=" << mode  << ";"
-		    "mag:=" << mag << ";"
-		    "batchmode;"
-		    "input " << _fontname << "\" >" << FileSystem::DEVNULL;
+	oss << "\"\\mode=" << mode  << ";"
+		   "mag:=" << mag << ";"
+		   "batchmode;"
+		   "input " << _fontname << "\""; 
 	Message::mstream() << "running Metafont for " << _fontname << endl;
-	int ret = system(oss.str().c_str());
+	int ret = execute(cmd, oss.str().c_str());
 
 	// try to read Metafont's logfile and get name of created GF file
 	ifstream ifs((_fontname+".log").c_str());
