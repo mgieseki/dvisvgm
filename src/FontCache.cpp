@@ -82,8 +82,9 @@ FontCache::~FontCache () {
 
 /** Removes all data from the cache. This does not affect the cache files. */
 void FontCache::clear () {
-	FORALL(_glyphs, GlyphMap::iterator, it)
+	FORALL(_glyphs, GlyphMap::iterator, it) {
 		delete it->second;
+	}
 	_glyphs.clear();
 }
 

@@ -202,8 +202,10 @@ void SVGFontTraceEmitter::traceAllGlyphs () {
 		for (int i=fchar; i <= lchar; i++) {
 			if (!_cache->getGlyph(i)) {
 				write_char_info(i, Message::wstream());
-				_gfTracer->executeChar(i);
-				_cache->setGlyph(i, _gfTracer->transferGlyph());
+				if (_gfTracer->executeChar(i))  // does char i exist in font? 
+					_cache->setGlyph(i, _gfTracer->transferGlyph());
+				else
+					Message::wstream() << "(empty)";
 				Message::wstream() << ']';
 			}
 		}
