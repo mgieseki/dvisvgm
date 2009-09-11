@@ -37,6 +37,9 @@
 using namespace std;
 
 
+unsigned DVIToSVGActions::PROGRESSBAR = 0;
+
+
 DVIToSVGActions::DVIToSVGActions (const DVIToSVG &dvisvg, SVGTree &svg) 
 	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE)
 {
@@ -148,12 +151,26 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
  *  @param[in] s the special expression */
 void DVIToSVGActions::special (const string &s) {
 	try {
-		_dvisvg.specialManager().process(s, this);
+		_dvisvg.specialManager().process(s, this, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
 		Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << endl;
 	}
+}
+
+
+void DVIToSVGActions::beginSpecial (const char *prefix) {
+	static unsigned count = 0;
+	if (PROGRESSBAR > 0 && ++count % PROGRESSBAR == 0) {
+		if (count == PROGRESSBAR)
+			Message::mstream(false) << ':';
+		Message::mstream(false) << '=';
+	}
+}
+
+
+void DVIToSVGActions::endSpecial (const char *) {
 }
 
 

@@ -25,6 +25,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'\0', "no-styles", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
    {'o', "output", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_output)},
    {'p', "page", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_page)},
+   {'P', "progress", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_progress)},
    {'r', "rotate", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
    {'c', "scale", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
    {'s', "stdout", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_stdout)},
@@ -50,6 +51,7 @@ void CommandLine::init () {
    _no_styles_given = false;
    _output_given = false;
    _page_given = false;
+   _progress_given = false;
    _rotate_given = false;
    _scale_given = false;
    _stdout_given = false;
@@ -67,6 +69,7 @@ void CommandLine::init () {
    _no_specials_arg.clear();
    _output_arg.clear();
    _page_arg = 1;
+   _progress_arg = 100;
    _rotate_arg = 0;
    _scale_arg.clear();
    _transform_arg.clear();
@@ -101,6 +104,7 @@ void CommandLine::help () const {
    puts("\nMessage options:");
    puts("  -h, --help                    print this help and exit");
    puts("  -l, --list-specials           print supported special sets and exit");
+   puts("  -P, --progress[=skip]         enable progess indicator (default: 100)");
    puts("  -v, --verbosity=level         set verbosity level (0-7) (default: 7)");
    puts("  -V, --version                 print version and exit");
 }
@@ -173,6 +177,12 @@ void CommandLine::handle_page(InputReader &ir, const Option &opt, bool longopt) 
 }
 
 
+void CommandLine::handle_progress(InputReader &ir, const Option &opt, bool longopt) {
+   if (ir.eof() || getUIntArg(ir, opt, longopt, _progress_arg))
+      _progress_given = true;
+}
+
+
 void CommandLine::handle_rotate(InputReader &ir, const Option &opt, bool longopt) {
    if (getDoubleArg(ir, opt, longopt, _rotate_arg))
       _rotate_given = true;
@@ -237,6 +247,7 @@ void CommandLine::status () const {
    cout << ' '<< setw(20) << "no-styles " << no_styles_given() << endl;
    cout << 'o'<< setw(20) << "output " << output_given() << setw(10) << output_arg() << endl;
    cout << 'p'<< setw(20) << "page " << page_given() << setw(10) << page_arg() << endl;
+   cout << 'P'<< setw(20) << "progress " << progress_given() << setw(10) << progress_arg() << endl;
    cout << 'r'<< setw(20) << "rotate " << rotate_given() << setw(10) << rotate_arg() << endl;
    cout << 'c'<< setw(20) << "scale " << scale_given() << setw(10) << scale_arg() << endl;
    cout << 's'<< setw(20) << "stdout " << stdout_given() << endl;

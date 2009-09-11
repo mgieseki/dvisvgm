@@ -104,6 +104,10 @@
 			<option long="list-specials" short="l">
 				<description>print supported special sets and exit</description>
 			</option>
+			<option long="progress" short="P">
+				<arg type="unsigned" name="skip" default="100" optional="yes"/>
+				<description>enable progess indicator</description>
+			</option>
 			<option long="verbosity" short="v">
 				<arg type="unsigned" name="level" default="7"/>
 				<description>set verbosity level (0-7)</description>

@@ -37,7 +37,7 @@ class FileFinder;
 class Font;
 class XMLNode;
 
-class DVIToSVGActions : public DVIActions, public SpecialActions
+class DVIToSVGActions : public DVIActions, public SpecialActions, public SpecialManager::Listener
 {
 	typedef std::map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
 	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
@@ -63,12 +63,17 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void postamble ();
 		void beginPage (Int32 *c);
 		void endPage ();
+		void beginSpecial (const char *prefix);
+		void endSpecial (const char *prefix);
 		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
 		void setPageMatrix (const Matrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 		int getX() const     {return _dvisvg.getXPos();}
 		int getY() const     {return _dvisvg.getYPos();}
 		BoundingBox& bbox () {return _bbox;}
+
+	public:
+		static unsigned PROGRESSBAR; ///< disabled if 0, indicates skip value otherwise
 
 	private:
 		SVGTree &_svg;

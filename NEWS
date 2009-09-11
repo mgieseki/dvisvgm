@@ -1,8 +1,9 @@
 dvisvgm-0.8.4
-- improved command line parser to be more POSIX-compliant
+- improved the command-line parser to be more POSIX-compliant
+- added a simple progress indicator for time-consuming special operations
 - option --cache prints more information about the cached fonts
-- fixed clipping bug in PostScript handler
-- fixed bug in computation of bounding box
+- fixed a clipping bug in the PostScript handler
+- fixed a bug in computation of the PS bounding box
 - fixed a memory bug in the GF tracer module
 
 dvisvgm-0.8.3

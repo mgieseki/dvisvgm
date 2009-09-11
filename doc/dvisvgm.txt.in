@@ -48,6 +48,18 @@ as most (manually optimized) PFB outlines but are nonetheless really nice in mos
 
 OPTIONS
 -------
+*-a, --trace-all*::
+This option forces dvisvgm not to trace just the actually needed glyphs but to trace all 
+glyphs of the bitmap fonts used in a DVI file. Since the tracing results are stored in 
+the font cache, all following conversions (without option *--trace-all*) of DVI files using 
+these fonts will be much faster. By default, only the actually referenced glyphs 
+are traced and added to the cache during a DVI conversion.
++
+[NOTE]
+This option only takes affect if font caching is active. Thus, *--trace-all* cannot be 
+combined with option *--cache=none*.
++
+
 *-b, --bbox-format*='fmt'::
 Sets the bounding box of the generated graphic to the specified format. 
 The argument fmt is argument a case-insensitive string that denotes the paper size. 
@@ -155,6 +167,13 @@ of this option don't refer to the page numbers printed on the page. Instead the 
 count is expected, where the first page always gets number 1.
 If this option is omitted, the first page will be selected.
 
+*-P, --progress*[='skip']::
+Enables a simple progress indicator shown when DVI specials are processed,
+since this can be a time-consuming operation, especially when PostScript specials are
+involved. The optional non-negative parameter 'skip' controls the indicator length:
+Every time a set of 'skip' specials has been processed, an indicator character
+is printed. Therefore, smaller values lead to a longer, more frequently updated
+progress indicator. 
 
 *-r, --rotate*='angle'::
 Rotates page content clockwise by 'angle' degrees around the page center.
@@ -164,18 +183,6 @@ This option is equivalent to *-TR*'angle'.
 *-s, --stdout*::
 Don't write output to a file but redirect it to *stdout*.
 
-
-*-a, --trace-all*::
-This option forces dvisvgm not to trace just the actually needed glyphs but to trace all 
-glyphs of the bitmap fonts used in a DVI file. Since the tracing results are stored in 
-the font cache, all following conversions (without option *--trace-all*) of DVI files using 
-these fonts will be much faster. By default, only the actually referenced glyphs 
-are traced and added to the cache during a DVI conversion.
-+
-[NOTE]
-This option only takes affect if font caching is active. Thus, *--trace-all* cannot be 
-combined with option *--cache=none*.
-+
 
 *-t, --translate*='tx'[,'ty']::
 Translates (moves) page content in direction of vector ('tx','ty'). This option is 
@@ -304,7 +311,7 @@ exact syntax, see the documentation of *dvips*, for instance.
   *dvisvgm:bbox* 'width' 'height';;
   Updates the bounding box of the current page by embedding a virtual rectangle of given 'width' and 'height'
   relative to the current DVI drawing position. This command should be used in conjunction with
-  *raw* to update the viewport of the page properly.
+  *raw* in order to properly update the viewport of the page.
 
 *em*::
 These specials were introduced with the emTeX distribution by Eberhard Mattes. They provide line drawing 

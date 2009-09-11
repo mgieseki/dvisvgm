@@ -31,18 +31,26 @@ class SpecialActions;
 
 class SpecialManager
 {
-	typedef std::vector<SpecialHandler*> HandlerPool;
-	typedef std::map<std::string,SpecialHandler*> HandlerMap;
-	typedef HandlerMap::iterator Iterator;
-	typedef HandlerMap::const_iterator ConstIterator;
+	public:
+		struct Listener
+		{
+			virtual void beginSpecial (const char *prefix)=0;
+			virtual void endSpecial (const char *prefix)=0;
+		};
 
+	private:
+		typedef std::vector<SpecialHandler*> HandlerPool;
+		typedef std::map<std::string,SpecialHandler*> HandlerMap;
+		typedef HandlerMap::iterator Iterator;
+		typedef HandlerMap::const_iterator ConstIterator;
+	
    public:
 		SpecialManager () {}
       ~SpecialManager ();
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		void unregisterHandlers ();
-		bool process (const std::string &special, SpecialActions *actions) const;
+		bool process (const std::string &special, SpecialActions *actions, Listener *listener=0) const;
 		void notifyEndPage ();
 		void writeHandlerInfo (std::ostream &os) const;
 

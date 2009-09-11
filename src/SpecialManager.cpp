@@ -89,9 +89,10 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 /** Executes a special command. 
  *  @param[in] special the special expression 
  *  @param[in] actions actions the special handlers can perform
+ *  @param[in] listener object that wants to be notified about the processing state
  *  @return true if a special handler was found 
  *  @throw SpecialException in case of errors during special processing */
-bool SpecialManager::process (const string &special, SpecialActions *actions) const {
+bool SpecialManager::process (const string &special, SpecialActions *actions, Listener *listener) const {
 	istringstream iss(special);
 	string prefix;
 	int c;
@@ -99,8 +100,14 @@ bool SpecialManager::process (const string &special, SpecialActions *actions) co
 		prefix += c;
 	if (ispunct(c)) // also add seperation character to identifying prefix
 		prefix += c;
-	if (SpecialHandler *handler = findHandler(prefix))
-		return handler->process(prefix.c_str(), iss, actions);
+	if (SpecialHandler *handler = findHandler(prefix)) {
+		if (listener)
+			listener->beginSpecial(prefix.c_str());
+		bool ret = handler->process(prefix.c_str(), iss, actions);
+		if (listener)
+			listener->endSpecial(prefix.c_str());
+		return ret;
+	}
 	return false;
 }
 

@@ -16,7 +16,7 @@ class CommandLine : public CmdLineParserBase
       CommandLine (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
       void help () const;
       void status () const;
-      int numOptions () const {return 21;}
+      int numOptions () const {return 22;}
       bool page_given () const {return _page_given;}
       unsigned page_arg () const {return _page_arg;}
       bool map_file_given () const {return _map_file_given;}
@@ -48,6 +48,8 @@ class CommandLine : public CmdLineParserBase
       bool trace_all_given () const {return _trace_all_given;}
       bool help_given () const {return _help_given;}
       bool list_specials_given () const {return _list_specials_given;}
+      bool progress_given () const {return _progress_given;}
+      unsigned progress_arg () const {return _progress_arg;}
       bool verbosity_given () const {return _verbosity_given;}
       unsigned verbosity_arg () const {return _verbosity_arg;}
       bool version_given () const {return _version_given;}
@@ -74,6 +76,7 @@ class CommandLine : public CmdLineParserBase
       void handle_trace_all (InputReader &ir, const Option &opt, bool longopt);
       void handle_help (InputReader &ir, const Option &opt, bool longopt);
       void handle_list_specials (InputReader &ir, const Option &opt, bool longopt);
+      void handle_progress (InputReader &ir, const Option &opt, bool longopt);
       void handle_verbosity (InputReader &ir, const Option &opt, bool longopt);
       void handle_version (InputReader &ir, const Option &opt, bool longopt);
 
@@ -110,6 +113,8 @@ class CommandLine : public CmdLineParserBase
       bool _trace_all_given;
       bool _help_given;
       bool _list_specials_given;
+      bool _progress_given;
+      unsigned _progress_arg;
       bool _verbosity_given;
       unsigned _verbosity_arg;
       bool _version_given;

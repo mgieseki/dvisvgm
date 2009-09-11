@@ -28,6 +28,7 @@
 #include "gzstream.h"
 #include "CommandLine.h"
 #include "DVIToSVG.h"
+#include "DVIToSVGActions.h"
 #include "FileSystem.h"
 #include "FontCache.h"
 #include "Message.h"
@@ -181,6 +182,9 @@ int main (int argc, char *argv[]) {
 		Message::estream(true) << "no input file given" << endl;
 		return 1;
 	}
+
+	if (args.progress_given())
+		DVIToSVGActions::PROGRESSBAR = args.progress_arg()+1;
 		  
 	if (args.stdout_given() && args.zip_given()) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
