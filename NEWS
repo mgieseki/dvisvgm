@@ -3,6 +3,7 @@ dvisvgm-0.8.4
 - added a simple progress indicator for time-consuming special operations
 - option --cache prints more information about the cached fonts
 - fixed a clipping bug in the PostScript handler
+  (thanks to John Bowman for also providing a patch for this issue)
 - fixed a bug in computation of the PS bounding box
 - fixed a memory bug in the GF tracer module
 
