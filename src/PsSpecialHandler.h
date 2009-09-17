@@ -81,7 +81,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void sethsbcolor (std::vector<double> &hsb);
 		void setlinecap (std::vector<double> &p)     {_linecap = p[0];}
 		void setlinejoin (std::vector<double> &p)    {_linejoin = p[0];}
-		void setlinewidth (std::vector<double> &p)   {_linewidth = p[0] ? p[0]*1.00375 : 0.1;}
+		void setlinewidth (std::vector<double> &p)   {_linewidth = p[0] ? p[0]*1.00375 : 0.5;}
 		void setmatrix (std::vector<double> &p);
 		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
 		void setrgbcolor (std::vector<double> &rgb);
