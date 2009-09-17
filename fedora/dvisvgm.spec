@@ -65,7 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri 04 Sep 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.4-1
+* Thu Sep 17 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.4-1
 - updated to latest upstream release
 
 * Mon Aug 24 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.3-1
