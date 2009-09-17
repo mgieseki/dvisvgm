@@ -261,9 +261,9 @@ transformation sequences. They are simply independent shorthand options for comm
 *-v, --verbosity*='level'::
 Controls the type of messages printed during a *dvisvgm* run:
   *0*;; no message output
-  *1*;; informal output only
+  *1*;; error messages only
   *2*;; warning messages only
-  *4*;; error messages only
+  *4*;; informational messages only
 
 +
 [NOTE]
