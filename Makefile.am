@@ -4,6 +4,6 @@
 ## Process this file with automake.
 
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = COPYING
+EXTRA_DIST = COPYING LGPL-2.1.txt
 SUBDIRS = potracelib src tests doc 
 
