@@ -82,10 +82,16 @@ static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 }
 
 
-static void update_bbox (double w, double h, SpecialActions *actions) {
+/** Embeds the virtual rectangle (x, y ,w , h) into the current bounding box,
+ *  where (x,y) is the lower left vertex composed of the current DVI position. 
+ *  @param[in] w width of the rectangle in TeX point units 
+ *  @param[in] h height of the rectangle in TeX point units 
+ *  @param[in] d depth of the rectangle in TeX point units */
+static void update_bbox (double w, double h, double d, SpecialActions *actions) {
 	double x = actions->getX();
 	double y = actions->getY();
-	actions->bbox().embed(BoundingBox(x, y, x+w, y+h));
+	actions->bbox().embed(BoundingBox(x, y, x+w, y-h));
+	actions->bbox().embed(BoundingBox(x, y, x+w, y+d));
 }
 
 
@@ -100,16 +106,17 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 		string cmd = in.getWord();
 		if (cmd == "raw")               // raw <text>
 			raw(in, actions);
-		else if (cmd == "bbox") {       // bbox <width> <height>
+		else if (cmd == "bbox") {       // bbox <width> <height> <depth>
 			double w = in.getDouble();
 			double h = in.getDouble();
-			update_bbox(w, h, actions);
+			double d = in.getDouble();
+			update_bbox(w, h, d, actions);
 		}
 		else if (cmd == "img") {        // img <width> <height> <file>
 			double w = in.getDouble();
 			double h = in.getDouble();
 			string f = in.getString();
-			update_bbox(w, h, actions);
+			update_bbox(w, h, 0, actions);
 			XMLElementNode *img = new XMLElementNode("image");
 			img->addAttribute("x", actions->getX());
 			img->addAttribute("y", actions->getY());
