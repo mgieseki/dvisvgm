@@ -21,8 +21,8 @@ DEPENDENCIES
      links against libgs.so. Otherwise, the library is looked up 
      at runtime and PostScript support is enabled only if libgs.so 
      could be found. 
-     Due to incompatible API changes, dvisvgm requires 
-     Ghostscript 8.31 or later.
+     Due to incompatible changes of the Ghostscript API, dvisvgm 
+     requires Ghostscript 8.31 or later.
 
    * kpathsea
      This library is part of the Web2C package and is
@@ -40,7 +40,8 @@ DEPENDENCIES
      Compressed SVG files are produced by using functions
      of this library and the Gzstream wrapper classes
      (http://www.cs.unc.edu/Research/compgeom/gzstream)
-     which should be included with this package.
+     which are licensed under LGPL version 2.1 (or optionally any 
+     later version) and should be included with this package.
 
 
 COMPILATION

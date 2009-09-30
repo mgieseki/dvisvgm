@@ -1,3 +1,8 @@
+dvisvgm-0.8.5
+- added optional depth parameter to special dvisvgm:raw
+- updated man page
+- added LGPL license text needed for gzstream wrapper classes
+
 dvisvgm-0.8.4
 - improved the command-line parser to be more POSIX-compliant
 - added a simple progress indicator for time-consuming special operations
