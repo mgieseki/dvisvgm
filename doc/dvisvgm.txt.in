@@ -118,7 +118,7 @@ its own map file but tries to use available ones coming with *dvips* or *dvipdfm
 option *-m* is not given *dvisvgm* looks for +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order).
 Without further options, the file specified by option *-m* will be used instead of the 
 default maps. If you want *dvisgvm* to load the given file additionally to the default maps, add a 
-leading '\+' to the file/path, e.g. `--map-file=\+myfonts.map`.
+leading '+' to the file/path, e.g. `--map-file=+myfonts.map`.
 For further information about the file format see the manuals of *dvips* and *dvipdfm*. 
 
 
