@@ -131,9 +131,10 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			// execute literal PostScript (without any wrapping code)
 			set_current_pos(_psi, actions);
 			_psi.execute(is);
-			if (_actions) {
-				_actions->setX(_pos.x());
-				_actions->setY(_pos.y());
+			DPair pos;
+			if (_actions && _path.lastMoveTo(pos)) {
+				_actions->setX(pos.x());
+				_actions->setY(pos.y());
 			}
 		}
 		else {
@@ -165,9 +166,10 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		else {
 			// execute literal PostScript (without any wrapping code)
 			_psi.execute(is);
-			if (_actions) {
-				_actions->setX(_pos.x());
-				_actions->setY(_pos.y());
+			DPair pos;
+			if (_actions && _path.lastMoveTo(pos)) {
+				_actions->setX(pos.x());
+				_actions->setY(pos.y());
 			}
 		}
 	}
@@ -261,7 +263,6 @@ void PsSpecialHandler::grestore (vector<double> &p) {
 
 void PsSpecialHandler::moveto (vector<double> &p) {
 	_path.moveto(p[0], p[1]);
-	_pos = DPair(p[0], p[1]);
 }
 
 

@@ -89,6 +89,7 @@ class GraphicPath
 
 	typedef typename std::vector<Command>::iterator Iterator;
 	typedef typename std::vector<Command>::const_iterator ConstIterator;
+	typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
 
    public:
 		void newpath () {
@@ -176,6 +177,15 @@ class GraphicPath
 		}
 
 		void iterate (Actions &actions, bool optimize) const;
+
+		bool lastMoveTo (Point &p) const {
+			for (ConstRevIterator it=_commands.rbegin(); it != _commands.rend(); ++it)
+				if (it->type == Command::MOVETO) {
+					p = it->params[0];
+					return true;
+				}
+			return false;
+		}
 
    private:
 		std::vector<Command> _commands;
