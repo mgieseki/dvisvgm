@@ -88,7 +88,7 @@ Following size names are supported:
 
 +
 [NOTE]
-Option *-b, --bbox-format* only affects the bounding box and doesn't transform the page content. Hence if 
+Option *-b, --bbox-format* only affects the bounding box and does not transform the page content. Hence if 
 you choose a landscape format the page won't be rotated.
 +
 
@@ -113,12 +113,12 @@ separated from the rest of the statement by a colon or a blank, e.g. 'color' or 
 
 
 *-m, --map-file*='file'::
-Sets the map file that is used to look up font names and encodings. *dvisvgm* doesn't provide
+Sets the map file that is used to look up font names and encodings. *dvisvgm* does not provide
 its own map file but tries to use available ones coming with *dvips* or *dvipdfm*. If 
 option *-m* is not given *dvisvgm* looks for +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order).
 Without further options, the file specified by option *-m* will be used instead of the 
 default maps. If you want *dvisgvm* to load the given file additionally to the default maps, add a 
-leading '\+' to the file/path, e.g. `--map-file=\+myfonts.map`.
+leading '+' to the file/path, e.g. `--map-file=+myfonts.map`.
 For further information about the file format see the manuals of *dvips* and *dvipdfm*. 
 
 
@@ -211,11 +211,11 @@ parameters. Following transformation commands are supported:
   
   *KX* 'angle';;
     Skews page along the 'x'-axis by 'angle' degrees. Argument 'angle' can take any value
-    except 90+180'k', where 'k' is an integer.
+    except 90+180__k__, where 'k' is an integer.
   
   *KY* 'angle';;
     Skews page along the 'y'-axis by 'angle' degrees. Argument 'angle' can take any value
-    except 90+180'k', where 'k' is an integer.
+    except 90+180__k__, where 'k' is an integer.
   
   *FH* ['y'];;
   Mirrors (flips) page at the horizontal line through point (0,'y'). Omitting the optional argument
@@ -307,7 +307,7 @@ exact syntax, see the documentation of *dvips*, for instance.
  
   *dvisvgm:img* 'width' 'height' 'file';;
   Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
-  can be used here. However, *dvisvgm* doesn't check the file format or the file name suffix. The lengths 'width'
+  can be used here. However, *dvisvgm* does not check the file format or the file name suffix. The lengths 'width'
   and 'height' must be given in TeX point units (1in = 72.27pt).
  
   *dvisvgm:bbox* 'width' 'height' ['depth'];;
