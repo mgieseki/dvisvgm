@@ -40,7 +40,7 @@ using namespace std;
 unsigned DVIToSVGActions::PROGRESSBAR = 0;
 
 
-DVIToSVGActions::DVIToSVGActions (const DVIToSVG &dvisvg, SVGTree &svg) 
+DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg) 
 	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE)
 {
 	_currentFontNum = -1;

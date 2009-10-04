@@ -94,6 +94,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		bool _initialized;
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		GraphicPath<double> _path;
+		DPair _pos;                 ///< current drawing position
 		float _linewidth;           ///< current linewidth
 		float _miterlimit;          ///< current miter limit
 		unsigned _linecap  : 2;     ///< current line cap (0=butt, 1=round, 2=projecting square)

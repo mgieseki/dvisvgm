@@ -43,7 +43,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
 	
 	public:
-		DVIToSVGActions (const DVIToSVG &dvisvg, SVGTree &svg);
+		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
 		~DVIToSVGActions ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
@@ -68,8 +68,10 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
 		void setPageMatrix (const Matrix &tm);
 		CharmapTranslator* getCharmapTranslator (const Font *font) const;
-		int getX() const     {return _dvisvg.getXPos();}
-		int getY() const     {return _dvisvg.getYPos();}
+		double getX() const  {return _dvisvg.getXPos();}
+		double getY() const  {return _dvisvg.getYPos();}
+		void setX (double x) {_dvisvg.setXPos(x);}
+		void setY (double y) {_dvisvg.setYPos(y);}
 		BoundingBox& bbox () {return _bbox;}
 
 	public:
@@ -77,7 +79,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 
 	private:
 		SVGTree &_svg;
-		const DVIToSVG &_dvisvg;
+		DVIToSVG &_dvisvg;
 		BoundingBox _bbox;
 		int _pageCount;
 		int _currentFontNum;

@@ -31,8 +31,10 @@ class XMLNode;
 struct SpecialActions
 {
 	virtual ~SpecialActions () {}
-	virtual int getX() const =0;
-	virtual int getY() const =0;
+	virtual double getX() const =0;
+	virtual double getY() const =0;
+	virtual void setX(double x) =0;
+	virtual void setY(double y) =0;
 	virtual void setColor (const Color &color) =0;
 	virtual Color getColor () const =0;
 	virtual void setMatrix (const Matrix &m) =0;
@@ -47,8 +49,10 @@ struct SpecialActions
 class SpecialEmptyActions : public SpecialActions
 {
 	public:
-		int getX() const {return 0;}
-		int getY() const {return 0;}
+		double getX() const {return 0;}
+		double getY() const {return 0;}
+		void setX(double x) {}
+		void setY(double y) {}
 		void setColor (const Color &color) {}
 		void setBgColor (const Color &color) {}
 		Color getColor () const {return 0;}

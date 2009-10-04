@@ -230,15 +230,30 @@ double DVIReader::getXPos () const {
 	return _currPos.h;
 }
 
+
 /** Returns the current y coordinate in TeX point units. 
  *  This is the vertical position where the next output would be placed. */
 double DVIReader::getYPos () const {
 	return _currPos.v;
 }
 
+
+/** Sets the horizontal position in TeX point units. */
+void DVIReader::setXPos (double x) {
+	_currPos.h = x;
+}
+
+
+/** Sets the vertical position in TeX point units. */
+void DVIReader::setYPos (double y) {
+	_currPos.v = y;
+}
+
+
 double DVIReader::getPageHeight () const {
 	return _pageHeight;
 }
+
 
 double DVIReader::getPageWidth () const {
 	return _pageWidth;

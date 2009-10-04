@@ -66,6 +66,8 @@ class DVIReader : public StreamReader, protected VFActions
 		bool isInPostamble () const                {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
+		void setXPos (double x);
+		void setYPos (double y);
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const          {return _currFontNum;}
