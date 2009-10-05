@@ -1,3 +1,7 @@
+dvisvgm-0.8.6
+- fixed PS bounding box bug
+- fixed a couple of PS positioning issues reported by John Bowman
+
 dvisvgm-0.8.5
 - added optional depth parameter to special dvisvgm:raw
 - updated man page

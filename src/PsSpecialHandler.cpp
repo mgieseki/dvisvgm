@@ -199,12 +199,12 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*BP : 0;
 		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second)*BP : 612*BP;
 		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second)*BP : 792*BP;
-		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second)*BP : 100;
-		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second)*BP : 100;
-		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second)*BP : 0;
+		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
+		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
+		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
 		
 		double x=_actions->getX(), y=_actions->getY();
-		double w=(urx-llx)*BP, h=(ury-lly)*BP;  // width and height of (E)PS image in TeX points
+		double w=(urx-llx), h=(ury-lly);  // width and height of (E)PS image in TeX points
 		if (w <= 0)
 			w = hsize;
 		if (h <= 0)
@@ -316,9 +316,9 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
-			BoundingBox clipbox;
-			_clipStack.top()->computeBBox(clipbox);
-			bbox.intersect(clipbox);
+//			BoundingBox clipbox;
+//			_clipStack.top()->computeBBox(clipbox);
+//			bbox.intersect(clipbox);
 		}
 		if (_dashpattern.size() > 0) {
 			ostringstream oss;
@@ -369,9 +369,9 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
-			BoundingBox clipbox;
-			_clipStack.top()->computeBBox(clipbox);
-			bbox.intersect(clipbox);
+//			BoundingBox clipbox;
+//			_clipStack.top()->computeBBox(clipbox);
+//			bbox.intersect(clipbox);
 		}
 		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 			path->addAttribute("fill-rule", "evenodd");
