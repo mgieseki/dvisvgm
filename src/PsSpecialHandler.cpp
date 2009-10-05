@@ -285,6 +285,10 @@ void PsSpecialHandler::closepath (vector<double> &p) {
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
 	if (!_path.empty() && _actions) {
+		const double pt = 72.27/72.0;
+		ScalingMatrix scale(pt,pt);
+		_path.transform(scale);
+
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
@@ -343,6 +347,10 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (!_path.empty() && _actions) {
+		const double pt = 72.27/72.0;
+		ScalingMatrix scale(pt,pt);
+		_path.transform(scale);
+
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
