@@ -1,5 +1,5 @@
 Name:           dvisvgm
-Version:        0.8.5
+Version:        0.8.6
 Release:        1%{?dist}
 Summary:        A DVI to SVG converter
 
@@ -65,8 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Sep 30 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.5-1
-- updated to latest upstream release
+* Tue Oct 06 2009  Martin Gieseking <martin.gieseking@uos.de> - 0.8.6-1
+- updated to latest upstream release 0.8.6
 
 * Thu Sep 17 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.4-1
 - updated to latest upstream release
