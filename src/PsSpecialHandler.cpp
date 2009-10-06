@@ -32,15 +32,6 @@
 using namespace std;
 
 
-static inline void set_current_pos (PSInterpreter &psi, SpecialActions *actions) {
-	if (actions) {
-		ostringstream oss;
-		oss << ' ' << actions->getX() << ' ' << actions->getY() << " moveto ";
-		psi.execute(oss.str());
-	}
-}
-
-
 static inline double str2double (const string &str) {
 	double ret;
 	istringstream iss(str);
@@ -90,6 +81,17 @@ const char* PsSpecialHandler::info () const {
 }
 
 
+void PsSpecialHandler::updatePos () {
+	if (_actions) {
+		ostringstream oss;
+		const double x = _actions->getX(), y = _actions->getY();
+		oss << ' ' << x << ' ' << y << " moveto ";
+		_psi.execute(oss.str());
+		_currentpoint = DPair(x, y);
+	}
+}
+
+
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!_initialized)
 		initialize();
@@ -97,7 +99,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 
 	if (*prefix == '"') { 
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
-		set_current_pos(_psi, actions);
+		updatePos();
 		_psi.execute(" @beginspecial @setspecial ");
 		_psi.execute(is);
 		_psi.execute(" @endspecial ");
@@ -116,6 +118,8 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			ifstream ifs(path);
 			_psi.execute(ifs);
 		}
+		else
+			Message::estream(true) << "PS header file '" << fname << "' not found";
 	}
 	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
 		if (_actions) {
@@ -128,14 +132,11 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	}
 	else if (strcmp(prefix, "ps::") == 0) {
 		if (is.peek() != '[') {
-			// execute literal PostScript (without any wrapping code)
-			set_current_pos(_psi, actions);
+			// execute literal PostScript without initial positioning and without any wrapping code
 			_psi.execute(is);
-			DPair pos;
-			if (_actions && _path.lastMoveTo(pos)) {
-				_actions->setX(pos.x());
-				_actions->setY(pos.y());
-			}
+			_psi.execute(" setpos ");  // forces a call of PSActions::setpos to get the current PS position
+			_actions->setX(_currentpoint.x());
+			_actions->setY(_currentpoint.y());
 		}
 		else {
 			is.get();
@@ -143,9 +144,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			int c;
 			while (!is.eof() && (c = is.get()) != ']')
 				label += c;
-			if (label == "begin")
-				set_current_pos(_psi, actions);
-			else if (label != "end") {
+			if (label != "begin" && label != "end") {
 				Message::wstream(true) << "invalid PostScript special ps::[" << label << "]\n";
 				return false;
 			}
@@ -153,7 +152,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else { // ps: ...
-		set_current_pos(_psi, actions);
+		updatePos();
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
 			string fname = in.getString();
@@ -166,11 +165,9 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		else {
 			// execute literal PostScript (without any wrapping code)
 			_psi.execute(is);
-			DPair pos;
-			if (_actions && _path.lastMoveTo(pos)) {
-				_actions->setX(pos.x());
-				_actions->setY(pos.y());
-			}
+			_psi.execute(" setpos ");  // forces a call of PSActions::setpos to get the current PS position
+			_actions->setX(_currentpoint.x());
+			_actions->setY(_currentpoint.y());
 		}
 	}
 	return true;
@@ -182,7 +179,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 	if (!ifs)
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 	else {
-		const double BP = 72.27/72.0;
+		const double BP = 72.27/72.0;   // factor to convert bp -> pt
 		map<string,string>::const_iterator it;
 		// coordinates of lower left and upper right vertex (result in TeX points)
 		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*BP : 0;
@@ -236,7 +233,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 
 		_xmlnode = new XMLElementNode("g");
 		_xmlnode->addAttribute("transform", trans.getSVG());
-		set_current_pos(_psi, _actions);
+		updatePos();
 		_psi.execute(ifs);
 		_actions->appendToPage(_xmlnode);
 		_xmlnode = 0;
@@ -285,8 +282,8 @@ void PsSpecialHandler::closepath (vector<double> &p) {
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
 	if (!_path.empty() && _actions) {
-		const double pt = 72.27/72.0;
-		ScalingMatrix scale(pt,pt);
+		const double pt = 72.27/72.0;  // factor to convert bp -> pt
+		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
 
 		// compute bounding box
@@ -316,9 +313,9 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
-//			BoundingBox clipbox;
-//			_clipStack.top()->computeBBox(clipbox);
-//			bbox.intersect(clipbox);
+			BoundingBox clipbox;
+			_clipStack.top()->computeBBox(clipbox);
+			bbox.intersect(clipbox);
 		}
 		if (_dashpattern.size() > 0) {
 			ostringstream oss;
@@ -347,8 +344,8 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (!_path.empty() && _actions) {
-		const double pt = 72.27/72.0;
-		ScalingMatrix scale(pt,pt);
+		const double pt = 72.27/72.0;  // factor to convert bp -> pt
+		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
 
 		// compute bounding box
@@ -369,9 +366,9 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
-//			BoundingBox clipbox;
-//			_clipStack.top()->computeBBox(clipbox);
-//			bbox.intersect(clipbox);
+			BoundingBox clipbox;
+			_clipStack.top()->computeBBox(clipbox);
+			bbox.intersect(clipbox);
 		}
 		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 			path->addAttribute("fill-rule", "evenodd");

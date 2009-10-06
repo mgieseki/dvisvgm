@@ -57,6 +57,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 
 	protected:	
 		void initialize ();
+		void updatePos ();
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
 
 		void clip (std::vector<double> &p)           {clip(p, false);}
@@ -84,6 +85,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setlinewidth (std::vector<double> &p)   {_linewidth = p[0] ? p[0]*1.00375 : 0.5;}
 		void setmatrix (std::vector<double> &p);
 		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
+		void setpos (std::vector<double> &p)         {_currentpoint = DPair(p[0], p[1]);}
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
 		void translate (std::vector<double> &p);
@@ -94,6 +96,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		bool _initialized;
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		GraphicPath<double> _path;
+		DPair _currentpoint;        ///< current PS position
 		float _linewidth;           ///< current linewidth
 		float _miterlimit;          ///< current miter limit
 		unsigned _linecap  : 2;     ///< current line cap (0=butt, 1=round, 2=projecting square)

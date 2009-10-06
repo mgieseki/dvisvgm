@@ -43,7 +43,7 @@ const char *PSInterpreter::GSARGS[] = {
 
 
 PSInterpreter::PSInterpreter (PSActions *actions) 
-	: _gs(7, GSARGS, this), _mode(PS_NONE), _actions(actions), _inError(false)
+	: _gs(sizeof(GSARGS)/sizeof(char*), GSARGS, this), _mode(PS_NONE), _actions(actions), _inError(false)
 {
 	_gs.set_stdio(input, output, error);
 	_initialized = false;
@@ -224,6 +224,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"setlinewidth",  1, &PSActions::setlinewidth},
 		{"setmatrix",     6, &PSActions::setmatrix},
 		{"setmiterlimit", 1, &PSActions::setmiterlimit},
+		{"setpos",        2, &PSActions::setpos},
 		{"setrgbcolor",   3, &PSActions::setrgbcolor},
 		{"stroke",        0, &PSActions::stroke},
 		{"translate",     2, &PSActions::translate},

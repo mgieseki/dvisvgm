@@ -98,11 +98,16 @@ void BoundingBox::expand (double m) {
 }
 
 
-void BoundingBox::intersect (const BoundingBox &bbox) {
+/** Returns the intersection of the current box with bbox.
+ *  @return false if both boxes are disjoint */
+bool BoundingBox::intersect (const BoundingBox &bbox) {
+	if (lrx < bbox.ulx || lry < bbox.uly || ulx > bbox.lrx || uly > bbox.lry)
+		return false;
 	ulx = max(ulx, bbox.ulx);
 	uly = max(uly, bbox.uly);
 	lrx = min(lrx, bbox.lrx);
 	lry = min(lry, bbox.lry);
+	return true;
 }
 
 

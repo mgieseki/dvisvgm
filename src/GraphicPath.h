@@ -178,15 +178,6 @@ class GraphicPath
 
 		void iterate (Actions &actions, bool optimize) const;
 
-		bool lastMoveTo (Point &p) const {
-			for (ConstRevIterator it=_commands.rbegin(); it != _commands.rend(); ++it)
-				if (it->type == Command::MOVETO) {
-					p = it->params[0];
-					return true;
-				}
-			return false;
-		}
-
    private:
 		std::vector<Command> _commands;
 };
