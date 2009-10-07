@@ -28,7 +28,7 @@ using namespace std;
 
 
 BoundingBox::BoundingBox () 
-	: ulx(0), uly(0), lrx(0), lry(0), valid(false)
+	: ulx(0), uly(0), lrx(0), lry(0), _valid(false), _locked(false)
 {
 }
 
@@ -36,7 +36,7 @@ BoundingBox::BoundingBox ()
 BoundingBox::BoundingBox (double ulxx, double ulyy, double lrxx, double lryy)
 	: ulx(min(ulxx,lrxx)), uly(min(ulyy,lryy)), 
 	  lrx(max(ulxx,lrxx)), lry(max(ulyy,lryy)), 
-	  valid(true)
+	  _valid(true), _locked(false)
 {
 }
 
@@ -44,33 +44,37 @@ BoundingBox::BoundingBox (double ulxx, double ulyy, double lrxx, double lryy)
 BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
 	: ulx(min(p1.x(), p2.x())), uly(min(p1.y(), p2.y())),
 	  lrx(max(p1.x(), p2.x())), lry(max(p1.y(), p2.y())),
-	  valid(true)
+	  _valid(true), _locked(false)
 {
 }
 
 
+/** Enlarges the box so that point (x,y) is enclosed. */
 void BoundingBox::embed (double x, double y) {
-	if (valid) {
-		if (x < ulx) 
-			ulx = x;
-		else if (x > lrx) 
-			lrx = x;
-		if (y < uly) 
-			uly = y;
-		else if (y > lry) 
-			lry = y;
-	}
-	else {
-		ulx = lrx = x;
-		uly = lry = y;
-		valid = true;
+	if (!_locked) {
+		if (_valid) {
+			if (x < ulx) 
+				ulx = x;
+			else if (x > lrx) 
+				lrx = x;
+			if (y < uly) 
+				uly = y;
+			else if (y > lry) 
+				lry = y;
+		}
+		else {
+			ulx = lrx = x;
+			uly = lry = y;
+			_valid = true;
+		}
 	}
 }
 
 
+/** Enlarges the box so that box bb is enclosed. */
 void BoundingBox::embed (const BoundingBox &bb) {
-	if (bb.valid) {
-		if (valid) {
+	if (!_locked && bb._valid) {
+		if (_valid) {
 			embed(bb.ulx, bb.uly);
 			embed(bb.lrx, bb.lry);
 		}
@@ -79,7 +83,7 @@ void BoundingBox::embed (const BoundingBox &bb) {
 			uly = bb.uly;
 			lrx = bb.lrx;
 			lry = bb.lry;
-			valid = true;
+			_valid = true;
 		}
 	}
 }
@@ -91,17 +95,21 @@ void BoundingBox::embed (const DPair &c, double r) {
 
 
 void BoundingBox::expand (double m) {
-	ulx -= m;
-	uly -= m;
-	lrx += m;
-	lry += m;
+	if (!_locked) {
+		ulx -= m;
+		uly -= m;
+		lrx += m;
+		lry += m;
+	}
 }
 
 
-/** Returns the intersection of the current box with bbox.
- *  @return false if both boxes are disjoint */
+/** Intersects the current box with bbox and applies the result to *this.
+ *  If both boxes are disjoint, *this is not altered.
+ *  @param[in] bbox box to intersect with
+ *  @return false if *this is locked or both boxes are disjoint */
 bool BoundingBox::intersect (const BoundingBox &bbox) {
-	if (lrx < bbox.ulx || lry < bbox.uly || ulx > bbox.lrx || uly > bbox.lry)
+	if (_locked || lrx < bbox.ulx || lry < bbox.uly || ulx > bbox.lrx || uly > bbox.lry)
 		return false;
 	ulx = max(ulx, bbox.ulx);
 	uly = max(uly, bbox.uly);
@@ -112,22 +120,26 @@ bool BoundingBox::intersect (const BoundingBox &bbox) {
 
 
 void BoundingBox::operator += (const BoundingBox &bb) {
-	ulx += bb.ulx;
-	uly += bb.uly;
-	lrx += bb.lrx;
-	lry += bb.lry;
+	if (!_locked) {
+		ulx += bb.ulx;
+		uly += bb.uly;
+		lrx += bb.lrx;
+		lry += bb.lry;
+	}
 }
 
 
 void BoundingBox::transform (const Matrix &tm) {
-	DPair ul = tm * DPair(lrx, lry);
-	DPair lr = tm * DPair(ulx, uly);
-	DPair ll = tm * DPair(ulx, lry);
-	DPair ur = tm * DPair(lrx, uly);
-	ulx = min(min(ul.x(), lr.x()), min(ur.x(), ll.x()));
-	uly = min(min(ul.y(), lr.y()), min(ur.y(), ll.y()));
-	lrx = max(max(ul.x(), lr.x()), max(ur.x(), ll.x()));
-	lry = max(max(ul.y(), lr.y()), max(ur.y(), ll.y()));
+	if (!_locked) {
+		DPair ul = tm * DPair(lrx, lry);
+		DPair lr = tm * DPair(ulx, uly);
+		DPair ll = tm * DPair(ulx, lry);
+		DPair ur = tm * DPair(lrx, uly);
+		ulx = min(min(ul.x(), lr.x()), min(ur.x(), ll.x()));
+		uly = min(min(ul.y(), lr.y()), min(ur.y(), ll.y()));
+		lrx = max(max(ul.x(), lr.x()), max(ur.x(), ll.x()));
+		lry = max(max(ul.y(), lr.y()), max(ur.y(), ll.y()));
+	}
 }
 
 

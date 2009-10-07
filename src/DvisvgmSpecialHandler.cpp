@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -29,14 +29,14 @@
 using namespace std;
 
 
-/** Replaces constants of the form {?name} by their corresponding value. 
- *  @param[in,out] str text to expand 
+/** Replaces constants of the form {?name} by their corresponding value.
+ *  @param[in,out] str text to expand
  *  @param[in] actions interfcae to the world outside the special handler */
 static void expand_constants (string &str, SpecialActions *actions) {
 	struct Constant {
 		const char *name;
 		XMLString  val;
-	} 
+	}
 	constants[] = {
 		{"x", XMLString(actions->getX())},
 		{"y", XMLString(actions->getY())},
@@ -54,9 +54,22 @@ static void expand_constants (string &str, SpecialActions *actions) {
 }
 
 
-/** Inserts raw text into the SVG tree. 
+/** Embeds the virtual rectangle (x, y ,w , h) into the current bounding box,
+ *  where (x,y) is the lower left vertex composed of the current DVI position.
+ *  @param[in] w width of the rectangle in TeX point units
+ *  @param[in] h height of the rectangle in TeX point units
+ *  @param[in] d depth of the rectangle in TeX point units */
+static void update_bbox (double w, double h, double d, SpecialActions *actions) {
+	double x = actions->getX();
+	double y = actions->getY();
+	actions->bbox().embed(BoundingBox(x, y, x+w, y-h));
+	actions->bbox().embed(BoundingBox(x, y, x+w, y+d));
+}
+
+
+/** Inserts raw text into the SVG tree.
  *  @param[in,out] in the raw text is read from this input buffer
- *  @param[in] actions interfcae to the world outside the special handler 
+ *  @param[in] actions interfcae to the world outside the special handler
  *  @param[in] group true if the text should be wrapped by a group element */
 static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 	string str;
@@ -82,22 +95,44 @@ static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 }
 
 
-/** Embeds the virtual rectangle (x, y ,w , h) into the current bounding box,
- *  where (x,y) is the lower left vertex composed of the current DVI position. 
- *  @param[in] w width of the rectangle in TeX point units 
- *  @param[in] h height of the rectangle in TeX point units 
- *  @param[in] d depth of the rectangle in TeX point units */
-static void update_bbox (double w, double h, double d, SpecialActions *actions) {
-	double x = actions->getX();
-	double y = actions->getY();
-	actions->bbox().embed(BoundingBox(x, y, x+w, y-h));
-	actions->bbox().embed(BoundingBox(x, y, x+w, y+d));
+/** Evaluates the special dvisvgm:bbox.
+ *  variant 1: dvisvgm:bbox [r[el]] <width> <height> [<depth>]
+ *  variant 2: dvisvgm:bbox a[bs] <x1> <y1> <x2> <y2>
+ *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2> */
+static void bbox (InputReader &in, SpecialActions *actions) {
+	in.skipSpace();
+	char c = in.peek();
+	if (isalpha(c)) {
+		while (!isspace(in.peek()))  // skip trailing characters
+			in.get();
+		if (c == 'a' || c == 'f') {
+			double p[4];
+			for (int i=0; i < 4; i++)
+				p[i] = in.getDouble();
+			BoundingBox b(p[0], p[1], p[2], p[3]);
+			if (c == 'a')
+				actions->bbox().embed(b);
+			else {
+				actions->bbox() = b;
+				actions->bbox().lock();
+			}
+		}
+	}
+	else
+		c = 'r';   // no mode specifier => relative box parameters
+
+	if (c == 'r') {
+		double w = in.getDouble();
+		double h = in.getDouble();
+		double d = in.getDouble();
+		update_bbox(w, h, d, actions);
+	}
 }
 
 
 /** Evaluates and executes a dvisvgm special statement.
  *  @param[in] prefix special prefix read by the SpecialManager
- *  @param[in] is the special statement is read from this stream 
+ *  @param[in] is the special statement is read from this stream
  *  @param[in,out] in the raw text is read from this input buffer */
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (actions) {
@@ -106,12 +141,8 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 		string cmd = in.getWord();
 		if (cmd == "raw")               // raw <text>
 			raw(in, actions);
-		else if (cmd == "bbox") {       // bbox <width> <height> <depth>
-			double w = in.getDouble();
-			double h = in.getDouble();
-			double d = in.getDouble();
-			update_bbox(w, h, d, actions);
-		}
+		else if (cmd == "bbox")         // bbox [r] <width> <height> <depth> or bbox a <x1> <y1> <x2> <y2>
+			bbox(in, actions);
 		else if (cmd == "img") {        // img <width> <height> <file>
 			double w = in.getDouble();
 			double h = in.getDouble();

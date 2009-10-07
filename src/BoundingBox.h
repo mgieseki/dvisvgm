@@ -48,15 +48,18 @@ class BoundingBox
 		double maxY () const        {return lry;}
 		double width () const       {return lrx-ulx;}
 		double height () const      {return lry-uly;}
+		void lock ()                {_locked = true;}
+		void unlock ()              {_locked = false;}
 		void operator += (const BoundingBox &bb);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;
 
    private:
-		double ulx, uly; //< coordinates of upper left vertex (in TeX point units)
-	   double lrx, lry; //< coordinates of lower right vertex (in TeX point unitx)
-		bool valid;
+		double ulx, uly; ///< coordinates of upper left vertex (in TeX point units)
+	   double lrx, lry; ///< coordinates of lower right vertex (in TeX point unitx)
+		bool _valid : 1;  ///< true if the box coordinates are properly set
+		bool _locked : 1; ///< if true, the box data is read-only
 };
 
 IMPLEMENT_OUTPUT_OPERATOR(BoundingBox)
