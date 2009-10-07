@@ -37,9 +37,9 @@
 			</option>
 		</section>
 		<section title="SVG output options">
-			<option long="bbox-format" short="b">
+			<option long="bbox" short="b">
 				<arg type="string" name="fmt" default="min"/>
-				<description>set format of bounding box</description>
+				<description>set format or size of bounding box</description>
 			</option>
 			<option long="output" short="o">
 				<arg type="string" name="filename"/>

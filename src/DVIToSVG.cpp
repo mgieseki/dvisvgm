@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <sstream>
 #include "Calculator.h"
 #include "CharmapTranslator.h"
 #include "DVIToSVG.h"
@@ -193,28 +194,38 @@ void DVIToSVG::endPage () {
 		calc.setVariable("mm", 72.27/25.4);
 		Matrix matrix(_transCmds, calc);
 		static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
-		if (_pageSizeName == "min")
+		if (_bboxString == "min")
 			bbox.transform(matrix);
 	}
-	if (string("dvi none min").find(_pageSizeName) == string::npos) {
-		// set explicitly given page format
-		PageSize size(_pageSizeName);
-		if (size.valid()) {
-			// convention: DVI position (0,0) equals (1in, 1in) relative 
-			// to the upper left vertex of the page (see DVI specification)
-			const double border = -72.27;
-			bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
+	if (string("dvi none min").find(_bboxString) == string::npos) {
+		istringstream iss(_bboxString);
+		StreamInputReader ir(iss);
+		ir.skipSpace();
+		if (isalpha(ir.peek())) {
+			// set explicitly given page format
+			PageSize size(_bboxString);
+			if (size.valid()) {
+				// convention: DVI position (0,0) equals (1in, 1in) relative 
+				// to the upper left vertex of the page (see DVI specification)
+				const double border = -72.27;
+				bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
+			}
 		}
-		else
-			Message::wstream(true) << "invalid page format '" << _pageSizeName << "'\n";
+		else {
+			try {
+				bbox = BoundingBox(_bboxString);
+			}
+			catch (const MessageException &e) {
+			}
+		}
 	}
-	else if (_pageSizeName == "dvi") {
+	else if (_bboxString == "dvi") {
 		// center page content
 		double dx = (getPageWidth()-bbox.width())/2;
 		double dy = (getPageHeight()-bbox.height())/2;
 		bbox += BoundingBox(-dx, -dy, dx, dy);
 	}
-	if (_pageSizeName != "none" && bbox.width() > 0) {
+	if (_bboxString != "none" && bbox.width() > 0) {
 		_svg.setBBox(bbox);
 
 		Message::mstream() << "\npage size: " << bbox.width() << "pt"

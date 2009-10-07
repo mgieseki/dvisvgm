@@ -13,7 +13,7 @@
 using namespace std;
 
 const CmdLineParserBase::Option CommandLine::_options[] = {
-   {'b', "bbox-format", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox_format)},
+   {'b', "bbox", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
    {'h', "help", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
    {'l', "list-specials", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
@@ -39,7 +39,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 
 void CommandLine::init () {
    CmdLineParserBase::init();
-   _bbox_format_given = false;
+   _bbox_given = false;
    _cache_given = false;
    _help_given = false;
    _list_specials_given = false;
@@ -62,7 +62,7 @@ void CommandLine::init () {
    _version_given = false;
    _zip_given = false;
 
-   _bbox_format_arg = "min";
+   _bbox_arg = "min";
    _cache_arg.clear();
    _mag_arg = 4;
    _map_file_arg.clear();
@@ -84,7 +84,7 @@ void CommandLine::help () const {
    puts("  -p, --page=number             choose page to convert (default: 1)");
    puts("  -m, --map-file=[+]filename    set [additional] font map file name");
    puts("\nSVG output options:");
-   puts("  -b, --bbox-format=fmt         set format of bounding box (default: min)");
+   puts("  -b, --bbox=fmt                set format or size of bounding box (default: min)");
    puts("  -o, --output=filename         set name of output file");
    puts("  -s, --stdout                  write SVG output to stdout");
    puts("  -n, --no-fonts                draw glyphs by using path elements");
@@ -110,9 +110,9 @@ void CommandLine::help () const {
 }
 
 
-void CommandLine::handle_bbox_format(InputReader &ir, const Option &opt, bool longopt) {
-   if (getStringArg(ir, opt, longopt, _bbox_format_arg))
-      _bbox_format_given = true;
+void CommandLine::handle_bbox(InputReader &ir, const Option &opt, bool longopt) {
+   if (getStringArg(ir, opt, longopt, _bbox_arg))
+      _bbox_given = true;
 }
 
 
@@ -235,7 +235,7 @@ void CommandLine::handle_zip(InputReader &ir, const Option &opt, bool longopt) {
 
 
 void CommandLine::status () const {
-   cout << 'b'<< setw(20) << "bbox-format " << bbox_format_given() << setw(10) << bbox_format_arg() << endl;
+   cout << 'b'<< setw(20) << "bbox " << bbox_given() << setw(10) << bbox_arg() << endl;
    cout << 'C'<< setw(20) << "cache " << cache_given() << setw(10) << cache_arg() << endl;
    cout << 'h'<< setw(20) << "help " << help_given() << endl;
    cout << 'l'<< setw(20) << "list-specials " << list_specials_given() << endl;

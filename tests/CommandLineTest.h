@@ -62,8 +62,8 @@ class CommandLineTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(cmd.rotate_arg(), 45);
 			TS_ASSERT(cmd.output_given());
 			TS_ASSERT_EQUALS(cmd.output_arg(), "myfile.xyz");
-			TS_ASSERT(!cmd.bbox_format_given());
-			TS_ASSERT_EQUALS(cmd.bbox_format_arg(), "min");
+			TS_ASSERT(!cmd.bbox_given());
+			TS_ASSERT_EQUALS(cmd.bbox_arg(), "min");
 			TS_ASSERT(!cmd.error());
 			TS_ASSERT_EQUALS(cmd.numFiles(), 0);
 		}
@@ -105,8 +105,8 @@ class CommandLineTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(cmd.rotate_arg(), -45.5);
 			TS_ASSERT(cmd.output_given());
 			TS_ASSERT_EQUALS(cmd.output_arg(), "myfile.zyx");
-			TS_ASSERT(!cmd.bbox_format_given());
-			TS_ASSERT_EQUALS(cmd.bbox_format_arg(), "min");
+			TS_ASSERT(!cmd.bbox_given());
+			TS_ASSERT_EQUALS(cmd.bbox_arg(), "min");
 			TS_ASSERT(!cmd.error());
 			TS_ASSERT_EQUALS(cmd.numFiles(), 0);
 		}
@@ -122,8 +122,8 @@ class CommandLineTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(cmd.rotate_arg(), -45.5);
 			TS_ASSERT(cmd.output_given());
 			TS_ASSERT_EQUALS(cmd.output_arg(), "myfile.zyx");
-			TS_ASSERT(!cmd.bbox_format_given());
-			TS_ASSERT_EQUALS(cmd.bbox_format_arg(), "min");
+			TS_ASSERT(!cmd.bbox_given());
+			TS_ASSERT_EQUALS(cmd.bbox_arg(), "min");
 			TS_ASSERT(!cmd.error());
 			TS_ASSERT_EQUALS(cmd.numFiles(), 0);
 		}

@@ -33,9 +33,9 @@ class DVIToSVG : public DVIReader
       DVIToSVG (std::istream &is, std::ostream &os);
 		~DVIToSVG ();
 		int convert (unsigned firstPage, unsigned lastPage);
-		void setPageSize (string name)    {_pageSizeName = name;}
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
-		const SpecialManager& specialManager () const {return _specialManager;}
+		const SpecialManager& specialManager () const    {return _specialManager;}
+		void setPageSize (const string &name)            {_bboxString = name;}
 		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
 	
 	protected:
@@ -48,7 +48,7 @@ class DVIToSVG : public DVIReader
    private:
 		SVGTree _svg;
 		std::ostream &_out;       ///< DVI output is written to this stream
-		std::string _pageSizeName;
+		std::string _bboxString;
 		std::string _transCmds;
 		SpecialManager _specialManager;
 

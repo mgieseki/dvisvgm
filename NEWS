@@ -1,4 +1,6 @@
 dvisvgm-0.8.6
+- renamed command-line option --bbox-format to --bbox
+- option --bbox can now be used to set an arbitrary bounding box
 - added the two special variants "dvisvgm:bbox abs" and "dvisvgm:bbox fix"
 - fixed a PS bounding box bug
 - fixed a couple of PS positioning issues reported by John Bowman

@@ -65,10 +65,12 @@ void BoundingBox::set (const string &boxstr) {
 		while (l < len && isspace(boxstr[l]))
 			l++;
 		size_t r=l;
-		while (r < len && !isspace(boxstr[r]))
+		while (r < len && !isspace(boxstr[r]) && boxstr[r] != ',')
 			r++;
 		string lenstr = boxstr.substr(l, r-l);
 		coord[i].set(lenstr);
+		if (boxstr[r] == ',')
+			r++;
 		l = r;
 		if ((l == len && i < 3) || lenstr.empty())
 			throw BoundingBoxException("four length parameters expected");

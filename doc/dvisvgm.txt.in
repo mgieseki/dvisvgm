@@ -63,7 +63,7 @@ OPTIONS
 -------
 *-a, --trace-all*::
 This option forces dvisvgm to trace not just the actually needed glyphs but all 
-glyphs of all bitmap fonts used in a DVI file. Since the tracing results are stored in 
+glyphs of all bitmap fonts used in the DVI file. Since the tracing results are stored in 
 the font cache, all following DVI conversions (without option *--trace-all*) where these 
 fonts are involved will be much faster. By default, dvisvgm traces only the actually 
 needed glyphs and adds them to the cache.
@@ -73,10 +73,13 @@ This option only takes affect if font caching is active. Thus, *--trace-all* can
 combined with option *--cache=none*.
 +
 
-*-b, --bbox-format*='fmt'::
-Sets the bounding box of the generated graphic to the specified format. 
-The argument fmt is argument a case-insensitive string that denotes the paper size. 
-Following size names are supported:
+*-b, --bbox*='fmt'::
+Sets the bounding box of the generated graphic to the specified format. The parameter 'fmt'
+takes either one of the format specifiers listed below or a sequence of four comma- or
+whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define two diagonal 
+corners of the bounding box. Each length value consists of a floating point number and an optional 
+length unit (pt, bp, cm, mm, in, or pc). If the unit is omitted, pt (TeX points) are assumed.
+Alternatively, the following format specifiers are supported:
  
  *International DIN/ISO paper sizes*;;
  A__n__, B__n__, C__n__, D__n__, where 'n' is a non-negative integer, e.g. A4 or a4 for DIN/ISO A4 
@@ -86,9 +89,9 @@ Following size names are supported:
    invoice, executive, legal, letter, ledger
  
  *Special bounding box sizes*;;
-   *dvi*:: the page size stored in the DVI file will be used
-   *min*:: the minimal bounding box will be computed and assigned
-   *none*:: no bounding box will be assigned
+   *dvi*:: the page size stored in the DVI file will be used 
+   *min*:: the minimal bounding box will be computed and assigned 
+   *none*:: no bounding box will be assigned 
  
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
@@ -98,10 +101,9 @@ Following size names are supported:
    Note that these suffixes are part of the size string and not separate options. Thus 
    they must directly follow the above mentioned size specifiers without additional blanks.
    Furthermore, the orientation suffixes can't be used with *dvi*, *min* and *none*.
-
 +
 [NOTE]
-Option *-b, --bbox-format* only affects the bounding box and does not transform the page content. Hence if 
+Option *-b, --bbox* only affects the bounding box and does not transform the page content. Hence if 
 you choose a landscape format the page won't be rotated.
 +
 

@@ -16,7 +16,7 @@ TESTS = test-all
 
 # the tests to be executed are implemented in the following header files
 test_all_headers = CalculatorTest.h ColorSpecialTest.h CommandLineTest.h DirectoryTest.h \
-	FontManagerTest.h FontMapTest.h FileFinderTest.h GraphicPathTest.h MatrixTest.h \
+	FontManagerTest.h FontMapTest.h FileFinderTest.h GraphicPathTest.h LengthTest.h MatrixTest.h \
    StreamCounterTest.h PageSizeTest.h SplittedCharInputBufferTest.h StreamInputBufferTest.h \
 	VectorStreamTest.h
 

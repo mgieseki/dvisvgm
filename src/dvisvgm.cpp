@@ -31,8 +31,10 @@
 #include "DVIToSVGActions.h"
 #include "FileSystem.h"
 #include "FontCache.h"
+#include "InputReader.h"
 #include "Message.h"
 #include "FileFinder.h"
+#include "PageSize.h"
 #include "SpecialManager.h"
 #include "StreamCounter.h"
 #include "SVGFontTraceEmitter.h"
@@ -153,6 +155,29 @@ static bool set_cache_dir (const CommandLine &args) {
 }
 
 
+static bool check_bbox (const string &bboxstr) {
+	const char *formats[] = {"none", "min", "dvi", 0};
+	for (const char **p=formats; *p; ++p)
+		if (bboxstr == *p)
+			return true;
+	if (isalpha(bboxstr[0])) {
+		PageSize size(bboxstr);
+		if (!size.valid())
+			Message::wstream(true) << "invalid page format '" << bboxstr << "'\n";
+		return size.valid();
+	}
+	try {
+		BoundingBox bbox;
+		bbox.set(bboxstr);
+		return true;
+	}
+	catch (const MessageException &e) {
+		Message::estream(true) << e.getMessage() << endl;
+		return false;
+	}
+}
+
+
 int main (int argc, char *argv[]) {
 	CommandLine args;
 	args.parse(argc, argv);
@@ -193,6 +218,9 @@ int main (int argc, char *argv[]) {
 	if (args.map_file_given())
 		FileFinder::setUserFontMap(args.map_file_arg().c_str());
 
+	if (!check_bbox(args.bbox_arg()))
+		return 1;
+
 	DVIToSVG::CREATE_STYLE = !args.no_styles_given();
 	DVIToSVG::USE_FONTS = !args.no_fonts_given();
 	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given();
@@ -225,7 +253,7 @@ int main (int argc, char *argv[]) {
 			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
 			dvisvg.setProcessSpecials(ignore_specials);
 			set_trans(dvisvg, args);
-			dvisvg.setPageSize(args.bbox_format_arg());
+			dvisvg.setPageSize(args.bbox_arg());
 			
 			try {
 				FileFinder::init(argv[0], !args.no_mktexmf_given());
