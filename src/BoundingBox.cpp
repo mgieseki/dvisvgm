@@ -49,6 +49,37 @@ BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
 }
 
 
+BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy)
+	: ulx(min(ulxx.pt(),lrxx.pt())), uly(min(ulyy.pt(),lryy.pt())), 
+	  lrx(max(ulxx.pt(),lrxx.pt())), lry(max(ulyy.pt(),lryy.pt())), 
+	  _valid(true), _locked(false)
+{
+}
+
+
+void BoundingBox::set (const string &boxstr) {
+	Length coord[4];
+	const size_t len = boxstr.length();
+	size_t l=0;
+	for (int i=0; i < 4; i++) {
+		while (l < len && isspace(boxstr[l]))
+			l++;
+		size_t r=l;
+		while (r < len && !isspace(boxstr[r]))
+			r++;
+		string lenstr = boxstr.substr(l, r-l);
+		coord[i].set(lenstr);
+		l = r;
+		if ((l == len && i < 3) || lenstr.empty())
+			throw BoundingBoxException("four length parameters expected");
+	}
+	ulx = min(coord[0].pt(), coord[2].pt());
+	uly = min(coord[1].pt(), coord[3].pt());
+	lrx = max(coord[0].pt(), coord[2].pt());
+	lry = max(coord[1].pt(), coord[3].pt());
+}
+
+
 /** Enlarges the box so that point (x,y) is enclosed. */
 void BoundingBox::embed (double x, double y) {
 	if (!_locked) {
