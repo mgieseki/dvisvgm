@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -46,7 +46,7 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(fa
 
 
 /** Initializes the PostScript handler. It's called by the first use of process(). The
- *  deferred initialization speeds up the conversion of DVI files that doesn't contain 
+ *  deferred initialization speeds up the conversion of DVI files that doesn't contain
  *  PS specials. */
 void PsSpecialHandler::initialize () {
 	if (!_initialized) {
@@ -63,7 +63,7 @@ void PsSpecialHandler::initialize () {
 				ifstream ifs(path);
 				_psi.execute(ifs);
 			}
-			else 
+			else
 				Message::wstream(true) << "PostScript header file " << *p << " not found\n";
 		}
 		// push dictionary "TeXDict" with dvips definitions on dictionary stack
@@ -97,7 +97,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		initialize();
 	_actions = actions;
 
-	if (*prefix == '"') { 
+	if (*prefix == '"') {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
 		updatePos();
 		_psi.execute(" @beginspecial @setspecial ");
@@ -199,13 +199,13 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
 		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
 		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
-		
+
 		double x=_actions->getX(), y=_actions->getY();
 		double w=(urx-llx), h=(ury-lly);  // width and height of (E)PS image in TeX points
 		if (w <= 0)
 			w = hsize;
 		if (h <= 0)
-			h = vsize;  
+			h = vsize;
 		h *= -1;  	// must be negative to get the bounding box right
 
 		double sx=1, sy=1;
@@ -278,7 +278,7 @@ void PsSpecialHandler::closepath (vector<double> &p) {
 }
 
 
-/** Draws the current path recorded by previously executed path commands (moveto, lineto,...). 
+/** Draws the current path recorded by previously executed path commands (moveto, lineto,...).
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
 	if (!_path.empty() && _actions) {
@@ -304,7 +304,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		path->addAttribute("fill", "none");
 		if (_linewidth != 1)
 			path->addAttribute("stroke-width", XMLString(_linewidth));
-		if (_miterlimit != 4) 
+		if (_miterlimit != 4)
 			path->addAttribute("stroke-miterlimit", XMLString(_miterlimit));
 		if (_linecap > 0)     // default value is "butt", no need to set it explicitely
 			path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
@@ -339,7 +339,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 }
 
 
-/** Draws a closed path filled with the current color. 
+/** Draws a closed path filled with the current color.
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
@@ -383,14 +383,14 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 }
 
 
-/** Clears the current clipping path. 
+/** Clears the current clipping path.
  *  @param[in] p not used */
 void PsSpecialHandler::initclip (vector<double> &p) {
 	_clipStack.push();  // push empty path
 }
 
 
-/** Assigns a new clipping path. 
+/** Assigns a new clipping path.
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
@@ -398,6 +398,11 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 	if (!_path.empty() && _actions) {
 		if (!_actions->getMatrix().isIdentity())
 			_path.transform(_actions->getMatrix());
+
+		int oldID = _clipStack.topID();
+		_clipStack.replace(_path);
+		int newID = _clipStack.topID();
+
 		ostringstream oss;
 		_path.writeSVG(oss);
 		XMLElementNode *path = new XMLElementNode("path");
@@ -405,10 +410,11 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 		if (evenodd)
 			path->addAttribute("clip-rule", "evenodd");
 
-		_clipStack.push(_path);
-
 		XMLElementNode *clip = new XMLElementNode("clipPath");
-		clip->addAttribute("id", XMLString("clip")+XMLString(_clipStack.topID()));
+		clip->addAttribute("id", XMLString("clip")+XMLString(newID));
+		if (oldID)
+			clip->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+XMLString(")"));
+
 		clip->append(path);
 		_actions->appendToDefs(clip);
 	}
@@ -431,7 +437,7 @@ void PsSpecialHandler::setmatrix (vector<double> &p) {
 				p[i] = (i%3 ? 0 : 1);
 		}
 		// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
-		// Since PS uses left multiplications, we must transpose and reorder 
+		// Since PS uses left multiplications, we must transpose and reorder
 		// the matrix to ((a,c,e),(b,d,f),(0,0,1)). This is done by the
 		// following swaps.
 		swap(p[1], p[2]);  // => (a, c, b, d, e, f)
@@ -443,8 +449,8 @@ void PsSpecialHandler::setmatrix (vector<double> &p) {
 }
 
 
-// In contrast to SVG, PostScript transformations are applied in 
-// reverse order (M' = T*M). Thus, the transformation matrices must be 
+// In contrast to SVG, PostScript transformations are applied in
+// reverse order (M' = T*M). Thus, the transformation matrices must be
 // left-multiplied in the following methods scale(), translate() and rotate().
 
 
@@ -528,18 +534,31 @@ void PsSpecialHandler::ClippingStack::push () {
 }
 
 
-void PsSpecialHandler::ClippingStack::push (Path &path) {
+void PsSpecialHandler::ClippingStack::push (const Path &path) {
 	if (!path.empty()) {
 		_paths.push_back(path);
 		_stack.push(_paths.size());
 	}
 }
 
+
+void PsSpecialHandler::ClippingStack::replace (const Path &path) {
+	if (path.empty())
+		push(path);
+	else {
+		_paths.push_back(path);
+		if (!_stack.empty())
+			_stack.pop();
+		_stack.push(_paths.size());
+	}
+}
+
+
 void PsSpecialHandler::ClippingStack::dup () {
 	if (!_stack.empty())
 		_stack.push(_stack.top());
 }
-		
+
 
 const char** PsSpecialHandler::prefixes () const {
 	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", 0};

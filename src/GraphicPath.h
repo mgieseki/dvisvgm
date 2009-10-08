@@ -97,7 +97,7 @@ class GraphicPath
 		}
 
 		/// Returns true if path is empty (there is nothing to draw)
-		bool empty () {
+		bool empty () const {
 			return _commands.empty();
 		}
 

@@ -2,6 +2,7 @@ dvisvgm-0.8.6
 - renamed command-line option --bbox-format to --bbox
 - option --bbox can now be used to set an arbitrary bounding box
 - added the two special variants "dvisvgm:bbox abs" and "dvisvgm:bbox fix"
+- PS clipping path sequences and intersections are now handled correctly
 - fixed a PS bounding box bug
 - fixed a couple of PS positioning issues reported by John Bowman
 

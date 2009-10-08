@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef PSSPECIALHANDLER_H
@@ -36,7 +36,8 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		typedef GraphicPath<double> Path;
 		public:
 			void push ();
-			void push (Path &path);
+			void push (const Path &path);
+			void replace (const Path &path);
 			void dup ();
 			void pop ()    {_stack.pop();}
 			bool empty ()  {return _stack.empty();}
@@ -55,7 +56,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 
-	protected:	
+	protected:
 		void initialize ();
 		void updatePos ();
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
@@ -103,7 +104,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		unsigned _linejoin : 2;     ///< current line join (0=miter, 1=round, 2=bevel)
 		int _dashoffset;            ///< current dash offset
 		std::vector<int> _dashpattern;
-		ClippingStack _clipStack; 
+		ClippingStack _clipStack;
 };
 
 
