@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -90,7 +90,7 @@ static string ensure_suffix (string fname, const string &suffix) {
 	size_t dotpos = remove_path(fname).rfind('.');
 	if (dotpos == string::npos) {
 		dotpos = fname.length();
-		fname += "."+suffix;		
+		fname += "."+suffix;
 	}
 	return fname;
 }
@@ -98,7 +98,7 @@ static string ensure_suffix (string fname, const string &suffix) {
 
 static string remove_suffix (string fname) {
 	size_t dotpos = fname.rfind('.');
-	if (dotpos == string::npos) 
+	if (dotpos == string::npos)
 		return fname;
 	return fname.substr(0, dotpos);
 }
@@ -128,7 +128,7 @@ static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cache_given() && !args.cache_arg().empty()) {
-		if (args.cache_arg() == "none") 
+		if (args.cache_arg() == "none")
 			SVGFontTraceEmitter::CACHE_PATH = 0;
 		else if (FileSystem::exists(args.cache_arg().c_str()))
 			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg().c_str();
@@ -144,7 +144,7 @@ static bool set_cache_dir (const CommandLine &args) {
 			if (!FileSystem::exists(path.c_str()))
 				FileSystem::mkdir(path.c_str());
 			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
-		}		
+		}
 		if (args.cache_given() && args.cache_arg().empty()) {
 			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
 			FontCache::fontinfo(SVGFontTraceEmitter::CACHE_PATH, cout);
@@ -161,10 +161,14 @@ static bool check_bbox (const string &bboxstr) {
 		if (bboxstr == *p)
 			return true;
 	if (isalpha(bboxstr[0])) {
-		PageSize size(bboxstr);
-		if (!size.valid())
-			Message::wstream(true) << "invalid page format '" << bboxstr << "'\n";
-		return size.valid();
+		try {
+			PageSize size(bboxstr);
+			return true;
+		}
+		catch (const PageSizeException &e) {
+			Message::estream(true) << "invalid bounding box format '" << bboxstr << "'\n";
+			return false;
+		}
 	}
 	try {
 		BoundingBox bbox;
@@ -210,7 +214,7 @@ int main (int argc, char *argv[]) {
 
 	if (args.progress_given())
 		DVIToSVGActions::PROGRESSBAR = args.progress_arg()+1;
-		  
+
 	if (args.stdout_given() && args.zip_given()) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
@@ -227,23 +231,23 @@ int main (int argc, char *argv[]) {
 	SVGFontTraceEmitter::METAFONT_MAG = args.mag_arg();
 
 	double start_time = get_time();
-	
+
 	string dvifile = ensure_suffix(args.file(0), "dvi");
 	string svgfile = args.output_given() ? args.output_arg() : remove_suffix(remove_path(dvifile));
-	svgfile = ensure_suffix(svgfile, args.zip_given() ? "svgz" : "svg");	
-	
+	svgfile = ensure_suffix(svgfile, args.zip_given() ? "svgz" : "svg");
+
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
    if (!ifs)
       Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
 	else {
 		Pointer<ostream> out;
-		if (args.stdout_given()) 
+		if (args.stdout_given())
 			out = Pointer<ostream>(&cout, false);
-		else if (args.zip_given()) 
+		else if (args.zip_given())
 			out = Pointer<ostream>(new ogzstream(svgfile.c_str(), args.zip_arg()));
-		else 
+		else
 			out = Pointer<ostream>(new ofstream(svgfile.c_str(), ios_base::binary));
-		
+
 		if (!*out)
       	Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
 		else {
@@ -254,7 +258,7 @@ int main (int argc, char *argv[]) {
 			dvisvg.setProcessSpecials(ignore_specials);
 			set_trans(dvisvg, args);
 			dvisvg.setPageSize(args.bbox_arg());
-			
+
 			try {
 				FileFinder::init(argv[0], !args.no_mktexmf_given());
 				if (int pages = dvisvg.convert(args.page_arg(), args.page_arg())) {
@@ -265,11 +269,11 @@ int main (int argc, char *argv[]) {
 					out.release();       // force writing
 					const char *pstr = pages == 1 ? "" : "s";
 					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
-					Message::mstream() << pages << " page" << pstr; 
+					Message::mstream() << pages << " page" << pstr;
 					Message::mstream() << " (" << nbytes << " bytes";
 					if (args.zip_given())
 						Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
-					Message::mstream() << ") written to " 
+					Message::mstream() << ") written to "
 						<< (args.stdout_given() ? "<stdout>" : svgfile)
 						<< " in " << (get_time()-start_time) << " seconds\n";
 				}
