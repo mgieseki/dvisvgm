@@ -53,7 +53,7 @@ outlines of all used fonts into scalable path descriptions. The fastest way to d
 is to extract the path information from PFB (PostScript Type 1) files. So if *dvisvgm* is able 
 to find a PFB file for a used font, it will read the necessary information from it.
 
-Because TeX's main source for font descriptions is Metafont which produces bitmap output, 
+TeX's main source for font descriptions is Metafont which produces bitmap output .That's why 
 not all obtainable TeX fonts are available in PFB format. In these cases *dvisvgm* tries 
 to vectorize Metafont's output by tracing the glyph bitmaps. The results are not as perfect 
 as most (manually optimized) PFB outlines but are nonetheless really nice in most cases.
@@ -79,6 +79,7 @@ takes either one of the format specifiers listed below or a sequence of four com
 whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define two diagonal 
 corners of the bounding box. Each length value consists of a floating point number and an optional 
 length unit (pt, bp, cm, mm, in, or pc). If the unit is omitted, pt (TeX points) are assumed.
++
 Alternatively, the following format specifiers are supported:
  
  *International DIN/ISO paper sizes*;;
@@ -89,10 +90,12 @@ Alternatively, the following format specifiers are supported:
    invoice, executive, legal, letter, ledger
  
  *Special bounding box sizes*;;
-   *dvi*:: the page size stored in the DVI file will be used 
-   *min*:: the minimal bounding box will be computed and assigned 
-   *none*:: no bounding box will be assigned 
- 
+[horizontal]
+   *dvi*::: the page size stored in the DVI file will be used 
+   *min*::: the minimal bounding box will be computed and assigned 
+   *none*::: no bounding box will be assigned 
+
+//
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
    i.e. 'width' < 'height'. Appending *-landscape* or simply *-l* to the format
@@ -106,7 +109,9 @@ Alternatively, the following format specifiers are supported:
 Option *-b, --bbox* only affects the bounding box and does not transform the page content. Hence if 
 you choose a landscape format the page won't be rotated.
 +
+//
 
+//
 *-c, --scale*='sx'[,'sy']::
 Scales page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent 
 to *-TS*__sx__,__sy__.
@@ -257,6 +262,7 @@ precedence rules. Parentheses may be used as well.
 
 Additionally, some pre-defined constants are provided:
 
+[horizontal]
 *ux*:: horizontal position of upper left page corner in TeX point units
 *uy*:: vertical position of upper left page corner in TeX point units
 *h*:: page height in TeX point units (0 in case of *-bnone*)
@@ -275,6 +281,7 @@ transformation sequences. They are simply independent shorthand options for comm
 
 *-v, --verbosity*='level'::
 Controls the type of messages printed during a *dvisvgm* run:
+[horizontal]
   *0*;; no message output
   *1*;; error messages only
   *2*;; warning messages only
@@ -342,16 +349,16 @@ exact syntax, see the documentation of *dvips*, for instance.
   This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
   this command, dvisvgm doesn't further alter the bounding box coordinates, except this special is called again later.
   The points ('x1','y1') and ('x2','y2') denote two diagonal corners of the rectangle given in TeX point units.
-  
-  The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:;;
 +
-....................................................................................
+The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:
++
+------------------------------------------------------------------------------------
 \special{dvisvgm:raw <circle cx='{?x}' cy='{?y}' r='10' stroke='black' fill='red'/>}
 \special{dvisvgm:bbox 20 10 10}
 
 \special{dvisvgm:raw <path d='M50 200 L10 250 H100 Z' stroke='black' fill='blue'/>}
 \special{dvisvgm:bbox abs 10 200 100 250}
-....................................................................................
+------------------------------------------------------------------------------------
 +
 
 *em*::
@@ -417,6 +424,7 @@ FILES
 The location of the following files is determined by the kpathsea library.
 To check the actual kpathsea configuration you can use the *kpsewhich* utility.
 
+[horizontal]
 **.enc*:: Font encoding files
 **.fgd*:: Font glyph data files (cache files created by dvisvgm)
 **.map*:: Font map files
