@@ -52,6 +52,9 @@ class Bitmap
 		
 		template <typename T>
 		int copy (std::vector<T> &target, bool vflip=false) const;
+
+//		template <typename T>
+//		void write (std::ostream &os, const std::vector<T> &v) const;
 			
 		std::ostream& write (std::ostream &os) const;
 
@@ -76,7 +79,7 @@ int Bitmap::copy (std::vector<T> &target, bool vflip) const {
 		int targetrow = vflip ? _rows-r-1 : r;
 		for (int b=0; b < _bpr; b++) {
 			T &t = target[targetrow*tpr + b/s];
-			T chunk = _bytes[r*_bpr+b] << (8*(s-1-b%s));
+			T chunk = (T)_bytes[r*_bpr+b] << (8*(s-1-b%s));
 			if (b % s == 0)
 				t = chunk;
 			else
@@ -85,5 +88,22 @@ int Bitmap::copy (std::vector<T> &target, bool vflip) const {
 	}
 	return tpr;
 }
+
+
+/*
+template <typename T>
+void Bitmap::write (std::ostream &os, const std::vector<T> &v) const {
+	const int s = sizeof(T);
+	const int tpr = _bpr/s + (_bpr%s ? 1 : 0); // number of Ts per row
+	for (int r=_rows-1; r >= 0; r--) {
+		for (int t=0; t < tpr; t++) {
+			for (T b=(T)1<<(8*s-1); b; b>>=1)
+				os << ((v[r*tpr+t] & b) ? '*' : '-');
+			os << ' ';
+		}
+		os << std::endl;
+	}
+}*/
+
 
 #endif
