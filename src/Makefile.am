@@ -33,8 +33,10 @@ AM_CXXFLAGS = -Wall
 
 # the commandline parser is generated from options.xml by opt2cpp
 CommandLine.cpp: options.xml
-	rm -f $@ $*.h
-	xsltproc opt2cpp.xsl $<
+	if test -f opt2cpp.xsl; then \
+		rm -f $@ $*.h; \
+		xsltproc opt2cpp.xsl $<; \
+	fi
 
 # The required MikTeX functions are declared in .def files that reference a DLL.
 # It's necessary to create import libraries from these .def files. dlltool helps us
