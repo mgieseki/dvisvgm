@@ -55,8 +55,8 @@ void Length::set (double val, Unit unit) {
 		case PT: _pt = val; break;
 		case BP: _pt = val*72.27/72; break;
 		case IN: _pt = val*72.27; break;
-		case CM: _pt = val*2.54*72.27; break;
-		case MM: _pt = val*0.254*72.27; break;
+		case CM: _pt = val/2.54*72.27; break;
+		case MM: _pt = val/25.4*72.27; break;
 		case PC: _pt = val/12*72.27; break;
 	}
 }

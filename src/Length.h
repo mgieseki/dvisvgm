@@ -45,9 +45,9 @@ class Length
 		void set (const std::string &len);
 
 		double pt () const {return _pt;}
-		double bp () const {return _pt*72/72.27;}
 		double in () const {return _pt/72.27;}
-		double cm () const {return in()/2.54;}
+		double bp () const {return in()*72;}
+		double cm () const {return in()*2.54;}
 		double mm () const {return cm()*10;}
 		double pc () const {return in()*12;}
 

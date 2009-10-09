@@ -41,15 +41,15 @@ class LengthTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(len.pt(), 72.27);
 			TS_ASSERT_EQUALS(len.in(), 1);
 
-			len.set(1, Length::CM);
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
-			TS_ASSERT_EQUALS(len.cm(), 1);
-			TS_ASSERT_EQUALS(len.mm(), 10);
+			len.set(2.54, Length::CM);
+			TS_ASSERT_EQUALS(len.pt(), 72.27);
+			TS_ASSERT_EQUALS(len.cm(), 2.54);
+			TS_ASSERT_EQUALS(len.mm(), 25.4);
 
-			len.set(10, Length::MM);
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
-			TS_ASSERT_EQUALS(len.cm(), 1);
-			TS_ASSERT_EQUALS(len.mm(), 10);
+			len.set(25.4, Length::MM);
+			TS_ASSERT_EQUALS(len.pt(), 72.27);
+			TS_ASSERT_EQUALS(len.cm(), 2.54);
+			TS_ASSERT_EQUALS(len.mm(), 25.4);
 		}
 
 
@@ -72,13 +72,12 @@ class LengthTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(len.in(), 1);
 			TS_ASSERT_EQUALS(len.pc(), 12);
 
-			len.set(1, "cm");
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
-			TS_ASSERT_EQUALS(len.cm(), 1);
-			TS_ASSERT_EQUALS(len.mm(), 10);
+			len.set(2.54, "cm");
+			TS_ASSERT_EQUALS(len.pt(), 72.27);
+			TS_ASSERT_EQUALS(len.cm(), 2.54);
+			TS_ASSERT_EQUALS(len.mm(), 25.4);
 
 			len.set(10, "mm");
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
 			TS_ASSERT_EQUALS(len.cm(), 1);
 			TS_ASSERT_EQUALS(len.mm(), 10);
 
@@ -107,13 +106,12 @@ class LengthTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(len.in(), 1);
 			TS_ASSERT_EQUALS(len.pc(), 12);
 
-			len.set("1cm");
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
-			TS_ASSERT_EQUALS(len.cm(), 1);
-			TS_ASSERT_EQUALS(len.mm(), 10);
+			len.set("2.54cm");
+			TS_ASSERT_EQUALS(len.pt(), 72.27);
+			TS_ASSERT_EQUALS(len.cm(), 2.54);
+			TS_ASSERT_EQUALS(len.mm(), 25.4);
 
 			len.set("10mm");
-			TS_ASSERT_EQUALS(len.pt(), 2.54*72.27);
 			TS_ASSERT_EQUALS(len.cm(), 1);
 			TS_ASSERT_EQUALS(len.mm(), 10);
 
