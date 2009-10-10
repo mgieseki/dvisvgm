@@ -396,6 +396,10 @@ void PsSpecialHandler::initclip (vector<double> &p) {
 void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 	// when this method is called, _path contains the clipping path
 	if (!_path.empty() && _actions) {
+		const double pt = 72.27/72.0;  // factor to convert bp -> pt
+		ScalingMatrix scale(pt, pt);
+		_path.transform(scale);
+
 		if (!_actions->getMatrix().isIdentity())
 			_path.transform(_actions->getMatrix());
 
