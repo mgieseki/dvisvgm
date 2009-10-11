@@ -130,6 +130,23 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 }
 
 
+static void img (InputReader &in, SpecialActions *actions) {
+	double w = in.getDouble();
+	double h = in.getDouble();
+	string f = in.getString();
+	update_bbox(w, h, 0, actions);
+	XMLElementNode *img = new XMLElementNode("image");
+	img->addAttribute("x", actions->getX());
+	img->addAttribute("y", actions->getY());
+	img->addAttribute("width", w);
+	img->addAttribute("height", h);
+	img->addAttribute("xlink:href", f);
+	if (actions && !actions->getMatrix().isIdentity())
+		img->addAttribute("transform", actions->getMatrix().getSVG());
+	actions->appendToPage(img);
+}
+
+
 /** Evaluates and executes a dvisvgm special statement.
  *  @param[in] prefix special prefix read by the SpecialManager
  *  @param[in] is the special statement is read from this stream
@@ -144,17 +161,7 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 		else if (cmd == "bbox")         // bbox [r] <width> <height> <depth> or bbox a <x1> <y1> <x2> <y2>
 			bbox(in, actions);
 		else if (cmd == "img") {        // img <width> <height> <file>
-			double w = in.getDouble();
-			double h = in.getDouble();
-			string f = in.getString();
-			update_bbox(w, h, 0, actions);
-			XMLElementNode *img = new XMLElementNode("image");
-			img->addAttribute("x", actions->getX());
-			img->addAttribute("y", actions->getY());
-			img->addAttribute("width", w);
-			img->addAttribute("height", h);
-			img->addAttribute("xlink:href", f);
-			actions->appendToPage(img);
+			img(in, actions);
 		}
 	}
 	return true;

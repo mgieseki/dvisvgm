@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "BoundingBox.h"
@@ -47,7 +47,7 @@ void SVGTree::reset () {
 	_root->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	_root->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	_doc.setRootNode(_root);
-	_doc.append(new XMLDocTypeNode("svg", "PUBLIC", 
+	_doc.append(new XMLDocTypeNode("svg", "PUBLIC",
 		"\"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\""));
 	_page = _text = _span = _defs = 0;
 }
@@ -55,13 +55,13 @@ void SVGTree::reset () {
 
 /** Sets the bounding box of the document. */
 void SVGTree::setBBox (const BoundingBox &bbox) {
-	_root->addAttribute("width", XMLString(bbox.width())); 		
+	_root->addAttribute("width", XMLString(bbox.width()));
 	_root->addAttribute("height", XMLString(bbox.height()));
 	_root->addAttribute("viewBox", bbox.toSVGViewBox());
 }
 
 
-/** Starts a new page. 
+/** Starts a new page.
  *  @param[in] pageno number of new page */
 void SVGTree::newPage (int pageno) {
 	_page = new XMLElementNode("g");
@@ -80,7 +80,7 @@ void SVGTree::appendToDefs (XMLNode *node) {
 	_defs->append(node);
 }
 
-/** Appends a single charater to the current text node. If necessary, and depending on output mode 
+/** Appends a single charater to the current text node. If necessary, and depending on output mode
  *  and further output states, new XML elements (text, tspan, g, ...) are created.
  *  @param[in] c character to be added
  *  @param[in] x x coordinate
@@ -93,9 +93,9 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 		// changes of fonts and transformations require a new text element
 		if (!_text || _font.changed() || _matrix.changed()) {
 			newTextNode(x, y);
-			node = _text;	
+			node = _text;
 			_color.changed(true);
-		}	
+		}
 		if (_xchanged || _ychanged || (_color.changed() && _color.get() != Color::BLACK)) {
 			// if drawing position was explicitly changed, create a new tspan element
 			_span = new XMLElementNode("tspan");
@@ -137,7 +137,7 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 			else
 				node = _span = 0;
 		}
-			
+
 		if (!node)
 			node = _page;
 		ostringstream oss;
@@ -151,10 +151,10 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 }
 
 
-/** Creates a new text element. This is a helper function used by appendChar(). 
- *  @param[in] x current x coordinate 
+/** Creates a new text element. This is a helper function used by appendChar().
+ *  @param[in] x current x coordinate
  *  @param[in] y current y coordinate */
-void SVGTree::newTextNode (double x, double y) {	
+void SVGTree::newTextNode (double x, double y) {
 	_text = new XMLElementNode("text");
 	_span = 0; // no tspan in text element yet
 	if (DVIToSVG::USE_FONTS) {

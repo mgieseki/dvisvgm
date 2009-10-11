@@ -232,10 +232,14 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		trans.translate(-llx, -lly).rmultiply(usertrans).scale(sx, -sy).translate(x, y);
 
 		_xmlnode = new XMLElementNode("g");
-		_xmlnode->addAttribute("transform", trans.getSVG());
 		updatePos();
 		_psi.execute(ifs);
-		_actions->appendToPage(_xmlnode);
+		if (!_xmlnode->empty()) {
+			_xmlnode->addAttribute("transform", trans.getSVG());
+			_actions->appendToPage(_xmlnode);
+		}
+		else
+			delete _xmlnode;
 		_xmlnode = 0;
 
 		// adapt bounding box
@@ -543,6 +547,13 @@ void PsSpecialHandler::ClippingStack::push (const Path &path) {
 		_paths.push_back(path);
 		_stack.push(_paths.size());
 	}
+}
+
+
+void PsSpecialHandler::ClippingStack::clear() {
+	_paths.clear();
+	while (!_stack.empty())
+		_stack.pop();
 }
 
 

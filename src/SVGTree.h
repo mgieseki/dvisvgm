@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef SVGTREE_H
@@ -69,7 +69,7 @@ class SVGTree
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const FontManager &fm, const CharmapTranslator &cmt);
 		void setBBox (const BoundingBox &bbox);
-		void setFont (int id, const Font *font);		
+		void setFont (int id, const Font *font);
 		void setX (double x) {_xchanged = true;}
 		void setY (double y) {_ychanged = true;}
 		void setMatrix (const Matrix &m) {_matrix.set(m);}

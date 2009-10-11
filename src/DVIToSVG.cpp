@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -91,7 +91,7 @@ class PSHeaderActions : public DVIActions
 			if (s.substr(0, 7) == "header=")
 				_dvisvg.specialManager().process(s, 0);
 		}
-		
+
 		BoundingBox& bbox () {return _bbox;}
 
 	private:
@@ -100,7 +100,7 @@ class PSHeaderActions : public DVIActions
 };
 
 
-DVIToSVG::DVIToSVG (istream &is, ostream &os) 
+DVIToSVG::DVIToSVG (istream &is, ostream &os)
 	: DVIReader(is), _out(os)
 {
 	replaceActions(new DVIToSVGActions(*this, _svg));
@@ -112,7 +112,7 @@ DVIToSVG::~DVIToSVG () {
 }
 
 
-/** Starts the conversion process. 
+/** Starts the conversion process.
  *  @return number of processed pages */
 int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	executePostamble();    // collect scaling and font information
@@ -120,7 +120,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		ostringstream oss;
 		oss << "file contains only " << getTotalPages() << " page(s)";
 		throw DVIException(oss.str());
-	}	
+	}
 	if (firstPage < 0)
 		firstPage = 1;
 
@@ -132,24 +132,27 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		executePage(1);
 		replaceActions(save);
 	}
-	
+
 	if (CREATE_STYLE && USE_FONTS) {
-		XMLElementNode *styleNode = new XMLElementNode("style");
-		styleNode->addAttribute("type", "text/css");
-		_svg.appendToRoot(styleNode);
-		ostringstream style;
-		FORALL(getFontManager().getFonts(), vector<Font*>::const_iterator, i) {
-			if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-				style << "text.f"        << getFontManager().fontID(*i) << ' '
-						<< "{font-family:" << (*i)->name()
-						<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+		const vector<Font*> &fonts = getFontManager().getFonts();
+		if (!fonts.empty()) {
+			XMLElementNode *styleNode = new XMLElementNode("style");
+			styleNode->addAttribute("type", "text/css");
+			_svg.appendToRoot(styleNode);
+			ostringstream style;
+			FORALL(fonts, vector<Font*>::const_iterator, i) {
+				if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
+					style << "text.f"        << getFontManager().fontID(*i) << ' '
+							<< "{font-family:" << (*i)->name()
+							<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+				}
 			}
+			XMLCDataNode *cdata = new XMLCDataNode(style.str());
+			styleNode->append(cdata);
 		}
-		XMLCDataNode *cdata = new XMLCDataNode(style.str());
-		styleNode->append(cdata);
 	}
 
-	if (executePage(firstPage)) {  // @@ 
+	if (executePage(firstPage)) {  // @@
 		Message::mstream() << endl;
 		embedFonts(_svg.rootNode());
 		_svg.write(_out);
@@ -160,8 +163,8 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 }
 
 
-/** This template method is called by parent class DVIReader before 
- *  executing the BOP actions. 
+/** This template method is called by parent class DVIReader before
+ *  executing the BOP actions.
  *  @param[in] c contains information about the page (page number etc.) */
 void DVIToSVG::beginPage (Int32 *c) {
 	if (dynamic_cast<DVIToSVGActions*>(getActions())) {
@@ -187,7 +190,7 @@ void DVIToSVG::endPage () {
 		calc.setVariable("ux", bbox.minX());
 		calc.setVariable("uy", bbox.minY());
 		calc.setVariable("w", bbox.width());
-		calc.setVariable("h", bbox.height()); 
+		calc.setVariable("h", bbox.height());
 		calc.setVariable("pt", 1);
 		calc.setVariable("in", 72.27);
 		calc.setVariable("cm", 72.27/2.54);
@@ -205,7 +208,7 @@ void DVIToSVG::endPage () {
 			// set explicitly given page format
 			PageSize size(_bboxString);
 			if (size.valid()) {
-				// convention: DVI position (0,0) equals (1in, 1in) relative 
+				// convention: DVI position (0,0) equals (1in, 1in) relative
 				// to the upper left vertex of the page (see DVI specification)
 				const double border = -72.27;
 				bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
@@ -247,28 +250,28 @@ static void collect_chars (map<const Font*, set<int> > &fm) {
 }
 
 
-/** Adds the font information to the SVG tree. 
+/** Adds the font information to the SVG tree.
  *  @param[in] svgElement the font nodes are added to this node */
 void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	if (!svgElement)
-		return; 
+		return;
 	if (!getActions())  // no dvi actions => no chars written => no fonts to embed
 		return;
-	
+
 	typedef map<const Font*, set<int> > UsedCharsMap;
 	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(getActions());
 	UsedCharsMap &usedChars = svgActions->getUsedChars();
-		
+
 	collect_chars(usedChars);
 
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
 			CharmapTranslator *cmt = svgActions->getCharmapTranslator(font);
-			// If the same character is used in various sizes we don't want to embed the complete (lengthy) path 
-			// description multiple times because they would only differ by a scale factor. Thus it's better to 
-			// reference the already embedded path together with a transformation attribute and let the SVG renderer 
-			// scale the glyph properly. This is only necessary if we don't want to use font but path elements. 
+			// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
+			// description multiple times because they would only differ by a scale factor. Thus it's better to
+			// reference the already embedded path together with a transformation attribute and let the SVG renderer
+			// scale the glyph properly. This is only necessary if we don't want to use font but path elements.
 			if (font != font->uniqueFont()) {
 				FORALL(it->second, set<int>::const_iterator, cit) {
 					ostringstream oss;
@@ -302,13 +305,13 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	}
 }
 
-	
-/** Enables or disables processing of specials. If ignorelist == 0, all 
+
+/** Enables or disables processing of specials. If ignorelist == 0, all
  *  supported special handlers are loaded. To disable selected sets of specials,
  *  the corresponding prefixes can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
- *  @param[in] ignorelist list of special prefixes to ignore 
+ *  @param[in] ignorelist list of special prefixes to ignore
  *  @return the SpecialManager that handles special statements */
 const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
@@ -320,7 +323,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 			0,                          // placeholder for PsSpecialHandler
 			new BgColorSpecialHandler,  // handles background color special
 			new ColorSpecialHandler,    // handles color specials
-			new DvisvgmSpecialHandler,  // handles raw SVG embeddings 
+			new DvisvgmSpecialHandler,  // handles raw SVG embeddings
 			new EmSpecialHandler,       // handles emTeX specials
 //			new HtmlSpecialHandler,     // handles hyperref specials
 			new TpicSpecialHandler,     // handles tpic specials

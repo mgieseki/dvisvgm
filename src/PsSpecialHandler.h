@@ -40,6 +40,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 			void replace (const Path &path);
 			void dup ();
 			void pop ()    {_stack.pop();}
+			void clear ();
 			bool empty ()  {return _stack.empty();}
 			Path* top ()   {return (!_stack.empty() && _stack.top()) ? &_paths[_stack.top()-1] : 0;}
 			int topID ()   {return _stack.empty() ? 0 : _stack.top();}
@@ -106,6 +107,5 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		std::vector<int> _dashpattern;
 		ClippingStack _clipStack;
 };
-
 
 #endif
