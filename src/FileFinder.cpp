@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -27,11 +27,11 @@
 #include "macros.h"
 
 
-#ifdef MIKTEX	
+#ifdef MIKTEX
 	#include "MessageException.h"
 	#import <MiKTeX207-session.tlb>
-	using namespace MiKTeXSession2_7;	
-	
+	using namespace MiKTeXSession2_7;
+
 	static ISession2Ptr miktex_session;
 #else
 	// unfortunately, the kpathsea headers are not C++-ready,
@@ -58,9 +58,9 @@ const char *FileFinder::Impl::_usermapname = 0;
 
 FileFinder::Impl::Impl ()
 {
-#ifdef MIKTEX				
+#ifdef MIKTEX
 	if (FAILED(CoInitialize(0)))
-		throw MessageException("COM library could not be initialized\n");			
+		throw MessageException("COM library could not be initialized\n");
 
 	HRESULT hres = miktex_session.CreateInstance(L"MiKTeX.Session");
 	if (FAILED(hres))
@@ -70,7 +70,7 @@ FileFinder::Impl::Impl ()
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
-	kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools		
+	kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
 #endif
 }
 
@@ -94,7 +94,7 @@ FileFinder::Impl& FileFinder::Impl::instance () {
 
 
 /** Determines filetype by the filename extension and calls kpse_find_file
- *  to actually look up the file. 
+ *  to actually look up the file.
  *  @param[in] fname name of file to look up
  *  @return file path on success, 0 otherwise */
 const char* FileFinder::Impl::findFile (const std::string &fname) {
@@ -114,10 +114,10 @@ const char* FileFinder::Impl::findFile (const std::string &fname) {
 	catch (_com_error e) {
 		throw MessageException((const char*)e.Description());
 	}
-	return 0;		
+	return 0;
 
 #else
-		
+
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
 		types["tfm"] = kpse_tfm_format;
@@ -134,7 +134,7 @@ const char* FileFinder::Impl::findFile (const std::string &fname) {
 	if (it == types.end())
 		return 0;
 	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
-		// In the current version of libkpathsea, each call of kpse_find_file produces 
+		// In the current version of libkpathsea, each call of kpse_find_file produces
 		// a memory leak since the path buffer is not freed. I don't think we can do
 		// anything against it here...
 		static std::string buf;
@@ -147,14 +147,14 @@ const char* FileFinder::Impl::findFile (const std::string &fname) {
 }
 
 
-/** Checks whether the given file is mapped to a different name and if the 
- *  file can be found under this name. 
+/** Checks whether the given file is mapped to a different name and if the
+ *  file can be found under this name.
  *  @param[in] fname name of file to look up
  *  @param[in] fontmap font mappings
  *  @return file path on success, 0 otherwise */
 const char* FileFinder::Impl::findMappedFile (std::string fname) {
 	size_t pos = fname.rfind('.');
-	if (pos == std::string::npos) 
+	if (pos == std::string::npos)
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
@@ -184,10 +184,10 @@ const char* FileFinder::Impl::mktex (const std::string &fname) {
 	std::string base = fname.substr(0, pos);
 	const char *path = 0;
 #ifdef MIKTEX
-	// maketfm and makemf are located in miktex/bin which is in the search PATH	
-	string toolname = (ext == "tfm" ? "maketfm" : "makemf");		
+	// maketfm and makemf are located in miktex/bin which is in the search PATH
+	string toolname = (ext == "tfm" ? "maketfm" : "makemf");
 	system((toolname+".exe "+fname).c_str());
-	path = findFile(fname);	
+	path = findFile(fname);
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
@@ -196,13 +196,13 @@ const char* FileFinder::Impl::mktex (const std::string &fname) {
 }
 
 
-/** Initializes a font map by reading the map file(s). 
+/** Initializes a font map by reading the map file(s).
  *  @param[in,out] fontmap font map to be initialized */
 void FileFinder::Impl::initFontMap () {
 	const char *usermapname = _usermapname;
 	if (usermapname && *usermapname == '+') // read additional map entries?
 		usermapname++;
-	if (usermapname) {		
+	if (usermapname) {
 		// try to read user font map file
 		const char *mappath = 0;
 		if (!_fontmap.read(usermapname)) {
@@ -220,11 +220,11 @@ void FileFinder::Impl::initFontMap () {
 				_fontmap.read(mf);
 		if (!mf)
 			Message::wstream(true) << "none of the default map files could be found";
-	}	
+	}
 }
 
 
-/** Searches a file in the TeX directory tree. 
+/** Searches a file in the TeX directory tree.
  *  If the file doesn't exist, maximal two further steps are applied
  *  (if "extended" is true):
  *  - checks whether the filename is mapped to a different name and returns
@@ -242,7 +242,7 @@ const char* FileFinder::Impl::lookup (const std::string &fname, bool extended) {
 }
 
 
-/** Returns the path to the corresponding encoding file for a given font file. 
+/** Returns the path to the corresponding encoding file for a given font file.
  *  @param[in] fname name of the font file
  *  @return path to encoding file on success, 0 otherwise */
 const char* FileFinder::Impl::lookupEncFile (std::string fname) {
@@ -251,7 +251,7 @@ const char* FileFinder::Impl::lookupEncFile (std::string fname) {
 		const char *path = findFile(fname);
 		if (path)
 			return path;
-	}	
+	}
 	return 0;
 }
 

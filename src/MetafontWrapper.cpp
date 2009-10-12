@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -67,7 +67,7 @@ static int execute (const char *cmd, const char *params) {
 }
 
 
-MetafontWrapper::MetafontWrapper (const string &fname) 
+MetafontWrapper::MetafontWrapper (const string &fname)
 	: _fontname(fname)
 {
 }
@@ -81,10 +81,10 @@ MetafontWrapper::MetafontWrapper (const string &fname)
  *  @return return value of Metafont system call */
 int MetafontWrapper::call (const string &mode, double mag) {
 	if (!FileFinder::lookup(_fontname+".mf"))
-		return 1;     // mf file not available => no need to call the "slow" Metafont	
-	FileSystem::remove(_fontname+".gf");	
+		return 1;     // mf file not available => no need to call the "slow" Metafont
+	FileSystem::remove(_fontname+".gf");
 
-#ifdef __WIN32__	
+#ifdef __WIN32__
 	const char *cmd = FileFinder::lookup("mf.exe", false);
 #else
 	const char *cmd = "mf";
@@ -93,15 +93,15 @@ int MetafontWrapper::call (const string &mode, double mag) {
 	oss << "\"\\mode=" << mode  << ";"
 		   "mag:=" << mag << ";"
 		   "batchmode;"
-		   "input " << _fontname << "\""; 
+		   "input " << _fontname << "\"";
 	Message::mstream() << "running Metafont for " << _fontname << endl;
 	int ret = execute(cmd, oss.str().c_str());
 
 	// try to read Metafont's logfile and get name of created GF file
 	ifstream ifs((_fontname+".log").c_str());
-	if (ifs) {	
+	if (ifs) {
 		char buf[128];
-		while (ifs) {		
+		while (ifs) {
 			ifs.getline(buf, 128);
 			string line = buf;
 			if (line.substr(0, 17) == "Output written on") {
@@ -135,14 +135,14 @@ bool MetafontWrapper::success () const {
 }
 
 
-/** Remove all files created by a Metafont call (tfm, gf, log). 
+/** Remove all files created by a Metafont call (tfm, gf, log).
  *  @param[in] keepGF if true, GF files won't be removed */
 void MetafontWrapper::removeOutputFiles (bool keepGF) {
 	removeOutputFiles(_fontname, keepGF);
 }
 
 
-/** Remove all files created by a Metafont call for a given font (tfm, gf, log). 
+/** Remove all files created by a Metafont call for a given font (tfm, gf, log).
  *  @param[in] fontname name of font whose temporary files should be removed
  *  @param[in] keepGF if true, GF files will be kept */
 void MetafontWrapper::removeOutputFiles (const string &fontname, bool keepGF) {

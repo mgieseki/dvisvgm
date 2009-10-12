@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdarg>
@@ -33,8 +33,8 @@
 using namespace std;
 
 
-DVIReader::DVIReader (istream &is, DVIActions *a) 
-	: StreamReader(is), _actions(a) 
+DVIReader::DVIReader (istream &is, DVIActions *a)
+	: StreamReader(is), _actions(a)
 {
 	_inPage = false;
 	_pageHeight = _pageWidth = 0;
@@ -51,7 +51,7 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
 
 
 /** Reads a single DVI command from the current position of the input stream and calls the
- *  corresponding cmdFOO method.  
+ *  corresponding cmdFOO method.
  *  @return opcode of the executed command */
 int DVIReader::executeCommand () {
 	struct DVICommand {
@@ -85,7 +85,7 @@ int DVIReader::executeCommand () {
 		{&DVIReader::cmdFontDef, 1}, {&DVIReader::cmdFontDef, 2}, {&DVIReader::cmdFontDef, 3}, {&DVIReader::cmdFontDef, 4}, // 243-246
 		{&DVIReader::cmdPre, 0},     {&DVIReader::cmdPost, 0},    {&DVIReader::cmdPostPost, 0}                              // 247-249
 	};
-	
+
 	int opcode = in().get();
 	if (!in() || opcode < 0)  // at end of file
 		throw InvalidDVIFileException("invalid file");
@@ -94,7 +94,7 @@ int DVIReader::executeCommand () {
 	else if (opcode >= 171 && opcode <= 234)
 		cmdFontNum0(opcode-171);
 	else if (opcode >= 250) {
-		ostringstream oss; 
+		ostringstream oss;
 		oss << "undefined DVI command (opcode " << opcode << ')';
 		throw DVIException(oss.str());
 	}
@@ -144,8 +144,8 @@ bool DVIReader::executeAllPages () {
 #endif
 
 
-/** Reads and executes the commands of a single page. 
- *  This methods stops reading after the page's eop command has been executed. 
+/** Reads and executes the commands of a single page.
+ *  This methods stops reading after the page's eop command has been executed.
  *  @param[in] n number of page to be executed
  *  @returns true if page was read successfully */
 bool DVIReader::executePage (unsigned n) {
@@ -153,14 +153,14 @@ bool DVIReader::executePage (unsigned n) {
 	if (!in())
 		throw DVIException("invalid DVI file");
 	in().seekg(-1, ios_base::end);      // stream pointer to last byte
-	while (in().peek() == 223) 
+	while (in().peek() == 223)
 		in().seekg(-1, ios_base::cur);   // skip fill bytes
 	in().seekg(-4, ios_base::cur);      // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = readUnsigned(4);         // pointer to begin of postamble
 	in().seekg(q, ios_base::beg);       // now on begin of postamble
 	if (executeCommand() != 248)        // execute postamble command but not the fontdefs
 		return false;
-	if (n < 1 || n > _totalPages) 
+	if (n < 1 || n > _totalPages)
 		return false;
 	in().seekg(_prevBop, ios_base::beg); // now on last bop
 	_inPostamble = false;               // we jumped out of the postamble
@@ -183,7 +183,7 @@ bool DVIReader::executePages (unsigned first, unsigned last) {
 	if (first > last)
 		swap(first, last);
 	in().seekg(-1, ios_base::end);      // stream pointer to last byte
-	while (in().peek() == 223) 
+	while (in().peek() == 223)
 		in().seekg(-1, ios_base::cur);   // skip fill bytes
 	in().seekg(-4, ios_base::cur);      // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = readUnsigned(4);         // pointer to begin of postamble
@@ -214,7 +214,7 @@ void DVIReader::executePostamble () {
 	if (!in())
 		throw DVIException("invalid DVI file");
 	in().seekg(-1, ios_base::end);    // stream pointer to last byte
-	while (in().peek() == 223) 
+	while (in().peek() == 223)
 		in().seekg(-1, ios_base::cur); // skip fill bytes
 
 	in().seekg(-4, ios_base::cur);    // now on first byte of q (pointer to begin of postamble)
@@ -224,14 +224,14 @@ void DVIReader::executePostamble () {
 }
 
 
-/** Returns the current x coordinate in TeX point units. 
+/** Returns the current x coordinate in TeX point units.
  *  This is the horizontal position where the next output would be placed. */
 double DVIReader::getXPos () const {
 	return _currPos.h;
 }
 
 
-/** Returns the current y coordinate in TeX point units. 
+/** Returns the current y coordinate in TeX point units.
  *  This is the vertical position where the next output would be placed. */
 double DVIReader::getYPos () const {
 	return _currPos.v;
@@ -259,7 +259,7 @@ double DVIReader::getPageWidth () const {
 	return _pageWidth;
 }
 
-/////////////////////////////////////		
+/////////////////////////////////////
 
 /** Reads and executes DVI preamble command. */
 void DVIReader::cmdPre (int) {
@@ -267,7 +267,7 @@ void DVIReader::cmdPre (int) {
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
 	_mag = readUnsigned(4);        // magnification
-	UInt32 k   = readUnsigned(1);  // length of following comment 
+	UInt32 k   = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
 	if (i != 2)
 		throw DVIException("invalid identification value in DVI preamble");
@@ -282,7 +282,7 @@ void DVIReader::cmdPre (int) {
 /** Reads and executes DVI postamble command. */
 void DVIReader::cmdPost (int) {
 	_prevBop   = readUnsigned(4);  // pointer to previous bop
-	UInt32 num = readUnsigned(4);  
+	UInt32 num = readUnsigned(4);
 	UInt32 den = readUnsigned(4);
 	_mag = readUnsigned(4);
 	_pageHeight = readUnsigned(4); // height of tallest page in dvi units
@@ -305,9 +305,9 @@ void DVIReader::cmdPostPost (int) {
 	_inPostamble = false;
 	readUnsigned(4);               // pointer to begin of postamble
 	UInt32 i = readUnsigned(1);    // identification byte (should be 2)
-	if (i == 2) 
+	if (i == 2)
 		while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
-	else 
+	else
 		throw DVIException("invalid identification value in postpost");
 }
 
@@ -331,7 +331,7 @@ void DVIReader::cmdBop (int) {
 
 /** Reads and executes End-Of-Page command. */
 void DVIReader::cmdEop (int) {
-	if (!_posStack.empty()) 
+	if (!_posStack.empty())
 		throw DVIException("stack not empty at end of page");
 	_inPage = false;
 	endPage();
@@ -341,14 +341,14 @@ void DVIReader::cmdEop (int) {
 
 
 /** Reads and executes push command. */
-void DVIReader::cmdPush (int) {	
+void DVIReader::cmdPush (int) {
 	_posStack.push(_currPos);
 }
 
 
 /** Reads and executes pop command (restores pushed position information). */
 void DVIReader::cmdPop (int) {
-	if (_posStack.empty()) 
+	if (_posStack.empty())
 		throw DVIException("stack empty at pop command");
 	else {
 		DVIPosition prevPos = _currPos;
@@ -367,10 +367,10 @@ void DVIReader::cmdPop (int) {
 /** Helper function that actually sets/puts a charater. It is called by the
  *  cmdSetChar and cmdPutChar methods.
  * @param[in] c character to typeset
- * @param[in] moveCursor if true, register h is increased by the character width 
+ * @param[in] moveCursor if true, register h is increased by the character width
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
-	if (_inPage) {   
+	if (_inPage) {
 		Font *font = _fontManager.getFont(_currFontNum);
 		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
 			vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
@@ -382,7 +382,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 				cmdFontNum0(_fontManager.vfFirstFontNum(vf));
 				double save_scale = _scaleFactor;
 				_scaleFactor = vf->scaledSize()/(1 << 20);
-				
+
 				VectorInputStream<UInt8> vis(*dvi);
 				istream &is = replaceStream(vis);
 				try {
@@ -409,65 +409,65 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 }
 
 
-/** Reads and executes set_char_x command. Puts a character at the current 
- *  position and advances the cursor. 
- *  @param[in] c character to set 
+/** Reads and executes set_char_x command. Puts a character at the current
+ *  position and advances the cursor.
+ *  @param[in] c character to set
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetChar0 (int c) {
 	putChar(c, true);
 }
 
 
-/** Reads and executes setx command. Puts a character at the current 
- *  position and advances the cursor. 
+/** Reads and executes setx command. Puts a character at the current
+ *  position and advances the cursor.
  *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
-void DVIReader::cmdSetChar (int len) {	
-   // According to the dvi specification all character codes are unsigned 
+void DVIReader::cmdSetChar (int len) {
+   // According to the dvi specification all character codes are unsigned
    // except len == 4. At the moment all char codes are treated as unsigned...
 	UInt32 c = readUnsigned(len); // if len == 4 c may be signed
 	putChar(c, true);
 }
 
 
-/** Reads and executes putx command. Puts a character at the current 
- *  position but doesn't change the cursor position. 
+/** Reads and executes putx command. Puts a character at the current
+ *  position but doesn't change the cursor position.
  *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutChar (int len) {
-   // According to the dvi specification all character codes are unsigned 
+   // According to the dvi specification all character codes are unsigned
    // except len == 4. At the moment all char codes are treated as unsigned...
 	Int32 c = readUnsigned(len);
 	putChar(c, false);
 }
 
 
-/** Reads and executes set_rule command. Puts a solid rectangle at the current 
- *  position and updates the cursor position. 
+/** Reads and executes set_rule command. Puts a solid rectangle at the current
+ *  position and updates the cursor position.
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
 	if (_inPage) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
-		if (_actions && height > 0 && width > 0) 
+		if (_actions && height > 0 && width > 0)
 			_actions->setRule(_currPos.h, _currPos.v, height, width);
 		_currPos.h += width;
 		if (_actions && (height <= 0 || width <= 0))
-			_actions->moveToX(_currPos.h);	
+			_actions->moveToX(_currPos.h);
 	}
 	else
 		throw DVIException("set_rule outside of page");
 }
 
 
-/** Reads and executes set_rule command. Puts a solid rectangle at the current 
- *  position but leaves the cursor position unchanged. 
+/** Reads and executes set_rule command. Puts a solid rectangle at the current
+ *  position but leaves the cursor position unchanged.
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
 	if (_inPage) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
-		if (_actions && height > 0 && width > 0) 
+		if (_actions && height > 0 && width > 0)
 			_actions->setRule(_currPos.h, _currPos.v, height, width);
 	}
 	else
@@ -501,8 +501,8 @@ void DVIReader::cmdXXX (int len) {
 }
 
 
-/** Selects a previously defined font by its number. 
- * @param[in] num font number 
+/** Selects a previously defined font by its number.
+ * @param[in] num font number
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
 	if (Font *font = _fontManager.getFont(num)) {
@@ -519,18 +519,18 @@ void DVIReader::cmdFontNum0 (int num) {
 
 
 /** Selects a previously defined font.
- * @param[in] len size of font number variable (in bytes) 
+ * @param[in] len size of font number variable (in bytes)
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum (int len) {
 	UInt32 num = readUnsigned(len);
-	cmdFontNum0(num);	
+	cmdFontNum0(num);
 }
 
 
 /** Helper function to handle a font definition.
- *  @param[in] fontnum local font number 
+ *  @param[in] fontnum local font number
  *  @param[in] name font name
- *  @param[in] checksum checksum to be compared with TFM checksum 
+ *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] ds design size in TeX point units
  *  @param[in] ss scaled size in TeX point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
@@ -550,7 +550,7 @@ void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, doubl
 }
 
 
-/** Defines a new font. 
+/** Defines a new font.
  * @param[in] len size of font number variable (in bytes) */
 void DVIReader::cmdFontDef (int len) {
 	UInt32 fontnum  = readUnsigned(len);   // font number
@@ -561,19 +561,19 @@ void DVIReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	
+
 	defineFont(fontnum, fontname, checksum, dsize*_scaleFactor, ssize*_scaleFactor);
 }
 
 
 /** This template method is called by the VFReader after reading a font definition from a VF file.
- *  @param[in] fontnum local font number 
+ *  @param[in] fontnum local font number
  *  @param[in] name font name
- *  @param[in] checksum checksum to be compared with TFM checksum 
+ *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] dsize design size in TeX point units
  *  @param[in] ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
-	VirtualFont *vf = _fontManager.getVF();	
+	VirtualFont *vf = _fontManager.getVF();
 	defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 }
 

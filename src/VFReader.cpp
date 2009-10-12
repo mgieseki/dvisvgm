@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <sstream>
@@ -33,7 +33,7 @@ inline static double fix2double (FixWord fix) {
 }
 
 
-VFReader::VFReader (istream &is) 
+VFReader::VFReader (istream &is)
 	: StreamReader(is), actions(0) {
 }
 
@@ -55,15 +55,15 @@ VFActions* VFReader::replaceActions (VFActions *a) {
  *  @param[in] approve function to approve invocation of the action assigned to command
  *  @return opcode of the executed command */
 int VFReader::executeCommand (ApproveAction approve) {
-	int opcode = in().get();	
+	int opcode = in().get();
 	if (!in() || opcode < 0)  // at end of file
 		throw VFException("invalid file");
-	
+
 	bool approved = !approve || approve(opcode);
 	VFActions *act = actions;
 	if (!approved)
 		replaceActions(0);   // disable actions
-	
+
 	if (opcode <= 241)      // short character definition?
 		cmdShortChar(opcode);
 	else if (opcode >= 243 && opcode <= 246)   // font definition?
@@ -75,7 +75,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 			case 248: cmdPost();     break;      // postamble
 			default : {                          // invalid opcode
 				replaceActions(act);              // reenable actions
-				ostringstream oss; 
+				ostringstream oss;
 				oss << "undefined VF command (opcode " << opcode << ')';
 				throw VFException(oss.str());
 			}
@@ -97,7 +97,7 @@ bool VFReader::executeAll () {
 
 
 /// Returns true if op indicates the preamble or a font definition
-static bool is_pre_or_fontdef (int op) {return op > 242;}  
+static bool is_pre_or_fontdef (int op) {return op > 242;}
 static bool is_chardef (int op)        {return op < 243;}
 
 
@@ -125,7 +125,7 @@ bool VFReader::executeCharDefs () {
 /** Reads and executes DVI preamble command. */
 void VFReader::cmdPre () {
 	UInt32 i   = readUnsigned(1);  // identification number (should be 2)
-	UInt32 k   = readUnsigned(1);  // length of following comment 
+	UInt32 k   = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
 	UInt32 cs  = readUnsigned(4);  // check sum to be compared with TFM cecksum
 	UInt32 ds  = readUnsigned(4);  // design size (same as TFM design size) (fix_word)

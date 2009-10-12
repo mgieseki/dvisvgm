@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "macros.h"
@@ -56,7 +56,7 @@ void XMLElementNode::append (XMLNode *child) {
 	if (!child)
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
-	if (!textNode1 || children.empty()) 
+	if (!textNode1 || children.empty())
 		children.push_back(child);
 	else {
 		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
@@ -79,7 +79,7 @@ void XMLElementNode::prepend (XMLNode *child) {
 	if (!child)
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
-	if (!textNode1 || children.empty()) 
+	if (!textNode1 || children.empty())
 		children.push_front(child);
 	else {
 		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
@@ -92,7 +92,7 @@ void XMLElementNode::prepend (XMLNode *child) {
 
 ostream& XMLElementNode::write (ostream &os) const {
 	os << '<' << name;
-	FORALL(attributes, AttribMap::const_iterator, i) 
+	FORALL(attributes, AttribMap::const_iterator, i)
 		os << ' ' << i->first << "='" << i->second << '\'';
 	if (children.empty())
 		os << "/>\n";
@@ -117,12 +117,12 @@ ostream& XMLElementNode::write (ostream &os) const {
  *  @return true if node was completely emitted
  * */
 bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
-	if (this == stopNode) 
+	if (this == stopNode)
 		return false;
 
 	if (!emitted) {
 		os << '<' << name;
-		FORALL(attributes, AttribMap::iterator, i) 
+		FORALL(attributes, AttribMap::iterator, i)
 			os << ' ' << i->first << "='" << i->second << '\'';
 		if (children.empty())
 			os << "/>\n";
@@ -131,7 +131,7 @@ bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 			if (dynamic_cast<XMLElementNode*>(children.front()))
 				os << '\n';
 		}
-			
+
 		emitted = true;
 	}
 	if (!children.empty()) {
@@ -153,7 +153,7 @@ bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 bool XMLElementNode::hasAttribute (const string &name) const {
 	return attributes.find(name) != attributes.end();
 }
-	
+
 
 //////////////////////
 
@@ -166,7 +166,7 @@ void XMLTextNode::append (XMLNode *node) {
 
 
 void XMLTextNode::append (XMLTextNode *node) {
-	if (node) 
+	if (node)
 		text += node->text;
 	delete node;
 }
@@ -187,14 +187,14 @@ void XMLTextNode::prepend (XMLNode *node) {
 
 //////////////////////
 
-XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p) 
-	: name(n), params(p), emitted(false) 
+XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p)
+	: name(n), params(p), emitted(false)
 {
 }
 
 
 XMLDeclarationNode::~XMLDeclarationNode () {
-	FORALL(children, list<XMLDeclarationNode*>::iterator, i) 
+	FORALL(children, list<XMLDeclarationNode*>::iterator, i)
 		delete *i;
 }
 
@@ -213,7 +213,7 @@ ostream& XMLDeclarationNode::write (ostream &os) const {
 			(*i)->write(os);
 		os << "]>\n";
 	}
-	return os;	
+	return os;
 }
 
 
@@ -225,7 +225,7 @@ bool XMLDeclarationNode::emit (ostream &os, XMLNode *stopNode) {
 		os << "<!" << name << ' ' << params;
 		if (children.empty())
 			os << ">\n";
-		else 	
+		else
 			os << "[\n";
 		emitted = true;
 	}
@@ -244,7 +244,7 @@ bool XMLDeclarationNode::emit (ostream &os, XMLNode *stopNode) {
 	return true;
 
 }
-	
+
 //////////////////////
 
 ostream& XMLCDataNode::write (ostream &os) const {

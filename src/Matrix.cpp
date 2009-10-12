@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -38,7 +38,7 @@ static double round (double x, int n) {
 }
 
 
-/** Creates a diagonal matrix ((d,0,0),(0,d,0),(0,0,d)). 
+/** Creates a diagonal matrix ((d,0,0),(0,d,0),(0,0,d)).
  *  @param[in] d value of diagonal elements */
 Matrix::Matrix (double d) {
 	for (int i=0; i < 3; i++)
@@ -47,8 +47,8 @@ Matrix::Matrix (double d) {
 }
 
 
-/** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)). 
- *  Expects that array v consists of 'size' elements. If size is less than 9, the 
+/** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
+ *  Expects that array v consists of 'size' elements. If size is less than 9, the
  *  remaining matrix components will be set to those of the identity matrix.
  *  @param v array containing the matrix components */
 Matrix::Matrix (double v[], unsigned size) {
@@ -56,8 +56,8 @@ Matrix::Matrix (double v[], unsigned size) {
 }
 
 
-/** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)). 
- *  If vector v has less than 9 elements, the remaining matrix components will be set to 
+/** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
+ *  If vector v has less than 9 elements, the remaining matrix components will be set to
  *  those of the identity matrix.
  *  @param v array containing the matrix components */
 Matrix::Matrix (const std::vector<double> &v) {
@@ -108,8 +108,8 @@ Matrix& Matrix::scale (double sx, double sy) {
 }
 
 
-/** Multiplies this matrix by ((cos d, -sin d, 0), (sin d, cos d, 0), (0,0,1)) that 
- *  describes an anti-clockwise rotation by d degrees. 
+/** Multiplies this matrix by ((cos d, -sin d, 0), (sin d, cos d, 0), (0,0,1)) that
+ *  describes an anti-clockwise rotation by d degrees.
  *  @param[in] deg rotation angle in degrees */
 Matrix& Matrix::rotate (double deg) {
 	RotationMatrix r(deg);
@@ -224,10 +224,10 @@ bool Matrix::isIdentity() const {
 }
 
 
-/** Checks whether this matrix describes a plain translation (without any other transformations). 
+/** Checks whether this matrix describes a plain translation (without any other transformations).
  *  If so, the parameters tx and ty are filled with the translation components.
  *  @param[out] tx horizontal translation
- *  @param[out] ty vertical translation 
+ *  @param[out] ty vertical translation
  *  @return true if matrix describes a pure translation */
 bool Matrix::isTranslation (double &tx, double &ty) const {
 	tx = values[0][2];
@@ -351,7 +351,7 @@ Matrix& Matrix::parse (const string &cmds, Calculator &calc) {
 }
 
 
-/** Returns an SVG matrix expression that can be used in transform attributes. 
+/** Returns an SVG matrix expression that can be used in transform attributes.
  *  ((a,b,c),(d,e,f),(0,0,1)) => matrix(a d b e c f) */
 string Matrix::getSVG () const {
 	ostringstream oss;
@@ -394,7 +394,7 @@ TranslationMatrix::TranslationMatrix (double tx, double ty) {
 
 ScalingMatrix::ScalingMatrix (double sx, double sy) {
 	double v[] = {sx, 0, 0, 0, sy};
-	set(v, 5);	
+	set(v, 5);
 }
 
 
@@ -403,7 +403,7 @@ RotationMatrix::RotationMatrix (double deg) {
 	double c = cos(rad);
 	double s = sin(rad);
 	double v[] = {c, -s, 0, s, c};
-	set(v, 5);	
+	set(v, 5);
 }
 
 

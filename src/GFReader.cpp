@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -25,7 +25,7 @@
 
 using namespace std;
 
-struct GFCommand 
+struct GFCommand
 {
 	void (GFReader::*method)(int);
 	int numBytes;
@@ -33,9 +33,9 @@ struct GFCommand
 
 struct CharInfo
 {
-	CharInfo (Int32 dxx, Int32 dyy, Int32 w, UInt32 p) 
+	CharInfo (Int32 dxx, Int32 dyy, Int32 w, UInt32 p)
 		: dx(dxx), dy(dyy), width(w), location(p) {}
-	
+
 	Int32 dx, dy;
 	Int32 width;  // 2^24 * (true width)/(design size)
 	UInt32 location;
@@ -78,7 +78,7 @@ Int32 GFReader::readSigned (int bytes) {
 	Int32 ret = in.get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !in.eof(); i--) 
+	for (int i=bytes-2; i >= 0 && !in.eof(); i--)
 		ret = (ret << 8) | in.get();
 	return ret;
 }
@@ -97,7 +97,7 @@ string GFReader::readString (int bytes) {
 
 
 /** Reads a single GF command from the current position of the input stream and calls the
- *  corresponding cmdFOO method.  
+ *  corresponding cmdFOO method.
  *  @return opcode of the executed command */
 int GFReader::executeCommand () {
    /* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
@@ -114,7 +114,7 @@ int GFReader::executeCommand () {
 		{&GFReader::cmdCharLoc, 0}, {&GFReader::cmdCharLoc0, 0},                                             // 245-246
 		{&GFReader::cmdPre, 0},     {&GFReader::cmdPost, 0}, {&GFReader::cmdPostPost, 0}                     // 247-249
 	};
-	
+
 	int opcode = in.get();
 	if (opcode < 0) { // at end of file
 		Message::estream(true) << "unexpected end of file\n";
@@ -237,7 +237,7 @@ void GFReader::cmdPost (int) {
 void GFReader::cmdPostPost (int) {
 	readUnsigned(4);   // pointer to begin of postamble
 	UInt32 i = readUnsigned(1);
-	if (i == 131) 
+	if (i == 131)
 		while (readUnsigned(1) == 223); // skip fill bytes
 	else {
 		Message::estream(true) << "invalid identification number in GF preamble\n";
@@ -247,7 +247,7 @@ void GFReader::cmdPostPost (int) {
 
 
 /** Inverts "paint color" (black to white or vice versa) of n pixels
- *  and advances the cursor by n. 
+ *  and advances the cursor by n.
  *  @param[in] n number of pixels to be inverted */
 void GFReader::cmdPaint0 (int n) {
 	if (penDown)                    // set pixels?
@@ -306,14 +306,14 @@ void GFReader::cmdEoc (int) {
 }
 
 
-/** Moves cursor to the beginning of a following row and sets 
- *  paint color to white. 
- *  @param[in] len if 0: move to next row, otherwise: number of bytes to read. 
+/** Moves cursor to the beginning of a following row and sets
+ *  paint color to white.
+ *  @param[in] len if 0: move to next row, otherwise: number of bytes to read.
  *                 The read value denotes the number of rows to be skipped.  */
 void GFReader::cmdSkip (int len) {
 	if (len == 0)
 		y--;
-	else 
+	else
 		y -= readUnsigned(len)+1;
 	x = minX;
 	penDown = false;
@@ -321,7 +321,7 @@ void GFReader::cmdSkip (int len) {
 
 
 /** Moves cursor to pixel number 'col' in the next row and sets
- *  the paint color to black. 
+ *  the paint color to black.
  *  @param[in] col pixel/column number */
 void GFReader::cmdNewRow (int col) {
 	x = minX + col ;
@@ -349,9 +349,9 @@ void GFReader::cmdNop (int) {
 
 
 /** Reads character locator (part of postamble) */
-void GFReader::cmdCharLoc0 (int) {	
+void GFReader::cmdCharLoc0 (int) {
 	UInt8 c  = readUnsigned(1); // character code mod 256
-	UInt8 dm = readUnsigned(1); // 
+	UInt8 dm = readUnsigned(1); //
 	Int32 w  = readSigned(4);   // (1<<24)*characterWidth/designSize
 	Int32 p   = readSigned(4);  // pointer to begin of (last) character data
 	Int32 dx  = 65536*dm;

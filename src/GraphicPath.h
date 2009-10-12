@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef GRAPHICPATH_H
@@ -33,12 +33,12 @@ template <typename T>
 class GraphicPath
 {
 	typedef Pair<T> Point;
-	
+
 	struct Command {
 		enum Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
-		
+
 		Command (Type t) : type(t) {}
-		
+
 		Command (Type t, const Point &p) : type(t) {
 			params[0] = p;
 		}
@@ -69,7 +69,7 @@ class GraphicPath
 			for (int i=0; i < numParams(); i++)
 				params[i] = matrix * params[i];
 		}
-		
+
 		Type type;
 		Point params[3];
 	};
@@ -93,7 +93,7 @@ class GraphicPath
 
    public:
 		void newpath () {
-			_commands.clear();	
+			_commands.clear();
 		}
 
 		/// Returns true if path is empty (there is nothing to draw)
@@ -104,7 +104,7 @@ class GraphicPath
 		void moveto (const T &x, const T &y) {
 			moveto(Point(x, y));
 		}
-		
+
 		void moveto (const Point &p) {
 			// avoid sequences of several MOVETOs; always use latest
 			if (_commands.empty() || _commands.back().type != Command::MOVETO)
@@ -116,7 +116,7 @@ class GraphicPath
 		void lineto (const T &x, const T &y) {
 			lineto(Point(x, y));
 		}
-		
+
 		void lineto (const Point &p) {
 			_commands.push_back(Command(Command::LINETO, p));
 		}
@@ -136,11 +136,11 @@ class GraphicPath
 		void cubicto (const Point &p1, const Point &p2, const Point &p3) {
 			_commands.push_back(Command(Command::CUBICTO, p1, p2, p3));
 		}
-		
+
 		void closepath () {
 			_commands.push_back(Command(Command::CLOSEPATH));
 		}
-		
+
 		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0) const {
 			struct WriteActions : Actions {
 				WriteActions (std::ostream &os) : _os(os) {}

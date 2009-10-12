@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -29,7 +29,7 @@
 using namespace std;
 
 
-/** Reads a single unsigned integer value of given size (max. 4 bytes). 
+/** Reads a single unsigned integer value of given size (max. 4 bytes).
  *  @param[in] is characters are read from this stream
  *  @param[in] n number of bytes to be read */
 static UInt32 read_unsigned (istream &is, int n) {
@@ -42,11 +42,11 @@ static UInt32 read_unsigned (istream &is, int n) {
 }
 
 
-/** Reads a sequence of n TFM words (4 Bytes each). 
+/** Reads a sequence of n TFM words (4 Bytes each).
  *  @param[in]  is reads from this stream
  *  @param[out] v the read words
  *  @param[in]  n number of words to be read
- *  @return dynamically allocated array containing the read words 
+ *  @return dynamically allocated array containing the read words
  *          (must be deleted by the caller) */
 template <typename T>
 static void read_words (istream &is, vector<T> &v, unsigned n) {
@@ -95,8 +95,8 @@ bool TFM::readFromStream (istream &is) {
 //	UInt16 nl = read_unsigned(is, 2);  // number of words in lig/kern table
 //	UInt16 nk = read_unsigned(is, 2);  // number of words in kern table
 //	UInt16 ne = read_unsigned(is, 2);  // number of words in ext. char table
-//	UInt16 np = read_unsigned(is, 2);  // number of font parameter words 
-	
+//	UInt16 np = read_unsigned(is, 2);  // number of font parameter words
+
 	is.seekg(10, ios_base::cur);       // move to header
 	_checksum = read_unsigned(is, 4);
 	_designSize = read_unsigned(is, 4);
@@ -118,7 +118,7 @@ double TFM::getDesignSize () const {
 /** Returns the width of char c in TeX point units. */
 double TFM::getCharWidth (int c) const {
 	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
-		return 0;   
+		return 0;
 	int index = (_charInfoTable[c-_firstChar] >> 24) & 0xFF;
 	return fix2double(_widthTable[index]) * fix2double(_designSize);
 }
@@ -127,7 +127,7 @@ double TFM::getCharWidth (int c) const {
 /** Returns the height of char c in TeX point units. */
 double TFM::getCharHeight (int c) const {
 	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
-		return 0;   
+		return 0;
 	int index = (_charInfoTable[c-_firstChar] >> 20) & 0x0F;
 	return fix2double(_heightTable[index]) * fix2double(_designSize);
 }
@@ -136,7 +136,7 @@ double TFM::getCharHeight (int c) const {
 /** Returns the depth of char c in TeX point units. */
 double TFM::getCharDepth (int c) const {
 	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
-		return 0;   
+		return 0;
 	int index = (_charInfoTable[c-_firstChar] >> 16) & 0x0F;
 	return fix2double(_depthTable[index]) * fix2double(_designSize);
 }

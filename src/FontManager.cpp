@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,14 +15,13 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
 #include <fstream>
 #include "Font.h"
 #include "FontEncoding.h"
-#include "FontEngine.h"
 #include "FontManager.h"
 #include "FileFinder.h"
 #include "Message.h"
@@ -45,8 +44,8 @@ FontManager::~FontManager () {
 }
 
 
-/** Returns a unique ID that identifies the font. 
- *  @param[in] n local font number, as used in DVI and VF files 
+/** Returns a unique ID that identifies the font.
+ *  @param[in] n local font number, as used in DVI and VF files
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (int n) const {
 	if (_vfStack.empty()) {
@@ -106,7 +105,7 @@ int FontManager::vfFirstFontNum (VirtualFont *vf) const {
 
 
 /** Returns a previously registered font.
- *  @param[in] n local font number, as used in DVI and VF files 
+ *  @param[in] n local font number, as used in DVI and VF files
  *  @return pointer to font if font was found, 0 otherwise */
 Font* FontManager::getFont (int n) const {
 	int id = fontID(n);
@@ -137,11 +136,11 @@ VirtualFont* FontManager::getVF () const {
 
 /** Registers a new font to be managed by the FontManager. If there is
  *  already a registered font assigned to number n, nothing happens.
- *  @param[in] fontnum local font number, as used in DVI and VF files 
- *  @param[in] name fontname, e.g. cmr10 
+ *  @param[in] fontnum local font number, as used in DVI and VF files
+ *  @param[in] name fontname, e.g. cmr10
  *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] dsize design size in TeX point units
- *  @param[in] ssize scaled size in TeX point units 
+ *  @param[in] ssize scaled size in TeX point units
  *  @return id of registered font */
 int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);
@@ -171,7 +170,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		_name2id[name] = newid;
 
 		const char *encname = FileFinder::lookupEncName(name);
-		if (encname && _encMap.find(encname) == _encMap.end()) 
+		if (encname && _encMap.find(encname) == _encMap.end())
 			_encMap[encname] = new FontEncoding(encname);
 	}
 	_fonts.push_back(newfont);
@@ -187,11 +186,11 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 }
 
 
-/** Enters a new virtual font frame. 
+/** Enters a new virtual font frame.
  *  This method must be called before processing a VF character.
  *  @param[in] vf virtual font */
 void FontManager::enterVF (VirtualFont *vf) {
-	if (vf) 
+	if (vf)
 		_vfStack.push(vf);
 }
 
@@ -203,7 +202,7 @@ void FontManager::leaveVF () {
 }
 
 
-/** Assigns a sequence of DVI commands to a char code. 
+/** Assigns a sequence of DVI commands to a char code.
  * @param[in] c character code
  * @param[in] dvi points to vector with DVI commands */
 void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
@@ -238,12 +237,12 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 		VirtualFont *vf = dynamic_cast<VirtualFont*>(font);
 		for (int j=0; j < level+1; j++)
 			os << "  ";
-		os << "id " << id 
+		os << "id " << id
 			<< " fontnum " << fontnum(id) << " "
-			<< (vf ? "VF" : "PF") << " " 
-			<< font->name() 
+			<< (vf ? "VF" : "PF") << " "
+			<< font->name()
 			<< endl;
-		
+
 		if (vf) {
 			enterVF(vf);
 			const Num2IdMap &num2id = vfnum2id.find(vf)->second;

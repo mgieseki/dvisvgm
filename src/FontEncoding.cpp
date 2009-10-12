@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <fstream>
@@ -31,7 +31,7 @@ static string read_entry (InputReader &in);
 static bool valid_name_char (char c);
 
 
-FontEncoding::FontEncoding (const string &encname) : _encname(encname) 
+FontEncoding::FontEncoding (const string &encname) : _encname(encname)
 {
 	read();
 }
@@ -43,7 +43,7 @@ const char* FontEncoding::path () const {
 
 
 
-/** Search for suitable enc-file and read its encoding information. 
+/** Search for suitable enc-file and read its encoding information.
  *  The file contents must be a valid PostScript vector with 256 entries. */
 void FontEncoding::read () {
 	if (const char *p = path()) {
@@ -60,22 +60,22 @@ void FontEncoding::read (istream &is) {
 	StreamInputBuffer ib(is, 256);
 	BufferInputReader in(ib);
 	_table.resize(256);
-	
+
 	// find beginning of vector
 	while (!in.eof()) {
 		in.skipSpace();
-		if (in.peek() == '%') 
+		if (in.peek() == '%')
 			in.skipUntil("\n");
-		else 
+		else
 			if (in.get() == '[')
 				break;
 	}
-	
+
 	// read vector entries
 	int n=0;
 	while (!in.eof()) {
 		in.skipSpace();
-		if (in.peek() == '%') 
+		if (in.peek() == '%')
 			in.skipUntil("\n");
 		else if (in.peek() == ']') {
 			in.get();
@@ -90,7 +90,7 @@ void FontEncoding::read (istream &is) {
 		}
 	}
 	// remove trailing .notdef names
-	for (n--; n > 0 && _table[n].empty(); n--);	
+	for (n--; n > 0 && _table[n].empty(); n--);
 	_table.resize(n+1);
 }
 
@@ -104,8 +104,8 @@ static string read_entry (InputReader &in) {
 		entry += in.get();
 	}
 	if (entry.length() > 1) {
-		// strip leading slashes 
-		// According to the PostScript specification, a single slash without further 
+		// strip leading slashes
+		// According to the PostScript specification, a single slash without further
 		// following characters is a valid name.
 		size_t n=0;
 		while (n < entry.length() && entry[n] == '/')
@@ -123,7 +123,7 @@ static bool valid_name_char (char c) {
 
 
 /** Returns an entry of the encoding table.
- * @param[in] c character code 
+ * @param[in] c character code
  * @return character name assigned to charcter code c*/
 const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())

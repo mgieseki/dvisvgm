@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -53,7 +53,7 @@ int StreamInputBuffer::get () {
 }
 
 
-/** Returns the next character to be read without skipping it. 
+/** Returns the next character to be read without skipping it.
  *  Same as peek(0). */
 int StreamInputBuffer::peek () const {
 	if (pos() < _size1)
@@ -73,8 +73,8 @@ int StreamInputBuffer::peek (unsigned n) const {
 
 
 /** Fills the buffer by reading a sequence of characters from the assigned
- *  input stream. 
- *  @param[in] buf pointer to character buffer to be filled 
+ *  input stream.
+ *  @param[in] buf pointer to character buffer to be filled
  *  @return number of characters read */
 int StreamInputBuffer::fillBuffer (UInt8 *buf) {
 	if (_is && !_is.eof()) {

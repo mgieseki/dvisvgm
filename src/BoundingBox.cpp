@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -27,15 +27,15 @@
 using namespace std;
 
 
-BoundingBox::BoundingBox () 
+BoundingBox::BoundingBox ()
 	: ulx(0), uly(0), lrx(0), lry(0), _valid(false), _locked(false)
 {
 }
 
 
 BoundingBox::BoundingBox (double ulxx, double ulyy, double lrxx, double lryy)
-	: ulx(min(ulxx,lrxx)), uly(min(ulyy,lryy)), 
-	  lrx(max(ulxx,lrxx)), lry(max(ulyy,lryy)), 
+	: ulx(min(ulxx,lrxx)), uly(min(ulyy,lryy)),
+	  lrx(max(ulxx,lrxx)), lry(max(ulyy,lryy)),
 	  _valid(true), _locked(false)
 {
 }
@@ -50,8 +50,8 @@ BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
 
 
 BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy)
-	: ulx(min(ulxx.pt(),lrxx.pt())), uly(min(ulyy.pt(),lryy.pt())), 
-	  lrx(max(ulxx.pt(),lrxx.pt())), lry(max(ulyy.pt(),lryy.pt())), 
+	: ulx(min(ulxx.pt(),lrxx.pt())), uly(min(ulyy.pt(),lryy.pt())),
+	  lrx(max(ulxx.pt(),lrxx.pt())), lry(max(ulyy.pt(),lryy.pt())),
 	  _valid(true), _locked(false)
 {
 }
@@ -86,13 +86,13 @@ void BoundingBox::set (const string &boxstr) {
 void BoundingBox::embed (double x, double y) {
 	if (!_locked) {
 		if (_valid) {
-			if (x < ulx) 
+			if (x < ulx)
 				ulx = x;
-			else if (x > lrx) 
+			else if (x > lrx)
 				lrx = x;
-			if (y < uly) 
+			if (y < uly)
 				uly = y;
-			else if (y > lry) 
+			else if (y > lry)
 				lry = y;
 		}
 		else {

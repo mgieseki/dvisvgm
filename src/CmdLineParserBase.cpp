@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -32,16 +32,16 @@ void CmdLineParserBase::init () {
 	_files.clear();
 }
 
-/** Parses all options given on the command line. 
+/** Parses all options given on the command line.
  *  @param[in] printErrors enable/disable printing of error messages */
 void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 	init();
 	_printErrors = printErrors;
-	bool filesOnly = false;  // 
+	bool filesOnly = false;  //
 	for (int i=1; i < argc; i++) {
 		CharInputBuffer ib(argv[i], strlen(argv[i]));
 		BufferInputReader ir(ib);
-		if (filesOnly || ir.peek() != '-') 
+		if (filesOnly || ir.peek() != '-')
 			_files.push_back(argv[i]);
 		else {
 			ir.get();
@@ -97,9 +97,9 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 }
 
 
-/** Prints an error message to stdout. 
+/** Prints an error message to stdout.
  *  @param[in] opt error occurred in this option
- *  @param[in] longopt the long option name was scanned 
+ *  @param[in] longopt the long option name was scanned
  *  @param[in] msg message to be printed */
 void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg) const {
 	if (_printErrors) {
@@ -123,13 +123,13 @@ void CmdLineParserBase::status () const {
 }
 
 
-/** Returns the option information of a given short option name. 
+/** Returns the option information of a given short option name.
  *  If the option name can't be found 0 is returned.
  *  @param[in] longname long version of the option without leading hyphen (e.g. p, not -p) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) const {
 	const Option *opts = options();
 	for (int i=0; i < numOptions(); i++)
-		if (opts[i].shortname == shortname) 
+		if (opts[i].shortname == shortname)
 			return &opts[i];
 	return 0;
 }
@@ -178,7 +178,7 @@ const CmdLineParserBase::Option* CmdLineParserBase::option (const string &longna
  *  @param[in]  longopt true if the long option name was given */
 bool CmdLineParserBase::checkArgPrefix (InputReader &ir, const Option &opt, bool longopt) const {
 	if (longopt) {
-		if (ir.peek() == '=') 
+		if (ir.peek() == '=')
 			ir.get();
 		else {
 			error(opt, longopt, "'=' expected");
@@ -189,7 +189,7 @@ bool CmdLineParserBase::checkArgPrefix (InputReader &ir, const Option &opt, bool
 }
 
 
-/** Returns true if a given option has no argument, .e.g. -p or --param. 
+/** Returns true if a given option has no argument, .e.g. -p or --param.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
  *  @param[in]  longopt true if the long option name was given */
@@ -201,10 +201,10 @@ bool CmdLineParserBase::checkNoArg (InputReader &ir, const Option &opt, bool lon
 }
 
 
-/** Gets an integer argument of a given option, e.g. -p5 or --param=5. 
+/** Gets an integer argument of a given option, e.g. -p5 or --param=5.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
- *  @param[in]  longopt true if the long option name was given 
+ *  @param[in]  longopt true if the long option name was given
  *  @param[out] arg the scanned option argument
  *  @return true if argument could be scanned without errors */
 bool CmdLineParserBase::getIntArg (InputReader &ir, const Option &opt, bool longopt, int &arg) const {
@@ -220,7 +220,7 @@ bool CmdLineParserBase::getIntArg (InputReader &ir, const Option &opt, bool long
 /** Gets an unsigned integer argument of a given option, e.g. -p5 or --param=5.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
- *  @param[in]  longopt true if the long option name was given 
+ *  @param[in]  longopt true if the long option name was given
  *  @param[out] arg the scanned option argument
  *  @return true if argument could be scanned without errors */
 bool CmdLineParserBase::getUIntArg (InputReader &ir, const Option &opt, bool longopt, unsigned &arg) const {
@@ -233,10 +233,10 @@ bool CmdLineParserBase::getUIntArg (InputReader &ir, const Option &opt, bool lon
 }
 
 
-/** Gets a double (floating point) argument of a given option, e.g. -p=2.5 or --param=2.5. 
+/** Gets a double (floating point) argument of a given option, e.g. -p=2.5 or --param=2.5.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
- *  @param[in]  longopt true if the long option name was given 
+ *  @param[in]  longopt true if the long option name was given
  *  @param[out] arg the scanned option argument
  *  @return true if argument could be scanned without errors */
 bool CmdLineParserBase::getDoubleArg (InputReader &ir, const Option &opt, bool longopt, double &arg) const {
@@ -249,10 +249,10 @@ bool CmdLineParserBase::getDoubleArg (InputReader &ir, const Option &opt, bool l
 }
 
 
-/** Gets a string argument of a given option, e.g. -pstr or --param=str. 
+/** Gets a string argument of a given option, e.g. -pstr or --param=str.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
- *  @param[in]  longopt true if the long option name was given 
+ *  @param[in]  longopt true if the long option name was given
  *  @param[out] arg the scanned option argument
  *  @return true if argument could be scanned without errors */
 bool CmdLineParserBase::getStringArg (InputReader &ir, const Option &opt, bool longopt, string &arg) const {
@@ -260,7 +260,7 @@ bool CmdLineParserBase::getStringArg (InputReader &ir, const Option &opt, bool l
 		arg.clear();
 		while (!ir.eof())
 			arg += ir.get();
-		if (!arg.empty()) 
+		if (!arg.empty())
 			return true;
 		error(opt, longopt, "string argument expected");
 	}

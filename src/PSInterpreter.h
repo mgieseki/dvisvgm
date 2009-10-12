@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef PSINTERPRETER_H
@@ -71,7 +71,7 @@ struct PSActions
 class PSInterpreter
 {
 	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};
-	
+
    public:
       PSInterpreter (PSActions *actions=0);
 		void execute (const char *str, size_t len, bool flush=true);
@@ -79,7 +79,7 @@ class PSInterpreter
 		void execute (const std::string &str)  {execute(str.c_str());}
 		void execute (std::istream &is);
 		bool active () const                   {return _mode != PS_QUIT;}
-		
+
 	protected:
 		// callback functions
 		static int GSDLLCALL input (void *inst, char *buf, int len);
@@ -92,7 +92,7 @@ class PSInterpreter
 		Ghostscript _gs;
 		Mode _mode;                  ///< current execution mode
 		PSActions *_actions;         ///< actions to be performed
-		std::vector<char> _linebuf;	
+		std::vector<char> _linebuf;
 		std::string _errorMessage;   ///< text of error message
 		bool _inError;               ///< true if scanning error message
 		bool _initialized;           ///< true if PSInterpreter has been completely initialized

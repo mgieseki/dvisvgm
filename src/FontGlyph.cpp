@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "FontEncoding.h"
@@ -65,7 +65,7 @@ void GlyphCommand::writeSVGCommand (ostream &os, double sx, double sy) const {
 
 
 GlyphCommand* GlyphMoveTo::combine (GlyphCommand &cmd) {
-	if (cmd.getSVGPathCommand() == 'M' && _params.size() == 1) 
+	if (cmd.getSVGPathCommand() == 'M' && _params.size() == 1)
 		return &cmd;
 	if (cmd.getSVGPathCommand() == 'L') {
 		_params.insert(_params.end(), cmd.params().begin(), cmd.params().end());
@@ -100,11 +100,11 @@ GlyphCommand* GlyphCubicTo::combine (GlyphCommand &cmd) {
 		LPair e1 = getParam(-1);
 		LPair b2 = cmd.getParam(0);
 		LPair c2 = cmd.getParam(1);
-		if (e1 == b2 && c2 == e1*2-c1) 
-			return new GlyphShortCubicTo(cmd.getParam(-2), cmd.getParam(-1));	
+		if (e1 == b2 && c2 == e1*2-c1)
+			return new GlyphShortCubicTo(cmd.getParam(-2), cmd.getParam(-1));
 		else {
 			_params.insert(_params.end(), cmd.getParams().begin(), cmd.getParams().end());
-			return this;		
+			return this;
 		}
 	}*/
 	return 0;
@@ -117,19 +117,19 @@ GlyphCommand* GlyphCubicTo::combine (GlyphCommand &cmd) {
 class Commands : public FEGlyphCommands {
 	public:
 		Commands (Glyph &g) : glyph(g) {}
-		
+
 		void moveTo(long x, long y) {
 			glyph.addCommand(new GlyphMoveTo(LPair(x, y)));
 		}
-		
+
 		void lineTo(long x, long y) {
 			glyph.addCommand(new GlyphLineTo(LPair(x, y)));
 		}
-		
+
 		void conicTo(long x1, long y1, long x2, long y2)  {
 			glyph.addCommand(new GlyphConicTo(LPair(x1, y1), LPair(x2, y2)));
 		}
-		
+
 		void cubicTo(long x1, long y1, long x2, long y2, long x3, long y3) {
 			glyph.addCommand(new GlyphCubicTo(LPair(x1, y1), LPair(x2, y2), LPair(x3, y3)));
 		}
@@ -152,7 +152,7 @@ void Glyph::clear () {
 }
 
 
-/** Appends a new path command to the current glyph. 
+/** Appends a new path command to the current glyph.
  *  @param[in] cmd command to append */
 void Glyph::addCommand (GlyphCommand *cmd) {
 	if (cmd)
@@ -176,7 +176,7 @@ void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngin
 /** Writes an SVG representation of the path commands to a stream. The parameters
  *  can be scaled by the given factors.
  *  @param[in] os output stream
- *  @param[in] sx horizontal scale factor 
+ *  @param[in] sx horizontal scale factor
  *  @param[in] sy vertical scale factor */
 void Glyph::writeSVGCommands (ostream &os, double sx, double sy) const {
 	FORALL (_commands, ConstIterator, i)
@@ -184,7 +184,7 @@ void Glyph::writeSVGCommands (ostream &os, double sx, double sy) const {
 }
 
 
-/** Calls a function for all path sections/commands. 
+/** Calls a function for all path sections/commands.
  *  @param[in] f function to be called
  *  @param[in] userParam parameter passed to function f */
 void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {
@@ -193,9 +193,9 @@ void Glyph::forAllCommands (void (*f)(GlyphCommand*, void*), void *userParam) {
 }
 
 
-/** Detects all open paths of the glyph's outline and closes them by adding a closePath command. 
+/** Detects all open paths of the glyph's outline and closes them by adding a closePath command.
  *	 Most font formats only support closed outline paths so there are no explicit closePath statements
- *	 in the glyph's outline description. All open paths are automatically closed by the renderer. 
+ *	 in the glyph's outline description. All open paths are automatically closed by the renderer.
  *	 This method detects all open paths and adds the missing closePath statement. */
 void Glyph::closeOpenPaths () {
 	GlyphCommand *prevCommand = 0;
@@ -216,11 +216,11 @@ void Glyph::closeOpenPaths () {
 /** Optimizes the glyph's outline description by using command sequences with less parameters.
  *  TrueType and Type1 fonts only support 3 drawing commands (moveto, lineto, conicto/cubicto).
  *  In the case of successive bezier curve sequences, control points or tangent slopes are often
- *  identical so that the path description contains redundant information. SVG provides shorthand 
+ *  identical so that the path description contains redundant information. SVG provides shorthand
  *  curve commands that need less parameters because they reuse previously given arguments.
  *  This method detects such command sequences and replaces them by their short form. It does not
  *  recompute the whole paths to reduce the number of necessary line/curve segments. */
-void Glyph::optimizeCommands () {	
+void Glyph::optimizeCommands () {
 	LPair fp;            // first point of current path
 	LPair cp;            // current point (where path drawing continues)
 	ConstIterator prev;  // preceding command

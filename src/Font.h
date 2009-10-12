@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef FONT_H
@@ -94,11 +94,11 @@ class VirtualFont : public virtual Font
 	friend class FontManager;
 	public:
 		typedef vector<UInt8> DVIVector;
-	
+
 	public:
 		static Font* create (string name, UInt32 checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
-	
+
 	protected:
 		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;
 };
@@ -119,7 +119,7 @@ class TFMFont : public virtual Font
 
 	private:
 		mutable TFM *tfm;
-		string fontname; 
+		string fontname;
 		UInt32 checksum; ///< cheksum to be compared with TFM checksum
 		double dsize;    ///< design size in TeX point units
 		double ssize;    ///< scaled size
@@ -135,9 +135,9 @@ class PhysicalFontProxy : public PhysicalFont
 		string name () const                  {return pf->name();}
 		double designSize () const            {return dsize;}
 		double scaledSize () const            {return ssize;}
-		double charWidth (int c) const        {return pf->charWidth(c);} 
-		double charDepth (int c) const        {return pf->charDepth(c);} 
-		double charHeight (int c) const       {return pf->charHeight(c);} 
+		double charWidth (int c) const        {return pf->charWidth(c);}
+		double charDepth (int c) const        {return pf->charDepth(c);}
+		double charHeight (int c) const       {return pf->charHeight(c);}
 		const TFM* getTFM () const            {return pf->getTFM();}
 		const char* path () const             {return pf->path();}
 		Type type () const                    {return pf->type();}
@@ -180,9 +180,9 @@ class VirtualFontProxy : public VirtualFont
 		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
 		double designSize () const            {return dsize;}
 		double scaledSize () const            {return ssize;}
-		double charWidth (int c) const        {return vf->charWidth(c);} 
-		double charDepth (int c) const        {return vf->charDepth(c);} 
-		double charHeight (int c) const       {return vf->charHeight(c);} 
+		double charWidth (int c) const        {return vf->charWidth(c);}
+		double charDepth (int c) const        {return vf->charDepth(c);}
+		double charHeight (int c) const       {return vf->charHeight(c);}
 		const TFM* getTFM () const            {return vf->getTFM();}
 		const char* path () const             {return vf->path();}
 
@@ -190,7 +190,7 @@ class VirtualFontProxy : public VirtualFont
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : vf(proxy.vf), dsize(ds), ssize(ss) {}
 		void assignChar (UInt32 c, DVIVector *dvi) {delete dvi;}
-	
+
 	private:
 		const VirtualFont *vf;
 		double dsize;  ///< design size in TeX point units

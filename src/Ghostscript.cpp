@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "Ghostscript.h"
@@ -35,7 +35,7 @@ using namespace std;
 
 /** Loads the Ghostscript library but does not create an instance. This
  *  constructor should only be used to call available() and revision(). */
-Ghostscript::Ghostscript () 
+Ghostscript::Ghostscript ()
 #if !HAVE_LIBGS
 : DLLoader(GS_DL_NAME)
 #endif
@@ -44,9 +44,9 @@ Ghostscript::Ghostscript ()
 }
 
 
-/** Tries to load the shared library and to initialize Ghostscript. 
+/** Tries to load the shared library and to initialize Ghostscript.
  * @param[in] argc number of parameters in array argv
- * @param[in] argv parameters passed to Ghostscript 
+ * @param[in] argv parameters passed to Ghostscript
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !HAVE_LIBGS
@@ -54,7 +54,7 @@ Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #endif
 {
 	int status = new_instance(&_inst, caller);
-	if (status < 0) 
+	if (status < 0)
 		_inst = 0;
 	else {
 		init_with_args(argc, (char**)argv);
@@ -81,8 +81,8 @@ bool Ghostscript::available () {
 }
 
 
-/** Retrieves version information about Ghostscript. 
- * @param[out] r takes the revision information (see GS API documentation for further details) 
+/** Retrieves version information about Ghostscript.
+ * @param[out] r takes the revision information (see GS API documentation for further details)
  * @return true on success  */
 bool Ghostscript::revision (gsapi_revision_t *r) {
 #if HAVE_LIBGS
@@ -107,7 +107,7 @@ string Ghostscript::revision () {
 
 
 /** Creates a new instance of Ghostscript. This method is called by the constructor and
- *  should not be used elsewhere. 
+ *  should not be used elsewhere.
  *  @param[out] psinst handle of newly created instance (or 0 on error)
  *  @param[in] caller pointer forwarded to callback functions */
 int Ghostscript::new_instance (void **psinst, void *caller) {
@@ -146,7 +146,7 @@ int Ghostscript::exit () {
 }
 
 
-/** Sets the I/O callback functions. 
+/** Sets the I/O callback functions.
  * @param[in] in pointer to stdin handler
  * @param[in] out pointer to stdout handler
  * @param[in] err pointer to stderr handler */
@@ -191,10 +191,10 @@ int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
 
 /** Executes a chunk of PostScript commands given by a buffer of characters. The size of
  *  this buffer must not exceed 64KB. Longer programs can be split into arbitrary smaller chunks
- *  and passed to Ghostscript by successive calls of run_string_continue. 
+ *  and passed to Ghostscript by successive calls of run_string_continue.
  *  @param[in] str buffer containing the PostScript code
- *  @param[in] length number of characters in buffer 
- *  @param[in] user_errors if non-negative, the default PS error values will be generated, otherwise this value is returned 
+ *  @param[in] length number of characters in buffer
+ *  @param[in] user_errors if non-negative, the default PS error values will be generated, otherwise this value is returned
  *  @param[out] pexit_code takes the PS error code */
 int Ghostscript::run_string_continue (const char *str, unsigned length, int user_errors, int *pexit_code) {
 #if HAVE_LIBGS

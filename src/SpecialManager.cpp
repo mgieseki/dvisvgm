@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iomanip>
@@ -38,7 +38,7 @@ void SpecialManager::unregisterHandlers () {
 }
 
 
-/** Registers a single special handler. This method doesn't check if a 
+/** Registers a single special handler. This method doesn't check if a
  *  handler of the same class is already registered.
  *  @param[in] pointer to handler to be registered */
 void SpecialManager::registerHandler (SpecialHandler *handler) {
@@ -51,11 +51,11 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 }
 
 
-/** Registers a multiple special handlers. 
- *  If ignorelist == 0, all given handlers are registered. To exclude selected sets of 
+/** Registers a multiple special handlers.
+ *  If ignorelist == 0, all given handlers are registered. To exclude selected sets of
  *  specials, the corresponding names can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
- *  @param[in] handlers pointer to zero-terminated array of handlers to be registered 
+ *  @param[in] handlers pointer to zero-terminated array of handlers to be registered
  *  @param[in] ignorelist list of special names to be ignored */
 void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ignorelist) {
 	if (handlers) {
@@ -86,11 +86,11 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 }
 
 
-/** Executes a special command. 
- *  @param[in] special the special expression 
+/** Executes a special command.
+ *  @param[in] special the special expression
  *  @param[in] actions actions the special handlers can perform
  *  @param[in] listener object that wants to be notified about the processing state
- *  @return true if a special handler was found 
+ *  @return true if a special handler was found
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, SpecialActions *actions, Listener *listener) const {
 	istringstream iss(special);
@@ -123,7 +123,7 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 	SortMap m;
 	FORALL(_handlers, ConstIterator, it)
 		m[it->second->name()] = it->second;
-	
+
 	FORALL(m, SortMap::iterator, it) {
 		os << setw(10) << left << it->second->name() << ' ';
 		if (it->second->info())

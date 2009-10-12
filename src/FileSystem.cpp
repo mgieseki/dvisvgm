@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -88,8 +88,8 @@ string FileSystem::getcwd () {
 }
 
 
-/** Changes the work directory. 
- *  @param[in] path to new work directory 
+/** Changes the work directory.
+ *  @param[in] path to new work directory
  *  @return true on success */
 bool FileSystem::chdir (const char *dir) {
 	bool success = false;
@@ -98,7 +98,7 @@ bool FileSystem::chdir (const char *dir) {
 		success = (_chdir(dir) == 0);
 #else
 		success = (chdir(dir) == 0);
-#endif	
+#endif
 	}
 	return success;
 }
@@ -107,7 +107,7 @@ bool FileSystem::chdir (const char *dir) {
 /** Returns the user's home directory. */
 const char* FileSystem::userdir () {
 #ifdef __WIN32__
-	const char *drive=getenv("HOMEDRIVE");	
+	const char *drive=getenv("HOMEDRIVE");
 	const char *path=getenv("HOMEPATH");
 	if (drive && path) {
 		static string ret = string(drive)+path;
@@ -164,16 +164,16 @@ static string trim (const string &str) {
 }
 
 
-/** Creates a new folder relative to the current work directory. If necessary, 
- *  the parent folders are also created. 
- *  @param[in] dir single folder name or path to folder 
+/** Creates a new folder relative to the current work directory. If necessary,
+ *  the parent folders are also created.
+ *  @param[in] dir single folder name or path to folder
  *  @return true if folder(s) could be created */
 bool FileSystem::mkdir (const char *dir) {
 	bool success = false;
 	if (dir) {
 		success = true;
 		const string dirstr = adaptPathSeperators(trim(dir));
-		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++) 
+		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++)
 			success &= s_mkdir(dirstr.substr(0, pos).c_str());
 		success &= s_mkdir(dirstr.c_str());
 	}
@@ -181,8 +181,8 @@ bool FileSystem::mkdir (const char *dir) {
 }
 
 
-/** Removes a directory and its contents. 
- *  @param[in] dirname path to directory 
+/** Removes a directory and its contents.
+ *  @param[in] dirname path to directory
  *  @return true on success */
 bool FileSystem::rmdir (const char *dirname) {
 	bool ok = false;
@@ -190,12 +190,12 @@ bool FileSystem::rmdir (const char *dirname) {
 		ok = true;
 #ifdef __WIN32__
 		string pattern = string(dirname) + "/*";
-		WIN32_FIND_DATA data; 
+		WIN32_FIND_DATA data;
 		HANDLE h = FindFirstFile(pattern.c_str(), &data);
 		bool ready = (h == INVALID_HANDLE_VALUE);
 		while (!ready && ok) {
 			const char *fname = data.cFileName;
-			string path = string(dirname) + "/" + fname;			
+			string path = string(dirname) + "/" + fname;
 			if (isDirectory(path.c_str())) {
 				if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
 					ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
@@ -204,7 +204,7 @@ bool FileSystem::rmdir (const char *dirname) {
 				ok = remove(path);
 			else
 				ok = false;
-			ready = !FindNextFile(h, &data);				
+			ready = !FindNextFile(h, &data);
 		}
 		FindClose(h);
 #else
@@ -223,7 +223,7 @@ bool FileSystem::rmdir (const char *dirname) {
 					ok = false;
 			}
 			closedir(dir);
-		}		
+		}
 #endif
 		ok = s_rmdir(dirname);
 	}
@@ -283,7 +283,7 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 		string path = string(dirname)+"/"+fname;
 		string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
 		if (fname != "." && fname != "..")
-			entries.push_back(typechar+fname);		
+			entries.push_back(typechar+fname);
 		ready = !FindNextFile(h, &data);
 	}
 	FindClose(h);

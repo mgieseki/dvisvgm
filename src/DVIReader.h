@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef DVIREADER_H
@@ -56,7 +56,7 @@ class DVIReader : public StreamReader, protected VFActions
 
 	public:
 		DVIReader (istream &is, DVIActions *a=0);
-		
+
 		bool executeDocument ();
 		void executeAll ();
 		bool executeAllPages ();
@@ -87,8 +87,8 @@ class DVIReader : public StreamReader, protected VFActions
 		// VFAction methods
 		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize);
 		void defineVFChar (UInt32 c, vector<UInt8> *dvi);
-		
-		// the following methods represent the DVI commands 
+
+		// the following methods represent the DVI commands
 		// they are called by executeCommand and should not be used directly
 		void cmdSetChar0 (int c);
 		void cmdSetChar (int len);
@@ -117,7 +117,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPre (int len);
 		void cmdPost (int len);
 		void cmdPostPost (int len);
-		
+
 	private:
 		DVIActions *_actions;
 		bool _inPage;        // true if between bop and eop

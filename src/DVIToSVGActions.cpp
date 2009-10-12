@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -40,7 +40,7 @@ using namespace std;
 unsigned DVIToSVGActions::PROGRESSBAR = 0;
 
 
-DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg) 
+DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
 	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE)
 {
 	_currentFontNum = -1;
@@ -61,11 +61,11 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 }
 
 
-/** This method is called when a "set char" command was found in the DVI file. 
+/** This method is called when a "set char" command was found in the DVI file.
  *  It draws a character of the current font.
- *  @param[in] x horizontal position of left bounding box edge 
- *  @param[in] y vertical position of the character's baseline 
- *  @param[in] c character code relative to the current font 
+ *  @param[in] x horizontal position of left bounding box edge
+ *  @param[in] y vertical position of the character's baseline
+ *  @param[in] c character code relative to the current font
  *  @param[in] font font to be used */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
 /*	x *= BP;
@@ -99,11 +99,11 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 }
 
 
-/** This method is called when a "set rule" or "put rule" command was found in the 
+/** This method is called when a "set rule" or "put rule" command was found in the
  *  DVI file. It draws a solid unrotated rectangle.
- *  @param[in] x horizontal position of left edge 
- *  @param[in] y vertical position of bottom(!) edge 
- *  @param[in] height length of the vertical edges 
+ *  @param[in] x horizontal position of left edge
+ *  @param[in] y vertical position of bottom(!) edge
+ *  @param[in] height length of the vertical edges
  *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
 /*	x *= BP;
@@ -121,7 +121,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	if (getColor() != Color::BLACK)
 		rect->addAttribute("fill", _svg.getColor().rgbString());
 	_svg.appendToPage(rect);
-	
+
 	// update bounding box
 	BoundingBox bb(x, y+height, x+width, y);
 	if (!getMatrix().isIdentity())
@@ -147,7 +147,7 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 }
 
 
-/** This method is called when a "special" command was found in the DVI file. 
+/** This method is called when a "special" command was found in the DVI file.
  *  @param[in] s the special expression */
 void DVIToSVGActions::special (const string &s) {
 	try {
@@ -174,7 +174,7 @@ void DVIToSVGActions::endSpecial (const char *) {
 }
 
 
-/** This method is called when the DVI preamble was read 
+/** This method is called when the DVI preamble was read
  *  @param[in] cmt preamble comment text. */
 void DVIToSVGActions::preamble (const string &cmt) {
 }
@@ -184,7 +184,7 @@ void DVIToSVGActions::postamble () {
 }
 
 
-/** This method is called when a "begin of page (bop)" command was found in the DVI file. 
+/** This method is called when a "begin of page (bop)" command was found in the DVI file.
  *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (Int32 *c) {

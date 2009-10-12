@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -76,7 +76,7 @@ string Color::rgbString () const {
 	ostringstream oss;
 	oss << '#';
 	for (int i=2; i >= 0; i--) {
-		oss << setbase(16) << setfill('0') << setw(2) 
+		oss << setbase(16) << setfill('0') << setw(2)
 			 << (((_rgb >> (8*i)) & 0xff));
 	}
 	return oss.str();
@@ -93,11 +93,11 @@ void Color::CMYK2RGB (const vector<float> &cmyk, vector<float> &rgb) {
 }
 
 
-/** Converts a color given in HSB coordinates to RGB. 
+/** Converts a color given in HSB coordinates to RGB.
  *  @param[in]  hsb color in HSB space
  *  @param[out] rgb color in RGB space */
 void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
-	if (hsb[1] == 0) 
+	if (hsb[1] == 0)
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
 		float h = hsb[0]-floor(hsb[0]);

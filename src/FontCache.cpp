@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -292,9 +292,9 @@ bool FontCache::read (const char *fontname, istream &is) {
 }
 
 
-/** Collects font cache information. 
- *  @param[in]  dirname path to font cache directory 
- *  @param[out] infos the collected data 
+/** Collects font cache information.
+ *  @param[in]  dirname path to font cache directory
+ *  @param[out] infos the collected data
  *  @return true on success */
 bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
 	infos.clear();
@@ -315,9 +315,9 @@ bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
 }
 
 
-/** Collects font cache information of a single font. 
- *  @param[in]  is input stream of the cache file 
- *  @param[out] info the collected data 
+/** Collects font cache information of a single font.
+ *  @param[in]  is input stream of the cache file
+ *  @param[out] info the collected data
  *  @return true on success */
 bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	info.name.clear();
@@ -325,7 +325,7 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	if (is) {
 		if ((info.version = read_unsigned(1, is)) != VERSION)
 			return false;
-		while (!is.eof() && is.peek() != 0) 
+		while (!is.eof() && is.peek() != 0)
 			info.name += is.get();
 		is.get(); // skip 0-byte
 		info.numchars = read_unsigned(4, is);
@@ -361,8 +361,8 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 }
 
 
-/** Collects font cache information and write it to a stream. 
- *  @param[in] dirname path to font cache directory 
+/** Collects font cache information and write it to a stream.
+ *  @param[in] dirname path to font cache directory
  *  @param[in] os output is written to this stream */
 void FontCache::fontinfo (const char *dirname, ostream &os) {
 	vector<FontInfo> infos;

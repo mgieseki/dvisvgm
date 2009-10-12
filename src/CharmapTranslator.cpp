@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <fstream>
@@ -37,7 +37,7 @@ static bool valid_unicode (UInt32 unicode) {
 		0x0086, 0x009f,
 		0xfdd0, 0xfddf
 	};
-	for (int i=0; i < 4; i++)		
+	for (int i=0; i < 4; i++)
 		if (unicode >= ranges[2*i] && unicode <= ranges[2*i+1])
 			return false;
 	return true;
@@ -56,7 +56,7 @@ CharmapTranslator::CharmapTranslator (const FontEngine &fe) {
 
 void CharmapTranslator::setFont (const Font *font) {
 	translationMap.clear();
-	
+
 	const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(font);
 	if (pf && pf->type() != PhysicalFont::MF) {
 		const char *path = font->path();
@@ -68,13 +68,13 @@ void CharmapTranslator::setFont (const Font *font) {
 
 
 UInt32 CharmapTranslator::unicode (UInt32 customCode) const {
-	ConstIterator it = translationMap.find(customCode);	
+	ConstIterator it = translationMap.find(customCode);
 	if (it != translationMap.end())
 		return it->second;
-	
+
 	// No unicode equivalent found in font file.
 	// Now we should look for a smart alternative but at the moment
-	// it's sufficient to simply choose a valid unused unicode value...	
+	// it's sufficient to simply choose a valid unused unicode value...
 	map<UInt32,UInt32> reverseMap;
 	FORALL(translationMap, ConstIterator, i)
 		reverseMap[i->second] = i->first;

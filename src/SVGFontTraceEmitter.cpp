@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -69,7 +69,7 @@ SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 }
 
 
-/** Creates the tracer object and calls Metafont to generate a GF file of the current font. 
+/** Creates the tracer object and calls Metafont to generate a GF file of the current font.
  *  @return true if GF file tracer were successfully created */
 bool SVGFontTraceEmitter::prepareTracer () {
 	if (!_gfTracer) {
@@ -95,18 +95,18 @@ int SVGFontTraceEmitter::emitFont (const char *id) {
 }
 
 
-/** Appends a new font element of the current font to the SVG document. 
- *  @param[in] usedChars characters to be embedded 
- *  @param[in] id unique font identifier (usually the font name) 
+/** Appends a new font element of the current font to the SVG document.
+ *  @param[in] usedChars characters to be embedded
+ *  @param[in] id unique font identifier (usually the font name)
  *  @return number of embedded glyphs */
 int SVGFontTraceEmitter::emitFont (const set<int> &usedChars, const char *id) {
 	return emitFont(&usedChars, id);
 }
 
 
-/** Appends a new font element of the current font to the SVG document. 
- *  @param[in] usedChars characters to be embedded 
- *  @param[in] id unique font identifier (usually the font name) 
+/** Appends a new font element of the current font to the SVG document.
+ *  @param[in] usedChars characters to be embedded
+ *  @param[in] id unique font identifier (usually the font name)
  *  @return number of embedded glyphs */
 int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) {
 	if (!usedChars || usedChars->empty())
@@ -123,18 +123,18 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) {
 		faceNode->addAttribute("font-family", id);
 		faceNode->addAttribute("units-per-em", XMLString(1000));
 		fontNode->append(faceNode);
-		FORALL(*usedChars, set<int>::const_iterator, i) {			
+		FORALL(*usedChars, set<int>::const_iterator, i) {
 			emitGlyph(*i);  // create new glyphNode
 			fontNode->append(_glyphNode);
 		}
 	}
 	else {
-		FORALL(*usedChars, set<int>::const_iterator, i) {			
+		FORALL(*usedChars, set<int>::const_iterator, i) {
 			emitGlyph(*i);  // create new glyphNode
 			_svg.appendToDefs(_glyphNode);
 		}
 	}
-	
+
 	if (_gfTracer)
 		Message::mstream() << endl;
 	return usedChars->size();
@@ -174,12 +174,12 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
 		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
-		_glyphNode->addAttribute("horiz-adv-x", XMLString(1000.0*tfm->getCharWidth(c)/tfm->getDesignSize())); 
+		_glyphNode->addAttribute("horiz-adv-x", XMLString(1000.0*tfm->getCharWidth(c)/tfm->getDesignSize()));
 	}
 	else {
 		ostringstream oss;
 		oss << 'g' << _fontManager.fontID(_font) << c;
-		_glyphNode = new XMLElementNode("path");		
+		_glyphNode = new XMLElementNode("path");
 		_glyphNode->addAttribute("id", oss.str());
 		sx = _font->scaledSize()/1000.0; // 1000 units per em
 		sy = -sx;
@@ -192,7 +192,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 }
 
 
-/** Traces all glyphs of the current font and stores them in the cache. 
+/** Traces all glyphs of the current font and stores them in the cache.
  *  If caching is disabled nothing happens. */
 void SVGFontTraceEmitter::traceAllGlyphs () {
 	const TFM *tfm = _font->getTFM();
@@ -202,7 +202,7 @@ void SVGFontTraceEmitter::traceAllGlyphs () {
 		for (int i=fchar; i <= lchar; i++) {
 			if (!_cache->getGlyph(i)) {
 				write_char_info(i, Message::wstream());
-				if (_gfTracer->executeChar(i))  // does char i exist in font? 
+				if (_gfTracer->executeChar(i))  // does char i exist in font?
 					_cache->setGlyph(i, _gfTracer->transferGlyph());
 				else
 					Message::wstream() << "(empty)";

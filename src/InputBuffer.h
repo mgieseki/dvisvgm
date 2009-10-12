@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef INPUTBUFFER_H
@@ -69,7 +69,7 @@ class StringInputBuffer : public InputBuffer
 		StringInputBuffer (std::string &str) : _str(str), _pos(0) {}
 		int get ()                  {return _pos < _str.length() ? _str[_pos++] : -1;}
 		int peek () const           {return _pos < _str.length() ? _str[_pos] : -1;}
-		int peek (unsigned n) const {return _pos+n < _str.length() ? _str[_pos+n] : -1;} 
+		int peek (unsigned n) const {return _pos+n < _str.length() ? _str[_pos+n] : -1;}
 		bool eof () const           {return _pos >= _str.length();}
 
 	private:
@@ -82,9 +82,9 @@ class CharInputBuffer : public InputBuffer
 {
 	public:
 		CharInputBuffer (const char *buf, unsigned size) : _pos(buf), _size(buf ? size : 0) {}
-		
+
 		int get () {
-			if (_size <= 0) 
+			if (_size <= 0)
 				return -1;
 			else {
 				_size--;
@@ -94,7 +94,7 @@ class CharInputBuffer : public InputBuffer
 
 
 		void assign (const char *buf, unsigned size) {
-			_pos = buf; 
+			_pos = buf;
 			_size = size;
 		}
 
@@ -102,7 +102,7 @@ class CharInputBuffer : public InputBuffer
 		int peek () const             {return _size > 0 ? *_pos : -1;}
 		int peek (unsigned n) const   {return _size >= n ? _pos[n] : -1;}
 		bool eof () const             {return _size <= 0;}
-	
+
 	private:
 		const char *_pos;
 		unsigned _size;

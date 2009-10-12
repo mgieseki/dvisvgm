@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -36,16 +36,16 @@ extern "C" {
 using namespace std;
 
 
-GFTracer::GFTracer (istream &is) 
+GFTracer::GFTracer (istream &is)
 	: GFReader(is), _unitsPerPoint(0.0)
 {
 }
 
 
-/** Constructs a new GFTracer. 
+/** Constructs a new GFTracer.
  *  @param[in] is GF file is read from this stream
  *  @param[in] upp target units per TeX point */
-GFTracer::GFTracer (istream &is, double upp) 
+GFTracer::GFTracer (istream &is, double upp)
 	: GFReader(is), _unitsPerPoint(upp)
 {
 }
@@ -97,7 +97,7 @@ void GFTracer::endChar (UInt32 c) {
 				}
 			}
 		}
-	}	
-	potrace_state_free(state);	
-}	
+	}
+	potrace_state_free(state);
+}
 

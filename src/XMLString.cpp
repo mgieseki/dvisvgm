@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <sstream>
@@ -35,7 +35,7 @@ static string translate (unsigned c) {
 	if (c >= 32 && c <= 126)
 		oss << char(c);
 	else
-		oss <<"&#" << unsigned(c) << ';';				
+		oss <<"&#" << unsigned(c) << ';';
 	return oss.str();
 }
 
@@ -94,7 +94,7 @@ ostream& XMLString::write (ostream &os) const {
 				if (c >= 32 && c <= 126)
 					os << c;
 				else
-					os << "&#" << int(c) << ';';				
+					os << "&#" << int(c) << ';';
 		}
 	}
 	return os;

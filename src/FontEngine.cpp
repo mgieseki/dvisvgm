@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -46,7 +46,7 @@ FontEngine::~FontEngine () {
    if (FT_Done_FreeType(_library))
       Message::estream(true) << "FontEngine: error removing FreeType library\n";
 }
-   
+
 
 void FontEngine::setDeviceResolution (int x, int y) {
 	_horDeviceRes = x;
@@ -54,7 +54,7 @@ void FontEngine::setDeviceResolution (int x, int y) {
 }
 
 
-/** Builds a table that maps glyph indexes to char codes. 
+/** Builds a table that maps glyph indexes to char codes.
  * @param[in] face font face to be used
  * @param[out] reverseMap the resulting map */
 static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
@@ -68,9 +68,9 @@ static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
 }
 
 
-/** Sets the font to be used. 
+/** Sets the font to be used.
  * @param[in] fname path to font file
- * @param[in] ptSize font size in point units 
+ * @param[in] ptSize font size in point units
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int ptSize) {
 	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
@@ -80,7 +80,7 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
 	if (ptSize && FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
 		Message::estream(true) << "FontEngine: error setting character size\n";
       return false;
-   }  
+   }
    // look for a custom character map
    for (int i=0; i < _currentFace->num_charmaps; i++) {
       FT_CharMap charmap = _currentFace->charmaps[i];
@@ -97,11 +97,11 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
 
 void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const {
 	FT_CharMap unicodeMap=0, customMap=0;
-   for (int i=0; i < _currentFace->num_charmaps; i++) {		
+   for (int i=0; i < _currentFace->num_charmaps; i++) {
       FT_CharMap charmap = _currentFace->charmaps[i];
-      if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) 
+      if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM)
 			customMap = charmap;
-		else if (charmap->encoding == FT_ENCODING_UNICODE) 
+		else if (charmap->encoding == FT_ENCODING_UNICODE)
 			unicodeMap = charmap;
 	}
 	if (unicodeMap == 0 || customMap == 0)
@@ -153,7 +153,7 @@ int FontEngine::getHAdvance (unsigned c) const {
 	if (_currentFace) {
 		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)c);
 		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiAdvance;	
+		return _currentFace->glyph->metrics.horiAdvance;
 	}
 	return 0;
 }
@@ -163,7 +163,7 @@ int FontEngine::getHAdvance (const char *name) const {
 	if (_currentFace && name) {
 		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
 		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiAdvance;	
+		return _currentFace->glyph->metrics.horiAdvance;
 	}
 	return 0;
 }
@@ -171,7 +171,7 @@ int FontEngine::getHAdvance (const char *name) const {
 
 /** Get first available character of the current font face. */
 int FontEngine::getFirstChar () const {
-	if (_currentFace) 
+	if (_currentFace)
 		return _currentChar = FT_Get_First_Char(_currentFace, &_currentGlyphIndex);
 	return 0;
 }
@@ -179,14 +179,14 @@ int FontEngine::getFirstChar () const {
 
 /** Get the next available character of the current font face. */
 int FontEngine::getNextChar () const {
-	if (_currentFace && _currentGlyphIndex) 
+	if (_currentFace && _currentGlyphIndex)
 		return _currentChar = FT_Get_Next_Char(_currentFace, _currentChar, &_currentGlyphIndex);
-	return getFirstChar();		
+	return getFirstChar();
 }
 
 
-/** Returns the glyph name for a given charater code. 
- * @param[in] c char code 
+/** Returns the glyph name for a given charater code.
+ * @param[in] c char code
  * @return glyph name */
 string FontEngine::getGlyphName (unsigned c) const {
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
@@ -199,9 +199,9 @@ string FontEngine::getGlyphName (unsigned c) const {
 }
 
 
-/* Returns the character code for a given glyph name. 
+/* Returns the character code for a given glyph name.
  * @param name glyph name
- * @return char code or 0 if name couldn't be found 
+ * @return char code or 0 if name couldn't be found
 int FontEngine::getCharByGlyphName (const char *name) const {
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace))	{
 		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
@@ -217,7 +217,7 @@ vector<int> FontEngine::getPanose () const {
 	vector<int> panose(10);
 	if (_currentFace) {
 		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
-		if (table) 
+		if (table)
 			for (int i=0; i < 10; i++)
 				panose[i] = table->panose[i];
 	}
@@ -246,7 +246,7 @@ bool FontEngine::setCharSize (int ptSize) {
 	typedef FT_Vector *FTVectorPtr;
 #endif
 
-// Callback functions used by traceOutline 
+// Callback functions used by traceOutline
 static int moveto (FTVectorPtr to, void *user) {
 	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
 	commands->moveTo(to->x, to->y);
@@ -276,13 +276,13 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
- *  Each glyph is composed of straight lines, quadratic (conic) or cubic Bézier curves.
+ *  Each glyph is composed of straight lines, quadratic (conic) or cubic Bï¿½zier curves.
  *  This function takes all these outline segments and processes them by calling
- *  the corresponding functions. The functions must be provided in form of a 
- *  FEGlyphCommands object. 
- *  @param[in] index index of the glyph that will be traced 
+ *  the corresponding functions. The functions must be provided in form of a
+ *  FEGlyphCommands object.
+ *  @param[in] index index of the glyph that will be traced
  *  @param[in] commands the drawing commands to be executed
- *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used. 
+ *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
 static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, bool scale) {
 	if (face) {
@@ -307,14 +307,14 @@ static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, b
 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
- *  Each glyph is composed of straight lines, quadratic (conic) or cubic Bézier curves.
+ *  Each glyph is composed of straight lines, quadratic (conic) or cubic Bï¿½zier curves.
  *  This function takes all these outline segments and processes them by calling
- *  the corresponding functions. The functions must be provided in form of a 
- *  FEGlyphCommands object. 
- *  @param[in] chr the glyph of this character will be traced 
+ *  the corresponding functions. The functions must be provided in form of a
+ *  FEGlyphCommands object.
+ *  @param[in] chr the glyph of this character will be traced
  *  @param[in] commands the drawing commands to be executed
  *  @param[in] scale if true the current pt size will be considered otherwise
- *                   the plain TrueType units are used. 
+ *                   the plain TrueType units are used.
  *  @return false on errors */
 bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale) const {
 	if (_currentFace) {

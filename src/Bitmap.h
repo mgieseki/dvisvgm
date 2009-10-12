@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef BITMAP_H
@@ -49,13 +49,13 @@ class Bitmap
 		bool empty () const                   {return (!_rows && !_cols) || _bytes.empty();}
 		void bbox (int &w, int &h) const;
 		void forAllPixels (ForAllData &data) const;
-		
+
 		template <typename T>
 		int copy (std::vector<T> &target, bool vflip=false) const;
 
 //		template <typename T>
 //		void write (std::ostream &os, const std::vector<T> &v) const;
-			
+
 		std::ostream& write (std::ostream &os) const;
 
    private:
@@ -66,9 +66,9 @@ class Bitmap
 };
 
 
-/** Copies the bitmap to a new target area and reorganize the bits. 
+/** Copies the bitmap to a new target area and reorganize the bits.
  *  @param[out] target points to first T of new bitmap (must be deleted after usage)
- *  @param[in]  vflip true if the new bitmap should be flipped vertically 
+ *  @param[in]  vflip true if the new bitmap should be flipped vertically
  *  @return number of Ts per row */
 template <typename T>
 int Bitmap::copy (std::vector<T> &target, bool vflip) const {

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <fstream>
@@ -69,7 +69,7 @@ void FontMap::readPsMap (istream &is) {
 			switch (read_entry(first, last)) {
 				case FM_NAME:
 					if (name.empty())
-						name = first; 
+						name = first;
 					break;
 				case FM_ENC:
 					entry.encname = first; break;
@@ -88,7 +88,7 @@ void FontMap::readPsMap (istream &is) {
 			entry.encname = entry.encname.substr(0, len-4);
 		if ((len = entry.fontname.length()) > 4 && entry.fontname[len-4] == '.')
 			entry.fontname = entry.fontname.substr(0, len-4);
-		
+
 		if (!name.empty() && ((name != entry.fontname && !entry.fontname.empty()) || !entry.encname.empty()))
 			_fontMap[name] = entry;
 	}
@@ -97,7 +97,7 @@ void FontMap::readPsMap (istream &is) {
 
 /** Read map file in dvipdfm format.
  *  <font name> [<encoding>|default|none] [<map target>] [options]
- *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored. 
+ *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored.
  *  @param[in] is data is read from this stream */
 void FontMap::readPdfMap (istream &is) {
 	char buf[512];
@@ -146,10 +146,10 @@ static inline char* get_extension (char *fname) {
 
 
 
-/** Reads a single line entry. 
- *  @param[in,out] first pointer to first char of entry 
+/** Reads a single line entry.
+ *  @param[in,out] first pointer to first char of entry
  *  @param[in,out] last  pointer to last char of entry
- *  @param[in] name_only true, if special meanings of \" and < should be ignored  
+ *  @param[in] name_only true, if special meanings of \" and < should be ignored
  *  @return entry type */
 static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
 	while (*first && isspace(*first))
@@ -215,7 +215,7 @@ void FontMap::readdir (const string &dirname) {
 }
 
 
-/** Returns name of font that is mapped to a given font. 
+/** Returns name of font that is mapped to a given font.
  * @param[in] fontname name of font whose mapped name is retrieved
  * @returns name of mapped font */
 const char* FontMap::lookup (const string &fontname) const {
@@ -226,7 +226,7 @@ const char* FontMap::lookup (const string &fontname) const {
 }
 
 
-/** Returns the name of the assigned encoding for a given font. 
+/** Returns the name of the assigned encoding for a given font.
  *  @param[in] fontname name of font whose encoding is returned
  *  @return name of encoding, 0 if there is no encoding assigned */
 const char* FontMap::encoding (const string &fontname) const {

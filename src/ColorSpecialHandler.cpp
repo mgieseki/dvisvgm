@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -41,11 +41,11 @@ static void cmyk_to_rgb (const vector<float> &cmyk, vector<float> &rgb) {
 }
 
 
-/** Converts a color given in HSB coordinates to RGB. 
+/** Converts a color given in HSB coordinates to RGB.
  *  @param[in]  hsb color in HSB space
  *  @param[out] rgb color in RGB space */
 static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
-	if (hsb[1] == 0) 
+	if (hsb[1] == 0)
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
 		float h = hsb[0]-floor(hsb[0]);
@@ -67,8 +67,8 @@ static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
 }
 
 
-/** Converts a gray value to RGB. 
- *  @param[in]  gray normalized gray value (0 <= gray <= 1) 
+/** Converts a gray value to RGB.
+ *  @param[in]  gray normalized gray value (0 <= gray <= 1)
  *  @param[out] rgb resulting RGB triple */
 static void gray_to_rgb (const float gray, vector<float> &rgb) {
 	for (int i=0; i < 3; i++)
@@ -86,9 +86,9 @@ static float read_float (istream &is) {
 }
 
 
-/** Reads multiple float values from a given stream. The number of 
+/** Reads multiple float values from a given stream. The number of
  *  values read is determined by the size of the result vector.
- *  @param[in]  is stream to be read from 
+ *  @param[in]  is stream to be read from
  *  @param[out] v  the resulting floats */
 static void read_floats (istream &is, vector<float> &v) {
 	for (size_t i=0; i < v.size(); i++)
@@ -101,7 +101,7 @@ static bool color_constant (const string &c, vector<float> &rgb) {
 	const struct {
 		const char *name;
 		const float rgb[3];
-	} 
+	}
 	constants[] = {
 		{"Apricot", {1, 0.68, 0.48}},
 		{"Aquamarine", {0.18, 1, 0.7}},
@@ -186,7 +186,7 @@ static bool color_constant (const string &c, vector<float> &rgb) {
 			rgb[1] = constants[mid].rgb[1];
 			rgb[2] = constants[mid].rgb[2];
 			return true;
-		}			
+		}
 	}
 	return false;
 }
@@ -196,10 +196,10 @@ static bool color_constant (const string &c, vector<float> &rgb) {
  *  A color statement has the following syntax:
  *  <color model> <component values>
  *  Currently, the following color models are supported: rgb, cmyk, hsb and gray.
- *  Examples: rgb 1 0.5 0, gray 0.5 
+ *  Examples: rgb 1 0.5 0, gray 0.5
  *  @param[in]  model if model != "" this value specifies the model, otherwise it's read from the stream
  *  @param[in]  is stream to be read from
- *  @param[out] resulting RGB triple 
+ *  @param[out] resulting RGB triple
  *  @return true if statement has successfully been read */
 static void read_color (string model, istream &is, vector<float> &rgb) {
 	if (model.empty())
@@ -216,7 +216,7 @@ static void read_color (string model, istream &is, vector<float> &rgb) {
 		read_floats(is, hsb);
 		hsb_to_rgb(hsb, rgb);
 	}
-	else if (model == "gray") 
+	else if (model == "gray")
 		gray_to_rgb(read_float(is), rgb);
 	else if (!color_constant(model, rgb))
 		throw SpecialException("unknown color statement");
@@ -238,7 +238,7 @@ bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActio
 		string cmd;
 		is >> cmd;
 		if (cmd == "push") {             // color push <model> <params>
-			read_color("", is, rgb); 		
+			read_color("", is, rgb);
 			_colorStack.push(rgb);
 		}
 		else if (cmd == "pop") {

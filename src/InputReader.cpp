@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -27,7 +27,7 @@ using namespace std;
 
 /** Skips n characters. */
 void InputReader::skip (unsigned n) {
-	while (n-- > 0) 
+	while (n-- > 0)
 		get();
 }
 
@@ -40,7 +40,7 @@ void InputReader::skipSpace () {
 }
 
 
-/** Tries to find a given string and skips all characters preceding that string. 
+/** Tries to find a given string and skips all characters preceding that string.
  *  @param[in] s string to look for (must not be longer than the maximal buffer size)
  *  @param[in] consume if true, the buffer pointer is moved to the first charater following string s
  *  @return true if s was found */
@@ -52,9 +52,9 @@ bool InputReader::skipUntil (const char *s, bool consume) {
 }
 
 
-/** Checks if the next characters to be read match a given string. 
- *  @param[in] s string to be matched 
- *  @param[in] consume if true, the characters of the matched string are skipped 
+/** Checks if the next characters to be read match a given string.
+ *  @param[in] s string to be matched
+ *  @param[in] consume if true, the characters of the matched string are skipped
  *  @return true if s matches */
 bool InputReader::check (const char *s, bool consume) {
 	unsigned count = 0;
@@ -85,7 +85,7 @@ int InputReader::compare (const char *s, bool consume) {
  *  the read integer constant are skipped. If this function returns false,
  *  the buffer pointer points to the same position as before the function call.
  *  @param[out] val contains the read integer value on success
- *  @param[in] accept_sign if false, only positive integers (without sign) are accepted 
+ *  @param[in] accept_sign if false, only positive integers (without sign) are accepted
  *  @return true if integer could be read */
 bool InputReader::parseInt (int &val, bool accept_sign) {
 	val = 0;
@@ -102,7 +102,7 @@ bool InputReader::parseInt (int &val, bool accept_sign) {
 	}
 	else if (!isdigit(peek()))
 		return false;
-	
+
 	while (isdigit(peek()))
 		val = val*10 + (get()-'0');
 	val *= fac;
@@ -136,7 +136,7 @@ bool InputReader::parseInt (int base, int &val) {
 		int digit = c - (c <= '9' ? '0' : 'a'-10);
 		val = val*base + digit;
 	}
-	return true;	
+	return true;
 }
 
 

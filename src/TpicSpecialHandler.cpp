@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -50,8 +50,8 @@ void TpicSpecialHandler::reset () {
 }
 
 
-/** Creates SVG elements that draw lines through the recorded points. 
- *  @param[in] fill true if enclosed area should be filled 
+/** Creates SVG elements that draw lines through the recorded points.
+ *  @param[in] fill true if enclosed area should be filled
  *  @param[in] ddist dash/dot distance of line in TeX point units
  *                   (0:solid line, >0:dashed line, <0:dotted line) */
 void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *actions) {
@@ -103,14 +103,14 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 		}
 		actions->appendToPage(elem);
 	}
-	reset();	
+	reset();
 }
 
 
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 	if (actions && _points.size() > 0) {
 		const size_t size = _points.size();
-		if (size < 3) 
+		if (size < 3)
 			drawLines(false, ddist, actions);
 		else {
 			double x = actions->getX();
@@ -126,7 +126,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 				const DPair p1 = p+_points[i];
 				const DPair p2 = p+_points[i+1];
 				mid = p1+(p2-p1)/2.0;
-				oss << 'Q' << p1.x() << ',' << p1.y() 
+				oss << 'Q' << p1.x() << ',' << p1.y()
 					 << ' ' << mid.x() << ',' << mid.y();
 				actions->bbox().embed(mid);
 				actions->bbox().embed((p0+p1*6.0+p2)/8.0, _penwidth);
@@ -169,8 +169,8 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {
 		const double PI2 = 4*asin(1.0);
-		angle1 *= -1; 
-		angle2 *= -1; 
+		angle1 *= -1;
+		angle2 *= -1;
 		if (fabs(angle1) > PI2) {
 			int n = angle1/PI2;
 			angle1 = angle1 - n*PI2;
@@ -186,7 +186,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 			elem->addAttribute("cy", XMLString(y));
 			elem->addAttribute("rx", XMLString(rx));
 			elem->addAttribute("ry", XMLString(ry));
-		}	
+		}
 		else {
 			if (angle1 < 0)
 				angle1 = PI2+angle1;
@@ -201,8 +201,8 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 			}
 			ostringstream oss;
 			oss << 'M' << x+rx*cos(angle1) << ',' << y+ry*sin(-angle1)
-				 << 'A' << rx << ',' << ry 
-				 << " 0 " 
+				 << 'A' << rx << ',' << ry
+				 << " 0 "
 				 << large_arg << ' ' << sweep << ' '
 				 << x+rx*cos(angle2) << ',' << y-ry*sin(angle2);
 			if (_fill >= 0)

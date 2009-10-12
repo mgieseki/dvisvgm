@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "macros.h"
@@ -24,7 +24,7 @@
 using namespace std;
 
 XMLDocument::XMLDocument (XMLElementNode *root)
-	: rootElement(root), emitted(false) 
+	: rootElement(root), emitted(false)
 {
 }
 
@@ -37,7 +37,7 @@ XMLDocument::~XMLDocument () {
 void XMLDocument::clear () {
 	delete rootElement;
 	rootElement = 0;
-	FORALL(nodes, list<XMLNode*>::iterator, i) 
+	FORALL(nodes, list<XMLNode*>::iterator, i)
 		delete *i;
 	nodes.clear();
 }
@@ -45,7 +45,7 @@ void XMLDocument::clear () {
 
 void XMLDocument::append (XMLNode *node) {
 	if (!node)
-		return; 
+		return;
 	XMLElementNode *newRoot = dynamic_cast<XMLElementNode*>(node);
 	if (newRoot) {             // there can only be one root element node in the document
 		delete rootElement;     // so if there is already one...
@@ -65,7 +65,7 @@ void XMLDocument::setRootNode (XMLElementNode *root) {
 ostream& XMLDocument::write (ostream &os) const {
 	if (rootElement) { // no root element => no output
 		os << "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
-		FORALL(nodes, list<XMLNode*>::const_iterator, i) 
+		FORALL(nodes, list<XMLNode*>::const_iterator, i)
 			(*i)->write(os);
 		rootElement->write(os);
 	}
