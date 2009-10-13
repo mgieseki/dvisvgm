@@ -1,5 +1,5 @@
 /*************************************************************************
-** FileFinderTest.h                                                     **
+** FileFinderTest.cpp                                                   **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,53 +18,52 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
+#include <gtest/gtest.h>
 #include <fstream>
 #include "FileFinder.h"
 
 using std::ifstream;
 
-class FileFinderTest : public CxxTest::TestSuite
-{
-	public:
 
-		void test_findBaseFile () {
-			const char *path = FileFinder::lookup("cmr10.tfm");
-			TS_ASSERT(path);
+TEST(FileFinderTest, find_base_file) {
+	const char *path = FileFinder::lookup("cmr10.tfm");
+	EXPECT_TRUE(path);
+	ifstream ifs(path);
+	EXPECT_TRUE(ifs);
+}
+
+
+TEST(FileFinderTest, find_mapped_file) {
+	// mapped base tfm file => should be resolved by kpathsea
+	// circle10.tfm is usually mapped to lcircle.tfm
+	if (const char *path = FileFinder::lookup("circle10.tfm")) {
+		EXPECT_TRUE(path);
+		ifstream ifs(path);
+		EXPECT_TRUE(ifs);
+	}
+
+	// mapped lm font => should be resolved using dvisvgm's FontMap
+	// cork-lmr10 is usually mapped to lmr10
+	bool have_lmodern = FileFinder::lookup("lmodern.sty");
+	if (have_lmodern) {  // package lmodern installed?
+		if (const char *path = FileFinder::lookup("cork-lmr10.pfb")) {
 			ifstream ifs(path);
-			TS_ASSERT(ifs);
+			EXPECT_TRUE(ifs);
 		}
+	}
+}
 
-		void test_findMappedFile () {
-			// mapped base tfm file => should be resolved by kpathsea
-			// circle10.tfm is usually mapped to lcircle.tfm
-			if (const char *path = FileFinder::lookup("circle10.tfm")) {
-				TS_ASSERT(path);
-				ifstream ifs(path);
-				TS_ASSERT(ifs);
-			}
 
-			// mapped lm font => should be resolved using dvisvgm's FontMap
-			// cork-lmr10 is usually mapped to lmr10
-			bool have_lmodern = FileFinder::lookup("lmodern.sty");
-			if (have_lmodern) {  // package lmodern installed?
-				if (const char *path = FileFinder::lookup("cork-lmr10.pfb")) {
-					ifstream ifs(path);
-					TS_ASSERT(ifs);
-				}
-			}
-		}
+TEST(FileFinderTest, mktexmf) {
+	// ensure availability of ec font => call mktexmf if necessary
+	if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
+		ifstream ifs(path);
+		EXPECT_TRUE(ifs);
+	}
+}
 
-		void test_mktexmf () {
-			// ensure availability of ec font => call mktexmf if necessary
-			if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
-				ifstream ifs(path);
-				TS_ASSERT(ifs);
-			}
-		}
 
-		void test_findUnavailableFile () {
-			const char *path = FileFinder::lookup("not-available.xyz");
-			TS_ASSERT(!path);
-		}
-};
+TEST(FileFinderTest, find_unavailable_file) {
+	const char *path = FileFinder::lookup("not-available.xyz");
+	EXPECT_FALSE(path);
+}

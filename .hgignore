@@ -44,7 +44,7 @@ install-sh
 src/samples
 src/psdefs.psc
 src/CommandLine.*
-tests/test-all*
+tests/*Test
 svg2vml
 stamp-h1
 a.out

@@ -1,5 +1,5 @@
 /*************************************************************************
-** VectorStreamTest.h                                                   **
+** StreamCounterTest.cpp                                                **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,26 +18,22 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
-#include "VectorStream.h"
+#include <gtest/gtest.h>
+#include <sstream>
+#include "StreamCounter.h"
 
-using std::string;
 
-class VectorStreamTest : public CxxTest::TestSuite
-{
-	public:
-		void test_read () {
-			const char *str = "abcdefghijklm\0nopqrstuvwxyz";
-			vector<char> vec(str, str+27);
-			VectorInputStream<char> vs(vec);
-			for (unsigned count = 0; vs; count++) {
-				int c = vs.get();
-				if (count < vec.size()) {
-					TS_ASSERT_EQUALS(c, str[count]);
-				}
-				else {
-					TS_ASSERT_EQUALS(c, -1);
-				}
-			}
-		}
-};
+TEST(StreamCounterTest, count) {
+	std::ostringstream ss;
+	StreamCounter<char> sc(ss);
+	EXPECT_EQ(sc.count(), unsigned(0));
+
+	ss << "0123456789";
+	EXPECT_EQ(sc.count(), unsigned(10));
+	
+	ss << "0123456789";
+	EXPECT_EQ(sc.count(), unsigned(20));
+
+	sc.reset();
+	EXPECT_EQ(sc.count(), unsigned(0));
+}

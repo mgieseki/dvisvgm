@@ -1,5 +1,5 @@
 /*************************************************************************
-** FontManagerTest.h                                                    **
+** CalculatorTest.cpp                                                   **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,55 +18,43 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
-#include <sstream>
-#include "Font.h"
-#include "FontManager.h"
-#include "FileFinder.h"
+#include <gtest/gtest.h>
+#include "Calculator.h"
 
-class FontManagerTest : public CxxTest::TestSuite
-{
-	public:
-
-		FontManagerTest () {
-			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
-			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
-			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
-		}
-
-		void test_fontID1 () {
-			TS_ASSERT_EQUALS(fm.fontID(10), 0);
-			TS_ASSERT_EQUALS(fm.fontID(11), 1);
-			TS_ASSERT_EQUALS(fm.fontID(9), 2);
-			TS_ASSERT_EQUALS(fm.fontID(1), -1);
-		}
+TEST(CalculatorTest, eval) {
+	Calculator calc;
+	EXPECT_EQ(calc.eval("2+3+4"),    9);
+	EXPECT_EQ(calc.eval("2*3+4"),   10);
+	EXPECT_EQ(calc.eval("2+3*4"),   14);
+	EXPECT_EQ(calc.eval("(2+3)*4"), 20);
+	EXPECT_EQ(calc.eval("2*(3+4)"), 14);
+	EXPECT_EQ(calc.eval("-2+3+4"),   5);
+	EXPECT_EQ(calc.eval("3/2"),    1.5);
+	EXPECT_EQ(calc.eval("3%2"),      1);
+}
 
 
-		void test_font_ID2 () {
-			TS_ASSERT_EQUALS(fm.fontID("cmr10"), 0);
-		}
+TEST(CalculatorTest, variables) {
+	Calculator calc;
+	calc.setVariable("a", 1);
+	EXPECT_EQ(calc.getVariable("a"), 1);
+	
+	calc.setVariable("a", 2);
+	EXPECT_EQ(calc.getVariable("a"), 2);
+	
+	calc.setVariable("b", 3);
+	EXPECT_EQ(calc.eval("a+b"), 5);
+	EXPECT_EQ(calc.eval("2a+2b"), 10);
+}
 
 
-		void test_getFont () {
-			const Font *f1 = fm.getFont(10);
-			TS_ASSERT(f1);
-			TS_ASSERT_EQUALS(f1->name(), "cmr10");
-			TS_ASSERT(dynamic_cast<const PhysicalFontImpl*>(f1));
-			
-			const Font *f2 = fm.getFont(11);
-			TS_ASSERT(f2);
-			TS_ASSERT_DIFFERS(f1, f2);
-			TS_ASSERT_EQUALS(f2->name(), "cmr10");
-			TS_ASSERT(dynamic_cast<const PhysicalFontProxy*>(f2));
-			TS_ASSERT_EQUALS(f2->uniqueFont(), f1);
-		}
+TEST(CalculatorTest, exceptions) {
+	Calculator calc;
+	ASSERT_THROW(calc.eval("2++3"), CalculatorException);
+	ASSERT_THROW(calc.eval("c"), CalculatorException);
+	ASSERT_THROW(calc.eval("1/0"), CalculatorException);
+	ASSERT_THROW(calc.eval("1%0"), CalculatorException);
+	ASSERT_THROW(calc.eval("2*(3+4"), CalculatorException);
+	ASSERT_THROW(calc.eval("2*(3+4))"), CalculatorException);
+}
 
-		void test_getFontById () {
-			TS_ASSERT_EQUALS(fm.getFont(10), fm.getFontById(0));
-			TS_ASSERT_EQUALS(fm.getFont("cmr10"), fm.getFontById(0));
-		}
-
-
-	private:
-		FontManager fm;
-};

@@ -1,5 +1,5 @@
 /*************************************************************************
-** CalculatorTest.h                                                     **
+** VectorStreamTest.cpp                                                 **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,44 +18,25 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
-#include "Calculator.h"
+#include <gtest/gtest.h>
+#include <vector>
+#include "VectorStream.h"
 
-class CalculatorTest : public CxxTest::TestSuite
-{
-	public:
-		void test_eval () {
-			TS_ASSERT_EQUALS(calc.eval("2+3+4"),    9);
-			TS_ASSERT_EQUALS(calc.eval("2*3+4"),   10);
-			TS_ASSERT_EQUALS(calc.eval("2+3*4"),   14);
-			TS_ASSERT_EQUALS(calc.eval("(2+3)*4"), 20);
-			TS_ASSERT_EQUALS(calc.eval("2*(3+4)"), 14);
-			TS_ASSERT_EQUALS(calc.eval("-2+3+4"),   5);
-			TS_ASSERT_EQUALS(calc.eval("3/2"),    1.5);
-			TS_ASSERT_EQUALS(calc.eval("3%2"),      1);
-		}
+using std::string;
+using std::vector;
 
-		void test_variables () {
-			calc.setVariable("a", 1);
-			TS_ASSERT_EQUALS(calc.getVariable("a"), 1);
-			
-			calc.setVariable("a", 2);
-			TS_ASSERT_EQUALS(calc.getVariable("a"), 2);
-			
-			calc.setVariable("b", 3);
-			TS_ASSERT_EQUALS(calc.eval("a+b"), 5);
-			TS_ASSERT_EQUALS(calc.eval("2a+2b"), 10);
+TEST(VectorStreamTest, read) {
+	const char *str = "abcdefghijklm\0nopqrstuvwxyz";
+	vector<char> vec(str, str+27);
+	VectorInputStream<char> vs(vec);
+	for (unsigned count = 0; vs; count++) {
+		int c = vs.get();
+		if (count < vec.size()) {
+			EXPECT_EQ(c, str[count]);
 		}
+		else {
+			EXPECT_EQ(c, -1);
+		}
+	}
+}
 
-		void test_exceptions () {
-			TS_ASSERT_THROWS(calc.eval("2++3"), CalculatorException);
-			TS_ASSERT_THROWS(calc.eval("c"), CalculatorException);
-			TS_ASSERT_THROWS(calc.eval("1/0"), CalculatorException);
-			TS_ASSERT_THROWS(calc.eval("1%0"), CalculatorException);
-			TS_ASSERT_THROWS(calc.eval("2*(3+4"), CalculatorException);
-			TS_ASSERT_THROWS(calc.eval("2*(3+4))"), CalculatorException);
-		}
-		
-	private:
-		Calculator calc;
-};

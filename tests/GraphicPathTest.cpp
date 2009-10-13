@@ -1,5 +1,5 @@
 /*************************************************************************
-** MatrixTest.h                                                         **
+** GraphicPathTest.cpp                                                  **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,55 +18,48 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
+#include <gtest/gtest.h>
 #include <sstream>
-#include "Matrix.h"
+#include "GraphicPath.h"
 
 using std::ostringstream;
 
-class MatrixTest : public CxxTest::TestSuite
-{
-	public:
-		void test_svg () {
-			double v1[] = {1,2,3,4,5,6,7,8,9};
-			Matrix m1(v1);
-			ostringstream oss;
-			m1.write(oss);
-			TS_ASSERT_EQUALS(oss.str(), "((1,2,3),(4,5,6),(7,8,9))");
-			TS_ASSERT_EQUALS(m1.getSVG(), "matrix(1 4 2 5 3 6)");
-
-			double v2[] = {1,2};
-			Matrix m2(v2, 2);
-			oss.str("");
-			m2.write(oss);
-			TS_ASSERT_EQUALS(oss.str(), "((1,2,0),(0,1,0),(0,0,1))");
-			TS_ASSERT_EQUALS(m2.getSVG(), "matrix(1 0 2 1 0 0)");
-		}
+TEST(GraphicPathTest, svg) {
+	GraphicPath<int> path;
+	path.moveto(0,0);
+	path.lineto(10,10);
+	path.cubicto(20,20,30,30,40,40);
+	path.closepath();
+	ostringstream oss;
+	path.writeSVG(oss);
+	EXPECT_EQ(oss.str(), "M0 0L10 10C20 20 30 30 40 40Z");
+}
 
 
-		void test_transpose () {
-			double v[] = {1,2,3,4,5,6,7,8,9};
-			Matrix m(v);
-			m.transpose();
-			ostringstream oss;
-			m.write(oss);
-			TS_ASSERT_EQUALS(oss.str(), "((1,4,7),(2,5,8),(3,6,9))");
-			TS_ASSERT_EQUALS(m.getSVG(), "matrix(1 2 4 5 7 8)");
-		}
+TEST(GraphicPathTest, optimize) {
+	GraphicPath<int> path;
+	path.moveto(0,0);
+	path.lineto(10,0);
+	path.lineto(10,20);
+	ostringstream oss;
+	path.writeSVG(oss);
+	EXPECT_EQ(oss.str(), "M0 0H10V20");
+}
 
-		
-		void test_checks () {
-			Matrix m(1);
-			TS_ASSERT(m.isIdentity());
-			double tx, ty;
-			TS_ASSERT(m.isTranslation(tx, ty));
-			TS_ASSERT_EQUALS(tx, 0);
-			TS_ASSERT_EQUALS(ty, 0);
-			m.translate(1,2);
-			TS_ASSERT(m.isTranslation(tx, ty));
-			TS_ASSERT_EQUALS(tx, 1);
-			TS_ASSERT_EQUALS(ty, 2);
-			m.scale(2, 2);
-			TS_ASSERT(!m.isTranslation(tx, ty));
-		}
-};
+
+TEST(GraphicPathTest, transform) {
+	GraphicPath<double> path;
+	path.moveto(0,0);
+	path.lineto(1,0);
+	path.lineto(1,1);
+	path.lineto(0,1);
+	path.closepath();
+	Matrix m(1);
+	m.scale(2,2);
+	m.translate(10, 100);
+	m.rotate(90);
+	path.transform(m);
+	ostringstream oss;
+	path.writeSVG(oss);
+	EXPECT_EQ(oss.str(), "M-100 10V12H-102V10Z");
+}

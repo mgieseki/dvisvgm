@@ -1,5 +1,5 @@
 /*************************************************************************
-** PageSizeTest.h                                                       **
+** FontManagerTest.cpp                                                  **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,50 +18,55 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
-#include <limits>
-#include "PageSize.h"
+#include <gtest/gtest.h>
+#include <sstream>
+#include "Font.h"
+#include "FontManager.h"
+#include "FileFinder.h"
 
-
-class PageSizeTest : public CxxTest::TestSuite
+class FontManagerTest : public ::testing::Test
 {
-	struct PageData 
-	{
-		const char *id;
-		double width, height;
-	};
+	protected:
+		FontManager fm;
+
+		void SetUp () {
+			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
+			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
+			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
+		}
+};
+
+
+TEST_F(FontManagerTest, fontID1) {
+	EXPECT_EQ(fm.fontID(10), 0);
+	EXPECT_EQ(fm.fontID(11), 1);
+	EXPECT_EQ(fm.fontID(9), 2);
+	EXPECT_EQ(fm.fontID(1), -1);
+}
+
+
+TEST_F(FontManagerTest, font_ID2) {
+	EXPECT_EQ(fm.fontID("cmr10"), 0);
+}
+
+
+TEST_F(FontManagerTest, getFont) {
+	const Font *f1 = fm.getFont(10);
+	EXPECT_TRUE(f1);
+	EXPECT_EQ(f1->name(), "cmr10");
+	EXPECT_TRUE(dynamic_cast<const PhysicalFontImpl*>(f1));
 	
-	public:
-		void test_resize () {
-			TS_ASSERT(!ps.valid());
-			
-			for (const PageData *p = pageData; p && p->id; p++) {
-				ps.resize(p->id);
-				TS_ASSERT_DELTA(ps.widthInMM(), p->width, 0.0000001);
-				TS_ASSERT_DELTA(ps.heightInMM(), p->height, 0.000001);
-			}
-		}
-
-		void test_exceptions () {
-			TS_ASSERT_THROWS(ps.resize("a"), PageSizeException);
-			TS_ASSERT_THROWS(ps.resize("e4"), PageSizeException);
-			TS_ASSERT_THROWS(ps.resize("a4-unknown"), PageSizeException);
-		}
-	private:
-		static const PageData pageData[];
-		PageSize ps;
-};
+	const Font *f2 = fm.getFont(11);
+	EXPECT_TRUE(f2);
+	EXPECT_NE(f1, f2);
+	EXPECT_EQ(f2->name(), "cmr10");
+	EXPECT_TRUE(dynamic_cast<const PhysicalFontProxy*>(f2));
+	EXPECT_EQ(f2->uniqueFont(), f1);
+}
 
 
-const PageSizeTest::PageData PageSizeTest::pageData[] = {
-	{"A4", 210, 297},
-	{"a4", 210, 297}, 
-	{"a4-p", 210, 297}, 
-	{"a4-portrait", 210, 297}, 
-	{"a4-l", 297, 210}, 
-	{"a4-landscape", 297, 210}, 
-	{"a5", 148, 210}, 
-	{"c10", 28, 40},
-	{"letter", 216, 279},
-	{0, 0, 0}
-};
+TEST_F(FontManagerTest, getFontById) {
+	EXPECT_EQ(fm.getFont(10), fm.getFontById(0));
+	EXPECT_EQ(fm.getFont("cmr10"), fm.getFontById(0));
+}
+

@@ -1,5 +1,5 @@
 /*************************************************************************
-** StreamCounterTest.h                                                  **
+** MatrixTest.cpp                                                       **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,25 +18,51 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#include <cxxtest/TestSuite.h>
+#include <gtest/gtest.h>
 #include <sstream>
-#include "StreamCounter.h"
+#include "Matrix.h"
 
-class StreamCounterTest : public CxxTest::TestSuite
-{
-	public:
-		void test_count () {
-			std::ostringstream ss;
-			StreamCounter<char> sc(ss);
-			TS_ASSERT_EQUALS(sc.count(), unsigned(0));
+using std::ostringstream;
 
-			ss << "0123456789";
-			TS_ASSERT_EQUALS(sc.count(), unsigned(10));
-			
-			ss << "0123456789";
-			TS_ASSERT_EQUALS(sc.count(), unsigned(20));
+TEST(MatrixTest, svg) {
+	double v1[] = {1,2,3,4,5,6,7,8,9};
+	Matrix m1(v1);
+	ostringstream oss;
+	m1.write(oss);
+	EXPECT_EQ(oss.str(), "((1,2,3),(4,5,6),(7,8,9))");
+	EXPECT_EQ(m1.getSVG(), "matrix(1 4 2 5 3 6)");
 
-			sc.reset();
-			TS_ASSERT_EQUALS(sc.count(), unsigned(0));
-		}
-};
+	double v2[] = {1,2};
+	Matrix m2(v2, 2);
+	oss.str("");
+	m2.write(oss);
+	EXPECT_EQ(oss.str(), "((1,2,0),(0,1,0),(0,0,1))");
+	EXPECT_EQ(m2.getSVG(), "matrix(1 0 2 1 0 0)");
+}
+
+
+TEST(MatrixTest, transpose) {
+	double v[] = {1,2,3,4,5,6,7,8,9};
+	Matrix m(v);
+	m.transpose();
+	ostringstream oss;
+	m.write(oss);
+	EXPECT_EQ(oss.str(), "((1,4,7),(2,5,8),(3,6,9))");
+	EXPECT_EQ(m.getSVG(), "matrix(1 2 4 5 7 8)");
+}
+
+
+TEST(MatrixTest, checks) {
+	Matrix m(1);
+	EXPECT_TRUE(m.isIdentity());
+	double tx, ty;
+	EXPECT_TRUE(m.isTranslation(tx, ty));
+	EXPECT_EQ(tx, 0);
+	EXPECT_EQ(ty, 0);
+	m.translate(1,2);
+	EXPECT_TRUE(m.isTranslation(tx, ty));
+	EXPECT_EQ(tx, 1);
+	EXPECT_EQ(ty, 2);
+	m.scale(2, 2);
+	EXPECT_FALSE(m.isTranslation(tx, ty));
+}

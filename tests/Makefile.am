@@ -6,27 +6,81 @@
 
 AM_CXXFLAGS = -I../src -I../../src -Wall
 
-## rules and macros for the unit test environment
-## CxxTest (http://cxxtest.sourceforge.net) must be installed if you want to build 
-## and run the tests!
-check_PROGRAMS = test-all
+TESTS =
+check_PROGRAMS =
 
-# "test-all" should automatically be executed when calling "make check"
-TESTS = test-all
 
-# the tests to be executed are implemented in the following header files
-test_all_headers = CalculatorTest.h ColorSpecialTest.h CommandLineTest.h DirectoryTest.h \
-	FontManagerTest.h FontMapTest.h FileFinderTest.h GraphicPathTest.h LengthTest.h MatrixTest.h \
-   StreamCounterTest.h PageSizeTest.h SplittedCharInputBufferTest.h StreamInputBufferTest.h \
-	VectorStreamTest.h
+TESTS += CalculatorTest
+check_PROGRAMS += CalculatorTest
+CalculatorTest_SOURCES = CalculatorTest.cpp
+CalculatorTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
-test_all_SOURCES      = $(test_all_headers) test-all.cpp 
-test_all_LDADD        = ../src/libdvisvgm.a
-test_all_DEPENDENCIES = ../src/libdvisvgm.a
+TESTS += ColorSpecialTest
+check_PROGRAMS += ColorSpecialTest
+ColorSpecialTest_SOURCES = ColorSpecialTest.cpp
+ColorSpecialTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
-# use CxxTest to create the complete testing application
-test-all.cpp: $(test_all_headers)
-	cxxtestgen --error-printer -o $@ $(test_all_headers)
+TESTS += CommandLineTest
+check_PROGRAMS += CommandLineTest
+CommandLineTest_SOURCES = CommandLineTest.cpp
+CommandLineTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
-CLEANFILES = test-all.cpp
+TESTS += DirectoryTest
+check_PROGRAMS += DirectoryTest
+DirectoryTest_SOURCES = DirectoryTest.cpp
+DirectoryTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
+TESTS += FileFinderTest
+check_PROGRAMS += FileFinderTest
+FileFinderTest_SOURCES = FileFinderTest.cpp
+FileFinderTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += FontManagerTest
+check_PROGRAMS += FontManagerTest
+FontManagerTest_SOURCES = FontManagerTest.cpp
+FontManagerTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += FontMapTest
+check_PROGRAMS += FontMapTest
+FontMapTest_SOURCES = FontMapTest.cpp
+FontMapTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += GraphicPathTest
+check_PROGRAMS += GraphicPathTest
+GraphicPathTest_SOURCES = GraphicPathTest.cpp
+GraphicPathTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += LengthTest
+check_PROGRAMS += LengthTest
+LengthTest_SOURCES = LengthTest.cpp
+LengthTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += MatrixTest
+check_PROGRAMS += MatrixTest
+MatrixTest_SOURCES = MatrixTest.cpp
+MatrixTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += PageSizeTest
+check_PROGRAMS += PageSizeTest
+PageSizeTest_SOURCES = PageSizeTest.cpp
+PageSizeTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += SplittedCharInputBufferTest
+check_PROGRAMS += SplittedCharInputBufferTest
+SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp
+SplittedCharInputBufferTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += StreamCounterTest
+check_PROGRAMS += StreamCounterTest
+StreamCounterTest_SOURCES = StreamCounterTest.cpp
+StreamCounterTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += StreamInputBufferTest
+check_PROGRAMS += StreamInputBufferTest
+StreamInputBufferTest_SOURCES = StreamInputBufferTest.cpp
+StreamInputBufferTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
+TESTS += VectorStreamTest
+check_PROGRAMS += VectorStreamTest
+VectorStreamTest_SOURCES = VectorStreamTest.cpp
+VectorStreamTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
