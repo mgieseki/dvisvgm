@@ -10,7 +10,7 @@ dvisvgm.pdf: dvisvgm.1
 	man -t ./$< | ps2pdf - $@
 
 dvi-pdf: dvisvgm.dvi
-	dvipdfm $*
+	dvipdfm $<
 	rm -f $<
 
 dvisvgm.dvi: dvisvgm.1
