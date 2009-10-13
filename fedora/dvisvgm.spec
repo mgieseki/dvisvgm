@@ -65,14 +65,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Oct 06 2009  Martin Gieseking <martin.gieseking@uos.de> - 0.8.6-1
+* Tue Oct 13 2009  Martin Gieseking <martin.gieseking@uos.de> - 0.8.6-1
 - updated to latest upstream release 0.8.6
 
 * Thu Sep 17 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.4-1
-- updated to latest upstream release
+- updated to latest upstream release 0.8.4
 
 * Mon Aug 24 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.3-1
-- updated to latest upstream release
+- updated to latest upstream release 0.8.3
 - conditional Requires and BuildRequires to satisfy F-xx and EL5
 
 * Wed Aug 12 2009 Martin Gieseking <martin.gieseking@uos.de> - 0.8.1-5
