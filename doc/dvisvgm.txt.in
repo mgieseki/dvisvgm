@@ -78,7 +78,7 @@ Sets the bounding box of the generated graphic to the specified format. The para
 takes either one of the format specifiers listed below or a sequence of four comma- or
 whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define two diagonal 
 corners of the bounding box. Each length value consists of a floating point number and an optional 
-length unit (pt, bp, cm, mm, in, or pc). If the unit is omitted, pt (TeX points) are assumed.
+length unit (pt, bp, cm, mm, in, or pc). If the unit is omitted, TeX points (pt) are assumed.
 +
 Alternatively, the following format specifiers are supported:
  
