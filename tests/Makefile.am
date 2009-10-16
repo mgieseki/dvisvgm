@@ -3,12 +3,10 @@
 ##
 ## Process this file with automake.
 
-
 AM_CXXFLAGS = -I../src -I../../src -Wall
 
 TESTS =
 check_PROGRAMS =
-
 
 TESTS += CalculatorTest
 check_PROGRAMS += CalculatorTest
@@ -84,3 +82,4 @@ TESTS += VectorStreamTest
 check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
 VectorStreamTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
+
