@@ -53,7 +53,7 @@ const TFM* TFMFont::getTFM () const {
 }
 
 
-double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c);}
+double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c) + getTFM()->getItalicCorr(c);}
 double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
 double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
 

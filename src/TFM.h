@@ -37,6 +37,7 @@ class TFM
 		double getCharWidth (int c) const;
 		double getCharHeight (int c) const;
 		double getCharDepth (int c) const;
+		double getItalicCorr (int c) const;
 		UInt16 getChecksum () const {return _checksum;}
 		UInt16 firstChar () const   {return _firstChar;}
 		UInt16 lastChar () const    {return _lastChar;}
@@ -52,6 +53,7 @@ class TFM
 		std::vector<FixWord> _widthTable;    ///< character widths in design size units
 		std::vector<FixWord> _heightTable;   ///< character height in design size units
 		std::vector<FixWord> _depthTable;    ///< character depth in design size units
+		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
 };
 
 #endif

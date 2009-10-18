@@ -91,13 +91,13 @@ bool TFM::readFromStream (istream &is) {
 	UInt16 nw = read_unsigned(is, 2);  // number of words in width table
 	UInt16 nh = read_unsigned(is, 2);  // number of words in height table
 	UInt16 nd = read_unsigned(is, 2);  // number of words in depth table
-//	UInt16 ni = read_unsigned(is, 2);  // number of words in italic corr. table
+	UInt16 ni = read_unsigned(is, 2);  // number of words in italic corr. table
 //	UInt16 nl = read_unsigned(is, 2);  // number of words in lig/kern table
 //	UInt16 nk = read_unsigned(is, 2);  // number of words in kern table
 //	UInt16 ne = read_unsigned(is, 2);  // number of words in ext. char table
 //	UInt16 np = read_unsigned(is, 2);  // number of font parameter words
 
-	is.seekg(10, ios_base::cur);       // move to header
+	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
 	_checksum = read_unsigned(is, 4);
 	_designSize = read_unsigned(is, 4);
 	is.seekg(24+lh*4, ios_base::beg);  // move to char info table
@@ -105,6 +105,7 @@ bool TFM::readFromStream (istream &is) {
 	read_words(is, _widthTable, nw);
 	read_words(is, _heightTable, nh);
 	read_words(is, _depthTable, nd);
+	read_words(is, _italicTable, ni);
 	return true;
 }
 
@@ -114,6 +115,14 @@ double TFM::getDesignSize () const {
 	return fix2double(_designSize);
 }
 
+
+// the char info word for each character consists of 4 bytes holding the following information:
+// width index w, height index (h), depth index (d), italic correction index (it),
+// tag (tg) and a remainder:
+//
+// byte 1   | byte 2    | byte 3    | byte 4
+// xxxxxxxx | xxxx xxxx | xxxxxx xx | xxxxxxxx
+// w        | h    d    | it     tg | remainder
 
 /** Returns the width of char c in TeX point units. */
 double TFM::getCharWidth (int c) const {
@@ -139,5 +148,14 @@ double TFM::getCharDepth (int c) const {
 		return 0;
 	int index = (_charInfoTable[c-_firstChar] >> 16) & 0x0F;
 	return fix2double(_depthTable[index]) * fix2double(_designSize);
+}
+
+
+/** Returns the italic correction of char c in TeX point units. */
+double TFM::getItalicCorr (int c) const {
+	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
+		return 0;
+	int index = (_charInfoTable[c-_firstChar] >> 10) & 0x3F;
+	return fix2double(_italicTable[index]) * fix2double(_designSize);
 }
 
