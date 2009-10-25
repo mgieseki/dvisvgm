@@ -35,12 +35,13 @@ using namespace std;
 static void expand_constants (string &str, SpecialActions *actions) {
 	struct Constant {
 		const char *name;
-		XMLString  val;
+		string val;
 	}
 	constants[] = {
 		{"x", XMLString(actions->getX())},
 		{"y", XMLString(actions->getY())},
 		{"color", actions->getColor().rgbString()},
+		{"nl", "\n"},
 		{0, ""}
 	};
 	for (const Constant *p=constants; p->name; p++) {
