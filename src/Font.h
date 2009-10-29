@@ -51,6 +51,7 @@ struct Font
 	virtual double charWidth (int c) const =0;
 	virtual double charDepth (int c) const =0;
 	virtual double charHeight (int c) const =0;
+	virtual double italicCorr (int c) const =0;
 	virtual const TFM* getTFM () const =0;
 	virtual const char* path () const =0;
 };
@@ -71,6 +72,7 @@ struct EmptyFont : public Font
 		double charWidth (int c) const  {return 9.164;} // width of cmr10's 'M' in pt
 		double charHeight (int c) const {return 6.833;} // height of cmr10's 'M' in pt
 		double charDepth (int c) const  {return 0;}
+		double italicCorr (int c) const {return 0;}
 		const TFM* getTFM () const      {return 0;}
 		const char* path () const       {return 0;}
 
@@ -116,6 +118,7 @@ class TFMFont : public virtual Font
 		double charWidth (int c) const;
 		double charDepth (int c) const;
 		double charHeight (int c) const;
+		double italicCorr (int c) const;
 
 	private:
 		mutable TFM *tfm;
@@ -138,6 +141,7 @@ class PhysicalFontProxy : public PhysicalFont
 		double charWidth (int c) const        {return pf->charWidth(c);}
 		double charDepth (int c) const        {return pf->charDepth(c);}
 		double charHeight (int c) const       {return pf->charHeight(c);}
+		double italicCorr (int c) const       {return pf->italicCorr(c);}
 		const TFM* getTFM () const            {return pf->getTFM();}
 		const char* path () const             {return pf->path();}
 		Type type () const                    {return pf->type();}
@@ -183,6 +187,7 @@ class VirtualFontProxy : public VirtualFont
 		double charWidth (int c) const        {return vf->charWidth(c);}
 		double charDepth (int c) const        {return vf->charDepth(c);}
 		double charHeight (int c) const       {return vf->charHeight(c);}
+		double italicCorr (int c) const       {return vf->italicCorr(c);}
 		const TFM* getTFM () const            {return vf->getTFM();}
 		const char* path () const             {return vf->path();}
 

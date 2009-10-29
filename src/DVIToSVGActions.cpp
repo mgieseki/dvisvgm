@@ -88,7 +88,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		/*	x *= BP;
 			y *= BP;*/
 		double s = font->scaleFactor(); // * BP;
-		double w = s*font->charWidth(c);
+		double w = s*(font->charWidth(c) + font->italicCorr(c));
 		double h = s*font->charHeight(c);
 		double d = s*font->charDepth(c);
 		BoundingBox charbox(x, y-h, x+w, y+d);
