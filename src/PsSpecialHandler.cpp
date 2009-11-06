@@ -286,12 +286,19 @@ void PsSpecialHandler::closepath (vector<double> &p) {
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
 	if (!_path.empty() && _actions) {
+		BoundingBox bbox;
+		if (!_actions->getMatrix().isIdentity()) {
+			_path.transform(_actions->getMatrix());
+			if (!_xmlnode)
+				bbox.transform(_actions->getMatrix());
+		}
+
 		const double pt = 72.27/72.0;  // factor to convert bp -> pt
 		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
+		bbox.transform(scale);
 
 		XMLElementNode *path=0;
-		BoundingBox bbox;
 		Pair<double> point;
 		if (_path.isDot(point)) {  // zero-length path?
 			if (_linecap == 1) {     // round line ends?  => draw dot
@@ -310,11 +317,6 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			// compute bounding box
 			_path.computeBBox(bbox);
 			bbox.expand(_linewidth/2);
-			if (!_actions->getMatrix().isIdentity()) {
-				_path.transform(_actions->getMatrix());
-				if (!_xmlnode)
-					bbox.transform(_actions->getMatrix());
-			}
 
 			ostringstream oss;
 			_path.writeSVG(oss);
@@ -366,10 +368,6 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (!_path.empty() && _actions) {
-		const double pt = 72.27/72.0;  // factor to convert bp -> pt
-		ScalingMatrix scale(pt, pt);
-		_path.transform(scale);
-
 		// compute bounding box
 		BoundingBox bbox;
 		_path.computeBBox(bbox);
@@ -378,6 +376,11 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			if (!_xmlnode)
 				bbox.transform(_actions->getMatrix());
 		}
+
+		const double pt = 72.27/72.0;  // factor to convert bp -> pt
+		ScalingMatrix scale(pt, pt);
+		_path.transform(scale);
+		bbox.transform(scale);
 
 		ostringstream oss;
 		_path.writeSVG(oss);
@@ -418,12 +421,13 @@ void PsSpecialHandler::initclip (vector<double> &p) {
 void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 	// when this method is called, _path contains the clipping path
 	if (!_path.empty() && _actions) {
+		if (!_actions->getMatrix().isIdentity())
+			_path.transform(_actions->getMatrix());
+
 		const double pt = 72.27/72.0;  // factor to convert bp -> pt
 		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
 
-		if (!_actions->getMatrix().isIdentity())
-			_path.transform(_actions->getMatrix());
 
 		int oldID = _clipStack.topID();
 		_clipStack.replace(_path);
