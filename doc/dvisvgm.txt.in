@@ -325,7 +325,7 @@ exact syntax, see the documentation of *dvips*, for instance.
   Adds an arbitrary sequence of characters to the SVG output. *dvisvgm* does not perform any validation here, 
   thus the user of this special has to ensure that the resulting SVG is still valid. The parameter 'text' may
   contain the macros *{?x}*, *{?y}*, and *{?color}* which are expanded to the current 'x' or 'y' coordinate
-  and the current color, respectively.
+  and the current color, respectively. Also, the macro *{?nl}* expands to a newline character.
  
   *dvisvgm:img* 'width' 'height' 'file';;
   Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images

@@ -1,3 +1,8 @@
+dvisvgm-0.8.7
+- fixed bounding box issue concerning italic corrections
+- PS handler: zero-length paths are now drawn as dots
+- added macro {?nl} to be used with special dvisvgm:raw
+
 dvisvgm-0.8.6
 - renamed command-line option --bbox-format to --bbox
 - option --bbox can now be used to set an arbitrary bounding box
