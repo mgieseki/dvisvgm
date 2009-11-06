@@ -290,30 +290,58 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
 
-		// compute bounding box
+		XMLElementNode *path=0;
 		BoundingBox bbox;
-		_path.computeBBox(bbox);
-		bbox.expand(_linewidth/2);
-		if (!_actions->getMatrix().isIdentity()) {
-			_path.transform(_actions->getMatrix());
-			if (!_xmlnode)
-				bbox.transform(_actions->getMatrix());
+		Pair<double> point;
+		if (_path.isDot(point)) {  // zero-length path?
+			if (_linecap == 1) {     // round line ends?  => draw dot
+				double x = point.x();
+				double y = point.y();
+				double r = _linewidth/2.0;
+				path = new XMLElementNode("circle");
+				path->addAttribute("cx", XMLString(x));
+				path->addAttribute("cy", XMLString(y));
+				path->addAttribute("r", XMLString(r));
+				path->addAttribute("fill", _actions->getColor().rgbString());
+				bbox = BoundingBox(x-r, y-r, x+r, y+r);
+			}
 		}
+		else {
+			// compute bounding box
+			_path.computeBBox(bbox);
+			bbox.expand(_linewidth/2);
+			if (!_actions->getMatrix().isIdentity()) {
+				_path.transform(_actions->getMatrix());
+				if (!_xmlnode)
+					bbox.transform(_actions->getMatrix());
+			}
 
-		ostringstream oss;
-		_path.writeSVG(oss);
-		XMLElementNode *path = new XMLElementNode("path");
-		path->addAttribute("d", oss.str());
-		path->addAttribute("stroke", _actions->getColor().rgbString());
-		path->addAttribute("fill", "none");
-		if (_linewidth != 1)
-			path->addAttribute("stroke-width", XMLString(_linewidth));
-		if (_miterlimit != 4)
-			path->addAttribute("stroke-miterlimit", XMLString(_miterlimit));
-		if (_linecap > 0)     // default value is "butt", no need to set it explicitely
-			path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
-		if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
-			path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
+			ostringstream oss;
+			_path.writeSVG(oss);
+			path = new XMLElementNode("path");
+			path->addAttribute("d", oss.str());
+			path->addAttribute("stroke", _actions->getColor().rgbString());
+			path->addAttribute("fill", "none");
+			if (_linewidth != 1)
+				path->addAttribute("stroke-width", XMLString(_linewidth));
+			if (_miterlimit != 4)
+				path->addAttribute("stroke-miterlimit", XMLString(_miterlimit));
+			if (_linecap > 0)     // default value is "butt", no need to set it explicitely
+				path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
+			if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
+				path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
+			if (_dashpattern.size() > 0) {
+				ostringstream oss;
+				for (size_t i=0; i < _dashpattern.size(); i++) {
+					if (i > 0)
+						oss << ',';
+					oss << _dashpattern[i];
+				}
+				path->addAttribute("stroke-dasharray", oss.str());
+				if (_dashoffset != 0)
+					path->addAttribute("stroke-dashoffset", _dashoffset);
+			}
+		}
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
@@ -321,17 +349,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			_clipStack.top()->computeBBox(clipbox);
 			bbox.intersect(clipbox);
 		}
-		if (_dashpattern.size() > 0) {
-			ostringstream oss;
-			for (size_t i=0; i < _dashpattern.size(); i++) {
-				if (i > 0)
-					oss << ',';
-				oss << _dashpattern[i];
-			}
-			path->addAttribute("stroke-dasharray", oss.str());
-			if (_dashoffset != 0)
-				path->addAttribute("stroke-dashoffset", _dashoffset);
-		}
+
 		if (_xmlnode)
 			_xmlnode->append(path);
 		else {

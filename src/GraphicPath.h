@@ -25,8 +25,8 @@
 #include <ostream>
 #include <vector>
 #include "BoundingBox.h"
-#include "Pair.h"
 #include "Matrix.h"
+#include "Pair.h"
 
 
 template <typename T>
@@ -85,6 +85,7 @@ class GraphicPath
 		virtual void scubicto (const Point &p1, const Point &p2) {}
 		virtual void cubicto (const Point &p1, const Point &p2, const Point &p3) {}
 		virtual void closepath () {}
+		virtual bool quit () {return false;}
 	};
 
 	typedef typename std::vector<Command>::iterator Iterator;
@@ -171,6 +172,22 @@ class GraphicPath
 			iterate(actions, false);
 		}
 
+		bool isDot (Point &p) const {
+			struct DotActions : Actions {
+				DotActions () : differs(false) {}
+				void moveto (const Point &p) {point = p;}
+				void lineto (const Point &p) {differs = (p != point);}
+				void conicto (const Point &p1, const Point &p2) {differs = (point != p1 || point != p2);}
+				void cubicto (const Point &p1, const Point &p2, const Point &p3) {differs = (point != p1 || point != p2 || point != p3);}
+				bool quit () {return differs;}
+				Point point;
+				bool differs;
+			} actions;
+			iterate(actions, false);
+			p = actions.point;
+			return !actions.differs;
+		}
+
 		void transform (const Matrix &matrix) {
 			FORALL(_commands, Iterator, it)
 				it->transform(matrix);
@@ -189,7 +206,7 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 	Point fp; // first point of current path
 	Point cp; // current point
 	Point pstore[2];
-	FORALL(_commands, ConstIterator, it) {
+	for (ConstIterator it=_commands.begin(); it != _commands.end() && !actions.quit(); ++it) {
 		const Point *params = it->params;
 		switch (it->type) {
 			case Command::MOVETO:
