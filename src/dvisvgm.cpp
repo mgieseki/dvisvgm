@@ -269,13 +269,15 @@ int main (int argc, char *argv[]) {
 					out.release();       // force writing
 					const char *pstr = pages == 1 ? "" : "s";
 					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
-					Message::mstream() << pages << " page" << pstr;
-					Message::mstream() << " (" << nbytes << " bytes";
+					Message::mstream() << "1 ";
+					if (pages > 1)
+						Message::mstream() << "of " << pages << " ";
+					Message::mstream() << "page" << pstr << " written to "
+						                << (args.stdout_given() ? "<stdout>" : svgfile)
+					                   << " (" << nbytes << " bytes";
 					if (args.zip_given())
 						Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
-					Message::mstream() << ") written to "
-						<< (args.stdout_given() ? "<stdout>" : svgfile)
-						<< " in " << (get_time()-start_time) << " seconds\n";
+					Message::mstream() << ") in " << (get_time()-start_time) << " seconds\n";
 				}
 			}
 			catch (DVIException &e) {

@@ -113,7 +113,7 @@ DVIToSVG::~DVIToSVG () {
 
 
 /** Starts the conversion process.
- *  @return number of processed pages */
+ *  @return total number of pages in DVI file */
 int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	executePostamble();    // collect scaling and font information
 	if (firstPage > getTotalPages()) {
@@ -159,7 +159,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		_svg.reset();
 
 	}
-	return 1; // @@
+	return getTotalPages();
 }
 
 
