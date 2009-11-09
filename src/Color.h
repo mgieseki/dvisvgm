@@ -46,6 +46,7 @@ class Color
 		void setGray (float g)                {set(g,g,g);}
 		void setHSB (float h, float s, float b);
 		void setCMYK (float c, float m, float y, float k);
+		void getRGB (float &r, float &g, float &b) const; 
 		void operator *= (double c);
 		std::string rgbString () const;
 		static void CMYK2RGB (const std::vector<float> &cmyk, std::vector<float> &rgb);

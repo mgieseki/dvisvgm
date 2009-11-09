@@ -127,14 +127,16 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 			bool set_matrix = (_matrix.changed() && !_matrix.get().isIdentity());
 			if (set_color || set_matrix) {
 				_span = new XMLElementNode("g");
-				if (set_color)
+				if (_color.get() != Color::BLACK)
 					_span->addAttribute("fill", _color.get().rgbString());
-				if (set_matrix)
+				if (!_matrix.get().isIdentity())
 					_span->addAttribute("transform", _matrix.get().getSVG());
 				_page->append(_span);
 				node = _span;
+				_color.changed(false);
+				_matrix.changed(false);
 			}
-			else
+			else if (_color.get() == Color::BLACK && _matrix.get().isIdentity())
 				node = _span = 0;
 		}
 

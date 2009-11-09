@@ -1,7 +1,8 @@
 dvisvgm-0.8.7
-- fixed bounding box issue concerning italic corrections
+- fixed a bounding box issue concerning italic corrections
 - PS handler: zero-length paths are now drawn as dots
 - PS handler: fixed a path positioning issue
+- PS handler: colors set by color specials are now considered properly
 - added macro {?nl} to be used with special dvisvgm:raw
 
 dvisvgm-0.8.6

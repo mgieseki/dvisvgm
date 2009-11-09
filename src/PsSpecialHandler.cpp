@@ -48,7 +48,7 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(fa
 /** Initializes the PostScript handler. It's called by the first use of process(). The
  *  deferred initialization speeds up the conversion of DVI files that doesn't contain
  *  PS specials. */
-void PsSpecialHandler::initialize () {
+void PsSpecialHandler::initialize (SpecialActions *actions) {
 	if (!_initialized) {
 		// initial values of graphics state
 		_linewidth = 1;
@@ -68,8 +68,15 @@ void PsSpecialHandler::initialize () {
 		}
 		// push dictionary "TeXDict" with dvips definitions on dictionary stack
 		// and initialize basic dvips PostScript variables
-		_psi.execute(" TeXDict begin 0 0 1000 72.27 72.27 () @start ");
-		_psi.execute(" 0 0 moveto ");
+		ostringstream oss;
+		oss << " TeXDict begin 0 0 1000 72.27 72.27 () @start "
+		       " 0 0 moveto ";
+  		if (actions) {
+			float r, g, b;
+			actions->getColor().getRGB(r, g, b);
+			oss << r << ' ' << g << ' ' << b << " setrgbcolor ";
+		}
+		_psi.execute(oss.str());
 		_initialized = true;
 	}
 }
@@ -94,7 +101,7 @@ void PsSpecialHandler::updatePos () {
 
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!_initialized)
-		initialize();
+		initialize(actions);
 	_actions = actions;
 
 	if (*prefix == '"') {

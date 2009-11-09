@@ -117,3 +117,10 @@ void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
 		}
 	}
 }
+
+
+void Color::getRGB (float &r, float &g, float &b) const {
+	r = ((_rgb >> 16) & 255) / 255.0;
+	g = ((_rgb >> 8) & 255) / 255.0;
+	b = (_rgb & 255) / 255.0;
+}

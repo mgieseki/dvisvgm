@@ -58,7 +58,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 
 	protected:
-		void initialize ();
+		void initialize (SpecialActions *actions);
 		void updatePos ();
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
 
