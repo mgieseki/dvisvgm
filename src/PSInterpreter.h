@@ -38,6 +38,7 @@ struct PSException : public MessageException
 
 struct PSActions
 {
+	virtual ~PSActions () {}
 	virtual void clip (std::vector<double> &p) =0;
 	virtual void closepath (std::vector<double> &p) =0;
 	virtual void curveto (std::vector<double> &p) =0;

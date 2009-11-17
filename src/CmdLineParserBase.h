@@ -32,6 +32,7 @@ class CmdLineParserBase
 		struct Option;
 
 		struct OptionHandler {
+			virtual ~OptionHandler () {}
 			virtual void operator () (CmdLineParserBase *obj, InputReader &ir, const Option &opt, bool longopt) const=0;
 		};
 
@@ -72,6 +73,7 @@ class CmdLineParserBase
 	protected:
 		CmdLineParserBase () : _error(false) {}
 		CmdLineParserBase (const CmdLineParserBase &cmd) {}
+		virtual ~CmdLineParserBase () {}
 		virtual void init ();
 		virtual void error (const Option &opt, bool longopt, const char *msg) const;
 		bool checkArgPrefix (InputReader &ir, const Option &opt, bool longopt) const;

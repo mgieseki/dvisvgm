@@ -29,6 +29,7 @@
 
 struct InputReader
 {
+	virtual ~InputReader() {}
 	virtual int get () =0;
 	virtual int peek () const =0;
 	virtual int peek (unsigned n) const =0;

@@ -29,7 +29,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 
 EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h
 
-AM_CXXFLAGS = -Wall
+AM_CXXFLAGS = -Wall -Wnon-virtual-dtor
 
 # the commandline parser is generated from options.xml by opt2cpp
 CommandLine.cpp: options.xml

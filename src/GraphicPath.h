@@ -76,6 +76,7 @@ class GraphicPath
 
 	struct Actions
 	{
+		virtual ~Actions () {}
 		virtual void moveto (const Point &p) {}
 		virtual void lineto (const Point &p) {}
 		virtual void hlineto (const T &y) {}

@@ -34,6 +34,7 @@ class SpecialManager
 	public:
 		struct Listener
 		{
+			virtual ~Listener () {}
 			virtual void beginSpecial (const char *prefix)=0;
 			virtual void endSpecial (const char *prefix)=0;
 		};
