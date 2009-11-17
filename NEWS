@@ -1,3 +1,7 @@
+dvisvgm-0.8.8
+- applied patches sent by Peter Breitenlohner to prepare integration of 
+  dvisvgm into TeX Live
+
 dvisvgm-0.8.7
 - fixed a bounding box issue concerning italic corrections
 - PS handler: zero-length paths are now drawn as dots
