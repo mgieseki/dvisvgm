@@ -126,6 +126,6 @@ void potrace_state_free(potrace_state_t *st);
 
 /* return a static plain text version string identifying this version
    of potracelib */
-char *potrace_version(void);
+const char *potrace_version(void);
 
 #endif /* POTRACELIB_H */
