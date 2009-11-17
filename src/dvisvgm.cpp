@@ -41,9 +41,6 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#define EMAIL " <" PACKAGE_BUGREPORT ">"
-#else
-#define EMAIL "Martin Gieseking <martin.gieseking@uos.de>"
 #endif
 
 using namespace std;
@@ -73,7 +70,7 @@ class Pointer
 static void show_help (const CommandLine &cmd) {
 	cout << PACKAGE_STRING "\n\n";
 	cmd.help();
-   cout << "\nCopyright (C) 2005-2009 Martin Gieseking" EMAIL "\n\n";
+   cout << "\nCopyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de> \n\n";
 }
 
 
