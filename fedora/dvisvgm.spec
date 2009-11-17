@@ -1,5 +1,5 @@
 Name:           dvisvgm
-Version:        0.8.7
+Version:        0.8.8dev
 Release:        1%{?dist}
 Summary:        A DVI to SVG converter
 
