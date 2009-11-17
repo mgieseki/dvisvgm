@@ -45,7 +45,7 @@ void InputReader::skipSpace () {
  *  @param[in] consume if true, the buffer pointer is moved to the first charater following string s
  *  @return true if s was found */
 bool InputReader::skipUntil (const char *s, bool consume) {
-	bool found;
+	bool found = false;
 	while (!eof() && !(found = check(s, consume)))
 		get();
 	return found;
