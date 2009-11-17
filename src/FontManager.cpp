@@ -100,7 +100,7 @@ int FontManager::fontnum (int id) const {
 
 int FontManager::vfFirstFontNum (VirtualFont *vf) const {
 	VfFirstFontMap::const_iterator it = _vfFirstFontMap.find(vf);
-	return (it == _vfFirstFontMap.end()) ? -1 : it->second;
+	return (it == _vfFirstFontMap.end()) ? -1 : (int) it->second;
 }
 
 

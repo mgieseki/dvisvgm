@@ -172,7 +172,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		angle1 *= -1;
 		angle2 *= -1;
 		if (fabs(angle1) > PI2) {
-			int n = angle1/PI2;
+			int n = (int) (angle1/PI2);
 			angle1 = angle1 - n*PI2;
 			angle2 = angle2 - n*PI2;
 		}

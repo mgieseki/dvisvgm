@@ -558,8 +558,8 @@ void PsSpecialHandler::sethsbcolor (vector<double> &p) {
 void PsSpecialHandler::setdash (vector<double> &p) {
 	_dashpattern.clear();
 	for (size_t i=0; i < p.size()-1; i++)
-		_dashpattern.push_back(p[i]*1.00375);
-	_dashoffset = p.back()*1.00375;
+		_dashpattern.push_back((int) (p[i]*1.00375));
+	_dashoffset = (int) (p.back()*1.00375);
 }
 
 

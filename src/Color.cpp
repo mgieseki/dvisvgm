@@ -32,7 +32,7 @@ const Color Color::WHITE(UInt8(255), UInt8(255), UInt8(255));
 
 
 static inline UInt8 float_to_byte (float v) {
-	return floor(255*v+0.5);
+	return (UInt8) (floor(255*v+0.5));
 }
 
 
@@ -101,7 +101,7 @@ void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
 		float h = hsb[0]-floor(hsb[0]);
-		int i = 6*h;
+		int i = (int) (6*h);
 		float f =  6*h-i;
 		float p = hsb[2]*(1-hsb[1]);
 		float q = hsb[2]*(1-hsb[1]*f);
