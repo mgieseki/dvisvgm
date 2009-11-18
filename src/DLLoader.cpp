@@ -54,4 +54,3 @@ void* DLLoader::loadFunction (const char *name) {
 	return 0;
 }
 
-
