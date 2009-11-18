@@ -26,7 +26,9 @@
 #endif
 
 #include <string>
-#if HAVE_LIBGS
+#if defined(DISABLE_GS)
+   #include "iapi.h"
+#elif HAVE_LIBGS
    #include <ghostscript/iapi.h>
 #else
    #include "DLLoader.h"
@@ -37,7 +39,7 @@
 	#define _Windows
 #endif
 
-#if DISABLE_GS
+#if defined(DISABLE_GS)
 struct Ghostscript
 {
 	typedef int (GSDLLCALLPTR Stdin) (void *caller, char *buf, int len);

@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include "Ghostscript.h"
-#if !DISABLE_GS
+#if !defined(DISABLE_GS)
 
 #include <cstring>
 #include <sstream>

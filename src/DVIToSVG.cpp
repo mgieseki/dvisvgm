@@ -18,6 +18,13 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
+#else
+#define VERSION_STR ""
+#endif
+
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
@@ -50,19 +57,12 @@
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
 //#include "HtmlSpecialHandler.h"
-#if !DISABLE_GS
+#if !defined(DISABLE_GS)
 	#include "PsSpecialHandler.h"
 #endif
 #include "TpicSpecialHandler.h"
 ///////////////////////////////////
 
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
-#else
-#define VERSION_STR ""
-#endif
 
 using namespace std;
 
@@ -330,7 +330,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 			0
 		};
 		SpecialHandler **p = handlers;
-#if !DISABLE_GS
+#if !defined(DISABLE_GS)
 		if (Ghostscript().available())
 			*p = new PsSpecialHandler;
 		else
