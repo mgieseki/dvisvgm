@@ -281,9 +281,12 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 					oss.str("");
 					oss << "#g" << getFontManager().fontID(font->uniqueFont()) << *cit;
 					use->addAttribute("xlink:href", oss.str());
-					oss.str("");
-					oss << "scale(" << (font->scaledSize()/font->uniqueFont()->scaledSize()) << ')';
-					use->addAttribute("transform", oss.str());
+					double scale = font->scaledSize()/font->uniqueFont()->scaledSize();
+					if (scale != 1.0) {
+						oss.str("");
+						oss << "scale(" << scale << ')';
+						use->addAttribute("transform", oss.str());
+					}
 					_svg.appendToDefs(use);
 				}
 			}
