@@ -21,8 +21,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "FontGlyph.h"
 #include "GFTracer.h"
+#include "Glyph.h"
 #include "Message.h"
 
 #ifdef __MSVC__
@@ -100,4 +100,3 @@ void GFTracer::endChar (UInt32 c) {
 	}
 	potrace_state_free(state);
 }
-

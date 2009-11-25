@@ -1,5 +1,5 @@
 /*************************************************************************
-** GFGlyphTracer.h                                                      **
+** Glyph.cpp                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,28 +18,22 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GFGLYPHTRACER_H
-#define GFGLYPHTRACER_H
-
-#include "GFTracer.h"
+#include "FontEncoding.h"
+#include "FontEngine.h"
 #include "Glyph.h"
+#include "Message.h"
+#include "macros.h"
 
-class GFGlyphTracer : public GFTracer
-{
-   public:
-      GFGlyphTracer (istream &is, double upp);
-		~GFGlyphTracer ();
-		void moveTo (double x, double y);
-		void lineTo (double x, double y);
-		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
-		void closePath ();
-		void endChar (UInt32 c);
-		const Glyph& getGlyph () const {return *_glyph;}
-		Glyph* transferGlyph ();
+using namespace std;
 
-   private:
-		Glyph *_glyph;
-		bool _transfered;
-};
 
-#endif
+void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine) {
+	if (encoding) {
+		if (const char *name = encoding->getEntry(c))
+			fontEngine.traceOutline(name, *this, false);
+		else
+			Message::wstream(true) << "no encoding for char #" << int(c) << " in '" << encoding->name() << "'\n";
+	}
+	else
+		fontEngine.traceOutline(c, *this, false);
+}

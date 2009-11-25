@@ -125,21 +125,26 @@ const char* FontEngine::getFamilyName () const {
 	return _currentFace ? _currentFace->family_name : 0;
 }
 
+
 const char* FontEngine::getStyleName () const {
 	return _currentFace ? _currentFace->style_name : 0;
 }
+
 
 int FontEngine::getUnitsPerEM () const {
 	return _currentFace ? _currentFace->units_per_EM : 0;
 }
 
+
 int FontEngine::getAscender () const {
 	return _currentFace ? _currentFace->ascender : 0;
 }
 
+
 int FontEngine::getDescender () const {
 	return _currentFace ? _currentFace->descender : 0;
 }
+
 
 int FontEngine::getHAdvance () const {
 	if (_currentFace) {
@@ -148,6 +153,7 @@ int FontEngine::getHAdvance () const {
 	}
 	return 0;
 }
+
 
 int FontEngine::getHAdvance (unsigned c) const {
 	if (_currentFace) {
@@ -248,29 +254,29 @@ bool FontEngine::setCharSize (int ptSize) {
 
 // Callback functions used by traceOutline
 static int moveto (FTVectorPtr to, void *user) {
-	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
-	commands->moveTo(to->x, to->y);
+	Glyph *glyph = static_cast<Glyph*>(user);
+	glyph->moveto(to->x, to->y);
 	return 0;
 }
 
 
 static int lineto (FTVectorPtr to, void *user) {
-	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
-	commands->lineTo(to->x, to->y);
+	Glyph *glyph = static_cast<Glyph*>(user);
+	glyph->lineto(to->x, to->y);
 	return 0;
 }
 
 
 static int conicto (FTVectorPtr control, FTVectorPtr to, void *user) {
-	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
-	commands->conicTo(control->x, control->y, to->x, to->y);
+	Glyph *glyph = static_cast<Glyph*>(user);
+	glyph->conicto(control->x, control->y, to->x, to->y);
 	return 0;
 }
 
 
 static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, void *user) {
-	FEGlyphCommands *commands = static_cast<FEGlyphCommands*>(user);
-	commands->cubicTo(control1->x, control1->y, control2->x, control2->y, to->x, to->y);
+	Glyph *glyph = static_cast<Glyph*>(user);
+	glyph->cubicto(control1->x, control1->y, control2->x, control2->y, to->x, to->y);
 	return 0;
 }
 
@@ -284,7 +290,7 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *  @param[in] commands the drawing commands to be executed
  *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
-static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, bool scale) {
+static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
 	if (face) {
 		if (FT_Load_Glyph(face, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
 			Message::estream(true) << "can't load glyph " << int(index) << endl;
@@ -297,7 +303,7 @@ static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, b
 		}
 		FT_Outline outline = face->glyph->outline;
 		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
-		FT_Outline_Decompose(&outline, &funcs, &commands);
+		FT_Outline_Decompose(&outline, &funcs, &glyph);
 		return true;
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
@@ -316,20 +322,20 @@ static bool trace_outline (FT_Face face, int index, FEGlyphCommands &commands, b
  *  @param[in] scale if true the current pt size will be considered otherwise
  *                   the plain TrueType units are used.
  *  @return false on errors */
-bool FontEngine::traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale) const {
+bool FontEngine::traceOutline (unsigned char chr, Glyph &glyph, bool scale) const {
 	if (_currentFace) {
 		int index = FT_Get_Char_Index(_currentFace, chr);
-		return trace_outline(_currentFace, index, commands, scale);
+		return trace_outline(_currentFace, index, glyph, scale);
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
 }
 
 
-bool FontEngine::traceOutline (const char *name, FEGlyphCommands &commands, bool scale) const {
+bool FontEngine::traceOutline (const char *name, Glyph &glyph, bool scale) const {
 	if (_currentFace) {
 		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
-		return trace_outline(_currentFace, index, commands, scale);
+		return trace_outline(_currentFace, index, glyph, scale);
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;

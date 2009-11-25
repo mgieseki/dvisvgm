@@ -24,7 +24,7 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "FontGlyph.h"
+#include "Glyph.h"
 
 class FontCache
 {
@@ -53,10 +53,10 @@ class FontCache
 
 		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos);
 		static bool fontinfo (std::istream &is, FontInfo &info);
-		static void fontinfo (const char *dirname, ostream &os);
+		static void fontinfo (const char *dirname, std::ostream &os);
 
    private:
-		const static UInt8 VERSION = 3;
+		const static UInt8 VERSION = 4;
 		GlyphMap _glyphs;
 		bool _changed;
 };

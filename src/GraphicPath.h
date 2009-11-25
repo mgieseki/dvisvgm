@@ -32,66 +32,68 @@
 template <typename T>
 class GraphicPath
 {
-	typedef Pair<T> Point;
+	public:
+		typedef Pair<T> Point;
 
-	struct Command {
-		enum Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
+		struct Command {
+			enum Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
 
-		Command (Type t) : type(t) {}
+			Command (Type t) : type(t) {}
 
-		Command (Type t, const Point &p) : type(t) {
-			params[0] = p;
-		}
-
-		Command (Type t, const Point &p1, const Point &p2) : type(t) {
-			params[0] = p1;
-			params[1] = p2;
-		}
-
-		Command (Type t, const Point &p1, const Point &p2, const Point &p3) : type(t) {
-			params[0] = p1;
-			params[1] = p2;
-			params[2] = p3;
-		}
-
-		int numParams () const {
-			switch (type) {
-				case CLOSEPATH : return 0;
-				case MOVETO    :
-				case LINETO    : return 1;
-				case CONICTO   : return 2;
-				case CUBICTO   : return 3;
+			Command (Type t, const Point &p) : type(t) {
+				params[0] = p;
 			}
-			return 0;
-		}
 
-		void transform (const Matrix &matrix) {
-			for (int i=0; i < numParams(); i++)
-				params[i] = matrix * params[i];
-		}
+			Command (Type t, const Point &p1, const Point &p2) : type(t) {
+				params[0] = p1;
+				params[1] = p2;
+			}
 
-		Type type;
-		Point params[3];
-	};
+			Command (Type t, const Point &p1, const Point &p2, const Point &p3) : type(t) {
+				params[0] = p1;
+				params[1] = p2;
+				params[2] = p3;
+			}
 
-	struct Actions
-	{
-		virtual ~Actions () {}
-		virtual void moveto (const Point &p) {}
-		virtual void lineto (const Point &p) {}
-		virtual void hlineto (const T &y) {}
-		virtual void vlineto (const T &x) {}
-		virtual void sconicto (const Point &p) {}
-		virtual void conicto (const Point &p1, const Point &p2) {}
-		virtual void scubicto (const Point &p1, const Point &p2) {}
-		virtual void cubicto (const Point &p1, const Point &p2, const Point &p3) {}
-		virtual void closepath () {}
-		virtual bool quit () {return false;}
-	};
+			int numParams () const {
+				switch (type) {
+					case CLOSEPATH : return 0;
+					case MOVETO    :
+					case LINETO    : return 1;
+					case CONICTO   : return 2;
+					case CUBICTO   : return 3;
+				}
+				return 0;
+			}
 
-	typedef typename std::vector<Command>::iterator Iterator;
-	typedef typename std::vector<Command>::const_iterator ConstIterator;
-	typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
+			void transform (const Matrix &matrix) {
+				for (int i=0; i < numParams(); i++)
+					params[i] = matrix * params[i];
+			}
+
+			Type type;
+			Point params[3];
+		};
+
+		struct Actions
+		{
+			virtual ~Actions () {}
+			virtual void moveto (const Point &p) {}
+			virtual void lineto (const Point &p) {}
+			virtual void hlineto (const T &y) {}
+			virtual void vlineto (const T &x) {}
+			virtual void sconicto (const Point &p) {}
+			virtual void conicto (const Point &p1, const Point &p2) {}
+			virtual void scubicto (const Point &p1, const Point &p2) {}
+			virtual void cubicto (const Point &p1, const Point &p2, const Point &p3) {}
+			virtual void closepath () {}
+			virtual void draw (char cmd, const Point *points, int n) {}
+			virtual bool quit () {return false;}
+		};
+
+		typedef typename std::vector<Command>::iterator Iterator;
+		typedef typename std::vector<Command>::const_iterator ConstIterator;
+		typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
 
    public:
 		void newpath () {
@@ -101,6 +103,10 @@ class GraphicPath
 		/// Returns true if path is empty (there is nothing to draw)
 		bool empty () const {
 			return _commands.empty();
+		}
+
+		size_t size () const {
+			return _commands.size();
 		}
 
 		void moveto (const T &x, const T &y) {
@@ -143,23 +149,54 @@ class GraphicPath
 			_commands.push_back(Command(Command::CLOSEPATH));
 		}
 
+		
+		const std::vector<Command>& commands () const {
+			return _commands;
+		}
+
+
+		/** Detects all open subpaths and closes them by adding a closePath command.
+		 *	 Most font formats only support closed outline paths so there are no explicit closePath statements
+		 *	 in the glyph's outline description. All open paths are automatically closed by the renderer.
+		 *	 This method detects all open paths and adds the missing closePath statement. */
+		void closeOpenSubPaths () {
+			Command *prevCommand = 0;
+			FORALL(_commands, Iterator, it) {
+				if (it->type == Command::MOVETO && prevCommand && prevCommand->type != Command::CLOSEPATH) {
+					prevCommand = &(*it);
+					it = _commands.insert(it, Command(Command::CLOSEPATH))+1;
+//					++it; // skip inserted closePath command in next iteration step
+				}
+				else
+					prevCommand = &(*it);
+			}
+			if (!_commands.empty() && _commands.back().type != Command::CLOSEPATH)
+				closepath();
+		}
+
+
 		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0) const {
 			struct WriteActions : Actions {
-				WriteActions (std::ostream &os) : _os(os) {}
-				void moveto (const Point &p)   {write('M', p);}
-				void lineto (const Point &p)   {write('L', p);}
-				void hlineto (const T &y)      {_os << 'H' << y;}
-				void vlineto (const T &x)      {_os << 'V' << x;}
-				void sconicto (const Point &p) {write('T', p); }
-				void conicto (const Point &p1, const Point &p2)  {write('Q', p1); write(' ', p2);}
-				void scubicto (const Point &p1, const Point &p2) {write('S', p1); write(' ', p2);}
-				void cubicto (const Point &p1, const Point &p2, const Point &p3) {write('C', p1); write(' ', p2); write(' ', p3);}
-				void closepath () {_os << 'Z';}
-				void write (char prefix, const Point &p) {_os << prefix << p.x() << ' ' << p.y();}
+				WriteActions (std::ostream &os, double sx, double sy) : _os(os), _sx(sx), _sy(sy) {}
+				void draw (char cmd, const Point *points, int n) {
+					_os << cmd;
+					switch (cmd) {
+						case 'H': _os << _sy*points->x(); break;
+						case 'V': _os << _sx*points->y(); break;
+						default :
+							for (int i=0; i < n; i++) {
+								if (i > 0)
+									_os << ' ';
+								_os << _sx*points[i].x() << ' ' << _sy*points[i].y();
+							}
+					}
+				}
 				std::ostream &_os;
-			} actions(os);
+				double _sx, _sy;
+			} actions(os, sx, sy);
 			iterate(actions, true);
 		}
+
 
 		void computeBBox (BoundingBox &bbox) const {
 			struct BBoxActions : Actions {
@@ -201,6 +238,13 @@ class GraphicPath
 };
 
 
+/** Iterates over all commands defining this path and calls the corresponding template methods.  
+ *  In the case of successive bezier curve sequences, control points or tangent slopes are often
+ *  identical so that the path description contains redundant information. SVG provides shorthand
+ *  curve commands that require less parameters. If 'optimize' is true, this method detects such 
+ *  command sequences.
+ *  @param[in] actions template methods called by each iteration step
+ *  @param[in] optimize if true, shorthand drawing commands (sconicto, scubicto,...) are considered */
 template <typename T>
 void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 	ConstIterator prev;  // pointer to preceding command
@@ -212,39 +256,57 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 		switch (it->type) {
 			case Command::MOVETO:
 				actions.moveto(params[0]);
+				actions.draw('M', params, 1);
 				fp = params[0];
 				break;
 			case Command::LINETO:
 				if (optimize) {
-					if (cp.x() == params[0].x())
+					if (cp.x() == params[0].x()) {
 						actions.vlineto(params[0].y());
-					else if (cp.y() == params[0].y())
+						actions.draw('V', params, 1);
+					}
+					else if (cp.y() == params[0].y()) {
 						actions.hlineto(params[0].x());
-					else
+						actions.draw('H', params, 1);
+					}
+					else {
 						actions.lineto(params[0]);
+						actions.draw('L', params, 1);
+					}
 				}
-				else
+				else {
 					actions.lineto(params[0]);
+					actions.draw('L', params, 1);
+				}
 				break;
 			case Command::CONICTO:
-				if (optimize && prev->type == Command::CONICTO && params[0] == pstore[1]*T(2)-pstore[0])
+				if (optimize && prev->type == Command::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.sconicto(params[1]);
-				else
+					actions.draw('T', params+1, 1);
+				}
+				else {
 					actions.conicto(params[0], params[1]);
+					actions.draw('Q', params, 2);
+				}
 				pstore[0] = params[0]; // store control point and
 				pstore[1] = params[1]; // curve endpoint
 				break;
 			case Command::CUBICTO:
 				// is first control point reflection of preceding second control point?
-				if (optimize && prev->type == Command::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0])
+				if (optimize && prev->type == Command::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.scubicto(params[1], params[2]);
-				else
+					actions.draw('S', params+1, 2);
+				}
+				else {
 					actions.cubicto(params[0], params[1], params[2]);
+					actions.draw('C', params, 3);
+				}
 				pstore[0] = params[1]; // store second control point and
 				pstore[1] = params[2]; // curve endpoint
 				break;
 			case Command::CLOSEPATH:
 				actions.closepath();
+				actions.draw('Z', params, 0);
 				cp = fp;
 		}
 		// update current point

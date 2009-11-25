@@ -25,7 +25,7 @@
 #include "FontEncoding.h"
 #include "FontEngine.h"
 #include "FontManager.h"
-#include "FontGlyph.h"
+#include "Glyph.h"
 #include "SVGFontEmitter.h"
 #include "SVGTree.h"
 #include "XMLNode.h"
@@ -116,9 +116,8 @@ bool SVGFontEmitter::emitGlyph (int c) {
 	ostringstream path;
 	Glyph glyph;
 	glyph.read(c, encoding, _fontEngine);
-	glyph.closeOpenPaths();
-	glyph.optimizeCommands();
-	glyph.writeSVGCommands(path, sx, sy);
+	glyph.closeOpenSubPaths();
+	glyph.writeSVG(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
 	return true;
 }

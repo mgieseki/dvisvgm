@@ -25,7 +25,7 @@
 #include <sstream>
 #include "FileSystem.h"
 #include "FontCache.h"
-#include "FontGlyph.h"
+#include "Glyph.h"
 //#include "gzstream.h"
 #include "types.h"
 
@@ -63,10 +63,10 @@ static inline void write_signed (Int32 value, int bytes, ostream &os) {
 }
 
 
-static LPair read_pair (int bytes, istream &is) {
-	long x = read_signed(bytes, is);
-	long y = read_signed(bytes, is);
-	return LPair(x, y);
+static Pair32 read_pair (int bytes, istream &is) {
+	Int32 x = read_signed(bytes, is);
+	Int32 y = read_signed(bytes, is);
+	return Pair32(x, y);
 }
 
 
@@ -153,11 +153,11 @@ static int max_int_size (Int32 value) {
 
 /** Returns the minimal number of bytes needed to store the biggest
  *  pair component of the given vector. */
-static int max_int_size (const vector<LPair> &pairs) {
+static int max_int_size (const Pair<Int32> *pairs, size_t n) {
 	int ret=0;
-	FORALL(pairs, vector<LPair>::const_iterator, it) {
-		ret = max(ret, max_int_size(it->x()));
-		ret = max(ret, max_int_size(it->y()));
+	for (size_t i=0; i < n; i++) {
+		ret = max(ret, max_int_size(pairs[i].x()));
+		ret = max(ret, max_int_size(pairs[i].y()));
 	}
 	return ret;
 }
@@ -172,6 +172,22 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 	if (!_changed)
 		return true;
 
+	struct WriteActions : Glyph::Actions {
+		WriteActions (ostream &os) : _os(os) {}
+
+		void draw (char cmd, const Glyph::Point *points, int n) {
+			int bytes = max_int_size(points, n);
+			UInt8 cmdchar = (bytes << 5) | (cmd - 'A');
+			write_unsigned(cmdchar, 1, _os);
+			for (int i=0; i < n; i++) {
+				write_signed(points[i].x(), bytes, _os);
+				write_signed(points[i].y(), bytes, _os);
+			}
+		}
+
+		ostream &_os;
+	} actions(os);
+
 	if (os) {
 		write_unsigned(VERSION, 1, os);
 		for (const char *p=fontname; *p; p++)
@@ -179,18 +195,10 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 		os.put(0);
 		write_unsigned(_glyphs.size(), 4, os);
 		FORALL(_glyphs, GlyphMap::const_iterator, it) {
+			const Glyph *glyph = it->second;
 			write_unsigned(it->first, 4, os);
-			write_unsigned(it->second->commands().size(), 2, os);
-			FORALL(it->second->commands(), list<GlyphCommand*>::const_iterator, cit) {
-				const vector<LPair> &params = (*cit)->params();
-				int bytes = max_int_size(params);
-				UInt8 cmdchar = (bytes << 5) | ((*cit)->getSVGPathCommand() - 'A');
-				write_unsigned(cmdchar, 1, os);
-				for (size_t i=0; i < params.size(); i++) {
-					write_signed(params[i].x(), bytes, os);
-					write_signed(params[i].y(), bytes, os);
-				}
-			}
+			write_unsigned(glyph->size(), 2, os);
+			glyph->iterate(actions, false);
 		}
 		return true;
 	}
@@ -241,47 +249,29 @@ bool FontCache::read (const char *fontname, istream &is) {
 				UInt8 cmdval = read_unsigned(1, is);
 				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
 				int bytes = cmdval >> 5;
-				GlyphCommand *cmd=0;
 				switch (cmdchar) {
 					case 'C': {
-						LPair p1 = read_pair(bytes, is);
-						LPair p2 = read_pair(bytes, is);
-						LPair p3 = read_pair(bytes, is);
-						cmd = new GlyphCubicTo(p1, p2, p3);
+						Pair32 p1 = read_pair(bytes, is);
+						Pair32 p2 = read_pair(bytes, is);
+						Pair32 p3 = read_pair(bytes, is);
+						glyph->cubicto(p1, p2, p3);
 						break;
 					}
-					case 'H':
-						cmd = new GlyphHorizontalLineTo(read_pair(bytes, is));
-						break;
 					case 'L':
-						cmd = new GlyphLineTo(read_pair(bytes, is));
+						glyph->lineto(read_pair(bytes, is));
 						break;
 					case 'M':
-						cmd = new GlyphMoveTo(read_pair(bytes, is));
+						glyph->moveto(read_pair(bytes, is));
 						break;
 					case 'Q': {
-						LPair p1 = read_pair(bytes, is);
-						LPair p2 = read_pair(bytes, is);
-						cmd = new GlyphConicTo(p1, p2);
+						Pair32 p1 = read_pair(bytes, is);
+						Pair32 p2 = read_pair(bytes, is);
+						glyph->conicto(p1, p2);
 						break;
 					}
-					case 'S': {
-						LPair p1 = read_pair(bytes, is);
-						LPair p2 = read_pair(bytes, is);
-						cmd = new GlyphShortCubicTo(p1, p2);
-						break;
-					}
-					case 'T':
-						cmd = new GlyphShortConicTo(read_pair(bytes, is));
-						break;
-					case 'V':
-						cmd = new GlyphVerticalLineTo(read_pair(bytes, is));
-						break;
 					case 'Z':
-						cmd = new GlyphClosePath();
+						glyph->closepath();
 				}
-				if (cmd)
-					glyph->addCommand(cmd);
 			}
 			setGlyph(c, glyph);
 		}

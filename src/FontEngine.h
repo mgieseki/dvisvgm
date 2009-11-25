@@ -26,21 +26,12 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "Glyph.h"
 #include "types.h"
 
 using std::map;
 using std::string;
 using std::vector;
-
-
-struct FEGlyphCommands
-{
-	virtual ~FEGlyphCommands () {}
-	virtual void moveTo(long x, long y) {}
-	virtual void lineTo(long x, long y) {}
-	virtual void conicTo(long x1, long y1, long x2, long y2) {}
-	virtual void cubicTo(long x1, long y1, long x2, long y2, long x3, long y3) {}
-};
 
 
 /** This class provides methods to handle font files and font data.
@@ -54,8 +45,8 @@ class FontEngine
       bool setFont (const string &fname, int ptSize=0);
 		bool setCharSize (int ptSize);
 		bool getGlyphMetrics (unsigned char chr, int &width, int &height, int &depth) const;
-		bool traceOutline (unsigned char chr, FEGlyphCommands &commands, bool scale=true) const;
-		bool traceOutline (const char *name, FEGlyphCommands &commands, bool scale) const;
+		bool traceOutline (unsigned char chr, Glyph &glyph, bool scale=true) const;
+		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
 		const char* getFamilyName () const;
 		const char* getStyleName () const;
 		int getUnitsPerEM () const;

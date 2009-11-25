@@ -24,6 +24,7 @@
 #include <cmath>
 #include <ostream>
 #include "macros.h"
+#include "types.h"
 
 template <typename T>
 class Pair
@@ -49,12 +50,12 @@ class Pair
 };
 
 
-struct LPair : public Pair<long>
+struct Pair32 : public Pair<Int32>
 {
-   LPair (long x=0, long y=0) : Pair<long>(x, y) {}
-	explicit LPair (double x, double y) : Pair<long>(long(x+0.5), long(y+0.5)) {}
-	LPair (const Pair<long> &p) : Pair<long>(p) {}
-	operator Pair<long> () {return *this;}
+   Pair32 (Int32 x=0, Int32 y=0) : Pair<Int32>(x, y) {}
+	explicit Pair32 (double x, double y) : Pair<Int32>(Int32(x+0.5), Int32(y+0.5)) {}
+	Pair32 (const Pair<Int32> &p) : Pair<Int32>(p) {}
+	operator Pair<Int32> () {return *this;}
 };
 
 typedef Pair<double> DPair;
@@ -74,5 +75,5 @@ IMPLEMENT_ARITHMETIC_OPERATOR2(Pair<T>, T, /)
 template <typename T>
 IMPLEMENT_OUTPUT_OPERATOR(Pair<T>)
 
-IMPLEMENT_ARITHMETIC_OPERATOR2(LPair, long, *)
+IMPLEMENT_ARITHMETIC_OPERATOR2(Pair32, Int32, *)
 #endif

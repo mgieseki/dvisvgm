@@ -157,7 +157,6 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	const TFM *tfm = _font->getTFM();
 	if (!tfm)
 		return false;
-
 	bool write_info=false;
 	const Glyph *glyph = _cache ? _cache->getGlyph(c) : 0;
 	if (!glyph && prepareTracer()) {
@@ -184,7 +183,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 		sx = _font->scaledSize()/1000.0; // 1000 units per em
 		sy = -sx;
 	}
-	glyph->writeSVGCommands(path, sx, sy);
+	glyph->writeSVG(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
 	if (write_info)
 		Message::mstream() << ']';

@@ -1,5 +1,5 @@
 /*************************************************************************
-** GFGlyphTracer.h                                                      **
+** Glyph.h                                                              **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,28 +18,18 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GFGLYPHTRACER_H
-#define GFGLYPHTRACER_H
+#ifndef GLYPH_H
+#define GLYPH_H
 
-#include "GFTracer.h"
-#include "Glyph.h"
+#include <ostream>
+#include "GraphicPath.h"
 
-class GFGlyphTracer : public GFTracer
+class FontEncoding;
+class FontEngine;
+
+struct Glyph : GraphicPath<Int32>
 {
-   public:
-      GFGlyphTracer (istream &is, double upp);
-		~GFGlyphTracer ();
-		void moveTo (double x, double y);
-		void lineTo (double x, double y);
-		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
-		void closePath ();
-		void endChar (UInt32 c);
-		const Glyph& getGlyph () const {return *_glyph;}
-		Glyph* transferGlyph ();
-
-   private:
-		Glyph *_glyph;
-		bool _transfered;
+	void read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine);
 };
 
 #endif
