@@ -32,11 +32,11 @@ class XMLDocument
 		void append (XMLNode *node);
 		void setRootNode (XMLElementNode *root);
 		const XMLElementNode* getRootElement () const {return rootElement;}
-		ostream& write (ostream &os) const;
-		bool emit (ostream& os, XMLNode *stopNode);
+		std::ostream& write (std::ostream &os) const;
+		bool emit (std::ostream& os, XMLNode *stopNode);
 
    private:
-		list<XMLNode*> nodes;
+		std::list<XMLNode*> nodes;
 		XMLElementNode *rootElement;
 		bool emitted;
 };

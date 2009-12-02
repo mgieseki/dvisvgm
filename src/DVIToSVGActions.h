@@ -58,8 +58,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void moveToY (double y)                         {_svg.setY(y);}
 		void defineFont (int num, const Font *font);
 		void setFont (int num, const Font *font);
-		void special (const string &s);
-		void preamble (const string &cmt);
+		void special (const std::string &s);
+		void preamble (const std::string &cmt);
 		void postamble ();
 		void beginPage (Int32 *c);
 		void endPage ();

@@ -21,22 +21,14 @@
 #ifndef VFREADER_H
 #define VFREADER_H
 
-#include <istream>
-#include <map>
-#include <stack>
-#include <string>
 #include "MessageException.h"
 #include "StreamReader.h"
 #include "types.h"
 
-using std::istream;
-using std::map;
-using std::stack;
-using std::string;
 
 struct VFException : public MessageException
 {
-	VFException (const string &msg) : MessageException(msg) {}
+	VFException (const std::string &msg) : MessageException(msg) {}
 };
 
 
@@ -48,7 +40,7 @@ class VFReader : public StreamReader
 {
 	typedef bool (*ApproveAction)(int);
 	public:
-		VFReader (istream &is);
+		VFReader (std::istream &is);
 		virtual ~VFReader ();
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();

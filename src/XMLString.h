@@ -21,27 +21,18 @@
 #ifndef XMLSTRING_H
 #define XMLSTRING_H
 
-#include <ostream>
 #include <string>
-#include <sstream>
-#include "macros.h"
 
-using std::string;
-using std::ostream;
-using std::stringstream;
 
-class XMLString : public string
+class XMLString : public std::string
 {
    public:
-		XMLString () : string() {}
+		XMLString () : std::string() {}
 		XMLString (const char *str, bool plain=false);
-      XMLString (const string &str, bool plain=false);
+      XMLString (const std::string &str, bool plain=false);
 		XMLString (int n, bool cast=true);
 		XMLString (double x);
-//		ostream& write (ostream &os) const;
 };
 
-
-//IMPLEMENT_OUTPUT_OPERATOR(XMLString)
 
 #endif

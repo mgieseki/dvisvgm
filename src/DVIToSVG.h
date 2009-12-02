@@ -35,7 +35,7 @@ class DVIToSVG : public DVIReader
 		int convert (unsigned firstPage, unsigned lastPage);
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
 		const SpecialManager& specialManager () const    {return _specialManager;}
-		void setPageSize (const string &name)            {_bboxString = name;}
+		void setPageSize (const std::string &name)       {_bboxString = name;}
 		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
 
 	protected:

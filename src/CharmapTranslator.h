@@ -22,11 +22,8 @@
 #define CHARMAPTRANSLATOR_H
 
 #include <map>
-#include <string>
 #include "types.h"
 
-using std::map;
-using std::string;
 
 class FileFinder;
 class Font;
@@ -34,8 +31,8 @@ class FontEngine;
 
 class CharmapTranslator
 {
-	typedef map<UInt32,UInt32>::iterator Iterator;
-	typedef map<UInt32,UInt32>::const_iterator ConstIterator;
+	typedef std::map<UInt32,UInt32>::iterator Iterator;
+	typedef std::map<UInt32,UInt32>::const_iterator ConstIterator;
    public:
 		CharmapTranslator () {}
       CharmapTranslator (const Font *font);
@@ -44,7 +41,7 @@ class CharmapTranslator
 		UInt32 unicode (UInt32 customCode) const;
 
    private:
-		map<UInt32,UInt32> translationMap;
+		std::map<UInt32,UInt32> translationMap;
 };
 
 #endif

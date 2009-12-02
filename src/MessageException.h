@@ -23,16 +23,15 @@
 
 #include <string>
 
-using std::string;
 
 class MessageException
 {
    public:
-      MessageException (const string &msg) : message(msg) {}
-      const string& getMessage () const {return message;}
+      MessageException (const std::string &msg) : message(msg) {}
+      const std::string& getMessage () const {return message;}
 
    private:
-		string message;
+		std::string message;
 };
 
 #endif

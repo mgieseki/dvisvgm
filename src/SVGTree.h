@@ -60,7 +60,7 @@ class SVGTree
    public:
       SVGTree ();
 		void reset ();
-		void write (ostream &os) const    {_doc.write(os);}
+		void write (std::ostream &os) const    {_doc.write(os);}
 		void newPage (int pageno);
 		void appendToDefs (XMLNode *node);
 		void appendToPage (XMLNode *node) {_page->append(node);}

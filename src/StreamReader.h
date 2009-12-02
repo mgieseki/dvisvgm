@@ -27,33 +27,30 @@
 #include "MessageException.h"
 #include "types.h"
 
-using std::istream;
-using std::string;
-using std::vector;
 
 class StreamReader
 {
    public:
-		StreamReader (istream &s);
+		StreamReader (std::istream &s);
 		virtual ~StreamReader () {}
-		istream& replaceStream (istream &s);
+		std::istream& replaceStream (std::istream &s);
 		UInt32 readUnsigned (int n);
 		Int32 readSigned (int n);
-		string readString (int length);
-		vector<UInt8>& readBytes (int n, vector<UInt8> &bytes);
+		std::string readString (int length);
+		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
 		int readByte ()     {return is->get();}
 
 	protected:
-		istream& in () {return *is;}
+		std::istream& in () {return *is;}
 
    private:
-		istream *is;
+		std::istream *is;
 };
 
 
 struct StreamReaderException : public MessageException
 {
-	StreamReaderException (const string &msg) : MessageException(msg) {}
+	StreamReaderException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

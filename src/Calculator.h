@@ -26,34 +26,31 @@
 #include <string>
 #include "MessageException.h"
 
-using std::istream;
-using std::map;
-using std::string;
 
 struct CalculatorException : public MessageException
 {
-	CalculatorException (const string &msg) : MessageException(msg) {}
+	CalculatorException (const std::string &msg) : MessageException(msg) {}
 };
 
 class Calculator
 {
    public:
-      double eval (istream &is);
-		double eval (const string &expr);
-		void setVariable (const string &name, double value) {variables[name] = value;}
-		double getVariable (const string &name) const;
+      double eval (std::istream &is);
+		double eval (const std::string &expr);
+		void setVariable (const std::string &name, double value) {variables[name] = value;}
+		double getVariable (const std::string &name) const;
 
    protected:
-      double expr (istream &is, bool skip);
-      double term (istream &is, bool skip);
-      double prim (istream &is, bool skip);
-      char lex (istream &is);
-      char lookAhead (istream &is);
+      double expr (std::istream &is, bool skip);
+      double term (std::istream &is, bool skip);
+      double prim (std::istream &is, bool skip);
+      char lex (std::istream &is);
+      char lookAhead (std::istream &is);
 
    private:
-		map<string,double> variables;
+		std::map<std::string,double> variables;
 		double numValue;
-		string strValue;
+		std::string strValue;
 };
 
 #endif

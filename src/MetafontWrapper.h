@@ -23,22 +23,21 @@
 
 #include <string>
 
-using std::string;
 
 class FileFinder;
 
 class MetafontWrapper
 {
    public:
-      MetafontWrapper (const string &fontname);
-		int call (const string &mode, double mag);
-		int make (const string &mode, double mag);
+      MetafontWrapper (const std::string &fontname);
+		int call (const std::string &mode, double mag);
+		int make (const std::string &mode, double mag);
 		bool success () const;
 		void removeOutputFiles (bool keepGF=false);
-		static void removeOutputFiles (const string &fontname, bool keepGF=false);
+		static void removeOutputFiles (const std::string &fontname, bool keepGF=false);
 
    private:
-		string _fontname;
+		std::string _fontname;
 };
 
 #endif

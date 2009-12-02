@@ -24,32 +24,27 @@
 #include <istream>
 #include <map>
 #include <string>
-#include <vector>
 #include "Bitmap.h"
 #include "types.h"
 
-using std::istream;
-using std::map;
-using std::string;
-using std::vector;
 
 class CharInfo;
 
 class GFReader
 {
-	typedef map<UInt8,CharInfo*>::iterator Iterator;
-	typedef map<UInt8,CharInfo*>::const_iterator ConstIterator;
+	typedef std::map<UInt8,CharInfo*>::iterator Iterator;
+	typedef std::map<UInt8,CharInfo*>::const_iterator ConstIterator;
    public:
-      GFReader (istream &is);
+      GFReader (std::istream &is);
       virtual ~GFReader ();
 		bool executeChar (UInt8 c);
 		bool executeAllChars ();
 		bool executePostamble ();
-		virtual void preamble (const string &str) {}
+		virtual void preamble (const std::string &str) {}
 		virtual void postamble () {}
 		virtual void beginChar (UInt32 c) {}
 		virtual void endChar (UInt32 c) {}
-		virtual void special (string str) {}
+		virtual void special (std::string str) {}
 		virtual void numspecial (Int32 y) {}
 		const Bitmap& getBitmap () const {return bitmap;}
 		double getDesignSize () const;
@@ -61,9 +56,9 @@ class GFReader
 	protected:
 		Int32 readSigned (int bytes);
 		UInt32 readUnsigned (int bytes);
-		string readString (int len);
+		std::string readString (int len);
 		int executeCommand ();
-		istream& getInputStream () const {return in;}
+		std::istream& getInputStream () const {return in;}
 
 		void cmdPre (int);
 		void cmdPost (int);
@@ -82,7 +77,7 @@ class GFReader
 		void cmdCharLoc (int);
 
    private:
-		istream &in;
+		std::istream &in;
 		Int32 minX, maxX, minY, maxY;
 		Int32 x, y;            // current pen location (pixel units)
 		Int32 currentChar;
@@ -90,7 +85,7 @@ class GFReader
 		FixWord designSize;    // designSize
 		ScaledInt hppp, vppp;  // horizontal and vertical pixel per point
 		UInt32 checksum;
-		map<UInt8,CharInfo*> charInfoMap;
+		std::map<UInt8,CharInfo*> charInfoMap;
 		bool penDown;
 		bool valid;
 };

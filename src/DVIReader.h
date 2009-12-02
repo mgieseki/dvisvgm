@@ -55,7 +55,7 @@ class DVIReader : public StreamReader, protected VFActions
 	};
 
 	public:
-		DVIReader (istream &is, DVIActions *a=0);
+		DVIReader (std::istream &is, DVIActions *a=0);
 
 		bool executeDocument ();
 		void executeAll ();
@@ -86,7 +86,7 @@ class DVIReader : public StreamReader, protected VFActions
 
 		// VFAction methods
 		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize);
-		void defineVFChar (UInt32 c, vector<UInt8> *dvi);
+		void defineVFChar (UInt32 c, std::vector<UInt8> *dvi);
 
 		// the following methods represent the DVI commands
 		// they are called by executeCommand and should not be used directly

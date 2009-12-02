@@ -35,7 +35,7 @@ class Matrix;
 
 struct BoundingBoxException : MessageException
 {
-	BoundingBoxException (const string &msg) : MessageException(msg) {}
+	BoundingBoxException (const std::string &msg) : MessageException(msg) {}
 };
 
 
@@ -46,8 +46,8 @@ class BoundingBox
 		BoundingBox (double ulxx, double ulyy, double lrxx, double lryy);
 		BoundingBox (const DPair &p1, const DPair &p2);
 		BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy);
-		BoundingBox (const string &boxstr) {set(boxstr);}
-		void set (const string &boxstr);
+		BoundingBox (const std::string &boxstr) {set(boxstr);}
+		void set (const std::string &boxstr);
 		void embed (double x, double y);
 		void embed (const BoundingBox &bb);
 		void embed (const DPair &p) {embed(p.x(), p.y());}

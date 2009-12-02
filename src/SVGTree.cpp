@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <sstream>
 #include "BoundingBox.h"
 #include "CharmapTranslator.h"
 #include "DVIToSVG.h"

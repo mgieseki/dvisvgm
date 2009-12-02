@@ -29,10 +29,6 @@
 #include "Glyph.h"
 #include "types.h"
 
-using std::map;
-using std::string;
-using std::vector;
-
 
 /** This class provides methods to handle font files and font data.
  *  It's a wrapper for the Freetype font library. */
@@ -42,9 +38,8 @@ class FontEngine
       FontEngine ();
       ~FontEngine ();
 		void setDeviceResolution (int x, int y);
-      bool setFont (const string &fname, int ptSize=0);
+      bool setFont (const std::string &fname, int ptSize=0);
 		bool setCharSize (int ptSize);
-		bool getGlyphMetrics (unsigned char chr, int &width, int &height, int &depth) const;
 		bool traceOutline (unsigned char chr, Glyph &glyph, bool scale=true) const;
 		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
 		const char* getFamilyName () const;
@@ -55,14 +50,13 @@ class FontEngine
 		int getHAdvance () const;
 		int getHAdvance (unsigned int c) const;
 		int getHAdvance (const char *name) const;
-//		int getVAdvance () const;
 		int getFirstChar () const;
 		int getNextChar () const;
 		int getCharSize () const {return _ptSize;}
-		vector<int> getPanose () const;
-		string getGlyphName (unsigned int c) const;
+		std::vector<int> getPanose () const;
+		std::string getGlyphName (unsigned int c) const;
 		int getCharByGlyphName (const char *name) const;
-		void buildTranslationMap (map<UInt32,UInt32> &translationMap) const;
+		void buildTranslationMap (std::map<UInt32,UInt32> &translationMap) const;
 
    private:
 		int _horDeviceRes, _vertDeviceRes;

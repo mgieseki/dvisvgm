@@ -27,7 +27,7 @@
 class GFGlyphTracer : public GFTracer
 {
    public:
-      GFGlyphTracer (istream &is, double upp);
+      GFGlyphTracer (std::istream &is, double upp);
 		~GFGlyphTracer ();
 		void moveTo (double x, double y);
 		void lineTo (double x, double y);

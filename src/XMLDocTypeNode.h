@@ -26,7 +26,7 @@
 class XMLDocTypeNode : public XMLDeclarationNode
 {
    public:
-      XMLDocTypeNode (const string &rootName, const string &type, const string &param)
+      XMLDocTypeNode (const std::string &rootName, const std::string &type, const std::string &param)
 			: XMLDeclarationNode("DOCTYPE", rootName + " " + type + " " + param) {}
 };
 
@@ -34,7 +34,7 @@ class XMLDocTypeNode : public XMLDeclarationNode
 class XMLEntityNode : public XMLDeclarationNode
 {
 	public:
-		XMLEntityNode (const string &n, const string &v)
+		XMLEntityNode (const std::string &n, const std::string &v)
 			: XMLDeclarationNode("ENTITY", n + " " + v) {}
 };
 

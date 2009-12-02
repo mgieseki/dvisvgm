@@ -21,12 +21,11 @@
 #ifndef PAGESIZE_H
 #define PAGESIZE_H
 
-#include <string>
 #include "MessageException.h"
 
 struct PageSizeException : public MessageException
 {
-	PageSizeException (const string &msg) : MessageException(msg) {}
+	PageSizeException (const std::string &msg) : MessageException(msg) {}
 };
 
 class PageSize
