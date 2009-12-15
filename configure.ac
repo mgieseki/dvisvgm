@@ -22,6 +22,9 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_LANG(C)
 
+AC_CHECK_FUNCS([ftime gettimeofday])
+AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
+
 # Check whether MikTeX import libraries should be linked
 case $host in 
 	*-mingw32* | *-windows*)
