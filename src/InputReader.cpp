@@ -115,7 +115,7 @@ bool InputReader::parseUInt (unsigned &val) {
 	if (!isdigit(peek()))
 		return false;
 	while (isdigit(peek()))
-		val += val*10 + (get()-'0');
+		val = val*10 + (get()-'0');
 	return true;
 }
 
