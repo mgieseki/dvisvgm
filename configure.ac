@@ -40,7 +40,7 @@ case $host in
 		AC_MSG_CHECKING([kpathsea version])
 		AC_TRY_RUN([#include <stdio.h>
   			#include <kpathsea/kpathsea.h>
-			extern char *kpathsea_version_string;
+			extern const char *kpathsea_version_string;
 			int main() {
 				FILE *f;
 				f = fopen("conftestval", "w");
