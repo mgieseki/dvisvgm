@@ -72,7 +72,7 @@ class Ghostscript
 		typedef int (GSDLLCALLPTR Stdout) (void *caller, const char *str, int len);
 		typedef int (GSDLLCALLPTR Stderr) (void *caller, const char *str, int len);
 
-	public:
+	public:		
 		Ghostscript ();
 		Ghostscript (int argc, const char **argv, void *caller=0);
 		~Ghostscript ();
@@ -84,6 +84,8 @@ class Ghostscript
 		int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code);
 		int run_string_end (int user_errors, int *pexit_code);
 		int exit ();
+
+		static std::string LIBGS_NAME;
 
 	protected:
 		Ghostscript (const Ghostscript &gs) {}

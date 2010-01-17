@@ -33,11 +33,14 @@ using namespace std;
 #endif
 
 
+string Ghostscript::LIBGS_NAME;
+
+
 /** Loads the Ghostscript library but does not create an instance. This
  *  constructor should only be used to call available() and revision(). */
 Ghostscript::Ghostscript ()
 #if !defined(HAVE_LIBGS)
-: DLLoader(GS_DL_NAME)
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGSNAME.c_str())
 #endif
 {
 	_inst = 0;
@@ -50,7 +53,7 @@ Ghostscript::Ghostscript ()
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !defined(HAVE_LIBGS)
-	: DLLoader(GS_DL_NAME)
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGSNAME.c_str())
 #endif
 {
 	int status = new_instance(&_inst, caller);

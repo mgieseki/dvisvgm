@@ -26,6 +26,7 @@
 #include "Message.h"
 #include "macros.h"
 
+using namespace std;
 
 #ifdef MIKTEX
 	#include "MessageException.h"

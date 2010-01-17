@@ -30,6 +30,7 @@
 #include "DVIToSVGActions.h"
 #include "FileSystem.h"
 #include "FontCache.h"
+#include "Ghostscript.h"
 #include "InputReader.h"
 #include "Message.h"
 #include "FileFinder.h"
@@ -194,6 +195,9 @@ static bool check_bbox (const string &bboxstr) {
 
 
 int main (int argc, char *argv[]) {
+	if (getenv("LIBGS"))
+		Ghostscript::LIBGS_NAME = getenv("LIBGS");
+
 	CommandLine args;
 	args.parse(argc, argv);
 	if (args.error())
