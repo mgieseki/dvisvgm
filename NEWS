@@ -1,5 +1,10 @@
 dvisvgm-0.8.8
-- applied patches sent by Peter Breitenlohner to prepare integration of 
+- added evaluation of environment variable LIBGS that can be used to 
+  set the file name of the GS shared library
+- option --bbox can now be used to enlarge the minimal bounding box by 
+  a given amount
+- fixed bug in evaluation of option --page
+- applied patches sent by Peter Breitenlohner to prepare the integration of 
   dvisvgm into TeX Live
 
 dvisvgm-0.8.7
