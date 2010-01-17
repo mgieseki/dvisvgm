@@ -40,7 +40,7 @@ string Ghostscript::LIBGS_NAME;
  *  constructor should only be used to call available() and revision(). */
 Ghostscript::Ghostscript ()
 #if !defined(HAVE_LIBGS)
-	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGSNAME.c_str())
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
 #endif
 {
 	_inst = 0;
@@ -53,7 +53,7 @@ Ghostscript::Ghostscript ()
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !defined(HAVE_LIBGS)
-	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGSNAME.c_str())
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
 #endif
 {
 	int status = new_instance(&_inst, caller);
