@@ -214,9 +214,9 @@ void DVIToSVG::endPage () {
 				bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
 			}
 		}
-		else {
+		else { // set/modify bounding box by explicitly given values
 			try {
-				bbox = BoundingBox(_bboxString);
+				bbox.set(_bboxString);
 			}
 			catch (const MessageException &e) {
 			}
