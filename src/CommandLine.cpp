@@ -2,7 +2,7 @@
 // It is part of the dvisvgm package and published under the terms
 // of the GNU General Public License version 3 or later.
 // See file COPYING for further details.
-// (C) 2009 Martin Gieseking <martin.gieseking@uos.de>
+// (C) 2009-2010 Martin Gieseking <martin.gieseking@uos.de>
 
 #include <cstdio>
 #include <iostream>
@@ -79,7 +79,7 @@ void CommandLine::init () {
 }
 
 void CommandLine::help () const {
-   puts("This program converts DVI files, as created by TeX/LaTeX to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
+   puts("This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
    puts("Input options:");
    puts("  -p, --page=number             choose page to convert (default: 1)");
    puts("  -m, --map-file=[+]filename    set [additional] font map file name");
