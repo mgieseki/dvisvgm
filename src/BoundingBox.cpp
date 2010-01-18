@@ -2,9 +2,9 @@
 ** BoundingBox.cpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #include <algorithm>
@@ -57,28 +57,68 @@ BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &
 }
 
 
-void BoundingBox::set (const string &boxstr) {
-	Length coord[4];
+/** Removes leading and trailing whitespace from the given string. */
+static string& strip (string &str) {
+	size_t n=0;
+	while (n < str.length() && isspace(str[n]))
+		++n;
+	str.erase(0, n);
+	n=str.length()-1;
+	while (n > 0 && isspace(str[n]))
+		--n;
+	str.erase(n+1);
+	return str;
+}
+
+
+/** Sets or modifies the bounding box. If 'boxstr' consists of 4 length values,
+ *  they denote the absolute position of two diagonal corners of the box. In case
+ *  of a single length value l the current box is enlarged by adding (-l,-l) the upper
+ *  left and (l,l) to the lower right corner.
+ *  @param boxstr[in] whitespace and/or comma separated string of lengths. */
+void BoundingBox::set (string boxstr) {
+	vector<Length> coord;
 	const size_t len = boxstr.length();
 	size_t l=0;
-	for (int i=0; i < 4; i++) {
+	strip(boxstr);
+	string lenstr;
+	do {
 		while (l < len && isspace(boxstr[l]))
 			l++;
 		size_t r=l;
 		while (r < len && !isspace(boxstr[r]) && boxstr[r] != ',')
 			r++;
-		string lenstr = boxstr.substr(l, r-l);
-		coord[i].set(lenstr);
-		if (boxstr[r] == ',')
-			r++;
-		l = r;
-		if ((l == len && i < 3) || lenstr.empty())
-			throw BoundingBoxException("four length parameters expected");
+		lenstr = boxstr.substr(l, r-l);
+		if (!lenstr.empty()) {
+			coord.push_back(Length(lenstr));
+			if (boxstr[r] == ',')
+				r++;
+			l = r;
+		}
+	} while (!lenstr.empty() && coord.size() < 4);
+	
+	switch (coord.size()) {
+		case 1: 
+			ulx -= coord[0].pt();
+			uly -= coord[0].pt();
+			lrx += coord[0].pt();
+			lry += coord[0].pt();
+			break;
+		case 2:
+			ulx -= coord[0].pt();
+			uly -= coord[1].pt();
+			lrx += coord[0].pt();
+			lry += coord[1].pt();
+			break;
+		case 4:
+			ulx = min(coord[0].pt(), coord[2].pt());
+			uly = min(coord[1].pt(), coord[3].pt());
+			lrx = max(coord[0].pt(), coord[2].pt());
+			lry = max(coord[1].pt(), coord[3].pt());
+			break;			
+		default:
+			throw BoundingBoxException("1, 2 or 4 length parameters expected");
 	}
-	ulx = min(coord[0].pt(), coord[2].pt());
-	uly = min(coord[1].pt(), coord[3].pt());
-	lrx = max(coord[0].pt(), coord[2].pt());
-	lry = max(coord[1].pt(), coord[3].pt());
 }
 
 

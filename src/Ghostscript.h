@@ -2,9 +2,9 @@
 ** Ghostscript.h                                                        **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #ifndef GHOSTSCRIPT_H
@@ -72,7 +72,7 @@ class Ghostscript
 		typedef int (GSDLLCALLPTR Stdout) (void *caller, const char *str, int len);
 		typedef int (GSDLLCALLPTR Stderr) (void *caller, const char *str, int len);
 
-	public:
+	public:		
 		Ghostscript ();
 		Ghostscript (int argc, const char **argv, void *caller=0);
 		~Ghostscript ();
@@ -84,6 +84,8 @@ class Ghostscript
 		int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code);
 		int run_string_end (int user_errors, int *pexit_code);
 		int exit ();
+
+		static std::string LIBGS_NAME;
 
 	protected:
 		Ghostscript (const Ghostscript &gs) {}

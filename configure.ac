@@ -1,11 +1,11 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 AC_INIT([dvisvgm],[0.8.8dev],[martin.gieseking@uos.de])
-DATE="August 2009"
+DATE="January 2010"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
@@ -40,7 +40,7 @@ case $host in
 		AC_MSG_CHECKING([kpathsea version])
 		AC_TRY_RUN([#include <stdio.h>
   			#include <kpathsea/kpathsea.h>
-			extern char *kpathsea_version_string;
+			extern const char *kpathsea_version_string;
 			int main() {
 				FILE *f;
 				f = fopen("conftestval", "w");

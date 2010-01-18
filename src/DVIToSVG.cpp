@@ -2,9 +2,9 @@
 ** DVIToSVG.cpp                                                         **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -214,9 +214,9 @@ void DVIToSVG::endPage () {
 				bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
 			}
 		}
-		else {
+		else { // set/modify bounding box by explicitly given values
 			try {
-				bbox = BoundingBox(_bboxString);
+				bbox.set(_bboxString);
 			}
 			catch (const MessageException &e) {
 			}
@@ -281,9 +281,12 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 					oss.str("");
 					oss << "#g" << getFontManager().fontID(font->uniqueFont()) << *cit;
 					use->addAttribute("xlink:href", oss.str());
-					oss.str("");
-					oss << "scale(" << (font->scaledSize()/font->uniqueFont()->scaledSize()) << ')';
-					use->addAttribute("transform", oss.str());
+					double scale = font->scaledSize()/font->uniqueFont()->scaledSize();
+					if (scale != 1.0) {
+						oss.str("");
+						oss << "scale(" << scale << ')';
+						use->addAttribute("transform", oss.str());
+					}
 					_svg.appendToDefs(use);
 				}
 			}

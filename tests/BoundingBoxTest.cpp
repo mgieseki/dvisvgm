@@ -1,5 +1,5 @@
 /*************************************************************************
-** TFM.h                                                                **
+** BoundingBoxTest.cpp                                                  **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,42 +18,36 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#ifndef TFM_H
-#define TFM_H
+#include <gtest/gtest.h>
+#include "BoundingBox.h"
 
-#include <istream>
-#include <vector>
-#include "types.h"
+TEST(BoundingBox, set) {
+	BoundingBox bbox;
+	bbox.set("1pt 2pt 3pt 4pt");
+	EXPECT_EQ(bbox.minX(), 1);
+	EXPECT_EQ(bbox.minY(), 2);
+	EXPECT_EQ(bbox.maxX(), 3);
+	EXPECT_EQ(bbox.maxY(), 4);
 
-class FileFinder;
+	bbox.set("4pt 3pt 2pt 1pt");
+	EXPECT_EQ(bbox.minX(), 2);
+	EXPECT_EQ(bbox.minY(), 1);
+	EXPECT_EQ(bbox.maxX(), 4);
+	EXPECT_EQ(bbox.maxY(), 3);
 
-class TFM
-{
-   public:
-		TFM ();
-		TFM (std::istream &is);
-		static TFM* createFromFile (const char *fname);
-		double getDesignSize () const;
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		double getItalicCorr (int c) const;
-		UInt16 getChecksum () const {return _checksum;}
-		UInt16 firstChar () const   {return _firstChar;}
-		UInt16 lastChar () const    {return _lastChar;}
+	bbox.set("1pt");
+	EXPECT_EQ(bbox.minX(), 1);
+	EXPECT_EQ(bbox.minY(), 0);
+	EXPECT_EQ(bbox.maxX(), 5);
+	EXPECT_EQ(bbox.maxY(), 4);
 
-	protected:
-		bool readFromStream (std::istream &is);
+	bbox.set("2pt 3pt");
+	EXPECT_EQ(bbox.minX(), -1);
+	EXPECT_EQ(bbox.minY(), -3);
+	EXPECT_EQ(bbox.maxX(), 7);
+	EXPECT_EQ(bbox.maxY(), 7);
 
-   private:
-		UInt16 _checksum;
-		UInt16 _firstChar, _lastChar;
-		FixWord _designSize;  ///< design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  _charInfoTable;
-		std::vector<FixWord> _widthTable;    ///< character widths in design size units
-		std::vector<FixWord> _heightTable;   ///< character height in design size units
-		std::vector<FixWord> _depthTable;    ///< character depth in design size units
-		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
-};
+	EXPECT_THROW(bbox.set(""), BoundingBoxException);
+	EXPECT_THROW(bbox.set("1pt 2pt 3pt"), BoundingBoxException);
+}
 
-#endif

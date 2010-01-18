@@ -2,9 +2,9 @@
 ** Font.h                                                               **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #ifndef FONT_H
@@ -29,10 +29,6 @@
 #include "VFReader.h"
 #include "types.h"
 
-using std::map;
-using std::string;
-using std::vector;
-
 
 class FontEncoding;
 class TFM;
@@ -44,7 +40,7 @@ struct Font
 	virtual ~Font () {}
 	virtual Font* clone (double ds, double sc) const =0;
 	virtual const Font* uniqueFont () const =0;
-	virtual string name () const =0;
+	virtual std::string name () const =0;
 	virtual double designSize () const =0;
 	virtual double scaledSize () const =0;
 	virtual double scaleFactor () const        {return scaledSize()/designSize();}
@@ -63,10 +59,10 @@ struct Font
 struct EmptyFont : public Font
 {
 	public:
-		EmptyFont (string name) : fontname(name) {}
+		EmptyFont (std::string name) : fontname(name) {}
 		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
 		const Font* uniqueFont () const {return this;}
-		string name () const            {return fontname;}
+		std::string name () const       {return fontname;}
 		double designSize () const      {return 10;}    // cmr10 design size in pt
 		double scaledSize () const      {return 10;}    // cmr10 scaled size in pt
 		double charWidth (int c) const  {return 9.164;} // width of cmr10's 'M' in pt
@@ -77,7 +73,7 @@ struct EmptyFont : public Font
 		const char* path () const       {return 0;}
 
 	private:
-		string fontname;
+		std::string fontname;
 };
 
 
@@ -85,7 +81,7 @@ struct EmptyFont : public Font
 struct PhysicalFont : public virtual Font
 {
 	enum Type {MF, PFB, TTF};
-	static Font* create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 	virtual Type type () const =0;
 };
 
@@ -95,10 +91,10 @@ class VirtualFont : public virtual Font
 {
 	friend class FontManager;
 	public:
-		typedef vector<UInt8> DVIVector;
+		typedef std::vector<UInt8> DVIVector;
 
 	public:
-		static Font* create (string name, UInt32 checksum, double dsize, double ssize);
+		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
 
 	protected:
@@ -109,10 +105,10 @@ class VirtualFont : public virtual Font
 class TFMFont : public virtual Font
 {
 	public:
-		TFMFont (string name, UInt32 checksum, double dsize, double ssize);
+		TFMFont (std::string name, UInt32 checksum, double dsize, double ssize);
 		~TFMFont ();
 		const TFM* getTFM () const;
-		string name () const        {return fontname;}
+		std::string name () const   {return fontname;}
 		double designSize () const  {return dsize;}
 		double scaledSize () const  {return ssize;}
 		double charWidth (int c) const;
@@ -122,7 +118,7 @@ class TFMFont : public virtual Font
 
 	private:
 		mutable TFM *tfm;
-		string fontname;
+		std::string fontname;
 		UInt32 checksum; ///< cheksum to be compared with TFM checksum
 		double dsize;    ///< design size in TeX point units
 		double ssize;    ///< scaled size
@@ -135,7 +131,7 @@ class PhysicalFontProxy : public PhysicalFont
 	public:
 		Font* clone (double ds, double sc) const {return new PhysicalFontProxy(*this, ds, sc);}
 		const Font* uniqueFont () const       {return pf;}
-		string name () const                  {return pf->name();}
+		std::string name () const             {return pf->name();}
 		double designSize () const            {return dsize;}
 		double scaledSize () const            {return ssize;}
 		double charWidth (int c) const        {return pf->charWidth(c);}
@@ -167,7 +163,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		Type type () const {return filetype;}
 
 	protected:
-		PhysicalFontImpl (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 
 	private:
 		Type filetype;
@@ -180,7 +176,7 @@ class VirtualFontProxy : public VirtualFont
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
 		const Font* uniqueFont () const       {return vf;}
-		string name () const                  {return vf->name();}
+		std::string name () const             {return vf->name();}
 		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
 		double designSize () const            {return dsize;}
 		double scaledSize () const            {return ssize;}
@@ -214,17 +210,17 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 		const char* path () const;
 
 	protected:
-		VirtualFontImpl (string name, UInt32 checksum, double dsize, double ssize);
+		VirtualFontImpl (std::string name, UInt32 checksum, double dsize, double ssize);
 		void assignChar (UInt32 c, DVIVector *dvi);
 
 	private:
-		map<UInt32, DVIVector*> charDefs; ///< dvi subroutines defining the characters
+		std::map<UInt32, DVIVector*> charDefs; ///< dvi subroutines defining the characters
 };
 
 
 struct FontException : public MessageException
 {
-	FontException (string msg) : MessageException(msg) {}
+	FontException (std::string msg) : MessageException(msg) {}
 };
 
 #endif

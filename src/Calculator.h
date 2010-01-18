@@ -2,9 +2,9 @@
 ** Calculator.h                                                         **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #ifndef CALCULATOR_H
@@ -26,34 +26,31 @@
 #include <string>
 #include "MessageException.h"
 
-using std::istream;
-using std::map;
-using std::string;
 
 struct CalculatorException : public MessageException
 {
-	CalculatorException (const string &msg) : MessageException(msg) {}
+	CalculatorException (const std::string &msg) : MessageException(msg) {}
 };
 
 class Calculator
 {
    public:
-      double eval (istream &is);
-		double eval (const string &expr);
-		void setVariable (const string &name, double value) {variables[name] = value;}
-		double getVariable (const string &name) const;
+      double eval (std::istream &is);
+		double eval (const std::string &expr);
+		void setVariable (const std::string &name, double value) {variables[name] = value;}
+		double getVariable (const std::string &name) const;
 
    protected:
-      double expr (istream &is, bool skip);
-      double term (istream &is, bool skip);
-      double prim (istream &is, bool skip);
-      char lex (istream &is);
-      char lookAhead (istream &is);
+      double expr (std::istream &is, bool skip);
+      double term (std::istream &is, bool skip);
+      double prim (std::istream &is, bool skip);
+      char lex (std::istream &is);
+      char lookAhead (std::istream &is);
 
    private:
-		map<string,double> variables;
+		std::map<std::string,double> variables;
 		double numValue;
-		string strValue;
+		std::string strValue;
 };
 
 #endif

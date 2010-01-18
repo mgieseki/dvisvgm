@@ -2,9 +2,9 @@
 ** Ghostscript.cpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #include "Ghostscript.h"
@@ -33,11 +33,14 @@ using namespace std;
 #endif
 
 
+string Ghostscript::LIBGS_NAME;
+
+
 /** Loads the Ghostscript library but does not create an instance. This
  *  constructor should only be used to call available() and revision(). */
 Ghostscript::Ghostscript ()
 #if !defined(HAVE_LIBGS)
-: DLLoader(GS_DL_NAME)
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
 #endif
 {
 	_inst = 0;
@@ -50,7 +53,7 @@ Ghostscript::Ghostscript ()
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !defined(HAVE_LIBGS)
-	: DLLoader(GS_DL_NAME)
+	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
 #endif
 {
 	int status = new_instance(&_inst, caller);

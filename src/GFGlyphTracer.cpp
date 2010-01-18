@@ -2,9 +2,9 @@
 ** GFGlyphTracer.cpp                                                    **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #include "GFGlyphTracer.h"
@@ -39,27 +39,22 @@ GFGlyphTracer::~GFGlyphTracer () {
 
 
 void GFGlyphTracer::moveTo (double x, double y) {
-	LPair p(x, y);
-	_glyph->addCommand(new GlyphMoveTo(p));
+	_glyph->moveto(x, y);
 }
 
 
 void GFGlyphTracer::lineTo (double x, double y) {
-	LPair p(x, y);
-	_glyph->addCommand(new GlyphLineTo(p));
+	_glyph->lineto(x, y);
 }
 
 
 void GFGlyphTracer::curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {
-	LPair p1(c1x, c1y);
-	LPair p2(c2x, c2y);
-	LPair p3(x, y);
-	_glyph->addCommand(new GlyphCubicTo(p1, p2, p3));
+	_glyph->cubicto(c1x, c1y, c2x, c2y, x, y);
 }
 
 
 void GFGlyphTracer::closePath () {
-	_glyph->addCommand(new GlyphClosePath());
+	_glyph->closepath();
 }
 
 
@@ -69,9 +64,8 @@ void GFGlyphTracer::endChar (UInt32 c) {
 		_transfered = false;
 	}
 	else
-		_glyph->clear();
+		_glyph->newpath();
 	GFTracer::endChar(c);
-	_glyph->optimizeCommands();
 }
 
 

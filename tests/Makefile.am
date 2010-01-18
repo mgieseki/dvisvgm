@@ -1,5 +1,5 @@
 ## This file is part of dvisvgm
-## Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>
+## Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>
 ##
 ## Process this file with automake.
 
@@ -7,6 +7,11 @@ AM_CXXFLAGS = -I../src -I../../src -Wall
 
 TESTS =
 check_PROGRAMS =
+
+TESTS += BoundingBoxTest
+check_PROGRAMS += BoundingBoxTest
+BoundingBoxTest_SOURCES = BoundingBoxTest.cpp
+BoundingBoxTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
 TESTS += CalculatorTest
 check_PROGRAMS += CalculatorTest

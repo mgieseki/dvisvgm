@@ -2,9 +2,9 @@
 ** SVGFontEmitter.cpp                                                   **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #include <sstream>
@@ -25,7 +25,7 @@
 #include "FontEncoding.h"
 #include "FontEngine.h"
 #include "FontManager.h"
-#include "FontGlyph.h"
+#include "Glyph.h"
 #include "SVGFontEmitter.h"
 #include "SVGTree.h"
 #include "XMLNode.h"
@@ -116,9 +116,8 @@ bool SVGFontEmitter::emitGlyph (int c) {
 	ostringstream path;
 	Glyph glyph;
 	glyph.read(c, encoding, _fontEngine);
-	glyph.closeOpenPaths();
-	glyph.optimizeCommands();
-	glyph.writeSVGCommands(path, sx, sy);
+	glyph.closeOpenSubPaths();
+	glyph.writeSVG(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());
 	return true;
 }

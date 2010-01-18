@@ -1,5 +1,5 @@
 /*************************************************************************
-** TFM.h                                                                **
+** Glyph.cpp                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,42 +18,22 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
-#ifndef TFM_H
-#define TFM_H
+#include "FontEncoding.h"
+#include "FontEngine.h"
+#include "Glyph.h"
+#include "Message.h"
+#include "macros.h"
 
-#include <istream>
-#include <vector>
-#include "types.h"
+using namespace std;
 
-class FileFinder;
 
-class TFM
-{
-   public:
-		TFM ();
-		TFM (std::istream &is);
-		static TFM* createFromFile (const char *fname);
-		double getDesignSize () const;
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		double getItalicCorr (int c) const;
-		UInt16 getChecksum () const {return _checksum;}
-		UInt16 firstChar () const   {return _firstChar;}
-		UInt16 lastChar () const    {return _lastChar;}
-
-	protected:
-		bool readFromStream (std::istream &is);
-
-   private:
-		UInt16 _checksum;
-		UInt16 _firstChar, _lastChar;
-		FixWord _designSize;  ///< design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  _charInfoTable;
-		std::vector<FixWord> _widthTable;    ///< character widths in design size units
-		std::vector<FixWord> _heightTable;   ///< character height in design size units
-		std::vector<FixWord> _depthTable;    ///< character depth in design size units
-		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
-};
-
-#endif
+void Glyph::read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine) {
+	if (encoding) {
+		if (const char *name = encoding->getEntry(c))
+			fontEngine.traceOutline(name, *this, false);
+		else
+			Message::wstream(true) << "no encoding for char #" << int(c) << " in '" << encoding->name() << "'\n";
+	}
+	else
+		fontEngine.traceOutline(c, *this, false);
+}

@@ -2,9 +2,9 @@
 ** XMLString.h                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2009 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        **
+** This program is free software; you can redistribute it and/or        ** 
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,33 +15,24 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
 #ifndef XMLSTRING_H
 #define XMLSTRING_H
 
-#include <ostream>
 #include <string>
-#include <sstream>
-#include "macros.h"
 
-using std::string;
-using std::ostream;
-using std::stringstream;
 
-class XMLString : public string
+class XMLString : public std::string
 {
    public:
-		XMLString () : string() {}
+		XMLString () : std::string() {}
 		XMLString (const char *str, bool plain=false);
-      XMLString (const string &str, bool plain=false);
+      XMLString (const std::string &str, bool plain=false);
 		XMLString (int n, bool cast=true);
 		XMLString (double x);
-//		ostream& write (ostream &os) const;
 };
 
-
-//IMPLEMENT_OUTPUT_OPERATOR(XMLString)
 
 #endif
