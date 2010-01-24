@@ -16,6 +16,9 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'b', "bbox", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
    {'h', "help", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+   {'\0', "libgs", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_libgs)},
+#endif
    {'l', "list-specials", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
    {'M', "mag", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
    {'m', "map-file", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_map_file)},
@@ -42,6 +45,9 @@ void CommandLine::init () {
    _bbox_given = false;
    _cache_given = false;
    _help_given = false;
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+   _libgs_given = false;
+#endif
    _list_specials_given = false;
    _mag_given = false;
    _map_file_given = false;
@@ -64,6 +70,9 @@ void CommandLine::init () {
 
    _bbox_arg = "min";
    _cache_arg.clear();
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+   _libgs_arg.clear();
+#endif
    _mag_arg = 4;
    _map_file_arg.clear();
    _no_specials_arg.clear();
@@ -97,6 +106,9 @@ void CommandLine::help () const {
    puts("  -T, --transform=commands      transform page content");
    puts("\nProcessing options:");
    puts("  -C, --cache[=dir]             set/print path of cache directory");
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+   puts("      --libgs=filename          set name of Ghostscript shared library");
+#endif
    puts("  -M, --mag=factor              magnification of Metafont output (default: 4)");
    puts("      --no-mktexmf              don't try to create missing fonts");
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
@@ -125,6 +137,14 @@ void CommandLine::handle_cache(InputReader &ir, const Option &opt, bool longopt)
 void CommandLine::handle_help(InputReader &ir, const Option &opt, bool longopt) {
    _help_given = true;
 }
+
+
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+void CommandLine::handle_libgs(InputReader &ir, const Option &opt, bool longopt) {
+   if (getStringArg(ir, opt, longopt, _libgs_arg))
+      _libgs_given = true;
+}
+#endif
 
 
 void CommandLine::handle_list_specials(InputReader &ir, const Option &opt, bool longopt) {
@@ -238,6 +258,9 @@ void CommandLine::status () const {
    cout << 'b'<< setw(20) << "bbox " << bbox_given() << setw(10) << bbox_arg() << endl;
    cout << 'C'<< setw(20) << "cache " << cache_given() << setw(10) << cache_arg() << endl;
    cout << 'h'<< setw(20) << "help " << help_given() << endl;
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+   cout << ' '<< setw(20) << "libgs " << libgs_given() << setw(10) << libgs_arg() << endl;
+#endif
    cout << 'l'<< setw(20) << "list-specials " << list_specials_given() << endl;
    cout << 'M'<< setw(20) << "mag " << mag_given() << setw(10) << mag_arg() << endl;
    cout << 'm'<< setw(20) << "map-file " << map_file_given() << setw(10) << map_file_arg() << endl;

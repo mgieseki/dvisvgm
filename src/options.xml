@@ -83,6 +83,10 @@
 				<arg type="string" name="dir" optional="yes"/>
 				<description>set/print path of cache directory</description>
 			</option>
+			<option long="libgs" if="!defined(HAVE_LIBGS) &amp;&amp; !defined(DISABLE_GS)">
+				<arg name="filename" type="string"/>
+				<description>set name of Ghostscript shared library</description>
+			</option>			
 			<option long="mag" short="M">
 				<arg type="double" name="factor" default="4"/>
 				<description>magnification of Metafont output</description>

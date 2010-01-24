@@ -24,7 +24,12 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "types.h"
 #include "Glyph.h"
+
+#ifdef VERSION
+#undef VERSION
+#endif
 
 class FontCache
 {

@@ -138,6 +138,16 @@ static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 }
 
 
+static void set_libgs (CommandLine &args) {
+#if !defined(DISABLE_GS) && !defined(HAVE_LIBGS)
+	if (args.libgs_given())
+		Ghostscript::LIBGS_NAME = args.libgs_arg();
+	else if (getenv("LIBGS"))
+		Ghostscript::LIBGS_NAME = getenv("LIBGS");
+#endif
+}
+
+
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cache_given() && !args.cache_arg().empty()) {
 		if (args.cache_arg() == "none")
@@ -195,14 +205,12 @@ static bool check_bbox (const string &bboxstr) {
 
 
 int main (int argc, char *argv[]) {
-	if (getenv("LIBGS"))
-		Ghostscript::LIBGS_NAME = getenv("LIBGS");
-
 	CommandLine args;
 	args.parse(argc, argv);
 	if (args.error())
 		return 1;
 
+	set_libgs(args);
 	if (args.version_given()) {
 		cout << PACKAGE_STRING "\n";
 		return 0;

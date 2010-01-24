@@ -7,6 +7,9 @@
 #ifndef COMMANDLINE_H
 #define COMMANDLINE_H
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "CmdLineParserBase.h"
 
 class CommandLine : public CmdLineParserBase
@@ -16,7 +19,7 @@ class CommandLine : public CmdLineParserBase
       CommandLine (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
       void help () const;
       void status () const;
-      int numOptions () const {return 22;}
+      int numOptions () const {return 23;}
       bool page_given () const {return _page_given;}
       unsigned page_arg () const {return _page_arg;}
       bool map_file_given () const {return _map_file_given;}
@@ -40,6 +43,10 @@ class CommandLine : public CmdLineParserBase
       const std::string& transform_arg () const {return _transform_arg;}
       bool cache_given () const {return _cache_given;}
       const std::string& cache_arg () const {return _cache_arg;}
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+      bool libgs_given () const {return _libgs_given;}
+      const std::string& libgs_arg () const {return _libgs_arg;}
+#endif
       bool mag_given () const {return _mag_given;}
       double mag_arg () const {return _mag_arg;}
       bool no_mktexmf_given () const {return _no_mktexmf_given;}
@@ -70,6 +77,9 @@ class CommandLine : public CmdLineParserBase
       void handle_translate (InputReader &ir, const Option &opt, bool longopt);
       void handle_transform (InputReader &ir, const Option &opt, bool longopt);
       void handle_cache (InputReader &ir, const Option &opt, bool longopt);
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+      void handle_libgs (InputReader &ir, const Option &opt, bool longopt);
+#endif
       void handle_mag (InputReader &ir, const Option &opt, bool longopt);
       void handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt);
       void handle_no_specials (InputReader &ir, const Option &opt, bool longopt);
@@ -105,6 +115,10 @@ class CommandLine : public CmdLineParserBase
       std::string _transform_arg;
       bool _cache_given;
       std::string _cache_arg;
+#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
+      bool _libgs_given;
+      std::string _libgs_arg;
+#endif
       bool _mag_given;
       double _mag_arg;
       bool _no_mktexmf_given;

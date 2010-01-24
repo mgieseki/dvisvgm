@@ -128,6 +128,13 @@ a different location use option *--cache* to overwrite the default. Furthermore,
 to disable the font caching mechanism completely with option *--cache=none*. If argument 'dir' is omitted,
 dvisvgm prints the path of the default cache directory and some information about the stored fonts.
 
+*--libgs=filename*::
+This option is only available if the Ghostscript library is not directly linked to dvisvgm and
+PostScript support was not completely disabled. In this case, dvisvgm tries to load the shared 
+GS library dynamically during runtime. By default, it expects the library's name to be libgs.so (Linux) 
+or gsdll32.dll (Windows). Option *--libgs* can be used to give a different name. Alternatively, 
+the GS library name can also be set by the environment variable *LIBGS*. The latter has a less 
+precedence than the command-line option.
 
 *-l, --list-specials*::
 Prints a list of registered special handlers and exits. Each handler processes a set of special
