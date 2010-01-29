@@ -19,7 +19,6 @@ class CommandLine : public CmdLineParserBase
       CommandLine (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
       void help () const;
       void status () const;
-      int numOptions () const {return 23;}
       bool page_given () const {return _page_given;}
       unsigned page_arg () const {return _page_arg;}
       bool map_file_given () const {return _map_file_given;}

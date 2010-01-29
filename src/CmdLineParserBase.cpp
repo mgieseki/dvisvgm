@@ -127,10 +127,9 @@ void CmdLineParserBase::status () const {
  *  If the option name can't be found 0 is returned.
  *  @param[in] longname long version of the option without leading hyphen (e.g. p, not -p) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) const {
-	const Option *opts = options();
-	for (int i=0; i < numOptions(); i++)
-		if (opts[i].shortname == shortname)
-			return &opts[i];
+	for (const Option *opts = options(); opts->longname; ++opts)
+		if (opts->shortname == shortname)
+			return opts;
 	return 0;
 }
 
@@ -144,11 +143,11 @@ const CmdLineParserBase::Option* CmdLineParserBase::option (const string &longna
 	const Option *opts = options();
 	vector<const Option*> matches;  // all matching options
 	size_t len = longname.length();
-	for (int i=0; i < numOptions(); i++) {
-		if (string(opts[i].longname, len) == longname) {
-			if (len == strlen(opts[i].longname))  // exact match?
-				return &opts[i];
-			matches.push_back(&opts[i]);
+	for (const Option *opts = options(); opts->longname; ++opts) {
+		if (string(opts->longname, len) == longname) {
+			if (len == strlen(opts->longname))  // exact match?
+				return opts;
+			matches.push_back(opts);
 		}
 	}
 	switch (matches.size()) {

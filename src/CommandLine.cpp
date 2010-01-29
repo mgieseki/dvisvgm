@@ -38,6 +38,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'v', "verbosity", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
    {'V', "version", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
    {'z', "zip", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
+   {0, 0, 0, 0}
 };
 
 void CommandLine::init () {
