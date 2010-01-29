@@ -181,8 +181,8 @@ class GraphicPath
 				void draw (char cmd, const Point *points, int n) {
 					_os << cmd;
 					switch (cmd) {
-						case 'H': _os << _sy*points->x(); break;
-						case 'V': _os << _sx*points->y(); break;
+						case 'H': _os << _sx*points->x(); break;
+						case 'V': _os << _sy*points->y(); break;
 						default :
 							for (int i=0; i < n; i++) {
 								if (i > 0)
