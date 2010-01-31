@@ -1,0 +1,41 @@
+#!/bin/sh
+# This file is part of the dvisvgm package and published under the 
+# terms of the GNU General Public License version 3 or later.
+# See file COPYING for further details.
+# (C) 2009-2010 Martin Gieseking <martin.gieseking@uos.de>
+
+files=(sample frktest)
+state=0
+
+GREEN="\E[0;32m"
+RED="\E[0;31m"
+COLOR_OFF="\E[0m"
+
+for f in ${files[@]}; do
+	for m in "wf" "nf"; do
+		infile=${srcdir}/$f
+		outfile=$f-$m.svg
+		cmpfile=${srcdir}/$f-$m-cmp.svg
+		if [ $m = "wf" ]; then
+			../src/dvisvgm -v0 -o$outfile $infile
+		else
+			../src/dvisvgm -v0 -n  -o$outfile $infile
+		fi
+		xsltproc --novalid ${srcdir}/normalize.xsl $outfile | xmllint --format - >tmp1.svg
+		xsltproc --novalid ${srcdir}/normalize.xsl $cmpfile | xmllint --format - >tmp2.svg
+		mv tmp1.svg $outfile
+
+		# remove header comments
+		diff $outfile tmp2.svg >/dev/null
+		if [ $? -ne 0 ]; then
+			echo -en "${RED}FAILED $COLOR_OFF"
+			state=1
+		else
+			echo -en "${GREEN}PASSED $COLOR_OFF"
+			rm $outfile
+		fi
+		echo "converting $f.dvi (mode $m)"
+		rm tmp2.svg
+	done
+done
+exit $state

@@ -88,3 +88,8 @@ check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
 VectorStreamTest_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
+TESTDATA =
+TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
+TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
+EXTRA_DIST = check-conv normalize.xsl $(TESTDATA)
+TESTS += check-conv

@@ -1,4 +1,8 @@
 #!/bin/sh
+# This file is part of the dvisvgm package and published under the 
+# terms of the GNU General Public License version 3 or later.
+# See file COPYING for further details.
+# (C) 2009-2010 Martin Gieseking <martin.gieseking@uos.de>
 
 out=Makefile.am
 cat >$out <<EOT
@@ -24,5 +28,17 @@ ${base}_LDADD = ../src/libdvisvgm.a -lgtest -lgtest_main
 
 EOT
 done
+
+echo "TESTDATA =" >>$out
+
+for f in *.dvi; do
+	base=`basename $f .dvi`
+   echo  "TESTDATA += ${base}.dvi ${base}-wf-cmp.svg ${base}-nf-cmp.svg" >>$out
+done  
+
+cat >>$out <<EOT
+EXTRA_DIST = check-conv normalize.xsl \$(TESTDATA)
+TESTS += check-conv
+EOT
 
 # vim: set syntax=sh: 
