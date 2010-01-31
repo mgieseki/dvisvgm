@@ -26,11 +26,10 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:exsl="http://exslt.org/common"
-	xmlns:func="http://exslt.org/functions"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:mg="my-namespace"
-	extension-element-prefixes="str"
-	exclude-result-prefixes="svg xlink exsl func str mg">
+	extension-element-prefixes="exsl str"
+	exclude-result-prefixes="svg xlink exsl str mg">
 
 	<xsl:key name="path-by-id" match="/svg:defs/svg:path" use="@id"/>
 
@@ -48,7 +47,7 @@
 
 	<xsl:variable name="num-paths" select="count(/*/svg:defs/svg:path)"/>
 
-	<xsl:variable name="paths-rtf">
+	<xsl:variable name="defs-rtf">
 		<xsl:for-each select="/*/svg:defs/svg:path">
 			<xsl:sort select="@d"/>
 			<mg:path id="{@id}" new-id="g{position()}"/>
@@ -59,7 +58,8 @@
 		</xsl:for-each>
 	</xsl:variable>
 
-	<xsl:variable name="paths" select="exsl:node-set($paths-rtf)"/>
+	<xsl:variable name="defs" select="exsl:node-set($defs-rtf)"/>
+
 
 	<xsl:template match="*|@*">
 		<xsl:copy>
@@ -69,46 +69,46 @@
 
 
 	<xsl:template match="svg:defs[svg:path]">
-		<xsl:apply-templates select="svg:path">
-			<xsl:sort select="@d"/>
-		</xsl:apply-templates>
-		<xsl:apply-templates select="svg:use">
-			<xsl:sort select="$paths/mg:use[@id=current()/@id]/@new-id"/>
-		</xsl:apply-templates>
+		<xsl:copy>
+			<xsl:apply-templates select="svg:path">
+				<xsl:sort select="@d"/>
+			</xsl:apply-templates>
+			<xsl:apply-templates select="svg:use">
+				<xsl:sort select="$defs/mg:use[@id=current()/@id]/@new-id"/>
+			</xsl:apply-templates>
+		</xsl:copy>
 	</xsl:template>
 
 
 	<xsl:template match="svg:defs[svg:font]">
-		<xsl:apply-templates>
-			<xsl:sort select="@id"/>
-		</xsl:apply-templates>
+		<xsl:copy>
+			<xsl:apply-templates>
+				<xsl:sort select="@id"/>
+			</xsl:apply-templates>
+		</xsl:copy>
 	</xsl:template>
 
 
 	<xsl:template match="svg:defs/svg:path">
-		<path id="{$paths/mg:path[@id=current()/@id]/@new-id}" d="{@d}"/>
+		<path id="{$defs/mg:path[@id=current()/@id]/@new-id}" d="{@d}"/>
 	</xsl:template>
+
+
+	<xsl:template match="svg:defs/text()"/>
 
 
 	<xsl:template match="svg:use">
 		<xsl:variable name="href" select="substring(@xlink:href, 2)"/>
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
-			<xsl:choose>
-				<xsl:when test="ancestor::svg:defs">
-					<xsl:attribute name="id">
-						<xsl:value-of select="$paths/mg:use[@id=current()/@id]/@new-id"/>
-					</xsl:attribute>
-					<xsl:attribute name="xlink:href">
-						<xsl:value-of select="concat('#', $paths/*[@id=$href]/@new-id)"/>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="xlink:href">
-						<xsl:value-of select="concat('#', $paths/*[@id=$href]/@new-id)"/>
-					</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:if test="ancestor::svg:defs">
+				<xsl:attribute name="id">
+					<xsl:value-of select="$defs/mg:use[@id=current()/@id]/@new-id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:attribute name="xlink:href">
+				<xsl:value-of select="concat('#', $defs/*[@id=$href]/@new-id)"/>
+			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
 
