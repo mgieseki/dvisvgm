@@ -4,12 +4,19 @@
 # See file COPYING for further details.
 # (C) 2009-2010 Martin Gieseking <martin.gieseking@uos.de>
 
+
 files=(sample frktest)
 state=0
 
+BLUE="\E[0;34m"
 GREEN="\E[0;32m"
 RED="\E[0;31m"
 COLOR_OFF="\E[0m"
+
+if [ \! -e enable-check-conv ]; then
+	echo -e "${BLUE}conversion checks skipped${COLOR_OFF}"
+	exit 0
+fi
 
 for f in ${files[@]}; do
 	for m in "wf" "nf"; do
@@ -25,7 +32,6 @@ for f in ${files[@]}; do
 		xsltproc --novalid ${srcdir}/normalize.xsl $cmpfile | xmllint --format - >tmp2.svg
 		mv tmp1.svg $outfile
 
-		# remove header comments
 		diff $outfile tmp2.svg >/dev/null
 		if [ $? -ne 0 ]; then
 			echo -en "${RED}FAILED $COLOR_OFF"
