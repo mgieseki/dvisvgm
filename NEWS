@@ -1,11 +1,14 @@
 dvisvgm-0.8.8
-- added evaluation of environment variable LIBGS that can be used to 
-  set the file name of the GS shared library
+- added option --libgs and evaluation of environment variable LIBGS
+  to overwrite the expected file name of the GS shared library
+  (only available if dvisvgm isn't linked against libgs and GS support
+  isn't completely disabled)
 - option --bbox can now be used to enlarge the minimal bounding box by 
   a given amount
 - fixed bug in evaluation of option --page
 - applied patches sent by Peter Breitenlohner to prepare the integration of 
   dvisvgm into TeX Live
+- some code refactorings
 
 dvisvgm-0.8.7
 - fixed a bounding box issue concerning italic corrections
