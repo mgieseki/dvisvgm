@@ -88,7 +88,8 @@ class PSHeaderActions : public DVIActions
 		PSHeaderActions (DVIToSVG &dvisvg) : _dvisvg(dvisvg) {}
 
 		void special (const std::string &s) {
-			if (s.substr(0, 7) == "header=")
+			// execute PS headers only
+			if (!s.empty() && (s[0] == '!' || s.substr(0, 7) == "header="))
 				_dvisvg.specialManager().process(s, 0);
 		}
 
