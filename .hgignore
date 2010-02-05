@@ -11,6 +11,7 @@ syntax: glob
 *.svg
 *.svgz
 *.aux
+*.orig
 *.toc
 *.tar.*
 *.zip
@@ -46,6 +47,7 @@ src/psdefs.psc
 src/CommandLine.*
 tests/*Test
 svg2vml
+nbproject
 stamp-h1
 a.out
 test*.*
