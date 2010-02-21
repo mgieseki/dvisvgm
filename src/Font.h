@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 #include "FontEncoding.h"
+#include "Glyph.h"
+#include "GraphicPath.h"
 #include "MessageException.h"
 #include "VFActions.h"
 #include "VFReader.h"
@@ -52,6 +54,7 @@ struct Font
 	virtual const TFM* getTFM () const =0;
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
+	virtual bool getGlyph (int c, Glyph &glyph) const =0;
 };
 
 
@@ -62,17 +65,18 @@ struct EmptyFont : public Font
 {
 	public:
 		EmptyFont (std::string name) : fontname(name) {}
-		Font* clone (double ds, double sc) const {return new EmptyFont(*this);}
-		const Font* uniqueFont () const {return this;}
-		std::string name () const       {return fontname;}
-		double designSize () const      {return 10;}    // cmr10 design size in pt
-		double scaledSize () const      {return 10;}    // cmr10 scaled size in pt
-		double charWidth (int c) const  {return 9.164;} // width of cmr10's 'M' in pt
-		double charHeight (int c) const {return 6.833;} // height of cmr10's 'M' in pt
-		double charDepth (int c) const  {return 0;}
-		double italicCorr (int c) const {return 0;}
-		const TFM* getTFM () const      {return 0;}
-		const char* path () const       {return 0;}
+		Font* clone (double ds, double sc) const  {return new EmptyFont(*this);}
+		const Font* uniqueFont () const           {return this;}
+		std::string name () const                 {return fontname;}
+		double designSize () const                {return 10;}    // cmr10 design size in pt
+		double scaledSize () const                {return 10;}    // cmr10 scaled size in pt
+		double charWidth (int c) const            {return 9.164;} // width of cmr10's 'M' in pt
+		double charHeight (int c) const           {return 6.833;} // height of cmr10's 'M' in pt
+		double charDepth (int c) const            {return 0;}
+		double italicCorr (int c) const           {return 0;}
+		const TFM* getTFM () const                {return 0;}
+		const char* path () const                 {return 0;}
+		bool getGlyph (int c, Glyph &glyph) const {return false;}
 
 	private:
 		std::string fontname;
@@ -85,6 +89,7 @@ struct PhysicalFont : public virtual Font
 	enum Type {MF, PFB, TTF};
 	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 	virtual Type type () const =0;
+	virtual bool getGlyph (int c, Glyph &glyph) const;
 };
 
 
@@ -98,6 +103,7 @@ class VirtualFont : public virtual Font
 	public:
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
+		bool getGlyph (int c, Glyph &glyph) const {return false;}
 
 	protected:
 		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;

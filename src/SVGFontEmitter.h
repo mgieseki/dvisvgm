@@ -23,7 +23,6 @@
 
 
 #include "FontEmitter.h"
-#include "FontEngine.h"
 
 
 class CharmapTranslator;
@@ -45,7 +44,6 @@ class SVGFontEmitter : public FontEmitter
 
    private:
 		const Font *_font;
-		FontEngine _fontEngine;
 		const FontManager &_fontManager;
 		const CharmapTranslator &_charmapTranslator;
 		SVGTree &_svg;

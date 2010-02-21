@@ -22,7 +22,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharmapTranslator.cpp CmdLineParserBase.cpp Color.cpp \
   	ColorSpecialHandler.cpp CommandLine.cpp Directory.cpp DLLoader.cpp DVIActions.cpp DVIReader.cpp DvisvgmSpecialHandler.cpp \
 	DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp FileFinder.cpp FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp \
-	FontEngine.cpp FontManager.cpp FontMap.cpp GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp Glyph.cpp \
+	FontEngine.cpp FontManager.cpp FontMap.cpp GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp \
 	InputBuffer.cpp InputReader.cpp Length.cpp Matrix.cpp Message.cpp MetafontWrapper.cpp PageSize.cpp PSInterpreter.cpp \
 	PsSpecialHandler.cpp SpecialManager.cpp StreamReader.cpp SVGFontEmitter.cpp SVGFontTraceEmitter.cpp SVGTree.cpp TFM.cpp \
 	TpicSpecialHandler.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp

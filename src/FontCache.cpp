@@ -26,6 +26,7 @@
 #include "FileSystem.h"
 #include "FontCache.h"
 #include "Glyph.h"
+#include "Pair.h"
 //#include "gzstream.h"
 #include "types.h"
 

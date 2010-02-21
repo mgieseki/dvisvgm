@@ -31,6 +31,7 @@
 #undef VERSION
 #endif
 
+
 class FontCache
 {
 	typedef std::map<int, const Glyph*> GlyphMap;

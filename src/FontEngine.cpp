@@ -23,6 +23,7 @@
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
+#include "Font.h"
 #include "FontEngine.h"
 #include "Message.h"
 #include "macros.h"
@@ -45,6 +46,13 @@ FontEngine::~FontEngine () {
       Message::estream(true) << "FontEngine: error removing glyph\n";
    if (FT_Done_FreeType(_library))
       Message::estream(true) << "FontEngine: error removing FreeType library\n";
+}
+
+
+/** Returns the singleton instance of this class. */
+FontEngine& FontEngine::instance () {
+	static FontEngine engine;
+	return engine;
 }
 
 
@@ -93,6 +101,14 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
 	return true;
 }
 
+
+bool FontEngine::setFont (const Font &font) {
+	if (fname != font.name()) {
+		fname = font.name();
+		return setFont(font.path());
+	}
+	return true;
+}
 
 
 void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const {

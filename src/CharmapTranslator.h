@@ -27,7 +27,6 @@
 
 class FileFinder;
 class Font;
-class FontEngine;
 
 class CharmapTranslator
 {
@@ -36,7 +35,6 @@ class CharmapTranslator
    public:
 		CharmapTranslator () {}
       CharmapTranslator (const Font *font);
-		CharmapTranslator (const FontEngine &fe);
 		void setFont (const Font *font);
 		UInt32 unicode (UInt32 customCode) const;
 

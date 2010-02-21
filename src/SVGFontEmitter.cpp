@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
 *************************************************************************/
 
+
 #include <sstream>
 #include "macros.h"
 #include "CharmapTranslator.h"
@@ -38,7 +39,7 @@ SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const C
 	: _fontManager(fm), _charmapTranslator(cmt), _svg(svg), _useFonts(uf)
 {
 	_font = font;
-	_fontEngine.setFont(font->path());
+	FontEngine::instance().setFont(*font);
 }
 
 
@@ -59,17 +60,18 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 
 	XMLElementNode *fontNode=0;
 	if (_useFonts) {
+		FontEngine &fe = FontEngine::instance();
 		fontNode = new XMLElementNode("font");
 		if (id && strlen(id) > 0)
 			fontNode->addAttribute("id", id);
-		fontNode->addAttribute("horiz-adv", XMLString(_fontEngine.getHAdvance()));
+		fontNode->addAttribute("horiz-adv", XMLString(fe.getHAdvance()));
 		_svg.appendToDefs(fontNode);
 
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
-		faceNode->addAttribute("font-family", (id && strlen(id) > 0) ? id : _fontEngine.getFamilyName());
-		faceNode->addAttribute("units-per-em", XMLString(_fontEngine.getUnitsPerEM()));
-		faceNode->addAttribute("ascent", XMLString(_fontEngine.getAscender()));
-		faceNode->addAttribute("descent", XMLString(_fontEngine.getDescender()));
+		faceNode->addAttribute("font-family", (id && strlen(id) > 0) ? id : fe.getFamilyName());
+		faceNode->addAttribute("units-per-em", XMLString(fe.getUnitsPerEM()));
+		faceNode->addAttribute("ascent", XMLString(fe.getAscender()));
+		faceNode->addAttribute("descent", XMLString(fe.getDescender()));
 		fontNode->append(faceNode);
 		FORALL(*usedChars, set<int>::const_iterator, i) {
 			emitGlyph(*i);  // create new glyphNode
@@ -89,18 +91,19 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 bool SVGFontEmitter::emitGlyph (int c) {
 	double sx=1.0, sy=1.0;
 	FontEncoding *encoding = _font->encoding();
+	FontEngine &fe = FontEngine::instance();
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
 		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
 		int advance;
 		string name;
 		if (encoding && encoding->getEntry(c)) {
-			advance = _fontEngine.getHAdvance(encoding->getEntry(c));
+			advance = fe.getHAdvance(encoding->getEntry(c));
 			name = encoding->getEntry(c);
 		}
 		else {
-			advance = _fontEngine.getHAdvance(c);
-			name = _fontEngine.getGlyphName(c);
+			advance = fe.getHAdvance(c);
+			name = fe.getGlyphName(c);
 		}
 		_glyphNode->addAttribute("horiz-adv-x", XMLString(advance));
 		_glyphNode->addAttribute("glyph-name", name);
@@ -110,12 +113,13 @@ bool SVGFontEmitter::emitGlyph (int c) {
 		oss << 'g' << _fontManager.fontID(_font) << c;
 		_glyphNode = new XMLElementNode("path");
 		_glyphNode->addAttribute("id" , oss.str());
-		sx = double(_font->scaledSize())/_fontEngine.getUnitsPerEM();
+		sx = double(_font->scaledSize())/fe.getUnitsPerEM();
 		sy = -sx;
 	}
 	ostringstream path;
 	Glyph glyph;
-	glyph.read(c, encoding, _fontEngine);
+	_font->getGlyph(c, glyph);
+//	glyph.read(c, encoding, _fontEngine);
 	glyph.closeOpenSubPaths();
 	glyph.writeSVG(path, sx, sy);
 	_glyphNode->addAttribute("d", path.str());

@@ -26,19 +26,20 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Glyph.h"
 #include "types.h"
+#include "Glyph.h"
 
+class Font;
 
 /** This class provides methods to handle font files and font data.
  *  It's a wrapper for the Freetype font library. */
 class FontEngine
 {
    public:
-      FontEngine ();
       ~FontEngine ();
+		static FontEngine& instance ();
 		void setDeviceResolution (int x, int y);
-      bool setFont (const std::string &fname, int ptSize=0);
+      bool setFont (const Font &font);
 		bool setCharSize (int ptSize);
 		bool traceOutline (unsigned char chr, Glyph &glyph, bool scale=true) const;
 		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
@@ -58,12 +59,17 @@ class FontEngine
 		int getCharByGlyphName (const char *name) const;
 		void buildTranslationMap (std::map<UInt32,UInt32> &translationMap) const;
 
+	protected:
+      FontEngine ();
+      bool setFont (const std::string &fname, int ptSize=0);
+
    private:
 		int _horDeviceRes, _vertDeviceRes;
 		mutable unsigned int _currentChar, _currentGlyphIndex;
-		FT_Face             _currentFace;
-      FT_Library          _library;
-		int                 _ptSize;
+		FT_Face _currentFace;
+      FT_Library _library;
+		int _ptSize;
+		std::string fname;
 };
 
 #endif

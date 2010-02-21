@@ -21,15 +21,8 @@
 #ifndef GLYPH_H
 #define GLYPH_H
 
-#include <ostream>
 #include "GraphicPath.h"
 
-class FontEncoding;
-class FontEngine;
-
-struct Glyph : GraphicPath<Int32>
-{
-	void read (unsigned char c, const FontEncoding *encoding, const FontEngine &fontEngine);
-};
+typedef GraphicPath<Int32> Glyph;
 
 #endif

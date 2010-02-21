@@ -23,7 +23,9 @@
 #include <fstream>
 #include <sstream>
 #include "Font.h"
+#include "FontEngine.h"
 #include "FileFinder.h"
+#include "Glyph.h"
 #include "Message.h"
 #include "TFM.h"
 #include "VFReader.h"
@@ -62,6 +64,20 @@ double TFMFont::italicCorr (int c) const  {return getTFM()->getItalicCorr(c);}
 
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
+}
+
+
+bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph) const {
+	if (type() == PFB || type() == TTF) {
+		FontEngine::instance().setFont(*this);
+		if (FontEncoding *enc = encoding()) {
+			if (const char *encname = enc->getEntry(c))
+				return FontEngine::instance().traceOutline(encname, glyph, false);
+		}
+		else
+			return FontEngine::instance().traceOutline((unsigned char)c, glyph, false);
+	}
+	return false;
 }
 
 

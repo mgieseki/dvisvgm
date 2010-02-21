@@ -49,19 +49,13 @@ CharmapTranslator::CharmapTranslator (const Font *font) {
 }
 
 
-CharmapTranslator::CharmapTranslator (const FontEngine &fe) {
-	fe.buildTranslationMap(translationMap);
-}
-
-
 void CharmapTranslator::setFont (const Font *font) {
 	translationMap.clear();
 
 	const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(font);
 	if (pf && pf->type() != PhysicalFont::MF) {
-		const char *path = font->path();
-		FontEngine fe;
-		if (fe.setFont(path))
+		FontEngine &fe = FontEngine::instance();
+		if (fe.setFont(*font))
 			fe.buildTranslationMap(translationMap);
 	}
 }
