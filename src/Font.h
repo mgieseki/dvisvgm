@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "FontEncoding.h"
 #include "MessageException.h"
 #include "VFActions.h"
 #include "VFReader.h"
@@ -50,6 +51,7 @@ struct Font
 	virtual double italicCorr (int c) const =0;
 	virtual const TFM* getTFM () const =0;
 	virtual const char* path () const =0;
+	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
 };
 
 

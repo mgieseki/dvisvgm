@@ -22,9 +22,11 @@
 #define FONTENCODING_H
 
 #include <istream>
+#include <map>
 #include <string>
 #include <vector>
 #include "types.h"
+
 
 class FontEncoding
 {
@@ -36,6 +38,7 @@ class FontEncoding
 		std::string name () const          {return _encname;}
 		const char* getEntry (int c) const;
 		const char* path () const;
+		static FontEncoding* encoding (const std::string &fontname);
 
    private:
 		std::string _encname;

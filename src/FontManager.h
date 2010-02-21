@@ -32,7 +32,6 @@
 
 class FileFinder;
 class Font;
-class FontEncoding;
 class TFM;
 class VirtualFont;
 
@@ -47,8 +46,8 @@ class FontManager
 	typedef std::map<std::string,int> Name2IdMap;
 	typedef std::map<VirtualFont*,Num2IdMap> VfNum2IdMap;
 	typedef std::map<VirtualFont*, UInt32> VfFirstFontMap;
-	typedef std::map<std::string,FontEncoding*> EncodingMap;
 	typedef std::stack<VirtualFont*> VfStack;
+
    public:
       FontManager ();
       ~FontManager ();
@@ -66,7 +65,6 @@ class FontManager
 		void leaveVF ();
 		void assignVfChar (int c, std::vector<UInt8> *dvi);
 		const std::vector<Font*>& getFonts () const {return _fonts;}
-		FontEncoding* encoding (const Font *font) const;
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
 
    private:
@@ -76,7 +74,6 @@ class FontManager
 		VfNum2IdMap    _vfnum2id;
 		VfStack        _vfStack;   ///< stack of currently processed virtual fonts
 		VfFirstFontMap _vfFirstFontMap; ///< VF -> local font number of first font defined in VF
-		EncodingMap    _encMap;    ///< encname -> encoding table
 };
 
 #endif

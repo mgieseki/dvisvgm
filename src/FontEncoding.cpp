@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <fstream>
+#include "Font.h"
 #include "FontEncoding.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
@@ -131,3 +132,28 @@ const char* FontEncoding::getEntry (int c) const {
 	return 0;
 }
 
+
+
+struct EncodingMap : public map<string, FontEncoding*>
+{
+	~EncodingMap () {
+		for (EncodingMap::iterator it=begin(); it != end(); ++it)
+			delete it->second;
+	}
+};
+
+
+/** Returns the encoding of a font.
+ * @param[in] fontname name of font whose encoding will be returned
+ * @return pointer to encoding object, or 0 if there is no encoding defined */
+FontEncoding* FontEncoding::encoding (const string &fontname) {
+	static EncodingMap encmap;
+
+	if (const char *encname = FileFinder::lookupEncName(fontname)) {
+      EncodingMap::const_iterator it = encmap.find(encname);
+   	if (it == encmap.end())
+			encmap[encname] = new FontEncoding(encname);
+      return it->second;
+	}
+	return 0;
+}

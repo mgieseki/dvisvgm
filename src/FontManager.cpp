@@ -38,9 +38,6 @@ FontManager::FontManager ()
 FontManager::~FontManager () {
 	FORALL(_fonts, vector<Font*>::iterator, i)
 		delete *i;
-	typedef map<string,FontEncoding*>::iterator Iterator;
-	FORALL(_encMap, Iterator, i)
-		delete i->second;
 }
 
 
@@ -168,10 +165,6 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			Message::wstream(true) << "font '" << name << "' not found\n";
 		}
 		_name2id[name] = newid;
-
-		const char *encname = FileFinder::lookupEncName(name);
-		if (encname && _encMap.find(encname) == _encMap.end())
-			_encMap[encname] = new FontEncoding(encname);
 	}
 	_fonts.push_back(newfont);
 	if (_vfStack.empty())  // register font referenced in dvi file?
@@ -208,21 +201,6 @@ void FontManager::leaveVF () {
 void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
 	if (!_vfStack.empty() && dvi)
 		_vfStack.top()->assignChar(c, dvi);
-}
-
-
-/** Returns the encoding of a given font.
- * @param[in] font font whose encoding will be returned
- * @return pointer to encoding object, or 0 if there is no encoding defined */
-FontEncoding* FontManager::encoding (const Font *font) const {
-	if (font) {
-		if (const char *encname = FileFinder::lookupEncName(font->name())) {
-			map<string,FontEncoding*>::const_iterator it = _encMap.find(encname);
-			if (it != _encMap.end())
-				return it->second;
-		}
-	}
-	return 0;
 }
 
 

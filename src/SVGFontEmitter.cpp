@@ -88,7 +88,7 @@ int SVGFontEmitter::emitFont (const set<int> *usedChars, const char *id) {
 
 bool SVGFontEmitter::emitGlyph (int c) {
 	double sx=1.0, sy=1.0;
-	FontEncoding *encoding = _fontManager.encoding(_font);
+	FontEncoding *encoding = _font->encoding();
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
 		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
