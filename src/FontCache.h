@@ -34,7 +34,7 @@
 
 class FontCache
 {
-	typedef std::map<int, const Glyph*> GlyphMap;
+	typedef std::map<int, Glyph> GlyphMap;
 
 	public:
 		struct FontInfo
@@ -54,7 +54,7 @@ class FontCache
 		bool write (const char *fontname, const char *dir) const;
 		bool write (const char *fontname, std::ostream &os) const;
 		const Glyph* getGlyph (int c) const;
-		void setGlyph (int c, const Glyph *glyph);
+		void setGlyph (int c, const Glyph &glyph);
 		void clear ();
 
 		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos);

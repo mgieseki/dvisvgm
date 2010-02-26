@@ -37,6 +37,9 @@ class GFTracer : public GFReader
 		void beginChar (UInt32 c);
 		void endChar (UInt32 c);
 
+	protected:
+		void unitsPerPoint(double upp) {_unitsPerPoint = upp;}
+
 	private:
 		double _unitsPerPoint; ///< target units per TeX point
 };

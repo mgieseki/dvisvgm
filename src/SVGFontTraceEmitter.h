@@ -25,6 +25,7 @@
 #include <set>
 #include "CharmapTranslator.h"
 #include "FontEmitter.h"
+#include "GFGlyphTracer.h"
 #include "XMLNode.h"
 
 
@@ -32,7 +33,6 @@ class FileFinder;
 class Font;
 class FontCache;
 class FontManager;
-class GFGlyphTracer;
 class SVGTree;
 class XMLElementNode;
 
@@ -56,8 +56,7 @@ class SVGFontTraceEmitter : public FontEmitter
 		void traceAllGlyphs ();
 
    private:
-		GFGlyphTracer *_gfTracer;
-		std::istream *_in;
+		GFGlyphTracer _gfTracer;
 		const Font *_font;
 		const FontManager &_fontManager;
 		FontCache *_cache;

@@ -58,7 +58,7 @@ const TFM* TFMFont::getTFM () const {
 double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c);}
 double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
 double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
-double TFMFont::italicCorr (int c) const  {return getTFM()->getItalicCorr(c);}
+double TFMFont::italicCorr (int c) const {return getTFM()->getItalicCorr(c);}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -67,8 +67,15 @@ Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double s
 }
 
 
+/** Extracts the glyph outlines of a given character.
+ *  @param[in]  c character code of requested glyph 
+ *  @param[out] glyph path segments of the glyph outline
+ *  @return true if outline could be computed */
 bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph) const {
-	if (type() == PFB || type() == TTF) {
+	if (type() == MF) {
+
+	}
+	else { // PFB or TTF
 		FontEngine::instance().setFont(*this);
 		if (FontEncoding *enc = encoding()) {
 			if (const char *encname = enc->getEntry(c))

@@ -31,16 +31,6 @@ struct GFCommand
 	int numBytes;
 };
 
-struct CharInfo
-{
-	CharInfo (Int32 dxx, Int32 dyy, Int32 w, UInt32 p)
-		: dx(dxx), dy(dyy), width(w), location(p) {}
-
-	Int32 dx, dy;
-	Int32 width;  // 2^24 * (true width)/(design size)
-	UInt32 location;
-};
-
 
 static inline double fix2double (Int32 fix) {
 	return double(fix)/(1 << 20);
@@ -55,12 +45,6 @@ static inline double scaled2double (Int32 scaled) {
 GFReader::GFReader (istream &is) : in(is), valid(true)
 {
 	minX = maxX = minY = maxY = x = y = 0;
-}
-
-
-GFReader::~GFReader () {
-	FORALL(charInfoMap, Iterator, i)
-		delete i->second;
 }
 
 
@@ -85,14 +69,12 @@ Int32 GFReader::readSigned (int bytes) {
 
 
 string GFReader::readString (int bytes) {
-	char *buf = new char[bytes+1];
+	vector<char> buf(bytes+1);
 	if (bytes > 0)
-		in.get(buf, bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
+		in.get(&buf[0], bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
 	else
-		*buf = 0;
-	string ret = buf;
-	delete [] buf;
-	return ret;
+		buf[0] = 0;
+	return &buf[0];
 }
 
 
@@ -116,7 +98,7 @@ int GFReader::executeCommand () {
 	};
 
 	int opcode = in.get();
-	if (opcode < 0) { // at end of file
+	if (opcode < 0) { // at end of file?
 		Message::estream(true) << "unexpected end of file\n";
 		return 249;   // postpost opcode => stop further reading
 	}
@@ -141,11 +123,11 @@ int GFReader::executeCommand () {
 bool GFReader::executeChar (UInt8 c) {
 	in.clear();
 	if (charInfoMap.empty())
-		executePostamble();          // read character infos
+		executePostamble();          // read character info
 	in.clear();
 	Iterator it = charInfoMap.find(c);
 	if (in && valid && it != charInfoMap.end()) {
-		in.seekg(it->second->location, ios_base::beg);
+		in.seekg(it->second.location, ios_base::beg);
 		while (valid && executeCommand() != 69);  // execute all commands until eoc is reached
 		return valid;
 	}
@@ -156,7 +138,7 @@ bool GFReader::executeChar (UInt8 c) {
 bool GFReader::executeAllChars () {
 	in.clear();
 	if (charInfoMap.empty())
-		executePostamble();   // read character infos
+		executePostamble();   // read character info
 	in.clear();
 	if (in && valid) {
 		in.seekg(0);
@@ -176,7 +158,7 @@ bool GFReader::executePostamble () {
 		in.seekg(-1, ios_base::cur);
 	in.seekg(-4, ios_base::cur);
 	UInt32 q = readUnsigned(4);      // pointer to begin of postamble
-	in.seekg(q, ios_base::beg);    // now on begin of postamble
+	in.seekg(q, ios_base::beg);      // now on begin of postamble
 	while (valid && executeCommand() != 249); // execute all commands until postpost is reached
 	return valid;
 }
@@ -200,7 +182,7 @@ double GFReader::getVPixelsPerPoint () const {
 /** Returns the width of character c in TeX point units */
 double GFReader::getCharWidth (UInt32 c) const {
 	ConstIterator it = charInfoMap.find(c%256);
-	return it == charInfoMap.end() ? 0 : it->second->width*getDesignSize()/(1<<24);
+	return it == charInfoMap.end() ? 0 : it->second.width*getDesignSize()/(1<<24);
 }
 
 ///////////////////////
@@ -356,7 +338,7 @@ void GFReader::cmdCharLoc0 (int) {
 	Int32 p   = readSigned(4);  // pointer to begin of (last) character data
 	Int32 dx  = 65536*dm;
 	Int32 dy  = 0;
-	charInfoMap[c] = new CharInfo(dx, dy, w, p);
+	charInfoMap[c] = CharInfo(dx, dy, w, p);
 }
 
 
@@ -367,6 +349,6 @@ void GFReader::cmdCharLoc (int) {
 	Int32 dy = readSigned(4);   // vertical escapement (scaled pixel units)
 	Int32 w  = readSigned(4);   // (1<<24)*characterWidth/designSize
 	Int32 p  = readSigned(4);   // pointer to begin of (last) character data
-	charInfoMap[c] = new CharInfo(dx, dy, w, p);
+	charInfoMap[c] = CharInfo(dx, dy, w, p);
 }
 

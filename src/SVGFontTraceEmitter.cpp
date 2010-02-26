@@ -44,7 +44,7 @@ double SVGFontTraceEmitter::METAFONT_MAG = 4;
 
 
 SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf)
-	: _gfTracer(0), _in(0), _font(f), _fontManager(fm), _cache(0),
+	: _font(f), _fontManager(fm), _cache(0),
 	  _charmapTranslator(cmt), _svg(svg), _glyphNode(0), _useFonts(uf)
 {
 	if (CACHE_PATH && _font) {
@@ -60,8 +60,6 @@ SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, 
 
 
 SVGFontTraceEmitter::~SVGFontTraceEmitter () {
-	delete _gfTracer;
-	delete _in;
 	if (_cache && _font)
 		_cache->write(_font->name().c_str(), CACHE_PATH);
 	delete _cache;
@@ -72,12 +70,12 @@ SVGFontTraceEmitter::~SVGFontTraceEmitter () {
 /** Creates the tracer object and calls Metafont to generate a GF file of the current font.
  *  @return true if GF file tracer were successfully created */
 bool SVGFontTraceEmitter::prepareTracer () {
-	if (!_gfTracer) {
+	if (!_gfTracer.opened()) {
 		MetafontWrapper mf(_font->name());
 		mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
 		if (mf.success() && _font->getTFM()) {
-			_in = new ifstream((_font->name()+".gf").c_str(), ios_base::binary);
-			_gfTracer = new GFGlyphTracer(*_in, 1000.0/_font->getTFM()->getDesignSize()); // 1000 units per em
+			string gfname = _font->name()+".gf";
+			_gfTracer.reset(gfname, 1000.0/_font->getTFM()->getDesignSize()); // 1000 units per em
 			Message::mstream() << "tracing glyphs of " << _font->name() << endl;
 		}
 		else {
@@ -135,7 +133,7 @@ int SVGFontTraceEmitter::emitFont (const set<int> *usedChars, const char *id) {
 		}
 	}
 
-	if (_gfTracer)
+	if (_gfTracer.opened())
 		Message::mstream() << endl;
 	return usedChars->size();
 }
@@ -158,13 +156,15 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	if (!tfm)
 		return false;
 	bool write_info=false;
+	Glyph glyph_buf;
 	const Glyph *glyph = _cache ? _cache->getGlyph(c) : 0;
 	if (!glyph && prepareTracer()) {
+		glyph = &glyph_buf;
 		write_char_info(c, Message::wstream());
-		_gfTracer->executeChar(c);
-		glyph = &_gfTracer->getGlyph();
+		_gfTracer.setGlyph(&glyph_buf);
+		_gfTracer.executeChar(c);
 		if (_cache)
-			_cache->setGlyph(c, _gfTracer->transferGlyph());
+			_cache->setGlyph(c, *glyph);
 		write_info = true;
 	}
 
@@ -201,8 +201,10 @@ void SVGFontTraceEmitter::traceAllGlyphs () {
 		for (int i=fchar; i <= lchar; i++) {
 			if (!_cache->getGlyph(i)) {
 				write_char_info(i, Message::wstream());
-				if (_gfTracer->executeChar(i))  // does char i exist in font?
-					_cache->setGlyph(i, _gfTracer->transferGlyph());
+				Glyph glyph_buf;
+				_gfTracer.setGlyph(&glyph_buf);
+				if (_gfTracer.executeChar(i))  // does char i exist in font?
+					_cache->setGlyph(i, glyph_buf);
 				else
 					Message::wstream() << "(empty)";
 				Message::wstream() << ']';

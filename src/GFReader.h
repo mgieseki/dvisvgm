@@ -32,11 +32,21 @@ class CharInfo;
 
 class GFReader
 {
-	typedef std::map<UInt8,CharInfo*>::iterator Iterator;
-	typedef std::map<UInt8,CharInfo*>::const_iterator ConstIterator;
+	struct CharInfo
+	{
+		CharInfo () : dx(0), dy(0), width(0), location(0) {}
+		CharInfo (Int32 dxx, Int32 dyy, Int32 w, UInt32 p) : dx(dxx), dy(dyy), width(w), location(p) {}
+
+		Int32 dx, dy;
+		Int32 width;  // 2^24 * (true width)/(design size)
+		UInt32 location;
+	};
+
+	typedef std::map<UInt8,CharInfo>::iterator Iterator;
+	typedef std::map<UInt8,CharInfo>::const_iterator ConstIterator;
    public:
       GFReader (std::istream &is);
-      virtual ~GFReader ();
+      virtual ~GFReader () {}
 		bool executeChar (UInt8 c);
 		bool executeAllChars ();
 		bool executePostamble ();
@@ -85,7 +95,7 @@ class GFReader
 		FixWord designSize;    // designSize
 		ScaledInt hppp, vppp;  // horizontal and vertical pixel per point
 		UInt32 checksum;
-		std::map<UInt8,CharInfo*> charInfoMap;
+		std::map<UInt8,CharInfo> charInfoMap;
 		bool penDown;
 		bool valid;
 };

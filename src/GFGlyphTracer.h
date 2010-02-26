@@ -21,25 +21,30 @@
 #ifndef GFGLYPHTRACER_H
 #define GFGLYPHTRACER_H
 
+#include <fstream>
+#include <string>
 #include "GFTracer.h"
 #include "Glyph.h"
 
 class GFGlyphTracer : public GFTracer
 {
    public:
-      GFGlyphTracer (std::istream &is, double upp);
-		~GFGlyphTracer ();
+		GFGlyphTracer ();
+      GFGlyphTracer (std::string &fname, double upp);
+		void reset (std::string &fname, double upp);
+		bool executeChar (UInt8 c);
 		void moveTo (double x, double y);
 		void lineTo (double x, double y);
 		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
 		void closePath ();
 		void endChar (UInt32 c);
+		void setGlyph (Glyph *glyph)   {_glyph = glyph;}
 		const Glyph& getGlyph () const {return *_glyph;}
-		Glyph* transferGlyph ();
+		bool opened () const           {return _ifs.is_open();}
 
    private:
+		std::ifstream _ifs;
 		Glyph *_glyph;
-		bool _transfered;
 };
 
 #endif

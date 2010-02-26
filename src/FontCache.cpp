@@ -83,9 +83,6 @@ FontCache::~FontCache () {
 
 /** Removes all data from the cache. This does not affect the cache files. */
 void FontCache::clear () {
-	FORALL(_glyphs, GlyphMap::iterator, it) {
-		delete it->second;
-	}
 	_glyphs.clear();
 }
 
@@ -93,17 +90,9 @@ void FontCache::clear () {
 /** Assigns glyph data to a character and adds it to the cache.
  *  @param[in] c character code
  *  @param[in] glyph font glyph data */
-void FontCache::setGlyph (int c, const Glyph *glyph) {
-	if (!glyph || glyph->empty())
-		delete glyph;
-	else {
-		GlyphMap::iterator it = _glyphs.find(c);
-		if (it != _glyphs.end()) {
-			delete it->second;
-			it->second = glyph;
-		}
-		else
-			_glyphs[c] = glyph;
+void FontCache::setGlyph (int c, const Glyph &glyph) {
+	if (!glyph.empty()) {
+		_glyphs[c] = glyph;
 		_changed = true;
 	}
 }
@@ -114,7 +103,7 @@ void FontCache::setGlyph (int c, const Glyph *glyph) {
  *  @return font glyph data (0 if no matching data was found) */
 const Glyph* FontCache::getGlyph (int c) const {
 	GlyphMap::const_iterator it = _glyphs.find(c);
-	return (it != _glyphs.end()) ? it->second : 0;
+	return (it != _glyphs.end()) ? &it->second : 0;
 }
 
 
@@ -196,10 +185,10 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 		os.put(0);
 		write_unsigned(_glyphs.size(), 4, os);
 		FORALL(_glyphs, GlyphMap::const_iterator, it) {
-			const Glyph *glyph = it->second;
+			const Glyph &glyph = it->second;
 			write_unsigned(it->first, 4, os);
-			write_unsigned(glyph->size(), 2, os);
-			glyph->iterate(actions, false);
+			write_unsigned(glyph.size(), 2, os);
+			glyph.iterate(actions, false);
 		}
 		return true;
 	}
@@ -245,7 +234,7 @@ bool FontCache::read (const char *fontname, istream &is) {
 		while (num_glyphs-- > 0) {
 			UInt32 c = read_unsigned(4, is);  // character code
 			UInt16 s = read_unsigned(2, is);  // number of path commands
-			Glyph *glyph = new Glyph;
+			Glyph &glyph = _glyphs[c];
 			while (s-- > 0) {
 				UInt8 cmdval = read_unsigned(1, is);
 				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
@@ -255,26 +244,25 @@ bool FontCache::read (const char *fontname, istream &is) {
 						Pair32 p1 = read_pair(bytes, is);
 						Pair32 p2 = read_pair(bytes, is);
 						Pair32 p3 = read_pair(bytes, is);
-						glyph->cubicto(p1, p2, p3);
+						glyph.cubicto(p1, p2, p3);
 						break;
 					}
 					case 'L':
-						glyph->lineto(read_pair(bytes, is));
+						glyph.lineto(read_pair(bytes, is));
 						break;
 					case 'M':
-						glyph->moveto(read_pair(bytes, is));
+						glyph.moveto(read_pair(bytes, is));
 						break;
 					case 'Q': {
 						Pair32 p1 = read_pair(bytes, is);
 						Pair32 p2 = read_pair(bytes, is);
-						glyph->conicto(p1, p2);
+						glyph.conicto(p1, p2);
 						break;
 					}
 					case 'Z':
-						glyph->closepath();
+						glyph.closepath();
 				}
 			}
-			setGlyph(c, glyph);
 		}
 		_changed = false;
 		return true;

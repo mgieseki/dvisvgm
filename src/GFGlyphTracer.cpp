@@ -23,18 +23,31 @@
 
 using namespace std;
 
-
-
-GFGlyphTracer::GFGlyphTracer (istream &is, double upp) : GFTracer(is, upp)
+GFGlyphTracer::GFGlyphTracer () : GFTracer(_ifs, 0), _glyph(0)
 {
-	_glyph = new Glyph;
-	_transfered = false;
+}
+
+/** Constructs a new glyph tracer. 
+ *  @param[in] is GF input stream
+ *  @param[in] upp target units per TeX point */
+GFGlyphTracer::GFGlyphTracer (string &fname, double upp) : GFTracer(_ifs, upp), _glyph(0)
+{
+	_ifs.open(fname.c_str(), ios::binary);
 }
 
 
-GFGlyphTracer::~GFGlyphTracer () {
-	if (!_transfered)
-		delete _glyph;
+void GFGlyphTracer::reset (string &fname, double upp) {
+	if (_ifs.is_open())
+		_ifs.close();
+	unitsPerPoint(upp);
+	_ifs.open(fname.c_str(), ios::binary);
+}
+
+
+bool GFGlyphTracer::executeChar (UInt8 c) {
+	if (_glyph)
+		return GFTracer::executeChar(c);
+	return false;
 }
 
 
@@ -59,22 +72,6 @@ void GFGlyphTracer::closePath () {
 
 
 void GFGlyphTracer::endChar (UInt32 c) {
-	if (_transfered) {
-		_glyph = new Glyph;
-		_transfered = false;
-	}
-	else
-		_glyph->newpath();
+	_glyph->newpath();
 	GFTracer::endChar(c);
 }
-
-
-/** Returns a pointer to the current glyph object and transfers its ownership. That means
- *  the caller is responsible for deleting the object after its usage. GFGlyphTracer doesn't
- *  care for it any longer. To just retrieve the glyph without transferring ownership, use
- *  getGlyph(). */
-Glyph* GFGlyphTracer::transferGlyph () {
-	_transfered = true;
-	return _glyph;
-}
-
