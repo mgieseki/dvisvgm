@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <iostream>
+#include <sstream>
 #include "GFReader.h"
-#include "Message.h"
 #include "macros.h"
 
 using namespace std;
@@ -42,7 +42,7 @@ static inline double scaled2double (Int32 scaled) {
 }
 
 
-GFReader::GFReader (istream &is) : in(is), valid(true)
+GFReader::GFReader (istream &is) : in(is)
 {
 	minX = maxX = minY = maxY = x = y = 0;
 }
@@ -98,17 +98,17 @@ int GFReader::executeCommand () {
 	};
 
 	int opcode = in.get();
-	if (opcode < 0) { // at end of file?
-		Message::estream(true) << "unexpected end of file\n";
-		return 249;   // postpost opcode => stop further reading
-	}
+	if (opcode < 0)  // at end of file?
+		throw GFException("unexpected end of file");
+
 	if (opcode >= 0 && opcode <= 63)
 		cmdPaint0(opcode);
 	else if (opcode >= 74 && opcode <= 238)
 		cmdNewRow(opcode-74);
 	else if (opcode >= 250) {
-		Message::estream(true) << "undefined GF command (opcode " << opcode << ")\n";
-		valid = false;
+		ostringstream oss;
+		oss << "undefined GF command (opcode " << opcode << ")";
+		throw GFException(oss.str());
 	}
 	else {
 		int offset = opcode <= 73 ? 64 : 239-(73-64+1);
@@ -126,10 +126,10 @@ bool GFReader::executeChar (UInt8 c) {
 		executePostamble();          // read character info
 	in.clear();
 	Iterator it = charInfoMap.find(c);
-	if (in && valid && it != charInfoMap.end()) {
+	if (in && it != charInfoMap.end()) {
 		in.seekg(it->second.location, ios_base::beg);
-		while (valid && executeCommand() != 69);  // execute all commands until eoc is reached
-		return valid;
+		while (executeCommand() != 69);  // execute all commands until eoc is reached
+		return true;
 	}
 	return false;
 }
@@ -140,10 +140,10 @@ bool GFReader::executeAllChars () {
 	if (charInfoMap.empty())
 		executePostamble();   // read character info
 	in.clear();
-	if (in && valid) {
+	if (in) {
 		in.seekg(0);
-		while (valid && executeCommand() != 248); // execute all commands until postamble is reached
-		return valid;
+		while (executeCommand() != 248); // execute all commands until postamble is reached
+		return true;
 	}
 	return false;
 }
@@ -159,8 +159,8 @@ bool GFReader::executePostamble () {
 	in.seekg(-4, ios_base::cur);
 	UInt32 q = readUnsigned(4);      // pointer to begin of postamble
 	in.seekg(q, ios_base::beg);      // now on begin of postamble
-	while (valid && executeCommand() != 249); // execute all commands until postpost is reached
-	return valid;
+	while (executeCommand() != 249); // execute all commands until postpost is reached
+	return true;
 }
 
 
@@ -196,10 +196,8 @@ void GFReader::cmdPre (int) {
 		string s = readString(k);
 		preamble(s);
 	}
-	else {
-		Message::estream(true) << "invalid identification number in GF preamble\n";
-		valid = false;
-	}
+	else 
+		throw GFException("invalid identification number in GF preamble");
 }
 
 
@@ -221,10 +219,8 @@ void GFReader::cmdPostPost (int) {
 	UInt32 i = readUnsigned(1);
 	if (i == 131)
 		while (readUnsigned(1) == 223); // skip fill bytes
-	else {
-		Message::estream(true) << "invalid identification number in GF preamble\n";
-		valid = false;
-	}
+	else
+		throw GFException("invalid identification number in GF preamble");
 }
 
 

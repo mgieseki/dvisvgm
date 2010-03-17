@@ -25,10 +25,18 @@
 #include <map>
 #include <string>
 #include "Bitmap.h"
+#include "MessageException.h"
 #include "types.h"
 
 
 class CharInfo;
+
+
+struct GFException : public MessageException
+{
+	GFException (const std::string &msg) : MessageException(msg) {}
+};
+
 
 class GFReader
 {
@@ -97,7 +105,6 @@ class GFReader
 		UInt32 checksum;
 		std::map<UInt8,CharInfo> charInfoMap;
 		bool penDown;
-		bool valid;
 };
 
 #endif
