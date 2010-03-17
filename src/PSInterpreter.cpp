@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -42,6 +42,8 @@ const char *PSInterpreter::GSARGS[] = {
 };
 
 
+/** Constructs a new PSInterpreter object.
+ *  @param[in] actions template methods to be executed after recognizing the corresponding PS operator. */
 PSInterpreter::PSInterpreter (PSActions *actions)
 	: _gs(sizeof(GSARGS)/sizeof(char*), GSARGS, this), _mode(PS_NONE), _actions(actions), _inError(false)
 {
@@ -95,6 +97,8 @@ void PSInterpreter::execute (const char *str, size_t len, bool flush) {
 }
 
 
+/** Executes a chunk of PostScript code read from a stream. The method returns on EOF.
+ *  @param[in] is the input stream */
 void PSInterpreter::execute (istream &is) {
 	char buf[4096];
 	while (is && !is.eof()) {

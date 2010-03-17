@@ -75,7 +75,7 @@ static string& strip (string &str) {
  *  they denote the absolute position of two diagonal corners of the box. In case
  *  of a single length value l the current box is enlarged by adding (-l,-l) the upper
  *  left and (l,l) to the lower right corner.
- *  @param boxstr[in] whitespace and/or comma separated string of lengths. */
+ *  @param[in] boxstr whitespace and/or comma separated string of lengths. */
 void BoundingBox::set (string boxstr) {
 	vector<Length> coord;
 	const size_t len = boxstr.length();

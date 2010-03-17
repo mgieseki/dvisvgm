@@ -33,7 +33,7 @@ const char NAME   = 2;
 #include <iostream>
 
 
-/** Evaluates a given arithmetic expressions and returns its value.
+/** Evaluates a given arithmetic expression and returns its value.
  *  The evaluator is implemented as a recursive descendent parser.
  *  @param[in] is reads expression from this stream
  *  @return expression value */
@@ -45,7 +45,7 @@ double Calculator::eval (istream &is) {
 }
 
 
-/** Evaluates a given arithmetic expressions and returns its value.
+/** Evaluates a given arithmetic expression and returns its value.
  *  @param[in] expr expression to evaluate
  *  @return expression value */
 double Calculator::eval (const string &expr) {

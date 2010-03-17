@@ -36,6 +36,8 @@ struct PSException : public MessageException
 };
 
 
+/** This interface provides the template methods called by PSInterpreter when executing a PS snippet. 
+ *  Each method corresponds to a PostScript operator of the same name. */
 struct PSActions
 {
 	virtual ~PSActions () {}
@@ -69,6 +71,8 @@ struct PSActions
 };
 
 
+/** This class provides methods to execute chunks of PostScript code and calls
+ *  several template methods on invocation of selected PS operators (see PSActions). */
 class PSInterpreter
 {
 	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};

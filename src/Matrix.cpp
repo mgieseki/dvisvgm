@@ -50,7 +50,8 @@ Matrix::Matrix (double d) {
 /** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  Expects that array v consists of 'size' elements. If size is less than 9, the
  *  remaining matrix components will be set to those of the identity matrix.
- *  @param v array containing the matrix components */
+ *  @param[in] v array containing the matrix components 
+ *  @param[in] size size of array v */
 Matrix::Matrix (double v[], unsigned size) {
 	set(v, size);
 }
@@ -59,7 +60,7 @@ Matrix::Matrix (double v[], unsigned size) {
 /** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  If vector v has less than 9 elements, the remaining matrix components will be set to
  *  those of the identity matrix.
- *  @param v array containing the matrix components */
+ *  @param[in] v array containing the matrix components */
 Matrix::Matrix (const std::vector<double> &v) {
 	set(v);
 }
