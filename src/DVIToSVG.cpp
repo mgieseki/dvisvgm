@@ -39,8 +39,6 @@
 #include "Matrix.h"
 #include "Message.h"
 #include "PageSize.h"
-#include "SVGFontEmitter.h"
-#include "SVGFontTraceEmitter.h"
 #include "SVGTree.h"
 #include "TFM.h"
 #include "XMLDocument.h"
@@ -64,10 +62,6 @@
 
 
 using namespace std;
-
-// static class variables
-bool DVIToSVG::CREATE_STYLE=true;
-bool DVIToSVG::USE_FONTS=true;
 
 
 /** Returns time stamp of current date/time. */
@@ -133,24 +127,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		replaceActions(save);
 	}
 
-	if (CREATE_STYLE && USE_FONTS) {
-		const vector<Font*> &fonts = FontManager::instance().getFonts();
-		if (!fonts.empty()) {
-			XMLElementNode *styleNode = new XMLElementNode("style");
-			styleNode->addAttribute("type", "text/css");
-			_svg.appendToRoot(styleNode);
-			ostringstream style;
-			FORALL(fonts, vector<Font*>::const_iterator, i) {
-				if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-					style << "text.f"        << FontManager::instance().fontID(*i) << ' '
-							<< "{font-family:" << (*i)->name()
-							<< ";font-size:"   << (*i)->scaledSize() << "}\n";
-				}
-			}
-			XMLCDataNode *cdata = new XMLCDataNode(style.str());
-			styleNode->append(cdata);
-		}
-	}
+	_svg.appendFontStyles();
 
 	if (executePage(firstPage)) {  // @@
 		Message::mstream() << endl;
@@ -289,18 +266,10 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 					_svg.appendToDefs(use);
 				}
 			}
-			else {
-				if (ph_font->type() == PhysicalFont::MF) {
-					SVGFontTraceEmitter emitter(font, _svg, USE_FONTS);
-					emitter.emitFont(it->second, font->name().c_str());
-				}
-				else if (font->path()) { // path to pfb/ttf file
-					SVGFontEmitter emitter(font, _svg, USE_FONTS);
-					emitter.emitFont(it->second, font->name().c_str());
-				}
-				else
-					Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
-			}
+			else if (font->path())  // does font file exist?
+				_svg.append(*ph_font, it->second);
+			else
+				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}
 		else
 			Message::wstream(true) << "can't embed font '" << font->name() << "'\n";

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -29,6 +29,7 @@
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "FileSystem.h"
+#include "Font.h"
 #include "FontCache.h"
 #include "Ghostscript.h"
 #include "InputReader.h"
@@ -37,7 +38,6 @@
 #include "PageSize.h"
 #include "SpecialManager.h"
 #include "StreamCounter.h"
-#include "SVGFontTraceEmitter.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -151,9 +151,9 @@ static void set_libgs (CommandLine &args) {
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cache_given() && !args.cache_arg().empty()) {
 		if (args.cache_arg() == "none")
-			SVGFontTraceEmitter::CACHE_PATH = 0;
+			PhysicalFontImpl::CACHE_PATH = 0;
 		else if (FileSystem::exists(args.cache_arg().c_str()))
-			SVGFontTraceEmitter::CACHE_PATH = args.cache_arg().c_str();
+			PhysicalFontImpl::CACHE_PATH = args.cache_arg().c_str();
 		else
 			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)" << endl;
 	}
@@ -165,11 +165,11 @@ static bool set_cache_dir (const CommandLine &args) {
 			path = FileSystem::adaptPathSeperators(path);
 			if (!FileSystem::exists(path.c_str()))
 				FileSystem::mkdir(path.c_str());
-			SVGFontTraceEmitter::CACHE_PATH = path.c_str();
+			PhysicalFontImpl::CACHE_PATH = path.c_str();
 		}
 		if (args.cache_given() && args.cache_arg().empty()) {
-			cout << "cache directory: " << (SVGFontTraceEmitter::CACHE_PATH ? SVGFontTraceEmitter::CACHE_PATH : "(none)") << endl;
-			FontCache::fontinfo(SVGFontTraceEmitter::CACHE_PATH, cout);
+			cout << "cache directory: " << (PhysicalFontImpl::CACHE_PATH ? PhysicalFontImpl::CACHE_PATH : "(none)") << endl;
+			FontCache::fontinfo(PhysicalFontImpl::CACHE_PATH, cout);
 			return false;
 		}
 	}
@@ -248,10 +248,10 @@ int main (int argc, char *argv[]) {
 	if (!check_bbox(args.bbox_arg()))
 		return 1;
 
-	DVIToSVG::CREATE_STYLE = !args.no_styles_given();
-	DVIToSVG::USE_FONTS = !args.no_fonts_given();
-	SVGFontTraceEmitter::TRACE_ALL = args.trace_all_given();
-	SVGFontTraceEmitter::METAFONT_MAG = args.mag_arg();
+	SVGTree::CREATE_STYLE = !args.no_styles_given();
+	SVGTree::USE_FONTS = !args.no_fonts_given();
+	PhysicalFontImpl::TRACE_ALL = args.trace_all_given();
+	PhysicalFontImpl::METAFONT_MAG = args.mag_arg();
 
 	double start_time = get_time();
 

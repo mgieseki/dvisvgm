@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,21 +15,26 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "FileSystem.h"
 #include "Font.h"
 #include "FontEngine.h"
 #include "FileFinder.h"
+#include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "Message.h"
+#include "MetafontWrapper.h"
 #include "TFM.h"
 #include "VFReader.h"
 #include "macros.h"
+#include "FileSystem.h"
+#include "SVGTree.h"
 
 using namespace std;
 
@@ -71,6 +76,8 @@ TFMFont::~TFMFont () {
 }
 
 
+/** Returns a font metrics object for the current font.
+ *  @throw FontException if TFM file can't be found */
 const TFM* TFMFont::getTFM () const {
 	if (!tfm) {
 		tfm = TFM::createFromFile(fontname.c_str());
@@ -93,24 +100,70 @@ Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double s
 }
 
 
-/** Extracts the glyph outlines of a given character.
- *  @param[in]  c character code of requested glyph 
- *  @param[out] glyph path segments of the glyph outline
- *  @return true if outline could be computed */
-bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph) const {
-	if (type() == MF) {
+/** Returns the number of units per EM. The EM square is the virtual area a glyph is designed on.
+ *  All coordinates used to specify portions of the glyph are relative to the origin (0,0) at the
+ *  lower left corner of this square, while the upper right corner is located at (m,m), where m
+ *  is an integer value defined with the font, and returned by this function. */
+int PhysicalFont::unitsPerEm() const {
+	if (type() == MF)
+		return 1000;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getUnitsPerEM();
+}
 
-	}
-	else { // PFB or TTF
-		FontEngine::instance().setFont(*this);
-		if (FontEncoding *enc = encoding()) {
-			if (const char *encname = enc->getEntry(c))
-				return FontEngine::instance().traceOutline(encname, glyph, false);
+
+int PhysicalFont::hAdvance () const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getHAdvance();
+}
+
+
+double PhysicalFont::hAdvance (int c) const {
+	if (type() == MF)
+		return unitsPerEm()*charWidth(c)/designSize();
+	FontEngine::instance().setFont(*this);
+	if (FontEncoding *enc = encoding())
+		return FontEngine::instance().getHAdvance(enc->getEntry(c));
+	return FontEngine::instance().getHAdvance(c);
+}
+
+
+string PhysicalFont::glyphName (int c) const {
+	if (type() == MF)
+		return "";
+	FontEngine::instance().setFont(*this);
+	if (FontEncoding *enc = encoding())
+		return enc->getEntry(c);
+	return FontEngine::instance().getGlyphName(c);
+}
+
+
+int PhysicalFont::ascent () const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getAscender();
+}
+
+
+int PhysicalFont::descent () const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getDescender();
+}
+
+
+void PhysicalFont::tidy () const {
+   if (type() == MF) {
+		const char *ext[] = {"gf", "tfm", "log", 0};
+		for (const char **p=ext; *p; ++p) {
+			if (FileSystem::exists((name()+"."+(*p)).c_str()))
+				FileSystem::remove(name()+"."+(*p));
 		}
-		else
-			return FontEngine::instance().traceOutline((unsigned char)c, glyph, false);
-	}
-	return false;
+   }
 }
 
 
@@ -118,7 +171,15 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 	return new VirtualFontImpl(name, checksum, dsize, ssize);
 }
 
+
 //////////////////////////////////////////////////////////////////////////////
+
+
+const char *PhysicalFontImpl::CACHE_PATH = 0;
+bool PhysicalFontImpl::TRACE_ALL = false;
+double PhysicalFontImpl::METAFONT_MAG = 4;
+FontCache PhysicalFontImpl::_cache;
+
 
 PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss), _filetype(type), _charmap(0)
@@ -127,6 +188,9 @@ PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss
 
 
 PhysicalFontImpl::~PhysicalFontImpl () {
+	if (CACHE_PATH)
+		_cache.write(CACHE_PATH);
+	tidy();
 	delete _charmap;
 }
 
@@ -142,10 +206,75 @@ const char* PhysicalFontImpl::path () const {
 }
 
 
+/** Extracts the glyph outlines of a given character.
+ *  @param[in]  c character code of requested glyph
+ *  @param[out] glyph path segments of the glyph outline
+ *  @return true if outline could be computed */
+bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph) const {
+	if (type() == MF) {
+		const Glyph *cached_glyph=0;
+		if (CACHE_PATH) {			
+			_cache.write(CACHE_PATH);
+			_cache.read(name().c_str(), CACHE_PATH);
+			cached_glyph = _cache.getGlyph(c);
+		}
+		if (cached_glyph) {
+			glyph = *cached_glyph;
+			return true;
+		}
+		else {
+			string gfname;
+			if (createGF(gfname)) {
+				try {
+					GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize());
+					tracer.setGlyph(glyph);
+					tracer.executeChar(c);
+					glyph.closeOpenSubPaths();
+					if (CACHE_PATH)
+						_cache.setGlyph(c, glyph);
+//					cached_glyph = &glyph;
+					return true;
+				}
+				catch (GFException &e) {
+					// @@ print error message
+				}
+			}
+			else {
+				// @@ print error message
+			}
+		}
+	}
+	else { // PFB or TTF
+		bool ok=true;
+		FontEngine::instance().setFont(*this);
+		if (FontEncoding *enc = encoding()) {
+			if (const char *encname = enc->getEntry(c))
+				ok = FontEngine::instance().traceOutline(encname, glyph, false);
+		}
+		else
+			ok = FontEngine::instance().traceOutline((unsigned char)c, glyph, false);
+		glyph.closeOpenSubPaths();
+		return ok;
+	}
+	return false;
+}
+
+
+/** Creates a GF file for this font object.
+ *  @param[out] gfname name of GF font file
+ *  @return true on success */
+bool PhysicalFontImpl::createGF (string &gfname) const {
+	gfname = name()+".gf";
+	MetafontWrapper mf(name());
+	mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
+	return mf.success() && getTFM();
+}
+
+
 UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (type() == MF)
 		return Font::unicode(c);
-	
+
 	if (_charmap == 0) {
 		FontEngine &fe = FontEngine::instance();
 		if (fe.setFont(*this)) {
@@ -168,6 +297,26 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (valid_unicode(c) && (reverse_map.empty() || reverse_map.find(c) != reverse_map.end()))
 		return c;
 	return 0x3400+c;
+}
+
+
+/** Traces all glyphs of the current font and stores them in the cache.
+ *  If caching is disabled, nothing happens. */
+void PhysicalFontImpl::traceAllGlyphs () {
+	if (type() == MF && CACHE_PATH) {
+		if (const TFM *tfm = getTFM()) {
+			int fchar = tfm->firstChar();
+			int lchar = tfm->lastChar();
+			for (int i=fchar; i <= lchar; i++) {
+				if (!_cache.getGlyph(i)) {
+					Glyph glyph;
+					if (!getGlyph(i, glyph))
+						;  // @@ "(empty)" message
+					// @@ "]" message
+				}
+			}
+		}
+	}
 }
 
 

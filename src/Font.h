@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef FONT_H
@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "FontCache.h"
 #include "FontEncoding.h"
 #include "Glyph.h"
 #include "GraphicPath.h"
@@ -31,8 +32,6 @@
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
-#include "SVGFontEmitter.h"
-
 
 class TFM;
 
@@ -56,6 +55,7 @@ struct Font
 	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
 	virtual bool getGlyph (int c, Glyph &glyph) const =0;
    virtual UInt32 unicode (UInt32 c) const;
+   virtual void tidy () const {}
 };
 
 
@@ -90,7 +90,14 @@ struct PhysicalFont : public virtual Font
 	enum Type {MF, PFB, TTF};
 	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 	virtual Type type () const =0;
-	virtual bool getGlyph (int c, Glyph &glyph) const;   
+	virtual bool getGlyph (int c, Glyph &glyph) const =0;
+	virtual int hAdvance () const;
+	virtual double hAdvance (int c) const;
+	std::string glyphName (int c) const;
+   virtual int unitsPerEm () const;
+	virtual int ascent () const;
+	virtual int descent () const;
+   void tidy () const;
 };
 
 
@@ -138,19 +145,20 @@ class PhysicalFontProxy : public PhysicalFont
 {
 	friend class PhysicalFontImpl;
 	public:
-		Font* clone (double ds, double sc) const {return new PhysicalFontProxy(*this, ds, sc);}
-		const Font* uniqueFont () const       {return pf;}
-		std::string name () const             {return pf->name();}
-		double designSize () const            {return dsize;}
-		double scaledSize () const            {return ssize;}
-		double charWidth (int c) const        {return pf->charWidth(c);}
-		double charDepth (int c) const        {return pf->charDepth(c);}
-		double charHeight (int c) const       {return pf->charHeight(c);}
-		double italicCorr (int c) const       {return pf->italicCorr(c);}
-		const TFM* getTFM () const            {return pf->getTFM();}
-		const char* path () const             {return pf->path();}
-		Type type () const                    {return pf->type();}
-      UInt32 unicode (UInt32 c) const       {return pf->unicode(c);}
+		Font* clone (double ds, double sc) const  {return new PhysicalFontProxy(*this, ds, sc);}
+		const Font* uniqueFont () const           {return pf;}
+		std::string name () const                 {return pf->name();}
+		double designSize () const                {return dsize;}
+		double scaledSize () const                {return ssize;}
+		double charWidth (int c) const            {return pf->charWidth(c);}
+		double charDepth (int c) const            {return pf->charDepth(c);}
+		double charHeight (int c) const           {return pf->charHeight(c);}
+		double italicCorr (int c) const           {return pf->italicCorr(c);}
+		const TFM* getTFM () const                {return pf->getTFM();}
+		const char* path () const                 {return pf->path();}
+      bool getGlyph (int c, Glyph &glyph) const {return pf->getGlyph(c, glyph);}
+		Type type () const                        {return pf->type();}
+      UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -172,14 +180,23 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const Font* uniqueFont () const          {return this;}
       Type type () const                       {return _filetype;}
 		const char* path () const;
+      bool getGlyph (int c, GraphicPath<Int32> &glyph) const;
       UInt32 unicode (UInt32 c) const;
+
+   public:
+		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
+		static bool TRACE_ALL;         ///< if true, not only the actually used, but all font glyphs are traced
+		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
 	protected:
 		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+  		bool createGF (std::string &gfname) const;
+		void traceAllGlyphs ();
 
 	private:
 		Type _filetype;
       mutable std::map<UInt32,UInt32> *_charmap;
+      static FontCache _cache;
 };
 
 

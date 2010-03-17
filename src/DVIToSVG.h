@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef DVITOSVG_H
@@ -51,10 +51,6 @@ class DVIToSVG : public DVIReader
 		std::string _bboxString;
 		std::string _transCmds;
 		SpecialManager _specialManager;
-
-	public:
-		static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?
-		static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
 };
 
 #endif

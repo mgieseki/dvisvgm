@@ -32,7 +32,7 @@ for f in ${files[@]}; do
 		xsltproc --novalid ${srcdir}/normalize.xsl $cmpfile | xmllint --format - >tmp2.svg
 		mv tmp1.svg $outfile
 
-		diff $outfile tmp2.svg >/dev/null
+		diff $outfile tmp2.svg >$f-$m.diff #>/dev/null
 		if [ $? -ne 0 ]; then
 			echo -en "${RED}FAILED $COLOR_OFF"
 			state=1

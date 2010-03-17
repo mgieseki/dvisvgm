@@ -21,6 +21,7 @@
 #ifndef SVGTREE_H
 #define SVGTREE_H
 
+#include <set>
 #include "Color.h"
 #include "Matrix.h"
 #include "XMLDocument.h"
@@ -30,6 +31,7 @@ class BoundingBox;
 class Color;
 class Font;
 class Matrix;
+class PhysicalFont;
 
 class SVGTree
 {
@@ -66,6 +68,9 @@ class SVGTree
 		void appendToDoc (XMLNode *node)  {_doc.append(node);}
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const Font &font);
+      void appendFontStyles ();
+      void append (const PhysicalFont &font);
+      void append (const PhysicalFont &font, const std::set<int> &chars);
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);
 		void setX (double x) {_xchanged = true;}
@@ -76,6 +81,10 @@ class SVGTree
 		const Color& getColor () const    {return _color.get();}
 		const Matrix& getMatrix () const {return _matrix.get();}
 		XMLElementNode* rootNode () const {return _root;}
+
+   public:
+      static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
+      static bool CREATE_STYLE; ///< should <style>...</style> and class attributes be used to reference fonts?
 
 	protected:
 		void newTextNode (double x, double y);

@@ -67,7 +67,7 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
 /*	x *= BP;
 	y *= BP; */
-	if (DVIToSVG::USE_FONTS) {
+	if (SVGTree::USE_FONTS) {
 		// If we use SVG fonts there is no need to record all font name/char/size combinations
 		// because the SVG font mechanism handles this automatically. It's sufficient to
 		// record font names and chars. The various font sizes can be ignored here.

@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <sstream>
+#include <string>
 #include "BoundingBox.h"
 #include "DVIToSVG.h"
 #include "Font.h"
@@ -30,6 +31,11 @@
 #include "XMLString.h"
 
 using namespace std;
+
+
+// static class variables
+bool SVGTree::CREATE_STYLE=true;
+bool SVGTree::USE_FONTS=true;
 
 
 SVGTree::SVGTree () : _font(0), _color(Color::BLACK), _matrix(1) {
@@ -84,11 +90,11 @@ void SVGTree::appendToDefs (XMLNode *node) {
  *  and further output states, new XML elements (text, tspan, g, ...) are created.
  *  @param[in] c character to be added
  *  @param[in] x x coordinate
- *  @param[in] y y coordinate 
+ *  @param[in] y y coordinate
  *  @param[in] font font to be used */
 void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 	XMLElementNode *node=_span;
-	if (DVIToSVG::USE_FONTS) {
+	if (USE_FONTS) {
 		// changes of fonts and transformations require a new text element
 		if (!_text || _font.changed() || _matrix.changed()) {
 			newTextNode(x, y);
@@ -158,9 +164,9 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 void SVGTree::newTextNode (double x, double y) {
 	_text = new XMLElementNode("text");
 	_span = 0; // no tspan in text element yet
-	if (DVIToSVG::USE_FONTS) {
+	if (USE_FONTS) {
 		const Font *font = _font.get();
-		if (DVIToSVG::CREATE_STYLE || !font)
+		if (CREATE_STYLE || !font)
 			_text->addAttribute("class", string("f")+XMLString(_fontnum));
 		else {
 			_text->addAttribute("font-family", font->name());
@@ -188,3 +194,96 @@ void SVGTree::setFont (int num, const Font *font) {
 void SVGTree::transformPage (const Matrix &m) {
 	_page->addAttribute("transform", m.getSVG());
 }
+
+
+/** Creates an SVG element for a single glyph.
+ *  @param[in] c character number
+ *  @param[in] font font to extract the glyph from
+ *  @return pointer to element node if glyph exists, 0 otherwise */
+static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font) {
+	Glyph glyph;
+	if (!font.getGlyph(c, glyph))
+		return 0;
+
+	double sx=1.0, sy=1.0;
+	double upem = font.unitsPerEm();
+	XMLElementNode *glyph_node=0;
+	if (SVGTree::USE_FONTS) {
+		glyph_node = new XMLElementNode("glyph");
+		glyph_node->addAttribute("unicode", XMLString(font.unicode(c), false));
+		glyph_node->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)));
+		string name = font.glyphName(c);
+		if (!name.empty())
+			glyph_node->addAttribute("glyph-name", name);
+	}
+	else {
+		ostringstream oss;
+		oss << 'g' << FontManager::instance().fontID(&font) << c;
+		glyph_node = new XMLElementNode("path");
+		glyph_node->addAttribute("id", oss.str());
+		sx = font.scaledSize()/upem;
+		sy = -sx;
+	}
+	ostringstream oss;
+	glyph.writeSVG(oss, sx, sy);
+	glyph_node->addAttribute("d", oss.str());
+	return glyph_node;
+}
+
+
+void SVGTree::appendFontStyles () {
+	if (CREATE_STYLE && USE_FONTS) {
+		const vector<Font*> &fonts = FontManager::instance().getFonts();
+		if (!fonts.empty()) {
+			XMLElementNode *styleNode = new XMLElementNode("style");
+			styleNode->addAttribute("type", "text/css");
+			appendToRoot(styleNode);
+			ostringstream style;
+			FORALL(fonts, vector<Font*>::const_iterator, i) {
+				if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
+					style << "text.f"        << FontManager::instance().fontID(*i) << ' '
+							<< "{font-family:" << (*i)->name()
+							<< ";font-size:"   << (*i)->scaledSize() << "}\n";
+				}
+			}
+			XMLCDataNode *cdata = new XMLCDataNode(style.str());
+			styleNode->append(cdata);
+		}
+	}
+}
+
+
+/** Appends glyph definitions of a given font to the defs section of the SVG tree.
+ *  @param[in] font font to be appended
+ *  @param[in] chars codes of the characters whose glyph outlines should be appended */
+void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
+	if (chars.empty())
+		return;
+
+	XMLElementNode *fontNode=0;
+	if (USE_FONTS) {
+		fontNode = new XMLElementNode("font");
+		string fontname = font.name();
+		fontNode->addAttribute("id", fontname);
+		if (font.type() != PhysicalFont::MF)
+			fontNode->addAttribute("horiz-adv", XMLString(font.hAdvance()));
+		appendToDefs(fontNode);
+
+		XMLElementNode *faceNode = new XMLElementNode("font-face");
+		faceNode->addAttribute("font-family", fontname);
+		faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
+		if (font.type() != PhysicalFont::MF) {
+			faceNode->addAttribute("ascent", XMLString(font.ascent()));
+			faceNode->addAttribute("descent", XMLString(font.descent()));
+		}
+		fontNode->append(faceNode);
+		FORALL(chars, set<int>::const_iterator, i)
+			fontNode->append(createGlyphNode(*i, font));
+	}
+	else {
+		FORALL(chars, set<int>::const_iterator, i)
+			appendToDefs(createGlyphNode(*i, font));
+	}
+}
+
+
