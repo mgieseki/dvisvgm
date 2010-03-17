@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef FONTCACHE_H
@@ -51,11 +51,13 @@ class FontCache
       ~FontCache ();
 		bool read (const char *fontname, const char *dir);
 		bool read (const char *fontname, std::istream &is);
+      bool write (const char *dir) const;
 		bool write (const char *fontname, const char *dir) const;
 		bool write (const char *fontname, std::ostream &os) const;
 		const Glyph* getGlyph (int c) const;
 		void setGlyph (int c, const Glyph &glyph);
 		void clear ();
+      const std::string& fontname () const {return _fontname;}
 
 		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos);
 		static bool fontinfo (std::istream &is, FontInfo &info);
@@ -63,6 +65,7 @@ class FontCache
 
    private:
 		const static UInt8 VERSION = 4;
+      std::string _fontname;
 		GlyphMap _glyphs;
 		bool _changed;
 };

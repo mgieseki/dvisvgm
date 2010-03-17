@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -84,6 +84,7 @@ FontCache::~FontCache () {
 /** Removes all data from the cache. This does not affect the cache files. */
 void FontCache::clear () {
 	_glyphs.clear();
+	_fontname.clear();
 }
 
 
@@ -126,6 +127,11 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 		return write(fontname, ofs);
 	}
 	return false;
+}
+
+
+bool FontCache::write (const char* dir) const {
+	return _fontname.empty() ? false : write(_fontname.c_str(), dir);
 }
 
 
@@ -201,6 +207,8 @@ bool FontCache::write (const char *fontname, ostream &os) const {
  *  @param[in] dir directory where the cache files are located
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, const char *dir) {
+	if (_fontname == fontname)
+		return true;
 	clear();
 	if (fontname && strlen(fontname) > 0) {
 		if (dir == 0 || strlen(dir) == 0)
@@ -220,7 +228,10 @@ bool FontCache::read (const char *fontname, const char *dir) {
  *  @param[in] dir input stream
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, istream &is) {
+	if (_fontname == fontname)
+		return true;	
 	clear();
+	_fontname = fontname;
 	if (is) {
 		if (read_unsigned(1, is) != VERSION)
 			return false;
@@ -264,7 +275,7 @@ bool FontCache::read (const char *fontname, istream &is) {
 				}
 			}
 		}
-		_changed = false;
+		_changed = false;		
 		return true;
 	}
 	return false;
