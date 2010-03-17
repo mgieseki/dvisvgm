@@ -20,7 +20,6 @@
 
 #include <sstream>
 #include "BoundingBox.h"
-#include "CharmapTranslator.h"
 #include "DVIToSVG.h"
 #include "Font.h"
 #include "FontManager.h"
@@ -87,8 +86,8 @@ void SVGTree::appendToDefs (XMLNode *node) {
  *  @param[in] x x coordinate
  *  @param[in] y y coordinate
  *  @param[in] fontManager the FontManager provides information about the fonts used in the document
- *  @param[in] cmt the CharmapTranslator remaps the character codes */
-void SVGTree::appendChar (int c, double x, double y, const FontManager &fontManager, const CharmapTranslator &cmt) {
+ *  @param[in] font font to be used */
+void SVGTree::appendChar (int c, double x, double y, const FontManager &fontManager, const Font &font) {
 	XMLElementNode *node=_span;
 	if (DVIToSVG::USE_FONTS) {
 		// changes of fonts and transformations require a new text element
@@ -120,7 +119,7 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 				newTextNode(x, y);
 			node = _text;
 		}
-		node->append(XMLString(cmt.unicode(c), false));
+		node->append(XMLString(font.unicode(c), false));
 	}
 	else {
 		if (_color.changed() || _matrix.changed()) {

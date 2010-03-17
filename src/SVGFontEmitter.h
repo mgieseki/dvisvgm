@@ -25,7 +25,7 @@
 #include "FontEmitter.h"
 
 
-class CharmapTranslator;
+class Font;
 class FontManager;
 class SVGTree;
 class XMLElementNode;
@@ -33,7 +33,7 @@ class XMLElementNode;
 class SVGFontEmitter : public FontEmitter
 {
    public:
-      SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf);
+      SVGFontEmitter (const Font *font, const FontManager &fm, SVGTree &svg, bool uf);
 		int emitFont (const char *id);
 		int emitFont (const std::set<int> &usedChars, const char *id);
 		bool emitGlyph (int c);
@@ -44,8 +44,7 @@ class SVGFontEmitter : public FontEmitter
 
    private:
 		const Font *_font;
-		const FontManager &_fontManager;
-		const CharmapTranslator &_charmapTranslator;
+		const FontManager &_fontManager;		
 		SVGTree &_svg;
 		mutable XMLElementNode *_glyphNode; // current <glyph ...>-node
 		bool _useFonts;  ///< create font elements or draw paths?

@@ -43,9 +43,8 @@ bool SVGFontTraceEmitter::TRACE_ALL = false;
 double SVGFontTraceEmitter::METAFONT_MAG = 4;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf)
-	: _font(f), _fontManager(fm), _cache(0),
-	  _charmapTranslator(cmt), _svg(svg), _glyphNode(0), _useFonts(uf)
+SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, SVGTree &svg, bool uf)
+	: _font(f), _fontManager(fm), _cache(0), _svg(svg), _glyphNode(0), _useFonts(uf)
 {
 	if (CACHE_PATH && _font) {
 		_cache = new FontCache;
@@ -172,7 +171,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	double sx=1.0, sy=1.0;
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
-		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
+		_glyphNode->addAttribute("unicode", XMLString(_font->unicode(c), false));
 		_glyphNode->addAttribute("horiz-adv-x", XMLString(1000.0*tfm->getCharWidth(c)/tfm->getDesignSize()));
 	}
 	else {

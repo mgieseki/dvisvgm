@@ -21,7 +21,6 @@
 
 #include <sstream>
 #include "macros.h"
-#include "CharmapTranslator.h"
 #include "Font.h"
 #include "FontEncoding.h"
 #include "FontEngine.h"
@@ -35,8 +34,8 @@
 using namespace std;
 
 
-SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf)
-	: _fontManager(fm), _charmapTranslator(cmt), _svg(svg), _useFonts(uf)
+SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, SVGTree &svg, bool uf)
+	: _fontManager(fm), _svg(svg), _useFonts(uf)
 {
 	_font = font;
 	FontEngine::instance().setFont(*font);
@@ -94,7 +93,7 @@ bool SVGFontEmitter::emitGlyph (int c) {
 	FontEngine &fe = FontEngine::instance();
 	if (_useFonts) {
 		_glyphNode = new XMLElementNode("glyph");
-		_glyphNode->addAttribute("unicode", XMLString(_charmapTranslator.unicode(c), false));
+		_glyphNode->addAttribute("unicode", XMLString(_font->unicode(c), false));
 		int advance;
 		string name;
 		if (encoding && encoding->getEntry(c)) {

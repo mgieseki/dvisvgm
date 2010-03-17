@@ -24,7 +24,6 @@
 
 #include <cstring>
 #include "BoundingBox.h"
-#include "CharmapTranslator.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
@@ -50,8 +49,6 @@ DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
 
 DVIToSVGActions::~DVIToSVGActions () {
 	delete _pageMatrix;
-	FORALL (_charmapTranslatorMap, CharmapTranslatorMap::iterator, i)
-		delete i->second;
 }
 
 
@@ -80,8 +77,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	}
 	_usedCharsMap[font].insert(c);
 
-	const CharmapTranslator *cmt = _charmapTranslatorMap[font->uniqueFont()];
-	_svg.appendChar(c, x, y, _dvisvg.getFontManager(), *cmt);
+	_svg.appendChar(c, x, y, _dvisvg.getFontManager(), *font);
 
 	// update bounding box
 	if (font) {
@@ -127,13 +123,6 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	if (!getMatrix().isIdentity())
 		bb.transform(getMatrix());
 	_bbox.embed(bb);
-}
-
-
-void DVIToSVGActions::defineFont (int num, const Font *font) {
-	font = font->uniqueFont();
-	if (_charmapTranslatorMap.find(font) == _charmapTranslatorMap.end())
-		_charmapTranslatorMap[font] = new CharmapTranslator(font);
 }
 
 
@@ -190,16 +179,6 @@ void DVIToSVGActions::postamble () {
 void DVIToSVGActions::beginPage (Int32 *c) {
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
-}
-
-
-CharmapTranslator* DVIToSVGActions::getCharmapTranslator (const Font *font) const {
-	if (font) {
-		CharmapTranslatorMap::const_iterator it = _charmapTranslatorMap.find(font->uniqueFont());
-		if (it != _charmapTranslatorMap.end())
-			return it->second;
-	}
-	return 0;
 }
 
 

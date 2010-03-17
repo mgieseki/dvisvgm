@@ -23,7 +23,6 @@
 
 #include <istream>
 #include <set>
-#include "CharmapTranslator.h"
 #include "FontEmitter.h"
 #include "GFGlyphTracer.h"
 #include "XMLNode.h"
@@ -39,7 +38,7 @@ class XMLElementNode;
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const Font *font, const FontManager &fm, const CharmapTranslator &cmt, SVGTree &svg, bool uf);
+      SVGFontTraceEmitter (const Font *font, const FontManager &fm, SVGTree &svg, bool uf);
       ~SVGFontTraceEmitter ();
 		int emitFont (const char *id);
 		int emitFont (const std::set<int> &usedChars, const char *id);
@@ -59,8 +58,7 @@ class SVGFontTraceEmitter : public FontEmitter
 		GFGlyphTracer _gfTracer;
 		const Font *_font;
 		const FontManager &_fontManager;
-		FontCache *_cache;
-		const CharmapTranslator &_charmapTranslator;
+		FontCache *_cache;		
 		SVGTree &_svg;
 		XMLElementNode *_glyphNode;
 		bool _useFonts;

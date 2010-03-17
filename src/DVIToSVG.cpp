@@ -30,7 +30,6 @@
 #include <fstream>
 #include <sstream>
 #include "Calculator.h"
-#include "CharmapTranslator.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "Font.h"
@@ -268,7 +267,6 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
-			CharmapTranslator *cmt = svgActions->getCharmapTranslator(font);
 			// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
 			// description multiple times because they would only differ by a scale factor. Thus it's better to
 			// reference the already embedded path together with a transformation attribute and let the SVG renderer
@@ -293,11 +291,11 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			}
 			else {
 				if (ph_font->type() == PhysicalFont::MF) {
-					SVGFontTraceEmitter emitter(font, getFontManager(), *cmt, _svg, USE_FONTS);
+					SVGFontTraceEmitter emitter(font, getFontManager(), _svg, USE_FONTS);
 					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else if (font->path()) { // path to pfb/ttf file
-					SVGFontEmitter emitter(font, getFontManager(), *cmt, _svg, USE_FONTS);
+					SVGFontEmitter emitter(font, getFontManager(), _svg, USE_FONTS);
 					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else

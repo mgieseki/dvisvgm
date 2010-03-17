@@ -31,9 +31,9 @@
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
+#include "SVGFontEmitter.h"
 
 
-class FontEncoding;
 class TFM;
 
 
@@ -55,6 +55,7 @@ struct Font
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
 	virtual bool getGlyph (int c, Glyph &glyph) const =0;
+   virtual UInt32 unicode (UInt32 c) const;
 };
 
 
@@ -89,7 +90,7 @@ struct PhysicalFont : public virtual Font
 	enum Type {MF, PFB, TTF};
 	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 	virtual Type type () const =0;
-	virtual bool getGlyph (int c, Glyph &glyph) const;
+	virtual bool getGlyph (int c, Glyph &glyph) const;   
 };
 
 
@@ -149,6 +150,7 @@ class PhysicalFontProxy : public PhysicalFont
 		const TFM* getTFM () const            {return pf->getTFM();}
 		const char* path () const             {return pf->path();}
 		Type type () const                    {return pf->type();}
+      UInt32 unicode (UInt32 c) const       {return pf->unicode(c);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -165,16 +167,19 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 {
 	friend class PhysicalFont;
 	public:
+      ~PhysicalFontImpl();
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
-		const Font* uniqueFont () const {return this;}
+		const Font* uniqueFont () const          {return this;}
+      Type type () const                       {return _filetype;}
 		const char* path () const;
-		Type type () const {return filetype;}
+      UInt32 unicode (UInt32 c) const;
 
 	protected:
 		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 
 	private:
-		Type filetype;
+		Type _filetype;
+      mutable std::map<UInt32,UInt32> *_charmap;
 };
 
 

@@ -27,7 +27,6 @@
 #include "XMLNode.h"
 
 class BoundingBox;
-class CharmapTranslator;
 class Color;
 class Font;
 class FontManager;
@@ -67,7 +66,7 @@ class SVGTree
 		void prependToPage (XMLNode *node){_page->prepend(node);}
 		void appendToDoc (XMLNode *node)  {_doc.append(node);}
 		void appendToRoot (XMLNode *node) {_root->append(node);}
-		void appendChar (int c, double x, double y, const FontManager &fm, const CharmapTranslator &cmt);
+		void appendChar (int c, double x, double y, const FontManager &fm, const Font &font);
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);
 		void setX (double x) {_xchanged = true;}

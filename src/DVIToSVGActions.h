@@ -31,7 +31,6 @@
 #include "SVGTree.h"
 
 
-class CharmapTranslator;
 class DVIToSVG;
 class FileFinder;
 class Font;
@@ -39,7 +38,6 @@ class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions, public SpecialManager::Listener
 {
-	typedef std::map<const Font*, CharmapTranslator*> CharmapTranslatorMap;
 	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
 
 	public:
@@ -56,7 +54,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void appendToDefs (XMLNode *node)               {_svg.appendToDefs(node);}
 		void moveToX (double x)                         {_svg.setX(x);}
 		void moveToY (double y)                         {_svg.setY(y);}
-		void defineFont (int num, const Font *font);
 		void setFont (int num, const Font *font);
 		void special (const std::string &s);
 		void preamble (const std::string &cmt);
@@ -67,7 +64,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void endSpecial (const char *prefix);
 		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
 		void setPageMatrix (const Matrix &tm);
-		CharmapTranslator* getCharmapTranslator (const Font *font) const;
 		double getX() const  {return _dvisvg.getXPos();}
 		double getY() const  {return _dvisvg.getYPos();}
 		void setX (double x) {_dvisvg.setXPos(x);}
@@ -83,7 +79,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		BoundingBox _bbox;
 		int _pageCount;
 		int _currentFontNum;
-		CharmapTranslatorMap _charmapTranslatorMap;
 		mutable UsedCharsMap _usedCharsMap;
 		Matrix *_pageMatrix;  // transformation of whole page
 		Color _bgcolor;

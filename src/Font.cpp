@@ -34,6 +34,32 @@
 using namespace std;
 
 
+/** Returns true if 'unicode' is a valid unicode value in XML documents.
+ *  XML version 1.0 doesn't allow various unicode character references
+ *  (&#1; for example).  */
+static bool valid_unicode (UInt32 unicode) {
+	UInt32 ranges[] = {
+		0x0000, 0x0020,
+		0x007f, 0x0084,
+		0x0086, 0x009f,
+		0xfdd0, 0xfddf
+	};
+	for (int i=0; i < 4; i++)
+		if (unicode >= ranges[2*i] && unicode <= ranges[2*i+1])
+			return false;
+	return true;
+}
+
+
+UInt32 Font::unicode (UInt32 c) const {
+	// @@ this should be optimized :-)
+	return valid_unicode(c) ? c : 0x3400+c;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
 TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
 	: tfm(0), fontname(name), checksum(cs), dsize(ds), ssize(ss)
 {
@@ -95,19 +121,53 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
-	: TFMFont(name, cs, ds, ss), filetype(type)
+	: TFMFont(name, cs, ds, ss), _filetype(type), _charmap(0)
 {
+}
+
+
+PhysicalFontImpl::~PhysicalFontImpl () {
+	delete _charmap;
 }
 
 
 const char* PhysicalFontImpl::path () const {
 	string ext;
-	switch (filetype) {
+	switch (_filetype) {
 		case PFB: ext = "pfb"; break;
 		case TTF: ext = "ttf"; break;
 		case MF : ext = "mf";  break;
 	}
 	return FileFinder::lookup(name()+"."+ext);
+}
+
+
+UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
+	if (type() == MF)
+		return Font::unicode(c);
+	
+	if (_charmap == 0) {
+		FontEngine &fe = FontEngine::instance();
+		if (fe.setFont(*this)) {
+			_charmap = new map<UInt32,UInt32>;
+			fe.buildTranslationMap(*_charmap);
+		}
+	}
+	typedef map<UInt32,UInt32>::const_iterator ConstIterator;
+	ConstIterator it = _charmap->find(c);
+	if (it != _charmap->end())
+		return it->second;
+
+	// No unicode equivalent found in font file.
+	// Now we should look for a smart alternative but at the moment
+	// it's sufficient to simply choose a valid unused unicode value...
+	map<UInt32,UInt32> reverse_map;
+	FORALL(*_charmap, ConstIterator, it)
+		reverse_map[it->second] = it->first;
+	// can we use charcode itself as unicode replacement?
+	if (valid_unicode(c) && (reverse_map.empty() || reverse_map.find(c) != reverse_map.end()))
+		return c;
+	return 0x3400+c;
 }
 
 
