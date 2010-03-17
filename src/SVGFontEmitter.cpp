@@ -34,13 +34,12 @@
 using namespace std;
 
 
-SVGFontEmitter::SVGFontEmitter (const Font *font, const FontManager &fm, SVGTree &svg, bool uf)
-	: _fontManager(fm), _svg(svg), _useFonts(uf)
+SVGFontEmitter::SVGFontEmitter (const Font *font, SVGTree &svg, bool uf)
+	: _svg(svg), _useFonts(uf)
 {
 	_font = font;
 	FontEngine::instance().setFont(*font);
 }
-
 
 
 int SVGFontEmitter::emitFont (const char *id) {
@@ -109,7 +108,7 @@ bool SVGFontEmitter::emitGlyph (int c) {
 	}
 	else {
 		ostringstream oss;
-		oss << 'g' << _fontManager.fontID(_font) << c;
+		oss << 'g' << FontManager::instance().fontID(_font) << c;
 		_glyphNode = new XMLElementNode("path");
 		_glyphNode->addAttribute("id" , oss.str());
 		sx = double(_font->scaledSize())/fe.getUnitsPerEM();

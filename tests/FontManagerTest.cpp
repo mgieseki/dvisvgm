@@ -27,9 +27,8 @@
 class FontManagerTest : public ::testing::Test
 {
 	protected:
-		FontManager fm;
-
 		void SetUp () {
+			FontManager &fm = FontManager::instance();
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
@@ -38,6 +37,7 @@ class FontManagerTest : public ::testing::Test
 
 
 TEST_F(FontManagerTest, fontID1) {
+	FontManager &fm = FontManager::instance();
 	EXPECT_EQ(fm.fontID(10), 0);
 	EXPECT_EQ(fm.fontID(11), 1);
 	EXPECT_EQ(fm.fontID(9), 2);
@@ -46,11 +46,13 @@ TEST_F(FontManagerTest, fontID1) {
 
 
 TEST_F(FontManagerTest, font_ID2) {
+	FontManager &fm = FontManager::instance();
 	EXPECT_EQ(fm.fontID("cmr10"), 0);
 }
 
 
 TEST_F(FontManagerTest, getFont) {
+	FontManager &fm = FontManager::instance();
 	const Font *f1 = fm.getFont(10);
 	EXPECT_TRUE(f1);
 	EXPECT_EQ(f1->name(), "cmr10");
@@ -66,6 +68,7 @@ TEST_F(FontManagerTest, getFont) {
 
 
 TEST_F(FontManagerTest, getFontById) {
+	FontManager &fm = FontManager::instance();
 	EXPECT_EQ(fm.getFont(10), fm.getFontById(0));
 	EXPECT_EQ(fm.getFont("cmr10"), fm.getFontById(0));
 }

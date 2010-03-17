@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdarg>
@@ -26,6 +26,7 @@
 #include "DVIActions.h"
 #include "DVIReader.h"
 #include "Font.h"
+#include "FontManager.h"
 #include "Message.h"
 #include "VectorStream.h"
 #include "macros.h"
@@ -33,8 +34,7 @@
 using namespace std;
 
 
-DVIReader::DVIReader (istream &is, DVIActions *a)
-	: StreamReader(is), _actions(a)
+DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a)
 {
 	_inPage = false;
 	_pageHeight = _pageWidth = 0;
@@ -371,15 +371,16 @@ void DVIReader::cmdPop (int) {
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (_inPage) {
-		Font *font = _fontManager.getFont(_currFontNum);
+      FontManager &fm = FontManager::instance();
+		Font *font = fm.getFont(_currFontNum);
 		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
 			vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
 			if (dvi) {
 				DVIPosition pos = _currPos;       // save current cursor position
 				_currPos.x = _currPos.y = _currPos.w = _currPos.z = 0;
 				int save_fontnum = _currFontNum; // save current font number
-				_fontManager.enterVF(vf);        // new font number context
-				cmdFontNum0(_fontManager.vfFirstFontNum(vf));
+				fm.enterVF(vf);        // new font number context
+				cmdFontNum0(fm.vfFirstFontNum(vf));
 				double save_scale = _scaleFactor;
 				_scaleFactor = vf->scaledSize()/(1 << 20);
 
@@ -393,7 +394,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 				}
 				replaceStream(is);          // restore previous input stream
 				_scaleFactor = save_scale;  // restore previous scale factor
-				_fontManager.leaveVF();    // restore previous font number context
+				fm.leaveVF();    // restore previous font number context
 				cmdFontNum0(save_fontnum);  // restore previous font number
 				_currPos = pos;             // restore previous cursor position
 			}
@@ -505,10 +506,10 @@ void DVIReader::cmdXXX (int len) {
  * @param[in] num font number
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	if (Font *font = _fontManager.getFont(num)) {
+	if (Font *font = FontManager::instance().getFont(num)) {
 		_currFontNum = num;
 		if (_actions && !dynamic_cast<VirtualFont*>(font))
-			_actions->setFont(_fontManager.fontID(num), font);  // all fonts get a recomputed ID
+			_actions->setFont(FontManager::instance().fontID(num), font);  // all fonts get a recomputed ID
 	}
 	else {
 		ostringstream oss;
@@ -534,16 +535,17 @@ void DVIReader::cmdFontNum (int len) {
  *  @param[in] ds design size in TeX point units
  *  @param[in] ss scaled size in TeX point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
-	int id = _fontManager.registerFont(fontnum, name, cs, ds, ss);
-	Font *font = _fontManager.getFontById(id);
+   FontManager &fm = FontManager::instance();
+	int id = fm.registerFont(fontnum, name, cs, ds, ss);
+	Font *font = fm.getFontById(id);
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
 		// read vf file, register its font and character definitions
-		_fontManager.enterVF(vf);
+		fm.enterVF(vf);
 		ifstream ifs(vf->path(), ios::binary);
 		VFReader vfReader(ifs);
 		vfReader.replaceActions(this);
 		vfReader.executeAll();
-		_fontManager.leaveVF();
+		fm.leaveVF();
 	}
 	if (_actions)
 		_actions->defineFont(id, font);
@@ -573,7 +575,7 @@ void DVIReader::cmdFontDef (int len) {
  *  @param[in] dsize design size in TeX point units
  *  @param[in] ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
-	VirtualFont *vf = _fontManager.getVF();
+	VirtualFont *vf = FontManager::instance().getVF();
 	defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 }
 
@@ -582,5 +584,5 @@ void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 c
  *  @param[in] c character number
  *  @param[in] dvi DVI fragment describing the character */
 void DVIReader::defineVFChar (UInt32 c, vector<UInt8> *dvi) {
-	_fontManager.assignVfChar(c, dvi);
+	FontManager::instance().assignVfChar(c, dvi);
 }

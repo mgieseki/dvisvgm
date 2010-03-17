@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -30,14 +30,16 @@
 using namespace std;
 
 
-FontManager::FontManager ()
-{
-}
-
-
 FontManager::~FontManager () {
 	FORALL(_fonts, vector<Font*>::iterator, i)
 		delete *i;
+}
+
+
+/** Returns the singleton instance */
+FontManager& FontManager::instance () {
+   static FontManager fm;
+   return fm;
 }
 
 
@@ -58,6 +60,11 @@ int FontManager::fontID (int n) const {
 }
 
 
+/** Returns a unique ID that identifies the font. Not the font object but the
+ *  font pointer is looked up to get the ID. Thus, two different pointers
+ *  referencing different objects of the same font are mapped to different IDs.
+ *  @param[in] font pointer to font object to be identified
+ *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const Font *font) const {
 	for (size_t i=0; i < _fonts.size(); i++)
 		if (_fonts[i] == font)
@@ -66,6 +73,9 @@ int FontManager::fontID (const Font *font) const {
 }
 
 
+/** Returns a unique ID that identifies the font.
+ *  @param[in] name name of font to be identified, e.g. cmr10
+ *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const string &name) const {
 	map<string,int>::const_iterator it = _name2id.find(name);
 	if (it == _name2id.end())

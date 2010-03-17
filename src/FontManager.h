@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef FONTMANAGER_H
@@ -49,8 +49,8 @@ class FontManager
 	typedef std::stack<VirtualFont*> VfStack;
 
    public:
-      FontManager ();
       ~FontManager ();
+      static FontManager& instance ();
 		int registerFont (UInt32 fontnum, std::string fontname, UInt32 checksum, double dsize, double scale);
 		Font* getFont (int n) const;
 		Font* getFont (const std::string &name) const;
@@ -66,6 +66,9 @@ class FontManager
 		void assignVfChar (int c, std::vector<UInt8> *dvi);
 		const std::vector<Font*>& getFonts () const {return _fonts;}
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
+
+   protected:
+      FontManager () {}
 
    private:
 		std::vector<Font*> _fonts; ///< all registered Fonts

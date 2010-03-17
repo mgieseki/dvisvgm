@@ -43,8 +43,8 @@ bool SVGFontTraceEmitter::TRACE_ALL = false;
 double SVGFontTraceEmitter::METAFONT_MAG = 4;
 
 
-SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, const FontManager &fm, SVGTree &svg, bool uf)
-	: _font(f), _fontManager(fm), _cache(0), _svg(svg), _glyphNode(0), _useFonts(uf)
+SVGFontTraceEmitter::SVGFontTraceEmitter (const Font *f, SVGTree &svg, bool uf)
+	: _font(f), _cache(0), _svg(svg), _glyphNode(0), _useFonts(uf)
 {
 	if (CACHE_PATH && _font) {
 		_cache = new FontCache;
@@ -176,7 +176,7 @@ bool SVGFontTraceEmitter::emitGlyph (int c) {
 	}
 	else {
 		ostringstream oss;
-		oss << 'g' << _fontManager.fontID(_font) << c;
+		oss << 'g' << FontManager::instance().fontID(_font) << c;
 		_glyphNode = new XMLElementNode("path");
 		_glyphNode->addAttribute("id", oss.str());
 		sx = _font->scaledSize()/1000.0; // 1000 units per em

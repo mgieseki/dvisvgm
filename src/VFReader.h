@@ -32,7 +32,6 @@ struct VFException : public MessageException
 };
 
 
-class FontManager;
 class VFActions;
 
 

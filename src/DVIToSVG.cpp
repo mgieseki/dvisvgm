@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -134,7 +134,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 	}
 
 	if (CREATE_STYLE && USE_FONTS) {
-		const vector<Font*> &fonts = getFontManager().getFonts();
+		const vector<Font*> &fonts = FontManager::instance().getFonts();
 		if (!fonts.empty()) {
 			XMLElementNode *styleNode = new XMLElementNode("style");
 			styleNode->addAttribute("type", "text/css");
@@ -142,7 +142,7 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 			ostringstream style;
 			FORALL(fonts, vector<Font*>::const_iterator, i) {
 				if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-					style << "text.f"        << getFontManager().fontID(*i) << ' '
+					style << "text.f"        << FontManager::instance().fontID(*i) << ' '
 							<< "{font-family:" << (*i)->name()
 							<< ";font-size:"   << (*i)->scaledSize() << "}\n";
 				}
@@ -275,10 +275,10 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				FORALL(it->second, set<int>::const_iterator, cit) {
 					ostringstream oss;
 					XMLElementNode *use = new XMLElementNode("use");
-					oss << 'g' << getFontManager().fontID(font) << *cit;
+					oss << 'g' << FontManager::instance().fontID(font) << *cit;
 					use->addAttribute("id", oss.str());
 					oss.str("");
-					oss << "#g" << getFontManager().fontID(font->uniqueFont()) << *cit;
+					oss << "#g" << FontManager::instance().fontID(font->uniqueFont()) << *cit;
 					use->addAttribute("xlink:href", oss.str());
 					double scale = font->scaledSize()/font->uniqueFont()->scaledSize();
 					if (scale != 1.0) {
@@ -291,11 +291,11 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 			}
 			else {
 				if (ph_font->type() == PhysicalFont::MF) {
-					SVGFontTraceEmitter emitter(font, getFontManager(), _svg, USE_FONTS);
+					SVGFontTraceEmitter emitter(font, _svg, USE_FONTS);
 					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else if (font->path()) { // path to pfb/ttf file
-					SVGFontEmitter emitter(font, getFontManager(), _svg, USE_FONTS);
+					SVGFontEmitter emitter(font, _svg, USE_FONTS);
 					emitter.emitFont(it->second, font->name().c_str());
 				}
 				else

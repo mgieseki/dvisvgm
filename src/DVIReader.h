@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef DVIREADER_H
@@ -24,7 +24,6 @@
 #include <map>
 #include <stack>
 #include <string>
-#include "FontManager.h"
 #include "MessageException.h"
 #include "StreamReader.h"
 #include "VFActions.h"
@@ -75,7 +74,6 @@ class DVIReader : public StreamReader, protected VFActions
 		unsigned getTotalPages () const            {return _totalPages;}
 		DVIActions* getActions () const            {return _actions;}
 		DVIActions* replaceActions (DVIActions *a);
-		const FontManager& getFontManager () const {return _fontManager;}
 
 	protected:
 		int executeCommand ();
@@ -131,7 +129,6 @@ class DVIReader : public StreamReader, protected VFActions
 		double _pageHeight, _pageWidth;  // page height and width in TeX points
 		DVIPosition _currPos;
 		std::stack<DVIPosition> _posStack;
-		FontManager _fontManager;
 };
 
 #endif

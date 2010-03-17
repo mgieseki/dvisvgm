@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <sstream>
@@ -84,10 +84,9 @@ void SVGTree::appendToDefs (XMLNode *node) {
  *  and further output states, new XML elements (text, tspan, g, ...) are created.
  *  @param[in] c character to be added
  *  @param[in] x x coordinate
- *  @param[in] y y coordinate
- *  @param[in] fontManager the FontManager provides information about the fonts used in the document
+ *  @param[in] y y coordinate 
  *  @param[in] font font to be used */
-void SVGTree::appendChar (int c, double x, double y, const FontManager &fontManager, const Font &font) {
+void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 	XMLElementNode *node=_span;
 	if (DVIToSVG::USE_FONTS) {
 		// changes of fonts and transformations require a new text element
@@ -143,7 +142,7 @@ void SVGTree::appendChar (int c, double x, double y, const FontManager &fontMana
 		if (!node)
 			node = _page;
 		ostringstream oss;
-		oss << "#g" << fontManager.fontID(_font) << c;
+		oss << "#g" << FontManager::instance().fontID(_font) << c;
 		XMLElementNode *use = new XMLElementNode("use");
 		use->addAttribute("x", XMLString(x));
 		use->addAttribute("y", XMLString(y));

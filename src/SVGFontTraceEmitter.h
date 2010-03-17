@@ -31,14 +31,13 @@
 class FileFinder;
 class Font;
 class FontCache;
-class FontManager;
 class SVGTree;
 class XMLElementNode;
 
 class SVGFontTraceEmitter : public FontEmitter
 {
    public:
-      SVGFontTraceEmitter (const Font *font, const FontManager &fm, SVGTree &svg, bool uf);
+      SVGFontTraceEmitter (const Font *font, SVGTree &svg, bool uf);
       ~SVGFontTraceEmitter ();
 		int emitFont (const char *id);
 		int emitFont (const std::set<int> &usedChars, const char *id);
@@ -56,8 +55,7 @@ class SVGFontTraceEmitter : public FontEmitter
 
    private:
 		GFGlyphTracer _gfTracer;
-		const Font *_font;
-		const FontManager &_fontManager;
+		const Font *_font;		
 		FontCache *_cache;		
 		SVGTree &_svg;
 		XMLElementNode *_glyphNode;
