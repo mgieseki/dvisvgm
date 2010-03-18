@@ -54,9 +54,9 @@ TEST(CommandLineTest, noarg_long) {
 
 TEST(CommandLineTest, arg_short) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-p5", "-r45", "-omyfile.xyz"};
+	const char *args[] = {"progname", "-p5", "-r45", "-omyfile.xyz", "-ayes"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	cmd.parse(5, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
 	EXPECT_EQ(cmd.page_arg(), 5);
@@ -68,6 +68,8 @@ TEST(CommandLineTest, arg_short) {
 	EXPECT_EQ(cmd.bbox_arg(), "min");
 	EXPECT_FALSE(cmd.error());
 	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_TRUE(cmd.trace_all_given());
+	EXPECT_TRUE(cmd.trace_all_arg());
 }
 
 
@@ -88,9 +90,9 @@ TEST(CommandLineTest, arg_combined) {
 
 TEST(CommandLineTest, arg_separated) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-p", "5", "-r",  "45", "myfile.xyz"};
+	const char *args[] = {"progname", "-p", "5", "-r",  "45", "myfile.xyz", "-afalse"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(6, argv, false);
+	cmd.parse(7, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
 	EXPECT_EQ(cmd.page_arg(), 5);
@@ -98,14 +100,16 @@ TEST(CommandLineTest, arg_separated) {
 	EXPECT_EQ(cmd.rotate_arg(), 45);
 	EXPECT_FALSE(cmd.error());
 	EXPECT_EQ(cmd.numFiles(), 1);
+	EXPECT_TRUE(cmd.trace_all_given());
+	EXPECT_FALSE(cmd.trace_all_arg());
 }
 
 
 TEST(CommandLineTest, arg_long) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "--page=9", "--rotate=-45.5", "--output=myfile.zyx"};
+	const char *args[] = {"progname", "--page=9", "--rotate=-45.5", "--trace-all", "--output=myfile.zyx"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	cmd.parse(5, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
 	EXPECT_EQ(cmd.page_arg(), 9);
@@ -117,6 +121,8 @@ TEST(CommandLineTest, arg_long) {
 	EXPECT_EQ(cmd.bbox_arg(), "min");
 	EXPECT_FALSE(cmd.error());
 	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_TRUE(cmd.trace_all_given());
+	EXPECT_FALSE(cmd.trace_all_arg());
 }
 
 
@@ -164,6 +170,13 @@ TEST(CommandLineTest, error) {
 	const char *args3[] = {"progname", "--no"};
 	argv = const_cast<char**>(args3);
 	cmd.parse(2, argv, false);
+	EXPECT_TRUE(cmd.error());
+
+	// incorrect boolean value
+	const char *args4[] = {"progname", "--trace-all=nope"};
+	argv = const_cast<char**>(args4);
+	cmd.parse(2, argv, false);
+	EXPECT_FALSE(cmd.trace_all_given());
 	EXPECT_TRUE(cmd.error());
 }
 

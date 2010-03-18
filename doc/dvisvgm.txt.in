@@ -61,12 +61,15 @@ as most (manually optimized) PFB outlines but are nonetheless really nice in mos
 
 OPTIONS
 -------
-*-a, --trace-all*::
+*-a, --trace-all*=['retrace']::
 This option forces dvisvgm to trace not just the actually needed glyphs but all 
 glyphs of all bitmap fonts used in the DVI file. Since the tracing results are stored in 
 the font cache, all following DVI conversions (without option *--trace-all*) where these 
 fonts are involved will be much faster. By default, dvisvgm traces only the actually 
-needed glyphs and adds them to the cache.
+needed glyphs and adds them to the cache. 
+The boolean option 'retrace' determines how to handle glyphs that are already stored in the cache.
+By default, these glyphs are skipped. Setting argument 'retrace' to 'yes' or
+'true' forces dvisvgm to trace the corresponding bitmaps again.
 +
 [NOTE]
 This option only takes affect if font caching is active. Thus, *--trace-all* cannot be 

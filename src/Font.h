@@ -98,6 +98,7 @@ struct PhysicalFont : public virtual Font
    virtual int unitsPerEm () const;
 	virtual int ascent () const;
 	virtual int descent () const;
+   virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const =0;
    void tidy () const;
 };
 
@@ -156,10 +157,11 @@ class PhysicalFontProxy : public PhysicalFont
 		double charHeight (int c) const           {return pf->charHeight(c);}
 		double italicCorr (int c) const           {return pf->italicCorr(c);}
 		const TFM* getTFM () const                {return pf->getTFM();}
-		const char* path () const                 {return pf->path();}      
+		const char* path () const                 {return pf->path();}
 		Type type () const                        {return pf->type();}
       UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
       bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return pf->getGlyph(c, glyph, cb);}
+      int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const {return pf->traceAllGlyphs(includeCached, cb);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -183,16 +185,15 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const char* path () const;
       bool getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb=0) const;
       UInt32 unicode (UInt32 c) const;
+      int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
 
    public:
 		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
-		static bool TRACE_ALL;         ///< if true, not only the actually used, but all font glyphs are traced
 		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
 	protected:
 		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
   		bool createGF (std::string &gfname) const;
-		void traceAllGlyphs ();
 
 	private:
 		Type _filetype;

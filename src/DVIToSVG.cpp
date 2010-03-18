@@ -74,7 +74,6 @@ static string datetime () {
 	return timestr;
 }
 
-
 class PSHeaderActions : public DVIActions
 {
 	public :
@@ -92,6 +91,12 @@ class PSHeaderActions : public DVIActions
 		DVIToSVG &_dvisvg;
 		BoundingBox _bbox;
 };
+
+
+/** 'a': trace all glyphs even if some of them are already cached
+ *  'm': trace missing glyphs, i.e. glyphs not yet cached
+ *   0 : only trace actually required glyphs */
+char DVIToSVG::TRACE_MODE = 0;
 
 
 DVIToSVG::DVIToSVG (istream &is, ostream &os)
@@ -272,6 +277,9 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
+			if (TRACE_MODE)
+				ph_font->traceAllGlyphs(TRACE_MODE == 'a', &callback);
+							
 			if (font->path())  // does font file exist?
 				_svg.append(*ph_font, it->second, &callback);
 			else

@@ -52,6 +52,7 @@ class CommandLine : public CmdLineParserBase
       bool no_specials_given () const {return _no_specials_given;}
       const std::string& no_specials_arg () const {return _no_specials_arg;}
       bool trace_all_given () const {return _trace_all_given;}
+      bool trace_all_arg () const {return _trace_all_arg;}
       bool help_given () const {return _help_given;}
       bool list_specials_given () const {return _list_specials_given;}
       bool progress_given () const {return _progress_given;}
@@ -124,6 +125,7 @@ class CommandLine : public CmdLineParserBase
       bool _no_specials_given;
       std::string _no_specials_arg;
       bool _trace_all_given;
+      bool _trace_all_arg;
       bool _help_given;
       bool _list_specials_given;
       bool _progress_given;

@@ -32,7 +32,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'r', "rotate", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
    {'c', "scale", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
    {'s', "stdout", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_stdout)},
-   {'a', "trace-all", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_trace_all)},
+   {'a', "trace-all", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_trace_all)},
    {'T', "transform", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_transform)},
    {'t', "translate", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_translate)},
    {'v', "verbosity", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
@@ -82,6 +82,7 @@ void CommandLine::init () {
    _progress_arg = 100;
    _rotate_arg = 0;
    _scale_arg.clear();
+   _trace_all_arg = false;
    _transform_arg.clear();
    _translate_arg.clear();
    _verbosity_arg = 7;
@@ -113,7 +114,7 @@ void CommandLine::help () const {
    puts("  -M, --mag=factor              magnification of Metafont output (default: 4)");
    puts("      --no-mktexmf              don't try to create missing fonts");
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
-   puts("  -a, --trace-all               trace all glyphs of used bitmap fonts");
+   puts("  -a, --trace-all[=retrace]     trace all glyphs of bitmap fonts (default: no)");
    puts("\nMessage options:");
    puts("  -h, --help                    print this help and exit");
    puts("  -l, --list-specials           print supported special sets and exit");
@@ -222,7 +223,8 @@ void CommandLine::handle_stdout(InputReader &ir, const Option &opt, bool longopt
 
 
 void CommandLine::handle_trace_all(InputReader &ir, const Option &opt, bool longopt) {
-   _trace_all_given = true;
+   if (ir.eof() || getBoolArg(ir, opt, longopt, _trace_all_arg))
+      _trace_all_given = true;
 }
 
 
@@ -275,7 +277,7 @@ void CommandLine::status () const {
    cout << 'r'<< setw(20) << "rotate " << rotate_given() << setw(10) << rotate_arg() << endl;
    cout << 'c'<< setw(20) << "scale " << scale_given() << setw(10) << scale_arg() << endl;
    cout << 's'<< setw(20) << "stdout " << stdout_given() << endl;
-   cout << 'a'<< setw(20) << "trace-all " << trace_all_given() << endl;
+   cout << 'a'<< setw(20) << "trace-all " << trace_all_given() << setw(10) << trace_all_arg() << endl;
    cout << 'T'<< setw(20) << "transform " << transform_given() << setw(10) << transform_arg() << endl;
    cout << 't'<< setw(20) << "translate " << translate_given() << setw(10) << translate_arg() << endl;
    cout << 'v'<< setw(20) << "verbosity " << verbosity_given() << setw(10) << verbosity_arg() << endl;

@@ -38,6 +38,9 @@ class DVIToSVG : public DVIReader
 		void setPageSize (const std::string &name)       {_bboxString = name;}
 		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
 
+   public:
+      static char TRACE_MODE;
+
 	protected:
 		DVIToSVG (const DVIToSVG &);
 		DVIToSVG operator = (const DVIToSVG &);

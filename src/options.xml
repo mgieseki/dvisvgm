@@ -99,7 +99,8 @@
 				<description>don't process [selected] specials</description>
 			</option>
 			<option long="trace-all" short="a">
-				<description>trace all glyphs of used bitmap fonts</description>
+            <arg name="retrace" type="bool" optional="yes" default="no"/>
+				<description>trace all glyphs of bitmap fonts</description>
 			</option>
 		</section>
 		<section title="Message options">

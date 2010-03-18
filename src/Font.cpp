@@ -175,8 +175,8 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 
+// static class variables
 const char *PhysicalFontImpl::CACHE_PATH = 0;
-bool PhysicalFontImpl::TRACE_ALL = false;
 double PhysicalFontImpl::METAFONT_MAG = 4;
 FontCache PhysicalFontImpl::_cache;
 
@@ -214,7 +214,7 @@ const char* PhysicalFontImpl::path () const {
 bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
 	if (type() == MF) {
 		const Glyph *cached_glyph=0;
-		if (CACHE_PATH) {			
+		if (CACHE_PATH) {
 			_cache.write(CACHE_PATH);
 			_cache.read(name().c_str(), CACHE_PATH);
 			cached_glyph = _cache.getGlyph(c);
@@ -300,23 +300,35 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 }
 
 
-/** Traces all glyphs of the current font and stores them in the cache.
- *  If caching is disabled, nothing happens. */
-void PhysicalFontImpl::traceAllGlyphs () {
+/** Traces all glyphs of the current font and stores them in the cache. If caching is disabled, nothing happens.
+ *  @param[in] includeCached if true, glyphs already cached are traced again
+ *  @param[in] cb optional callback methods called by the tracer
+ *  @return number of glyphs traced */
+int PhysicalFontImpl::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
+	int count = 0;
 	if (type() == MF && CACHE_PATH) {
 		if (const TFM *tfm = getTFM()) {
 			int fchar = tfm->firstChar();
 			int lchar = tfm->lastChar();
-			for (int i=fchar; i <= lchar; i++) {
-				if (!_cache.getGlyph(i)) {
-					Glyph glyph;
-					if (!getGlyph(i, glyph))
-						;  // @@ "(empty)" message
-					// @@ "]" message
+			string gfname;
+			Glyph glyph;
+			if (createGF(gfname)) {
+				_cache.read(name().c_str(), CACHE_PATH);
+				GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
+				tracer.setGlyph(glyph);
+				for (int i=fchar; i <= lchar; i++) {
+					if (includeCached || !_cache.getGlyph(i)) {
+						glyph.newpath();
+						tracer.executeChar(i);
+						_cache.setGlyph(i, glyph);
+						++count;
+					}
 				}
+				_cache.write(CACHE_PATH);
 			}
 		}
 	}
+	return count;
 }
 
 
