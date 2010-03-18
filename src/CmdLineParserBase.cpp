@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -232,7 +232,7 @@ bool CmdLineParserBase::getUIntArg (InputReader &ir, const Option &opt, bool lon
 }
 
 
-/** Gets a double (floating point) argument of a given option, e.g. -p=2.5 or --param=2.5.
+/** Gets a double (floating point) argument of a given option, e.g. -p2.5 or --param=2.5.
  *  @param[in]  ir argument is read from this InputReader
  *  @param[in]  opt scans argument of this option
  *  @param[in]  longopt true if the long option name was given
@@ -266,3 +266,44 @@ bool CmdLineParserBase::getStringArg (InputReader &ir, const Option &opt, bool l
 	return false;
 }
 
+
+/** Gets a boolean argument of a given option, e.g. -pyes or --param=yes.
+ *  @param[in]  ir argument is read from this InputReader
+ *  @param[in]  opt scans argument of this option
+ *  @param[in]  longopt true if the long option name was given
+ *  @param[out] arg the scanned option argument
+ *  @return true if argument could be scanned without errors */
+bool CmdLineParserBase::getBoolArg (InputReader &ir, const Option &opt, bool longopt, bool &arg) const {
+	if (checkArgPrefix(ir, opt, longopt)) {
+		string str;
+		while (!ir.eof())
+			str += ir.get();
+		if (str == "yes" || str == "y" || str == "true" || str == "1") {
+			arg = true;
+			return true;
+		}
+		else if (str == "no" || str == "n" || str == "false" || str == "0") {
+			arg = false;
+			return true;
+		}
+		error(opt, longopt, "boolean argument expected (yes, no, true, false, 0, 1)");
+	}
+	return false;
+}
+
+
+/** Gets a (single) character argument of a given option, e.g. -pc or --param=c.
+ *  @param[in]  ir argument is read from this InputReader
+ *  @param[in]  opt scans argument of this option
+ *  @param[in]  longopt true if the long option name was given
+ *  @param[out] arg the scanned option argument
+ *  @return true if argument could be scanned without errors */
+bool CmdLineParserBase::getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const {
+	if (checkArgPrefix(ir, opt, longopt)) {
+		arg = ir.get();
+		if (arg >= 0 && ir.eof())
+			return true;
+		error(opt, longopt, "character argument expected");
+	}
+	return false;
+}

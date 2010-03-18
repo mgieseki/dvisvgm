@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef CMDLINEPARSERBASE_H
@@ -81,6 +81,8 @@ class CmdLineParserBase
 		bool getUIntArg (InputReader &ir, const Option &opt, bool longopt, unsigned &arg) const;
 		bool getDoubleArg (InputReader &ir, const Option &opt, bool longopt, double &arg) const;
 		bool getStringArg (InputReader &ir, const Option &opt, bool longopt, std::string &arg) const;
+      bool getBoolArg (InputReader &ir, const Option &opt, bool longopt, bool &arg) const;
+      bool getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const;
 		const Option* option (char shortname) const;
 		const Option* option (const std::string &longname) const;
 		virtual const Option* options () const {return 0;}
