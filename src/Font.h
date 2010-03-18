@@ -100,6 +100,8 @@ struct PhysicalFont : public virtual Font
 	virtual int descent () const;
    virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const =0;
    void tidy () const;
+
+   static bool KEEP_TEMP_FILES;
 };
 
 

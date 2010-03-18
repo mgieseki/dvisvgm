@@ -251,6 +251,7 @@ int main (int argc, char *argv[]) {
 	SVGTree::CREATE_STYLE = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
+	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFontImpl::METAFONT_MAG = args.mag_arg();
 
 	double start_time = get_time();

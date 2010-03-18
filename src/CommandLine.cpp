@@ -16,6 +16,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'b', "bbox", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
    {'h', "help", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
+   {'\0', "keep", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    {'\0', "libgs", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_libgs)},
 #endif
@@ -46,6 +47,7 @@ void CommandLine::init () {
    _bbox_given = false;
    _cache_given = false;
    _help_given = false;
+   _keep_given = false;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    _libgs_given = false;
 #endif
@@ -108,6 +110,7 @@ void CommandLine::help () const {
    puts("  -T, --transform=commands      transform page content");
    puts("\nProcessing options:");
    puts("  -C, --cache[=dir]             set/print path of cache directory");
+   puts("      --keep                    keep temporary files");
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    puts("      --libgs=filename          set name of Ghostscript shared library");
 #endif
@@ -138,6 +141,11 @@ void CommandLine::handle_cache(InputReader &ir, const Option &opt, bool longopt)
 
 void CommandLine::handle_help(InputReader &ir, const Option &opt, bool longopt) {
    _help_given = true;
+}
+
+
+void CommandLine::handle_keep(InputReader &ir, const Option &opt, bool longopt) {
+   _keep_given = true;
 }
 
 
@@ -261,6 +269,7 @@ void CommandLine::status () const {
    cout << 'b'<< setw(20) << "bbox " << bbox_given() << setw(10) << bbox_arg() << endl;
    cout << 'C'<< setw(20) << "cache " << cache_given() << setw(10) << cache_arg() << endl;
    cout << 'h'<< setw(20) << "help " << help_given() << endl;
+   cout << ' '<< setw(20) << "keep " << keep_given() << endl;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    cout << ' '<< setw(20) << "libgs " << libgs_given() << setw(10) << libgs_arg() << endl;
 #endif

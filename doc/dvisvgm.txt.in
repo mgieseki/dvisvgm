@@ -145,6 +145,8 @@ statements belonging to the same category. The categories are identified by the
 prefix of the special statements. It's usually a leading word
 separated from the rest of the statement by a colon or a blank, e.g. 'color' or 'ps'.
 
+*--keep*::
+Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
 
 *-m, --map-file*='file'::
 Sets the map file that is used to look up font names and encodings. *dvisvgm* does not provide

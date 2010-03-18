@@ -95,6 +95,9 @@ double TFMFont::italicCorr (int c) const {return getTFM()->getItalicCorr(c);}
 
 //////////////////////////////////////////////////////////////////////////////
 
+bool PhysicalFont::KEEP_TEMP_FILES = false;
+
+
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
 }
@@ -157,7 +160,7 @@ int PhysicalFont::descent () const {
 
 
 void PhysicalFont::tidy () const {
-   if (type() == MF) {
+   if (!KEEP_TEMP_FILES && type() == MF) {
 		const char *ext[] = {"gf", "tfm", "log", 0};
 		for (const char **p=ext; *p; ++p) {
 			if (FileSystem::exists((name()+"."+(*p)).c_str()))
