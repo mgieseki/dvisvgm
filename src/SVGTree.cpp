@@ -258,11 +258,10 @@ void SVGTree::appendFontStyles () {
  *  @param[in] chars codes of the characters whose glyph outlines should be appended */
 void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
 	if (chars.empty())
-		return;
-
-	XMLElementNode *fontNode=0;
+		return;	
+	
 	if (USE_FONTS) {
-		fontNode = new XMLElementNode("font");
+		XMLElementNode *fontNode = new XMLElementNode("font");
 		string fontname = font.name();
 		fontNode->addAttribute("id", fontname);
 		if (font.type() != PhysicalFont::MF)
@@ -279,6 +278,28 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
 		fontNode->append(faceNode);
 		FORALL(chars, set<int>::const_iterator, i)
 			fontNode->append(createGlyphNode(*i, font));
+	}
+	else if (&font != font.uniqueFont()) {
+		// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
+		// description multiple times because they would only differ by a scale factor. Thus it's better to
+		// reference the already embedded path together with a transformation attribute and let the SVG renderer
+		// scale the glyph properly. This is only necessary if we don't want to use font but path elements.
+		FORALL(chars, set<int>::const_iterator, it) {
+			ostringstream oss;
+			XMLElementNode *use = new XMLElementNode("use");
+			oss << 'g' << FontManager::instance().fontID(&font) << *it;
+			use->addAttribute("id", oss.str());
+			oss.str("");
+			oss << "#g" << FontManager::instance().fontID(font.uniqueFont()) << *it;
+			use->addAttribute("xlink:href", oss.str());
+			double scale = font.scaledSize()/font.uniqueFont()->scaledSize();
+			if (scale != 1.0) {
+				oss.str("");
+				oss << "scale(" << scale << ')';
+				use->addAttribute("transform", oss.str());
+			}
+			appendToDefs(use);
+		}
 	}
 	else {
 		FORALL(chars, set<int>::const_iterator, i)

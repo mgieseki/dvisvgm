@@ -244,29 +244,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
-			// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
-			// description multiple times because they would only differ by a scale factor. Thus it's better to
-			// reference the already embedded path together with a transformation attribute and let the SVG renderer
-			// scale the glyph properly. This is only necessary if we don't want to use font but path elements.
-			if (font != font->uniqueFont()) {
-				FORALL(it->second, set<int>::const_iterator, cit) {
-					ostringstream oss;
-					XMLElementNode *use = new XMLElementNode("use");
-					oss << 'g' << FontManager::instance().fontID(font) << *cit;
-					use->addAttribute("id", oss.str());
-					oss.str("");
-					oss << "#g" << FontManager::instance().fontID(font->uniqueFont()) << *cit;
-					use->addAttribute("xlink:href", oss.str());
-					double scale = font->scaledSize()/font->uniqueFont()->scaledSize();
-					if (scale != 1.0) {
-						oss.str("");
-						oss << "scale(" << scale << ')';
-						use->addAttribute("transform", oss.str());
-					}
-					_svg.appendToDefs(use);
-				}
-			}
-			else if (font->path())  // does font file exist?
+			if (font->path())  // does font file exist?
 				_svg.append(*ph_font, it->second);
 			else
 				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
