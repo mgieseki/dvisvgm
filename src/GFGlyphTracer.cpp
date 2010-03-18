@@ -23,20 +23,25 @@
 
 using namespace std;
 
-GFGlyphTracer::GFGlyphTracer () : GFTracer(_ifs, 0), _glyph(0)
+GFGlyphTracer::GFGlyphTracer () : GFTracer(_ifs, 0), _glyph(0), _callback(0)
 {
 }
 
 /** Constructs a new glyph tracer. 
  *  @param[in] is GF input stream
  *  @param[in] upp target units per TeX point */
-GFGlyphTracer::GFGlyphTracer (string &fname, double upp) : GFTracer(_ifs, upp), _glyph(0)
+GFGlyphTracer::GFGlyphTracer (string &fname, double upp, Callback *cb)
+   : GFTracer(_ifs, upp), _glyph(0), _callback(cb)
 {
+	if (_callback)
+		_callback->setFont(fname);
 	_ifs.open(fname.c_str(), ios::binary);
 }
 
 
 void GFGlyphTracer::reset (string &fname, double upp) {
+	if (_callback)
+		_callback->setFont(fname);
 	if (_ifs.is_open())
 		_ifs.close();
 	unitsPerPoint(upp);
@@ -45,8 +50,18 @@ void GFGlyphTracer::reset (string &fname, double upp) {
 
 
 bool GFGlyphTracer::executeChar (UInt8 c) {
-	if (_glyph)
-		return GFTracer::executeChar(c);
+	if (_glyph) {
+		if (_callback)
+			_callback->beginChar(c);
+		bool ok = GFTracer::executeChar(c);
+		if (_callback) {
+			if (ok)
+				_callback->endChar(c);
+			else
+				_callback->emptyChar(c);
+			return ok;
+		}
+	}
 	return false;
 }
 

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef GFGLYPHTRACER_H
@@ -29,9 +29,19 @@
 class GFGlyphTracer : public GFTracer
 {
    public:
+      struct Callback {
+         virtual ~Callback () {}
+         virtual void setFont (const std::string &fontname) {}
+         virtual void beginChar (UInt8 c) {}
+         virtual void endChar (UInt8 c) {}
+         virtual void emptyChar (UInt8 c) {}
+      };
+
+   public:
 		GFGlyphTracer ();
-      GFGlyphTracer (std::string &fname, double upp);
+      GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
 		void reset (std::string &fname, double upp);
+      void setCallback (Callback *cb) {_callback = cb;}
 		bool executeChar (UInt8 c);
 		void moveTo (double x, double y);
 		void lineTo (double x, double y);
@@ -45,6 +55,7 @@ class GFGlyphTracer : public GFTracer
    private:
 		std::ifstream _ifs;
 		Glyph *_glyph;
+      Callback *_callback;
 };
 
 #endif

@@ -209,8 +209,9 @@ const char* PhysicalFontImpl::path () const {
 /** Extracts the glyph outlines of a given character.
  *  @param[in]  c character code of requested glyph
  *  @param[out] glyph path segments of the glyph outline
+ *  @param[in]  cb optional callback object for tracer class
  *  @return true if outline could be computed */
-bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph) const {
+bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
 	if (type() == MF) {
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {			
@@ -226,13 +227,12 @@ bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph) const {
 			string gfname;
 			if (createGF(gfname)) {
 				try {
-					GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize());
+					GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
 					tracer.setGlyph(glyph);
 					tracer.executeChar(c);
 					glyph.closeOpenSubPaths();
 					if (CACHE_PATH)
 						_cache.setGlyph(c, glyph);
-//					cached_glyph = &glyph;
 					return true;
 				}
 				catch (GFException &e) {

@@ -23,6 +23,7 @@
 
 #include <set>
 #include "Color.h"
+#include "GFGlyphTracer.h"
 #include "Matrix.h"
 #include "XMLDocument.h"
 #include "XMLNode.h"
@@ -69,8 +70,8 @@ class SVGTree
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const Font &font);
       void appendFontStyles ();
-      void append (const PhysicalFont &font);
-      void append (const PhysicalFont &font, const std::set<int> &chars);
+//      void append (const PhysicalFont &font);
+      void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);
 		void setX (double x) {_xchanged = true;}

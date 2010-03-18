@@ -26,6 +26,7 @@
 #include <vector>
 #include "FontCache.h"
 #include "FontEncoding.h"
+#include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "GraphicPath.h"
 #include "MessageException.h"
@@ -53,7 +54,7 @@ struct Font
 	virtual const TFM* getTFM () const =0;
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
-	virtual bool getGlyph (int c, Glyph &glyph) const =0;
+	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
 };
@@ -77,7 +78,7 @@ struct EmptyFont : public Font
 		double italicCorr (int c) const           {return 0;}
 		const TFM* getTFM () const                {return 0;}
 		const char* path () const                 {return 0;}
-		bool getGlyph (int c, Glyph &glyph) const {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
 
 	private:
 		std::string fontname;
@@ -90,7 +91,7 @@ struct PhysicalFont : public virtual Font
 	enum Type {MF, PFB, TTF};
 	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 	virtual Type type () const =0;
-	virtual bool getGlyph (int c, Glyph &glyph) const =0;
+	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
 	virtual int hAdvance () const;
 	virtual double hAdvance (int c) const;
 	std::string glyphName (int c) const;
@@ -111,7 +112,7 @@ class VirtualFont : public virtual Font
 	public:
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
-		bool getGlyph (int c, Glyph &glyph) const {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
 
 	protected:
 		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;
@@ -155,10 +156,10 @@ class PhysicalFontProxy : public PhysicalFont
 		double charHeight (int c) const           {return pf->charHeight(c);}
 		double italicCorr (int c) const           {return pf->italicCorr(c);}
 		const TFM* getTFM () const                {return pf->getTFM();}
-		const char* path () const                 {return pf->path();}
-      bool getGlyph (int c, Glyph &glyph) const {return pf->getGlyph(c, glyph);}
+		const char* path () const                 {return pf->path();}      
 		Type type () const                        {return pf->type();}
       UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
+      bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return pf->getGlyph(c, glyph, cb);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -180,7 +181,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const Font* uniqueFont () const          {return this;}
       Type type () const                       {return _filetype;}
 		const char* path () const;
-      bool getGlyph (int c, GraphicPath<Int32> &glyph) const;
+      bool getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb=0) const;
       UInt32 unicode (UInt32 c) const;
 
    public:

@@ -200,9 +200,9 @@ void SVGTree::transformPage (const Matrix &m) {
  *  @param[in] c character number
  *  @param[in] font font to extract the glyph from
  *  @return pointer to element node if glyph exists, 0 otherwise */
-static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font) {
+static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
 	Glyph glyph;
-	if (!font.getGlyph(c, glyph))
+	if (!font.getGlyph(c, glyph, cb))
 		return 0;
 
 	double sx=1.0, sy=1.0;
@@ -256,7 +256,7 @@ void SVGTree::appendFontStyles () {
 /** Appends glyph definitions of a given font to the defs section of the SVG tree.
  *  @param[in] font font to be appended
  *  @param[in] chars codes of the characters whose glyph outlines should be appended */
-void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
+void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTracer::Callback *cb) {
 	if (chars.empty())
 		return;	
 	
@@ -277,7 +277,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
 		}
 		fontNode->append(faceNode);
 		FORALL(chars, set<int>::const_iterator, i)
-			fontNode->append(createGlyphNode(*i, font));
+			fontNode->append(createGlyphNode(*i, font, cb));
 	}
 	else if (&font != font.uniqueFont()) {
 		// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
@@ -303,7 +303,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars) {
 	}
 	else {
 		FORALL(chars, set<int>::const_iterator, i)
-			appendToDefs(createGlyphNode(*i, font));
+			appendToDefs(createGlyphNode(*i, font, cb));
 	}
 }
 
