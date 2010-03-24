@@ -27,46 +27,17 @@
 #include "FontCache.h"
 #include "Glyph.h"
 #include "Pair.h"
+#include "StreamReader.h"
+#include "StreamWriter.h"
 //#include "gzstream.h"
 #include "types.h"
 
 using namespace std;
 
 
-static UInt32 read_unsigned (int bytes, istream &is) {
-	UInt32 ret = 0;
-	for (bytes--; bytes >= 0 && !is.eof(); bytes--) {
-		UInt32 b = is.get();
-		ret |= b << (8*bytes);
-	}
-	return ret;
-}
-
-
-static Int32 read_signed (int bytes, istream &is) {
-	Int32 ret = is.get();
-	if (ret & 128)        // negative value?
-		ret |= 0xffffff00;
-	for (bytes-=2; bytes >= 0 && !is.eof(); bytes--)
-		ret = (ret << 8) | is.get();
-	return ret;
-}
-
-
-static void write_unsigned (UInt32 value, int bytes, ostream &os) {
-	for (bytes--; bytes >= 0; bytes--)
-		os.put((value >> (8*bytes)) & 0xff);
-}
-
-
-static inline void write_signed (Int32 value, int bytes, ostream &os) {
-	write_unsigned((UInt32)value, bytes, os);
-}
-
-
-static Pair32 read_pair (int bytes, istream &is) {
-	Int32 x = read_signed(bytes, is);
-	Int32 y = read_signed(bytes, is);
+static Pair32 read_pair (int bytes, StreamReader &sr) {
+	Int32 x = sr.readSigned(bytes);
+	Int32 y = sr.readSigned(bytes);
 	return Pair32(x, y);
 }
 
@@ -167,38 +138,36 @@ static int max_int_size (const Pair<Int32> *pairs, size_t n) {
 bool FontCache::write (const char *fontname, ostream &os) const {
 	if (!_changed)
 		return true;
+	if (!os)
+		return false;
+
+	StreamWriter sw(os);
 
 	struct WriteActions : Glyph::Actions {
-		WriteActions (ostream &os) : _os(os) {}
+		WriteActions (StreamWriter &sw) : _sw(sw) {}
 
 		void draw (char cmd, const Glyph::Point *points, int n) {
 			int bytes = max_int_size(points, n);
 			UInt8 cmdchar = (bytes << 5) | (cmd - 'A');
-			write_unsigned(cmdchar, 1, _os);
+			_sw.writeUnsigned(cmdchar, 1);
 			for (int i=0; i < n; i++) {
-				write_signed(points[i].x(), bytes, _os);
-				write_signed(points[i].y(), bytes, _os);
+				_sw.writeSigned(points[i].x(), bytes);
+				_sw.writeSigned(points[i].y(), bytes);
 			}
 		}
+		StreamWriter &_sw;
+	} actions(sw);
 
-		ostream &_os;
-	} actions(os);
-
-	if (os) {
-		write_unsigned(VERSION, 1, os);
-		for (const char *p=fontname; *p; p++)
-			os.put(*p);
-		os.put(0);
-		write_unsigned(_glyphs.size(), 4, os);
-		FORALL(_glyphs, GlyphMap::const_iterator, it) {
-			const Glyph &glyph = it->second;
-			write_unsigned(it->first, 4, os);
-			write_unsigned(glyph.size(), 2, os);
-			glyph.iterate(actions, false);
-		}
-		return true;
+	sw.writeUnsigned(VERSION, 1);
+	sw.writeString(fontname, true);
+	sw.writeUnsigned(_glyphs.size(), 4);
+	FORALL(_glyphs, GlyphMap::const_iterator, it) {
+		const Glyph &glyph = it->second;
+		sw.writeUnsigned(it->first, 4);
+		sw.writeUnsigned(glyph.size(), 2);
+		glyph.iterate(actions, false);
 	}
-	return false;
+	return true;
 }
 
 
@@ -229,56 +198,58 @@ bool FontCache::read (const char *fontname, const char *dir) {
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, istream &is) {
 	if (_fontname == fontname)
-		return true;	
+		return true;
+	if (!is)
+		return false;
+
 	clear();
 	_fontname = fontname;
-	if (is) {
-		if (read_unsigned(1, is) != VERSION)
-			return false;
-		string fname;
-		while (!is.eof() && is.peek() != 0)
-			fname += is.get();
-		is.get(); // skip 0-byte
-		if (fname != fontname)
-			return false;
-		UInt32 num_glyphs = read_unsigned(4, is);
-		while (num_glyphs-- > 0) {
-			UInt32 c = read_unsigned(4, is);  // character code
-			UInt16 s = read_unsigned(2, is);  // number of path commands
-			Glyph &glyph = _glyphs[c];
-			while (s-- > 0) {
-				UInt8 cmdval = read_unsigned(1, is);
-				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
-				int bytes = cmdval >> 5;
-				switch (cmdchar) {
-					case 'C': {
-						Pair32 p1 = read_pair(bytes, is);
-						Pair32 p2 = read_pair(bytes, is);
-						Pair32 p3 = read_pair(bytes, is);
-						glyph.cubicto(p1, p2, p3);
-						break;
-					}
-					case 'L':
-						glyph.lineto(read_pair(bytes, is));
-						break;
-					case 'M':
-						glyph.moveto(read_pair(bytes, is));
-						break;
-					case 'Q': {
-						Pair32 p1 = read_pair(bytes, is);
-						Pair32 p2 = read_pair(bytes, is);
-						glyph.conicto(p1, p2);
-						break;
-					}
-					case 'Z':
-						glyph.closepath();
+
+	StreamReader sr(is);
+	if (sr.readUnsigned(1) != VERSION)
+		return false;
+	string fname;
+	while (!is.eof() && is.peek() != 0)
+		fname += is.get();
+	is.get(); // skip 0-byte
+	if (fname != fontname)
+		return false;
+	UInt32 num_glyphs = sr.readUnsigned(4);
+	while (num_glyphs-- > 0) {
+		UInt32 c = sr.readUnsigned(4);  // character code
+		UInt16 s = sr.readUnsigned(2);  // number of path commands
+		Glyph &glyph = _glyphs[c];
+		while (s-- > 0) {
+			UInt8 cmdval = sr.readUnsigned(1);
+			UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+			int bytes = cmdval >> 5;
+			switch (cmdchar) {
+				case 'C': {
+					Pair32 p1 = read_pair(bytes, sr);
+					Pair32 p2 = read_pair(bytes, sr);
+					Pair32 p3 = read_pair(bytes, sr);
+					glyph.cubicto(p1, p2, p3);
+					break;
 				}
+				case 'L':
+					glyph.lineto(read_pair(bytes, sr));
+					break;
+				case 'M':
+					glyph.moveto(read_pair(bytes, sr));
+					break;
+				case 'Q': {
+					Pair32 p1 = read_pair(bytes, sr);
+					Pair32 p2 = read_pair(bytes, sr);
+					glyph.conicto(p1, p2);
+					break;
+				}
+				case 'Z':
+					glyph.closepath();
 			}
 		}
-		_changed = false;		
-		return true;
 	}
-	return false;
+	_changed = false;
+	return true;
 }
 
 
@@ -313,17 +284,18 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	info.name.clear();
 	info.numchars = info.numbytes = info.numcmds = 0;
 	if (is) {
-		if ((info.version = read_unsigned(1, is)) != VERSION)
+		StreamReader sr(is);
+		if ((info.version = sr.readUnsigned(1)) != VERSION)
 			return false;
 		while (!is.eof() && is.peek() != 0)
 			info.name += is.get();
 		is.get(); // skip 0-byte
-		info.numchars = read_unsigned(4, is);
+		info.numchars = sr.readUnsigned(4);
 		for (UInt32 i=0; i < info.numchars; i++) {
-			read_unsigned(4, is);  // character code
-			UInt16 s = read_unsigned(2, is);  // number of path commands
+			sr.readUnsigned(4);  // character code
+			UInt16 s = sr.readUnsigned(2);  // number of path commands
 			while (s-- > 0) {
-				UInt8 cmdval = read_unsigned(1, is);
+				UInt8 cmdval = sr.readUnsigned(1);
 				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
 				int bytes = cmdval >> 5;
 				int bc = 0;

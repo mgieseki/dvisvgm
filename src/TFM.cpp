@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -24,22 +24,10 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
+#include "StreamReader.h"
 #include "TFM.h"
 
 using namespace std;
-
-
-/** Reads a single unsigned integer value of given size (max. 4 bytes).
- *  @param[in] is characters are read from this stream
- *  @param[in] n number of bytes to be read */
-static UInt32 read_unsigned (istream &is, int n) {
-	UInt32 ret = 0;
-	for (int i=n-1; i >= 0 && !is.eof(); i--) {
-		UInt32 b = is.get();
-		ret |= b << (8*i);
-	}
-	return ret;
-}
 
 
 /** Reads a sequence of n TFM words (4 Bytes each).
@@ -49,11 +37,11 @@ static UInt32 read_unsigned (istream &is, int n) {
  *  @return dynamically allocated array containing the read words
  *          (must be deleted by the caller) */
 template <typename T>
-static void read_words (istream &is, vector<T> &v, unsigned n) {
+static void read_words (StreamReader &sr, vector<T> &v, unsigned n) {
 	v.clear();
 	v.resize(n);
 	for (unsigned i=0; i < n; i++)
-		v[i] = read_unsigned(is, 4);
+		v[i] = sr.readUnsigned(4);
 }
 
 
@@ -84,28 +72,29 @@ TFM* TFM::createFromFile (const char *fontname) {
 
 
 bool TFM::readFromStream (istream &is) {
+	StreamReader sr(is);
 	is.seekg(2, ios_base::beg);        // skip file size
-	UInt16 lh = read_unsigned(is, 2);  // length of header in 4 byte words
-	_firstChar= read_unsigned(is, 2);  // smalles character code in font
-	_lastChar = read_unsigned(is, 2);  // largest character code in font
-	UInt16 nw = read_unsigned(is, 2);  // number of words in width table
-	UInt16 nh = read_unsigned(is, 2);  // number of words in height table
-	UInt16 nd = read_unsigned(is, 2);  // number of words in depth table
-	UInt16 ni = read_unsigned(is, 2);  // number of words in italic corr. table
-//	UInt16 nl = read_unsigned(is, 2);  // number of words in lig/kern table
-//	UInt16 nk = read_unsigned(is, 2);  // number of words in kern table
-//	UInt16 ne = read_unsigned(is, 2);  // number of words in ext. char table
-//	UInt16 np = read_unsigned(is, 2);  // number of font parameter words
+	UInt16 lh = sr.readUnsigned(2);  // length of header in 4 byte words
+	_firstChar= sr.readUnsigned(2);  // smalles character code in font
+	_lastChar = sr.readUnsigned(2);  // largest character code in font
+	UInt16 nw = sr.readUnsigned(2);  // number of words in width table
+	UInt16 nh = sr.readUnsigned(2);  // number of words in height table
+	UInt16 nd = sr.readUnsigned(2);  // number of words in depth table
+	UInt16 ni = sr.readUnsigned(2);  // number of words in italic corr. table
+//	UInt16 nl = sr.readUnsigned(2);  // number of words in lig/kern table
+//	UInt16 nk = sr.readUnsigned(2);  // number of words in kern table
+//	UInt16 ne = sr.readUnsigned(2);  // number of words in ext. char table
+//	UInt16 np = sr.readUnsigned(2);  // number of font parameter words
 
 	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
-	_checksum = read_unsigned(is, 4);
-	_designSize = read_unsigned(is, 4);
+	_checksum = sr.readUnsigned(4);
+	_designSize = sr.readUnsigned(4);
 	is.seekg(24+lh*4, ios_base::beg);  // move to char info table
-	read_words(is, _charInfoTable, _lastChar-_firstChar+1);
-	read_words(is, _widthTable, nw);
-	read_words(is, _heightTable, nh);
-	read_words(is, _depthTable, nd);
-	read_words(is, _italicTable, ni);
+	read_words(sr, _charInfoTable, _lastChar-_firstChar+1);
+	read_words(sr, _widthTable, nw);
+	read_words(sr, _heightTable, nh);
+	read_words(sr, _depthTable, nd);
+	read_words(sr, _italicTable, ni);
 	return true;
 }
 
