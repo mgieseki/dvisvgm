@@ -151,9 +151,9 @@ static void set_libgs (CommandLine &args) {
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cache_given() && !args.cache_arg().empty()) {
 		if (args.cache_arg() == "none")
-			PhysicalFontImpl::CACHE_PATH = 0;
+			PhysicalFont::CACHE_PATH = 0;
 		else if (FileSystem::exists(args.cache_arg().c_str()))
-			PhysicalFontImpl::CACHE_PATH = args.cache_arg().c_str();
+			PhysicalFont::CACHE_PATH = args.cache_arg().c_str();
 		else
 			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)" << endl;
 	}
@@ -165,11 +165,11 @@ static bool set_cache_dir (const CommandLine &args) {
 			path = FileSystem::adaptPathSeperators(path);
 			if (!FileSystem::exists(path.c_str()))
 				FileSystem::mkdir(path.c_str());
-			PhysicalFontImpl::CACHE_PATH = path.c_str();
+			PhysicalFont::CACHE_PATH = path.c_str();
 		}
 		if (args.cache_given() && args.cache_arg().empty()) {
-			cout << "cache directory: " << (PhysicalFontImpl::CACHE_PATH ? PhysicalFontImpl::CACHE_PATH : "(none)") << endl;
-			FontCache::fontinfo(PhysicalFontImpl::CACHE_PATH, cout);
+			cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << endl;
+			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout);
 			return false;
 		}
 	}
@@ -252,7 +252,7 @@ int main (int argc, char *argv[]) {
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
-	PhysicalFontImpl::METAFONT_MAG = args.mag_arg();
+	PhysicalFont::METAFONT_MAG = args.mag_arg();
 
 	double start_time = get_time();
 

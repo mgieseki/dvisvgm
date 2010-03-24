@@ -95,11 +95,27 @@ double TFMFont::italicCorr (int c) const {return getTFM()->getItalicCorr(c);}
 
 //////////////////////////////////////////////////////////////////////////////
 
+// static class variables
 bool PhysicalFont::KEEP_TEMP_FILES = false;
+const char *PhysicalFont::CACHE_PATH = 0;
+double PhysicalFont::METAFONT_MAG = 4;
+FontCache PhysicalFont::_cache;
+
 
 
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
+}
+
+
+const char* PhysicalFont::path () const {
+	string ext;
+	switch (type()) {
+		case PFB: ext = "pfb"; break;
+		case TTF: ext = "ttf"; break;
+		case MF : ext = "mf";  break;
+	}
+	return FileFinder::lookup(name()+"."+ext);
 }
 
 
@@ -159,62 +175,12 @@ int PhysicalFont::descent () const {
 }
 
 
-void PhysicalFont::tidy () const {
-   if (!KEEP_TEMP_FILES && type() == MF) {
-		const char *ext[] = {"gf", "tfm", "log", 0};
-		for (const char **p=ext; *p; ++p) {
-			if (FileSystem::exists((name()+"."+(*p)).c_str()))
-				FileSystem::remove(name()+"."+(*p));
-		}
-   }
-}
-
-
-Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ssize) {
-	return new VirtualFontImpl(name, checksum, dsize, ssize);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////
-
-
-// static class variables
-const char *PhysicalFontImpl::CACHE_PATH = 0;
-double PhysicalFontImpl::METAFONT_MAG = 4;
-FontCache PhysicalFontImpl::_cache;
-
-
-PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
-	: TFMFont(name, cs, ds, ss), _filetype(type), _charmap(0)
-{
-}
-
-
-PhysicalFontImpl::~PhysicalFontImpl () {
-	if (CACHE_PATH)
-		_cache.write(CACHE_PATH);
-	tidy();
-	delete _charmap;
-}
-
-
-const char* PhysicalFontImpl::path () const {
-	string ext;
-	switch (_filetype) {
-		case PFB: ext = "pfb"; break;
-		case TTF: ext = "ttf"; break;
-		case MF : ext = "mf";  break;
-	}
-	return FileFinder::lookup(name()+"."+ext);
-}
-
-
 /** Extracts the glyph outlines of a given character.
  *  @param[in]  c character code of requested glyph
  *  @param[out] glyph path segments of the glyph outline
  *  @param[in]  cb optional callback object for tracer class
  *  @return true if outline could be computed */
-bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
+bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
 	if (type() == MF) {
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {
@@ -266,11 +232,66 @@ bool PhysicalFontImpl::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer
 /** Creates a GF file for this font object.
  *  @param[out] gfname name of GF font file
  *  @return true on success */
-bool PhysicalFontImpl::createGF (string &gfname) const {
+bool PhysicalFont::createGF (string &gfname) const {
 	gfname = name()+".gf";
 	MetafontWrapper mf(name());
 	mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
 	return mf.success() && getTFM();
+}
+
+
+/** Traces all glyphs of the current font and stores them in the cache. If caching is disabled, nothing happens.
+ *  @param[in] includeCached if true, glyphs already cached are traced again
+ *  @param[in] cb optional callback methods called by the tracer
+ *  @return number of glyphs traced */
+int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
+	int count = 0;
+	if (type() == MF && CACHE_PATH) {
+		if (const TFM *tfm = getTFM()) {
+			int fchar = tfm->firstChar();
+			int lchar = tfm->lastChar();
+			string gfname;
+			Glyph glyph;
+			if (createGF(gfname)) {
+				_cache.read(name().c_str(), CACHE_PATH);
+				GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
+				tracer.setGlyph(glyph);
+				for (int i=fchar; i <= lchar; i++) {
+					if (includeCached || !_cache.getGlyph(i)) {
+						glyph.newpath();
+						tracer.executeChar(i);
+						_cache.setGlyph(i, glyph);
+						++count;
+					}
+				}
+				_cache.write(CACHE_PATH);
+			}
+		}
+	}
+	return count;
+}
+
+
+Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ssize) {
+	return new VirtualFontImpl(name, checksum, dsize, ssize);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
+	: TFMFont(name, cs, ds, ss), _filetype(type), _charmap(0)
+{
+}
+
+
+PhysicalFontImpl::~PhysicalFontImpl () {
+	if (CACHE_PATH)
+		_cache.write(CACHE_PATH);
+	if (!KEEP_TEMP_FILES)
+		tidy();
+	delete _charmap;
 }
 
 
@@ -303,35 +324,14 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 }
 
 
-/** Traces all glyphs of the current font and stores them in the cache. If caching is disabled, nothing happens.
- *  @param[in] includeCached if true, glyphs already cached are traced again
- *  @param[in] cb optional callback methods called by the tracer
- *  @return number of glyphs traced */
-int PhysicalFontImpl::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
-	int count = 0;
-	if (type() == MF && CACHE_PATH) {
-		if (const TFM *tfm = getTFM()) {
-			int fchar = tfm->firstChar();
-			int lchar = tfm->lastChar();
-			string gfname;
-			Glyph glyph;
-			if (createGF(gfname)) {
-				_cache.read(name().c_str(), CACHE_PATH);
-				GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
-				tracer.setGlyph(glyph);
-				for (int i=fchar; i <= lchar; i++) {
-					if (includeCached || !_cache.getGlyph(i)) {
-						glyph.newpath();
-						tracer.executeChar(i);
-						_cache.setGlyph(i, glyph);
-						++count;
-					}
-				}
-				_cache.write(CACHE_PATH);
-			}
+void PhysicalFontImpl::tidy () const {
+   if (type() == MF) {
+		const char *ext[] = {"gf", "tfm", "log", 0};
+		for (const char **p=ext; *p; ++p) {
+			if (FileSystem::exists((name()+"."+(*p)).c_str()))
+				FileSystem::remove(name()+"."+(*p));
 		}
-	}
-	return count;
+   }
 }
 
 

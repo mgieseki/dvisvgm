@@ -86,22 +86,32 @@ struct EmptyFont : public Font
 
 
 /** Interface for all physical fonts. */
-struct PhysicalFont : public virtual Font
+class PhysicalFont : public virtual Font
 {
-	enum Type {MF, PFB, TTF};
-	static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
-	virtual Type type () const =0;
-	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
-	virtual int hAdvance () const;
-	virtual double hAdvance (int c) const;
-	std::string glyphName (int c) const;
-   virtual int unitsPerEm () const;
-	virtual int ascent () const;
-	virtual int descent () const;
-   virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const =0;
-   void tidy () const;
+   public:
+      enum Type {MF, PFB, TTF};
+      static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+      virtual Type type () const =0;
+      virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
+      virtual int hAdvance () const;
+      virtual double hAdvance (int c) const;
+      std::string glyphName (int c) const;
+      virtual int unitsPerEm () const;
+      virtual int ascent () const;
+      virtual int descent () const;
+      virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
+      const char* path () const;
 
-   static bool KEEP_TEMP_FILES;
+   protected:
+      bool createGF (std::string &gfname) const;
+
+   public:
+      static bool KEEP_TEMP_FILES;
+      static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
+      static double METAFONT_MAG;    ///< magnification factor for Metafont calls
+
+   protected:
+      static FontCache _cache;
 };
 
 
@@ -159,11 +169,8 @@ class PhysicalFontProxy : public PhysicalFont
 		double charHeight (int c) const           {return pf->charHeight(c);}
 		double italicCorr (int c) const           {return pf->italicCorr(c);}
 		const TFM* getTFM () const                {return pf->getTFM();}
-		const char* path () const                 {return pf->path();}
 		Type type () const                        {return pf->type();}
       UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
-      bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return pf->getGlyph(c, glyph, cb);}
-      int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const {return pf->traceAllGlyphs(includeCached, cb);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -184,23 +191,15 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
 		const Font* uniqueFont () const          {return this;}
       Type type () const                       {return _filetype;}
-		const char* path () const;
-      bool getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb=0) const;
       UInt32 unicode (UInt32 c) const;
-      int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
-
-   public:
-		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
-		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
+      void tidy () const;
 
 	protected:
 		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
-  		bool createGF (std::string &gfname) const;
 
 	private:
 		Type _filetype;
       mutable std::map<UInt32,UInt32> *_charmap;
-      static FontCache _cache;
 };
 
 
