@@ -63,10 +63,8 @@ void FontCache::clear () {
  *  @param[in] c character code
  *  @param[in] glyph font glyph data */
 void FontCache::setGlyph (int c, const Glyph &glyph) {
-	if (!glyph.empty()) {
-		_glyphs[c] = glyph;
-		_changed = true;
-	}
+	_glyphs[c] = glyph;
+	_changed = true;
 }
 
 
@@ -199,11 +197,10 @@ bool FontCache::read (const char *fontname, const char *dir) {
 bool FontCache::read (const char *fontname, istream &is) {
 	if (_fontname == fontname)
 		return true;
-	if (!is)
-		return false;
-
 	clear();
 	_fontname = fontname;
+	if (!is)
+		return false;
 
 	StreamReader sr(is);
 	if (sr.readUnsigned(1) != VERSION)
