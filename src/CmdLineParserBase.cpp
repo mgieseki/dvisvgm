@@ -58,7 +58,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 						(*opt->handler)(this, ir, *opt, true);
 					else if (!_error) {
 						if (printErrors)
-							Message::estream(false) << "unknown option --" << longname << endl;
+							Message::estream(false) << "unknown option --" << longname << '\n';
 						_error = true;
 					}
 				}
@@ -86,7 +86,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 					}
 					else if (shortname > 0) {
 						if (printErrors)
-							Message::estream(false) << "unknown option -" << shortname << endl;
+							Message::estream(false) << "unknown option -" << shortname << '\n';
 						_error = true;
 					}
 				}
@@ -108,7 +108,7 @@ void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg)
 			Message::estream(false) << "--" << opt.longname;
 		else
 			Message::estream(false) << '-' << opt.shortname;
-		Message::estream(false) << ": " << msg << endl;
+		Message::estream(false) << ": " << msg << '\n';
 	}
 	_error = true;
 }
@@ -140,7 +140,6 @@ const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) cons
  *  Otherwise, the return value is 0.
  *  @param[in] longname long version of the option without leading hyphens (e.g. param, not --param) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (const string &longname) const {
-	const Option *opts = options();
 	vector<const Option*> matches;  // all matching options
 	size_t len = longname.length();
 	for (const Option *opts = options(); opts->longname; ++opts) {

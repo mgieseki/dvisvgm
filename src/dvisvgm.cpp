@@ -155,7 +155,7 @@ static bool set_cache_dir (const CommandLine &args) {
 		else if (FileSystem::exists(args.cache_arg().c_str()))
 			PhysicalFont::CACHE_PATH = args.cache_arg().c_str();
 		else
-			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)" << endl;
+			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)\n";
 	}
 	else {
 		const char *userdir = FileSystem::userdir();
@@ -168,7 +168,7 @@ static bool set_cache_dir (const CommandLine &args) {
 			PhysicalFont::CACHE_PATH = path.c_str();
 		}
 		if (args.cache_given() && args.cache_arg().empty()) {
-			cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << endl;
+			cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << '\n';
 			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout);
 			return false;
 		}
@@ -198,7 +198,7 @@ static bool check_bbox (const string &bboxstr) {
 		return true;
 	}
 	catch (const MessageException &e) {
-		Message::estream(true) << e.getMessage() << endl;
+		Message::estream(true) << e.getMessage() << '\n';
 		return false;
 	}
 }
@@ -231,7 +231,7 @@ int main (int argc, char *argv[]) {
 	}
 
 	if (argc > 1 && args.numFiles() < 1) {
-		Message::estream(true) << "no input file given" << endl;
+		Message::estream(true) << "no input file given\n";
 		return 1;
 	}
 
@@ -294,10 +294,7 @@ int main (int argc, char *argv[]) {
 					out.release();       // force writing
 					const char *pstr = pages == 1 ? "" : "s";
 					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
-					Message::mstream() << "1 ";
-					if (pages > 1)
-						Message::mstream() << "of " << pages << " ";
-					Message::mstream() << "page" << pstr << " written to "
+					Message::mstream() << "\n1 page" << pstr << " written to "
 						                << (args.stdout_given() ? "<stdout>" : svgfile)
 					                   << " (" << nbytes << " bytes";
 					if (args.zip_given())
@@ -306,10 +303,10 @@ int main (int argc, char *argv[]) {
 				}
 			}
 			catch (DVIException &e) {
-				Message::estream() << "DVI error: " << e.getMessage() << endl;
+				Message::estream() << "DVI error: " << e.getMessage() << '\n';
 			}
 			catch (MessageException &e) {
-				Message::estream(true) << e.getMessage() << endl;
+				Message::estream(true) << e.getMessage() << '\n';
 			}
 		}
 	}

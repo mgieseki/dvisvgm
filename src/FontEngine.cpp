@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <iostream>
@@ -82,7 +82,7 @@ static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int ptSize) {
 	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
-		Message::estream(true) << "FontEngine: error reading file " << fname << endl;
+		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
       return false;
    }
 	if (ptSize && FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
@@ -309,12 +309,12 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
 static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
 	if (face) {
 		if (FT_Load_Glyph(face, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
-			Message::estream(true) << "can't load glyph " << int(index) << endl;
+			Message::estream(true) << "can't load glyph " << int(index) << '\n';
          return false;
       }
 
 		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
-			Message::estream(true) << "no outlines found in glyph " << int(index) << endl;
+			Message::estream(true) << "no outlines found in glyph " << int(index) << '\n';
 			return false;
 		}
 		FT_Outline outline = face->glyph->outline;

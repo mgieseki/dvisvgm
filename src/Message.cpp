@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,40 +15,51 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdarg>
 #include <iostream>
 #include "Message.h"
+#include "macros.h"
 
 using namespace std;
 
 
-struct NullStreamBuf : public streambuf
-{
-	streambuf::int_type overflow (int c)  {return 0;}
-	streambuf::int_type underflow ()      {return traits_type::eof();}
-	int sync ()                           {return traits_type::eof();}
-};
+MessageStream& MessageStream::operator << (const char *str) {
+	if (_os) {
+		for (const char *p=str; *p; ++p) {
+			if (!_nl || *p != '\n') {
+				(*_os) << *p;
+				_nl = (*p == '\n');
+			}
+		}
+	}
+	return *this;
+}
 
 
-struct NullStream : public ostream
-{
-	NullStream () : ostream(new NullStreamBuf) {}
-	~NullStream () {delete rdbuf();}
-};
+MessageStream& MessageStream::operator << (const char &c) {
+	if (_os) {
+		if (!_nl || c != '\n') {
+			(*_os) << c;
+			_nl = (c == '\n');
+		}
+	}
+	return *this;
+}
 
 
-static NullStream nullStream;
+static MessageStream nullStream;
+static MessageStream messageStream(cerr);
 
 // maximal verbosity
 int Message::level = Message::MESSAGES | Message::WARNINGS | Message::ERRORS;
 
 
 /** Returns the stream for usual messages. */
-ostream& Message::mstream (bool prefix) {
-	ostream *os = (level & MESSAGES) ? &cerr : &nullStream;
+MessageStream& Message::mstream (bool prefix) {
+	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
 	if (prefix)
 		*os << "MESSAGE: ";
 	return *os;
@@ -56,8 +67,8 @@ ostream& Message::mstream (bool prefix) {
 
 
 /** Returns the stream for warning messages. */
-ostream& Message::wstream (bool prefix) {
-	ostream *os = (level & WARNINGS) ? &cerr : &nullStream;
+MessageStream& Message::wstream (bool prefix) {
+	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
 	if (prefix)
 		*os << "WARNING: ";
 	return *os;
@@ -65,8 +76,8 @@ ostream& Message::wstream (bool prefix) {
 
 
 /** Returns the stream for error messages. */
-ostream& Message::estream (bool prefix) {
-	ostream *os = (level & ERRORS) ? &cerr : &nullStream;
+MessageStream& Message::estream (bool prefix) {
+	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
 	if (prefix)
 		*os << "ERROR: ";
 	return *os;

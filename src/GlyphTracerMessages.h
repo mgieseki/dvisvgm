@@ -28,19 +28,17 @@
 class GlyphTracerMessages : public GFGlyphTracer::Callback
 {
 	public:
-
-		GlyphTracerMessages () : _output(false) {}
-		~GlyphTracerMessages ()                 {if (_output) Message::mstream() << std::endl;}
+		GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl) {}
+		~GlyphTracerMessages ()  {if (_autonl) Message::mstream() << '\n';}
 		void beginChar (UInt8 c) {Message::mstream() << '[';}
 		void emptyChar (UInt8 c) {Message::mstream() << "(empty)]";}
 
 		void setFont (const std::string &fname) {
-			if (fname != _fname) {
+			if (_sfmsg && fname != _fname) {
 				if (!_fname.empty())
-					Message::mstream() << std::endl;
-				Message::mstream() << "tracing glyphs of " << fname.substr(0, fname.length()-3) << std::endl;
+					Message::mstream() << '\n';
+				Message::mstream() << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
 				_fname = fname;
-				_output = true;
 			}
 		}
 
@@ -54,7 +52,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 
 	private:
 		std::string _fname;
-		bool _output;
+		bool _sfmsg, _autonl;
 };
 
 

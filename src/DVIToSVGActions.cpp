@@ -29,6 +29,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "Ghostscript.h"
+#include "GlyphTracerMessages.h"
 #include "SpecialManager.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -65,7 +66,7 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
  *  @param[in] y vertical position of the character's baseline
  *  @param[in] c character code relative to the current font
  *  @param[in] font font to be used */
-void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {		
+void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
 	// If we use SVG fonts there is no need to record all font name/char/size combinations
 	// because the SVG font mechanism handles this automatically. It's sufficient to
 	// record font names and chars. The various font sizes can be ignored here.
@@ -74,12 +75,14 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	_usedCharsMap[SVGTree::USE_FONTS ? font->uniqueFont() : font].insert(c);
 
 	_svg.appendChar(c, x, y, *font);
-
-	// update bounding box	
-	double wl=0, wr=0, h=0, d=0; // left/right width, height, and depth of character c	
+	// update bounding box
+	double wl=0, wr=0, h=0, d=0; // left/right width, height, and depth of character c
+	static string fontname;
+	GlyphTracerMessages callback(fontname != font->name(), false);
+	fontname = font->name();
 	BoundingBox charbox;
 	const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font);
-	if (EXACT_BBOX && ph_font && ph_font->getGlyphBox(c, charbox)) {
+	if (EXACT_BBOX && ph_font && ph_font->getGlyphBox(c, charbox, &callback)) {
 		if ((wl = charbox.minX()) > 0) wl=0;
 		if ((wr = charbox.maxX()) < 0) wr=0;
 		if ((h = charbox.maxY()) < 0) h=0;
@@ -90,7 +93,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		wr = s*(font->charWidth(c) + font->italicCorr(c));
 		h  = s*font->charHeight(c);
 		d  = s*font->charDepth(c);
-	}	
+	}
 
 	BoundingBox bbox(x+wl, y-h, x+wr, y+d);
 /*	XMLElementNode *rect = new XMLElementNode("rect");
@@ -157,7 +160,7 @@ void DVIToSVGActions::special (const string &s) {
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
-		Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << endl;
+		Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << '\n';
 	}
 }
 
