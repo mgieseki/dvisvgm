@@ -260,6 +260,7 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 					if (includeCached || !_cache.getGlyph(i)) {
 						glyph.newpath();
 						tracer.executeChar(i);
+						glyph.closeOpenSubPaths();
 						_cache.setGlyph(i, glyph);
 						++count;
 					}
@@ -269,6 +270,23 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 		}
 	}
 	return count;
+}
+
+
+/** Computes the exact bounding box of a glyph.
+ *  @param[in]  c character code of the glyph
+ *  @param[out] bbox the computed bounding box
+ *  @param[in]  optional calback object forwarded to the tracer
+ *  @return true if the box could be computed successfully */
+bool PhysicalFont::getGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
+	Glyph glyph;
+	if (getGlyph(c, glyph, cb)) {
+		glyph.computeBBox(bbox);
+		double s = scaledSize()/unitsPerEm();
+		bbox.scale(s, s);
+		return true;
+	}
+	return false;
 }
 
 

@@ -37,6 +37,7 @@ using namespace std;
 
 
 unsigned DVIToSVGActions::PROGRESSBAR = 0;
+bool DVIToSVGActions::EXACT_BBOX = false;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
@@ -64,34 +65,46 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
  *  @param[in] y vertical position of the character's baseline
  *  @param[in] c character code relative to the current font
  *  @param[in] font font to be used */
-void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
-/*	x *= BP;
-	y *= BP; */
-	if (SVGTree::USE_FONTS) {
-		// If we use SVG fonts there is no need to record all font name/char/size combinations
-		// because the SVG font mechanism handles this automatically. It's sufficient to
-		// record font names and chars. The various font sizes can be ignored here.
-		// For a given font object, Font::uniqueFont() returns the same unique font object for
-		// all fonts with the same name.
-		font = font->uniqueFont();
-	}
-	_usedCharsMap[font].insert(c);
+void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {		
+	// If we use SVG fonts there is no need to record all font name/char/size combinations
+	// because the SVG font mechanism handles this automatically. It's sufficient to
+	// record font names and chars. The various font sizes can be ignored here.
+	// For a given font object, Font::uniqueFont() returns the same unique font object for
+	// all fonts with the same name.
+	_usedCharsMap[SVGTree::USE_FONTS ? font->uniqueFont() : font].insert(c);
 
 	_svg.appendChar(c, x, y, *font);
 
-	// update bounding box
-	if (font) {
-		/*	x *= BP;
-			y *= BP;*/
-		double s = font->scaleFactor(); // * BP;
-		double w = s*(font->charWidth(c) + font->italicCorr(c));
-		double h = s*font->charHeight(c);
-		double d = s*font->charDepth(c);
-		BoundingBox charbox(x, y-h, x+w, y+d);
-		if (!getMatrix().isIdentity())
-			charbox.transform(getMatrix());
-		_bbox.embed(charbox);
+	// update bounding box	
+	double wl=0, wr=0, h=0, d=0; // left/right width, height, and depth of character c	
+	BoundingBox charbox;
+	const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font);
+	if (EXACT_BBOX && ph_font && ph_font->getGlyphBox(c, charbox)) {
+		if ((wl = charbox.minX()) > 0) wl=0;
+		if ((wr = charbox.maxX()) < 0) wr=0;
+		if ((h = charbox.maxY()) < 0) h=0;
+		if ((d = -charbox.minY()) < 0) d=0;
 	}
+	else {
+		double s = ph_font->scaleFactor();
+		wr = s*(font->charWidth(c) + font->italicCorr(c));
+		h  = s*font->charHeight(c);
+		d  = s*font->charDepth(c);
+	}	
+
+	BoundingBox bbox(x+wl, y-h, x+wr, y+d);
+/*	XMLElementNode *rect = new XMLElementNode("rect");
+	rect->addAttribute("x", x+wl);
+	rect->addAttribute("y", y-h);
+	rect->addAttribute("width", (-wl+wr));
+	rect->addAttribute("height", (h+d));
+	rect->addAttribute("fill", "none");
+	rect->addAttribute("stroke", "red");
+	rect->addAttribute("stroke-width", "0.5");
+	_svg.appendToPage(rect);*/
+	if (!getMatrix().isIdentity())
+		bbox.transform(getMatrix());
+	_bbox.embed(bbox);
 }
 
 

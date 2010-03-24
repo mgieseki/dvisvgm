@@ -42,6 +42,7 @@ class CommandLine : public CmdLineParserBase
       const std::string& transform_arg () const {return _transform_arg;}
       bool cache_given () const {return _cache_given;}
       const std::string& cache_arg () const {return _cache_arg;}
+      bool exact_given () const {return _exact_given;}
       bool keep_given () const {return _keep_given;}
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
       bool libgs_given () const {return _libgs_given;}
@@ -78,6 +79,7 @@ class CommandLine : public CmdLineParserBase
       void handle_translate (InputReader &ir, const Option &opt, bool longopt);
       void handle_transform (InputReader &ir, const Option &opt, bool longopt);
       void handle_cache (InputReader &ir, const Option &opt, bool longopt);
+      void handle_exact (InputReader &ir, const Option &opt, bool longopt);
       void handle_keep (InputReader &ir, const Option &opt, bool longopt);
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
       void handle_libgs (InputReader &ir, const Option &opt, bool longopt);
@@ -117,6 +119,7 @@ class CommandLine : public CmdLineParserBase
       std::string _transform_arg;
       bool _cache_given;
       std::string _cache_arg;
+      bool _exact_given;
       bool _keep_given;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
       bool _libgs_given;

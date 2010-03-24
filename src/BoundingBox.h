@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef BOUNDINGBOX_H
@@ -52,6 +52,10 @@ class BoundingBox
 		void embed (const BoundingBox &bb);
 		void embed (const DPair &p) {embed(p.x(), p.y());}
 		void embed (const DPair &c, double r);
+
+		template <typename T>
+      void embed (const Pair<T> &p) {embed(p.x(), p.y());}
+
 		void expand (double m);
 		bool  intersect (const BoundingBox &bbox);
 		double minX () const        {return ulx;}
@@ -63,6 +67,7 @@ class BoundingBox
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
 		void operator += (const BoundingBox &bb);
+      void scale (double sx, double sy);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;

@@ -93,6 +93,7 @@ class PhysicalFont : public virtual Font
       static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
       virtual Type type () const =0;
       virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
+      virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
       virtual int hAdvance () const;
       virtual double hAdvance (int c) const;
       std::string glyphName (int c) const;

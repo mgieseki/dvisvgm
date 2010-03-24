@@ -35,6 +35,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "FileFinder.h"
+#include "GlyphTracerMessages.h"
 #include "InputReader.h"
 #include "Matrix.h"
 #include "Message.h"
@@ -246,42 +247,15 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 
 	collect_chars(usedChars);
 
-	struct Callback : GFGlyphTracer::Callback {
-		string _fname;
-		bool _output;
-
-		Callback () : _output(false) {}
-		~Callback ()                 {if (_output) Message::mstream() << endl;}
-		void beginChar (UInt8 c)     {Message::mstream() << '[';}
-		void emptyChar (UInt8 c)     {Message::mstream() << "(empty)]";}
-
-		void setFont (const string &fname) {
-			if (fname != _fname) {
-				if (!_fname.empty())
-					Message::mstream() << endl;
-				Message::mstream() << "tracing glyphs of " << fname.substr(0, fname.length()-3) << endl;
-				_fname = fname;
-				_output = true;
-			}
-		}
-
-      void endChar (UInt8 c) {
-			if (isprint(c))
-				Message::mstream() << c;
-			else
-				Message::mstream() << '#' << unsigned(c);
-			Message::mstream() << ']';
-		}		
-	} callback;
-
+	GlyphTracerMessages messages;
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
 			if (TRACE_MODE)
-				ph_font->traceAllGlyphs(TRACE_MODE == 'a', &callback);
-							
+				ph_font->traceAllGlyphs(TRACE_MODE == 'a', &messages);
+
 			if (font->path())  // does font file exist?
-				_svg.append(*ph_font, it->second, &callback);
+				_svg.append(*ph_font, it->second, &messages);
 			else
 				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}

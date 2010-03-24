@@ -15,9 +15,9 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CmdLineParserBase.h Color.h \
 	ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h \
 	DVIToSVGActions.h EmSpecialHandler.h FileFinder.h FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h \
-	FontManager.h FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h Glyph.h GraphicPath.h InputBuffer.h InputReader.h \
-	Length.h macros.h Matrix.h Message.h MessageException.h MetafontWrapper.h PageSize.h Pair.h PSInterpreter.h PsSpecialHandler.h \
-	SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h SVGTree.h \
+	FontManager.h FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h Glyph.h GlyphTracerMessages.h \
+	GraphicPath.h InputBuffer.h InputReader.h Length.h macros.h Matrix.h Message.h MessageException.h MetafontWrapper.h \
+	PageSize.h Pair.h PSInterpreter.h PsSpecialHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h SVGTree.h \
 	TpicSpecialHandler.h TFM.h types.h VectorStream.h VFActions.h VFReader.h XMLDocTypeNode.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CmdLineParserBase.cpp Color.cpp \
   	ColorSpecialHandler.cpp CommandLine.cpp Directory.cpp DLLoader.cpp DVIActions.cpp DVIReader.cpp DvisvgmSpecialHandler.cpp \

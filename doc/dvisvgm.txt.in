@@ -76,6 +76,7 @@ This option only takes affect if font caching is active. Thus, *--trace-all* can
 combined with option *--cache=none*.
 +
 
+
 *-b, --bbox*='fmt'::
 Sets the bounding box of the generated graphic to the specified format. The parameter 'fmt'
 takes either one of the format specifiers listed below or a sequence of four comma- or
@@ -131,6 +132,17 @@ a different location use option *--cache* to overwrite the default. Furthermore,
 to disable the font caching mechanism completely with option *--cache=none*. If argument 'dir' is omitted,
 dvisvgm prints the path of the default cache directory and some information about the stored fonts.
 
+
+*-e, --exact*::
+If this option is given, dvisvgm computes the precise bounding box of each character. By default,
+the values stored in the font's TFM file are used to determine a glyph's extent. As these values are
+intended to realize optimal character placements and are not designed to represent the exact dimensions, 
+they don't necessarily correspond with the bounds of the visual glyphs. Thus, the width and/or height 
+of some glyphs may be larger than the respective TFM values. As a result, this can lead to clipped 
+characters at the bounds of the SVG graphic. With option *--exact*, dvisvgm analyzes the actual shape 
+of each character and derives a usually tight bounding box.
+
+
 *--libgs=filename*::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and
 PostScript support was not completely disabled. In this case, dvisvgm tries to load the shared 
@@ -139,14 +151,17 @@ or gsdll32.dll (Windows). Option *--libgs* can be used to give a different name.
 the GS library name can also be set by the environment variable *LIBGS*. The latter has a less 
 precedence than the command-line option.
 
+
 *-l, --list-specials*::
 Prints a list of registered special handlers and exits. Each handler processes a set of special
 statements belonging to the same category. The categories are identified by the
 prefix of the special statements. It's usually a leading word
 separated from the rest of the statement by a colon or a blank, e.g. 'color' or 'ps'.
 
+
 *--keep*::
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
+
 
 *-m, --map-file*='file'::
 Sets the map file that is used to look up font names and encodings. *dvisvgm* does not provide

@@ -202,6 +202,18 @@ void BoundingBox::operator += (const BoundingBox &bb) {
 }
 
 
+void BoundingBox::scale (double sx, double sy) {
+	if (!_locked) {
+		ulx *= sx;
+		lrx *= sx;
+		if (sx < 0)	swap(ulx, lrx);
+		uly *= sy;
+		lry *= sy;
+		if (sy < 0)	swap(uly, lry);
+	}
+}
+
+
 void BoundingBox::transform (const Matrix &tm) {
 	if (!_locked) {
 		DPair ul = tm * DPair(lrx, lry);
