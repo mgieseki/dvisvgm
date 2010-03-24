@@ -1,3 +1,12 @@
+dvisvgm-0.9
+- added option --exact and corresponding algorithms to compute the exact 
+  bounding boxes of characters
+- added option --keep that prevents deleting temporary font files
+- extended option --trace-all by an optional boolean argument controlling
+  the re-tracing of glyphs
+- fixed bug in evaluation of embedded PS headers
+- several code refactorings
+
 dvisvgm-0.8.8
 - added option --libgs and evaluation of environment variable LIBGS
   to overwrite the expected file name of the GS shared library
@@ -50,7 +59,7 @@ dvisvgm-0.8.3
 
 dvisvgm-0.8.2
 - changed license of dvisvgm to GPL version 3 or later
-- replaced getopt-based commandline parser by own implementation
+- replaced getopt-based command-line parser by own implementation
   in order to simplify future internationalizations
 - fixed memory bug in fontmap reader
 
@@ -73,7 +82,7 @@ dvisvgm-0.7.3
 dvisvgm-0.7.2
 - font caching has been added (speeds up embedding of bitmap fonts)
 - added option --trace-all that enables tracing of all glyphs of all
-  bitmap fonts used in the currect DVI file. Even glyphs that are currently
+  bitmap fonts used in the current DVI file. Even glyphs that are currently
   not needed are considered. This avoids multiple calls of Metafont for the 
   same fonts. In combination with the new caching functionality this can 
   drastically increase the speed of successive dvisvgm calls.
@@ -149,4 +158,4 @@ Added a glyph tracing module that vectorizes Metafont's bitmap output
 if no corresponding Type 1 font file is available.
 
 dvisvgm-0.3:
-Inititial public release with basic conversion functionality.
+Initial public release with basic conversion functionality.
