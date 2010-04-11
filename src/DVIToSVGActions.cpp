@@ -89,7 +89,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 		if ((d = -charbox.minY()) < 0) d=0;
 	}
 	else {
-		double s = ph_font->scaleFactor();
+		double s = font->scaleFactor();
 		wr = s*(font->charWidth(c) + font->italicCorr(c));
 		h  = s*font->charHeight(c);
 		d  = s*font->charDepth(c);
