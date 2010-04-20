@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <fstream>
@@ -41,7 +41,6 @@ FontEncoding::FontEncoding (const string &encname) : _encname(encname)
 const char* FontEncoding::path () const {
 	return FileFinder::lookup(_encname+".enc");
 }
-
 
 
 /** Search for suitable enc-file and read its encoding information.
@@ -133,7 +132,6 @@ const char* FontEncoding::getEntry (int c) const {
 }
 
 
-
 struct EncodingMap : public map<string, FontEncoding*>
 {
 	~EncodingMap () {
@@ -148,12 +146,13 @@ struct EncodingMap : public map<string, FontEncoding*>
  * @return pointer to encoding object, or 0 if there is no encoding defined */
 FontEncoding* FontEncoding::encoding (const string &fontname) {
 	static EncodingMap encmap;
-
 	if (const char *encname = FileFinder::lookupEncName(fontname)) {
       EncodingMap::const_iterator it = encmap.find(encname);
-   	if (it == encmap.end())
-			encmap[encname] = new FontEncoding(encname);
-      return it->second;
+   	if (it != encmap.end()) 
+			return it->second;
+		FontEncoding *enc = new FontEncoding(encname);
+		encmap[encname] = enc;
+		return enc;      
 	}
 	return 0;
 }
