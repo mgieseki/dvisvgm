@@ -96,15 +96,15 @@ void CommandLine::init () {
 void CommandLine::help () const {
    puts("This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
    puts("Input options:");
-   puts("  -p, --page=number             choose page to convert (default: 1)");
+   puts("  -p, --page=number             choose page to convert [1]");
    puts("  -m, --map-file=[+]filename    set [additional] font map file name");
    puts("\nSVG output options:");
-   puts("  -b, --bbox=fmt                set format or size of bounding box (default: min)");
+   puts("  -b, --bbox=size               set size of bounding box [min]");
    puts("  -o, --output=filename         set name of output file");
    puts("  -s, --stdout                  write SVG output to stdout");
    puts("  -n, --no-fonts                draw glyphs by using path elements");
    puts("      --no-styles               don't use styles to reference fonts");
-   puts("  -z, --zip[=level]             create compressed .svgz file (default: 9)");
+   puts("  -z, --zip[=level]             create compressed .svgz file [9]");
    puts("\nSVG transformations:");
    puts("  -r, --rotate=angle            rotate page content clockwise");
    puts("  -c, --scale=sx[,sy]           scale page content");
@@ -117,15 +117,15 @@ void CommandLine::help () const {
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    puts("      --libgs=filename          set name of Ghostscript shared library");
 #endif
-   puts("  -M, --mag=factor              magnification of Metafont output (default: 4)");
+   puts("  -M, --mag=factor              magnification of Metafont output [4]");
    puts("      --no-mktexmf              don't try to create missing fonts");
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
-   puts("  -a, --trace-all[=retrace]     trace all glyphs of bitmap fonts (default: no)");
+   puts("  -a, --trace-all[=retrace]     trace all glyphs of bitmap fonts [no]");
    puts("\nMessage options:");
    puts("  -h, --help                    print this help and exit");
    puts("  -l, --list-specials           print supported special sets and exit");
-   puts("  -P, --progress[=skip]         enable progess indicator (default: 100)");
-   puts("  -v, --verbosity=level         set verbosity level (0-7) (default: 7)");
+   puts("  -P, --progress[=skip]         enable progess indicator [100]");
+   puts("  -v, --verbosity=level         set verbosity level (0-7) [7]");
    puts("  -V, --version                 print version and exit");
 }
 
