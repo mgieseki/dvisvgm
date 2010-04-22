@@ -20,6 +20,7 @@ fi
 
 for f in ${files[@]}; do
 	for m in "wf" "nf"; do
+		echo "converting $f.dvi (mode $m)"
 		infile=${srcdir}/$f
 		outfile=$f-$m.svg
 		cmpfile=${srcdir}/$f-$m-cmp.svg
@@ -40,7 +41,9 @@ for f in ${files[@]}; do
 			echo -en "${GREEN}PASSED $COLOR_OFF"
 			rm $outfile
 		fi
-		echo "converting $f.dvi (mode $m)"
+		if [ \! -s $f-$m.diff ]; then
+			rm $f-$m.diff
+		fi
 		rm tmp2.svg
 	done
 done
