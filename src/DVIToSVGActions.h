@@ -59,7 +59,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void special (const std::string &s);
 		void preamble (const std::string &cmt);
 		void postamble ();
-		void beginPage (Int32 *c);
+		void beginPage (unsigned n, Int32 *c);
 		void endPage ();
 		void beginSpecial (const char *prefix);
 		void endSpecial (const char *prefix);

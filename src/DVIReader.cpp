@@ -323,9 +323,9 @@ void DVIReader::cmdBop (int) {
 		_posStack.pop();
 	_currFontNum = 0;
 	_inPage = true;
-	beginPage(c);
+	beginPage(_currPageNum, c);
 	if (_actions)
-		_actions->beginPage(c);
+		_actions->beginPage(_currPageNum, c);
 }
 
 
