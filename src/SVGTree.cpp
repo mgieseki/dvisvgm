@@ -265,8 +265,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		XMLElementNode *fontNode = new XMLElementNode("font");
 		string fontname = font.name();
 		fontNode->addAttribute("id", fontname);
-		if (font.type() != PhysicalFont::MF)
-			fontNode->addAttribute("horiz-adv", XMLString(font.hAdvance()));
+		fontNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance()));
 		appendToDefs(fontNode);
 
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
@@ -277,6 +276,11 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			faceNode->addAttribute("descent", XMLString(font.descent()));
 		}
 		fontNode->append(faceNode);
+
+		// add required missing-glyph element
+		XMLElementNode *missing = new XMLElementNode("missing-glyph");
+		missing->addAttribute("d", "");
+		fontNode->append(missing);
 		FORALL(chars, set<int>::const_iterator, i)
 			fontNode->append(createGlyphNode(*i, font, cb));
 	}
