@@ -72,7 +72,10 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	// record font names and chars. The various font sizes can be ignored here.
 	// For a given font object, Font::uniqueFont() returns the same unique font object for
 	// all fonts with the same name.
-	_usedCharsMap[SVGTree::USE_FONTS ? font->uniqueFont() : font].insert(c);
+	_usedChars[SVGTree::USE_FONTS ? font->uniqueFont() : font].insert(c);
+
+	// However, we record all required fonts
+	_usedFonts.insert(font);
 
 	_svg.appendChar(c, x, y, *font);
 	// update bounding box

@@ -133,8 +133,6 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		replaceActions(save);
 	}
 
-	_svg.appendFontStyles();
-
 	if (executePage(firstPage)) {  // @@
 		Message::mstream() << '\n';
 		embedFonts(_svg.rootNode());
@@ -261,6 +259,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 		else
 			Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 	}
+	_svg.appendFontStyles(svgActions->getUsedFonts());
 }
 
 

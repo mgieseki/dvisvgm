@@ -21,6 +21,7 @@
 #ifndef SVGTREE_H
 #define SVGTREE_H
 
+#include <map>
 #include <set>
 #include "Color.h"
 #include "GFGlyphTracer.h"
@@ -69,8 +70,7 @@ class SVGTree
 		void appendToDoc (XMLNode *node)  {_doc.append(node);}
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const Font &font);
-      void appendFontStyles ();
-//      void append (const PhysicalFont &font);
+		void appendFontStyles (const std::set<const Font*> &fonts);
       void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);

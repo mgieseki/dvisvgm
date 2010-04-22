@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "macros.h"
@@ -87,6 +87,42 @@ void XMLElementNode::prepend (XMLNode *child) {
 		else
 			children.push_front(child);
 	}
+}
+
+
+/** Inserts a new child node before a given child node already present. The latter
+ *  will be the following sibling of the node to be inserted. If there's no such
+ *  node present, nothing is inserted.
+ *  @param[in] child node to be inserted
+ *  @param[in] sibling following sibling of 'child'
+ *  @return true on success */
+bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
+	ElementList::iterator it = children.begin();
+	while (it != children.end() && *it != sibling)
+		++it;
+	if (it != children.end()) {
+		children.insert(it, child);
+		return true;
+	}
+	return false;
+}
+
+
+/** Inserts a new child node after a given child node already present. The latter
+ *  will be the preceding sibling of the node to be inserted. If there's no such
+ *  node present, nothing is inserted.
+ *  @param[in] child node to be inserted
+ *  @param[in] sibling preceding sibling of 'child'
+ *  @return true on success */
+bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
+	ElementList::iterator it = children.begin();
+	while (it != children.end() && *it != sibling)
+		++it;
+	if (it != children.end()) {
+		children.insert(++it, child);
+		return true;
+	}
+	return false;
 }
 
 

@@ -38,7 +38,8 @@ class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions, public SpecialManager::Listener
 {
-	typedef std::map<const Font*, std::set<int> > UsedCharsMap;
+	typedef std::map<const Font*, std::set<int> > CharMap;
+	typedef std::set<const Font*> FontSet;
 
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
@@ -62,7 +63,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void endPage ();
 		void beginSpecial (const char *prefix);
 		void endSpecial (const char *prefix);
-		UsedCharsMap& getUsedChars () const  {return _usedCharsMap;}
+		CharMap& getUsedChars () const        {return _usedChars;}
+		const FontSet& getUsedFonts () const  {return _usedFonts;}
 		void setPageMatrix (const Matrix &tm);
 		double getX() const  {return _dvisvg.getXPos();}
 		double getY() const  {return _dvisvg.getYPos();}
@@ -80,7 +82,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		BoundingBox _bbox;
 		int _pageCount;
 		int _currentFontNum;
-		mutable UsedCharsMap _usedCharsMap;
+		mutable CharMap _usedChars;
+		FontSet _usedFonts;
 		Matrix *_pageMatrix;  // transformation of whole page
 		Color _bgcolor;
 };

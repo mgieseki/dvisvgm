@@ -231,24 +231,25 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 }
 
 
-void SVGTree::appendFontStyles () {
-	if (CREATE_STYLE && USE_FONTS) {
-		const vector<Font*> &fonts = FontManager::instance().getFonts();
-		if (!fonts.empty()) {
-			XMLElementNode *styleNode = new XMLElementNode("style");
-			styleNode->addAttribute("type", "text/css");
-			appendToRoot(styleNode);
-			ostringstream style;
-			FORALL(fonts, vector<Font*>::const_iterator, i) {
-				if (!dynamic_cast<VirtualFont*>(*i)) {  // skip virtual fonts
-					style << "text.f"        << FontManager::instance().fontID(*i) << ' '
-							<< "{font-family:" << (*i)->name()
-							<< ";font-size:"   << (*i)->scaledSize() << "}\n";
-				}
-			}
-			XMLCDataNode *cdata = new XMLCDataNode(style.str());
-			styleNode->append(cdata);
+void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
+	if (CREATE_STYLE && USE_FONTS && !fonts.empty() && _defs) {
+		XMLElementNode *styleNode = new XMLElementNode("style");
+		styleNode->addAttribute("type", "text/css");
+		_root->insertAfter(styleNode, _defs);
+		typedef map<int, const Font*> SortMap;
+		SortMap sortmap;
+		FORALL(fonts, set<const Font*>::const_iterator, it)
+			if (!dynamic_cast<const VirtualFont*>(*it))   // skip virtual fonts
+				sortmap[FontManager::instance().fontID(*it)] = *it;
+		ostringstream style;
+		// add font style definitions in ascending order
+		FORALL(sortmap, SortMap::const_iterator, it) {
+			style << "text.f"        << it->first << ' '
+				<< "{font-family:" << it->second->name()
+				<< ";font-size:"   << it->second->scaledSize() << "}\n";
 		}
+		XMLCDataNode *cdata = new XMLCDataNode(style.str());
+		styleNode->append(cdata);
 	}
 }
 
@@ -258,8 +259,8 @@ void SVGTree::appendFontStyles () {
  *  @param[in] chars codes of the characters whose glyph outlines should be appended */
 void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTracer::Callback *cb) {
 	if (chars.empty())
-		return;	
-	
+		return;
+
 	if (USE_FONTS) {
 		XMLElementNode *fontNode = new XMLElementNode("font");
 		string fontname = font.name();
