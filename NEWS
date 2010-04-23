@@ -1,3 +1,8 @@
+dvisvgm-0.9.1
+- CSS style definitions omit unnecessary fonts now
+- SVG validity was broken when using font elements
+- fixed two memory issues that could lead to segfaults
+
 dvisvgm-0.9
 - added option --exact and corresponding algorithms to compute the exact 
   bounding boxes of characters
