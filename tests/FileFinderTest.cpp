@@ -25,7 +25,16 @@
 using std::ifstream;
 
 
-TEST(FileFinderTest, find_base_file) {
+class FileFinderTest : public ::testing::Test
+{
+	protected:
+		void SetUp () {
+			FileFinder::init("FileFinderTest", false);
+		}
+};
+
+
+TEST_F(FileFinderTest, find_base_file) {
 	const char *path = FileFinder::lookup("cmr10.tfm");
 	EXPECT_TRUE(path);
 	ifstream ifs(path);
@@ -33,7 +42,7 @@ TEST(FileFinderTest, find_base_file) {
 }
 
 
-TEST(FileFinderTest, find_mapped_file) {
+TEST_F(FileFinderTest, find_mapped_file) {
 	// mapped base tfm file => should be resolved by kpathsea
 	// circle10.tfm is usually mapped to lcircle.tfm
 	if (const char *path = FileFinder::lookup("circle10.tfm")) {
@@ -54,7 +63,7 @@ TEST(FileFinderTest, find_mapped_file) {
 }
 
 
-TEST(FileFinderTest, mktexmf) {
+TEST_F(FileFinderTest, mktexmf) {
 	// ensure availability of ec font => call mktexmf if necessary
 	if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
 		ifstream ifs(path);
@@ -63,7 +72,7 @@ TEST(FileFinderTest, mktexmf) {
 }
 
 
-TEST(FileFinderTest, find_unavailable_file) {
+TEST_F(FileFinderTest, find_unavailable_file) {
 	const char *path = FileFinder::lookup("not-available.xyz");
 	EXPECT_FALSE(path);
 }

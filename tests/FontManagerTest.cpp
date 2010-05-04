@@ -28,6 +28,7 @@ class FontManagerTest : public ::testing::Test
 {
 	protected:
 		void SetUp () {
+			FileFinder::init("FontManagerTest", false);
 			FontManager &fm = FontManager::instance();
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
