@@ -25,38 +25,28 @@ AC_LANG(C)
 AC_CHECK_FUNCS([ftime gettimeofday])
 AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
 
-# Check whether MikTeX import libraries should be linked
-case $host in 
-	*-mingw32* | *-windows*)
-		CPPFLAGS="$CPPFLAGS -DMIKTEX"
-		EXTRA_LIBS="miktex-core.a miktex-kps.a"
-	;;
-	*)
-		AC_CHECK_HEADER([kpathsea/kpathsea.h], , 
-			[AC_MSG_ERROR([please install the kpathsea development package])])
-		AC_CHECK_LIB(kpathsea, kpse_find_file, , 
-			[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
+AC_CHECK_HEADER([kpathsea/kpathsea.h], , 
+	[AC_MSG_ERROR([please install the kpathsea development package])])
+AC_CHECK_LIB(kpathsea, kpse_find_file, , 
+	[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
 
-		AC_MSG_CHECKING([kpathsea version])
-		AC_RUN_IFELSE([#include <stdio.h>
-  			#include <kpathsea/kpathsea.h>
-			int main() {
-				FILE *f;
-				f = fopen("conftestval", "w");
-				if(!f) exit(1);
-				fprintf(f, "%s\n", KPSEVERSION+17);
-				fclose(f);
-    			exit(0);
-			}], 
-			[kpseversion=`cat conftestval`], [kpseversion=], [kpseversion=unknown])
-#		AC_RESTORE_FLAGS
-		AC_MSG_RESULT("$kpseversion")
-		rm -f conftestval >/dev/null
-		if test -z "$kpseversion"; then
-	  		AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
-		fi
-	;;
-esac
+AC_MSG_CHECKING([kpathsea version])
+AC_RUN_IFELSE([#include <stdio.h>
+	#include <kpathsea/kpathsea.h>
+	int main() {
+		FILE *f;
+		f = fopen("kpseversion", "w");
+		if(!f) exit(1);
+		fprintf(f, "%s\n", KPSEVERSION);
+		fclose(f);
+		exit(0);
+	}], 
+	[kpseversion=`cat kpseversion|sed 's/kpathsea version //'`], [kpseversion=], [kpseversion=unknown])
+AC_MSG_RESULT("$kpseversion")
+rm -f kpseversion
+if test -z "$kpseversion"; then
+	AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
+fi
 
 
 # Check how to link potracelib
@@ -92,20 +82,20 @@ else
 				FILE *f; 
 				f = fopen("gsversion", "w");
 				if (!f) exit(1);
-				fprintf(f, "%d\n", r.revision);
+				fprintf(f, "%ld\n", r.revision);
 				fclose(f);
 				exit(0);
 			}
 		}],
-		[gsversion=`cat gsversion|cut -c1-3`], [gsversion=], [gsversion=unknown])
+		[gsversion=`cat gsversion`], [gsversion=], [gsversion=unknown])
 	AC_MSG_RESULT("$gsversion")
-	rm -f gsversion >/dev/null
+	rm -f gsversion
 	if test "$gsversion" -lt 831; then
 		# current Ghostscript API was introduced in version 8.31
 		# older versions are not supported
 		LIBS=`echo $LIBS | sed "s/-lgs //" $LIBS`
 		AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
-		AC_MSG_WARN([Ghostscript version < 8.31; PostScript support disabled])
+		AC_MSG_WARN([Ghostscript version < 8.31 found; PostScript support disabled])
 	fi
 fi
 

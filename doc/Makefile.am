@@ -2,7 +2,7 @@ man_MANS = dvisvgm.1
 EXTRA_DIST = $(man_MANS)
 
 dvisvgm.1: dvisvgm.txt
-	if test -f buildman; then \
+	if [ `type -p a2x` ]; then \
 		a2x -dmanpage -fmanpage -L $<; \
 	fi
 

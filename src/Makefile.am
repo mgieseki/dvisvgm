@@ -39,13 +39,6 @@ CommandLine.cpp: options.xml
 		xsltproc opt2cpp.xsl $<; \
 	fi
 
-# The required MikTeX functions are declared in .def files that reference a DLL.
-# It's necessary to create import libraries from these .def files. dlltool helps us
-# to do that.
-.def.a:
-	dlltool -d $< -l $@ -U
-
-
 # Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter
 psdefs.psc: psdefs.ps
 	if test -f $<; then \
