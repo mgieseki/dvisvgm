@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <cmath>
-#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -39,15 +38,10 @@
 #include "FileFinder.h"
 #include "PageSize.h"
 #include "SpecialManager.h"
+#include "System.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
-#if defined (HAVE_SYS_TIME_H)
-#include <sys/time.h>
-#elif defined (HAVE_SYS_TIMEB_H)
-#include <sys/timeb.h>
 #endif
 
 using namespace std;
@@ -167,23 +161,6 @@ static string ensure_suffix (string fname, const string &suffix) {
 }
 
 
-/** Returns timestamp (wall time) in seconds. */
-static double get_time () {
-#if defined (HAVE_SYS_TIME_H)
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	return tv.tv_sec + tv.tv_usec/1000000.0;
-#elif defined (HAVE_SYS_TIMEB_H)
-	struct timeb tb;
-	ftime(&tb);
-	return tb.time + tb.millitm/1000.0;
-#else
-	clock_t myclock = clock();
-	return double(myclock)/CLOCKS_PER_SEC;
-#endif
-}
-
-
 static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 	ostringstream oss;
 	if (args.rotate_given())
@@ -297,9 +274,6 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	if (args.progress_given())
-		DVIToSVGActions::PROGRESSBAR = args.progress_arg()+1;
-
 	if (args.stdout_given() && args.zip_given()) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
@@ -310,15 +284,18 @@ int main (int argc, char *argv[]) {
 	if (!check_bbox(args.bbox_arg()))
 		return 1;
 
+	if (args.progress_given()) {
+		DVIReader::COMPUTE_PAGE_LENGTH = args.progress_given();
+		DVIToSVGActions::PROGRESSBAR_DELAY = args.progress_arg();
+	}
 	SVGTree::CREATE_STYLE = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();
-	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	DVIToSVGActions::EXACT_BBOX = args.exact_given();
+	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
 
-	double start_time = get_time();
-
+	double start_time = System::time();
 	string dvifile = ensure_suffix(args.file(0), "dvi");
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
    if (!ifs)
@@ -340,7 +317,7 @@ int main (int argc, char *argv[]) {
 			Message::mstream(false, Terminal::BLUE, true) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
 			if (pageinfo.second > 1)
 				Message::mstream(false, Terminal::BLUE, true) << 's';
-			Message::mstream(false, Terminal::BLUE, true) << " converted in " << (get_time()-start_time) << " seconds\n";
+			Message::mstream(false, Terminal::BLUE, true) << " converted in " << (System::time()-start_time) << " seconds\n";
 		}
 		catch (DVIException &e) {
 			Message::estream() << "\nDVI error: " << e.getMessage() << '\n';

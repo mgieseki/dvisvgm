@@ -46,6 +46,7 @@ struct SpecialActions
    virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
    virtual void embed (const BoundingBox &bbox) =0;
    virtual void embed (const DPair &p, double r=0) =0;
+	virtual void progress (const char *id) {}
 };
 
 

@@ -1,5 +1,5 @@
 /*************************************************************************
-** DVIActions.h                                                         **
+** System.cpp                                                           **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,39 +18,37 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVIACTIONS_H
-#define DVIACTIONS_H
 
-#include <string>
-#include "Message.h"
-#include "types.h"
+#include <ctime>
+#include "System.h"
 
-class BoundingBox;
-class Font;
-class SpecialManager;
-
-
-struct DVIActions
-{
-	static const double BP;
-	static const double IN;
-	static const double CM;
-	static const double MM;
-	virtual ~DVIActions () {}
-	virtual void setChar (double x, double y, unsigned c, const Font *f) {}
-	virtual void setRule (double x, double y, double height, double width) {}
-	virtual void moveToX (double x) {}
-	virtual void moveToY (double y) {}
-	virtual void defineFont (int num, const Font *font) {}
-	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const std::string &s) {}
-	virtual void preamble (const std::string &cmt) {}
-	virtual void postamble () {}
-	virtual void beginPage (unsigned n, Int32 *c) {}
-	virtual void endPage () {}
-	virtual BoundingBox& bbox () =0;
-	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
-	virtual void progress (size_t current, size_t total, const char *id=0) {}
-};
-
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
+
+#if defined (HAVE_SYS_TIME_H)
+#include <sys/time.h>
+#elif defined (HAVE_SYS_TIMEB_H)
+#include <sys/timeb.h>
+#endif
+
+
+using namespace std;
+
+
+/** Returns timestamp (wall time) in seconds. */
+double System::time () {
+#if defined (HAVE_SYS_TIME_H)
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec + tv.tv_usec/1000000.0;
+#elif defined (HAVE_SYS_TIMEB_H)
+	struct timeb tb;
+	ftime(&tb);
+	return tb.time + tb.millitm/1000.0;
+#else
+	clock_t myclock = clock();
+	return double(myclock)/CLOCKS_PER_SEC;
+#endif
+}
+

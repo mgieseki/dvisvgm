@@ -1,5 +1,5 @@
 /*************************************************************************
-** DVIActions.h                                                         **
+** System.h                                                             **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,39 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVIACTIONS_H
-#define DVIACTIONS_H
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
-#include <string>
-#include "Message.h"
-#include "types.h"
-
-class BoundingBox;
-class Font;
-class SpecialManager;
-
-
-struct DVIActions
+namespace System
 {
-	static const double BP;
-	static const double IN;
-	static const double CM;
-	static const double MM;
-	virtual ~DVIActions () {}
-	virtual void setChar (double x, double y, unsigned c, const Font *f) {}
-	virtual void setRule (double x, double y, double height, double width) {}
-	virtual void moveToX (double x) {}
-	virtual void moveToY (double y) {}
-	virtual void defineFont (int num, const Font *font) {}
-	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const std::string &s) {}
-	virtual void preamble (const std::string &cmt) {}
-	virtual void postamble () {}
-	virtual void beginPage (unsigned n, Int32 *c) {}
-	virtual void endPage () {}
-	virtual BoundingBox& bbox () =0;
-	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
-	virtual void progress (size_t current, size_t total, const char *id=0) {}
+	double time ();
 };
 
 #endif

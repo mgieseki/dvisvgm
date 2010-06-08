@@ -41,31 +41,37 @@ MessageStream::~MessageStream () {
 
 
 void MessageStream::putchar (const char c, ostream &os) {
-	if (c == '\n') {
-		if (!_nl) {
-			_col = _indent+1;
+	switch (c) {
+		case '\r':
+			os << '\r';
 			_nl = true;
-			os << '\n';
-		}
-	}
-	else {
-		if (_nl) {
-			os << string(_indent, ' ');
-			_col += _indent;
-		}
-		else {
-			const int cols = Terminal::columns();
-			if (cols > 0 && _col >= cols) {
-				os << '\n' << string(_indent, ' ');
-				_col = _indent+1;
+			_col = 1;
+			return;
+		case '\n':
+			if (!_nl) {
+				_col = 1;
+				_nl = true;
+				os << '\n';
 			}
-			else
-				_col++;
-		}
-		_nl = false;
+			return;
+		default:
+			if (_nl) {
+				os << string(_indent, ' ');
+				_col += _indent;
+			}
+			else {
+				const int cols = Terminal::columns();
+				if (cols > 0 && _col >= cols) {
+					os << '\n' << string(_indent, ' ');
+					_col = _indent+1;
+				}
+				else
+					_col++;
+			}
+			_nl = false;
+			if (!_nl || c != '\n')
+				os << c;
 	}
-	if (!_nl || c != '\n')
-		os << c;
 }
 
 
@@ -103,6 +109,15 @@ void MessageStream::outdent (bool all) {
 		_indent -= 2;
 }
 
+
+void MessageStream::clearline () {
+	if (_os) {
+		int cols = Terminal::columns();
+		*_os << '\r' << string(cols ? cols-1 : 79, ' ') << '\r';
+		_nl = true;
+		_col = 1;
+	}
+}
 
 static MessageStream nullStream;
 static MessageStream messageStream(cerr);

@@ -18,11 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <cstring>
+#include <ctime>
 #include "BoundingBox.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
@@ -31,13 +28,14 @@
 #include "Ghostscript.h"
 #include "GlyphTracerMessages.h"
 #include "SpecialManager.h"
+#include "System.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
 using namespace std;
 
 
-unsigned DVIToSVGActions::PROGRESSBAR = 0;
+double DVIToSVGActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (values >= 1000 disable the progressbar)
 bool DVIToSVGActions::EXACT_BBOX = false;
 
 
@@ -179,12 +177,6 @@ void DVIToSVGActions::special (const string &s) {
 
 
 void DVIToSVGActions::beginSpecial (const char *prefix) {
-	static unsigned count = 0;
-	if (PROGRESSBAR > 0 && ++count % PROGRESSBAR == 0) {
-		if (count == PROGRESSBAR)
-			Message::mstream(false) << ':';
-		Message::mstream(false) << '=';
-	}
 }
 
 
@@ -261,4 +253,80 @@ BoundingBox& DVIToSVGActions::bbox(const string& name, bool reset) {
 	if (reset)
 		box = BoundingBox();
 	return box;
+}
+
+
+/** This method is called by subprocesses like the PS handler when
+ *  a computation step has finished. Since the total number of steps
+ *  can't be determined in advance, we don't show a percent value but
+ *  a rotating dash. */
+void DVIToSVGActions::progress (const char *id) {
+	if (PROGRESSBAR_DELAY < 1000) {
+		static double time=0;
+		// slow down updating of the progress indicator to prevent flickering
+		if (System::time() - time > 0.1) {
+			progress(0, 0, id);
+			time = System::time();
+		}
+	}
+}
+
+
+/** Returns the number of digits of a given integer. */
+static int digits (int n) {
+	if (n == 0)
+		return 1;
+	if (n > 0)
+		return log10(double(n))+1;
+	return log10(double(-n))+2;
+}
+
+
+/** Draws a simple progress indicator.
+ *  @param[in] current current iteration step (of 'total' steps)
+ *  @param[in] total total number of iteration steps
+ *  @param[in] id ID of the subprocess providing the information */
+void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
+	static double time=0;
+	static bool draw=false; // show progress indicator?
+	static int step = -1;   // >=0: rotating dash
+	static size_t prev_current=0, prev_total=1;
+	static const char *prev_id=0;
+	const char *tips = "-\\|/";
+	if (current == 0 && total > 0) {
+		time = System::time();
+		draw = false;
+		Message::mstream() << '\n';
+	}
+	// don't show the progress indicator before the given time has elapsed
+	if (!draw && System::time()-time > PROGRESSBAR_DELAY)
+		draw = true;
+	if (draw && (System::time() - time > 0.1 || (total > 0 && current == total) || prev_id != id)) {
+		if (total == 0) {
+			current = prev_current;
+			total = prev_total;
+			step = (step+1) % 4;
+		}
+		else {
+			prev_current = current;
+			prev_total = total;
+			step = -1;
+		}
+		// adapt length of progress indicator to terminal width
+		int cols = Terminal::columns();
+		int width = (cols == 0 || cols > 60) ? 50 : 49-60+cols;
+		double factor = double(current)/total;
+		int length = width*factor;
+		Message::mstream(false, Terminal::MAGENTA)
+			<< '[' << string(length, '=')
+			<< (factor < 1.0 ? (step < 0 ? ' ' : tips[step]) : '=')
+			<< string(width-length, ' ')
+			<< "] " << string(3-digits(100*factor), ' ') << int(100*factor)
+			<< "%\r";
+		// overprint indicator when finished
+		if (factor == 1.0)
+			Message::estream().clearline();
+		time = System::time();
+		prev_id = id;
+	}
 }

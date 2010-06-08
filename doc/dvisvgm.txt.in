@@ -234,13 +234,11 @@ Please consider that the page values don't refer to the page numbers printed on 
 Instead, the physical page count is expected, where the first page always gets number 1.
 
 
-*-P, --progress*[='skip']::
-Enables a simple progress indicator shown when DVI specials are processed,
-since this can be a time-consuming operation, especially when PostScript specials are
-involved. The optional non-negative parameter 'skip' controls the indicator length:
-Every time a set of 'skip' specials has been processed, an indicator character
-is printed. Therefore, smaller values lead to a longer, more frequently updated
-progress indicator. 
+*-P, --progress*[='delay']::
+Enables a simple progress indicator shown when time-consuming operations like
+PostScript specials are processed. The indicator doesn't appear before the given
+delay (in seconds). The default delay value is 0.5 seconds.
+
 
 *-r, --rotate*='angle'::
 Rotates page content clockwise by 'angle' degrees around the page center.

@@ -568,6 +568,12 @@ void PsSpecialHandler::setdash (vector<double> &p) {
 }
 
 
+/** This method is called by the PSInterpreter if an PS operator has been executed. */
+void PsSpecialHandler::executed () {
+	if (_actions)
+		_actions->progress("ps");
+}
+
 ////////////////////////////////////////////
 
 void PsSpecialHandler::ClippingStack::push () {

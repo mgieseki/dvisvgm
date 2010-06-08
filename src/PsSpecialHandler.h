@@ -92,6 +92,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
 		void translate (std::vector<double> &p);
+		void executed ();
 
    private:
 		PSInterpreter _psi;

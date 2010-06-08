@@ -266,6 +266,7 @@ void PSInterpreter::callActions (InputReader &in) {
 				vector<double> v(params.size());
 				str2double(params, v);
 				(_actions->*operators[mid].op)(v);
+				_actions->executed();
 			}
 		}
 	}

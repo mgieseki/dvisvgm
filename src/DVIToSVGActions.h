@@ -65,6 +65,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void endPage ();
 		void beginSpecial (const char *prefix);
 		void endSpecial (const char *prefix);
+		void progress (size_t current, size_t total, const char *id=0);
+		void progress (const char *id);
 		CharMap& getUsedChars () const        {return _usedChars;}
 		const FontSet& getUsedFonts () const  {return _usedFonts;}
 		void setPageMatrix (const Matrix &tm);
@@ -78,7 +80,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
       void embed (const DPair &p, double r=0);
 
 	public:
-		static unsigned PROGRESSBAR; ///< disabled if 0, indicates skip value otherwise
+		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
       static bool EXACT_BBOX;
 
 	private:

@@ -59,7 +59,7 @@ class CommandLine : public CmdLineParserBase
       bool help_given () const {return _help_given;}
       bool list_specials_given () const {return _list_specials_given;}
       bool progress_given () const {return _progress_given;}
-      unsigned progress_arg () const {return _progress_arg;}
+      double progress_arg () const {return _progress_arg;}
       bool verbosity_given () const {return _verbosity_given;}
       unsigned verbosity_arg () const {return _verbosity_arg;}
       bool version_given () const {return _version_given;}
@@ -138,7 +138,7 @@ class CommandLine : public CmdLineParserBase
       bool _help_given;
       bool _list_specials_given;
       bool _progress_given;
-      unsigned _progress_arg;
+      double _progress_arg;
       bool _verbosity_given;
       unsigned _verbosity_arg;
       bool _version_given;

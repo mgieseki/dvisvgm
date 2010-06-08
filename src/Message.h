@@ -52,6 +52,7 @@ class MessageStream
 		void indent (int level)        {_indent = std::max(0, level*2); }
 		void indent (bool reset=false);
 		void outdent (bool all=false);
+		void clearline ();
 
 	protected:
 		void putchar (const char c, std::ostream &os);

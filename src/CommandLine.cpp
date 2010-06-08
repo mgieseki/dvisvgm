@@ -85,7 +85,7 @@ void CommandLine::init () {
    _no_specials_arg.clear();
    _output_arg.clear();
    _page_arg = "1";
-   _progress_arg = 100;
+   _progress_arg = 0.5;
    _rotate_arg = 0;
    _scale_arg.clear();
    _trace_all_arg = false;
@@ -127,7 +127,7 @@ void CommandLine::help () const {
    puts("      --color                   colorize messages");
    puts("  -h, --help                    print this help and exit");
    puts("  -l, --list-specials           print supported special sets and exit");
-   puts("  -P, --progress[=skip]         enable progess indicator [100]");
+   puts("  -P, --progress[=delay]        enable progess indicator [0.5]");
    puts("  -v, --verbosity=level         set verbosity level (0-7) [7]");
    puts("  -V, --version                 print version and exit");
 }
@@ -224,7 +224,7 @@ void CommandLine::handle_page(InputReader &ir, const Option &opt, bool longopt) 
 
 
 void CommandLine::handle_progress(InputReader &ir, const Option &opt, bool longopt) {
-   if (ir.eof() || getUIntArg(ir, opt, longopt, _progress_arg))
+   if (ir.eof() || getDoubleArg(ir, opt, longopt, _progress_arg))
       _progress_given = true;
 }
 

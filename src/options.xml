@@ -120,7 +120,7 @@
 				<description>print supported special sets and exit</description>
 			</option>
 			<option long="progress" short="P">
-				<arg type="unsigned" name="skip" default="100" optional="yes"/>
+            <arg name="delay" type="double" optional="yes" default="0.5"/>
 				<description>enable progess indicator</description>
 			</option>
 			<option long="verbosity" short="v">
