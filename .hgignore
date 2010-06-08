@@ -4,9 +4,11 @@ syntax: glob
 *.Po
 *.obj
 *.dvi
+*.gch
 *.lib
 *.log
 *.lpro
+*.ncb
 *.tex
 *.svg
 *.svgz
@@ -39,6 +41,10 @@ vc/Debug
 vc/Release
 vc/freetype
 vc/zlib*
+vc/*.s*
+vc/_*
+*.vc*proj*
+vc/Upgrade*
 configure
 depcomp
 install-sh

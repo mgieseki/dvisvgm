@@ -94,7 +94,7 @@ int MetafontWrapper::call (const string &mode, double mag) {
 		   "mag:=" << mag << ";"
 		   "batchmode;"
 		   "input " << _fontname << "\"";
-	Message::mstream() << "\nrunning Metafont for " << _fontname << '\n';
+	Message::mstream(false, Terminal::CYAN) << "\nrunning Metafont for " << _fontname << '\n';
 	int ret = execute(cmd, oss.str().c_str());
 
 	// try to read Metafont's logfile and get name of created GF file

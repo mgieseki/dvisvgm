@@ -21,6 +21,7 @@
 #ifndef GLYPHTRACERMESSAGES_H
 #define GLYPHTRACERMESSAGES_H
 
+#include <sstream>
 #include "GFGlyphTracer.h"
 #include "Message.h"
 #include "types.h"
@@ -29,25 +30,30 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 {
 	public:
 		GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl) {}
-		~GlyphTracerMessages ()  {if (_autonl) Message::mstream() << '\n';}
-		void beginChar (UInt8 c) {Message::mstream() << '[';}
-		void emptyChar (UInt8 c) {Message::mstream() << "(empty)]";}
+
+		~GlyphTracerMessages () {
+			if (_autonl)
+				Message::mstream() << '\n';
+		}
+
+		void endChar (UInt8 c) {
+			std::ostringstream oss;
+			oss << '[';
+			if (isprint(c))
+				oss << c;
+			else
+				oss << '#' << unsigned(c);
+			oss << ']';
+			Message::mstream(false, Terminal::BLUE) << oss.str();
+		}
 
 		void setFont (const std::string &fname) {
 			if (_sfmsg && fname != _fname) {
 				if (!_fname.empty())
 					Message::mstream() << '\n';
-				Message::mstream() << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
+				Message::mstream(false, Terminal::CYAN) << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
 				_fname = fname;
 			}
-		}
-
-      void endChar (UInt8 c) {
-			if (isprint(c))
-				Message::mstream() << c;
-			else
-				Message::mstream() << '#' << unsigned(c);
-			Message::mstream() << ']';
 		}
 
 	private:

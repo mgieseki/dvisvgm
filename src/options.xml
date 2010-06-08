@@ -110,6 +110,9 @@
 			</option>
 		</section>
 		<section title="Message options">
+			<option long="color">
+				<description>colorize messages</description>
+			</option>
 			<option long="help" short="h">
 				<description>print this help and exit</description>
 			</option>

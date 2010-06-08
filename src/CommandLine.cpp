@@ -15,6 +15,7 @@ using namespace std;
 const CmdLineParserBase::Option CommandLine::_options[] = {
    {'b', "bbox", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
+   {'\0', "color", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
    {'e', "exact", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
    {'h', "help", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
    {'\0', "keep", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
@@ -47,6 +48,7 @@ void CommandLine::init () {
    CmdLineParserBase::init();
    _bbox_given = false;
    _cache_given = false;
+   _color_given = false;
    _exact_given = false;
    _help_given = false;
    _keep_given = false;
@@ -122,6 +124,7 @@ void CommandLine::help () const {
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
    puts("  -a, --trace-all[=retrace]     trace all glyphs of bitmap fonts [no]");
    puts("\nMessage options:");
+   puts("      --color                   colorize messages");
    puts("  -h, --help                    print this help and exit");
    puts("  -l, --list-specials           print supported special sets and exit");
    puts("  -P, --progress[=skip]         enable progess indicator [100]");
@@ -139,6 +142,11 @@ void CommandLine::handle_bbox(InputReader &ir, const Option &opt, bool longopt) 
 void CommandLine::handle_cache(InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getStringArg(ir, opt, longopt, _cache_arg))
       _cache_given = true;
+}
+
+
+void CommandLine::handle_color(InputReader &ir, const Option &opt, bool longopt) {
+   _color_given = true;
 }
 
 
@@ -276,6 +284,7 @@ void CommandLine::handle_zip(InputReader &ir, const Option &opt, bool longopt) {
 void CommandLine::status () const {
    cout << 'b'<< setw(20) << "bbox " << bbox_given() << setw(10) << bbox_arg() << endl;
    cout << 'C'<< setw(20) << "cache " << cache_given() << setw(10) << cache_arg() << endl;
+   cout << ' '<< setw(20) << "color " << color_given() << endl;
    cout << 'e'<< setw(20) << "exact " << exact_given() << endl;
    cout << 'h'<< setw(20) << "help " << help_given() << endl;
    cout << ' '<< setw(20) << "keep " << keep_given() << endl;

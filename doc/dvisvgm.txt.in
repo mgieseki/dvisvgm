@@ -22,8 +22,6 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:icons: 1
-:iconsdir: .
 
 NAME
 ----
@@ -131,6 +129,8 @@ a different location use option *--cache* to overwrite the default. Furthermore,
 to disable the font caching mechanism completely with option *--cache=none*. If argument 'dir' is omitted,
 dvisvgm prints the path of the default cache directory and some information about the stored fonts.
 
+*--color*::
+Enables colorization of messages printed during the conversion process.
 
 *-e, --exact*::
 If this option is given, dvisvgm computes the precise bounding box of each character. By default,

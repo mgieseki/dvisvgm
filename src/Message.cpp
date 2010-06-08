@@ -19,34 +19,88 @@
 *************************************************************************/
 
 #include <cstdarg>
+#include <cstring>
 #include <iostream>
 #include "Message.h"
+#include "Terminal.h"
 #include "macros.h"
 
 using namespace std;
 
+MessageStream::MessageStream (std::ostream &os)
+	: _os(&os), _nl(true), _col(1), _indent(0)
+{
+	Terminal::init(os);
+}
+
+
+MessageStream::~MessageStream () {
+	if (_os)
+		Terminal::finish(*_os);
+}
+
+
+void MessageStream::putchar (const char c, ostream &os) {
+	if (c == '\n') {
+		if (!_nl) {
+			_col = _indent+1;
+			_nl = true;
+			os << '\n';
+		}
+	}
+	else {
+		if (_nl) {
+			os << string(_indent, ' ');
+			_col += _indent;
+		}
+		else {
+			const int cols = Terminal::columns();
+			if (cols > 0 && _col >= cols) {
+				os << '\n' << string(_indent, ' ');
+				_col = _indent+1;
+			}
+			else
+				_col++;
+		}
+		_nl = false;
+	}
+	if (!_nl || c != '\n')
+		os << c;
+}
+
 
 MessageStream& MessageStream::operator << (const char *str) {
 	if (_os) {
-		for (const char *p=str; *p; ++p) {
-			if (!_nl || *p != '\n') {
-				(*_os) << *p;
-				_nl = (*p == '\n');
-			}
-		}
+		const int len = strlen(str);
+		const int cols = Terminal::columns();
+		if (cols > 0 && _col+len > cols && _indent+len <= cols)
+			putchar('\n', *_os);
+		for (const char *p=str; *p; ++p)
+			putchar(*p, *_os);
 	}
 	return *this;
 }
 
 
 MessageStream& MessageStream::operator << (const char &c) {
-	if (_os) {
-		if (!_nl || c != '\n') {
-			(*_os) << c;
-			_nl = (c == '\n');
-		}
-	}
+	if (_os)
+		putchar(c, *_os);
 	return *this;
+}
+
+
+void MessageStream::indent (bool reset) {
+	if (reset)
+		_indent = 0;
+	_indent += 2;
+}
+
+
+void MessageStream::outdent (bool all) {
+	if (all)
+		_indent = 0;
+	else if (_indent > 0)
+		_indent -= 2;
 }
 
 
@@ -54,32 +108,39 @@ static MessageStream nullStream;
 static MessageStream messageStream(cerr);
 
 // maximal verbosity
-int Message::level = Message::MESSAGES | Message::WARNINGS | Message::ERRORS;
+int Message::LEVEL = Message::MESSAGES | Message::WARNINGS | Message::ERRORS;
+bool Message::COLORIZE = false;
 
 
 /** Returns the stream for usual messages. */
-MessageStream& Message::mstream (bool prefix) {
-	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
+MessageStream& Message::mstream (bool prefix, int color, bool light) {
+	MessageStream *ms = (LEVEL & MESSAGES) ? &messageStream : &nullStream;
+	if (COLORIZE && ms && ms->os())
+		Terminal::color(color, light, *ms->os());
 	if (prefix)
-		*os << "MESSAGE: ";
-	return *os;
+		*ms << "\nMESSAGE: ";
+	return *ms;
 }
 
 
 /** Returns the stream for warning messages. */
 MessageStream& Message::wstream (bool prefix) {
-	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
+	MessageStream *ms = (LEVEL & WARNINGS) ? &messageStream : &nullStream;
+	if (COLORIZE && ms && ms->os())
+		Terminal::color(Terminal::YELLOW, false, *ms->os());
 	if (prefix)
-		*os << "WARNING: ";
-	return *os;
+		*ms << "\nWARNING: ";
+	return *ms;
 }
 
 
 /** Returns the stream for error messages. */
 MessageStream& Message::estream (bool prefix) {
-	MessageStream *os = (level & MESSAGES) ? &messageStream : &nullStream;
+	MessageStream *ms = (LEVEL & ERRORS) ? &messageStream : &nullStream;
+	if (COLORIZE && ms && ms->os())
+		Terminal::color(Terminal::RED, true, *ms->os());
 	if (prefix)
-		*os << "ERROR: ";
-	return *os;
+		*ms << "\nERROR: ";
+	return *ms;
 }
 

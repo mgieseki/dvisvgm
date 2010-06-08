@@ -3,7 +3,7 @@ EXTRA_DIST = $(man_MANS)
 
 dvisvgm.1: dvisvgm.txt
 	if [ `type -p a2x` ]; then \
-		a2x -dmanpage -fmanpage -L $<; \
+		a2x -dmanpage -fmanpage -L -a icons -a 'iconsdir=.' $<; \
 	fi
 
 dvisvgm.pdf: dvisvgm.1
@@ -17,7 +17,7 @@ dvisvgm.dvi: dvisvgm.1
 	groff -Tdvi -mandoc ./$< >$@
 
 dvisvgm.html: dvisvgm.txt
-	asciidoc --unsafe -dmanpage $<
+	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -dmanpage $<
 
 html: dvisvgm.html
 man: dvisvgm.1

@@ -55,6 +55,7 @@ class CommandLine : public CmdLineParserBase
       const std::string& no_specials_arg () const {return _no_specials_arg;}
       bool trace_all_given () const {return _trace_all_given;}
       bool trace_all_arg () const {return _trace_all_arg;}
+      bool color_given () const {return _color_given;}
       bool help_given () const {return _help_given;}
       bool list_specials_given () const {return _list_specials_given;}
       bool progress_given () const {return _progress_given;}
@@ -88,6 +89,7 @@ class CommandLine : public CmdLineParserBase
       void handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt);
       void handle_no_specials (InputReader &ir, const Option &opt, bool longopt);
       void handle_trace_all (InputReader &ir, const Option &opt, bool longopt);
+      void handle_color (InputReader &ir, const Option &opt, bool longopt);
       void handle_help (InputReader &ir, const Option &opt, bool longopt);
       void handle_list_specials (InputReader &ir, const Option &opt, bool longopt);
       void handle_progress (InputReader &ir, const Option &opt, bool longopt);
@@ -132,6 +134,7 @@ class CommandLine : public CmdLineParserBase
       std::string _no_specials_arg;
       bool _trace_all_given;
       bool _trace_all_arg;
+      bool _color_given;
       bool _help_given;
       bool _list_specials_given;
       bool _progress_given;

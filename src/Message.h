@@ -21,19 +21,27 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include <algorithm>
 #include <string>
 #include <ostream>
+#include <sstream>
+#include "Terminal.h"
+
+class Message;
 
 class MessageStream
 {
+	friend class Message;
 	public:
 		MessageStream () : _os(0), _nl(false) {}
-		MessageStream (std::ostream &os) : _os(&os), _nl(false) {}
+		MessageStream (std::ostream &os);
+		~MessageStream ();
 
 		template <typename T>
 		MessageStream& operator << (const T &obj) {
-			if (_os)
-				(*_os) << obj;
+			std::ostringstream oss;
+			oss << obj;
+			(*this) << oss.str();
 			return *this;
 		}
 
@@ -41,21 +49,31 @@ class MessageStream
 		MessageStream& operator << (const char &c);
 		MessageStream& operator << (const std::string &str) {return (*this) << str.c_str();}
 
+		void indent (int level)        {_indent = std::max(0, level*2); }
+		void indent (bool reset=false);
+		void outdent (bool all=false);
+
+	protected:
+		void putchar (const char c, std::ostream &os);
+		std::ostream* os () {return _os;}
+
 	private:
 		std::ostream *_os;
-		bool _nl;
+		bool _nl;     ///< true if previous character was a newline
+		int _col;     ///< current terminal column
+		int _indent;  ///< indentation width
 };
-
 
 
 struct Message
 {
-	static MessageStream& mstream (bool prefix=false);
+	static MessageStream& mstream (bool prefix=false, int color=Terminal::DEFAULT, bool light=false);
 	static MessageStream& estream (bool prefix=false);
 	static MessageStream& wstream (bool prefix=false);
 
 	enum {ERRORS=1, WARNINGS=2, MESSAGES=4};
-	static int level;
+	static int LEVEL;
+	static bool COLORIZE;
 };
 
 #endif

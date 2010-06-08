@@ -126,7 +126,9 @@ class SVGOutput : public DVIToSVG::Output
 			FilePath outpath(fname, true);
 			if (outpath.suffix().empty())
 				outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
-			return outpath.relative();
+			string apath = outpath.absolute();
+			string rpath = outpath.relative();
+			return apath.length() < rpath.length() ? apath : rpath;
 		}
 
 	private:
@@ -162,14 +164,6 @@ static string ensure_suffix (string fname, const string &suffix) {
 		fname += "."+suffix;
 	}
 	return fname;
-}
-
-
-static string remove_suffix (string fname) {
-	size_t dotpos = fname.rfind('.');
-	if (dotpos == string::npos)
-		return fname;
-	return fname.substr(0, dotpos);
 }
 
 
@@ -224,8 +218,7 @@ static bool set_cache_dir (const CommandLine &args) {
 			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)\n";
 	}
 	else {
-		const char *userdir = FileSystem::userdir();
-		if (userdir) {
+		if (const char *userdir = FileSystem::userdir()) {
 			static string path = userdir;
 			path += "/.dvisvgm";
 			path = FileSystem::adaptPathSeperators(path);
@@ -276,6 +269,8 @@ int main (int argc, char *argv[]) {
 	if (args.error())
 		return 1;
 
+	Message::COLORIZE = args.color_given();
+
 	set_libgs(args);
 	if (args.version_given()) {
 		cout << PACKAGE_STRING "\n";
@@ -325,18 +320,12 @@ int main (int argc, char *argv[]) {
 	double start_time = get_time();
 
 	string dvifile = ensure_suffix(args.file(0), "dvi");
-	string svgfile = args.output_given() ? args.output_arg() : remove_suffix(remove_path(dvifile));
-	svgfile = ensure_suffix(svgfile, args.zip_given() ? "svgz" : "svg");
-
 	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
    if (!ifs)
       Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
 	else {
-		const char *basename=0;
-		if (!args.stdout_given())
-			basename = svgfile.c_str();
-		SVGOutput out(basename, args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
-		Message::level = args.verbosity_arg();
+		SVGOutput out(args.stdout_given() ? 0 : dvifile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
+		Message::LEVEL = args.verbosity_arg();
 		DVIToSVG dvisvg(ifs, out);
 		const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
 		dvisvg.setProcessSpecials(ignore_specials);
@@ -347,19 +336,14 @@ int main (int argc, char *argv[]) {
 			FileFinder::init(argv[0], !args.no_mktexmf_given());
 			pair<int,int> pageinfo;
 			dvisvg.convert(args.page_arg(), &pageinfo);
-//					if (!args.stdout_given())
-//						sc.invalidate();  // output buffer is no longer valid
-				// valgrind issues an invalid conditional jump/move in the deflate function of libz here.
-				// According to libz FAQ #36 this is not a bug but intended behavior.
-//					out.release();       // force writing
-//					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
-			Message::mstream() << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
+			Message::mstream().indent(0);
+			Message::mstream(false, Terminal::BLUE, true) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
 			if (pageinfo.second > 1)
-				Message::mstream() << 's';
-			Message::mstream() << " converted in " << (get_time()-start_time) << " seconds\n";
+				Message::mstream(false, Terminal::BLUE, true) << 's';
+			Message::mstream(false, Terminal::BLUE, true) << " converted in " << (get_time()-start_time) << " seconds\n";
 		}
 		catch (DVIException &e) {
-			Message::estream() << "DVI error: " << e.getMessage() << '\n';
+			Message::estream() << "\nDVI error: " << e.getMessage() << '\n';
 		}
 		catch (MessageException &e) {
 			Message::estream(true) << e.getMessage() << '\n';
