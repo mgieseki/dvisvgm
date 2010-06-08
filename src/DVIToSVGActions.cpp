@@ -55,6 +55,15 @@ DVIToSVGActions::~DVIToSVGActions () {
 }
 
 
+void DVIToSVGActions::reset() {
+	_usedChars.clear();
+	_usedFonts.clear();
+	_bbox = BoundingBox();
+	_currentFontNum = -1;
+	_bgcolor = Color::WHITE;
+}
+
+
 void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 	delete _pageMatrix;
 	_pageMatrix = new Matrix(matrix);

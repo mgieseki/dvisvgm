@@ -29,8 +29,8 @@
 	<options>
 		<section title="Input options">
 			<option long="page" short="p">
-				<arg type="unsigned" name="number" default="1"/>
-				<description>choose page to convert</description>
+				<arg type="string" name="ranges" default="1"/>
+				<description>choose pages to convert</description>
 			</option>
 			<option long="map-file" short="m">
 				<arg type="string" name="[+]filename"/>
@@ -43,8 +43,8 @@
 				<description>set size of bounding box</description>
 			</option>
 			<option long="output" short="o">
-				<arg type="string" name="filename"/>
-				<description>set name of output file</description>
+				<arg type="string" name="pattern"/>
+				<description>set name pattern of output files</description>
 			</option>
 			<option long="stdout" short="s">
 				<description>write SVG output to stdout</description>
@@ -88,11 +88,11 @@
          </option>
 		   <option long="keep">
 		      <description>keep temporary files</description>
-		   </option>		   
+		   </option>
 		   <option long="libgs" if="!defined(HAVE_LIBGS) &amp;&amp; !defined(DISABLE_GS)">
 				<arg name="filename" type="string"/>
 				<description>set name of Ghostscript shared library</description>
-			</option>			
+			</option>
 			<option long="mag" short="M">
 				<arg type="double" name="factor" default="4"/>
 				<description>magnification of Metafont output</description>

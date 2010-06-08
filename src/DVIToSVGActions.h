@@ -45,6 +45,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
 		~DVIToSVGActions ();
+      void reset ();
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setBgColor (const Color &color);

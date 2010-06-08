@@ -20,7 +20,7 @@ class CommandLine : public CmdLineParserBase
       void help () const;
       void status () const;
       bool page_given () const {return _page_given;}
-      unsigned page_arg () const {return _page_arg;}
+      const std::string& page_arg () const {return _page_arg;}
       bool map_file_given () const {return _map_file_given;}
       const std::string& map_file_arg () const {return _map_file_arg;}
       bool bbox_given () const {return _bbox_given;}
@@ -97,7 +97,7 @@ class CommandLine : public CmdLineParserBase
    private:
       static const CmdLineParserBase::Option _options[];
       bool _page_given;
-      unsigned _page_arg;
+      std::string _page_arg;
       bool _map_file_given;
       std::string _map_file_arg;
       bool _bbox_given;

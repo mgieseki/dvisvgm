@@ -36,9 +36,11 @@
 #include "FontManager.h"
 #include "FileFinder.h"
 #include "GlyphTracerMessages.h"
+#include "InputBuffer.h"
 #include "InputReader.h"
 #include "Matrix.h"
 #include "Message.h"
+#include "PageRanges.h"
 #include "PageSize.h"
 #include "SVGTree.h"
 #include "TFM.h"
@@ -100,8 +102,7 @@ class PSHeaderActions : public DVIActions
 char DVIToSVG::TRACE_MODE = 0;
 
 
-DVIToSVG::DVIToSVG (istream &is, ostream &os)
-	: DVIReader(is), _out(os)
+DVIToSVG::DVIToSVG (istream &is, DVIToSVG::Output &out) : DVIReader(is), _out(out)
 {
 	replaceActions(new DVIToSVGActions(*this, _svg));
 }
@@ -113,18 +114,24 @@ DVIToSVG::~DVIToSVG () {
 
 
 /** Starts the conversion process.
- *  @return total number of pages in DVI file */
-int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
-	executePostamble();    // collect scaling and font information
-	if (firstPage > getTotalPages()) {
+ *  @param[in] first number of first page to convert
+ *  @param[in] last number of last page to convert
+ *  @param[out] pageinfo (number of converted pages, number of total pages) */
+void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
+	if (getTotalPages() == 0)
+		executePostamble();    // collect scaling and font information
+	if (first > last)
+		swap(first, last);
+	if (first > getTotalPages()) {
 		ostringstream oss;
-		oss << "file contains only " << getTotalPages() << " page(s)";
+		oss << "file contains only " << getTotalPages() << " page";
+		if (getTotalPages() > 1)
+			oss << 's';
 		throw DVIException(oss.str());
 	}
-	if (firstPage < 0)
-		firstPage = 1;
+	last = min(last, getTotalPages());
 
-	if (firstPage > 1) {
+	if (first > 1) {
 		// ensure loading of PostScript prologues given at the beginning of the first page
 		// (prologue files are always referenced in first page)
 		PSHeaderActions headerActions(*this);
@@ -132,15 +139,37 @@ int DVIToSVG::convert (unsigned firstPage, unsigned lastPage) {
 		executePage(1);
 		replaceActions(save);
 	}
-
-	if (executePage(firstPage)) {  // @@
-		Message::mstream() << '\n';
+	for (unsigned i=first; i <= last; ++i) {
+		executePage(i);
 		embedFonts(_svg.rootNode());
-		_svg.write(_out);
+		_svg.write(_out.getPageStream(getCurrentPageNumber(), getTotalPages()));
+		string fname = _out.filename(i, getTotalPages());
+		Message::mstream() << "\npage written to " << (fname.empty() ? "<stdout>" : fname) << '\n';
 		_svg.reset();
-
+		static_cast<DVIToSVGActions*>(getActions())->reset();
 	}
-	return getTotalPages();
+	if (pageinfo) {
+		pageinfo->first = last-first+1;
+		pageinfo->second = getTotalPages();
+	}
+}
+
+
+/** Convert DVI pages specified by a page range string.
+ *  @param[in] rangestr string describing the pages to convert
+ *  @param[out] pageinfo (number of converted pages, number of total pages) */
+void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
+	if (getTotalPages() == 0)
+		executePostamble();    // collect scaling and font information
+	PageRanges ranges;
+	if (!ranges.parse(rangestr, getTotalPages()))
+		throw MessageException("invalid page range format");
+	FORALL(ranges, PageRanges::ConstIterator, it)
+		convert(it->first, it->second);
+	if (pageinfo) {
+		pageinfo->first = ranges.pages();
+		pageinfo->second = getTotalPages();
+	}
 }
 
 
@@ -208,13 +237,17 @@ void DVIToSVG::endPage () {
 		double dy = (getPageHeight()-bbox.height())/2;
 		bbox += BoundingBox(-dx, -dy, dx, dy);
 	}
-	if (_bboxString != "none" && bbox.width() > 0) {
-		_svg.setBBox(bbox);
+	if (_bboxString != "none") {
+		if (bbox.width() == 0)
+			Message::mstream() << "\npage is empty\n";
+		else {
+			_svg.setBBox(bbox);
 
-		Message::mstream() << "\npage size: " << bbox.width() << "pt"
-			" x " << bbox.height() << "pt"
-			" (" << bbox.width()/72.27*25.4 << "mm"
-			" x " << bbox.height()/72.27*25.4 << "mm)\n";
+			Message::mstream() << "\npage size: " << bbox.width() << "pt"
+				" x " << bbox.height() << "pt"
+				" (" << bbox.width()/72.27*25.4 << "mm"
+				" x " << bbox.height()/72.27*25.4 << "mm)\n";
+		}
 	}
 }
 

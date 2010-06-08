@@ -62,17 +62,17 @@ class DVIReader : public StreamReader, protected VFActions
 		void executePostamble ();
 		bool executePage (unsigned n);
 		bool executePages (unsigned first, unsigned last);
-		bool isInPostamble () const                {return _inPostamble;}
+		bool inPostamble () const              {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
 		void setXPos (double x);
 		void setYPos (double y);
 		double getPageWidth () const;
 		double getPageHeight () const;
-		int getCurrentFontNumber () const          {return _currFontNum;}
-		unsigned getCurrentPageNumber () const     {return _currPageNum;}
-		unsigned getTotalPages () const            {return _totalPages;}
-		DVIActions* getActions () const            {return _actions;}
+		int getCurrentFontNumber () const      {return _currFontNum;}
+		unsigned getCurrentPageNumber () const {return _currPageNum;}
+		unsigned getTotalPages () const        {return _totalPages;}
+		DVIActions* getActions () const        {return _actions;}
 		DVIActions* replaceActions (DVIActions *a);
 
 	protected:
@@ -118,14 +118,14 @@ class DVIReader : public StreamReader, protected VFActions
 
 	private:
 		DVIActions *_actions;
-		bool _inPage;        // true if between bop and eop
-		unsigned _totalPages;  // total number of pages in dvi file
-		unsigned _currPageNum; // current page number
-		int _currFontNum;    // current font number
-		double _scaleFactor; // 1 dvi unit = scaleFactor * TeX points
-		UInt32 _mag;         // magnification factor * 1000
-		bool _inPostamble;   // true if stream pointer is inside the postamble
-		Int32 _prevBop;      // pointer to previous bop
+		bool _inPage;           // true if between bop and eop
+		unsigned _totalPages;   // total number of pages in dvi file
+		unsigned _currPageNum;  // current page number
+		int _currFontNum;       // current font number
+		double _scaleFactor;    // 1 dvi unit = scaleFactor * TeX points
+		UInt32 _mag;            // magnification factor * 1000
+		bool _inPostamble;      // true if stream pointer is inside the postamble
+		Int32 _prevBop;         // pointer to previous bop
 		double _pageHeight, _pageWidth;  // page height and width in TeX points
 		DVIPosition _currPos;
 		std::stack<DVIPosition> _posStack;

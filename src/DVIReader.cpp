@@ -40,6 +40,9 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a
 	_pageHeight = _pageWidth = 0;
 	_scaleFactor = 0.0;
 	_inPostamble = false;
+	_totalPages = 0;  // we don't know the correct value yet
+	_currFontNum = 0;
+	_currPageNum = 0;
 }
 
 
@@ -190,8 +193,8 @@ bool DVIReader::executePages (unsigned first, unsigned last) {
 	in().seekg(q, ios_base::beg);       // now on begin of postamble
 	if (executeCommand() != 248)        // execute postamble command but not the fontdefs
 		return false;
-	first = max(1u, min(first, (unsigned)_totalPages));
-	last = max(1u, min(last, (unsigned)_totalPages));
+	first = max(1u, min(first, _totalPages));
+	last = max(1u, min(last, _totalPages));
 	in().seekg(_prevBop, ios_base::beg); // now on last bop
 	_inPostamble = false;               // we jumped out of the postamble
 	unsigned count = _totalPages;

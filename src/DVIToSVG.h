@@ -22,6 +22,8 @@
 #define DVITOSVG_H
 
 #include <iostream>
+#include <string>
+#include <utility>
 #include "DVIReader.h"
 #include "SpecialManager.h"
 #include "SVGTree.h"
@@ -30,9 +32,18 @@
 class DVIToSVG : public DVIReader
 {
    public:
-      DVIToSVG (std::istream &is, std::ostream &os);
+      /** DVIToSVG uses this interface to get the output streams for the SVG files. */
+      struct Output {
+         virtual ~Output () {}
+			virtual std::ostream& getPageStream (int page, int numPages) const =0;
+			virtual std::string filename (int page, int numPages) const =0;
+      };
+
+   public:
+      DVIToSVG (std::istream &is, Output &out);
 		~DVIToSVG ();
-		int convert (unsigned firstPage, unsigned lastPage);
+		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
+      void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
 		const SpecialManager* setProcessSpecials (const char *ignorelist=0);
 		const SpecialManager& specialManager () const    {return _specialManager;}
 		void setPageSize (const std::string &name)       {_bboxString = name;}
@@ -50,7 +61,7 @@ class DVIToSVG : public DVIReader
 
    private:
 		SVGTree _svg;
-		std::ostream &_out;       ///< DVI output is written to this stream
+		Output &_out;
 		std::string _bboxString;
 		std::string _transCmds;
 		SpecialManager _specialManager;

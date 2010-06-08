@@ -19,15 +19,17 @@
 *************************************************************************/
 
 #include <cmath>
+#include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <time.h>
 #include "gzstream.h"
 #include "CommandLine.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
+#include "FilePath.h"
 #include "FileSystem.h"
 #include "Font.h"
 #include "FontCache.h"
@@ -37,7 +39,6 @@
 #include "FileFinder.h"
 #include "PageSize.h"
 #include "SpecialManager.h"
-#include "StreamCounter.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -51,25 +52,90 @@
 
 using namespace std;
 
-
-/** Simple private auto pointer class to simplify pointer handling in main function. */
-template <typename T>
-class Pointer
+class SVGOutput : public DVIToSVG::Output
 {
 	public:
-		Pointer (T *p=0, bool free=true) : _p(p), _free(free) {}
-		Pointer (const Pointer &p) : _p(p._p), _free(p._free) {p._p = 0;}
-		~Pointer ()       {if (_free) delete _p;}
-		T& operator * ()  {return *_p;}
-		void operator = (const Pointer &p) {_p=p._p; _free=p._free; p._p=0;}
-		void release () {
-			if (_free) delete _p;
-			_p=0;
+		SVGOutput (const char *base=0, string pattern="", int zip_level=0)
+			: _path(base ? base : ""),
+			_pattern(pattern),
+			_stdout(base == 0),
+			_zipLevel(zip_level),
+			_page(-1),
+			_os(0) {}
+
+
+		~SVGOutput () {
+			delete _os;
+		}
+
+
+		/** Returns an output stream for the given page.
+		 *  @param[in] page number of current page
+		 *  @param[in] numPages total number of pages in the DVI file
+		 *  @return output stream for the given page */
+		ostream& getPageStream (int page, int numPages) const {
+			string fname = filename(page, numPages);
+			if (fname.empty()) {
+				delete _os;
+				_os = 0;
+				return cout;
+			}
+			if (page == _page)
+				return *_os;
+
+			_page = page;
+			delete _os;
+
+			if (_zipLevel > 0)
+				_os = new ogzstream(fname.c_str(), _zipLevel);
+			else
+				_os = new ofstream(fname.c_str());
+			if (!_os || !*_os) {
+				delete _os;
+				_os = 0;
+				throw MessageException("can't open file "+fname+" for writing");
+			}
+			return *_os;
+		}
+
+
+		/** Returns the name of the SVG file containing the given page.
+		 *  @param[in] page number of page */
+		string filename (int page, int numPages) const {
+			if (_stdout)
+				return "";
+			string fname = _pattern;
+			if (fname.empty())
+				fname = numPages > 1 ? "%f-%p" : "%f";
+			else if (numPages > 1 && fname.find("%p") == string::npos)
+				fname += FileSystem::isDirectory(fname.c_str()) ? "/%f-%p" : "-%p";
+
+			// replace pattern variables by their actual values
+			// %f: basename of the DVI file
+			// %p: current page number
+			ostringstream oss;
+			oss << setfill('0') << setw(max(2, int(1+log10((double)numPages)))) << page;
+			size_t pos=0;
+			while ((pos = fname.find('%', pos)) != string::npos && pos < fname.length()-1) {
+				switch (fname[pos+1]) {
+					case 'f': fname.replace(pos, 2, _path.basename());  pos += _path.basename().length(); break;
+					case 'p': fname.replace(pos, 2, oss.str()); pos += oss.str().length(); break;
+					default : ++pos;
+				}
+			}
+			FilePath outpath(fname, true);
+			if (outpath.suffix().empty())
+				outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
+			return outpath.relative();
 		}
 
 	private:
-		mutable T *_p;
-		bool _free; ///< delete pointer in destructor?
+		FilePath _path;
+		string _pattern;
+		bool _stdout;
+		int _zipLevel;
+		mutable int _page; // number of current page being written
+		mutable ostream *_os;
 };
 
 
@@ -118,8 +184,8 @@ static double get_time () {
 	ftime(&tb);
 	return tb.time + tb.millitm/1000.0;
 #else
-	time_t myclock = time((time_t*)NULL);
-	return myclock;
+	clock_t myclock = clock();
+	return double(myclock)/CLOCKS_PER_SEC;
 #endif
 }
 
@@ -216,7 +282,8 @@ int main (int argc, char *argv[]) {
 		return 0;
 	}
 	if (args.list_specials_given()) {
-		DVIToSVG dvisvg(cin, cout);
+		SVGOutput out;
+		DVIToSVG dvisvg(cin, out);
 		if (const SpecialManager *sm = dvisvg.setProcessSpecials())
 			sm->writeHandlerInfo(cout);
 		return 0;
@@ -265,49 +332,37 @@ int main (int argc, char *argv[]) {
    if (!ifs)
       Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
 	else {
-		Pointer<ostream> out;
-		if (args.stdout_given())
-			out = Pointer<ostream>(&cout, false);
-		else if (args.zip_given())
-			out = Pointer<ostream>(new ogzstream(svgfile.c_str(), args.zip_arg()));
-		else
-			out = Pointer<ostream>(new ofstream(svgfile.c_str(), ios_base::binary));
+		const char *basename=0;
+		if (!args.stdout_given())
+			basename = svgfile.c_str();
+		SVGOutput out(basename, args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
+		Message::level = args.verbosity_arg();
+		DVIToSVG dvisvg(ifs, out);
+		const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
+		dvisvg.setProcessSpecials(ignore_specials);
+		set_trans(dvisvg, args);
+		dvisvg.setPageSize(args.bbox_arg());
 
-		if (!*out)
-      	Message::estream(true) << "can't open file '" << svgfile << "' for writing\n";
-		else {
-			StreamCounter<char> sc(*out);
-			Message::level = args.verbosity_arg();
-			DVIToSVG dvisvg(ifs, *out);
-			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
-			dvisvg.setProcessSpecials(ignore_specials);
-			set_trans(dvisvg, args);
-			dvisvg.setPageSize(args.bbox_arg());
-
-			try {
-				FileFinder::init(argv[0], !args.no_mktexmf_given());
-				if (int pages = dvisvg.convert(args.page_arg(), args.page_arg())) {
-					if (!args.stdout_given())
-						sc.invalidate();  // output buffer is no longer valid
-					// valgrind issues an invalid conditional jump/move in the deflate function of libz here.
-					// According to libz FAQ #36 this is not a bug but intended behavior.
-					out.release();       // force writing
-					const char *pstr = pages == 1 ? "" : "s";
-					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
-					Message::mstream() << "\n1 page" << pstr << " written to "
-						                << (args.stdout_given() ? "<stdout>" : svgfile)
-					                   << " (" << nbytes << " bytes";
-					if (args.zip_given())
-						Message::mstream() << " = " << floor(double(nbytes)/sc.count()*100.0+0.5) << "%";
-					Message::mstream() << ") in " << (get_time()-start_time) << " seconds\n";
-				}
-			}
-			catch (DVIException &e) {
-				Message::estream() << "DVI error: " << e.getMessage() << '\n';
-			}
-			catch (MessageException &e) {
-				Message::estream(true) << e.getMessage() << '\n';
-			}
+		try {
+			FileFinder::init(argv[0], !args.no_mktexmf_given());
+			pair<int,int> pageinfo;
+			dvisvg.convert(args.page_arg(), &pageinfo);
+//					if (!args.stdout_given())
+//						sc.invalidate();  // output buffer is no longer valid
+				// valgrind issues an invalid conditional jump/move in the deflate function of libz here.
+				// According to libz FAQ #36 this is not a bug but intended behavior.
+//					out.release();       // force writing
+//					UInt64 nbytes = args.stdout_given() ? sc.count() : FileSystem::filesize(svgfile);
+			Message::mstream() << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
+			if (pageinfo.second > 1)
+				Message::mstream() << 's';
+			Message::mstream() << " converted in " << (get_time()-start_time) << " seconds\n";
+		}
+		catch (DVIException &e) {
+			Message::estream() << "DVI error: " << e.getMessage() << '\n';
+		}
+		catch (MessageException &e) {
+			Message::estream(true) << e.getMessage() << '\n';
 		}
 	}
 	return 0;

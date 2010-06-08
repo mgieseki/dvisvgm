@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <gtest/gtest.h>
@@ -34,7 +34,7 @@ TEST(CommandLineTest, noarg_short) {
 	EXPECT_FALSE(cmd.list_specials_given());
 	EXPECT_FALSE(cmd.error());
 	EXPECT_EQ(cmd.numFiles(), 0);
-}		
+}
 
 
 TEST(CommandLineTest, noarg_long) {
@@ -59,7 +59,7 @@ TEST(CommandLineTest, arg_short) {
 	cmd.parse(5, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 5);
+	EXPECT_EQ(cmd.page_arg(), "5");
 	EXPECT_TRUE(cmd.rotate_given());
 	EXPECT_EQ(cmd.rotate_arg(), 45);
 	EXPECT_TRUE(cmd.output_given());
@@ -80,7 +80,7 @@ TEST(CommandLineTest, arg_combined) {
 	cmd.parse(4, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 5);
+	EXPECT_EQ(cmd.page_arg(), "5");
 	EXPECT_TRUE(cmd.list_specials_given());
 	EXPECT_TRUE(cmd.stdout_given());
 	EXPECT_TRUE(cmd.no_fonts_given());
@@ -95,7 +95,7 @@ TEST(CommandLineTest, arg_separated) {
 	cmd.parse(7, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 5);
+	EXPECT_EQ(cmd.page_arg(), "5");
 	EXPECT_TRUE(cmd.rotate_given());
 	EXPECT_EQ(cmd.rotate_arg(), 45);
 	EXPECT_FALSE(cmd.error());
@@ -112,7 +112,7 @@ TEST(CommandLineTest, arg_long) {
 	cmd.parse(5, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 9);
+	EXPECT_EQ(cmd.page_arg(), "9");
 	EXPECT_TRUE(cmd.rotate_given());
 	EXPECT_EQ(cmd.rotate_arg(), -45.5);
 	EXPECT_TRUE(cmd.output_given());
@@ -133,7 +133,7 @@ TEST(CommandLineTest, abbrev_long) {
 	cmd.parse(4, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 9);
+	EXPECT_EQ(cmd.page_arg(), "9");
 	EXPECT_TRUE(cmd.rotate_given());
 	EXPECT_EQ(cmd.rotate_arg(), -45.5);
 	EXPECT_TRUE(cmd.output_given());
@@ -148,11 +148,11 @@ TEST(CommandLineTest, abbrev_long) {
 TEST(CommandLineTest, error) {
 	CommandLine cmd;
 	// error on wrong argument type
-	const char *args1[] = {"progname", "--page=x"};
+	const char *args1[] = {"progname", "--rotate=x"};
 	char **argv = const_cast<char**>(args1);
 	cmd.parse(2, argv, false);
 
-	EXPECT_FALSE(cmd.page_given());
+	EXPECT_FALSE(cmd.rotate_given());
 	EXPECT_TRUE(cmd.error());
 
 	// error on missing arguments
@@ -188,7 +188,7 @@ TEST(CommandLineTest, file) {
 	cmd.parse(6, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 3);
+	EXPECT_EQ(cmd.page_arg(), "3");
 	EXPECT_TRUE(cmd.zip_given());
 	EXPECT_EQ(cmd.zip_arg(), 5);
 	EXPECT_TRUE(cmd.list_specials_given());
@@ -206,7 +206,7 @@ TEST(CommandLineTest, files_only) {
 	cmd.parse(6, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), 3);
+	EXPECT_EQ(cmd.page_arg(), "3");
 	EXPECT_TRUE(cmd.zip_given());
 	EXPECT_EQ(cmd.zip_arg(), 5);
 	EXPECT_EQ(cmd.numFiles(), 2);

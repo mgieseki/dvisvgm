@@ -82,7 +82,7 @@ void CommandLine::init () {
    _map_file_arg.clear();
    _no_specials_arg.clear();
    _output_arg.clear();
-   _page_arg = 1;
+   _page_arg = "1";
    _progress_arg = 100;
    _rotate_arg = 0;
    _scale_arg.clear();
@@ -96,11 +96,11 @@ void CommandLine::init () {
 void CommandLine::help () const {
    puts("This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
    puts("Input options:");
-   puts("  -p, --page=number             choose page to convert [1]");
+   puts("  -p, --page=ranges             choose pages to convert [1]");
    puts("  -m, --map-file=[+]filename    set [additional] font map file name");
    puts("\nSVG output options:");
    puts("  -b, --bbox=size               set size of bounding box [min]");
-   puts("  -o, --output=filename         set name of output file");
+   puts("  -o, --output=pattern          set name pattern of output files");
    puts("  -s, --stdout                  write SVG output to stdout");
    puts("  -n, --no-fonts                draw glyphs by using path elements");
    puts("      --no-styles               don't use styles to reference fonts");
@@ -210,7 +210,7 @@ void CommandLine::handle_output(InputReader &ir, const Option &opt, bool longopt
 
 
 void CommandLine::handle_page(InputReader &ir, const Option &opt, bool longopt) {
-   if (getUIntArg(ir, opt, longopt, _page_arg))
+   if (getStringArg(ir, opt, longopt, _page_arg))
       _page_given = true;
 }
 

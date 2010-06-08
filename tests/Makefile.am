@@ -68,6 +68,11 @@ check_PROGRAMS += MatrixTest
 MatrixTest_SOURCES = MatrixTest.cpp
 MatrixTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += PageRagesTest
+check_PROGRAMS += PageRagesTest
+PageRagesTest_SOURCES = PageRagesTest.cpp
+PageRagesTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += PageSizeTest
 check_PROGRAMS += PageSizeTest
 PageSizeTest_SOURCES = PageSizeTest.cpp
@@ -77,11 +82,6 @@ TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp
 SplittedCharInputBufferTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
-
-TESTS += StreamCounterTest
-check_PROGRAMS += StreamCounterTest
-StreamCounterTest_SOURCES = StreamCounterTest.cpp
-StreamCounterTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
 TESTS += StreamInputBufferTest
 check_PROGRAMS += StreamInputBufferTest
