@@ -80,8 +80,8 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("stroke-width", lw);
 		node->addAttribute("stroke", actions->getColor().rgbString());
 		// update bounding box
-		actions->bbox().embed(p1);
-		actions->bbox().embed(p2);
+		actions->embed(p1);
+		actions->embed(p2);
 	}
 	else {
 		// draw polygon
@@ -99,10 +99,10 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		if (actions->getColor() != Color::BLACK)
 			node->addAttribute("fill", actions->getColor().rgbString());
 		// update bounding box
-		actions->bbox().embed(q11);
-		actions->bbox().embed(q12);
-		actions->bbox().embed(q21);
-		actions->bbox().embed(q22);
+		actions->embed(q11);
+		actions->embed(q12);
+		actions->embed(q21);
+		actions->embed(q22);
 	}
 	actions->appendToPage(node);
 }

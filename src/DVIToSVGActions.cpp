@@ -42,7 +42,7 @@ bool DVIToSVGActions::EXACT_BBOX = false;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE)
+	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE), _boxes(0)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;
@@ -51,6 +51,7 @@ DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
 
 DVIToSVGActions::~DVIToSVGActions () {
 	delete _pageMatrix;
+	delete _boxes;
 }
 
 
@@ -110,7 +111,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 	_svg.appendToPage(rect);*/
 	if (!getMatrix().isIdentity())
 		bbox.transform(getMatrix());
-	_bbox.embed(bbox);
+	embed(bbox);
 }
 
 
@@ -141,7 +142,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	BoundingBox bb(x, y+height, x+width, y);
 	if (!getMatrix().isIdentity())
 		bb.transform(getMatrix());
-	_bbox.embed(bb);
+	embed(bb);
 }
 
 
@@ -198,6 +199,8 @@ void DVIToSVGActions::postamble () {
 void DVIToSVGActions::beginPage (unsigned n, Int32 *c) {
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
+	if (_boxes)
+		_boxes->clear();
 }
 
 
@@ -221,3 +224,32 @@ void DVIToSVGActions::setBgColor (const Color &color) {
 	_bgcolor = color;
 }
 
+
+void DVIToSVGActions::embed(const BoundingBox& bbox) {
+	_bbox.embed(bbox);
+	if (_boxes) {
+		FORALL(*_boxes, BoxMap::iterator, it)
+			it->second.embed(bbox);
+	}
+}
+
+
+void DVIToSVGActions::embed(const DPair& p, double r) {
+	if (r == 0)
+		_bbox.embed(p);
+	else
+		_bbox.embed(p, r);
+	if (_boxes)
+		FORALL(*_boxes, BoxMap::iterator, it)
+			it->second.embed(p, r);
+}
+
+
+BoundingBox& DVIToSVGActions::bbox(const string& name, bool reset) {
+	if (!_boxes)
+		_boxes = new BoxMap;
+	BoundingBox &box = (*_boxes)[name];
+	if (reset)
+		box = BoundingBox();
+	return box;
+}

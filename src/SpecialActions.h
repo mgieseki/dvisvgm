@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef SPECIALACTIONS_H
@@ -43,6 +43,9 @@ struct SpecialActions
 	virtual void appendToPage (XMLNode *node) =0;
 	virtual void appendToDefs (XMLNode *node) =0;
 	virtual BoundingBox& bbox () =0;
+   virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
+   virtual void embed (const BoundingBox &bbox) =0;
+   virtual void embed (const DPair &p, double r=0) =0;
 };
 
 
@@ -61,6 +64,9 @@ class SpecialEmptyActions : public SpecialActions
 		void appendToPage (XMLNode *node) {}
 		void appendToDefs (XMLNode *node) {}
 		BoundingBox& bbox () {return _bbox;}
+      BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
+      void embed (const BoundingBox &bbox) {}
+      void embed (const DPair &p, double r=0) {}
 
 	private:
 		BoundingBox _bbox;

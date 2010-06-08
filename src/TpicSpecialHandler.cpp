@@ -63,7 +63,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 			elem->addAttribute("cx", p.x()+actions->getX());
 			elem->addAttribute("cy", p.y()+actions->getY());
 			elem->addAttribute("r", _penwidth/2.0);
-			actions->bbox().embed(p, _penwidth/2.0);
+			actions->embed(p, _penwidth/2.0);
 		}
 		else {
 			if (_points.size() == 2 || (!fill && _points.front() != _points.back())) {
@@ -88,7 +88,7 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 				double x = it->x()+actions->getX();
 			  	double y = it->y()+actions->getY();
 				oss << x << ',' << y;
-				actions->bbox().embed(x, y);
+				actions->embed(DPair(x, y));
 			}
 			elem->addAttribute("points", oss.str());
 			elem->addAttribute("stroke", "black");
@@ -120,7 +120,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 			oss << 'M' << x+_points[0].x() << ',' << y+_points[0].y();
 			DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
 			oss << 'L' << mid.x() << ',' << mid.y();
-			actions->bbox().embed(p+_points[0]);
+			actions->embed(p+_points[0]);
 			for (size_t i=1; i < size-1; i++) {
 				const DPair p0 = p+_points[i-1];
 				const DPair p1 = p+_points[i];
@@ -128,14 +128,14 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 				mid = p1+(p2-p1)/2.0;
 				oss << 'Q' << p1.x() << ',' << p1.y()
 					 << ' ' << mid.x() << ',' << mid.y();
-				actions->bbox().embed(mid);
-				actions->bbox().embed((p0+p1*6.0+p2)/8.0, _penwidth);
+				actions->embed(mid);
+				actions->embed((p0+p1*6.0+p2)/8.0, _penwidth);
 			}
 			if (_points[0] == _points[size-1])  // closed path?
 				oss << 'Z';
 			else {
 				oss << 'L' << x+_points[size-1].x() << ',' << y+_points[size-1].y();
-				actions->bbox().embed(p+_points[size-1]);
+				actions->embed(p+_points[size-1]);
 			}
 
 			Color color = actions->getColor();
@@ -221,7 +221,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		else
 			elem->addAttribute("fill", "none");
 		actions->appendToPage(elem);
-		actions->bbox().embed(BoundingBox(cx-rx, cy-ry, cx+rx, cy+ry));
+		actions->embed(BoundingBox(cx-rx, cy-ry, cx+rx, cy+ry));
 	}
 	reset();
 }

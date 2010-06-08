@@ -252,7 +252,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		// adapt bounding box
 		BoundingBox bbox(x, y, x+w, y+h);
 		bbox.transform(usertrans);
-		_actions->bbox().embed(bbox);
+		_actions->embed(bbox);
 	}
 }
 
@@ -363,7 +363,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			_xmlnode->append(path);
 		else {
 			_actions->appendToPage(path);
-			_actions->bbox().embed(bbox);
+			_actions->embed(bbox);
 		}
 		_path.newpath();
 	}
@@ -408,7 +408,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			_xmlnode->append(path);
 		else {
 			_actions->appendToPage(path);
-			_actions->bbox().embed(bbox);
+			_actions->embed(bbox);
 		}
 		_path.newpath();
 	}

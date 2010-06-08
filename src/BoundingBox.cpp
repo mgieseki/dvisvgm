@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -96,9 +96,9 @@ void BoundingBox::set (string boxstr) {
 			l = r;
 		}
 	} while (!lenstr.empty() && coord.size() < 4);
-	
+
 	switch (coord.size()) {
-		case 1: 
+		case 1:
 			ulx -= coord[0].pt();
 			uly -= coord[0].pt();
 			lrx += coord[0].pt();
@@ -115,7 +115,7 @@ void BoundingBox::set (string boxstr) {
 			uly = min(coord[1].pt(), coord[3].pt());
 			lrx = max(coord[0].pt(), coord[2].pt());
 			lry = max(coord[1].pt(), coord[3].pt());
-			break;			
+			break;
 		default:
 			throw BoundingBoxException("1, 2 or 4 length parameters expected");
 	}

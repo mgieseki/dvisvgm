@@ -363,6 +363,18 @@ exact syntax, see the documentation of *dvips*, for instance.
   can be used here. However, *dvisvgm* does not check the file format or the file name suffix. The lengths 'width'
   and 'height' must be given as plain floating point numbers in TeX point units (1in = 72.27pt).
  
+  *dvisvgm:bbox* n[ew] 'name';;
+  Defines or resets a local bounding box called 'name'. The name may consist of letters and digits. 
+  While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to
+  determine the minimal rectangle containing all visible page components (characters, images, drawing elements etc.).
+  Additionally to the global bounding box, the user can request an arbitrary number of named local bounding boxes. 
+  Once defined, these boxes are updated together with the global bounding box starting with the first character that 
+  follows the definition. Thus, the local boxes can be used to compute the extent of parts of the page. This is useful
+  for scenarios where the generated SVG file is post-processed. 
+  In conjunction with special dvisvgm:raw, the macro *{?bbox 'name'}* expands to the four values 'x', 'y', 'w', and 'h' 
+  (separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box 'name'. 
+  If box 'name' wasn't previously defined, all four values equal zero.
+ 
   *dvisvgm:bbox* 'width' 'height' ['depth'];;
   Updates the bounding box of the current page by embedding a virtual rectangle ('x', 'y', 'width', 'height')
   where the lower left corner is located at the current DVI drawing position ('x','y'). If the optional parameter 'depth' 

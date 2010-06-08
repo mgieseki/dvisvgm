@@ -40,6 +40,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 {
 	typedef std::map<const Font*, std::set<int> > CharMap;
 	typedef std::set<const Font*> FontSet;
+   typedef std::map<std::string,BoundingBox> BoxMap;
 
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
@@ -71,6 +72,9 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void setX (double x) {_dvisvg.setXPos(x);}
 		void setY (double y) {_dvisvg.setYPos(y);}
 		BoundingBox& bbox () {return _bbox;}
+      BoundingBox& bbox (const std::string &name, bool reset=false);
+      void embed (const BoundingBox &bbox);
+      void embed (const DPair &p, double r=0);
 
 	public:
 		static unsigned PROGRESSBAR; ///< disabled if 0, indicates skip value otherwise
@@ -86,6 +90,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		FontSet _usedFonts;
 		Matrix *_pageMatrix;  // transformation of whole page
 		Color _bgcolor;
+      BoxMap *_boxes;
 };
 
 

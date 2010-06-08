@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstring>
@@ -44,6 +44,23 @@ static void expand_constants (string &str, SpecialActions *actions) {
 		{"nl", "\n"},
 		{0, ""}
 	};
+	bool repl_bbox = true;
+	while (repl_bbox) {
+		size_t pos = str.find(string("{?bbox "));
+		if (pos == string::npos)
+			repl_bbox = false;
+		else {
+			size_t endpos = pos+7;
+			while (endpos < str.length() && isalnum(str[endpos]))
+				++endpos;
+			if (str[endpos] == '}') {
+				BoundingBox &box=actions->bbox(str.substr(pos+7, endpos-pos-7));
+				str.replace(pos, endpos-pos+1, box.toSVGViewBox());
+			}
+			else
+				repl_bbox = false;
+		}
+	}
 	for (const Constant *p=constants; p->name; p++) {
 		const string pattern = string("{?")+p->name+"}";
 		size_t pos = str.find(pattern);
@@ -63,8 +80,8 @@ static void expand_constants (string &str, SpecialActions *actions) {
 static void update_bbox (double w, double h, double d, SpecialActions *actions) {
 	double x = actions->getX();
 	double y = actions->getY();
-	actions->bbox().embed(BoundingBox(x, y, x+w, y-h));
-	actions->bbox().embed(BoundingBox(x, y, x+w, y+d));
+	actions->embed(BoundingBox(x, y, x+w, y-h));
+	actions->embed(BoundingBox(x, y, x+w, y+d));
 }
 
 
@@ -99,20 +116,30 @@ static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 /** Evaluates the special dvisvgm:bbox.
  *  variant 1: dvisvgm:bbox [r[el]] <width> <height> [<depth>]
  *  variant 2: dvisvgm:bbox a[bs] <x1> <y1> <x2> <y2>
- *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2> */
+ *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2>
+ *  variant 4: dvisvgm:bbox n[ew] <name> */
 static void bbox (InputReader &in, SpecialActions *actions) {
 	in.skipSpace();
 	char c = in.peek();
 	if (isalpha(c)) {
 		while (!isspace(in.peek()))  // skip trailing characters
 			in.get();
-		if (c == 'a' || c == 'f') {
+		if (c == 'n') {
+			in.skipSpace();
+			string name;
+			while (isalnum(in.peek()))
+				name += in.get();
+			in.skipSpace();
+			if (!name.empty() && in.eof())
+				actions->bbox(name, true); // create new user box
+		}
+		else if (c == 'a' || c == 'f') {
 			double p[4];
 			for (int i=0; i < 4; i++)
 				p[i] = in.getDouble();
 			BoundingBox b(p[0], p[1], p[2], p[3]);
 			if (c == 'a')
-				actions->bbox().embed(b);
+				actions->embed(b);
 			else {
 				actions->bbox() = b;
 				actions->bbox().lock();
