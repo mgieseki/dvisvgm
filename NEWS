@@ -1,3 +1,12 @@
+dvisvgm-1.0
+- conversion of multiple pages (must be enabled explicitly, see option --pages)
+- added transparency support to the PS handler
+- improved conversion results of the PS handler
+- added support for computation of local bounding boxes
+- optional colorization of dvisvgm messages (option --color)
+- improved progress indicator (option --progress)
+- a couple of improvements of the build system
+
 dvisvgm-0.9.1
 - CSS style definitions omit unnecessary fonts now
 - SVG validity was broken when using font elements
