@@ -38,6 +38,11 @@ check_PROGRAMS += FileFinderTest
 FileFinderTest_SOURCES = FileFinderTest.cpp
 FileFinderTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += FilePathTest
+check_PROGRAMS += FilePathTest
+FilePathTest_SOURCES = FilePathTest.cpp
+FilePathTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += FontManagerTest
 check_PROGRAMS += FontManagerTest
 FontManagerTest_SOURCES = FontManagerTest.cpp
