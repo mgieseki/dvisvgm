@@ -209,7 +209,7 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 				}
 			}
 			else {
-				// @@ print error message
+				Message::wstream(true) << "failed creating " << name() << ".gf\n";
 			}
 		}
 	}
