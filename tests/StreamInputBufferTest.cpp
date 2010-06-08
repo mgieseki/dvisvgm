@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <gtest/gtest.h>
@@ -30,7 +30,7 @@ using std::map;
 using std::string;
 
 TEST(StreamInputBufferTest, get) {
-	istringstream iss("abcdefghijklmnopqrstuvwxyz"); 
+	istringstream iss("abcdefghijklmnopqrstuvwxyz");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	bool ok=true;
@@ -43,20 +43,20 @@ TEST(StreamInputBufferTest, get) {
 
 
 TEST(StreamInputBufferTest, peek) {
-	istringstream iss("abcdefghijklmnopqrstuvwxyz"); 
+	istringstream iss("abcdefghijklmnopqrstuvwxyz");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	EXPECT_EQ(in.peek(), 'a');
-	for (int i=0; i < 20; i++) 
+	for (int i=0; i < 20; i++)
 		EXPECT_EQ(in.peek(i), 'a'+i);
 	// we can't look forward more than BUFSIZE characters (10 in this case)
-	for (int i=21; i < 26; i++) 
+	for (int i=21; i < 26; i++)
 		EXPECT_EQ(in.peek(i), -1);
 }
 
 
 TEST(StreamInputBufferTest, check) {
-	istringstream iss("abcdefghijklmnopqrstuvwxyz"); 
+	istringstream iss("abcdefghijklmnopqrstuvwxyz");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	EXPECT_TRUE(in.check("abc", false));
@@ -71,7 +71,7 @@ TEST(StreamInputBufferTest, check) {
 
 
 TEST(StreamInputBufferTest, skip) {
-	istringstream iss("abcdefghijklmnopqrstuvwxyz"); 
+	istringstream iss("abcdefghijklmnopqrstuvwxyz");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	in.skip(3);
@@ -86,7 +86,7 @@ TEST(StreamInputBufferTest, skip) {
 
 
 TEST(StreamInputBufferTest, parseInt) {
-	istringstream iss("1234,-5,+6,10.-"); 
+	istringstream iss("1234,-5,+6,10.-");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	int n;
@@ -112,7 +112,7 @@ TEST(StreamInputBufferTest, parseInt) {
 
 
 TEST(StreamInputBufferTest, parseInt_base) {
-	istringstream iss("1234,-5,10,1abc,1234a"); 
+	istringstream iss("1234,-5,10,1abc,1234a");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	int n;
@@ -141,7 +141,7 @@ TEST(StreamInputBufferTest, parseInt_base) {
 
 
 TEST(StreamInputBufferTest, parseDouble) {
-	istringstream iss("1234,-5,6.12,-3.1415,-.1,12e2,10.-"); 
+	istringstream iss("1234,-5,6.12,-3.1415,-.1,12e2,10.-");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	double d;
@@ -179,7 +179,7 @@ TEST(StreamInputBufferTest, parseDouble) {
 
 
 TEST(StreamInputBufferTest, attribs) {
-	istringstream iss("aaa=1 bbb=2 ccc=3 d e"); 
+	istringstream iss("aaa=1 bbb=2 ccc=3 d e");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	map<string,string> attr;
@@ -188,4 +188,16 @@ TEST(StreamInputBufferTest, attribs) {
 	EXPECT_EQ(attr["aaa"], "1");
 	EXPECT_EQ(attr["bbb"], "2");
 	EXPECT_EQ(attr["ccc"], "3");
+}
+
+
+TEST(StreamInputBufferTest, invalidate) {
+	istringstream iss("aaa=1 bbb=2 ccc=3 d e");
+	StreamInputBuffer buffer(iss, 10);
+	EXPECT_EQ(buffer.get(), 'a');
+	EXPECT_EQ(buffer.get(), 'a');
+	EXPECT_EQ(buffer.get(), 'a');
+	EXPECT_EQ(buffer.get(), '=');
+	buffer.invalidate();
+	EXPECT_TRUE(buffer.eof());
 }

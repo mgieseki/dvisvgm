@@ -35,6 +35,7 @@ struct InputBuffer
 	virtual int peek () const =0;
 	virtual int peek (unsigned n) const =0;
 	virtual bool eof () const =0;
+   virtual void invalidate () =0;
 };
 
 
@@ -46,7 +47,8 @@ class StreamInputBuffer : public InputBuffer
 		int get ();
 		int peek () const;
 		int peek (unsigned n) const;
-		bool eof () const {return pos() == _size1 && _size2 == 0;}
+		bool eof () const  {return pos() == _size1 && _size2 == 0;}
+      void invalidate () {_bufptr = _buf1+_size1; _size2 = 0;}
 
 	protected:
 		int fillBuffer (UInt8 *buf);
@@ -71,6 +73,7 @@ class StringInputBuffer : public InputBuffer
 		int peek () const           {return _pos < _str.length() ? _str[_pos] : -1;}
 		int peek (unsigned n) const {return _pos+n < _str.length() ? _str[_pos+n] : -1;}
 		bool eof () const           {return _pos >= _str.length();}
+      void invalidate ()          {_pos = _str.length();}
 
 	private:
 		std::string &_str;
@@ -102,6 +105,7 @@ class CharInputBuffer : public InputBuffer
 		int peek () const             {return _size > 0 ? *_pos : -1;}
 		int peek (unsigned n) const   {return _size >= n ? _pos[n] : -1;}
 		bool eof () const             {return _size <= 0;}
+      void invalidate ()            {_size = 0;}
 
 	private:
 		const char *_pos;
@@ -116,8 +120,8 @@ class SplittedCharInputBuffer : public InputBuffer
 		int get ();
 		int peek () const;
 		int peek (unsigned n) const;
-		bool eof () const {return _size[_index] == 0;}
-//		bool check (const char *s, bool consume=true);
+		bool eof () const   {return _size[_index] == 0;}
+      void invalidate ()  {_size[_index] = 0;}
 
 	private:
 		const char *_buf[2];
