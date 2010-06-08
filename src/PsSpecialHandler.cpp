@@ -45,6 +45,12 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(fa
 }
 
 
+PsSpecialHandler::~PsSpecialHandler () {
+	// ensure no further PS actions are performed
+	_psi.setActions(0);
+}
+
+
 /** Initializes the PostScript handler. It's called by the first use of process(). The
  *  deferred initialization speeds up the conversion of DVI files that doesn't contain
  *  PS specials. */

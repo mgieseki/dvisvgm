@@ -86,6 +86,7 @@ class PSInterpreter
 		void execute (const std::string &str)  {execute(str.c_str());}
 		void execute (std::istream &is);
 		bool active () const                   {return _mode != PS_QUIT;}
+		PSActions* setActions (PSActions *actions);
 
 	protected:
 		// callback functions

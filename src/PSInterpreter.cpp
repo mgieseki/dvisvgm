@@ -53,6 +53,13 @@ PSInterpreter::PSInterpreter (PSActions *actions)
 }
 
 
+PSActions* PSInterpreter::setActions (PSActions *actions) {
+	PSActions *old_actions = _actions;
+	_actions = actions;
+	return old_actions;
+}
+
+
 /** Executes a chunk of PostScript code.
  *  @param[in] str buffer containing the code
  *  @param[in] len number of characters in buffer

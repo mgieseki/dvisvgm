@@ -52,6 +52,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 
 	public:
 		PsSpecialHandler ();
+		~PsSpecialHandler ();
 		const char* name () const   {return "ps";}
 		const char* info () const;
 		const char** prefixes () const;
