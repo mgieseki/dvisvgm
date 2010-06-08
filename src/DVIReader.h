@@ -45,6 +45,8 @@ class FileFinder;
 
 class DVIReader : public StreamReader, protected VFActions
 {
+	typedef void (DVIReader::*CommandHandler)(int);
+
 	struct DVIPosition
 	{
 		double h, v;
@@ -77,6 +79,7 @@ class DVIReader : public StreamReader, protected VFActions
 
 	protected:
 		int executeCommand ();
+		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
 		void putChar (UInt32 c, bool moveCursor);
 		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
 		virtual void beginPage (unsigned n, Int32 *c) {}
@@ -117,18 +120,23 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPostPost (int len);
 
 	private:
-		DVIActions *_actions;
-		bool _inPage;           // true if between bop and eop
-		unsigned _totalPages;   // total number of pages in dvi file
-		unsigned _currPageNum;  // current page number
-		int _currFontNum;       // current font number
-		double _scaleFactor;    // 1 dvi unit = scaleFactor * TeX points
-		UInt32 _mag;            // magnification factor * 1000
-		bool _inPostamble;      // true if stream pointer is inside the postamble
-		Int32 _prevBop;         // pointer to previous bop
-		double _pageHeight, _pageWidth;  // page height and width in TeX points
+		DVIActions *_actions;   ///< actions to be performed on various DVI events
+		bool _inPage;           ///< true if between bop and eop
+		unsigned _totalPages;   ///< total number of pages in dvi file
+		unsigned _currPageNum;  ///< current page number
+		int _currFontNum;       ///< current font number
+		double _scaleFactor;    ///< 1 dvi unit = scaleFactor * TeX points
+		UInt32 _mag;            ///< magnification factor * 1000
+		bool _inPostamble;      ///< true if stream pointer is inside the postamble
+		Int32 _prevBop;         ///< pointer to previous bop
+		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
 		DVIPosition _currPos;
 		std::stack<DVIPosition> _posStack;
+		size_t _pageLength;     ///< number of bytes between current bop end eop
+		size_t _pagePos;        ///< distance of current DVI command from bop (in bytes)
+
+	public:
+		static bool COMPUTE_PAGE_LENGTH;  ///< if true, the bop handler computes the number of bytes of the current page
 };
 
 #endif

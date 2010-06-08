@@ -50,6 +50,7 @@ struct DVIActions
 	virtual void endPage () {}
 	virtual BoundingBox& bbox () =0;
 	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
+	virtual void progress (size_t current, size_t total) {}
 };
 
 #endif
