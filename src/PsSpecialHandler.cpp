@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -55,6 +55,7 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		_linecap = _linejoin = 0;
 		_miterlimit = 4;
 		_xmlnode = 0;
+		_opacityalpha = 1;  // fully opaque
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
@@ -339,6 +340,8 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
 			if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
 				path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
+			if (_opacityalpha < 1)
+				path->addAttribute("stroke-opacity", XMLString(_opacityalpha));
 			if (_dashpattern.size() > 0) {
 				ostringstream oss;
 				for (size_t i=0; i < _dashpattern.size(); i++) {
@@ -404,6 +407,8 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		}
 		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 			path->addAttribute("fill-rule", "evenodd");
+		if (_opacityalpha < 1)
+			path->addAttribute("fill-opacity", XMLString(_opacityalpha));
 		if (_xmlnode)
 			_xmlnode->append(path);
 		else {

@@ -32,13 +32,14 @@ using namespace std;
 
 
 const char *PSInterpreter::GSARGS[] = {
-	"gs",            // dummy name
-	"-q",            // be quiet, suppress gs banner
-	"-dSAFER",       // disallow writing of files
-	"-dNODISPLAY",   // we don't need a display device
-	"-dNOPAUSE",     // keep going
+	"gs",                // dummy name
+	"-q",                // be quiet, suppress gs banner
+	"-dSAFER",           // disallow writing of files
+	"-dNODISPLAY",       // we don't need a display device
+	"-dNOPAUSE",         // keep going
+	"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced
 	"-dNOPROMPT",
-	"-dNOBIND",
+//	"-dNOBIND",
 };
 
 
@@ -205,33 +206,34 @@ void PSInterpreter::callActions (InputReader &in) {
 		int pcount;       // number of parameters (< 0 : variable number of parameters)
 		void (PSActions::*op)(vector<double> &p);  // operation handler
 	} operators [] = {
-		{"clip",          0, &PSActions::clip},
-		{"closepath",     0, &PSActions::closepath},
-		{"curveto",       6, &PSActions::curveto},
-		{"eoclip",        0, &PSActions::eoclip},
-		{"eofill",        0, &PSActions::eofill},
-		{"fill",          0, &PSActions::fill},
-		{"grestore",      0, &PSActions::grestore},
-		{"gsave",         0, &PSActions::gsave},
-		{"initclip",      0, &PSActions::initclip},
-		{"lineto",        2, &PSActions::lineto},
-		{"moveto",        2, &PSActions::moveto},
-		{"newpath",       0, &PSActions::newpath},
-		{"rotate",        1, &PSActions::rotate},
-		{"scale",         2, &PSActions::scale},
-		{"setcmykcolor",  4, &PSActions::setcmykcolor},
-		{"setdash",      -1, &PSActions::setdash},
-		{"setgray",       1, &PSActions::setgray},
-		{"sethsbcolor",   3, &PSActions::sethsbcolor},
-		{"setlinecap",    1, &PSActions::setlinecap},
-		{"setlinejoin",   1, &PSActions::setlinejoin},
-		{"setlinewidth",  1, &PSActions::setlinewidth},
-		{"setmatrix",     6, &PSActions::setmatrix},
-		{"setmiterlimit", 1, &PSActions::setmiterlimit},
-		{"setpos",        2, &PSActions::setpos},
-		{"setrgbcolor",   3, &PSActions::setrgbcolor},
-		{"stroke",        0, &PSActions::stroke},
-		{"translate",     2, &PSActions::translate},
+		{"clip",            0, &PSActions::clip},
+		{"closepath",       0, &PSActions::closepath},
+		{"curveto",         6, &PSActions::curveto},
+		{"eoclip",          0, &PSActions::eoclip},
+		{"eofill",          0, &PSActions::eofill},
+		{"fill",            0, &PSActions::fill},
+		{"grestore",        0, &PSActions::grestore},
+		{"gsave",           0, &PSActions::gsave},
+		{"initclip",        0, &PSActions::initclip},
+		{"lineto",          2, &PSActions::lineto},
+		{"moveto",          2, &PSActions::moveto},
+		{"newpath",         0, &PSActions::newpath},
+		{"rotate",          1, &PSActions::rotate},
+		{"scale",           2, &PSActions::scale},
+		{"setcmykcolor",    4, &PSActions::setcmykcolor},
+		{"setdash",        -1, &PSActions::setdash},
+		{"setgray",         1, &PSActions::setgray},
+		{"sethsbcolor",     3, &PSActions::sethsbcolor},
+		{"setlinecap",      1, &PSActions::setlinecap},
+		{"setlinejoin",     1, &PSActions::setlinejoin},
+		{"setlinewidth",    1, &PSActions::setlinewidth},
+		{"setmatrix",       6, &PSActions::setmatrix},
+		{"setmiterlimit",   1, &PSActions::setmiterlimit},
+		{"setopacityalpha", 1, &PSActions::setopacityalpha},
+		{"setpos",          2, &PSActions::setpos},
+		{"setrgbcolor",     3, &PSActions::setrgbcolor},
+		{"stroke",          0, &PSActions::stroke},
+		{"translate",       2, &PSActions::translate},
 	};
 	if (_actions) {
 		in.skipSpace();

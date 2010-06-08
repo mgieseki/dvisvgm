@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef PSSPECIALHANDLER_H
@@ -87,6 +87,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setlinewidth (std::vector<double> &p)   {_linewidth = p[0] ? p[0]*1.00375 : 0.5;}
 		void setmatrix (std::vector<double> &p);
 		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
+		void setopacityalpha (std::vector<double> &p){_opacityalpha = p[0];}
 		void setpos (std::vector<double> &p)         {_currentpoint = DPair(p[0], p[1]);}
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
@@ -101,6 +102,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		DPair _currentpoint;        ///< current PS position
 		float _linewidth;           ///< current linewidth
 		float _miterlimit;          ///< current miter limit
+		float _opacityalpha;        ///< opacity level (0=fully transparent, ..., 1=opaque)
 		unsigned _linecap  : 2;     ///< current line cap (0=butt, 1=round, 2=projecting square)
 		unsigned _linejoin : 2;     ///< current line join (0=miter, 1=round, 2=bevel)
 		int _dashoffset;            ///< current dash offset
