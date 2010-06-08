@@ -4,6 +4,7 @@ EXTRA_DIST = $(man_MANS)
 dvisvgm.1: dvisvgm.txt
 	if [ `type -p a2x` ]; then \
 		a2x -dmanpage -fmanpage -L -a icons -a 'iconsdir=.' $<; \
+		rm -f dvisvgm.xml; \
 	fi
 
 dvisvgm.pdf: dvisvgm.1

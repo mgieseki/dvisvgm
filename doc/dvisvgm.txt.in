@@ -129,8 +129,10 @@ a different location use option *--cache* to overwrite the default. Furthermore,
 to disable the font caching mechanism completely with option *--cache=none*. If argument 'dir' is omitted,
 dvisvgm prints the path of the default cache directory and some information about the stored fonts.
 
+
 *--color*::
 Enables colorization of messages printed during the conversion process.
+
 
 *-e, --exact*::
 If this option is given, dvisvgm computes the precise bounding box of each character. By default,
@@ -140,6 +142,10 @@ they don't necessarily correspond with the bounds of the visual glyphs. Thus, th
 of some glyphs may be larger than the respective TFM values. As a result, this can lead to clipped 
 characters at the bounds of the SVG graphic. With option *--exact*, dvisvgm analyzes the actual shape 
 of each character and derives a usually tight bounding box.
+
+
+*-h, --help*::
+Prints a short summary of all available command-line options.
 
 
 *--libgs=filename*::
@@ -337,6 +343,11 @@ Controls the type of messages printed during a *dvisvgm* run:
 By adding these values you can combine the categories. The default level is 7, i.e. all 
 messages are printed.
 +
+
+
+*-V, --version*::
+Prints the version number and exits.
+
 
 *-z, --zip*[='level']::
 Creates a compressed SVG file with suffix .svgz. The optional argument specifies the compression 
