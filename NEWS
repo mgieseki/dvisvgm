@@ -1,3 +1,8 @@
+dvisvgm-1.0.1
+- fixed a memory issue in the PS handler that could lead to a segfault (SF bug #3013392)
+- fixed a recursion issue in the PS handler
+- suppress ANSI color code when terminating
+
 dvisvgm-1.0
 - conversion of multiple pages (must be enabled explicitly, see option --pages)
 - added transparency support to the PS handler
