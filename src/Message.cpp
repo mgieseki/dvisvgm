@@ -35,7 +35,7 @@ MessageStream::MessageStream (std::ostream &os)
 
 
 MessageStream::~MessageStream () {
-	if (_os)
+	if (_os && Message::COLORIZE)
 		Terminal::finish(*_os);
 }
 
