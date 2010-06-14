@@ -34,6 +34,8 @@
 
 using namespace std;
 
+const UInt8 FontCache::VERSION = 4;
+
 
 static Pair32 read_pair (int bytes, StreamReader &sr) {
 	Int32 x = sr.readSigned(bytes);

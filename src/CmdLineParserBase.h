@@ -65,7 +65,7 @@ class CmdLineParserBase
 		virtual void parse (int argc, char **argv, bool printErrors=true);
 		virtual void help () const  {}
 		virtual int numFiles () const       {return _files.size();}
-		virtual const char* file (size_t n) {return (n >= 0 && n < _files.size()) ? _files[n].c_str() : 0;}
+		virtual const char* file (size_t n) {return n < _files.size() ? _files[n].c_str() : 0;}
 		virtual void status () const;
 		virtual bool error () const         {return _error;}
 

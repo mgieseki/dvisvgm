@@ -66,7 +66,7 @@ void FontEngine::setDeviceResolution (int x, int y) {
  * @param[in] face font face to be used
  * @param[out] reverseMap the resulting map */
 static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
-	UInt32 glyphIndex;
+	FT_UInt glyphIndex;
 	UInt32 charcode = FT_Get_First_Char(face, &glyphIndex);
 	while (glyphIndex) {
 //		if (reverseMap.find(glyphIndex) == reverseMap.end())
@@ -127,7 +127,7 @@ void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const
 	build_reverse_map(_currentFace, reverseMap);
 
 	FT_Set_Charmap(_currentFace, unicodeMap);
-	UInt32 glyphIndex;
+	FT_UInt glyphIndex;
 	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyphIndex);
 	while (glyphIndex) {
 		translationMap[reverseMap[glyphIndex]] = charcode;

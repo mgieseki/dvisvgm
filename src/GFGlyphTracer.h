@@ -50,7 +50,6 @@ class GFGlyphTracer : public GFTracer
 		void endChar (UInt32 c);
 		void setGlyph (Glyph &glyph)   {_glyph = &glyph;}
 		const Glyph& getGlyph () const {return *_glyph;}
-		bool opened () const           {return _ifs.is_open();}
 
    private:
 		std::ifstream _ifs;

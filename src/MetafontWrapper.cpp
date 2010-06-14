@@ -55,7 +55,7 @@ static int execute (const char *cmd, const char *params) {
 	string cmdline = string("\"")+cmd+"\" "+params;
 	CreateProcess(NULL, (LPSTR)cmdline.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
 	WaitForSingleObject(pi.hProcess, INFINITE);
-	DWORD exitcode = -1;
+	DWORD exitcode = (DWORD)-1;
 	GetExitCodeProcess(pi.hProcess, &exitcode);
 	CloseHandle(devnull);
 	return exitcode;

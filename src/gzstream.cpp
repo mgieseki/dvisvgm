@@ -34,6 +34,8 @@
 namespace GZSTREAM_NAMESPACE {
 #endif
 
+const int gzstreambuf::bufferSize;
+
 // ----------------------------------------------------------------------------
 // Internal classes to implement gzstream. See header file for user classes.
 // ----------------------------------------------------------------------------

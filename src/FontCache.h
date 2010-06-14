@@ -64,7 +64,7 @@ class FontCache
 		static void fontinfo (const char *dirname, std::ostream &os);
 
    private:
-		const static UInt8 VERSION = 4;
+		static const UInt8 VERSION;
       std::string _fontname;
 		GlyphMap _glyphs;
 		bool _changed;

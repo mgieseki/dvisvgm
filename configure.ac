@@ -57,7 +57,7 @@ AC_CHECK_HEADER([potracelib.h],
 	 AC_CHECK_LIB(potrace, potrace_trace, , HAVE_LIBPOTRACE=0)], HAVE_LIBPOTRACE=0)
 
 if test "$HAVE_LIBPOTRACE" -eq 0; then
-	AM_CPPFLAGS="$AM_CXXFLAGS -I../potracelib -I../../potracelib"
+	AM_CPPFLAGS="$AM_CXXFLAGS -I\${srcdir}/../potracelib -I\${srcdir}/../../potracelib"
 	EXTRA_LIBS="$EXTRA_LIBS ../potracelib/libpotrace.a "
 	AC_MSG_NOTICE([Using bundled potrace library])
 fi
