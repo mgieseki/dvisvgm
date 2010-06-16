@@ -266,7 +266,7 @@ static path_t *findpath(potrace_bitmap_t *bm, int x0, int y0, int sign, int turn
   } /* while this path */
 
   /* allocate new path object */
-  p = path_new();
+  p = potrace_path_new();
   if (!p) {
     goto error;
   }
@@ -481,7 +481,7 @@ int bm_to_pathlist(const potrace_bitmap_t *bm, path_t **plistp, const potrace_pa
 
     /* if it's a turd, eliminate it, else append it to the list */
     if (p->area <= param->turdsize) {
-      path_free(p);
+      potrace_path_free(p);
     } else {
       list_insert_beforehook(p, hook);
     }
@@ -502,7 +502,7 @@ int bm_to_pathlist(const potrace_bitmap_t *bm, path_t **plistp, const potrace_pa
  error:
   bm_free(bm1);
   list_forall_unlink(p, plist) {
-    path_free(p);
+    potrace_path_free(p);
   }
   return -1;
 }

@@ -67,8 +67,8 @@ typedef struct potrace_privpath_s potrace_privpath_t;
 typedef potrace_privpath_t privpath_t;
 typedef potrace_path_t path_t;
 
-path_t *path_new(void);
-void path_free(path_t *p);
+path_t *potrace_path_new(void);
+void potrace_path_free(path_t *p);
 void pathlist_free(path_t *plist);
 int privcurve_init(privcurve_t *curve, int n);
 void privcurve_to_curve(privcurve_t *pc, potrace_curve_t *c);

@@ -19,7 +19,7 @@
 /* ---------------------------------------------------------------------- */
 /* allocate and free path objects */
 
-path_t *path_new(void) {
+path_t *potrace_path_new(void) {
   path_t *p = NULL;
   privpath_t *priv = NULL;
 
@@ -47,7 +47,7 @@ static void privcurve_free_members(privcurve_t *curve) {
 }
 
 /* free a path. Leave errno untouched. */
-void path_free(path_t *p) {
+void potrace_path_free(path_t *p) {
   if (p) {
     if (p->priv) {
       free(p->priv->pt);
@@ -68,7 +68,7 @@ void pathlist_free(path_t *plist) {
   path_t *p;
 
   list_forall_unlink(p, plist) {
-    path_free(p);
+    potrace_path_free(p);
   }
 }
 
