@@ -92,9 +92,9 @@ static void update_bbox (double w, double h, double d, SpecialActions *actions) 
 static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
 	string str;
 	while (!in.eof()) {
-		char c = in.get();
+		int c = in.get();
 		if (isprint(c))
-			str += c;
+			str += char(c);
 	}
 	expand_constants(str, actions);
 	if (!str.empty()) {
@@ -120,7 +120,7 @@ static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
  *  variant 4: dvisvgm:bbox n[ew] <name> */
 static void bbox (InputReader &in, SpecialActions *actions) {
 	in.skipSpace();
-	char c = in.peek();
+	int c = in.peek();
 	if (isalpha(c)) {
 		while (!isspace(in.peek()))  // skip trailing characters
 			in.get();
@@ -128,7 +128,7 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 			in.skipSpace();
 			string name;
 			while (isalnum(in.peek()))
-				name += in.get();
+				name += char(in.get());
 			in.skipSpace();
 			if (!name.empty() && in.eof())
 				actions->bbox(name, true); // create new user box

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <sstream>
@@ -193,12 +193,12 @@ bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			map<int,DPair>::iterator it1=_points.find(n1);
 			map<int,DPair>::iterator it2=_points.find(n2);
 			if (it1 != _points.end() && it2 != _points.end())
-				create_line(it1->second, it2->second, c1, c2, lw, actions);
+				create_line(it1->second, it2->second, char(c1), char(c2), lw, actions);
 			else {
 				// Line endpoints havn't necessarily to be defined before
 				// a line definition. If a point wasn't defined yet we push the line
 				// in a wait list and process the lines at the end of the page.
-				_lines.push_back(Line(n1, n2, c1, c2, lw));
+				_lines.push_back(Line(n1, n2, char(c1), char(c2), lw));
 			}
 		}
 	}

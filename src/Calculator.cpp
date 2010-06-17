@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -131,12 +131,12 @@ char Calculator::lookAhead (istream &is) {
       is.get();
    if (is.eof())
       return END;
-   char c = is.peek();
+   int c = is.peek();
    if (isdigit(c) || c == '.')
       return NUMBER;
    if (isalpha(c))
       return NAME;
-   return c;
+   return char(c);
 }
 
 
@@ -147,7 +147,7 @@ char Calculator::lookAhead (istream &is) {
  *  @param[in] is next token is read from this stream
  *  @return token type */
 char Calculator::lex (istream &is) {
-	char tokenType = lookAhead(is);
+	int tokenType = lookAhead(is);
    switch (tokenType) {
       case NUMBER:
          is >> numValue;
@@ -161,7 +161,7 @@ char Calculator::lex (istream &is) {
 		default:
 			tokenType = is.get();
    }
-   return tokenType;
+   return char(tokenType);
 }
 
 

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -89,7 +89,7 @@ string Color::rgbString () const {
  *  @param[out] rgb  RGB approximation */
 void Color::CMYK2RGB (const vector<float> &cmyk, vector<float> &rgb) {
 	for (int i=0; i < 3; i++)
-		rgb[i] = 1.0-min(1.0f, cmyk[i]+cmyk[3]);
+		rgb[i] = 1.0f-min(1.0f, cmyk[i]+cmyk[3]);
 }
 
 
@@ -101,8 +101,8 @@ void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
 		float h = hsb[0]-floor(hsb[0]);
-		int i = (int) (6*h);
-		float f =  6*h-i;
+		int i = int(6*h);
+		float f =  float(6.0*h-i);
 		float p = hsb[2]*(1-hsb[1]);
 		float q = hsb[2]*(1-hsb[1]*f);
 		float t = hsb[2]*(1-hsb[1]*(1-f));
@@ -120,7 +120,7 @@ void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
 
 
 void Color::getRGB (float &r, float &g, float &b) const {
-	r = ((_rgb >> 16) & 255) / 255.0;
-	g = ((_rgb >> 8) & 255) / 255.0;
-	b = (_rgb & 255) / 255.0;
+	r = float(((_rgb >> 16) & 255) / 255.0);
+	g = float(((_rgb >> 8) & 255) / 255.0);
+	b = float((_rgb & 255) / 255.0);
 }

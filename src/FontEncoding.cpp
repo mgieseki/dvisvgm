@@ -29,7 +29,7 @@
 using namespace std;
 
 static string read_entry (InputReader &in);
-static bool valid_name_char (char c);
+static bool valid_name_char (int c);
 
 
 FontEncoding::FontEncoding (const string &encname) : _encname(encname)
@@ -116,7 +116,7 @@ static string read_entry (InputReader &in) {
 }
 
 
-static bool valid_name_char (char c) {
+static bool valid_name_char (int c) {
 	const char *delimiters = "<>(){}[]/~%";
 	return isprint(c) && !isspace(c) && !strchr(delimiters, c);
 }
@@ -148,11 +148,12 @@ FontEncoding* FontEncoding::encoding (const string &fontname) {
 	static EncodingMap encmap;
 	if (const char *encname = FileFinder::lookupEncName(fontname)) {
       EncodingMap::const_iterator it = encmap.find(encname);
-   	if (it != encmap.end()) 
+   	if (it != encmap.end())
 			return it->second;
 		FontEncoding *enc = new FontEncoding(encname);
 		encmap[encname] = enc;
-		return enc;      
+		return enc;
 	}
 	return 0;
 }
+

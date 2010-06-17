@@ -148,7 +148,7 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 
 		void draw (char cmd, const Glyph::Point *points, int n) {
 			int bytes = max_int_size(points, n);
-			UInt8 cmdchar = (bytes << 5) | (cmd - 'A');
+			int cmdchar = (bytes << 5) | (cmd - 'A');
 			_sw.writeUnsigned(cmdchar, 1);
 			for (int i=0; i < n; i++) {
 				_sw.writeSigned(points[i].x(), bytes);
@@ -209,7 +209,7 @@ bool FontCache::read (const char *fontname, istream &is) {
 		return false;
 	string fname;
 	while (!is.eof() && is.peek() != 0)
-		fname += is.get();
+		fname += char(is.get());
 	is.get(); // skip 0-byte
 	if (fname != fontname)
 		return false;
@@ -287,7 +287,7 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 		if ((info.version = sr.readUnsigned(1)) != VERSION)
 			return false;
 		while (!is.eof() && is.peek() != 0)
-			info.name += is.get();
+			info.name += char(is.get());
 		is.get(); // skip 0-byte
 		info.numchars = sr.readUnsigned(4);
 		for (UInt32 i=0; i < info.numchars; i++) {

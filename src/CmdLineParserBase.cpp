@@ -53,7 +53,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 				else {
 					string longname;
 					while (isalnum(ir.peek()) || ir.peek() == '-')
-						longname += ir.get();
+						longname += char(ir.get());
 					if (const Option *opt = option(longname))
 						(*opt->handler)(this, ir, *opt, true);
 					else if (!_error) {
@@ -257,7 +257,7 @@ bool CmdLineParserBase::getStringArg (InputReader &ir, const Option &opt, bool l
 	if (checkArgPrefix(ir, opt, longopt)) {
 		arg.clear();
 		while (!ir.eof())
-			arg += ir.get();
+			arg += char(ir.get());
 		if (!arg.empty())
 			return true;
 		error(opt, longopt, "string argument expected");
@@ -276,7 +276,7 @@ bool CmdLineParserBase::getBoolArg (InputReader &ir, const Option &opt, bool lon
 	if (checkArgPrefix(ir, opt, longopt)) {
 		string str;
 		while (!ir.eof())
-			str += ir.get();
+			str += char(ir.get());
 		if (str == "yes" || str == "y" || str == "true" || str == "1") {
 			arg = true;
 			return true;
@@ -299,7 +299,7 @@ bool CmdLineParserBase::getBoolArg (InputReader &ir, const Option &opt, bool lon
  *  @return true if argument could be scanned without errors */
 bool CmdLineParserBase::getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const {
 	if (checkArgPrefix(ir, opt, longopt)) {
-		arg = ir.get();
+		arg = char(ir.get());
 		if (arg >= 0 && ir.eof())
 			return true;
 		error(opt, longopt, "character argument expected");

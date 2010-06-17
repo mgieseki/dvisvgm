@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <algorithm>
@@ -37,7 +37,7 @@ using namespace std;
  *  @param[out] rgb  RGB approximation */
 static void cmyk_to_rgb (const vector<float> &cmyk, vector<float> &rgb) {
 	for (int i=0; i < 3; i++)
-		rgb[i] = 1.0-min(1.0f, cmyk[i]+cmyk[3]);
+		rgb[i] = 1.0f-min(1.0f, cmyk[i]+cmyk[3]);
 }
 
 
@@ -49,12 +49,12 @@ static void hsb_to_rgb (const vector<float> &hsb, vector<float> &rgb) {
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
 		float h = hsb[0]-floor(hsb[0]);
-		int i = (int) (6*h);
-		float f =  6*h-i;
+		float i = floor(6*h);
+		float f = 6.0f*h-i;
 		float p = hsb[2]*(1-hsb[1]);
 		float q = hsb[2]*(1-hsb[1]*f);
 		float t = hsb[2]*(1-hsb[1]*(1-f));
-		switch (i) {
+		switch (int(i)) {
 			case 0 : rgb[0]=hsb[2]; rgb[1]=t; rgb[2]=p; break;
 			case 1 : rgb[0]=q; rgb[1]=hsb[2]; rgb[2]=p; break;
 			case 2 : rgb[0]=p; rgb[1]=hsb[2]; rgb[2]=t; break;
@@ -103,74 +103,74 @@ static bool color_constant (const string &c, vector<float> &rgb) {
 		const float rgb[3];
 	}
 	constants[] = {
-		{"Apricot", {1, 0.68, 0.48}},
-		{"Aquamarine", {0.18, 1, 0.7}},
-		{"Bittersweet", {0.76, 0.01, 0}},
+		{"Apricot", {1, 0.68f, 0.48f}},
+		{"Aquamarine", {0.18f, 1, 0.7f}},
+		{"Bittersweet", {0.76f, 0.01f, 0}},
 		{"Black", {0, 0, 0}},
 		{"Blue", {0, 0, 1}},
-		{"BlueGreen", {0.15, 1, 0.67}},
-		{"BlueViolet", {0.1, 0.05, 0.96}},
-		{"BrickRed", {0.72, 0, 0}},
-		{"Brown", {0.4, 0, 0}},
-		{"BurntOrange", {1, 0.49, 0}},
-		{"CadetBlue", {0.38, 0.43, 0.77}},
-		{"CarnationPink", {1, 0.37, 1}},
-		{"Cerulean", {0.06, 0.89, 1}},
-		{"CornflowerBlue", {0.35, 0.87, 1}},
+		{"BlueGreen", {0.15f, 1, 0.67f}},
+		{"BlueViolet", {0.1f, 0.05f, 0.96f}},
+		{"BrickRed", {0.72f, 0, 0}},
+		{"Brown", {0.4f, 0, 0}},
+		{"BurntOrange", {1, 0.49f, 0}},
+		{"CadetBlue", {0.38f, 0.43f, 0.77f}},
+		{"CarnationPink", {1, 0.37f, 1}},
+		{"Cerulean", {0.06f, 0.89f, 1}},
+		{"CornflowerBlue", {0.35f, 0.87f, 1}},
 		{"Cyan", {0, 1, 1}},
-		{"Dandelion", {1, 0.71, 0.16}},
-		{"DarkOrchid", {0.6, 0.2, 0.8}},
-		{"Emerald", {0, 1, 0.5}},
-		{"ForestGreen", {0, 0.88, 0}},
-		{"Fuchsia", {0.45, 0.01, 0.92}},
-		{"Goldenrod", {1, 0.9, 0.16}},
-		{"Gray", {0.5, 0.5, 0.5}},
+		{"Dandelion", {1, 0.71f, 0.16f}},
+		{"DarkOrchid", {0.6f, 0.2f, 0.8f}},
+		{"Emerald", {0, 1, 0.5f}},
+		{"ForestGreen", {0, 0.88f, 0}},
+		{"Fuchsia", {0.45f, 0.01f, 0.92f}},
+		{"Goldenrod", {1, 0.9f, 0.16f}},
+		{"Gray", {0.5f, 0.5f, 0.5f}},
 		{"Green", {0, 1, 0}},
-		{"GreenYellow", {0.85, 1, 0.31}},
-		{"JungleGreen", {0.01, 1, 0.48}},
-		{"Lavender", {1, 0.52, 1}},
-		{"LimeGreen", {0.5, 1, 0}},
+		{"GreenYellow", {0.85f, 1, 0.31f}},
+		{"JungleGreen", {0.01f, 1, 0.48f}},
+		{"Lavender", {1, 0.52f, 1}},
+		{"LimeGreen", {0.5f, 1, 0}},
 		{"Magenta", {1, 0, 1}},
-		{"Mahogany", {0.65, 0, 0}},
-		{"Maroon", {0.68, 0, 0}},
-		{"Melon", {1, 0.54, 0.5}},
-		{"MidnightBlue", {0, 0.44, 0.57}},
-		{"Mulberry", {0.64, 0.08, 0.98}},
-		{"NavyBlue", {0.06, 0.46, 1}},
-		{"OliveGreen", {0, 0.6, 0}},
-		{"Orange", {1, 0.39, 0.13}},
-		{"OrangeRed", {1, 0, 0.5}},
-		{"Orchid", {0.68, 0.36, 1}},
-		{"Peach", {1, 0.5, 0.3}},
-		{"Periwinkle", {0.43, 0.45, 1}},
-		{"PineGreen", {0, 0.75, 0.16}},
-		{"Plum", {0.5, 0, 1}},
-		{"ProcessBlue", {0.04, 1, 1}},
-		{"Purple", {0.55, 0.14, 1}},
-		{"RawSienna", {0.55, 0, 0}},
+		{"Mahogany", {0.65f, 0, 0}},
+		{"Maroon", {0.68f, 0, 0}},
+		{"Melon", {1, 0.54f, 0.5f}},
+		{"MidnightBlue", {0, 0.44f, 0.57f}},
+		{"Mulberry", {0.64f, 0.08f, 0.98f}},
+		{"NavyBlue", {0.06f, 0.46f, 1}},
+		{"OliveGreen", {0, 0.6f, 0}},
+		{"Orange", {1, 0.39f, 0.13f}},
+		{"OrangeRed", {1, 0, 0.5f}},
+		{"Orchid", {0.68f, 0.36f, 1}},
+		{"Peach", {1, 0.5f, 0.3f}},
+		{"Periwinkle", {0.43f, 0.45f, 1}},
+		{"PineGreen", {0, 0.75f, 0.16f}},
+		{"Plum", {0.5f, 0, 1}},
+		{"ProcessBlue", {0.04f, 1, 1}},
+		{"Purple", {0.55f, 0.14f, 1}},
+		{"RawSienna", {0.55f, 0, 0}},
 		{"Red", {1, 0, 0}},
-		{"RedOrange", {1, 0.23, 0.13}},
-		{"RedViolet", {0.59, 0, 0.66}},
-		{"Rhodamine", {1, 0.18, 1}},
-		{"RoyalBlue", {0, 0.5, 1}},
-		{"RoyalPurple", {0.25, 0.1, 1}},
-		{"RubineRed", {1, 0, 0.87}},
-		{"Salmon", {1, 0.47, 0.62}},
-		{"SeaGreen", {0.31, 1, 0.5}},
-		{"Sepia", {0.3, 0, 0}},
-		{"SkyBlue", {0.38, 1, 0.88}},
-		{"SpringGreen", {0.74, 1, 0.24}},
-		{"Tan", {0.86, 0.58, 0.44}},
-		{"TealBlue", {0.12, 0.98, 0.64}},
-		{"Thistle", {0.88, 0.41, 1}},
-		{"Turquoise", {0.15, 1, 0.8}},
-		{"Violet", {0.21, 0.12, 1}},
-		{"VioletRed", {1, 0.19, 1}},
+		{"RedOrange", {1, 0.23f, 0.13f}},
+		{"RedViolet", {0.59f, 0, 0.66f}},
+		{"Rhodamine", {1, 0.18f, 1}},
+		{"RoyalBlue", {0, 0.5f, 1}},
+		{"RoyalPurple", {0.25f, 0.1f, 1}},
+		{"RubineRed", {1, 0, 0.87f}},
+		{"Salmon", {1, 0.47f, 0.62f}},
+		{"SeaGreen", {0.31f, 1, 0.5f}},
+		{"Sepia", {0.3f, 0, 0}},
+		{"SkyBlue", {0.38f, 1, 0.88f}},
+		{"SpringGreen", {0.74f, 1, 0.24f}},
+		{"Tan", {0.86f, 0.58f, 0.44f}},
+		{"TealBlue", {0.12f, 0.98f, 0.64f}},
+		{"Thistle", {0.88f, 0.41f, 1}},
+		{"Turquoise", {0.15f, 1, 0.8f}},
+		{"Violet", {0.21f, 0.12f, 1}},
+		{"VioletRed", {1, 0.19f, 1}},
 		{"White", {1, 1, 1}},
-		{"WildStrawberry", {1, 0.04, 0.61}},
+		{"WildStrawberry", {1, 0.04f, 0.61f}},
 		{"Yellow", {1, 1, 0}},
-		{"YellowGreen", {0.56, 1, 0.26}},
-		{"YellowOrange", {1, 0.58, 0}}
+		{"YellowGreen", {0.56f, 1, 0.26f}},
+		{"YellowOrange", {1, 0.58f, 0}}
 	};
 	// binary search
 	int first=0, last=68-1;

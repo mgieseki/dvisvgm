@@ -549,7 +549,7 @@ void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 	if (_actions) {
 		Color c;
-		c.setCMYK(p[0], p[1], p[2], p[3]);
+		c.setCMYK((float)p[0], (float)p[1], (float)p[2], (float)p[3]);
 		_actions->setColor(c);
 	}
 }
@@ -558,7 +558,7 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
 	if (_actions) {
 		Color c;
-		c.setHSB(p[0], p[1], p[2]);
+		c.setHSB((float)p[0], (float)p[1], (float)p[2]);
 		_actions->setColor(c);
 	}
 }

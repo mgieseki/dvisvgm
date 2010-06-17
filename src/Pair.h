@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef PAIR_H
@@ -55,7 +55,7 @@ struct Pair32 : public Pair<Int32>
    Pair32 (Int32 x=0, Int32 y=0) : Pair<Int32>(x, y) {}
 	explicit Pair32 (double x, double y) : Pair<Int32>(Int32(x+0.5), Int32(y+0.5)) {}
 	Pair32 (const Pair<Int32> &p) : Pair<Int32>(p) {}
-	operator Pair<Int32> () {return *this;}
+//	operator Pair<Int32> () {return *this;}
 };
 
 typedef Pair<double> DPair;

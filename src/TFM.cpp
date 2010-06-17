@@ -73,18 +73,18 @@ TFM* TFM::createFromFile (const char *fontname) {
 
 bool TFM::readFromStream (istream &is) {
 	StreamReader sr(is);
-	is.seekg(2, ios_base::beg);        // skip file size
-	UInt16 lh = sr.readUnsigned(2);  // length of header in 4 byte words
-	_firstChar= sr.readUnsigned(2);  // smalles character code in font
-	_lastChar = sr.readUnsigned(2);  // largest character code in font
-	UInt16 nw = sr.readUnsigned(2);  // number of words in width table
-	UInt16 nh = sr.readUnsigned(2);  // number of words in height table
-	UInt16 nd = sr.readUnsigned(2);  // number of words in depth table
-	UInt16 ni = sr.readUnsigned(2);  // number of words in italic corr. table
-//	UInt16 nl = sr.readUnsigned(2);  // number of words in lig/kern table
-//	UInt16 nk = sr.readUnsigned(2);  // number of words in kern table
-//	UInt16 ne = sr.readUnsigned(2);  // number of words in ext. char table
-//	UInt16 np = sr.readUnsigned(2);  // number of font parameter words
+	is.seekg(2, ios_base::beg);             // skip file size
+	UInt16 lh = UInt16(sr.readUnsigned(2)); // length of header in 4 byte words
+	_firstChar= UInt16(sr.readUnsigned(2)); // smalles character code in font
+	_lastChar = UInt16(sr.readUnsigned(2)); // largest character code in font
+	UInt16 nw = UInt16(sr.readUnsigned(2)); // number of words in width table
+	UInt16 nh = UInt16(sr.readUnsigned(2)); // number of words in height table
+	UInt16 nd = UInt16(sr.readUnsigned(2)); // number of words in depth table
+	UInt16 ni = UInt16(sr.readUnsigned(2)); // number of words in italic corr. table
+//	UInt16 nl = UInt16(sr.readUnsigned(2)); // number of words in lig/kern table
+//	UInt16 nk = UInt16(sr.readUnsigned(2)); // number of words in kern table
+//	UInt16 ne = UInt16(sr.readUnsigned(2)); // number of words in ext. char table
+//	UInt16 np = UInt16(sr.readUnsigned(2)); // number of font parameter words
 
 	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
 	_checksum = sr.readUnsigned(4);

@@ -132,8 +132,8 @@ class DVIReader : public StreamReader, protected VFActions
 		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
 		DVIPosition _currPos;
 		std::stack<DVIPosition> _posStack;
-		size_t _pageLength;     ///< number of bytes between current bop end eop
-		size_t _pagePos;        ///< distance of current DVI command from bop (in bytes)
+		size_t _pageLength;      ///< number of bytes between current bop end eop
+		std::streampos _pagePos; ///< distance of current DVI command from bop (in bytes)
 
 	public:
 		static bool COMPUTE_PAGE_LENGTH;  ///< if true, the bop handler computes the number of bytes of the current page

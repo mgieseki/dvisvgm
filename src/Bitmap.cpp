@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cstdlib>
@@ -64,9 +64,9 @@ void Bitmap::setBits (int r, int c, int n) {
 	while (n > 0) {
 		int b = 7 - c%8;            // number of leftmost bit in current byte to be set
 		int m = min(n, b+1);        // number of bits to be set in current byte
-		Int16 bitseq = (1 << m)-1;  // sequence of n set bits (bits 0..n-1 are set)
+		int bitseq = (1 << m)-1;    // sequence of n set bits (bits 0..n-1 are set)
 		bitseq <<= b-m+1;           // move bit sequence so that bit b is the leftmost set bit
-		*byte |= bitseq;		       // apply bit sequence to current byte
+		*byte |= UInt8(bitseq);     // apply bit sequence to current byte
 		byte++;
 		n -= m;
 		c += m;

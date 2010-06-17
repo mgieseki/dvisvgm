@@ -277,8 +277,8 @@ static int digits (int n) {
 	if (n == 0)
 		return 1;
 	if (n > 0)
-		return log10(double(n))+1;
-	return log10(double(-n))+2;
+		return int(log10(double(n))+1);
+	return int(log10(double(-n))+2);
 }
 
 
@@ -315,13 +315,13 @@ void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 		// adapt length of progress indicator to terminal width
 		int cols = Terminal::columns();
 		int width = (cols == 0 || cols > 60) ? 50 : 49-60+cols;
-		double factor = double(current)/total;
-		int length = width*factor;
+		double factor = double(current)/double(total);
+		int length = int(width*factor);
 		Message::mstream(false, Terminal::MAGENTA)
 			<< '[' << string(length, '=')
 			<< (factor < 1.0 ? (step < 0 ? ' ' : tips[step]) : '=')
 			<< string(width-length, ' ')
-			<< "] " << string(3-digits(100*factor), ' ') << int(100*factor)
+			<< "] " << string(3-digits(int(100*factor)), ' ') << int(100*factor)
 			<< "%\r";
 		// overprint indicator when finished
 		if (factor == 1.0)

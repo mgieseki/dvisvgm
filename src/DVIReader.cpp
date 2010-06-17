@@ -45,7 +45,8 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a
 	_totalPages = 0;  // we don't know the correct value yet
 	_currFontNum = 0;
 	_currPageNum = 0;
-	_pageLength = _pagePos = 0;
+	_pageLength = 0;
+	_pagePos = 0;
 }
 
 
@@ -387,7 +388,8 @@ void DVIReader::cmdBop (int) {
 		_posStack.pop();
 	_currFontNum = 0;
 	_inPage = true;
-	_pageLength = _pagePos = 0;
+	_pageLength = 0;
+	_pagePos = 0;
 	if (COMPUTE_PAGE_LENGTH) {
 		// compute number of bytes in current page
 		int length, param;

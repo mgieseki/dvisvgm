@@ -67,17 +67,17 @@ bool GFGlyphTracer::executeChar (UInt8 c) {
 
 
 void GFGlyphTracer::moveTo (double x, double y) {
-	_glyph->moveto(x, y);
+	_glyph->moveto(int(x), int(y));
 }
 
 
 void GFGlyphTracer::lineTo (double x, double y) {
-	_glyph->lineto(x, y);
+	_glyph->lineto(int(x), int(y));
 }
 
 
 void GFGlyphTracer::curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {
-	_glyph->cubicto(c1x, c1y, c2x, c2y, x, y);
+	_glyph->cubicto(int(c1x), int(c1y), int(c2x), int(c2y), int(x), int(y));
 }
 
 
