@@ -27,6 +27,7 @@
 #include <sstream>
 #include "Terminal.h"
 
+
 class Message;
 
 class MessageStream
@@ -49,20 +50,20 @@ class MessageStream
 		MessageStream& operator << (const char &c);
 		MessageStream& operator << (const std::string &str) {return (*this) << str.c_str();}
 
-		void indent (int level)        {_indent = std::max(0, level*2); }
+		void indent (int level)        {_indent = std::max(0, level*2);}
 		void indent (bool reset=false);
 		void outdent (bool all=false);
 		void clearline ();
 
 	protected:
-		void putchar (const char c, std::ostream &os);
+		void putChar (const char c, std::ostream &os);
 		std::ostream* os () {return _os;}
 
 	private:
 		std::ostream *_os;
 		bool _nl;     ///< true if previous character was a newline
 		int _col;     ///< current terminal column
-		int _indent;  ///< indentation width
+		int _indent;  ///< indentation width (number of columns/characters)
 };
 
 

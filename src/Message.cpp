@@ -40,7 +40,7 @@ MessageStream::~MessageStream () {
 }
 
 
-void MessageStream::putchar (const char c, ostream &os) {
+void MessageStream::putChar (const char c, ostream &os) {
 	switch (c) {
 		case '\r':
 			os << '\r';
@@ -80,9 +80,9 @@ MessageStream& MessageStream::operator << (const char *str) {
 		const int len = strlen(str);
 		const int cols = Terminal::columns();
 		if (cols > 0 && _col+len > cols && _indent+len <= cols)
-			putchar('\n', *_os);
+			putChar('\n', *_os);
 		for (const char *p=str; *p; ++p)
-			putchar(*p, *_os);
+			putChar(*p, *_os);
 	}
 	return *this;
 }
@@ -90,7 +90,7 @@ MessageStream& MessageStream::operator << (const char *str) {
 
 MessageStream& MessageStream::operator << (const char &c) {
 	if (_os)
-		putchar(c, *_os);
+		putChar(c, *_os);
 	return *this;
 }
 
