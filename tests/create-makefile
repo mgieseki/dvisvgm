@@ -11,7 +11,7 @@ cat >$out <<EOT
 ##
 ## Process this file with automake.
 
-AM_CXXFLAGS = -I../src -I../../src -Wall
+AM_CXXFLAGS = -I\$(srcdir)/../src -I\$(srcdir)/../../src -Wall -DSRCDIR='"\$(srcdir)"'
 
 TESTS =
 check_PROGRAMS =
@@ -37,7 +37,7 @@ for f in *.dvi; do
 done  
 
 cat >>$out <<EOT
-EXTRA_DIST = check-conv normalize.xsl \$(TESTDATA)
+EXTRA_DIST = check-conv normalize.xsl cmr10.600gf \$(TESTDATA)
 TESTS += check-conv
 EOT
 

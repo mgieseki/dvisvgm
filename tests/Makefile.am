@@ -3,7 +3,7 @@
 ##
 ## Process this file with automake.
 
-AM_CXXFLAGS = -I../src -I../../src -Wall
+AM_CXXFLAGS = -I$(srcdir)/../src -I$(srcdir)/../../src -Wall -DSRCDIR='"$(srcdir)"'
 
 TESTS =
 check_PROGRAMS =
@@ -53,6 +53,11 @@ check_PROGRAMS += FontMapTest
 FontMapTest_SOURCES = FontMapTest.cpp
 FontMapTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += GFReaderTest
+check_PROGRAMS += GFReaderTest
+GFReaderTest_SOURCES = GFReaderTest.cpp
+GFReaderTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += GraphicPathTest
 check_PROGRAMS += GraphicPathTest
 GraphicPathTest_SOURCES = GraphicPathTest.cpp
@@ -101,5 +106,5 @@ VectorStreamTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest 
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
 TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
-EXTRA_DIST = check-conv normalize.xsl $(TESTDATA)
+EXTRA_DIST = check-conv normalize.xsl cmr10.600gf $(TESTDATA)
 TESTS += check-conv

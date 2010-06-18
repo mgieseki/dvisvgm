@@ -75,11 +75,12 @@ void Bitmap::setBits (int r, int c, int n) {
 
 
 void Bitmap::forAllPixels (ForAllData &data) const {
-	for (int r=_rows-1; r >= 0 ; r--) {
+	for (int y=_rows-1; y >= 0 ; y--) {
 		for (int c=0; c < _bpr; c++) {
-			UInt8 byte = _bytes[r*_bpr+c];
-			for (int b=7; b >= 0; b--) {
-				data.pixel(8*c+(7-b), r, byte & (1 << b), *this);
+			UInt8 byte = _bytes[y*_bpr+c];
+			int x;
+			for (int b=7; (b >= 0) && ((x = 8*c+(7-b)) < _cols); b--) {
+				data.pixel(x, y, byte & (1 << b), *this);
 			}
 		}
 	}
