@@ -1,3 +1,10 @@
+dvisvgm-1.0.2
+- applied latest TeX Live portability patches sent by Peter Breitenlohner and Karl Berry
+- fixed a potrace name clash occurred on Mac OS X Tiger
+- fixed putchar() name clash occurred on Solaris
+- fixed a couple of conversion warnings
+- updated the test suite
+
 dvisvgm-1.0.1
 - fixed a memory issue in the PS handler that could lead to a segfault (SF bug #3013392)
 - fixed a recursion issue in the PS handler
