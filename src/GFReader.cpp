@@ -42,16 +42,16 @@ static inline double scaled2double (Int32 scaled) {
 }
 
 
-GFReader::GFReader (istream &is) : in(is)
+GFReader::GFReader (istream &is) : _in(is)
 {
-	minX = maxX = minY = maxY = x = y = 0;
+	_minX = _maxX = _minY = _maxY = _x = _y = 0;
 }
 
 
 UInt32 GFReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
-	for (int i=bytes-1; i >= 0 && !in.eof(); i--) {
-		UInt32 b = in.get();
+	for (int i=bytes-1; i >= 0 && !_in.eof(); i--) {
+		UInt32 b = _in.get();
 		ret |= b << (8*i);
 	}
 	return ret;
@@ -59,11 +59,11 @@ UInt32 GFReader::readUnsigned (int bytes) {
 
 
 Int32 GFReader::readSigned (int bytes) {
-	Int32 ret = in.get();
+	Int32 ret = _in.get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (int i=bytes-2; i >= 0 && !in.eof(); i--)
-		ret = (ret << 8) | in.get();
+	for (int i=bytes-2; i >= 0 && !_in.eof(); i--)
+		ret = (ret << 8) | _in.get();
 	return ret;
 }
 
@@ -71,7 +71,7 @@ Int32 GFReader::readSigned (int bytes) {
 string GFReader::readString (int bytes) {
 	vector<char> buf(bytes+1);
 	if (bytes > 0)
-		in.get(&buf[0], bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
+		_in.get(&buf[0], bytes+1);  // reads 'bytes' bytes (pos. bytes+1 is set to 0)
 	else
 		buf[0] = 0;
 	return &buf[0];
@@ -97,7 +97,7 @@ int GFReader::executeCommand () {
 		{&GFReader::cmdPre, 0},     {&GFReader::cmdPost, 0}, {&GFReader::cmdPostPost, 0}                     // 247-249
 	};
 
-	int opcode = in.get();
+	int opcode = _in.get();
 	if (opcode < 0)  // at end of file?
 		throw GFException("unexpected end of file");
 
@@ -121,13 +121,13 @@ int GFReader::executeCommand () {
 
 
 bool GFReader::executeChar (UInt8 c) {
-	in.clear();
-	if (charInfoMap.empty())
+	_in.clear();
+	if (_charInfoMap.empty())
 		executePostamble();          // read character info
-	in.clear();
-	Iterator it = charInfoMap.find(c);
-	if (in && it != charInfoMap.end()) {
-		in.seekg(it->second.location, ios_base::beg);
+	_in.clear();
+	Iterator it = _charInfoMap.find(c);
+	if (_in && it != _charInfoMap.end()) {
+		_in.seekg(it->second.location, ios_base::beg);
 		while (executeCommand() != 69);  // execute all commands until eoc is reached
 		return true;
 	}
@@ -136,12 +136,12 @@ bool GFReader::executeChar (UInt8 c) {
 
 
 bool GFReader::executeAllChars () {
-	in.clear();
-	if (charInfoMap.empty())
+	_in.clear();
+	if (_charInfoMap.empty())
 		executePostamble();   // read character info
-	in.clear();
-	if (in) {
-		in.seekg(0);
+	_in.clear();
+	if (_in) {
+		_in.seekg(0);
 		while (executeCommand() != 248); // execute all commands until postamble is reached
 		return true;
 	}
@@ -150,15 +150,15 @@ bool GFReader::executeAllChars () {
 
 
 bool GFReader::executePostamble () {
-	in.clear();
-	if (!in)
+	_in.clear();
+	if (!_in)
 		return false;
-	in.seekg(-1, ios_base::end);
-	while (in.peek() == 223)         // skip fill bytes
-		in.seekg(-1, ios_base::cur);
-	in.seekg(-4, ios_base::cur);
+	_in.seekg(-1, ios_base::end);
+	while (_in.peek() == 223)         // skip fill bytes
+		_in.seekg(-1, ios_base::cur);
+	_in.seekg(-4, ios_base::cur);
 	UInt32 q = readUnsigned(4);      // pointer to begin of postamble
-	in.seekg(q, ios_base::beg);      // now on begin of postamble
+	_in.seekg(q, ios_base::beg);      // now on begin of postamble
 	while (executeCommand() != 249); // execute all commands until postpost is reached
 	return true;
 }
@@ -166,23 +166,23 @@ bool GFReader::executePostamble () {
 
 /** Returns the design size of this font int TeX point units. */
 double GFReader::getDesignSize () const {
-	return fix2double(designSize);
+	return fix2double(_designSize);
 }
 
 /** Returns the number of horizontal pixels per point. */
 double GFReader::getHPixelsPerPoint () const {
-	return scaled2double(hppp);
+	return scaled2double(_hppp);
 }
 
 /** Returns the number of vertical pixels per point. */
 double GFReader::getVPixelsPerPoint () const {
-	return scaled2double(vppp);
+	return scaled2double(_vppp);
 }
 
 /** Returns the width of character c in TeX point units */
 double GFReader::getCharWidth (UInt32 c) const {
-	ConstIterator it = charInfoMap.find(c%256);
-	return it == charInfoMap.end() ? 0 : it->second.width*getDesignSize()/(1<<24);
+	ConstIterator it = _charInfoMap.find(c%256);
+	return it == _charInfoMap.end() ? 0 : it->second.width*getDesignSize()/(1<<24);
 }
 
 ///////////////////////
@@ -204,11 +204,11 @@ void GFReader::cmdPre (int) {
 /** Reads the postamble. */
 void GFReader::cmdPost (int) {
 	readUnsigned(4);               // pointer to byte after final eoc
-	designSize = readUnsigned(4);  // design size of font in points
-	checksum   = readUnsigned(4);  // checksum
-	hppp       = readUnsigned(4);  // horizontal pixels per point (scaled int)
-	vppp       = readUnsigned(4);  // vertical pixels per point (scaled int)
-	in.seekg(16, ios_base::cur);   // skip x and y bounds
+	_designSize = readUnsigned(4);  // design size of font in points
+	_checksum   = readUnsigned(4);  // checksum
+	_hppp       = readUnsigned(4);  // horizontal pixels per point (scaled int)
+	_vppp       = readUnsigned(4);  // vertical pixels per point (scaled int)
+	_in.seekg(16, ios_base::cur);   // skip x and y bounds
 	postamble();
 }
 
@@ -228,10 +228,10 @@ void GFReader::cmdPostPost (int) {
  *  and advances the cursor by n.
  *  @param[in] n number of pixels to be inverted */
 void GFReader::cmdPaint0 (int n) {
-	if (penDown)                    // set pixels?
-		bitmap.setBits(y, x, n);
-	x += n;
-	penDown = !penDown;             // inverse pen state
+	if (_penDown)                    // set pixels?
+		_bitmap.setBits(_y, _x, n);
+	_x += n;
+	_penDown = !_penDown;             // inverse pen state
 }
 
 
@@ -247,40 +247,40 @@ void GFReader::cmdPaint (int len) {
 
 /** Beginning of character (generic format). */
 void GFReader::cmdBoc (int) {
-	currentChar = readSigned(4);
+	_currentChar = readSigned(4);
 	readSigned(4);  // pointer to previous boc with same c mod 256
-	minX = readSigned(4);
-	maxX = readSigned(4);
-	minY = readSigned(4);
-	maxY = readSigned(4);
-	x = minX;
-	y = maxY;
-	penDown = false;
-	bitmap.resize(minX, maxX, minY, maxY);
-	beginChar(currentChar);
+	_minX = readSigned(4);
+	_maxX = readSigned(4);
+	_minY = readSigned(4);
+	_maxY = readSigned(4);
+	_x = _minX;
+	_y = _maxY;
+	_penDown = false;
+	_bitmap.resize(_minX, _maxX, _minY, _maxY);
+	beginChar(_currentChar);
 }
 
 
 /** Beginning of character (compact format). */
 void GFReader::cmdBoc1 (int) {
-	currentChar = readUnsigned(1);
+	_currentChar = readUnsigned(1);
 	UInt32 dx = readUnsigned(1);
-	maxX = readUnsigned(1);
-	minX = maxX - dx;
+	_maxX = readUnsigned(1);
+	_minX = _maxX - dx;
 	UInt32 dy = readUnsigned(1);
-	maxY = readUnsigned(1);
-	minY = maxY - dy;
-	x = minX;
-	y = maxY;
-	penDown = false;
-	bitmap.resize(minX, maxX, minY, maxY);
-	beginChar(currentChar);
+	_maxY = readUnsigned(1);
+	_minY = _maxY - dy;
+	_x = _minX;
+	_y = _maxY;
+	_penDown = false;
+	_bitmap.resize(_minX, _maxX, _minY, _maxY);
+	beginChar(_currentChar);
 }
 
 
 /** End of character. */
 void GFReader::cmdEoc (int) {
-	endChar(currentChar);
+	endChar(_currentChar);
 }
 
 
@@ -290,11 +290,11 @@ void GFReader::cmdEoc (int) {
  *                 The read value denotes the number of rows to be skipped.  */
 void GFReader::cmdSkip (int len) {
 	if (len == 0)
-		y--;
+		_y--;
 	else
-		y -= readUnsigned(len)+1;
-	x = minX;
-	penDown = false;
+		_y -= readUnsigned(len)+1;
+	_x = _minX;
+	_penDown = false;
 }
 
 
@@ -302,9 +302,9 @@ void GFReader::cmdSkip (int len) {
  *  the paint color to black.
  *  @param[in] col pixel/column number */
 void GFReader::cmdNewRow (int col) {
-	x = minX + col ;
-	y--;
-	penDown = true;
+	_x = _minX + col ;
+	_y--;
+	_penDown = true;
 }
 
 
@@ -334,7 +334,7 @@ void GFReader::cmdCharLoc0 (int) {
 	Int32 p   = readSigned(4);  // pointer to begin of (last) character data
 	Int32 dx  = 65536*dm;
 	Int32 dy  = 0;
-	charInfoMap[c] = CharInfo(dx, dy, w, p);
+	_charInfoMap[c] = CharInfo(dx, dy, w, p);
 }
 
 
@@ -345,6 +345,6 @@ void GFReader::cmdCharLoc (int) {
 	Int32 dy = readSigned(4);   // vertical escapement (scaled pixel units)
 	Int32 w  = readSigned(4);   // (1<<24)*characterWidth/designSize
 	Int32 p  = readSigned(4);   // pointer to begin of (last) character data
-	charInfoMap[c] = CharInfo(dx, dy, w, p);
+	_charInfoMap[c] = CharInfo(dx, dy, w, p);
 }
 

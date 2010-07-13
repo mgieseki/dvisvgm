@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include "Directory.h"
@@ -49,7 +49,7 @@ Directory::~Directory () {
 
 
 bool Directory::open (string dname) {
-	dirname = dname;
+	_dirname = dname;
 #ifdef __WIN32__
 	firstread = true;
 	if (dname[dname.length()-1] == '/' || dname[dname.length()-1] == '\\')
@@ -58,7 +58,7 @@ bool Directory::open (string dname) {
 	handle = FindFirstFile(dname.c_str(), &fileData);
 	return handle != INVALID_HANDLE_VALUE;
 #else
-	dir = opendir(dirname.c_str());
+	dir = opendir(_dirname.c_str());
 	return dir;
 #endif
 }
@@ -96,7 +96,7 @@ const char* Directory::read (char type) {
 	if (!dir)
 		return 0;
 	while ((dirent = readdir(dir))) {
-		string path = string(dirname) + "/" + dirent->d_name;
+		string path = string(_dirname) + "/" + dirent->d_name;
 		struct stat stats;
 		stat(path.c_str(), &stats);
 		if (S_ISDIR(stats.st_mode)) {

@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #ifndef GFREADER_H
@@ -64,19 +64,19 @@ class GFReader
 		virtual void endChar (UInt32 c) {}
 		virtual void special (std::string str) {}
 		virtual void numspecial (Int32 y) {}
-		const Bitmap& getBitmap () const {return bitmap;}
+		const Bitmap& getBitmap () const {return _bitmap;}
 		double getDesignSize () const;
 		double getHPixelsPerPoint () const;
 		double getVPixelsPerPoint () const;
 		double getCharWidth (UInt32 c) const;
-		UInt32 getChecksum () const  {return checksum;}
+		UInt32 getChecksum () const  {return _checksum;}
 
 	protected:
 		Int32 readSigned (int bytes);
 		UInt32 readUnsigned (int bytes);
 		std::string readString (int len);
 		int executeCommand ();
-		std::istream& getInputStream () const {return in;}
+		std::istream& getInputStream () const {return _in;}
 
 		void cmdPre (int);
 		void cmdPost (int);
@@ -95,16 +95,16 @@ class GFReader
 		void cmdCharLoc (int);
 
    private:
-		std::istream &in;
-		Int32 minX, maxX, minY, maxY;
-		Int32 x, y;            // current pen location (pixel units)
-		Int32 currentChar;
-		Bitmap bitmap;         // bitmap of current char
-		FixWord designSize;    // designSize
-		ScaledInt hppp, vppp;  // horizontal and vertical pixel per point
-		UInt32 checksum;
-		std::map<UInt8,CharInfo> charInfoMap;
-		bool penDown;
+		std::istream &_in;
+		Int32 _minX, _maxX, _minY, _maxY;
+		Int32 _x, _y;            // current pen location (pixel units)
+		Int32 _currentChar;
+		Bitmap _bitmap;         // bitmap of current char
+		FixWord _designSize;    // designSize
+		ScaledInt _hppp, _vppp;  // horizontal and vertical pixel per point
+		UInt32 _checksum;
+		std::map<UInt8,CharInfo> _charInfoMap;
+		bool _penDown;
 };
 
 #endif
