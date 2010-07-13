@@ -247,7 +247,7 @@ class GraphicPath
  *  @param[in] optimize if true, shorthand drawing commands (sconicto, scubicto,...) are considered */
 template <typename T>
 void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
-	ConstIterator prev;  // pointer to preceding command
+	ConstIterator prev = _commands.end();  // pointer to preceding command
 	Point fp; // first point of current path
 	Point cp; // current point
 	Point pstore[2];
@@ -280,7 +280,7 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 				}
 				break;
 			case Command::CONICTO:
-				if (optimize && prev->type == Command::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+				if (optimize && prev != _commands.end() && prev->type == Command::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.sconicto(params[1]);
 					actions.draw('T', params+1, 1);
 				}
@@ -293,7 +293,7 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 				break;
 			case Command::CUBICTO:
 				// is first control point reflection of preceding second control point?
-				if (optimize && prev->type == Command::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+				if (optimize && prev != _commands.end() && prev->type == Command::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.scubicto(params[1], params[2]);
 					actions.draw('S', params+1, 2);
 				}

@@ -31,9 +31,10 @@ class XMLElementNode;
 
 class PsSpecialHandler : public SpecialHandler, protected PSActions
 {
+	typedef GraphicPath<double> Path;
+	
 	class ClippingStack
 	{
-		typedef GraphicPath<double> Path;
 		public:
 			void push ();
 			void push (const Path &path);
@@ -100,7 +101,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		SpecialActions *_actions;
 		bool _initialized;
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
-		GraphicPath<double> _path;
+		Path _path;
 		DPair _currentpoint;        ///< current PS position
 		double _linewidth;          ///< current linewidth
 		double _miterlimit;         ///< current miter limit
