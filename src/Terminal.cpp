@@ -134,9 +134,9 @@ void Terminal::color (int color, bool light, ostream &os) {
 	}
 #else
 	if (color == DEFAULT)
-		os << "\e[0m";
+		os << "\x1B[0m";
 	else
-		os << "\e[" << (light ? '1': '0') << ';' << (30+(color & 0x07)) << 'm';
+		os << "\x1B[" << (light ? '1': '0') << ';' << (30+(color & 0x07)) << 'm';
 #endif
 }
 
@@ -158,8 +158,8 @@ void Terminal::bgcolor (int color, bool light, ostream &os) {
 	}
 #else
 	if (color == DEFAULT)
-		os << "\e[0m";
+		os << "\x1B[0m";
 	else
-		os << "\e[" << (40+(color & 0x07)) << 'm';
+		os << "\x1B[" << (40+(color & 0x07)) << 'm';
 #endif
 }
