@@ -247,7 +247,9 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 
 		_xmlnode = new XMLElementNode("g");
 		updatePos();
+		Matrix saved_matrix = _actions->getMatrix();
 		_psi.execute(ifs);
+		_actions->setMatrix(saved_matrix);
 		if (!_xmlnode->empty()) {
 			_xmlnode->addAttribute("transform", trans.getSVG());
 			_actions->appendToPage(_xmlnode);

@@ -32,7 +32,7 @@ class XMLElementNode;
 class PsSpecialHandler : public SpecialHandler, protected PSActions
 {
 	typedef GraphicPath<double> Path;
-	
+
 	class ClippingStack
 	{
 		public:
