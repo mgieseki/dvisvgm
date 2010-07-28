@@ -273,6 +273,17 @@ bool DVIReader::executePages (unsigned first, unsigned last) {
 }
 
 
+void DVIReader::executePreamble () {
+	in().clear();
+	if (!in())
+		throw DVIException("invalid DVI file");
+	in().seekg(0, ios_base::beg);
+	if (in().get() != 247)
+		throw DVIException("invalid DVI file");
+	cmdPre(0);
+}
+
+
 /** Reads and executes the commands of the postamble. */
 void DVIReader::executePostamble () {
 	in().clear();  // reset all status bits
@@ -334,8 +345,11 @@ void DVIReader::cmdPre (int) {
 	_mag = readUnsigned(4);        // magnification
 	UInt32 k   = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
-	if (i != 2)
-		throw DVIException("invalid identification value in DVI preamble");
+	if (i != 2) {
+		ostringstream oss;
+		oss << "DVI format version " << i << " not supported";
+		throw DVIException(oss.str());
+	}
 	// 1 dviunit * num/den == multiples of 0.0000001m
 	// 1 dviunit * _scaleFactor: length of 1 dviunit in TeX points * _mag/1000
 	_scaleFactor = num/25400000.0*7227.0/den*_mag/1000.0;

@@ -61,6 +61,7 @@ class DVIReader : public StreamReader, protected VFActions
 		bool executeDocument ();
 		void executeAll ();
 		bool executeAllPages ();
+		void executePreamble ();
 		void executePostamble ();
 		bool executePage (unsigned n);
 		bool executePages (unsigned first, unsigned last);

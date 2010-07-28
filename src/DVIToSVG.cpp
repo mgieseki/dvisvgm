@@ -118,8 +118,10 @@ DVIToSVG::~DVIToSVG () {
  *  @param[in] last number of last page to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
 void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
-	if (getTotalPages() == 0)
+	if (getTotalPages() == 0) {
+		executePreamble();
 		executePostamble();    // collect scaling and font information
+	}
 	if (first > last)
 		swap(first, last);
 	if (first > getTotalPages()) {
@@ -159,8 +161,10 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
  *  @param[in] rangestr string describing the pages to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
 void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
-	if (getTotalPages() == 0)
+	if (getTotalPages() == 0) {
+		executePreamble();
 		executePostamble();    // collect scaling and font information
+	}
 	PageRanges ranges;
 	if (!ranges.parse(rangestr, getTotalPages()))
 		throw MessageException("invalid page range format");
