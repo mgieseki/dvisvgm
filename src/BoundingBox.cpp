@@ -23,6 +23,7 @@
 #include <string>
 #include "BoundingBox.h"
 #include "Matrix.h"
+#include "XMLNode.h"
 
 using namespace std;
 
@@ -238,4 +239,15 @@ string BoundingBox::toSVGViewBox () const {
 ostream& BoundingBox::write (ostream &os) const {
 	return os << '('  << ulx << ", " << uly
 				 << ", " << lrx << ", " << lry << ')';
+}
+
+
+XMLElementNode* BoundingBox::toSVGRect () const {
+	XMLElementNode *rect = new XMLElementNode("rect");
+	rect->addAttribute("x", minX());
+	rect->addAttribute("y", minY());
+	rect->addAttribute("width", width());
+	rect->addAttribute("height", height());
+	rect->addAttribute("fill", "none");
+	return rect;
 }

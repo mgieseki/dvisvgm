@@ -31,6 +31,7 @@
 
 
 class Matrix;
+class XMLElementNode;
 
 
 struct BoundingBoxException : MessageException
@@ -71,6 +72,7 @@ class BoundingBox
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;
+		XMLElementNode* toSVGRect () const;
 
    private:
 		double ulx, uly; ///< coordinates of upper left vertex (in TeX point units)

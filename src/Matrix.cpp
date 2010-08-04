@@ -4,7 +4,7 @@
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
-** This program is free software; you can redistribute it and/or        ** 
+** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
 ** published by the Free Software Foundation; either version 3 of       **
 ** the License, or (at your option) any later version.                  **
@@ -15,7 +15,7 @@
 ** GNU General Public License for more details.                         **
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
-** along with this program; if not, see <http://www.gnu.org/licenses/>. ** 
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
 #include <cmath>
@@ -50,7 +50,7 @@ Matrix::Matrix (double d) {
 /** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  Expects that array v consists of 'size' elements. If size is less than 9, the
  *  remaining matrix components will be set to those of the identity matrix.
- *  @param[in] v array containing the matrix components 
+ *  @param[in] v array containing the matrix components
  *  @param[in] size size of array v */
 Matrix::Matrix (double v[], unsigned size) {
 	set(v, size);

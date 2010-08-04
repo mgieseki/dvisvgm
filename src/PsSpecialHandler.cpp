@@ -76,7 +76,7 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		// push dictionary "TeXDict" with dvips definitions on dictionary stack
 		// and initialize basic dvips PostScript variables
 		ostringstream oss;
-		oss << " TeXDict begin 0 0 1000 72.27 72.27 () @start "
+		oss << " TeXDict begin 0 0 1000 72 72 () @start "
 		       " 0 0 moveto ";
   		if (actions) {
 			float r, g, b;
@@ -97,8 +97,9 @@ const char* PsSpecialHandler::info () const {
 
 void PsSpecialHandler::updatePos () {
 	if (_actions) {
+		const double bp = 72.0/72.27;
 		ostringstream oss;
-		const double x = _actions->getX(), y = _actions->getY();
+		const double x = _actions->getX()*bp, y = _actions->getY()*bp;
 		oss << ' ' << x << ' ' << y << " moveto ";
 		_psi.execute(oss.str());
 		_currentpoint = DPair(x, y);
@@ -188,79 +189,85 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 }
 
 
+/** Handles psfile special.
+ *  @param[in] fname EPS file to be included
+ *  @param[in] attr attributes given with \special psfile */
 void PsSpecialHandler::psfile (const string &fname, const map<string,string> &attr) {
 	ifstream ifs(fname.c_str());
 	if (!ifs)
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 	else {
-		const double BP = 72.27/72.0;   // factor to convert bp -> pt
 		map<string,string>::const_iterator it;
-		// coordinates of lower left and upper right vertex (result in TeX points)
-		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*BP : 0;
-		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*BP : 0;
-		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*BP : 0;
-		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*BP : 0;
+		const double PT = 72.27/72.0;  // bp -> pt
 
-		// actual width and height (result in 10th of TeX points)
-		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)*BP : 0;
-		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)*BP : 0;
+		// bounding box of EPS figure
+		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*PT : 0;
+		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*PT : 0;
+		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*PT : 0;
+		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*PT : 0;
+
+		// desired width/height of resulting figure
+		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0*PT : -1;
+		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0*PT : -1;
+		if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
+			return;
 
 		// user transformations (default values chosen according to dvips manual)
-		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second)*BP : 0;
-		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*BP : 0;
-		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second)*BP : 612*BP;
-		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second)*BP : 792*BP;
+		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second)*PT : 0;
+		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*PT : 0;
+//		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second) : 612;
+//		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second) : 792;
 		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
 		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
 		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
 
-		double x=_actions->getX(), y=_actions->getY();
-		double w=(urx-llx), h=(ury-lly);  // width and height of (E)PS image in TeX points
-		if (w <= 0)
-			w = hsize;
-		if (h <= 0)
-			h = vsize;
-		h *= -1;  	// must be negative to get the bounding box right
+		Matrix m(1);
+		m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
+		BoundingBox bbox(llx, lly, urx, ury);
+		bbox.transform(m);
 
-		double sx=1, sy=1;
-		if (rwi != 0 || rhi != 0) {
-			sx = rwi/10/w;
-			sy = rhi/10/fabs(h);
-			if (sx == 0)
-				sx = sy;
-			else if (sy == 0)
-				sy = sx;
-		}
-		w *= sx;
-		h *= sy;
+		double sx = rwi/bbox.width();
+		double sy = rhi/bbox.height();
+		if (sx < 0)	sx = sy;
+		if (sy < 0)	sy = sx;
+		if (sx < 0) sx = sy = 1.0;
 
-		Matrix usertrans(1);  // transformations given by the user
-		if (hscale != 100 || vscale != 100)
-			usertrans.scale(hscale/100, vscale/100);
-		if (angle != 0)
-			usertrans.rotate(angle);
-		if (hoffset != 0 || voffset != 0)
-			usertrans.translate(hoffset, voffset);
+		// save current DVI position (in pt units)
+		const double x = _actions->getX();
+		const double y = _actions->getY();
 
-		Matrix trans(1);  // final transformation to position the graphic correctly
-		trans.translate(-llx, -lly).rmultiply(usertrans).scale(sx, -sy).translate(x, y);
+		// all following drawings are relative to (0,0)
+		_actions->setX(0);
+		_actions->setY(0);
+		updatePos();
 
 		_xmlnode = new XMLElementNode("g");
-		updatePos();
-		Matrix saved_matrix = _actions->getMatrix();
-		_psi.execute(ifs);
-		_actions->setMatrix(saved_matrix);
-		if (!_xmlnode->empty()) {
-			_xmlnode->addAttribute("transform", trans.getSVG());
+		_psi.execute(" @beginspecial @setspecial "); // enter \special environment
+		_psi.execute(ifs);             // process EPS file
+		_psi.execute(" @endspecial "); // leave special environment
+		if (!_xmlnode->empty()) {      // has anything been drawn?
+			Matrix m(1);
+			m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
+			m.translate(-llx, lly);
+			m.scale(sx, sy);      // resize image to width "rwi" and height "rhi"
+			m.translate(x, y); // move image to current DVI position
+			_xmlnode->addAttribute("transform", m.getSVG());
 			_actions->appendToPage(_xmlnode);
 		}
 		else
 			delete _xmlnode;
 		_xmlnode = 0;
 
-		// adapt bounding box
-		BoundingBox bbox(x, y, x+w, y+h);
-		bbox.transform(usertrans);
+		// restore DVI position
+		_actions->setX(x);
+		_actions->setY(y);
+		updatePos();
+
+		// update bounding box
+		m.scale(sx, -sy);
+		m.translate(x, y);
+		bbox = BoundingBox(0, 0, fabs(urx-llx), fabs(ury-lly));
+		bbox.transform(m);
 		_actions->embed(bbox);
 	}
 }
