@@ -1,3 +1,8 @@
+dvisvgm-1.0.3
+- applied some more portability patches for TeX Live
+- fixed a potential memory issue
+- fixed a transformation issue regarding special 'psfile' (SF bug #3037372)
+
 dvisvgm-1.0.2
 - applied latest TeX Live portability patches sent by Peter Breitenlohner and Karl Berry
 - fixed a potrace name clash occurred on Mac OS X Tiger

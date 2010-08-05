@@ -119,7 +119,7 @@ you choose a landscape format the page won't be rotated.
 //
 *-c, --scale*='sx'[,'sy']::
 Scales page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent 
-to *-TS*__sx__,__sy__.
+to *-TS*'sx','sy'.
 
 
 *-C, --cache*[='dir']::
@@ -151,10 +151,10 @@ Prints a short summary of all available command-line options.
 *--libgs=filename*::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and
 PostScript support was not completely disabled. In this case, dvisvgm tries to load the shared 
-GS library dynamically during runtime. By default, it expects the library's name to be libgs.so (Linux) 
-or gsdll32.dll (Windows). Option *--libgs* can be used to give a different name. Alternatively, 
-the GS library name can also be set by the environment variable *LIBGS*. The latter has a less 
-precedence than the command-line option.
+GS library dynamically during runtime. By default, it expects the library's name to be libgs.so 
+(on Unix-like systems) or gsdll32.dll (Windows). Option *--libgs* can be used to give a different 
+name. Alternatively, the GS library name can also be set by the environment variable *LIBGS*. 
+The latter has a less precedence than the command-line option.
 
 
 *-l, --list-specials*::
@@ -445,10 +445,10 @@ which greatly improves the capabilities of DVI documents. One aim of *dvisvgm* i
 PostScript code and to convert a large amount of it to SVG. 
 Since PostScript is a rather complex language, *dvisvgm* does not try to implement its own PostScript interpreter but uses
 Ghostscript instead. If the Ghostscript library was not linked while building dvisvgm, it is looked up and dynamically loaded
-during runtime. In this case, dvisvgm looks for libgs.so on Linux systems, and gsdll32.dll on Windows. You can override these
+during runtime. In this case, dvisvgm looks for libgs.so on Unix-like systems, and gsdll32.dll on Windows. You can override these
 default file names with the environment variable LIBGS.
-The library must be installed and reachable through the PATH environment variable. If it cannot
-be found, the evaluation of PostScript specials is disabled. Use option *--list-specials* to check whether 
+The library must be installed and reachable through the ld search path (\*nix) or the PATH environment variable (Windows). 
+If it cannot be found, the evaluation of PostScript specials is disabled. Use option *--list-specials* to check whether 
 PS support is available, i.e. the entry 'ps' is present.
 
 *tpic*::
