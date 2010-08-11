@@ -83,6 +83,11 @@ check_PROGRAMS += PageSizeTest
 PageSizeTest_SOURCES = PageSizeTest.cpp
 PageSizeTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += PairTest
+check_PROGRAMS += PairTest
+PairTest_SOURCES = PairTest.cpp
+PairTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp
