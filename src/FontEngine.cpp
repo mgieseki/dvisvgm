@@ -262,7 +262,7 @@ bool FontEngine::setCharSize (int ptSize) {
 
 
 // handle API change in freetype version 2.2.1
-#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 2 && FREETYPE_PATCH >= 1
+#if FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 2 || (FREETYPE_MINOR == 2 && FREETYPE_PATCH >= 1)))
 	typedef const FT_Vector *FTVectorPtr;
 #else
 	typedef FT_Vector *FTVectorPtr;
