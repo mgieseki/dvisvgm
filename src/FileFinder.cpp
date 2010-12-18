@@ -30,8 +30,8 @@ using namespace std;
 
 #ifdef MIKTEX
 	#include "MessageException.h"
-	#import <MiKTeX207-session.tlb>
-	using namespace MiKTeXSession2_7;
+	#import <MiKTeX208-session.tlb>
+	using namespace MiKTeXSession2_8;
 
 	static ISession2Ptr miktex_session;
 #else
