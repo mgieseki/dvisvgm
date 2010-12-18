@@ -97,9 +97,8 @@ const char* PsSpecialHandler::info () const {
 
 void PsSpecialHandler::updatePos () {
 	if (_actions) {
-		const double bp = 72.0/72.27;
 		ostringstream oss;
-		const double x = _actions->getX()*bp, y = _actions->getY()*bp;
+		const double x = _actions->getX(), y = _actions->getY();
 		oss << ' ' << x << ' ' << y << " moveto ";
 		_psi.execute(oss.str());
 		_currentpoint = DPair(x, y);
