@@ -213,6 +213,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		int pcount;       // number of parameters (< 0 : variable number of parameters)
 		void (PSActions::*op)(vector<double> &p);  // operation handler
 	} operators [] = {
+		{"applyscalevals",  3, &PSActions::applyscalevals},
 		{"clip",            0, &PSActions::clip},
 		{"closepath",       0, &PSActions::closepath},
 		{"curveto",         6, &PSActions::curveto},

@@ -62,6 +62,7 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		_miterlimit = 4;
 		_xmlnode = 0;
 		_opacityalpha = 1;  // fully opaque
+		_sx = _sy = _cos = 1.0;
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
@@ -577,8 +578,8 @@ void PsSpecialHandler::sethsbcolor (vector<double> &p) {
 void PsSpecialHandler::setdash (vector<double> &p) {
 	_dashpattern.clear();
 	for (size_t i=0; i < p.size()-1; i++)
-		_dashpattern.push_back((int) (p[i]*1.00375));
-	_dashoffset = (int) (p.back()*1.00375);
+		_dashpattern.push_back(scale(p[i]));
+	_dashoffset = scale(p.back());
 }
 
 

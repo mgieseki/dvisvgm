@@ -41,8 +41,9 @@ struct PSException : public MessageException
 struct PSActions
 {
 	virtual ~PSActions () {}
+   virtual void applyscalevals (std::vector<double> &p) =0;
 	virtual void clip (std::vector<double> &p) =0;
-	virtual void closepath (std::vector<double> &p) =0;
+	virtual void closepath (std::vector<double> &p) =0;   
 	virtual void curveto (std::vector<double> &p) =0;
 	virtual void eoclip (std::vector<double> &p) =0;
 	virtual void eofill (std::vector<double> &p) =0;
@@ -68,7 +69,7 @@ struct PSActions
 	virtual void setpos (std::vector<double> &p) =0;
 	virtual void setrgbcolor (std::vector<double> &rgb) =0;
 	virtual void stroke (std::vector<double> &p) =0;
-	virtual void translate (std::vector<double> &p) =0;
+	virtual void translate (std::vector<double> &p) =0;   
 	virtual void executed () {}  // triggered if one of the above PS operators has been executed
 };
 
