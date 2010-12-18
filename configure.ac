@@ -4,8 +4,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[1.0.4dev],[martin.gieseking@uos.de])
-DATE="May 2010"
+AC_INIT([dvisvgm],[1.0.4],[martin.gieseking@uos.de])
+DATE="December 2010"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST

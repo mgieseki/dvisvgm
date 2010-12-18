@@ -1,3 +1,8 @@
+dvisvgm-1.0.4
+- added missing line width/dash pattern scaling to PS handler
+- fixed scaling issue in PS positioning
+- fixed compilation issue related to FreeType 2.4.0
+
 dvisvgm-1.0.3
 - applied some more portability patches for TeX Live
 - fixed a potential memory issue
