@@ -2,7 +2,7 @@
 ** System.cpp                                                           **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2011 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -17,7 +17,6 @@
 ** You should have received a copy of the GNU General Public License    **
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
-
 
 #include <ctime>
 #include "System.h"

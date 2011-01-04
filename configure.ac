@@ -1,5 +1,5 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005-2010 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2011 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
 
