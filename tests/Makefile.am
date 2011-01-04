@@ -88,6 +88,11 @@ check_PROGRAMS += PairTest
 PairTest_SOURCES = PairTest.cpp
 PairTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += PSInterpreterTest
+check_PROGRAMS += PSInterpreterTest
+PSInterpreterTest_SOURCES = PSInterpreterTest.cpp
+PSInterpreterTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp
