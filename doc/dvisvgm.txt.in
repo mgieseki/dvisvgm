@@ -124,7 +124,7 @@ to *-TS*'sx','sy'.
 
 *-C, --cache*[='dir']::
 To speed up the conversion process of bitmap fonts, *dvisvgm* saves intermediate conversion
-information in cache files. By default, these files are stored in $HOME/.dvisvgm. If you prefer
+information in cache files. By default, these files are stored in $HOME/.dvisvgm/cache. If you prefer
 a different location, use option *--cache* to overwrite the default. Furthermore, it is also possible
 to disable the font caching mechanism completely with option *--cache=none*. If argument 'dir' is omitted,
 dvisvgm prints the path of the default cache directory and some information about the stored fonts.

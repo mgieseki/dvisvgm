@@ -199,8 +199,24 @@ static bool set_cache_dir (const CommandLine &args) {
 			static string path = userdir;
 			path += "/.dvisvgm";
 			path = FileSystem::adaptPathSeperators(path);
-			if (!FileSystem::exists(path.c_str()))
-				FileSystem::mkdir(path.c_str());
+			const string cachepath = path+"/cache";
+			if (!FileSystem::exists(cachepath.c_str())) {
+				if (!FileSystem::exists(path.c_str()))
+					FileSystem::mkdir(cachepath.c_str());
+				else {
+					FileSystem::mkdir(cachepath.c_str());
+					// move existing cache files from former location to new one
+					vector<string> files;
+					FileSystem::collect(path.c_str(), files);
+					FORALL(files, vector<string>::iterator, it) {
+						if (it->at(0) == 'f' && it->length() > 4 && it->substr(it->length()-4, 4) == ".fgd") {
+							const char *fname = it->c_str()+1;
+							FileSystem::move(path+"/"+fname, cachepath+"/"+fname);
+						}
+					}
+				}
+			}
+			path = cachepath;
 			PhysicalFont::CACHE_PATH = path.c_str();
 		}
 		if (args.cache_given() && args.cache_arg().empty()) {
