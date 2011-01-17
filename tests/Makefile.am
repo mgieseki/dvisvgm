@@ -43,6 +43,11 @@ check_PROGRAMS += FilePathTest
 FilePathTest_SOURCES = FilePathTest.cpp
 FilePathTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += FileSystemTest
+check_PROGRAMS += FileSystemTest
+FileSystemTest_SOURCES = FileSystemTest.cpp
+FileSystemTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += FontManagerTest
 check_PROGRAMS += FontManagerTest
 FontManagerTest_SOURCES = FontManagerTest.cpp

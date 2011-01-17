@@ -55,6 +55,32 @@ bool FileSystem::remove (const string &fname) {
 }
 
 
+/** Copies a file.
+ *  @param[in] src path of file to copy
+ *  @param[in] dest path of target file
+ *  @return true on success */
+bool FileSystem::copy (const string &src, const string &dest) {
+	ifstream ifs(src.c_str());
+	ofstream ofs(dest.c_str());
+	if (ifs && ofs) {
+		ofs << ifs.rdbuf();
+		return true; // @@
+	}
+	return false;
+}
+
+
+/** Moves a file.
+ *  @param[in] src path of file to move
+ *  @param[in] dest path of target file
+ *  @return true on success */
+bool FileSystem::move (const string &src, const string &dest) {
+	if (copy(src, dest))
+		return remove(src);
+	return false;
+}
+
+
 bool FileSystem::rename (const string &oldname, const string &newname) {
 	return ::rename(oldname.c_str(), newname.c_str()) == 0;
 }
