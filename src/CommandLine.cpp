@@ -39,7 +39,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'T', "transform", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_transform)},
    {'t', "translate", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_translate)},
    {'v', "verbosity", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
-   {'V', "version", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
+   {'V', "version", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
    {'z', "zip", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
    {0, 0, 0, 0}
 };
@@ -92,6 +92,7 @@ void CommandLine::init () {
    _transform_arg.clear();
    _translate_arg.clear();
    _verbosity_arg = 7;
+   _version_arg = false;
    _zip_arg = 9;
 }
 
@@ -129,7 +130,7 @@ void CommandLine::help () const {
    puts("  -l, --list-specials           print supported special sets and exit");
    puts("  -P, --progress[=delay]        enable progess indicator [0.5]");
    puts("  -v, --verbosity=level         set verbosity level (0-7) [7]");
-   puts("  -V, --version                 print version and exit");
+   puts("  -V, --version[=extended]      print version and exit [no]");
 }
 
 
@@ -271,7 +272,8 @@ void CommandLine::handle_verbosity(InputReader &ir, const Option &opt, bool long
 
 
 void CommandLine::handle_version(InputReader &ir, const Option &opt, bool longopt) {
-   _version_given = true;
+   if (ir.eof() || getBoolArg(ir, opt, longopt, _version_arg))
+      _version_given = true;
 }
 
 
@@ -308,7 +310,7 @@ void CommandLine::status () const {
    cout << 'T'<< setw(20) << "transform " << transform_given() << setw(10) << transform_arg() << endl;
    cout << 't'<< setw(20) << "translate " << translate_given() << setw(10) << translate_arg() << endl;
    cout << 'v'<< setw(20) << "verbosity " << verbosity_given() << setw(10) << verbosity_arg() << endl;
-   cout << 'V'<< setw(20) << "version " << version_given() << endl;
+   cout << 'V'<< setw(20) << "version " << version_given() << setw(10) << version_arg() << endl;
    cout << 'z'<< setw(20) << "zip " << zip_given() << setw(10) << zip_arg() << endl;
    CmdLineParserBase::status();
 }

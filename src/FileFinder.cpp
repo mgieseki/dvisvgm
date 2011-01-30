@@ -94,6 +94,25 @@ FileFinder::Impl& FileFinder::Impl::instance () {
 }
 
 
+std::string FileFinder::Impl::version () {
+#ifdef MIKTEX
+	instance();
+	try {
+		MiKTeXSetupInfo info = miktex_session->GetMiKTeXSetupInfo();
+		_bstr_t version = info.version;
+		return string(version);
+	}
+	catch (_com_error e) {
+		throw MessageException((const char*)e.Description());
+	}
+#else
+	if (const char *v = strrchr(KPSEVERSION, ' '))
+		return v+1;
+#endif
+	return "unknown";
+}
+
+
 /** Determines filetype by the filename extension and calls kpse_find_file
  *  to actually look up the file.
  *  @param[in] fname name of file to look up

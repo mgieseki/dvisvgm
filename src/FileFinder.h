@@ -36,6 +36,7 @@ class FileFinder
 			static void setProgname (const char *progname) {_progname = progname;}
 			static void enableMktex (bool enable)          {_mktex_enabled = enable;}
 			static void setUserFontMap (const char *fname) {_usermapname = fname;}
+			static std::string version ();
 
 		protected:
 			Impl ();
@@ -54,6 +55,10 @@ class FileFinder
 	};
 
    public:
+		static std::string version () {
+			return Impl::version();
+		}
+
 		static const char* lookup (const std::string &fname, bool extended=true) {
 			return Impl::instance().lookup(fname, extended);
 		}

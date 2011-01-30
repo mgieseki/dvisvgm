@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <iostream>
+#include <sstream>
 #include <ft2build.h>
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
@@ -53,6 +54,16 @@ FontEngine::~FontEngine () {
 FontEngine& FontEngine::instance () {
 	static FontEngine engine;
 	return engine;
+}
+
+
+string FontEngine::version () {
+	FT_Int major, minor, patch;
+	FT_Library &lib = instance()._library;
+	FT_Library_Version(lib, &major, &minor, &patch);
+	ostringstream oss;
+	oss << major << '.' << minor << '.' << patch;
+	return oss.str();
 }
 
 

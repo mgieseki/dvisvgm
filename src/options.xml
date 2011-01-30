@@ -128,6 +128,7 @@
 				<description>set verbosity level (0-7)</description>
 			</option>
 			<option long="version" short="V">
+				<arg type="bool" name="extended" optional="yes" default="no"/>
 				<description>print version and exit</description>
 			</option>
 		</section>

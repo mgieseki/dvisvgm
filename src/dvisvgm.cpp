@@ -32,6 +32,7 @@
 #include "FileSystem.h"
 #include "Font.h"
 #include "FontCache.h"
+#include "FontEngine.h"
 #include "Ghostscript.h"
 #include "InputReader.h"
 #include "Message.h"
@@ -42,6 +43,16 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#else
+#define TARGET_SYSTEM ""
+#endif
+
+#ifdef __MSVC__
+#include <potracelib.h>
+#else
+extern "C" {
+#include <potracelib.h>
+}
 #endif
 
 using namespace std;
@@ -256,6 +267,25 @@ static bool check_bbox (const string &bboxstr) {
 }
 
 
+static void print_version (bool extended) {
+	ostringstream oss;
+	oss << PACKAGE_STRING;
+	if (extended) {
+		oss << " (" TARGET_SYSTEM ")\n";
+		oss << string(oss.str().length()-1, '-') << "\n"
+			"freetype: " << FontEngine::version() << "\n"
+#ifdef MIKTEX
+			"MiKTeX:   " << FileFinder::version() << "\n"
+#else
+			"kpathsea: " << FileFinder::version() << "\n"
+#endif
+			"potrace:  " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
+			"zlib:     " << zlibVersion();
+	}
+	cout << oss.str() << endl;
+}
+
+
 int main (int argc, char *argv[]) {
 	CommandLine args;
 	args.parse(argc, argv);
@@ -266,7 +296,7 @@ int main (int argc, char *argv[]) {
 
 	set_libgs(args);
 	if (args.version_given()) {
-		cout << PACKAGE_STRING "\n";
+		print_version(args.version_arg());
 		return 0;
 	}
 	if (args.list_specials_given()) {

@@ -345,8 +345,9 @@ messages are printed.
 +
 
 
-*-V, --version*::
-Prints the version number and exits.
+*-V, --version*[='extended']::
+Prints the version of dvisvgm and exits. If the optional argument is set to 'yes', the
+version numbers of the linked libraries are printed as well.
 
 
 *-z, --zip*[='level']::

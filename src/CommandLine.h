@@ -63,6 +63,7 @@ class CommandLine : public CmdLineParserBase
       bool verbosity_given () const {return _verbosity_given;}
       unsigned verbosity_arg () const {return _verbosity_arg;}
       bool version_given () const {return _version_given;}
+      bool version_arg () const {return _version_arg;}
 
    protected:
       void init ();
@@ -142,6 +143,7 @@ class CommandLine : public CmdLineParserBase
       bool _verbosity_given;
       unsigned _verbosity_arg;
       bool _version_given;
+      bool _version_arg;
 };
 
 #endif

@@ -38,6 +38,7 @@ class FontEngine
    public:
       ~FontEngine ();
 		static FontEngine& instance ();
+		static std::string version ();
 		void setDeviceResolution (int x, int y);
       bool setFont (const Font &font);
 		bool setCharSize (int ptSize);
