@@ -32,6 +32,7 @@ void CmdLineParserBase::init () {
 	_files.clear();
 }
 
+
 /** Parses all options given on the command line.
  *  @param[in] printErrors enable/disable printing of error messages */
 void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
@@ -86,7 +87,7 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 					}
 					else if (shortname > 0) {
 						if (printErrors)
-							Message::estream(false) << "unknown option -" << shortname << '\n';
+							Message::estream(false) << "unknown option -" << char(shortname) << '\n';
 						_error = true;
 					}
 				}
