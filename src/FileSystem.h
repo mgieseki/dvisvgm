@@ -29,8 +29,7 @@ struct FileSystem
 {
 	static bool remove (const std::string &fname);
 	static bool rename (const std::string &oldname, const std::string &newname);
-	static bool copy (const std::string &src, const std::string &dest);
-	static bool move (const std::string &src, const std::string &dest);
+	static bool copy (const std::string &src, const std::string &dest, bool remove_src=false);
 	static UInt64 filesize (const std::string &fname);
 	static std::string adaptPathSeperators (std::string path);
 	static std::string getcwd ();

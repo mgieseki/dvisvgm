@@ -222,7 +222,7 @@ static bool set_cache_dir (const CommandLine &args) {
 					FORALL(files, vector<string>::iterator, it) {
 						if (it->at(0) == 'f' && it->length() > 4 && it->substr(it->length()-4, 4) == ".fgd") {
 							const char *fname = it->c_str()+1;
-							FileSystem::move(path+"/"+fname, cachepath+"/"+fname);
+							FileSystem::copy(path+"/"+fname, cachepath+"/"+fname, true);
 						}
 					}
 				}

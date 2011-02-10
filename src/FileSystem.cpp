@@ -22,6 +22,7 @@
 #include <cstring>
 #include <fstream>
 #include "FileSystem.h"
+#include "macros.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -58,25 +59,21 @@ bool FileSystem::remove (const string &fname) {
 /** Copies a file.
  *  @param[in] src path of file to copy
  *  @param[in] dest path of target file
+ *  @param[in] remove_src remove file 'src' if true
  *  @return true on success */
-bool FileSystem::copy (const string &src, const string &dest) {
-	ifstream ifs(src.c_str());
-	ofstream ofs(dest.c_str());
+bool FileSystem::copy (const string &src, const string &dest, bool remove_src) {
+	ifstream ifs(src.c_str(), ios::in|ios::binary);
+	ofstream ofs(dest.c_str(), ios::out|ios::binary);
 	if (ifs && ofs) {
 		ofs << ifs.rdbuf();
-		return true; // @@
+		if (!ifs.fail() && !ofs.fail() && remove_src) {
+			ofs.close();
+			ifs.close();
+			return remove(src);
+		}
+		else 
+			return !remove_src;
 	}
-	return false;
-}
-
-
-/** Moves a file.
- *  @param[in] src path of file to move
- *  @param[in] dest path of target file
- *  @return true on success */
-bool FileSystem::move (const string &src, const string &dest) {
-	if (copy(src, dest))
-		return remove(src);
 	return false;
 }
 

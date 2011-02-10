@@ -106,7 +106,7 @@ TEST(FileSystemTest, move) {
 	const char *str = "FileSystemTest::copy\n";
 	ofs << str;
 	ofs.close();
-	FileSystem::move(tmpfile1, tmpfile2);
+	FileSystem::copy(tmpfile1, tmpfile2, true);
 	ifstream ifs1(tmpfile1);
 	ifstream ifs2(tmpfile2);
 	EXPECT_TRUE(!ifs1 && ifs2);
