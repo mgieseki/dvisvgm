@@ -28,6 +28,11 @@ check_PROGRAMS += CommandLineTest
 CommandLineTest_SOURCES = CommandLineTest.cpp
 CommandLineTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += CRC32Test
+check_PROGRAMS += CRC32Test
+CRC32Test_SOURCES = CRC32Test.cpp
+CRC32Test_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += DirectoryTest
 check_PROGRAMS += DirectoryTest
 DirectoryTest_SOURCES = DirectoryTest.cpp
