@@ -23,6 +23,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include "CRC32.h"
 #include "FileSystem.h"
 #include "FontCache.h"
 #include "Glyph.h"
@@ -34,7 +35,7 @@
 
 using namespace std;
 
-const UInt8 FontCache::VERSION = 4;
+const UInt8 FontCache::VERSION = 5;
 
 
 static Pair32 read_pair (int bytes, StreamReader &sr) {
@@ -142,31 +143,37 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 		return false;
 
 	StreamWriter sw(os);
+	CRC32 crc32;
 
 	struct WriteActions : Glyph::Actions {
-		WriteActions (StreamWriter &sw) : _sw(sw) {}
+		WriteActions (StreamWriter &sw, CRC32 &crc32) : _sw(sw), _crc32(crc32) {}
 
 		void draw (char cmd, const Glyph::Point *points, int n) {
 			int bytes = max_int_size(points, n);
 			int cmdchar = (bytes << 5) | (cmd - 'A');
-			_sw.writeUnsigned(cmdchar, 1);
+			_sw.writeUnsigned(cmdchar, 1, _crc32);
 			for (int i=0; i < n; i++) {
-				_sw.writeSigned(points[i].x(), bytes);
-				_sw.writeSigned(points[i].y(), bytes);
+				_sw.writeSigned(points[i].x(), bytes, _crc32);
+				_sw.writeSigned(points[i].y(), bytes, _crc32);
 			}
 		}
 		StreamWriter &_sw;
-	} actions(sw);
+		CRC32 &_crc32;
+	} actions(sw, crc32);
 
-	sw.writeUnsigned(VERSION, 1);
-	sw.writeString(fontname, true);
-	sw.writeUnsigned(_glyphs.size(), 4);
+	sw.writeUnsigned(VERSION, 1, crc32);
+	sw.writeUnsigned(0, 4);  // space for checksum
+	sw.writeString(fontname, crc32, true);
+	sw.writeUnsigned(_glyphs.size(), 4, crc32);
 	FORALL(_glyphs, GlyphMap::const_iterator, it) {
 		const Glyph &glyph = it->second;
-		sw.writeUnsigned(it->first, 4);
-		sw.writeUnsigned(glyph.size(), 2);
+		sw.writeUnsigned(it->first, 4, crc32);
+		sw.writeUnsigned(glyph.size(), 2, crc32);
 		glyph.iterate(actions, false);
 	}
+	os.seekp(1);
+	sw.writeUnsigned(crc32.get(), 4);  // insert CRC32 checksum
+	os.seekp(0, ios::end);
 	return true;
 }
 
@@ -205,14 +212,22 @@ bool FontCache::read (const char *fontname, istream &is) {
 		return false;
 
 	StreamReader sr(is);
-	if (sr.readUnsigned(1) != VERSION)
+	CRC32 crc32;
+	if (sr.readUnsigned(1, crc32) != VERSION)
 		return false;
-	string fname;
-	while (!is.eof() && is.peek() != 0)
-		fname += char(is.get());
-	is.get(); // skip 0-byte
+
+	UInt32 crc32_cmp = sr.readUnsigned(4);
+	crc32.update(is);
+	if (crc32.get() != crc32_cmp)
+		return false;
+
+	is.clear();
+	is.seekg(5);  // continue reading after checksum
+
+	string fname = sr.readString();
 	if (fname != fontname)
 		return false;
+
 	UInt32 num_glyphs = sr.readUnsigned(4);
 	while (num_glyphs-- > 0) {
 		UInt32 c = sr.readUnsigned(4);  // character code
@@ -283,12 +298,22 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	info.name.clear();
 	info.numchars = info.numbytes = info.numcmds = 0;
 	if (is) {
+		is.clear();
+		is.seekg(0);
 		StreamReader sr(is);
-		if ((info.version = sr.readUnsigned(1)) != VERSION)
+		CRC32 crc32;
+		if ((info.version = sr.readUnsigned(1, crc32)) != VERSION)
 			return false;
-		while (!is.eof() && is.peek() != 0)
-			info.name += char(is.get());
-		is.get(); // skip 0-byte
+
+		info.checksum = sr.readUnsigned(4);
+		crc32.update(is);
+		if (crc32.get() != info.checksum)
+			return false;
+
+		is.clear();
+		is.seekg(5);  // continue reading after checksum
+
+		info.name = sr.readString();
 		info.numchars = sr.readUnsigned(4);
 		for (UInt32 i=0; i < info.numchars; i++) {
 			sr.readUnsigned(4);  // character code
@@ -335,10 +360,12 @@ void FontCache::fontinfo (const char *dirname, ostream &os) {
 			sortmap[it->name] = &(*it);
 
 		FORALL(sortmap, SortMap::iterator, it) {
-			os << setw(10) << left  << it->second->name
-				<< setw(5)  << right << it->second->numchars << " chars"
-				<< setw(10) << right << it->second->numcmds  << " cmds"
-				<< setw(10) << right << it->second->numbytes << " bytes"
+			os	<< dec << setfill(' ') << left
+			   << setw(10) << left  << it->second->name
+				<< setw(5)  << right << it->second->numchars << " char" << (it->second->numchars == 1 ? ' ':'s')
+				<< setw(10) << right << it->second->numcmds  << " cmd"  << (it->second->numcmds == 1 ? ' ':'s')
+				<< setw(12) << right << it->second->numbytes << " byte" << (it->second->numbytes == 1 ? ' ':'s')
+			   << setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << it->second->checksum
 				<< endl;
 		}
 	}

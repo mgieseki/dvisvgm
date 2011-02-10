@@ -40,7 +40,8 @@ class FontCache
 		struct FontInfo
 		{
 			std::string name; // fontname
-			UInt16 version;
+			UInt16 version;   // file format version
+			UInt32 checksum;  // CRC32 checksum of file data
 			UInt32 numchars;  // number of characters
 			UInt32 numbytes;  // number of bytes
 			UInt32 numcmds;   // number of path commands
