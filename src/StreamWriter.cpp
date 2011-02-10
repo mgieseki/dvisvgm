@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include "CRC32.h"
 #include "StreamWriter.h"
 
 using namespace std;
@@ -48,4 +49,33 @@ void StreamWriter::writeString (const string &str, bool finalZero) {
 		_os.put(str[i]);
 	if (finalZero)
 		_os.put(0);
+}
+
+
+/** Writes an unsigned integer to the output stream.
+ *  @param[in] val the value to write
+ *  @param[in] n number of bytes to be considered
+ *  @param[in,out] crc32 checksum to be updated */
+void StreamWriter::writeUnsigned (UInt32 val, int n, CRC32 &crc32) {
+	writeUnsigned(val, n);
+	crc32.update(val, n);
+}
+
+
+/** Writes a signed integer to the output stream and updates the CRC32 checksum.
+ *  @param[in] val the value to write
+ *  @param[in] n number of bytes to be considered
+ *  @param[in,out] crc32 checksum to be updated */
+void StreamWriter::writeSigned (Int32 val, int n, CRC32 &crc32) {
+	writeUnsigned((UInt32)val, n, crc32);
+}
+
+
+/** Writes a signed integer to the output stream and updates the CRC32 checksum.
+ *  @param[in] val the value to write
+ *  @param[in,out] crc32 checksum to be updated
+ *  @param[in] finalZero if true, a final 0-byte is appended */
+void StreamWriter::writeString (const std::string &str, CRC32 &crc32, bool finalZero) {
+	writeString(str, finalZero);
+	crc32.update((UInt8*)str.c_str(), str.length() + (finalZero ? 1 : 0));
 }

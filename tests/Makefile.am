@@ -113,6 +113,16 @@ check_PROGRAMS += StreamInputBufferTest
 StreamInputBufferTest_SOURCES = StreamInputBufferTest.cpp
 StreamInputBufferTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += StreamReaderTest
+check_PROGRAMS += StreamReaderTest
+StreamReaderTest_SOURCES = StreamReaderTest.cpp
+StreamReaderTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
+TESTS += StreamWriterTest
+check_PROGRAMS += StreamWriterTest
+StreamWriterTest_SOURCES = StreamWriterTest.cpp
+StreamWriterTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += TypesTest
 check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp

@@ -27,6 +27,7 @@
 #include "MessageException.h"
 #include "types.h"
 
+class CRC32;
 
 class StreamReader
 {
@@ -35,10 +36,17 @@ class StreamReader
 		virtual ~StreamReader () {}
 		std::istream& replaceStream (std::istream &s);
 		UInt32 readUnsigned (int n);
+		UInt32 readUnsigned (int n, CRC32 &crc32);
 		Int32 readSigned (int n);
+		Int32 readSigned (int n, CRC32 &crc32);
+		std::string readString ();
+		std::string readString (CRC32 &crc32, bool finalZero=false);
 		std::string readString (int length);
+		std::string readString (int length, CRC32 &crc32);
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
-		int readByte ()     {return is->get();}
+		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
+		int readByte ()              {return is->get();}
+		int readByte (CRC32 &crc32);
 
 	protected:
 		std::istream& in () {return *is;}
