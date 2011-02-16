@@ -68,7 +68,7 @@ class StreamInputBuffer : public InputBuffer
 class StringInputBuffer : public InputBuffer
 {
 	public:
-		StringInputBuffer (std::string &str) : _str(str), _pos(0) {}
+		StringInputBuffer (const std::string &str) : _str(str), _pos(0) {}
 		int get ()                  {return _pos < _str.length() ? _str[_pos++] : -1;}
 		int peek () const           {return _pos < _str.length() ? _str[_pos] : -1;}
 		int peek (unsigned n) const {return _pos+n < _str.length() ? _str[_pos+n] : -1;}
@@ -76,7 +76,7 @@ class StringInputBuffer : public InputBuffer
       void invalidate ()          {_pos = _str.length();}
 
 	private:
-		std::string &_str;
+		const std::string &_str;
 		unsigned _pos;
 };
 
