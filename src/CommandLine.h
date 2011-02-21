@@ -29,6 +29,7 @@ class CommandLine : public CmdLineParserBase
       const std::string& output_arg () const {return _output_arg;}
       bool stdout_given () const {return _stdout_given;}
       bool no_fonts_given () const {return _no_fonts_given;}
+      int no_fonts_arg () const {return _no_fonts_arg;}
       bool no_styles_given () const {return _no_styles_given;}
       bool zip_given () const {return _zip_given;}
       int zip_arg () const {return _zip_arg;}
@@ -109,6 +110,7 @@ class CommandLine : public CmdLineParserBase
       std::string _output_arg;
       bool _stdout_given;
       bool _no_fonts_given;
+      int _no_fonts_arg;
       bool _no_styles_given;
       bool _zip_given;
       int _zip_arg;

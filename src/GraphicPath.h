@@ -149,7 +149,7 @@ class GraphicPath
 			_commands.push_back(Command(Command::CLOSEPATH));
 		}
 
-		
+
 		const std::vector<Command>& commands () const {
 			return _commands;
 		}
@@ -175,25 +175,27 @@ class GraphicPath
 		}
 
 
-		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0) const {
+		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
 			struct WriteActions : Actions {
-				WriteActions (std::ostream &os, double sx, double sy) : _os(os), _sx(sx), _sy(sy) {}
+				WriteActions (std::ostream &os, double sx, double sy, double dx, double dy)
+					: _os(os), _sx(sx), _sy(sy), _dx(dx), _dy(dy) {}
+
 				void draw (char cmd, const Point *points, int n) {
 					_os << cmd;
 					switch (cmd) {
-						case 'H': _os << _sx*points->x(); break;
-						case 'V': _os << _sy*points->y(); break;
+						case 'H': _os << _sx*points->x()+_dx; break;
+						case 'V': _os << _sy*points->y()+_dy; break;
 						default :
 							for (int i=0; i < n; i++) {
 								if (i > 0)
 									_os << ' ';
-								_os << _sx*points[i].x() << ' ' << _sy*points[i].y();
+								_os << _sx*points[i].x()+_dx << ' ' << _sy*points[i].y()+_dy;
 							}
 					}
 				}
 				std::ostream &_os;
-				double _sx, _sy;
-			} actions(os, sx, sy);
+				double _sx, _sy, _dx, _dy;
+			} actions(os, sx, sy, dx, dy);
 			iterate(actions, true);
 		}
 
@@ -238,10 +240,10 @@ class GraphicPath
 };
 
 
-/** Iterates over all commands defining this path and calls the corresponding template methods.  
+/** Iterates over all commands defining this path and calls the corresponding template methods.
  *  In the case of successive bezier curve sequences, control points or tangent slopes are often
  *  identical so that the path description contains redundant information. SVG provides shorthand
- *  curve commands that require less parameters. If 'optimize' is true, this method detects such 
+ *  curve commands that require less parameters. If 'optimize' is true, this method detects such
  *  command sequences.
  *  @param[in] actions template methods called by each iteration step
  *  @param[in] optimize if true, shorthand drawing commands (sconicto, scubicto,...) are considered */

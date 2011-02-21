@@ -50,6 +50,7 @@
 				<description>write SVG output to stdout</description>
 			</option>
 			<option long="no-fonts" short="n">
+				<arg type="int" name="variant" default="0" optional="yes"/>
 				<description>draw glyphs by using path elements</description>
 			</option>
 			<option long="no-styles">

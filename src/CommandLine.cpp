@@ -25,7 +25,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'l', "list-specials", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
    {'M', "mag", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
    {'m', "map-file", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_map_file)},
-   {'n', "no-fonts", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
+   {'n', "no-fonts", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
    {'\0', "no-mktexmf", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_mktexmf)},
    {'S', "no-specials", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_specials)},
    {'\0', "no-styles", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
@@ -82,6 +82,7 @@ void CommandLine::init () {
 #endif
    _mag_arg = 4;
    _map_file_arg.clear();
+   _no_fonts_arg = 0;
    _no_specials_arg.clear();
    _output_arg.clear();
    _page_arg = "1";
@@ -105,7 +106,7 @@ void CommandLine::help () const {
    puts("  -b, --bbox=size               set size of bounding box [min]");
    puts("  -o, --output=pattern          set name pattern of output files");
    puts("  -s, --stdout                  write SVG output to stdout");
-   puts("  -n, --no-fonts                draw glyphs by using path elements");
+   puts("  -n, --no-fonts[=variant]      draw glyphs by using path elements [0]");
    puts("      --no-styles               don't use styles to reference fonts");
    puts("  -z, --zip[=level]             create compressed .svgz file [9]");
    puts("\nSVG transformations:");
@@ -192,7 +193,8 @@ void CommandLine::handle_map_file(InputReader &ir, const Option &opt, bool longo
 
 
 void CommandLine::handle_no_fonts(InputReader &ir, const Option &opt, bool longopt) {
-   _no_fonts_given = true;
+   if (ir.eof() || getIntArg(ir, opt, longopt, _no_fonts_arg))
+      _no_fonts_given = true;
 }
 
 
@@ -296,7 +298,7 @@ void CommandLine::status () const {
    cout << 'l'<< setw(20) << "list-specials " << list_specials_given() << endl;
    cout << 'M'<< setw(20) << "mag " << mag_given() << setw(10) << mag_arg() << endl;
    cout << 'm'<< setw(20) << "map-file " << map_file_given() << setw(10) << map_file_arg() << endl;
-   cout << 'n'<< setw(20) << "no-fonts " << no_fonts_given() << endl;
+   cout << 'n'<< setw(20) << "no-fonts " << no_fonts_given() << setw(10) << no_fonts_arg() << endl;
    cout << ' '<< setw(20) << "no-mktexmf " << no_mktexmf_given() << endl;
    cout << 'S'<< setw(20) << "no-specials " << no_specials_given() << setw(10) << no_specials_arg() << endl;
    cout << ' '<< setw(20) << "no-styles " << no_styles_given() << endl;

@@ -75,7 +75,7 @@ TEST(CommandLineTest, arg_short) {
 
 TEST(CommandLineTest, arg_combined) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-lsn", "-p5", "-omyfile.xyz"};
+	const char *args[] = {"progname", "-lse", "-p5", "-omyfile.xyz"};
 	char **argv = const_cast<char**>(args);
 	cmd.parse(4, argv, false);
 
@@ -83,7 +83,7 @@ TEST(CommandLineTest, arg_combined) {
 	EXPECT_EQ(cmd.page_arg(), "5");
 	EXPECT_TRUE(cmd.list_specials_given());
 	EXPECT_TRUE(cmd.stdout_given());
-	EXPECT_TRUE(cmd.no_fonts_given());
+	EXPECT_TRUE(cmd.exact_given());
 	EXPECT_FALSE(cmd.error());
 }
 

@@ -186,10 +186,12 @@ overflows. So, use this option with care. The default setting usually produces
 nice results.
 
 
-*-n, --no-fonts*::
+*-n, --no-fonts*[='variant']::
 If this option is given, *dvisvgm* doesn't create SVG font elements but uses paths instead. The
 resulting SVG files tends to be larger but concurrently more compatible with most applications that
-don't support SVG fonts yet. This option implies *--no-styles*.
+don't support SVG fonts yet. The optional argument 'variant' selects the method how to substitute fonts
+by paths. Variant 0 creates 'path' and 'use' elements. Variant 1 creates 'path' elements only.
+Option *--no-fonts* implies *--no-styles*.
 
 
 *-S, --no-specials*[='names']::

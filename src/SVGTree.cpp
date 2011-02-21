@@ -36,6 +36,7 @@ using namespace std;
 // static class variables
 bool SVGTree::CREATE_STYLE=true;
 bool SVGTree::USE_FONTS=true;
+bool SVGTree::CREATE_USE_ELEMENTS=false;
 
 
 SVGTree::SVGTree () : _font(0), _color(Color::BLACK), _matrix(1) {
@@ -147,13 +148,28 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 
 		if (!node)
 			node = _page;
-		ostringstream oss;
-		oss << "#g" << FontManager::instance().fontID(_font) << c;
-		XMLElementNode *use = new XMLElementNode("use");
-		use->addAttribute("x", XMLString(x));
-		use->addAttribute("y", XMLString(y));
-		use->addAttribute("xlink:href", oss.str());
-		node->append(use);
+		if (CREATE_USE_ELEMENTS) {
+			ostringstream oss;
+			oss << "#g" << FontManager::instance().fontID(_font) << c;
+			XMLElementNode *use = new XMLElementNode("use");
+			use->addAttribute("x", XMLString(x));
+			use->addAttribute("y", XMLString(y));
+			use->addAttribute("xlink:href", oss.str());
+			node->append(use);
+		}
+		else {
+			Glyph glyph;
+			const PhysicalFont *font = dynamic_cast<const PhysicalFont*>(_font.get());
+			if (font && font->getGlyph(c, glyph)) {
+				double sx = font->scaledSize()/font->unitsPerEm();
+				double sy = -sx;
+				ostringstream oss;
+				glyph.writeSVG(oss, sx, sy, x, y);
+				XMLElementNode *glyph_node = new XMLElementNode("path");
+				glyph_node->addAttribute("d", oss.str());
+				node->append(glyph_node);
+			}
+		}
 	}
 }
 
@@ -202,7 +218,7 @@ void SVGTree::transformPage (const Matrix &m) {
  *  @return pointer to element node if glyph exists, 0 otherwise */
 static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
 	Glyph glyph;
-	if (!font.getGlyph(c, glyph, cb))
+	if (!font.getGlyph(c, glyph, cb) || (!SVGTree::USE_FONTS && !SVGTree::CREATE_USE_ELEMENTS))
 		return 0;
 
 	double sx=1.0, sy=1.0;
@@ -284,7 +300,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		FORALL(chars, set<int>::const_iterator, i)
 			fontNode->append(createGlyphNode(*i, font, cb));
 	}
-	else if (&font != font.uniqueFont()) {
+	else if (CREATE_USE_ELEMENTS && &font != font.uniqueFont()) {
 		// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
 		// description multiple times because they would only differ by a scale factor. Thus it's better to
 		// reference the already embedded path together with a transformation attribute and let the SVG renderer
@@ -311,5 +327,4 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			appendToDefs(createGlyphNode(*i, font, cb));
 	}
 }
-
 
