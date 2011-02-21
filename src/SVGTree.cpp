@@ -62,8 +62,8 @@ void SVGTree::reset () {
 
 /** Sets the bounding box of the document. */
 void SVGTree::setBBox (const BoundingBox &bbox) {
-	_root->addAttribute("width", XMLString(bbox.width()));
-	_root->addAttribute("height", XMLString(bbox.height()));
+	_root->addAttribute("width", XMLString(bbox.width())+"pt");
+	_root->addAttribute("height", XMLString(bbox.height())+"pt");
 	_root->addAttribute("viewBox", bbox.toSVGViewBox());
 }
 
