@@ -22,6 +22,7 @@
 #if !defined(DISABLE_GS)
 
 #include <cstring>
+#include <iomanip>
 #include <sstream>
 
 using namespace std;
@@ -102,7 +103,7 @@ string Ghostscript::revision () {
 	gsapi_revision_t r;
 	if (revision(&r)) {
 		ostringstream oss;
-		oss << r.product << ' ' << (r.revision/100) << '.' << (r.revision%100);
+		oss << r.product << ' ' << (r.revision/100) << '.' << setfill('0') << setw(2) << (r.revision%100);
 		return oss.str();
 	}
 	return "";
