@@ -60,9 +60,9 @@ class FontCache
 		void clear ();
       const std::string& fontname () const {return _fontname;}
 
-		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos);
+		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos, std::vector<std::string> &invalid);
 		static bool fontinfo (std::istream &is, FontInfo &info);
-		static void fontinfo (const char *dirname, std::ostream &os);
+		static void fontinfo (const char *dirname, std::ostream &os, bool purge=false);
 
    private:
 		static const UInt8 VERSION;

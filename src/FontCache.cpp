@@ -269,10 +269,12 @@ bool FontCache::read (const char *fontname, istream &is) {
 
 /** Collects font cache information.
  *  @param[in]  dirname path to font cache directory
- *  @param[out] infos the collected data
+ *  @param[out] infos the collected font information
+ *  @param[out] invalid names of outdated/corrupted cache files
  *  @return true on success */
-bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
+bool FontCache::fontinfo (const char *dirname, vector<FontInfo> &infos, vector<string> &invalid) {
 	infos.clear();
+	invalid.clear();
 	if (dirname) {
 		vector<string> fnames;
 		FileSystem::collect(dirname, fnames);
@@ -283,6 +285,8 @@ bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
 				ifstream ifs(path.c_str(), ios::binary);
 				if (fontinfo(ifs, info))
 					infos.push_back(info);
+				else
+					invalid.push_back(it->substr(1));
 			}
 		}
 	}
@@ -293,7 +297,7 @@ bool FontCache::fontinfo (const char *dirname, std::vector<FontInfo> &infos) {
 /** Collects font cache information of a single font.
  *  @param[in]  is input stream of the cache file
  *  @param[out] info the collected data
- *  @return true on success */
+ *  @return true if data could be read, false if cache file is unavailable, outdated, or corrupted */
 bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	info.name.clear();
 	info.numchars = info.numbytes = info.numcmds = 0;
@@ -349,26 +353,35 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 
 /** Collects font cache information and write it to a stream.
  *  @param[in] dirname path to font cache directory
- *  @param[in] os output is written to this stream */
-void FontCache::fontinfo (const char *dirname, ostream &os) {
-	vector<FontInfo> infos;
-	if (fontinfo(dirname, infos)) {
-		os << "cache format version " << infos[0].version << endl;
-		typedef map<string,FontInfo*> SortMap;
-		SortMap sortmap;
-		FORALL(infos, vector<FontInfo>::iterator, it)
-			sortmap[it->name] = &(*it);
+ *  @param[in] os output is written to this stream
+ *  @param[in] purge if true, outdated and corrupted cache files are removed */
+void FontCache::fontinfo (const char *dirname, ostream &os, bool purge) {
+	if (dirname) {
+		vector<FontInfo> infos;
+		vector<string> invalid_files;
+		if (fontinfo(dirname, infos, invalid_files)) {
+			os << "cache format version " << infos[0].version << endl;
+			typedef map<string,FontInfo*> SortMap;
+			SortMap sortmap;
+			FORALL(infos, vector<FontInfo>::iterator, it)
+				sortmap[it->name] = &(*it);
 
-		FORALL(sortmap, SortMap::iterator, it) {
-			os	<< dec << setfill(' ') << left
-			   << setw(10) << left  << it->second->name
-				<< setw(5)  << right << it->second->numchars << " char" << (it->second->numchars == 1 ? ' ':'s')
-				<< setw(10) << right << it->second->numcmds  << " cmd"  << (it->second->numcmds == 1 ? ' ':'s')
-				<< setw(12) << right << it->second->numbytes << " byte" << (it->second->numbytes == 1 ? ' ':'s')
-			   << setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << it->second->checksum
-				<< endl;
+			FORALL(sortmap, SortMap::iterator, it) {
+				os	<< dec << setfill(' ') << left
+					<< setw(10) << left  << it->second->name
+					<< setw(5)  << right << it->second->numchars << " char" << (it->second->numchars == 1 ? ' ':'s')
+					<< setw(10) << right << it->second->numcmds  << " cmd"  << (it->second->numcmds == 1 ? ' ':'s')
+					<< setw(12) << right << it->second->numbytes << " byte" << (it->second->numbytes == 1 ? ' ':'s')
+					<< setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << it->second->checksum
+					<< endl;
+			}
+		}
+		else
+			os << "cache is empty\n";
+		FORALL(invalid_files, vector<string>::iterator, it) {
+			string path=string(dirname)+"/"+(*it);
+			if (FileSystem::remove(path))
+				os << "invalid cache file " << (*it) << " removed\n";
 		}
 	}
-	else
-		os << "cache is empty\n";
 }

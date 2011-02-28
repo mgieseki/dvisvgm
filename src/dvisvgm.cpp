@@ -232,7 +232,7 @@ static bool set_cache_dir (const CommandLine &args) {
 		}
 		if (args.cache_given() && args.cache_arg().empty()) {
 			cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << '\n';
-			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout);
+			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
 			return false;
 		}
 	}
