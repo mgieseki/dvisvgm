@@ -49,7 +49,7 @@ void CRC32::reset () {
 /** Appends string bytes to the previous data and computes the resulting checksum.
  *  @param[in] data string to update the checksum with */
 void CRC32::update (const char *data) {
-	update((UInt8*)data, strlen(data));
+	update((const UInt8*)data, strlen(data));
 }
 
 
@@ -101,7 +101,7 @@ UInt32 CRC32::compute (const UInt8 *bytes, size_t len) {
 
 /** Computes the CRC32 checksum of a string. */
 UInt32 CRC32::compute (const char *str) {
-	return compute((UInt8*)str, strlen(str));
+	return compute((const UInt8*)str, strlen(str));
 }
 
 
