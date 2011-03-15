@@ -464,43 +464,45 @@ void DVIReader::cmdPop (int) {
  * @param[in] moveCursor if true, register h is increased by the character width
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
-	if (_inPage) {
-      FontManager &fm = FontManager::instance();
-		Font *font = fm.getFont(_currFontNum);
-		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
-			vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
-			if (dvi) {
-				DVIPosition pos = _currPos;       // save current cursor position
-				_currPos.x = _currPos.y = _currPos.w = _currPos.z = 0;
-				int save_fontnum = _currFontNum; // save current font number
-				fm.enterVF(vf);        // new font number context
-				cmdFontNum0(fm.vfFirstFontNum(vf));
-				double save_scale = _scaleFactor;
-				_scaleFactor = vf->scaledSize()/(1 << 20);
+	if (!_inPage)
+		throw DVIException("set_char or put_char outside of page");
 
-				VectorInputStream<UInt8> vis(*dvi);
-				istream &is = replaceStream(vis);
-				try {
-					executeAll();            // execute DVI fragment
-				}
-				catch (const DVIException &e) {
-//					Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
-				}
-				replaceStream(is);          // restore previous input stream
-				_scaleFactor = save_scale;  // restore previous scale factor
-				fm.leaveVF();    // restore previous font number context
-				cmdFontNum0(save_fontnum);  // restore previous font number
-				_currPos = pos;             // restore previous cursor position
+	FontManager &fm = FontManager::instance();
+	Font *font = fm.getFont(_currFontNum);
+	if (!font)
+		throw DVIException("no font selected");
+
+	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
+		vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
+		if (dvi) {
+			DVIPosition pos = _currPos;       // save current cursor position
+			_currPos.x = _currPos.y = _currPos.w = _currPos.z = 0;
+			int save_fontnum = _currFontNum; // save current font number
+			fm.enterVF(vf);        // new font number context
+			cmdFontNum0(fm.vfFirstFontNum(vf));
+			double save_scale = _scaleFactor;
+			_scaleFactor = vf->scaledSize()/(1 << 20);
+
+			VectorInputStream<UInt8> vis(*dvi);
+			istream &is = replaceStream(vis);
+			try {
+				executeAll();            // execute DVI fragment
 			}
+			catch (const DVIException &e) {
+				//					Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
+			}
+			replaceStream(is);          // restore previous input stream
+			_scaleFactor = save_scale;  // restore previous scale factor
+			fm.leaveVF();               // restore previous font number context
+			cmdFontNum0(save_fontnum);  // restore previous font number
+			_currPos = pos;             // restore previous cursor position
 		}
-		else if (_actions) {
-			_actions->setChar(_currPos.h, _currPos.v, c, font);
-		}
-		if (moveCursor)
-			_currPos.h += font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
 	}
-	else
-		throw DVIException("set_char or put_char outside page");
+	else if (_actions) {
+		_actions->setChar(_currPos.h, _currPos.v, c, font);
+	}
+	if (moveCursor)
+		_currPos.h += font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
 }
 
 
