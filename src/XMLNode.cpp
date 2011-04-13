@@ -32,23 +32,23 @@ bool XMLNode::emit (ostream &os, XMLNode *stopNode) {
 }
 
 
-XMLElementNode::XMLElementNode (const string &n) : name(n), emitted(false) {
+XMLElementNode::XMLElementNode (const string &n) : _name(n), _emitted(false) {
 }
 
 
 XMLElementNode::~XMLElementNode () {
-	FORALL(children, ElementList::iterator, i)
+	FORALL(_children, ChildList::iterator, i)
 		delete *i;
 }
 
 
 void XMLElementNode::addAttribute (const string &name, const string &value) {
-	attributes[name] = value;
+	_attributes[name] = value;
 }
 
 
 void XMLElementNode::addAttribute (const string &name, double value) {
-	attributes[name] = XMLString(value);
+	_attributes[name] = XMLString(value);
 }
 
 
@@ -56,22 +56,22 @@ void XMLElementNode::append (XMLNode *child) {
 	if (!child)
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
-	if (!textNode1 || children.empty())
-		children.push_back(child);
+	if (!textNode1 || _children.empty())
+		_children.push_back(child);
 	else {
-		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
+		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.back()))
 			textNode2->append(textNode1);  // merge two consecutive text nodes
 		else
-			children.push_back(child);
+			_children.push_back(child);
 	}
 }
 
 
 void XMLElementNode::append (const string &str) {
-	if (children.empty() || !dynamic_cast<XMLTextNode*>(children.back()))
-		children.push_back(new XMLTextNode(str));
+	if (_children.empty() || !dynamic_cast<XMLTextNode*>(_children.back()))
+		_children.push_back(new XMLTextNode(str));
 	else
-		static_cast<XMLTextNode*>(children.back())->append(str);
+		static_cast<XMLTextNode*>(_children.back())->append(str);
 }
 
 
@@ -79,13 +79,13 @@ void XMLElementNode::prepend (XMLNode *child) {
 	if (!child)
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
-	if (!textNode1 || children.empty())
-		children.push_front(child);
+	if (!textNode1 || _children.empty())
+		_children.push_front(child);
 	else {
-		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(children.back()))
+		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.back()))
 			textNode2->prepend(textNode1);  // merge two consecutive text nodes
 		else
-			children.push_front(child);
+			_children.push_front(child);
 	}
 }
 
@@ -97,11 +97,11 @@ void XMLElementNode::prepend (XMLNode *child) {
  *  @param[in] sibling following sibling of 'child'
  *  @return true on success */
 bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
-	ElementList::iterator it = children.begin();
-	while (it != children.end() && *it != sibling)
+	ChildList::iterator it = _children.begin();
+	while (it != _children.end() && *it != sibling)
 		++it;
-	if (it != children.end()) {
-		children.insert(it, child);
+	if (it != _children.end()) {
+		_children.insert(it, child);
 		return true;
 	}
 	return false;
@@ -115,11 +115,11 @@ bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
  *  @param[in] sibling preceding sibling of 'child'
  *  @return true on success */
 bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
-	ElementList::iterator it = children.begin();
-	while (it != children.end() && *it != sibling)
+	ChildList::iterator it = _children.begin();
+	while (it != _children.end() && *it != sibling)
 		++it;
-	if (it != children.end()) {
-		children.insert(++it, child);
+	if (it != _children.end()) {
+		_children.insert(++it, child);
 		return true;
 	}
 	return false;
@@ -127,18 +127,18 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
 
 
 ostream& XMLElementNode::write (ostream &os) const {
-	os << '<' << name;
-	FORALL(attributes, AttribMap::const_iterator, i)
+	os << '<' << _name;
+	FORALL(_attributes, AttribMap::const_iterator, i)
 		os << ' ' << i->first << "='" << i->second << '\'';
-	if (children.empty())
+	if (_children.empty())
 		os << "/>\n";
 	else {
 		os << '>';
-		if (dynamic_cast<XMLElementNode*>(children.front()))
+		if (dynamic_cast<XMLElementNode*>(_children.front()))
 			os << '\n';
-		FORALL(children, ElementList::const_iterator, i)
+		FORALL(_children, ChildList::const_iterator, i)
 			(*i)->write(os);
-		os << "</" << name << ">\n";
+		os << "</" << _name << ">\n";
 	}
 	return os;
 }
@@ -150,44 +150,44 @@ ostream& XMLElementNode::write (ostream &os) const {
  *  its child was the stop node, a further call of emit will continue the output.
  *  @param[in] os stream to which the output is sent to
  *  @param[in] stopElement node where emitting stops (if 0 the whole tree will be emitted)
- *  @return true if node was completely emitted
- * */
+ *  @return true if node was emitted completely */
 bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 	if (this == stopNode)
 		return false;
 
-	if (!emitted) {
-		os << '<' << name;
-		FORALL(attributes, AttribMap::iterator, i)
+	if (!_emitted) {
+		os << '<' << _name;
+		FORALL(_attributes, AttribMap::iterator, i)
 			os << ' ' << i->first << "='" << i->second << '\'';
-		if (children.empty())
+		if (_children.empty())
 			os << "/>\n";
 		else {
 			os << '>';
-			if (dynamic_cast<XMLElementNode*>(children.front()))
+			if (dynamic_cast<XMLElementNode*>(_children.front()))
 				os << '\n';
 		}
 
-		emitted = true;
+		_emitted = true;
 	}
-	if (!children.empty()) {
-		FORALL(children, ElementList::iterator, i) {
+	if (!_children.empty()) {
+		FORALL(_children, ChildList::iterator, i) {
 			if ((*i)->emit(os, stopNode)) {
-				ElementList::iterator it = i++;  // prevent i from being invalidated...
-				children.erase(it);              // ... by erase
+				ChildList::iterator it = i++;  // prevent i from being invalidated...
+				_children.erase(it);              // ... by erase
 				--i;  // @@ what happens if i points to first child?
 			}
 			else
 				return false;
 		}
-		os << "</" << name << ">\n";
+		os << "</" << _name << ">\n";
 	}
 	return true;
 }
 
 
+/** Returns true if this element has an attribute of given name. */
 bool XMLElementNode::hasAttribute (const string &name) const {
-	return attributes.find(name) != attributes.end();
+	return _attributes.find(name) != _attributes.end();
 }
 
 
@@ -203,13 +203,13 @@ void XMLTextNode::append (XMLNode *node) {
 
 void XMLTextNode::append (XMLTextNode *node) {
 	if (node)
-		text += node->text;
+		_text += node->_text;
 	delete node;
 }
 
 
 void XMLTextNode::append (const string &str) {
-	text += str;
+	_text += str;
 }
 
 
@@ -224,28 +224,28 @@ void XMLTextNode::prepend (XMLNode *node) {
 //////////////////////
 
 XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p)
-	: name(n), params(p), emitted(false)
+	: _name(n), _params(p), _emitted(false)
 {
 }
 
 
 XMLDeclarationNode::~XMLDeclarationNode () {
-	FORALL(children, list<XMLDeclarationNode*>::iterator, i)
+	FORALL(_children, list<XMLDeclarationNode*>::iterator, i)
 		delete *i;
 }
 
 void XMLDeclarationNode::append (XMLDeclarationNode *child) {
 	if (child)
-		children.push_back(child);
+		_children.push_back(child);
 }
 
 ostream& XMLDeclarationNode::write (ostream &os) const {
-	os << "<!" << name << ' ' << params;
-	if (children.empty())
+	os << "<!" << _name << ' ' << _params;
+	if (_children.empty())
 		os << ">\n";
 	else {
 		os << "[\n";
-		FORALL(children, list<XMLDeclarationNode*>::const_iterator, i)
+		FORALL(_children, list<XMLDeclarationNode*>::const_iterator, i)
 			(*i)->write(os);
 		os << "]>\n";
 	}
@@ -257,19 +257,19 @@ bool XMLDeclarationNode::emit (ostream &os, XMLNode *stopNode) {
 	if (this == stopNode)
 		return false;
 
-	if (!emitted) {
-		os << "<!" << name << ' ' << params;
-		if (children.empty())
+	if (!_emitted) {
+		os << "<!" << _name << ' ' << _params;
+		if (_children.empty())
 			os << ">\n";
 		else
 			os << "[\n";
-		emitted = true;
+		_emitted = true;
 	}
-	if (!children.empty()) {
-		FORALL(children, list<XMLDeclarationNode*>::iterator, i) {
+	if (!_children.empty()) {
+		FORALL(_children, list<XMLDeclarationNode*>::iterator, i) {
 			if ((*i)->emit(os, stopNode)) {
 				list<XMLDeclarationNode*>::iterator it = i++;  // prevent i from being invalidated...
-				children.erase(it);              // ... by erase
+				_children.erase(it);              // ... by erase
 				--i;  // @@ what happens if i points to first child?
 			}
 			else
@@ -285,7 +285,7 @@ bool XMLDeclarationNode::emit (ostream &os, XMLNode *stopNode) {
 
 ostream& XMLCDataNode::write (ostream &os) const {
 	os << "<![CDATA[\n"
-		<< data
+		<< _data
 		<< "]]>\n";
 	return os;
 }

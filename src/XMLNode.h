@@ -26,6 +26,8 @@
 #include <ostream>
 #include <string>
 
+#include "SpecialActions.h"
+
 
 struct XMLNode
 {
@@ -40,7 +42,7 @@ struct XMLNode
 class XMLElementNode : public XMLNode
 {
 	typedef std::map<std::string,std::string> AttribMap;
-	typedef std::list<XMLNode*> ElementList;
+	typedef std::list<XMLNode*> ChildList;
 	public:
       XMLElementNode (const std::string &name);
 		~XMLElementNode ();
@@ -54,39 +56,41 @@ class XMLElementNode : public XMLNode
 		bool hasAttribute (const std::string &name) const;
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
-		bool empty () const  {return children.empty();}
+		bool empty () const                          {return _children.empty();}
+      const std::list<XMLNode*>& children () const {return _children;}
+      const std::string& getName () const          {return _name;}
 
 	private:
-		std::string name;          // element name (<name a1="v1" .. an="vn">...</name>)
-		AttribMap attributes;
-		ElementList children; // child nodes
-		bool emitted;         // true if node has been (partly) emitted
+		std::string _name;     // element name (<name a1="v1" .. an="vn">...</name>)
+		AttribMap _attributes;
+		ChildList _children;   // child nodes
+		bool _emitted;         // true if node has been (partly) emitted
 };
 
 
 class XMLTextNode : public XMLNode
 {
 	public:
-		XMLTextNode (const std::string &str) : text(str) {}
+		XMLTextNode (const std::string &str) : _text(str) {}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
 		void append (const std::string &str);
 		void prepend (XMLNode *child);
-		std::ostream& write (std::ostream &os) const {return os << text;}
+		std::ostream& write (std::ostream &os) const {return os << _text;}
 
 	private:
-		std::string text;
+		std::string _text;
 };
 
 
 class XMLCommentNode : public XMLNode
 {
 	public:
-		XMLCommentNode (const std::string &str) : text(str) {}
-		std::ostream& write (std::ostream &os) const {return os << "<!--" << text << "-->\n";}
+		XMLCommentNode (const std::string &str) : _text(str) {}
+		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->\n";}
 
 	private:
-		std::string text;
+		std::string _text;
 };
 
 
@@ -100,21 +104,21 @@ class XMLDeclarationNode : public XMLNode
 		bool emit (std::ostream &os, XMLNode *stopElement);
 
 	private:
-		std::string name;
-		std::string params;
-		std::list<XMLDeclarationNode*> children;
-		bool emitted;
+		std::string _name;
+		std::string _params;
+		std::list<XMLDeclarationNode*> _children;
+		bool _emitted;
 };
 
 
 class XMLCDataNode : public XMLNode
 {
 	public:
-		XMLCDataNode (const std::string &d) : data(d) {}
+		XMLCDataNode (const std::string &d) : _data(d) {}
 		std::ostream& write (std::ostream &os) const;
 
 	private:
-		std::string data;
+		std::string _data;
 };
 
 #endif
