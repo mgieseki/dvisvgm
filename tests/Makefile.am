@@ -83,6 +83,11 @@ check_PROGRAMS += MatrixTest
 MatrixTest_SOURCES = MatrixTest.cpp
 MatrixTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
 
+TESTS += MessageExceptionTest
+check_PROGRAMS += MessageExceptionTest
+MessageExceptionTest_SOURCES = MessageExceptionTest.cpp
+MessageExceptionTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main
+
 TESTS += PageRagesTest
 check_PROGRAMS += PageRagesTest
 PageRagesTest_SOURCES = PageRagesTest.cpp

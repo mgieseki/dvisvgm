@@ -1,5 +1,5 @@
 /*************************************************************************
-** MessageException.h                                                   **
+** BoundingBoxTest.cpp                                                  **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2011 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,22 +18,61 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MESSAGEEXCEPTION_H
-#define MESSAGEEXCEPTION_H
-
-#include <exception>
+#include <gtest/gtest.h>
 #include <string>
+#include <cstring>
+#include "MessageException.h"
+
+using namespace std;
+
+static void throw_exception (const string &msg) {
+	throw MessageException(msg);
+}
 
 
-class MessageException : public std::exception
-{
-   public:
-      MessageException (const std::string &msg) : message(msg) {}
-      virtual ~MessageException () throw() {}
-      const char* what () const throw() {return message.c_str();}
+TEST(MessageExceptionTest, catch_direct) {
+	bool caught=false;
+	try {
+		throw_exception("test message");
+		FAIL();
+	}
+	catch (MessageException &e) {
+		ASSERT_TRUE(strcmp(e.what(), "test message") == 0);
+		caught = true;
+	}
+	catch (...) {
+		FAIL();
+	}
+	ASSERT_TRUE(caught);
+}
 
-   private:
-		std::string message;
-};
 
-#endif
+TEST(MessageExceptionTest, catch_indirect1) {
+	bool caught=false;
+	try {
+		throw_exception("test message");
+		FAIL();
+	}
+	catch (exception &e) {
+		ASSERT_TRUE(strcmp(e.what(), "test message") == 0);
+		caught = true;
+	}
+	catch (...) {
+		FAIL();
+	}
+	ASSERT_TRUE(caught);
+}
+
+
+TEST(MessageExceptionTest, catch_indirect2) {
+	bool caught=false;
+	try {
+		throw_exception("test message");
+		FAIL();
+	}
+	catch (...) {
+		caught = true;
+	}
+	ASSERT_TRUE(caught);
+}
+

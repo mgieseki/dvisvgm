@@ -171,7 +171,7 @@ void DVIToSVGActions::special (const string &s) {
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
-		Message::estream(true) << "error in special '" << s << "': " << e.getMessage() << '\n';
+		Message::estream(true) << "error in special '" << s << "': " << e.what() << '\n';
 	}
 }
 

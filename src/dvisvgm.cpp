@@ -261,7 +261,7 @@ static bool check_bbox (const string &bboxstr) {
 		return true;
 	}
 	catch (const MessageException &e) {
-		Message::estream(true) << e.getMessage() << '\n';
+		Message::estream(true) << e.what() << '\n';
 		return false;
 	}
 }
@@ -366,10 +366,10 @@ int main (int argc, char *argv[]) {
 			Message::mstream(false, Terminal::BLUE, true) << " converted in " << (System::time()-start_time) << " seconds\n";
 		}
 		catch (DVIException &e) {
-			Message::estream() << "\nDVI error: " << e.getMessage() << '\n';
+			Message::estream() << "\nDVI error: " << e.what() << '\n';
 		}
 		catch (MessageException &e) {
-			Message::estream(true) << e.getMessage() << '\n';
+			Message::estream(true) << e.what() << '\n';
 		}
 	}
 	FileFinder::finish();
