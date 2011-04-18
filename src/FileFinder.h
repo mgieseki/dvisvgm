@@ -24,61 +24,14 @@
 #include <string>
 #include "FontMap.h"
 
-class FileFinder
+struct FileFinder
 {
-	class Impl
-	{
-		public:
-			const char* lookup (const std::string &fname, bool extended);
-			const char* lookupEncFile (std::string fontname);
-			const char* lookupEncName (std::string fname);
-			static Impl& instance ();
-			static void setProgname (const char *progname) {_progname = progname;}
-			static void enableMktex (bool enable)          {_mktex_enabled = enable;}
-			static void setUserFontMap (const char *fname) {_usermapname = fname;}
-			static std::string version ();
-
-		protected:
-			Impl ();
-			~Impl ();
-			const char* findFile (const std::string &fname);
-			const char* findMappedFile (std::string fname);
-			const char* mktex (const std::string &fname);
-			void initFontMap ();
-
-		private:
-			static Impl *_instance;
-			static const char *_progname;
-			static bool _mktex_enabled;
-		   static FontMap _fontmap;
-			static const char *_usermapname;
-	};
-
-   public:
-		static std::string version () {
-			return Impl::version();
-		}
-
-		static const char* lookup (const std::string &fname, bool extended=true) {
-			return Impl::instance().lookup(fname, extended);
-		}
-
-		static const char* lookupEncFile (std::string fontname) {
-			return Impl::instance().lookupEncFile(fontname);
-		}
-
-		static const char* lookupEncName (std::string fname) {
-			return Impl::instance().lookupEncName(fname);
-		}
-
-		static void init (const char *progname, bool enable_mktexmf) {
-			Impl::setProgname(progname);
-			Impl::enableMktex(enable_mktexmf);
-		}
-
-		static void setUserFontMap (const char *fname) {
-			Impl::setUserFontMap(fname);
-		}
+  	static void init (const char *progname, bool enable_mktexmf, const char *usermapname=0);
+	static void finish ();
+	static std::string version ();
+	static const char* lookup (const std::string &fname, bool extended=true);
+	static const char* lookupEncFile (std::string fontname);
+	static const char* lookupEncName (std::string fname);
 };
 
 #endif

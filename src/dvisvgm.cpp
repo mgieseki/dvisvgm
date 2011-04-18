@@ -324,8 +324,6 @@ int main (int argc, char *argv[]) {
 		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
 		return 1;
 	}
-	if (args.map_file_given())
-		FileFinder::setUserFontMap(args.map_file_arg().c_str());
 
 	if (!check_bbox(args.bbox_arg()))
 		return 1;
@@ -357,7 +355,8 @@ int main (int argc, char *argv[]) {
 		dvisvg.setPageSize(args.bbox_arg());
 
 		try {
-			FileFinder::init(argv[0], !args.no_mktexmf_given());
+			const char *usermap = args.map_file_given() ? args.map_file_arg().c_str() : 0;
+			FileFinder::init(argv[0], !args.no_mktexmf_given(), usermap);
 			pair<int,int> pageinfo;
 			dvisvg.convert(args.page_arg(), &pageinfo);
 			Message::mstream().indent(0);
@@ -373,6 +372,7 @@ int main (int argc, char *argv[]) {
 			Message::estream(true) << e.getMessage() << '\n';
 		}
 	}
+	FileFinder::finish();
 	return 0;
 }
 

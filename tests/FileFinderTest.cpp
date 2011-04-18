@@ -31,6 +31,10 @@ class FileFinderTest : public ::testing::Test
 		void SetUp () {
 			FileFinder::init("FileFinderTest", false);
 		}
+
+		void TearDown () {
+			FileFinder::finish();
+		}
 };
 
 
