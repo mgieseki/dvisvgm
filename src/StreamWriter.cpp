@@ -71,11 +71,11 @@ void StreamWriter::writeSigned (Int32 val, int n, CRC32 &crc32) {
 }
 
 
-/** Writes a signed integer to the output stream and updates the CRC32 checksum.
- *  @param[in] val the value to write
+/** Writes a string to the output stream and updates the CRC32 checksum.
+ *  @param[in] str the string to write
  *  @param[in,out] crc32 checksum to be updated
  *  @param[in] finalZero if true, a final 0-byte is appended */
 void StreamWriter::writeString (const std::string &str, CRC32 &crc32, bool finalZero) {
 	writeString(str, finalZero);
-	crc32.update((UInt8*)str.c_str(), str.length() + (finalZero ? 1 : 0));
+	crc32.update((const UInt8*)str.c_str(), str.length() + (finalZero ? 1 : 0));
 }
