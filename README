@@ -67,16 +67,8 @@ COMPILATION
  via a system call. Please ensure that Metafont is installed and
  reachable through the search path.
  
- To build Windows binaries I recommend MinGW in conjunction
- with MSYS (http://www.mingw.org). If executed within MSYS
- the configure script assumes that you want to build dvisvgm
- for MiKTeX. In this case the necessary import libraries for
- the MiKTeX DLLs will be created and linked. If not already done,
- add the MiKTeX bin directory to your search path, otherwise the
- required DLLs won't be found while running dvisvgm.
-
  If you don't like compiling the sources yourself, you can
- download precompiled executables for Windows and MiKTeX
+ download pre-compiled executables for Windows and MiKTeX
  from sourceforge.net instead (see below).
 
 

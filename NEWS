@@ -1,3 +1,9 @@
+dvisvgm-1.0.6
+- fixed segfault occured if a (malformed) DVI file calls set_char/put_char whithout preceding font definition
+- added CTRL-C handler
+- MiKTeX support updated to version 2.9
+- some code refactorings
+
 dvisvgm-1.0.5
 - added optional integer argument to option -n to disable generation of <use> elements
 - added missing unit to width/height attributes of svg root element (SF bug #3185773)
