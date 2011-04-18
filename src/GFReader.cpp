@@ -22,6 +22,7 @@
 #include <sstream>
 #include "GFReader.h"
 #include "macros.h"
+#include "SignalHandler.h"
 
 using namespace std;
 
@@ -82,6 +83,7 @@ string GFReader::readString (int bytes) {
  *  corresponding cmdFOO method.
  *  @return opcode of the executed command */
 int GFReader::executeCommand () {
+	SignalHandler::instance().check();
    /* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
    doesn't need to know the exact GF command format. Some cmdFOO methods are used for multiple
 	GF commands because they only differ in the size of their parameters. */

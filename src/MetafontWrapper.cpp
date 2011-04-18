@@ -26,6 +26,7 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
+#include "SignalHandler.h"
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -90,7 +91,7 @@ int MetafontWrapper::call (const string &mode, double mag) {
 	const char *cmd = "mf";
 #endif
 	ostringstream oss;
-	oss << "\"\\mode=" << mode  << ";"
+	oss << "--halt-on-error \"\\mode=" << mode  << ";"
 		   "mag:=" << mag << ";"
 		   "batchmode;"
 		   "input " << _fontname << "\"";
@@ -104,6 +105,8 @@ int MetafontWrapper::call (const string &mode, double mag) {
 		while (ifs) {
 			ifs.getline(buf, 128);
 			string line = buf;
+			if (line.substr(0, 15) == "! Interruption.")
+				SignalHandler::instance().trigger(true);
 			if (line.substr(0, 17) == "Output written on") {
 				size_t pos = line.find("gf ", 18+_fontname.length());
 				if (pos != string::npos) {

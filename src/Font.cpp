@@ -34,6 +34,7 @@
 #include "VFReader.h"
 #include "macros.h"
 #include "FileSystem.h"
+#include "SignalHandler.h"
 #include "SVGTree.h"
 
 using namespace std;
@@ -233,10 +234,11 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
  *  @param[out] gfname name of GF font file
  *  @return true on success */
 bool PhysicalFont::createGF (string &gfname) const {
+	SignalHandler::instance().check();
 	gfname = name()+".gf";
 	MetafontWrapper mf(name());
-	mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
-	return mf.success() && getTFM();
+	int ret = mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
+	return (ret == 0) && mf.success() && getTFM();
 }
 
 

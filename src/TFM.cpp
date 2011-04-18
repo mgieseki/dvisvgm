@@ -23,7 +23,6 @@
 #include <vector>
 #include "FileFinder.h"
 #include "Message.h"
-#include "MetafontWrapper.h"
 #include "StreamReader.h"
 #include "TFM.h"
 

@@ -28,6 +28,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "Message.h"
+#include "SignalHandler.h"
 #include "VectorStream.h"
 #include "macros.h"
 
@@ -151,6 +152,7 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
  *  corresponding cmdFOO method.
  *  @return opcode of the executed command */
 int DVIReader::executeCommand () {
+	SignalHandler::instance().check();
 	CommandHandler handler;
 	int len;   // number of parameter bytes
 	int param; // parameter of handler

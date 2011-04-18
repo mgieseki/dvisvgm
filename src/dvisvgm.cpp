@@ -38,6 +38,7 @@
 #include "Message.h"
 #include "FileFinder.h"
 #include "PageSize.h"
+#include "SignalHandler.h"
 #include "SpecialManager.h"
 #include "System.h"
 
@@ -358,6 +359,7 @@ int main (int argc, char *argv[]) {
 			const char *usermap = args.map_file_given() ? args.map_file_arg().c_str() : 0;
 			FileFinder::init(argv[0], !args.no_mktexmf_given(), usermap);
 			pair<int,int> pageinfo;
+			SignalHandler::instance().start();
 			dvisvg.convert(args.page_arg(), &pageinfo);
 			Message::mstream().indent(0);
 			Message::mstream(false, Terminal::BLUE, true) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
@@ -367,6 +369,9 @@ int main (int argc, char *argv[]) {
 		}
 		catch (DVIException &e) {
 			Message::estream() << "\nDVI error: " << e.what() << '\n';
+		}
+		catch (SignalException &e) {
+			Message::wstream(true) << "execution interrupted by user\n";
 		}
 		catch (MessageException &e) {
 			Message::estream(true) << e.what() << '\n';
