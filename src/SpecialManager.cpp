@@ -100,6 +100,8 @@ bool SpecialManager::process (const string &special, SpecialActions *actions, Li
 		prefix += c;
 	if (ispunct(c)) // also add seperation character to identifying prefix
 		prefix += c;
+	if (prefix == "ps:" && iss.peek() == ':')
+		prefix += iss.get();
 	if (SpecialHandler *handler = findHandler(prefix)) {
 		if (listener)
 			listener->beginSpecial(prefix.c_str());
