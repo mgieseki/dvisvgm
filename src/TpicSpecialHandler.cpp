@@ -51,10 +51,11 @@ void TpicSpecialHandler::reset () {
 
 
 /** Creates SVG elements that draw lines through the recorded points.
- *  @param[in] fill true if enclosed area should be filled
+ *  @param[in] stroke if true, the (out)line is drawn (in black)
+ *  @param[in] fill if true, enclosed area is filled with current color
  *  @param[in] ddist dash/dot distance of line in TeX point units
  *                   (0:solid line, >0:dashed line, <0:dotted line) */
-void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *actions) {
+void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions) {
 	if (actions && _points.size() > 0) {
 		XMLElementNode *elem=0;
 		if (_points.size() == 1) {
@@ -91,8 +92,10 @@ void TpicSpecialHandler::drawLines (bool fill, double ddist, SpecialActions *act
 				actions->embed(DPair(x, y));
 			}
 			elem->addAttribute("points", oss.str());
-			elem->addAttribute("stroke", "black");
-			elem->addAttribute("stroke-width", XMLString(_penwidth));
+			if (stroke) {   // draw outline?
+				elem->addAttribute("stroke", "black");
+				elem->addAttribute("stroke-width", XMLString(_penwidth));
+			}
 		}
 		if (ddist > 0)
 			elem->addAttribute("stroke-dasharray", XMLString(ddist));
@@ -111,7 +114,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 	if (actions && _points.size() > 0) {
 		const size_t size = _points.size();
 		if (size < 3)
-			drawLines(false, ddist, actions);
+			drawLines(true, false, ddist, actions);
 		else {
 			double x = actions->getX();
 			double y = actions->getY();
@@ -259,16 +262,16 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			break;
 		}
 		case cmd_id('f','p'): // draw solid lines through recorded points; close and fill path if fill color was defined
-			drawLines(_fill >= 0, 0, actions);
+			drawLines(true, _fill >= 0, 0, actions);
 			break;
-		case cmd_id('i','p'): // as above but always fill polygon
-			drawLines(true, 0, actions);
+		case cmd_id('i','p'): // don't draw outlines but close the recorded path and fill the resulting polygon
+			drawLines(false, true, 0, actions);
 			break;
 		case cmd_id('d','a'): // as fp but draw dashed lines
-			drawLines(_fill >= 0, in.getDouble()*72.27, actions);
+			drawLines(true, _fill >= 0, in.getDouble()*72.27, actions);
 			break;
 		case cmd_id('d','t'): // as fp but draw dotted lines
-			drawLines(_fill >= 0, -in.getDouble()*72.27, actions);
+			drawLines(true, _fill >= 0, -in.getDouble()*72.27, actions);
 			break;
 		case cmd_id('s','p'): { // draw quadratic splines through recorded points
 			double ddist = in.getDouble();

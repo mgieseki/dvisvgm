@@ -38,7 +38,7 @@ class TpicSpecialHandler : public SpecialHandler
 	protected:
 		bool isEndPageListener () const {return true;}
 		void reset ();
-		void drawLines (bool fill, double ddist, SpecialActions *actions);
+		void drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions);
 		void drawSplines (double ddist, SpecialActions *actions);
 		void drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions);
 
