@@ -84,6 +84,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void lineto (std::vector<double> &p);
 		void moveto (std::vector<double> &p);
 		void newpath (std::vector<double> &p);
+		void querypos (std::vector<double> &p)       {_currentpoint = DPair(p[0], p[1]);}
 		void rotate (std::vector<double> &p);
 		void scale (std::vector<double> &p);
 		void setcmykcolor (std::vector<double> &cmyk);
@@ -96,7 +97,6 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setmatrix (std::vector<double> &p);
 		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
 		void setopacityalpha (std::vector<double> &p){_opacityalpha = p[0];}
-		void setpos (std::vector<double> &p)         {_currentpoint = DPair(p[0], p[1]);}
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
 		void translate (std::vector<double> &p);

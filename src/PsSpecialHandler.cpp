@@ -126,6 +126,20 @@ void PsSpecialHandler::moveToDVIPos () {
 }
 
 
+/** Executes a PS snippet and moves the DVI cursor to the current DVI position afterwards.
+ *  It's just a shorthand function as this action sequence is required several times.
+ *  @param[in] psi PS interpreter instance
+ *  @param[in] is  stream to read the PS code from
+ *  @param[in] pos current PS graphic position
+ *  @param[in] actions special actions */
+static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos, SpecialActions *actions) {
+	psi.execute(is);
+	psi.execute(" querypos "); // retrieve current PS position (stored in 'pos')
+	actions->setX(pos.x());
+	actions->setY(pos.y());
+}
+
+
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!_initialized)
 		initialize(actions);
@@ -165,27 +179,33 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else if (strcmp(prefix, "ps::") == 0) {
-		if (is.peek() != '[') {
-			// execute literal PostScript without initial positioning and without any wrapping code
-			_psi.execute(is);
-			_psi.execute(" setpos ");  // forces a call of PSActions::setpos to get the current PS position
-			_actions->setX(_currentpoint.x());
-			_actions->setY(_currentpoint.y());
-		}
-		else {
-			is.get();
-			string label;
-			int c;
-			while (!is.eof() && (c = is.get()) != ']')
-				label += c;
-			if (label != "begin" && label != "end") {
-				Message::wstream(true) << "invalid PostScript special ps::[" << label << "]\n";
-				return false;
+		_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
+		if (is.peek() == '[') {
+			// collect characters inside the brackets
+			string code;
+			for (int i=0; i < 7 && is.peek() != ']' && !is.eof(); ++i)
+				code += is.get();
+			if (is.peek() == ']')
+				code += is.get();
+
+			if (code == "[begin]" || code == "[nobreak]") {
+				moveToDVIPos();
+				exec_and_syncpos(_psi, is, _currentpoint, _actions);
 			}
-			_psi.execute(is);
+			else {
+				// no move to DVI position here
+				if (code != "[end]") // PS array?
+					_psi.execute(code);
+				exec_and_syncpos(_psi, is, _currentpoint, _actions);
+			}
+		}
+		else { // ps::<code> behaves like ps::[end]<code>
+			// no move to DVI position here
+			exec_and_syncpos(_psi, is, _currentpoint, _actions);
 		}
 	}
 	else { // ps: ...
+		_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
 		moveToDVIPos();
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
@@ -197,11 +217,12 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 				Message::wstream(true) << "file '" << fname << "' not found in ps: plotfile\n";
 		}
 		else {
-			// execute literal PostScript (without any wrapping code)
-			_psi.execute(is);
-			_psi.execute(" setpos ");  // forces a call of PSActions::setpos to get the current PS position
-			_actions->setX(_currentpoint.x());
-			_actions->setY(_currentpoint.y());
+			// ps:<code> is almost identical to ps::[begin]<code> but does
+			// a final repositioning to the current DVI location
+			moveToDVIPos();
+			exec_and_syncpos(_psi, is, _currentpoint, _actions);
+			_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
+			moveToDVIPos();
 		}
 	}
 	return true;

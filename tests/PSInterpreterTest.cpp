@@ -42,6 +42,7 @@ class PSTestActions : public PSActions
 		void lineto (vector<double> &p)          {print("lineto", p);}
 		void moveto (vector<double> &p)          {print("moveto", p);}
 		void newpath (vector<double> &p)         {print("newpath", p);}
+		void querypos (vector<double> &p)        {print("querypos", p);}
 		void rotate (vector<double> &p)          {print("rotate", p);}
 		void scale (vector<double> &p)           {print("scale", p);}
 		void setcmykcolor (vector<double> &p)    {print("setcmykcolor", p);}
@@ -54,7 +55,6 @@ class PSTestActions : public PSActions
 		void setmatrix (vector<double> &p)       {print("setmatrix", p);}
 		void setmiterlimit (vector<double> &p)   {print("setmiterlimit", p);}
 		void setopacityalpha (vector<double> &p) {print("setopacityalpha", p);}
-		void setpos (vector<double> &p)          {print("setpos", p);}
 		void setrgbcolor (vector<double> &p)     {print("setrgbcolor", p);}
 		void stroke (vector<double> &p)          {print("stroke", p);}
 		void translate (vector<double> &p)       {print("translate", p);}
@@ -93,7 +93,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	psi.execute("grestore ");
 	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;setdash 0;grestore;");
 	actions.clear();
-	
+
 	psi.execute("1 setlinecap 5 setmiterlimit 0 1 0 setrgbcolor gsave 0 setlinecap 10 setmiterlimit ");
 	ASSERT_EQ(actions.result(), "setlinecap 1;setmiterlimit 5;setrgbcolor 0 1 0;gsave;setlinecap 0;setmiterlimit 10;");
 	actions.clear();
@@ -149,15 +149,15 @@ TEST(PSInterpreterTest, setlinewidth) {
 	psi.execute("10 setlinewidth ");
 	ASSERT_EQ(actions.result(), "applyscalevals 1 1 1;setlinewidth 10;");
 	actions.clear();
-	
+
 	psi.execute("5 5 scale 10 setlinewidth ");
 	ASSERT_EQ(actions.result(), "scale 5 5;applyscalevals 5 5 1;setlinewidth 10;");
 	actions.clear();
-	
+
 	psi.execute("90 rotate 10 setlinewidth ");
 	ASSERT_EQ(actions.result(), "rotate 90;applyscalevals 5 5 0;setlinewidth 10;");
 	actions.clear();
-	
+
 	psi.execute("-30 rotate 10 setlinewidth ");
 	ASSERT_EQ(actions.result(), "rotate -30;applyscalevals 5 5 0.5;setlinewidth 10;");
 }

@@ -54,6 +54,7 @@ struct PSActions
 	virtual void lineto (std::vector<double> &p) =0;
 	virtual void moveto (std::vector<double> &p) =0;
 	virtual void newpath (std::vector<double> &p) =0;
+	virtual void querypos (std::vector<double> &p) =0;
 	virtual void rotate (std::vector<double> &p) =0;
 	virtual void scale (std::vector<double> &p) =0;
 	virtual void setcmykcolor (std::vector<double> &cmyk) =0;
@@ -66,7 +67,6 @@ struct PSActions
 	virtual void setmatrix (std::vector<double> &p) =0;
 	virtual void setmiterlimit (std::vector<double> &p) =0;
 	virtual void setopacityalpha (std::vector<double> &p) =0;
-	virtual void setpos (std::vector<double> &p) =0;
 	virtual void setrgbcolor (std::vector<double> &rgb) =0;
 	virtual void stroke (std::vector<double> &p) =0;
 	virtual void translate (std::vector<double> &p) =0;
