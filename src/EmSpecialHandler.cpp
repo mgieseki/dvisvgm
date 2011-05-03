@@ -208,7 +208,7 @@ bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 
 /** This method is called at the end of a DVI page. Here we have to draw all pending
  *   lines that are still in the line list. All line endpoints must be defined until here. */
-void EmSpecialHandler::endPage () {
+void EmSpecialHandler::dviEndPage () {
 	if (_actions) {
 		FORALL(_lines, list<Line>::iterator, it) {
 			map<int,DPair>::iterator pit1=_points.find(it->p1);

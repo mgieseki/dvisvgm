@@ -68,8 +68,9 @@ class DVIReader : public StreamReader, protected VFActions
 		bool inPostamble () const              {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
-		void setXPos (double x);
-		void setYPos (double y);
+		void translate (double tx, double ty)  {_tx=tx; _ty=ty;}
+		void translateToX (double x)           {_tx=x-_currPos.h-_tx;}
+		void translateToY (double y)           {_ty=y-_currPos.v-_ty;}
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const      {return _currFontNum;}
@@ -121,18 +122,19 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPostPost (int len);
 
 	private:
-		DVIActions *_actions;   ///< actions to be performed on various DVI events
-		bool _inPage;           ///< true if between bop and eop
-		unsigned _totalPages;   ///< total number of pages in dvi file
-		unsigned _currPageNum;  ///< current page number
-		int _currFontNum;       ///< current font number
-		double _scaleFactor;    ///< 1 dvi unit = scaleFactor * TeX points
-		UInt32 _mag;            ///< magnification factor * 1000
-		bool _inPostamble;      ///< true if stream pointer is inside the postamble
-		Int32 _prevBop;         ///< pointer to previous bop
+		DVIActions *_actions;    ///< actions to be performed on various DVI events
+		bool _inPage;            ///< true if between bop and eop
+		unsigned _totalPages;    ///< total number of pages in dvi file
+		unsigned _currPageNum;   ///< current page number
+		int _currFontNum;        ///< current font number
+		double _scaleFactor;     ///< 1 dvi unit = scaleFactor * TeX points
+		UInt32 _mag;             ///< magnification factor * 1000
+		bool _inPostamble;       ///< true if stream pointer is inside the postamble
+		Int32 _prevBop;          ///< pointer to previous bop
 		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
-		DVIPosition _currPos;
+		DVIPosition _currPos;    ///< current cursor position
 		std::stack<DVIPosition> _posStack;
+		double _tx, _ty;         ///< tranlation of cursor position
 		size_t _pageLength;      ///< number of bytes between current bop end eop
 		std::streampos _pagePos; ///< distance of current DVI command from bop (in bytes)
 

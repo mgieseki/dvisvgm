@@ -42,6 +42,7 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a
 	_inPage = false;
 	_pageHeight = _pageWidth = 0;
 	_scaleFactor = 0.0;
+	_tx = _ty = 0;    // no cursor translation
 	_inPostamble = false;
 	_totalPages = 0;  // we don't know the correct value yet
 	_currFontNum = 0;
@@ -305,26 +306,14 @@ void DVIReader::executePostamble () {
 /** Returns the current x coordinate in TeX point units.
  *  This is the horizontal position where the next output would be placed. */
 double DVIReader::getXPos () const {
-	return _currPos.h;
+	return _currPos.h+_tx;
 }
 
 
 /** Returns the current y coordinate in TeX point units.
  *  This is the vertical position where the next output would be placed. */
 double DVIReader::getYPos () const {
-	return _currPos.v;
-}
-
-
-/** Sets the horizontal position in TeX point units. */
-void DVIReader::setXPos (double x) {
-	_currPos.h = x;
-}
-
-
-/** Sets the vertical position in TeX point units. */
-void DVIReader::setYPos (double y) {
-	_currPos.v = y;
+	return _currPos.v+_ty;
 }
 
 
@@ -452,9 +441,9 @@ void DVIReader::cmdPop (int) {
 		_posStack.pop();
 		if (_actions) {
 			if (prevPos.h != _currPos.h)
-				_actions->moveToX(_currPos.h);
+				_actions->moveToX(_currPos.h + _tx);
 			if (prevPos.v != _currPos.v)
-				_actions->moveToY(_currPos.v);
+				_actions->moveToY(_currPos.v + _ty);
 		}
 	}
 }
@@ -501,7 +490,7 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		}
 	}
 	else if (_actions) {
-		_actions->setChar(_currPos.h, _currPos.v, c, font);
+		_actions->setChar(_currPos.h+_tx, _currPos.v+_ty, c, font);
 	}
 	if (moveCursor)
 		_currPos.h += font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
@@ -549,10 +538,10 @@ void DVIReader::cmdSetRule (int) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
 		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_currPos.h, _currPos.v, height, width);
+			_actions->setRule(_currPos.h+_tx, _currPos.v+_ty, height, width);
 		_currPos.h += width;
 		if (_actions && (height <= 0 || width <= 0))
-			_actions->moveToX(_currPos.h);
+			_actions->moveToX(_currPos.h+_tx);
 	}
 	else
 		throw DVIException("set_rule outside of page");
@@ -567,7 +556,7 @@ void DVIReader::cmdPutRule (int) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
 		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_currPos.h, _currPos.v, height, width);
+			_actions->setRule(_currPos.h+_tx, _currPos.v+_ty, height, width);
 	}
 	else
 		throw DVIException("put_rule outside of page");

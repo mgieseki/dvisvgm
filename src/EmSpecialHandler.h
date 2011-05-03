@@ -42,7 +42,10 @@ class EmSpecialHandler : public SpecialHandler
 		const char* info () const   {return "line drawing statements of the emTeX special set";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
-		void endPage ();
+		void dviEndPage ();
+
+	protected:
+		bool isEndPageListener () const {return true;}
 
    private:
 		std::map<int, DPair> _points; ///< points defined by special em:point

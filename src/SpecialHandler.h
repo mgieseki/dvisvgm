@@ -27,6 +27,7 @@
 
 
 class SpecialActions;
+class SpecialManager;
 
 
 struct SpecialException : public MessageException
@@ -35,14 +36,22 @@ struct SpecialException : public MessageException
 };
 
 
-struct SpecialHandler
+class SpecialHandler
 {
-	virtual ~SpecialHandler () {}
-	virtual const char** prefixes () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const=0;
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-	virtual void endPage () {}
+	friend class SpecialManager;
+
+	public:
+		virtual ~SpecialHandler () {}
+		virtual const char** prefixes () const=0;
+		virtual const char* info () const=0;
+		virtual const char* name () const=0;
+		virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
+		virtual void dviMovedTo (double x, double y) {}
+		virtual void dviEndPage () {}
+
+	protected:
+		virtual bool isEndPageListener () const  {return false;}
+		virtual bool isPositionListener () const {return false;}
 };
 
 

@@ -29,6 +29,7 @@
 #include "SpecialActions.h"
 #include "SpecialManager.h"
 #include "SVGTree.h"
+#include "DVIReader.h"
 
 
 class DVIToSVG;
@@ -55,8 +56,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		Color getColor () const                         {return _svg.getColor();}
 		void appendToPage (XMLNode *node)               {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)               {_svg.appendToDefs(node);}
-		void moveToX (double x)                         {_svg.setX(x);}
-		void moveToY (double y)                         {_svg.setY(y);}
+		void moveToX (double x);
+		void moveToY (double y);
 		void setFont (int num, const Font *font);
 		void special (const std::string &s);
 		void preamble (const std::string &cmt);
@@ -70,10 +71,11 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		CharMap& getUsedChars () const        {return _usedChars;}
 		const FontSet& getUsedFonts () const  {return _usedFonts;}
 		void setPageMatrix (const Matrix &tm);
-		double getX() const  {return _dvisvg.getXPos();}
-		double getY() const  {return _dvisvg.getYPos();}
-		void setX (double x) {_dvisvg.setXPos(x);}
-		void setY (double y) {_dvisvg.setYPos(y);}
+		double getX() const   {return _dvisvg.getXPos();}
+		double getY() const   {return _dvisvg.getYPos();}
+		void setX (double x)  {_dvisvg.translateToX(x); _svg.setX(x);}
+		void setY (double y)  {_dvisvg.translateToY(y); _svg.setY(y);}
+      void resetPosition () {_dvisvg.translate(0, 0);}
 		BoundingBox& bbox () {return _bbox;}
       BoundingBox& bbox (const std::string &name, bool reset=false);
       void embed (const BoundingBox &bbox);

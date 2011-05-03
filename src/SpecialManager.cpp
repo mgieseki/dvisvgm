@@ -47,6 +47,10 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 		_pool.push_back(handler);
 		for (const char **p=handler->prefixes(); *p; ++p)
 			_handlers[*p] = handler;
+		if (handler->isEndPageListener())
+			_endPageListeners.push_back(handler);
+		if (handler->isPositionListener())
+			_positionListeners.push_back(handler);
 	}
 }
 
@@ -114,9 +118,15 @@ bool SpecialManager::process (const string &special, SpecialActions *actions, Li
 }
 
 
-void SpecialManager::notifyEndPage () {
-	FORALL(_handlers, Iterator, it)
-		it->second->endPage();
+void SpecialManager::notifyEndPage () const {
+	FORALL(_endPageListeners, HandlerPool::const_iterator, it)
+		(*it)->dviEndPage();
+}
+
+
+void SpecialManager::notifyPositionChange (double x, double y) const {
+	FORALL(_positionListeners, HandlerPool::const_iterator, it)
+		(*it)->dviMovedTo(x, y);
 }
 
 

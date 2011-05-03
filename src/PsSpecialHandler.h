@@ -58,11 +58,13 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		const char* info () const;
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+		void dviMovedTo (double x, double y);
 
 	protected:
 		void initialize (SpecialActions *actions);
-		void updatePos ();
+		void moveToDVIPos ();
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
+		bool isPositionListener () const {return true;}
 
       /// scale given value by current PS scale factors
       double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos)*(1-_cos));}
@@ -70,7 +72,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
       void applyscalevals (std::vector<double> &p) {_sx = p[0]; _sy = p[1]; _cos = p[2];}
 		void clip (std::vector<double> &p)           {clip(p, false);}
 		void clip (std::vector<double> &p, bool evenodd);
-		void closepath (std::vector<double> &p);      
+		void closepath (std::vector<double> &p);
 		void curveto (std::vector<double> &p);
 		void eoclip (std::vector<double> &p)         {clip(p, true);}
 		void eofill (std::vector<double> &p)         {fill(p, true);}
@@ -97,7 +99,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setpos (std::vector<double> &p)         {_currentpoint = DPair(p[0], p[1]);}
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
-		void translate (std::vector<double> &p);      
+		void translate (std::vector<double> &p);
 		void executed ();
 
    private:
@@ -107,6 +109,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		Path _path;
 		DPair _currentpoint;        ///< current PS position
+		double _prevDviY;           ///< previous vertical DVI position
       double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
       double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
 		double _linewidth;          ///< current linewidth

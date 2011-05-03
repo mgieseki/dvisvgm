@@ -52,7 +52,8 @@ class SpecialManager
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		void unregisterHandlers ();
 		bool process (const std::string &special, SpecialActions *actions, Listener *listener=0) const;
-		void notifyEndPage ();
+		void notifyEndPage () const;
+		void notifyPositionChange (double x, double y) const;
 		void writeHandlerInfo (std::ostream &os) const;
 
 	protected:
@@ -63,6 +64,8 @@ class SpecialManager
    private:
 		HandlerPool _pool;     ///< stores pointers to all handlers
 		HandlerMap _handlers;  ///< pointers to handlers for corresponding prefixes
+		HandlerPool _endPageListeners;
+		HandlerPool _positionListeners;
 };
 
 #endif

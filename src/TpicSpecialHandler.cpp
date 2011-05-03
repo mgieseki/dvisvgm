@@ -38,7 +38,7 @@ TpicSpecialHandler::TpicSpecialHandler () {
 }
 
 
-void TpicSpecialHandler::endPage () {
+void TpicSpecialHandler::dviEndPage () {
 	reset();
 }
 

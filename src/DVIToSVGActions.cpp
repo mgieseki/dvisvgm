@@ -25,7 +25,6 @@
 #include "DVIToSVGActions.h"
 #include "Font.h"
 #include "FontManager.h"
-#include "Ghostscript.h"
 #include "GlyphTracerMessages.h"
 #include "SpecialManager.h"
 #include "System.h"
@@ -65,6 +64,18 @@ void DVIToSVGActions::reset() {
 void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 	delete _pageMatrix;
 	_pageMatrix = new Matrix(matrix);
+}
+
+
+void DVIToSVGActions::moveToX (double x) {
+	_dvisvg.specialManager().notifyPositionChange(getX(), getY());
+	_svg.setX(getX());        // get current horizontal DVI position
+}
+
+
+void DVIToSVGActions::moveToY (double y) {
+	_dvisvg.specialManager().notifyPositionChange(getX(), getY());
+	_svg.setY(y);
 }
 
 

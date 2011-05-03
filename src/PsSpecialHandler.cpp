@@ -21,8 +21,10 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include "FileFinder.h"
+#include "Ghostscript.h"
 #include "Message.h"
 #include "PsSpecialHandler.h"
 #include "SpecialActions.h"
@@ -63,6 +65,7 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		_xmlnode = 0;
 		_opacityalpha = 1;  // fully opaque
 		_sx = _sy = _cos = 1.0;
+		_prevDviY = numeric_limits<double>::min();
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
@@ -96,14 +99,30 @@ const char* PsSpecialHandler::info () const {
 }
 
 
-void PsSpecialHandler::updatePos () {
-	if (_actions) {
-		ostringstream oss;
-		const double x = _actions->getX(), y = _actions->getY();
-		oss << ' ' << x << ' ' << y << " moveto ";
-		_psi.execute(oss.str());
-		_currentpoint = DPair(x, y);
+/** The DVI action handler calls this method whenever the DVI position changes.
+ *  @param[in] x new horizontal position (in TeX pt units)
+ *  @param[in] y new vertical position (in TeX pt units) */
+void PsSpecialHandler::dviMovedTo (double x, double y) {
+	// In order to imitate the positioning of dvips in conjunction with
+	// plain PS specials, alterations of the DVI position stay active as
+	// long as we are in horizointal mode.
+	if (y != _prevDviY && _actions) {
+		_actions->resetPosition();
+		_prevDviY = y;
 	}
+}
+
+
+/** Move PS graphic position to current DVI location. */
+void PsSpecialHandler::moveToDVIPos () {
+	if (_actions) {
+		const double x = _actions->getX();
+		const double y = _actions->getY();
+		ostringstream oss;
+      oss << ' ' << x << ' ' << y << " moveto ";
+      _psi.execute(oss.str());
+      _currentpoint = DPair(x, y);
+   }
 }
 
 
@@ -114,7 +133,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 
 	if (*prefix == '"') {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
-		updatePos();
+		moveToDVIPos();
 		_psi.execute(" @beginspecial @setspecial ");
 		_psi.execute(is);
 		_psi.execute(" @endspecial ");
@@ -167,7 +186,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else { // ps: ...
-		updatePos();
+		moveToDVIPos();
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
 			string fname = in.getString();
@@ -239,7 +258,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		// all following drawings are relative to (0,0)
 		_actions->setX(0);
 		_actions->setY(0);
-		updatePos();
+		moveToDVIPos();
 
 		_xmlnode = new XMLElementNode("g");
 		_psi.execute(" @beginspecial @setspecial "); // enter \special environment
@@ -261,7 +280,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		// restore DVI position
 		_actions->setX(x);
 		_actions->setY(y);
-		updatePos();
+		moveToDVIPos();
 
 		// update bounding box
 		m.scale(sx, -sy);
