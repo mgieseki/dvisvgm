@@ -22,21 +22,22 @@
 #define DLLOADER_H
 
 #ifdef __WIN32__
+	#define NOMINMAX
 	#include <windows.h>
 #else
 	#include <dlfcn.h>
 #endif
 
+
 class DLLoader
 {
    public:
-      DLLoader (const char *dllname);
+      DLLoader (const char *dlname);
       virtual ~DLLoader ();
 		bool loaded () const {return _handle != 0;}
 
 	protected:
 		DLLoader () : _handle(0) {}
-		DLLoader (const DLLoader &l) {}
 		void* loadFunction (const char *name);
 
    private:
