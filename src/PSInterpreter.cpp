@@ -47,10 +47,21 @@ const char *PSInterpreter::GSARGS[] = {
 /** Constructs a new PSInterpreter object.
  *  @param[in] actions template methods to be executed after recognizing the corresponding PS operator. */
 PSInterpreter::PSInterpreter (PSActions *actions)
-	: _gs(sizeof(GSARGS)/sizeof(char*), GSARGS, this), _mode(PS_NONE), _actions(actions), _inError(false)
+	: _mode(PS_NONE), _actions(actions), _inError(false), _initialized(false)
 {
-	_gs.set_stdio(input, output, error);
-	_initialized = false;
+}
+
+
+void PSInterpreter::init () {
+	if (!_initialized) {
+		_gs.init(sizeof(GSARGS)/sizeof(char*), GSARGS, this);
+		_gs.set_stdio(input, output, error);
+		_initialized = true;
+		// Before executing any random PS code redefine some operators and run
+		// initializing PS code. This cannot be done in the constructor because we
+		// need the completely initialized PSInterpreter object here.
+		execute(PSDEFS);
+	}
 }
 
 
@@ -67,13 +78,7 @@ PSActions* PSInterpreter::setActions (PSActions *actions) {
  *  @param[in] flush If true, a final 'flush' is sent which forces the
  *  	output buffer to be written immediately.*/
 void PSInterpreter::execute (const char *str, size_t len, bool flush) {
-	if (!_initialized) {
-		// Before executing any random PS code redefine some operators and run
-		// initializing PS code. This cannot be done in the constructor because we
-		// need the completely initialized PSInterpreter object here.
-		_initialized = true;
-		execute(PSDEFS);
-	}
+	init();
 	if (_mode != PS_QUIT) {
 		int status;
 		if (_mode == PS_NONE) {

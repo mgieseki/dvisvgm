@@ -57,12 +57,8 @@ Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
 #endif
 {
-	int status = new_instance(&_inst, caller);
-	if (status < 0)
-		_inst = 0;
-	else {
-		init_with_args(argc, (char**)argv);
-	}
+	_inst = 0;
+	init(argc, argv, caller);
 }
 
 
@@ -72,6 +68,19 @@ Ghostscript::~Ghostscript () {
 		exit();
 		delete_instance();
 	}
+}
+
+
+bool Ghostscript::init (int argc, const char **argv, void *caller) {
+	if (!_inst) {
+		int status = new_instance(&_inst, caller);
+		if (status < 0)
+			_inst = 0;
+		else {
+			init_with_args(argc, (char**)argv);
+		}
+	}
+	return _inst != 0;
 }
 
 

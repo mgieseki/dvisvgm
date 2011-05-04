@@ -76,6 +76,7 @@ class Ghostscript
 		Ghostscript ();
 		Ghostscript (int argc, const char **argv, void *caller=0);
 		~Ghostscript ();
+		bool init (int argc, const char **argv, void *caller=0);
 		bool available ();
 		bool revision (gsapi_revision_t *r);
 		std::string revision ();

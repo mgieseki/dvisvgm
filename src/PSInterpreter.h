@@ -90,6 +90,7 @@ class PSInterpreter
 		PSActions* setActions (PSActions *actions);
 
 	protected:
+		void init ();
 		// callback functions
 		static int GSDLLCALL input (void *inst, char *buf, int len);
 		static int GSDLLCALL output (void *inst, const char *buf, int len);
