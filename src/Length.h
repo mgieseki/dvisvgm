@@ -24,6 +24,10 @@
 #include <string>
 #include "MessageException.h"
 
+#ifdef IN
+#undef IN
+#endif
+
 struct UnitException : MessageException
 {
 	UnitException (const std::string &msg) : MessageException(msg) {}
