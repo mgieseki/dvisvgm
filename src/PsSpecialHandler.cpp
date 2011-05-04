@@ -94,7 +94,8 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 
 
 const char* PsSpecialHandler::info () const {
-	static string str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
+	static string str;
+	str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
 	return str.c_str();
 }
 
