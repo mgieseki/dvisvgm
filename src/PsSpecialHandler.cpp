@@ -120,7 +120,7 @@ void PsSpecialHandler::moveToDVIPos () {
 		const double x = _actions->getX();
 		const double y = _actions->getY();
 		ostringstream oss;
-      oss << ' ' << x << ' ' << y << " moveto ";
+      oss << '\n' << x << ' ' << y << " moveto ";
       _psi.execute(oss.str());
       _currentpoint = DPair(x, y);
    }
@@ -135,7 +135,7 @@ void PsSpecialHandler::moveToDVIPos () {
  *  @param[in] actions special actions */
 static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos, SpecialActions *actions) {
 	psi.execute(is);
-	psi.execute(" querypos "); // retrieve current PS position (stored in 'pos')
+	psi.execute("\nquerypos "); // retrieve current PS position (stored in 'pos')
 	actions->setX(pos.x());
 	actions->setY(pos.y());
 }
@@ -149,15 +149,15 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	if (*prefix == '"') {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
 		moveToDVIPos();
-		_psi.execute(" @beginspecial @setspecial ");
+		_psi.execute("\n@beginspecial @setspecial ");
 		_psi.execute(is);
-		_psi.execute(" @endspecial ");
+		_psi.execute("\n@endspecial ");
 	}
 	else if (*prefix == '!') {
 		// execute literal PostScript header
-		_psi.execute(" @defspecial ");
+		_psi.execute("\n@defspecial ");
 		_psi.execute(is);
-		_psi.execute(" @fedspecial ");
+		_psi.execute("\n@fedspecial ");
 	}
 	else if (strcmp(prefix, "header=") == 0) {
 		// read and execute PS header files
@@ -283,9 +283,9 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		moveToDVIPos();
 
 		_xmlnode = new XMLElementNode("g");
-		_psi.execute(" @beginspecial @setspecial "); // enter \special environment
+		_psi.execute("\n@beginspecial @setspecial "); // enter \special environment
 		_psi.execute(ifs);             // process EPS file
-		_psi.execute(" @endspecial "); // leave special environment
+		_psi.execute("\n@endspecial "); // leave special environment
 		if (!_xmlnode->empty()) {      // has anything been drawn?
 			Matrix m(1);
 			m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);

@@ -106,7 +106,7 @@ void PSInterpreter::execute (const char *str, size_t len, bool flush) {
 		}
 		if (flush) {
 			// force writing contents of output buffer
-			_gs.run_string_continue(" flush ", 7, 0, &status);
+			_gs.run_string_continue("\nflush ", 7, 0, &status);
 		}
 	}
 }
@@ -120,7 +120,7 @@ void PSInterpreter::execute (istream &is) {
 		is.read(buf, 4096);
 		execute(buf, is.gcount(), false);
 	}
-	execute(" ", 1);
+	execute("\n", 1);
 }
 
 
