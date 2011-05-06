@@ -117,8 +117,9 @@ void PsSpecialHandler::dviMovedTo (double x, double y) {
 /** Move PS graphic position to current DVI location. */
 void PsSpecialHandler::moveToDVIPos () {
 	if (_actions) {
-		const double x = _actions->getX();
-		const double y = _actions->getY();
+		const double bp=72.0/72.27; // pt -> bp
+		const double x = _actions->getX()*bp;
+		const double y = _actions->getY()*bp;
 		ostringstream oss;
       oss << '\n' << x << ' ' << y << " moveto ";
       _psi.execute(oss.str());
@@ -135,9 +136,10 @@ void PsSpecialHandler::moveToDVIPos () {
  *  @param[in] actions special actions */
 static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos, SpecialActions *actions) {
 	psi.execute(is);
-	psi.execute("\nquerypos "); // retrieve current PS position (stored in 'pos')
-	actions->setX(pos.x());
-	actions->setY(pos.y());
+	psi.execute("\nquerypos ");   // retrieve current PS position (stored in 'pos')
+	const double pt = 72.27/72.0; // bp -> pt
+	actions->setX(pos.x()*pt);
+	actions->setY(pos.y()*pt);
 }
 
 
@@ -184,7 +186,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		if (is.peek() == '[') {
 			// collect characters inside the brackets
 			string code;
-			for (int i=0; i < 7 && is.peek() != ']' && !is.eof(); ++i)
+			for (int i=0; i < 9 && is.peek() != ']' && !is.eof(); ++i)
 				code += is.get();
 			if (is.peek() == ']')
 				code += is.get();
@@ -220,7 +222,6 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		else {
 			// ps:<code> is almost identical to ps::[begin]<code> but does
 			// a final repositioning to the current DVI location
-			moveToDVIPos();
 			exec_and_syncpos(_psi, is, _currentpoint, _actions);
 			_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
 			moveToDVIPos();
@@ -239,23 +240,23 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 	else {
 		map<string,string>::const_iterator it;
-		const double PT = 72.27/72.0;  // bp -> pt
+		const double pt = 72.27/72.0;  // bp -> pt
 
 		// bounding box of EPS figure
-		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*PT : 0;
-		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*PT : 0;
-		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*PT : 0;
-		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*PT : 0;
+		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second)*pt : 0;
+		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second)*pt : 0;
+		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second)*pt : 0;
+		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second)*pt : 0;
 
 		// desired width/height of resulting figure
-		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0*PT : -1;
-		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0*PT : -1;
+		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0*pt : -1;
+		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0*pt : -1;
 		if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
 			return;
 
 		// user transformations (default values chosen according to dvips manual)
-		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second)*PT : 0;
-		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*PT : 0;
+		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second)*pt : 0;
+		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second)*pt : 0;
 //		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second) : 612;
 //		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second) : 792;
 		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
@@ -365,7 +366,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		XMLElementNode *path=0;
 		Pair<double> point;
 		if (_path.isDot(point)) {  // zero-length path?
-			if (_linecap == 1) {     // round line ends?  => draw dot
+			if (_linecap == 1) {    // round line ends?  => draw dot
 				double x = point.x();
 				double y = point.y();
 				double r = _linewidth/2.0;

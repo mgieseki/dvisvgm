@@ -76,7 +76,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void setX (double x)  {_dvisvg.translateToX(x); _svg.setX(x);}
 		void setY (double y)  {_dvisvg.translateToY(y); _svg.setY(y);}
       void resetPosition () {_dvisvg.translate(0, 0);}
-		BoundingBox& bbox () {return _bbox;}
+		BoundingBox& bbox ()  {return _bbox;}
       BoundingBox& bbox (const std::string &name, bool reset=false);
       void embed (const BoundingBox &bbox);
       void embed (const DPair &p, double r=0);

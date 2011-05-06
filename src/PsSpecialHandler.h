@@ -108,7 +108,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		bool _initialized;
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		Path _path;
-		DPair _currentpoint;        ///< current PS position
+		DPair _currentpoint;        ///< current PS position in bp units
 		double _prevDviY;           ///< previous vertical DVI position
       double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
       double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
