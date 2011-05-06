@@ -1,39 +1,46 @@
-dvisvgm-1.0.6
-- fixed segfault occured if a (malformed) DVI file calls set_char/put_char whithout preceding font definition
+dvisvgm-1.0.7 (2011-05-06)
+- improved overall handling of PS specials
+- fixed broken PS special subset 'ps::'
+- fixed scaling of PS line properties (width, dash distance, etc.)
+- fixed semantics of TPIC special 'ip' (doesn't draw polygon outlines any longer)
+
+dvisvgm-1.0.6 (2011-04-21)
+- fixed segfault occured if a (malformed) DVI file calls set_char/put_char 
+  whithout preceding font definition
 - added CTRL-C handler
 - MiKTeX support updated to version 2.9
 - some code refactorings
 
-dvisvgm-1.0.5
+dvisvgm-1.0.5 (2011-03-01)
 - added optional integer argument to option -n to disable generation of <use> elements
 - added missing unit to width/height attributes of svg root element (SF bug #3185773)
 - added integrity check to font cache files
 - updated bundled potrace library to version 1.9
 - fixed a couple of minor issues
 
-dvisvgm-1.0.4
+dvisvgm-1.0.4 (2010-12-18)
 - added missing line width/dash pattern scaling to PS handler
 - fixed scaling issue in PS positioning
 - fixed compilation issue related to FreeType 2.4.0
 
-dvisvgm-1.0.3
+dvisvgm-1.0.3 (2010-08-06)
 - applied some more portability patches for TeX Live
 - fixed a potential memory issue
 - fixed a transformation issue regarding special 'psfile' (SF bug #3037372)
 
-dvisvgm-1.0.2
+dvisvgm-1.0.2 (2010-06-22)
 - applied latest TeX Live portability patches sent by Peter Breitenlohner and Karl Berry
 - fixed a potrace name clash occurred on Mac OS X Tiger
 - fixed putchar() name clash occurred on Solaris
 - fixed a couple of conversion warnings
 - updated the test suite
 
-dvisvgm-1.0.1
+dvisvgm-1.0.1 (2010-06-11)
 - fixed a memory issue in the PS handler that could lead to a segfault (SF bug #3013392)
 - fixed a recursion issue in the PS handler
 - suppress ANSI color code when terminating
 
-dvisvgm-1.0
+dvisvgm-1.0 (2010-06-08)
 - conversion of multiple pages (must be enabled explicitly, see option --pages)
 - added transparency support to the PS handler
 - improved conversion results of the PS handler
@@ -42,12 +49,12 @@ dvisvgm-1.0
 - improved progress indicator (option --progress)
 - a couple of improvements of the build system
 
-dvisvgm-0.9.1
+dvisvgm-0.9.1 (2010-04-23)
 - CSS style definitions omit unnecessary fonts now
 - SVG validity was broken when using font elements
 - fixed two memory issues that could lead to segfaults
 
-dvisvgm-0.9
+dvisvgm-0.9 (2010-03-25)
 - added option --exact and corresponding algorithms to compute the exact 
   bounding boxes of characters
 - added option --keep that prevents deleting temporary font files
@@ -56,7 +63,7 @@ dvisvgm-0.9
 - fixed bug in evaluation of embedded PS headers
 - several code refactorings
 
-dvisvgm-0.8.8
+dvisvgm-0.8.8 (2010-02-02)
 - added option --libgs and evaluation of environment variable LIBGS
   to overwrite the expected file name of the GS shared library
   (only available if dvisvgm isn't linked against libgs and GS support
@@ -68,14 +75,14 @@ dvisvgm-0.8.8
   dvisvgm into TeX Live
 - some code refactorings
 
-dvisvgm-0.8.7
+dvisvgm-0.8.7 (2009-11-09)
 - fixed a bounding box issue concerning italic corrections
 - PS handler: zero-length paths are now drawn as dots
 - PS handler: fixed a path positioning issue
 - PS handler: colors set by color specials are now considered properly
 - added macro {?nl} to be used with special dvisvgm:raw
 
-dvisvgm-0.8.6
+dvisvgm-0.8.6 (2009-10-13)
 - renamed command-line option --bbox-format to --bbox
 - option --bbox can now be used to set an arbitrary bounding box
 - added the two special variants "dvisvgm:bbox abs" and "dvisvgm:bbox fix"
@@ -84,12 +91,12 @@ dvisvgm-0.8.6
 - fixed a couple of PS positioning issues reported by John Bowman
 - fixed a bit shift overflow in the font tracer occurred on 64-bit systems
 
-dvisvgm-0.8.5
+dvisvgm-0.8.5 (2009-10-01)
 - added an optional depth parameter to special dvisvgm:raw
 - updated the man page
 - added LGPL license text needed for the gzstream wrapper classes
 
-dvisvgm-0.8.4
+dvisvgm-0.8.4 (2009-09-17)
 - improved the command-line parser to be more POSIX-compliant
 - added a simple progress indicator for time-consuming special operations
 - option --cache prints more information about the cached fonts
@@ -98,7 +105,7 @@ dvisvgm-0.8.4
 - fixed a bug in computation of the PS bounding box
 - fixed a memory bug in the GF tracer module
 
-dvisvgm-0.8.3
+dvisvgm-0.8.3 (2009-08-28)
 - added basic evaluation of the PostScript "show" operator
   (handles PSTricks Type 3 fonts properly now)
 - improved checks for Ghostscript and potrace library in configure script
@@ -106,29 +113,29 @@ dvisvgm-0.8.3
 - PostScript header/prologue files are now loaded regardless of converted page
 - replaced command-line option variant --cache=? by --cache
 
-dvisvgm-0.8.2
+dvisvgm-0.8.2 (2009-08-24)
 - changed license of dvisvgm to GPL version 3 or later
 - replaced getopt-based command-line parser by own implementation
   in order to simplify future internationalizations
 - fixed memory bug in fontmap reader
 
-dvisvgm-0.8.1
+dvisvgm-0.8.1 (2009-08-02)
 - added evaluation of more psfile parameters
 - fixed computation of bounding box in psfile special
 - fixed compilation errors and a conversion bug occurred on x64 systems
 
-dvisvgm-0.8
+dvisvgm-0.8 (2009-07-27)
 - experimental evaluation of PostScript specials has been added (requires 
   a recent version of the Ghostscript shared library libgs.so or gsdll32.dll)
 - several code improvements and refactorings
 - fixed compilation bug occurred when using GCC 4.4.x
 
-dvisvgm-0.7.3
+dvisvgm-0.7.3 (2009-04-24)
 - fixed bug in font map reader that could cause a segmentation fault
 - fixed bug in creation of shorthand path drawing commands
 - fixed bug in TPIC special handler
 
-dvisvgm-0.7.2
+dvisvgm-0.7.2 (2009-04-02)
 - font caching has been added (speeds up embedding of bitmap fonts)
 - added option --trace-all that enables tracing of all glyphs of all
   bitmap fonts used in the current DVI file. Even glyphs that are currently
@@ -138,7 +145,7 @@ dvisvgm-0.7.2
 - if option --no-fonts is used, all glyph sizes are now computed correctly
 - use shorthand path commands in SVG fonts if possible
 
-dvisvgm-0.7.1
+dvisvgm-0.7.1 (2009-03-09)
 - evaluation of a subset of emTeX specials has been added
 - specials for embedding of raw SVG snippets have been added
 - evaluation of TPIC specials has been added
@@ -148,7 +155,7 @@ dvisvgm-0.7.1
 - moved defs to top of SVG file to make Firefox's SVG renderer happy
 - fixed bug in color handler
 
-dvisvgm-0.7
+dvisvgm-0.7 (2009-02-16)
 - basic support for evaluation of specials has been added
 - evaluation of color specials has been added
 - renamed command-line option -S to --no-specials and inverted previous behavior
@@ -161,13 +168,13 @@ dvisvgm-0.7
 - fixed buggy evaluation of command-line argument -m/--map-file
 - several internal code improvements
 
-dvisvgm-0.6.1
+dvisvgm-0.6.1 (2009-01-29)
 - added support for dvips map files
 - removed dependency on dvipdfm's map file (now ps2pk.map, psfonts.map or dvipdfm.map is used by default)
 - fixed compilation bug #2535497
 - some internal refactorings
 
-dvisvgm-0.6
+dvisvgm-0.6 (2009-01-23)
 - added support for varying font encodings
 - updated MiKTeX support using its COM interface
 - fixed incomplete handling of nested virtual fonts
@@ -175,7 +182,7 @@ dvisvgm-0.6
 - fixed bug in matrix transformation code
 - updated bundled potrace library to version 1.8
 
-dvisvgm-0.5
+dvisvgm-0.5 (2007-03-26)
 - redesigned and improved font handling
 - added support for virtual fonts
 - evaluation of dvipdfm's map file to find font files with differing 
@@ -187,24 +194,24 @@ dvisvgm-0.5
 - added sources of Peter Selinger's potrace library (part of potrace, http://potrace.sourceforge.net) 
   to simplify the build process
 
-dvisvgm-0.4.3
+dvisvgm-0.4.3 (2007-01-03)
 - problem with changed freetype API (freetype version >= 2.2.1) has been fixed
 - updated MiKTeX support to version 2.5 
 - minor code improvements
 - some unit tests based on CxxTest (http://cxxtest.sourceforge.net) have been added
 
-dvisvgm-0.4.2
+dvisvgm-0.4.2 (2005-09-22)
 - added SVG transformation options
 - some bugfixes in command line frontend and TFM handling
 - code refactorings to improve modularity and extensibility
 
-dvisvgm-0.4.1:
+dvisvgm-0.4.1 (2005-09-02)
 - added option -b to specify the bounding box
 - added a manual page 
 
-dvisvgm-0.4:
-Added a glyph tracing module that vectorizes Metafont's bitmap output
-if no corresponding Type 1 font file is available.
+dvisvgm-0.4 (2005-08-24)
+- Added a glyph tracing module that vectorizes Metafont's bitmap output
+  if no corresponding Type 1 font file is available.
 
-dvisvgm-0.3:
-Initial public release with basic conversion functionality.
+dvisvgm-0.3 (2005-08-10)
+- Initial public release with basic conversion functionality.
