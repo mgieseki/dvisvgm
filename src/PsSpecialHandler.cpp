@@ -394,7 +394,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 					path->addAttribute("stroke-dashoffset", _dashoffset);
 			}
 		}
-		if (_clipStack.top()) {
+		if (path && _clipStack.top()) {
 			// assign clipping path and clip bounding box
 			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
 			BoundingBox clipbox;
