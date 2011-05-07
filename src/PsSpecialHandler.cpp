@@ -141,9 +141,9 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	}
 	else if (*prefix == '!') {
 		// execute literal PostScript header
-		_psi.execute("\n@defspecial ");
+		_psi.execute("\nTeXDict begin @defspecial ");
 		_psi.execute(is);
-		_psi.execute("\n@fedspecial ");
+		_psi.execute("\n@fedspecial end ");
 	}
 	else if (strcmp(prefix, "header=") == 0) {
 		// read and execute PS header files
