@@ -35,7 +35,7 @@ struct SpecialActions
 	virtual double getY() const =0;
 	virtual void setX(double x) =0;
 	virtual void setY(double y) =0;
-   virtual void resetPosition () =0;
+   virtual void finishLine () =0;
 	virtual void setColor (const Color &color) =0;
 	virtual Color getColor () const =0;
 	virtual void setMatrix (const Matrix &m) =0;
@@ -58,7 +58,7 @@ class SpecialEmptyActions : public SpecialActions
 		double getY() const {return 0;}
 		void setX(double x) {}
 		void setY(double y) {}
-   	void resetPosition () {}
+   	void finishLine ()  {}
 		void setColor (const Color &color) {}
 		void setBgColor (const Color &color) {}
 		Color getColor () const {return 0;}

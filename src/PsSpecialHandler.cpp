@@ -21,7 +21,6 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <limits>
 #include <sstream>
 #include "FileFinder.h"
 #include "Ghostscript.h"
@@ -65,7 +64,6 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		_xmlnode = 0;
 		_opacityalpha = 1;  // fully opaque
 		_sx = _sy = _cos = 1.0;
-		_prevDviY = numeric_limits<double>::min();
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
@@ -97,20 +95,6 @@ const char* PsSpecialHandler::info () const {
 	static string str;
 	str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
 	return str.c_str();
-}
-
-
-/** The DVI action handler calls this method whenever the DVI position changes.
- *  @param[in] x new horizontal position (in TeX pt units)
- *  @param[in] y new vertical position (in TeX pt units) */
-void PsSpecialHandler::dviMovedTo (double x, double y) {
-	// In order to imitate the positioning of dvips in conjunction with
-	// plain PS specials, alterations of the DVI position stay active as
-	// long as we are in horizointal mode.
-	if (y != _prevDviY && _actions) {
-		_actions->resetPosition();
-		_prevDviY = y;
-	}
 }
 
 
@@ -182,7 +166,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else if (strcmp(prefix, "ps::") == 0) {
-		_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
+		_actions->finishLine();  // reset DVI position on next DVI command
 		if (is.peek() == '[') {
 			// collect characters inside the brackets
 			string code;
@@ -208,7 +192,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else { // ps: ...
-		_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
+		_actions->finishLine();
 		moveToDVIPos();
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
@@ -223,7 +207,6 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			// ps:<code> is almost identical to ps::[begin]<code> but does
 			// a final repositioning to the current DVI location
 			exec_and_syncpos(_psi, is, _currentpoint, _actions);
-			_prevDviY = numeric_limits<double>::min();  // forget previous vertical DVI position
 			moveToDVIPos();
 		}
 	}

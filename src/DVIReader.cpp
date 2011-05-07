@@ -43,6 +43,7 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a
 	_pageHeight = _pageWidth = 0;
 	_scaleFactor = 0.0;
 	_tx = _ty = 0;    // no cursor translation
+	_prevYPos = numeric_limits<double>::min();
 	_inPostamble = false;
 	_totalPages = 0;  // we don't know the correct value yet
 	_currFontNum = 0;
@@ -160,6 +161,10 @@ int DVIReader::executeCommand () {
 	streampos pos = in().tellg();
 	int opcode = evalCommand(false, handler, len, param);
 	(this->*handler)(param);
+	if (_currPos.v+_ty != _prevYPos) {
+		_tx = _ty = 0;
+		_prevYPos = _currPos.v;
+	}
 	if (COMPUTE_PAGE_LENGTH && _inPage && _actions) {
 		// ensure progress() is called at 0%
 		if (opcode == 139) // bop?
@@ -565,12 +570,12 @@ void DVIReader::cmdPutRule (int) {
 
 void DVIReader::cmdNop (int)       {}
 
-void DVIReader::cmdRight (int len) {_currPos.h += _scaleFactor*readSigned(len); if (_actions) _actions->moveToX(_currPos.h);}
-void DVIReader::cmdDown (int len)  {_currPos.v += _scaleFactor*readSigned(len); if (_actions) _actions->moveToY(_currPos.v);}
-void DVIReader::cmdX0 (int)        {_currPos.h += _currPos.x;                   if (_actions) _actions->moveToX(_currPos.h);}
-void DVIReader::cmdY0 (int)        {_currPos.v += _currPos.y;                   if (_actions) _actions->moveToY(_currPos.v);}
-void DVIReader::cmdW0 (int)        {_currPos.h += _currPos.w;                   if (_actions) _actions->moveToX(_currPos.h);}
-void DVIReader::cmdZ0 (int)        {_currPos.v += _currPos.z;                   if (_actions) _actions->moveToY(_currPos.v);}
+void DVIReader::cmdRight (int len) {_currPos.h += _scaleFactor*readSigned(len); if (_actions) _actions->moveToX(_currPos.h+_tx);}
+void DVIReader::cmdDown (int len)  {_currPos.v += _scaleFactor*readSigned(len); if (_actions) _actions->moveToY(_currPos.v+_ty);}
+void DVIReader::cmdX0 (int)        {_currPos.h += _currPos.x;                   if (_actions) _actions->moveToX(_currPos.h+_tx);}
+void DVIReader::cmdY0 (int)        {_currPos.v += _currPos.y;                   if (_actions) _actions->moveToY(_currPos.v+_ty);}
+void DVIReader::cmdW0 (int)        {_currPos.h += _currPos.w;                   if (_actions) _actions->moveToX(_currPos.h+_tx);}
+void DVIReader::cmdZ0 (int)        {_currPos.v += _currPos.z;                   if (_actions) _actions->moveToY(_currPos.v+_ty);}
 void DVIReader::cmdX (int len)     {_currPos.x = _scaleFactor*readSigned(len);  cmdX0(0);}
 void DVIReader::cmdY (int len)     {_currPos.y = _scaleFactor*readSigned(len);  cmdY0(0);}
 void DVIReader::cmdW (int len)     {_currPos.w = _scaleFactor*readSigned(len);  cmdW0(0);}

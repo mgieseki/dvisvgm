@@ -58,13 +58,11 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		const char* info () const;
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		void dviMovedTo (double x, double y);
 
 	protected:
 		void initialize (SpecialActions *actions);
 		void moveToDVIPos ();
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
-		bool isPositionListener () const {return true;}
 
       /// scale given value by current PS scale factors
       double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}
@@ -109,7 +107,6 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		Path _path;
 		DPair _currentpoint;        ///< current PS position in bp units
-		double _prevDviY;           ///< previous vertical DVI position
       double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
       double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
 		double _linewidth;          ///< current linewidth

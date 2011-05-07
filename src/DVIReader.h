@@ -21,6 +21,7 @@
 #ifndef DVIREADER_H
 #define DVIREADER_H
 
+#include <limits>
 #include <map>
 #include <stack>
 #include <string>
@@ -68,7 +69,7 @@ class DVIReader : public StreamReader, protected VFActions
 		bool inPostamble () const              {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
-		void translate (double tx, double ty)  {_tx=tx; _ty=ty;}
+		void finishLine ()                     {_prevYPos = std::numeric_limits<double>::min();}
 		void translateToX (double x)           {_tx=x-_currPos.h-_tx;}
 		void translateToY (double y)           {_ty=y-_currPos.v-_ty;}
 		double getPageWidth () const;
@@ -134,6 +135,7 @@ class DVIReader : public StreamReader, protected VFActions
 		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
 		DVIPosition _currPos;    ///< current cursor position
 		std::stack<DVIPosition> _posStack;
+		double _prevYPos;        ///< previous vertical cursor position
 		double _tx, _ty;         ///< tranlation of cursor position
 		size_t _pageLength;      ///< number of bytes between current bop end eop
 		std::streampos _pagePos; ///< distance of current DVI command from bop (in bytes)
