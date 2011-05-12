@@ -38,12 +38,15 @@ class PSTestActions : public PSActions
 		void fill (vector<double> &p)            {print("fill", p);}
 		void gsave (vector<double> &p)           {print("gsave", p);}
 		void grestore (vector<double> &p)        {print("grestore", p);}
+		void grestoreall(std::vector<double> &p) {print("grestoreall", p);}
 		void initclip (vector<double> &p)        {print("initclip", p);}
 		void lineto (vector<double> &p)          {print("lineto", p);}
 		void moveto (vector<double> &p)          {print("moveto", p);}
 		void newpath (vector<double> &p)         {print("newpath", p);}
 		void querypos (vector<double> &p)        {print("querypos", p);}
+		void restore(std::vector<double> &p)     {print("restore", p);}
 		void rotate (vector<double> &p)          {print("rotate", p);}
+		void save(std::vector<double> &p)        {print("save", p);}
 		void scale (vector<double> &p)           {print("scale", p);}
 		void setcmykcolor (vector<double> &p)    {print("setcmykcolor", p);}
 		void setdash (vector<double> &p)         {print("setdash", p);}
@@ -58,6 +61,7 @@ class PSTestActions : public PSActions
 		void setrgbcolor (vector<double> &p)     {print("setrgbcolor", p);}
 		void stroke (vector<double> &p)          {print("stroke", p);}
 		void translate (vector<double> &p)       {print("translate", p);}
+
 
 		string result () const {return _oss.str();}
 		void clear ()          {_oss.str("");}

@@ -37,18 +37,23 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 	{
 		public:
 			void push ();
-			void push (const Path &path);
+			void push (const Path &path, int saveID=-1);
 			void replace (const Path &path);
-			void dup ();
-			void pop ()    {_stack.pop();}
+			void dup (int saveID=-1);
+			void pop (int saveID=-1, bool grestore=false);
 			void clear ();
-			bool empty ()  {return _stack.empty();}
-			Path* top ()   {return (!_stack.empty() && _stack.top()) ? &_paths[_stack.top()-1] : 0;}
-			int topID ()   {return _stack.empty() ? 0 : _stack.top();}
+			bool empty () {return _stack.empty();}
+			Path* top ();
+			int topID ()  {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
-			std::vector<Path> _paths;
-			std::stack<int> _stack;
+			struct Entry {
+				int pathID;  ///< index referencing a path of the pool
+				int saveID;  ///< if >=0, path was pushed by 'save', and saveID holds the ID of the
+				Entry (int pid, int sid) : pathID(pid), saveID(sid) {}
+			};
+			std::vector<Path> _paths;  ///< pool of all clipping paths
+			std::stack<Entry> _stack;
 	};
 
 	public:
@@ -74,16 +79,19 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void curveto (std::vector<double> &p);
 		void eoclip (std::vector<double> &p)         {clip(p, true);}
 		void eofill (std::vector<double> &p)         {fill(p, true);}
-		void fill (std::vector<double> &p)           {fill(p, false);}
 		void fill (std::vector<double> &p, bool evenodd);
-		void gsave (std::vector<double> &p);
+		void fill (std::vector<double> &p)           {fill(p, false);}
 		void grestore (std::vector<double> &p);
+		void grestoreall (std::vector<double> &p);
+		void gsave (std::vector<double> &p);
 		void initclip (std::vector<double> &p);
 		void lineto (std::vector<double> &p);
 		void moveto (std::vector<double> &p);
 		void newpath (std::vector<double> &p);
 		void querypos (std::vector<double> &p)       {_currentpoint = DPair(p[0], p[1]);}
+		void restore (std::vector<double> &p);
 		void rotate (std::vector<double> &p);
+		void save (std::vector<double> &p);
 		void scale (std::vector<double> &p);
 		void setcmykcolor (std::vector<double> &cmyk);
 		void setdash (std::vector<double> &p);

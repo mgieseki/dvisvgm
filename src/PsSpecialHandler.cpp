@@ -305,8 +305,22 @@ void PsSpecialHandler::gsave (vector<double> &p) {
 
 
 void PsSpecialHandler::grestore (vector<double> &p) {
-	if (!_clipStack.empty())
-		_clipStack.pop();
+	_clipStack.pop();
+}
+
+
+void PsSpecialHandler::grestoreall (vector<double> &p) {
+	_clipStack.pop(-1, true);
+}
+
+
+void PsSpecialHandler::save (vector<double> &p) {
+	_clipStack.dup(p[0]);
+}
+
+
+void PsSpecialHandler::restore (vector<double> &p) {
+	_clipStack.pop(p[0]);
 }
 
 
@@ -618,18 +632,59 @@ void PsSpecialHandler::executed () {
 
 void PsSpecialHandler::ClippingStack::push () {
 	if (!_stack.empty())
-		_stack.push(0);
+		_stack.push(Entry(0, -1));
 }
 
 
-void PsSpecialHandler::ClippingStack::push (const Path &path) {
-	if (!path.empty()) {
+void PsSpecialHandler::ClippingStack::push (const Path &path, int saveID) {
+	if (path.empty())
+		_stack.push(Entry(0, saveID));
+	else {
 		_paths.push_back(path);
-		_stack.push(_paths.size());
+		_stack.push(Entry(_paths.size(), saveID));
 	}
 }
 
 
+/** Pops a single or several elements from the clipping stack.
+ *  The method distingushes between the following cases:
+ *  1) saveID < 0 and grestoreall == false:
+ *     pop top element if it was pushed by gsave (its saveID is < 0 as well)
+ *  2) saveID < 0 and grestoreall == true
+ *     repeat popping until stack is empty or the top element was pushed
+ *     by save (its saveID is >= 0)
+ *  3) saveID >= 0:
+ *     pop all elements until the saveID of the top element equals parameter saveID */
+void PsSpecialHandler::ClippingStack::pop (int saveID, bool grestoreall) {
+	if (!_stack.empty()) {
+		if (saveID < 0) {                // grestore?
+			if (_stack.top().saveID < 0)  // pushed by 'gsave'?
+				_stack.pop();
+			// pop all further elements pushed by 'gsave' if grestoreall == true
+			while (grestoreall && !_stack.empty() && _stack.top().saveID < 0)
+				_stack.pop();
+		}
+		else {
+			// pop elements pushed by 'gsave'
+			while (!_stack.empty() && _stack.top().saveID != saveID)
+				_stack.pop();
+			// pop element pushed by 'save'
+			if (!_stack.empty())
+				_stack.pop();
+		}
+	}
+}
+
+
+/** Returns a pointer to the path on top of the stack, or 0 if the stack is empty. */
+PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () {
+	return (!_stack.empty() && _stack.top().pathID)
+		? &_paths[_stack.top().pathID-1]
+		: 0;
+}
+
+
+/** Pops all elements from the stack. */
 void PsSpecialHandler::ClippingStack::clear() {
 	_paths.clear();
 	while (!_stack.empty())
@@ -637,21 +692,22 @@ void PsSpecialHandler::ClippingStack::clear() {
 }
 
 
+/** Replaces the top element by a new one.
+ *  @param[in] path new path to be on top of the stack */
 void PsSpecialHandler::ClippingStack::replace (const Path &path) {
-	if (path.empty())
-		push(path);
+	if (_stack.empty())
+		push(path, -1);
 	else {
 		_paths.push_back(path);
-		if (!_stack.empty())
-			_stack.pop();
-		_stack.push(_paths.size());
+		_stack.top().pathID = _paths.size();
 	}
 }
 
 
-void PsSpecialHandler::ClippingStack::dup () {
-	if (!_stack.empty())
-		_stack.push(_stack.top());
+/** Duplicates the top element, i.e. the top element is pushed again. */
+void PsSpecialHandler::ClippingStack::dup (int saveID) {
+	_stack.push(_stack.empty() ? Entry(0, -1) : _stack.top());
+	_stack.top().saveID = saveID;
 }
 
 

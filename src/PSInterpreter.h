@@ -50,12 +50,15 @@ struct PSActions
 	virtual void fill (std::vector<double> &p) =0;
 	virtual void gsave (std::vector<double> &p) =0;
 	virtual void grestore (std::vector<double> &p) =0;
+	virtual void grestoreall (std::vector<double> &p) =0;
 	virtual void initclip (std::vector<double> &p) =0;
 	virtual void lineto (std::vector<double> &p) =0;
 	virtual void moveto (std::vector<double> &p) =0;
 	virtual void newpath (std::vector<double> &p) =0;
 	virtual void querypos (std::vector<double> &p) =0;
+	virtual void restore (std::vector<double> &p) =0;
 	virtual void rotate (std::vector<double> &p) =0;
+	virtual void save (std::vector<double> &p) =0;
 	virtual void scale (std::vector<double> &p) =0;
 	virtual void setcmykcolor (std::vector<double> &cmyk) =0;
 	virtual void setdash (std::vector<double> &p) =0;
