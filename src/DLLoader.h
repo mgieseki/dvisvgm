@@ -22,7 +22,8 @@
 #define DLLOADER_H
 
 #ifdef __WIN32__
-	#define NOMINMAX
+	#undef NOMINMAX
+	#define NOMINMAX 1
 	#include <windows.h>
 #else
 	#include <dlfcn.h>
