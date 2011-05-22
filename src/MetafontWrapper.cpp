@@ -91,7 +91,7 @@ int MetafontWrapper::call (const string &mode, double mag) {
 	const char *cmd = "mf";
 #endif
 	ostringstream oss;
-	oss << "--halt-on-error \"\\mode=" << mode  << ";"
+	oss << "\"\\mode=" << mode  << ";"
 		   "mag:=" << mag << ";"
 		   "batchmode;"
 		   "input " << _fontname << "\"";
