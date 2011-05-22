@@ -228,7 +228,7 @@ static const char* mktex (const std::string &fname) {
 	const char *path = 0;
 #ifdef MIKTEX
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
-	string toolname = (ext == "tfm" ? "maketfm" : "makemf");
+	string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
 	system((toolname+".exe "+fname).c_str());
 	path = find_file(fname);
 #else
