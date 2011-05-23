@@ -26,50 +26,14 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
+#include "Process.h"
 #include "SignalHandler.h"
-
-#ifdef __WIN32__
-#include <windows.h>
-#endif
+#include "macros.h"
 
 using namespace std;
 
 
-static int execute (const char *cmd, const char *params) {
-#ifdef __WIN32__
-	SECURITY_ATTRIBUTES sa;
-	ZeroMemory(&sa, sizeof(sa));
-	sa.nLength = sizeof(sa);
-	sa.bInheritHandle = true;
-
-	STARTUPINFO si;
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	si.dwFlags = STARTF_USESTDHANDLES;
-	HANDLE devnull = CreateFile("nul", GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, &sa, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-	si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
-	si.hStdOutput = devnull;
-	PROCESS_INFORMATION pi;
-	ZeroMemory(&pi, sizeof(pi));
-
-	string cmdline = string("\"")+cmd+"\" "+params;
-	CreateProcess(NULL, (LPSTR)cmdline.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
-	WaitForSingleObject(pi.hProcess, INFINITE);
-	DWORD exitcode = (DWORD)-1;
-	GetExitCodeProcess(pi.hProcess, &exitcode);
-	CloseHandle(devnull);
-	return exitcode;
-#else
-	ostringstream oss;
-	oss << cmd << ' ' << params << " >" << FileSystem::DEVNULL;
-	return system(oss.str().c_str());
-#endif
-}
-
-
-MetafontWrapper::MetafontWrapper (const string &fname)
-	: _fontname(fname)
+MetafontWrapper::MetafontWrapper (const string &fname) : _fontname(fname)
 {
 }
 
@@ -79,10 +43,10 @@ MetafontWrapper::MetafontWrapper (const string &fname)
  *  (e.g. cmr10.600gf => cmr10.gf). This makes life easier...
  *  @param[in] mode Metafont mode, e.g. "ljfour"
  *  @param[in] mag magnification factor
- *  @return return value of Metafont system call */
-int MetafontWrapper::call (const string &mode, double mag) {
+ *  @return true on success */
+bool MetafontWrapper::call (const string &mode, double mag) {
 	if (!FileFinder::lookup(_fontname+".mf"))
-		return 1;     // mf file not available => no need to call the "slow" Metafont
+		return false;     // mf file not available => no need to call the "slow" Metafont
 	FileSystem::remove(_fontname+".gf");
 
 #ifdef __WIN32__
@@ -96,7 +60,8 @@ int MetafontWrapper::call (const string &mode, double mag) {
 		   "batchmode;"
 		   "input " << _fontname << "\"";
 	Message::mstream(false, Terminal::CYAN) << "\nrunning Metafont for " << _fontname << '\n';
-	int ret = execute(cmd, oss.str().c_str());
+	Process mf_process(cmd, oss.str().c_str());
+	mf_process.run();
 
 	// try to read Metafont's logfile and get name of created GF file
 	ifstream ifs((_fontname+".log").c_str());
@@ -117,16 +82,20 @@ int MetafontWrapper::call (const string &mode, double mag) {
 			}
 		}
 	}
-	return ret;
+	ifstream gf((_fontname+".gf").c_str());
+	return gf;
 }
 
 
-/** Calls Metafont if output files (tfm and gf) don't already exist. */
-int MetafontWrapper::make (const string &mode, double mag) {
+/** Calls Metafont if output files (tfm and gf) don't already exist.
+ *  @param[in] mode Metafont mode to be used (e.g. 'ljfour')
+ *  @param[in] mag magnification factor
+ *  @return true on success */
+bool MetafontWrapper::make (const string &mode, double mag) {
 	ifstream tfm((_fontname+".tfm").c_str());
 	ifstream gf((_fontname+".gf").c_str());
 	if (gf && tfm) // @@ distinguish between gf and tfm
-		return 0;
+		return true;
 	return call(mode, mag);
 }
 

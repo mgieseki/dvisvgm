@@ -237,8 +237,8 @@ bool PhysicalFont::createGF (string &gfname) const {
 	SignalHandler::instance().check();
 	gfname = name()+".gf";
 	MetafontWrapper mf(name());
-	int ret = mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
-	return (ret == 0) && mf.success() && getTFM();
+	bool ok = mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
+	return ok && mf.success() && getTFM();
 }
 
 

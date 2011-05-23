@@ -1,5 +1,5 @@
 /*************************************************************************
-** SignalHandler.cpp                                                    **
+** Process.h                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2011 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,68 +18,24 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <cerrno>
-#include <csignal>
-#include <cstdlib>
-#include "SignalHandler.h"
+#ifndef PROCESS_H
+#define PROCESS_H
 
-using namespace std;
+#include <string>
 
-bool SignalHandler::_break = false;
+class Process
+{
+   public:
+      Process (const std::string &cmd, const std::string &paramstr);
+      bool run (bool quiet=true);
 
+   protected:
+      Process (const Process& orig) {}
 
-SignalHandler::~SignalHandler() {
-	stop();
-}
+   private:
+      std::string _cmd;
+      std::string _paramstr;
+};
 
-
-/** Returns the singleton handler object. */
-SignalHandler& SignalHandler::instance() {
-	static SignalHandler handler;
-	return handler;
-}
-
-
-/** Starts listening to CTRL-C signals.
- *  @return true if handler was activated. */
-bool SignalHandler::start () {
-	if (!_active) {
-		_break = false;
-		if (signal(SIGINT, SignalHandler::callback) != SIG_ERR) {
-			_active = true;
-			return true;
-		}
-	}
-	return false;
-}
-
-
-/** Stops listening for CTRL-C signals. */
-void SignalHandler::stop () {
-	if (_active) {
-		signal(SIGINT, SIG_DFL);
-		_active = false;
-	}
-}
-
-
-/** Checks for incoming signals and throws an exception if CTRL-C was caught.
- *  @throw SignalException */
-void SignalHandler::check() {
-	if (_break)
-		throw SignalException();
-}
-
-
-void SignalHandler::trigger (bool notify) {
-	_break = true;
-	if (notify)
-		check();
-}
-
-
-/** This function is called on CTRL-C signals. */
-void SignalHandler::callback (int) {
-	_break = true;
-}
+#endif
 

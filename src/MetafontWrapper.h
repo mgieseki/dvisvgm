@@ -30,8 +30,8 @@ class MetafontWrapper
 {
    public:
       MetafontWrapper (const std::string &fontname);
-		int call (const std::string &mode, double mag);
-		int make (const std::string &mode, double mag);
+		bool call (const std::string &mode, double mag);
+		bool make (const std::string &mode, double mag);
 		bool success () const;
 		void removeOutputFiles (bool keepGF=false);
 		static void removeOutputFiles (const std::string &fontname, bool keepGF=false);
