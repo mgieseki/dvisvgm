@@ -1,3 +1,10 @@
+dvisvgm-1.0.8 (2011-05-31)
+- PS handler: added evaluation of PS operators save, restore, and grestoreall
+- PS handler: fixed potention segfault caused by invisible zero-length paths
+- fixed computation of current drawing position influenced by PS and DVI actions
+- don't stop Metafont conversions on errors any longer in order to convert 
+  buggy MF fonts properly
+
 dvisvgm-1.0.7 (2011-05-06)
 - improved overall handling of PS specials
 - fixed broken PS special subset 'ps::'
