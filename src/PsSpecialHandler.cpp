@@ -315,12 +315,12 @@ void PsSpecialHandler::grestoreall (vector<double> &p) {
 
 
 void PsSpecialHandler::save (vector<double> &p) {
-	_clipStack.dup(p[0]);
+	_clipStack.dup(static_cast<int>(p[0]));
 }
 
 
 void PsSpecialHandler::restore (vector<double> &p) {
-	_clipStack.pop(p[0]);
+	_clipStack.pop(static_cast<int>(p[0]));
 }
 
 
