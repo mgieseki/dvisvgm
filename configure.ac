@@ -32,7 +32,7 @@ AC_CHECK_LIB(kpathsea, kpse_find_file, ,
 	[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
 
 AC_MSG_CHECKING([kpathsea version])
-AC_RUN_IFELSE([#include <stdio.h>
+AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
 	#include <kpathsea/kpathsea.h>
 	int main() {
 		FILE *f;
@@ -41,7 +41,7 @@ AC_RUN_IFELSE([#include <stdio.h>
 		fprintf(f, "%s\n", KPSEVERSION);
 		fclose(f);
 		exit(0);
-	}], 
+	}])], 
 	[kpseversion=`cat kpseversion|sed 's/kpathsea version //'`], [kpseversion=], [kpseversion=unknown])
 AC_MSG_RESULT("$kpseversion")
 rm -f kpseversion
@@ -75,7 +75,7 @@ if test "$HAVE_LIBGS" -eq 0; then
 else
 	# query Ghostscript version
 	AC_MSG_CHECKING([Ghostscript version])
-	AC_RUN_IFELSE([#include <stdio.h>
+	AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
 		#include <ghostscript/iapi.h>
 		int main () {
 			gsapi_revision_t r;
@@ -87,7 +87,7 @@ else
 				fclose(f);
 				exit(0);
 			}
-		}],
+		}])],
 		[gsversion=`cat gsversion`], [gsversion=], [gsversion=unknown])
 	AC_MSG_RESULT("$gsversion")
 	rm -f gsversion
