@@ -23,6 +23,7 @@
 #include <map>
 #include <string>
 #include "FileFinder.h"
+#include "FileSystem.h"
 #include "Message.h"
 #include "macros.h"
 
@@ -157,6 +158,18 @@ static const char* find_file (const std::string &fname) {
 	return 0;
 
 #else
+	static std::string buf;
+
+#ifdef TEXLIVEWIN32
+	if (ext == "exe") {
+		// lookup exe files in directory where dvisvgm is located 
+		if (const char *path = kpse_var_value("SELFAUTOLOC")) {
+			buf = std::string(path) + "/" + fname;
+			return FileSystem::exists(buf.c_str()) ? buf.c_str() : 0;
+		}
+		return 0;
+	}
+#endif
 
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
@@ -173,11 +186,11 @@ static const char* find_file (const std::string &fname) {
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
 		return 0;
+
 	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
 		// In the current version of libkpathsea, each call of kpse_find_file produces
 		// a memory leak since the path buffer is not freed. I don't think we can do
 		// anything against it here...
-		static std::string buf;
 		buf = path;
 		std::free(path);
 		return buf.c_str();

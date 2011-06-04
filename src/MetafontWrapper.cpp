@@ -50,7 +50,16 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 	FileSystem::remove(_fontname+".gf");
 
 #ifdef __WIN32__
-	const char *cmd = FileFinder::lookup("mf.exe", false);
+#ifdef TEXLIVEWIN32
+	const char *mfname = "mf-nowin.exe";
+#else
+	const char *mfname = "mf.exe";
+#endif
+	const char *cmd = FileFinder::lookup(mfname, false);
+	if (!cmd) {
+		Message::estream(true) << "can't run Metafont (" << mfname << " not found)\n";
+		return false;
+	}
 #else
 	const char *cmd = "mf";
 #endif
