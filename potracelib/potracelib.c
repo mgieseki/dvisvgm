@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2010 Peter Selinger.
+/* Copyright (C) 2001-2011 Peter Selinger.
    This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
@@ -55,7 +55,7 @@ potrace_state_t *potrace_trace(const potrace_param_t *param, const potrace_bitma
   potrace_state_t *st;
   progress_t prog;
   progress_t subprog;
-
+  
   /* prepare private progress bar state */
   prog.callback = param->progress.callback;
   prog.data = param->progress.data;
@@ -110,5 +110,5 @@ void potrace_param_free(potrace_param_t *p) {
 }
 
 const char *potrace_version(void) {
-  return "potracelib 1.9";
+  return "potracelib 1.10";
 }

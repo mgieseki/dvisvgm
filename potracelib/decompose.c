@@ -1,8 +1,7 @@
-/* Copyright (C) 2001-2010 Peter Selinger.
+/* Copyright (C) 2001-2011 Peter Selinger.
    This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
-/* $Id: decompose.c 227 2010-12-16 05:47:19Z selinger $ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,10 +11,37 @@
 #include "potracelib.h"
 #include "curve.h"
 #include "lists.h"
-#include "auxiliary.h"
 #include "bitmap.h"
 #include "decompose.h"
 #include "progress.h"
+
+/* ---------------------------------------------------------------------- */
+/* deterministically and efficiently hash (x,y) into a pseudo-random bit */
+
+static inline int detrand(int x, int y) {
+  unsigned int z;
+  static const unsigned char t[256] = { 
+    /* non-linear sequence: constant term of inverse in GF(8), 
+       mod x^8+x^4+x^3+x+1 */
+    0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 
+    0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 
+    0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 
+    1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 
+    0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 
+    0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 
+    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 
+    1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 
+    0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 
+    1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 
+  };
+
+  /* 0x04b3e375 and 0x05a8ef93 are chosen to contain every possible
+     5-bit sequence */
+  z = ((0x04b3e375 * x) ^ y) * 0x05a8ef93;
+  z = t[z & 0xff] ^ t[(z>>8) & 0xff] ^ t[(z>>16) & 0xff] ^ t[(z>>24) & 0xff];
+  return z;
+}
 
 /* ---------------------------------------------------------------------- */
 /* auxiliary bitmap manipulations */
