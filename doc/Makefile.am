@@ -13,7 +13,10 @@ dvisvgm.1: dvisvgm.txt
 	fi
 
 dvisvgm.pdf: dvisvgm.1
-	man -t ./$< | ps2pdf - $@
+	echo '[ /Author (Martin Gieseking) /Title (dvisvgm manual page) /Subject (manual page of dvisvgm @VERSION@) /DOCINFO pdfmark' >tmp.ps
+	man -t ./$< >>tmp.ps
+	ps2pdf tmp.ps $@
+	rm -f tmp.ps
 
 dvi-pdf: dvisvgm.dvi
 	dvipdfm $<
