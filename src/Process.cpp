@@ -42,6 +42,7 @@ Process::Process (const string &cmd, const string &paramstr)
 }
 
 
+#ifndef __WIN32__
 /** Extracts whitespace-sparated parameters from a string.
  *  @param[in] paramstr the parameter string
  *  @param[out] params vector holding the extracted parameters */
@@ -70,6 +71,7 @@ static void split_paramstr (string paramstr, vector<const char*> &params) {
 		left = ++right;
 	}
 }
+#endif
 
 
 /** Runs the process and waits until it's finished.
