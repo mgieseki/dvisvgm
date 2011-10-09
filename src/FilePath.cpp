@@ -27,6 +27,7 @@
 using namespace std;
 
 
+/** Removes redundant slashes from a given path. */
 static string& single_slashes (string &str) {
 	size_t pos=0;
 	while ((pos = str.find("//", pos)) != string::npos)
@@ -72,6 +73,9 @@ static void tolower (string &str) {
 #endif
 
 
+/** Constructs a FilePath object from a given path. Relative paths are
+ *  relative to the current working directory.
+ *  @param[in] path absolute or relative path to a file or directory */
 FilePath::FilePath (const string &path) {
 	init(path, !FileSystem::isDirectory(path.c_str()), FileSystem::getcwd());
 }
@@ -86,6 +90,10 @@ FilePath::FilePath (const string &path, bool isfile, string current_dir) {
 }
 
 
+/** Initializes a FilePath object. This method should be called by the constructors only.
+ *  @param[in] path absolute or relative path to a file or directory
+ *  @param[in] isfile true if 'path' references a file, false if a directory is referenced
+ *  @param[in] current_dir if 'path' is a relative path expression it will be related to 'current_dir' */
 void FilePath::init (string path, bool isfile, string current_dir) {
 	single_slashes(path);
 	single_slashes(current_dir);
@@ -134,6 +142,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 }
 
 
+/** Adds a location step to the current path. */
 void FilePath::add (const string &dir) {
 	if (dir == ".." && !_dirs.empty())
 		_dirs.pop_back();
@@ -221,9 +230,9 @@ string FilePath::relative (string reldir, bool with_filename) const {
 		return absolute();
 	FilePath rel(reldir, false);
 	string path;
-#ifdef __WIN32__ 
-	if (rel._drive && rel._drive != _drive) 
-		path += string(1, _drive) + ":"; 
+#ifdef __WIN32__
+	if (rel._drive && rel._drive != _drive)
+		path += string(1, _drive) + ":";
 #endif
 	ConstIterator i = _dirs.begin();
 	ConstIterator j = rel._dirs.begin();
