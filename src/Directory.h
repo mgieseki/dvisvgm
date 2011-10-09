@@ -37,7 +37,6 @@ class Directory
 		bool open (std::string path);
 		void close ();
 		const char* read (char type='a');
-		std::string getEntry () const;
 
    private:
 		std::string _dirname;
