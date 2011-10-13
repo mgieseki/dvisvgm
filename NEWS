@@ -1,3 +1,9 @@
+dvisvgm-1.0.9 (2011-10-13)
+- fixed segfault occurred in TeX Live Win32 caused by mf.exe being unavailable
+  (thanks to Akira Kakuto for tracking down the issue)
+- updated bundled potrace library to version 1.10
+- some minor code improvements
+
 dvisvgm-1.0.8 (2011-05-31)
 - PS handler: added evaluation of PS operators save, restore, and grestoreall
 - PS handler: fixed potention segfault caused by invisible zero-length paths
