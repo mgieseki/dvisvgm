@@ -87,6 +87,7 @@ void SVGTree::appendToDefs (XMLNode *node) {
 	_defs->append(node);
 }
 
+
 /** Appends a single charater to the current text node. If necessary, and depending on output mode
  *  and further output states, new XML elements (text, tspan, g, ...) are created.
  *  @param[in] c character to be added
@@ -150,7 +151,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			node = _page;
 		if (CREATE_USE_ELEMENTS) {
 			ostringstream oss;
-			oss << "#g" << FontManager::instance().fontID(_font) << c;
+			oss << "#g" << FontManager::instance().fontID(_font) << '-' << c;
 			XMLElementNode *use = new XMLElementNode("use");
 			use->addAttribute("x", XMLString(x));
 			use->addAttribute("y", XMLString(y));
@@ -234,7 +235,7 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 	}
 	else {
 		ostringstream oss;
-		oss << 'g' << FontManager::instance().fontID(&font) << c;
+		oss << 'g' << FontManager::instance().fontID(&font) << '-' << c;
 		glyph_node = new XMLElementNode("path");
 		glyph_node->addAttribute("id", oss.str());
 		sx = font.scaledSize()/upem;
@@ -260,7 +261,7 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		ostringstream style;
 		// add font style definitions in ascending order
 		FORALL(sortmap, SortMap::const_iterator, it) {
-			style << "text.f"        << it->first << ' '
+			style << "text.f"     << it->first << ' '
 				<< "{font-family:" << it->second->name()
 				<< ";font-size:"   << it->second->scaledSize() << "}\n";
 		}
@@ -308,10 +309,10 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		FORALL(chars, set<int>::const_iterator, it) {
 			ostringstream oss;
 			XMLElementNode *use = new XMLElementNode("use");
-			oss << 'g' << FontManager::instance().fontID(&font) << *it;
+			oss << 'g' << FontManager::instance().fontID(&font) << '-' << *it;
 			use->addAttribute("id", oss.str());
 			oss.str("");
-			oss << "#g" << FontManager::instance().fontID(font.uniqueFont()) << *it;
+			oss << "#g" << FontManager::instance().fontID(font.uniqueFont()) << '-' << *it;
 			use->addAttribute("xlink:href", oss.str());
 			double scale = font.scaledSize()/font.uniqueFont()->scaledSize();
 			if (scale != 1.0) {
