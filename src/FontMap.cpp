@@ -164,13 +164,10 @@ static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
 			return FM_PS_CODE;
 		}
 		else if (*first == '<') {
-			bool eval_prefix = true;
 			FontMapFieldType type=FM_HEADER;
 			first++;
-			if (isspace(*first)) {
+			if (isspace(*first))
 				first++;
-				eval_prefix = false;
-			}
 			else if (*first == '<' || *first == '[') {
 				type = (*first == '<') ? FM_FONT : FM_ENC;
 				first++;
