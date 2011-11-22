@@ -105,6 +105,8 @@ class GraphicPath
 			return _commands.empty();
 		}
 
+
+		/// Returns the number of path commands used to describe the path.
 		size_t size () const {
 			return _commands.size();
 		}
@@ -175,6 +177,12 @@ class GraphicPath
 		}
 
 
+		/** Writes the path data as SVG path drawing command to a given output stream. 
+		 *  @param[in] os output stream used to write the SVG commands to 
+		 *  @param[in] sx horizontal scale factor
+		 *  @param[in] sy vertical scale factor 
+		 *  @param[in] dx horizontal translation in TeX point units
+		 *  @param[in] sy vertical translation in TeX point units */
 		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
 			struct WriteActions : Actions {
 				WriteActions (std::ostream &os, double sx, double sy, double dx, double dy)
@@ -200,6 +208,8 @@ class GraphicPath
 		}
 
 
+		/** Computes the bounding box of the current path.
+		 *  @param[out] bbox the computed bounding box */
 		void computeBBox (BoundingBox &bbox) const {
 			struct BBoxActions : Actions {
 				BBoxActions (BoundingBox &bb) : bbox(bb) {}
@@ -212,6 +222,10 @@ class GraphicPath
 			iterate(actions, false);
 		}
 
+
+		/** Checks whether the current path describes a dot/point only (with no extent). 
+		 *  @param[out] p coordinates of the point if path describes a dot
+		 *  @return true if path is a dot/point */
 		bool isDot (Point &p) const {
 			struct DotActions : Actions {
 				DotActions () : differs(false) {}
@@ -228,6 +242,9 @@ class GraphicPath
 			return !actions.differs;
 		}
 
+
+		/** Transforms the path according to a given Matrix. 
+		 *  @param[in] matrix Matrix describing the affine transformation */
 		void transform (const Matrix &matrix) {
 			FORALL(_commands, Iterator, it)
 				it->transform(matrix);
