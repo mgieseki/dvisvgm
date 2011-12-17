@@ -44,14 +44,14 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 			else
 				oss << '#' << unsigned(c);
 			oss << ']';
-			Message::mstream(false, Terminal::BLUE) << oss.str();
+			Message::mstream(false, Message::MC_TRACING) << oss.str();
 		}
 
 		void setFont (const std::string &fname) {
 			if (_sfmsg && fname != _fname) {
 				if (!_fname.empty())
 					Message::mstream() << '\n';
-				Message::mstream(false, Terminal::CYAN) << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
+				Message::mstream(false, Message::MC_STATE) << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
 				_fname = fname;
 			}
 		}

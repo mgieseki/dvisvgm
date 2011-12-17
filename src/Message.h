@@ -26,6 +26,7 @@
 #include <ostream>
 #include <sstream>
 #include "Terminal.h"
+#include "types.h"
 
 
 class Message;
@@ -33,8 +34,9 @@ class Message;
 class MessageStream
 {
 	friend class Message;
+
 	public:
-		MessageStream () : _os(0), _nl(false) {}
+		MessageStream ();
 		MessageStream (std::ostream &os);
 		~MessageStream ();
 
@@ -67,15 +69,46 @@ class MessageStream
 };
 
 
-struct Message
+class Message
 {
-	static MessageStream& mstream (bool prefix=false, int color=Terminal::DEFAULT, bool light=false);
-	static MessageStream& estream (bool prefix=false);
-	static MessageStream& wstream (bool prefix=false);
+	struct Color {
+		Color () : foreground(-1), background(-1) {}
+		Color (Int8 fgcolor) : foreground(fgcolor), background(-1) {}
+		Color (Int8 fgcolor, bool light) : foreground(fgcolor + (light ? 8 : 0)), background(-1) {}
+		Color (Int8 fgcolor, Int8 bgcolor) : foreground(fgcolor), background(bgcolor) {}
+		Int8 foreground;
+		Int8 background;
+	};
 
-	enum {ERRORS=1, WARNINGS=2, MESSAGES=4};
-	static int LEVEL;
-	static bool COLORIZE;
+	public:
+		enum MessageClass {
+			MC_ERROR,
+			MC_WARNING,
+			MC_MESSAGE,
+			MC_PAGE_NUMBER,
+			MC_PAGE_SIZE,
+			MC_PAGE_WRITTEN,
+			MC_STATE,
+			MC_TRACING,
+			MC_PROGRESS,
+		};
+
+	public:
+		static MessageStream& mstream (bool prefix=false, MessageClass mclass=MC_MESSAGE);
+		static MessageStream& estream (bool prefix=false);
+		static MessageStream& wstream (bool prefix=false);
+
+		enum {ERRORS=1, WARNINGS=2, MESSAGES=4};
+		static int LEVEL;
+		static bool COLORIZE;
+
+	protected:
+		static void init ();
+
+
+	private:
+		static Color _classColors[];
+		static bool _initialized;
 };
 
 #endif

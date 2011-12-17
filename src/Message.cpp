@@ -19,13 +19,18 @@
 *************************************************************************/
 
 #include <cstdarg>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <map>
 #include "Message.h"
 #include "Terminal.h"
-#include "macros.h"
 
 using namespace std;
+
+MessageStream::MessageStream () : _os(0), _nl(false) {
+}
+
 
 MessageStream::MessageStream (std::ostream &os)
 	: _os(&os), _nl(true), _col(1), _indent(0)
@@ -122,16 +127,24 @@ void MessageStream::clearline () {
 static MessageStream nullStream;
 static MessageStream messageStream(cerr);
 
+
+//////////////////////////////
+
 // maximal verbosity
 int Message::LEVEL = Message::MESSAGES | Message::WARNINGS | Message::ERRORS;
 bool Message::COLORIZE = false;
+bool Message::_initialized = false;
+Message::Color Message::_classColors[9];
 
 
 /** Returns the stream for usual messages. */
-MessageStream& Message::mstream (bool prefix, int color, bool light) {
+MessageStream& Message::mstream (bool prefix, MessageClass mclass) {
+	init();
 	MessageStream *ms = (LEVEL & MESSAGES) ? &messageStream : &nullStream;
-	if (COLORIZE && ms && ms->os())
-		Terminal::color(color, light, *ms->os());
+	if (COLORIZE && ms && ms->os()) {
+		Terminal::fgcolor(_classColors[mclass].foreground, *ms->os());
+		Terminal::bgcolor(_classColors[mclass].background, *ms->os());
+	}
 	if (prefix)
 		*ms << "\nMESSAGE: ";
 	return *ms;
@@ -140,9 +153,12 @@ MessageStream& Message::mstream (bool prefix, int color, bool light) {
 
 /** Returns the stream for warning messages. */
 MessageStream& Message::wstream (bool prefix) {
+	init();
 	MessageStream *ms = (LEVEL & WARNINGS) ? &messageStream : &nullStream;
-	if (COLORIZE && ms && ms->os())
-		Terminal::color(Terminal::YELLOW, false, *ms->os());
+	if (COLORIZE && ms && ms->os()) {
+		Terminal::fgcolor(_classColors[MC_WARNING].foreground, *ms->os());
+		Terminal::bgcolor(_classColors[MC_WARNING].background, *ms->os());
+	}
 	if (prefix)
 		*ms << "\nWARNING: ";
 	return *ms;
@@ -151,11 +167,93 @@ MessageStream& Message::wstream (bool prefix) {
 
 /** Returns the stream for error messages. */
 MessageStream& Message::estream (bool prefix) {
+	init();
 	MessageStream *ms = (LEVEL & ERRORS) ? &messageStream : &nullStream;
-	if (COLORIZE && ms && ms->os())
-		Terminal::color(Terminal::RED, true, *ms->os());
+	if (COLORIZE && ms && ms->os()) {
+		Terminal::fgcolor(_classColors[MC_ERROR].foreground, *ms->os());
+		Terminal::bgcolor(_classColors[MC_ERROR].background, *ms->os());
+	}
 	if (prefix)
 		*ms << "\nERROR: ";
 	return *ms;
+}
+
+
+static bool colorchar2int (char colorchar, int *val) {
+	colorchar = tolower(colorchar);
+	if (colorchar >= '0' && colorchar <= '9')
+		*val = int(colorchar-'0');
+	else if (colorchar >= 'a' && colorchar <= 'f')
+		*val = int(colorchar-'a'+10);
+	else if (colorchar == '*')
+		*val = -1;
+	else
+		return false;
+	return true;
+}
+
+
+/** Initializes the Message class. Sets the colors for each message set.
+ *  The colors can be changed via environment variable DVISVGM_COLORS. Its
+ *  value must be a sequence of color entries of the form gg:BF where the
+ *  two-letter ID gg specifies a message set, B the hex digit of the
+ *  background, and F the hex digit of the foreground/text color.
+ *  Color codes:
+ *  - 1: red, 2: green, 4: blue
+ *  - 0-7: dark colors
+ *  - 8-F: light colors
+ *  - *: default color
+ *  Example: num:01 sets page number messages to red on black background */
+void Message::init () {
+	if (_initialized || !Message::COLORIZE)
+		return;
+
+	// set default message colors
+	_classColors[MC_ERROR]        = Color(Terminal::RED, true);
+	_classColors[MC_WARNING]      = Color(Terminal::YELLOW);
+	_classColors[MC_PAGE_NUMBER]  = Color(Terminal::BLUE, true);
+	_classColors[MC_PAGE_SIZE]    = Color(Terminal::MAGENTA);
+	_classColors[MC_PAGE_WRITTEN] = Color(Terminal::GREEN);
+	_classColors[MC_STATE]        = Color(Terminal::CYAN);
+	_classColors[MC_TRACING]      = Color(Terminal::BLUE);
+	_classColors[MC_PROGRESS]     = Color(Terminal::MAGENTA);
+
+	if (const char *color_str = getenv("DVISVGM_COLORS")) {
+		map<string, MessageClass> classes;
+		classes["er"] = MC_ERROR;
+		classes["wn"] = MC_WARNING;
+		classes["pn"] = MC_PAGE_NUMBER;
+		classes["ps"] = MC_PAGE_SIZE;
+		classes["fw"] = MC_PAGE_WRITTEN;
+		classes["sm"] = MC_STATE;
+		classes["tr"] = MC_TRACING;
+		classes["pi"] = MC_PROGRESS;
+		const char *p=color_str;
+
+		// skip leading whitespace
+		while (isspace(*p))
+			++p;
+
+		// iterate over color assignments
+		while (strlen(p) >= 5) {
+			map<string, MessageClass>::iterator it = classes.find(string(p, 2));
+			if (it != classes.end() && p[2] == '=') {
+				int bgcolor, fgcolor;
+				if (colorchar2int(p[3], &bgcolor) && colorchar2int(p[4], &fgcolor)) {
+					_classColors[it->second].background = bgcolor;
+					_classColors[it->second].foreground = fgcolor;
+				}
+			}
+			p += 5;
+
+			// skip trailing characters in a malformed entry
+			while (!isspace(*p) && *p != ':' && *p != ';')
+				++p;
+			// skip separation characters
+			while (isspace(*p) || *p == ':' || *p == ';')
+				++p;
+		}
+	}
+	_initialized = true;
 }
 

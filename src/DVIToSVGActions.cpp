@@ -328,7 +328,7 @@ void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 		int width = (cols == 0 || cols > 60) ? 50 : 49-60+cols;
 		double factor = double(current)/double(total);
 		int length = int(width*factor);
-		Message::mstream(false, Terminal::MAGENTA)
+		Message::mstream(false, Message::MC_PROGRESS)
 			<< '[' << string(length, '=')
 			<< (factor < 1.0 ? (step < 0 ? ' ' : tips[step]) : '=')
 			<< string(width-length, ' ')

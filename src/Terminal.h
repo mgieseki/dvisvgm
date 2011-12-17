@@ -41,11 +41,14 @@ class Terminal
 		static void finish (std::ostream &os);
 		static int columns ();
 		static int rows ();
-		static void color (int color, bool light, std::ostream &os);
-		static void bgcolor (int color, bool light, std::ostream &os);
+		static void fgcolor (int color, std::ostream &os);
+		static void bgcolor (int color, std::ostream &os);
+
+	private:
+		static int _fgcolor;  ///< current foreground color
+		static int _bgcolor;  ///< current background color
 
 #ifdef __WIN32__
-	private:
 		static int _defaultColor;
 #endif
 };

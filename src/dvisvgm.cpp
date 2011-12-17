@@ -362,10 +362,12 @@ int main (int argc, char *argv[]) {
 			SignalHandler::instance().start();
 			dvisvg.convert(args.page_arg(), &pageinfo);
 			Message::mstream().indent(0);
-			Message::mstream(false, Terminal::BLUE, true) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
 			if (pageinfo.second > 1)
-				Message::mstream(false, Terminal::BLUE, true) << 's';
-			Message::mstream(false, Terminal::BLUE, true) << " converted in " << (System::time()-start_time) << " seconds\n";
+				Message::mstream(false, Message::MC_PAGE_NUMBER) << 's';
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << " converted in " << (System::time()-start_time) << " seconds";
+			Message::mstream(false) << "\n";
+
 		}
 		catch (DVIException &e) {
 			Message::estream() << "\nDVI error: " << e.what() << '\n';

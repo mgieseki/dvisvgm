@@ -68,7 +68,7 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		   "mag:=" << mag << ";"
 		   "batchmode;"
 		   "input " << _fontname << "\"";
-	Message::mstream(false, Terminal::CYAN) << "\nrunning Metafont for " << _fontname << '\n';
+	Message::mstream(false, Message::MC_STATE) << "\nrunning Metafont for " << _fontname << '\n';
 	Process mf_process(cmd, oss.str().c_str());
 	mf_process.run();
 

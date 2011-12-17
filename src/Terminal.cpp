@@ -42,16 +42,9 @@
 using namespace std;
 
 
-#ifdef __WIN32__
-int Terminal::_defaultColor;
-const int Terminal::RED     = FOREGROUND_RED;
-const int Terminal::GREEN   = FOREGROUND_GREEN;
-const int Terminal::BLUE    = FOREGROUND_BLUE;
-#else
 const int Terminal::RED     = 1;
 const int Terminal::GREEN   = 2;
 const int Terminal::BLUE    = 4;
-#endif
 
 const int Terminal::CYAN    = GREEN|BLUE;
 const int Terminal::YELLOW  = RED|GREEN;
@@ -60,8 +53,16 @@ const int Terminal::WHITE   = RED|GREEN|BLUE;
 const int Terminal::DEFAULT = -1;
 const int Terminal::BLACK   = 0;
 
+#ifdef __WIN32__
+int Terminal::_defaultColor;
+#endif
+
+int Terminal::_fgcolor = Terminal::DEFAULT;
+int Terminal::_bgcolor = Terminal::DEFAULT;
 
 
+/** Initializes the terminal. This method should be called before any of the others.
+ *  @param[in,out] os terminal output stream (currently unused) */
 void Terminal::init (ostream &os) {
 #ifdef __WIN32__
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -74,8 +75,11 @@ void Terminal::init (ostream &os) {
 }
 
 
+/** Finishes the terminal output. Should be called after last terminal action.
+ *  @param[in,out] os terminal output stream */
 void Terminal::finish (ostream &os) {
-	color(DEFAULT, false, os);
+	fgcolor(DEFAULT, os);
+	bgcolor(DEFAULT, os);
 }
 
 
@@ -117,48 +121,70 @@ int Terminal::rows () {
 }
 
 
-void Terminal::color (int color, bool light, ostream &os) {
+/** Sets the foreground color.
+ *  @param[in] color color code
+ *  @param[in] os terminal output stream */
+void Terminal::fgcolor (int color, ostream &os) {
+	_fgcolor = color;
+
 #ifdef __WIN32__
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (h != INVALID_HANDLE_VALUE) {
-		if (color == DEFAULT)
-			color = _defaultColor;
+		CONSOLE_SCREEN_BUFFER_INFO info;
+		GetConsoleScreenBufferInfo(h, &info);
+		if (_fgcolor == DEFAULT)
+			color = _defaultColor & 0x0f;
 		else {
-			CONSOLE_SCREEN_BUFFER_INFO info;
-			GetConsoleScreenBufferInfo(h, &info);
-			color = (info.wAttributes & 0xf0) | (color & 0x07);
-			if (light)
-				color |= FOREGROUND_INTENSITY;
+			// swap red and blue bits
+			color = (color & 0x0a) | ((color & 1) << 2) | ((color & 4) >> 2);
 		}
+		color = (info.wAttributes & 0xf0) | (color & 0x0f);
 		SetConsoleTextAttribute(h, (DWORD)color);
 	}
 #else
-	if (color == DEFAULT)
+	bool light = false;
+	if (color != DEFAULT && color > 7) {
+		light = true;
+		color %= 8;
+	}
+	if (color == DEFAULT) {
 		os << "\x1B[0m";
+		if (_bgcolor != DEFAULT)
+			bgcolor(_bgcolor, os);
+	}
 	else
 		os << "\x1B[" << (light ? '1': '0') << ';' << (30+(color & 0x07)) << 'm';
 #endif
 }
 
 
-void Terminal::bgcolor (int color, bool light, ostream &os) {
+/** Sets the background color.
+ *  @param[in] color color code
+ *  @param[in] os terminal output stream */
+void Terminal::bgcolor (int color, ostream &os) {
+	_bgcolor = color;
 #ifdef __WIN32__
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (h != INVALID_HANDLE_VALUE) {
-		if (color == DEFAULT)
-			color = _defaultColor;
+		CONSOLE_SCREEN_BUFFER_INFO info;
+		GetConsoleScreenBufferInfo(h, &info);
+		if (_bgcolor == DEFAULT)
+			color = (_defaultColor & 0xf0) >> 4;
 		else {
-			CONSOLE_SCREEN_BUFFER_INFO info;
-			GetConsoleScreenBufferInfo(h, &info);
-			color = (info.wAttributes & 0x0f) | ((color & 0x07) << 4);
-			if (light)
-				color |= BACKGROUND_INTENSITY;
+			// swap red and blue bits
+			color = (color & 0x0a) | ((color & 1) << 2) | ((color & 4) >> 2);
 		}
+		color = (info.wAttributes & 0x0f) | ((color & 0x0f) << 4);
 		SetConsoleTextAttribute(h, (DWORD)color);
 	}
 #else
-	if (color == DEFAULT)
+	if (color != DEFAULT && color > 7)
+		color %= 8;
+	if (color == DEFAULT) {
 		os << "\x1B[0m";
+		if (_fgcolor != DEFAULT)
+			fgcolor(_fgcolor, os);
+	}
 	else
 		os << "\x1B[" << (40+(color & 0x07)) << 'm';
 #endif
