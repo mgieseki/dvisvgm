@@ -2,7 +2,7 @@
 // It is part of the dvisvgm package and published under the terms
 // of the GNU General Public License version 3 or later.
 // See file COPYING for further details.
-// (C) 2009-2011 Martin Gieseking <martin.gieseking@uos.de>
+// (C) 2009-2012 Martin Gieseking <martin.gieseking@uos.de>
 
 #ifndef COMMANDLINE_H
 #define COMMANDLINE_H
