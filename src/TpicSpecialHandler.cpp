@@ -110,6 +110,13 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 }
 
 
+/** Stroke a quadratic spline through the midpoints of the lines defined by
+ *  the previously recorded points. The spline starts	with a straight line 
+ *  from the first point to the mid-point of the first line.  The spline ends 
+ *  with a straight line from the mid-point of the last line to the last point.
+ *  If ddist=0, the spline is stroked solid. Otherwise ddist denotes the length
+ *  of the dashes and the gaps inbetween.
+ *  @param[in] ddist length of dashes and gaps */
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 	if (actions && _points.size() > 0) {
 		const size_t size = _points.size();
@@ -169,13 +176,20 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 }
 
 
+/** Draws an elliptical arc.
+ *  @param[in] cx x-coordinate of arc center
+ *  @param[in] cy y-coordinate of arc center
+ *  @param[in] rx length of horizonal semi-axis
+ *  @param[in] ry length of vertical semi-axis
+ *  @param[in] angle1 starting angle (clockwise) relative to x-axis
+ *  @param[in] angle2 ending angle (clockwise) relative to x-axis */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {
 		const double PI2 = 4*asin(1.0);
 		angle1 *= -1;
-		angle2 *= -1;
+		angle2 *= -1;		
 		if (fabs(angle1) > PI2) {
-			int n = (int) (angle1/PI2);
+			int n = (int)(angle1/PI2);
 			angle1 = angle1 - n*PI2;
 			angle2 = angle2 - n*PI2;
 		}
@@ -197,16 +211,16 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 				angle2 = PI2+angle2;
 			elem = new XMLElementNode("path");
 			int large_arg = fabs(angle1-angle2) > PI2/2 ? 0 : 1;
-			int sweep = angle1 > angle2 ? 0 : 1;
+			int sweep_flag = angle1 > angle2 ? 0 : 1;
 			if (angle1 > angle2) {
 				large_arg = 1-large_arg;
-				sweep = 1-sweep;
+				sweep_flag = 1-sweep_flag;
 			}
 			ostringstream oss;
 			oss << 'M' << x+rx*cos(angle1) << ',' << y+ry*sin(-angle1)
 				 << 'A' << rx << ',' << ry
 				 << " 0 "
-				 << large_arg << ' ' << sweep << ' '
+				 << large_arg << ' ' << sweep_flag << ' '
 				 << x+rx*cos(angle2) << ',' << y-ry*sin(angle2);
 			if (_fill >= 0)
 				oss << 'Z';
