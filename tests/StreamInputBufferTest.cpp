@@ -141,7 +141,7 @@ TEST(StreamInputBufferTest, parseInt_base) {
 
 
 TEST(StreamInputBufferTest, parseDouble) {
-	istringstream iss("1234,-5,6.12,-3.1415,-.1,12e2,10.-");
+	istringstream iss("1234,-5,6.12,-3.1415,-0.5,-.1,12e2,10.-");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	double d;
@@ -159,6 +159,10 @@ TEST(StreamInputBufferTest, parseDouble) {
 
 	EXPECT_EQ(in.parseDouble(d), 'f');
 	EXPECT_EQ(d, -3.1415);
+	EXPECT_EQ(in.get(), ',');
+
+	EXPECT_EQ(in.parseDouble(d), 'f');
+	EXPECT_EQ(d, -0.5);
 	EXPECT_EQ(in.get(), ',');
 
 	EXPECT_EQ(in.parseDouble(d), 'f');

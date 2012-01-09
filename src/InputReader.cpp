@@ -149,12 +149,14 @@ char InputReader::parseDouble (double &val) {
 	int fac=1;
 	int int_part=0;
 	bool is_float = false;
+	skipSpace();
+	char sign = peek();
 	if (parseInt(int_part)) { // match [+-]?[0-9]+\.?
 		if (peek() == '.') {
 			get();
 			is_float = true;
 		}
-		if (int_part < 0) {
+		if (int_part < 0 || sign == '-') {
 			fac = -1;
 			int_part = -int_part;
 		}
