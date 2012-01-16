@@ -1,4 +1,0 @@
-LIBRARY miktex-core-2.dll
-EXPORTS
-miktex_initialize@0
-miktex_uninitialize@0
