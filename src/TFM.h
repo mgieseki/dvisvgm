@@ -25,7 +25,7 @@
 #include <vector>
 #include "types.h"
 
-class FileFinder;
+struct FileFinder;
 
 class TFM
 {

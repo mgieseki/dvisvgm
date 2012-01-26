@@ -26,7 +26,7 @@
 #include "Color.h"
 #include "Matrix.h"
 
-class XMLNode;
+struct XMLNode;
 
 struct SpecialActions
 {
@@ -35,7 +35,7 @@ struct SpecialActions
 	virtual double getY() const =0;
 	virtual void setX(double x) =0;
 	virtual void setY(double y) =0;
-   virtual void finishLine () =0;
+	virtual void finishLine () =0;
 	virtual void setColor (const Color &color) =0;
 	virtual Color getColor () const =0;
 	virtual void setMatrix (const Matrix &m) =0;
@@ -44,9 +44,9 @@ struct SpecialActions
 	virtual void appendToPage (XMLNode *node) =0;
 	virtual void appendToDefs (XMLNode *node) =0;
 	virtual BoundingBox& bbox () =0;
-   virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
-   virtual void embed (const BoundingBox &bbox) =0;
-   virtual void embed (const DPair &p, double r=0) =0;
+	virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
+	virtual void embed (const BoundingBox &bbox) =0;
+	virtual void embed (const DPair &p, double r=0) =0;
 	virtual void progress (const char *id) {}
 };
 

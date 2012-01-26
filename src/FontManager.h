@@ -30,10 +30,10 @@
 #include "types.h"
 
 
-class FileFinder;
-class Font;
-class TFM;
-class VirtualFont;
+struct FileFinder;
+struct Font;
+class  TFM;
+class  VirtualFont;
 
 /** This class provides methods for easy DVI font handling.
  *  DVI and VF files use local font numbers to reference fonts. For SVG output

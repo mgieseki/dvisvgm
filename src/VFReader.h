@@ -32,7 +32,7 @@ struct VFException : public MessageException
 };
 
 
-class VFActions;
+struct VFActions;
 
 
 class VFReader : public StreamReader

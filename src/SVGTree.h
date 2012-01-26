@@ -29,11 +29,11 @@
 #include "XMLDocument.h"
 #include "XMLNode.h"
 
-class BoundingBox;
-class Color;
-class Font;
-class Matrix;
-class PhysicalFont;
+class  BoundingBox;
+class  Color;
+struct Font;
+class  Matrix;
+class  PhysicalFont;
 
 class SVGTree
 {

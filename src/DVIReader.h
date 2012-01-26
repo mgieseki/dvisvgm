@@ -41,8 +41,8 @@ struct InvalidDVIFileException : public DVIException
 	InvalidDVIFileException(const std::string &msg) : DVIException(msg) {}
 };
 
-class DVIActions;
-class FileFinder;
+struct DVIActions;
+struct FileFinder;
 
 class DVIReader : public StreamReader, protected VFActions
 {

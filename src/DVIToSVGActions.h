@@ -32,10 +32,10 @@
 #include "DVIReader.h"
 
 
-class DVIToSVG;
-class FileFinder;
-class Font;
-class XMLNode;
+class  DVIToSVG;
+struct FileFinder;
+struct Font;
+struct XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions, public SpecialManager::Listener
 {

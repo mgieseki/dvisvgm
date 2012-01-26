@@ -27,7 +27,7 @@
 #include <vector>
 #include "SpecialHandler.h"
 
-class SpecialActions;
+struct SpecialActions;
 
 class SpecialManager
 {

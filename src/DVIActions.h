@@ -25,9 +25,9 @@
 #include "Message.h"
 #include "types.h"
 
-class BoundingBox;
-class Font;
-class SpecialManager;
+class  BoundingBox;
+struct Font;
+class  SpecialManager;
 
 
 struct DVIActions

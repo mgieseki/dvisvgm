@@ -29,7 +29,7 @@
 #include "types.h"
 #include "Glyph.h"
 
-class Font;
+struct Font;
 
 /** This class provides methods to handle font files and font data.
  *  It's a wrapper for the Freetype font library. */

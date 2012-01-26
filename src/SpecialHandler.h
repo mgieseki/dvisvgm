@@ -26,8 +26,8 @@
 #include "MessageException.h"
 
 
-class SpecialActions;
-class SpecialManager;
+struct SpecialActions;
+class  SpecialManager;
 
 
 struct SpecialException : public MessageException

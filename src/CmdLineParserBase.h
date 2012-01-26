@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-class InputReader;
+struct InputReader;
 
 class CmdLineParserBase
 {
