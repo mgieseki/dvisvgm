@@ -157,7 +157,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	_svg.appendToPage(rect);
 
 	// update bounding box
-	BoundingBox bb(x, y+height, x+width, y);
+	BoundingBox bb(x, y-height, x+width, y);
 	if (!getMatrix().isIdentity())
 		bb.transform(getMatrix());
 	embed(bb);
