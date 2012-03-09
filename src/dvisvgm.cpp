@@ -274,14 +274,21 @@ static void print_version (bool extended) {
 	if (extended) {
 		oss << " (" TARGET_SYSTEM ")\n";
 		oss << string(oss.str().length()-1, '-') << "\n"
-			"freetype: " << FontEngine::version() << "\n"
+			"freetype:    " << FontEngine::version() << "\n";
+
+		string gsver;
+		Ghostscript gs;
+		gsver = gs.revision(true);
+		if (!gsver.empty())
+			oss << "Ghostscript: " << gsver + "\n";
+		oss <<
 #ifdef MIKTEX
-			"MiKTeX:   " << FileFinder::version() << "\n"
+			"MiKTeX:      " << FileFinder::version() << "\n"
 #else
-			"kpathsea: " << FileFinder::version() << "\n"
+			"kpathsea:    " << FileFinder::version() << "\n"
 #endif
-			"potrace:  " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
-			"zlib:     " << zlibVersion();
+			"potrace:     " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
+			"zlib:        " << zlibVersion();
 	}
 	cout << oss.str() << endl;
 }
