@@ -108,11 +108,15 @@ bool Ghostscript::revision (gsapi_revision_t *r) {
 }
 
 
-string Ghostscript::revision () {
+/** Returns product name and revision number of the GS library. 
+ *  @param[in] revonly if true, only the revision number is returned */
+string Ghostscript::revision (bool revonly) {
 	gsapi_revision_t r;
 	if (revision(&r)) {
 		ostringstream oss;
-		oss << r.product << ' ' << (r.revision/100) << '.' << setfill('0') << setw(2) << (r.revision%100);
+		if (!revonly)
+			oss << r.product << ' '; 
+		oss << (r.revision/100) << '.' << setfill('0') << setw(2) << (r.revision%100);
 		return oss.str();
 	}
 	return "";

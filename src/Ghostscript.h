@@ -51,7 +51,7 @@ struct Ghostscript
 	Ghostscript (int argc, const char **argv, void *caller=0) {}
 	bool available () {return false;}
 	bool revision (gsapi_revision_t *r) {return false;}
-	std::string revision () {return "";}
+	std::string revision (bool revonly=false) {return "";}
 	int set_stdio (Stdin in, Stdout out, Stderr err) {return 0;}
 	int run_string_begin (int user_errors, int *pexit_code) {return 0;}
 	int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code) {return 0;}
@@ -79,7 +79,7 @@ class Ghostscript
 		bool init (int argc, const char **argv, void *caller=0);
 		bool available ();
 		bool revision (gsapi_revision_t *r);
-		std::string revision ();
+		std::string revision (bool revonly=false);
 		int set_stdio (Stdin in, Stdout out, Stderr err);
 		int run_string_begin (int user_errors, int *pexit_code);
 		int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code);
