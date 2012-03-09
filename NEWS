@@ -1,3 +1,11 @@
+dvisvgm-1.0.11 (2012-03-09)
+- added Ghostscript to library list printed by --version=yes
+- fixed a bug in the number parser that could lead to displaced objects (SF bug #3471097)
+- corrected the computation of bounding boxes of DVI rules (lp bug #948713)
+- improved code compatibilty to make dvisvgm compile with clang++ (patch by Vladimir Lomov)
+- fixed formatting issues in the manual page
+- updated information about bug reporting (tracker moved to Launchpad)
+
 dvisvgm-1.0.10 (2011-12-18)
 - introduced environment variable DVISVGM_COLORS to allow user-defined message colors
 - fixed linking issue concerning libfreetype
