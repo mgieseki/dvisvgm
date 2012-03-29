@@ -60,9 +60,10 @@ Matrix::Matrix (double v[], unsigned size) {
 /** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  If vector v has less than 9 elements, the remaining matrix components will be set to
  *  those of the identity matrix.
- *  @param[in] v array containing the matrix components */
-Matrix::Matrix (const std::vector<double> &v) {
-	set(v);
+ *  @param[in] v array containing the matrix components 
+ *  @param[in] start use vector components start,...,start+8 */
+Matrix::Matrix (const std::vector<double> &v, int start) {
+	set(v, start);
 }
 
 
@@ -81,10 +82,15 @@ Matrix& Matrix::set (double v[], unsigned size) {
 }
 
 
-Matrix& Matrix::set (const vector<double> &v) {
-	unsigned size = min((unsigned)v.size(), 9u);
+/** Set matrix values ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
+ *  If vector v has less than 9 elements, the remaining matrix components will be set to
+ *  those of the identity matrix.
+ *  @param[in] v array containing the matrix components 
+ *  @param[in] start use vector components start,...,start+8 */
+Matrix& Matrix::set (const vector<double> &v, int start) {
+	unsigned size = min((unsigned)v.size()-start, 9u);
 	for (unsigned i=0; i < size; i++)
-		values[i/3][i%3] = v[i];
+		values[i/3][i%3] = v[i+start];
 	for (unsigned i=size; i < 9; i++)
 		values[i/3][i%3] = (i%4 ? 0 : 1);
 	return *this;

@@ -41,9 +41,9 @@ class Matrix
 		Matrix (const std::string &cmds, Calculator &calc);
 		Matrix (double d=0);
       Matrix (double v[], unsigned size=9);
-      Matrix (const std::vector<double> &v);
+      Matrix (const std::vector<double> &v, int start=0);
 		Matrix& set (double v[], unsigned size);
-      Matrix& set (const std::vector<double> &v);
+      Matrix& set (const std::vector<double> &v, int start=0);
 		Matrix& transpose ();
 		Matrix& parse (std::istream &is, Calculator &c);
 		Matrix& parse (const std::string &cmds, Calculator &c);
