@@ -37,6 +37,9 @@ class Calculator;
 
 class Matrix
 {
+	friend double det (const Matrix &m);
+	friend double det (const Matrix &m, int row, int col);
+
    public:
 		Matrix (const std::string &cmds, Calculator &calc);
 		Matrix (double d=0);
@@ -44,7 +47,9 @@ class Matrix
       Matrix (const std::vector<double> &v, int start=0);
 		Matrix& set (double v[], unsigned size);
       Matrix& set (const std::vector<double> &v, int start=0);
+		double get (int row, int col) const {return values[row][col];}
 		Matrix& transpose ();
+		Matrix& invert ();
 		Matrix& parse (std::istream &is, Calculator &c);
 		Matrix& parse (const std::string &cmds, Calculator &c);
 		Matrix& lmultiply (const Matrix &tm);
@@ -55,6 +60,7 @@ class Matrix
 		Matrix& xskew (double deg);
 		Matrix& yskew (double deg);
 		Matrix& flip (bool h, double a);
+		Matrix& operator *= (double c);
 		DPair operator * (const DPair &p) const;
 		bool operator == (const Matrix &m) const;
 		bool operator != (const Matrix &m) const;
@@ -89,5 +95,10 @@ struct RotationMatrix : public Matrix
 inline std::ostream& operator << (std::ostream &os, const Matrix &m) {
 	return m.write(os);
 }
+
+
+double det (const Matrix &m);
+double det (const Matrix &m, int row, int col);
+
 
 #endif
