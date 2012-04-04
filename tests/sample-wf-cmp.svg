@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="576.887pt" version="1.1" viewBox="77 56.1128 276.69 576.887" width="276.69pt">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="574.732pt" version="1.1" viewBox="76.7123 55.9032 275.656 574.732" width="275.656pt">
   <defs>
     <font horiz-adv-x="0" id="cmex10">
       <font-face ascent="772" descent="-2960" font-family="cmex10" units-per-em="1000"/>
@@ -145,7 +145,7 @@ text.f11 {font-family:ecsl1000;font-size:10}
 text.f12 {font-family:ecss1000;font-size:10}
 text.f13 {font-family:ecti1000;font-size:10}
 </style>
-  <g id="page1">
+  <g id="page1" transform="matrix(0.996 0 0 0.996 0 0)">
     <text class="f10" x="77" y="63">Color<tspan x="104.243">test:</tspan>
 <tspan fill="#ff0000" x="127.627">red,</tspan>
 <tspan fill="#0000ff" x="147.649">blue,</tspan>

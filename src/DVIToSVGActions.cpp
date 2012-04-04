@@ -218,8 +218,7 @@ void DVIToSVGActions::beginPage (unsigned n, Int32 *c) {
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
-	if (_pageMatrix)
-		_svg.transformPage(*_pageMatrix);
+	_svg.transformPage(_pageMatrix);
 	if (_bgcolor != Color::WHITE) {
 		XMLElementNode *r = new XMLElementNode("rect");
 		r->addAttribute("x", _bbox.minX());

@@ -78,7 +78,7 @@ class SVGTree
 		void setY (double y) {_ychanged = true;}
 		void setMatrix (const Matrix &m) {_matrix.set(m);}
 		void setColor (const Color &c)    {_color.set(c);}
-		void transformPage (const Matrix &m);
+		void transformPage (const Matrix *m);
 		const Color& getColor () const    {return _color.get();}
 		const Matrix& getMatrix () const {return _matrix.get();}
 		XMLElementNode* rootNode () const {return _root;}
