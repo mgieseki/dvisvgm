@@ -33,7 +33,7 @@ man: dvisvgm.1
 pdf: dvisvgm.pdf
 
 clean:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.1 dvisvgm.txt
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt
 
 distclean-local:
-	rm -f dvisvgm.1
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt dvisvgm.1
