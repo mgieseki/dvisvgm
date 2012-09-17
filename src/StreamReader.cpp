@@ -117,10 +117,12 @@ string StreamReader::readString (int length) {
 	if (!is)
 		throw StreamReaderException("no stream assigned");
 	char *buf = new char[length+1];
-	if (length > 0)
-		is->get(buf, length+1);  // reads 'length' bytes (pos. length+1 is set to 0)
-	else
+	if (length <= 0)
 		*buf = 0;
+	else {
+		is->read(buf, length);  // reads 'length' bytes
+		buf[length] = 0;
+	}
 	string ret = buf;
 	delete [] buf;
 	return ret;
