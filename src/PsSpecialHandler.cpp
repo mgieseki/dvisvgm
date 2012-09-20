@@ -91,13 +91,6 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 }
 
 
-const char* PsSpecialHandler::info () const {
-	static string str;
-	str = "dvips PostScript specials (using " + Ghostscript().revision() + ")";
-	return str.c_str();
-}
-
-
 /** Move PS graphic position to current DVI location. */
 void PsSpecialHandler::moveToDVIPos () {
 	if (_actions) {

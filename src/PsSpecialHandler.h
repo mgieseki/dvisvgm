@@ -60,7 +60,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		PsSpecialHandler ();
 		~PsSpecialHandler ();
 		const char* name () const   {return "ps";}
-		const char* info () const;
+		const char* info () const   {return "dvips PostScript specials";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 
