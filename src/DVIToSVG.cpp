@@ -336,6 +336,8 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 			p++;
 		_specialManager.unregisterHandlers();
 		_specialManager.registerHandlers(p, ignorelist);
+		if (*handlers == 0)
+			Message::wstream() << "processing of PostScript specials is disabled\n";
 	}
 	return &_specialManager;
 }
