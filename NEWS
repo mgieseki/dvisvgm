@@ -1,3 +1,10 @@
+dvisvgm-1.0.12 (2012-09-27)
+- print a message if the processing of PostScript specials is disabled
+- the resulting SVG is now scaled to bp ("big point" units) properly
+- added the evaluation of PS operators rectclip, rectfill, and rectstroke
+- ignore dvips operator bop if present in a PS special
+- fixed processing of special strings that contain newline characters
+
 dvisvgm-1.0.11 (2012-03-09)
 - added Ghostscript to library list printed by --version=yes
 - fixed a bug in the number parser that could lead to displaced objects (SF bug #3471097)
