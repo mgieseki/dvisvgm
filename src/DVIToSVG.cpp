@@ -310,8 +310,9 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
  *  @param[in] ignorelist list of special prefixes to ignore
+ *  @param[in] pswarning if true, shows warning about disabled PS support
  *  @return the SpecialManager that handles special statements */
-const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
+const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
 		_specialManager.unregisterHandlers();
 	}
@@ -336,7 +337,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist) {
 			p++;
 		_specialManager.unregisterHandlers();
 		_specialManager.registerHandlers(p, ignorelist);
-		if (*handlers == 0)
+		if (*handlers == 0 && pswarning)
 			Message::wstream() << "processing of PostScript specials is disabled\n";
 	}
 	return &_specialManager;

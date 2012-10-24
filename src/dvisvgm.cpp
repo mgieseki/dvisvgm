@@ -358,7 +358,7 @@ int main (int argc, char *argv[]) {
 		Message::LEVEL = args.verbosity_arg();
 		DVIToSVG dvisvg(ifs, out);
 		const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
-		dvisvg.setProcessSpecials(ignore_specials);
+		dvisvg.setProcessSpecials(ignore_specials, true);
 		set_trans(dvisvg, args);
 		dvisvg.setPageSize(args.bbox_arg());
 
