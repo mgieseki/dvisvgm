@@ -26,7 +26,7 @@ using namespace std;
 
 
 /** Skips n characters. */
-void InputReader::skip (unsigned n) {
+void InputReader::skip (size_t n) {
 	while (n-- > 0)
 		get();
 }
@@ -42,7 +42,7 @@ void InputReader::skipSpace () {
 
 /** Tries to find a given string and skips all characters preceding that string.
  *  @param[in] s string to look for (must not be longer than the maximal buffer size)
- *  @param[in] consume if true, the buffer pointer is moved to the first charater following string s
+ *  @param[in] consume if true, the buffer pointer is moved to the first character following string s
  *  @return true if s was found */
 bool InputReader::skipUntil (const char *s, bool consume) {
 	bool found = false;
@@ -52,12 +52,24 @@ bool InputReader::skipUntil (const char *s, bool consume) {
 }
 
 
+/** Looks for the first occurrence of a given character. 
+ *  @param[in] c character to lookup 
+ *  @return position of character relative to current location, -1 if character was not found */
+int InputReader::find (char c) const {
+	int pos = 0;
+	int cc;
+	while ((cc = peek(pos)) >= 0 && cc != c)
+		pos++;
+	return cc < 0 ? -1 : pos;
+}
+
+
 /** Checks if the next characters to be read match a given string.
  *  @param[in] s string to be matched
  *  @param[in] consume if true, the characters of the matched string are skipped
  *  @return true if s matches */
 bool InputReader::check (const char *s, bool consume) {
-	unsigned count = 0;
+	size_t count = 0;
 	for (const char *p=s; *p; p++) {
 		if (peek(count++) != *p)
 			return false;
@@ -69,7 +81,7 @@ bool InputReader::check (const char *s, bool consume) {
 
 
 int InputReader::compare (const char *s, bool consume) {
-	unsigned count = 0;
+	size_t count = 0;
 	for (const char *p=s; *p; p++) {
 		int c = peek(count++);
 		if (c != *p)
@@ -229,7 +241,56 @@ char InputReader::getPunct () {
 }
 
 
-string InputReader::getString (char quotechar) {
+/** Reads a string delimited by a given quotation character. 
+ *  Before reading the string, all leading whitespace is skipped. Then, the function checks
+ *  for the given quotation character. If it is found, all characters until the second
+ *  appearance of the quotation char are appended to the result. Otherwise, an empty string
+ *  is returned. If the quotation character is 0, the behavior of this function is identical to
+ *  a call of getString(). 
+ *  @param[in] quotechar the quotation character bounding the string to be read 
+ *  @return the string read */
+string InputReader::getQuotedString (char quotechar) {
+	if (quotechar == 0)
+		return getString();
+	
+	string ret;
+	skipSpace();
+	if (peek() == quotechar) {
+		get();
+		while (!eof() && peek() != quotechar)
+			ret += get();
+		get();
+	}
+	return ret;
+}
+
+
+/** Reads a string delimited by whitespace and/or invisible characters. 
+ *  Before reading the string, all leading whitespace is skipped. Then, the function adds
+ *  all printable characters to the result until a whitespace, an unprintable character, or
+ *  EOF is found.
+ *  @return the string read */
+string InputReader::getString () {
+	string ret;
+	skipSpace();
+	while (!eof() && !isspace(peek()) && isprint(peek()))
+		ret += get();
+	return ret;
+}
+
+
+/** Reads a given number of characters and returns the resulting string. 
+ *  @param n number of character to read
+ *  @return the string read */
+string InputReader::getString (size_t n) {
+	string ret;
+	while (n-- > 0)
+		ret += get();
+	return ret;
+}
+
+
+/*string InputReader::getString (char quotechar) {
 	string ret;
 	skipSpace();
 	if (quotechar == 0) {
@@ -243,7 +304,7 @@ string InputReader::getString (char quotechar) {
 		get();
 	}
 	return ret;
-}
+}*/
 
 
 int InputReader::parseAttributes (map<string,string> &attr) {
@@ -269,7 +330,7 @@ int InputReader::parseAttributes (map<string,string> &attr) {
 //////////////////////////////////////////
 
 
-int StreamInputReader::peek (unsigned n) const {
+int StreamInputReader::peek (size_t n) const {
 	if (n == 0)
 		return peek();
 	vector<char> chars(n);

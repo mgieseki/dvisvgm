@@ -152,7 +152,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
 		if (_actions) {
 			StreamInputReader in(is);
-			string fname = in.getString(in.peek() == '"' ? '"' : 0);
+			string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
 			map<string,string> attr;
 			in.parseAttributes(attr);
 			psfile(fname, attr);

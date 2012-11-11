@@ -32,13 +32,14 @@ struct InputReader
 	virtual ~InputReader() {}
 	virtual int get () =0;
 	virtual int peek () const =0;
-	virtual int peek (unsigned n) const =0;
+	virtual int peek (size_t n) const =0;
 	virtual bool eof () const =0;
 	virtual bool check (char c) const {return peek() == c;}
 	virtual bool check (const char *s, bool consume=true);
 	virtual int compare (const char *s, bool consume=true);
-	virtual void skip (unsigned n);
+	virtual void skip (size_t n);
 	virtual bool skipUntil (const char *s, bool consume=true);
+	virtual int find (char c) const;
 	virtual void skipSpace ();
 	virtual int getInt ();
 	virtual bool parseInt (int &val, bool accept_sign=true);
@@ -48,7 +49,9 @@ struct InputReader
 	virtual double getDouble ();
 	virtual std::string getWord ();
 	virtual char getPunct ();
-	virtual std::string getString (char quotechar=0);
+	virtual std::string getQuotedString (char quotechar);
+	virtual std::string getString ();
+	virtual std::string getString (size_t n);
 	virtual int parseAttributes (std::map<std::string,std::string> &attr);
 	virtual operator bool () const {return !eof();}
 };
@@ -60,7 +63,7 @@ class StreamInputReader : public InputReader
 		StreamInputReader (std::istream &is) : _is(is) {}
 		int get ()                {return _is.get();}
 		int peek () const         {return _is.peek();}
-		int peek (unsigned n) const;
+		int peek (size_t n) const;
 		bool eof () const         {return !_is || _is.eof();}
 
 	private:
@@ -75,7 +78,7 @@ class BufferInputReader : public InputReader
 		void assign (InputBuffer &ib) {_ib = &ib;}
 		int get ()                    {return _ib->get();}
 		int peek () const             {return _ib->peek();}
-		int peek (unsigned n) const   {return _ib->peek(n);}
+		int peek (size_t n) const     {return _ib->peek(n);}
 		bool eof () const             {return _ib->eof();}
 
 	private:

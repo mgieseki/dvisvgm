@@ -205,3 +205,26 @@ TEST(StreamInputBufferTest, invalidate) {
 	buffer.invalidate();
 	EXPECT_TRUE(buffer.eof());
 }
+
+
+TEST(StreamInputBufferTest, find) {
+	istringstream iss("abcd efgh ijklmn abc");
+	StreamInputBuffer buffer(iss);
+	BufferInputReader reader(buffer);
+	EXPECT_EQ(reader.find('x'), -1);
+	EXPECT_EQ(reader.find('c'), 2);
+	EXPECT_EQ(reader.find(' '), 4);
+}
+
+
+TEST(StreamInputBufferTest, getString) {
+	istringstream iss("abcd efgh \"ijklm\"n abcdef 01234");
+	StreamInputBuffer buffer(iss);
+	BufferInputReader reader(buffer);
+	EXPECT_EQ(reader.getString(), "abcd");
+	EXPECT_EQ(reader.getString(), "efgh");
+	EXPECT_EQ(reader.getQuotedString('"'), "ijklm");
+	EXPECT_EQ(reader.getQuotedString('"'), "");
+	EXPECT_EQ(reader.getString(4), "n ab");
+	EXPECT_EQ(reader.getQuotedString(0), "cdef");
+}
