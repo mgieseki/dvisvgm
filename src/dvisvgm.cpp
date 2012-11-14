@@ -364,7 +364,7 @@ int main (int argc, char *argv[]) {
 
 		try {
 			const char *usermap = args.map_file_given() ? args.map_file_arg().c_str() : 0;
-			FileFinder::init(argv[0], !args.no_mktexmf_given(), usermap);
+			FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given(), usermap);
 			pair<int,int> pageinfo;
 			SignalHandler::instance().start();
 			dvisvg.convert(args.page_arg(), &pageinfo);

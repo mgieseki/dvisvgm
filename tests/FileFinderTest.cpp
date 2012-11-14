@@ -29,7 +29,7 @@ class FileFinderTest : public ::testing::Test
 {
 	protected:
 		void SetUp () {
-			FileFinder::init("FileFinderTest", false);
+			FileFinder::init("FileFinderTest", "FileFinderTest", false);
 		}
 
 		void TearDown () {

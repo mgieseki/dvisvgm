@@ -25,7 +25,6 @@
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Message.h"
-#include "macros.h"
 
 using namespace std;
 
@@ -63,10 +62,11 @@ static void init_font_map (const char *usermapname);
 
 /** Initializes the file finder. This function must be called before any other
  *  FileFinder function.
- *  @param[in] progname name of appllication using the FileFinder
+ *  @param[in] argv0 argv[0] of main() function
+ *  @param[in] progname name of application using the FileFinder
  *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated
  *  @param[in] usermapname optional path to mapfile; if 0, the default files are used */
-void FileFinder::init (const char *progname, bool enable_mktexmf, const char *usermapname) {
+void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf, const char *usermapname) {
 	if (_initialized)
 		return;
 
@@ -79,7 +79,7 @@ void FileFinder::init (const char *progname, bool enable_mktexmf, const char *us
 	if (FAILED(hres))
 		throw MessageException("MiKTeX.Session could not be initialized");
 #else
-	kpse_set_program_name(progname, NULL);
+	kpse_set_program_name(argv0, progname);
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
@@ -110,7 +110,7 @@ std::string FileFinder::version () {
 #ifdef MIKTEX
 	bool autoinit=false;
 	if (!_initialized) {
-		init("", false);
+		init("", "", false);
 		autoinit = true;
 	}
 
@@ -165,7 +165,7 @@ static const char* find_file (const std::string &fname) {
 
 #ifdef TEXLIVEWIN32
 	if (ext == "exe") {
-		// lookup exe files in directory where dvisvgm is located 
+		// lookup exe files in directory where dvisvgm is located
 		if (const char *path = kpse_var_value("SELFAUTOLOC")) {
 			buf = std::string(path) + "/" + fname;
 			return FileSystem::exists(buf.c_str()) ? buf.c_str() : 0;

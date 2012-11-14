@@ -28,7 +28,7 @@ class FontManagerTest : public ::testing::Test
 {
 	protected:
 		void SetUp () {
-			FileFinder::init("FontManagerTest", false);
+			FileFinder::init("FontManagerTest", "FontManagerTest", false);
 			FontManager &fm = FontManager::instance();
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
@@ -58,7 +58,7 @@ TEST_F(FontManagerTest, getFont) {
 	EXPECT_TRUE(f1);
 	EXPECT_EQ(f1->name(), "cmr10");
 	EXPECT_TRUE(dynamic_cast<const PhysicalFontImpl*>(f1));
-	
+
 	const Font *f2 = fm.getFont(11);
 	EXPECT_TRUE(f2);
 	EXPECT_NE(f1, f2);
