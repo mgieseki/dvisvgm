@@ -27,21 +27,35 @@
 #include <ostream>
 #include <string>
 
+class MapLine;
 
 class FontMap
 {
 	struct MapEntry
 	{
+		MapEntry () : locked(false) {}
+		MapEntry (const std::string &fname, const std::string &ename) : fontname(fname), encname(ename), locked(false) {}
 		std::string fontname; ///< target font name
 		std::string encname;  ///< name of font encoding
+		bool locked;
 	};
 
+	typedef std::map<std::string,MapEntry>::iterator Iterator;
 	typedef std::map<std::string,MapEntry>::const_iterator ConstIterator;
 
-   public:
+	public:
+		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
+
 		static FontMap& instance ();
-		bool read (const std::string &fname);
+		bool read (const std::string &fname, Mode mode=FM_REPLACE);
+		bool read (const std::string &fname, char modechar);
 		void readdir (const std::string &dirname);
+		bool apply (const MapLine &mapline, Mode mode);
+		bool apply (const MapLine &mapline, char modechar);
+		bool append (const MapLine &mapline);
+		bool replace (const MapLine &mapline);
+		bool remove (const MapLine &mapline);
+		void lockFont (const std::string &fontname);
 		void clear ()    {_fontMap.clear();}
 		std::ostream& write (std::ostream &os) const;
 		const char* lookup(const std::string &fontname) const;
@@ -49,8 +63,6 @@ class FontMap
 
 	protected:
 		FontMap () {}
-		void readPsMap (std::istream &is);
-		void readPdfMap (std::istream &is);
 
    private:
 		std::map<std::string,MapEntry> _fontMap;

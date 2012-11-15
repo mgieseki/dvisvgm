@@ -20,18 +20,14 @@
 
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <vector>
 #include "Directory.h"
 #include "FontMap.h"
+#include "MapLine.h"
+#include "Message.h"
 
 using namespace std;
-
-enum FontMapFieldType {FM_ERROR=0, FM_NONE, FM_NAME, FM_PS_CODE, FM_HEADER, FM_ENC, FM_FONT};
-
-
-static char* str_tolower (char *str);
-static inline char* get_extension (char *fname);
-static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false);
 
 
 /** Returns the singleton instance. */
@@ -41,157 +37,122 @@ FontMap& FontMap::instance() {
 }
 
 
-bool FontMap::read (const string &fname) {
+/** Reads and evaluates a font map file.
+ *  @param[in] fname name of mapfile to read
+ *  @return true if file could be opened */
+bool FontMap::read (const string &fname, FontMap::Mode mode) {
 	ifstream ifs(fname.c_str());
-	if (ifs) {
-		if (fname.find("dvipdfm") != string::npos)
-			readPdfMap(ifs);
-		else
-			readPsMap(ifs);
+   if (!ifs)
+      return false;
+
+	int line_number = 1;
+	while (ifs) {
+		if (strchr("\n&#%;*", ifs.peek()))  // comment line?
+			ifs.ignore(numeric_limits<int>::max(), '\n');
+		else {
+			try {
+				MapLine mapline(ifs);
+				apply(mapline, mode);
+			}
+			catch (const MapLineException &ex) {
+				Message::wstream(true) << "map file " << fname << ", line " << line_number << ": " << ex.what() << '\n';
+			}
+		}
+      line_number++;
+	}
+	return true;
+}
+
+
+bool FontMap::read (const string &fname, char modechar) {
+	Mode mode;
+	switch (modechar) {
+		case '=': mode = FM_REPLACE; break;
+		case '-': mode = FM_REMOVE; break;
+		default : mode = FM_APPEND;
+	}
+	return read(fname, mode);
+}
+
+
+/** Applies a mapline according to the given mode (append, remove, replace).
+ *  @param[in] mapline the mapline to be applied
+ *  @param[in] mode mode to use
+ *  @return true in case of success */
+bool FontMap::apply (const MapLine& mapline, FontMap::Mode mode) {
+	switch (mode) {
+		case FM_APPEND:
+			return append(mapline);
+		case FM_REMOVE:
+			return remove(mapline);
+		default:
+			return replace(mapline);
+	}
+}
+
+
+/** Applies a mapline according to the given mode (append, remove, replace).
+ *  @param[in] mapline the mapline to be applied
+ *  @param[in] modechar character that denotes the mode (+, -, or =)
+ *  @return true in case of success */
+bool FontMap::apply (const MapLine& mapline, char modechar) {
+	Mode mode;
+	switch (modechar) {
+		case '=': mode = FM_REPLACE; break;
+		case '-': mode = FM_REMOVE; break;
+		default : mode = FM_APPEND;
+	}
+	return apply(mapline, mode);
+}
+
+
+/** Appends given mapline data to the fontmap if there is no entry for the corresponding font in the map yet.
+ *  @param[in] mapline parsed font data
+ *  @return true if data has been appended */
+bool FontMap::append (const MapLine &mapline) {
+   if (!mapline.texname().empty()) {
+		if (!mapline.fontfname().empty() || !mapline.encname().empty()) {
+			Iterator it = _fontMap.find(mapline.texname());
+			if (it == _fontMap.end()) {
+				_fontMap[mapline.texname()] = MapEntry(mapline.fontfname(), mapline.encname());
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+/** Replaces the map data of the given font. If the font is locked (because it's already in use) nothing happens.
+ *  @param[in] mapline parsed font data
+ *  @return true if data has been replaced */
+bool FontMap::replace (const MapLine &mapline) {
+   if (!mapline.texname().empty()) {
+		if (mapline.fontfname().empty() && mapline.encname().empty())
+			return remove(mapline);
+		Iterator it = _fontMap.find(mapline.texname());
+		if (it == _fontMap.end())
+			_fontMap[mapline.texname()] = MapEntry(mapline.fontfname(), mapline.encname());
+		else if (!it->second.locked)
+			it->second = MapEntry(mapline.fontfname(), mapline.encname());
 		return true;
 	}
 	return false;
 }
 
 
-/** Read map file in dvips format.
- *  @param[in] is data is read from this stream */
-void FontMap::readPsMap (istream &is) {
-	char buf[512];
-	while (is && !is.eof()) {
-		is.getline(buf, 512);
-		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
-			continue;
-		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
-		MapEntry entry;
-		string name;
-		while (last < end && *first) {
-			last = first;
-			switch (read_entry(first, last)) {
-				case FM_NAME:
-					if (name.empty())
-						name = first;
-					break;
-				case FM_ENC:
-					entry.encname = first; break;
-				case FM_FONT:
-					entry.fontname = first; break;
-				case FM_ERROR:
-					continue;
-				default:
-					break;
-			}
-			first = last+1;
-		}
-		// strip filename suffix
-		size_t len;
-		if ((len = entry.encname.length()) > 4 && entry.encname.substr(len-4) == ".enc")
-			entry.encname = entry.encname.substr(0, len-4);
-		if ((len = entry.fontname.length()) > 4 && entry.fontname[len-4] == '.')
-			entry.fontname = entry.fontname.substr(0, len-4);
-
-		if (!name.empty() && ((name != entry.fontname && !entry.fontname.empty()) || !entry.encname.empty()))
-			_fontMap[name] = entry;
-	}
-}
-
-
-/** Read map file in dvipdfm format.
- *  <font name> [<encoding>|default|none] [<map target>] [options]
- *  The optional trailing dvipdfm-parameters -r, -e and -s are ignored.
- *  @param[in] is data is read from this stream */
-void FontMap::readPdfMap (istream &is) {
-	char buf[512];
-	while (is && !is.eof()) {
-		is.getline(buf, 512);
-		if (!buf[0] || strchr(" %#;*", buf[0])) // comment?
-			continue;
-		char *first=buf, *last=buf, *end=buf+is.gcount()-1;
-		vector<string> fields;
-		for (int i=0; i < 3 && last < end && *first; i++) {
-			FontMapFieldType type = read_entry(first, last, true);
-			if (*first == '-')
-				break;
-			if (type == FM_NAME)
-				fields.push_back(first);
-			first = last+1;
-		}
-		if (fields.size() > 1 && (fields[1] == "default" || fields[1] == "none"))
-			fields[1].clear();
-
-		if (fields.size() < 2)
-			continue;
-		if ((fields.size() == 2 && fields[1].empty()) || (fields.size() == 3 && fields[1].empty() && fields[0] == fields[2]))
-			continue;
-
-		_fontMap[fields[0]].fontname = fields[fields.size() == 2 ? 0 : 2];
-		_fontMap[fields[0]].encname  = fields[1];
-	}
-}
-
-
-
-static char* str_tolower (char *str) {
-	for (char *p=str; *p; p++)
-		*p = tolower(*p);
-	return str;
-}
-
-
-static inline char* get_extension (char *fname) {
-	if (char* p=strrchr(fname, '.'))
-		return p+1;
-	return 0;
-}
-
-
-
-
-/** Reads a single line entry.
- *  @param[in,out] first pointer to first char of entry
- *  @param[in,out] last  pointer to last char of entry
- *  @param[in] name_only true, if special meanings of \" and < should be ignored
- *  @return entry type */
-static FontMapFieldType read_entry (char* &first, char* &last, bool name_only) {
-	while (*first && isspace(*first))
-		first++;
-	if (!name_only) {
-		if (*first == '"') {
-			last = first+1;
-			while (*last && *last != '"')
-				last++;
-			if (*last == 0)  // quote not closed => skip invalid line
-				return FM_ERROR;
-			return FM_PS_CODE;
-		}
-		else if (*first == '<') {
-			FontMapFieldType type=FM_HEADER;
-			first++;
-			if (isspace(*first))
-				first++;
-			else if (*first == '<' || *first == '[') {
-				type = (*first == '<') ? FM_FONT : FM_ENC;
-				first++;
-			}
-			if (read_entry(first, last, true) != FM_NAME)
-				return FM_ERROR;
-			if (type == FM_HEADER) {
-				if (char *ext = get_extension(first)) {
-					ext = str_tolower(ext);
-					if (strcmp(ext, "enc")==0)
-						return FM_ENC;
-					if (strcmp(ext, "pfb")==0 || strcmp(ext, "pfa")==0)
-						return FM_FONT;
-				}
-			}
-			return type;
-		}
-	}
-	last = first;
-	while (*last && !isspace(*last))
-		last++;
-	*last = 0;
-	return (first < last) ? FM_NAME : FM_NONE;
+/** Removes the map entry of the given font. If the font is locked (because it's already in use) nothing happens.
+ *  @param[in] mapline parsed font data
+ *  @return true if entry has been removed */
+bool FontMap::remove (const MapLine &mapline) {
+   if (!mapline.texname().empty()) {
+      Iterator it = _fontMap.find(mapline.texname());
+      if (it != _fontMap.end() && !it->second.locked) {
+         _fontMap.erase(it);
+         return true;
+      }
+   }
+   return false;
 }
 
 
@@ -202,6 +163,8 @@ ostream& FontMap::write (ostream &os) const {
 }
 
 
+/** Reads and evaluates all map files in the given directory.
+ *  @param[in] path to directory containing the map files to be read */
 void FontMap::readdir (const string &dirname) {
 	Directory dir(dirname);
 	while (const char *fname = dir.read('f')) {
@@ -232,4 +195,13 @@ const char* FontMap::encoding (const string &fontname) const {
 	if (it == _fontMap.end() || it->second.encname.empty())
 		return 0;
 	return it->second.encname.c_str();
+}
+
+
+/** Sets the lock flag for the given font in order to avoid changing the map data of this font.
+ *  @param[in] fontname name of font to be locked */
+void FontMap::lockFont (const string& fontname) {
+	Iterator it = _fontMap.find(fontname);
+	if (it != _fontMap.end())
+		it->second.locked = true;
 }

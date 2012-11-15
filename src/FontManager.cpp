@@ -23,6 +23,7 @@
 #include "Font.h"
 #include "FontEncoding.h"
 #include "FontManager.h"
+#include "FontMap.h"
 #include "FileFinder.h"
 #include "Message.h"
 #include "macros.h"
@@ -141,10 +142,28 @@ VirtualFont* FontManager::getVF () const {
 }
 
 
+static Font* create_font (const string &filename, const string &fontname, UInt32 checksum, double dsize, double ssize) {
+	string ext;
+	if (const char *dot = strrchr(filename.c_str(), '.'))
+		ext = dot+1;
+	if (!ext.empty() && FileFinder::lookup(filename)) {
+		if (ext == "pfb")
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::PFB);
+		if (ext == "ttf")
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::TTF);
+		if (ext == "vf")
+			return VirtualFont::create(fontname, checksum, dsize, ssize);
+		if (ext == "mf")
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::MF);
+	}
+	return 0;
+}
+
+
 /** Registers a new font to be managed by the FontManager. If there is
  *  already a registered font assigned to number n, nothing happens.
  *  @param[in] fontnum local font number, as used in DVI and VF files
- *  @param[in] name fontname, e.g. cmr10
+ *  @param[in] name TFM fontname given in DVI file, e.g. cmr10
  *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] dsize design size in TeX point units
  *  @param[in] ssize scaled size in TeX point units
@@ -155,26 +174,24 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		return id;
 
 	Font *newfont = 0;
-	int newid = _fonts.size();      // the new font gets this ID
+	const int newid = _fonts.size();   // the new font gets this ID
 	Name2IdMap::iterator it = _name2id.find(name);
 	if (it != _name2id.end()) {  // font with same name already registered?
 		Font *font = _fonts[it->second];
 		newfont = font->clone(dsize, ssize);
 	}
 	else {
-		if (FileFinder::lookup(name+".pfb"))
-			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::PFB);
-		else if (FileFinder::lookup(name+".ttf"))
-			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::TTF);
-		else if (FileFinder::lookup(name+".vf"))
-			newfont = VirtualFont::create(name, checksum, dsize, ssize);
-		else if (FileFinder::lookup(name+".mf"))
-			newfont = PhysicalFont::create(name, checksum, dsize, ssize, PhysicalFont::MF);
-		else {
+		if (const char *mapped_name = FontMap::instance().lookup(name))
+			newfont = create_font(mapped_name, name, checksum, dsize, ssize);
+
+		const char *exts[] = {".pfb", ".ttf", ".vf", ".mf", 0};
+		for (const char **p = exts; *p && !newfont; ++p)
+			newfont = create_font(name+*p, name, checksum, dsize, ssize);
+		if (!newfont) {
 			newfont = new EmptyFont(name);
 			Message::wstream(true) << "font '" << name << "' not found\n";
 		}
-		if (!newfont->verifyChecksums())
+		else if (!newfont->verifyChecksums())
 			Message::wstream(true) << "checksum mismatch in font " << name << '\n';
 		_name2id[name] = newid;
 	}

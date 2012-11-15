@@ -54,7 +54,6 @@ static bool _mktex_enabled = false;
 static const char* find_file (const std::string &fname);
 static const char* find_mapped_file (std::string fname);
 static const char* mktex (const std::string &fname);
-static void init_font_map (const char *usermapname);
 
 
 /** Initializes the file finder. This function must be called before any other
@@ -191,12 +190,15 @@ static const char* find_mapped_file (std::string fname) {
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
-	const char *mapped_name = FontMap::instance().lookup(base);
-	if (mapped_name) {
-		fname = std::string(mapped_name) + "." + ext;
-		const char *path;
-		if ((path = find_file(fname)) || (path = mktex(fname)))
-			return path;
+	if (const char *mapped_name = FontMap::instance().lookup(base)) {
+		const char *path=0;
+		if (strchr(mapped_name, '.'))      // does the mapped filename has an extension?
+			path = find_file(mapped_name);  // look for that file
+		else {                             // otherwise, use extension of unmapped file
+			fname = std::string(mapped_name) + "." + ext;
+			(path = find_file(fname)) || (path = mktex(fname));
+		}
+		return path;
 	}
 	return 0;
 }

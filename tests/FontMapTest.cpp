@@ -60,6 +60,5 @@ TEST(FontMapTest, ps_map) {
 
 		EXPECT_EQ(strcmp(fm.encoding("MyriadPro-Bold-8t"), "my-lf-t1"), 0);
 		EXPECT_EQ(fm.encoding("cmbsy8"), (const char*)0);
-
 	}
 }
