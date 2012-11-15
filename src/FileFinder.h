@@ -25,7 +25,7 @@
 
 struct FileFinder
 {
-  	static void init (const char *argv0, const char *progname, bool enable_mktexmf, const char *usermapname=0);
+  	static void init (const char *argv0, const char *progname, bool enable_mktexmf);
 	static void finish ();
 	static std::string version ();
 	static const char* lookup (const std::string &fname, bool extended=true);

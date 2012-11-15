@@ -33,6 +33,7 @@
 #include "Font.h"
 #include "FontCache.h"
 #include "FontEngine.h"
+#include "FontMap.h"
 #include "Ghostscript.h"
 #include "InputReader.h"
 #include "Message.h"
@@ -294,6 +295,33 @@ static void print_version (bool extended) {
 }
 
 
+static void init_fontmap (const CommandLine &args) {
+	const char *usermapname = args.map_file_given() ? args.map_file_arg().c_str() : 0;
+	bool additional = (usermapname && *usermapname == '+'); // read additional map entries?
+	if (additional)
+		usermapname++;
+	if (usermapname) {
+		// try to read user font map file
+		const char *mappath = 0;
+		if (!FontMap::instance().read(usermapname)) {
+			if ((mappath = FileFinder::lookup(usermapname, false)) != 0)
+				FontMap::instance().read(mappath);
+			else
+				Message::wstream(true) << "map file '" << usermapname << "' not found\n";
+		}
+	}
+	if (!usermapname || additional) {
+		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
+		const char *mf=0;
+		for (const char **p=mapfiles; *p && !mf; p++)
+			if ((mf = FileFinder::lookup(*p, false)) != 0)
+				FontMap::instance().read(mf);
+		if (!mf)
+			Message::wstream(true) << "none of the default map files could be found";
+	}
+}
+
+
 int main (int argc, char *argv[]) {
 	CommandLine args;
 	args.parse(argc, argv);
@@ -363,8 +391,8 @@ int main (int argc, char *argv[]) {
 		dvisvg.setPageSize(args.bbox_arg());
 
 		try {
-			const char *usermap = args.map_file_given() ? args.map_file_arg().c_str() : 0;
-			FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given(), usermap);
+			FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
+			init_fontmap(args);
 			pair<int,int> pageinfo;
 			SignalHandler::instance().start();
 			dvisvg.convert(args.page_arg(), &pageinfo);

@@ -64,9 +64,8 @@ static void init_font_map (const char *usermapname);
  *  FileFinder function.
  *  @param[in] argv0 argv[0] of main() function
  *  @param[in] progname name of application using the FileFinder
- *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated
- *  @param[in] usermapname optional path to mapfile; if 0, the default files are used */
-void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf, const char *usermapname) {
+ *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated */
+void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf) {
 	if (_initialized)
 		return;
 
@@ -89,7 +88,6 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 #endif
 #endif
 	_initialized = true;
-	init_font_map(usermapname);
 }
 
 
@@ -252,34 +250,6 @@ static const char* mktex (const std::string &fname) {
 	path = kpse_make_tex(type, fname.c_str());
 #endif
 	return path;
-}
-
-
-/** Initializes a font map by reading the map file(s).
- *  @param[in,out] fontmap font map to be initialized */
-static void init_font_map (const char *usermapname) {
-	bool additional = (usermapname && *usermapname == '+'); // read additional map entries?
-	if (additional)
-		usermapname++;
-	if (usermapname) {
-		// try to read user font map file
-		const char *mappath = 0;
-		if (!FontMap::instance().read(usermapname)) {
-			if ((mappath = find_file(usermapname)))
-				FontMap::instance().read(mappath);
-			else
-				Message::wstream(true) << "map file '" << usermapname << "' not found\n";
-		}
-	}
-	if (!usermapname || additional) {
-		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
-		const char *mf=0;
-		for (const char **p=mapfiles; *p && !mf; p++)
-			if ((mf = find_file(*p))!=0)
-				FontMap::instance().read(mf);
-		if (!mf)
-			Message::wstream(true) << "none of the default map files could be found";
-	}
 }
 
 
