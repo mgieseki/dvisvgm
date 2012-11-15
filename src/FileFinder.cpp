@@ -25,6 +25,7 @@
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Message.h"
+#include "FontMap.h"
 
 using namespace std;
 
@@ -50,7 +51,6 @@ using namespace std;
 
 static bool _initialized = false;
 static bool _mktex_enabled = false;
-static FontMap _fontmap;
 
 // ---------------------------------------------------
 
@@ -214,7 +214,7 @@ static const char* find_mapped_file (std::string fname) {
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
-	const char *mapped_name = _fontmap.lookup(base);
+	const char *mapped_name = FontMap::instance().lookup(base);
 	if (mapped_name) {
 		fname = std::string(mapped_name) + "." + ext;
 		const char *path;
@@ -264,9 +264,9 @@ static void init_font_map (const char *usermapname) {
 	if (usermapname) {
 		// try to read user font map file
 		const char *mappath = 0;
-		if (!_fontmap.read(usermapname)) {
+		if (!FontMap::instance().read(usermapname)) {
 			if ((mappath = find_file(usermapname)))
-				_fontmap.read(mappath);
+				FontMap::instance().read(mappath);
 			else
 				Message::wstream(true) << "map file '" << usermapname << "' not found\n";
 		}
@@ -276,7 +276,7 @@ static void init_font_map (const char *usermapname) {
 		const char *mf=0;
 		for (const char **p=mapfiles; *p && !mf; p++)
 			if ((mf = find_file(*p))!=0)
-				_fontmap.read(mf);
+				FontMap::instance().read(mf);
 		if (!mf)
 			Message::wstream(true) << "none of the default map files could be found";
 	}
@@ -319,5 +319,5 @@ const char* FileFinder::lookupEncName (std::string fname) {
 	size_t pos = fname.rfind('.');
 	if (pos != std::string::npos)
 		fname = fname.substr(0, pos); // strip extension
-	return _fontmap.encoding(fname);
+	return FontMap::instance().encoding(fname);
 }

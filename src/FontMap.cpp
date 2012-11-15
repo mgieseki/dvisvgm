@@ -34,9 +34,10 @@ static inline char* get_extension (char *fname);
 static FontMapFieldType read_entry (char* &first, char* &last, bool name_only=false);
 
 
-
-FontMap::FontMap (const string &fname) {
-	read(fname);
+/** Returns the singleton instance. */
+FontMap& FontMap::instance() {
+	static FontMap fontmap;
+	return fontmap;
 }
 
 

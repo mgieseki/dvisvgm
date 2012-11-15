@@ -22,7 +22,6 @@
 #define KPSFILEFINDER_H
 
 #include <string>
-#include "FontMap.h"
 
 struct FileFinder
 {

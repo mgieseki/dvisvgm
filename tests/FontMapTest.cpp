@@ -28,7 +28,8 @@ TEST(FontMapTest, pdf_map) {
 	const char *fname = "tests/dvipdfm_test.map";
 	ifstream ifs(fname);
 	if (ifs) {
-		FontMap fm(fname);
+		FontMap &fm = FontMap::instance();
+		fm.read(fname);
 		EXPECT_EQ(strcmp(fm.lookup("MyriadPro-Bold-8t"), "MyriadPro-Bold"), 0);
 		EXPECT_EQ(strcmp(fm.lookup("cmbsy8"), "cmbsy7"), 0);
 		// entry without mapped name
@@ -47,7 +48,8 @@ TEST(FontMapTest, ps_map) {
 	const char *fname = "tests/dvips_test.map";
 	ifstream ifs(fname);
 	if (ifs) {
-		FontMap fm(fname);
+		FontMap &fm = FontMap::instance();
+		fm.read(fname);
 		EXPECT_EQ(strcmp(fm.lookup("MyriadPro-Bold-8t"), "MyriadPro-Bold"), 0);
 		EXPECT_EQ(strcmp(fm.lookup("cmbsy8"), "cmbsy7"), 0);
 		// entry without mapped name
