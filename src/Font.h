@@ -57,6 +57,7 @@ struct Font
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
+	virtual bool verifyChecksums () const      {return true;}
 };
 
 
@@ -146,6 +147,7 @@ class TFMFont : public virtual Font
 		double charDepth (int c) const;
 		double charHeight (int c) const;
 		double italicCorr (int c) const;
+		bool verifyChecksums () const;
 
 	private:
 		mutable TFM *tfm;

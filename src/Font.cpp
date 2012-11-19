@@ -94,6 +94,12 @@ double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
 double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
 double TFMFont::italicCorr (int c) const {return getTFM()->getItalicCorr(c);}
 
+bool TFMFont::verifyChecksums () const   {
+	if (checksum != 0 && getTFM()->getChecksum() != 0)
+		return checksum == getTFM()->getChecksum();
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 // static class variables

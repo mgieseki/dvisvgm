@@ -174,6 +174,8 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			newfont = new EmptyFont(name);
 			Message::wstream(true) << "font '" << name << "' not found\n";
 		}
+		if (!newfont->verifyChecksums())
+			Message::wstream(true) << "checksum mismatch in font " << name << '\n';
 		_name2id[name] = newid;
 	}
 	_fonts.push_back(newfont);
