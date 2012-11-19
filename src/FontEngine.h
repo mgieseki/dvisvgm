@@ -70,7 +70,7 @@ class FontEngine
 		FT_Face _currentFace;
       FT_Library _library;
 		int _ptSize;
-		std::string fname;
+		std::string _fontname;  // name of current font
 };
 
 #endif

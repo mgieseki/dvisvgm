@@ -114,8 +114,8 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
 
 
 bool FontEngine::setFont (const Font &font) {
-	if (fname != font.name()) {
-		fname = font.name();
+	if (_fontname != font.name()) {
+		_fontname = font.name();
 		return setFont(font.path());
 	}
 	return true;
