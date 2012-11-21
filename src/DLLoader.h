@@ -39,7 +39,7 @@ class DLLoader
 
 	protected:
 		DLLoader () : _handle(0) {}
-		void* loadFunction (const char *name);
+		void* loadSymbol (const char *name);
 
    private:
 #ifdef __WIN32__

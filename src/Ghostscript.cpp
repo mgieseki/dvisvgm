@@ -101,7 +101,7 @@ bool Ghostscript::revision (gsapi_revision_t *r) {
 #if defined(HAVE_LIBGS)
 	return (gsapi_revision(r, sizeof(gsapi_revision_t)) == 0);
 #else
-	if (PFN_gsapi_revision fn = (PFN_gsapi_revision)loadFunction("gsapi_revision"))
+	if (PFN_gsapi_revision fn = (PFN_gsapi_revision)loadSymbol("gsapi_revision"))
 		return (fn(r, sizeof(gsapi_revision_t)) == 0);
 	return false;
 #endif
@@ -131,7 +131,7 @@ int Ghostscript::new_instance (void **psinst, void *caller) {
 #if defined(HAVE_LIBGS)
 	return gsapi_new_instance(psinst, caller);
 #else
-	if (PFN_gsapi_new_instance fn = (PFN_gsapi_new_instance)loadFunction("gsapi_new_instance"))
+	if (PFN_gsapi_new_instance fn = (PFN_gsapi_new_instance)loadSymbol("gsapi_new_instance"))
 		return fn(psinst, caller);
    *psinst = 0;
 	return 0;
@@ -145,7 +145,7 @@ void Ghostscript::delete_instance () {
 #if defined(HAVE_LIBGS)
 	gsapi_delete_instance(_inst);
 #else
-	if (PFN_gsapi_delete_instance fn = (PFN_gsapi_delete_instance)loadFunction("gsapi_delete_instance"))
+	if (PFN_gsapi_delete_instance fn = (PFN_gsapi_delete_instance)loadSymbol("gsapi_delete_instance"))
 		fn(_inst);
 #endif
 }
@@ -156,7 +156,7 @@ int Ghostscript::exit () {
 #if defined(HAVE_LIBGS)
 	return gsapi_exit(_inst);
 #else
-	if (PFN_gsapi_exit fn = (PFN_gsapi_exit)loadFunction("gsapi_exit"))
+	if (PFN_gsapi_exit fn = (PFN_gsapi_exit)loadSymbol("gsapi_exit"))
 		return fn(_inst);
 	return 0;
 #endif
@@ -171,7 +171,7 @@ int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
 #if defined(HAVE_LIBGS)
 	return gsapi_set_stdio(_inst, in, out, err);
 #else
-	if (PFN_gsapi_set_stdio fn = (PFN_gsapi_set_stdio)loadFunction("gsapi_set_stdio"))
+	if (PFN_gsapi_set_stdio fn = (PFN_gsapi_set_stdio)loadSymbol("gsapi_set_stdio"))
 		return fn(_inst, in, out, err);
 	return 0;
 #endif
@@ -186,7 +186,7 @@ int Ghostscript::init_with_args (int argc, char **argv) {
 #if defined(HAVE_LIBGS)
 	return gsapi_init_with_args(_inst, argc, argv);
 #else
-	if (PFN_gsapi_init_with_args fn = (PFN_gsapi_init_with_args)loadFunction("gsapi_init_with_args"))
+	if (PFN_gsapi_init_with_args fn = (PFN_gsapi_init_with_args)loadSymbol("gsapi_init_with_args"))
 		return fn(_inst, argc, argv);
 	return 0;
 #endif
@@ -198,7 +198,7 @@ int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_begin(_inst, user_errors, pexit_code);
 #else
-	if (PFN_gsapi_run_string_begin fn = (PFN_gsapi_run_string_begin)loadFunction("gsapi_run_string_begin"))
+	if (PFN_gsapi_run_string_begin fn = (PFN_gsapi_run_string_begin)loadSymbol("gsapi_run_string_begin"))
 		return fn(_inst, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;
@@ -217,7 +217,7 @@ int Ghostscript::run_string_continue (const char *str, unsigned length, int user
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_continue(_inst, str, length, user_errors, pexit_code);
 #else
-	if (PFN_gsapi_run_string_continue fn = (PFN_gsapi_run_string_continue)loadFunction("gsapi_run_string_continue"))
+	if (PFN_gsapi_run_string_continue fn = (PFN_gsapi_run_string_continue)loadSymbol("gsapi_run_string_continue"))
 		return fn(_inst, str, length, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;
@@ -230,7 +230,7 @@ int Ghostscript::run_string_end (int user_errors, int *pexit_code) {
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_end(_inst, user_errors, pexit_code);
 #else
-	if (PFN_gsapi_run_string_end fn = (PFN_gsapi_run_string_end)loadFunction("gsapi_run_string_end"))
+	if (PFN_gsapi_run_string_end fn = (PFN_gsapi_run_string_end)loadSymbol("gsapi_run_string_end"))
 		return fn(_inst, user_errors, pexit_code);
 	*pexit_code = 0;
 	return 0;

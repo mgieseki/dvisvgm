@@ -41,7 +41,10 @@ DLLoader::~DLLoader () {
 }
 
 
-void* DLLoader::loadFunction (const char *name) {
+/** Loads a function or variable from the dynamic/shared library.
+ *  @param[in] name name of function/variable to load
+ *  @return pointer to loaded symbol, or 0 if the symbol could not be loaded */
+void* DLLoader::loadSymbol (const char *name) {
 	if (_handle) {
 #ifdef __WIN32__
 		return (void*)GetProcAddress(_handle, name);
