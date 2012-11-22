@@ -81,13 +81,20 @@ void MessageStream::putChar (const char c, ostream &os) {
 
 
 MessageStream& MessageStream::operator << (const char *str) {
-	if (_os) {
-		const int len = strlen(str);
+	if (_os && str) {
 		const int cols = Terminal::columns();
-		if (cols > 0 && _col+len > cols && _indent+len <= cols)
-			putChar('\n', *_os);
-		for (const char *p=str; *p; ++p)
-			putChar(*p, *_os);
+		const char *first = str;
+		while (*first) {
+			const char *last = strchr(first, '\n');
+			if (!last)
+				last = first+strlen(first)-1;
+			size_t len = last-first+1;
+			if (cols > 0 && _col+len > cols && _indent+len <= cols)
+				putChar('\n', *_os);
+			while (first <= last)
+				putChar(*first++, *_os);
+			first = last+1;
+		}
 	}
 	return *this;
 }
