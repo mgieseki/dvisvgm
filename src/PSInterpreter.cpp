@@ -73,12 +73,17 @@ PSActions* PSInterpreter::setActions (PSActions *actions) {
 }
 
 
+/** Checks if the given status value returned by Ghostscript indicates an error.
+ *  @param[in] status status value returned by Ghostscript after the execution of a PS snippet
+ *  @throw PSException if the status value indicates a PostScript error */
 void PSInterpreter::checkStatus (int status) {
 	if (status < 0) {
 		_mode = PS_QUIT;
 		if (status < -100)
 			throw PSException("fatal error");
-		throw PSException(_gs.error_name(status));
+		if (_errorMessage.empty())
+			throw PSException(_gs.error_name(status));
+		throw PSException(_errorMessage);
 	}
 }
 
@@ -159,31 +164,28 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 		const char *end = buf+len-1;  // last position of buf
 		for (const char *first=buf, *last=buf; first <= end; last++, first=last) {
 			// move first and last to begin and end of the next line, respectively
-			while (last <= end && *last != '\n')
+			while (last < end && *last != '\n')
 				last++;
 			size_t linelength = last-first+1;
 			if (linelength > MAXLEN)  // skip long lines since they don't contain any relevant information
 				continue;
 
 			vector<char> &linebuf = self->_linebuf;  // just a shorter name...
-			if ((*last == '\n' || !self->active())) {
-				if (linelength + linebuf.size() > 5) {  // prefix "dvi." plus final newline
+			if ((*last == '\n' || !self->active()) || self->_inError) {
+				if (linelength + linebuf.size() > 1) {  // prefix "dvi." plus final newline
 					SplittedCharInputBuffer ib(linebuf.empty() ? 0 : &linebuf[0], linebuf.size(), first, linelength);
 					BufferInputReader in(ib);
-					in.skipSpace();
-					if (self->_inError) {
-						if (in.check("dvi.enderror")) {
-							// @@
+					if (self->_inError)
+						self->_errorMessage += string(first, linelength);
+					else {
+						in.skipSpace();
+						if (in.check("Unrecoverable error: ")) {
 							self->_errorMessage.clear();
-							self->_inError = false;
-						}
-						else
-							self->_errorMessage += string(first, linelength);
-					}
-					if (in.check("dvi.")) {
-						if (in.check("beginerror"))  // all following output belongs to an error message
+							while (!in.eof())
+								self->_errorMessage += in.get();
 							self->_inError = true;
-						else
+						}
+						else if (in.check("dvi."))
 							self->callActions(in);
 					}
 				}
@@ -191,7 +193,6 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 			}
 			else { // no line end found =>
 				// save remaining characters and prepend them to the next incoming chunk of characters
-				linelength--;         // last == end+1 => linelength is 1 too large
 				if (linebuf.size() + linelength > MAXLEN)
 					linebuf.clear();   // don't care for long lines
 				else {
@@ -304,9 +305,6 @@ void PSInterpreter::callActions (InputReader &in) {
  *  @param[in] len number of chars in buf
  *  @return number of processed characters */
 int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) {
-	ostringstream oss;
-	oss << "PostScript error:\n";
-	oss.write(buf, len);
 	return len;
 }
 

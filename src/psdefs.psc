@@ -70,8 +70,6 @@ const char *PSInterpreter::PSDEFS =
 "sysexec aload pop 6(setmatrix)prcmd}def/initmatrix{matrix setmatrix}def/concat{m"
 "atrix currentmatrix matrix concatmatrix setmatrix}def/setgray 1 defpr/setcmykcol"
 "or 4 defpr/sethsbcolor 3 defpr/setrgbcolor 3 defpr/.setopacityalpha{dup/.setopac"
-"ityalpha sysexec 1(setopacityalpha)prcmd}def/.handleerror errordict/handleerror "
-"get def errordict begin/handleerror{0(beginerror)prcmd .handleerror 0(enderror)p"
-"rcmd}.bind def end ";
+"ityalpha sysexec 1(setopacityalpha)prcmd}def ";
 
 // vim: set syntax=cpp:
