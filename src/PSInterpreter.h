@@ -99,6 +99,7 @@ class PSInterpreter
 		static int GSDLLCALL output (void *inst, const char *buf, int len);
 		static int GSDLLCALL error (void *inst, const char *buf, int len);
 
+		void checkStatus (int status);
 		void callActions (InputReader &cib);
 
    private:

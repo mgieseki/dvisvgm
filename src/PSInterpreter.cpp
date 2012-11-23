@@ -29,6 +29,7 @@
 #include "psdefs.psc"
 #include "SignalHandler.h"
 
+
 using namespace std;
 
 
@@ -72,6 +73,16 @@ PSActions* PSInterpreter::setActions (PSActions *actions) {
 }
 
 
+void PSInterpreter::checkStatus (int status) {
+	if (status < 0) {
+		_mode = PS_QUIT;
+		if (status < -100)
+			throw PSException("fatal error");
+		throw PSException(_gs.error_name(status));
+	}
+}
+
+
 /** Executes a chunk of PostScript code.
  *  @param[in] str buffer containing the code
  *  @param[in] len number of characters in buffer
@@ -80,11 +91,12 @@ PSActions* PSInterpreter::setActions (PSActions *actions) {
 void PSInterpreter::execute (const char *str, size_t len, bool flush) {
 	init();
 	if (_mode != PS_QUIT) {
-		int status;
+		int status=0;
 		if (_mode == PS_NONE) {
 			_gs.run_string_begin(0, &status);
 			_mode = PS_RUNNING;
 		}
+		checkStatus(status);
 		const char *p=str;
 		// feed Ghostscript with code chunks that are not larger than 64KB
 		// => see documentation of gsapi_run_string_foo()
@@ -94,15 +106,10 @@ void PSInterpreter::execute (const char *str, size_t len, bool flush) {
 			_gs.run_string_continue(p, chunksize, 0, &status);
 			p += chunksize;
 			len -= chunksize;
-			if (status == -101) { // e_Quit
-				_gs.exit();
+			if (status == -101)  // e_Quit
 				_mode = PS_QUIT;
-			}
-			else if (status <= -100) {
-				_gs.exit();
-				_mode = PS_QUIT;
-				throw PSException("fatal PostScript error");
-			}
+			else
+				checkStatus(status);
 		}
 		if (flush) {
 			// force writing contents of output buffer

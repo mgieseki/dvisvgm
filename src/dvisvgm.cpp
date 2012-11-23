@@ -45,6 +45,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#include "PSInterpreter.h"
 #else
 #define TARGET_SYSTEM ""
 #endif
@@ -406,6 +407,9 @@ int main (int argc, char *argv[]) {
 		}
 		catch (DVIException &e) {
 			Message::estream() << "\nDVI error: " << e.what() << '\n';
+		}
+		catch (PSException &e) {
+			Message::estream() << "\nPostScript error: " << e.what() << '\n';
 		}
 		catch (SignalException &e) {
 			Message::wstream(true) << "execution interrupted by user\n";

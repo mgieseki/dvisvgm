@@ -25,6 +25,12 @@
 #include <iomanip>
 #include <sstream>
 
+#if defined(HAVE_LIBGS)
+   #include <ghostscript/ierrors.h>
+#else
+   #include "ierrors.h"
+#endif
+
 using namespace std;
 
 #ifdef __WIN32__
@@ -108,14 +114,14 @@ bool Ghostscript::revision (gsapi_revision_t *r) {
 }
 
 
-/** Returns product name and revision number of the GS library. 
+/** Returns product name and revision number of the GS library.
  *  @param[in] revonly if true, only the revision number is returned */
 string Ghostscript::revision (bool revonly) {
 	gsapi_revision_t r;
 	if (revision(&r)) {
 		ostringstream oss;
 		if (!revonly)
-			oss << r.product << ' '; 
+			oss << r.product << ' ';
 		oss << (r.revision/100) << '.' << setfill('0') << setw(2) << (r.revision%100);
 		return oss.str();
 	}
@@ -233,6 +239,26 @@ int Ghostscript::run_string_end (int user_errors, int *pexit_code) {
 	if (PFN_gsapi_run_string_end fn = (PFN_gsapi_run_string_end)loadSymbol("gsapi_run_string_end"))
 		return fn(_inst, user_errors, pexit_code);
 	*pexit_code = 0;
+	return 0;
+#endif
+}
+
+
+const char* Ghostscript::error_name (int code) {
+	if (code < 0)
+		code = -code;
+	const char *error_names[] = { ERROR_NAMES };
+	if (code == 0 || code > sizeof(error_names)/sizeof(error_names[0]))
+		return 0;
+#if defined(HAVE_LIBGS)
+	// use array defined in libgs to avoid linking the error strings into the binary
+	return gs_error_names[code-1];
+#elif defined(__WIN32__)
+	// gs_error_names is private in the Ghostscript DLL so we can't access it here
+	return error_names[code-1];
+#else
+	if (const char **error_names = (const char**)loadSymbol("gs_error_names"))
+		return error_names[code-1];
 	return 0;
 #endif
 }
