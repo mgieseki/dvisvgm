@@ -67,7 +67,11 @@ void MessageStream::putChar (const char c, ostream &os) {
 			else {
 				const int cols = Terminal::columns();
 				if (cols > 0 && _col >= cols) {
-					os << '\n' << string(_indent, ' ');
+#ifndef __WIN32__
+					// move cursor to next line explicitly (not necessary in Windows/DOS terminal)
+					os << '\n';
+#endif
+					os << string(_indent, ' ');
 					_col = _indent+1;
 				}
 				else
@@ -89,8 +93,11 @@ MessageStream& MessageStream::operator << (const char *str) {
 			if (!last)
 				last = first+strlen(first)-1;
 			size_t len = last-first+1;
+#ifndef __WIN32__
+			// move cursor to next line explicitly (not necessary in Windows/DOS terminal)
 			if (cols > 0 && _col+len > cols && _indent+len <= cols)
 				putChar('\n', *_os);
+#endif
 			while (first <= last)
 				putChar(*first++, *_os);
 			first = last+1;
