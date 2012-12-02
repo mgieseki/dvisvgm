@@ -33,7 +33,10 @@
 
 using namespace std;
 
-#ifdef __WIN32__
+// default name of dynamic/shared Ghostscript library
+#if defined(__WIN64__)
+	#define GS_DL_NAME "gsdll64.dll"
+#elif defined(__WIN32__)
 	#define GS_DL_NAME "gsdll32.dll"
 #else
 	#define GS_DL_NAME "libgs.so"
