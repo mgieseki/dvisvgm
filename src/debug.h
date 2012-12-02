@@ -23,6 +23,7 @@
 
 #include <iostream>
 
-#define SHOW(x) std::cerr << __FILE__ ", " << __LINE__ << ": " << #x << "=" << (x) << std::endl
+#define SHOW(x) std::cerr << ">>> " << __FILE__ ", " << __LINE__ << ": " << #x << "=" << (x) << std::endl
+#define PRINT(x) std::cerr << ">>> " << __FILE__ ", " << __LINE__ << ": " << (x) << std::endl
 
 #endif
