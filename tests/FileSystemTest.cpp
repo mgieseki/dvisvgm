@@ -62,7 +62,9 @@ TEST(FileSystemTest, rename) {
 	ofs.close();
 	EXPECT_TRUE(FileSystem::exists(tmpfile1));
 	FileSystem::rename(tmpfile1, tmpfile2);
+#ifndef __WIN32__
 	EXPECT_FALSE(FileSystem::exists(tmpfile1));
+#endif
 	EXPECT_TRUE(FileSystem::exists(tmpfile2));
 	FileSystem::remove(tmpfile2);
 	EXPECT_FALSE(FileSystem::exists(tmpfile2));

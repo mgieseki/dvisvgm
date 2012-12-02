@@ -224,7 +224,7 @@ static void check_letter (const char **lettermap, const vector<string> &charmap)
 
 TEST(GFReaderTest, executeChar) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
-	ifstream ifs(gf.c_str());
+	ifstream ifs(gf.c_str(), ios::binary);
 	ASSERT_TRUE(ifs);
 	GFReader gfReader(ifs);
 	PixelActions actions;
