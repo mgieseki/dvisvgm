@@ -231,7 +231,7 @@ string FilePath::relative (string reldir, bool with_filename) const {
 	FilePath rel(reldir, false);
 	string path;
 #ifdef __WIN32__
-	if (rel._drive && rel._drive != _drive)
+	if (rel._drive && _drive && rel._drive != _drive)
 		path += string(1, _drive) + ":";
 #endif
 	ConstIterator i = _dirs.begin();
