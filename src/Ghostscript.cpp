@@ -251,7 +251,7 @@ const char* Ghostscript::error_name (int code) {
 	if (code < 0)
 		code = -code;
 	const char *error_names[] = { ERROR_NAMES };
-	if (code == 0 || code > sizeof(error_names)/sizeof(error_names[0]))
+	if (code == 0 || (size_t)code > sizeof(error_names)/sizeof(error_names[0]))
 		return 0;
 #if defined(HAVE_LIBGS)
 	// use array defined in libgs to avoid linking the error strings into the binary
