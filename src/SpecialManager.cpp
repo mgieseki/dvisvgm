@@ -32,9 +32,14 @@ SpecialManager::~SpecialManager () {
 }
 
 
+/** Remove all registered handlers. */
 void SpecialManager::unregisterHandlers () {
 	FORALL(_pool, vector<SpecialHandler*>::iterator, it)
 		delete *it;
+	_pool.clear();
+	_handlers.clear();
+	_endPageListeners.clear();
+	_positionListeners.clear();
 }
 
 
@@ -55,7 +60,7 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 }
 
 
-/** Registers a multiple special handlers.
+/** Registers several special handlers at once.
  *  If ignorelist == 0, all given handlers are registered. To exclude selected sets of
  *  specials, the corresponding names can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
