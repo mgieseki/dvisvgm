@@ -369,9 +369,9 @@ void FontCache::fontinfo (const char *dirname, ostream &os, bool purge) {
 			FORALL(sortmap, SortMap::iterator, it) {
 				os	<< dec << setfill(' ') << left
 					<< setw(10) << left  << it->second->name
-					<< setw(5)  << right << it->second->numchars << " char" << (it->second->numchars == 1 ? ' ':'s')
-					<< setw(10) << right << it->second->numcmds  << " cmd"  << (it->second->numcmds == 1 ? ' ':'s')
-					<< setw(12) << right << it->second->numbytes << " byte" << (it->second->numbytes == 1 ? ' ':'s')
+					<< setw(5)  << right << it->second->numchars << " glyph" << (it->second->numchars == 1 ? ' ':'s')
+					<< setw(10) << right << it->second->numcmds  << " cmd"   << (it->second->numcmds == 1 ? ' ':'s')
+					<< setw(12) << right << it->second->numbytes << " byte"  << (it->second->numbytes == 1 ? ' ':'s')
 					<< setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << it->second->checksum
 					<< endl;
 			}
