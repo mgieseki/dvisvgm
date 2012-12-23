@@ -167,10 +167,8 @@ static string remove_path (string fname) {
 
 static string ensure_suffix (string fname, const string &suffix) {
 	size_t dotpos = remove_path(fname).rfind('.');
-	if (dotpos == string::npos) {
-		dotpos = fname.length();
+	if (dotpos == string::npos)
 		fname += "."+suffix;
-	}
 	return fname;
 }
 
@@ -303,8 +301,8 @@ static void init_fontmap (const CommandLine &args) {
 		usermapname++;
 	if (usermapname) {
 		// try to read user font map file
-		const char *mappath = 0;
 		if (!FontMap::instance().read(usermapname)) {
+			const char *mappath = 0;
 			if ((mappath = FileFinder::lookup(usermapname, false)) != 0)
 				FontMap::instance().read(mappath);
 			else

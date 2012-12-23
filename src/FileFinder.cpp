@@ -217,7 +217,6 @@ static const char* mktex (const std::string &fname) {
 	if (ext != "tfm" && ext != "mf")
 		return 0;
 
-	std::string base = fname.substr(0, pos);
 	const char *path = 0;
 #ifdef MIKTEX
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
