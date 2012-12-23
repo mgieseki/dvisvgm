@@ -133,7 +133,7 @@ bool Process::run (bool quiet) {
 			}
 			catch (SignalException &e) { // caught ctrl-c
 				kill(pid, SIGKILL);
-				throw e;
+				throw;
 			}
 		}
 	}

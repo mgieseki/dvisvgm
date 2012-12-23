@@ -113,7 +113,7 @@ std::string FileFinder::version () {
 	catch (MessageException &e) {
 		if (autoinit)
 			finish();
-		throw e;
+		throw;
 	}
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))

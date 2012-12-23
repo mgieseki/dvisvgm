@@ -63,7 +63,7 @@ const char* MiKTeXCom::findFile (const char *fname) {
 		}
 		return 0;
 	}
-	catch (_com_error e) {
+	catch (_com_error &e) {
 		throw MessageException((const char*)e.Description());
 	}
 }
