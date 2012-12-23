@@ -35,6 +35,7 @@ Directory::Directory () {
 	handle = INVALID_HANDLE_VALUE;
 #else
 	dir = 0;
+	dirent = 0;
 #endif
 }
 

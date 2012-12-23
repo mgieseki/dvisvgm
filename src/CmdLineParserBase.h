@@ -70,7 +70,7 @@ class CmdLineParserBase
 		virtual bool error () const         {return _error;}
 
 	protected:
-		CmdLineParserBase () : _error(false) {}
+		CmdLineParserBase () : _printErrors(true), _error(false) {}
 		CmdLineParserBase (const CmdLineParserBase &cmd) {}
 		virtual ~CmdLineParserBase () {}
 		virtual void init ();

@@ -41,7 +41,7 @@ static inline double str2double (const string &str) {
 }
 
 
-PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(false)
+PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(false), _xmlnode(0)
 {
 }
 
