@@ -290,7 +290,7 @@ bool FontCache::fontinfo (const char *dirname, vector<FontInfo> &infos, vector<s
 			}
 		}
 	}
-	return infos.size() > 0;
+	return !infos.empty();
 }
 
 

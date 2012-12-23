@@ -56,7 +56,7 @@ void TpicSpecialHandler::reset () {
  *  @param[in] ddist dash/dot distance of line in TeX point units
  *                   (0:solid line, >0:dashed line, <0:dotted line) */
 void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions) {
-	if (actions && _points.size() > 0) {
+	if (actions && !_points.empty()) {
 		XMLElementNode *elem=0;
 		if (_points.size() == 1) {
 			const DPair &p = _points.back();
@@ -118,7 +118,7 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
  *  of the dashes and the gaps inbetween.
  *  @param[in] ddist length of dashes and gaps */
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
-	if (actions && _points.size() > 0) {
+	if (actions && !_points.empty()) {
 		const size_t size = _points.size();
 		if (size < 3)
 			drawLines(true, false, ddist, actions);

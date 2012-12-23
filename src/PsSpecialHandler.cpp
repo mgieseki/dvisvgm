@@ -389,7 +389,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
 			if (_opacityalpha < 1)
 				path->addAttribute("stroke-opacity", XMLString(_opacityalpha));
-			if (_dashpattern.size() > 0) {
+			if (!_dashpattern.empty()) {
 				ostringstream oss;
 				for (size_t i=0; i < _dashpattern.size(); i++) {
 					if (i > 0)
