@@ -38,7 +38,7 @@ class FontEncoding
 		std::string name () const          {return _encname;}
 		const char* getEntry (int c) const;
 		const char* path () const;
-		static FontEncoding* encoding (const std::string &fontname);
+		static FontEncoding* encoding (std::string fontname);
 
    private:
 		std::string _encname;

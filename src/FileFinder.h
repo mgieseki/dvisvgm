@@ -29,8 +29,6 @@ struct FileFinder
 	static void finish ();
 	static std::string version ();
 	static const char* lookup (const std::string &fname, bool extended=true);
-	static const char* lookupEncFile (std::string fontname);
-	static const char* lookupEncName (std::string fname);
 };
 
 #endif

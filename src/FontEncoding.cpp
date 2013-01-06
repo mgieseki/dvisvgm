@@ -21,6 +21,7 @@
 #include <fstream>
 #include "Font.h"
 #include "FontEncoding.h"
+#include "FontMap.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "FileFinder.h"
@@ -124,7 +125,7 @@ static bool valid_name_char (int c) {
 
 /** Returns an entry of the encoding table.
  * @param[in] c character code
- * @return character name assigned to charcter code c*/
+ * @return character name assigned to character code c*/
 const char* FontEncoding::getEntry (int c) const {
 	if (c >= 0 && (size_t)c < _table.size())
 		return !_table[c].empty() ? _table[c].c_str() : 0;
@@ -144,9 +145,12 @@ struct EncodingMap : public map<string, FontEncoding*>
 /** Returns the encoding of a font.
  * @param[in] fontname name of font whose encoding will be returned
  * @return pointer to encoding object, or 0 if there is no encoding defined */
-FontEncoding* FontEncoding::encoding (const string &fontname) {
+FontEncoding* FontEncoding::encoding (string fontname) {
 	static EncodingMap encmap;
-	if (const char *encname = FileFinder::lookupEncName(fontname)) {
+   size_t pos = fontname.rfind('.');
+	if (pos != string::npos)
+		fontname = fontname.substr(0, pos); // strip extension
+	if (const char *encname = FontMap::instance().encoding(fontname)) {
       EncodingMap::const_iterator it = encmap.find(encname);
    	if (it != encmap.end())
 			return it->second;

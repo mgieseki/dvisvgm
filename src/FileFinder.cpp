@@ -24,8 +24,8 @@
 #include <string>
 #include "FileFinder.h"
 #include "FileSystem.h"
-#include "Message.h"
 #include "FontMap.h"
+#include "Message.h"
 
 using namespace std;
 
@@ -45,7 +45,6 @@ using namespace std;
 #endif
 
 // ---------------------------------------------------
-// static member variables of FileFinder::Impl
 
 static bool _initialized = false;
 static bool _mktex_enabled = false;
@@ -97,6 +96,7 @@ void FileFinder::finish () {
 }
 
 
+/** Returns the version string of the underlying file searching library (kpathsea, MiKTeX) */
 std::string FileFinder::version () {
 #ifdef MIKTEX
 	bool autoinit=false;
@@ -246,26 +246,4 @@ const char* FileFinder::lookup (const std::string &fname, bool extended) {
 	if ((path = find_file(fname)) || (extended  && ((path = find_mapped_file(fname)) || (path = mktex(fname)))))
 		return path;
 	return 0;
-}
-
-
-/** Returns the path to the corresponding encoding file for a given font file.
- *  @param[in] fname name of the font file
- *  @return path to encoding file on success, 0 otherwise */
-const char* FileFinder::lookupEncFile (std::string fname) {
-	if (const char *encname = lookupEncName(fname)) {
-		fname = std::string(encname) + ".enc";
-		const char *path = find_file(fname);
-		if (path)
-			return path;
-	}
-	return 0;
-}
-
-
-const char* FileFinder::lookupEncName (std::string fname) {
-	size_t pos = fname.rfind('.');
-	if (pos != std::string::npos)
-		fname = fname.substr(0, pos); // strip extension
-	return FontMap::instance().encoding(fname);
 }
