@@ -40,7 +40,7 @@ FontEncoding::FontEncoding (const string &encname) : _encname(encname)
 
 
 const char* FontEncoding::path () const {
-	return FileFinder::lookup(_encname+".enc");
+	return FileFinder::lookup(_encname+".enc", false);
 }
 
 
@@ -52,7 +52,7 @@ void FontEncoding::read () {
 		read(ifs);
 	}
 	else
-		Message::mstream(true) << "encoding file '" << _encname << ".enc' not found\n";
+		Message::wstream(true) << "encoding file '" << _encname << ".enc' not found\n";
 }
 
 
@@ -151,13 +151,14 @@ FontEncoding* FontEncoding::encoding (string fontname) {
 	if (pos != string::npos)
 		fontname = fontname.substr(0, pos); // strip extension
 	if (const char *encname = FontMap::instance().encoding(fontname)) {
-      EncodingMap::const_iterator it = encmap.find(encname);
-   	if (it != encmap.end())
+		EncodingMap::const_iterator it = encmap.find(encname);
+		if (it != encmap.end())
 			return it->second;
-		FontEncoding *enc = new FontEncoding(encname);
-		encmap[encname] = enc;
-		return enc;
+		if (FileFinder::lookup(string(encname)+".enc"), false) {
+			FontEncoding *enc = new FontEncoding(encname);
+			encmap[encname] = enc;
+			return enc;
+		}
 	}
 	return 0;
 }
-

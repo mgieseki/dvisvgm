@@ -160,8 +160,10 @@ string PhysicalFont::glyphName (int c) const {
 	if (type() == MF)
 		return "";
 	FontEngine::instance().setFont(*this);
-	if (FontEncoding *enc = encoding())
-		return enc->getEntry(c);
+	if (FontEncoding *enc = encoding()) {
+		const char *name = enc->getEntry(c);
+		return name ? name : "";
+	}
 	return FontEngine::instance().getGlyphName(c);
 }
 
