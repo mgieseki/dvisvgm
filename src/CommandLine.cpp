@@ -17,6 +17,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
    {'\0', "color", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
    {'e', "exact", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
+   {'m', "fontmap", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_fontmap)},
    {'h', "help", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
    {'\0', "keep", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -24,7 +25,6 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 #endif
    {'l', "list-specials", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
    {'M', "mag", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
-   {'m', "map-file", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_map_file)},
    {'n', "no-fonts", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
    {'\0', "no-mktexmf", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_mktexmf)},
    {'S', "no-specials", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_specials)},
@@ -50,6 +50,7 @@ void CommandLine::init () {
    _cache_given = false;
    _color_given = false;
    _exact_given = false;
+   _fontmap_given = false;
    _help_given = false;
    _keep_given = false;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -57,7 +58,6 @@ void CommandLine::init () {
 #endif
    _list_specials_given = false;
    _mag_given = false;
-   _map_file_given = false;
    _no_fonts_given = false;
    _no_mktexmf_given = false;
    _no_specials_given = false;
@@ -77,11 +77,11 @@ void CommandLine::init () {
 
    _bbox_arg = "min";
    _cache_arg.clear();
+   _fontmap_arg.clear();
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    _libgs_arg.clear();
 #endif
    _mag_arg = 4;
-   _map_file_arg.clear();
    _no_fonts_arg = 0;
    _no_specials_arg.clear();
    _output_arg.clear();
@@ -101,7 +101,7 @@ void CommandLine::help () const {
    puts("This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
    puts("Input options:");
    puts("  -p, --page=ranges             choose pages to convert [1]");
-   puts("  -m, --map-file=[+]filename    set [additional] font map file name");
+   puts("  -m, --fontmap=filenames       evaluate (additional) font map files");
    puts("\nSVG output options:");
    puts("  -b, --bbox=size               set size of bounding box [min]");
    puts("  -o, --output=pattern          set name pattern of output files");
@@ -157,6 +157,12 @@ void CommandLine::handle_exact(InputReader &ir, const Option &opt, bool longopt)
 }
 
 
+void CommandLine::handle_fontmap(InputReader &ir, const Option &opt, bool longopt) {
+   if (getStringArg(ir, opt, longopt, _fontmap_arg))
+      _fontmap_given = true;
+}
+
+
 void CommandLine::handle_help(InputReader &ir, const Option &opt, bool longopt) {
    _help_given = true;
 }
@@ -183,12 +189,6 @@ void CommandLine::handle_list_specials(InputReader &ir, const Option &opt, bool 
 void CommandLine::handle_mag(InputReader &ir, const Option &opt, bool longopt) {
    if (getDoubleArg(ir, opt, longopt, _mag_arg))
       _mag_given = true;
-}
-
-
-void CommandLine::handle_map_file(InputReader &ir, const Option &opt, bool longopt) {
-   if (getStringArg(ir, opt, longopt, _map_file_arg))
-      _map_file_given = true;
 }
 
 
@@ -290,6 +290,7 @@ void CommandLine::status () const {
    cout << 'C'<< setw(20) << "cache " << cache_given() << setw(10) << cache_arg() << endl;
    cout << ' '<< setw(20) << "color " << color_given() << endl;
    cout << 'e'<< setw(20) << "exact " << exact_given() << endl;
+   cout << 'm'<< setw(20) << "fontmap " << fontmap_given() << setw(10) << fontmap_arg() << endl;
    cout << 'h'<< setw(20) << "help " << help_given() << endl;
    cout << ' '<< setw(20) << "keep " << keep_given() << endl;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -297,7 +298,6 @@ void CommandLine::status () const {
 #endif
    cout << 'l'<< setw(20) << "list-specials " << list_specials_given() << endl;
    cout << 'M'<< setw(20) << "mag " << mag_given() << setw(10) << mag_arg() << endl;
-   cout << 'm'<< setw(20) << "map-file " << map_file_given() << setw(10) << map_file_arg() << endl;
    cout << 'n'<< setw(20) << "no-fonts " << no_fonts_given() << setw(10) << no_fonts_arg() << endl;
    cout << ' '<< setw(20) << "no-mktexmf " << no_mktexmf_given() << endl;
    cout << 'S'<< setw(20) << "no-specials " << no_specials_given() << setw(10) << no_specials_arg() << endl;

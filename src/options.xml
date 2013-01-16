@@ -32,9 +32,9 @@
 				<arg type="string" name="ranges" default="1"/>
 				<description>choose pages to convert</description>
 			</option>
-			<option long="map-file" short="m">
-				<arg type="string" name="[+]filename"/>
-				<description>set [additional] font map file name</description>
+			<option long="fontmap" short="m">
+				<arg type="string" name="filenames"/>
+				<description>evaluate (additional) font map files</description>
 			</option>
 		</section>
 		<section title="SVG output options">

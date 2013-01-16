@@ -146,6 +146,41 @@ characters at the bounds of the SVG graphic. With option *--exact*, dvisvgm anal
 of each character and derives a usually tight bounding box.
 
 
+*-m, --fontmap*='filenames'::
+Loads and evaluates a single or multiple font map files. These files are required to resolve
+font file names and encodings. dvisvgm does not provide its own map file but tries to read
+available ones coming with dvips or dvipdfm. If option *--fonrmapm* is not given, dvisvgm looks for the
+default map files +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order). Otherwise, the
+listed files are used. Multiple filenames must be separated by commas without leading and/or trailing
+whitespace. 
+The map files are evaluated in the given order. By default, redefined mappings do not replace previous ones.
+However, each filename can be preceded by an optional mode specifier (*+*, *-*, or *=*) to change this behavior:
+ 
+  +mapfile;;
+    Only those entries in the given map file that don't redefine a font mapping are applied.
+	 That's also the default mode if no mode specifier is given.
+  
+  -mapfile;;
+    Ensures that none of the font mappings defined in the given map file are used, i.e. previously 
+    defined mappings for the specified fonts are removed.
+  
+  =mapfile;;
+    All mappings defined in the map file are applied. Previously defined settings for the same font
+    are replaced.
++
+If the first filename in the filename sequence is preceded by a mode specifier, dvisvgm loads the
+default font map (see above) and applies the other map files afterwards. Otherwise, none of default
+map files will be loaded automatically.
++
+Examples: *--fontmap=myfile1.map,+myfile2.map* loads `myfile1.map` followed by `myfile2.map` where all
+redefinitions of `myfile2.map` are ignored.
+*--fontmap==myfile1.map,-myfile2.map* loads the default map file followed by `myfile1.map` and `myfile2.map`
+where all redefinitions of `myfile1.map` replace previous entries. Afterwards, all definitions for the fonts
+given in `myfile2.map` are removed again.
++
+For further information about the map file formats, see the manuals of dvips and dvipdfm.
+
+
 *-h, --help*::
 Prints a short summary of all available command-line options.
 This is also the default action if dvisvgm is called without parameters.
@@ -171,18 +206,8 @@ statement by a colon or a blank, e.g. 'color' or 'ps'.
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
 
 
-*-m, --map-file*='file'::
-Sets the map file used to look up font names and encodings. dvisvgm does not provide
-its own map file but tries to read available ones coming with dvips or dvipdfm. If
-option *-m* is not given, dvisvgm looks for +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order).
-Without further options, the file specified by option *-m* will be used instead of the
-default maps. If you want dvisgvm to load the given file additionally to the default maps, add a
-leading '+' to the file/path, e.g. `--map-file=+myfonts.map`.
-For further information about the map file formats, see the manuals of dvips and dvipdfm.
-
-
 *-M, --mag*='factor'::
-Sets the maginfication factor applied in conjunction with Metafont calls prior tracing the glyphs.
+Sets the magnification factor applied in conjunction with Metafont calls prior tracing the glyphs.
 The larger this value, the better the tracing results. Nevertheless, large magnification values
 can cause Metafont arithmetic errors due to number overflows. So, use this option with care.
 The default setting usually produces nice results.
@@ -448,7 +473,7 @@ A description of the command syntax can be found in the DVI driver documentation
 The famous DVI driver dvips introduced its own set of specials in order to embed PostScript code into DVI files,
 which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
 PostScript snippets and to convert a large amount of it to SVG. However, in contrast to dvips, dvisvgm uses floating point
-arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the corrdinates. Therefore,
+arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the coordinates. Therefore,
 the relative locations of the graphic elements may slightly differ from those computed by dvips.
 +
 Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter but relies on

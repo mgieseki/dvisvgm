@@ -47,8 +47,9 @@ class FontMap
 		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
 
 		static FontMap& instance ();
-		bool read (const std::string &fname, Mode mode=FM_REPLACE);
+		bool read (const std::string &fname, Mode mode);
 		bool read (const std::string &fname, char modechar);
+		bool read (const std::string &fname_seq);
 		void readdir (const std::string &dirname);
 		bool apply (const MapLine &mapline, Mode mode);
 		bool apply (const MapLine &mapline, char modechar);

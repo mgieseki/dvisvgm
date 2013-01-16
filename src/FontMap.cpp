@@ -23,6 +23,7 @@
 #include <limits>
 #include <vector>
 #include "Directory.h"
+#include "FileFinder.h"
 #include "FontMap.h"
 #include "MapLine.h"
 #include "Message.h"
@@ -37,8 +38,9 @@ FontMap& FontMap::instance() {
 }
 
 
-/** Reads and evaluates a font map file.
- *  @param[in] fname name of mapfile to read
+/** Reads and evaluates a single font map file.
+ *  @param[in] fname name of map file to read
+ *  @param[in] mode selects how to integrate the map file entries into the global map tree
  *  @return true if file could be opened */
 bool FontMap::read (const string &fname, FontMap::Mode mode) {
 	ifstream ifs(fname.c_str());
@@ -106,7 +108,41 @@ bool FontMap::apply (const MapLine& mapline, char modechar) {
 }
 
 
-/** Appends given mapline data to the fontmap if there is no entry for the corresponding font in the map yet.
+/** Reads and evaluates a sequence of map files. Each map file is looked up in the local
+ *  directory and the TeX file tree.
+ *  @param[in] fname_seq comma-separated list of map file names
+ *  @return true if at least one of the given map files was found */
+bool FontMap::read (const string &fname_seq) {
+	bool found = false;
+	size_t left=0;
+	while (left < fname_seq.length()) {
+		const char modechar = fname_seq[left];
+		if (strchr("+-=", modechar))
+			left++;
+		string fname;
+		size_t right = fname_seq.find(',', left);
+		if (right != string::npos)
+			fname = fname_seq.substr(left, right-left);
+		else {
+			fname = fname_seq.substr(left);
+			right = fname_seq.length();
+		}
+		if (!fname.empty()) {
+         if (!read(fname, modechar)) {
+            if (const char *path = FileFinder::lookup(fname, false))
+               found = found || read(path, modechar);
+            else
+               Message::wstream(true) << "map file " << fname << " not found\n";
+         }
+		}
+		left = right+1;
+	}
+	return found;
+}
+
+
+/** Appends given map line data to the font map if there is no entry for the corresponding
+ *  font in the map yet.
  *  @param[in] mapline parsed font data
  *  @return true if data has been appended */
 bool FontMap::append (const MapLine &mapline) {
@@ -123,7 +159,8 @@ bool FontMap::append (const MapLine &mapline) {
 }
 
 
-/** Replaces the map data of the given font. If the font is locked (because it's already in use) nothing happens.
+/** Replaces the map data of the given font.
+ *  If the font is locked (because it's already in use) nothing happens.
  *  @param[in] mapline parsed font data
  *  @return true if data has been replaced */
 bool FontMap::replace (const MapLine &mapline) {
@@ -141,7 +178,8 @@ bool FontMap::replace (const MapLine &mapline) {
 }
 
 
-/** Removes the map entry of the given font. If the font is locked (because it's already in use) nothing happens.
+/** Removes the map entry of the given font.
+ *  If the font is locked (because it's already in use) nothing happens.
  *  @param[in] mapline parsed font data
  *  @return true if entry has been removed */
 bool FontMap::remove (const MapLine &mapline) {

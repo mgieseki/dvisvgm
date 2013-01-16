@@ -295,29 +295,18 @@ static void print_version (bool extended) {
 
 
 static void init_fontmap (const CommandLine &args) {
-	const char *usermapname = args.map_file_given() ? args.map_file_arg().c_str() : 0;
-	bool additional = (usermapname && *usermapname == '+'); // read additional map entries?
-	if (additional)
-		usermapname++;
-	if (usermapname) {
-		// try to read user font map file
-		if (!FontMap::instance().read(usermapname)) {
-			const char *mappath = 0;
-			if ((mappath = FileFinder::lookup(usermapname, false)) != 0)
-				FontMap::instance().read(mappath);
-			else
-				Message::wstream(true) << "map file '" << usermapname << "' not found\n";
-		}
-	}
-	if (!usermapname || additional) {
+	const char *mapseq = args.fontmap_given() ? args.fontmap_arg().c_str() : 0;
+	bool additional = mapseq && strchr("+-=", *mapseq);
+	if (!mapseq || additional) {
 		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
-		const char *mf=0;
-		for (const char **p=mapfiles; *p && !mf; p++)
-			if ((mf = FileFinder::lookup(*p, false)) != 0)
-				FontMap::instance().read(mf);
-		if (!mf)
+		bool found = false;
+		for (const char **p=mapfiles; *p && !found; p++)
+			found = FontMap::instance().read(*p);
+		if (!found)
 			Message::wstream(true) << "none of the default map files could be found";
 	}
+	if (mapseq)
+		FontMap::instance().read(mapseq);
 }
 
 

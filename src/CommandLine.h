@@ -21,8 +21,8 @@ class CommandLine : public CmdLineParserBase
       void status () const;
       bool page_given () const {return _page_given;}
       const std::string& page_arg () const {return _page_arg;}
-      bool map_file_given () const {return _map_file_given;}
-      const std::string& map_file_arg () const {return _map_file_arg;}
+      bool fontmap_given () const {return _fontmap_given;}
+      const std::string& fontmap_arg () const {return _fontmap_arg;}
       bool bbox_given () const {return _bbox_given;}
       const std::string& bbox_arg () const {return _bbox_arg;}
       bool output_given () const {return _output_given;}
@@ -70,7 +70,7 @@ class CommandLine : public CmdLineParserBase
       void init ();
       const CmdLineParserBase::Option* options () const {return _options;}
       void handle_page (InputReader &ir, const Option &opt, bool longopt);
-      void handle_map_file (InputReader &ir, const Option &opt, bool longopt);
+      void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
       void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
       void handle_output (InputReader &ir, const Option &opt, bool longopt);
       void handle_stdout (InputReader &ir, const Option &opt, bool longopt);
@@ -102,8 +102,8 @@ class CommandLine : public CmdLineParserBase
       static const CmdLineParserBase::Option _options[];
       bool _page_given;
       std::string _page_arg;
-      bool _map_file_given;
-      std::string _map_file_arg;
+      bool _fontmap_given;
+      std::string _fontmap_arg;
       bool _bbox_given;
       std::string _bbox_arg;
       bool _output_given;
