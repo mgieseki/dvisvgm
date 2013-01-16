@@ -469,6 +469,13 @@ A description of the command syntax can be found in the DVI driver documentation
 // The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files.
 // dvisvgm converts them to corresponding SVG elements.
 
+*pdf*::
+pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently, only
+two of them, 'pdf:mapfile' and 'pdf:mapline' are supported by dvisvgm. These specials allow modifying the font map
+tree during the processing of DVI files. They are used by CTeX, for example. dvisvgm supports both, the dvips and
+dvipdfm font map format. For further information on the command syntax and semantics, see the documentation of
+\pdfmapfile in the pdfTeX user manual.
+
 *ps*::
 The famous DVI driver dvips introduced its own set of specials in order to embed PostScript code into DVI files,
 which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
@@ -479,9 +486,9 @@ the relative locations of the graphic elements may slightly differ from those co
 Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter but relies on
 Ghostscript instead. If the Ghostscript library was not linked while building dvisvgm, it is looked up and loaded dynamically
 during runtime. In this case, dvisvgm looks for 'libgs.so' on Unix-like systems, and for 'gsdll32.dll' or 'gsdll64.dll' on Windows.
-You can override these default file names with the environment variable +LIBGS+.
-The library must be installed and must be reachable through the ld search path (\*nix) or the PATH environment
-variable (Windows). If it cannot be found, the evaluation of PostScript specials is disabled.
+You can override these default file names with environment variable +LIBGS+ or the command-line option *--libgs*.
+The library must be installed and reachable through the ld search path (\*nix) or the PATH environment
+variable (Windows). If it cannot be found, the processing of PostScript specials is disabled.
 Use option *--list-specials* to check whether PS support is available, i.e. the entry 'ps' is present.
 
 *tpic*::
@@ -579,6 +586,11 @@ RESOURCES
 ---------
 Project home page::: http://dvisvgm.sourceforge.net
 SourceForge project site::: http://sourceforge.net/projects/dvisvgm
+
+
+BUGS
+----
+Please report bugs using the bug tracker at Launchpad (see https://launchpad.net/dvisvgm).
 
 
 AUTHOR

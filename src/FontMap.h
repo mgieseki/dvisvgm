@@ -57,7 +57,7 @@ class FontMap
 		bool replace (const MapLine &mapline);
 		bool remove (const MapLine &mapline);
 		void lockFont (const std::string &fontname);
-		void clear ()    {_fontMap.clear();}
+		void clear (bool unlocked_only=false);
 		std::ostream& write (std::ostream &os) const;
 		const char* lookup(const std::string &fontname) const;
 		const char* encoding (const std::string &fontname) const;

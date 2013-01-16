@@ -243,3 +243,20 @@ void FontMap::lockFont (const string& fontname) {
 	if (it != _fontMap.end())
 		it->second.locked = true;
 }
+
+
+/** Removes all (unlocked) entries from the font map.
+ *  @param[in] unlocked_only if true, only unlocked entries are removed */
+void FontMap::clear (bool unlocked_only) {
+   if (!unlocked_only)
+      _fontMap.clear();
+   else {
+      Iterator it=_fontMap.begin();
+      while (it != _fontMap.end()) {
+         if (it->second.locked)
+            ++it;
+         else
+            _fontMap.erase(it++);
+      }
+   }
+}

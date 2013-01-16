@@ -56,6 +56,7 @@
 #include "ColorSpecialHandler.h"
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
+#include "PdfSpecialHandler.h"
 //#include "HtmlSpecialHandler.h"
 #if !defined(DISABLE_GS)
 	#include "PsSpecialHandler.h"
@@ -324,6 +325,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool
 			new ColorSpecialHandler,    // handles color specials
 			new DvisvgmSpecialHandler,  // handles raw SVG embeddings
 			new EmSpecialHandler,       // handles emTeX specials
+			new PdfSpecialHandler,      // handles pdf specials
 //			new HtmlSpecialHandler,     // handles hyperref specials
 			new TpicSpecialHandler,     // handles tpic specials
 			0
