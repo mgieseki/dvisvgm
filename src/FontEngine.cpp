@@ -35,7 +35,6 @@ FontEngine::FontEngine () {
 	_currentFace = 0;
 	_currentChar = _currentGlyphIndex = 0;
 	_horDeviceRes = _vertDeviceRes = 300;
-	_ptSize = 0;
    if (FT_Init_FreeType(&_library))
       Message::estream(true) << "FontEngine: error initializing FreeType library\n";
 }
@@ -88,15 +87,10 @@ static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
 
 /** Sets the font to be used.
  * @param[in] fname path to font file
- * @param[in] ptSize font size in point units
  * @return true on success */
-bool FontEngine::setFont (const string &fname, int ptSize) {
+bool FontEngine::setFont (const string &fname) {
 	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
-      return false;
-   }
-	if (ptSize && FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
-		Message::estream(true) << "FontEngine: error setting character size\n";
       return false;
    }
    // look for a custom character map
@@ -107,7 +101,6 @@ bool FontEngine::setFont (const string &fname, int ptSize) {
          break;
       }
    }
-	_ptSize = ptSize;
 	return true;
 }
 
@@ -254,20 +247,6 @@ vector<int> FontEngine::getPanose () const {
 				panose[i] = table->panose[i];
 	}
 	return panose;
-}
-
-
-bool FontEngine::setCharSize (int ptSize) {
-	if (_currentFace) {
-		if (FT_Set_Char_Size(_currentFace, 0, ptSize*64, _horDeviceRes, _vertDeviceRes)) {
-			Message::estream(true) << "FontEngine: error setting character size\n";
-		   return false;
-      }
-		_ptSize = ptSize;
-      return true;
-	}
-	Message::wstream(true) << "FontEngine: can't set char size, no font face selected\n";
-	return false;
 }
 
 

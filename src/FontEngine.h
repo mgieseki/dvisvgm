@@ -41,7 +41,6 @@ class FontEngine
 		static std::string version ();
 		void setDeviceResolution (int x, int y);
       bool setFont (const Font &font);
-		bool setCharSize (int ptSize);
 		bool traceOutline (unsigned char chr, Glyph &glyph, bool scale=true) const;
 		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
 		const char* getFamilyName () const;
@@ -54,7 +53,6 @@ class FontEngine
 		int getHAdvance (const char *name) const;
 		int getFirstChar () const;
 		int getNextChar () const;
-		int getCharSize () const {return _ptSize;}
 		std::vector<int> getPanose () const;
 		std::string getGlyphName (unsigned int c) const;
 		int getCharByGlyphName (const char *name) const;
@@ -62,14 +60,13 @@ class FontEngine
 
 	protected:
       FontEngine ();
-      bool setFont (const std::string &fname, int ptSize=0);
+      bool setFont (const std::string &fname);
 
    private:
 		int _horDeviceRes, _vertDeviceRes;
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face _currentFace;
       FT_Library _library;
-		int _ptSize;
 		std::string _fontname;  // name of current font
 };
 
