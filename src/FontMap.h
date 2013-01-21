@@ -39,6 +39,7 @@ class FontMap
 			Subfont *subfont;
 			int fontindex;        ///< index of font in multi-font file
 			bool locked;
+			double bold, slant, extend;
 		};
 
 	protected:

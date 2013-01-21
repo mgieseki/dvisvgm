@@ -22,6 +22,7 @@
 #include <sstream>
 #include "FileFinder.h"
 #include "MapLine.h"
+#include "Subfont.h"
 
 using namespace std;
 
@@ -47,7 +48,8 @@ TEST_F(MapLineTest, psline1) {
 	EXPECT_EQ(mapline.fontfname(), "texname.pfb");
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0);
-	EXPECT_DOUBLE_EQ(mapline.extend(), 0);
+	EXPECT_DOUBLE_EQ(mapline.extend(), 1);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 0);
 }
 
 TEST_F(MapLineTest, psline2) {
@@ -59,6 +61,7 @@ TEST_F(MapLineTest, psline2) {
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 0);
 }
 
 TEST_F(MapLineTest, psline3) {
@@ -70,6 +73,7 @@ TEST_F(MapLineTest, psline3) {
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 0);
 }
 
 TEST_F(MapLineTest, pdfline1) {
@@ -92,7 +96,7 @@ TEST_F(MapLineTest, pdfline2) {
 	EXPECT_TRUE(mapline.sfd() == 0);
    EXPECT_EQ(mapline.fontindex(), 0);
    EXPECT_DOUBLE_EQ(mapline.slant(), 0);
-   EXPECT_DOUBLE_EQ(mapline.extend(), 0);
+   EXPECT_DOUBLE_EQ(mapline.extend(), 1);
 }
 
 TEST_F(MapLineTest, pdfline3) {
@@ -107,6 +111,7 @@ TEST_F(MapLineTest, pdfline3) {
    EXPECT_EQ(mapline.fontindex(), 0);
    EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
    EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 1);
 }
 
 TEST_F(MapLineTest, pdfline4) {

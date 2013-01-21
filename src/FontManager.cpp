@@ -21,6 +21,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include <set>
 #include "Font.h"
 #include "FontEncoding.h"
 #include "FontManager.h"
@@ -184,15 +185,36 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		newfont = font->clone(dsize, ssize);
 	}
 	else {
-		if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name))
-			newfont = create_font(map_entry->fontname, name, map_entry->fontindex, checksum, dsize, ssize);
-
-		const char *exts[] = {".pfb", ".ttc", ".ttf", ".vf", ".mf", 0};
-		for (const char **p = exts; *p && !newfont; ++p)
-			newfont = create_font(name+*p, name, 0, checksum, dsize, ssize);
+		string filename = name;
+		int fontindex = 0;
+		const FontMap::Entry *map_entry = FontMap::instance().lookup(name);
+		if (map_entry) {
+			filename = map_entry->fontname;
+			fontindex = map_entry->fontindex;
+		}
+		// try to find font file with the exact given name
+		if (filename.rfind(".") != string::npos)
+			newfont = create_font(filename, name, fontindex, checksum, dsize, ssize);
+		else {
+			// try various font file formats if the given file has no extension
+			const char *exts[] = {".pfb", ".ttc", ".ttf", ".vf", ".mf", 0};
+			for (const char **p = exts; *p && !newfont; ++p)
+				newfont = create_font(filename+*p, name, fontindex, checksum, dsize, ssize);
+		}
+		if (map_entry)
+			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont))
+				pf->setStyle(map_entry->bold, map_entry->extend, map_entry->slant);
 		if (!newfont) {
+			// create dummy font as a placeholder if the proper font is not available
 			newfont = new EmptyFont(name);
-			Message::wstream(true) << "font '" << name << "' not found\n";
+			if (filename.rfind(".") == string::npos)
+				filename += ".mf";
+			// print warning message about missing font file (only once for each filename)
+			static set<string> missing_fonts;
+			if (missing_fonts.find(filename) == missing_fonts.end()) {
+				Message::wstream(true) << "font file '" << filename << "' not found\n";
+				missing_fonts.insert(filename);
+			}
 		}
 		else if (!newfont->verifyChecksums())
 			Message::wstream(true) << "checksum mismatch in font " << name << '\n';

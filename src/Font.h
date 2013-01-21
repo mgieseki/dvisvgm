@@ -38,8 +38,15 @@ class TFM;
 
 
 /** Abstract base for all font classes. */
-struct Font
-{
+struct Font {
+	struct Style {
+		Style () : bold(0), extend(0), slant(0) {}
+		Style (float b, float e, float s) : bold(b), extend(e), slant(s) {}
+		double bold;   ///< stroke width in pt used to draw the glyph outlines
+		double extend; ///< factor to strech/shrink the glyphs horizontally
+		double slant;  ///< horizontal slanting/skewing value (= tan(phi))
+	};
+
 	virtual ~Font () {}
 	virtual Font* clone (double ds, double sc) const =0;
 	virtual const Font* uniqueFont () const =0;
@@ -59,6 +66,7 @@ struct Font
    virtual void tidy () const {}
 	virtual bool verifyChecksums () const      {return true;}
 	virtual int fontIndex () const             {return 0;}
+	virtual const Style* style () const    {return 0;}
 };
 
 
@@ -105,6 +113,7 @@ class PhysicalFont : public virtual Font
       virtual int descent () const;
       virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
       const char* path () const;
+		virtual void setStyle (double bold, double extend, double slant) {}
 
    protected:
       bool createGF (std::string &gfname) const;
@@ -177,6 +186,7 @@ class PhysicalFontProxy : public PhysicalFont
 		Type type () const                        {return pf->type();}
       UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
 		int fontIndex () const                    {return pf->fontIndex();}
+		const Style* style () const               {return pf->style();}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -198,6 +208,8 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const Font* uniqueFont () const          {return this;}
       Type type () const                       {return _filetype;}
 		int fontIndex() const                    {return _fontIndex;}
+		const Style* style () const              {return _style;}
+		void setStyle (double bold, double extend, double slant);
       UInt32 unicode (UInt32 c) const;
       void tidy () const;
 
@@ -207,6 +219,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 	private:
 		Type _filetype;
 		int _fontIndex;
+		Style *_style;
       mutable std::map<UInt32,UInt32> *_charmap;
 };
 

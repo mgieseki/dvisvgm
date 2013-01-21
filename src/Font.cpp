@@ -91,10 +91,25 @@ const TFM* TFMFont::getTFM () const {
 }
 
 
-double TFMFont::charWidth (int c) const  {return getTFM()->getCharWidth(c);}
+double TFMFont::charWidth (int c) const {
+	double w = getTFM()->getCharWidth(c);
+	if (style())
+		w *= style()->extend;
+	return w;
+}
+
+
+double TFMFont::italicCorr (int c) const {
+	double w = getTFM()->getItalicCorr(c);
+	if (style())
+		w *= style()->extend;
+	return w;
+}
+
+
 double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
 double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
-double TFMFont::italicCorr (int c) const {return getTFM()->getItalicCorr(c);}
+
 
 bool TFMFont::verifyChecksums () const   {
 	if (checksum != 0 && getTFM()->getChecksum() != 0)
@@ -326,7 +341,7 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 
 
 PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
-	: TFMFont(name, cs, ds, ss), _filetype(type), _fontIndex(fontindex), _charmap(0)
+	: TFMFont(name, cs, ds, ss), _filetype(type), _fontIndex(fontindex), _style(0), _charmap(0)
 {
 }
 
@@ -336,6 +351,7 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 		_cache.write(CACHE_PATH);
 	if (!KEEP_TEMP_FILES)
 		tidy();
+	delete _style;
 	delete _charmap;
 }
 
@@ -377,6 +393,17 @@ void PhysicalFontImpl::tidy () const {
 				FileSystem::remove(name()+"."+(*p));
 		}
    }
+}
+
+
+void PhysicalFontImpl::setStyle (double bold, double extend, double slant) {
+	if (_style) {
+		_style->bold = bold;
+		_style->extend = extend;
+		_style->slant = slant;
+	}
+	else if (bold != 0 || extend != 1 || slant != 0)
+		_style = new Style(bold, extend, slant);
 }
 
 

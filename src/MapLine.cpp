@@ -30,7 +30,7 @@ using namespace std;
 
 /** Constructs a MapLine object by parsing a single mapline from the given stream. */
 MapLine::MapLine (istream &is)
-	: _sfd(0), _fontindex(0), _slant(0), _extend(0)
+	: _sfd(0), _fontindex(0), _slant(0), _bold(0), _extend(1)
 {
    char buf[256];
    is.getline(buf, 256);
@@ -182,17 +182,16 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
                throw_number_expected('e');
             break;
          case 'b': // bold
-            double bold;
-            if (!ir.parseDouble(bold))
+            if (!ir.parseDouble(_bold))
                throw_number_expected('b');
             break;
-         case 'r': //remap
+         case 'r': //remap (deprecated)
             break;
          case 'i': // ttc index
             if (!ir.parseInt(_fontindex, false))
                throw_number_expected('i', true);
             break;
-         case 'p':
+         case 'p': // UCS plane
             int dummy;
             if (!ir.parseInt(dummy, false))
                throw_number_expected('p', true);

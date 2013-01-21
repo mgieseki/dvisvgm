@@ -24,6 +24,7 @@
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
+#include FT_TYPES_H
 #include "Font.h"
 #include "FontEngine.h"
 #include "Message.h"
@@ -31,8 +32,32 @@
 using namespace std;
 
 
-FontEngine::FontEngine () {
-	_currentFace = 0;
+/** Converts a floating point value to a 16.16 fixed point value. */
+static inline FT_Fixed to_16dot16 (double val) {
+	return static_cast<FT_Fixed>(val*65536.0 + 0.5);
+}
+
+/** Converts an integer to a 16.16 fixed point value. */
+static inline FT_Fixed to_16dot16 (int val) {
+	return static_cast<FT_Fixed>(val) << 16;
+}
+
+/** Converts a floating point value to a 26.6 fixed point value. */
+static inline FT_F26Dot6 to_26dot6 (double val) {
+	return static_cast<FT_F26Dot6>(val*64.0 + 0.5);
+}
+
+/** Converts an integer to a 26.6 fixed point value. */
+static inline FT_F26Dot6 to_26dot6 (int val) {
+	return static_cast<FT_F26Dot6>(val) << 6;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+FontEngine::FontEngine () : _currentFace(0), _currentFont(0)
+{
 	_currentChar = _currentGlyphIndex = 0;
 	_horDeviceRes = _vertDeviceRes = 300;
    if (FT_Init_FreeType(&_library))
@@ -107,8 +132,8 @@ bool FontEngine::setFont (const string &fname, int fontindex) {
 
 
 bool FontEngine::setFont (const Font &font) {
-	if (_fontname != font.name()) {
-		_fontname = font.name();
+	if (!_currentFont || _currentFont->name() != font.name()) {
+		_currentFont = &font;
 		return setFont(font.path(), font.fontIndex());
 	}
 	return true;
@@ -258,7 +283,8 @@ vector<int> FontEngine::getPanose () const {
 	typedef FT_Vector *FTVectorPtr;
 #endif
 
-// Callback functions used by traceOutline
+
+// Callback functions used by trace_outline/FT_Outline_Decompose
 static int moveto (FTVectorPtr to, void *user) {
 	Glyph *glyph = static_cast<Glyph*>(user);
 	glyph->moveto(to->x, to->y);
@@ -296,18 +322,24 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
  *  @param[in] commands the drawing commands to be executed
  *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
-static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
+static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &glyph, bool scale) {
 	if (face) {
 		if (FT_Load_Glyph(face, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
 			Message::estream(true) << "can't load glyph " << int(index) << '\n';
          return false;
       }
-
 		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
 			Message::estream(true) << "no outlines found in glyph " << int(index) << '\n';
 			return false;
 		}
 		FT_Outline outline = face->glyph->outline;
+		// apply style parameters if set
+		if (const Font::Style *style = font->style()) {
+			FT_Matrix matrix = {to_16dot16(style->extend), to_16dot16(style->slant), 0, to_16dot16(1)};
+			FT_Outline_Transform(&outline, &matrix);
+			if (style->bold != 0)
+				FT_Outline_Embolden(&outline, style->bold/font->scaledSize()*face->units_per_EM);
+		}
 		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
 		FT_Outline_Decompose(&outline, &funcs, &glyph);
 		return true;
@@ -315,7 +347,6 @@ static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
 }
-
 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
@@ -331,7 +362,7 @@ static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
 bool FontEngine::traceOutline (UInt16 chr, Glyph &glyph, bool scale) const {
 	if (_currentFace) {
 		int index = FT_Get_Char_Index(_currentFace, chr);
-		return trace_outline(_currentFace, index, glyph, scale);
+		return trace_outline(_currentFace, _currentFont, index, glyph, scale);
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
@@ -341,7 +372,7 @@ bool FontEngine::traceOutline (UInt16 chr, Glyph &glyph, bool scale) const {
 bool FontEngine::traceOutline (const char *name, Glyph &glyph, bool scale) const {
 	if (_currentFace) {
 		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
-		return trace_outline(_currentFace, index, glyph, scale);
+		return trace_outline(_currentFace, _currentFont, index, glyph, scale);
 	}
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;

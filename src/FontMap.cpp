@@ -296,6 +296,7 @@ void FontMap::clear (bool unlocked_only) {
 /////////////////////////////////////////////////
 
 FontMap::Entry::Entry (const MapLine &mapline, Subfont *sf)
-	: fontname(mapline.fontfname()), encname(mapline.encname()), subfont(sf), fontindex(mapline.fontindex()), locked(false)
+	: fontname(mapline.fontfname()), encname(mapline.encname()), subfont(sf), fontindex(mapline.fontindex()), locked(false),
+	  bold(mapline.bold()), slant(mapline.slant()), extend(mapline.extend())
 {
 }

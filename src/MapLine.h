@@ -45,6 +45,7 @@ class MapLine
 		const std::string& fontfname () const {return _fontfname;}
 		const std::string& encname () const   {return _encname;}
       int fontindex () const                {return _fontindex;}
+		double bold () const                  {return _bold;}
 		double slant () const                 {return _slant;}
 		double extend () const                {return _extend;}
 		SubfontDefinition* sfd () const       {return _sfd;}
@@ -64,7 +65,7 @@ class MapLine
       std::string _encname;     ///< name of encoding (without file suffix ".enc")
 		SubfontDefinition *_sfd;  ///< subfont definition to be used
       int _fontindex;           ///< font index of file with multiple fonts (e.g. ttc files)
-      double _slant, _extend;
+      double _slant, _bold, _extend;
 };
 
 

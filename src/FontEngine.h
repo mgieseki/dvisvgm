@@ -67,7 +67,7 @@ class FontEngine
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face _currentFace;
       FT_Library _library;
-		std::string _fontname;  // name of current font
+		const Font *_currentFont;
 };
 
 #endif
