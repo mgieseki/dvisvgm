@@ -18,18 +18,26 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <limits>
 #include <vector>
 #include "Directory.h"
 #include "FileFinder.h"
+#include "FontManager.h"
 #include "FontMap.h"
 #include "MapLine.h"
 #include "Message.h"
-#include "FontManager.h"
+#include "Subfont.h"
 
 using namespace std;
+
+
+FontMap::~FontMap () {
+	for (Iterator it=_entries.begin(); it != _entries.end(); ++it)
+		delete it->second;
+}
 
 
 /** Returns the singleton instance. */
@@ -165,7 +173,7 @@ bool FontMap::append (const MapLine &mapline) {
 				string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
 				Iterator it = _entries.find(fontname);
 				if (it == _entries.end()) {
-					_entries[fontname] = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
+					_entries[fontname] = new Entry(mapline, subfonts[i]);
 					ret = true;
 				}
 			}
@@ -194,9 +202,9 @@ bool FontMap::replace (const MapLine &mapline) {
 		string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
 		Iterator it = _entries.find(fontname);
 		if (it == _entries.end())
-			_entries[fontname] = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
-		else if (!it->second.locked)
-			it->second = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
+			_entries[fontname] = new Entry(mapline, subfonts[i]);
+		else if (!it->second->locked)
+			*it->second = Entry(mapline, subfonts[i]);
 	}
 	return true;
 }
@@ -217,7 +225,7 @@ bool FontMap::remove (const MapLine &mapline) {
 		for (size_t i=0; i < subfonts.size(); i++) {
 			string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
 			Iterator it = _entries.find(fontname);
-			if (it != _entries.end() && !it->second.locked) {
+			if (it != _entries.end() && !it->second->locked) {
 				_entries.erase(it);
 				ret = true;
 			}
@@ -228,8 +236,8 @@ bool FontMap::remove (const MapLine &mapline) {
 
 
 ostream& FontMap::write (ostream &os) const {
-	for (map<string,Entry>::const_iterator i=_entries.begin(); i != _entries.end(); ++i)
-		os << i->first << " -> " << i->second.fontname << " [" << i->second.encname << "]\n";
+	for (ConstIterator it=_entries.begin(); it != _entries.end(); ++it)
+		os << it->first << " -> " << it->second->fontname << " [" << it->second->encname << "]\n";
 	return os;
 }
 
@@ -254,7 +262,7 @@ const FontMap::Entry* FontMap::lookup (const string &fontname) const {
 	ConstIterator it = _entries.find(fontname);
 	if (it == _entries.end())
 		return 0;
-	return &it->second;
+	return it->second;
 }
 
 
@@ -263,7 +271,7 @@ const FontMap::Entry* FontMap::lookup (const string &fontname) const {
 void FontMap::lockFont (const string& fontname) {
 	Iterator it = _entries.find(fontname);
 	if (it != _entries.end())
-		it->second.locked = true;
+		it->second->locked = true;
 }
 
 
@@ -275,10 +283,19 @@ void FontMap::clear (bool unlocked_only) {
    else {
       Iterator it=_entries.begin();
       while (it != _entries.end()) {
-         if (it->second.locked)
+         if (it->second->locked)
             ++it;
-         else
+         else {
+				delete it->second;
             _entries.erase(it++);
+			}
       }
    }
+}
+
+/////////////////////////////////////////////////
+
+FontMap::Entry::Entry (const MapLine &mapline, Subfont *sf)
+	: fontname(mapline.fontfname()), encname(mapline.encname()), subfont(sf), fontindex(mapline.fontindex()), locked(false)
+{
 }

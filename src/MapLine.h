@@ -24,7 +24,7 @@
 #include <istream>
 #include <string>
 #include "MessageException.h"
-#include "Subfont.h"
+
 
 class InputReader;
 class SubfontDefinition;

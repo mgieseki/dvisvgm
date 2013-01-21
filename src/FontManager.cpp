@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cstring>
 #include <cstdlib>
 #include <fstream>
 #include "Font.h"

@@ -21,13 +21,9 @@
 #ifndef FONTMAP_H
 #define FONTMAP_H
 
-#include <cstring>
-#include <istream>
 #include <map>
 #include <ostream>
 #include <string>
-
-#include "Subfont.h"
 
 class MapLine;
 class Subfont;
@@ -37,10 +33,7 @@ class FontMap
 	public:
 		struct Entry
 		{
-			Entry () : subfont(0), fontindex(0), locked(false) {}
-			Entry (const std::string &fname, const std::string &ename, Subfont *sf)
-				: fontname(fname), encname(ename), subfont(sf), fontindex(0), locked(false) {}
-
+			Entry (const MapLine &mapline, Subfont *subfont=0);
 			std::string fontname; ///< target font name
 			std::string encname;  ///< name of font encoding
 			Subfont *subfont;
@@ -49,12 +42,13 @@ class FontMap
 		};
 
 	protected:
-		typedef std::map<std::string,Entry>::iterator Iterator;
-		typedef std::map<std::string,Entry>::const_iterator ConstIterator;
+		typedef std::map<std::string,Entry*>::iterator Iterator;
+		typedef std::map<std::string,Entry*>::const_iterator ConstIterator;
 
 	public:
 		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
 
+		~FontMap ();
 		static FontMap& instance ();
 		bool read (const std::string &fname, Mode mode);
 		bool read (const std::string &fname, char modechar);
@@ -74,7 +68,7 @@ class FontMap
 		FontMap () {}
 
    private:
-		std::map<std::string,Entry> _entries;
+		std::map<std::string,Entry*> _entries;
 };
 
 #endif
