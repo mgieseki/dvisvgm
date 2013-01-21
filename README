@@ -15,13 +15,13 @@ DEPENDENCIES
 
    * Ghostscript (http://pages.cs.wisc.edu/~ghost)
      The PostScript special handler requires the Ghostscript
-     library libgs.so (Linux) or gsdll32.dll (Windows) to be
-     installed. If the configure script finds the corresponing 
-     Ghostscript development files on the system, it directly 
-     links against libgs.so. Otherwise, the library is looked up 
-     at runtime and PostScript support is enabled only if libgs.so 
-     could be found. 
-     Due to incompatible changes of the Ghostscript API, dvisvgm 
+     library libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows)
+	  to be installed. If the configure script finds the corresponding
+     Ghostscript development files on the system, it directly
+     links against libgs.so. Otherwise, the library is looked up
+     at runtime and PostScript support is enabled only if libgs.so
+     could be found.
+     Due to incompatible changes of the Ghostscript API, dvisvgm
      requires Ghostscript 8.31 or later.
 
    * kpathsea
@@ -40,7 +40,7 @@ DEPENDENCIES
      Compressed SVG files are produced by using functions
      of this library and the Gzstream wrapper classes
      (http://www.cs.unc.edu/Research/compgeom/gzstream)
-     which are licensed under LGPL version 2.1 (or optionally any 
+     which are licensed under LGPL version 2.1 (or optionally any
      later version) and should be included with this package.
 
  If you want to build and run the testsuite located in the tests
@@ -66,7 +66,7 @@ COMPILATION
  The tracer module calls Metafont in case of lacking TFM or PFB files
  via a system call. Please ensure that Metafont is installed and
  reachable through the search path.
- 
+
  If you don't like compiling the sources yourself, you can
  download pre-compiled executables for Windows and MiKTeX
  from sourceforge.net instead (see below).
@@ -78,12 +78,12 @@ USAGE
 
 
 ADDITIONAL INFORMATION
- This packacke is available from CTAN (dviware/dvisvgm) and can
+ This package is available from CTAN (dviware/dvisvgm) and can
  be downloaded from the project website at sourceforge.net as well:
 
     http://dvisvgm.sourceforge.net
 
- Here you can find the sources, precompiled binaries and further additional
+ Here you can find the sources, pre-compiled binaries and further additional
  information about the converter and related topics.
 
  If you've found a bug, please let me know. You can either send me an
@@ -95,18 +95,18 @@ COPYRIGHT
 
  Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>
 
- This program is free software; you can redistribute it and/or modify it 
- under the terms of the GNU General Public License as published by the 
- Free Software Foundation; either version 3 of the License, or (at your 
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 3 of the License, or (at your
  option) any later version.
 
- This program is distributed in the hope that it will be useful, but 
- WITHOUT ANY WARRANTY; without even the implied warranty of 
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  Public License for more details.
 
- You should have received a copy of the GNU General Public License along 
- with this program; if not, see <http://www.gnu.org/licenses/>. 
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, see <http://www.gnu.org/licenses/>.
 
  See the file COPYING for details.
 
