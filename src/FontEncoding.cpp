@@ -150,13 +150,13 @@ FontEncoding* FontEncoding::encoding (string fontname) {
    size_t pos = fontname.rfind('.');
 	if (pos != string::npos)
 		fontname = fontname.substr(0, pos); // strip extension
-	if (const char *encname = FontMap::instance().encoding(fontname)) {
-		EncodingMap::const_iterator it = encmap.find(encname);
+	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname)) {
+		EncodingMap::const_iterator it = encmap.find(entry->encname);
 		if (it != encmap.end())
 			return it->second;
-		if (FileFinder::lookup(string(encname)+".enc"), false) {
-			FontEncoding *enc = new FontEncoding(encname);
-			encmap[encname] = enc;
+		if (FileFinder::lookup(entry->encname + ".enc"), false) {
+			FontEncoding *enc = new FontEncoding(entry->encname);
+			encmap[entry->encname] = enc;
 			return enc;
 		}
 	}

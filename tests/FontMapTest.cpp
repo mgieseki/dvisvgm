@@ -30,16 +30,19 @@ TEST(FontMapTest, pdf_map) {
 	if (ifs) {
 		FontMap &fm = FontMap::instance();
 		fm.read(fname);
-		EXPECT_EQ(strcmp(fm.lookup("MyriadPro-Bold-8t"), "MyriadPro-Bold"), 0);
-		EXPECT_EQ(strcmp(fm.lookup("cmbsy8"), "cmbsy7"), 0);
-		// entry without mapped name
-		EXPECT_EQ(fm.lookup("msam10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("msbm10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("msbm10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("i don't exist"), (const char*)0);
+		const FontMap::Entry *entry;
+		ASSERT_TRUE((entry = fm.lookup("MyriadPro-Bold-8t")) != 0);
+		EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
+		EXPECT_EQ(entry->encname, "my-lf-t1");
+		ASSERT_TRUE((entry = fm.lookup("cmbsy8")) != 0);
+		EXPECT_EQ(entry->fontname, "cmbsy7");
+		EXPECT_EQ(entry->encname, "");
 
-		EXPECT_EQ(strcmp(fm.encoding("MyriadPro-Bold-8t"), "my-lf-t1"), 0);
-		EXPECT_EQ(fm.encoding("cmbsy8"), (const char*)0);
+		// entry without mapped name
+		EXPECT_TRUE(fm.lookup("msam10") == 0);
+		EXPECT_TRUE(fm.lookup("msbm10") == 0);
+		EXPECT_TRUE(fm.lookup("msbm10") == 0);
+		EXPECT_TRUE(fm.lookup("i don't exist") ==  0);
 	}
 }
 
@@ -50,15 +53,18 @@ TEST(FontMapTest, ps_map) {
 	if (ifs) {
 		FontMap &fm = FontMap::instance();
 		fm.read(fname);
-		EXPECT_EQ(strcmp(fm.lookup("MyriadPro-Bold-8t"), "MyriadPro-Bold"), 0);
-		EXPECT_EQ(strcmp(fm.lookup("cmbsy8"), "cmbsy7"), 0);
-		// entry without mapped name
-		EXPECT_EQ(fm.lookup("msam10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("msbm10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("msbm10"), (const char*)0);
-		EXPECT_EQ(fm.lookup("i don't exist"), (const char*)0);
+		const FontMap::Entry *entry;
+		ASSERT_TRUE((entry = fm.lookup("MyriadPro-Bold-8t")) != 0);
+		EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
+		EXPECT_EQ(entry->encname, "my-lf-t1");
+		ASSERT_TRUE((entry = fm.lookup("cmbsy8")) != 0);
+		EXPECT_EQ(entry->fontname, "cmbsy7");
+		EXPECT_EQ(entry->encname, "");
 
-		EXPECT_EQ(strcmp(fm.encoding("MyriadPro-Bold-8t"), "my-lf-t1"), 0);
-		EXPECT_EQ(fm.encoding("cmbsy8"), (const char*)0);
+		// entry without mapped name
+		EXPECT_TRUE(fm.lookup("msam10") == 0);
+		EXPECT_TRUE(fm.lookup("msbm10") == 0);
+		EXPECT_TRUE(fm.lookup("msbm10") == 0);
+		EXPECT_TRUE(fm.lookup("i don't exist") ==  0);
 	}
 }

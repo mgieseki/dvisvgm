@@ -23,12 +23,15 @@
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "MapLine.h"
+#include "Subfont.h"
 
 using namespace std;
 
 
 /** Constructs a MapLine object by parsing a single mapline from the given stream. */
-MapLine::MapLine (istream &is) : _sfindex(0), _slant(0), _extend(0), _embed(true) {
+MapLine::MapLine (istream &is)
+	: _sfd(0), _fontindex(0), _slant(0), _extend(0)
+{
    char buf[256];
    is.getline(buf, 256);
    parse(buf);
@@ -60,17 +63,17 @@ bool MapLine::isDVIPSFormat (const char *line) const {
 }
 
 
-/** Separates main font name and subfont name from a given combined name.
- *  Example: "basename@sfname@10" => {"basename10", "sfname"}
+/** Separates main font name and subfont definition name from a given combined name.
+ *  Example: "basename@sfdname@10" => {"basename10", "sfdname"}
  *  @param[in,out] fontname complete fontname; after separation: main fontname only
- *  @param[out] subfontname name of subfont
+ *  @param[out] sfdname name of subfont definition
  *  @return true on success */
-static bool split_fontname (string &fontname, string &subfontname) {
+static bool split_fontname (string &fontname, string &sfdname) {
 	size_t pos1;    // index of first '@'
 	if ((pos1 = fontname.find('@')) != string::npos && pos1 > 0) {
 		size_t pos2; // index of second '@'
 		if ((pos2 = fontname.find('@', pos1+1)) != string::npos && pos2 > pos1+1) {
-			subfontname = fontname.substr(pos1+1, pos2-pos1-1);
+			sfdname = fontname.substr(pos1+1, pos2-pos1-1);
 			fontname = fontname.substr(0, pos1) + fontname.substr(pos2+1);
 			return true;
 		}
@@ -86,7 +89,10 @@ void MapLine::parse (const char *line) {
    CharInputBuffer ib(line, strlen(line));
    BufferInputReader ir(ib);
    _texname = ir.getString();
-	split_fontname(_texname, _sfname);
+	string sfdname;
+	split_fontname(_texname, sfdname);
+	if (!sfdname.empty())
+		_sfd = SubfontDefinition::lookup(sfdname);
    if (isDVIPSFormat(line))
       parseDVIPSLine(ir);
    else
@@ -110,7 +116,7 @@ void MapLine::parseDVIPSLine (InputReader &ir) {
          if (name.length() > 4 && name.substr(name.length()-4) == ".enc")
             _encname = name.substr(0, name.length()-4);
          else
-            _fontname = name;
+            _fontfname = name;
       }
       else {  // ir.peek() == '"' => list of PS font operators
          string options = ir.getQuotedString('"');
@@ -155,9 +161,9 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
 	}
    ir.skipSpace();
       if (ir.peek() != '-')
-      _fontname = ir.getString();
-   if (!_fontname.empty()) {
-		parseFilenameOptions(_fontname);
+      _fontfname = ir.getString();
+   if (!_fontfname.empty()) {
+		parseFilenameOptions(_fontfname);
    }
    ir.skipSpace();
    while (ir.peek() == '-') {
@@ -183,8 +189,7 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
          case 'r': //remap
             break;
          case 'i': // ttc index
-				int index;
-            if (!ir.parseInt(index, false))
+            if (!ir.parseInt(_fontindex, false))
                throw_number_expected('i', true);
             break;
          case 'p':
@@ -203,9 +208,9 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
          case 'm': // map single chars
 				ir.skipUntil("-");
             break;
-         case 'w': // writing mode
-            int wmode;
-            if (!ir.parseInt(wmode, false))
+         case 'w': // writing mode (horizontal=0, vertical=1)
+            int vertical;
+            if (!ir.parseInt(vertical, false))
                throw_number_expected('w', true);
             break;
          default:
@@ -220,34 +225,32 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
 
 /** [:INDEX:][!]FONTNAME[/CSI][,VARIANT] */
 void MapLine::parseFilenameOptions (string fname) {
-   _fontname = fname;
+   _fontfname = fname;
 	StringInputBuffer ib(fname);
 	BufferInputReader ir(ib);
 	if (ir.peek() == ':' && isdigit(ir.peek(1))) {  // index given?
 		ir.get();
-		_sfindex = ir.getInt();  // subfont index
+		_fontindex = ir.getInt();  // font index of file with multiple fonts
       if (ir.peek() == ':')
          ir.get();
       else
-         _sfindex = 0;
+         _fontindex = 0;
 	}
-	if (ir.peek() == '!') { // no embedding
+	if (ir.peek() == '!')  // no embedding
 		ir.get();
-      _embed = false;
-   }
 
 	bool csi_given=false, style_given=false;
 	int pos;
 	if ((pos = ir.find('/')) >= 0) {  // csi delimiter
 		csi_given = true;
-		_fontname = ir.getString(pos);
+		_fontfname = ir.getString(pos);
 	}
 	else if ((pos = ir.find(',')) >= 0) {
 		style_given = true;
-		_fontname = ir.getString(pos);
+		_fontfname = ir.getString(pos);
 	}
 	else
-		_fontname = ir.getString();
+		_fontfname = ir.getString();
 
 	if (csi_given) {
 		if ((pos = ir.find(',')) >= 0) {

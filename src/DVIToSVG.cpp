@@ -121,7 +121,7 @@ DVIToSVG::~DVIToSVG () {
 void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
 	if (getTotalPages() == 0) {
 		executePreamble();
-		executePostamble();    // collect scaling and font information
+		executePostamble();    // collect scaling information
 	}
 	if (first > last)
 		swap(first, last);
@@ -164,7 +164,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	if (getTotalPages() == 0) {
 		executePreamble();
-		executePostamble();    // collect scaling and font information
+		executePostamble();    // collect scaling information
 	}
 	PageRanges ranges;
 	if (!ranges.parse(rangestr, getTotalPages()))

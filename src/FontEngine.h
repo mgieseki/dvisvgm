@@ -41,7 +41,7 @@ class FontEngine
 		static std::string version ();
 		void setDeviceResolution (int x, int y);
       bool setFont (const Font &font);
-		bool traceOutline (unsigned char chr, Glyph &glyph, bool scale=true) const;
+		bool traceOutline (UInt16 chr, Glyph &glyph, bool scale=true) const;
 		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
 		const char* getFamilyName () const;
 		const char* getStyleName () const;
@@ -60,7 +60,7 @@ class FontEngine
 
 	protected:
       FontEngine ();
-      bool setFont (const std::string &fname);
+      bool setFont (const std::string &fname, int fontindex=0);
 
    private:
 		int _horDeviceRes, _vertDeviceRes;

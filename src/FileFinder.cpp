@@ -156,11 +156,13 @@ static const char* find_file (const std::string &fname) {
 		types["pfb"] = kpse_type1_format;
 		types["vf"]  = kpse_vf_format;
 		types["mf"]  = kpse_mf_format;
+		types["ttc"] = kpse_truetype_format;
 		types["ttf"] = kpse_truetype_format;
 		types["map"] = kpse_fontmap_format;
 		types["sty"] = kpse_tex_format;
 		types["enc"] = kpse_enc_format;
 		types["pro"] = kpse_tex_ps_header_format;
+      types["sfd"] = kpse_sfd_format;
 	}
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
@@ -190,12 +192,12 @@ static const char* find_mapped_file (std::string fname) {
 		return 0;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
-	if (const char *mapped_name = FontMap::instance().lookup(base)) {
+	if (const FontMap::Entry *entry = FontMap::instance().lookup(base)) {
 		const char *path=0;
-		if (strchr(mapped_name, '.'))      // does the mapped filename has an extension?
-			path = find_file(mapped_name);  // look for that file
+		if (entry->fontname.find('.') != std::string::npos)  // does the mapped filename has an extension?
+			path = find_file(entry->fontname);           // look for that file
 		else {                             // otherwise, use extension of unmapped file
-			fname = std::string(mapped_name) + "." + ext;
+			fname = entry->fontname + "." + ext;
 			(path = find_file(fname)) || (path = mktex(fname));
 		}
 		return path;

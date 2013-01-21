@@ -35,7 +35,9 @@
 #include "macros.h"
 #include "FileSystem.h"
 #include "SignalHandler.h"
+#include "Subfont.h"
 #include "SVGTree.h"
+#include "FontMap.h"
 
 using namespace std;
 
@@ -109,9 +111,13 @@ double PhysicalFont::METAFONT_MAG = 4;
 FontCache PhysicalFont::_cache;
 
 
-
 Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
-	return new PhysicalFontImpl(name, checksum, dsize, ssize, type);
+	return new PhysicalFontImpl(name, 0, checksum, dsize, ssize, type);
+}
+
+
+Font* PhysicalFont::create (string name, int fontindex, UInt32 checksum, double dsize, double ssize) {
+	return new PhysicalFontImpl(name, fontindex, checksum, dsize, ssize, PhysicalFont::TTC);
 }
 
 
@@ -119,6 +125,7 @@ const char* PhysicalFont::path () const {
 	string ext;
 	switch (type()) {
 		case PFB: ext = "pfb"; break;
+		case TTC: ext = "ttc"; break;
 		case TTF: ext = "ttf"; break;
 		case MF : ext = "mf";  break;
 	}
@@ -152,6 +159,9 @@ double PhysicalFont::hAdvance (int c) const {
 	FontEngine::instance().setFont(*this);
 	if (FontEncoding *enc = encoding())
 		return FontEngine::instance().getHAdvance(enc->getEntry(c));
+	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
+		if (Subfont *sf = map_entry->subfont)
+			c = sf->decode(c);
 	return FontEngine::instance().getHAdvance(c);
 }
 
@@ -164,6 +174,9 @@ string PhysicalFont::glyphName (int c) const {
 		const char *name = enc->getEntry(c);
 		return name ? name : "";
 	}
+	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
+		if (Subfont *sf = map_entry->subfont)
+			c = sf->decode(c);
 	return FontEngine::instance().getGlyphName(c);
 }
 
@@ -229,8 +242,12 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 			if (const char *encname = enc->getEntry(c))
 				ok = FontEngine::instance().traceOutline(encname, glyph, false);
 		}
-		else
-			ok = FontEngine::instance().traceOutline((unsigned char)c, glyph, false);
+		else {
+			if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
+				if (Subfont *sf = map_entry->subfont)
+					c = sf->decode(c);
+			ok = FontEngine::instance().traceOutline(c, glyph, false);
+		}
 		glyph.closeOpenSubPaths();
 		return ok;
 	}
@@ -308,8 +325,8 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 
-PhysicalFontImpl::PhysicalFontImpl (string name, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
-	: TFMFont(name, cs, ds, ss), _filetype(type), _charmap(0)
+PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
+	: TFMFont(name, cs, ds, ss), _filetype(type), _fontIndex(fontindex), _charmap(0)
 {
 }
 

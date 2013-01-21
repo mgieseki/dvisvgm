@@ -87,9 +87,10 @@ static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
 
 /** Sets the font to be used.
  * @param[in] fname path to font file
+ * @param[in] fontindex index of font in font collection (multi-font files, like TTC)
  * @return true on success */
-bool FontEngine::setFont (const string &fname) {
-	if (FT_New_Face(_library, fname.c_str(), 0, &_currentFace)) {
+bool FontEngine::setFont (const string &fname, int fontindex) {
+	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
       return false;
    }
@@ -108,7 +109,7 @@ bool FontEngine::setFont (const string &fname) {
 bool FontEngine::setFont (const Font &font) {
 	if (_fontname != font.name()) {
 		_fontname = font.name();
-		return setFont(font.path());
+		return setFont(font.path(), font.fontIndex());
 	}
 	return true;
 }
@@ -327,7 +328,7 @@ static bool trace_outline (FT_Face face, int index, Glyph &glyph, bool scale) {
  *  @param[in] scale if true the current pt size will be considered otherwise
  *                   the plain TrueType units are used.
  *  @return false on errors */
-bool FontEngine::traceOutline (unsigned char chr, Glyph &glyph, bool scale) const {
+bool FontEngine::traceOutline (UInt16 chr, Glyph &glyph, bool scale) const {
 	if (_currentFace) {
 		int index = FT_Get_Char_Index(_currentFace, chr);
 		return trace_outline(_currentFace, index, glyph, scale);

@@ -656,7 +656,9 @@ void DVIReader::cmdFontDef (int len) {
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
 
-	defineFont(fontnum, fontname, checksum, dsize*_scaleFactor, ssize*_scaleFactor);
+	// process font definitions between bop and eop only, skip those in the postamble
+	if (_inPage)
+		defineFont(fontnum, fontname, checksum, dsize*_scaleFactor, ssize*_scaleFactor);
 }
 
 

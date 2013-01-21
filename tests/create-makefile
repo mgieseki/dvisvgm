@@ -37,7 +37,7 @@ for f in *.dvi; do
 done  
 
 cat >>$out <<EOT
-EXTRA_DIST = check-conv normalize.xsl cmr10.600gf \$(TESTDATA)
+EXTRA_DIST = check-conv normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
 TESTS += check-conv
 EOT
 

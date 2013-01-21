@@ -24,8 +24,10 @@
 #include <istream>
 #include <string>
 #include "MessageException.h"
+#include "Subfont.h"
 
 class InputReader;
+class SubfontDefinition;
 
 
 struct MapLineException : MessageException
@@ -40,13 +42,12 @@ class MapLine
       MapLine (std::istream &is);
 		const std::string& texname () const   {return _texname;}
 		const std::string& psname () const    {return _psname;}
-		const std::string& fontfname () const {return _fontname;}
+		const std::string& fontfname () const {return _fontfname;}
 		const std::string& encname () const   {return _encname;}
-      const std::string& sfname () const    {return _sfname;}
-      int sfindex () const                  {return _sfindex;}
+      int fontindex () const                {return _fontindex;}
 		double slant () const                 {return _slant;}
 		double extend () const                {return _extend;}
-      bool embed () const                   {return _embed;}
+		SubfontDefinition* sfd () const       {return _sfd;}
 
    protected:
       void init ();
@@ -59,14 +60,12 @@ class MapLine
    private:
       std::string _texname;     ///< TeX font name
       std::string _psname;      ///< PS font name
-      std::string _fontname;    ///< name of fontfile
+      std::string _fontfname;   ///< name of fontfile
       std::string _encname;     ///< name of encoding (without file suffix ".enc")
-      std::string _sfname;      ///< subfont name
-      int _sfindex;             ///< subfont index
+		SubfontDefinition *_sfd;  ///< subfont definition to be used
+      int _fontindex;           ///< font index of file with multiple fonts (e.g. ttc files)
       double _slant, _extend;
-      bool _embed;
 };
 
 
 #endif
-

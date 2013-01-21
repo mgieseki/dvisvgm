@@ -142,7 +142,7 @@ VirtualFont* FontManager::getVF () const {
 }
 
 
-static Font* create_font (const string &filename, const string &fontname, UInt32 checksum, double dsize, double ssize) {
+static Font* create_font (const string &filename, const string &fontname, int fontindex, UInt32 checksum, double dsize, double ssize) {
 	string ext;
 	if (const char *dot = strrchr(filename.c_str(), '.'))
 		ext = dot+1;
@@ -151,6 +151,8 @@ static Font* create_font (const string &filename, const string &fontname, UInt32
 			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::PFB);
 		if (ext == "ttf")
 			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::TTF);
+		if (ext == "ttc")
+			return PhysicalFont::create(fontname, fontindex, checksum, dsize, ssize);
 		if (ext == "vf")
 			return VirtualFont::create(fontname, checksum, dsize, ssize);
 		if (ext == "mf")
@@ -181,12 +183,12 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		newfont = font->clone(dsize, ssize);
 	}
 	else {
-		if (const char *mapped_name = FontMap::instance().lookup(name))
-			newfont = create_font(mapped_name, name, checksum, dsize, ssize);
+		if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name))
+			newfont = create_font(map_entry->fontname, name, map_entry->fontindex, checksum, dsize, ssize);
 
-		const char *exts[] = {".pfb", ".ttf", ".vf", ".mf", 0};
+		const char *exts[] = {".pfb", ".ttc", ".ttf", ".vf", ".mf", 0};
 		for (const char **p = exts; *p && !newfont; ++p)
-			newfont = create_font(name+*p, name, checksum, dsize, ssize);
+			newfont = create_font(name+*p, name, 0, checksum, dsize, ssize);
 		if (!newfont) {
 			newfont = new EmptyFont(name);
 			Message::wstream(true) << "font '" << name << "' not found\n";

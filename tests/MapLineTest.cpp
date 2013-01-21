@@ -20,12 +20,26 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
+#include "FileFinder.h"
 #include "MapLine.h"
 
 using namespace std;
 
 
-TEST(MapLineTest, psline1) {
+class MapLineTest : public ::testing::Test
+{
+	protected:
+		void SetUp () {
+			FileFinder::init("MapLineTest", "MapLineTest", false);
+		}
+
+		void TearDown () {
+			FileFinder::finish();
+		}
+};
+
+
+TEST_F(MapLineTest, psline1) {
 	istringstream iss("texname0 TEXNAME0 <texname.pfb <encname.enc");
 	MapLine mapline(iss);
 	EXPECT_EQ(mapline.texname(), "texname0");
@@ -34,10 +48,9 @@ TEST(MapLineTest, psline1) {
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0);
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, psline2) {
+TEST_F(MapLineTest, psline2) {
 	istringstream iss("texname0 TEXNAME0 \".123 SlantFont .456 ExtendFont\" <encname.enc <[texname.ttf");
 	MapLine mapline(iss);
 	EXPECT_EQ(mapline.texname(), "texname0");
@@ -46,10 +59,9 @@ TEST(MapLineTest, psline2) {
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, psline3) {
+TEST_F(MapLineTest, psline3) {
 	istringstream iss("texname0 TEXNAME0 <encname.enc \".123 SlantFont IgnoreMe .456 ExtendFont\" <texname.ttf");
 	MapLine mapline(iss);
 	EXPECT_EQ(mapline.texname(), "texname0");
@@ -58,57 +70,55 @@ TEST(MapLineTest, psline3) {
 	EXPECT_EQ(mapline.encname(), "encname");
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, pdfline1) {
+TEST_F(MapLineTest, pdfline1) {
 	istringstream iss("texname");
 	MapLine mapline(iss);
    EXPECT_EQ(mapline.texname(), "texname");
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "");
    EXPECT_EQ(mapline.fontfname(), "");
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, pdfline2) {
+TEST_F(MapLineTest, pdfline2) {
 	istringstream iss("gbk unicode simsun.ttc");
 	MapLine mapline(iss);
    EXPECT_EQ(mapline.texname(), "gbk");
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "unicode");
    EXPECT_EQ(mapline.fontfname(), "simsun.ttc");
-   EXPECT_EQ(mapline.sfname(), "");
-   EXPECT_EQ(mapline.sfindex(), 0);
+	EXPECT_EQ(mapline.fontindex(), 0);
+	EXPECT_TRUE(mapline.sfd() == 0);
+   EXPECT_EQ(mapline.fontindex(), 0);
    EXPECT_DOUBLE_EQ(mapline.slant(), 0);
    EXPECT_DOUBLE_EQ(mapline.extend(), 0);
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, pdfline3) {
-	istringstream iss("gbk@UGBK@10 unicode :1:simsun.ttc -v 50 -r -s .123 -b 1 -e 0.456");
+TEST_F(MapLineTest, pdfline3) {
+	istringstream iss("gbk@UGBK@10 unicode simsun.ttc -v 50 -r -s .123 -b 1 -e 0.456");
 	MapLine mapline(iss);
    EXPECT_EQ(mapline.texname(), "gbk10");
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "unicode");
    EXPECT_EQ(mapline.fontfname(), "simsun.ttc");
-   EXPECT_EQ(mapline.sfname(), "UGBK");
-   EXPECT_EQ(mapline.sfindex(), 1);
+	ASSERT_TRUE(mapline.sfd() != 0);
+   EXPECT_EQ(mapline.sfd()->name(), "UGBK");
+   EXPECT_EQ(mapline.fontindex(), 0);
    EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
    EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
-   EXPECT_TRUE(mapline.embed());
 }
 
-TEST(MapLineTest, pdfline4) {
+TEST_F(MapLineTest, pdfline4) {
 	istringstream iss("gbk@UGBK@ default :1:!simsun.ttc/UCS,Bold -e.345");
 	MapLine mapline(iss);
    EXPECT_EQ(mapline.texname(), "gbk");
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "");  // encodings "default" and "none" are replaced with ""
    EXPECT_EQ(mapline.fontfname(), "simsun.ttc");
-   EXPECT_EQ(mapline.sfname(), "UGBK");
-   EXPECT_EQ(mapline.sfindex(), 1);
+	ASSERT_TRUE(mapline.sfd() != 0);
+   EXPECT_EQ(mapline.sfd()->name(), "UGBK");
+   EXPECT_EQ(mapline.fontindex(), 1);
    EXPECT_DOUBLE_EQ(mapline.slant(), 0);
    EXPECT_DOUBLE_EQ(mapline.extend(), 0.345);
-   EXPECT_FALSE(mapline.embed());
 }

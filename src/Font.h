@@ -58,6 +58,7 @@ struct Font
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
 	virtual bool verifyChecksums () const      {return true;}
+	virtual int fontIndex () const             {return 0;}
 };
 
 
@@ -90,8 +91,9 @@ struct EmptyFont : public Font
 class PhysicalFont : public virtual Font
 {
    public:
-      enum Type {MF, PFB, TTF};
-      static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+      enum Type {MF, PFB, TTC, TTF};
+		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+      static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
       virtual Type type () const =0;
       virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
       virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
@@ -174,6 +176,7 @@ class PhysicalFontProxy : public PhysicalFont
 		const TFM* getTFM () const                {return pf->getTFM();}
 		Type type () const                        {return pf->type();}
       UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
+		int fontIndex () const                    {return pf->fontIndex();}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
@@ -194,14 +197,16 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
 		const Font* uniqueFont () const          {return this;}
       Type type () const                       {return _filetype;}
+		int fontIndex() const                    {return _fontIndex;}
       UInt32 unicode (UInt32 c) const;
       void tidy () const;
 
 	protected:
-		PhysicalFontImpl (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+		PhysicalFontImpl (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 
 	private:
 		Type _filetype;
+		int _fontIndex;
       mutable std::map<UInt32,UInt32> *_charmap;
 };
 

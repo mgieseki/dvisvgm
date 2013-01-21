@@ -27,21 +27,30 @@
 #include <ostream>
 #include <string>
 
+#include "Subfont.h"
+
 class MapLine;
+class Subfont;
 
 class FontMap
 {
-	struct MapEntry
-	{
-		MapEntry () : locked(false) {}
-		MapEntry (const std::string &fname, const std::string &ename) : fontname(fname), encname(ename), locked(false) {}
-		std::string fontname; ///< target font name
-		std::string encname;  ///< name of font encoding
-		bool locked;
-	};
+	public:
+		struct Entry
+		{
+			Entry () : subfont(0), fontindex(0), locked(false) {}
+			Entry (const std::string &fname, const std::string &ename, Subfont *sf)
+				: fontname(fname), encname(ename), subfont(sf), fontindex(0), locked(false) {}
 
-	typedef std::map<std::string,MapEntry>::iterator Iterator;
-	typedef std::map<std::string,MapEntry>::const_iterator ConstIterator;
+			std::string fontname; ///< target font name
+			std::string encname;  ///< name of font encoding
+			Subfont *subfont;
+			int fontindex;        ///< index of font in multi-font file
+			bool locked;
+		};
+
+	protected:
+		typedef std::map<std::string,Entry>::iterator Iterator;
+		typedef std::map<std::string,Entry>::const_iterator ConstIterator;
 
 	public:
 		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
@@ -59,14 +68,13 @@ class FontMap
 		void lockFont (const std::string &fontname);
 		void clear (bool unlocked_only=false);
 		std::ostream& write (std::ostream &os) const;
-		const char* lookup(const std::string &fontname) const;
-		const char* encoding (const std::string &fontname) const;
+		const Entry* lookup(const std::string &fontname) const;
 
 	protected:
 		FontMap () {}
 
    private:
-		std::map<std::string,MapEntry> _fontMap;
+		std::map<std::string,Entry> _entries;
 };
 
 #endif

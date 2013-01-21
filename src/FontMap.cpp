@@ -27,6 +27,7 @@
 #include "FontMap.h"
 #include "MapLine.h"
 #include "Message.h"
+#include "FontManager.h"
 
 using namespace std;
 
@@ -56,8 +57,14 @@ bool FontMap::read (const string &fname, FontMap::Mode mode) {
 				MapLine mapline(ifs);
 				apply(mapline, mode);
 			}
-			catch (const MapLineException &ex) {
-				Message::wstream(true) << "map file " << fname << ", line " << line_number << ": " << ex.what() << '\n';
+			catch (const MapLineException &e) {
+				Message::wstream(true) << fname << ", line " << line_number << ": " << e.what() << '\n';
+			}
+			catch (const SubfontException &e) {
+				Message::wstream(true) << e.filename();
+				if (e.lineno() > 0)
+					Message::wstream(false) << ", line " << e.lineno();
+				Message::wstream(false) << e.what() << '\n';
 			}
 		}
       line_number++;
@@ -146,16 +153,25 @@ bool FontMap::read (const string &fname_seq) {
  *  @param[in] mapline parsed font data
  *  @return true if data has been appended */
 bool FontMap::append (const MapLine &mapline) {
+	bool ret = false;
    if (!mapline.texname().empty()) {
 		if (!mapline.fontfname().empty() || !mapline.encname().empty()) {
-			Iterator it = _fontMap.find(mapline.texname());
-			if (it == _fontMap.end()) {
-				_fontMap[mapline.texname()] = MapEntry(mapline.fontfname(), mapline.encname());
-				return true;
+			vector<Subfont*> subfonts;
+			if (mapline.sfd())
+				mapline.sfd()->subfonts(subfonts);
+			else
+				subfonts.push_back(0);
+			for (size_t i=0; i < subfonts.size(); i++) {
+				string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+				Iterator it = _entries.find(fontname);
+				if (it == _entries.end()) {
+					_entries[fontname] = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
+					ret = true;
+				}
 			}
 		}
 	}
-	return false;
+	return ret;
 }
 
 
@@ -164,17 +180,25 @@ bool FontMap::append (const MapLine &mapline) {
  *  @param[in] mapline parsed font data
  *  @return true if data has been replaced */
 bool FontMap::replace (const MapLine &mapline) {
-   if (!mapline.texname().empty()) {
-		if (mapline.fontfname().empty() && mapline.encname().empty())
-			return remove(mapline);
-		Iterator it = _fontMap.find(mapline.texname());
-		if (it == _fontMap.end())
-			_fontMap[mapline.texname()] = MapEntry(mapline.fontfname(), mapline.encname());
+   if (mapline.texname().empty())
+		return false;
+	if (mapline.fontfname().empty() && mapline.encname().empty())
+		return remove(mapline);
+
+	vector<Subfont*> subfonts;
+	if (mapline.sfd())
+		mapline.sfd()->subfonts(subfonts);
+	else
+		subfonts.push_back(0);
+	for (size_t i=0; i < subfonts.size(); i++) {
+		string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+		Iterator it = _entries.find(fontname);
+		if (it == _entries.end())
+			_entries[fontname] = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
 		else if (!it->second.locked)
-			it->second = MapEntry(mapline.fontfname(), mapline.encname());
-		return true;
+			it->second = Entry(mapline.fontfname(), mapline.encname(), subfonts[i]);
 	}
-	return false;
+	return true;
 }
 
 
@@ -183,19 +207,28 @@ bool FontMap::replace (const MapLine &mapline) {
  *  @param[in] mapline parsed font data
  *  @return true if entry has been removed */
 bool FontMap::remove (const MapLine &mapline) {
+	bool ret = false;
    if (!mapline.texname().empty()) {
-      Iterator it = _fontMap.find(mapline.texname());
-      if (it != _fontMap.end() && !it->second.locked) {
-         _fontMap.erase(it);
-         return true;
-      }
+		vector<Subfont*> subfonts;
+		if (mapline.sfd())
+			mapline.sfd()->subfonts(subfonts);
+		else
+			subfonts.push_back(0);
+		for (size_t i=0; i < subfonts.size(); i++) {
+			string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+			Iterator it = _entries.find(fontname);
+			if (it != _entries.end() && !it->second.locked) {
+				_entries.erase(it);
+				ret = true;
+			}
+		}
    }
-   return false;
+   return ret;
 }
 
 
 ostream& FontMap::write (ostream &os) const {
-	for (map<string,MapEntry>::const_iterator i=_fontMap.begin(); i != _fontMap.end(); ++i)
+	for (map<string,Entry>::const_iterator i=_entries.begin(); i != _entries.end(); ++i)
 		os << i->first << " -> " << i->second.fontname << " [" << i->second.encname << "]\n";
 	return os;
 }
@@ -217,30 +250,19 @@ void FontMap::readdir (const string &dirname) {
 /** Returns name of font that is mapped to a given font.
  * @param[in] fontname name of font whose mapped name is retrieved
  * @returns name of mapped font */
-const char* FontMap::lookup (const string &fontname) const {
-	ConstIterator it = _fontMap.find(fontname);
-	if (it == _fontMap.end())
+const FontMap::Entry* FontMap::lookup (const string &fontname) const {
+	ConstIterator it = _entries.find(fontname);
+	if (it == _entries.end())
 		return 0;
-	return it->second.fontname.c_str();
-}
-
-
-/** Returns the name of the assigned encoding for a given font.
- *  @param[in] fontname name of font whose encoding is returned
- *  @return name of encoding, 0 if there is no encoding assigned */
-const char* FontMap::encoding (const string &fontname) const {
-	ConstIterator it = _fontMap.find(fontname);
-	if (it == _fontMap.end() || it->second.encname.empty())
-		return 0;
-	return it->second.encname.c_str();
+	return &it->second;
 }
 
 
 /** Sets the lock flag for the given font in order to avoid changing the map data of this font.
  *  @param[in] fontname name of font to be locked */
 void FontMap::lockFont (const string& fontname) {
-	Iterator it = _fontMap.find(fontname);
-	if (it != _fontMap.end())
+	Iterator it = _entries.find(fontname);
+	if (it != _entries.end())
 		it->second.locked = true;
 }
 
@@ -249,14 +271,14 @@ void FontMap::lockFont (const string& fontname) {
  *  @param[in] unlocked_only if true, only unlocked entries are removed */
 void FontMap::clear (bool unlocked_only) {
    if (!unlocked_only)
-      _fontMap.clear();
+      _entries.clear();
    else {
-      Iterator it=_fontMap.begin();
-      while (it != _fontMap.end()) {
+      Iterator it=_entries.begin();
+      while (it != _entries.end()) {
          if (it->second.locked)
             ++it;
          else
-            _fontMap.erase(it++);
+            _entries.erase(it++);
       }
    }
 }

@@ -133,6 +133,11 @@ check_PROGRAMS += StreamWriterTest
 StreamWriterTest_SOURCES = StreamWriterTest.cpp
 StreamWriterTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main -lpthread
 
+TESTS += SubfontTest
+check_PROGRAMS += SubfontTest
+SubfontTest_SOURCES = SubfontTest.cpp
+SubfontTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest -lgtest_main -lpthread
+
 TESTS += TypesTest
 check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp
@@ -145,6 +150,6 @@ VectorStreamTest_LDADD = ../src/libdvisvgm.a ../potracelib/libpotrace.a -lgtest 
 
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
-TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
+TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg sample.sfd
 EXTRA_DIST = check-conv normalize.xsl cmr10.600gf $(TESTDATA)
 TESTS += check-conv
