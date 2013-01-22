@@ -29,7 +29,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	SpecialManager.cpp StreamReader.cpp StreamWriter.cpp SVGTree.cpp System.cpp Terminal.cpp TFM.cpp TpicSpecialHandler.cpp \
 	VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
-EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h
+EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor
 

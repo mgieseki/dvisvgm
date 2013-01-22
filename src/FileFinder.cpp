@@ -31,10 +31,8 @@ using namespace std;
 
 #ifdef MIKTEX
 	#include "MessageException.h"
-	#import <MiKTeX209-session.tlb>
-	using namespace MiKTeXSession2_9;
-
-	static ISession2Ptr miktex_session;
+	#include "MiKTeXCom.h"
+	static MiKTeXCom *miktex=0;
 #else
 	// unfortunately, the kpathsea headers are not C++-ready,
 	// so we have to wrap it with some ugly code
@@ -71,12 +69,7 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 
 	_mktex_enabled = enable_mktexmf;
 #ifdef MIKTEX
-	if (FAILED(CoInitialize(0)))
-		throw MessageException("COM library could not be initialized\n");
-
-	HRESULT hres = miktex_session.CreateInstance(L"MiKTeX.Session");
-	if (FAILED(hres))
-		throw MessageException("MiKTeX.Session could not be initialized");
+	miktex = new MiKTeXCom;
 #else
 	kpse_set_program_name(argv0, progname);
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
@@ -95,9 +88,9 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
  *  applications main() function. */
 void FileFinder::finish () {
 #ifdef MIKTEX
-	if (_initialized) {
-		miktex_session = 0;  // avoid automatic calling of Release() after CoUninitialize()
-		CoUninitialize();
+	if (miktex) {
+		delete miktex;
+		miktex = 0;
 	}
 #endif
 	_initialized = false;
@@ -111,18 +104,16 @@ std::string FileFinder::version () {
 		init("", "", false);
 		autoinit = true;
 	}
-
 	try {
-		MiKTeXSetupInfo info = miktex_session->GetMiKTeXSetupInfo();
-		_bstr_t version = info.version;
+		string ret = miktex->getVersion();
 		if (autoinit)
-			FileFinder::finish();
-		return string(version);
+			finish();
+		return ret;
 	}
-	catch (_com_error e) {
+	catch (MessageException &e) {
 		if (autoinit)
-			FileFinder::finish();
-		throw MessageException((const char*)e.Description());
+			finish();
+		throw e;
 	}
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))
@@ -145,19 +136,7 @@ static const char* find_file (const std::string &fname) {
 		return 0;  // no extension => no search
 	const std::string ext  = fname.substr(pos+1);  // file extension
 #ifdef MIKTEX
-	_bstr_t path;
-	static string ret;
-	try {
-		if (miktex_session->FindFile(fname.c_str(), path.GetAddress())) {
-			ret = path;
-			return ret.c_str();
-		}
-	}
-	catch (_com_error e) {
-		throw MessageException((const char*)e.Description());
-	}
-	return 0;
-
+	return miktex->findFile(fname.c_str());
 #else
 	static std::string buf;
 
