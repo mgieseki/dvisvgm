@@ -100,38 +100,38 @@ void CommandLine::init () {
 void CommandLine::help () const {
    puts("This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n");
    puts("Input options:");
-   puts("  -p, --page=ranges        choose pages to convert [1]");
-   puts("  -m, --fontmap=filenames  evaluate (additional) font map files");
+   puts("  -p, --page=ranges             choose pages to convert [1]");
+   puts("  -m, --fontmap=filenames       evaluate (additional) font map files");
    puts("\nSVG output options:");
-   puts("  -b, --bbox=size          set size of bounding box [min]");
-   puts("  -o, --output=pattern     set name pattern of output files");
-   puts("  -s, --stdout             write SVG output to stdout");
-   puts("  -n, --no-fonts[=variant]  draw glyphs by using path elements [0]");
-   puts("      --no-styles          don't use styles to reference fonts");
-   puts("  -z, --zip[=level]        create compressed .svgz file [9]");
+   puts("  -b, --bbox=size               set size of bounding box [min]");
+   puts("  -o, --output=pattern          set name pattern of output files");
+   puts("  -s, --stdout                  write SVG output to stdout");
+   puts("  -n, --no-fonts[=variant]      draw glyphs by using path elements [0]");
+   puts("      --no-styles               don't use styles to reference fonts");
+   puts("  -z, --zip[=level]             create compressed .svgz file [9]");
    puts("\nSVG transformations:");
-   puts("  -r, --rotate=angle       rotate page content clockwise");
-   puts("  -c, --scale=sx[,sy]      scale page content");
-   puts("  -t, --translate=tx[,ty]  shift page content");
-   puts("  -T, --transform=commands  transform page content");
+   puts("  -r, --rotate=angle            rotate page content clockwise");
+   puts("  -c, --scale=sx[,sy]           scale page content");
+   puts("  -t, --translate=tx[,ty]       shift page content");
+   puts("  -T, --transform=commands      transform page content");
    puts("\nProcessing options:");
-   puts("  -C, --cache[=dir]        set/print path of cache directory");
-   puts("  -e, --exact              compute exact glyph boxes");
-   puts("      --keep               keep temporary files");
+   puts("  -C, --cache[=dir]             set/print path of cache directory");
+   puts("  -e, --exact                   compute exact glyph boxes");
+   puts("      --keep                    keep temporary files");
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
-   puts("      --libgs=filename     set name of Ghostscript shared library");
+   puts("      --libgs=filename          set name of Ghostscript shared library");
 #endif
-   puts("  -M, --mag=factor         magnification of Metafont output [4]");
-   puts("      --no-mktexmf         don't try to create missing fonts");
+   puts("  -M, --mag=factor              magnification of Metafont output [4]");
+   puts("      --no-mktexmf              don't try to create missing fonts");
    puts("  -S, --no-specials[=prefixes]  don't process [selected] specials");
-   puts("  -a, --trace-all[=retrace]  trace all glyphs of bitmap fonts [no]");
+   puts("  -a, --trace-all[=retrace]     trace all glyphs of bitmap fonts [no]");
    puts("\nMessage options:");
-   puts("      --color              colorize messages");
-   puts("  -h, --help               print this help and exit");
-   puts("  -l, --list-specials      print supported special sets and exit");
-   puts("  -P, --progress[=delay]   enable progess indicator [0.5]");
-   puts("  -v, --verbosity=level    set verbosity level (0-7) [7]");
-   puts("  -V, --version[=extended]  print version and exit [no]");
+   puts("      --color                   colorize messages");
+   puts("  -h, --help                    print this help and exit");
+   puts("  -l, --list-specials           print supported special sets and exit");
+   puts("  -P, --progress[=delay]        enable progess indicator [0.5]");
+   puts("  -v, --verbosity=level         set verbosity level (0-7) [7]");
+   puts("  -V, --version[=extended]      print version and exit [no]");
 }
 
 
