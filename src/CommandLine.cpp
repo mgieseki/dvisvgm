@@ -31,6 +31,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'\0', "no-styles", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
    {'o', "output", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_output)},
    {'p', "page", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_page)},
+   {'d', "precision", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_precision)},
    {'P', "progress", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_progress)},
    {'r', "rotate", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
    {'c', "scale", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
@@ -64,6 +65,7 @@ void CommandLine::init () {
    _no_styles_given = false;
    _output_given = false;
    _page_given = false;
+   _precision_given = false;
    _progress_given = false;
    _rotate_given = false;
    _scale_given = false;
@@ -86,6 +88,7 @@ void CommandLine::init () {
    _no_specials_arg.clear();
    _output_arg.clear();
    _page_arg = "1";
+   _precision_arg = 0;
    _progress_arg = 0.5;
    _rotate_arg = 0;
    _scale_arg.clear();
@@ -105,6 +108,7 @@ void CommandLine::help () const {
    puts("\nSVG output options:");
    puts("  -b, --bbox=size               set size of bounding box [min]");
    puts("  -o, --output=pattern          set name pattern of output files");
+   puts("  -d, --precision=number        set number of decimal points (0-6) [0]");
    puts("  -s, --stdout                  write SVG output to stdout");
    puts("  -n, --no-fonts[=variant]      draw glyphs by using path elements [0]");
    puts("      --no-styles               don't use styles to reference fonts");
@@ -226,6 +230,12 @@ void CommandLine::handle_page(InputReader &ir, const Option &opt, bool longopt) 
 }
 
 
+void CommandLine::handle_precision(InputReader &ir, const Option &opt, bool longopt) {
+   if (getIntArg(ir, opt, longopt, _precision_arg))
+      _precision_given = true;
+}
+
+
 void CommandLine::handle_progress(InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getDoubleArg(ir, opt, longopt, _progress_arg))
       _progress_given = true;
@@ -304,6 +314,7 @@ void CommandLine::status () const {
    cout << ' '<< setw(20) << "no-styles " << no_styles_given() << endl;
    cout << 'o'<< setw(20) << "output " << output_given() << setw(10) << output_arg() << endl;
    cout << 'p'<< setw(20) << "page " << page_given() << setw(10) << page_arg() << endl;
+   cout << 'd'<< setw(20) << "precision " << precision_given() << setw(10) << precision_arg() << endl;
    cout << 'P'<< setw(20) << "progress " << progress_given() << setw(10) << progress_arg() << endl;
    cout << 'r'<< setw(20) << "rotate " << rotate_given() << setw(10) << rotate_arg() << endl;
    cout << 'c'<< setw(20) << "scale " << scale_given() << setw(10) << scale_arg() << endl;

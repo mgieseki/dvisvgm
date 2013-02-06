@@ -18,11 +18,16 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cmath>
+#include <cstdlib>
+#include <iomanip>
 #include <sstream>
 #include "macros.h"
 #include "XMLString.h"
 
 using namespace std;
+
+int XMLString::DECIMAL_PLACES = 0;
 
 static string translate (unsigned c) {
 	switch (c) {
@@ -37,6 +42,31 @@ static string translate (unsigned c) {
 	else
 		oss <<"&#" << unsigned(c) << ';';
 	return oss.str();
+}
+
+
+#if 0
+/** Returns the number of pre-decimal places of a given floating point value. */
+static int predecimal_places (double x) {
+	int n = abs(static_cast<int>(x));
+	int ret = (n == 0 ? 0 : 1);
+	while (n >= 10) {
+		ret++;
+		 n /= 10;
+	}
+	return ret;
+}
+#endif
+
+
+/** Rounds a floating point value to a given number of decimal places.
+ *  @param[in] x number to round
+ *  @param[in] n number of decimal places (must be between 1 and 6) 
+ *  @return rounded value */
+static inline double round (double x, long n) {
+	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
+	n--;
+   return floor(x*pow10[n]+0.5)/pow10[n];
 }
 
 
@@ -75,6 +105,8 @@ XMLString::XMLString (int n, bool cast) {
 
 XMLString::XMLString (double x) {
 	stringstream ss;
+	if (DECIMAL_PLACES > 0)
+		x = round(x, DECIMAL_PLACES);
 	ss << x;
 	ss >> *this;
 }

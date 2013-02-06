@@ -23,6 +23,7 @@
 #include <sstream>
 #include "Calculator.h"
 #include "Matrix.h"
+#include "XMLString.h"
 
 using namespace std;
 
@@ -39,19 +40,19 @@ double det (const Matrix &m) {
 }
 
 
-/** Computes the determinant of the 2x2 submatrix of m where a given 
- *  row and column were removed. 
+/** Computes the determinant of the 2x2 submatrix of m where a given
+ *  row and column were removed.
  *  @param[in] m base matrix
  *  @param[in] row row to remove
  *  @param[in] col column to remove */
 double det (const Matrix &m, int row, int col) {
 	int c1 = (col+1)%3, c2 = (col+2)%3;
 	int r1 = (row+1)%3, r2 = (row+2)%3;
-	if (c1 > c2) 
+	if (c1 > c2)
 		swap(c1, c2);
 	if (r1 > r2)
 		swap(r1, r2);
-	return m.values[r1][c1] * m.values[r2][c2] 
+	return m.values[r1][c1] * m.values[r2][c2]
 	     - m.values[r1][c2] * m.values[r2][c1];
 }
 
@@ -59,12 +60,6 @@ double det (const Matrix &m, int row, int col) {
 static inline double deg2rad (double deg) {
    const double PI = acos(-1.0);
    return PI*deg/180.0;
-}
-
-
-static inline double round (double x, int n) {
-   double pow10 = pow(10.0, n);
-   return floor(x*pow10+0.5)/pow10;
 }
 
 
@@ -90,7 +85,7 @@ Matrix::Matrix (double v[], unsigned size) {
 /** Creates the matrix ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  If vector v has less than 9 elements, the remaining matrix components will be set to
  *  those of the identity matrix.
- *  @param[in] v array containing the matrix components 
+ *  @param[in] v array containing the matrix components
  *  @param[in] start use vector components start,...,start+8 */
 Matrix::Matrix (const std::vector<double> &v, int start) {
 	set(v, start);
@@ -115,7 +110,7 @@ Matrix& Matrix::set (double v[], unsigned size) {
 /** Set matrix values ((v0,v1,v2),(v3,v4,v5),(v6,v7,v8)).
  *  If vector v has less than 9 elements, the remaining matrix components will be set to
  *  those of the identity matrix.
- *  @param[in] v array containing the matrix components 
+ *  @param[in] v array containing the matrix components
  *  @param[in] start use vector components start,...,start+8 */
 Matrix& Matrix::set (const vector<double> &v, int start) {
 	unsigned size = min((unsigned)v.size()-start, 9u);
@@ -421,7 +416,7 @@ string Matrix::getSVG () const {
 		for (int j=0; j < 2; j++) {
 			if (i > 0 || j > 0)
 				oss << ' ';
-			oss << round(values[j][i], 3);
+			oss << XMLString(values[j][i]);
 		}
 	}
 	oss << ')';

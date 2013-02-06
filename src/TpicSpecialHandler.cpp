@@ -88,7 +88,7 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 					oss << ' ';
 				double x = it->x()+actions->getX();
 			  	double y = it->y()+actions->getY();
-				oss << x << ',' << y;
+				oss << XMLString(x) << ',' << XMLString(y);
 				actions->embed(DPair(x, y));
 			}
 			elem->addAttribute("points", oss.str());
@@ -99,11 +99,8 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 		}
 		if (ddist > 0)
 			elem->addAttribute("stroke-dasharray", XMLString(ddist));
-		else if (ddist < 0) {
-			ostringstream oss;
-			oss << _penwidth << ' ' << -ddist;
-			elem->addAttribute("stroke-dasharray", oss.str());
-		}
+		else if (ddist < 0)
+			elem->addAttribute("stroke-dasharray", XMLString(_penwidth) + ' ' + XMLString(-ddist));
 		actions->appendToPage(elem);
 	}
 	reset();
@@ -111,8 +108,8 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 
 
 /** Stroke a quadratic spline through the midpoints of the lines defined by
- *  the previously recorded points. The spline starts	with a straight line 
- *  from the first point to the mid-point of the first line.  The spline ends 
+ *  the previously recorded points. The spline starts	with a straight line
+ *  from the first point to the mid-point of the first line.  The spline ends
  *  with a straight line from the mid-point of the last line to the last point.
  *  If ddist=0, the spline is stroked solid. Otherwise ddist denotes the length
  *  of the dashes and the gaps inbetween.
@@ -127,24 +124,24 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 			double y = actions->getY();
 			DPair p(x,y);
 			ostringstream oss;
-			oss << 'M' << x+_points[0].x() << ',' << y+_points[0].y();
+			oss << 'M' << XMLString(x+_points[0].x()) << ',' << XMLString(y+_points[0].y());
 			DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
-			oss << 'L' << mid.x() << ',' << mid.y();
+			oss << 'L' << XMLString(mid.x()) << ',' << XMLString(mid.y());
 			actions->embed(p+_points[0]);
 			for (size_t i=1; i < size-1; i++) {
 				const DPair p0 = p+_points[i-1];
 				const DPair p1 = p+_points[i];
 				const DPair p2 = p+_points[i+1];
 				mid = p1+(p2-p1)/2.0;
-				oss << 'Q' << p1.x() << ',' << p1.y()
-					 << ' ' << mid.x() << ',' << mid.y();
+				oss << 'Q' << XMLString(p1.x()) << ',' << XMLString(p1.y())
+					 << ' ' << XMLString(mid.x()) << ',' << XMLString(mid.y());
 				actions->embed(mid);
 				actions->embed((p0+p1*6.0+p2)/8.0, _penwidth);
 			}
 			if (_points[0] == _points[size-1])  // closed path?
 				oss << 'Z';
 			else {
-				oss << 'L' << x+_points[size-1].x() << ',' << y+_points[size-1].y();
+				oss << 'L' << XMLString(x+_points[size-1].x()) << ',' << XMLString(y+_points[size-1].y());
 				actions->embed(p+_points[size-1]);
 			}
 
@@ -164,11 +161,8 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 			path->addAttribute("stroke-width", XMLString(_penwidth));
 			if (ddist > 0)
 				path->addAttribute("stroke-dasharray", XMLString(ddist));
-			else if (ddist < 0) {
-				ostringstream oss;
-				oss << _penwidth << ' ' << -ddist;
-				path->addAttribute("stroke-dasharray", oss.str());
-			}
+			else if (ddist < 0)
+				path->addAttribute("stroke-dasharray", XMLString(_penwidth) + ' ' + XMLString(-ddist));
 			actions->appendToPage(path);
 		}
 	}
@@ -187,7 +181,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 	if (actions) {
 		const double PI2 = 4*asin(1.0);
 		angle1 *= -1;
-		angle2 *= -1;		
+		angle2 *= -1;
 		if (fabs(angle1) > PI2) {
 			int n = (int)(angle1/PI2);
 			angle1 = angle1 - n*PI2;
@@ -217,11 +211,11 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 				sweep_flag = 1-sweep_flag;
 			}
 			ostringstream oss;
-			oss << 'M' << x+rx*cos(angle1) << ',' << y+ry*sin(-angle1)
-				 << 'A' << rx << ',' << ry
+			oss << 'M' << XMLString(x+rx*cos(angle1)) << ',' << XMLString(y+ry*sin(-angle1))
+				 << 'A' << XMLString(rx) << ',' << XMLString(ry)
 				 << " 0 "
 				 << large_arg << ' ' << sweep_flag << ' '
-				 << x+rx*cos(angle2) << ',' << y-ry*sin(angle2);
+				 << XMLString(x+rx*cos(angle2)) << ',' << XMLString(y-ry*sin(angle2));
 			if (_fill >= 0)
 				oss << 'Z';
 			elem->addAttribute("d", oss.str());

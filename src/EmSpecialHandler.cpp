@@ -24,6 +24,7 @@
 #include "InputReader.h"
 #include "SpecialActions.h"
 #include "XMLNode.h"
+#include "XMLString.h"
 
 using namespace std;
 
@@ -91,10 +92,10 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		DPair q21 = p2+cv2, q22 = p2-cv2;
 		node = new XMLElementNode("polygon");
 		ostringstream oss;
-		oss << q11.x() << ',' << q11.y() << ' '
-		    << q12.x() << ',' << q12.y() << ' '
-		    << q22.x() << ',' << q22.y() << ' '
-		    << q21.x() << ',' << q21.y();
+		oss << XMLString(q11.x()) << ',' << XMLString(q11.y()) << ' '
+		    << XMLString(q12.x()) << ',' << XMLString(q12.y()) << ' '
+		    << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
+		    << XMLString(q21.x()) << ',' << XMLString(q21.y());
 		node->addAttribute("points", oss.str());
 		if (actions->getColor() != Color::BLACK)
 			node->addAttribute("fill", actions->getColor().rgbString());

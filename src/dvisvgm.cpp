@@ -363,6 +363,7 @@ int main (int argc, char *argv[]) {
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
+	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
 
 	double start_time = System::time();
 	string dvifile = ensure_suffix(args.file(0), "dvi");

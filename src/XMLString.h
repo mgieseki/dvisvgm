@@ -32,6 +32,8 @@ class XMLString : public std::string
       XMLString (const std::string &str, bool plain=false);
 		XMLString (int n, bool cast=true);
 		XMLString (double x);
+
+		static int DECIMAL_PLACES;  ///< number of decimal places applied to floating point values (0-6)
 };
 
 

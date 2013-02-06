@@ -46,6 +46,10 @@
 				<arg type="string" name="pattern"/>
 				<description>set name pattern of output files</description>
 			</option>
+			<option long="precision" short="d">
+				<arg type="int" name="number" default="0"/>
+				<description>set number of decimal points (0-6)</description>
+			</option>
 			<option long="stdout" short="s">
 				<description>write SVG output to stdout</description>
 			</option>

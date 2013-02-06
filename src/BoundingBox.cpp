@@ -24,6 +24,7 @@
 #include "BoundingBox.h"
 #include "Matrix.h"
 #include "XMLNode.h"
+#include "XMLString.h"
 
 using namespace std;
 
@@ -231,7 +232,7 @@ void BoundingBox::transform (const Matrix &tm) {
 
 string BoundingBox::toSVGViewBox () const {
 	ostringstream oss;
-	oss << ulx << ' ' << uly << ' ' << width() << ' ' << height();
+	oss << XMLString(ulx) << ' ' << XMLString(uly) << ' ' << XMLString(width()) << ' ' << XMLString(height());
 	return oss.str();
 }
 

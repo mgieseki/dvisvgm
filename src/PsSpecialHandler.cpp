@@ -361,9 +361,9 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				double y = point.y();
 				double r = _linewidth/2.0;
 				path = new XMLElementNode("circle");
-				path->addAttribute("cx", XMLString(x));
-				path->addAttribute("cy", XMLString(y));
-				path->addAttribute("r", XMLString(r));
+				path->addAttribute("cx", x);
+				path->addAttribute("cy", y);
+				path->addAttribute("r", r);
 				path->addAttribute("fill", _actions->getColor().rgbString());
 				bbox = BoundingBox(x-r, y-r, x+r, y+r);
 			}
@@ -380,21 +380,21 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("stroke", _actions->getColor().rgbString());
 			path->addAttribute("fill", "none");
 			if (_linewidth != 1)
-				path->addAttribute("stroke-width", XMLString(_linewidth));
+				path->addAttribute("stroke-width", _linewidth);
 			if (_miterlimit != 4)
-				path->addAttribute("stroke-miterlimit", XMLString(_miterlimit));
+				path->addAttribute("stroke-miterlimit", _miterlimit);
 			if (_linecap > 0)     // default value is "butt", no need to set it explicitely
-				path->addAttribute("stroke-linecap", XMLString(_linecap == 1 ? "round" : "square"));
+				path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
 			if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
-				path->addAttribute("stroke-linejoin", XMLString(_linecap == 1 ? "round" : "bevel"));
+				path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
 			if (_opacityalpha < 1)
-				path->addAttribute("stroke-opacity", XMLString(_opacityalpha));
+				path->addAttribute("stroke-opacity", _opacityalpha);
 			if (!_dashpattern.empty()) {
 				ostringstream oss;
 				for (size_t i=0; i < _dashpattern.size(); i++) {
 					if (i > 0)
 						oss << ',';
-					oss << _dashpattern[i];
+					oss << XMLString(_dashpattern[i]);
 				}
 				path->addAttribute("stroke-dasharray", oss.str());
 				if (_dashoffset != 0)
@@ -403,7 +403,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		}
 		if (path && _clipStack.top()) {
 			// assign clipping path and clip bounding box
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
+			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 			BoundingBox clipbox;
 			_clipStack.top()->computeBBox(clipbox);
 			bbox.intersect(clipbox);
@@ -447,7 +447,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			path->addAttribute("fill", _actions->getColor().rgbString());
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+XMLString(")"));
+			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 			BoundingBox clipbox;
 			_clipStack.top()->computeBBox(clipbox);
 			bbox.intersect(clipbox);
@@ -455,7 +455,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 			path->addAttribute("fill-rule", "evenodd");
 		if (_opacityalpha < 1)
-			path->addAttribute("fill-opacity", XMLString(_opacityalpha));
+			path->addAttribute("fill-opacity", _opacityalpha);
 		if (_xmlnode)
 			_xmlnode->append(path);
 		else {
@@ -502,7 +502,7 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 		XMLElementNode *clip = new XMLElementNode("clipPath");
 		clip->addAttribute("id", XMLString("clip")+XMLString(newID));
 		if (oldID)
-			clip->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+XMLString(")"));
+			clip->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
 
 		clip->append(path);
 		_actions->appendToDefs(clip);

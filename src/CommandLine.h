@@ -27,6 +27,8 @@ class CommandLine : public CmdLineParserBase
       const std::string& bbox_arg () const {return _bbox_arg;}
       bool output_given () const {return _output_given;}
       const std::string& output_arg () const {return _output_arg;}
+      bool precision_given () const {return _precision_given;}
+      int precision_arg () const {return _precision_arg;}
       bool stdout_given () const {return _stdout_given;}
       bool no_fonts_given () const {return _no_fonts_given;}
       int no_fonts_arg () const {return _no_fonts_arg;}
@@ -73,6 +75,7 @@ class CommandLine : public CmdLineParserBase
       void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
       void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
       void handle_output (InputReader &ir, const Option &opt, bool longopt);
+      void handle_precision (InputReader &ir, const Option &opt, bool longopt);
       void handle_stdout (InputReader &ir, const Option &opt, bool longopt);
       void handle_no_fonts (InputReader &ir, const Option &opt, bool longopt);
       void handle_no_styles (InputReader &ir, const Option &opt, bool longopt);
@@ -108,6 +111,8 @@ class CommandLine : public CmdLineParserBase
       std::string _bbox_arg;
       bool _output_given;
       std::string _output_arg;
+      bool _precision_given;
+      int _precision_arg;
       bool _stdout_given;
       bool _no_fonts_given;
       int _no_fonts_arg;

@@ -27,6 +27,7 @@
 #include "BoundingBox.h"
 #include "Matrix.h"
 #include "Pair.h"
+#include "XMLString.h"
 
 
 template <typename T>
@@ -177,10 +178,10 @@ class GraphicPath
 		}
 
 
-		/** Writes the path data as SVG path drawing command to a given output stream. 
-		 *  @param[in] os output stream used to write the SVG commands to 
+		/** Writes the path data as SVG path drawing command to a given output stream.
+		 *  @param[in] os output stream used to write the SVG commands to
 		 *  @param[in] sx horizontal scale factor
-		 *  @param[in] sy vertical scale factor 
+		 *  @param[in] sy vertical scale factor
 		 *  @param[in] dx horizontal translation in TeX point units
 		 *  @param[in] sy vertical translation in TeX point units */
 		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
@@ -191,13 +192,13 @@ class GraphicPath
 				void draw (char cmd, const Point *points, int n) {
 					_os << cmd;
 					switch (cmd) {
-						case 'H': _os << _sx*points->x()+_dx; break;
-						case 'V': _os << _sy*points->y()+_dy; break;
+						case 'H': _os << XMLString(_sx*points->x()+_dx); break;
+						case 'V': _os << XMLString(_sy*points->y()+_dy); break;
 						default :
 							for (int i=0; i < n; i++) {
 								if (i > 0)
 									_os << ' ';
-								_os << _sx*points[i].x()+_dx << ' ' << _sy*points[i].y()+_dy;
+								_os << XMLString(_sx*points[i].x()+_dx) << ' ' << XMLString(_sy*points[i].y()+_dy);
 							}
 					}
 				}
@@ -223,7 +224,7 @@ class GraphicPath
 		}
 
 
-		/** Checks whether the current path describes a dot/point only (with no extent). 
+		/** Checks whether the current path describes a dot/point only (with no extent).
 		 *  @param[out] p coordinates of the point if path describes a dot
 		 *  @return true if path is a dot/point */
 		bool isDot (Point &p) const {
@@ -243,7 +244,7 @@ class GraphicPath
 		}
 
 
-		/** Transforms the path according to a given Matrix. 
+		/** Transforms the path according to a given Matrix.
 		 *  @param[in] matrix Matrix describing the affine transformation */
 		void transform (const Matrix &matrix) {
 			FORALL(_commands, Iterator, it)

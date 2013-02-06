@@ -117,11 +117,6 @@ Hence, if you choose a landscape format, the page won't be rotated.
 //
 
 //
-*-c, --scale*='sx'[,'sy']::
-Scales the page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent
-to *-TS*'sx','sy'.
-
-
 *-C, --cache*[='dir']::
 To speed up the conversion process of bitmap fonts, dvisvgm saves intermediate conversion
 information in cache files. By default, these files are stored in $HOME/.dvisvgm/cache. If you prefer
@@ -186,6 +181,10 @@ Prints a short summary of all available command-line options.
 This is also the default action if dvisvgm is called without parameters.
 
 
+*--keep*::
+Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
+
+
 *--libgs=filename*::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
 PostScript support was not completely disabled during compilation. In this case, dvisvgm tries
@@ -202,15 +201,17 @@ prefix of the special statements. It's usually a leading word separated from the
 statement by a colon or a blank, e.g. 'color' or 'ps'.
 
 
-*--keep*::
-Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
-
-
 *-M, --mag*='factor'::
 Sets the magnification factor applied in conjunction with Metafont calls prior tracing the glyphs.
 The larger this value, the better the tracing results. Nevertheless, large magnification values
 can cause Metafont arithmetic errors due to number overflows. So, use this option with care.
 The default setting usually produces nice results.
+
+
+*--no-mktexmf*::
+Suppresses the generation of missing font files. If dvisvgm can't find a font file
+through the kpathsea lookup mechanism, it calls the external tools mktextfm or mktexmf by.
+This option disables these calls.
 
 
 *-n, --no-fonts*[='variant']::
@@ -219,6 +220,11 @@ resulting SVG files tends to be larger but concurrently more compatible with mos
 don't support SVG fonts yet. The optional argument 'variant' selects the method how to substitute fonts
 by paths. Variant 0 creates 'path' and 'use' elements. Variant 1 creates 'path' elements only.
 Option *--no-fonts* implies *--no-styles*.
+
+
+*-c, --scale*='sx'[,'sy']::
+Scales the page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent
+to *-TS*'sx','sy'.
 
 
 *-S, --no-specials*[='names']::
@@ -234,12 +240,6 @@ All unsupported special statements are silently ignored.
 By default, dvisvgm creates CSS styles and class attributes to reference fonts because it's more
 compact than repeatedly set the complete font information in each text element. However, if you
 prefer direct font references, the default behavior can be disabled with option *--no-styles*.
-
-
-*--no-mktexmf*::
-Suppresses the generation of missing font files. If dvisvgm can't find a font file
-through the kpathsea lookup mechanism, it calls the external tools mktextfm or mktexmf by.
-This option disables these calls.
 
 
 *-o, --output*='pattern'::
@@ -269,6 +269,14 @@ Please consider that the page values don't refer to the page numbers printed on 
 Instead, the physical page count is expected, where the first page always gets number 1.
 
 
+*-d, --precision*='digits'::
+Specifies the maximal number of decimal places applied to floating-point attribute values.
+All attribute values written to the generated SVG file(s) are rounded accordingly. The
+parameter 'digits' allows integer values from 0 to 6, where 0 enables the automatic selection
+of significant decimal places. This is also the default value if dvisvgm is called without
+option *--precision*.
+
+
 *-P, --progress*[='delay']::
 Enables a simple progress indicator shown when time-consuming operations like
 PostScript specials are processed. The indicator doesn't appear before the given
@@ -282,11 +290,6 @@ This option is equivalent to *-TR*'angle'.
 
 *-s, --stdout*::
 Don't write the SVG output to a file but redirect it to *stdout*.
-
-
-*-t, --translate*='tx'[,'ty']::
-Translates (moves) the page content in direction of vector ('tx','ty'). This option is
-equivalent to *-TT*'tx','ty'.
 
 
 *-T, --transform*='commands'::
@@ -360,6 +363,11 @@ transformation sequences. They are simply independent shorthand options for comm
 //
 
 //
+*-t, --translate*='tx'[,'ty']::
+Translates (moves) the page content in direction of vector ('tx','ty'). This option is
+equivalent to *-TT*'tx','ty'.
+
+
 *-v, --verbosity*='level'::
 Controls the type of messages printed during a dvisvgm run:
 [horizontal]
