@@ -176,16 +176,19 @@ given in `myfile2.map` are removed again.
 For further information about the map file formats, see the manuals of dvips and dvipdfm.
 
 
-*-h, --help*::
-Prints a short summary of all available command-line options.
-This is also the default action if dvisvgm is called without parameters.
+*-h, --help*[='mode']::
+Prints a short summary of all available command-line options. The optional 'mode' parameter is
+an integer value between 0 and 2. It selects the display variant of the help text. Mode 0
+lists all options divided into categories with section headers. This is also the default if
+dvisvgm is called without parameters. Mode 1 lists all options ordered by the short option name,
+while mode 2 sorts the lines by the long option name.
 
 
 *--keep*::
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
 
 
-*--libgs=filename*::
+*--libgs*='filename'::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
 PostScript support was not completely disabled during compilation. In this case, dvisvgm tries
 to load the shared GS library dynamically during runtime. By default, it expects the library's name

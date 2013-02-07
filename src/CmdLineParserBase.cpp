@@ -18,8 +18,9 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
+#include <cstdio>
 #include <cstring>
-#include <iostream>
 #include "CmdLineParserBase.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
@@ -115,6 +116,9 @@ void CmdLineParserBase::error (const Option &opt, bool longopt, const char *msg)
 }
 
 
+#if 0
+#include <iostream>
+
 /** Lists the scanned filenames. Just for debugging purposes. */
 void CmdLineParserBase::status () const {
 	cout << "file names:\n";
@@ -122,6 +126,7 @@ void CmdLineParserBase::status () const {
 		cout << "  " << _files[i] << endl;
 	cout << endl;
 }
+#endif
 
 
 /** Returns the option information of a given short option name.
@@ -306,4 +311,51 @@ bool CmdLineParserBase::getCharArg (InputReader &ir, const Option &opt, bool lon
 		error(opt, longopt, "character argument expected");
 	}
 	return false;
+}
+
+
+/** Compares the short option characters of two help lines.
+ *  @return true if line1 should appear before line2 */
+static bool cmp_short (const char *line1, const char *line2) {
+	if (*line1 != 'o' || *line2 != 'o' || (line1[1] == ' ' && line2[1] == ' '))
+		return strcmp(line1, line2) < 0;
+	char lopt1 = tolower(line1[2]);
+	char lopt2 = tolower(line2[2]);
+	if (lopt1 == lopt2)             // same character but different case?
+		return line1[2] > line2[2];  // line with lower-case letter first
+	return lopt1 < lopt2;
+}
+
+
+/** Compares the long option names of two help lines.
+ *  @return true if line1 should appear before line2 */
+static bool cmp_long (const char *line1, const char *line2) {
+	if (*line1 != 'o' || *line2 != 'o')
+		return strcmp(line1, line2) < 0;
+	return strcmp(line1+6, line2+6) < 0;
+}
+
+
+/** Prints the help text to stdout.
+ *  @param[in] mode format of help text */
+void CmdLineParserBase::help (int mode) const {
+	size_t numlines;
+	const char **lines = helplines(&numlines);
+	if (mode == 0) {  // list options with section headers
+		for (size_t i=0; i < numlines; i++) {
+			switch (*lines[i]) {
+				case 's': fputc('\n', stdout); break;  // section header
+				case 'o': fputs("  ", stdout); break;  // option info
+			}
+			puts(lines[i]+1);
+		}
+	}
+	else {
+		vector<const char*> linevec(lines, lines+numlines);
+		sort(linevec.begin(), linevec.end(), mode == 1 ? cmp_short : cmp_long);
+		for (vector<const char*>::iterator it=linevec.begin(); it != linevec.end(); ++it) {
+			if (**it != 's')  // skip section headers
+				puts(*it+1);
+		}
+	}
 }

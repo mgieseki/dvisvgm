@@ -119,7 +119,8 @@
 				<description>colorize messages</description>
 			</option>
 			<option long="help" short="h">
-				<description>print this help and exit</description>
+				<arg name="mode" type="int" optional="yes" default="0"/>
+				<description>print this summary of options and exit</description>
 			</option>
 			<option long="list-specials" short="l">
 				<description>print supported special sets and exit</description>

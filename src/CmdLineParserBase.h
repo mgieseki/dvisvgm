@@ -63,10 +63,10 @@ class CmdLineParserBase
 
 	public:
 		virtual void parse (int argc, char **argv, bool printErrors=true);
-		virtual void help () const  {}
+		virtual void help (int mode=0) const;
 		virtual int numFiles () const       {return _files.size();}
 		virtual const char* file (size_t n) {return n < _files.size() ? _files[n].c_str() : 0;}
-		virtual void status () const;
+//		virtual void status () const;
 		virtual bool error () const         {return _error;}
 
 	protected:
@@ -75,6 +75,8 @@ class CmdLineParserBase
 		virtual ~CmdLineParserBase () {}
 		virtual void init ();
 		virtual void error (const Option &opt, bool longopt, const char *msg) const;
+		virtual const Option* options () const =0;
+		virtual const char** helplines (size_t *numlines) const =0;
 		bool checkArgPrefix (InputReader &ir, const Option &opt, bool longopt) const;
 		bool checkNoArg (InputReader &ir, const Option &opt, bool longopt) const;
 		bool getIntArg (InputReader &ir, const Option &opt, bool longopt, int &arg) const;
@@ -85,7 +87,6 @@ class CmdLineParserBase
       bool getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const;
 		const Option* option (char shortname) const;
 		const Option* option (const std::string &longname) const;
-		virtual const Option* options () const {return 0;}
 
 	private:
 		bool _printErrors;    ///< if true, print error messages

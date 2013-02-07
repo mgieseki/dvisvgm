@@ -17,8 +17,6 @@ class CommandLine : public CmdLineParserBase
    public:
       CommandLine () {init();}
       CommandLine (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
-      void help () const;
-      void status () const;
       bool page_given () const {return _page_given;}
       const std::string& page_arg () const {return _page_arg;}
       bool fontmap_given () const {return _fontmap_given;}
@@ -60,6 +58,7 @@ class CommandLine : public CmdLineParserBase
       bool trace_all_arg () const {return _trace_all_arg;}
       bool color_given () const {return _color_given;}
       bool help_given () const {return _help_given;}
+      int help_arg () const {return _help_arg;}
       bool list_specials_given () const {return _list_specials_given;}
       bool progress_given () const {return _progress_given;}
       double progress_arg () const {return _progress_arg;}
@@ -71,6 +70,7 @@ class CommandLine : public CmdLineParserBase
    protected:
       void init ();
       const CmdLineParserBase::Option* options () const {return _options;}
+      const char** helplines (size_t *numlines) const;
       void handle_page (InputReader &ir, const Option &opt, bool longopt);
       void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
       void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
@@ -144,6 +144,7 @@ class CommandLine : public CmdLineParserBase
       bool _trace_all_arg;
       bool _color_given;
       bool _help_given;
+      int _help_arg;
       bool _list_specials_given;
       bool _progress_given;
       double _progress_arg;
