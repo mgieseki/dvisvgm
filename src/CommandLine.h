@@ -69,7 +69,7 @@ class CommandLine : public CmdLineParserBase
 
    protected:
       void init ();
-      const CmdLineParserBase::Option* options () const {return _options;}
+      const CmdLineParserBase::Option* options (size_t *numopts) const;
       const char** helplines (size_t *numlines) const;
       void handle_page (InputReader &ir, const Option &opt, bool longopt);
       void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);

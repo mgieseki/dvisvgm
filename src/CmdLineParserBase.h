@@ -75,7 +75,7 @@ class CmdLineParserBase
 		virtual ~CmdLineParserBase () {}
 		virtual void init ();
 		virtual void error (const Option &opt, bool longopt, const char *msg) const;
-		virtual const Option* options () const =0;
+		virtual const Option* options (size_t *numopts) const =0;
 		virtual const char** helplines (size_t *numlines) const =0;
 		bool checkArgPrefix (InputReader &ir, const Option &opt, bool longopt) const;
 		bool checkNoArg (InputReader &ir, const Option &opt, bool longopt) const;

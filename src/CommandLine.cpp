@@ -42,11 +42,17 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'v', "verbosity", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
    {'V', "version", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
    {'z', "zip", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
-   {0, 0, 0, 0}
 };
+
+const CmdLineParserBase::Option* CommandLine::options (size_t *numopts) const {
+   *numopts = sizeof(_options)/sizeof(CmdLineParserBase::Option);
+   return _options;
+}
 
 void CommandLine::init () {
    CmdLineParserBase::init();
+
+   // disable all options by default
    _bbox_given = false;
    _cache_given = false;
    _color_given = false;
@@ -77,6 +83,7 @@ void CommandLine::init () {
    _version_given = false;
    _zip_given = false;
 
+   // set default option values
    _bbox_arg = "min";
    _cache_arg.clear();
    _fontmap_arg.clear();
@@ -143,45 +150,37 @@ const char** CommandLine::helplines (size_t *numlines) const {
    return lines;
 }
 
-
 void CommandLine::handle_bbox (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _bbox_arg))
       _bbox_given = true;
 }
-
 
 void CommandLine::handle_cache (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getStringArg(ir, opt, longopt, _cache_arg))
       _cache_given = true;
 }
 
-
 void CommandLine::handle_color (InputReader &ir, const Option &opt, bool longopt) {
    _color_given = true;
 }
 
-
 void CommandLine::handle_exact (InputReader &ir, const Option &opt, bool longopt) {
    _exact_given = true;
 }
-
 
 void CommandLine::handle_fontmap (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _fontmap_arg))
       _fontmap_given = true;
 }
 
-
 void CommandLine::handle_help (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getIntArg(ir, opt, longopt, _help_arg))
       _help_given = true;
 }
 
-
 void CommandLine::handle_keep (InputReader &ir, const Option &opt, bool longopt) {
    _keep_given = true;
 }
-
 
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
 void CommandLine::handle_libgs (InputReader &ir, const Option &opt, bool longopt) {
@@ -190,114 +189,94 @@ void CommandLine::handle_libgs (InputReader &ir, const Option &opt, bool longopt
 }
 #endif
 
-
 void CommandLine::handle_list_specials (InputReader &ir, const Option &opt, bool longopt) {
    _list_specials_given = true;
 }
-
 
 void CommandLine::handle_mag (InputReader &ir, const Option &opt, bool longopt) {
    if (getDoubleArg(ir, opt, longopt, _mag_arg))
       _mag_given = true;
 }
 
-
 void CommandLine::handle_no_fonts (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getIntArg(ir, opt, longopt, _no_fonts_arg))
       _no_fonts_given = true;
 }
 
-
 void CommandLine::handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt) {
    _no_mktexmf_given = true;
 }
-
 
 void CommandLine::handle_no_specials (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getStringArg(ir, opt, longopt, _no_specials_arg))
       _no_specials_given = true;
 }
 
-
 void CommandLine::handle_no_styles (InputReader &ir, const Option &opt, bool longopt) {
    _no_styles_given = true;
 }
-
 
 void CommandLine::handle_output (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _output_arg))
       _output_given = true;
 }
 
-
 void CommandLine::handle_page (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _page_arg))
       _page_given = true;
 }
-
 
 void CommandLine::handle_precision (InputReader &ir, const Option &opt, bool longopt) {
    if (getIntArg(ir, opt, longopt, _precision_arg))
       _precision_given = true;
 }
 
-
 void CommandLine::handle_progress (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getDoubleArg(ir, opt, longopt, _progress_arg))
       _progress_given = true;
 }
-
 
 void CommandLine::handle_rotate (InputReader &ir, const Option &opt, bool longopt) {
    if (getDoubleArg(ir, opt, longopt, _rotate_arg))
       _rotate_given = true;
 }
 
-
 void CommandLine::handle_scale (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _scale_arg))
       _scale_given = true;
 }
 
-
 void CommandLine::handle_stdout (InputReader &ir, const Option &opt, bool longopt) {
    _stdout_given = true;
 }
-
 
 void CommandLine::handle_trace_all (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getBoolArg(ir, opt, longopt, _trace_all_arg))
       _trace_all_given = true;
 }
 
-
 void CommandLine::handle_transform (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _transform_arg))
       _transform_given = true;
 }
-
 
 void CommandLine::handle_translate (InputReader &ir, const Option &opt, bool longopt) {
    if (getStringArg(ir, opt, longopt, _translate_arg))
       _translate_given = true;
 }
 
-
 void CommandLine::handle_verbosity (InputReader &ir, const Option &opt, bool longopt) {
    if (getUIntArg(ir, opt, longopt, _verbosity_arg))
       _verbosity_given = true;
 }
-
 
 void CommandLine::handle_version (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getBoolArg(ir, opt, longopt, _version_arg))
       _version_given = true;
 }
 
-
 void CommandLine::handle_zip (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getIntArg(ir, opt, longopt, _zip_arg))
       _zip_given = true;
 }
-
 
