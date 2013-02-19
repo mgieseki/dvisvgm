@@ -48,7 +48,7 @@ const char *PSInterpreter::GSARGS[] = {
 /** Constructs a new PSInterpreter object.
  *  @param[in] actions template methods to be executed after recognizing the corresponding PS operator. */
 PSInterpreter::PSInterpreter (PSActions *actions)
-	: _mode(PS_NONE), _actions(actions), _inError(false), _initialized(false)
+	: _mode(PS_NONE), _actions(actions), _bytesToRead(0), _inError(false), _initialized(false)
 {
 }
 
@@ -91,48 +91,62 @@ void PSInterpreter::checkStatus (int status) {
 /** Executes a chunk of PostScript code.
  *  @param[in] str buffer containing the code
  *  @param[in] len number of characters in buffer
- *  @param[in] flush If true, a final 'flush' is sent which forces the
- *  	output buffer to be written immediately.*/
-void PSInterpreter::execute (const char *str, size_t len, bool flush) {
+ *  @param[in] flush If true, a final 'flush' is sent which forces the output buffer to be written immediately.
+ *  @return true if the assigned number of bytes have been read */
+bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 	init();
-	if (_mode != PS_QUIT) {
-		int status=0;
-		if (_mode == PS_NONE) {
-			_gs.run_string_begin(0, &status);
-			_mode = PS_RUNNING;
-		}
-		checkStatus(status);
-		const char *p=str;
-		// feed Ghostscript with code chunks that are not larger than 64KB
-		// => see documentation of gsapi_run_string_foo()
-		while (PS_RUNNING && len > 0) {
-			SignalHandler::instance().check();
-			size_t chunksize = min(len, (size_t)0xffff);
-			_gs.run_string_continue(p, chunksize, 0, &status);
-			p += chunksize;
-			len -= chunksize;
-			if (status == -101)  // e_Quit
-				_mode = PS_QUIT;
-			else
-				checkStatus(status);
-		}
-		if (flush) {
-			// force writing contents of output buffer
-			_gs.run_string_continue("\nflush ", 7, 0, &status);
-		}
+	if (_mode == PS_QUIT)
+		return false;
+
+	int status=0;
+	if (_mode == PS_NONE) {
+		_gs.run_string_begin(0, &status);
+		_mode = PS_RUNNING;
 	}
+	checkStatus(status);
+
+	bool finished=false;
+	if (_bytesToRead > 0 && len >= _bytesToRead) {
+		len = _bytesToRead;
+		finished = true;
+	}
+
+	// feed Ghostscript with code chunks that are not larger than 64KB
+	// => see documentation of gsapi_run_string_foo()
+	const char *p=str;
+	while (PS_RUNNING && len > 0) {
+		SignalHandler::instance().check();
+		size_t chunksize = min(len, (size_t)0xffff);
+		_gs.run_string_continue(p, chunksize, 0, &status);
+		p += chunksize;
+		len -= chunksize;
+		if (_bytesToRead > 0)
+			_bytesToRead -= chunksize;
+		if (status == -101)  // e_Quit
+			_mode = PS_QUIT;
+		else
+			checkStatus(status);
+	}
+	if (flush) {
+		// force writing contents of output buffer
+		_gs.run_string_continue("\nflush ", 7, 0, &status);
+	}
+	return finished;
 }
 
 
 /** Executes a chunk of PostScript code read from a stream. The method returns on EOF.
- *  @param[in] is the input stream */
-void PSInterpreter::execute (istream &is) {
+ *  @param[in] is the input stream
+ *  @return true if the assigned number of bytes have been read */
+bool PSInterpreter::execute (istream &is) {
 	char buf[4096];
-	while (is && !is.eof()) {
+	bool finished = false;
+	while (is && !is.eof() && !finished) {
 		is.read(buf, 4096);
-		execute(buf, is.gcount(), false);
+		finished = execute(buf, is.gcount(), false);
 	}
 	execute("\n", 1);
+	return finished;
 }
 
 
@@ -140,7 +154,7 @@ void PSInterpreter::execute (istream &is) {
  *  @param[in] inst pointer to calling instance of PSInterpreter
  *  @param[in] buf takes the read characters
  *  @param[in] len size of buffer buf
- *  @return number of read characters */
+ *  @return number of characters read */
 int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
 	return 0;
 }

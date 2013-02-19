@@ -85,11 +85,12 @@ class PSInterpreter
 
    public:
       PSInterpreter (PSActions *actions=0);
-		void execute (const char *str, size_t len, bool flush=true);
-		void execute (const char *str)         {execute(str, std::strlen(str));}
-		void execute (const std::string &str)  {execute(str.c_str());}
-		void execute (std::istream &is);
+		bool execute (const char *str, size_t len, bool flush=true);
+		bool execute (const char *str)         {return execute(str, std::strlen(str));}
+		bool execute (const std::string &str)  {return execute(str.c_str());}
+		bool execute (std::istream &is);
 		bool active () const                   {return _mode != PS_QUIT;}
+		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
 		PSActions* setActions (PSActions *actions);
 
 	protected:
@@ -106,6 +107,7 @@ class PSInterpreter
 		Ghostscript _gs;
 		Mode _mode;                  ///< current execution mode
 		PSActions *_actions;         ///< actions to be performed
+		size_t _bytesToRead;         ///< if > 0, maximal number of bytes to be processed by following calls of execute()
 		std::vector<char> _linebuf;
 		std::string _errorMessage;   ///< text of error message
 		bool _inError;               ///< true if scanning error message
