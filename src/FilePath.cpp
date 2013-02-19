@@ -99,6 +99,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 	single_slashes(current_dir);
 #ifdef __WIN32__
 	tolower(path);
+	path = FileSystem::adaptPathSeperators(path);
 	_drive = strip_drive_letter(path);
 #endif
 	if (isfile) {
