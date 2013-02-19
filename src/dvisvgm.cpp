@@ -28,6 +28,7 @@
 #include "CommandLine.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
+#include "EPSToSVG.h"
 #include "FilePath.h"
 #include "FileSystem.h"
 #include "Font.h"
@@ -41,6 +42,7 @@
 #include "PageSize.h"
 #include "SignalHandler.h"
 #include "SpecialManager.h"
+#include "SVGOutputBase.h"
 #include "System.h"
 
 #ifdef HAVE_CONFIG_H
@@ -60,7 +62,7 @@ extern "C" {
 
 using namespace std;
 
-class SVGOutput : public DVIToSVG::Output
+class SVGOutput : public SVGOutputBase
 {
 	public:
 		SVGOutput (const char *base=0, string pattern="", int zip_level=0)
@@ -148,6 +150,7 @@ class SVGOutput : public DVIToSVG::Output
 		mutable ostream *_os;
 };
 
+////////////////////////////////////////////////////////////////////////////////
 
 static void show_help (const CommandLine &cmd) {
 	cout << PACKAGE_STRING "\n\n";
@@ -173,7 +176,7 @@ static string ensure_suffix (string fname, const string &suffix) {
 }
 
 
-static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
+static string get_transformation_string (const CommandLine &args) {
 	ostringstream oss;
 	if (args.rotate_given())
 		oss << 'R' << args.rotate_arg() << ",w/2,h/2";
@@ -183,7 +186,7 @@ static void set_trans (DVIToSVG &dvisvg, const CommandLine &args) {
 		oss << 'S' << args.scale_arg();
 	if (args.transform_given())
 		oss << args.transform_arg();
-	dvisvg.setTransformation(oss.str());
+	return oss.str();
 }
 
 
@@ -361,50 +364,57 @@ int main (int argc, char *argv[]) {
 	SVGTree::CREATE_USE_ELEMENTS = args.no_fonts_arg() < 1;
 	DVIToSVGActions::EXACT_BBOX = args.exact_given();
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
+	Message::LEVEL = args.verbosity_arg();
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
 
 	double start_time = System::time();
-	string dvifile = ensure_suffix(args.file(0), "dvi");
-	ifstream ifs(dvifile.c_str(), ios_base::binary|ios_base::in);
-   if (!ifs)
-      Message::estream(true) << "can't open file '" << dvifile << "' for reading\n";
-	else {
-		SVGOutput out(args.stdout_given() ? 0 : dvifile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
-		Message::LEVEL = args.verbosity_arg();
-		DVIToSVG dvisvg(ifs, out);
-		const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
-		dvisvg.setProcessSpecials(ignore_specials, true);
-		set_trans(dvisvg, args);
-		dvisvg.setPageSize(args.bbox_arg());
+	string inputfile = ensure_suffix(args.file(0), args.eps_given() ? "eps" : "dvi");
+	ifstream ifs(inputfile.c_str(), ios_base::binary|ios_base::in);
+	if (!ifs) {
+		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
+		return 0;
+	}
+	FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
+	try {
+		SVGOutput out(args.stdout_given() ? 0 : inputfile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
+		SignalHandler::instance().start();
+		if (args.eps_given()) {
+			EPSToSVG eps2svg(inputfile, out);
+			eps2svg.convert();
+			Message::mstream().indent(0);
+			Message::mstream(false, Message::MC_PAGE_NUMBER)
+				<< "file converted in " << (System::time()-start_time) << " seconds\n";
+		}
+		else {
+			DVIToSVG dvi2svg(ifs, out);
+			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
+			dvi2svg.setProcessSpecials(ignore_specials, true);
+			dvi2svg.setTransformation(get_transformation_string(args));
+			dvi2svg.setPageSize(args.bbox_arg());
 
-		try {
-			FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
 			init_fontmap(args);
 			pair<int,int> pageinfo;
-			SignalHandler::instance().start();
-			dvisvg.convert(args.page_arg(), &pageinfo);
+			dvi2svg.convert(args.page_arg(), &pageinfo);
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
 			if (pageinfo.second > 1)
 				Message::mstream(false, Message::MC_PAGE_NUMBER) << 's';
-			Message::mstream(false, Message::MC_PAGE_NUMBER) << " converted in " << (System::time()-start_time) << " seconds";
-			Message::mstream(false) << "\n";
-
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << " converted in " << (System::time()-start_time) << " seconds\n";
 		}
-		catch (DVIException &e) {
-			Message::estream() << "\nDVI error: " << e.what() << '\n';
-		}
-		catch (PSException &e) {
-			Message::estream() << "\nPostScript error: " << e.what() << '\n';
-		}
-		catch (SignalException &e) {
-			Message::wstream(true) << "execution interrupted by user\n";
-		}
-		catch (MessageException &e) {
-			Message::estream(true) << e.what() << '\n';
-		}
+	}
+	catch (DVIException &e) {
+		Message::estream() << "\nDVI error: " << e.what() << '\n';
+	}
+	catch (PSException &e) {
+		Message::estream() << "\nPostScript error: " << e.what() << '\n';
+	}
+	catch (SignalException &e) {
+		Message::wstream(true) << "execution interrupted by user\n";
+	}
+	catch (MessageException &e) {
+		Message::estream(true) << e.what() << '\n';
 	}
 	FileFinder::finish();
 	return 0;

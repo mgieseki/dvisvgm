@@ -21,6 +21,9 @@ class CommandLine : public CmdLineParserBase
       const std::string& page_arg () const {return _page_arg;}
       bool fontmap_given () const {return _fontmap_given;}
       const std::string& fontmap_arg () const {return _fontmap_arg;}
+#if !defined(DISABLE_GS)
+      bool eps_given () const {return _eps_given;}
+#endif
       bool bbox_given () const {return _bbox_given;}
       const std::string& bbox_arg () const {return _bbox_arg;}
       bool output_given () const {return _output_given;}
@@ -73,6 +76,9 @@ class CommandLine : public CmdLineParserBase
       const char** helplines (size_t *numlines) const;
       void handle_page (InputReader &ir, const Option &opt, bool longopt);
       void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
+#if !defined(DISABLE_GS)
+      void handle_eps (InputReader &ir, const Option &opt, bool longopt);
+#endif
       void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
       void handle_output (InputReader &ir, const Option &opt, bool longopt);
       void handle_precision (InputReader &ir, const Option &opt, bool longopt);
@@ -107,6 +113,9 @@ class CommandLine : public CmdLineParserBase
       std::string _page_arg;
       bool _fontmap_given;
       std::string _fontmap_arg;
+#if !defined(DISABLE_GS)
+      bool _eps_given;
+#endif
       bool _bbox_given;
       std::string _bbox_arg;
       bool _output_given;

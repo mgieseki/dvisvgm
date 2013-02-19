@@ -1,5 +1,5 @@
 /*************************************************************************
-** DVIToSVG.h                                                           **
+** EPSFile.h                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,46 +18,29 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVITOSVG_H
-#define DVITOSVG_H
+#ifndef EPSFILE_H
+#define EPSFILE_H
 
-#include <iostream>
+#include <fstream>
 #include <string>
-#include <utility>
-#include "DVIReader.h"
-#include "SpecialManager.h"
-#include "SVGTree.h"
+#include "BoundingBox.h"
+#include "types.h"
 
-struct SVGOutputBase;
-
-class DVIToSVG : public DVIReader
+class EPSFile
 {
-   public:
-      DVIToSVG (std::istream &is, SVGOutputBase &out);
-		~DVIToSVG ();
-		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
-      void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
-		const SpecialManager* setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
-		const SpecialManager& specialManager () const    {return _specialManager;}
-		void setPageSize (const std::string &name)       {_bboxString = name;}
-		void setTransformation (const std::string &cmds) {_transCmds = cmds;}
+	public:
+		EPSFile (const std::string &fname);
+		std::istream& istream () const;
+		bool hasValidHeader () const {return _headerValid;}
+		bool bbox (BoundingBox &box) const;
+		UInt32 pslength () const {return _pslength;}
 
-   public:
-      static char TRACE_MODE;
-
-	protected:
-		DVIToSVG (const DVIToSVG &);
-		DVIToSVG operator = (const DVIToSVG &);
-		void beginPage (unsigned n, Int32 *c);
-		void endPage ();
-		void embedFonts (XMLElementNode *svgElement);
-
-   private:
-		SVGTree _svg;
-		SVGOutputBase &_out;
-		std::string _bboxString;
-		std::string _transCmds;
-		SpecialManager _specialManager;
+	private:
+		mutable std::ifstream _ifs;
+		bool _headerValid; ///< true if file has a valid header
+		UInt32 _offset;    ///< stream offset where ASCII part of the file begins
+		UInt32 _pslength;  ///< length of PS section (in bytes)
 };
 
 #endif
+

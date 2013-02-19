@@ -22,6 +22,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "EPSFile.h"
 #include "FileFinder.h"
 #include "Ghostscript.h"
 #include "Message.h"
@@ -211,8 +212,9 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
  *  @param[in] fname EPS file to be included
  *  @param[in] attr attributes given with \special psfile */
 void PsSpecialHandler::psfile (const string &fname, const map<string,string> &attr) {
-	ifstream ifs(fname.c_str());
-	if (!ifs)
+	EPSFile epsfile(fname);
+	istream &is = epsfile.istream();
+	if (!is)
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 	else {
 		map<string,string>::const_iterator it;
@@ -261,9 +263,11 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 
 		_xmlnode = new XMLElementNode("g");
 		_psi.execute("\n@beginspecial @setspecial "); // enter \special environment
-		_psi.execute(ifs);             // process EPS file
+		_psi.limit(epsfile.pslength()); // limit the number of bytes to be processed
+		_psi.execute(is);               // process EPS file
+		_psi.limit(0);                  // disable limitation
 		_psi.execute("\n@endspecial "); // leave special environment
-		if (!_xmlnode->empty()) {      // has anything been drawn?
+		if (!_xmlnode->empty()) {       // has anything been drawn?
 			Matrix m(1);
 			m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
 			m.translate(-llx, lly);

@@ -16,6 +16,9 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'b', "bbox", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
    {'C', "cache", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
    {'\0', "color", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
+#if !defined(DISABLE_GS)
+   {'E', "eps", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
+#endif
    {'e', "exact", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
    {'m', "fontmap", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_fontmap)},
    {'h', "help", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
@@ -56,6 +59,9 @@ void CommandLine::init () {
    _bbox_given = false;
    _cache_given = false;
    _color_given = false;
+#if !defined(DISABLE_GS)
+   _eps_given = false;
+#endif
    _exact_given = false;
    _fontmap_given = false;
    _help_given = false;
@@ -114,6 +120,9 @@ const char** CommandLine::helplines (size_t *numlines) const {
       "sInput options:",
       "o-p, --page=ranges             choose pages to convert [1]",
       "o-m, --fontmap=filenames       evaluate (additional) font map files",
+#if !defined(DISABLE_GS)
+      "o-E, --eps                     convert an EPS file to SVG",
+#endif
       "sSVG output options:",
       "o-b, --bbox=size               set size of bounding box [min]",
       "o-o, --output=pattern          set name pattern of output files",
@@ -163,6 +172,12 @@ void CommandLine::handle_cache (InputReader &ir, const Option &opt, bool longopt
 void CommandLine::handle_color (InputReader &ir, const Option &opt, bool longopt) {
    _color_given = true;
 }
+
+#if !defined(DISABLE_GS)
+void CommandLine::handle_eps (InputReader &ir, const Option &opt, bool longopt) {
+   _eps_given = true;
+}
+#endif
 
 void CommandLine::handle_exact (InputReader &ir, const Option &opt, bool longopt) {
    _exact_given = true;

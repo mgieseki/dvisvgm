@@ -36,6 +36,9 @@
 				<arg type="string" name="filenames"/>
 				<description>evaluate (additional) font map files</description>
 			</option>
+			<option long="eps" short="E" if="!defined(DISABLE_GS)">
+				<description>convert an EPS file to SVG</description>
+			</option>
 		</section>
 		<section title="SVG output options">
 			<option long="bbox" short="b">

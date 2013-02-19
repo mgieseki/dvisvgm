@@ -42,6 +42,7 @@
 #include "Message.h"
 #include "PageRanges.h"
 #include "PageSize.h"
+#include "SVGOutputBase.h"
 #include "SVGTree.h"
 #include "TFM.h"
 #include "XMLDocument.h"
@@ -103,7 +104,7 @@ class PSHeaderActions : public DVIActions
 char DVIToSVG::TRACE_MODE = 0;
 
 
-DVIToSVG::DVIToSVG (istream &is, DVIToSVG::Output &out) : DVIReader(is), _out(out)
+DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
 {
 	replaceActions(new DVIToSVGActions(*this, _svg));
 }
