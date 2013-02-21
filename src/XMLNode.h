@@ -32,6 +32,7 @@
 struct XMLNode
 {
 	virtual ~XMLNode () {}
+	virtual XMLNode* clone () const =0;
 	virtual std::ostream& write (std::ostream &os) const =0;
 	virtual bool emit (std::ostream &os, XMLNode *stopElement);
 	virtual void append (XMLNode *child) {}
@@ -45,7 +46,9 @@ class XMLElementNode : public XMLNode
 	typedef std::list<XMLNode*> ChildList;
 	public:
       XMLElementNode (const std::string &name);
+		XMLElementNode (const XMLElementNode &node);
 		~XMLElementNode ();
+		XMLNode* clone () const {return new XMLElementNode(*this);}
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
 		void append (XMLNode *child);
@@ -72,6 +75,7 @@ class XMLTextNode : public XMLNode
 {
 	public:
 		XMLTextNode (const std::string &str) : _text(str) {}
+		XMLNode* clone () const {return new XMLTextNode(*this);}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
 		void append (const std::string &str);
@@ -87,6 +91,7 @@ class XMLCommentNode : public XMLNode
 {
 	public:
 		XMLCommentNode (const std::string &str) : _text(str) {}
+		XMLNode* clone () const {return new XMLCommentNode(*this);}
 		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->\n";}
 
 	private:
@@ -98,7 +103,9 @@ class XMLDeclarationNode : public XMLNode
 {
 	public:
 		XMLDeclarationNode (const std::string &n, const std::string &p);
+		XMLDeclarationNode (const XMLDeclarationNode &node);
 		~XMLDeclarationNode ();
+		XMLNode* clone () const {return new XMLDeclarationNode(*this);}
 		void append (XMLDeclarationNode *child);
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
@@ -115,6 +122,7 @@ class XMLCDataNode : public XMLNode
 {
 	public:
 		XMLCDataNode (const std::string &d) : _data(d) {}
+		XMLNode* clone () const {return new XMLCDataNode(*this);}
 		std::ostream& write (std::ostream &os) const;
 
 	private:

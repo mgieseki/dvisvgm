@@ -36,6 +36,14 @@ XMLElementNode::XMLElementNode (const string &n) : _name(n), _emitted(false) {
 }
 
 
+XMLElementNode::XMLElementNode (const XMLElementNode &node)
+	: _name(node._name), _attributes(node._attributes), _emitted(false)
+{
+	FORALL(node._children, ChildList::const_iterator, it)
+		_children.push_back((*it)->clone());
+}
+
+
 XMLElementNode::~XMLElementNode () {
 	FORALL(_children, ChildList::iterator, i)
 		delete *i;
@@ -226,6 +234,14 @@ void XMLTextNode::prepend (XMLNode *node) {
 XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p)
 	: _name(n), _params(p), _emitted(false)
 {
+}
+
+
+XMLDeclarationNode::XMLDeclarationNode (const XMLDeclarationNode &node)
+	: _name(node._name), _params(node._params), _emitted(false)
+{
+	FORALL(node._children, list<XMLDeclarationNode*>::const_iterator, it)
+		_children.push_back(new XMLDeclarationNode(**it));
 }
 
 
