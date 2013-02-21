@@ -57,6 +57,8 @@ class XMLElementNode : public XMLNode
 		bool insertAfter (XMLNode *child, XMLNode *sibling);
 		bool insertBefore (XMLNode *child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
+		const char* getAttributeValue (const std::string &name) const;
+		bool findDescendants (const char *name, const char *attr_name, std::vector<XMLElementNode*> &descendants);
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
 		bool empty () const                          {return _children.empty();}

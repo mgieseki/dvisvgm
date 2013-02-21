@@ -134,6 +134,23 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
 }
 
 
+/** Finds all descendant elements of a given name and given attribute.
+ *  @param[in] name name of elements to find
+ *  @param[in] attr_name name of attribute to find
+ *  @param[out] descendants all elements found
+ *  @return true if at least one element was found  */
+bool XMLElementNode::findDescendants (const char *name, const char *attr_name, vector<XMLElementNode*> &descendants) {
+	FORALL(_children, ChildList::iterator, it) {
+		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
+			if ((!name || elem->getName() == name) && (!attr_name || elem->hasAttribute(attr_name)))
+				descendants.push_back(elem);
+			elem->findDescendants(name, attr_name, descendants);
+		}
+	}
+	return !descendants.empty();
+}
+
+
 ostream& XMLElementNode::write (ostream &os) const {
 	os << '<' << _name;
 	FORALL(_attributes, AttribMap::const_iterator, i)
@@ -196,6 +213,17 @@ bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
 /** Returns true if this element has an attribute of given name. */
 bool XMLElementNode::hasAttribute (const string &name) const {
 	return _attributes.find(name) != _attributes.end();
+}
+
+
+/** Returns the value of an attribute.
+ *  @param[in] name name of attribute
+ *  @return attribute value or 0 if attribute doesn't exist */
+const char* XMLElementNode::getAttributeValue(const std::string& name) const {
+	AttribMap::const_iterator it = _attributes.find(name);
+	if (it != _attributes.end())
+		return it->second.c_str();
+	return 0;
 }
 
 
