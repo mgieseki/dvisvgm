@@ -1,3 +1,13 @@
+dvisvgm-1.2 (2013-03-01)
+- PostScript handler: added support of tiling patterns
+- PostScript handler: added support for EPS files with binary headers/footers
+- added option --eps to directly convert EPS files to SVG
+- added option --precision to select the number of decimal places used in the generated SVG files
+- added an optional argument to --help to choose a display variant
+- fixed the text alignment of the --help output
+- improved handling of PostScript operator "show"
+- choose the correct output location if the input file argument contains path specifiers (Windows only)
+
 dvisvgm-1.1 (2013-01-22)
 - added evaluation of pdf:mapline and pdf:mapfile specials
 - added evaluation of subfont file definitions (.sfd files)
