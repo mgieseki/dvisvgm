@@ -26,9 +26,7 @@
 #include "InputReader.h"
 #include "Message.h"
 #include "PSInterpreter.h"
-#include "psdefs.psc"
 #include "SignalHandler.h"
-
 
 using namespace std;
 

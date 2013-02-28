@@ -1,4 +1,4 @@
-## This file is part of dvisvgm
+:## This file is part of dvisvgm
 ## Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>
 ##
 ## Process this file with automake.
@@ -26,15 +26,16 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EPSFile.cpp EPSToSVG.cpp FileFinder.cpp \
 	FilePath.cpp FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontManager.cpp FontMap.cpp \
 	GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp InputBuffer.cpp InputReader.cpp Length.cpp MapLine.cpp \
-	Matrix.cpp Message.cpp MetafontWrapper.cpp PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp Process.cpp PSInterpreter.cpp \
-	PSPattern.cpp PsSpecialHandler.cpp SignalHandler.cpp SpecialManager.cpp StreamReader.cpp StreamWriter.cpp Subfont.cpp \
-	SVGTree.cpp System.cpp Terminal.cpp TFM.cpp TpicSpecialHandler.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
+	Matrix.cpp Message.cpp MetafontWrapper.cpp PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp Process.cpp psdefs.cpp \
+	PSInterpreter.cpp PSPattern.cpp PsSpecialHandler.cpp SignalHandler.cpp SpecialManager.cpp StreamReader.cpp \
+	StreamWriter.cpp Subfont.cpp SVGTree.cpp System.cpp Terminal.cpp TFM.cpp TpicSpecialHandler.cpp VFReader.cpp \
+	XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
-EXTRA_DIST = options.xml psdefs.psc iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
+EXTRA_DIST = options.xml iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor
 
-# the commandline parser is generated from options.xml by opt2cpp
+# the command-line parser is generated from options.xml by opt2cpp
 CommandLine.cpp: options.xml
 	if test -f opt2cpp.xsl; then \
 		rm -f $@ $*.h; \
@@ -42,7 +43,7 @@ CommandLine.cpp: options.xml
 	fi
 
 # Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter
-psdefs.psc: psdefs.ps
+$(srcdir)/psdefs.cpp: psdefs.ps
 	if test -f $<; then \
 		ps2c PSInterpreter::PSDEFS $< >$@; \
 	fi

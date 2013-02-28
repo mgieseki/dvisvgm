@@ -1,5 +1,5 @@
 /*************************************************************************
-** psdefs.psc                                                           **
+** psdefs.cpp                                                           **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -17,6 +17,8 @@
 ** You should have received a copy of the GNU General Public License    **
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
+
+#include "PSInterpreter.h"
 
 const char *PSInterpreter::PSDEFS =
 "3 dict dup begin/Install{matrix setmatrix}def/HWResolution[72 72]def/PageSize[10"
@@ -79,5 +81,3 @@ const char *PSInterpreter::PSDEFS =
 "}def/setcolor{dup type/dicttype eq{setpattern}{/setcolor sysexec}ifelse}def/setg"
 "ray 1 defpr/setcmykcolor 4 defpr/sethsbcolor 3 defpr/setrgbcolor 3 defpr/.setopa"
 "cityalpha{dup/.setopacityalpha sysexec 1(setopacityalpha)prcmd}def ";
-
-// vim: set syntax=cpp:
