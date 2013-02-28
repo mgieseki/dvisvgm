@@ -42,6 +42,8 @@ class PSTestActions : public PSActions
 		void initclip (vector<double> &p)        {print("initclip", p);}
 		void lineto (vector<double> &p)          {print("lineto", p);}
 		void moveto (vector<double> &p)          {print("moveto", p);}
+		void makepattern (vector<double> &p)     {print("makepattern", p);}
+		void setpattern (vector<double> &p)      {print("setpattern", p);}
 		void newpath (vector<double> &p)         {print("newpath", p);}
 		void querypos (vector<double> &p)        {print("querypos", p);}
 		void restore(std::vector<double> &p)     {print("restore", p);}

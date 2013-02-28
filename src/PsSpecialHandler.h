@@ -21,12 +21,17 @@
 #ifndef PSSPECIALHANDLER_H
 #define PSSPECIALHANDLER_H
 
+#include <set>
 #include <stack>
+#include <string>
 #include <vector>
 #include "GraphicPath.h"
 #include "PSInterpreter.h"
 #include "SpecialHandler.h"
+#include "PSPattern.h"
 
+
+class PSPattern;
 class XMLElementNode;
 
 class PsSpecialHandler : public SpecialHandler, protected PSActions
@@ -86,6 +91,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void gsave (std::vector<double> &p);
 		void initclip (std::vector<double> &p);
 		void lineto (std::vector<double> &p);
+		void makepattern (std::vector<double> &p);
 		void moveto (std::vector<double> &p);
 		void newpath (std::vector<double> &p);
 		void querypos (std::vector<double> &p)       {_currentpoint = DPair(p[0], p[1]);}
@@ -103,6 +109,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		void setmatrix (std::vector<double> &p);
 		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
 		void setopacityalpha (std::vector<double> &p){_opacityalpha = p[0];}
+		void setpattern (std::vector<double> &p);
 		void setrgbcolor (std::vector<double> &rgb);
 		void stroke (std::vector<double> &p);
 		void translate (std::vector<double> &p);
@@ -113,6 +120,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		SpecialActions *_actions;
 		bool _initialized;
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
+		XMLElementNode *_savenode;  ///< pointer to temporaryly store _xmlnode
 		Path _path;
 		DPair _currentpoint;        ///< current PS position in bp units
       double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
@@ -125,6 +133,8 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		double _dashoffset;         ///< current dash offset
 		std::vector<double> _dashpattern;
 		ClippingStack _clipStack;
+		std::map<int, PSPattern*> _patterns;
+		PSTilingPattern *_pattern;  ///< current pattern
 };
 
 #endif

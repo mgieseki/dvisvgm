@@ -26,6 +26,7 @@
 #include "FileFinder.h"
 #include "Ghostscript.h"
 #include "Message.h"
+#include "PSPattern.h"
 #include "PsSpecialHandler.h"
 #include "SpecialActions.h"
 #include "XMLNode.h"
@@ -48,8 +49,9 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(fa
 
 
 PsSpecialHandler::~PsSpecialHandler () {
-	// ensure no further PS actions are performed
-	_psi.setActions(0);
+	_psi.setActions(0); // ensure no further PS actions are performed
+	for (map<int, PSPattern*>::iterator it=_patterns.begin(); it != _patterns.end(); ++it)
+		delete it->second;
 }
 
 
@@ -62,9 +64,10 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 		_linewidth = 1;
 		_linecap = _linejoin = 0;
 		_miterlimit = 4;
-		_xmlnode = 0;
+		_xmlnode = _savenode = 0;
 		_opacityalpha = 1;  // fully opaque
 		_sx = _sy = _cos = 1.0;
+		_pattern = 0;
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
@@ -272,7 +275,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 			m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
 			m.translate(-llx, lly);
 			m.scale(sx, sy);      // resize image to width "rwi" and height "rhi"
-			m.translate(x, y); // move image to current DVI position
+			m.translate(x, y);    // move image to current DVI position
 			_xmlnode->addAttribute("transform", m.getSVG());
 			_actions->appendToPage(_xmlnode);
 		}
@@ -387,9 +390,9 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				path->addAttribute("stroke-width", _linewidth);
 			if (_miterlimit != 4)
 				path->addAttribute("stroke-miterlimit", _miterlimit);
-			if (_linecap > 0)     // default value is "butt", no need to set it explicitely
+			if (_linecap > 0)     // default value is "butt", no need to set it explicitly
 				path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
-			if (_linejoin > 0)    // default value is "miter", no need to set it explicitely
+			if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
 				path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
 			if (_opacityalpha < 1)
 				path->addAttribute("stroke-opacity", _opacityalpha);
@@ -437,7 +440,6 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			if (!_xmlnode)
 				bbox.transform(_actions->getMatrix());
 		}
-
 		const double pt = 72.27/72.0;  // factor to convert bp -> pt
 		ScalingMatrix scale(pt, pt);
 		_path.transform(scale);
@@ -447,7 +449,9 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		_path.writeSVG(oss);
 		XMLElementNode *path = new XMLElementNode("path");
 		path->addAttribute("d", oss.str());
-		if (_actions->getColor() != Color::BLACK)
+		if (_pattern)
+			path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
+		else if (_actions->getColor() != Color::BLACK || _savenode)
 			path->addAttribute("fill", _actions->getColor().rgbString());
 		if (_clipStack.top()) {
 			// assign clipping path and clip bounding box
@@ -467,6 +471,101 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			_actions->embed(bbox);
 		}
 		_path.newpath();
+	}
+}
+
+
+/** Creates a Matrix object out of a given sequence of 6 double values.
+ *  The given values must be arranged in PostScript matrix order.
+ *  @param[in] v vector containing the matrix values
+ *  @param[in] startindex vector index of first component
+ *  @param[out] matrix the generated matrix */
+static void create_matrix (vector<double> &v, int startindex, Matrix &matrix) {
+	// Ensure vector p has 6 elements. If necessary, add missing ones
+	// using corresponding values of the identity matrix.
+	if (v.size()-startindex < 6) {
+		v.resize(6+startindex);
+		for (int i=v.size()-startindex; i < 6; ++i)
+			v[i+startindex] = (i%3 ? 0 : 1);
+	}
+	// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
+	// Since PS uses left multiplications, we must transpose and reorder
+	// the matrix to ((a,c,e),(b,d,f),(0,0,1)). This is done by the
+	// following swaps.
+	swap(v[startindex+1], v[startindex+2]);  // => (a, c, b, d, e, f)
+	swap(v[startindex+2], v[startindex+4]);  // => (a, c, e, d, b, f)
+	swap(v[startindex+3], v[startindex+4]);  // => (a, c, e, b, d, f)
+	matrix.set(v, startindex);
+}
+
+
+/** Starts the definition of a new fill pattern. This operator
+ *  expects 9 parameters for tiling patterns (see PS reference 4.9.2):
+ *  @param[in] p the 9 values defining a tiling pattern (see PS reference 4.9.2):
+ *  0: pattern type (0:none, 1:tiling, 2:shading)
+ *  1: pattern ID
+ *  2-5: lower left and upper right coordinates of pattern box
+ *  6: horizontal distance of adjacent tiles
+ *  7: vertical distance of adjacent tiles
+ *  8: paint type (1: colored pattern, 2: uncolored pattern)
+ *  9-14: pattern matrix */
+void PsSpecialHandler::makepattern (vector<double> &p) {
+	int pattern_type = static_cast<int>(p[0]);
+	int id = static_cast<int>(p[1]);
+	switch (pattern_type) {
+		case 0:
+			// pattern definition completed
+			if (_savenode) {
+				_xmlnode = _savenode;
+				_savenode = 0;
+			}
+			break;
+		case 1: {  // tiling pattern
+			BoundingBox bbox(p[2], p[3], p[4], p[5]);
+			const double &xstep=p[6], &ystep=p[7]; // horizontal and vertical distance of adjacent tiles
+			int paint_type = static_cast<int>(p[8]);
+
+			Matrix matrix;  // transformation matrix given together with pattern definition
+			create_matrix(p, 9, matrix);
+			matrix.rmultiply(_actions->getMatrix());
+
+			PSTilingPattern *pattern=0;
+			if (paint_type == 1)
+				pattern = new PSColoredTilingPattern(id, bbox, matrix, xstep, ystep);
+			else
+				pattern = new PSUncoloredTilingPattern(id, bbox, matrix, xstep, ystep);
+			_patterns[id] = pattern;
+			_savenode = _xmlnode;
+			_xmlnode = pattern->getContainerNode();  // insert the following SVG elements into this node
+			break;
+		}
+		case 2: {
+			// define a shading pattern
+		}
+	}
+}
+
+
+/** Selects a previously defined fill pattern.
+ *  0: pattern ID
+ *  1-3: (optional) RGB values for uncolored tiling patterns
+ *  further parameters depend on the pattern type */
+void PsSpecialHandler::setpattern (vector<double> &p) {
+	int pattern_id = p[0];
+	Color color;
+	if (p.size() == 4)
+		color.set((float)p[1], (float)p[2], (float)p[3]);
+	map<int,PSPattern*>::iterator it = _patterns.find(pattern_id);
+	if (it == _patterns.end())
+		_pattern = 0;
+	else {
+		if (PSUncoloredTilingPattern *pattern = dynamic_cast<PSUncoloredTilingPattern*>(it->second))
+			pattern->setColor(color);
+		it->second->apply(_actions);
+		if (PSTilingPattern *pattern = dynamic_cast<PSTilingPattern*>(it->second))
+			_pattern = pattern;
+		else
+			_pattern = 0;
 	}
 }
 
@@ -522,21 +621,8 @@ void PsSpecialHandler::newpath (vector<double> &p) {
 
 void PsSpecialHandler::setmatrix (vector<double> &p) {
 	if (_actions) {
-		// Ensure vector p has 6 elements. If necessary, add missing ones
-		// using corresponding values of the identity matrix.
-		if (p.size() < 6) {
-			p.resize(6);
-			for (int i=p.size(); i < 6; i++)
-				p[i] = (i%3 ? 0 : 1);
-		}
-		// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
-		// Since PS uses left multiplications, we must transpose and reorder
-		// the matrix to ((a,c,e),(b,d,f),(0,0,1)). This is done by the
-		// following swaps.
-		swap(p[1], p[2]);  // => (a, c, b, d, e, f)
-		swap(p[2], p[4]);  // => (a, c, e, d, b, f)
-		swap(p[3], p[4]);  // => (a, c, e, b, d, f)
-		Matrix m(p);
+		Matrix m;
+		create_matrix(p, 0, m);
 		_actions->setMatrix(m);
 	}
 }
@@ -576,7 +662,9 @@ void PsSpecialHandler::rotate (vector<double> &p) {
 	}
 }
 
+
 void PsSpecialHandler::setgray (vector<double> &p) {
+	_pattern = 0;
 	if (_actions) {
 		Color c;
 		c.setGray((float)p[0]);
@@ -586,12 +674,14 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 
 
 void PsSpecialHandler::setrgbcolor (vector<double> &p) {
+	_pattern= 0;
 	if (_actions)
 		_actions->setColor(Color((float)p[0], (float)p[1], (float)p[2]));
 }
 
 
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
+	_pattern = 0;
 	if (_actions) {
 		Color c;
 		c.setCMYK((float)p[0], (float)p[1], (float)p[2], (float)p[3]);
@@ -601,6 +691,7 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 
 
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
+	_pattern = 0;
 	if (_actions) {
 		Color c;
 		c.setHSB((float)p[0], (float)p[1], (float)p[2]);
