@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2011 Peter Selinger.
+/* Copyright (C) 2001-2013 Peter Selinger.
    This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
@@ -78,7 +78,7 @@ typedef struct potrace_dpoint_s potrace_dpoint_t;
 struct potrace_curve_s {
   int n;                    /* number of segments */
   int *tag;                 /* tag[n]: POTRACE_CURVETO or POTRACE_CORNER */
-  potrace_dpoint_t (*c)[3]; /* c[n][3]: control points. 
+  potrace_dpoint_t (*c)[3]; /* c[n][3]: control points.
 			       c[n][0] is unused for tag[n]=POTRACE_CORNER */
 };
 typedef struct potrace_curve_s potrace_curve_t;
@@ -96,7 +96,7 @@ struct potrace_path_s {
 
   struct potrace_privpath_s *priv;  /* private state */
 };
-typedef struct potrace_path_s potrace_path_t;  
+typedef struct potrace_path_s potrace_path_t;
 
 /* ---------------------------------------------------------------------- */
 /* Potrace state */
@@ -105,7 +105,7 @@ typedef struct potrace_path_s potrace_path_t;
 #define POTRACE_STATUS_INCOMPLETE 1
 
 struct potrace_state_s {
-  int status;                       
+  int status;
   potrace_path_t *plist;            /* vector data */
 
   struct potrace_privstate_s *priv; /* private state */
@@ -122,7 +122,7 @@ potrace_param_t *potrace_param_default(void);
 void potrace_param_free(potrace_param_t *p);
 
 /* trace a bitmap*/
-potrace_state_t *potrace_trace(const potrace_param_t *param, 
+potrace_state_t *potrace_trace(const potrace_param_t *param,
 			       const potrace_bitmap_t *bm);
 
 /* free a Potrace state */

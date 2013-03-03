@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2011 Peter Selinger.
+/* Copyright (C) 2001-2013 Peter Selinger.
    This file is part of Potrace. It is free software and it is covered
    by the GNU General Public License. See the file COPYING for details. */
 
@@ -875,7 +875,7 @@ static void smooth(privcurve_t *curve, double alphamax) {
     }
     curve->alpha0[j] = alpha;	 /* remember "original" value of alpha */
 
-    if (alpha > alphamax) {  /* pointed corner */
+    if (alpha >= alphamax) {  /* pointed corner */
       curve->tag[j] = POTRACE_CORNER;
       curve->c[j][1] = curve->vertex[j];
       curve->c[j][2] = p4;
