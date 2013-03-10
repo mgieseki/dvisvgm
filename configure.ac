@@ -61,6 +61,7 @@ if test "$HAVE_LIBPOTRACE" -eq 0; then
 	EXTRA_LIBS="$EXTRA_LIBS ../potracelib/libpotrace.a "
 	AC_MSG_NOTICE([Using bundled potrace library])
 fi
+AM_CONDITIONAL(HAVE_LIBPOTRACE, test "x$HAVE_LIBPOTRACE" = "x1")
 
 
 # Check how to link Ghostscript
