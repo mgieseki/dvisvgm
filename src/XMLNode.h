@@ -108,7 +108,7 @@ class XMLDeclarationNode : public XMLNode
 		XMLDeclarationNode (const XMLDeclarationNode &node);
 		~XMLDeclarationNode ();
 		XMLNode* clone () const {return new XMLDeclarationNode(*this);}
-		void append (XMLDeclarationNode *child);
+		void append (XMLNode *child);
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
 

@@ -278,10 +278,16 @@ XMLDeclarationNode::~XMLDeclarationNode () {
 		delete *i;
 }
 
-void XMLDeclarationNode::append (XMLDeclarationNode *child) {
-	if (child)
-		_children.push_back(child);
+
+/** Appends another declaration node to this one.
+ *  @param[in] child child to append, must be of type XMLDeclarationNode */
+void XMLDeclarationNode::append (XMLNode *child) {
+	if (XMLDeclarationNode *decl_node = dynamic_cast<XMLDeclarationNode*>(child))
+		_children.push_back(decl_node);
+	else
+		delete child;
 }
+
 
 ostream& XMLDeclarationNode::write (ostream &os) const {
 	os << "<!" << _name << ' ' << _params;
