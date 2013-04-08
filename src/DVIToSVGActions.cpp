@@ -39,7 +39,7 @@ bool DVIToSVGActions::EXACT_BBOX = false;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::WHITE), _boxes(0)
+	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::TRANSPARENT), _boxes(0)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;
@@ -57,7 +57,7 @@ void DVIToSVGActions::reset() {
 	_usedFonts.clear();
 	_bbox = BoundingBox();
 	_currentFontNum = -1;
-	_bgcolor = Color::WHITE;
+	_bgcolor = Color::TRANSPARENT;
 }
 
 
@@ -219,7 +219,8 @@ void DVIToSVGActions::beginPage (unsigned n, Int32 *c) {
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage () {
 	_svg.transformPage(_pageMatrix);
-	if (_bgcolor != Color::WHITE) {
+	if (_bgcolor != Color::TRANSPARENT) {
+		// create a rectangle filled with the background color
 		XMLElementNode *r = new XMLElementNode("rect");
 		r->addAttribute("x", _bbox.minX());
 		r->addAttribute("y", _bbox.minY());

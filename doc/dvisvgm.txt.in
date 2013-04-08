@@ -416,9 +416,10 @@ with the same prefix. To get a list of actually provided special handlers, use o
 
 *bgcolor*::
 Special statement for changing the background/page color. Since SVG 1.1 doesn't support background colors,
-dvisvgm inserts a rectangle of the chosen color. In the current version, this rectangle always gets the size
-of the minimal bounding box. This command is part of the color special set but is handled separately in order
-to let the user turn it off. For an overview of the command syntax, see the documentation of dvips, for instance.
+dvisvgm inserts a rectangle of the chosen color into the generated SVG document. This rectangle always gets
+the same size as the selected or computed bounding box. This background color command is part of the color
+special set but is handled separately in order to let the user turn it off. For an overview of the command
+syntax, see the documentation of dvips, for instance.
 
 *color*::
 Statements of this command set provide instructions to change the text/paint color. For an overview of the

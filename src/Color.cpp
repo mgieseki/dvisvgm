@@ -29,6 +29,7 @@ using namespace std;
 
 const Color Color::BLACK(0);
 const Color Color::WHITE(UInt8(255), UInt8(255), UInt8(255));
+const Color Color::TRANSPARENT(0xff000000);
 
 
 static inline UInt8 float_to_byte (float v) {
