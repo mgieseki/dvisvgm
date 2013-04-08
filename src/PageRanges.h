@@ -44,7 +44,6 @@ class PageRanges
 
    private:
 		Container _ranges;
-		int _max;
 };
 
 #endif
