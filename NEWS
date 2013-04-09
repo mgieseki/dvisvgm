@@ -1,3 +1,9 @@
+dvisvgm-1.2.1 (2013-04-09)
+- updated bundled potrace library to version 1.11
+- avoid building bundled potracelib if system library is present (patch by Alexis Ballier)
+- allow background color specials to create white background rectangles
+- code refactorings and cleanup
+
 dvisvgm-1.2 (2013-03-01)
 - PostScript handler: added support of tiling patterns
 - PostScript handler: added support for EPS files with binary headers/footers
@@ -51,7 +57,7 @@ dvisvgm-1.0.9 (2011-10-13)
 
 dvisvgm-1.0.8 (2011-05-31)
 - PS handler: added evaluation of PS operators save, restore, and grestoreall
-- PS handler: fixed potention segfault caused by invisible zero-length paths
+- PS handler: fixed potential segfault caused by invisible zero-length paths
 - fixed computation of current drawing position influenced by PS and DVI actions
 - don't stop Metafont conversions on errors any longer in order to convert
   buggy MF fonts properly
@@ -63,8 +69,8 @@ dvisvgm-1.0.7 (2011-05-06)
 - fixed semantics of TPIC special 'ip' (doesn't draw polygon outlines any longer)
 
 dvisvgm-1.0.6 (2011-04-21)
-- fixed segfault occured if a (malformed) DVI file calls set_char/put_char
-  whithout preceding font definition
+- fixed segfault occurred if a (malformed) DVI file calls set_char/put_char
+  without preceding font definition
 - added CTRL-C handler
 - MiKTeX support updated to version 2.9
 - some code refactorings
