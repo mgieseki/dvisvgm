@@ -376,8 +376,8 @@ int main (int argc, char *argv[]) {
 		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
 		return 0;
 	}
-	FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
 	try {
+		FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
 		SVGOutput out(args.stdout_given() ? 0 : inputfile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
 		SignalHandler::instance().start();
 		if (args.eps_given()) {

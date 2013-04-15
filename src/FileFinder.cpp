@@ -99,11 +99,11 @@ void FileFinder::finish () {
 std::string FileFinder::version () {
 #ifdef MIKTEX
 	bool autoinit=false;
-	if (!_initialized) {
-		init("", "", false);
-		autoinit = true;
-	}
 	try {
+		if (!_initialized) {
+			init("", "", false);
+			autoinit = true;
+		}
 		string ret = miktex->getVersion();
 		if (autoinit)
 			finish();
@@ -112,7 +112,7 @@ std::string FileFinder::version () {
 	catch (MessageException &e) {
 		if (autoinit)
 			finish();
-		throw;
+		return "not available";
 	}
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))
