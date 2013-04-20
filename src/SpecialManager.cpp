@@ -75,7 +75,7 @@ void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ig
 		ign = "%"+ign+"%";
 
 		for (; *handlers; handlers++) {
-			if (ign.find("%"+string((*handlers)->name())+"%") == string::npos)
+			if (!(*handlers)->name() || ign.find("%"+string((*handlers)->name())+"%") == string::npos)
 				registerHandler(*handlers);
 			else
 				delete *handlers;
@@ -139,8 +139,8 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 	typedef map<string, SpecialHandler*> SortMap;
 	SortMap m;
 	FORALL(_handlers, ConstIterator, it)
-		m[it->second->name()] = it->second;
-
+		if (it->second->name())
+			m[it->second->name()] = it->second;
 	FORALL(m, SortMap::iterator, it) {
 		os << setw(10) << left << it->second->name() << ' ';
 		if (it->second->info())
