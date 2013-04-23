@@ -48,7 +48,8 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #include "PSInterpreter.h"
-#else
+#endif
+#ifndef TARGET_SYSTEM
 #define TARGET_SYSTEM ""
 #endif
 
@@ -275,8 +276,9 @@ static void print_version (bool extended) {
 	ostringstream oss;
 	oss << PACKAGE_STRING;
 	if (extended) {
-		oss << " (" TARGET_SYSTEM ")\n";
-		oss << string(oss.str().length()-1, '-') << "\n"
+		if (strlen(TARGET_SYSTEM) > 0)
+			oss << " (" TARGET_SYSTEM ")";
+		oss << "\n" << string(oss.str().length()-1, '-') << "\n"
 			"freetype:    " << FontEngine::version() << "\n";
 
 		string gsver;

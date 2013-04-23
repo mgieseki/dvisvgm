@@ -29,10 +29,14 @@
 #include "SVGOutputBase.h"
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
+	#include "config.h"
+	#ifdef TARGET_SYSTEM
+		#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
+	#else
+		#define VERSION_STR VERSION
+	#endif
 #else
-#define VERSION_STR ""
+	#define VERSION_STR ""
 #endif
 
 
