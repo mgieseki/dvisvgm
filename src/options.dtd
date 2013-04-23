@@ -23,7 +23,7 @@
 <!ATTLIST cmdline
   class NMTOKEN #REQUIRED>
 
-<!ELEMENT program (name,usage,description)>
+<!ELEMENT program (name,usage+,description)>
 
 <!ELEMENT options (section)+>
 

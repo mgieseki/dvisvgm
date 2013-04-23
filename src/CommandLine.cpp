@@ -116,7 +116,7 @@ void CommandLine::init () {
 
 const char** CommandLine::helplines (size_t *numlines) const {
    static const char *lines[] = {
-      "dThis program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile",
+      "dThis program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.\n\nUsage: dvisvgm [options] dvifile\n       dvisvgm -E [options] epsfile",
       "sInput options:",
       "o-p, --page=ranges             choose pages to convert [1]",
       "o-m, --fontmap=filenames       evaluate (additional) font map files",

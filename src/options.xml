@@ -24,6 +24,7 @@
 	<program>
 		<name>dvisvgm</name>
 		<usage>[options] dvifile</usage>
+		<usage>-E [options] epsfile</usage>
       <description>This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.</description>
 	</program>
 	<options>

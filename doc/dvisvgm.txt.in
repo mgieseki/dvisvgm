@@ -32,6 +32,8 @@ SYNOPSIS
 --------
 *dvisvgm* [ 'options' ] 'file' [.dvi]
 
+*dvisvgm* -E [ 'options' ] 'file' [.eps]
+
 
 DESCRIPTION
 -----------

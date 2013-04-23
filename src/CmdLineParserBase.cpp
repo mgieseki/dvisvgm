@@ -359,8 +359,11 @@ void CmdLineParserBase::help (int mode) const {
 		vector<const char*> linevec(lines, lines+numlines);
 		sort(linevec.begin(), linevec.end(), mode == 1 ? cmp_short : cmp_long);
 		for (vector<const char*>::iterator it=linevec.begin(); it != linevec.end(); ++it) {
-			if (**it != 's')  // skip section headers
+			if (**it != 's') { // skip section headers
 				puts(*it+1);
+				if (**it == 'd')
+					puts("\nOptions:");
+			}
 		}
 	}
 }
