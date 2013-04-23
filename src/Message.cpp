@@ -28,7 +28,7 @@
 
 using namespace std;
 
-MessageStream::MessageStream () : _os(0), _nl(false) {
+MessageStream::MessageStream () : _os(0), _nl(false), _col(1), _indent(0) {
 }
 
 

@@ -59,6 +59,13 @@ BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &
 }
 
 
+BoundingBox::BoundingBox (const string &boxstr)
+	: _valid(false), _locked(false)
+{
+	set(boxstr);
+}
+
+
 /** Removes leading and trailing whitespace from the given string. */
 static string& strip (string &str) {
 	size_t n=0;
@@ -121,6 +128,7 @@ void BoundingBox::set (string boxstr) {
 		default:
 			throw BoundingBoxException("1, 2 or 4 length parameters expected");
 	}
+	_valid = true;
 }
 
 

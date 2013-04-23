@@ -34,7 +34,7 @@ inline static double fix2double (FixWord fix) {
 
 
 VFReader::VFReader (istream &is)
-	: StreamReader(is), actions(0) {
+	: StreamReader(is), actions(0), designSize(0) {
 }
 
 

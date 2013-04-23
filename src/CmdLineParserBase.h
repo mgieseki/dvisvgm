@@ -71,7 +71,7 @@ class CmdLineParserBase
 
 	protected:
 		CmdLineParserBase () : _printErrors(true), _error(false) {}
-		CmdLineParserBase (const CmdLineParserBase &cmd) {}
+		CmdLineParserBase (const CmdLineParserBase &cmd) : _printErrors(true), _error(false) {}
 		virtual ~CmdLineParserBase () {}
 		virtual void init ();
 		virtual void error (const Option &opt, bool longopt, const char *msg) const;

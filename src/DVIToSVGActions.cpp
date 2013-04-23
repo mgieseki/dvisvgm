@@ -300,10 +300,7 @@ static int digits (int n) {
 void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 	static double time=0;
 	static bool draw=false; // show progress indicator?
-	static int step = -1;   // >=0: rotating dash
-	static size_t prev_current=0, prev_total=1;
 	static const char *prev_id=0;
-	const char *tips = "-\\|/";
 	if (current == 0 && total > 0) {
 		time = System::time();
 		draw = false;
@@ -313,6 +310,9 @@ void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 	if (!draw && System::time()-time > PROGRESSBAR_DELAY)
 		draw = true;
 	if (draw && (System::time() - time > 0.1 || (total > 0 && current == total) || prev_id != id)) {
+		static int step = -1;   // >=0: rotating dash
+		static size_t prev_current=0, prev_total=1;
+		const char *tips = "-\\|/";
 		if (total == 0) {
 			current = prev_current;
 			total = prev_total;

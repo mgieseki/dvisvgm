@@ -35,6 +35,7 @@ struct CalculatorException : public MessageException
 class Calculator
 {
    public:
+		Calculator () : numValue(0) {}
       double eval (std::istream &is);
 		double eval (const std::string &expr);
 		void setVariable (const std::string &name, double value) {variables[name] = value;}
