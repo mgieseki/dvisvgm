@@ -35,10 +35,10 @@ struct CalculatorException : public MessageException
 class Calculator
 {
    public:
-		Calculator () : numValue(0) {}
-      double eval (std::istream &is);
+		Calculator () : _numValue(0) {}
+		double eval (std::istream &is);
 		double eval (const std::string &expr);
-		void setVariable (const std::string &name, double value) {variables[name] = value;}
+		void setVariable (const std::string &name, double value) {_variables[name] = value;}
 		double getVariable (const std::string &name) const;
 
    protected:
@@ -49,9 +49,9 @@ class Calculator
       char lookAhead (std::istream &is);
 
    private:
-		std::map<std::string,double> variables;
-		double numValue;
-		std::string strValue;
+		std::map<std::string,double> _variables;
+		double _numValue;
+		std::string _strValue;
 };
 
 #endif

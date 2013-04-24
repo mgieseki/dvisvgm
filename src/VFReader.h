@@ -58,8 +58,8 @@ class VFReader : public StreamReader
 		void cmdFontDef (int len);
 
 	private:
-		VFActions *actions; ///< actions to execute when reading a VF command
-		double    designSize; ///< design size of currently read VF
+		VFActions *_actions; ///< actions to execute when reading a VF command
+		double _designSize; ///< design size of currently read VF
 };
 
 #endif

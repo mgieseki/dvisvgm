@@ -96,20 +96,20 @@ double Calculator::prim (istream &is, bool skip) { // prim:
    if (skip)
       lex(is);
    switch (lookAhead(is)) {
-      case NUMBER: {                               // NUMBER => $1
+		case NUMBER: {                               // NUMBER => $1
 			lex(is);
-			double ret = numValue;
+			double ret = _numValue;
 			if (lookAhead(is) == NAME) {              // NUMBER NAME => $1 * $2
 				lex(is);
-				ret *= getVariable(strValue);
+				ret *= getVariable(_strValue);
 			}
 			return ret;
 		}
 		case NAME: {                                 // NAME => getVariable($1)
 			lex(is);
-			return getVariable(strValue);
+			return getVariable(_strValue);
 		}
-      case '-':                                    // '-' prim => -$2
+		case '-':                                    // '-' prim => -$2
 			return -prim(is, true);
       case '(': {                                  // '(' expr ')' => $2
          double e = expr(is, true);
@@ -118,7 +118,7 @@ double Calculator::prim (istream &is, bool skip) { // prim:
          lex(is);
          return e;
       }
-      default:
+		default:
 			throw CalculatorException("primary expression expected");
    }
 }
@@ -148,20 +148,20 @@ char Calculator::lookAhead (istream &is) {
  *  @return token type */
 char Calculator::lex (istream &is) {
 	int tokenType = lookAhead(is);
-   switch (tokenType) {
-      case NUMBER:
-         is >> numValue;
-         break;
-      case NAME: {
-         strValue.clear();
-         while (isalpha(is.peek()))
-            strValue += char(is.get());
-         break;
+	switch (tokenType) {
+		case NUMBER:
+			is >> _numValue;
+			break;
+		case NAME: {
+			_strValue.clear();
+			while (isalpha(is.peek()))
+				_strValue += char(is.get());
+			break;
 		}
 		default:
 			tokenType = is.get();
-   }
-   return char(tokenType);
+	}
+	return char(tokenType);
 }
 
 
@@ -170,8 +170,8 @@ char Calculator::lex (istream &is) {
  *  @param[in] name name of variable
  *  @return assigned value */
 double Calculator::getVariable (const string &name) const {
-	map<string,double>::const_iterator it = variables.find(name);
-	if (it == variables.end())
+	map<string,double>::const_iterator it = _variables.find(name);
+	if (it == _variables.end())
 		throw CalculatorException("undefined variable '" + name + "'");
 	return it->second;
 }

@@ -33,8 +33,8 @@ using namespace std;
 double det (const Matrix &m) {
 	double sum=0;
 	for (int i=0; i < 3; ++i) {
-		sum += m.values[0][i] * m.values[1][(i+1)%3] * m.values[2][(i+2)%3]
-		     - m.values[0][2-i] * m.values[1][(4-i)%3] * m.values[2][(3-i)%3];
+		sum += m._values[0][i] * m._values[1][(i+1)%3] * m._values[2][(i+2)%3]
+		     - m._values[0][2-i] * m._values[1][(4-i)%3] * m._values[2][(3-i)%3];
 	}
 	return sum;
 }
@@ -52,8 +52,8 @@ double det (const Matrix &m, int row, int col) {
 		swap(c1, c2);
 	if (r1 > r2)
 		swap(r1, r2);
-	return m.values[r1][c1] * m.values[r2][c2]
-	     - m.values[r1][c2] * m.values[r2][c1];
+	return m._values[r1][c1] * m._values[r2][c2]
+	     - m._values[r1][c2] * m._values[r2][c1];
 }
 
 
@@ -68,7 +68,7 @@ static inline double deg2rad (double deg) {
 Matrix::Matrix (double d) {
 	for (int i=0; i < 3; i++)
 		for (int j=0; j < 3; j++)
-			values[i][j] = (i==j ? d : 0);
+			_values[i][j] = (i==j ? d : 0);
 }
 
 
@@ -100,9 +100,9 @@ Matrix::Matrix (const string &cmds, Calculator &calc) {
 Matrix& Matrix::set (double v[], unsigned size) {
 	size = min(size, 9u);
 	for (unsigned i=0; i < size; i++)
-		values[i/3][i%3] = v[i];
+		_values[i/3][i%3] = v[i];
 	for (unsigned i=size; i < 9; i++)
-		values[i/3][i%3] = (i%4 ? 0 : 1);
+		_values[i/3][i%3] = (i%4 ? 0 : 1);
 	return *this;
 }
 
@@ -115,9 +115,9 @@ Matrix& Matrix::set (double v[], unsigned size) {
 Matrix& Matrix::set (const vector<double> &v, int start) {
 	unsigned size = min((unsigned)v.size()-start, 9u);
 	for (unsigned i=0; i < size; i++)
-		values[i/3][i%3] = v[i+start];
+		_values[i/3][i%3] = v[i+start];
 	for (unsigned i=size; i < 9; i++)
-		values[i/3][i%3] = (i%4 ? 0 : 1);
+		_values[i/3][i%3] = (i%4 ? 0 : 1);
 	return *this;
 }
 
@@ -187,7 +187,7 @@ Matrix& Matrix::flip (bool haxis, double a) {
 Matrix& Matrix::transpose () {
 	for (int i=0; i < 3; i++)
 		for (int j=i+1; j < 3; j++)
-			swap(values[i][j], values[j][i]);
+			swap(_values[i][j], _values[j][i]);
 	return *this;
 }
 
@@ -198,7 +198,7 @@ Matrix& Matrix::lmultiply (const Matrix &tm) {
 	for (int i=0; i < 3; i++)
 		for (int j=0; j < 3; j++)
 			for (int k=0; k < 3; k++)
-				ret.values[i][j] += values[i][k] * tm.values[k][j];
+				ret._values[i][j] += _values[i][k] * tm._values[k][j];
 	return *this = ret;
 }
 
@@ -209,7 +209,7 @@ Matrix& Matrix::rmultiply (const Matrix &tm) {
 	for (int i=0; i < 3; i++)
 		for (int j=0; j < 3; j++)
 			for (int k=0; k < 3; k++)
-				ret.values[i][j] += tm.values[i][k] * values[k][j];
+				ret._values[i][j] += tm._values[i][k] * _values[k][j];
 	return *this = ret;
 }
 
@@ -219,9 +219,9 @@ Matrix& Matrix::invert () {
 	if (double denom = det(*this)) {
 		for (int i=0; i < 3; ++i) {
 			for (int j=0; j < 3; ++j) {
-				ret.values[i][j] = det(*this, i, j)/denom;
+				ret._values[i][j] = det(*this, i, j)/denom;
 				if ((i+j)%2 != 0)
-					ret.values[i][j] *= -1;
+					ret._values[i][j] *= -1;
 			}
 		}
 		return *this = ret;
@@ -233,7 +233,7 @@ Matrix& Matrix::invert () {
 Matrix& Matrix::operator *= (double c) {
    for (int i=0; i < 3; i++)
       for (int j=0; j < 3; j++)
-			values[i][j] *= c;
+			_values[i][j] *= c;
 	return *this;
 }
 
@@ -243,7 +243,7 @@ DPair Matrix::operator * (const DPair &p) const {
    double ret[]= {0, 0};
    for (int i=0; i < 2; i++)
       for (int j=0; j < 3; j++)
-         ret[i] += values[i][j] * pp[j];
+         ret[i] += _values[i][j] * pp[j];
 	return DPair(ret[0], ret[1]);
 }
 
@@ -252,7 +252,7 @@ DPair Matrix::operator * (const DPair &p) const {
 bool Matrix::operator == (const Matrix &m) const {
    for (int i=0; i < 2; i++)
       for (int j=0; j < 3; j++)
-			if (values[i][j] != m.values[i][j])
+			if (_values[i][j] != m._values[i][j])
 				return false;
 	return true;
 }
@@ -262,7 +262,7 @@ bool Matrix::operator == (const Matrix &m) const {
 bool Matrix::operator != (const Matrix &m) const {
    for (int i=0; i < 2; i++)
       for (int j=0; j < 3; j++)
-			if (values[i][j] != m.values[i][j])
+			if (_values[i][j] != m._values[i][j])
 				return true;
 	return false;
 }
@@ -272,7 +272,7 @@ bool Matrix::operator != (const Matrix &m) const {
 bool Matrix::isIdentity() const {
    for (int i=0; i < 2; i++)
       for (int j=0; j < 3; j++) {
-			const double &v = values[i][j];
+			const double &v = _values[i][j];
 			if ((i == j && v != 1) || (i != j && v != 0))
 				return false;
 		}
@@ -286,15 +286,15 @@ bool Matrix::isIdentity() const {
  *  @param[out] ty vertical translation
  *  @return true if matrix describes a pure translation */
 bool Matrix::isTranslation (double &tx, double &ty) const {
-	tx = values[0][2];
-	ty = values[1][2];
+	tx = _values[0][2];
+	ty = _values[1][2];
    for (int i=0; i < 3; i++)
       for (int j=0; j < 2; j++) {
-			const double &v = values[i][j];
+			const double &v = _values[i][j];
 			if ((i == j && v != 1) || (i != j && v != 0))
 				return false;
 		}
-	return values[2][2] == 1;
+	return _values[2][2] == 1;
 }
 
 
@@ -416,7 +416,7 @@ string Matrix::getSVG () const {
 		for (int j=0; j < 2; j++) {
 			if (i > 0 || j > 0)
 				oss << ' ';
-			oss << XMLString(values[j][i]);
+			oss << XMLString(_values[j][i]);
 		}
 	}
 	oss << ')';
@@ -427,9 +427,9 @@ string Matrix::getSVG () const {
 ostream& Matrix::write (ostream &os) const {
 	os << '(';
 	for (int i=0; i < 3; i++) {
-		os << '(' << values[i][0];
+		os << '(' << _values[i][0];
 		for (int j=1; j < 3; j++)
-			os << ',' << values[i][j];
+			os << ',' << _values[i][j];
 		os << ')';
 		if (i < 2)
 			os << ',';

@@ -47,7 +47,7 @@ class Matrix
       Matrix (const std::vector<double> &v, int start=0);
 		Matrix& set (double v[], unsigned size);
       Matrix& set (const std::vector<double> &v, int start=0);
-		double get (int row, int col) const {return values[row][col];}
+		double get (int row, int col) const {return _values[row][col];}
 		Matrix& transpose ();
 		Matrix& invert ();
 		Matrix& parse (std::istream &is, Calculator &c);
@@ -70,7 +70,7 @@ class Matrix
 		std::ostream& write (std::ostream &os) const;
 
    private:
-		double values[3][3];  // row x col
+		double _values[3][3];  // row x col
 };
 
 

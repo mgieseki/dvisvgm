@@ -45,14 +45,14 @@ class StreamReader
 		std::string readString (int length, CRC32 &crc32);
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
-		int readByte ()              {return is->get();}
+		int readByte () {return _is->get();}
 		int readByte (CRC32 &crc32);
 
 	protected:
-		std::istream& in () {return *is;}
+		std::istream& in () {return *_is;}
 
    private:
-		std::istream *is;
+		std::istream *_is;
 };
 
 

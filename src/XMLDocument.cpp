@@ -24,7 +24,7 @@
 using namespace std;
 
 XMLDocument::XMLDocument (XMLElementNode *root)
-	: rootElement(root), emitted(false)
+	: _rootElement(root), _emitted(false)
 {
 }
 
@@ -35,11 +35,11 @@ XMLDocument::~XMLDocument () {
 
 
 void XMLDocument::clear () {
-	delete rootElement;
-	rootElement = 0;
-	FORALL(nodes, list<XMLNode*>::iterator, i)
+	delete _rootElement;
+	_rootElement = 0;
+	FORALL(_nodes, list<XMLNode*>::iterator, i)
 		delete *i;
-	nodes.clear();
+	_nodes.clear();
 }
 
 
@@ -48,26 +48,26 @@ void XMLDocument::append (XMLNode *node) {
 		return;
 	XMLElementNode *newRoot = dynamic_cast<XMLElementNode*>(node);
 	if (newRoot) {             // there can only be one root element node in the document
-		delete rootElement;     // so if there is already one...
-		rootElement = newRoot;  // ...we replace it
+		delete _rootElement;     // so if there is already one...
+		_rootElement = newRoot;  // ...we replace it
 	}
 	else
-		nodes.push_back(node);
+		_nodes.push_back(node);
 }
 
 
 void XMLDocument::setRootNode (XMLElementNode *root) {
-	delete rootElement;
-	rootElement = root;
+	delete _rootElement;
+	_rootElement = root;
 }
 
 
 ostream& XMLDocument::write (ostream &os) const {
-	if (rootElement) { // no root element => no output
+	if (_rootElement) { // no root element => no output
 		os << "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
-		FORALL(nodes, list<XMLNode*>::const_iterator, i)
+		FORALL(_nodes, list<XMLNode*>::const_iterator, i)
 			(*i)->write(os);
-		rootElement->write(os);
+		_rootElement->write(os);
 	}
 	return os;
 }
@@ -80,21 +80,21 @@ ostream& XMLDocument::write (ostream &os) const {
  *  @param[in] stopElement node where emitting stops (if 0 the whole tree will be emitted)
  *  @return true if node was completely emitted */
 bool XMLDocument::emit (ostream& os, XMLNode *stopNode) {
-	if (rootElement) {  // no root element => no output
-		if (!emitted) {
+	if (_rootElement) {  // no root element => no output
+		if (!_emitted) {
 			os << "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
-			emitted = true;
+			_emitted = true;
 		}
-		FORALL(nodes, list<XMLNode*>::iterator, i) {
+		FORALL(_nodes, list<XMLNode*>::iterator, i) {
 			if ((*i)->emit(os, stopNode)) {
 				list<XMLNode*>::iterator it = i++;  // prevent i from being invalidated...
-				nodes.erase(it);              // ... by erase
+				_nodes.erase(it);              // ... by erase
 				--i;  // @@ what happens if i points to first child?
 			}
 			else
 				return false;
 		}
-		return rootElement->emit(os, stopNode);
+		return _rootElement->emit(os, stopNode);
 	}
 	return true;
 }

@@ -28,12 +28,12 @@
 class MessageException : public std::exception
 {
    public:
-      MessageException (const std::string &msg) : message(msg) {}
+      MessageException (const std::string &msg) : _message(msg) {}
       virtual ~MessageException () throw() {}
-      const char* what () const throw() {return message.c_str();}
+      const char* what () const throw() {return _message.c_str();}
 
    private:
-		std::string message;
+		std::string _message;
 };
 
 #endif

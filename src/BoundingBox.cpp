@@ -30,30 +30,30 @@ using namespace std;
 
 
 BoundingBox::BoundingBox ()
-	: ulx(0), uly(0), lrx(0), lry(0), _valid(false), _locked(false)
+	: _ulx(0), _uly(0), _lrx(0), _lry(0), _valid(false), _locked(false)
 {
 }
 
 
 BoundingBox::BoundingBox (double ulxx, double ulyy, double lrxx, double lryy)
-	: ulx(min(ulxx,lrxx)), uly(min(ulyy,lryy)),
-	  lrx(max(ulxx,lrxx)), lry(max(ulyy,lryy)),
+	: _ulx(min(ulxx,lrxx)), _uly(min(ulyy,lryy)),
+	  _lrx(max(ulxx,lrxx)), _lry(max(ulyy,lryy)),
 	  _valid(true), _locked(false)
 {
 }
 
 
 BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
-	: ulx(min(p1.x(), p2.x())), uly(min(p1.y(), p2.y())),
-	  lrx(max(p1.x(), p2.x())), lry(max(p1.y(), p2.y())),
+	: _ulx(min(p1.x(), p2.x())), _uly(min(p1.y(), p2.y())),
+	  _lrx(max(p1.x(), p2.x())), _lry(max(p1.y(), p2.y())),
 	  _valid(true), _locked(false)
 {
 }
 
 
 BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy)
-	: ulx(min(ulxx.pt(),lrxx.pt())), uly(min(ulyy.pt(),lryy.pt())),
-	  lrx(max(ulxx.pt(),lrxx.pt())), lry(max(ulyy.pt(),lryy.pt())),
+	: _ulx(min(ulxx.pt(),lrxx.pt())), _uly(min(ulyy.pt(),lryy.pt())),
+	  _lrx(max(ulxx.pt(),lrxx.pt())), _lry(max(ulyy.pt(),lryy.pt())),
 	  _valid(true), _locked(false)
 {
 }
@@ -108,22 +108,22 @@ void BoundingBox::set (string boxstr) {
 
 	switch (coord.size()) {
 		case 1:
-			ulx -= coord[0].pt();
-			uly -= coord[0].pt();
-			lrx += coord[0].pt();
-			lry += coord[0].pt();
+			_ulx -= coord[0].pt();
+			_uly -= coord[0].pt();
+			_lrx += coord[0].pt();
+			_lry += coord[0].pt();
 			break;
 		case 2:
-			ulx -= coord[0].pt();
-			uly -= coord[1].pt();
-			lrx += coord[0].pt();
-			lry += coord[1].pt();
+			_ulx -= coord[0].pt();
+			_uly -= coord[1].pt();
+			_lrx += coord[0].pt();
+			_lry += coord[1].pt();
 			break;
 		case 4:
-			ulx = min(coord[0].pt(), coord[2].pt());
-			uly = min(coord[1].pt(), coord[3].pt());
-			lrx = max(coord[0].pt(), coord[2].pt());
-			lry = max(coord[1].pt(), coord[3].pt());
+			_ulx = min(coord[0].pt(), coord[2].pt());
+			_uly = min(coord[1].pt(), coord[3].pt());
+			_lrx = max(coord[0].pt(), coord[2].pt());
+			_lry = max(coord[1].pt(), coord[3].pt());
 			break;
 		default:
 			throw BoundingBoxException("1, 2 or 4 length parameters expected");
@@ -136,18 +136,18 @@ void BoundingBox::set (string boxstr) {
 void BoundingBox::embed (double x, double y) {
 	if (!_locked) {
 		if (_valid) {
-			if (x < ulx)
-				ulx = x;
-			else if (x > lrx)
-				lrx = x;
-			if (y < uly)
-				uly = y;
-			else if (y > lry)
-				lry = y;
+			if (x < _ulx)
+				_ulx = x;
+			else if (x > _lrx)
+				_lrx = x;
+			if (y < _uly)
+				_uly = y;
+			else if (y > _lry)
+				_lry = y;
 		}
 		else {
-			ulx = lrx = x;
-			uly = lry = y;
+			_ulx = _lrx = x;
+			_uly = _lry = y;
 			_valid = true;
 		}
 	}
@@ -158,14 +158,14 @@ void BoundingBox::embed (double x, double y) {
 void BoundingBox::embed (const BoundingBox &bb) {
 	if (!_locked && bb._valid) {
 		if (_valid) {
-			embed(bb.ulx, bb.uly);
-			embed(bb.lrx, bb.lry);
+			embed(bb._ulx, bb._uly);
+			embed(bb._lrx, bb._lry);
 		}
 		else {
-			ulx = bb.ulx;
-			uly = bb.uly;
-			lrx = bb.lrx;
-			lry = bb.lry;
+			_ulx = bb._ulx;
+			_uly = bb._uly;
+			_lrx = bb._lrx;
+			_lry = bb._lry;
 			_valid = true;
 		}
 	}
@@ -179,10 +179,10 @@ void BoundingBox::embed (const DPair &c, double r) {
 
 void BoundingBox::expand (double m) {
 	if (!_locked) {
-		ulx -= m;
-		uly -= m;
-		lrx += m;
-		lry += m;
+		_ulx -= m;
+		_uly -= m;
+		_lrx += m;
+		_lry += m;
 	}
 }
 
@@ -192,62 +192,62 @@ void BoundingBox::expand (double m) {
  *  @param[in] bbox box to intersect with
  *  @return false if *this is locked or both boxes are disjoint */
 bool BoundingBox::intersect (const BoundingBox &bbox) {
-	if (_locked || lrx < bbox.ulx || lry < bbox.uly || ulx > bbox.lrx || uly > bbox.lry)
+	if (_locked || _lrx < bbox._ulx || _lry < bbox._uly || _ulx > bbox._lrx || _uly > bbox._lry)
 		return false;
-	ulx = max(ulx, bbox.ulx);
-	uly = max(uly, bbox.uly);
-	lrx = min(lrx, bbox.lrx);
-	lry = min(lry, bbox.lry);
+	_ulx = max(_ulx, bbox._ulx);
+	_uly = max(_uly, bbox._uly);
+	_lrx = min(_lrx, bbox._lrx);
+	_lry = min(_lry, bbox._lry);
 	return true;
 }
 
 
 void BoundingBox::operator += (const BoundingBox &bb) {
 	if (!_locked) {
-		ulx += bb.ulx;
-		uly += bb.uly;
-		lrx += bb.lrx;
-		lry += bb.lry;
+		_ulx += bb._ulx;
+		_uly += bb._uly;
+		_lrx += bb._lrx;
+		_lry += bb._lry;
 	}
 }
 
 
 void BoundingBox::scale (double sx, double sy) {
 	if (!_locked) {
-		ulx *= sx;
-		lrx *= sx;
-		if (sx < 0)	swap(ulx, lrx);
-		uly *= sy;
-		lry *= sy;
-		if (sy < 0)	swap(uly, lry);
+		_ulx *= sx;
+		_lrx *= sx;
+		if (sx < 0)	swap(_ulx, _lrx);
+		_uly *= sy;
+		_lry *= sy;
+		if (sy < 0)	swap(_uly, _lry);
 	}
 }
 
 
 void BoundingBox::transform (const Matrix &tm) {
 	if (!_locked) {
-		DPair ul = tm * DPair(lrx, lry);
-		DPair lr = tm * DPair(ulx, uly);
-		DPair ll = tm * DPair(ulx, lry);
-		DPair ur = tm * DPair(lrx, uly);
-		ulx = min(min(ul.x(), lr.x()), min(ur.x(), ll.x()));
-		uly = min(min(ul.y(), lr.y()), min(ur.y(), ll.y()));
-		lrx = max(max(ul.x(), lr.x()), max(ur.x(), ll.x()));
-		lry = max(max(ul.y(), lr.y()), max(ur.y(), ll.y()));
+		DPair ul = tm * DPair(_lrx, _lry);
+		DPair lr = tm * DPair(_ulx, _uly);
+		DPair ll = tm * DPair(_ulx, _lry);
+		DPair ur = tm * DPair(_lrx, _uly);
+		_ulx = min(min(ul.x(), lr.x()), min(ur.x(), ll.x()));
+		_uly = min(min(ul.y(), lr.y()), min(ur.y(), ll.y()));
+		_lrx = max(max(ul.x(), lr.x()), max(ur.x(), ll.x()));
+		_lry = max(max(ul.y(), lr.y()), max(ur.y(), ll.y()));
 	}
 }
 
 
 string BoundingBox::toSVGViewBox () const {
 	ostringstream oss;
-	oss << XMLString(ulx) << ' ' << XMLString(uly) << ' ' << XMLString(width()) << ' ' << XMLString(height());
+	oss << XMLString(_ulx) << ' ' << XMLString(_uly) << ' ' << XMLString(width()) << ' ' << XMLString(height());
 	return oss.str();
 }
 
 
 ostream& BoundingBox::write (ostream &os) const {
-	return os << '('  << ulx << ", " << uly
-				 << ", " << lrx << ", " << lry << ')';
+	return os << '('  << _ulx << ", " << _uly
+				 << ", " << _lrx << ", " << _lry << ')';
 }
 
 

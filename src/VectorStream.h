@@ -38,9 +38,9 @@ template <typename T>
 class VectorInputStream : public std::istream
 {
 	public:
-		VectorInputStream (std::vector<T> &source) : std::istream(&buf), buf(source) {}
+		VectorInputStream (std::vector<T> &source) : std::istream(&_buf), _buf(source) {}
 	private:
-		VectorStreamBuffer<T> buf;
+		VectorStreamBuffer<T> _buf;
 };
 
 #endif

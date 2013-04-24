@@ -59,12 +59,12 @@ class BoundingBox
 
 		void expand (double m);
 		bool  intersect (const BoundingBox &bbox);
-		double minX () const        {return ulx;}
-		double minY () const        {return uly;}
-		double maxX () const        {return lrx;}
-		double maxY () const        {return lry;}
-		double width () const       {return lrx-ulx;}
-		double height () const      {return lry-uly;}
+		double minX () const        {return _ulx;}
+		double minY () const        {return _uly;}
+		double maxX () const        {return _lrx;}
+		double maxY () const        {return _lry;}
+		double width () const       {return _lrx-_ulx;}
+		double height () const      {return _lry-_uly;}
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
 		void operator += (const BoundingBox &bb);
@@ -75,10 +75,10 @@ class BoundingBox
 		XMLElementNode* toSVGRect () const;
 
    private:
-		double ulx, uly; ///< coordinates of upper left vertex (in TeX point units)
-	   double lrx, lry; ///< coordinates of lower right vertex (in TeX point unitx)
-		bool _valid : 1;  ///< true if the box coordinates are properly set
-		bool _locked : 1; ///< if true, the box data is read-only
+		double _ulx, _uly; ///< coordinates of upper left vertex (in TeX point units)
+		double _lrx, _lry; ///< coordinates of lower right vertex (in TeX point unitx)
+		bool _valid : 1;   ///< true if the box coordinates are properly set
+		bool _locked : 1;  ///< if true, the box data is read-only
 };
 
 IMPLEMENT_OUTPUT_OPERATOR(BoundingBox)

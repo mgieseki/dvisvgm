@@ -85,14 +85,14 @@ static void computeDSize (int n, double &width, double &height) {
 
 /** Constructs a PageSize object of given size.
  *  @param[in] name specifies the page size, e.g. "A4" or "letter" */
-PageSize::PageSize (string name) : width(0), height(0) {
+PageSize::PageSize (string name) : _width(0), _height(0) {
 	resize(name);
 }
 
 
 void PageSize::resize (double w, double h) {
-	width = w;
-	height = h;
+	_width = w;
+	_height = h;
 }
 
 void PageSize::resize (string name) {
@@ -113,44 +113,44 @@ void PageSize::resize (string name) {
 	}
 
 	if (name == "invoice") {
-		width = 140;
-		height = 216;
+		_width = 140;
+		_height = 216;
 	}
 	else if (name == "executive") {
-		width = 184;
-		height = 267;
+		_width = 184;
+		_height = 267;
 	}
 	else if (name == "legal") {
-		width = 216;
-		height = 356;
+		_width = 216;
+		_height = 356;
 	}
 	else if (name == "letter") {
-		width = 216;
-		height = 279;
+		_width = 216;
+		_height = 279;
 	}
 	else if (name == "ledger") {
-		width = 279;
-		height = 432;
+		_width = 279;
+		_height = 432;
 	}
 	else if (isdigit(name[1]) && name.length() < 5) {  // limit length of number to prevent arithmetic errors
 		istringstream iss(name.substr(1));
 		int n;
 		iss >> n;
 		switch (name[0]) {
-			case 'a' : computeASize(n, width, height); break;
-			case 'b' : computeBSize(n, width, height); break;
-			case 'c' : computeCSize(n, width, height); break;
-			case 'd' : computeDSize(n, width, height); break;
+			case 'a' : computeASize(n, _width, _height); break;
+			case 'b' : computeBSize(n, _width, _height); break;
+			case 'c' : computeCSize(n, _width, _height); break;
+			case 'd' : computeDSize(n, _width, _height); break;
 			default  : throw PageSizeException("invalid page format: "+name);
 		}
 	}
-	if (width == 0 || height == 0)
+	if (_width == 0 || _height == 0)
 		throw PageSizeException("unknown page format: "+name);
 	if (landscape)
-		swap(width, height);
+		swap(_width, _height);
 
 	const double ptpmm = 72.27/25.4; // TeX points per millimeter (72.27pt = 1in = 25.4mm)
-	width *= ptpmm;
-	height *= ptpmm;
+	_width *= ptpmm;
+	_height *= ptpmm;
 }
 

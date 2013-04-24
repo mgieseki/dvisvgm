@@ -34,7 +34,7 @@ inline static double fix2double (FixWord fix) {
 
 
 VFReader::VFReader (istream &is)
-	: StreamReader(is), actions(0), designSize(0) {
+	: StreamReader(is), _actions(0), _designSize(0) {
 }
 
 
@@ -43,8 +43,8 @@ VFReader::~VFReader () {
 
 
 VFActions* VFReader::replaceActions (VFActions *a) {
-	VFActions *ret = actions;
-	actions = a;
+	VFActions *ret = _actions;
+	_actions = a;
 	return ret;
 }
 
@@ -60,7 +60,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 		throw VFException("invalid file");
 
 	bool approved = !approve || approve(opcode);
-	VFActions *act = actions;
+	VFActions *actions = _actions;
 	if (!approved)
 		replaceActions(0);   // disable actions
 
@@ -74,14 +74,14 @@ int VFReader::executeCommand (ApproveAction approve) {
 			case 247: cmdPre();      break;      // preamble
 			case 248: cmdPost();     break;      // postamble
 			default : {                          // invalid opcode
-				replaceActions(act);              // reenable actions
+				replaceActions(actions);              // reenable actions
 				ostringstream oss;
 				oss << "undefined VF command (opcode " << opcode << ')';
 				throw VFException(oss.str());
 			}
 		}
 	}
-	replaceActions(act); // reenable actions
+	replaceActions(actions); // reenable actions
 	return opcode;
 }
 
@@ -129,29 +129,29 @@ void VFReader::cmdPre () {
 	string cmt = readString(k);    // comment
 	UInt32 cs  = readUnsigned(4);  // check sum to be compared with TFM cecksum
 	UInt32 ds  = readUnsigned(4);  // design size (same as TFM design size) (fix_word)
-	designSize = fix2double(ds);
+	_designSize = fix2double(ds);
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
-   if (actions)
-      actions->preamble(cmt, cs, ds);
+   if (_actions)
+      _actions->preamble(cmt, cs, ds);
 }
 
 
 void VFReader::cmdPost () {
 	while ((readUnsigned(1)) == 248); // skip fill bytes
-	if (actions)
-		actions->postamble();
+	if (_actions)
+		_actions->postamble();
 }
 
 
 void VFReader::cmdLongChar () {
 	UInt32 pl  = readUnsigned(4);      // packet length (length of DVI subroutine)
-	if (actions) {
+	if (_actions) {
 		UInt32 cc  = readUnsigned(4);   // character code
 		readUnsigned(4);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
-		actions->defineVFChar(cc, dvi); // call template method for user actions
+		_actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
 	else
 		in().seekg(8+pl, ios::cur);     // skip remaining char definition bytes
@@ -161,12 +161,12 @@ void VFReader::cmdLongChar () {
 /** Reads and executes short_char_x command.
  *  @param[in] pl packet length (length of DVI subroutine) */
 void VFReader::cmdShortChar (int pl) {
-	if (actions) {
+	if (_actions) {
 		UInt32 cc  = readUnsigned(1);   // character code
 		readUnsigned(3);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
-		actions->defineVFChar(cc, dvi); // call template method for user actions
+		_actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
 	else
 		in().seekg(4+pl, ios::cur);     // skip char definition bytes
@@ -182,9 +182,9 @@ void VFReader::cmdFontDef (int len) {
 	UInt32 namelen  = readUnsigned(1);     // length of font name
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
-	if (actions) {
+	if (_actions) {
 		double ss = fix2double(ssize);
 		double ds = fix2double(dsize);
-		actions->defineVFFont(fontnum, fontpath, fontname, checksum, ds, ss*designSize);
+		_actions->defineVFFont(fontnum, fontpath, fontname, checksum, ds, ss*_designSize);
 	}
 }

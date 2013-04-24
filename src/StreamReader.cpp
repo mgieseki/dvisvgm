@@ -25,14 +25,14 @@
 using namespace std;
 
 StreamReader::StreamReader (istream &s)
-	: is(&s)
+	: _is(&s)
 {
 }
 
 
 istream& StreamReader::replaceStream (istream &in) {
-	istream &ret = *is;
-	is = &in;
+	istream &ret = *_is;
+	_is = &in;
 	return ret;
 }
 
@@ -42,8 +42,8 @@ istream& StreamReader::replaceStream (istream &in) {
  *  @return read integer */
 UInt32 StreamReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
-	for (bytes--; bytes >= 0 && !is->eof(); bytes--) {
-		UInt32 b = is->get();
+	for (bytes--; bytes >= 0 && !_is->eof(); bytes--) {
+		UInt32 b = _is->get();
 		ret |= b << (8*bytes);
 	}
 	return ret;
@@ -65,11 +65,11 @@ UInt32 StreamReader::readUnsigned (int bytes, CRC32 &crc32) {
  *  @param[in] bytes number of bytes to read (max. 4)
  *  @return read integer */
 Int32 StreamReader::readSigned (int bytes) {
-	Int32 ret = is->get();
+	Int32 ret = _is->get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
-	for (bytes-=2; bytes >= 0 && !is->eof(); bytes--)
-		ret = (ret << 8) | is->get();
+	for (bytes-=2; bytes >= 0 && !_is->eof(); bytes--)
+		ret = (ret << 8) | _is->get();
 	return ret;
 }
 
@@ -87,12 +87,12 @@ Int32 StreamReader::readSigned (int bytes, CRC32 &crc32) {
 
 /** Reads a string terminated by a 0-byte. */
 string StreamReader::readString () {
-	if (!is)
+	if (!_is)
 		throw StreamReaderException("no stream assigned");
 	string ret;
-	while (!is->eof() && is->peek() > 0)
-		ret += is->get();
-	is->get();  // skip 0-byte
+	while (!_is->eof() && _is->peek() > 0)
+		ret += _is->get();
+	_is->get();  // skip 0-byte
 	return ret;
 }
 
@@ -114,13 +114,13 @@ string StreamReader::readString (CRC32 &crc32, bool finalZero) {
  *  @param[in] length number of characters to read
  *  @return the string read */
 string StreamReader::readString (int length) {
-	if (!is)
+	if (!_is)
 		throw StreamReaderException("no stream assigned");
 	char *buf = new char[length+1];
 	if (length <= 0)
 		*buf = 0;
 	else {
-		is->read(buf, length);  // reads 'length' bytes
+		_is->read(buf, length);  // reads 'length' bytes
 		buf[length] = 0;
 	}
 	string ret = buf;
