@@ -1,3 +1,10 @@
+dvisvgm-1.2.2 (2013-04-26)
+- fixed a bug that prevented the lookup of fontmap files
+- avoid throwing an exception but print a warning message if MiKTeX is not available
+- print a warning message if PostScript specials are found but ignored
+- added information about "dvisvgm -E" to the --help text and to the manpage
+- various code refactorings and cleanups
+
 dvisvgm-1.2.1 (2013-04-09)
 - updated bundled potrace library to version 1.11
 - avoid building bundled potracelib if system library is present (patch by Alexis Ballier)
