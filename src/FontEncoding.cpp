@@ -154,7 +154,7 @@ FontEncoding* FontEncoding::encoding (string fontname) {
 		EncodingMap::const_iterator it = encmap.find(entry->encname);
 		if (it != encmap.end())
 			return it->second;
-		if (FileFinder::lookup(entry->encname + ".enc"), false) {
+		if (FileFinder::lookup(entry->encname + ".enc", false)) {
 			FontEncoding *enc = new FontEncoding(entry->encname);
 			encmap[entry->encname] = enc;
 			return enc;
