@@ -61,10 +61,12 @@
 #include "ColorSpecialHandler.h"
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
-#include "NoPsSpecialHandler.h"
 #include "PdfSpecialHandler.h"
 //#include "HtmlSpecialHandler.h"
-#if !defined(DISABLE_GS)
+#ifndef HAVE_LIBGS
+	#include "NoPsSpecialHandler.h"
+#endif
+#ifndef DISABLE_GS
 	#include "PsSpecialHandler.h"
 #endif
 #include "TpicSpecialHandler.h"
@@ -343,7 +345,9 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool
 		else
 #endif
 		{
+#if defined(DISABLE_GS) || !defined(HAVE_LIBGS)
 			*p = new NoPsSpecialHandler; // dummy PS special handler that only prints warning messages
+#endif
 			if (pswarning) {
 #if defined(DISABLE_GS)
 				Message::wstream() << "this build of dvisvgm doesn't support the processing of PostScript specials\n";
