@@ -55,6 +55,7 @@ const int Terminal::BLACK   = 0;
 
 #ifdef __WIN32__
 int Terminal::_defaultColor;
+int Terminal::_cursorHeight;
 #endif
 
 int Terminal::_fgcolor = Terminal::DEFAULT;
@@ -67,9 +68,12 @@ void Terminal::init (ostream &os) {
 #ifdef __WIN32__
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (h != INVALID_HANDLE_VALUE) {
-		CONSOLE_SCREEN_BUFFER_INFO info;
-		GetConsoleScreenBufferInfo(h, &info);
-		_defaultColor = (info.wAttributes & 0xff);
+		CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+		GetConsoleScreenBufferInfo(h, &buffer_info);
+		_defaultColor = (buffer_info.wAttributes & 0xff);
+		CONSOLE_CURSOR_INFO cursor_info;
+		GetConsoleCursorInfo(h, &cursor_info);
+		_cursorHeight = cursor_info.dwSize;
 	}
 #endif
 }
@@ -80,6 +84,7 @@ void Terminal::init (ostream &os) {
 void Terminal::finish (ostream &os) {
 	fgcolor(DEFAULT, os);
 	bgcolor(DEFAULT, os);
+	cursor(true);
 }
 
 
@@ -187,5 +192,20 @@ void Terminal::bgcolor (int color, ostream &os) {
 	}
 	else
 		os << "\x1B[" << (40+(color & 0x07)) << 'm';
+#endif
+}
+
+
+/** Disables or enables the console cursor
+ *  @param[in] visible if false, the cursor is disabled, and enabled otherwise */
+void Terminal::cursor (bool visible) {
+#ifdef __WIN32__
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (h != INVALID_HANDLE_VALUE) {
+		CONSOLE_CURSOR_INFO cursor_info;
+		cursor_info.bVisible = visible;
+		cursor_info.dwSize = _cursorHeight;
+		SetConsoleCursorInfo(h, &cursor_info);
+	}
 #endif
 }

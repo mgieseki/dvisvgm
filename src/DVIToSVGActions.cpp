@@ -307,8 +307,10 @@ void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 		Message::mstream() << '\n';
 	}
 	// don't show the progress indicator before the given time has elapsed
-	if (!draw && System::time()-time > PROGRESSBAR_DELAY)
+	if (!draw && System::time()-time > PROGRESSBAR_DELAY) {
 		draw = true;
+		Terminal::cursor(false);
+	}
 	if (draw && (System::time() - time > 0.1 || (total > 0 && current == total) || prev_id != id)) {
 		static int step = -1;   // >=0: rotating dash
 		static size_t prev_current=0, prev_total=1;
@@ -335,8 +337,10 @@ void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 			<< "] " << string(3-digits(int(100*factor)), ' ') << int(100*factor)
 			<< "%\r";
 		// overprint indicator when finished
-		if (factor == 1.0)
+		if (factor == 1.0) {
 			Message::estream().clearline();
+			Terminal::cursor(true);
+		}
 		time = System::time();
 		prev_id = id;
 	}

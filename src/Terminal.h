@@ -43,6 +43,7 @@ class Terminal
 		static int rows ();
 		static void fgcolor (int color, std::ostream &os);
 		static void bgcolor (int color, std::ostream &os);
+		static void cursor (bool visible);
 
 	private:
 		static int _fgcolor;  ///< current foreground color
@@ -50,6 +51,7 @@ class Terminal
 
 #ifdef __WIN32__
 		static int _defaultColor;
+		static int _cursorHeight;  ///< current height of the cursor in percent
 #endif
 };
 
