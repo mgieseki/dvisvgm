@@ -52,8 +52,8 @@ bool InputReader::skipUntil (const char *s, bool consume) {
 }
 
 
-/** Looks for the first occurrence of a given character. 
- *  @param[in] c character to lookup 
+/** Looks for the first occurrence of a given character.
+ *  @param[in] c character to lookup
  *  @return position of character relative to current location, -1 if character was not found */
 int InputReader::find (char c) const {
 	int pos = 0;
@@ -241,18 +241,18 @@ char InputReader::getPunct () {
 }
 
 
-/** Reads a string delimited by a given quotation character. 
+/** Reads a string delimited by a given quotation character.
  *  Before reading the string, all leading whitespace is skipped. Then, the function checks
  *  for the given quotation character. If it is found, all characters until the second
  *  appearance of the quotation char are appended to the result. Otherwise, an empty string
  *  is returned. If the quotation character is 0, the behavior of this function is identical to
- *  a call of getString(). 
- *  @param[in] quotechar the quotation character bounding the string to be read 
+ *  a call of getString().
+ *  @param[in] quotechar the quotation character bounding the string to be read
  *  @return the string read */
 string InputReader::getQuotedString (char quotechar) {
 	if (quotechar == 0)
 		return getString();
-	
+
 	string ret;
 	skipSpace();
 	if (peek() == quotechar) {
@@ -265,7 +265,7 @@ string InputReader::getQuotedString (char quotechar) {
 }
 
 
-/** Reads a string delimited by whitespace and/or invisible characters. 
+/** Reads a string delimited by whitespace and/or invisible characters.
  *  Before reading the string, all leading whitespace is skipped. Then, the function adds
  *  all printable characters to the result until a whitespace, an unprintable character, or
  *  EOF is found.
@@ -279,7 +279,7 @@ string InputReader::getString () {
 }
 
 
-/** Reads a given number of characters and returns the resulting string. 
+/** Reads a given number of characters and returns the resulting string.
  *  @param n number of character to read
  *  @return the string read */
 string InputReader::getString (size_t n) {
@@ -290,24 +290,11 @@ string InputReader::getString (size_t n) {
 }
 
 
-/*string InputReader::getString (char quotechar) {
-	string ret;
-	skipSpace();
-	if (quotechar == 0) {
-		while (!eof() && !isspace(peek()) && isprint(peek()))
-			ret += get();
-	}
-	else if (peek() == quotechar) {
-		get();
-		while (!eof() && peek() != quotechar)
-			ret += get();
-		get();
-	}
-	return ret;
-}*/
-
-
-int InputReader::parseAttributes (map<string,string> &attr) {
+/** Parses a sequence of key-value pairs of the form KEY=VALUE or KEY="VALUE"
+ *  @param[out] attr the scanned atributes
+ *  @param[in] quotechar quote character used to enclose the attribute values
+ *  @return number of attributes scanned */
+int InputReader::parseAttributes (map<string,string> &attr, char quotechar) {
 	bool ready=false;
 	while (!eof() && !ready) {
 		string key;
@@ -318,7 +305,7 @@ int InputReader::parseAttributes (map<string,string> &attr) {
 		if (peek() == '=') {
 			get();
 			skipSpace();
-			string val = getString();
+			string val = getQuotedString(quotechar);
 			attr[key] = val;
 		}
 		else
