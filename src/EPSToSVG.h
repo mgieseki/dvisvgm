@@ -37,21 +37,24 @@ class EPSToSVG : protected SpecialActions
 
 	protected:
 		// implement abstract base class SpecialActions
-		double getX () const                    {return _x;}
-		double getY () const                    {return _y;}
-		void setX (double x)                    {_x = x; _svg.setX(x);}
-		void setY (double y)                    {_y = y; _svg.setY(y);}
-		void finishLine ()                      {}
-		void setColor (const Color &color)      {_svg.setColor(color);}
-		Color getColor () const                 {return _svg.getColor();}
-		void setMatrix (const Matrix &m)        {_svg.setMatrix(m);}
-		const Matrix& getMatrix () const        {return _svg.getMatrix();}
-		void setBgColor (const Color &color)    {}
-		void appendToPage (XMLNode *node)       {_svg.appendToPage(node);}
-		void appendToDefs (XMLNode *node)       {_svg.appendToDefs(node);}
-		void embed (const BoundingBox &bbox)    {_bbox.embed(bbox);}
-		void embed (const DPair &p, double r=0) {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
-		BoundingBox& bbox ()                    {return _bbox;}
+		double getX () const                           {return _x;}
+		double getY () const                           {return _y;}
+		void setX (double x)                           {_x = x; _svg.setX(x);}
+		void setY (double y)                           {_y = y; _svg.setY(y);}
+		void finishLine ()                             {}
+		void setColor (const Color &color)             {_svg.setColor(color);}
+		Color getColor () const                        {return _svg.getColor();}
+		void setMatrix (const Matrix &m)               {_svg.setMatrix(m);}
+		const Matrix& getMatrix () const               {return _svg.getMatrix();}
+		void setBgColor (const Color &color)           {}
+		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
+		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
+		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
+		void pushContextElement (XMLElementNode *node) {_svg.pushContextElement(node);}
+		void popContextElement ()                      {_svg.popContextElement();}
+		void embed (const BoundingBox &bbox)           {_bbox.embed(bbox);}
+		void embed (const DPair &p, double r=0)        {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
+		BoundingBox& bbox ()                           {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
 
 	private:

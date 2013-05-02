@@ -26,7 +26,9 @@
 #include "Color.h"
 #include "Matrix.h"
 
+
 struct XMLNode;
+class XMLElementNode;
 
 struct SpecialActions
 {
@@ -43,6 +45,9 @@ struct SpecialActions
 	virtual void setBgColor (const Color &color) =0;
 	virtual void appendToPage (XMLNode *node) =0;
 	virtual void appendToDefs (XMLNode *node) =0;
+	virtual void prependToPage (XMLNode *node) =0;
+	virtual void pushContextElement (XMLElementNode *node) =0;
+	virtual void popContextElement () =0;
 	virtual BoundingBox& bbox () =0;
 	virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
 	virtual void embed (const BoundingBox &bbox) =0;
@@ -66,10 +71,13 @@ class SpecialEmptyActions : public SpecialActions
 		const Matrix& getMatrix () const {return _matrix;}
 		void appendToPage (XMLNode *node) {}
 		void appendToDefs (XMLNode *node) {}
+		void prependToPage (XMLNode *node) {}
+		void pushContextElement (XMLElementNode *node) {}
+		void popContextElement () {}
 		BoundingBox& bbox () {return _bbox;}
-      BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
-      void embed (const BoundingBox &bbox) {}
-      void embed (const DPair &p, double r=0) {}
+		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
+		void embed (const BoundingBox &bbox) {}
+		void embed (const DPair &p, double r=0) {}
 
 	private:
 		BoundingBox _bbox;

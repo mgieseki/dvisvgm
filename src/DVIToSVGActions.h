@@ -56,6 +56,9 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		Color getColor () const                         {return _svg.getColor();}
 		void appendToPage (XMLNode *node)               {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)               {_svg.appendToDefs(node);}
+		void prependToPage (XMLNode *node)              {_svg.prependToPage(node);}
+		void pushContextElement (XMLElementNode *node)  {_svg.pushContextElement(node);}
+		void popContextElement ()                       {_svg.popContextElement();}
 		void moveToX (double x);
 		void moveToY (double y);
 		void setFont (int num, const Font *font);
