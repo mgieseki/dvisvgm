@@ -23,6 +23,7 @@
 
 #include <map>
 #include <set>
+#include <stack>
 #include "Color.h"
 #include "GFGlyphTracer.h"
 #include "Matrix.h"
@@ -65,22 +66,24 @@ class SVGTree
 		void write (std::ostream &os) const    {_doc.write(os);}
 		void newPage (int pageno);
 		void appendToDefs (XMLNode *node);
-		void appendToPage (XMLNode *node) {_page->append(node);}
-		void prependToPage (XMLNode *node){_page->prepend(node);}
+		void appendToPage (XMLNode *node);
+		void prependToPage (XMLNode *node);
 		void appendToDoc (XMLNode *node)  {_doc.append(node);}
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const Font &font);
 		void appendFontStyles (const std::set<const Font*> &fonts);
       void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
+		void pushContextElement (XMLElementNode *node);
+		void popContextElement ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);
-		void setX (double x) {_xchanged = true;}
-		void setY (double y) {_ychanged = true;}
-		void setMatrix (const Matrix &m) {_matrix.set(m);}
+		void setX (double x)              {_xchanged = true;}
+		void setY (double y)              {_ychanged = true;}
+		void setMatrix (const Matrix &m)  {_matrix.set(m);}
 		void setColor (const Color &c)    {_color.set(c);}
 		void transformPage (const Matrix *m);
 		const Color& getColor () const    {return _color.get();}
-		const Matrix& getMatrix () const {return _matrix.get();}
+		const Matrix& getMatrix () const  {return _matrix.get();}
 		XMLElementNode* rootNode () const {return _root;}
 
    public:
@@ -99,6 +102,7 @@ class SVGTree
 		Property<Color> _color;
 		Property<Matrix> _matrix;
 		int _fontnum;
+		std::stack<XMLElementNode*> _pageContainerStack;
 };
 
 #endif

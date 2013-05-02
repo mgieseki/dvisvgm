@@ -60,7 +60,7 @@ void SVGTree::reset () {
 }
 
 
-/** Sets the bounding box of the document. 
+/** Sets the bounding box of the document.
  *  @param[in] bbox bounding box in TeX point units */
 void SVGTree::setBBox (const BoundingBox &bbox) {
 	double bp = 72.0/72.27;  // pt -> bp
@@ -81,6 +81,8 @@ void SVGTree::newPage (int pageno) {
 		_page->addAttribute("id", string("page")+XMLString(pageno));
 	_root->append(_page);
 	_text = _span = 0;
+	while (!_pageContainerStack.empty())
+		_pageContainerStack.pop();
 }
 
 
@@ -90,6 +92,22 @@ void SVGTree::appendToDefs (XMLNode *node) {
 		_root->prepend(_defs);
 	}
 	_defs->append(node);
+}
+
+
+void SVGTree::appendToPage (XMLNode *node) {
+	if (_pageContainerStack.empty())
+		_page->append(node);
+	else
+		_pageContainerStack.top()->append(node);
+}
+
+
+void SVGTree::prependToPage (XMLNode *node) {
+	if (_pageContainerStack.empty())
+		_page->prepend(node);
+	else
+		_pageContainerStack.top()->prepend(node);
 }
 
 
@@ -143,7 +161,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 					_span->addAttribute("fill", _color.get().rgbString());
 				if (!_matrix.get().isIdentity())
 					_span->addAttribute("transform", _matrix.get().getSVG());
-				_page->append(_span);
+				appendToPage(_span);
 				node = _span;
 				_color.changed(false);
 				_matrix.changed(false);
@@ -153,7 +171,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 		}
 
 		if (!node)
-			node = _page;
+			node = _pageContainerStack.empty() ? _page : _pageContainerStack.top();
 		if (CREATE_USE_ELEMENTS) {
 			ostringstream oss;
 			oss << "#g" << FontManager::instance().fontID(_font) << '-' << c;
@@ -199,7 +217,7 @@ void SVGTree::newTextNode (double x, double y) {
 	_text->addAttribute("y", y);
 	if (!_matrix.get().isIdentity())
 		_text->addAttribute("transform", _matrix.get().getSVG());
-	_page->append(_text);
+	appendToPage(_text);
 	_font.changed(false);
 	_matrix.changed(false);
 	_xchanged = false;
@@ -312,10 +330,10 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			fontNode->append(createGlyphNode(*i, font, cb));
 	}
 	else if (CREATE_USE_ELEMENTS && &font != font.uniqueFont()) {
-		// If the same character is used in various sizes we don't want to embed the complete (lengthy) path
-		// description multiple times because they would only differ by a scale factor. Thus it's better to
+		// If the same character is used in various sizes, we don't want to embed the complete (lengthy) path
+		// descriptions multiple times. Because they would only differ by a scale factor, it's better to
 		// reference the already embedded path together with a transformation attribute and let the SVG renderer
-		// scale the glyph properly. This is only necessary if we don't want to use font but path elements.
+		// scale the glyphs properly. This is only necessary if we don't want to use font but path elements.
 		FORALL(chars, set<int>::const_iterator, it) {
 			ostringstream oss;
 			XMLElementNode *use = new XMLElementNode("use");
@@ -339,3 +357,22 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 	}
 }
 
+
+/** Pushes a new context element that will take all following nodes added to the page. */
+void SVGTree::pushContextElement (XMLElementNode *node) {
+	if (_pageContainerStack.empty())
+		_page->append(node);
+	else
+		_pageContainerStack.top()->append(node);
+	_pageContainerStack.push(node);
+	_text = _span = 0;  // ensure the creation of a new text element for the following characters added
+}
+
+
+/** Pops the current context element and restored the previous one. */
+void SVGTree::popContextElement () {
+	if (!_pageContainerStack.empty()) {
+		_pageContainerStack.pop();
+		_text = _span = 0; // ensure the creation of a new text element for the following characters added
+	}
+}
