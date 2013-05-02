@@ -424,9 +424,9 @@ void DVIReader::cmdEop (int) {
 	if (!_posStack.empty())
 		throw DVIException("stack not empty at end of page");
 	_inPage = false;
-	endPage();
+	endPage(_currPageNum);
 	if (_actions)
-		_actions->endPage();
+		_actions->endPage(_currPageNum);
 }
 
 

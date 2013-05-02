@@ -85,8 +85,8 @@ class DVIReader : public StreamReader, protected VFActions
 		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
 		void putChar (UInt32 c, bool moveCursor);
 		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
-		virtual void beginPage (unsigned n, Int32 *c) {}
-		virtual void endPage () {}
+		virtual void beginPage (unsigned pageno, Int32 *c) {}
+		virtual void endPage (unsigned pageno) {}
 
 		// VFAction methods
 		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize);

@@ -123,9 +123,9 @@ bool SpecialManager::process (const string &special, SpecialActions *actions, Li
 }
 
 
-void SpecialManager::notifyEndPage () const {
+void SpecialManager::notifyEndPage (unsigned pageno) const {
 	FORALL(_endPageListeners, vector<DVIEndPageListener*>::const_iterator, it)
-		(*it)->dviEndPage();
+		(*it)->dviEndPage(pageno);
 }
 
 

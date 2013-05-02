@@ -44,7 +44,7 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
 
 	protected:
-		void dviEndPage ();
+		void dviEndPage (unsigned pageno);
 
    private:
 		std::map<int, DPair> _points; ///< points defined by special em:point

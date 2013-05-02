@@ -33,7 +33,7 @@ class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		const char** prefixes () const;
 
 	protected:
-		void dviEndPage ();
+		void dviEndPage (unsigned pageno);
 
    private:
 		unsigned _count;  // number of PS specials skipped

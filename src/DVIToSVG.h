@@ -48,8 +48,8 @@ class DVIToSVG : public DVIReader
 	protected:
 		DVIToSVG (const DVIToSVG &);
 		DVIToSVG operator = (const DVIToSVG &);
-		void beginPage (unsigned n, Int32 *c);
-		void endPage ();
+		void beginPage (unsigned pageno, Int32 *c);
+		void endPage (unsigned pageno);
 		void embedFonts (XMLElementNode *svgElement);
 
    private:

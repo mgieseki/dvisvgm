@@ -39,7 +39,7 @@ struct SpecialException : public MessageException
 struct DVIEndPageListener
 {
 	virtual ~DVIEndPageListener () {}
-	virtual void dviEndPage () =0;
+	virtual void dviEndPage (unsigned pageno) =0;
 };
 
 

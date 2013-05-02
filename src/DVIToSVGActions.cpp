@@ -208,7 +208,7 @@ void DVIToSVGActions::postamble () {
 /** This method is called when a "begin of page (bop)" command was found in the DVI file.
  *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
-void DVIToSVGActions::beginPage (unsigned n, Int32 *c) {
+void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
 	if (_boxes)
@@ -217,7 +217,7 @@ void DVIToSVGActions::beginPage (unsigned n, Int32 *c) {
 
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
-void DVIToSVGActions::endPage () {
+void DVIToSVGActions::endPage (unsigned pageno) {
 	_svg.transformPage(_pageMatrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color

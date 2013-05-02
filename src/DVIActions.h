@@ -46,8 +46,8 @@ struct DVIActions
 	virtual void special (const std::string &s) {}
 	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
-	virtual void beginPage (unsigned n, Int32 *c) {}
-	virtual void endPage () {}
+	virtual void beginPage (unsigned pageno, Int32 *c) {}
+	virtual void endPage (unsigned pageno) {}
 	virtual BoundingBox& bbox () =0;
 	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
 	virtual void progress (size_t current, size_t total, const char *id=0) {}

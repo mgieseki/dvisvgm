@@ -35,7 +35,7 @@ class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 
 	protected:
-		void dviEndPage ();
+		void dviEndPage (unsigned pageno);
 		void reset ();
 		void drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions);
 		void drawSplines (double ddist, SpecialActions *actions);

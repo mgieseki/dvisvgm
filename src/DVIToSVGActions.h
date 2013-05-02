@@ -65,8 +65,8 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void special (const std::string &s);
 		void preamble (const std::string &cmt);
 		void postamble ();
-		void beginPage (unsigned n, Int32 *c);
-		void endPage ();
+		void beginPage (unsigned pageno, Int32 *c);
+		void endPage (unsigned pageno);
 		void beginSpecial (const char *prefix);
 		void endSpecial (const char *prefix);
 		void progress (size_t current, size_t total, const char *id=0);
