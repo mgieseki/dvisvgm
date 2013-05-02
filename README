@@ -33,8 +33,6 @@ DEPENDENCIES
    * potracelib (http://potrace.sourceforge.net)
      Peter Selinger's bitmap tracing library is utilized to
      vectorize Metafont's bitmap output.
-     The latest version of the library is bundled with the
-     source tarball.
 
    * zlib (http://www.zlib.org)
      Compressed SVG files are produced by using functions

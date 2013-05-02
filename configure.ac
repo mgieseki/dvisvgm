@@ -57,11 +57,8 @@ AC_CHECK_HEADER([potracelib.h],
 	 AC_CHECK_LIB(potrace, potrace_trace, , HAVE_LIBPOTRACE=0)], HAVE_LIBPOTRACE=0)
 
 if test "$HAVE_LIBPOTRACE" -eq 0; then
-	AM_CPPFLAGS="$AM_CXXFLAGS -I\${srcdir}/../potracelib -I\${srcdir}/../../potracelib"
-	EXTRA_LIBS="$EXTRA_LIBS ../potracelib/libpotrace.a "
-	AC_MSG_NOTICE([Using bundled potrace library])
+	AC_MSG_ERROR([potrace library not found])
 fi
-AM_CONDITIONAL(HAVE_LIBPOTRACE, test "x$HAVE_LIBPOTRACE" = "x1")
 
 
 # Check how to link Ghostscript
@@ -153,6 +150,6 @@ AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
-AC_CONFIG_FILES([Makefile potracelib/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
 AC_OUTPUT
 

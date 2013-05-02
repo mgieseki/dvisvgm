@@ -5,11 +5,5 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING LGPL-2.1.txt
-if HAVE_LIBPOTRACE
-SUBDIRS =
-else
-SUBDIRS = potracelib
-endif
-
-SUBDIRS += src tests doc
+SUBDIRS = src tests doc
 
