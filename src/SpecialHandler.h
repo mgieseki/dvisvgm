@@ -36,22 +36,29 @@ struct SpecialException : public MessageException
 };
 
 
-class SpecialHandler
+struct DVIEndPageListener
+{
+	virtual ~DVIEndPageListener () {}
+	virtual void dviEndPage () =0;
+};
+
+
+struct DVIPositionListener
+{
+	virtual ~DVIPositionListener () {}
+	virtual void dviMovedTo (double x, double y) =0;
+};
+
+
+struct SpecialHandler
 {
 	friend class SpecialManager;
 
-	public:
-		virtual ~SpecialHandler () {}
-		virtual const char** prefixes () const=0;
-		virtual const char* info () const=0;
-		virtual const char* name () const=0;
-		virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-		virtual void dviMovedTo (double x, double y) {}
-		virtual void dviEndPage () {}
-
-	protected:
-		virtual bool isEndPageListener () const  {return false;}
-		virtual bool isPositionListener () const {return false;}
+	virtual ~SpecialHandler () {}
+	virtual const char** prefixes () const=0;
+	virtual const char* info () const=0;
+	virtual const char* name () const=0;
+	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
 };
 
 

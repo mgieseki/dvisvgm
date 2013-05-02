@@ -27,7 +27,7 @@
 #include "SpecialHandler.h"
 
 
-class EmSpecialHandler : public SpecialHandler
+class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
 	struct Line {
 		Line (int pp1, int pp2, char cc1, char cc2, double w) : p1(pp1), p2(pp2), c1(cc1), c2(cc2), width(w) {}
@@ -42,10 +42,9 @@ class EmSpecialHandler : public SpecialHandler
 		const char* info () const   {return "line drawing statements of the emTeX special set";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
-		void dviEndPage ();
 
 	protected:
-		bool isEndPageListener () const {return true;}
+		void dviEndPage ();
 
    private:
 		std::map<int, DPair> _points; ///< points defined by special em:point

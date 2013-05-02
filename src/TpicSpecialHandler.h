@@ -25,7 +25,7 @@
 #include "Pair.h"
 #include "SpecialHandler.h"
 
-class TpicSpecialHandler : public SpecialHandler
+class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
 	public:
 		TpicSpecialHandler ();
@@ -33,10 +33,9 @@ class TpicSpecialHandler : public SpecialHandler
 		const char* name () const   {return "tpic";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		void dviEndPage ();
 
 	protected:
-		bool isEndPageListener () const {return true;}
+		void dviEndPage ();
 		void reset ();
 		void drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions);
 		void drawSplines (double ddist, SpecialActions *actions);

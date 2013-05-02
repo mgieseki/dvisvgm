@@ -64,8 +64,8 @@ class SpecialManager
    private:
 		HandlerPool _pool;     ///< stores pointers to all handlers
 		HandlerMap _handlers;  ///< pointers to handlers for corresponding prefixes
-		HandlerPool _endPageListeners;
-		HandlerPool _positionListeners;
+		std::vector<DVIEndPageListener*> _endPageListeners;
+		std::vector<DVIPositionListener*> _positionListeners;
 };
 
 #endif

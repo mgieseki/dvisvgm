@@ -23,18 +23,17 @@
 
 #include "SpecialHandler.h"
 
-class NoPsSpecialHandler : public SpecialHandler
+class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
    public:
       NoPsSpecialHandler () : _count(0) {}
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		void dviEndPage ();
 		const char* name () const   {return 0;}
 		const char* info () const   {return 0;}
 		const char** prefixes () const;
 
 	protected:
-		bool isEndPageListener () const  {return true;}
+		void dviEndPage ();
 
    private:
 		unsigned _count;  // number of PS specials skipped

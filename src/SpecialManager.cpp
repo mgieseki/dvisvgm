@@ -52,10 +52,10 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 		_pool.push_back(handler);
 		for (const char **p=handler->prefixes(); *p; ++p)
 			_handlers[*p] = handler;
-		if (handler->isEndPageListener())
-			_endPageListeners.push_back(handler);
-		if (handler->isPositionListener())
-			_positionListeners.push_back(handler);
+		if (DVIEndPageListener *listener = dynamic_cast<DVIEndPageListener*>(handler))
+			_endPageListeners.push_back(listener);
+		if (DVIPositionListener *listener = dynamic_cast<DVIPositionListener*>(handler))
+			_positionListeners.push_back(listener);
 	}
 }
 
@@ -124,13 +124,13 @@ bool SpecialManager::process (const string &special, SpecialActions *actions, Li
 
 
 void SpecialManager::notifyEndPage () const {
-	FORALL(_endPageListeners, HandlerPool::const_iterator, it)
+	FORALL(_endPageListeners, vector<DVIEndPageListener*>::const_iterator, it)
 		(*it)->dviEndPage();
 }
 
 
 void SpecialManager::notifyPositionChange (double x, double y) const {
-	FORALL(_positionListeners, HandlerPool::const_iterator, it)
+	FORALL(_positionListeners, vector<DVIPositionListener*>::const_iterator, it)
 		(*it)->dviMovedTo(x, y);
 }
 
