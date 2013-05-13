@@ -487,9 +487,11 @@ statements, instructions for embedding MSP, PCX, and BMP image files, as well as
 dvisvgm supports only the line drawing statements and ignores all other em specials silently.
 A description of the command syntax can be found in the DVI driver documentation coming with emTeX (see CTAN).
 
-// *html*::
-// The hyperref package uses a set of HTML anchor tags to indicate hyperlinks in DVI files.
-// dvisvgm converts them to corresponding SVG elements.
+*html*::
+The hyperref specials allow the definition of hyperlinks inside DVI files in various flavors. dvisvgm supports
+the plain HyperTeX specials as created with hyperref package option 'hypertex'. Internal links, i.e. references
+to other parts of the same document, are only converted if the link and the corresponding link target are located
+on the same page. Links between different pages are not supported yet.
 
 *pdf*::
 pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently, only

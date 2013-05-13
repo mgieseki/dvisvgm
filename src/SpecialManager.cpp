@@ -99,7 +99,7 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
  *  @param[in] special the special expression
  *  @param[in] actions actions the special handlers can perform
  *  @param[in] listener object that wants to be notified about the processing state
- *  @return true if a special handler was found
+ *  @return true if the special could be processed successfully
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, SpecialActions *actions, Listener *listener) const {
 	istringstream iss(special);
