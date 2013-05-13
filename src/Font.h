@@ -34,7 +34,7 @@
 #include "VFReader.h"
 #include "types.h"
 
-class TFM;
+struct FontMetric;
 
 
 /** Abstract base for all font classes. */
@@ -58,7 +58,7 @@ struct Font {
 	virtual double charDepth (int c) const =0;
 	virtual double charHeight (int c) const =0;
 	virtual double italicCorr (int c) const =0;
-	virtual const TFM* getTFM () const =0;
+	virtual const FontMetric* getMetrics () const =0;
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
@@ -66,7 +66,7 @@ struct Font {
    virtual void tidy () const {}
 	virtual bool verifyChecksums () const      {return true;}
 	virtual int fontIndex () const             {return 0;}
-	virtual const Style* style () const    {return 0;}
+	virtual const Style* style () const        {return 0;}
 };
 
 
@@ -76,22 +76,22 @@ struct Font {
 struct EmptyFont : public Font
 {
 	public:
-		EmptyFont (std::string name) : fontname(name) {}
+		EmptyFont (std::string name) : _fontname(name) {}
 		Font* clone (double ds, double sc) const  {return new EmptyFont(*this);}
 		const Font* uniqueFont () const           {return this;}
-		std::string name () const                 {return fontname;}
+		std::string name () const                 {return _fontname;}
 		double designSize () const                {return 10;}    // cmr10 design size in pt
 		double scaledSize () const                {return 10;}    // cmr10 scaled size in pt
 		double charWidth (int c) const            {return 9.164;} // width of cmr10's 'M' in pt
 		double charHeight (int c) const           {return 6.833;} // height of cmr10's 'M' in pt
 		double charDepth (int c) const            {return 0;}
 		double italicCorr (int c) const           {return 0;}
-		const TFM* getTFM () const                {return 0;}
+		const FontMetric* getMetrics () const    {return 0;}
 		const char* path () const                 {return 0;}
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
 
 	private:
-		std::string fontname;
+		std::string _fontname;
 };
 
 
@@ -150,10 +150,10 @@ class TFMFont : public virtual Font
 	public:
 		TFMFont (std::string name, UInt32 checksum, double dsize, double ssize);
 		~TFMFont ();
-		const TFM* getTFM () const;
-		std::string name () const   {return fontname;}
-		double designSize () const  {return dsize;}
-		double scaledSize () const  {return ssize;}
+		const FontMetric* getMetrics () const;
+		std::string name () const   {return _fontname;}
+		double designSize () const  {return _dsize;}
+		double scaledSize () const  {return _ssize;}
 		double charWidth (int c) const;
 		double charDepth (int c) const;
 		double charHeight (int c) const;
@@ -161,11 +161,11 @@ class TFMFont : public virtual Font
 		bool verifyChecksums () const;
 
 	private:
-		mutable TFM *tfm;
-		std::string fontname;
-		UInt32 checksum; ///< cheksum to be compared with TFM checksum
-		double dsize;    ///< design size in TeX point units
-		double ssize;    ///< scaled size
+		mutable FontMetric *_metrics;
+		std::string _fontname;
+		UInt32 _checksum; ///< cheksum to be compared with TFM checksum
+		double _dsize;    ///< design size in TeX point units
+		double _ssize;    ///< scaled size
 };
 
 
@@ -174,28 +174,28 @@ class PhysicalFontProxy : public PhysicalFont
 	friend class PhysicalFontImpl;
 	public:
 		Font* clone (double ds, double sc) const  {return new PhysicalFontProxy(*this, ds, sc);}
-		const Font* uniqueFont () const           {return pf;}
-		std::string name () const                 {return pf->name();}
-		double designSize () const                {return dsize;}
-		double scaledSize () const                {return ssize;}
-		double charWidth (int c) const            {return pf->charWidth(c);}
-		double charDepth (int c) const            {return pf->charDepth(c);}
-		double charHeight (int c) const           {return pf->charHeight(c);}
-		double italicCorr (int c) const           {return pf->italicCorr(c);}
-		const TFM* getTFM () const                {return pf->getTFM();}
-		Type type () const                        {return pf->type();}
-      UInt32 unicode (UInt32 c) const           {return pf->unicode(c);}
-		int fontIndex () const                    {return pf->fontIndex();}
-		const Style* style () const               {return pf->style();}
+		const Font* uniqueFont () const           {return _pf;}
+		std::string name () const                 {return _pf->name();}
+		double designSize () const                {return _dsize;}
+		double scaledSize () const                {return _ssize;}
+		double charWidth (int c) const            {return _pf->charWidth(c);}
+		double charDepth (int c) const            {return _pf->charDepth(c);}
+		double charHeight (int c) const           {return _pf->charHeight(c);}
+		double italicCorr (int c) const           {return _pf->italicCorr(c);}
+		const FontMetric* getMetrics () const    {return _pf->getMetrics();}
+		Type type () const                        {return _pf->type();}
+		UInt32 unicode (UInt32 c) const           {return _pf->unicode(c);}
+		int fontIndex () const                    {return _pf->fontIndex();}
+		const Style* style () const               {return _pf->style();}
 
 	protected:
-		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : pf(font), dsize(ds), ssize(ss) {}
-		PhysicalFontProxy (const PhysicalFontProxy &proxy, double ds, double ss) : pf(proxy.pf), dsize(ds), ssize(ss) {}
+		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : _pf(font), _dsize(ds), _ssize(ss) {}
+		PhysicalFontProxy (const PhysicalFontProxy &proxy, double ds, double ss) : _pf(proxy._pf), _dsize(ds), _ssize(ss) {}
 
 	private:
-		const PhysicalFont *pf;
-		double dsize;  ///< design size in TeX point units
-		double ssize;  ///< scaled size
+		const PhysicalFont *_pf;
+		double _dsize;  ///< design size in TeX point units
+		double _ssize;  ///< scaled size
 };
 
 
@@ -229,27 +229,27 @@ class VirtualFontProxy : public VirtualFont
 	friend class VirtualFontImpl;
 	public:
 		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
-		const Font* uniqueFont () const       {return vf;}
-		std::string name () const             {return vf->name();}
-		const DVIVector* getDVI (int c) const {return vf->getDVI(c);}
-		double designSize () const            {return dsize;}
-		double scaledSize () const            {return ssize;}
-		double charWidth (int c) const        {return vf->charWidth(c);}
-		double charDepth (int c) const        {return vf->charDepth(c);}
-		double charHeight (int c) const       {return vf->charHeight(c);}
-		double italicCorr (int c) const       {return vf->italicCorr(c);}
-		const TFM* getTFM () const            {return vf->getTFM();}
-		const char* path () const             {return vf->path();}
+		const Font* uniqueFont () const          {return _vf;}
+		std::string name () const                {return _vf->name();}
+		const DVIVector* getDVI (int c) const    {return _vf->getDVI(c);}
+		double designSize () const               {return _dsize;}
+		double scaledSize () const               {return _ssize;}
+		double charWidth (int c) const           {return _vf->charWidth(c);}
+		double charDepth (int c) const           {return _vf->charDepth(c);}
+		double charHeight (int c) const          {return _vf->charHeight(c);}
+		double italicCorr (int c) const          {return _vf->italicCorr(c);}
+		const FontMetric* getMetrics () const   {return _vf->getMetrics();}
+		const char* path () const                {return _vf->path();}
 
 	protected:
-		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : vf(font), dsize(ds), ssize(ss) {}
-		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : vf(proxy.vf), dsize(ds), ssize(ss) {}
+		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : _vf(font), _dsize(ds), _ssize(ss) {}
+		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : _vf(proxy._vf), _dsize(ds), _ssize(ss) {}
 		void assignChar (UInt32 c, DVIVector *dvi) {delete dvi;}
 
 	private:
-		const VirtualFont *vf;
-		double dsize;  ///< design size in TeX point units
-		double ssize;  ///< scaled size in TeX point units
+		const VirtualFont *_vf;
+		double _dsize;  ///< design size in TeX point units
+		double _ssize;  ///< scaled size in TeX point units
 };
 
 
@@ -268,7 +268,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont
 		void assignChar (UInt32 c, DVIVector *dvi);
 
 	private:
-		std::map<UInt32, DVIVector*> charDefs; ///< dvi subroutines defining the characters
+		std::map<UInt32, DVIVector*> _charDefs; ///< dvi subroutines defining the characters
 };
 
 

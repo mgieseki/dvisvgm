@@ -22,22 +22,21 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "FileFinder.h"
 #include "FileSystem.h"
 #include "Font.h"
 #include "FontEngine.h"
-#include "FileFinder.h"
+#include "FontMap.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
 #include "TFM.h"
 #include "VFReader.h"
-#include "macros.h"
-#include "FileSystem.h"
 #include "SignalHandler.h"
 #include "Subfont.h"
 #include "SVGTree.h"
-#include "FontMap.h"
+#include "macros.h"
 
 using namespace std;
 
@@ -69,30 +68,38 @@ UInt32 Font::unicode (UInt32 c) const {
 
 
 TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
-	: tfm(0), fontname(name), checksum(cs), dsize(ds), ssize(ss)
+	: _metrics(0), _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
 {
 }
 
 
 TFMFont::~TFMFont () {
-	delete tfm;
+	delete _metrics;
 }
 
 
 /** Returns a font metrics object for the current font.
  *  @throw FontException if TFM file can't be found */
-const TFM* TFMFont::getTFM () const {
-	if (!tfm) {
-		tfm = TFM::createFromFile(fontname.c_str());
-		if (!tfm)
-			throw FontException("can't find "+fontname+".tfm");
+const FontMetric* TFMFont::getMetrics () const {
+	if (!_metrics) {
+		try {
+			_metrics = FontMetric::read(_fontname.c_str());
+			if (!_metrics) {
+				_metrics = new NullFontMetric;
+				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
+			}
+		}
+		catch (TFMException &e) {
+			_metrics = new NullFontMetric;
+			Message::wstream(true) << e.what() << " in " << _fontname << ".tfm\n";
+		}
 	}
-	return tfm;
+	return _metrics;
 }
 
 
 double TFMFont::charWidth (int c) const {
-	double w = getTFM()->getCharWidth(c);
+	double w = getMetrics() ? getMetrics()->getCharWidth(c) : 0;
 	if (style())
 		w *= style()->extend;
 	return w;
@@ -100,20 +107,20 @@ double TFMFont::charWidth (int c) const {
 
 
 double TFMFont::italicCorr (int c) const {
-	double w = getTFM()->getItalicCorr(c);
+	double w = getMetrics() ? getMetrics()->getItalicCorr(c) : 0;
 	if (style())
 		w *= style()->extend;
 	return w;
 }
 
 
-double TFMFont::charDepth (int c) const  {return getTFM()->getCharDepth(c);}
-double TFMFont::charHeight (int c) const {return getTFM()->getCharHeight(c);}
+double TFMFont::charDepth (int c) const  {return getMetrics() ? getMetrics()->getCharDepth(c) : 0;}
+double TFMFont::charHeight (int c) const {return getMetrics() ? getMetrics()->getCharHeight(c) : 0;}
 
 
 bool TFMFont::verifyChecksums () const   {
-	if (checksum != 0 && getTFM()->getChecksum() != 0)
-		return checksum == getTFM()->getChecksum();
+	if (_checksum != 0 && getMetrics() && getMetrics()->getChecksum() != 0)
+		return _checksum == getMetrics()->getChecksum();
 	return true;
 }
 
@@ -233,7 +240,8 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 			string gfname;
 			if (createGF(gfname)) {
 				try {
-					GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
+					double ds = getMetrics() ? getMetrics()->getDesignSize() : 1;
+					GFGlyphTracer tracer(gfname, unitsPerEm()/ds, cb);
 					tracer.setGlyph(glyph);
 					tracer.executeChar(c);
 					glyph.closeOpenSubPaths();
@@ -278,7 +286,7 @@ bool PhysicalFont::createGF (string &gfname) const {
 	gfname = name()+".gf";
 	MetafontWrapper mf(name());
 	bool ok = mf.make("ljfour", METAFONT_MAG); // call Metafont if necessary
-	return ok && mf.success() && getTFM();
+	return ok && mf.success() && getMetrics();
 }
 
 
@@ -289,14 +297,15 @@ bool PhysicalFont::createGF (string &gfname) const {
 int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
 	int count = 0;
 	if (type() == MF && CACHE_PATH) {
-		if (const TFM *tfm = getTFM()) {
-			int fchar = tfm->firstChar();
-			int lchar = tfm->lastChar();
+		if (const FontMetric *metrics = getMetrics()) {
+			int fchar = metrics->firstChar();
+			int lchar = metrics->lastChar();
 			string gfname;
 			Glyph glyph;
 			if (createGF(gfname)) {
 				_cache.read(name().c_str(), CACHE_PATH);
-				GFGlyphTracer tracer(gfname, unitsPerEm()/getTFM()->getDesignSize(), cb);
+				double ds = getMetrics() ? getMetrics()->getDesignSize() : 1;
+				GFGlyphTracer tracer(gfname, unitsPerEm()/ds, cb);
 				tracer.setGlyph(glyph);
 				for (int i=fchar; i <= lchar; i++) {
 					if (includeCached || !_cache.getGlyph(i)) {
@@ -417,7 +426,7 @@ VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss)
 
 VirtualFontImpl::~VirtualFontImpl () {
 	// delete dvi vectors received by VFReaderAction
-	for (map<UInt32, DVIVector*>::iterator i=charDefs.begin(); i != charDefs.end(); ++i)
+	for (map<UInt32, DVIVector*>::iterator i=_charDefs.begin(); i != _charDefs.end(); ++i)
 		delete i->second;
 }
 
@@ -429,8 +438,8 @@ const char* VirtualFontImpl::path () const {
 
 void VirtualFontImpl::assignChar (UInt32 c, DVIVector *dvi) {
 	if (dvi) {
-		if (charDefs.find(c) == charDefs.end())
-			charDefs[c] = dvi;
+		if (_charDefs.find(c) == _charDefs.end())
+			_charDefs[c] = dvi;
 		else
 			delete dvi;
 	}
@@ -438,7 +447,7 @@ void VirtualFontImpl::assignChar (UInt32 c, DVIVector *dvi) {
 
 
 const vector<UInt8>* VirtualFontImpl::getDVI (int c) const {
-	map<UInt32,DVIVector*>::const_iterator it = charDefs.find(c);
-	return (it == charDefs.end() ? 0 : it->second);
+	map<UInt32,DVIVector*>::const_iterator it = _charDefs.find(c);
+	return (it == _charDefs.end() ? 0 : it->second);
 }
 

@@ -15,8 +15,8 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CmdLineParserBase.h Color.h CRC32.h \
 	ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h \
 	DVIToSVGActions.h EmSpecialHandler.h EPSFile.h EPSToSVG.h FileFinder.h FilePath.h FileSystem.h Font.h FontCache.h \
-	FontEncoding.h FontEngine.h FontManager.h FontMap.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h Glyph.h \
-	GlyphTracerMessages.h GraphicPath.h InputBuffer.h InputReader.h Length.h macros.h MapLine.h Matrix.h Message.h \
+	FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetric.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h \
+	Glyph.h GlyphTracerMessages.h GraphicPath.h InputBuffer.h InputReader.h Length.h macros.h MapLine.h Matrix.h Message.h \
 	MessageException.h MetafontWrapper.h NoPsSpecialHandler.h PageRanges.h PageSize.h Pair.h PdfSpecialHandler.h Process.h \
 	PSInterpreter.h PSPattern.h PsSpecialHandler.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h \
 	StreamReader.h StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h \
@@ -25,8 +25,8 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	ColorSpecialHandler.cpp CommandLine.cpp CRC32.cpp Directory.cpp DLLoader.cpp DVIActions.cpp DVIReader.cpp \
 	DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EPSFile.cpp EPSToSVG.cpp FileFinder.cpp \
 	FilePath.cpp FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontManager.cpp FontMap.cpp \
-	GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp InputBuffer.cpp InputReader.cpp Length.cpp MapLine.cpp \
-	Matrix.cpp Message.cpp MetafontWrapper.cpp NoPsSpecialHandler.cpp PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp \
+	FontMetric.cpp GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp InputBuffer.cpp InputReader.cpp Length.cpp \
+	MapLine.cpp Matrix.cpp Message.cpp MetafontWrapper.cpp NoPsSpecialHandler.cpp PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp \
 	Process.cpp psdefs.cpp PSInterpreter.cpp PSPattern.cpp PsSpecialHandler.cpp SignalHandler.cpp SpecialManager.cpp \
 	StreamReader.cpp StreamWriter.cpp Subfont.cpp SVGTree.cpp System.cpp Terminal.cpp TFM.cpp TpicSpecialHandler.cpp \
 	VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp

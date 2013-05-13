@@ -1,5 +1,5 @@
 /*************************************************************************
-** TFM.h                                                                **
+** FontMetrics.cpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,48 +18,15 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef TFM_H
-#define TFM_H
-
-#include <istream>
-#include <string>
-#include <vector>
+#include <fstream>
+#include "FileFinder.h"
 #include "FontMetric.h"
-#include "MessageException.h"
-#include "types.h"
+#include "TFM.h"
+
+using namespace std;
 
 
-struct TFMException : public MessageException
-{
-	TFMException (const std::string &msg) : MessageException(msg) {}
-};
-
-
-class TFM : public FontMetric
-{
-   public:
-		TFM (const char *fname);
-		double getDesignSize () const;
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		double getItalicCorr (int c) const;
-		UInt32 getChecksum () const {return _checksum;}
-		UInt16 firstChar () const   {return _firstChar;}
-		UInt16 lastChar () const    {return _lastChar;}
-
-	protected:
-		bool readFromStream (std::istream &is);
-
-   private:
-		UInt32 _checksum;
-		UInt16 _firstChar, _lastChar;
-		FixWord _designSize;  ///< design size of the font in TeX points (7227 pt = 254 cm)
-		std::vector<UInt32>  _charInfoTable;
-		std::vector<FixWord> _widthTable;    ///< character widths in design size units
-		std::vector<FixWord> _heightTable;   ///< character height in design size units
-		std::vector<FixWord> _depthTable;    ///< character depth in design size units
-		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
-};
-
-#endif
+FontMetric* FontMetric::read (const char *fontname) {
+	const char *path = FileFinder::lookup(string(fontname) + ".tfm");
+	return new TFM(path);
+}

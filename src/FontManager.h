@@ -32,7 +32,6 @@
 
 struct FileFinder;
 struct Font;
-class  TFM;
 class  VirtualFont;
 
 /** This class provides methods for easy DVI font handling.

@@ -50,29 +50,16 @@ static double fix2double (FixWord fix) {
 }
 
 
-TFM::TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0)
-{
-}
-
-
-TFM::TFM (istream &is) {
-	readFromStream(is);
-}
-
-
-TFM* TFM::createFromFile (const char *fontname) {
-	string filename = string(fontname) + ".tfm";
-	const char *path = FileFinder::lookup(filename);
-	ifstream ifs(path, ios_base::binary);
+TFM::TFM (const char *fname) {
+	ifstream ifs(fname, ios_base::binary);
 	if (ifs)
-		return new TFM(ifs);
-	return 0;
+		readFromStream(ifs);
 }
 
 
 bool TFM::readFromStream (istream &is) {
 	StreamReader sr(is);
-	is.seekg(2, ios_base::beg);             // skip file size
+	UInt16 lf = UInt16(sr.readUnsigned(2)); // length of entire file in 4 byte words
 	UInt16 lh = UInt16(sr.readUnsigned(2)); // length of header in 4 byte words
 	_firstChar= UInt16(sr.readUnsigned(2)); // smalles character code in font
 	_lastChar = UInt16(sr.readUnsigned(2)); // largest character code in font
@@ -80,12 +67,17 @@ bool TFM::readFromStream (istream &is) {
 	UInt16 nh = UInt16(sr.readUnsigned(2)); // number of words in height table
 	UInt16 nd = UInt16(sr.readUnsigned(2)); // number of words in depth table
 	UInt16 ni = UInt16(sr.readUnsigned(2)); // number of words in italic corr. table
-//	UInt16 nl = UInt16(sr.readUnsigned(2)); // number of words in lig/kern table
-//	UInt16 nk = UInt16(sr.readUnsigned(2)); // number of words in kern table
-//	UInt16 ne = UInt16(sr.readUnsigned(2)); // number of words in ext. char table
-//	UInt16 np = UInt16(sr.readUnsigned(2)); // number of font parameter words
+	UInt16 nl = UInt16(sr.readUnsigned(2)); // number of words in lig/kern table
+	UInt16 nk = UInt16(sr.readUnsigned(2)); // number of words in kern table
+	UInt16 ne = UInt16(sr.readUnsigned(2)); // number of words in ext. char table
+	UInt16 np = UInt16(sr.readUnsigned(2)); // number of font parameter words
 
-	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
+	if (6+lh+(_lastChar-_firstChar+1)+nw+nh+nd+ni+nl+nk+ne+np != lf)
+		throw TFMException("inconsistent length values");
+	if (_firstChar >= _lastChar || _lastChar > 255 || ne > 256)
+		throw TFMException("character codes out of range");
+
+//	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
 	_checksum = sr.readUnsigned(4);
 	_designSize = sr.readUnsigned(4);
 	is.seekg(24+lh*4, ios_base::beg);  // move to char info table
