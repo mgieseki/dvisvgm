@@ -25,20 +25,16 @@
 #include <string>
 #include <vector>
 #include "FontMetric.h"
-#include "MessageException.h"
 #include "types.h"
+#include "StreamReader.h"
 
-
-struct TFMException : public MessageException
-{
-	TFMException (const std::string &msg) : MessageException(msg) {}
-};
-
+class StreamReader;
 
 class TFM : public FontMetric
 {
    public:
-		TFM (const char *fname);
+//		TFM (const char *fname);
+		TFM (std::istream &is);
 		double getDesignSize () const;
 		double getCharWidth (int c) const;
 		double getCharHeight (int c) const;
@@ -49,7 +45,11 @@ class TFM : public FontMetric
 		UInt16 lastChar () const    {return _lastChar;}
 
 	protected:
-		bool readFromStream (std::istream &is);
+		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0) {}
+		void readHeader (StreamReader &sr);
+		void readTables (StreamReader &sr, int nw, int nh, int nd, int ni);
+		virtual int charIndex (int c) const;
+		void setCharRange (int firstchar, int lastchar) {_firstChar=firstchar; _lastChar=lastchar;}
 
    private:
 		UInt32 _checksum;

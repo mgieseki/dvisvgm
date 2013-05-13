@@ -21,6 +21,7 @@
 #include <fstream>
 #include "FileFinder.h"
 #include "FontMetric.h"
+#include "JFM.h"
 #include "TFM.h"
 
 using namespace std;
@@ -28,5 +29,12 @@ using namespace std;
 
 FontMetric* FontMetric::read (const char *fontname) {
 	const char *path = FileFinder::lookup(string(fontname) + ".tfm");
-	return new TFM(path);
+	ifstream ifs(path, ios::binary);
+	if (!ifs)
+		return 0;
+	UInt16 id = 256*ifs.get();
+	id += ifs.get();
+	if (id == 9 || id == 11)  // Japanese font metric file?
+		return new JFM(ifs);
+	return new TFM(ifs);
 }

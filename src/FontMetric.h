@@ -18,10 +18,11 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTMETRICS_H
-#define FONTMETRICS_H
+#ifndef FONTMETRIC_H
+#define FONTMETRIC_H
 
 #include <istream>
+#include "MessageException.h"
 #include "types.h"
 
 struct FontMetric
@@ -50,5 +51,12 @@ struct NullFontMetric : public FontMetric
 	UInt16 firstChar () const          {return 0;}
 	UInt16 lastChar () const           {return 0;}
 };
+
+
+struct FontMetricException : public MessageException
+{
+	FontMetricException (const std::string &msg) : MessageException(msg) {}
+};
+
 
 #endif

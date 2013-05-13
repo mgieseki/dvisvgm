@@ -1,5 +1,5 @@
 /*************************************************************************
-** StreamReader.h                                                       **
+** JFM.h                                                                **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,48 +18,25 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef STREAMREADER_H
-#define STREAMREADER_H
+#ifndef JFM_H
+#define JFM_H
 
 #include <istream>
-#include <string>
-#include <vector>
-#include "MessageException.h"
-#include "types.h"
+#include "TFM.h"
 
-class CRC32;
 
-class StreamReader
+class JFM : public TFM
 {
    public:
-		StreamReader (std::istream &s);
-		virtual ~StreamReader () {}
-		std::istream& replaceStream (std::istream &s);
-		UInt32 readUnsigned (int n);
-		UInt32 readUnsigned (int n, CRC32 &crc32);
-		Int32 readSigned (int n);
-		Int32 readSigned (int n, CRC32 &crc32);
-		std::string readString ();
-		std::string readString (CRC32 &crc32, bool finalZero=false);
-		std::string readString (int length);
-		std::string readString (int length, CRC32 &crc32);
-		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
-		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
-		int readByte () {return _is->get();}
-		int readByte (CRC32 &crc32);
-		void seek (std::istream::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}
+      JFM (std::istream &is);
 
 	protected:
-		std::istream& in () {return *_is;}
+		void readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni);
+		int charIndex (int c) const;
 
    private:
-		std::istream *_is;
-};
-
-
-struct StreamReaderException : public MessageException
-{
-	StreamReaderException (const std::string &msg) : MessageException(msg) {}
+		UInt16 _minchar;  ///<  character code of first entry in character type table
+		std::vector<UInt16> _charTypeTable;
 };
 
 #endif

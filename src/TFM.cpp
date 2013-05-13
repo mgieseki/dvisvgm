@@ -32,9 +32,7 @@ using namespace std;
 /** Reads a sequence of n TFM words (4 Bytes each).
  *  @param[in]  is reads from this stream
  *  @param[out] v the read words
- *  @param[in]  n number of words to be read
- *  @return dynamically allocated array containing the read words
- *          (must be deleted by the caller) */
+ *  @param[in]  n number of words to be read */
 template <typename T>
 static void read_words (StreamReader &sr, vector<T> &v, unsigned n) {
 	v.clear();
@@ -50,18 +48,12 @@ static double fix2double (FixWord fix) {
 }
 
 
-TFM::TFM (const char *fname) {
-	ifstream ifs(fname, ios_base::binary);
-	if (ifs)
-		readFromStream(ifs);
-}
-
-
-bool TFM::readFromStream (istream &is) {
+TFM::TFM (istream &is) {
+	is.seekg(0);
 	StreamReader sr(is);
 	UInt16 lf = UInt16(sr.readUnsigned(2)); // length of entire file in 4 byte words
 	UInt16 lh = UInt16(sr.readUnsigned(2)); // length of header in 4 byte words
-	_firstChar= UInt16(sr.readUnsigned(2)); // smalles character code in font
+	_firstChar= UInt16(sr.readUnsigned(2)); // smallest character code in font
 	_lastChar = UInt16(sr.readUnsigned(2)); // largest character code in font
 	UInt16 nw = UInt16(sr.readUnsigned(2)); // number of words in width table
 	UInt16 nh = UInt16(sr.readUnsigned(2)); // number of words in height table
@@ -73,26 +65,44 @@ bool TFM::readFromStream (istream &is) {
 	UInt16 np = UInt16(sr.readUnsigned(2)); // number of font parameter words
 
 	if (6+lh+(_lastChar-_firstChar+1)+nw+nh+nd+ni+nl+nk+ne+np != lf)
-		throw TFMException("inconsistent length values");
+		throw FontMetricException("inconsistent length values");
 	if (_firstChar >= _lastChar || _lastChar > 255 || ne > 256)
-		throw TFMException("character codes out of range");
+		throw FontMetricException("character codes out of range");
 
-//	is.seekg(8, ios_base::cur);        // move to header (skip above commented bytes)
+	readHeader(sr);
+	is.seekg(24+lh*4);  // move to char info table
+	readTables(sr, nw, nh, nd, ni);
+}
+
+
+void TFM::readHeader (StreamReader &sr) {
 	_checksum = sr.readUnsigned(4);
 	_designSize = sr.readUnsigned(4);
-	is.seekg(24+lh*4, ios_base::beg);  // move to char info table
+}
+
+
+void TFM::readTables (StreamReader &sr, int nw, int nh, int nd, int ni) {
 	read_words(sr, _charInfoTable, _lastChar-_firstChar+1);
 	read_words(sr, _widthTable, nw);
 	read_words(sr, _heightTable, nh);
 	read_words(sr, _depthTable, nd);
 	read_words(sr, _italicTable, ni);
-	return true;
 }
 
 
 /** Returns the design size of this font in TeX point units. */
 double TFM::getDesignSize () const {
 	return fix2double(_designSize);
+}
+
+
+/** Returns the index to the entry of the character info table that describes the metric of a given character.
+ *  @param[in] c character whose index is retrieved
+ *  @return table index for character c, or -1 if there's no entry */
+int TFM::charIndex (int c) const {
+	if (c < _firstChar || c > _lastChar || size_t(c-_firstChar) >= _charInfoTable.size())
+		return -1;
+	return c-_firstChar;
 }
 
 
@@ -106,36 +116,39 @@ double TFM::getDesignSize () const {
 
 /** Returns the width of char c in TeX point units. */
 double TFM::getCharWidth (int c) const {
-	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
+	int index = charIndex(c);
+	if (index < 0)
 		return 0;
-	int index = (_charInfoTable[c-_firstChar] >> 24) & 0xFF;
+	index = (_charInfoTable[index] >> 24) & 0xFF;
 	return fix2double(_widthTable[index]) * fix2double(_designSize);
 }
 
 
 /** Returns the height of char c in TeX point units. */
 double TFM::getCharHeight (int c) const {
-	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
+	int index = charIndex(c);
+	if (index < 0)
 		return 0;
-	int index = (_charInfoTable[c-_firstChar] >> 20) & 0x0F;
+	index = (_charInfoTable[index] >> 20) & 0x0F;
 	return fix2double(_heightTable[index]) * fix2double(_designSize);
 }
 
 
 /** Returns the depth of char c in TeX point units. */
 double TFM::getCharDepth (int c) const {
-	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
+	int index = charIndex(c);
+	if (index < 0)
 		return 0;
-	int index = (_charInfoTable[c-_firstChar] >> 16) & 0x0F;
+	index = (_charInfoTable[index] >> 16) & 0x0F;
 	return fix2double(_depthTable[index]) * fix2double(_designSize);
 }
 
 
 /** Returns the italic correction of char c in TeX point units. */
 double TFM::getItalicCorr (int c) const {
-	if (c < _firstChar || c > _lastChar || unsigned(c-_firstChar) >= _charInfoTable.size())
+	int index = charIndex(c);
+	if (index < 0)
 		return 0;
-	int index = (_charInfoTable[c-_firstChar] >> 10) & 0x3F;
+	index = (_charInfoTable[index] >> 10) & 0x3F;
 	return fix2double(_italicTable[index]) * fix2double(_designSize);
 }
-

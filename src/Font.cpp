@@ -89,7 +89,7 @@ const FontMetric* TFMFont::getMetrics () const {
 				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
 			}
 		}
-		catch (TFMException &e) {
+		catch (FontMetricException &e) {
 			_metrics = new NullFontMetric;
 			Message::wstream(true) << e.what() << " in " << _fontname << ".tfm\n";
 		}
