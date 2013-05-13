@@ -124,7 +124,7 @@ void HtmlSpecialHandler::closeAnchor () {
  *  it over the hyperlinked area. */
 void HtmlSpecialHandler::markLinkedBox () {
 	const BoundingBox &bbox = _actions->bbox("{anchor}");
-	if (bbox.width() > 0 && bbox.height() > 0) {  // does bounding box extends in both dimensions?
+	if (bbox.width() > 0 && bbox.height() > 0) {  // does the bounding box extend in both dimensions?
 		if (LINK_MARKER != LM_NONE) {
 			const double linewidth = min(0.5, bbox.height()/15);
 			XMLElementNode *rect = new XMLElementNode("rect");

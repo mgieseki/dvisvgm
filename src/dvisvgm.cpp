@@ -37,6 +37,7 @@
 #include "FontEngine.h"
 #include "FontMap.h"
 #include "Ghostscript.h"
+#include "HtmlSpecialHandler.h"
 #include "InputReader.h"
 #include "Message.h"
 #include "PageSize.h"
@@ -390,6 +391,9 @@ int main (int argc, char *argv[]) {
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
+	HtmlSpecialHandler::LINK_MARKER =
+		args.linkmark_arg() == "line" ? HtmlSpecialHandler::LM_LINE :
+		args.linkmark_arg() == "box" ? HtmlSpecialHandler::LM_BOX : HtmlSpecialHandler::LM_NONE;
 
 	double start_time = System::time();
 	string inputfile = ensure_suffix(args.file(0), args.eps_given() ? "eps" : "dvi");

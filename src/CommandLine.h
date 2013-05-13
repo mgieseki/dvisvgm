@@ -26,6 +26,8 @@ class CommandLine : public CmdLineParserBase
 #endif
       bool bbox_given () const {return _bbox_given;}
       const std::string& bbox_arg () const {return _bbox_arg;}
+      bool linkmark_given () const {return _linkmark_given;}
+      const std::string& linkmark_arg () const {return _linkmark_arg;}
       bool output_given () const {return _output_given;}
       const std::string& output_arg () const {return _output_arg;}
       bool precision_given () const {return _precision_given;}
@@ -80,6 +82,7 @@ class CommandLine : public CmdLineParserBase
       void handle_eps (InputReader &ir, const Option &opt, bool longopt);
 #endif
       void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
+      void handle_linkmark (InputReader &ir, const Option &opt, bool longopt);
       void handle_output (InputReader &ir, const Option &opt, bool longopt);
       void handle_precision (InputReader &ir, const Option &opt, bool longopt);
       void handle_stdout (InputReader &ir, const Option &opt, bool longopt);
@@ -118,6 +121,8 @@ class CommandLine : public CmdLineParserBase
 #endif
       bool _bbox_given;
       std::string _bbox_arg;
+      bool _linkmark_given;
+      std::string _linkmark_arg;
       bool _output_given;
       std::string _output_arg;
       bool _precision_given;

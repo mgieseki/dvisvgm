@@ -26,6 +26,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    {'\0', "libgs", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_libgs)},
 #endif
+   {'L', "linkmark", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_linkmark)},
    {'l', "list-specials", 0, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
    {'M', "mag", 'r', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
    {'n', "no-fonts", 'o', new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
@@ -69,6 +70,7 @@ void CommandLine::init () {
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    _libgs_given = false;
 #endif
+   _linkmark_given = false;
    _list_specials_given = false;
    _mag_given = false;
    _no_fonts_given = false;
@@ -97,6 +99,7 @@ void CommandLine::init () {
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    _libgs_arg.clear();
 #endif
+   _linkmark_arg = "line";
    _mag_arg = 4;
    _no_fonts_arg = 0;
    _no_specials_arg.clear();
@@ -125,6 +128,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #endif
       "sSVG output options:",
       "o-b, --bbox=size               set size of bounding box [min]",
+      "o-L, --linkmark=type           select how to mark hyperlinked areas [line]",
       "o-o, --output=pattern          set name pattern of output files",
       "o-d, --precision=number        set number of decimal points (0-6) [0]",
       "o-s, --stdout                  write SVG output to stdout",
@@ -203,6 +207,11 @@ void CommandLine::handle_libgs (InputReader &ir, const Option &opt, bool longopt
       _libgs_given = true;
 }
 #endif
+
+void CommandLine::handle_linkmark (InputReader &ir, const Option &opt, bool longopt) {
+   if (getStringArg(ir, opt, longopt, _linkmark_arg))
+      _linkmark_given = true;
+}
 
 void CommandLine::handle_list_specials (InputReader &ir, const Option &opt, bool longopt) {
    _list_specials_given = true;

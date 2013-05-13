@@ -46,6 +46,10 @@
 				<arg type="string" name="size" default="min"/>
 				<description>set size of bounding box</description>
 			</option>
+			<option long="linkmark" short="L">
+				<arg type="string" name="type" default="line"/>
+				<description>select how to mark hyperlinked areas</description>
+			</option>
 			<option long="output" short="o">
 				<arg type="string" name="pattern"/>
 				<description>set name pattern of output files</description>
