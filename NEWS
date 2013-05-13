@@ -1,3 +1,14 @@
+dvisvgm-1.3 (2013-05-13)
+- added support for hyperref specials
+- added command-line option --linkmarker to select the way how to mark hyperlinked areas
+- dvisvgm builds for MiKTeX now try to access the Ghostscript DLL provided by MiKTeX so that
+  it's no longer necessary to install Ghostscript seperately
+- improved the handling of TFM files to avoid failures in case of malformed files
+- added evaluation of Japanese Font Metric (JFM) files
+- the bundled potrace library has been removed from the source tarball as it's easy to build
+  the latest releases from the original sources available at http://potrace.sourceforge.net
+- several code refactorings
+
 dvisvgm-1.2.2 (2013-04-26)
 - fixed a bug that prevented the lookup of fontmap files
 - avoid throwing an exception but print a warning message if MiKTeX is not available
