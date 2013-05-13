@@ -29,6 +29,7 @@
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
 #include "EPSToSVG.h"
+#include "FileFinder.h"
 #include "FilePath.h"
 #include "FileSystem.h"
 #include "Font.h"
@@ -38,7 +39,6 @@
 #include "Ghostscript.h"
 #include "InputReader.h"
 #include "Message.h"
-#include "FileFinder.h"
 #include "PageSize.h"
 #include "SignalHandler.h"
 #include "SpecialManager.h"
@@ -197,6 +197,18 @@ static void set_libgs (CommandLine &args) {
 		Ghostscript::LIBGS_NAME = args.libgs_arg();
 	else if (getenv("LIBGS"))
 		Ghostscript::LIBGS_NAME = getenv("LIBGS");
+#ifdef MIKTEX
+	else {
+#ifdef __WIN64__
+		const char *gsdll = "mgsdll64.dll";
+#else
+		const char *gsdll = "mgsdll32.dll";
+#endif
+		// try to lookup the Ghostscript DLL coming with MiKTeX
+		if (const char *gsdll_path = FileFinder::lookup(gsdll))
+			Ghostscript::LIBGS_NAME = gsdll_path;
+	}
+#endif
 #endif
 }
 
@@ -323,6 +335,14 @@ int main (int argc, char *argv[]) {
 
 	Message::COLORIZE = args.color_given();
 
+	try {
+		FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
+	}
+	catch (MessageException &e) {
+		Message::estream(true) << e.what() << '\n';
+		return 0;
+	}
+
 	set_libgs(args);
 	if (args.version_given()) {
 		print_version(args.version_arg());
@@ -379,7 +399,6 @@ int main (int argc, char *argv[]) {
 		return 0;
 	}
 	try {
-		FileFinder::init(argv[0], "dvisvgm", !args.no_mktexmf_given());
 		SVGOutput out(args.stdout_given() ? 0 : inputfile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
 		SignalHandler::instance().start();
 		if (args.eps_given()) {

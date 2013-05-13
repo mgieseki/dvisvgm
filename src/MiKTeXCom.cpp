@@ -65,6 +65,18 @@ string MiKTeXCom::getVersion () {
 }
 
 
+string MiKTeXCom::getBinDir () {
+#ifdef _MSC_VER
+	MiKTeXSetupInfo info = _session->GetMiKTeXSetupInfo();
+#else
+	MiKTeXSetupInfo info;
+	_session->GetMiKTeXSetupInfo(&info);
+#endif
+	_bstr_t bindir = info.binDirectory;
+	return string(bindir);
+}
+
+
 const char* MiKTeXCom::findFile (const char *fname) {
 	try {
 		_bstr_t path;

@@ -134,11 +134,16 @@ static const char* find_file (const std::string &fname) {
 	if (pos == std::string::npos)
 		return 0;  // no extension => no search
 	const std::string ext  = fname.substr(pos+1);  // file extension
+	static std::string buf;
 #ifdef MIKTEX
+	if (ext == "dll" || ext == "exe") {
+		// lookup dll and exe files in the MiKTeX bin directory first
+		buf = miktex->getBinDir() + "/" + fname;
+		if (FileSystem::exists(buf.c_str()))
+			return buf.c_str();
+	}
 	return miktex->findFile(fname.c_str());
 #else
-	static std::string buf;
-
 #ifdef TEXLIVEWIN32
 	if (ext == "exe") {
 		// lookup exe files in directory where dvisvgm is located
@@ -149,7 +154,6 @@ static const char* find_file (const std::string &fname) {
 		return 0;
 	}
 #endif
-
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
 		types["tfm"] = kpse_tfm_format;
