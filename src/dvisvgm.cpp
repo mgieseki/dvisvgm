@@ -291,7 +291,7 @@ static void print_version (bool extended) {
 	if (extended) {
 		if (strlen(TARGET_SYSTEM) > 0)
 			oss << " (" TARGET_SYSTEM ")";
-		oss << "\n" << string(oss.str().length()-1, '-') << "\n"
+		oss << "\n" << string(oss.str().length(), '-') << "\n"
 			"freetype:    " << FontEngine::version() << "\n";
 
 		string gsver;
