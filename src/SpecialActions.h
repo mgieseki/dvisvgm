@@ -66,7 +66,7 @@ class SpecialEmptyActions : public SpecialActions
    	void finishLine ()  {}
 		void setColor (const Color &color) {}
 		void setBgColor (const Color &color) {}
-		Color getColor () const {return 0;}
+		Color getColor () const {return Color::BLACK;}
 		void setMatrix (const Matrix &m) {}
 		const Matrix& getMatrix () const {return _matrix;}
 		void appendToPage (XMLNode *node) {}

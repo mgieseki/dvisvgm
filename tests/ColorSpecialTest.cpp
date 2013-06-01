@@ -85,7 +85,7 @@ TEST_F(ColorSpecialTest, errors) {
 	std::istringstream iss("UnknownColor");
 	EXPECT_THROW(handler.process(0, iss, &actions), SpecialException);
 	iss.clear();
-	iss.str("rgb 0 0.3 3.1");
+	iss.str("blue");
 	EXPECT_THROW(handler.process(0, iss, &actions), SpecialException);
 }
 
