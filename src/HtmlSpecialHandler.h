@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include "Color.h"
 #include "SpecialHandler.h"
 
 struct SpecialActions;
@@ -46,8 +47,11 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		const char* info () const  {return "hyperref specials";}
 		const char** prefixes () const;
 
-		enum LinkMarker {LM_NONE, LM_LINE, LM_BOX};
+		static bool setLinkMarker (const std::string &type);
+
+		enum LinkMarker {LM_NONE, LM_LINE, LM_BOX, LM_BGCOLOR};
 		static LinkMarker LINK_MARKER;  ///< selects how linked areas are marked
+		static Color LINK_BGCOLOR;      ///< background color if anchor linkmark type == LT_BGCOLOR
 
 	protected:
 		void hrefAnchor (std::string uri);

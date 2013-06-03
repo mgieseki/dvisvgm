@@ -28,8 +28,9 @@
 
 using namespace std;
 
-// variable to select the link marker variant (none, underlined, or boxed)
+// variable to select the link marker variant (none, underlined, boxed, or colored background)
 HtmlSpecialHandler::LinkMarker HtmlSpecialHandler::LINK_MARKER = HtmlSpecialHandler::LM_LINE;
+Color HtmlSpecialHandler::LINK_BGCOLOR;
 
 
 bool HtmlSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
@@ -134,20 +135,31 @@ void HtmlSpecialHandler::markLinkedBox () {
 			double h = linewidth;
 			if (LINK_MARKER == LM_LINE)
 				rect->addAttribute("fill", _actions->getColor().rgbString());
-			else {  // LM_BOX
+			else {
 				x -= linewidth;
 				y = bbox.minY()-linewidth;
 				w += 2*linewidth;
 				h += bbox.height()+linewidth;
-				rect->addAttribute("fill", "none");
-				rect->addAttribute("stroke", _actions->getColor().rgbString());
-				rect->addAttribute("stroke-width", linewidth);
+				if (LINK_MARKER == LM_BGCOLOR)
+					rect->addAttribute("fill", LINK_BGCOLOR.rgbString());
+				else {  // LM_BOX
+					rect->addAttribute("fill", "none");
+					rect->addAttribute("stroke", _actions->getColor().rgbString());
+					rect->addAttribute("stroke-width", linewidth);
+				}
 			}
 			rect->addAttribute("x", x);
 			rect->addAttribute("y", y);
 			rect->addAttribute("width", w);
 			rect->addAttribute("height", h);
-			_actions->appendToPage(rect);
+			_actions->prependToPage(rect);
+			if (LINK_MARKER == LM_BOX) {
+				x -= linewidth;
+				y -= linewidth;
+				w += 2*linewidth;
+				h += 2*linewidth;
+			}
+			_actions->embed(BoundingBox(x, y, x+w, y+h));
 		}
 		// Create an invisible rectangle around the linked area so that it's easier to access.
 		// This is only necessary when using paths rather than real text elements together with fonts.
@@ -196,6 +208,22 @@ void HtmlSpecialHandler::dviEndPage (unsigned pageno) {
 		_namedAnchors.clear();
 		_actions = 0;
 	}
+}
+
+
+bool HtmlSpecialHandler::setLinkMarker (const string &type) {
+	if (type.empty() || type == "none")
+		LINK_MARKER = LM_NONE;
+	else if (type == "line")
+		LINK_MARKER = LM_LINE;
+	else if (type == "box")
+		LINK_MARKER = LM_BOX;
+	else {
+		if (!LINK_BGCOLOR.set(type, false))
+			return false;
+		LINK_MARKER = LM_BGCOLOR;
+	}
+	return true;
 }
 
 

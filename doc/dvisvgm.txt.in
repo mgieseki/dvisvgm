@@ -147,7 +147,7 @@ the values stored in a font's TFM file are used to determine a glyph's extent. A
 intended to realize optimal character placements and are not designed to represent the exact dimensions,
 they don't necessarily correspond with the bounds of the visual glyphs. Thus, width and/or height
 of some glyphs may be larger than the respective TFM values. As a result, this can lead to clipped
-characters at the bounds of the SVG graphic. With option *--exact*, dvisvgm analyzes the actual shape
+characters at the bounds of the SVG graphic. With option *--exact* given, dvisvgm analyzes the actual shape
 of each character and derives a usually tight bounding box.
 
 
@@ -212,6 +212,10 @@ Selects the method how to mark hyperlinked areas. The 'type' argument can take o
 'none', 'box', and 'line', where the latter is the default, i.e. all links are underlined when
 dvisvgm is called without option *--linkmark*. Type 'box' draws a rectangle around the linked
 area, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
+Additionally, the argument 'type' can take a dvips color name as listed here:
+http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
+It's also possible to give an explicit hexadecimal RGB value of the form '#RRGGBB', e.g. '#0000ff'
+or simply '#ff' for blue. The color is used to highlight the linked area.
 
 
 *-l, --list-specials*::
@@ -236,7 +240,7 @@ This option disables these calls.
 
 *-n, --no-fonts*[='variant']::
 If this option is given, dvisvgm doesn't create SVG 'font' elements but uses 'paths' instead. The
-resulting SVG files tends to be larger but concurrently more compatible with most applications that
+resulting SVG files tend to be larger but they are concurrently more compatible with most applications that
 don't support SVG fonts yet. The optional argument 'variant' selects the method how to substitute fonts
 by paths. Variant 0 creates 'path' and 'use' elements. Variant 1 creates 'path' elements only.
 Option *--no-fonts* implies *--no-styles*.
