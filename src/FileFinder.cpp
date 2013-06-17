@@ -27,8 +27,6 @@
 #include "FontMap.h"
 #include "Message.h"
 
-using namespace std;
-
 #ifdef MIKTEX
 	#include "MessageException.h"
 	#include "MiKTeXCom.h"
@@ -104,7 +102,7 @@ std::string FileFinder::version () {
 			init("", "", false);
 			autoinit = true;
 		}
-		string ret = miktex->getVersion();
+		std::string ret = miktex->getVersion();
 		if (autoinit)
 			finish();
 		return ret;
@@ -228,7 +226,7 @@ static const char* mktex (const std::string &fname) {
 	const char *path = 0;
 #ifdef MIKTEX
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
-	string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
+	std::string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
 	system((toolname+".exe "+fname).c_str());
 	path = find_file(fname);
 #else
