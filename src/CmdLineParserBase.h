@@ -53,11 +53,13 @@ class CmdLineParserBase
 				LocalHandler _handler;
 		};
 
+		enum ArgMode {ARG_NONE, ARG_OPTIONAL, ARG_REQUIRED};
+
 		struct Option {
 			~Option () {delete handler;}
 			char shortname;
 			const char *longname;
-			char argmode;  // mode of option argument: '\0'=none, 'o'=optional, 'r'=required
+			ArgMode argmode;  // mode of option argument
 			const OptionHandler *handler;
 		};
 
