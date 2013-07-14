@@ -19,12 +19,12 @@
 *************************************************************************/
 
 #ifdef __WIN32__
-#include <windows.h>
+	#include <windows.h>
 #else
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <signal.h>
+	#include <fcntl.h>
+	#include <sys/wait.h>
+	#include <unistd.h>
+	#include <signal.h>
 #endif
 
 #include <cstdlib>
@@ -41,7 +41,34 @@ Process::Process (const string &cmd, const string &paramstr)
 }
 
 
-#ifndef __WIN32__
+#ifdef __WIN32__
+static void pipe_read (HANDLE handle, string &out) {
+	char buf[4096];
+	out.clear();
+	for (;;) {
+		DWORD num_chars;
+		bool success = ReadFile(handle, buf, 1024, &num_chars, NULL);
+		if (!success || num_chars == 0)
+			break;
+		out.append(buf, num_chars);
+	}
+	// remove trailing space
+	if (!out.empty()) {
+		int pos = out.size()-1;
+		while (pos >= 0 && isspace(out[pos]))
+			pos--;
+		out.erase(pos+1);
+	}
+}
+
+
+static inline void close_handle (HANDLE handle) {
+	if (handle != NULL)
+		CloseHandle(handle);
+}
+
+#else
+
 /** Extracts whitespace-sparated parameters from a string.
  *  @param[in] paramstr the parameter string
  *  @param[out] params vector holding the extracted parameters */
@@ -70,42 +97,61 @@ static void split_paramstr (string paramstr, vector<const char*> &params) {
 		left = ++right;
 	}
 }
+
 #endif
 
 
 /** Runs the process and waits until it's finished.
- *  @param[in] quiet if true, output to stdout/stderr is suppressed
+ *  @param[out] out takes the output written to stdout by the executed process
  *  @return true if process terminated properly
  *  @throw SignalException if CTRL-C was pressed during execution */
-bool Process::run (bool quiet) {
+bool Process::run (string *out) {
 #ifdef __WIN32__
 	SECURITY_ATTRIBUTES sa;
-	ZeroMemory(&sa, sizeof(sa));
-	sa.nLength = sizeof(sa);
+	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
 	sa.bInheritHandle = true;
 
 	STARTUPINFO si;
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(STARTUPINFO);
 	si.dwFlags = STARTF_USESTDHANDLES;
-	HANDLE devnull = CreateFile("nul", GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, &sa, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE devnull = NULL;
+	HANDLE proc_read_handle = NULL;
+	HANDLE proc_write_handle = NULL;
+	if (out) {
+		CreatePipe(&proc_read_handle, &proc_write_handle, &sa, 0);
+		SetHandleInformation(proc_read_handle, HANDLE_FLAG_INHERIT, 0);
+		si.hStdOutput = proc_write_handle;
+	}
+	else {
+		devnull = CreateFile("nul", GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, &sa, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		si.hStdOutput = devnull;
+	}
 	si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
 	si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
-	si.hStdOutput = quiet ? devnull : GetStdHandle(STD_OUTPUT_HANDLE);
+
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&pi, sizeof(pi));
-
+	DWORD exitcode = DWORD(-1);
 	string cmdline = _cmd+" "+_paramstr;
-	CreateProcess(NULL, (LPSTR)cmdline.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
-	WaitForSingleObject(pi.hProcess, INFINITE);
-	DWORD exitcode = (DWORD)-1;
-	GetExitCodeProcess(pi.hProcess, &exitcode);
-	CloseHandle(devnull);
+	bool success = CreateProcess(NULL, (LPSTR)cmdline.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
+	if (success) {
+		WaitForSingleObject(pi.hProcess, INFINITE);
+		GetExitCodeProcess(pi.hProcess, &exitcode);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
+	close_handle(proc_write_handle);  // must be closed before reading from pipe to prevent blocking
+	if (success && out)
+		pipe_read(proc_read_handle, *out);
+	close_handle(proc_read_handle);
+	close_handle(devnull);
 	return exitcode == 0;
 #else
 	pid_t pid = fork();
 	if (pid == 0) {   // child process
-		if (quiet) {
+		if (!out) {
 			int devnull = open(FileSystem::DEVNULL, O_WRONLY);
 			if (devnull >= 0) {
 				dup2(devnull, STDOUT_FILENO);

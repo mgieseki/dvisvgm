@@ -27,7 +27,7 @@ class Process
 {
    public:
       Process (const std::string &cmd, const std::string &paramstr);
-      bool run (bool quiet=true);
+      bool run (std::string *out=0);
 
    protected:
       Process (const Process& orig) {}
