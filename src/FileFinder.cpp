@@ -26,6 +26,7 @@
 #include "FileSystem.h"
 #include "FontMap.h"
 #include "Message.h"
+#include "Process.h"
 
 #ifdef MIKTEX
 	#include "MessageException.h"
@@ -49,7 +50,7 @@ static bool _mktex_enabled = false;
 
 // ---------------------------------------------------
 
-static const char* find_file (const std::string &fname);
+static const char* find_file (const std::string &fname, const char *ftype);
 static const char* find_mapped_file (std::string fname);
 static const char* mktex (const std::string &fname);
 
@@ -81,7 +82,7 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 
 
 /** Cleans up the FileFinder. This function must be called before leaving the
- *  applications main() function. */
+ *  application's main() function. */
 void FileFinder::finish () {
 #ifdef MIKTEX
 	if (miktex) {
@@ -123,15 +124,22 @@ std::string FileFinder::version () {
 /** Determines filetype by the filename extension and calls kpse_find_file
  *  to actually look up the file.
  *  @param[in] fname name of file to look up
+ *  @param[in] ftype expected file format of file fname; if 0, it's derived from the filename suffix
  *  @return file path on success, 0 otherwise */
-static const char* find_file (const std::string &fname) {
+static const char* find_file (const std::string &fname, const char *ftype) {
 	if (!_initialized)
 		return 0;
 
-	size_t pos = fname.rfind('.');
-	if (pos == std::string::npos)
-		return 0;  // no extension => no search
-	const std::string ext  = fname.substr(pos+1);  // file extension
+	std::string ext;
+	if (ftype)
+		ext = ftype;
+	else {
+		size_t pos = fname.rfind('.');
+		if (pos == std::string::npos)
+			return 0;  // no extension and no file type => no search
+		ext = fname.substr(pos+1);
+	}
+
 	static std::string buf;
 #ifdef MIKTEX
 	if (ext == "dll" || ext == "exe") {
@@ -139,6 +147,14 @@ static const char* find_file (const std::string &fname) {
 		buf = miktex->getBinDir() + "/" + fname;
 		if (FileSystem::exists(buf.c_str()))
 			return buf.c_str();
+	}
+	else if (ext == "cmap") {
+		// The MiKTeX SDK doesn't support the lookup of files without suffix (yet), thus
+		// it's not possible to find cmap files which usually don't have a suffix. In order 
+		// to work around this, we try to lookup the files by calling kpsewhich.
+		Process process("kpsewhich", std::string("-format=cmap ")+fname);
+		process.run(&buf);
+		return buf.empty() ? 0 : buf.c_str();
 	}
 	return miktex->findFile(fname.c_str());
 #else
@@ -154,17 +170,18 @@ static const char* find_file (const std::string &fname) {
 #endif
 	static std::map<std::string, kpse_file_format_type> types;
 	if (types.empty()) {
-		types["tfm"] = kpse_tfm_format;
-		types["pfb"] = kpse_type1_format;
-		types["vf"]  = kpse_vf_format;
-		types["mf"]  = kpse_mf_format;
-		types["ttc"] = kpse_truetype_format;
-		types["ttf"] = kpse_truetype_format;
-		types["map"] = kpse_fontmap_format;
-		types["sty"] = kpse_tex_format;
-		types["enc"] = kpse_enc_format;
-		types["pro"] = kpse_tex_ps_header_format;
-      types["sfd"] = kpse_sfd_format;
+		types["tfm"]  = kpse_tfm_format;
+		types["pfb"]  = kpse_type1_format;
+		types["vf"]   = kpse_vf_format;
+		types["mf"]   = kpse_mf_format;
+		types["ttc"]  = kpse_truetype_format;
+		types["ttf"]  = kpse_truetype_format;
+		types["map"]  = kpse_fontmap_format;
+		types["cmap"] = kpse_cmap_format;
+		types["sty"]  = kpse_tex_format;
+		types["enc"]  = kpse_enc_format;
+		types["pro"]  = kpse_tex_ps_header_format;
+		types["sfd"]  = kpse_sfd_format;
 	}
 	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
 	if (it == types.end())
@@ -197,10 +214,10 @@ static const char* find_mapped_file (std::string fname) {
 	if (const FontMap::Entry *entry = FontMap::instance().lookup(base)) {
 		const char *path=0;
 		if (entry->fontname.find('.') != std::string::npos)  // does the mapped filename has an extension?
-			path = find_file(entry->fontname);           // look for that file
+			path = find_file(entry->fontname, 0);             // look for that file
 		else {                             // otherwise, use extension of unmapped file
 			fname = entry->fontname + "." + ext;
-			(path = find_file(fname)) || (path = mktex(fname));
+			(path = find_file(fname, 0)) || (path = mktex(fname));
 		}
 		return path;
 	}
@@ -228,7 +245,7 @@ static const char* mktex (const std::string &fname) {
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
 	std::string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
 	system((toolname+".exe "+fname).c_str());
-	path = find_file(fname);
+	path = find_file(fname, 0);
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
@@ -245,11 +262,12 @@ static const char* mktex (const std::string &fname) {
  *  - in case of tfm or mf files: invokes the external mktextfm/mktexmf tool
  *    to create the missing file
  *  @param[in] fname name of file to look up
+ *  @param[in] ftype type/format of file to look up
  *  @param[in] extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
-const char* FileFinder::lookup (const std::string &fname, bool extended) {
+const char* FileFinder::lookup (const std::string &fname, const char *ftype, bool extended) {
 	const char *path;
-	if ((path = find_file(fname)) || (extended  && ((path = find_mapped_file(fname)) || (path = mktex(fname)))))
+	if ((path = find_file(fname, ftype)) || (extended  && ((path = find_mapped_file(fname)) || (path = mktex(fname)))))
 		return path;
 	return 0;
 }
