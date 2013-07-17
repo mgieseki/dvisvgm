@@ -37,7 +37,7 @@ const char *PSInterpreter::PSDEFS =
 "ror/newerror false put}{2(querypos)prcmd}ifelse}put @SD/applyscalevals{1 0 trans"
 "form 0 0 transform 3 -1 roll sub dup mul 3 1 roll sub dup mul add sqrt 0 1 trans"
 "form 0 0 transform 3 -1 roll sub dup mul 3 1 roll sub dup mul add sqrt 1 0 trans"
-"form dup mul exch dup dup mul 3 -1 roll add sqrt div 3(applyscalevals)prcmd}def "
+"form dup mul exch dup dup mul 3 -1 roll add sqrt div 3(applyscalevals)prcmd}put "
 "@SD/prpath{{2(moveto)prcmd}{2(lineto)prcmd}{6(curveto)prcmd}{0(closepath)prcmd}p"
 "athforall}put @SD/charpath{/@dodraw false store :charpath/@dodraw true store}put"
 " @SD/show{@dodraw{dup :gsave true charpath eofill :grestore :show}if}put @SD/str"
