@@ -147,8 +147,14 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		// (prologue files are always referenced in first page)
 		PSHeaderActions headerActions(*this);
 		DVIActions *save = replaceActions(&headerActions);
-		executePage(1);
-		replaceActions(save);
+		try {
+			executePage(1);
+			replaceActions(save);
+		}
+		catch (PSException &e) {
+			replaceActions(save);
+			throw;
+		}
 	}
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
