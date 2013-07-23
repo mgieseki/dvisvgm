@@ -58,7 +58,8 @@ bool FontMap::read (const string &fname, FontMap::Mode mode) {
 
 	int line_number = 1;
 	while (ifs) {
-		if (strchr("\n&#%;*", ifs.peek()))  // comment line?
+		int c = ifs.peek();
+		if (c < 0 || strchr("\n&#%;*", c))  // comment or empty line?
 			ifs.ignore(numeric_limits<int>::max(), '\n');
 		else {
 			try {
