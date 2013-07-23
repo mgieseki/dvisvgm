@@ -52,6 +52,8 @@ void EPSToSVG::convert () {
 
 	BoundingBox bbox;
 	epsfile.bbox(bbox);
+	if (bbox.width() == 0 || bbox.height() == 0)
+		Message::wstream(true) << "bounding box of file " << _fname << " is empty\n";
 	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing file " << _fname << '\n';
 	Message::mstream().indent(1);
 	_svg.newPage(1);
