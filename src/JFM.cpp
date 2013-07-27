@@ -61,6 +61,7 @@ JFM::JFM (istream &is) {
 
 
 void JFM::readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni) {
+	// determine smallest charcode with chartype > 0
 	UInt16 minchar=0xFFFF, maxchar=0;
 	for (int i=0; i < nt; i++) {
 		UInt16 c = (UInt16)sr.readUnsigned(2);
@@ -70,6 +71,7 @@ void JFM::readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni) 
 			maxchar = max(maxchar, c);
 		}
 	}
+	// build charcode to chartype map
 	if (minchar <= maxchar) {
 		_minchar = minchar;
 		_charTypeTable.resize(maxchar-minchar+1);
@@ -87,10 +89,8 @@ void JFM::readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni) 
 
 
 int JFM::charIndex (int c) const {
-	if (_charTypeTable.empty())
-		return TFM::charIndex(c);
 	UInt16 chartype = 0;
-	if (c >= _minchar && size_t(c) < _minchar+_charTypeTable.size())
+	if (!_charTypeTable.empty() && c >= _minchar && size_t(c) < _minchar+_charTypeTable.size())
 		chartype = _charTypeTable[c-_minchar];
 	return TFM::charIndex(chartype);
 }
