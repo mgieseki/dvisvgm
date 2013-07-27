@@ -148,6 +148,15 @@ bool PSInterpreter::execute (istream &is, bool flush) {
 }
 
 
+bool PSInterpreter::executeRaw (const string &str, int n) {
+	_rawData.clear();
+	ostringstream oss;
+	oss << str << ' ' << n << " (raw) prcmd\n";
+	execute(oss.str());
+	return !_rawData.empty();
+}
+
+
 /** This callback function handles input from stdin to Ghostscript. Currently not needed.
  *  @param[in] inst pointer to calling instance of PSInterpreter
  *  @param[in] buf takes the read characters
@@ -256,6 +265,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"moveto",          2, &PSActions::moveto},
 		{"newpath",         0, &PSActions::newpath},
 		{"querypos",        2, &PSActions::querypos},
+		{"raw",            -1, 0},
 		{"restore",         1, &PSActions::restore},
 		{"rotate",          1, &PSActions::rotate},
 		{"save",            1, &PSActions::save},
@@ -287,26 +297,37 @@ void PSInterpreter::callActions (InputReader &in) {
 			else if (cmp < 0)
 				first = mid+1;
 			else {
-				// collect parameters and call handler
-				vector<string> params;
-				int pcount = operators[mid].pcount;
-				if (pcount < 0) {       // variable number of parameters?
+				if (!operators[mid].op) {  // raw string data received
+					_rawData.clear();
 					in.skipSpace();
-					while (!in.eof()) {  // read all available parameters
-						params.push_back(in.getString());
+					while (!in.eof()) {
+						_rawData.push_back(in.getString());
 						in.skipSpace();
 					}
 				}
-				else {                  // fixed number of parameters
-					for (int i=0; i < pcount; i++) {
+				else {
+					// collect parameters and call handler
+					vector<string> params;
+					int pcount = operators[mid].pcount;
+					if (pcount < 0) {       // variable number of parameters?
 						in.skipSpace();
-						params.push_back(in.getString());
+						while (!in.eof()) {  // read all available parameters
+							params.push_back(in.getString());
+							in.skipSpace();
+						}
 					}
+					else {   // fix number of parameters
+						for (int i=0; i < pcount; i++) {
+							in.skipSpace();
+							params.push_back(in.getString());
+						}
+					}
+					vector<double> v(params.size());
+					str2double(params, v);
+					(_actions->*operators[mid].op)(v);
+					_actions->executed();
 				}
-				vector<double> v(params.size());
-				str2double(params, v);
-				(_actions->*operators[mid].op)(v);
-				_actions->executed();
+				break;
 			}
 		}
 	}

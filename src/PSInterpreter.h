@@ -91,9 +91,11 @@ class PSInterpreter
 		bool execute (const char *str, bool flush=true)        {return execute(str, std::strlen(str), flush);}
 		bool execute (const std::string &str, bool flush=true) {return execute(str.c_str(), flush);}
 		bool execute (std::istream &is, bool flush=true);
+		bool executeRaw (const std::string &str, int n);
 		bool active () const                   {return _mode != PS_QUIT;}
 		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
 		PSActions* setActions (PSActions *actions);
+		const std::vector<std::string>& rawData () const {return _rawData;}
 
 	protected:
 		void init ();
@@ -107,15 +109,16 @@ class PSInterpreter
 
    private:
 		Ghostscript _gs;
-		Mode _mode;                  ///< current execution mode
-		PSActions *_actions;         ///< actions to be performed
-		size_t _bytesToRead;         ///< if > 0, maximal number of bytes to be processed by following calls of execute()
+		Mode _mode;                        ///< current execution mode
+		PSActions *_actions;               ///< actions to be performed
+		size_t _bytesToRead;               ///< if > 0, maximal number of bytes to be processed by following calls of execute()
 		std::vector<char> _linebuf;
-		std::string _errorMessage;   ///< text of error message
-		bool _inError;               ///< true if scanning error message
-		bool _initialized;           ///< true if PSInterpreter has been completely initialized
-		static const char *GSARGS[]; ///< parameters passed to Ghostscript
-		static const char *PSDEFS;   ///< initial PostScript definitions
+		std::string _errorMessage;         ///< text of error message
+		bool _inError;                     ///< true if scanning error message
+		bool _initialized;                 ///< true if PSInterpreter has been completely initialized
+		std::vector<std::string> _rawData; ///< raw data received
+		static const char *GSARGS[];       ///< parameters passed to Ghostscript
+		static const char *PSDEFS;         ///< initial PostScript definitions
 };
 
 #endif

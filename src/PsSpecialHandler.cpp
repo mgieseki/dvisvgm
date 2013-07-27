@@ -32,6 +32,8 @@
 #include "XMLNode.h"
 #include "XMLString.h"
 
+#include "debug.h"
+
 using namespace std;
 
 
@@ -107,8 +109,8 @@ void PsSpecialHandler::enterBodySection () {
 			_actions->getColor().getRGB(r, g, b);
 			oss << r << ' ' << g << ' ' << b << " setrgbcolor ";
 		}
-		oss << "userdict/bop-hook known{bop-hook}if\n";
 		_psi.execute(oss.str(), false);
+		_psi.execute("userdict/bop-hook known{bop-hook}if\n", false);
 	}
 }
 
