@@ -34,7 +34,7 @@
 class PSPattern;
 class XMLElementNode;
 
-class PsSpecialHandler : public SpecialHandler, protected PSActions
+class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions
 {
 	typedef GraphicPath<double> Path;
 
@@ -61,6 +61,8 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 			std::stack<Entry> _stack;
 	};
 
+	enum PsSection {PS_NONE, PS_HEADERS, PS_BODY};
+
 	public:
 		PsSpecialHandler ();
 		~PsSpecialHandler ();
@@ -68,11 +70,14 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
 		const char* info () const   {return "dvips PostScript specials";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+		void enterBodySection ();
 
 	protected:
-		void initialize (SpecialActions *actions);
+		void initialize ();
 		void moveToDVIPos ();
+		void processHeaderFile (const char *fname);
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
+		void dviEndPage (unsigned pageno);
 
       /// scale given value by current PS scale factors
       double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}
@@ -118,9 +123,10 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions
    private:
 		PSInterpreter _psi;
 		SpecialActions *_actions;
-		bool _initialized;
+		PsSection _psSection;       ///< current section processed (nothing yet, headers, or body specials)
 		XMLElementNode *_xmlnode;   ///< if != 0, created SVG elements are appended to this node
 		XMLElementNode *_savenode;  ///< pointer to temporaryly store _xmlnode
+		std::string _headerCode;    ///< collected literal PS header code
 		Path _path;
 		DPair _currentpoint;        ///< current PS position in bp units
       double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"

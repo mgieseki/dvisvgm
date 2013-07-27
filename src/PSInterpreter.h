@@ -88,9 +88,9 @@ class PSInterpreter
    public:
       PSInterpreter (PSActions *actions=0);
 		bool execute (const char *str, size_t len, bool flush=true);
-		bool execute (const char *str)         {return execute(str, std::strlen(str));}
-		bool execute (const std::string &str)  {return execute(str.c_str());}
-		bool execute (std::istream &is);
+		bool execute (const char *str, bool flush=true)        {return execute(str, std::strlen(str), flush);}
+		bool execute (const std::string &str, bool flush=true) {return execute(str.c_str(), flush);}
+		bool execute (std::istream &is, bool flush=true);
 		bool active () const                   {return _mode != PS_QUIT;}
 		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
 		PSActions* setActions (PSActions *actions);

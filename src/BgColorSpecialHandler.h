@@ -21,7 +21,7 @@
 #ifndef BGCOLORSPECIALHANDLER_H
 #define BGCOLORSPECIALHANDLER_H
 
-#include "SpecialManager.h"
+#include "SpecialHandler.h"
 
 struct BgColorSpecialHandler : SpecialHandler
 {

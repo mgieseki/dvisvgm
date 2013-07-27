@@ -136,14 +136,14 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 /** Executes a chunk of PostScript code read from a stream. The method returns on EOF.
  *  @param[in] is the input stream
  *  @return true if the assigned number of bytes have been read */
-bool PSInterpreter::execute (istream &is) {
+bool PSInterpreter::execute (istream &is, bool flush) {
 	char buf[4096];
 	bool finished = false;
 	while (is && !is.eof() && !finished) {
 		is.read(buf, 4096);
 		finished = execute(buf, is.gcount(), false);
 	}
-	execute("\n", 1);
+	execute("\n", 1, flush);
 	return finished;
 }
 

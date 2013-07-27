@@ -21,7 +21,9 @@
 #include <iomanip>
 #include <sstream>
 #include "SpecialActions.h"
+#include "SpecialHandler.h"
 #include "SpecialManager.h"
+#include "PsSpecialHandler.h"
 #include "macros.h"
 
 using namespace std;
@@ -95,6 +97,19 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
 }
 
 
+static string extract_prefix (istream &is) {
+	int c;
+	string prefix;
+	while (isalnum(c=is.get()))
+		prefix += c;
+	if (ispunct(c)) // also add seperation character to identifying prefix
+		prefix += c;
+	if (prefix == "ps:" && is.peek() == ':')
+		prefix += is.get();
+	return prefix;
+}
+
+
 /** Executes a special command.
  *  @param[in] special the special expression
  *  @param[in] actions actions the special handlers can perform
@@ -103,23 +118,22 @@ SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, SpecialActions *actions, Listener *listener) const {
 	istringstream iss(special);
-	string prefix;
-	int c;
-	while (isalnum(c=iss.get()))
-		prefix += c;
-	if (ispunct(c)) // also add seperation character to identifying prefix
-		prefix += c;
-	if (prefix == "ps:" && iss.peek() == ':')
-		prefix += iss.get();
+	string prefix = extract_prefix(iss);
+	bool success=false;
 	if (SpecialHandler *handler = findHandler(prefix)) {
 		if (listener)
 			listener->beginSpecial(prefix.c_str());
-		bool ret = handler->process(prefix.c_str(), iss, actions);
+		success = handler->process(prefix.c_str(), iss, actions);
 		if (listener)
 			listener->endSpecial(prefix.c_str());
-		return ret;
 	}
-	return false;
+	return success;
+}
+
+
+void SpecialManager::leavePSHeaderSection () const {
+	if (PsSpecialHandler *pshandler = dynamic_cast<PsSpecialHandler*>(findHandler("!")))
+		pshandler->enterBodySection();
 }
 
 

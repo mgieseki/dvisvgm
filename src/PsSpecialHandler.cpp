@@ -43,13 +43,13 @@ static inline double str2double (const string &str) {
 }
 
 
-PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _initialized(false), _xmlnode(0)
+PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _psSection(PS_NONE), _xmlnode(0)
 {
 }
 
 
 PsSpecialHandler::~PsSpecialHandler () {
-	_psi.setActions(0); // ensure no further PS actions are performed
+	_psi.setActions(0);     // ensure no further PS actions are performed
 	for (map<int, PSPattern*>::iterator it=_patterns.begin(); it != _patterns.end(); ++it)
 		delete it->second;
 }
@@ -58,8 +58,8 @@ PsSpecialHandler::~PsSpecialHandler () {
 /** Initializes the PostScript handler. It's called by the first use of process(). The
  *  deferred initialization speeds up the conversion of DVI files that doesn't contain
  *  PS specials. */
-void PsSpecialHandler::initialize (SpecialActions *actions) {
-	if (!_initialized) {
+void PsSpecialHandler::initialize () {
+	if (_psSection == PS_NONE) {
 		// initial values of graphics state
 		_linewidth = 1;
 		_linecap = _linejoin = 0;
@@ -71,26 +71,44 @@ void PsSpecialHandler::initialize (SpecialActions *actions) {
 
 		// execute dvips prologue/header files
 		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
-		for (const char **p=headers; *p; ++p) {
-			if (const char *path = FileFinder::lookup(*p, false)) {
-				ifstream ifs(path);
-				_psi.execute(ifs);
-			}
-			else
-				Message::wstream(true) << "PostScript header file " << *p << " not found\n";
+		for (const char **p=headers; *p; ++p)
+			processHeaderFile(*p);
+		_psSection = PS_HEADERS;  // allow to process header specials now
+	}
+}
+
+
+void PsSpecialHandler::processHeaderFile (const char *name) {
+	if (const char *path = FileFinder::lookup(name, false)) {
+		ifstream ifs(path);
+		_psi.execute(string("%%BeginProcSet: ")+name+" 0 0\n", false);
+		_psi.execute(ifs, false);
+		_psi.execute("%%EndProcSet\n", false);
+	}
+	else
+		Message::wstream(true) << "PostScript header file " << name << " not found\n";
+}
+
+
+void PsSpecialHandler::enterBodySection () {
+	if (_psSection == PS_HEADERS) {
+		_psSection = PS_BODY; // don't process any PS header code
+		ostringstream oss;
+		// process collected header code
+		if (!_headerCode.empty()) {
+			oss << "\nTeXDict begin @defspecial " << _headerCode << "\n@fedspecial end";
+			_headerCode.clear();
 		}
 		// push dictionary "TeXDict" with dvips definitions on dictionary stack
 		// and initialize basic dvips PostScript variables
-		ostringstream oss;
-		oss << " TeXDict begin 0 0 1000 72 72 () @start "
-		       " 0 0 moveto ";
-  		if (actions) {
+		oss << "\nTeXDict begin 0 0 1000 72 72 () @start 0 0 moveto ";
+  		if (_actions) {
 			float r, g, b;
-			actions->getColor().getRGB(r, g, b);
+			_actions->getColor().getRGB(r, g, b);
 			oss << r << ' ' << g << ' ' << b << " setrgbcolor ";
 		}
-		_psi.execute(oss.str());
-		_initialized = true;
+		oss << "userdict/bop-hook known{bop-hook}if\n";
+		_psi.execute(oss.str(), false);
 	}
 }
 
@@ -119,15 +137,19 @@ static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos,
 	psi.execute(is);
 	psi.execute("\nquerypos ");   // retrieve current PS position (stored in 'pos')
 	const double pt = 72.27/72.0; // bp -> pt
-	actions->setX(pos.x()*pt);
-	actions->setY(pos.y()*pt);
+	if (actions) {
+		actions->setX(pos.x()*pt);
+		actions->setY(pos.y()*pt);
+	}
 }
 
 
+
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	if (!_initialized)
-		initialize(actions);
 	_actions = actions;
+	initialize();
+	if (_psSection != PS_BODY && *prefix != '!' && strcmp(prefix, "header=") != 0)
+		enterBodySection();
 
 	if (*prefix == '"') {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
@@ -137,21 +159,18 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		_psi.execute("\n@endspecial ");
 	}
 	else if (*prefix == '!') {
-		// execute literal PostScript header
-		_psi.execute("\nTeXDict begin @defspecial ");
-		_psi.execute(is);
-		_psi.execute("\n@fedspecial end ");
+		if (_psSection == PS_HEADERS) {
+			_headerCode += "\n";
+			_headerCode += string(istreambuf_iterator<char>(is), istreambuf_iterator<char>());
+		}
 	}
 	else if (strcmp(prefix, "header=") == 0) {
-		// read and execute PS header files
-		string fname;
-		is >> fname;
-		if (const char *path = FileFinder::lookup(fname, false)) {
-			ifstream ifs(path);
-			_psi.execute(ifs);
+		if (_psSection == PS_HEADERS) {
+			// read and execute PS header file
+			string fname;
+			is >> fname;
+			processHeaderFile(fname.c_str());
 		}
-		else
-			Message::estream(true) << "PS header file '" << fname << "' not found";
 	}
 	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
 		if (_actions) {
@@ -163,7 +182,8 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else if (strcmp(prefix, "ps::") == 0) {
-		_actions->finishLine();  // reset DVI position on next DVI command
+		if (_actions)
+			_actions->finishLine();  // reset DVI position on next DVI command
 		if (is.peek() == '[') {
 			// collect characters inside the brackets
 			string code;
@@ -189,7 +209,8 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		}
 	}
 	else { // ps: ...
-		_actions->finishLine();
+		if (_actions)
+			_actions->finishLine();
 		moveToDVIPos();
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
@@ -295,6 +316,13 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		bbox.transform(m);
 		_actions->embed(bbox);
 	}
+}
+
+
+void PsSpecialHandler::dviEndPage(unsigned pageno) {
+	// close dictionary TeXDict opened in initialize() and execute end-hook if defined
+	if (_psSection == PS_BODY)
+		_psi.execute("\nend userdict/end-hook known{end-hook}if ", false);
 }
 
 ///////////////////////////////////////////////////////

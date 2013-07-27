@@ -91,10 +91,14 @@ class PSHeaderActions : public DVIActions
 	public :
 		PSHeaderActions (DVIToSVG &dvisvg) : _dvisvg(dvisvg) {}
 
-		void special (const std::string &s) {
+		void special (const std::string &str) {
 			// execute PS headers only
-			if (!s.empty() && (s[0] == '!' || s.substr(0, 7) == "header="))
-				_dvisvg.specialManager().process(s, 0);
+			if (!str.empty() && (str[0] == '!' || str.substr(0, 7) == "header="))
+				_dvisvg.specialManager().process(str, 0);
+		}
+
+		void endPage (unsigned) {
+			_dvisvg.specialManager().leavePSHeaderSection();
 		}
 
 		BoundingBox& bbox () {return _bbox;}
@@ -142,20 +146,19 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 	}
 	last = min(last, getTotalPages());
 
-	if (first > 1) {
-		// ensure loading of PostScript prologues given at the beginning of the first page
-		// (prologue files are always referenced in first page)
-		PSHeaderActions headerActions(*this);
-		DVIActions *save = replaceActions(&headerActions);
-		try {
-			executePage(1);
-			replaceActions(save);
-		}
-		catch (PSException &e) {
-			replaceActions(save);
-			throw;
-		}
+	// ensure loading of PostScript prologues given at the beginning of the first page
+	// (prologue files are always referenced in first page)
+	PSHeaderActions headerActions(*this);
+	DVIActions *save = replaceActions(&headerActions);
+	try {
+		executePage(1);
+		replaceActions(save);
 	}
+	catch (PSException &e) {
+		replaceActions(save);
+		throw;
+	}
+
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
 		embedFonts(_svg.rootNode());
