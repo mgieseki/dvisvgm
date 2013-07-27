@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include "FontCache.h"
-#include "FontEncoding.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "GraphicPath.h"
@@ -34,6 +33,7 @@
 #include "VFReader.h"
 #include "types.h"
 
+class FontEncoding;
 struct FontMetric;
 
 
@@ -60,7 +60,7 @@ struct Font {
 	virtual double italicCorr (int c) const =0;
 	virtual const FontMetric* getMetrics () const =0;
 	virtual const char* path () const =0;
-	virtual FontEncoding* encoding () const    {return FontEncoding::encoding(name());}
+	virtual FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}

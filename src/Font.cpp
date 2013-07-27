@@ -25,6 +25,7 @@
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Font.h"
+#include "FontEncoding.h"
 #include "FontEngine.h"
 #include "FontMap.h"
 #include "GFGlyphTracer.h"
@@ -61,6 +62,19 @@ static bool valid_unicode (UInt32 unicode) {
 UInt32 Font::unicode (UInt32 c) const {
 	// @@ this should be optimized :-)
 	return valid_unicode(c) ? c : 0x3400+c;
+}
+
+
+/** Returns the encoding object of this font which is asigned in a map file.
+ *  If there's no encoding assigned, the function returns 0. */
+FontEncoding* Font::encoding () const {
+	string fontname = name();
+   size_t pos = fontname.rfind('.');
+	if (pos != string::npos)
+		fontname = fontname.substr(0, pos); // strip extension
+	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname))
+		return FontEncoding::encoding(entry->encname);
+	return 0;
 }
 
 

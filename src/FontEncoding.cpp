@@ -142,23 +142,18 @@ struct EncodingMap : public map<string, FontEncoding*>
 };
 
 
-/** Returns the encoding of a font.
- * @param[in] fontname name of font whose encoding will be returned
+/** Returns the encoding object for a given encoding name.
+ * @param[in] encname name of the encoding to lookup
  * @return pointer to encoding object, or 0 if there is no encoding defined */
-FontEncoding* FontEncoding::encoding (string fontname) {
+FontEncoding* FontEncoding::encoding (const string &encname) {
 	static EncodingMap encmap;
-   size_t pos = fontname.rfind('.');
-	if (pos != string::npos)
-		fontname = fontname.substr(0, pos); // strip extension
-	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname)) {
-		EncodingMap::const_iterator it = encmap.find(entry->encname);
-		if (it != encmap.end())
-			return it->second;
-		if (FileFinder::lookup(entry->encname + ".enc", false)) {
-			FontEncoding *enc = new FontEncoding(entry->encname);
-			encmap[entry->encname] = enc;
-			return enc;
-		}
+	EncodingMap::const_iterator it = encmap.find(encname);
+	if (it != encmap.end())
+		return it->second;
+	if (FileFinder::lookup(encname + ".enc", false)) {
+		FontEncoding *enc = new FontEncoding(encname);
+		encmap[encname] = enc;
+		return enc;
 	}
 	return 0;
 }
