@@ -175,10 +175,11 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 
 
 /** This method is called when a "special" command was found in the DVI file.
- *  @param[in] s the special expression */
-void DVIToSVGActions::special (const string &s) {
+ *  @param[in] s the special expression
+ *  @param[in] dvi2pt factor to scale DVI units to TeX points */
+void DVIToSVGActions::special (const string &s, double dvi2pt) {
 	try {
-		_dvisvg.specialManager().process(s, this, this);
+		_dvisvg.specialManager().process(s, dvi2pt, this, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {

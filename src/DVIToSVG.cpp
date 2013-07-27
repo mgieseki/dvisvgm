@@ -91,10 +91,10 @@ class PSHeaderActions : public DVIActions
 	public :
 		PSHeaderActions (DVIToSVG &dvisvg) : _dvisvg(dvisvg) {}
 
-		void special (const std::string &str) {
+		void special (const std::string &str, double dvi2pt) {
 			// execute PS headers only
 			if (!str.empty() && (str[0] == '!' || str.substr(0, 7) == "header="))
-				_dvisvg.specialManager().process(str, 0);
+				_dvisvg.specialManager().process(str, dvi2pt, 0);
 		}
 
 		void endPage (unsigned) {
@@ -268,10 +268,10 @@ void DVIToSVG::endPage (unsigned pageno) {
 			_svg.setBBox(bbox);
 
 			Message::mstream(false) << '\n';
-			Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << bbox.width() << "pt"
-				" x " << bbox.height() << "pt"
-				" (" << bbox.width()/72.27*25.4 << "mm"
-				" x " << bbox.height()/72.27*25.4 << "mm)";
+			Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()) << "pt"
+				" x " << XMLString(bbox.height()) << "pt"
+				" (" << XMLString(bbox.width()/72.27*25.4) << "mm"
+				" x " << XMLString(bbox.height()/72.27*25.4) << "mm)";
 			Message::mstream(false) << '\n';
 		}
 	}

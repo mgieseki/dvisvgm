@@ -43,7 +43,7 @@ struct DVIActions
 	virtual void moveToY (double y) {}
 	virtual void defineFont (int num, const Font *font) {}
 	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const std::string &s) {}
+	virtual void special (const std::string &s, double dvi2pt) {}
 	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
 	virtual void beginPage (unsigned pageno, Int32 *c) {}

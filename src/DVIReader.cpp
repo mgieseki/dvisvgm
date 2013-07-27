@@ -587,7 +587,7 @@ void DVIReader::cmdXXX (int len) {
 		UInt32 numBytes = readUnsigned(len);
 		string s = readString(numBytes);
 		if (_actions)
-			_actions->special(s);
+			_actions->special(s, _scaleFactor);
 	}
 	else
 		throw DVIException("special outside of page");

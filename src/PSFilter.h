@@ -1,5 +1,5 @@
 /*************************************************************************
-** SpecialHandler.h                                                     **
+** PSFilter.h                                                           **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,49 +18,24 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SPECIALHANDLER_H
-#define SPECIALHANDLER_H
+#ifndef PSFILTER_H
+#define PSFILTER_H
 
-#include <istream>
-#include <list>
-#include "MessageException.h"
+class PSInterpreter;
 
-
-struct SpecialActions;
-class  SpecialManager;
-
-
-struct SpecialException : public MessageException
+class PSFilter
 {
-	SpecialException (const std::string &msg) : MessageException(msg) {}
+	public:
+		PSFilter (PSInterpreter &psi) : _psi(psi) {}
+		virtual ~PSFilter () {}
+		virtual void execute (const char *code, size_t len) =0;
+		virtual bool active () const =0;
+
+	protected:
+		PSInterpreter& psInterpreter () {return _psi;}
+
+	private:
+		PSInterpreter &_psi;
 };
-
-
-struct DVIEndPageListener
-{
-	virtual ~DVIEndPageListener () {}
-	virtual void dviEndPage (unsigned pageno) =0;
-};
-
-
-struct DVIPositionListener
-{
-	virtual ~DVIPositionListener () {}
-	virtual void dviMovedTo (double x, double y) =0;
-};
-
-
-struct SpecialHandler
-{
-	friend class SpecialManager;
-
-	virtual ~SpecialHandler () {}
-	virtual const char** prefixes () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const=0;
-	virtual void setDviScaleFactor (double dvi2pt) {}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-};
-
 
 #endif

@@ -78,6 +78,7 @@ struct PSActions
 	virtual void executed () {}  // triggered if one of the above PS operators has been executed
 };
 
+class PSFilter;
 
 /** This class provides methods to execute chunks of PostScript code and calls
  *  several template methods on invocation of selected PS operators (see PSActions). */
@@ -94,6 +95,7 @@ class PSInterpreter
 		bool executeRaw (const std::string &str, int n);
 		bool active () const                   {return _mode != PS_QUIT;}
 		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
+		void setFilter (PSFilter *filter)      {_filter = filter;}
 		PSActions* setActions (PSActions *actions);
 		const std::vector<std::string>& rawData () const {return _rawData;}
 
@@ -111,6 +113,7 @@ class PSInterpreter
 		Ghostscript _gs;
 		Mode _mode;                        ///< current execution mode
 		PSActions *_actions;               ///< actions to be performed
+		PSFilter *_filter;                 ///< active filter used to process PS code
 		size_t _bytesToRead;               ///< if > 0, maximal number of bytes to be processed by following calls of execute()
 		std::vector<char> _linebuf;
 		std::string _errorMessage;         ///< text of error message

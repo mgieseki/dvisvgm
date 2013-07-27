@@ -112,17 +112,19 @@ static string extract_prefix (istream &is) {
 
 /** Executes a special command.
  *  @param[in] special the special expression
+ *  @param[in] dvi2pt factor to convert DVI units to TeX points
  *  @param[in] actions actions the special handlers can perform
  *  @param[in] listener object that wants to be notified about the processing state
  *  @return true if the special could be processed successfully
  *  @throw SpecialException in case of errors during special processing */
-bool SpecialManager::process (const string &special, SpecialActions *actions, Listener *listener) const {
+bool SpecialManager::process (const string &special, double dvi2pt, SpecialActions *actions, Listener *listener) const {
 	istringstream iss(special);
 	string prefix = extract_prefix(iss);
 	bool success=false;
 	if (SpecialHandler *handler = findHandler(prefix)) {
 		if (listener)
 			listener->beginSpecial(prefix.c_str());
+		handler->setDviScaleFactor(dvi2pt);
 		success = handler->process(prefix.c_str(), iss, actions);
 		if (listener)
 			listener->endSpecial(prefix.c_str());

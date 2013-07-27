@@ -25,6 +25,7 @@
 #include "FileFinder.h"
 #include "InputReader.h"
 #include "Message.h"
+#include "PSFilter.h"
 #include "PSInterpreter.h"
 #include "SignalHandler.h"
 
@@ -46,7 +47,7 @@ const char *PSInterpreter::GSARGS[] = {
 /** Constructs a new PSInterpreter object.
  *  @param[in] actions template methods to be executed after recognizing the corresponding PS operator. */
 PSInterpreter::PSInterpreter (PSActions *actions)
-	: _mode(PS_NONE), _actions(actions), _bytesToRead(0), _inError(false), _initialized(false)
+	: _mode(PS_NONE), _actions(actions), _filter(0), _bytesToRead(0), _inError(false), _initialized(false)
 {
 }
 
@@ -103,10 +104,19 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 	}
 	checkStatus(status);
 
-	bool finished=false;
+	bool complete=false;
 	if (_bytesToRead > 0 && len >= _bytesToRead) {
 		len = _bytesToRead;
-		finished = true;
+		complete = true;
+	}
+
+	if (_filter && _filter->active()) {
+		PSFilter *filter = _filter;
+		_filter = 0;             // prevent recursion when filter calls execute()
+		filter->execute(str, len);
+		if (filter->active())    // filter still active after execution?
+			_filter = filter;
+		return complete;
 	}
 
 	// feed Ghostscript with code chunks that are not larger than 64KB
@@ -129,7 +139,7 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 		// force writing contents of output buffer
 		_gs.run_string_continue("\nflush ", 7, 0, &status);
 	}
-	return finished;
+	return complete;
 }
 
 

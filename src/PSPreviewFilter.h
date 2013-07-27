@@ -1,5 +1,5 @@
 /*************************************************************************
-** SpecialHandler.h                                                     **
+** PSPreviewFilter.h                                                    **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,49 +18,39 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SPECIALHANDLER_H
-#define SPECIALHANDLER_H
+#ifndef PSPREVIEWFILTER_H
+#define PSPREVIEWFILTER_H
 
-#include <istream>
-#include <list>
-#include "MessageException.h"
-
+#include <string>
+#include <vector>
+#include "BoundingBox.h"
+#include "PSFilter.h"
 
 struct SpecialActions;
-class  SpecialManager;
 
-
-struct SpecialException : public MessageException
+class PSPreviewFilter : public PSFilter
 {
-	SpecialException (const std::string &msg) : MessageException(msg) {}
+   public:
+		PSPreviewFilter (PSInterpreter &psi);
+		void activate ();
+		void execute (const char *code, size_t len);
+		bool active () const                   {return _active;}
+		std::string version () const           {return _version;}
+		bool tightpage () const                {return _tightpage;}
+		void setDviScaleFactor (double dvi2pt) {_dvi2pt = dvi2pt;}
+		bool getBorders (double &left, double &right, double &top, double &bottom) const;
+		void assignBorders (BoundingBox &bbox) const;
+		bool getBoundingBox (BoundingBox &bbox) const;
+		double height () const;
+		double depth () const;
+		double width () const;
+
+   private:
+		std::string _version;  ///< version string of preview package
+		bool _active;          ///< true if filter is active
+		bool _tightpage;       ///< true if tightpage option was given
+		double _dvi2pt;        ///< factor to convert dvi units to TeX points
+		std::vector<int> _boxExtents;
 };
-
-
-struct DVIEndPageListener
-{
-	virtual ~DVIEndPageListener () {}
-	virtual void dviEndPage (unsigned pageno) =0;
-};
-
-
-struct DVIPositionListener
-{
-	virtual ~DVIPositionListener () {}
-	virtual void dviMovedTo (double x, double y) =0;
-};
-
-
-struct SpecialHandler
-{
-	friend class SpecialManager;
-
-	virtual ~SpecialHandler () {}
-	virtual const char** prefixes () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const=0;
-	virtual void setDviScaleFactor (double dvi2pt) {}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-};
-
 
 #endif
