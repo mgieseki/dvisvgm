@@ -13,15 +13,15 @@ check_PROGRAMS += BoundingBoxTest
 BoundingBoxTest_SOURCES = BoundingBoxTest.cpp
 BoundingBoxTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
-TESTS += CRC32Test
-check_PROGRAMS += CRC32Test
-CRC32Test_SOURCES = CRC32Test.cpp
-CRC32Test_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
-
 TESTS += CalculatorTest
 check_PROGRAMS += CalculatorTest
 CalculatorTest_SOURCES = CalculatorTest.cpp
 CalculatorTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
+TESTS += CMapTest
+check_PROGRAMS += CMapTest
+CMapTest_SOURCES = CMapTest.cpp
+CMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
 TESTS += ColorSpecialTest
 check_PROGRAMS += ColorSpecialTest
@@ -37,6 +37,11 @@ TESTS += CommandLineTest
 check_PROGRAMS += CommandLineTest
 CommandLineTest_SOURCES = CommandLineTest.cpp
 CommandLineTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
+TESTS += CRC32Test
+check_PROGRAMS += CRC32Test
+CRC32Test_SOURCES = CRC32Test.cpp
+CRC32Test_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
 TESTS += DirectoryTest
 check_PROGRAMS += DirectoryTest
@@ -98,11 +103,6 @@ check_PROGRAMS += MessageExceptionTest
 MessageExceptionTest_SOURCES = MessageExceptionTest.cpp
 MessageExceptionTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
-TESTS += PSInterpreterTest
-check_PROGRAMS += PSInterpreterTest
-PSInterpreterTest_SOURCES = PSInterpreterTest.cpp
-PSInterpreterTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
-
 TESTS += PageRagesTest
 check_PROGRAMS += PageRagesTest
 PageRagesTest_SOURCES = PageRagesTest.cpp
@@ -117,6 +117,11 @@ TESTS += PairTest
 check_PROGRAMS += PairTest
 PairTest_SOURCES = PairTest.cpp
 PairTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
+TESTS += PSInterpreterTest
+check_PROGRAMS += PSInterpreterTest
+PSInterpreterTest_SOURCES = PSInterpreterTest.cpp
+PSInterpreterTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest

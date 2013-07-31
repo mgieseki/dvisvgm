@@ -23,7 +23,6 @@
 #include <fstream>
 #include <set>
 #include "Font.h"
-#include "FontEncoding.h"
 #include "FontManager.h"
 #include "FontMap.h"
 #include "FileFinder.h"
