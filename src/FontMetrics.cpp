@@ -1,5 +1,5 @@
 /*************************************************************************
-** FontMetrics.h                                                        **
+** FontMetrics.cpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,45 +18,23 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTMETRIC_H
-#define FONTMETRIC_H
+#include <fstream>
+#include "FileFinder.h"
+#include "FontMetrics.h"
+#include "JFM.h"
+#include "TFM.h"
 
-#include <istream>
-#include "MessageException.h"
-#include "types.h"
-
-struct FontMetric
-{
-	virtual ~FontMetric () {}
-	virtual double getDesignSize () const =0;
-	virtual double getCharWidth (int c) const =0;
-	virtual double getCharHeight (int c) const =0;
-	virtual double getCharDepth (int c) const =0;
-	virtual double getItalicCorr (int c) const =0;
-	virtual UInt32 getChecksum () const =0;
-	virtual UInt16 firstChar () const =0;
-	virtual UInt16 lastChar () const =0;
-	static FontMetric* read (const char *fontname);
-};
+using namespace std;
 
 
-struct NullFontMetric : public FontMetric
-{
-	double getDesignSize () const      {return 1;}
-	double getCharWidth (int c) const  {return 0;}
-	double getCharHeight (int c) const {return 0;}
-	double getCharDepth (int c) const  {return 0;}
-	double getItalicCorr (int c) const {return 0;}
-	UInt32 getChecksum () const        {return 0;}
-	UInt16 firstChar () const          {return 0;}
-	UInt16 lastChar () const           {return 0;}
-};
-
-
-struct FontMetricException : public MessageException
-{
-	FontMetricException (const std::string &msg) : MessageException(msg) {}
-};
-
-
-#endif
+FontMetrics* FontMetrics::read (const char *fontname) {
+	const char *path = FileFinder::lookup(string(fontname) + ".tfm");
+	ifstream ifs(path, ios::binary);
+	if (!ifs)
+		return 0;
+	UInt16 id = 256*ifs.get();
+	id += ifs.get();
+	if (id == 9 || id == 11)  // Japanese font metric file?
+		return new JFM(ifs);
+	return new TFM(ifs);
+}

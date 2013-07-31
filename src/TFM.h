@@ -24,13 +24,13 @@
 #include <istream>
 #include <string>
 #include <vector>
-#include "FontMetric.h"
+#include "FontMetrics.h"
 #include "types.h"
 #include "StreamReader.h"
 
 class StreamReader;
 
-class TFM : public FontMetric
+class TFM : public FontMetrics
 {
    public:
 //		TFM (const char *fname);

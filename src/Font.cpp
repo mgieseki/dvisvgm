@@ -94,10 +94,10 @@ TFMFont::~TFMFont () {
 
 /** Returns a font metrics object for the current font.
  *  @throw FontException if TFM file can't be found */
-const FontMetric* TFMFont::getMetrics () const {
+const FontMetrics* TFMFont::getMetrics () const {
 	if (!_metrics) {
 		try {
-			_metrics = FontMetric::read(_fontname.c_str());
+			_metrics = FontMetrics::read(_fontname.c_str());
 			if (!_metrics) {
 				_metrics = new NullFontMetric;
 				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
@@ -315,7 +315,7 @@ bool PhysicalFont::createGF (string &gfname) const {
 int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
 	int count = 0;
 	if (type() == MF && CACHE_PATH) {
-		if (const FontMetric *metrics = getMetrics()) {
+		if (const FontMetrics *metrics = getMetrics()) {
 			int fchar = metrics->firstChar();
 			int lchar = metrics->lastChar();
 			string gfname;

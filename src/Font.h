@@ -35,7 +35,7 @@
 #include "types.h"
 
 struct FontEncoding;
-struct FontMetric;
+struct FontMetrics;
 
 
 /** Abstract base for all font classes. */
@@ -59,7 +59,7 @@ struct Font {
 	virtual double charDepth (int c) const =0;
 	virtual double charHeight (int c) const =0;
 	virtual double italicCorr (int c) const =0;
-	virtual const FontMetric* getMetrics () const =0;
+	virtual const FontMetrics* getMetrics () const =0;
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
@@ -87,7 +87,7 @@ struct EmptyFont : public Font
 		double charHeight (int c) const           {return 6.833;} // height of cmr10's 'M' in pt
 		double charDepth (int c) const            {return 0;}
 		double italicCorr (int c) const           {return 0;}
-		const FontMetric* getMetrics () const    {return 0;}
+		const FontMetrics* getMetrics () const    {return 0;}
 		const char* path () const                 {return 0;}
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
 
@@ -153,7 +153,7 @@ class TFMFont : public virtual Font
 	public:
 		TFMFont (std::string name, UInt32 checksum, double dsize, double ssize);
 		~TFMFont ();
-		const FontMetric* getMetrics () const;
+		const FontMetrics* getMetrics () const;
 		std::string name () const   {return _fontname;}
 		double designSize () const  {return _dsize;}
 		double scaledSize () const  {return _ssize;}
@@ -164,7 +164,7 @@ class TFMFont : public virtual Font
 		bool verifyChecksums () const;
 
 	private:
-		mutable FontMetric *_metrics;
+		mutable FontMetrics *_metrics;
 		std::string _fontname;
 		UInt32 _checksum; ///< cheksum to be compared with TFM checksum
 		double _dsize;    ///< design size in TeX point units
@@ -185,7 +185,7 @@ class PhysicalFontProxy : public PhysicalFont
 		double charDepth (int c) const            {return _pf->charDepth(c);}
 		double charHeight (int c) const           {return _pf->charHeight(c);}
 		double italicCorr (int c) const           {return _pf->italicCorr(c);}
-		const FontMetric* getMetrics () const    {return _pf->getMetrics();}
+		const FontMetrics* getMetrics () const    {return _pf->getMetrics();}
 		Type type () const                        {return _pf->type();}
 		UInt32 unicode (UInt32 c) const           {return _pf->unicode(c);}
 		int fontIndex () const                    {return _pf->fontIndex();}
@@ -241,7 +241,7 @@ class VirtualFontProxy : public VirtualFont
 		double charDepth (int c) const           {return _vf->charDepth(c);}
 		double charHeight (int c) const          {return _vf->charHeight(c);}
 		double italicCorr (int c) const          {return _vf->italicCorr(c);}
-		const FontMetric* getMetrics () const   {return _vf->getMetrics();}
+		const FontMetrics* getMetrics () const   {return _vf->getMetrics();}
 		const char* path () const                {return _vf->path();}
 
 	protected:
