@@ -31,16 +31,20 @@
 struct CMap : public FontEncoding
 {
 	virtual ~CMap () {}
-	virtual bool vertical () const=0;
+	virtual bool vertical () const =0;
 	virtual const char* path () const;
 	virtual UInt32 cid (UInt32 c) const =0;
+	virtual UInt32 bfcode (UInt32 cid) const =0;
+	virtual std::string getROString () const =0;
 	Character decode (UInt32 c) const {return Character(Character::INDEX, cid(c));}
 };
 
 
 struct IdentityCMap : public CMap
 {
-	UInt32 cid (UInt32 c) const {return c;}
+	UInt32 cid (UInt32 c) const       {return c;}
+	UInt32 bfcode (UInt32 cid) const  {return 0;}
+	std::string getROString () const  {return "Adobe-Identity";}
 };
 
 
@@ -94,21 +98,28 @@ class SegmentedCMap : public CMap
       SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false) {}
 		const char* name () const {return _name.c_str();}
 		UInt32 cid (UInt32 c) const;
-		void addRange (UInt32 first, UInt32 last, UInt32 cid);
+		UInt32 bfcode (UInt32 cid) const;
+		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {addRange(_cidranges, first, last, cid);}
+		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {addRange(_bfranges, first, last, chrcode);}
 		void write (std::ostream &os) const;
-		bool vertical () const    {return _vertical;}
-		size_t numRanges () const {return _ranges.size();}
+		bool vertical () const       {return _vertical;}
+		size_t numCIDRanges () const {return _cidranges.size();}
+		size_t numBFRanges () const  {return _bfranges.size();}
+		std::string getROString () const;
 
 	protected:
-		void adaptNeighbors (Ranges::iterator it);
-		int lookup (UInt32 c) const;
-		int lowerBound (UInt32 c) const;
+		void addRange (Ranges &ranges, UInt32 first, UInt32 last, UInt32 cid);
+		void adaptNeighbors (Ranges &ranges, Ranges::iterator it);
+		int lookup (const Ranges &ranges, UInt32 c) const;
 
    private:
 		std::string _name;
+		std::string _registry;
+		std::string _ordering;
 		CMap *_basemap;
 		bool _vertical;
-		Ranges _ranges;
+		Ranges _cidranges;
+		Ranges _bfranges;
 };
 
 #endif

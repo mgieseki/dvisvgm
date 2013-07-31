@@ -18,6 +18,11 @@ check_PROGRAMS += CalculatorTest
 CalculatorTest_SOURCES = CalculatorTest.cpp
 CalculatorTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
+TESTS += CMapReaderTest
+check_PROGRAMS += CMapReaderTest
+CMapReaderTest_SOURCES = CMapReaderTest.cpp
+CMapReaderTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
 TESTS += CMapTest
 check_PROGRAMS += CMapTest
 CMapTest_SOURCES = CMapTest.cpp

@@ -58,15 +58,17 @@ class CMapReader
 	protected:
 		Token popToken () {Token t=_tokens.back(); _tokens.pop_back(); return t;}
 		void executeOperator (const std::string &op, InputReader &ir);
+		void op_beginbfchar (InputReader &ir);
+		void op_beginbfrange (InputReader &ir);
 		void op_begincidrange (InputReader &ir);
 		void op_def (InputReader &ir);
 		void op_endcmap (InputReader &ir);
 		void op_usecmap (InputReader &ir);
 
    private:
-		SegmentedCMap *_cmap;
-		std::vector<Token> _tokens;
-		bool _inCMap;     ///< operator begincmap has been executed
+		SegmentedCMap *_cmap;        ///< CMap being read
+		std::vector<Token> _tokens;  ///< stack of tokens to be processed
+		bool _inCMap;                ///< operator begincmap has been executed
 };
 
 

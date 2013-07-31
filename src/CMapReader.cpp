@@ -85,17 +85,20 @@ void CMapReader::executeOperator (const string &op, InputReader &ir) {
 		const char *name;
 		void (CMapReader::*handler)(InputReader&);
 	} operators[] = {
+		{"beginbfchar",   &CMapReader::op_beginbfchar},
+		{"beginbfrange",  &CMapReader::op_beginbfrange},
 		{"begincidrange", &CMapReader::op_begincidrange},
 		{"def",           &CMapReader::op_def},
 		{"endcmap",       &CMapReader::op_endcmap},
 		{"usecmap",       &CMapReader::op_usecmap},
 	};
 
-	for (size_t i=0; i < sizeof(operators)/sizeof(Operator); i++)
+	for (size_t i=0; i < sizeof(operators)/sizeof(Operator); i++) {
 		if (operators[i].name == op) {
 			(this->*operators[i].handler)(ir);
 			break;
 		}
+	}
 	_tokens.clear();
 }
 
@@ -115,6 +118,10 @@ void CMapReader::op_def (InputReader&) {
 			else
 				throw CMapReaderException("invalid WMode (0 or 1 expected)");
 		}
+		else if (name == "Registry")
+			_cmap->_registry = val;
+		else if (name == "Ordering")
+			_cmap->_ordering = val;
 	}
 }
 
@@ -159,7 +166,39 @@ void CMapReader::op_begincidrange (InputReader &ir) {
 			ir.skipSpace();
 			if (!ir.parseUInt(cid))
 				throw CMapReaderException("invalid range entry (decimal value expected)");
-			_cmap->addRange(first, last, cid);
+			_cmap->addCIDRange(first, last, cid);
+			ir.skipSpace();
+		}
+	}
+}
+
+
+void CMapReader::op_beginbfrange (InputReader &ir) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::TT_NUMBER) {
+		ir.skipSpace();
+		int num_entries = static_cast<int>(popToken().numvalue());
+		while (num_entries > 0 && ir.peek() == '<') {
+			UInt32 first = parse_hexentry(ir);
+			UInt32 last =  parse_hexentry(ir);
+			UInt32 chrcode = parse_hexentry(ir);
+			_cmap->addBFRange(first, last, chrcode);
+			ir.skipSpace();
+		}
+	}
+}
+
+
+void CMapReader::op_beginbfchar (InputReader &ir) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::TT_NUMBER) {
+		ir.skipSpace();
+		int num_entries = static_cast<int>(popToken().numvalue());
+		while (num_entries > 0 && ir.peek() == '<') {
+			UInt32 cid = parse_hexentry(ir);
+			ir.skipSpace();
+			if (ir.peek() == '/')
+				throw CMapReaderException("mapping of named characters is not supported");
+			UInt32 chrcode = parse_hexentry(ir);
+			_cmap->addBFRange(cid, cid, chrcode);
 			ir.skipSpace();
 		}
 	}

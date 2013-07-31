@@ -34,6 +34,14 @@ const char* CMap::path () const {
 }
 
 
+/** Returns the RO (Registry-Ordering) string of the CMap. */
+string SegmentedCMap::getROString() const {
+	if (_registry.empty() || _ordering.empty())
+		return "";
+	return _registry + "-" + _ordering;
+}
+
+
 /** Tries to merge range r into this one. This is only possible if the ranges
  *  touch or overlap and if the assigned CIDs match at the junction points.
  *  @param[in] r range to join
@@ -85,31 +93,32 @@ bool SegmentedCMap::Range::join (const Range &r) {
  *  The new range could overlap ranges in the neighborhood so that those must be
  *  adapted or removed. All ranges in the range vector are ordered ascendingly, i.e.
  *  [min_1, max_1],...,[min_n, max_n] where min_i < min_j for all i < j.
+  * @param[in,out] ranges range collection to be adapted
  *  @param[in] it pointer to the newly inserted range */
-void SegmentedCMap::adaptNeighbors (Ranges::iterator it) {
-	if (it != _ranges.end()) {
+void SegmentedCMap::adaptNeighbors (Ranges &ranges, Ranges::iterator it) {
+	if (it != ranges.end()) {
 		// adapt left neighbor
-		Ranges::iterator lit = it-1;    // points to left neighbor
-		if (it != _ranges.begin() && it->min() <= lit->max()) {
+		SegmentedCMap::Ranges::iterator lit = it-1;    // points to left neighbor
+		if (it != ranges.begin() && it->min() <= lit->max()) {
 			bool left_neighbor_valid = (it->min() > 0 && it->min()-1 >= lit->min());
 			if (left_neighbor_valid)     // is adapted left neighbor valid?
 				lit->_max = it->min()-1;  // => assign new max value
 			if (!left_neighbor_valid || it->join(*lit))
-				it = _ranges.erase(lit);
+				it = ranges.erase(lit);
 		}
 		// remove right neighbors completely overlapped by *it
-		Ranges::iterator rit = it+1;    // points to right neighbor
-		while (rit != _ranges.end() && it->max() >= rit->max()) { // complete overlap?
-			_ranges.erase(rit);
+		SegmentedCMap::Ranges::iterator rit = it+1;    // points to right neighbor
+		while (rit != ranges.end() && it->max() >= rit->max()) { // complete overlap?
+			ranges.erase(rit);
 			rit = it+1;
 		}
 		// adapt rightmost range partially overlapped by *it
-		if (rit != _ranges.end()) {
+		if (rit != ranges.end()) {
 			if (it->max() >= rit->min())
 				rit->setMinAndAdaptCID(it->max()+1);
 			// try to merge right neighbor into *this
 			if (it->join(*rit))
-				_ranges.erase(rit); // remove merged neighbor
+				ranges.erase(rit); // remove merged neighbor
 		}
 	}
 }
@@ -117,32 +126,33 @@ void SegmentedCMap::adaptNeighbors (Ranges::iterator it) {
 
 /** Adds a new code range. The range describes a mapping from character codes c to CIDs, where
  *  c \in [cmin,cmax] and CID(c):=cid+c-cmin.
+ *  @param[in,out] ranges collection the new range is added to
  *  @param[in] cmin smallest character code in the range
  *  @param[in] cmax largest character code in the range
  *  @param[in] cid CID of the smallest character code (cmin) */
-void SegmentedCMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 cid) {
+void SegmentedCMap::addRange (Ranges &ranges, UInt32 cmin, UInt32 cmax, UInt32 cid) {
 	if (cmin > cmax)
 		swap(cmin, cmax);
 
 	Range range(cmin, cmax, cid);
-	if (_ranges.empty())
-		_ranges.push_back(range);
+	if (ranges.empty())
+		ranges.push_back(range);
 	else {
 		// check for simple cases that can be handled pretty fast
-		Range &lrange = *_ranges.begin();
-		Range &rrange = *_ranges.rbegin();
+		Range &lrange = *ranges.begin();
+		Range &rrange = *ranges.rbegin();
 		if (cmin > rrange.max()) {       // non-overlapping range at end of vector?
 			if (!rrange.join(range))
-				_ranges.push_back(range);
+				ranges.push_back(range);
 		}
 		else if (cmax < lrange.min()) {  // non-overlapping range at begin of vector?
 			if (!lrange.join(range))
-				_ranges.insert(_ranges.begin(), range);
+				ranges.insert(ranges.begin(), range);
 		}
 		else {
 			// ranges overlap and/or must be inserted somewhere inside the vector
-			Ranges::iterator it = lower_bound(_ranges.begin(), _ranges.end(), range);
-			const bool at_end = (it == _ranges.end());
+			Ranges::iterator it = lower_bound(ranges.begin(), ranges.end(), range);
+			const bool at_end = (it == ranges.end());
 			if (at_end)
 				--it;
 			if (!it->join(range)) {
@@ -150,13 +160,13 @@ void SegmentedCMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 cid) {
 					//split existing range
 					UInt32 itmax = it->max();
 					it->_max = cmin-1;
-					it = _ranges.insert(it+1, Range(cmax+1, itmax, it->decode(cmax+1)));
+					it = ranges.insert(it+1, Range(cmax+1, itmax, it->decode(cmax+1)));
 				}
 				else if (at_end)        // does new range overlap right side of last range in vector?
-					it = _ranges.end();  // => append new range at end of vector
-				it = _ranges.insert(it, range);
+					it = ranges.end();  // => append new range at end of vector
+				it = ranges.insert(it, range);
 			}
-			adaptNeighbors(it);  // resolve overlaps
+			adaptNeighbors(ranges, it);  // resolve overlaps
 		}
 	}
 }
@@ -164,11 +174,22 @@ void SegmentedCMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 cid) {
 
 /** Returns the CID for a given character code. */
 UInt32 SegmentedCMap::cid (UInt32 c) const {
-	int pos = lookup(c);
+	int pos = lookup(_cidranges, c);
 	if (pos >= 0)
-		return _ranges[pos].decode(c);
+		return _cidranges[pos].decode(c);
 	if (_basemap)
 		return _basemap->cid(c);
+	return 0;
+}
+
+
+/** Returns the character code of a base font for a given CID. */
+UInt32 SegmentedCMap::bfcode (UInt32 cid) const {
+	int pos = lookup(_bfranges, cid);
+	if (pos >= 0)
+		return _bfranges[pos].decode(cid);
+	if (_basemap)
+		return _basemap->bfcode(cid);
 	return 0;
 }
 
@@ -176,14 +197,14 @@ UInt32 SegmentedCMap::cid (UInt32 c) const {
 /** Finds the index of the range that contains a given value c.
  *  @param[in] c find range that contains this value
  *  @return index of the range found, or -1 if range was not found */
-int SegmentedCMap::lookup (UInt32 c) const {
+int SegmentedCMap::lookup (const Ranges &ranges, UInt32 c) const {
 	// simple binary search
-	int left=0, right=_ranges.size()-1;
+	int left=0, right=ranges.size()-1;
 	while (left <= right) {
 		int mid = (left+right)/2;
-		if (c < _ranges[mid].min())
+		if (c < ranges[mid].min())
 			right = mid-1;
-		else if (c > _ranges[mid].max())
+		else if (c > ranges[mid].max())
 			left = mid+1;
 		else
 			return mid;
@@ -193,8 +214,8 @@ int SegmentedCMap::lookup (UInt32 c) const {
 
 
 void SegmentedCMap::write (ostream &os) const {
-	for (size_t i=0; i < _ranges.size(); i++) {
-		const Range &r = _ranges[i];
+	for (size_t i=0; i < _cidranges.size(); i++) {
+		const Range &r = _cidranges[i];
 		os << '[' << r.min() << ',' << r.max() << "] => " << r.cid() << '\n';
 	}
 }
