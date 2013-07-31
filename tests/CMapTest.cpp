@@ -24,20 +24,20 @@
 using namespace std;
 
 
-static void check_range (const CMap &cmap, int min, int max, int cid_min) {
+static void check_range (const SegmentedCMap &cmap, int min, int max, int cid_min) {
 	for (int i=min; i <= max; i++)
-		ASSERT_EQ(cmap.decode(i), cid_min+(i-min));
+		ASSERT_EQ(cmap.charIndex(i), cid_min+(i-min));
 }
 
 
-static void check_zero (const CMap &cmap, int min, int max) {
+static void check_zero (const SegmentedCMap &cmap, int min, int max) {
 	for (int i=min; i <= max; i++)
-		ASSERT_EQ(cmap.decode(i), 0);
+		ASSERT_EQ(cmap.charIndex(i), 0);
 }
 
 
-TEST(CMapTest, disjoint_ranges) {
-	CMap cmap("test");
+TEST(SegmentedCMapTest, disjoint_ranges) {
+	SegmentedCMap cmap("test");
 	cmap.addRange(5, 8, 1);
 	ASSERT_EQ(cmap.numRanges(), 1);
 	check_range(cmap, 5, 8, 1);
@@ -70,8 +70,8 @@ TEST(CMapTest, disjoint_ranges) {
 }
 
 
-TEST(CMapTest, touching_ranges) {
-	CMap cmap("test");
+TEST(SegmentedCMapTest, touching_ranges) {
+	SegmentedCMap cmap("test");
 	cmap.addRange(5, 8, 10);
 	ASSERT_EQ(cmap.numRanges(), 1);
 	check_range(cmap, 5, 8, 10);
@@ -91,8 +91,8 @@ TEST(CMapTest, touching_ranges) {
 }
 
 
-TEST(CMapTest, overlapping_ranges) {
-	CMap cmap("test");
+TEST(SegmentedCMapTest, overlapping_ranges) {
+	SegmentedCMap cmap("test");
 	cmap.addRange(5, 8, 10);
 	cmap.addRange(7, 15, 12);
 	ASSERT_EQ(cmap.numRanges(), 1);
@@ -119,8 +119,8 @@ TEST(CMapTest, overlapping_ranges) {
 }
 
 
-TEST(CMapTest, inner_ranges) {
-	CMap cmap("test");
+TEST(SegmentedCMapTest, inner_ranges) {
+	SegmentedCMap cmap("test");
 	cmap.addRange(5, 20, 1);
 	cmap.addRange(10, 15, 6);
 	ASSERT_EQ(cmap.numRanges(), 1);

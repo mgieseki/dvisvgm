@@ -127,7 +127,7 @@ std::string FileFinder::version () {
  *  @param[in] ftype expected file format of file fname; if 0, it's derived from the filename suffix
  *  @return file path on success, 0 otherwise */
 static const char* find_file (const std::string &fname, const char *ftype) {
-	if (!_initialized)
+	if (!_initialized || fname.empty())
 		return 0;
 
 	std::string ext;
@@ -150,7 +150,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 	}
 	else if (ext == "cmap") {
 		// The MiKTeX SDK doesn't support the lookup of files without suffix (yet), thus
-		// it's not possible to find cmap files which usually don't have a suffix. In order 
+		// it's not possible to find cmap files which usually don't have a suffix. In order
 		// to work around this, we try to lookup the files by calling kpsewhich.
 		Process process("kpsewhich", std::string("-format=cmap ")+fname);
 		process.run(&buf);

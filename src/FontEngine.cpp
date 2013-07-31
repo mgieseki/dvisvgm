@@ -140,6 +140,12 @@ bool FontEngine::setFont (const Font &font) {
 }
 
 
+bool FontEngine::isCIDFont() const {
+	FT_Bool cid_keyed;
+	return FT_Get_CID_Is_Internally_CID_Keyed(_currentFace, &cid_keyed) == 0 && cid_keyed;
+}
+
+
 void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const {
 	FT_CharMap unicodeMap=0, customMap=0;
    for (int i=0; i < _currentFace->num_charmaps; i++) {

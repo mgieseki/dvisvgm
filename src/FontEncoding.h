@@ -21,28 +21,16 @@
 #ifndef FONTENCODING_H
 #define FONTENCODING_H
 
-#include <istream>
-#include <map>
-#include <string>
-#include <vector>
 #include "types.h"
 
-
-class FontEncoding
+struct FontEncoding
 {
-   public:
-      FontEncoding (const std::string &name);
-		void read ();
-		void read (std::istream &is);
-		int size () const                  {return _table.size();}
-		std::string name () const          {return _encname;}
-		const char* getEntry (int c) const;
-		const char* path () const;
-		static FontEncoding* encoding (const std::string &fontname);
-
-   private:
-		std::string _encname;
-		std::vector<std::string> _table;
+	virtual ~FontEncoding () {}
+	virtual const char* name () const =0;
+	virtual const char* charName (UInt32 c) const =0;
+	virtual UInt32 charIndex (UInt32 c) const =0;
+	virtual const char* path () const =0;
+	static FontEncoding* encoding (const std::string &fontname);
 };
 
 #endif

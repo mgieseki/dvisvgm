@@ -18,122 +18,16 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <fstream>
-#include "Font.h"
-#include "FontEncoding.h"
-#include "FontMap.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
+#include "CMap.h"
+#include "CMapManager.h"
+#include "EncFile.h"
 #include "FileFinder.h"
-#include "Message.h"
+#include "FontEncoding.h"
 
 using namespace std;
 
-static string read_entry (InputReader &in);
-static bool valid_name_char (int c);
 
-
-FontEncoding::FontEncoding (const string &encname) : _encname(encname)
-{
-	read();
-}
-
-
-const char* FontEncoding::path () const {
-	return FileFinder::lookup(_encname+".enc", false);
-}
-
-
-/** Search for suitable enc-file and read its encoding information.
- *  The file contents must be a valid PostScript vector with 256 entries. */
-void FontEncoding::read () {
-	if (const char *p = path()) {
-		ifstream ifs(p);
-		read(ifs);
-	}
-	else
-		Message::wstream(true) << "encoding file '" << _encname << ".enc' not found\n";
-}
-
-
-/** Read encoding information from stream. */
-void FontEncoding::read (istream &is) {
-	StreamInputBuffer ib(is, 256);
-	BufferInputReader in(ib);
-	_table.resize(256);
-
-	// find beginning of vector
-	while (!in.eof()) {
-		in.skipSpace();
-		if (in.peek() == '%')
-			in.skipUntil("\n");
-		else
-			if (in.get() == '[')
-				break;
-	}
-
-	// read vector entries
-	int n=0;
-	while (!in.eof()) {
-		in.skipSpace();
-		if (in.peek() == '%')
-			in.skipUntil("\n");
-		else if (in.peek() == ']') {
-			in.get();
-			break;
-		}
-		else {
-			string entry = read_entry(in);
-			if (entry == ".notdef")
-				entry.clear();
-			if (n < 256)
-				_table[n++] = entry;
-		}
-	}
-	// remove trailing .notdef names
-	for (n--; n > 0 && _table[n].empty(); n--);
-	_table.resize(n+1);
-}
-
-
-static string read_entry (InputReader &in) {
-	string entry;
-	bool accept_slashes=true;
-	while (!in.eof() && ((in.peek() == '/' && accept_slashes) || valid_name_char(in.peek()))) {
-		if (in.peek() != '/')
-			accept_slashes = false;
-		entry += in.get();
-	}
-	if (entry.length() > 1) {
-		// strip leading slashes
-		// According to the PostScript specification, a single slash without further
-		// following characters is a valid name.
-		size_t n=0;
-		while (n < entry.length() && entry[n] == '/')
-			n++;
-		entry = entry.substr(n);
-	}
-	return entry;
-}
-
-
-static bool valid_name_char (int c) {
-	const char *delimiters = "<>(){}[]/~%";
-	return isprint(c) && !isspace(c) && !strchr(delimiters, c);
-}
-
-
-/** Returns an entry of the encoding table.
- * @param[in] c character code
- * @return character name assigned to character code c*/
-const char* FontEncoding::getEntry (int c) const {
-	if (c >= 0 && (size_t)c < _table.size())
-		return !_table[c].empty() ? _table[c].c_str() : 0;
-	return 0;
-}
-
-
-struct EncodingMap : public map<string, FontEncoding*>
+struct EncodingMap : public map<string, EncFile*>
 {
 	~EncodingMap () {
 		for (EncodingMap::iterator it=begin(); it != end(); ++it)
@@ -146,14 +40,20 @@ struct EncodingMap : public map<string, FontEncoding*>
  * @param[in] encname name of the encoding to lookup
  * @return pointer to encoding object, or 0 if there is no encoding defined */
 FontEncoding* FontEncoding::encoding (const string &encname) {
+	if (encname.empty())
+		return 0;
+	// initially, try to find an .enc file with the given name
 	static EncodingMap encmap;
 	EncodingMap::const_iterator it = encmap.find(encname);
 	if (it != encmap.end())
 		return it->second;
 	if (FileFinder::lookup(encname + ".enc", false)) {
-		FontEncoding *enc = new FontEncoding(encname);
+		EncFile *enc = new EncFile(encname);
 		encmap[encname] = enc;
 		return enc;
 	}
+	// no .enc file found => try to find a CMap
+	if (CMap *cmap = CMapManager::instance().lookup(encname))
+		return cmap;
 	return 0;
 }

@@ -23,6 +23,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_CID_H
 #include <map>
 #include <string>
 #include <vector>
@@ -41,6 +42,7 @@ class FontEngine
 		static std::string version ();
 		void setDeviceResolution (int x, int y);
       bool setFont (const Font &font);
+		bool isCIDFont() const;
 		bool traceOutline (UInt16 chr, Glyph &glyph, bool scale=true) const;
 		bool traceOutline (const char *name, Glyph &glyph, bool scale) const;
 		const char* getFamilyName () const;

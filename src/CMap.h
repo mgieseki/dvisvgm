@@ -24,32 +24,36 @@
 #include <algorithm>
 #include <ostream>
 #include <vector>
+#include "FontEncoding.h"
 #include "types.h"
 
 
-struct CMap
+struct CMap : public FontEncoding
 {
 	virtual ~CMap () {}
-	virtual UInt32 decode (UInt32 c) const =0;
 	virtual bool vertical () const=0;
+	virtual const char* path () const;
+	virtual const char* charName (UInt32 c) const {return 0;}
 };
 
 
 struct IdentityCMap : public CMap
 {
-	UInt32 decode (UInt32 c) const {return c;}
+	UInt32 charIndex (UInt32 c) const {return c;}
 };
 
 
 struct IdentityHCMap : public IdentityCMap
 {
-	bool vertical () const {return false;}
+	bool vertical () const    {return false;}
+	const char* name () const {return "Identity-H";}
 };
 
 
 struct IdentityVCMap : public IdentityCMap
 {
-	bool vertical () const {return true;}
+	bool vertical () const    {return true;}
+	const char* name () const {return "Identity-V";}
 };
 
 
@@ -87,8 +91,8 @@ class SegmentedCMap : public CMap
 
    public:
       SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false) {}
-		const std::string& name () const {return _name;}
-		UInt32 decode (UInt32 c) const;
+		const char* name () const {return _name.c_str();}
+		UInt32 charIndex (UInt32 c) const;
 		void addRange (UInt32 first, UInt32 last, UInt32 cid);
 		void write (std::ostream &os) const;
 		bool vertical () const    {return _vertical;}

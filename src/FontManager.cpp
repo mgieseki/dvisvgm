@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <set>
+#include "CMap.h"
 #include "Font.h"
 #include "FontManager.h"
 #include "FontMap.h"
@@ -200,9 +201,14 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			for (const char **p = exts; *p && !newfont; ++p)
 				newfont = create_font(filename+*p, name, fontindex, checksum, dsize, ssize);
 		}
-		if (map_entry)
-			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont))
+		if (map_entry) {
+			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont)) {
 				pf->setStyle(map_entry->bold, map_entry->extend, map_entry->slant);
+				CMap *cmap = dynamic_cast<CMap*>(pf->encoding());
+				if (cmap && !pf->isCIDFont())
+					Message::wstream(true) << filename << " is not a CID-based font\n";
+			}
+		}
 		if (!newfont) {
 			// create dummy font as a placeholder if the proper font is not available
 			newfont = new EmptyFont(name);

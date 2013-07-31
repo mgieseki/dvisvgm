@@ -14,7 +14,7 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CMap.h CMapManager.h CMapReader.h \
 	CmdLineParserBase.h Color.h CRC32.h ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h DVIActions.h DVIReader.h \
-	DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h EmSpecialHandler.h EPSFile.h EPSToSVG.h FileFinder.h FilePath.h \
+	DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h EncFile.h EmSpecialHandler.h EPSFile.h EPSToSVG.h FileFinder.h FilePath.h \
 	FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetric.h GFReader.h GFTracer.h \
 	GFGlyphTracer.h Ghostscript.h Glyph.h GlyphTracerMessages.h GraphicPath.h HtmlSpecialHandler.h InputBuffer.h InputReader.h \
 	JFM.h Length.h macros.h MapLine.h Matrix.h Message.h MessageException.h MetafontWrapper.h NoPsSpecialHandler.h PageRanges.h \
@@ -24,7 +24,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CMap.cpp CMapManager.cpp CMapReader.cpp \
 	CmdLineParserBase.cpp Color.cpp ColorSpecialHandler.cpp CommandLine.cpp CRC32.cpp Directory.cpp DLLoader.cpp DVIActions.cpp \
-	DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EPSFile.cpp EPSToSVG.cpp \
+	DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EncFile.cpp EPSFile.cpp EPSToSVG.cpp \
 	FileFinder.cpp FilePath.cpp FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp FontManager.cpp FontMap.cpp \
 	FontMetric.cpp GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp HtmlSpecialHandler.cpp InputBuffer.cpp \
 	InputReader.cpp JFM.cpp Length.cpp MapLine.cpp Matrix.cpp Message.cpp MetafontWrapper.cpp NoPsSpecialHandler.cpp \

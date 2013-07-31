@@ -23,9 +23,16 @@
 #include <set>
 #include <vector>
 #include "CMap.h"
+#include "FileFinder.h"
 #include "InputReader.h"
 
 using namespace std;
+
+
+const char* CMap::path () const {
+	return FileFinder::lookup(name(), "cmap", false);
+}
+
 
 /** Tries to merge range r into this one. This is only possible if the ranges
  *  touch or overlap and if the assigned CIDs match at the junction points.
@@ -156,12 +163,12 @@ void SegmentedCMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 cid) {
 
 
 /** Returns the CID for a given character code. */
-UInt32 SegmentedCMap::decode (UInt32 c) const {
+UInt32 SegmentedCMap::charIndex (UInt32 c) const {
 	int pos = lookup(c);
 	if (pos >= 0)
 		return _ranges[pos].decode(c);
 	if (_basemap)
-		return _basemap->decode(c);
+		return _basemap->charIndex(c);
 	return 0;
 }
 

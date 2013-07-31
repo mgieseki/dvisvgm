@@ -1,5 +1,5 @@
 /*************************************************************************
-** CMapManager.h                                                        **
+** EncFile.h                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,30 +18,32 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAPMANAGER_H
-#define CMAPMANAGER_H
+#ifndef ENCFILE_H
+#define ENCFILE_H
 
+#include <istream>
 #include <map>
-#include <set>
 #include <string>
+#include <vector>
+#include "FontEncoding.h"
+#include "types.h"
 
-struct CMap;
 
-class CMapManager
+class EncFile : public FontEncoding
 {
-	typedef std::map<std::string, CMap*> CMaps;
    public:
-      ~CMapManager ();
-		CMap* lookup (const std::string &name);
-		static CMapManager& instance ();
-
-	protected:
-		CMapManager () : _level(0) {}
+      EncFile (const std::string &name);
+		void read ();
+		void read (std::istream &is);
+		int size () const                  {return _table.size();}
+		const char* name () const          {return _encname.c_str();}
+		UInt32 charIndex (UInt32 c) const     {return 0;}
+		const char* charName (UInt32 c) const;
+		const char* path () const;
 
    private:
-		CMaps _cmaps;  ///< loaded cmaps
-		int _level;    ///< current inclusion depth; >0 if a cmap loaded by "usecmap" is being processed
-		std::set<std::string> _includedCMaps;  ///< names of cmaps loaded by "usecmap"
+		std::string _encname;
+		std::vector<std::string> _table;
 };
 
 #endif

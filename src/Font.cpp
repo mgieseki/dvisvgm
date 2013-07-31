@@ -158,7 +158,7 @@ Font* PhysicalFont::create (string name, int fontindex, UInt32 checksum, double 
 
 
 const char* PhysicalFont::path () const {
-	string ext;
+	const char *ext=0;
 	switch (type()) {
 		case PFB: ext = "pfb"; break;
 		case TTC: ext = "ttc"; break;
@@ -166,6 +166,14 @@ const char* PhysicalFont::path () const {
 		case MF : ext = "mf";  break;
 	}
 	return FileFinder::lookup(name()+"."+ext);
+}
+
+
+bool PhysicalFont::isCIDFont () const {
+	if (type() == MF)
+		return false;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().isCIDFont();
 }
 
 
@@ -193,8 +201,11 @@ double PhysicalFont::hAdvance (int c) const {
 	if (type() == MF)
 		return unitsPerEm()*charWidth(c)/designSize();
 	FontEngine::instance().setFont(*this);
-	if (FontEncoding *enc = encoding())
-		return FontEngine::instance().getHAdvance(enc->getEntry(c));
+	if (FontEncoding *enc = encoding()) {
+		if (const char *charname = enc->charName(c))
+			return FontEngine::instance().getHAdvance(charname);
+		return FontEngine::instance().getHAdvance(enc->charIndex(c));
+	}
 	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
 		if (Subfont *sf = map_entry->subfont)
 			c = sf->decode(c);
@@ -207,8 +218,8 @@ string PhysicalFont::glyphName (int c) const {
 		return "";
 	FontEngine::instance().setFont(*this);
 	if (FontEncoding *enc = encoding()) {
-		const char *name = enc->getEntry(c);
-		return name ? name : "";
+		const char *charname = enc->charName(c);
+		return charname ? charname : "";
 	}
 	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
 		if (Subfont *sf = map_entry->subfont)
@@ -276,8 +287,10 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 		bool ok=true;
 		FontEngine::instance().setFont(*this);
 		if (FontEncoding *enc = encoding()) {
-			if (const char *encname = enc->getEntry(c))
-				ok = FontEngine::instance().traceOutline(encname, glyph, false);
+			if (const char *charname = enc->charName(c))
+				ok = FontEngine::instance().traceOutline(charname, glyph, false);
+			else
+				ok = FontEngine::instance().traceOutline(enc->charIndex(c), glyph, false);
 		}
 		else {
 			if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))

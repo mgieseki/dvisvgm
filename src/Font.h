@@ -33,7 +33,7 @@
 #include "VFReader.h"
 #include "types.h"
 
-class FontEncoding;
+struct FontEncoding;
 struct FontMetric;
 
 
@@ -105,6 +105,7 @@ class PhysicalFont : public virtual Font
       virtual Type type () const =0;
       virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
       virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
+		virtual bool isCIDFont () const;
       virtual int hAdvance () const;
       virtual double hAdvance (int c) const;
       std::string glyphName (int c) const;
