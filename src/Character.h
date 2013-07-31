@@ -1,5 +1,5 @@
 /*************************************************************************
-** EncFile.h                                                            **
+** Character.h                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,32 +18,29 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef ENCFILE_H
-#define ENCFILE_H
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
-#include <istream>
-#include <map>
-#include <string>
-#include <vector>
-#include "FontEncoding.h"
 #include "types.h"
 
-
-class EncFile : public FontEncoding
+class Character
 {
-   public:
-      EncFile (const std::string &name);
-		void read ();
-		void read (std::istream &is);
-		int size () const                  {return _table.size();}
-		const char* name () const          {return _encname.c_str();}
-		const char* charName (UInt32 c) const;
-		Character decode (UInt32 c) const  {return Character(charName(c));}
-		const char* path () const;
+	public:
+		enum Type {CHRCODE, INDEX, NAME};
+		Character (const char *name) : _type(NAME), _name(name) {}
+		Character (Type type, UInt32 val) : _type(type), _number(val) {}
+		Character (Type type, const Character &c) : _type(type), _number(c.type() != NAME ? c._number : 0) {}
+		Type type () const {return _type;}
+		const char* name () const              {return _name;}
+		UInt32 number () const                 {return _number;}
 
-   private:
-		std::string _encname;
-		std::vector<std::string> _table;
+	private:
+		Type _type;
+		union {
+			UInt32 _number;
+			const char *_name;
+		};
 };
 
 #endif
+

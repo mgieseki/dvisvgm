@@ -21,14 +21,15 @@
 #ifndef FONTENCODING_H
 #define FONTENCODING_H
 
+#include "Character.h"
 #include "types.h"
+
 
 struct FontEncoding
 {
 	virtual ~FontEncoding () {}
 	virtual const char* name () const =0;
-	virtual const char* charName (UInt32 c) const =0;
-	virtual UInt32 charIndex (UInt32 c) const =0;
+	virtual Character decode (UInt32 c) const =0;
 	virtual const char* path () const =0;
 	static FontEncoding* encoding (const std::string &fontname);
 };

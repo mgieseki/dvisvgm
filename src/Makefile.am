@@ -12,7 +12,7 @@ dvisvgm_SOURCES      = gzstream.h \
 dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
-libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h CMap.h CMapManager.h CMapReader.h \
+libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h Character.h CMap.h CMapManager.h CMapReader.h \
 	CmdLineParserBase.h Color.h CRC32.h ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h DVIActions.h DVIReader.h \
 	DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h EncFile.h EmSpecialHandler.h EPSFile.h EPSToSVG.h FileFinder.h FilePath.h \
 	FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetric.h GFReader.h GFTracer.h \

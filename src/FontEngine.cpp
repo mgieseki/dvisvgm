@@ -206,23 +206,24 @@ int FontEngine::getHAdvance () const {
 }
 
 
-int FontEngine::getHAdvance (unsigned c) const {
+int FontEngine::getHAdvance (const Character &c) const {
 	if (_currentFace) {
-		int index = FT_Get_Char_Index(_currentFace, (FT_ULong)c);
-		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
+		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
 		return _currentFace->glyph->metrics.horiAdvance;
 	}
 	return 0;
 }
 
 
-int FontEngine::getHAdvance (const char *name) const {
-	if (_currentFace && name) {
-		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
-		FT_Load_Glyph(_currentFace, index, FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiAdvance;
+int FontEngine::charIndex (const Character &c) const {
+	switch (c.type()) {
+		case Character::CHRCODE:
+			return FT_Get_Char_Index(_currentFace, (FT_ULong)c.number());
+		case Character::NAME:
+			return FT_Get_Name_Index(_currentFace, (FT_String*)c.name());
+		default:
+			return c.number();
 	}
-	return 0;
 }
 
 
@@ -245,29 +246,17 @@ int FontEngine::getNextChar () const {
 /** Returns the glyph name for a given charater code.
  * @param[in] c char code
  * @return glyph name */
-string FontEngine::getGlyphName (unsigned c) const {
+string FontEngine::getGlyphName (const Character &c) const {
+	if (c.type() == Character::NAME)
+		return c.name();
+
 	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
 		char buf[256];
-		int index = FT_Get_Char_Index(_currentFace, c);
-		FT_Get_Glyph_Name(_currentFace, index, buf, 256);
+		FT_Get_Glyph_Name(_currentFace, charIndex(c), buf, 256);
 		return string(buf);
 	}
 	return "";
 }
-
-
-/* Returns the character code for a given glyph name.
- * @param name glyph name
- * @return char code or 0 if name couldn't be found
-int FontEngine::getCharByGlyphName (const char *name) const {
-	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace))	{
-		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
-		map<UInt32, UInt32>::const_iterator it = _reverseMap.find(index);
-		if (it != _reverseMap.end())
-			return it->second;
-	}
-	return 0;
-}*/
 
 
 vector<int> FontEngine::getPanose () const {
@@ -365,21 +354,9 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
  *  @param[in] scale if true the current pt size will be considered otherwise
  *                   the plain TrueType units are used.
  *  @return false on errors */
-bool FontEngine::traceOutline (UInt16 chr, Glyph &glyph, bool scale) const {
-	if (_currentFace) {
-		int index = FT_Get_Char_Index(_currentFace, chr);
-		return trace_outline(_currentFace, _currentFont, index, glyph, scale);
-	}
-	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
-	return false;
-}
-
-
-bool FontEngine::traceOutline (const char *name, Glyph &glyph, bool scale) const {
-	if (_currentFace) {
-		int index = FT_Get_Name_Index(_currentFace, (FT_String*)name);
-		return trace_outline(_currentFace, _currentFont, index, glyph, scale);
-	}
+bool FontEngine::traceOutline (const Character &c, Glyph &glyph, bool scale) const {
+	if (_currentFace)
+		return trace_outline(_currentFace, _currentFont, charIndex(c), glyph, scale);
 	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
 	return false;
 }

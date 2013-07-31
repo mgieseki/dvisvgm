@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "Character.h"
 #include "FontCache.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
@@ -118,6 +119,7 @@ class PhysicalFont : public virtual Font
 
    protected:
       bool createGF (std::string &gfname) const;
+		Character decodeChar (UInt32 c) const;
 
    public:
       static bool KEEP_TEMP_FILES;

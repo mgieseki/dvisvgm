@@ -26,13 +26,13 @@ using namespace std;
 
 static void check_range (const SegmentedCMap &cmap, int min, int max, int cid_min) {
 	for (int i=min; i <= max; i++)
-		ASSERT_EQ(cmap.charIndex(i), cid_min+(i-min));
+		ASSERT_EQ(cmap.cid(i), cid_min+(i-min));
 }
 
 
 static void check_zero (const SegmentedCMap &cmap, int min, int max) {
 	for (int i=min; i <= max; i++)
-		ASSERT_EQ(cmap.charIndex(i), 0);
+		ASSERT_EQ(cmap.cid(i), 0);
 }
 
 

@@ -163,12 +163,12 @@ void SegmentedCMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 cid) {
 
 
 /** Returns the CID for a given character code. */
-UInt32 SegmentedCMap::charIndex (UInt32 c) const {
+UInt32 SegmentedCMap::cid (UInt32 c) const {
 	int pos = lookup(c);
 	if (pos >= 0)
 		return _ranges[pos].decode(c);
 	if (_basemap)
-		return _basemap->charIndex(c);
+		return _basemap->cid(c);
 	return 0;
 }
 

@@ -33,13 +33,14 @@ struct CMap : public FontEncoding
 	virtual ~CMap () {}
 	virtual bool vertical () const=0;
 	virtual const char* path () const;
-	virtual const char* charName (UInt32 c) const {return 0;}
+	virtual UInt32 cid (UInt32 c) const =0;
+	Character decode (UInt32 c) const {return Character(Character::INDEX, cid(c));}
 };
 
 
 struct IdentityCMap : public CMap
 {
-	UInt32 charIndex (UInt32 c) const {return c;}
+	UInt32 cid (UInt32 c) const {return c;}
 };
 
 
@@ -92,7 +93,7 @@ class SegmentedCMap : public CMap
    public:
       SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false) {}
 		const char* name () const {return _name.c_str();}
-		UInt32 charIndex (UInt32 c) const;
+		UInt32 cid (UInt32 c) const;
 		void addRange (UInt32 first, UInt32 last, UInt32 cid);
 		void write (std::ostream &os) const;
 		bool vertical () const    {return _vertical;}
