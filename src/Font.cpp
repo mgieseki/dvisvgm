@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "CMap.h"
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Font.h"
@@ -65,18 +66,37 @@ UInt32 Font::unicode (UInt32 c) const {
 }
 
 
+/** Retrieves the encoding pair assigned to this font. The first encoding
+ *  is the main one assigned in the map file. The second encoding is optional
+ *  and computed implicitely if a non-CID-based font has a CMap assigned in the
+ *  font map. In this case, the second encoding maps from the CIDs that result
+ *  from the first encoding to the char codes of the font. That requires the
+ *  selection of a compatible encoding table provided by the font file.
+ *  @param[out] encpair the encoding pair assigned to this font
+ *  @return true if an encoding is assigned to this font */
+bool Font::encodings (FontEncodingPair &encpair) const {
+	string fontname = name();
+	size_t pos = fontname.rfind('.');
+	if (pos != string::npos)
+		fontname = fontname.substr(0, pos); // strip extension
+	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname)) {
+		if ((encpair.first = FontEncoding::encoding(entry->encname))) {
+			encpair.second = entry->bfmap;
+			return true;
+		}
+	}
+	return false;
+}
+
+
 /** Returns the encoding object of this font which is asigned in a map file.
  *  If there's no encoding assigned, the function returns 0. */
 FontEncoding* Font::encoding () const {
-	string fontname = name();
-   size_t pos = fontname.rfind('.');
-	if (pos != string::npos)
-		fontname = fontname.substr(0, pos); // strip extension
-	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname))
-		return FontEncoding::encoding(entry->encname);
+	FontEncodingPair encpair;
+	if (encodings(encpair))
+		return encpair.first;
 	return 0;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +152,8 @@ double TFMFont::charDepth (int c) const  {return getMetrics() ? getMetrics()->ge
 double TFMFont::charHeight (int c) const {return getMetrics() ? getMetrics()->getCharHeight(c) : 0;}
 
 
-bool TFMFont::verifyChecksums () const   {
+/** Tests if the checksum of the font matches that of the corresponding TFM file. */
+bool TFMFont::verifyChecksums () const {
 	if (_checksum != 0 && getMetrics() && getMetrics()->getChecksum() != 0)
 		return _checksum == getMetrics()->getChecksum();
 	return true;
@@ -170,6 +191,7 @@ const char* PhysicalFont::path () const {
 }
 
 
+/** Returns true if this font is CID-based. */
 bool PhysicalFont::isCIDFont () const {
 	if (type() == MF)
 		return false;
@@ -178,9 +200,18 @@ bool PhysicalFont::isCIDFont () const {
 }
 
 
+/** Decodes a character code used in the DVI file to the code required to
+ *  address the correct character in the font.
+ *  @param[in] c DVI character to decode
+ *  @return target character code or name */
 Character PhysicalFont::decodeChar (UInt32 c) const {
-	if (FontEncoding *enc = encoding())
-		return enc->decode(c);
+	FontEncodingPair encpair;
+	if (encodings(encpair)) {
+		Character chr = encpair.first->decode(c);
+		if (!encpair.second)
+			return chr;
+		return encpair.second->decode(chr.number());
+	}
 	return Character(Character::CHRCODE, c);
 }
 
@@ -240,6 +271,17 @@ int PhysicalFont::descent () const {
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getDescender();
+}
+
+
+/** Retrieve the IDs of all charachter maps available in the font file.
+ *  @param[out] charMapIDs IDs of the found character maps
+ *  @return number of found character maps */
+int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getCharMapIDs(charMapIDs);
 }
 
 
@@ -412,6 +454,7 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 }
 
 
+/** Delete all temporary font files created by Metafont. */
 void PhysicalFontImpl::tidy () const {
    if (type() == MF) {
 		const char *ext[] = {"gf", "tfm", "log", 0};

@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include "Character.h"
+#include "CharMapID.h"
 #include "FontCache.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
@@ -34,9 +35,11 @@
 #include "VFReader.h"
 #include "types.h"
 
+
 struct FontEncoding;
 struct FontMetrics;
 
+typedef std::pair<FontEncoding*, const FontEncoding*> FontEncodingPair;
 
 /** Abstract base for all font classes. */
 struct Font {
@@ -62,6 +65,7 @@ struct Font {
 	virtual const FontMetrics* getMetrics () const =0;
 	virtual const char* path () const =0;
 	virtual FontEncoding* encoding () const;
+	virtual bool encodings (FontEncodingPair &encpair) const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
@@ -101,33 +105,38 @@ class PhysicalFont : public virtual Font
 {
    public:
       enum Type {MF, OTF, PFB, TTC, TTF};
+
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
-      static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
-      virtual Type type () const =0;
-      virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
-      virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
+		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
+		virtual Type type () const =0;
+		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
+		virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
 		virtual bool isCIDFont () const;
-      virtual int hAdvance () const;
-      virtual double hAdvance (int c) const;
-      std::string glyphName (int c) const;
-      virtual int unitsPerEm () const;
-      virtual int ascent () const;
-      virtual int descent () const;
-      virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
-      const char* path () const;
+		virtual int hAdvance () const;
+		virtual double hAdvance (int c) const;
+		std::string glyphName (int c) const;
+		virtual int unitsPerEm () const;
+		virtual int ascent () const;
+		virtual int descent () const;
+		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
 		virtual void setStyle (double bold, double extend, double slant) {}
+		const char* path () const;
+		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
+		void setCharMapID (const CharMapID &id) {_charmapID = id;}
+		CharMapID getCharMapID () const         {return _charmapID;}
 
    protected:
-      bool createGF (std::string &gfname) const;
+		bool createGF (std::string &gfname) const;
 		Character decodeChar (UInt32 c) const;
 
    public:
-      static bool KEEP_TEMP_FILES;
-      static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
-      static double METAFONT_MAG;    ///< magnification factor for Metafont calls
+		CharMapID _charmapID;          ///< ID of the font's charmap to use
+		static bool KEEP_TEMP_FILES;
+		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
+		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
    protected:
-      static FontCache _cache;
+		static FontCache _cache;
 };
 
 

@@ -29,6 +29,7 @@
 #include "FileFinder.h"
 #include "Message.h"
 #include "macros.h"
+#include "CMapManager.h"
 
 using namespace std;
 
@@ -207,8 +208,15 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont)) {
 				pf->setStyle(map_entry->bold, map_entry->extend, map_entry->slant);
 				CMap *cmap = dynamic_cast<CMap*>(pf->encoding());
-				if (cmap && !pf->isCIDFont())
-					Message::wstream(true) << filename << " is not a CID-based font\n";
+				if (cmap && !pf->isCIDFont()) {
+					CharMapID charMapID;
+					if (CMap *bfmap = CMapManager::instance().findCompatibleBaseFontMap(pf, cmap, charMapID)) {
+						FontMap::instance().setBaseFontMap(name, bfmap);
+						pf->setCharMapID(charMapID);
+					}
+					else
+						Message::wstream(true) << "no suitable encoding table found for font " << filename << "\n";
+				}
 			}
 		}
 		if (!newfont) {

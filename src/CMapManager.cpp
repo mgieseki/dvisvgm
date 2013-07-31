@@ -22,6 +22,8 @@
 #include "CMap.h"
 #include "CMapManager.h"
 #include "CMapReader.h"
+#include "Font.h"
+#include "FileFinder.h"
 #include "Message.h"
 
 using namespace std;
@@ -80,4 +82,52 @@ CMap* CMapManager::lookup (const string &name) {
 	if (--_level == 0)            // back again at initial nesting level?
 		_includedCMaps.clear();    // => names of included cmaps are no longer needed
 	return cmap;
+}
+
+
+/** Looks for a base font CMap and a compatible encoding table in a given font. The CMap describe
+ *  the mapping from CIDs to character codes where the latter are relative to the encoding table
+ *  identified by charmapID.
+ *  cmap:X->CID, bfmap:CID->Y, enctable:Y->CharCode
+ *  @param[in] font look for available encoding tables in this font
+ *  @param[in] cmap take the source registry-ordering pair from this CMap
+ *  @param[out] charmapID ID of the compatible character map found in the given font
+ *  @return base font CMap that maps from CIDs to character codes */
+CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID) {
+	if (!font || !cmap)
+		return 0;
+
+	static const struct CharMapIDToEncName {
+		CharMapID id;
+		const char *encname;
+	} encodings[] = {
+		{CharMapID::WIN_UCS4,         "UCS4"},
+		{CharMapID::WIN_UCS2,         "UCS2"},
+		{CharMapID::WIN_SHIFTJIS,     "90ms-RKSJ"},
+		{CharMapID::WIN_PRC,          "GBK-EUC"},
+		{CharMapID::WIN_BIG5,         "ETen-B5"},
+		{CharMapID::WIN_WANSUNG,      "KSCms-UHC"},
+		{CharMapID::MAC_JAPANESE,     "90pv-RKSJ"},
+		{CharMapID::MAC_TRADCHINESE,  "B5pc"},
+		{CharMapID::MAC_SIMPLCHINESE, "GBpc-EUC"},
+		{CharMapID::MAC_KOREAN,       "KSCpc-EUC"}
+	};
+
+	// get IDs of all available charmaps in font
+	vector<CharMapID> charmapIDs;
+	font->collectCharMapIDs(charmapIDs);
+	// try to find a compatible encoding CMap
+	const string ro = cmap->getROString();
+	for (const CharMapIDToEncName *enc=encodings; enc < enc+sizeof(encodings)/sizeof(CharMapIDToEncName); enc++) {
+		for (size_t i=0; i < charmapIDs.size(); i++) {
+			if (enc->id == charmapIDs[i]) {
+				string cmapname = ro+"-"+enc->encname;
+				if (FileFinder::lookup(cmapname, "cmap", false)) {
+					charmapID = enc->id;
+					return lookup(cmapname);
+				}
+			}
+		}
+ 	}
+	return 0;
 }

@@ -184,6 +184,7 @@ void CMapReader::op_beginbfrange (InputReader &ir) {
 			_cmap->addBFRange(first, last, chrcode);
 			ir.skipSpace();
 		}
+		_cmap->_mapsToCID = false;
 	}
 }
 
@@ -201,6 +202,7 @@ void CMapReader::op_beginbfchar (InputReader &ir) {
 			_cmap->addBFRange(cid, cid, chrcode);
 			ir.skipSpace();
 		}
+		_cmap->_mapsToCID = false;
 	}
 }
 

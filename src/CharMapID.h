@@ -1,5 +1,5 @@
 /*************************************************************************
-** CMapManager.h                                                        **
+** CharMapID.h                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,33 +18,41 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAPMANAGER_H
-#define CMAPMANAGER_H
+#ifndef CHARMAPID_H
+#define CHARMAPID_H
 
-#include <map>
-#include <set>
-#include <string>
-#include "CharMapID.h"
-#include "Font.h"
+#include "types.h"
 
-struct CMap;
+/** Represents a character map of a font. */
+struct CharMapID {
+	CharMapID () : platform_id(0), encoding_id(0) {}
+	CharMapID (UInt8 plf_id, UInt8 enc_id) : platform_id(plf_id), encoding_id(enc_id) {}
 
-class CMapManager
-{
-	typedef std::map<std::string, CMap*> CMaps;
-   public:
-      ~CMapManager ();
-		CMap* lookup (const std::string &name);
-		CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
-		static CMapManager& instance ();
+	bool operator == (const CharMapID &ids) const {
+		return platform_id == ids.platform_id && encoding_id == ids.encoding_id;
+	}
 
-	protected:
-		CMapManager () : _level(0) {}
+	bool operator != (const CharMapID &ids) const {
+		return platform_id != ids.platform_id || encoding_id != ids.encoding_id;
+	}
 
-   private:
-		CMaps _cmaps;  ///< loaded cmaps
-		int _level;    ///< current inclusion depth; >0 if a cmap loaded by "usecmap" is being processed
-		std::set<std::string> _includedCMaps;  ///< names of cmaps loaded by "usecmap"
+	bool valid () const {return platform_id != 0 && encoding_id != 0;}
+
+	static const CharMapID WIN_SYMBOL;
+	static const CharMapID WIN_UCS2;
+	static const CharMapID WIN_SHIFTJIS;
+	static const CharMapID WIN_PRC;
+	static const CharMapID WIN_BIG5;
+	static const CharMapID WIN_WANSUNG;
+	static const CharMapID WIN_JOHAB;
+	static const CharMapID WIN_UCS4;
+	static const CharMapID MAC_JAPANESE;
+	static const CharMapID MAC_TRADCHINESE;
+	static const CharMapID MAC_SIMPLCHINESE;
+	static const CharMapID MAC_KOREAN;
+
+	UInt8 platform_id;
+	UInt8 encoding_id;
 };
 
 #endif

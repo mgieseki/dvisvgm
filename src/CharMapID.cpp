@@ -1,5 +1,5 @@
 /*************************************************************************
-** CMapManager.h                                                        **
+** CharMapID.cpp                                                        **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,33 +18,18 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAPMANAGER_H
-#define CMAPMANAGER_H
-
-#include <map>
-#include <set>
-#include <string>
 #include "CharMapID.h"
-#include "Font.h"
 
-struct CMap;
+const CharMapID CharMapID::WIN_SYMBOL(3, 0);
+const CharMapID CharMapID::WIN_UCS2(3, 1);
+const CharMapID CharMapID::WIN_SHIFTJIS(3, 2);
+const CharMapID CharMapID::WIN_PRC(3, 3);
+const CharMapID CharMapID::WIN_BIG5(3, 4);
+const CharMapID CharMapID::WIN_WANSUNG(3, 5);
+const CharMapID CharMapID::WIN_JOHAB(3, 6);
+const CharMapID CharMapID::WIN_UCS4(3, 10);
 
-class CMapManager
-{
-	typedef std::map<std::string, CMap*> CMaps;
-   public:
-      ~CMapManager ();
-		CMap* lookup (const std::string &name);
-		CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
-		static CMapManager& instance ();
-
-	protected:
-		CMapManager () : _level(0) {}
-
-   private:
-		CMaps _cmaps;  ///< loaded cmaps
-		int _level;    ///< current inclusion depth; >0 if a cmap loaded by "usecmap" is being processed
-		std::set<std::string> _includedCMaps;  ///< names of cmaps loaded by "usecmap"
-};
-
-#endif
+const CharMapID CharMapID::MAC_JAPANESE(1, 1);
+const CharMapID CharMapID::MAC_TRADCHINESE(1, 2);
+const CharMapID CharMapID::MAC_KOREAN(1, 3);
+const CharMapID CharMapID::MAC_SIMPLCHINESE(1, 25);

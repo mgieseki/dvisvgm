@@ -23,6 +23,7 @@
 #include <iostream>
 #include <limits>
 #include <vector>
+#include "CMap.h"
 #include "Directory.h"
 #include "FileFinder.h"
 #include "FontManager.h"
@@ -294,10 +295,17 @@ void FontMap::clear (bool unlocked_only) {
    }
 }
 
+
+void FontMap::setBaseFontMap (const std::string &fontname, const CMap *bfmap) {
+	Iterator it = _entries.find(fontname);
+	if (it != _entries.end())
+		it->second->bfmap = bfmap;
+}
+
 /////////////////////////////////////////////////
 
 FontMap::Entry::Entry (const MapLine &mapline, Subfont *sf)
-	: fontname(mapline.fontfname()), encname(mapline.encname()), subfont(sf), fontindex(mapline.fontindex()), locked(false),
-	  bold(mapline.bold()), slant(mapline.slant()), extend(mapline.extend())
+	: fontname(mapline.fontfname()), encname(mapline.encname()), bfmap(0), subfont(sf), fontindex(mapline.fontindex()),
+	  locked(false), bold(mapline.bold()), slant(mapline.slant()), extend(mapline.extend())
 {
 }

@@ -114,19 +114,31 @@ static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
  * @param[in] fname path to font file
  * @param[in] fontindex index of font in font collection (multi-font files, like TTC)
  * @return true on success */
-bool FontEngine::setFont (const string &fname, int fontindex) {
+bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
 	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
       return false;
    }
-   // look for a custom character map
-   for (int i=0; i < _currentFace->num_charmaps; i++) {
-      FT_CharMap charmap = _currentFace->charmaps[i];
-      if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) {
-         FT_Set_Charmap(_currentFace, charmap);
-         break;
-      }
-   }
+	if (charMapID.valid()) {
+		for (int i=0; i < _currentFace->num_charmaps; i++) {
+			FT_CharMap ft_cmap = _currentFace->charmaps[i];
+			if (ft_cmap->platform_id == charMapID.platform_id && ft_cmap->encoding_id == charMapID.encoding_id) {
+				FT_Set_Charmap(_currentFace, ft_cmap);
+				return true;
+			}
+		}
+		return false;
+	}
+	else {
+		// look for a custom character map
+		for (int i=0; i < _currentFace->num_charmaps; i++) {
+			FT_CharMap charmap = _currentFace->charmaps[i];
+			if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) {
+				FT_Set_Charmap(_currentFace, charmap);
+				break;
+			}
+		}
+	}
 	return true;
 }
 
@@ -134,7 +146,8 @@ bool FontEngine::setFont (const string &fname, int fontindex) {
 bool FontEngine::setFont (const Font &font) {
 	if (!_currentFont || _currentFont->name() != font.name()) {
 		_currentFont = &font;
-		return setFont(font.path(), font.fontIndex());
+		const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
+		return setFont(font.path(), font.fontIndex(), pf ? pf->getCharMapID() : CharMapID());
 	}
 	return true;
 }
@@ -268,6 +281,19 @@ vector<int> FontEngine::getPanose () const {
 				panose[i] = table->panose[i];
 	}
 	return panose;
+}
+
+
+int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
+	int num_charmaps=0;
+	if (_currentFace) {
+		num_charmaps = _currentFace->num_charmaps;
+		for (int i=0; i < num_charmaps; i++) {
+			FT_CharMap charmap = _currentFace->charmaps[i];
+			charmapIDs.push_back(CharMapID(charmap->platform_id, charmap->encoding_id));
+		}
+	}
+	return num_charmaps;
 }
 
 

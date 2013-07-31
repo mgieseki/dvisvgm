@@ -28,21 +28,22 @@
 #include <string>
 #include <vector>
 #include "Character.h"
+#include "CharMapID.h"
+#include "Font.h"
 #include "Glyph.h"
 #include "types.h"
 
-struct Font;
 
 /** This class provides methods to handle font files and font data.
  *  It's a wrapper for the Freetype font library. */
 class FontEngine
 {
    public:
-      ~FontEngine ();
+		~FontEngine ();
 		static FontEngine& instance ();
 		static std::string version ();
 		void setDeviceResolution (int x, int y);
-      bool setFont (const Font &font);
+		bool setFont (const Font &font);
 		bool isCIDFont() const;
 		bool traceOutline (const Character &c, Glyph &glyph, bool scale=true) const;
 		const char* getFamilyName () const;
@@ -54,21 +55,22 @@ class FontEngine
 		int getHAdvance (const Character &c) const;
 		int getFirstChar () const;
 		int getNextChar () const;
+		int getCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		std::vector<int> getPanose () const;
 		std::string getGlyphName (const Character &c) const;
 		int getCharByGlyphName (const char *name) const;
 		void buildTranslationMap (std::map<UInt32,UInt32> &translationMap) const;
 
 	protected:
-      FontEngine ();
-      bool setFont (const std::string &fname, int fontindex=0);
+		FontEngine ();
+		bool setFont (const std::string &fname, int fontindex, const CharMapID &charmapID);
 		int charIndex (const Character &c) const;
 
    private:
 		int _horDeviceRes, _vertDeviceRes;
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face _currentFace;
-      FT_Library _library;
+		FT_Library _library;
 		const Font *_currentFont;
 };
 

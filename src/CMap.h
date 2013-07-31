@@ -32,19 +32,26 @@ struct CMap : public FontEncoding
 {
 	virtual ~CMap () {}
 	virtual bool vertical () const =0;
+	virtual bool mapsToCID () const =0;
 	virtual const char* path () const;
 	virtual UInt32 cid (UInt32 c) const =0;
 	virtual UInt32 bfcode (UInt32 cid) const =0;
 	virtual std::string getROString () const =0;
-	Character decode (UInt32 c) const {return Character(Character::INDEX, cid(c));}
+
+	Character decode (UInt32 c) const {
+		if (mapsToCID())
+			return Character(Character::INDEX, cid(c));
+		return Character(Character::CHRCODE, bfcode(c));
+	}
 };
 
 
 struct IdentityCMap : public CMap
 {
-	UInt32 cid (UInt32 c) const       {return c;}
-	UInt32 bfcode (UInt32 cid) const  {return 0;}
-	std::string getROString () const  {return "Adobe-Identity";}
+	UInt32 cid (UInt32 c) const         {return c;}
+	UInt32 bfcode (UInt32 cid) const    {return 0;}
+	std::string getROString () const    {return "Adobe-Identity";}
+	bool mapsToCID() const              {return true;}
 };
 
 
@@ -95,16 +102,17 @@ class SegmentedCMap : public CMap
 	typedef std::vector<Range> Ranges;
 
    public:
-      SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false) {}
+		SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false), _mapsToCID(true) {}
 		const char* name () const {return _name.c_str();}
 		UInt32 cid (UInt32 c) const;
 		UInt32 bfcode (UInt32 cid) const;
 		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {addRange(_cidranges, first, last, cid);}
 		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {addRange(_bfranges, first, last, chrcode);}
 		void write (std::ostream &os) const;
-		bool vertical () const       {return _vertical;}
-		size_t numCIDRanges () const {return _cidranges.size();}
-		size_t numBFRanges () const  {return _bfranges.size();}
+		bool vertical () const        {return _vertical;}
+		bool mapsToCID () const       {return _mapsToCID;}
+		size_t numCIDRanges () const  {return _cidranges.size();}
+		size_t numBFRanges () const   {return _bfranges.size();}
 		std::string getROString () const;
 
 	protected:
@@ -118,6 +126,7 @@ class SegmentedCMap : public CMap
 		std::string _ordering;
 		CMap *_basemap;
 		bool _vertical;
+		bool _mapsToCID;   // true: chrcode->CID, false: CID->charcode
 		Ranges _cidranges;
 		Ranges _bfranges;
 };
