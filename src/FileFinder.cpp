@@ -176,6 +176,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		types["mf"]   = kpse_mf_format;
 		types["ttc"]  = kpse_truetype_format;
 		types["ttf"]  = kpse_truetype_format;
+		types["otf"]  = kpse_opentype_format;
 		types["map"]  = kpse_fontmap_format;
 		types["cmap"] = kpse_cmap_format;
 		types["sty"]  = kpse_tex_format;

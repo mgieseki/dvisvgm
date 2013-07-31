@@ -160,6 +160,7 @@ Font* PhysicalFont::create (string name, int fontindex, UInt32 checksum, double 
 const char* PhysicalFont::path () const {
 	const char *ext=0;
 	switch (type()) {
+		case OTF: ext = "otf"; break;
 		case PFB: ext = "pfb"; break;
 		case TTC: ext = "ttc"; break;
 		case TTF: ext = "ttf"; break;
@@ -281,7 +282,7 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 			}
 		}
 	}
-	else { // PFB or TTF
+	else { // vector fonts (OTF, PFB, TTF, TTC)
 		bool ok=true;
 		FontEngine::instance().setFont(*this);
 		if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))

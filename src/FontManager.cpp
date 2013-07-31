@@ -151,6 +151,8 @@ static Font* create_font (const string &filename, const string &fontname, int fo
 	if (!ext.empty() && FileFinder::lookup(filename)) {
 		if (ext == "pfb")
 			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::PFB);
+		if (ext == "otf")
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::OTF);
 		if (ext == "ttf")
 			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::TTF);
 		if (ext == "ttc")
@@ -197,9 +199,9 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			newfont = create_font(filename, name, fontindex, checksum, dsize, ssize);
 		else {
 			// try various font file formats if the given file has no extension
-			const char *exts[] = {".pfb", ".ttc", ".ttf", ".vf", ".mf", 0};
+			const char *exts[] = {"pfb", "otf", "ttc", "ttf", "vf", "mf", 0};
 			for (const char **p = exts; *p && !newfont; ++p)
-				newfont = create_font(filename+*p, name, fontindex, checksum, dsize, ssize);
+				newfont = create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize);
 		}
 		if (map_entry) {
 			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont)) {

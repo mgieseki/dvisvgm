@@ -100,7 +100,7 @@ struct EmptyFont : public Font
 class PhysicalFont : public virtual Font
 {
    public:
-      enum Type {MF, PFB, TTC, TTF};
+      enum Type {MF, OTF, PFB, TTC, TTF};
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
       static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
       virtual Type type () const =0;
