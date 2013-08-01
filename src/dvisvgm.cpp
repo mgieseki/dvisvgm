@@ -414,7 +414,7 @@ int main (int argc, char *argv[]) {
 			DVIToSVG dvi2svg(ifs, out);
 			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
 			dvi2svg.setProcessSpecials(ignore_specials, true);
-			dvi2svg.setTransformation(get_transformation_string(args));
+			dvi2svg.setPageTransformation(get_transformation_string(args));
 			dvi2svg.setPageSize(args.bbox_arg());
 
 			init_fontmap(args);

@@ -212,21 +212,12 @@ void DVIToSVG::endPage (unsigned pageno) {
 	_specialManager.notifyEndPage(pageno);
 	// set bounding box and apply page transformations
 	BoundingBox &bbox = getActions()->bbox();
-	if (!_transCmds.empty()) {
-		Calculator calc;
-		calc.setVariable("ux", bbox.minX());
-		calc.setVariable("uy", bbox.minY());
-		calc.setVariable("w", bbox.width());
-		calc.setVariable("h", bbox.height());
-		calc.setVariable("pt", 1);
-		calc.setVariable("in", 72.27);
-		calc.setVariable("cm", 72.27/2.54);
-		calc.setVariable("mm", 72.27/25.4);
-		Matrix matrix(_transCmds, calc);
-		static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
-		if (_bboxString == "min")
-			bbox.transform(matrix);
-	}
+	bbox.unlock();
+	Matrix matrix;
+	getPageTransformation(matrix);
+	static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
+	if (_bboxString == "min")
+		bbox.transform(matrix);
 	if (string("dvi none min").find(_bboxString) == string::npos) {
 		istringstream iss(_bboxString);
 		StreamInputReader ir(iss);
@@ -268,6 +259,27 @@ void DVIToSVG::endPage (unsigned pageno) {
 				" x " << XMLString(bbox.height()/72.27*25.4) << "mm)";
 			Message::mstream(false) << '\n';
 		}
+	}
+}
+
+
+void DVIToSVG::getPageTransformation(Matrix &matrix) const {
+	if (_transCmds.empty())
+		matrix.set(1);  // unity matrix
+	else {
+		Calculator calc;
+		if (getActions()) {
+			BoundingBox &bbox = getActions()->bbox();
+			calc.setVariable("ux", bbox.minX());
+			calc.setVariable("uy", bbox.minY());
+			calc.setVariable("w",  bbox.width());
+			calc.setVariable("h",  bbox.height());
+		}
+		calc.setVariable("pt", 1);
+		calc.setVariable("in", 72.27);
+		calc.setVariable("cm", 72.27/2.54);
+		calc.setVariable("mm", 72.27/25.4);
+		matrix.set(_transCmds, calc);
 	}
 }
 

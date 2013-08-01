@@ -50,15 +50,16 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void setChar (double x, double y, unsigned c, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setBgColor (const Color &color);
-		void setColor (const Color &color)              {_svg.setColor(color);}
-		void setMatrix (const Matrix &m)                {_svg.setMatrix(m);}
-		const Matrix& getMatrix () const                {return _svg.getMatrix();}
-		Color getColor () const                         {return _svg.getColor();}
-		void appendToPage (XMLNode *node)               {_svg.appendToPage(node);}
-		void appendToDefs (XMLNode *node)               {_svg.appendToDefs(node);}
-		void prependToPage (XMLNode *node)              {_svg.prependToPage(node);}
-		void pushContextElement (XMLElementNode *node)  {_svg.pushContextElement(node);}
-		void popContextElement ()                       {_svg.popContextElement();}
+		void setColor (const Color &color)             {_svg.setColor(color);}
+		void setMatrix (const Matrix &m)               {_svg.setMatrix(m);}
+		const Matrix& getMatrix () const               {return _svg.getMatrix();}
+		void getPageTransform (Matrix &matrix) const   {_dvisvg.getPageTransformation(matrix);}
+		Color getColor () const                        {return _svg.getColor();}
+		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
+		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
+		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
+		void pushContextElement (XMLElementNode *node) {_svg.pushContextElement(node);}
+		void popContextElement ()                      {_svg.popContextElement();}
 		void moveToX (double x);
 		void moveToY (double y);
 		void setFont (int num, const Font *font);

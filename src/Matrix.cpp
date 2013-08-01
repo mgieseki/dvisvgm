@@ -66,9 +66,7 @@ static inline double deg2rad (double deg) {
 /** Creates a diagonal matrix ((d,0,0),(0,d,0),(0,0,d)).
  *  @param[in] d value of diagonal elements */
 Matrix::Matrix (double d) {
-	for (int i=0; i < 3; i++)
-		for (int j=0; j < 3; j++)
-			_values[i][j] = (i==j ? d : 0);
+	set(d);
 }
 
 
@@ -97,6 +95,14 @@ Matrix::Matrix (const string &cmds, Calculator &calc) {
 }
 
 
+Matrix& Matrix::set (double d) {
+	for (int i=0; i < 3; i++)
+		for (int j=0; j < 3; j++)
+			_values[i][j] = (i==j ? d : 0);
+	return *this;
+}
+
+
 Matrix& Matrix::set (double v[], unsigned size) {
 	size = min(size, 9u);
 	for (unsigned i=0; i < size; i++)
@@ -118,6 +124,12 @@ Matrix& Matrix::set (const vector<double> &v, int start) {
 		_values[i/3][i%3] = v[i+start];
 	for (unsigned i=size; i < 9; i++)
 		_values[i/3][i%3] = (i%4 ? 0 : 1);
+	return *this;
+}
+
+
+Matrix& Matrix::set(const string &cmds, Calculator &calc) {
+	parse(cmds, calc);
 	return *this;
 }
 

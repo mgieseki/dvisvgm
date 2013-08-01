@@ -45,8 +45,10 @@ class Matrix
 		Matrix (double d=0);
       Matrix (double v[], unsigned size=9);
       Matrix (const std::vector<double> &v, int start=0);
+		Matrix& set (double d);
 		Matrix& set (double v[], unsigned size);
       Matrix& set (const std::vector<double> &v, int start=0);
+		Matrix& set (const std::string &cmds, Calculator &calc);
 		double get (int row, int col) const {return _values[row][col];}
 		Matrix& transpose ();
 		Matrix& invert ();

@@ -42,6 +42,7 @@ struct SpecialActions
 	virtual Color getColor () const =0;
 	virtual void setMatrix (const Matrix &m) =0;
 	virtual const Matrix& getMatrix () const =0;
+	virtual void getPageTransform (Matrix &matrix) const =0;
 	virtual void setBgColor (const Color &color) =0;
 	virtual void appendToPage (XMLNode *node) =0;
 	virtual void appendToDefs (XMLNode *node) =0;
@@ -69,6 +70,7 @@ class SpecialEmptyActions : public SpecialActions
 		Color getColor () const {return Color::BLACK;}
 		void setMatrix (const Matrix &m) {}
 		const Matrix& getMatrix () const {return _matrix;}
+		void getPageTransform (Matrix &matrix) const {}
 		void appendToPage (XMLNode *node) {}
 		void appendToDefs (XMLNode *node) {}
 		void prependToPage (XMLNode *node) {}

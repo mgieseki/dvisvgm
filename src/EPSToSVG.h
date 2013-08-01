@@ -46,6 +46,7 @@ class EPSToSVG : protected SpecialActions
 		Color getColor () const                        {return _svg.getColor();}
 		void setMatrix (const Matrix &m)               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const               {return _svg.getMatrix();}
+		void getPageTransform (Matrix &matrix) const   {}
 		void setBgColor (const Color &color)           {}
 		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}

@@ -327,17 +327,54 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 }
 
 
+/** Apply transformation to width, height, and depth set by preview package. 
+ *  @param[in] matrix transformation matrix to apply
+ *  @param[out] w width
+ *  @param[out] h height
+ *  @param[out] d depth
+ *  @return true if the baseline is still horizontal after the transformation */
+static bool transform_box_extents (const Matrix &matrix, double &w, double &h, double &d) {
+	DPair shift = matrix*DPair(0,0);  // the translation component of the matrix
+	DPair ex = matrix*DPair(1,0)-shift;
+	DPair ey = matrix*DPair(0,1)-shift;
+	if (ex.y() != 0 && ey.x() != 0)  // rotation != mod 90 degrees?
+		return false;                 // => non-horizontal baseline, can't compute meaningful extents
+
+	if (ex.y() == 0)  // horizontal scaling or skewing?
+		w *= fabs(ex.x());
+	if (ey.x()==0 || ex.y()==0) { // vertical scaling?
+		if (ey.y() < 0) swap(h, d);
+		if (double sy = fabs(ey.y())/ey.length()) {
+			h *= fabs(ey.y()/sy);
+			d *= fabs(ey.y()/sy);
+		}
+		else
+			h = d = 0;
+	}
+	return true;
+}
+
+
 void PsSpecialHandler::dviEndPage (unsigned) {
 	BoundingBox bbox;
 	if (_previewFilter.getBoundingBox(bbox)) {
+		double w = _previewFilter.width();
+		double h = _previewFilter.height();
+		double d = _previewFilter.depth();
+		bool horiz_baseline = true;
 		if (_actions) {
 			_actions->bbox() = bbox;
+			// apply page transformations to box extents
+			Matrix pagetrans;
+			_actions->getPageTransform(pagetrans);
+			horiz_baseline = transform_box_extents(pagetrans, w, h, d);
 			_actions->bbox().lock();
 		}
-		Message::mstream(false) << "\napplying bounding box set by preview package (version " << _previewFilter.version() << ")\n"
-			"width=" << XMLString(_previewFilter.width()) << "pt, "
-			"height=" << XMLString(_previewFilter.height()) << "pt, "
-			"depth=" << XMLString(_previewFilter.depth()) << "pt\n";
+		Message::mstream() << "\napplying bounding box set by preview package (version " << _previewFilter.version() << ")\n";
+		if (horiz_baseline)
+			Message::mstream() << "width=" << XMLString(w) << "pt, " "height=" << XMLString(h) << "pt, " "depth=" << XMLString(d) << "pt\n";
+		else
+			Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
 	}
 	// close dictionary TeXDict and execute end-hook if defined
 	if (_psSection == PS_BODY)
