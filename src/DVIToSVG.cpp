@@ -47,11 +47,6 @@
 #include "PageRanges.h"
 #include "PageSize.h"
 #include "SVGOutputBase.h"
-#include "SVGTree.h"
-#include "TFM.h"
-#include "XMLDocument.h"
-#include "XMLNode.h"
-#include "XMLString.h"
 //
 ///////////////////////////////////
 // special handlers
