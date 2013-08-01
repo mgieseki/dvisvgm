@@ -23,13 +23,14 @@
 #include <iomanip>
 #include <sstream>
 #include "macros.h"
+#include "types.h"
 #include "XMLString.h"
 
 using namespace std;
 
 int XMLString::DECIMAL_PLACES = 0;
 
-static string translate (unsigned c) {
+static string translate (UInt32 c) {
 	switch (c) {
 		case '<' : return "&lt;";
 		case '&' : return "&amp;";
@@ -40,7 +41,7 @@ static string translate (unsigned c) {
 	if (c >= 32 && c <= 126)
 		oss << char(c);
 	else
-		oss <<"&#" << unsigned(c) << ';';
+		oss <<"&#" << UInt32(c) << ';';
 	return oss.str();
 }
 
