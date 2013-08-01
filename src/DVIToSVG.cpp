@@ -50,7 +50,6 @@
 #include "SVGTree.h"
 #include "TFM.h"
 #include "XMLDocument.h"
-#include "XMLDocTypeNode.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 //

@@ -26,7 +26,6 @@
 #include "FontManager.h"
 #include "SVGTree.h"
 #include "XMLDocument.h"
-#include "XMLDocTypeNode.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -54,8 +53,6 @@ void SVGTree::reset () {
 	_root->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	_root->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	_doc.setRootNode(_root);
-	_doc.append(new XMLDocTypeNode("svg", "PUBLIC",
-		"\"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\""));
 	_page = _text = _span = _defs = 0;
 }
 
