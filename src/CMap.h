@@ -69,6 +69,18 @@ struct IdentityVCMap : public IdentityCMap
 };
 
 
+struct UnicodeCMap : public CMap
+{
+	bool vertical () const           {return false;}
+	const char* name () const        {return "unicode";}
+	bool mapsToCID () const          {return false;}
+	const char* path () const        {return 0;}
+	UInt32 cid (UInt32 c) const      {return c;}
+	UInt32 bfcode (UInt32 cid) const {return cid;}
+	std::string getROString () const {return "";}
+};
+
+
 class SegmentedCMap : public CMap
 {
 	friend class CMapReader;

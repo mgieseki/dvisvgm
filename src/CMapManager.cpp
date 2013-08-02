@@ -50,7 +50,7 @@ CMap* CMapManager::lookup (const string &name) {
 	if (_includedCMaps.find(name) != _includedCMaps.end()) {
 		_level = 0;
 		ostringstream oss;
-		oss << "circular reference of cmap " << name;
+		oss << "circular reference of CMap " << name;
 		throw CMapReaderException(oss.str());
 	}
 
@@ -59,6 +59,8 @@ CMap* CMapManager::lookup (const string &name) {
 		cmap = new IdentityHCMap;
 	else if (name == "Identity-V")
 		cmap = new IdentityVCMap;
+	else if (name == "unicode")
+		cmap = new UnicodeCMap;
 	if (cmap) {
 		_cmaps[name] = cmap;
 		return cmap;
@@ -71,10 +73,11 @@ CMap* CMapManager::lookup (const string &name) {
 	_level++;                     // increase nesting level
 	try {
 		CMapReader reader;
-		if ((cmap = reader.read(name)))
-			_cmaps[name] = cmap;
-		else
+		if (!(cmap = reader.read(name))) {
 			_level = 1;
+			Message::wstream(true) << "CMap file '" << name << "' not found\n";
+		}
+		_cmaps[name] = cmap;
 	}
 	catch (const CMapReaderException &e) {
 		Message::estream(true) << "CMap file " << name << ": " << e.what() << "\n";
@@ -116,15 +119,19 @@ CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CM
 	// get IDs of all available charmaps in font
 	vector<CharMapID> charmapIDs;
 	font->collectCharMapIDs(charmapIDs);
+
+	const bool is_unicode_map = dynamic_cast<const UnicodeCMap*>(cmap);
+	const size_t num_encodings = is_unicode_map ? 2 : sizeof(encodings)/sizeof(CharMapIDToEncName);
+
 	// try to find a compatible encoding CMap
 	const string ro = cmap->getROString();
-	for (const CharMapIDToEncName *enc=encodings; enc < enc+sizeof(encodings)/sizeof(CharMapIDToEncName); enc++) {
+	for (const CharMapIDToEncName *enc=encodings; enc < enc+num_encodings; enc++) {
 		for (size_t i=0; i < charmapIDs.size(); i++) {
 			if (enc->id == charmapIDs[i]) {
 				string cmapname = ro+"-"+enc->encname;
-				if (FileFinder::lookup(cmapname, "cmap", false)) {
+				if (is_unicode_map || FileFinder::lookup(cmapname, "cmap", false)) {
 					charmapID = enc->id;
-					return lookup(cmapname);
+					return is_unicode_map ? const_cast<CMap*>(cmap) : lookup(cmapname);
 				}
 			}
 		}
