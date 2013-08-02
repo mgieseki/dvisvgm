@@ -41,6 +41,7 @@ struct DVIActions
 	virtual void setRule (double x, double y, double height, double width) {}
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
+	virtual bool fontProcessingEnabled () const {return true;}
 	virtual void defineFont (int num, const Font *font) {}
 	virtual void setFont (int num, const Font *font) {}
 	virtual void special (const std::string &s, double dvi2pt) {}

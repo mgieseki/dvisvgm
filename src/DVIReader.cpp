@@ -463,6 +463,9 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (!_inPage)
 		throw DVIException("set_char or put_char outside of page");
 
+	if (_actions && !_actions->fontProcessingEnabled())
+		return;
+
 	FontManager &fm = FontManager::instance();
 	Font *font = fm.getFont(_currFontNum);
 	if (!font)
@@ -598,6 +601,9 @@ void DVIReader::cmdXXX (int len) {
  * @param[in] num font number
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
+	if (_actions && !_actions->fontProcessingEnabled())
+		return;
+
 	if (Font *font = FontManager::instance().getFont(num)) {
 		_currFontNum = num;
 		if (_actions && !dynamic_cast<VirtualFont*>(font))
@@ -627,7 +633,9 @@ void DVIReader::cmdFontNum (int len) {
  *  @param[in] ds design size in TeX point units
  *  @param[in] ss scaled size in TeX point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
-   FontManager &fm = FontManager::instance();
+	if (_actions && !_actions->fontProcessingEnabled())
+		return;
+	FontManager &fm = FontManager::instance();
 	int id = fm.registerFont(fontnum, name, cs, ds, ss);
 	Font *font = fm.getFontById(id);
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
@@ -640,7 +648,7 @@ void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, doubl
 		fm.leaveVF();
 	}
 	if (_actions)
-		_actions->defineFont(id, font);
+	_actions->defineFont(id, font);
 }
 
 
@@ -669,8 +677,8 @@ void DVIReader::cmdFontDef (int len) {
  *  @param[in] dsize design size in TeX point units
  *  @param[in] ssize scaled size in TeX point units */
 void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 checksum, double dsize, double ssize) {
-	VirtualFont *vf = FontManager::instance().getVF();
-	defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
+	if (VirtualFont *vf = FontManager::instance().getVF())
+		defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 }
 
 

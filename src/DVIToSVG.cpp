@@ -91,6 +91,10 @@ class PSHeaderActions : public DVIActions
 				_dvisvg.specialManager().process(str, dvi2pt, 0);
 		}
 
+		bool fontProcessingEnabled () const {
+			return false;
+		}
+
 		void endPage (unsigned) {
 			_dvisvg.specialManager().leavePSHeaderSection();
 		}
