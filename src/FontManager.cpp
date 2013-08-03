@@ -210,7 +210,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 				CMap *cmap = dynamic_cast<CMap*>(pf->encoding());
 				if (cmap && !pf->isCIDFont()) {
 					CharMapID charMapID;
-					if (CMap *bfmap = CMapManager::instance().findCompatibleBaseFontMap(pf, cmap, charMapID)) {
+					if (const CMap *bfmap = CMapManager::instance().findCompatibleBaseFontMap(pf, cmap, charMapID)) {
 						FontMap::instance().setBaseFontMap(name, bfmap);
 						pf->setCharMapID(charMapID);
 					}

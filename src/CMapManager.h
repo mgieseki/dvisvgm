@@ -35,7 +35,7 @@ class CMapManager
    public:
       ~CMapManager ();
 		CMap* lookup (const std::string &name);
-		CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
+		const CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
 		static CMapManager& instance ();
 
 	protected:

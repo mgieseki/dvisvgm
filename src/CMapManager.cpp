@@ -96,7 +96,7 @@ CMap* CMapManager::lookup (const string &name) {
  *  @param[in] cmap take the source registry-ordering pair from this CMap
  *  @param[out] charmapID ID of the compatible character map found in the given font
  *  @return base font CMap that maps from CIDs to character codes */
-CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID) {
+const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID) {
 	if (!font || !cmap)
 		return 0;
 
@@ -131,7 +131,7 @@ CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CM
 				string cmapname = ro+"-"+enc->encname;
 				if (is_unicode_map || FileFinder::lookup(cmapname, "cmap", false)) {
 					charmapID = enc->id;
-					return is_unicode_map ? const_cast<CMap*>(cmap) : lookup(cmapname);
+					return is_unicode_map ? cmap : lookup(cmapname);
 				}
 			}
 		}
