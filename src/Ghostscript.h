@@ -90,7 +90,7 @@ class Ghostscript
 		static std::string LIBGS_NAME;
 
 	protected:
-		Ghostscript (const Ghostscript &gs) {}
+		Ghostscript (const Ghostscript &gs) : _inst(0) {}
 		int init_with_args (int argc, char **argv);
 		int new_instance (void **psinst, void *caller);
 		void delete_instance ();

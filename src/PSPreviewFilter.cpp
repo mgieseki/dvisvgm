@@ -29,7 +29,8 @@
 
 using namespace std;
 
-PSPreviewFilter::PSPreviewFilter (PSInterpreter &psi) : PSFilter(psi), _active(false), _tightpage(false)
+PSPreviewFilter::PSPreviewFilter (PSInterpreter &psi)
+	: PSFilter(psi), _active(false), _tightpage(false), _dvi2pt(1.0/65536.0)
 {
 }
 

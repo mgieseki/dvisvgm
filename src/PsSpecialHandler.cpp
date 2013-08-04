@@ -144,8 +144,8 @@ void PsSpecialHandler::moveToDVIPos () {
 static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos, SpecialActions *actions) {
 	psi.execute(is);
 	psi.execute("\nquerypos ");   // retrieve current PS position (stored in 'pos')
-	const double pt = 72.27/72.0; // bp -> pt
 	if (actions) {
+		const double pt = 72.27/72.0; // bp -> pt
 		actions->setX(pos.x()*pt);
 		actions->setY(pos.y()*pt);
 	}
