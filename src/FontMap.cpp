@@ -306,6 +306,6 @@ void FontMap::setBaseFontMap (const std::string &fontname, const CMap *bfmap) {
 
 FontMap::Entry::Entry (const MapLine &mapline, Subfont *sf)
 	: fontname(mapline.fontfname()), encname(mapline.encname()), bfmap(0), subfont(sf), fontindex(mapline.fontindex()),
-	  locked(false), bold(mapline.bold()), slant(mapline.slant()), extend(mapline.extend())
+	  locked(false), style(mapline.bold(), mapline.extend(), mapline.slant())
 {
 }

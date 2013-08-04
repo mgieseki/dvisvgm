@@ -27,6 +27,7 @@
 #include FT_TYPES_H
 #include "Font.h"
 #include "FontEngine.h"
+#include "FontStyle.h"
 #include "Message.h"
 
 using namespace std;
@@ -355,7 +356,7 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 		}
 		FT_Outline outline = face->glyph->outline;
 		// apply style parameters if set
-		if (const Font::Style *style = font->style()) {
+		if (const FontStyle *style = font->style()) {
 			FT_Matrix matrix = {to_16dot16(style->extend), to_16dot16(style->slant), 0, to_16dot16(1)};
 			FT_Outline_Transform(&outline, &matrix);
 			if (style->bold != 0)

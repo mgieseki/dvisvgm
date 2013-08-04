@@ -28,7 +28,6 @@
 #include "Font.h"
 #include "FontEncoding.h"
 #include "FontEngine.h"
-#include "FontMap.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "Message.h"
@@ -75,11 +74,7 @@ UInt32 Font::unicode (UInt32 c) const {
  *  @param[out] encpair the encoding pair assigned to this font
  *  @return true if an encoding is assigned to this font */
 bool Font::encodings (FontEncodingPair &encpair) const {
-	string fontname = name();
-	size_t pos = fontname.rfind('.');
-	if (pos != string::npos)
-		fontname = fontname.substr(0, pos); // strip extension
-	if (const FontMap::Entry *entry = FontMap::instance().lookup(fontname)) {
+	if (const FontMap::Entry *entry = fontMapEntry()) {
 		if ((encpair.first = FontEncoding::encoding(entry->encname))) {
 			encpair.second = entry->bfmap;
 			return true;
@@ -97,6 +92,16 @@ FontEncoding* Font::encoding () const {
 		return encpair.first;
 	return 0;
 }
+
+
+const FontMap::Entry* Font::fontMapEntry () const {
+	string fontname = name();
+	size_t pos = fontname.rfind('.');
+	if (pos != string::npos)
+		fontname = fontname.substr(0, pos); // strip extension
+	return FontMap::instance().lookup(fontname);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -208,9 +213,9 @@ Character PhysicalFont::decodeChar (UInt32 c) const {
 	FontEncodingPair encpair;
 	if (encodings(encpair)) {
 		Character chr = encpair.first->decode(c);
-		if (!encpair.second)
-			return chr;
-		return encpair.second->decode(chr.number());
+		if (encpair.second)
+			return encpair.second->decode(chr.number());
+		return chr;
 	}
 	return Character(Character::CHRCODE, c);
 }
@@ -240,8 +245,8 @@ double PhysicalFont::hAdvance (int c) const {
 	if (type() == MF)
 		return unitsPerEm()*charWidth(c)/designSize();
 	FontEngine::instance().setFont(*this);
-	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
-		if (Subfont *sf = map_entry->subfont)
+	if (const FontMap::Entry *entry = fontMapEntry())
+		if (Subfont *sf = entry->subfont)
 			c = sf->decode(c);
 	return FontEngine::instance().getHAdvance(decodeChar(c));
 }
@@ -251,8 +256,8 @@ string PhysicalFont::glyphName (int c) const {
 	if (type() == MF)
 		return "";
 	FontEngine::instance().setFont(*this);
-	if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
-		if (Subfont *sf = map_entry->subfont)
+	if (const FontMap::Entry *entry = fontMapEntry())
+		if (Subfont *sf = entry->subfont)
 			c = sf->decode(c);
 	return FontEngine::instance().getGlyphName(decodeChar(c));
 }
@@ -271,17 +276,6 @@ int PhysicalFont::descent () const {
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getDescender();
-}
-
-
-/** Retrieve the IDs of all charachter maps available in the font file.
- *  @param[out] charMapIDs IDs of the found character maps
- *  @return number of found character maps */
-int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
-	if (type() == MF)
-		return 0;
-	FontEngine::instance().setFont(*this);
-	return FontEngine::instance().getCharMapIDs(charMapIDs);
 }
 
 
@@ -327,8 +321,8 @@ bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Ca
 	else { // vector fonts (OTF, PFB, TTF, TTC)
 		bool ok=true;
 		FontEngine::instance().setFont(*this);
-		if (const FontMap::Entry *map_entry = FontMap::instance().lookup(name()))
-			if (Subfont *sf = map_entry->subfont)
+		if (const FontMap::Entry *entry = fontMapEntry())
+			if (Subfont *sf = entry->subfont)
 				c = sf->decode(c);
 		ok = FontEngine::instance().traceOutline(decodeChar(c), glyph, false);
 		glyph.closeOpenSubPaths();
@@ -410,7 +404,8 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 
 
 PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
-	: TFMFont(name, cs, ds, ss), _filetype(type), _fontIndex(fontindex), _style(0), _charmap(0)
+	: TFMFont(name, cs, ds, ss),
+	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encoding(Font::encoding()), _charmap(0)
 {
 }
 
@@ -420,7 +415,6 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 		_cache.write(CACHE_PATH);
 	if (!KEEP_TEMP_FILES)
 		tidy();
-	delete _style;
 	delete _charmap;
 }
 
@@ -466,14 +460,14 @@ void PhysicalFontImpl::tidy () const {
 }
 
 
-void PhysicalFontImpl::setStyle (double bold, double extend, double slant) {
-	if (_style) {
-		_style->bold = bold;
-		_style->extend = extend;
-		_style->slant = slant;
-	}
-	else if (bold != 0 || extend != 1 || slant != 0)
-		_style = new Style(bold, extend, slant);
+/** Retrieve the IDs of all charachter maps available in the font file.
+ *  @param[out] charMapIDs IDs of the found character maps
+ *  @return number of found character maps */
+int PhysicalFontImpl::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getCharMapIDs(charMapIDs);
 }
 
 

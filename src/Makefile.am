@@ -15,7 +15,7 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h Character.h CharMapID.h CMap.h CMapManager.h CMapReader.h \
 	CmdLineParserBase.h Color.h CRC32.h ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h DVIActions.h DVIReader.h \
 	DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h EncFile.h EmSpecialHandler.h EPSFile.h EPSToSVG.h FileFinder.h FilePath.h \
-	FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetrics.h GFReader.h GFTracer.h \
+	FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetrics.h FontStyle.h GFReader.h GFTracer.h \
 	GFGlyphTracer.h Ghostscript.h Glyph.h GlyphTracerMessages.h GraphicPath.h HtmlSpecialHandler.h InputBuffer.h InputReader.h \
 	JFM.h Length.h macros.h MapLine.h Matrix.h Message.h MessageException.h MetafontWrapper.h NoPsSpecialHandler.h PageRanges.h \
 	PageSize.h Pair.h PdfSpecialHandler.h Process.h PSFilter.h PSInterpreter.h PSPattern.h PSPreviewFilter.h PsSpecialHandler.h \

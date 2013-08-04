@@ -24,6 +24,8 @@
 #include <map>
 #include <ostream>
 #include <string>
+#include "FontStyle.h"
+
 
 struct CMap;
 class MapLine;
@@ -41,7 +43,7 @@ class FontMap
 			Subfont *subfont;
 			int fontindex;        ///< index of font in multi-font file
 			bool locked;
-			double bold, slant, extend;
+			FontStyle style;
 		};
 
 	protected:

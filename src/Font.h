@@ -27,6 +27,7 @@
 #include "Character.h"
 #include "CharMapID.h"
 #include "FontCache.h"
+#include "FontMap.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "GraphicPath.h"
@@ -34,23 +35,18 @@
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
+#include "FontEncoding.h"
 
 
 struct FontEncoding;
 struct FontMetrics;
+struct FontStyle;
+
 
 typedef std::pair<FontEncoding*, const FontEncoding*> FontEncodingPair;
 
 /** Abstract base for all font classes. */
 struct Font {
-	struct Style {
-		Style () : bold(0), extend(0), slant(0) {}
-		Style (float b, float e, float s) : bold(b), extend(e), slant(s) {}
-		double bold;   ///< stroke width in pt used to draw the glyph outlines
-		double extend; ///< factor to strech/shrink the glyphs horizontally
-		double slant;  ///< horizontal slanting/skewing value (= tan(phi))
-	};
-
 	virtual ~Font () {}
 	virtual Font* clone (double ds, double sc) const =0;
 	virtual const Font* uniqueFont () const =0;
@@ -69,9 +65,10 @@ struct Font {
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
-	virtual bool verifyChecksums () const      {return true;}
-	virtual int fontIndex () const             {return 0;}
-	virtual const Style* style () const        {return 0;}
+	virtual bool verifyChecksums () const               {return true;}
+	virtual int fontIndex () const                      {return 0;}
+	virtual const FontStyle* style () const             {return 0;}
+	virtual const FontMap::Entry* fontMapEntry () const;
 };
 
 
@@ -119,18 +116,16 @@ class PhysicalFont : public virtual Font
 		virtual int ascent () const;
 		virtual int descent () const;
 		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
-		virtual void setStyle (double bold, double extend, double slant) {}
+		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const =0;
+		virtual CharMapID getCharMapID () const =0;
+		virtual void setCharMapID (const CharMapID &id) {}
 		const char* path () const;
-		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
-		void setCharMapID (const CharMapID &id) {_charmapID = id;}
-		CharMapID getCharMapID () const         {return _charmapID;}
 
    protected:
 		bool createGF (std::string &gfname) const;
 		Character decodeChar (UInt32 c) const;
 
    public:
-		CharMapID _charmapID;          ///< ID of the font's charmap to use
 		static bool KEEP_TEMP_FILES;
 		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
 		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
@@ -185,20 +180,24 @@ class PhysicalFontProxy : public PhysicalFont
 {
 	friend class PhysicalFontImpl;
 	public:
-		Font* clone (double ds, double sc) const  {return new PhysicalFontProxy(*this, ds, sc);}
-		const Font* uniqueFont () const           {return _pf;}
-		std::string name () const                 {return _pf->name();}
-		double designSize () const                {return _dsize;}
-		double scaledSize () const                {return _ssize;}
-		double charWidth (int c) const            {return _pf->charWidth(c);}
-		double charDepth (int c) const            {return _pf->charDepth(c);}
-		double charHeight (int c) const           {return _pf->charHeight(c);}
-		double italicCorr (int c) const           {return _pf->italicCorr(c);}
-		const FontMetrics* getMetrics () const    {return _pf->getMetrics();}
-		Type type () const                        {return _pf->type();}
-		UInt32 unicode (UInt32 c) const           {return _pf->unicode(c);}
-		int fontIndex () const                    {return _pf->fontIndex();}
-		const Style* style () const               {return _pf->style();}
+		Font* clone (double ds, double sc) const    {return new PhysicalFontProxy(*this, ds, sc);}
+		const Font* uniqueFont () const             {return _pf;}
+		std::string name () const                   {return _pf->name();}
+		double designSize () const                  {return _dsize;}
+		double scaledSize () const                  {return _ssize;}
+		double charWidth (int c) const              {return _pf->charWidth(c);}
+		double charDepth (int c) const              {return _pf->charDepth(c);}
+		double charHeight (int c) const             {return _pf->charHeight(c);}
+		double italicCorr (int c) const             {return _pf->italicCorr(c);}
+		const FontMetrics* getMetrics () const      {return _pf->getMetrics();}
+		Type type () const                          {return _pf->type();}
+		UInt32 unicode (UInt32 c) const             {return _pf->unicode(c);}
+		int fontIndex () const                      {return _pf->fontIndex();}
+		const FontStyle* style () const             {return _pf->style();}
+		const FontMap::Entry* fontMapEntry () const {return _pf->fontMapEntry();}
+		FontEncoding* encoding () const             {return _pf->encoding();}
+		CharMapID getCharMapID () const             {return _pf->getCharMapID();}
+		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const {return _pf->collectCharMapIDs(charmapIDs);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : _pf(font), _dsize(ds), _ssize(ss) {}
@@ -216,14 +215,18 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 	friend class PhysicalFont;
 	public:
       ~PhysicalFontImpl();
-		Font* clone (double ds, double ss) const {return new PhysicalFontProxy(this, ds, ss);}
-		const Font* uniqueFont () const          {return this;}
-      Type type () const                       {return _filetype;}
-		int fontIndex() const                    {return _fontIndex;}
-		const Style* style () const              {return _style;}
-		void setStyle (double bold, double extend, double slant);
+		Font* clone (double ds, double ss) const    {return new PhysicalFontProxy(this, ds, ss);}
+		const Font* uniqueFont () const             {return this;}
+      Type type () const                          {return _filetype;}
+		int fontIndex() const                       {return _fontIndex;}
+		const FontStyle* style () const             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
+		const FontMap::Entry* fontMapEntry () const {return _fontMapEntry;}
+		FontEncoding* encoding () const             {return _encoding;}
       UInt32 unicode (UInt32 c) const;
       void tidy () const;
+		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
+		CharMapID getCharMapID () const             {return _charmapID;}
+		void setCharMapID (const CharMapID &id)     {_charmapID = id;}
 
 	protected:
 		PhysicalFontImpl (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
@@ -231,7 +234,9 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 	private:
 		Type _filetype;
 		int _fontIndex;
-		Style *_style;
+		const FontMap::Entry *_fontMapEntry;
+		FontEncoding* _encoding;
+		CharMapID _charmapID;          ///< ID of the font's charmap to use
       mutable std::map<UInt32,UInt32> *_charmap;
 };
 
