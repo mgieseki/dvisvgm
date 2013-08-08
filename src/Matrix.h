@@ -59,8 +59,10 @@ class Matrix
 		Matrix& translate (double tx, double ty);
 		Matrix& scale (double sx, double sy);
 		Matrix& rotate (double deg);
-		Matrix& xskew (double deg);
-		Matrix& yskew (double deg);
+		Matrix& xskewByAngle (double deg);
+		Matrix& yskewByAngle (double deg);
+		Matrix& xskewByRatio (double xyratio);
+		Matrix& yskewByRatio (double xyratio);
 		Matrix& flip (bool h, double a);
 		Matrix& operator *= (double c);
 		DPair operator * (const DPair &p) const;

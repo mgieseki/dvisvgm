@@ -162,10 +162,16 @@ Matrix& Matrix::rotate (double deg) {
 }
 
 
-Matrix& Matrix::xskew (double deg) {
-	double t = tan(deg2rad(deg));
-	if (t != 0) {
-		double v[] = {1, t};
+Matrix& Matrix::xskewByAngle (double deg) {
+	if (fmod(fabs(deg)-90, 180) != 0)
+		return xskewByRatio(tan(deg2rad(deg)));
+	return *this;
+}
+
+
+Matrix& Matrix::xskewByRatio (double xyratio) {
+	if (xyratio != 0) {
+		double v[] = {1, xyratio};
 		Matrix t(v, 2);
 		rmultiply(t);
 	}
@@ -173,10 +179,16 @@ Matrix& Matrix::xskew (double deg) {
 }
 
 
-Matrix& Matrix::yskew (double deg) {
-	double t = tan(deg2rad(deg));
-	if (t != 0) {
-		double v[] = {1, 0, 0, t};
+Matrix& Matrix::yskewByAngle (double deg) {
+	if (fmod(fabs(deg)-90, 180) != 0)
+		return yskewByRatio(tan(deg2rad(deg)));
+	return *this;
+}
+
+
+Matrix& Matrix::yskewByRatio (double xyratio) {
+	if (xyratio != 0) {
+		double v[] = {1, 0, 0, xyratio};
 		Matrix t(v, 4);
 		rmultiply(t);
 	}
@@ -386,9 +398,9 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 					throw ParserException(oss.str());
 				}
 				if (c == 'X')
-					xskew(a);
+					xskewByAngle(a);
 				else
-					yskew(a);
+					yskewByAngle(a);
             break;
 			}
 			case 'M': {
