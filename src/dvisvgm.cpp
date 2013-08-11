@@ -291,12 +291,12 @@ static void print_version (bool extended) {
 	if (extended) {
 		if (strlen(TARGET_SYSTEM) > 0)
 			oss << " (" TARGET_SYSTEM ")";
-		oss << "\n" << string(oss.str().length(), '-') << "\n"
+		int len = oss.str().length();
+		oss << "\n" << string(len, '-') << "\n"
 			"freetype:    " << FontEngine::version() << "\n";
 
-		string gsver;
 		Ghostscript gs;
-		gsver = gs.revision(true);
+		string gsver = gs.revision(true);
 		if (!gsver.empty())
 			oss << "Ghostscript: " << gsver + "\n";
 		oss <<
