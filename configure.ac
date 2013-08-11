@@ -146,6 +146,17 @@ if test "$withval" != no; then
 	fi
 fi
 
+# Check if the kpathsea headers are C++ safe
+AC_MSG_CHECKING([if the kpathsea headers are C++ safe])
+AC_LANG_PUSH([C++])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <kpathsea/kpathsea.h>]],
+                                [[printf("%s\n", concat("one", "two"))]])],
+               [AC_MSG_RESULT([yes])],
+               [AC_MSG_RESULT([no])
+                AC_DEFINE([KPSE_CXX_UNSAFE], 1,
+                          [Define to 1 if the kpathsea headers are not C++ safe.])])
+AC_LANG_POP([C++])
+
 AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(AM_CPPFLAGS)

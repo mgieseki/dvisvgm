@@ -18,6 +18,24 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef MIKTEX
+	#include "MessageException.h"
+	#include "MiKTeXCom.h"
+	static MiKTeXCom *miktex=0;
+#else
+	#ifdef KPSE_CXX_UNSAFE
+	extern "C" {
+	#endif
+	#include <kpathsea/kpathsea.h>
+	#ifdef KPSE_CXX_UNSAFE
+	}
+	#endif
+#endif
+
 #include <cstdlib>
 #include <fstream>
 #include <map>
@@ -27,21 +45,6 @@
 #include "FontMap.h"
 #include "Message.h"
 #include "Process.h"
-
-#ifdef MIKTEX
-	#include "MessageException.h"
-	#include "MiKTeXCom.h"
-	static MiKTeXCom *miktex=0;
-#else
-	// unfortunately, the kpathsea headers are not C++-ready,
-	// so we have to wrap it with some ugly code
-	namespace KPS {
-		extern "C" {
-			#include <kpathsea/kpathsea.h>
-		}
-	}
-	using namespace KPS;
-#endif
 
 // ---------------------------------------------------
 
