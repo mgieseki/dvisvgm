@@ -295,17 +295,10 @@ void FontMap::clear (bool unlocked_only) {
    }
 }
 
-
-void FontMap::setBaseFontMap (const std::string &fontname, const FontEncoding *bfmap) {
-	Iterator it = _entries.find(fontname);
-	if (it != _entries.end())
-		it->second->bfmap = bfmap;
-}
-
 /////////////////////////////////////////////////
 
 FontMap::Entry::Entry (const MapLine &mapline, Subfont *sf)
-	: fontname(mapline.fontfname()), encname(mapline.encname()), bfmap(0), subfont(sf), fontindex(mapline.fontindex()),
+	: fontname(mapline.fontfname()), encname(mapline.encname()), subfont(sf), fontindex(mapline.fontindex()),
 	  locked(false), style(mapline.bold(), mapline.extend(), mapline.slant())
 {
 }

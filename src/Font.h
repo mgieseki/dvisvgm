@@ -61,6 +61,7 @@ struct Font {
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
+	virtual bool findAndAssignBaseFontMap ()            {return true;}
 	virtual bool verifyChecksums () const               {return true;}
 	virtual int fontIndex () const                      {return 0;}
 	virtual const FontStyle* style () const             {return 0;}
@@ -219,10 +220,10 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const FontMap::Entry* fontMapEntry () const {return _fontMapEntry;}
 		const FontEncoding* encoding () const;
       UInt32 unicode (UInt32 c) const;
+		bool findAndAssignBaseFontMap ();
       void tidy () const;
 		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		CharMapID getCharMapID () const             {return _charmapID;}
-		void setCharMapID (const CharMapID &id)     {_charmapID = id;}
 
 	protected:
 		PhysicalFontImpl (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
@@ -232,7 +233,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		int _fontIndex;
 		const FontMap::Entry *_fontMapEntry;
 		CharMapID _charmapID;          ///< ID of the font's charmap to use
-		mutable FontEncodingPair _encodingPair;
+		FontEncodingPair _encodingPair;
       mutable std::map<UInt32,UInt32> *_charmap;
 };
 

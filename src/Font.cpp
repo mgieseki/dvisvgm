@@ -416,10 +416,21 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 const FontEncoding* PhysicalFontImpl::encoding () const {
 	if (!_encodingPair.enc1())
 		return 0;
-	if (!_encodingPair.enc2())
-		if (const FontMap::Entry *entry = fontMapEntry())
-			_encodingPair.setEnc2(entry->bfmap);
 	return &_encodingPair;
+}
+
+
+bool PhysicalFontImpl::findAndAssignBaseFontMap () {
+	const FontEncoding *enc = encoding();
+	if (enc && enc->mapsToCharIndex()) {
+		// try to find a base font map that maps from character indexes to a suitable
+		// target encoding supported by the font file
+		if (const FontEncoding *bfmap = enc->findCompatibleBaseFontMap(this, _charmapID))
+			_encodingPair.assign(bfmap);
+		else
+			return false;
+	}
+	return true;
 }
 
 

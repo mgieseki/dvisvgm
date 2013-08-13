@@ -88,3 +88,10 @@ const FontEncoding* FontEncodingPair::findCompatibleBaseFontMap (const PhysicalF
 	return 0;
 }
 
+
+void FontEncodingPair::assign (const FontEncoding *enc) {
+	if (!_enc1)
+		_enc1 = enc;
+	else
+		_enc2 = enc;
+}

@@ -55,7 +55,7 @@ class FontEncodingPair : public FontEncoding
 		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
 		const FontEncoding* enc1 () const       {return _enc1;}
 		const FontEncoding* enc2 () const       {return _enc2;}
-		void setEnc2 (const FontEncoding *enc2) {_enc2 = enc2;}
+		void assign (const FontEncoding *enc);
 
 	private:
 		const FontEncoding *_enc1, *_enc2;
