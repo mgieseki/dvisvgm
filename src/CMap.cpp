@@ -23,6 +23,7 @@
 #include <set>
 #include <vector>
 #include "CMap.h"
+#include "CMapManager.h"
 #include "FileFinder.h"
 #include "InputReader.h"
 
@@ -33,6 +34,12 @@ const char* CMap::path () const {
 	return FileFinder::lookup(name(), "cmap", false);
 }
 
+
+const FontEncoding* CMap::findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {
+	return CMapManager::instance().findCompatibleBaseFontMap(font, this, charmapID);
+}
+
+//////////////////////////////////////////////////////////////////////
 
 /** Returns the RO (Registry-Ordering) string of the CMap. */
 string SegmentedCMap::getROString() const {

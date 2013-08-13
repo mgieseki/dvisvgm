@@ -65,6 +65,7 @@ UInt32 Font::unicode (UInt32 c) const {
 }
 
 
+#if 0
 /** Retrieves the encoding pair assigned to this font. The first encoding
  *  is the main one assigned in the map file. The second encoding is optional
  *  and computed implicitely if a non-CID-based font has a CMap assigned in the
@@ -82,14 +83,14 @@ bool Font::encodings (FontEncodingPair &encpair) const {
 	}
 	return false;
 }
+#endif
 
 
 /** Returns the encoding object of this font which is asigned in a map file.
  *  If there's no encoding assigned, the function returns 0. */
-FontEncoding* Font::encoding () const {
-	FontEncodingPair encpair;
-	if (encodings(encpair))
-		return encpair.first;
+const FontEncoding* Font::encoding () const {
+	if (const FontMap::Entry *entry = fontMapEntry())
+		return FontEncoding::encoding(entry->encname);
 	return 0;
 }
 
@@ -102,9 +103,7 @@ const FontMap::Entry* Font::fontMapEntry () const {
 	return FontMap::instance().lookup(fontname);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////
-
 
 TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
 	: _metrics(0), _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
@@ -210,13 +209,8 @@ bool PhysicalFont::isCIDFont () const {
  *  @param[in] c DVI character to decode
  *  @return target character code or name */
 Character PhysicalFont::decodeChar (UInt32 c) const {
-	FontEncodingPair encpair;
-	if (encodings(encpair)) {
-		Character chr = encpair.first->decode(c);
-		if (encpair.second)
-			return encpair.second->decode(chr.number());
-		return chr;
-	}
+	if (const FontEncoding *enc = encoding())
+		return enc->decode(c);
 	return Character(Character::CHRCODE, c);
 }
 
@@ -405,7 +399,7 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 
 PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss),
-	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encoding(Font::encoding()), _charmap(0)
+	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding()), _charmap(0)
 {
 }
 
@@ -416,6 +410,16 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 	if (!KEEP_TEMP_FILES)
 		tidy();
 	delete _charmap;
+}
+
+
+const FontEncoding* PhysicalFontImpl::encoding () const {
+	if (!_encodingPair.enc1())
+		return 0;
+	if (!_encodingPair.enc2())
+		if (const FontMap::Entry *entry = fontMapEntry())
+			_encodingPair.setEnc2(entry->bfmap);
+	return &_encodingPair;
 }
 
 

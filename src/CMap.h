@@ -28,7 +28,7 @@
 #include "types.h"
 
 
-struct CMap : public FontEncoding
+struct CMap : public NamedFontEncoding
 {
 	virtual ~CMap () {}
 	virtual bool vertical () const =0;
@@ -37,6 +37,8 @@ struct CMap : public FontEncoding
 	virtual UInt32 cid (UInt32 c) const =0;
 	virtual UInt32 bfcode (UInt32 cid) const =0;
 	virtual std::string getROString () const =0;
+	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
+	virtual bool mapsToCharIndex () const {return mapsToCID();}
 
 	Character decode (UInt32 c) const {
 		if (mapsToCID())

@@ -57,3 +57,34 @@ FontEncoding* FontEncoding::encoding (const string &encname) {
 		return cmap;
 	return 0;
 }
+
+/////////////////////////////////////////////////////////////////////////
+
+Character FontEncodingPair::decode (UInt32 c) const {
+	if (_enc1) {
+		Character chr = _enc1->decode(c);
+		if (_enc2 && chr.type() != Character::NAME)
+			chr = _enc2->decode(chr.number());
+		return chr;
+	}
+	return Character(Character::INDEX, 0);
+}
+
+
+bool FontEncodingPair::mapsToCharIndex () const {
+	if (_enc2)
+		return _enc2->mapsToCharIndex();
+  	if (_enc1)
+		return _enc1->mapsToCharIndex();
+	return false;
+}
+
+
+const FontEncoding* FontEncodingPair::findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {
+	if (_enc2)
+		return _enc2->findCompatibleBaseFontMap(font, charmapID);
+  	if (_enc1)
+		return _enc1->findCompatibleBaseFontMap(font, charmapID);
+	return 0;
+}
+

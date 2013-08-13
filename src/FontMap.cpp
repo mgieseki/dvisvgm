@@ -296,7 +296,7 @@ void FontMap::clear (bool unlocked_only) {
 }
 
 
-void FontMap::setBaseFontMap (const std::string &fontname, const CMap *bfmap) {
+void FontMap::setBaseFontMap (const std::string &fontname, const FontEncoding *bfmap) {
 	Iterator it = _entries.find(fontname);
 	if (it != _entries.end())
 		it->second->bfmap = bfmap;

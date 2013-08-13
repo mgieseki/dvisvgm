@@ -25,13 +25,40 @@
 #include "types.h"
 
 
+struct CharMapID;
+class PhysicalFont;
+
 struct FontEncoding
 {
 	virtual ~FontEncoding () {}
-	virtual const char* name () const =0;
 	virtual Character decode (UInt32 c) const =0;
-	virtual const char* path () const =0;
+	virtual bool mapsToCharIndex () const =0;
+	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}
 	static FontEncoding* encoding (const std::string &fontname);
+};
+
+
+struct NamedFontEncoding : public FontEncoding
+{
+	virtual const char* name () const =0;
+	virtual const char* path () const =0;
+};
+
+
+class FontEncodingPair : public FontEncoding
+{
+	public:
+		FontEncodingPair (const FontEncoding *enc1) : _enc1(enc1), _enc2(0) {}
+		FontEncodingPair (const FontEncoding *enc1, const FontEncoding *enc2) : _enc1(enc1), _enc2(enc2) {}
+		Character decode (UInt32 c) const;
+		bool mapsToCharIndex () const;
+		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
+		const FontEncoding* enc1 () const       {return _enc1;}
+		const FontEncoding* enc2 () const       {return _enc2;}
+		void setEnc2 (const FontEncoding *enc2) {_enc2 = enc2;}
+
+	private:
+		const FontEncoding *_enc1, *_enc2;
 };
 
 #endif

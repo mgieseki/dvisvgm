@@ -28,6 +28,8 @@
 #include "Font.h"
 
 struct CMap;
+struct FontEncoding;
+class FontEncodingPair;
 
 class CMapManager
 {

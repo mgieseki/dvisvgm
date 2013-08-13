@@ -27,7 +27,7 @@
 #include "FontStyle.h"
 
 
-struct CMap;
+struct FontEncoding;
 class MapLine;
 class Subfont;
 
@@ -39,7 +39,7 @@ class FontMap
 			Entry (const MapLine &mapline, Subfont *subfont=0);
 			std::string fontname; ///< target font name
 			std::string encname;  ///< name of font encoding
-			const CMap *bfmap;    ///< base font map to map from CID to another encoding
+			const FontEncoding *bfmap;    ///< base font map to map from CID to another encoding
 			Subfont *subfont;
 			int fontindex;        ///< index of font in multi-font file
 			bool locked;
@@ -66,7 +66,7 @@ class FontMap
 		bool remove (const MapLine &mapline);
 		void lockFont (const std::string &fontname);
 		void clear (bool unlocked_only=false);
-		void setBaseFontMap (const std::string &fontname, const CMap *bfmap);
+		void setBaseFontMap (const std::string &fontname, const FontEncoding *bfmap);
 		std::ostream& write (std::ostream &os) const;
 		const Entry* lookup(const std::string &fontname) const;
 

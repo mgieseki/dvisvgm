@@ -204,18 +204,18 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			for (const char **p = exts; *p && !newfont; ++p)
 				newfont = create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize);
 		}
-		if (map_entry) {
-			if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont)) {
-				CMap *cmap = dynamic_cast<CMap*>(pf->encoding());
-				if (cmap && !pf->isCIDFont()) {
-					CharMapID charMapID;
-					if (const CMap *bfmap = CMapManager::instance().findCompatibleBaseFontMap(pf, cmap, charMapID)) {
-						FontMap::instance().setBaseFontMap(name, bfmap);
-						pf->setCharMapID(charMapID);
-					}
-					else
-						Message::wstream(true) << "no suitable encoding table found for font " << filename << "\n";
+		if (PhysicalFont *pf = dynamic_cast<PhysicalFont*>(newfont)) {
+			const FontEncoding *enc = pf->encoding();
+			if (enc && enc->mapsToCharIndex()) {
+				// try to find a base font map that maps from character indexes to a suitable
+				// target encoding supported by the font file
+				CharMapID charMapID;
+				if (const FontEncoding *bfmap = enc->findCompatibleBaseFontMap(pf, charMapID)) {
+					FontMap::instance().setBaseFontMap(name, bfmap);
+					pf->setCharMapID(charMapID);
 				}
+				else
+					Message::wstream(true) << "no suitable encoding table found for font " << filename << "\n";
 			}
 		}
 		if (!newfont) {

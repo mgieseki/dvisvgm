@@ -29,7 +29,7 @@
 #include "types.h"
 
 
-class EncFile : public FontEncoding
+class EncFile : public NamedFontEncoding
 {
    public:
       EncFile (const std::string &name);
@@ -39,6 +39,7 @@ class EncFile : public FontEncoding
 		const char* name () const          {return _encname.c_str();}
 		const char* charName (UInt32 c) const;
 		Character decode (UInt32 c) const  {return Character(charName(c));}
+		bool mapsToCharIndex () const      {return false;}
 		const char* path () const;
 
    private:

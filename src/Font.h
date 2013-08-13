@@ -27,6 +27,7 @@
 #include "Character.h"
 #include "CharMapID.h"
 #include "FontCache.h"
+#include "FontEncoding.h"
 #include "FontMap.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
@@ -35,15 +36,11 @@
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
-#include "FontEncoding.h"
 
 
-struct FontEncoding;
 struct FontMetrics;
 struct FontStyle;
 
-
-typedef std::pair<FontEncoding*, const FontEncoding*> FontEncodingPair;
 
 /** Abstract base for all font classes. */
 struct Font {
@@ -60,8 +57,7 @@ struct Font {
 	virtual double italicCorr (int c) const =0;
 	virtual const FontMetrics* getMetrics () const =0;
 	virtual const char* path () const =0;
-	virtual FontEncoding* encoding () const;
-	virtual bool encodings (FontEncodingPair &encpair) const;
+	virtual const FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
@@ -195,7 +191,7 @@ class PhysicalFontProxy : public PhysicalFont
 		int fontIndex () const                      {return _pf->fontIndex();}
 		const FontStyle* style () const             {return _pf->style();}
 		const FontMap::Entry* fontMapEntry () const {return _pf->fontMapEntry();}
-		FontEncoding* encoding () const             {return _pf->encoding();}
+		const FontEncoding* encoding () const       {return _pf->encoding();}
 		CharMapID getCharMapID () const             {return _pf->getCharMapID();}
 		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const {return _pf->collectCharMapIDs(charmapIDs);}
 
@@ -221,7 +217,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		int fontIndex() const                       {return _fontIndex;}
 		const FontStyle* style () const             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
 		const FontMap::Entry* fontMapEntry () const {return _fontMapEntry;}
-		FontEncoding* encoding () const             {return _encoding;}
+		const FontEncoding* encoding () const;
       UInt32 unicode (UInt32 c) const;
       void tidy () const;
 		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
@@ -235,8 +231,8 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		Type _filetype;
 		int _fontIndex;
 		const FontMap::Entry *_fontMapEntry;
-		FontEncoding* _encoding;
 		CharMapID _charmapID;          ///< ID of the font's charmap to use
+		mutable FontEncodingPair _encodingPair;
       mutable std::map<UInt32,UInt32> *_charmap;
 };
 
