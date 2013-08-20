@@ -75,7 +75,7 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
-	kpse_make_tex_discard_errors = false; // don't suppress messages of mktexFOO tools
+	kpse_make_tex_discard_errors = true;  // suppress messages from mktexFOO tools
 #ifdef TEXLIVEWIN32
 	texlive_gs_init();
 #endif
