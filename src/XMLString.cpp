@@ -108,6 +108,8 @@ XMLString::XMLString (double x) {
 	stringstream ss;
 	if (DECIMAL_PLACES > 0)
 		x = round(x, DECIMAL_PLACES);
+	else if (fabs(x) < 1e-8)
+		x = 0;
 	ss << x;
 	ss >> *this;
 }
