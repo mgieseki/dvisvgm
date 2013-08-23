@@ -288,7 +288,7 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		FORALL(sortmap, SortMap::const_iterator, it) {
 			style << "text.f"     << it->first << ' '
 				<< "{font-family:" << it->second->name()
-				<< ";font-size:"   << it->second->scaledSize() << "}\n";
+				<< ";font-size:"   << it->second->scaledSize() << "px}\n";
 		}
 		XMLCDataNode *cdata = new XMLCDataNode(style.str());
 		styleNode->append(cdata);
