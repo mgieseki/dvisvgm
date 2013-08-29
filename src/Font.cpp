@@ -65,27 +65,6 @@ UInt32 Font::unicode (UInt32 c) const {
 }
 
 
-#if 0
-/** Retrieves the encoding pair assigned to this font. The first encoding
- *  is the main one assigned in the map file. The second encoding is optional
- *  and computed implicitely if a non-CID-based font has a CMap assigned in the
- *  font map. In this case, the second encoding maps from the CIDs that result
- *  from the first encoding to the char codes of the font. That requires the
- *  selection of a compatible encoding table provided by the font file.
- *  @param[out] encpair the encoding pair assigned to this font
- *  @return true if an encoding is assigned to this font */
-bool Font::encodings (FontEncodingPair &encpair) const {
-	if (const FontMap::Entry *entry = fontMapEntry()) {
-		if ((encpair.first = FontEncoding::encoding(entry->encname))) {
-			encpair.second = entry->bfmap;
-			return true;
-		}
-	}
-	return false;
-}
-#endif
-
-
 /** Returns the encoding object of this font which is asigned in a map file.
  *  If there's no encoding assigned, the function returns 0. */
 const FontEncoding* Font::encoding () const {
@@ -399,7 +378,7 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 
 PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss),
-	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding()), _charmap(0)
+	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding()), _localCharMap(0)
 {
 }
 
@@ -409,7 +388,7 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 		_cache.write(CACHE_PATH);
 	if (!KEEP_TEMP_FILES)
 		tidy();
-	delete _charmap;
+	delete _localCharMap;
 }
 
 
@@ -430,6 +409,13 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 		else
 			return false;
 	}
+	else if (type() != MF) {
+		FontEngine::instance().setFont(*this);
+		if ((_localCharMap = FontEngine::instance().createCustomToUnicodeMap()) != 0)
+			_charmapID = FontEngine::instance().setCustomCharMap();
+		else
+			_charmapID = FontEngine::instance().setUnicodeCharMap();
+	}
 	return true;
 }
 
@@ -437,29 +423,23 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (type() == MF)
 		return Font::unicode(c);
+	Character chr = decodeChar(c);
+	if (chr.type() == Character::NAME || chr.number() == 0)
+		return Font::unicode(c);
 
-	if (_charmap == 0) {
-		FontEngine &fe = FontEngine::instance();
-		if (fe.setFont(*this)) {
-			_charmap = new map<UInt32,UInt32>;
-			fe.buildTranslationMap(*_charmap);
-		}
+	if (_localCharMap) {
+		if (UInt32 mapped_char = (*_localCharMap)[chr.number()])
+			return mapped_char;
+		// No unicode equivalent found in font file.
+		// Now we should look for a smart alternative but at the moment
+		// it's sufficient to simply choose a valid unused unicode value...
+		// Can we use the charcode itself as a unicode replacement?
+		if (!_localCharMap->valueExists(chr.number()) && valid_unicode(chr.number()))
+			return chr.number();
 	}
-	typedef map<UInt32,UInt32>::const_iterator ConstIterator;
-	ConstIterator it = _charmap->find(c);
-	if (it != _charmap->end())
-		return it->second;
-
-	// No unicode equivalent found in font file.
-	// Now we should look for a smart alternative but at the moment
-	// it's sufficient to simply choose a valid unused unicode value...
-	map<UInt32,UInt32> reverse_map;
-	FORALL(*_charmap, ConstIterator, it)
-		reverse_map[it->second] = it->first;
-	// can we use charcode itself as unicode replacement?
-	if (valid_unicode(c) && (reverse_map.empty() || reverse_map.find(c) != reverse_map.end()))
-		return c;
-	return 0x3400+c;
+	if (valid_unicode(chr.number()))
+		return chr.number();
+	return Font::unicode(chr.number());
 }
 
 

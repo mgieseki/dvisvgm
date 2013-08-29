@@ -1,5 +1,5 @@
 /*************************************************************************
-** FontEncoding.h                                                       **
+** CharMap.h                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,48 +18,34 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTENCODING_H
-#define FONTENCODING_H
+#ifndef CHARMAP_H
+#define CHARMAP_H
 
-#include <string>
-#include "Character.h"
+#include <utility>
+#include <vector>
 #include "types.h"
 
+class FontEngine;
 
-struct CharMapID;
-class PhysicalFont;
-
-struct FontEncoding
+class CharMap
 {
-	virtual ~FontEncoding () {}
-	virtual Character decode (UInt32 c) const =0;
-	virtual bool mapsToCharIndex () const =0;
-	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}
-	static FontEncoding* encoding (const std::string &fontname);
-};
-
-
-struct NamedFontEncoding : public FontEncoding
-{
-	virtual const char* name () const =0;
-	virtual const char* path () const =0;
-};
-
-
-class FontEncodingPair : public FontEncoding
-{
+	friend class FontEngine;
+	typedef std::pair<UInt32, UInt32> UInt32Pair;
 	public:
-		FontEncodingPair (const FontEncoding *enc1) : _enc1(enc1), _enc2(0) {}
-		FontEncodingPair (const FontEncoding *enc1, const FontEncoding *enc2) : _enc1(enc1), _enc2(enc2) {}
-		Character decode (UInt32 c) const;
-		bool mapsToCharIndex () const;
-		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
-		const FontEncoding* enc1 () const       {return _enc1;}
-		const FontEncoding* enc2 () const       {return _enc2;}
-		void assign (const FontEncoding *enc);
+		CharMap () {}
+		bool valueExists (UInt32 c) const;
+		UInt32 operator [] (UInt32 c) const;
+		UInt32 size () const {return _pairs.size();}
+		bool empty () const  {return _pairs.empty();}
+		void clear ()        {return _pairs.clear();}
+		void invert ();
+
+	protected:
+		void append (UInt32 from, UInt32 to) {_pairs.push_back(UInt32Pair(from, to));}
+		void sort ();
 
 	private:
-		const FontEncoding *_enc1, *_enc2;
+		std::vector<UInt32Pair> _pairs;
 };
 
 #endif

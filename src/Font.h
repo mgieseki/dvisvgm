@@ -36,6 +36,7 @@
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
+#include "CharMap.h"
 
 
 struct FontMetrics;
@@ -232,9 +233,9 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		Type _filetype;
 		int _fontIndex;
 		const FontMap::Entry *_fontMapEntry;
-		CharMapID _charmapID;          ///< ID of the font's charmap to use
 		FontEncodingPair _encodingPair;
-      mutable std::map<UInt32,UInt32> *_charmap;
+		CharMapID _charmapID;  ///< ID of the font's charmap to use
+		const CharMap *_localCharMap;
 };
 
 

@@ -1,5 +1,5 @@
 /*************************************************************************
-** FontEncoding.h                                                       **
+** CharMap.cpp                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2013 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,48 +18,39 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTENCODING_H
-#define FONTENCODING_H
+#include <algorithm>
+#include "CharMap.h"
 
-#include <string>
-#include "Character.h"
-#include "types.h"
+using namespace std;
 
-
-struct CharMapID;
-class PhysicalFont;
-
-struct FontEncoding
-{
-	virtual ~FontEncoding () {}
-	virtual Character decode (UInt32 c) const =0;
-	virtual bool mapsToCharIndex () const =0;
-	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}
-	static FontEncoding* encoding (const std::string &fontname);
-};
+static bool is_less (const pair<UInt32,UInt32> &p1, const pair<UInt32,UInt32> &p2) {
+	return p1.first < p2.first;
+}
 
 
-struct NamedFontEncoding : public FontEncoding
-{
-	virtual const char* name () const =0;
-	virtual const char* path () const =0;
-};
+UInt32 CharMap::operator [] (UInt32 c) const {
+	vector<UInt32Pair>::const_iterator it = lower_bound(_pairs.begin(), _pairs.end(), UInt32Pair(c, 0), &is_less);
+	return (it != _pairs.end() && it->first == c) ? it->second : 0;
+}
 
 
-class FontEncodingPair : public FontEncoding
-{
-	public:
-		FontEncodingPair (const FontEncoding *enc1) : _enc1(enc1), _enc2(0) {}
-		FontEncodingPair (const FontEncoding *enc1, const FontEncoding *enc2) : _enc1(enc1), _enc2(enc2) {}
-		Character decode (UInt32 c) const;
-		bool mapsToCharIndex () const;
-		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
-		const FontEncoding* enc1 () const       {return _enc1;}
-		const FontEncoding* enc2 () const       {return _enc2;}
-		void assign (const FontEncoding *enc);
+/** Returns true if the charmap contains an entry that maps to the given charcode */
+bool CharMap::valueExists (UInt32 c) const {
+	for (std::vector<UInt32Pair>::const_iterator it=_pairs.begin(); it != _pairs.end(); ++it)
+		if (it->second == c)
+			return true;
+	return false;
+}
 
-	private:
-		const FontEncoding *_enc1, *_enc2;
-};
 
-#endif
+/** Swaps key and value of all entries. */
+void CharMap::invert () {
+	for (std::vector<UInt32Pair>::iterator it=_pairs.begin(); it != _pairs.end(); ++it)
+		swap(it->first, it->second);
+	sort();
+}
+
+
+void CharMap::sort () {
+	std::sort(_pairs.begin(), _pairs.end(), &is_less);
+}

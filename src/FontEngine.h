@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 #include "Character.h"
+#include "CharMap.h"
 #include "CharMapID.h"
 #include "Font.h"
 #include "Glyph.h"
@@ -56,10 +57,14 @@ class FontEngine
 		int getFirstChar () const;
 		int getNextChar () const;
 		int getCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
+		CharMapID setUnicodeCharMap ();
+		CharMapID setCustomCharMap ();
 		std::vector<int> getPanose () const;
 		std::string getGlyphName (const Character &c) const;
 		int getCharByGlyphName (const char *name) const;
-		void buildTranslationMap (std::map<UInt32,UInt32> &translationMap) const;
+		bool setCharMap (const CharMapID &charMapID);
+		void buildCharMap (bool invert, CharMap &charmap);
+		const CharMap* createCustomToUnicodeMap ();
 
 	protected:
 		FontEngine ();

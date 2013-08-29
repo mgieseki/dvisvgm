@@ -97,20 +97,6 @@ void FontEngine::setDeviceResolution (int x, int y) {
 }
 
 
-/** Builds a table that maps glyph indexes to char codes.
- * @param[in] face font face to be used
- * @param[out] reverseMap the resulting map */
-static void build_reverse_map (FT_Face face, map<UInt32, UInt32> &reverseMap) {
-	FT_UInt glyphIndex;
-	UInt32 charcode = FT_Get_First_Char(face, &glyphIndex);
-	while (glyphIndex) {
-//		if (reverseMap.find(glyphIndex) == reverseMap.end())
-		reverseMap[glyphIndex] = charcode;
-		charcode = FT_Get_Next_Char(face, charcode, &glyphIndex);
-	}
-}
-
-
 /** Sets the font to be used.
  * @param[in] fname path to font file
  * @param[in] fontindex index of font in font collection (multi-font files, like TTC)
@@ -120,34 +106,16 @@ bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &c
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
       return false;
    }
-	if (charMapID.valid()) {
-		for (int i=0; i < _currentFace->num_charmaps; i++) {
-			FT_CharMap ft_cmap = _currentFace->charmaps[i];
-			if (ft_cmap->platform_id == charMapID.platform_id && ft_cmap->encoding_id == charMapID.encoding_id) {
-				FT_Set_Charmap(_currentFace, ft_cmap);
-				return true;
-			}
-		}
-		return false;
-	}
-	else {
-		// look for a custom character map
-		for (int i=0; i < _currentFace->num_charmaps; i++) {
-			FT_CharMap charmap = _currentFace->charmaps[i];
-			if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM) {
-				FT_Set_Charmap(_currentFace, charmap);
-				break;
-			}
-		}
-	}
+	if (charMapID.valid())
+		setCharMap(charMapID);
 	return true;
 }
 
 
 bool FontEngine::setFont (const Font &font) {
 	if (!_currentFont || _currentFont->name() != font.name()) {
-		_currentFont = &font;
 		const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
+		_currentFont = &font;
 		return setFont(font.path(), font.fontIndex(), pf ? pf->getCharMapID() : CharMapID());
 	}
 	return true;
@@ -160,29 +128,57 @@ bool FontEngine::isCIDFont() const {
 }
 
 
-void FontEngine::buildTranslationMap (map<UInt32, UInt32> &translationMap) const {
-	FT_CharMap unicodeMap=0, customMap=0;
-   for (int i=0; i < _currentFace->num_charmaps; i++) {
-      FT_CharMap charmap = _currentFace->charmaps[i];
-      if (charmap->encoding == FT_ENCODING_ADOBE_CUSTOM)
-			customMap = charmap;
-		else if (charmap->encoding == FT_ENCODING_UNICODE)
-			unicodeMap = charmap;
+bool FontEngine::setCharMap (const CharMapID &charMapID) {
+	for (int i=0; i < _currentFace->num_charmaps; i++) {
+		FT_CharMap ft_cmap = _currentFace->charmaps[i];
+		if (ft_cmap->platform_id == charMapID.platform_id && ft_cmap->encoding_id == charMapID.encoding_id) {
+			FT_Set_Charmap(_currentFace, ft_cmap);
+			return true;
+		}
 	}
-	if (unicodeMap == 0 || customMap == 0)
-		return;
+	return false;
+}
 
-	map<UInt32,UInt32> reverseMap;
-	build_reverse_map(_currentFace, reverseMap);
 
-	FT_Set_Charmap(_currentFace, unicodeMap);
-	FT_UInt glyphIndex;
-	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyphIndex);
-	while (glyphIndex) {
-		translationMap[reverseMap[glyphIndex]] = charcode;
-		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyphIndex);
+/** Returns a character map that maps from character codes of the current
+ *  encoding to character indexes, or vice versa.
+ *  @param[in] invert if true, the resulting charmap maps from char indexes to char codes
+ *  @param[out] charmap the resultig charmap */
+void FontEngine::buildCharMap (bool invert, CharMap &charmap) {
+	charmap.clear();
+	FT_UInt glyph_index;
+	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
+	while (glyph_index) {
+		if (invert)
+			charmap.append(glyph_index, charcode);
+		else
+			charmap.append(charcode, glyph_index);
+		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
 	}
-	FT_Set_Charmap(_currentFace, customMap);
+	charmap.sort();
+}
+
+
+/** Creates a charmap that maps from the custom character encoding to unicode.
+ *  @return pointer to charmap if is could be created, 0 otherwise */
+const CharMap* FontEngine::createCustomToUnicodeMap () {
+	FT_CharMap ftcharmap = _currentFace->charmap;
+	if (FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) != 0)
+		return 0;
+	CharMap index_to_source_chrcode;
+	buildCharMap(true, index_to_source_chrcode);
+	if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
+		return 0;
+	CharMap *charmap = new CharMap;
+	FT_UInt glyph_index;
+	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
+	while (glyph_index) {
+		charmap->append(index_to_source_chrcode[glyph_index], charcode);
+		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
+	}
+	charmap->sort();
+	FT_Set_Charmap(_currentFace, ftcharmap);
+	return charmap;
 }
 
 
@@ -286,15 +282,28 @@ vector<int> FontEngine::getPanose () const {
 
 
 int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
-	int num_charmaps=0;
+	charmapIDs.clear();
 	if (_currentFace) {
-		num_charmaps = _currentFace->num_charmaps;
-		for (int i=0; i < num_charmaps; i++) {
+		for (int i=0; i < _currentFace->num_charmaps; i++) {
 			FT_CharMap charmap = _currentFace->charmaps[i];
 			charmapIDs.push_back(CharMapID(charmap->platform_id, charmap->encoding_id));
 		}
 	}
-	return num_charmaps;
+	return charmapIDs.size();
+}
+
+
+CharMapID FontEngine::setUnicodeCharMap () {
+	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) == 0)
+		return CharMapID(_currentFace->charmap->platform_id, _currentFace->charmap->encoding_id);
+	return CharMapID();
+}
+
+
+CharMapID FontEngine::setCustomCharMap () {
+	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) == 0)
+		return CharMapID(_currentFace->charmap->platform_id, _currentFace->charmap->encoding_id);
+	return CharMapID();
 }
 
 

@@ -204,9 +204,13 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 			for (const char **p = exts; *p && !newfont; ++p)
 				newfont = create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize);
 		}
-		if (!newfont->findAndAssignBaseFontMap())
+		if (newfont) {
+			if (!newfont->findAndAssignBaseFontMap())
 				Message::wstream(true) << "no suitable encoding table found for font " << filename << "\n";
-		if (!newfont) {
+			if (!newfont->verifyChecksums())
+				Message::wstream(true) << "checksum mismatch in font " << name << '\n';
+		}
+		else {
 			// create dummy font as a placeholder if the proper font is not available
 			newfont = new EmptyFont(name);
 			if (filename.rfind(".") == string::npos)
@@ -218,8 +222,6 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 				missing_fonts.insert(filename);
 			}
 		}
-		else if (!newfont->verifyChecksums())
-			Message::wstream(true) << "checksum mismatch in font " << name << '\n';
 		_name2id[name] = newid;
 	}
 	_fonts.push_back(newfont);
