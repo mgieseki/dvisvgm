@@ -133,11 +133,11 @@ class PhysicalFont : public virtual Font
 		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		virtual CharMapID getCharMapID () const =0;
 		virtual void setCharMapID (const CharMapID &id) {}
+		virtual Character decodeChar (UInt32 c) const;
 		const char* path () const;
 
    protected:
 		bool createGF (std::string &gfname) const;
-		Character decodeChar (UInt32 c) const;
 
    public:
 		static bool EXACT_BBOX;
@@ -262,6 +262,7 @@ class NativeFont : public PhysicalFont
 		virtual Font* clone (double ds, double sc) const =0;
 		std::string name () const;
 		Type type () const;
+		UInt32 unicode (UInt32 c) const;
 		double designSize () const               {return _ptsize;}
 		double scaledSize () const               {return _ptsize;}
 		double charWidth (int c) const;
@@ -295,7 +296,7 @@ class NativeFontProxy : public NativeFont
 		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
 		const Font* uniqueFont () const          {return _nfont;}
 		const char* path () const                {return _nfont->path();}
-//		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
+		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
 		CharMapID getCharMapID () const          {return _nfont->getCharMapID();}
 
 	protected:
@@ -320,16 +321,14 @@ class NativeFontImpl : public NativeFont
 		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
 		const Font* uniqueFont () const          {return this;}
 		const char* path () const                {return _path.c_str();}
-//		bool findAndAssignBaseFontMap ();
+		bool findAndAssignBaseFontMap ();
 		CharMapID getCharMapID () const          {return _charmapID;}
-
-	protected:
 		Character decodeChar (UInt32 c) const;
 
 	private:
 		std::string _path;
-//		CharMap _toUnicodeMap;
-		CharMapID _charmapID;
+		CharMap _toUnicodeMap;  ///< maps from char indexes to unicode point
+		CharMapID _charmapID;   ///< unicode charmap ID
 };
 
 

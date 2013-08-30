@@ -47,13 +47,18 @@ using namespace std;
  *  XML version 1.0 doesn't allow various unicode character references
  *  (&#1; for example).  */
 static bool valid_unicode (UInt32 unicode) {
+	if ((unicode & 0xffff) == 0xfffe || (unicode & 0xffff) == 0xffff)
+		return false;
+
 	UInt32 ranges[] = {
 		0x0000, 0x0020,
 		0x007f, 0x0084,
 		0x0086, 0x009f,
-		0xfdd0, 0xfddf
+		0x202a, 0x202e,  // bidi control characters
+		0xd800, 0xdfff,
+		0xfdd0, 0xfdef,
 	};
-	for (int i=0; i < 4; i++)
+	for (size_t i=0; i < sizeof(ranges)/sizeof(UInt32)/2; i++)
 		if (unicode >= ranges[2*i] && unicode <= ranges[2*i+1])
 			return false;
 	return true;
@@ -603,26 +608,23 @@ double NativeFont::charDepth (int c) const {
 }
 
 
-#if 0
+UInt32 NativeFont::unicode (UInt32 c) const {
+	UInt32 ucode = decodeChar(c).number();
+	return valid_unicode(ucode) ? ucode : 0x3400+ucode;
+}
+
+
 bool NativeFontImpl::findAndAssignBaseFontMap () {
 	FontEngine &fe = FontEngine::instance();
 	fe.setFont(*this);
-	fe.buildInverseCharMap(_toUnicodeMap, _charmapID);
-	vector<CharMapID> charmapIDs;
-	fe.getCharMapIDs(charmapIDs);
-	for (size_t i=0; i < charmapIDs.size(); i++) {
-		if (charmapIDs[i] == CharMapID::WIN_UCS2 || charmapIDs[i] == CharMapID::WIN_UCS4) {
-			_charmapID = charmapIDs[i];
-			break;
-		}
-	}
+	fe.buildCharMap(true, _toUnicodeMap);
+	_charmapID = fe.setUnicodeCharMap();
 	return true;
 }
-#endif
 
 
 Character NativeFontImpl::decodeChar (UInt32 c) const {
-	return Character(Character::INDEX, c); //_toUnicodeMap.decode(c);
+	return Character(Character::CHRCODE, _toUnicodeMap[c]);
 }
 
 //////////////////////////////////////////////////////////////////////////////

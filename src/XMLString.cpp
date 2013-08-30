@@ -30,6 +30,37 @@ using namespace std;
 
 int XMLString::DECIMAL_PLACES = 0;
 
+
+/** Converts a unicode value to a UTF-8 byte sequence.
+ *  @param[in] c character code
+ *  @return  utf8 seqence consisting of 1-4 bytes */
+static string to_utf8 (Int32 c) {
+	string utf8;
+	if (c >= 0) {
+		if (c < 0x80)
+			utf8 += c;
+		else if (c < 0x800) {
+			utf8 += 0xC0 + (c >> 6);
+			utf8 += 0x80 + (c & 0x3F);
+		}
+		else if (c == 0xFFFE || c == 0xFFFF)
+			utf8 += (c & 0xFF);
+		else if (c < 0x10000) {
+			utf8 += 0xE0 + (c >> 12);
+			utf8 += 0x80 + ((c >> 6) & 0x3F);
+			utf8 += 0x80 + (c & 0x3F);
+		}
+		else if (c < 0x110000) {
+			utf8 += 0xF0 + (c >> 18);
+			utf8 += 0x80 + ((c >> 12) & 0x3F);
+			utf8 += 0x80 + ((c >> 6) & 0x3F);
+			utf8 += 0x80 + (c & 0x3F);
+		}
+	}
+	return utf8;
+}
+
+
 static string translate (UInt32 c) {
 	switch (c) {
 		case '<' : return "&lt;";
@@ -37,32 +68,13 @@ static string translate (UInt32 c) {
 		case '"' : return "&quot;";
 		case '\'': return "&apos;";
 	}
-	ostringstream oss;
-	if (c >= 32 && c <= 126)
-		oss << char(c);
-	else
-		oss <<"&#" << UInt32(c) << ';';
-	return oss.str();
+	return to_utf8(c);
 }
-
-
-#if 0
-/** Returns the number of pre-decimal places of a given floating point value. */
-static int predecimal_places (double x) {
-	int n = abs(static_cast<int>(x));
-	int ret = (n == 0 ? 0 : 1);
-	while (n >= 10) {
-		ret++;
-		 n /= 10;
-	}
-	return ret;
-}
-#endif
 
 
 /** Rounds a floating point value to a given number of decimal places.
  *  @param[in] x number to round
- *  @param[in] n number of decimal places (must be between 1 and 6) 
+ *  @param[in] n number of decimal places (must be between 1 and 6)
  *  @return rounded value */
 static inline double round (double x, long n) {
 	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
