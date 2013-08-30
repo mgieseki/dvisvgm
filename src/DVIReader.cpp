@@ -22,7 +22,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "types.h"
+#include "Color.h"
 #include "DVIActions.h"
 #include "DVIReader.h"
 #include "Font.h"
@@ -31,6 +31,7 @@
 #include "SignalHandler.h"
 #include "VectorStream.h"
 #include "macros.h"
+#include "types.h"
 
 
 using namespace std;
@@ -97,7 +98,8 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 		{&DVIReader::cmdFontNum, 1}, {&DVIReader::cmdFontNum, 2}, {&DVIReader::cmdFontNum, 3}, {&DVIReader::cmdFontNum, 4}, // 235-238
 		{&DVIReader::cmdXXX, 1},     {&DVIReader::cmdXXX, 2},     {&DVIReader::cmdXXX, 3},     {&DVIReader::cmdXXX, 4},     // 239-242
 		{&DVIReader::cmdFontDef, 1}, {&DVIReader::cmdFontDef, 2}, {&DVIReader::cmdFontDef, 3}, {&DVIReader::cmdFontDef, 4}, // 243-246
-		{&DVIReader::cmdPre, 0},     {&DVIReader::cmdPost, 0},    {&DVIReader::cmdPostPost, 0}                              // 247-249
+		{&DVIReader::cmdPre, 0},     {&DVIReader::cmdPost, 0},    {&DVIReader::cmdPostPost, 0},                             // 247-249
+		{&DVIReader::cmdXPic, 0},    {&DVIReader::cmdXFontDef, 0},{&DVIReader::cmdXGlyphA, 0}, {&DVIReader::cmdXGlyphS, 0}  // 251-254
 	};
 
 	const int opcode = in().get();
@@ -115,7 +117,17 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 		length = 0;
 		param = opcode-171;
 	}
-	else if (opcode == 255 && _dviFormat == DVI_PTEX) {
+	else if (opcode >= 251 && opcode <= 254 && _dviFormat == DVI_XDV) {  // XDV command?
+		static const CommandHandler handlers[] = {
+			&DVIReader::cmdXPic,
+			&DVIReader::cmdXFontDef,
+			&DVIReader::cmdXGlyphA,
+			&DVIReader::cmdXGlyphS
+		};
+		handler = handlers[opcode-251];
+		param = 0;
+	}
+	else if (opcode == 255 && _dviFormat == DVI_PTEX) {  // direction command set by pTeX?
 		handler = &DVIReader::cmdDir;
 		length = 1;
 	}
@@ -319,6 +331,7 @@ void DVIReader::verifyDVIFormat (int id) const {
 	switch (id) {
 		case DVI_STANDARD:
 		case DVI_PTEX:
+		case DVI_XDV:
 			break;
 		default:
 			ostringstream oss;
@@ -729,4 +742,92 @@ void DVIReader::defineVFFont (UInt32 fontnum, string path, string name, UInt32 c
  *  @param[in] dvi DVI fragment describing the character */
 void DVIReader::defineVFChar (UInt32 c, vector<UInt8> *dvi) {
 	FontManager::instance().assignVfChar(c, dvi);
+}
+
+
+/** XDV extension: include image or pdf file.
+ *  parameters: box[1] matrix[4][6] p[2] len[2] path[l] */
+void DVIReader::cmdXPic (int) {
+	// just skip the parameters
+	readUnsigned(1);           // box
+	for (int i=0; i < 6; i++)  // matrix
+		readSigned(4);
+	readSigned(2);             // page number
+	UInt16 len = readUnsigned(2);
+	readString(len);           // path to image/pdf file
+}
+
+
+void DVIReader::cmdXFontDef (int) {
+	Int32 fontnum = readSigned(4);
+	double ptsize = _scaleFactor*readUnsigned(4);
+	UInt16 flags = readUnsigned(2);
+	UInt8 psname_len = readUnsigned(1);
+	UInt8 fmname_len = readUnsigned(1);
+	UInt8 stname_len = readUnsigned(1);
+	string fontname = readString(psname_len);
+	readString(fmname_len);
+	readString(stname_len);
+	FontStyle style;
+	Color color;
+	if (flags & 0x0100) { // vertical?
+	}
+	if (flags & 0x0200) { // colored?
+		UInt32 rgba = readUnsigned(4);
+		color.set(UInt8(rgba >> 24), UInt8((rgba >> 16) & 0xff), UInt8((rgba >> 8) & 0xff));
+	}
+	if (flags & 0x1000)   // extend?
+		style.extend = _scaleFactor*readSigned(4);
+	if (flags & 0x2000)   // slant?
+		style.slant = _scaleFactor*readSigned(4);
+	if (flags & 0x4000)   // embolden?
+		style.bold = _scaleFactor*readSigned(4);
+	if (flags & 0x0800) { // variations?
+		UInt16 num_variations = readSigned(2);
+		for (int i=0; i < num_variations; i++)
+			readUnsigned(4);
+	}
+	if (_inPage && _actions && _actions->fontProcessingEnabled()) {
+		FontManager::instance().registerFont(fontnum, fontname, ptsize, style, color);
+//		if (NativeFont *font = dynamic_cast<NativeFont*>(FontManager::instance().getFontById(id))) {
+//			font->setStyle(style);
+//		}
+	}
+}
+
+
+void DVIReader::cmdXGlyphA (int) {
+	putGlyphArray(false);
+}
+
+
+void DVIReader::cmdXGlyphS (int) {
+	putGlyphArray(true);
+}
+
+
+void DVIReader::putGlyphArray (bool xonly) {
+	double strwidth = _scaleFactor*readSigned(4);
+	UInt16 num_glyphs = readUnsigned(2);
+	vector<Int32> x(num_glyphs);
+	vector<Int32> y(num_glyphs);
+	for (int i=0; i < num_glyphs; i++) {
+		x[i] = readSigned(4);
+		y[i] = xonly ? 0 : readSigned(4);
+	}
+	if (_actions && _actions->fontProcessingEnabled()) {
+		if (Font *font = FontManager::instance().getFont(_currFontNum)) {
+			for (int i=0; i < num_glyphs; i++) {
+				UInt16 glyph_index = readUnsigned(2);
+				double xx = _dviState.h + x[i]*_scaleFactor + _tx;
+				double yy = _dviState.v + y[i]*_scaleFactor + _ty;
+				_actions->setChar(xx, yy, glyph_index, false, font);
+			}
+		}
+	}
+	else {
+		for (int i=0; i < num_glyphs; i++)
+			readUnsigned(2);
+	}
+	moveRight(strwidth);
 }

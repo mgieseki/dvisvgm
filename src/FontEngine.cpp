@@ -21,6 +21,7 @@
 #include <iostream>
 #include <sstream>
 #include <ft2build.h>
+#include FT_ADVANCES_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
@@ -42,6 +43,12 @@ static inline FT_Fixed to_16dot16 (double val) {
 static inline FT_Fixed to_16dot16 (int val) {
 	return static_cast<FT_Fixed>(val) << 16;
 }
+
+
+static inline double conv_16dot16_to_double (FT_Fixed fixed) {
+	return static_cast<double>(fixed)/(1 << 16);
+}
+
 
 /** Converts a floating point value to a 26.6 fixed point value. */
 static inline FT_F26Dot6 to_26dot6 (double val) {
@@ -197,13 +204,25 @@ int FontEngine::getUnitsPerEM () const {
 }
 
 
+/** Returns the ascender of the current font in font units. */
 int FontEngine::getAscender () const {
 	return _currentFace ? _currentFace->ascender : 0;
 }
 
 
+/** Returns the descender of the current font in font units. */
 int FontEngine::getDescender () const {
 	return _currentFace ? _currentFace->descender : 0;
+}
+
+
+int FontEngine::getAdvance (int c) const {
+	if (_currentFace) {
+		FT_Fixed adv=0;
+		FT_Get_Advance(_currentFace, c, FT_LOAD_NO_SCALE, &adv);
+		return adv;
+	}
+	return 0;
 }
 
 

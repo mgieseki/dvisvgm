@@ -242,6 +242,8 @@ void SVGTree::newTextNode (double x, double y) {
 		else {
 			_text->addAttribute("font-family", font->name());
 			_text->addAttribute("font-size", font->scaledSize());
+			if (font->color() != Color::BLACK)
+				_text->addAttribute("fill", font->color().rgbString());
 		}
 		if (_vertical) {
 			_text->addAttribute("writing-mode", "tb");
@@ -269,6 +271,9 @@ void SVGTree::newTextNode (double x, double y) {
 void SVGTree::setFont (int num, const Font *font) {
 	_font.set(font);
 	_fontnum = num;
+	// set default color assigned to the font
+	if (!USE_FONTS && _color.get() != font->color())
+		setColor(font->color());
 }
 
 
@@ -295,9 +300,10 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 	double upem = font.unitsPerEm();
 	XMLElementNode *glyph_node=0;
 	if (SVGTree::USE_FONTS) {
+		double extend = font.style() ? font.style()->extend : 1;
 		glyph_node = new XMLElementNode("glyph");
 		glyph_node->addAttribute("unicode", XMLString(font.unicode(c), false));
-		glyph_node->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)));
+		glyph_node->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)*extend));
 		glyph_node->addAttribute("vert-adv-y", XMLString(font.vAdvance(c)));
 		string name = font.glyphName(c);
 		if (!name.empty())
@@ -333,7 +339,10 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		FORALL(sortmap, SortMap::const_iterator, it) {
 			style << "text.f"     << it->first << ' '
 				<< "{font-family:" << it->second->name()
-				<< ";font-size:"   << it->second->scaledSize() << "px}\n";
+				<< ";font-size:"   << it->second->scaledSize() << "px";
+			if (it->second->color() != Color::BLACK)
+				style << ";fill:" << it->second->color().rgbString();
+			style << "}\n";
 		}
 		XMLCDataNode *cdata = new XMLCDataNode(style.str());
 		styleNode->append(cdata);

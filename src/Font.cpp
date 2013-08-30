@@ -148,8 +148,10 @@ const FontMetrics* TFMFont::getMetrics () const {
 
 double TFMFont::charWidth (int c) const {
 	double w = getMetrics() ? getMetrics()->getCharWidth(c) : 0;
-	if (style())
+	if (style()) {
 		w *= style()->extend;
+		w += fabs(style()->slant*charHeight(c));  // slant := tan(phi) = dx/height
+	}
 	return w;
 }
 
@@ -201,8 +203,11 @@ const char* PhysicalFont::path () const {
 		case TTC: ext = "ttc"; break;
 		case TTF: ext = "ttf"; break;
 		case MF : ext = "mf";  break;
+		default : ext = 0;
 	}
-	return FileFinder::lookup(name()+"."+ext);
+	if (ext)
+		return FileFinder::lookup(name()+"."+ext);
+	return FileFinder::lookup(name());
 }
 
 
@@ -212,6 +217,17 @@ bool PhysicalFont::isCIDFont () const {
 		return false;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().isCIDFont();
+}
+
+
+/** Retrieve the IDs of all charachter maps available in the font file.
+ *  @param[out] charMapIDs IDs of the found character maps
+ *  @return number of found character maps */
+int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
+	if (type() == MF)
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getCharMapIDs(charMapIDs);
 }
 
 
@@ -528,30 +544,86 @@ void PhysicalFontImpl::tidy () const {
    }
 }
 
-
-/** Retrieve the IDs of all charachter maps available in the font file.
- *  @param[out] charMapIDs IDs of the found character maps
- *  @return number of found character maps */
-int PhysicalFontImpl::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
-	if (type() == MF)
-		return 0;
-	FontEngine::instance().setFont(*this);
-	return FontEngine::instance().getCharMapIDs(charMapIDs);
-}
-
-
 //////////////////////////////////////////////////////////////////////////////
 
+string NativeFont::uniqueName (const string &path, const FontStyle &style) {
+	static map<string, int> ids;
+	ostringstream oss;
+	oss << path << "b" << style.bold << "e" << style.extend << "s" << style.slant;
+	map<string, int>::iterator it = ids.find(oss.str());
+	int id = ids.size();
+	if (it == ids.end())
+		ids[oss.str()] = id;
+	else
+		id = it->second;
+	oss.str("");
+	oss << "nf" << id;
+	return oss.str();
+}
+
+
+string NativeFont::name () const {
+	return uniqueName(path(), _style);
+}
+
+
+PhysicalFont::Type NativeFont::type () const {
+	if (const char *filepath = path()) {
+		if (const char *p =strrchr(filepath, '.')) {
+			string ext = p+1;
+			if (ext == "otf")
+				return PhysicalFont::OTF;
+			if (ext == "ttf")
+				return PhysicalFont::TTF;
+			if (ext == "pfb")
+				return PhysicalFont::PFB;
+		}
+	}
+	return PhysicalFont::UNKNOWN;
+}
+
+
+double NativeFont::charWidth (int c) const {
+	FontEngine::instance().setFont(*this);
+	double w = scaledSize()*FontEngine::instance().getAdvance(c)/FontEngine::instance().getUnitsPerEM()*_style.extend;
+	w += fabs(_style.slant*charHeight(c));
+	return w;
+}
+
+
+double NativeFont::charHeight (int c) const {
+	FontEngine::instance().setFont(*this);
+	return scaledSize()*FontEngine::instance().getAscender()/FontEngine::instance().getUnitsPerEM();
+}
+
+
+double NativeFont::charDepth (int c) const {
+	FontEngine::instance().setFont(*this);
+	return -scaledSize()*FontEngine::instance().getDescender()/FontEngine::instance().getUnitsPerEM();
+}
+
+
 #if 0
-void PhysicalFontProxy::getGlyphMetrics (int c, double &wl, double &wr, double &h, double &d, GFGlyphTracer::Callback *cb) const {
-	_pf->getGlyphMetrics(c, wl, wr, h, d, cb);
-	double s = scaleFactor()/_pf->scaleFactor();
-	wl *= s;
-	wr *= s;
-	h  *= s;
-	d  *= s;
+bool NativeFontImpl::findAndAssignBaseFontMap () {
+	FontEngine &fe = FontEngine::instance();
+	fe.setFont(*this);
+	fe.buildInverseCharMap(_toUnicodeMap, _charmapID);
+	vector<CharMapID> charmapIDs;
+	fe.getCharMapIDs(charmapIDs);
+	for (size_t i=0; i < charmapIDs.size(); i++) {
+		if (charmapIDs[i] == CharMapID::WIN_UCS2 || charmapIDs[i] == CharMapID::WIN_UCS4) {
+			_charmapID = charmapIDs[i];
+			break;
+		}
+	}
+	return true;
 }
 #endif
+
+
+Character NativeFontImpl::decodeChar (UInt32 c) const {
+	return Character(Character::INDEX, c); //_toUnicodeMap.decode(c);
+}
 
 //////////////////////////////////////////////////////////////////////////////
 

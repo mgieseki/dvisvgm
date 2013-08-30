@@ -170,10 +170,10 @@ static string remove_path (string fname) {
 }
 
 
-static string ensure_suffix (string fname, const string &suffix) {
+static string ensure_suffix (string fname, bool eps) {
 	size_t dotpos = remove_path(fname).rfind('.');
 	if (dotpos == string::npos)
-		fname += "."+suffix;
+		fname += (eps ? ".eps" : ".dvi");
 	return fname;
 }
 
@@ -394,7 +394,7 @@ int main (int argc, char *argv[]) {
 	if (!HtmlSpecialHandler::setLinkMarker(args.linkmark_arg()))
 		Message::wstream(true) << "invalid argument '"+args.linkmark_arg()+"' supplied for option --linkmark\n";
 	double start_time = System::time();
-	string inputfile = ensure_suffix(args.file(0), args.eps_given() ? "eps" : "dvi");
+	string inputfile = ensure_suffix(args.file(0), args.eps_given());
 	ifstream ifs(inputfile.c_str(), ios_base::binary|ios_base::in);
 	if (!ifs) {
 		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";

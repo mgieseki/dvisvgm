@@ -47,7 +47,7 @@ struct FileFinder;
 class DVIReader : public StreamReader, protected VFActions
 {
 	typedef void (DVIReader::*CommandHandler)(int);
-	enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3};
+	enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV=5};
 	enum WritingMode {WMODE_LR=0, WMODE_TB=1, WMODE_BT=3};
 
 	struct DVIState
@@ -90,6 +90,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void moveRight (double x, bool callAction=true);
 		void moveDown (double y);
 		void putChar (UInt32 c, bool moveCursor);
+		void putGlyphArray (bool xonly);
 		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
 		virtual void beginPage (unsigned pageno, Int32 *c) {}
 		virtual void endPage (unsigned pageno) {}
@@ -128,6 +129,10 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPre (int len);
 		void cmdPost (int len);
 		void cmdPostPost (int len);
+		void cmdXPic (int len);
+		void cmdXFontDef (int len);
+		void cmdXGlyphA (int len);
+		void cmdXGlyphS (int len);
 
 	private:
 		DVIFormat _dviFormat;    ///< format of DVI file currently processed

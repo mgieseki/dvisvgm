@@ -52,6 +52,7 @@ class FontEngine
 		int getUnitsPerEM () const;
 		int getAscender () const;
 		int getDescender () const;
+		int getAdvance (int c) const;
 		int getHAdvance () const;
 		int getHAdvance (const Character &c) const;
 		int getVAdvance (const Character &c) const;

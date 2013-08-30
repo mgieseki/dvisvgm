@@ -30,6 +30,7 @@
 #include "Message.h"
 #include "macros.h"
 #include "CMapManager.h"
+#include "FileSystem.h"
 
 using namespace std;
 
@@ -233,6 +234,48 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 		if (_vfFirstFontMap.find(vf) == _vfFirstFontMap.end()) // first fontdef of VF?
 			_vfFirstFontMap[vf] = fontnum;
 	}
+	return newid;
+}
+
+
+
+int FontManager::registerFont (UInt32 fontnum, string filename, double ptsize, const FontStyle &style, Color color) {
+	int id = fontID(fontnum);
+	if (id >= 0)
+		return id;
+
+	if (!filename.empty() && filename[0] == '[' && filename[filename.size()-1] == ']')
+		filename = filename.substr(1, filename.size()-2);
+	string fontname = NativeFont::uniqueName(filename, style);
+	const char *path = filename.c_str();
+	Font *newfont=0;
+	const int newid = _fonts.size();   // the new font gets this ID
+	Name2IdMap::iterator it = _name2id.find(fontname);
+	if (it != _name2id.end()) {  // font with same name already registered?
+		if (NativeFont *font = dynamic_cast<NativeFont*>(_fonts[it->second]))
+			newfont = font->clone(ptsize, style, color);
+	}
+	else {
+		if (!FileSystem::exists(path))
+			path = FileFinder::lookup(filename, false);
+		if (path) {
+			newfont = new NativeFontImpl(path, ptsize, style, color);
+			newfont->findAndAssignBaseFontMap();
+		}
+		if (!newfont) {
+			// create dummy font as a placeholder if the proper font is not available
+			newfont = new EmptyFont(filename);
+			// print warning message about missing font file (only once for each filename)
+			static set<string> missing_fonts;
+			if (missing_fonts.find(filename) == missing_fonts.end()) {
+				Message::wstream(true) << "font file '" << filename << "' not found\n";
+				missing_fonts.insert(filename);
+			}
+		}
+		_name2id[fontname] = newid;
+	}
+	_fonts.push_back(newfont);
+	_num2id[fontnum] = newid;
 	return newid;
 }
 

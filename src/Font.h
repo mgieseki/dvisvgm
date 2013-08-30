@@ -25,7 +25,9 @@
 #include <string>
 #include <vector>
 #include "Character.h"
+#include "CharMap.h"
 #include "CharMapID.h"
+#include "Color.h"
 #include "FontCache.h"
 #include "FontEncoding.h"
 #include "FontMap.h"
@@ -40,7 +42,6 @@
 #include "CharMap.h"
 
 
-struct FontMetrics;
 struct FontStyle;
 
 
@@ -77,6 +78,7 @@ struct Font {
 	virtual bool verifyChecksums () const    {return true;}
 	virtual int fontIndex () const           {return 0;}
 	virtual const FontStyle* style () const  {return 0;}
+	virtual Color color () const             {return Color::BLACK;}
 	virtual const FontMap::Entry* fontMapEntry () const;
 };
 
@@ -110,7 +112,7 @@ struct EmptyFont : public Font
 class PhysicalFont : public virtual Font
 {
    public:
-      enum Type {MF, OTF, PFB, TTC, TTF};
+      enum Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
 
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
@@ -128,7 +130,7 @@ class PhysicalFont : public virtual Font
 		virtual int ascent () const;
 		virtual int descent () const;
 		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
-		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const =0;
+		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		virtual CharMapID getCharMapID () const =0;
 		virtual void setCharMapID (const CharMapID &id) {}
 		const char* path () const;
@@ -238,7 +240,6 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
       UInt32 unicode (UInt32 c) const;
 		bool findAndAssignBaseFontMap ();
       void tidy () const;
-		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		CharMapID getCharMapID () const             {return _charmapID;}
 
 	protected:
@@ -251,6 +252,84 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		FontEncodingPair _encodingPair;
 		CharMapID _charmapID;  ///< ID of the font's charmap to use
 		const CharMap *_localCharMap;
+};
+
+
+class NativeFont : public PhysicalFont
+{
+	public:
+		virtual NativeFont* clone (double ptsize, const FontStyle &style, Color color) const =0;
+		virtual Font* clone (double ds, double sc) const =0;
+		std::string name () const;
+		Type type () const;
+		double designSize () const               {return _ptsize;}
+		double scaledSize () const               {return _ptsize;}
+		double charWidth (int c) const;
+		double charDepth (int c) const;
+		double charHeight (int c) const;
+		double italicCorr (int c) const          {return 0;}
+		const FontMetrics* getMetrics () const   {return 0;}
+		const FontStyle* style () const          {return &_style;}
+		Color color () const                     {return _color;}
+		const FontMap::Entry* fontMapEntry () const {return 0;}
+		static std::string uniqueName (const std::string &path, const FontStyle &style);
+
+	protected:
+		NativeFont (double ptsize, const FontStyle &style, Color color) : _ptsize(ptsize), _style(style), _color(color) {}
+
+	private:
+		double _ptsize;
+		FontStyle _style;
+		Color _color;
+};
+
+
+class NativeFontProxy : public NativeFont
+{
+	friend class NativeFontImpl;
+	public:
+		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const {
+			return new NativeFontProxy(this, ptsize, style, color);
+		}
+
+		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
+		const Font* uniqueFont () const          {return _nfont;}
+		const char* path () const                {return _nfont->path();}
+//		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
+		CharMapID getCharMapID () const          {return _nfont->getCharMapID();}
+
+	protected:
+		NativeFontProxy (const NativeFont *nfont, double ptsize, const FontStyle &style, Color color)
+			: NativeFont(ptsize, style, color), _nfont(nfont) {}
+
+	private:
+		const NativeFont *_nfont;
+};
+
+
+class NativeFontImpl : public NativeFont
+{
+	public:
+		NativeFontImpl (const std::string &fname, double ptsize, const FontStyle &style, Color color)
+			: NativeFont(ptsize, style, color), _path(fname) {}
+
+		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const {
+			return new NativeFontProxy(this, ptsize, style, color);
+		}
+
+		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
+		const Font* uniqueFont () const          {return this;}
+		const char* path () const                {return _path.c_str();}
+//		bool findAndAssignBaseFontMap ();
+		CharMapID getCharMapID () const          {return _charmapID;}
+
+	protected:
+		Character decodeChar (UInt32 c) const;
+
+	private:
+		std::string _path;
+//		CharMap _toUnicodeMap;
+		CharMapID _charmapID;
 };
 
 
