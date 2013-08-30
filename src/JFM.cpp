@@ -36,6 +36,7 @@ JFM::JFM (istream &is) {
 		oss << "invalid JFM identifier " << id << " (9 or 11 expected)";
 		throw FontMetricException(oss.str());
 	}
+	_vertical = (id == 9);
 	UInt16 nt = UInt16(sr.readUnsigned(2)); // length of character type table
 	UInt16 lf = UInt16(sr.readUnsigned(2)); // length of entire file in 4 byte words
 	UInt16 lh = UInt16(sr.readUnsigned(2)); // length of header in 4 byte words
