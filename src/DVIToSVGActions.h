@@ -47,7 +47,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
 		~DVIToSVGActions ();
       void reset ();
-		void setChar (double x, double y, unsigned c, const Font *f);
+		void setChar (double x, double y, unsigned c, bool vertical, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setBgColor (const Color &color);
 		void setColor (const Color &color)             {_svg.setColor(color);}
@@ -60,6 +60,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
 		void pushContextElement (XMLElementNode *node) {_svg.pushContextElement(node);}
 		void popContextElement ()                      {_svg.popContextElement();}
+		void setTextOrientation(bool vertical)         {_svg.setVertical(vertical);}
 		void moveToX (double x);
 		void moveToY (double y);
 		void setFont (int num, const Font *font);
@@ -87,7 +88,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 
 	public:
 		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
-      static bool EXACT_BBOX;
 
 	private:
 		SVGTree &_svg;

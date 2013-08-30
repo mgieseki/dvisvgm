@@ -40,10 +40,10 @@ class TFM : public FontMetrics
 		double getCharHeight (int c) const;
 		double getCharDepth (int c) const;
 		double getItalicCorr (int c) const;
-		bool verticalMode () const  {return false;}
-		UInt32 getChecksum () const {return _checksum;}
-		UInt16 firstChar () const   {return _firstChar;}
-		UInt16 lastChar () const    {return _lastChar;}
+		bool verticalLayout () const {return false;}
+		UInt32 getChecksum () const  {return _checksum;}
+		UInt16 firstChar () const    {return _firstChar;}
+		UInt16 lastChar () const     {return _lastChar;}
 
 	protected:
 		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0) {}

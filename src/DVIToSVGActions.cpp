@@ -31,11 +31,11 @@
 #include "XMLNode.h"
 #include "XMLString.h"
 
+
 using namespace std;
 
 
 double DVIToSVGActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (values >= 1000 disable the progressbar)
-bool DVIToSVGActions::EXACT_BBOX = false;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
@@ -85,7 +85,7 @@ void DVIToSVGActions::moveToY (double y) {
  *  @param[in] y vertical position of the character's baseline
  *  @param[in] c character code relative to the current font
  *  @param[in] font font to be used */
-void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font) {
+void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, const Font *font) {
 	// If we use SVG fonts there is no need to record all font name/char/size combinations
 	// because the SVG font mechanism handles this automatically. It's sufficient to
 	// record font names and chars. The various font sizes can be ignored here.
@@ -95,41 +95,62 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, const Font *font)
 
 	// However, we record all required fonts
 	_usedFonts.insert(font);
-
 	_svg.appendChar(c, x, y, *font);
-	// update bounding box
-	double wl=0, wr=0, h=0, d=0; // left/right width, height, and depth of character c
+
 	static string fontname;
 	GlyphTracerMessages callback(fontname != font->name(), false);
 	fontname = font->name();
-	BoundingBox charbox;
-	const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font);
-	if (EXACT_BBOX && ph_font && ph_font->getGlyphBox(c, charbox, &callback)) {
-		if ((wl = charbox.minX()) > 0) wl=0;
-		if ((wr = charbox.maxX()) < 0) wr=0;
-		if ((h = charbox.maxY()) < 0) h=0;
-		if ((d = -charbox.minY()) < 0) d=0;
-	}
-	else {
-		double s = font->scaleFactor();
-		wr = s*(font->charWidth(c) + font->italicCorr(c));
-		h  = s*font->charHeight(c);
-		d  = s*font->charDepth(c);
-	}
 
-	BoundingBox bbox(x+wl, y-h, x+wr, y+d);
-/*	XMLElementNode *rect = new XMLElementNode("rect");
-	rect->addAttribute("x", x+wl);
-	rect->addAttribute("y", y-h);
-	rect->addAttribute("width", (-wl+wr));
-	rect->addAttribute("height", (h+d));
-	rect->addAttribute("fill", "none");
-	rect->addAttribute("stroke", "red");
-	rect->addAttribute("stroke-width", "0.5");
-	_svg.appendToPage(rect);*/
+	BoundingBox charbox;
+	GlyphMetrics metrics;
+	font->getGlyphMetrics(c, vertical, metrics);
+	const PhysicalFont* pf = dynamic_cast<const PhysicalFont*>(font);
+	if (PhysicalFont::EXACT_BBOX && pf) {
+		GlyphMetrics exact_metrics;
+		pf->getExactGlyphBox(c, exact_metrics, vertical, &callback);
+		if (vertical) {
+			// move top of bbox to upper margin of glyph (just an approximation yet)
+			y += (metrics.d-exact_metrics.h-exact_metrics.d)/2;
+		}
+		metrics = exact_metrics;
+	}
+	BoundingBox bbox(x-metrics.wl, y-metrics.h, x+metrics.wr, y+metrics.d);
+
+	// update bounding box
 	if (!getMatrix().isIdentity())
 		bbox.transform(getMatrix());
 	embed(bbox);
+#if 0
+	XMLElementNode *rect = new XMLElementNode("rect");
+	rect->addAttribute("x", x-metrics.wl);
+	rect->addAttribute("y", y-metrics.h);
+	rect->addAttribute("width", metrics.wl+metrics.wr);
+	rect->addAttribute("height", metrics.h+metrics.d);
+	rect->addAttribute("fill", "none");
+	rect->addAttribute("stroke", "red");
+	rect->addAttribute("stroke-width", "0.5");
+	_svg.appendToPage(rect);
+	if (metrics.d > 0) {
+		XMLElementNode *line = new XMLElementNode("line");
+		line->addAttribute("x1", x-metrics.wl);
+		line->addAttribute("y1", y);
+		line->addAttribute("x2", x+metrics.wr);
+		line->addAttribute("y2", y);
+		line->addAttribute("stroke", "blue");
+		line->addAttribute("stroke-width", "0.5");
+		_svg.appendToPage(line);
+	}
+	if (metrics.wl > 0) {
+		XMLElementNode *line = new XMLElementNode("line");
+		line->addAttribute("x1", x);
+		line->addAttribute("y1", y-metrics.h);
+		line->addAttribute("x2", x);
+		line->addAttribute("y2", y+metrics.d);
+		line->addAttribute("stroke", "blue");
+		line->addAttribute("stroke-width", "0.5");
+		_svg.appendToPage(line);
+	}
+#endif
 }
 
 

@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include "BoundingBox.h"
@@ -38,7 +39,7 @@ bool SVGTree::USE_FONTS=true;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
 
 
-SVGTree::SVGTree () : _font(0), _color(Color::BLACK), _matrix(1) {
+SVGTree::SVGTree () : _vertical(false), _font(0), _color(Color::BLACK), _matrix(1) {
 	_xchanged = _ychanged = false;
 	_fontnum = 0;
 	reset();
@@ -118,7 +119,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 	XMLElementNode *node=_span;
 	if (USE_FONTS) {
 		// changes of fonts and transformations require a new text element
-		if (!_text || _font.changed() || _matrix.changed()) {
+		if (!_text || _font.changed() || _matrix.changed() || _vertical.changed()) {
 			newTextNode(x, y);
 			node = _text;
 			_color.changed(true);
@@ -127,6 +128,12 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			// if drawing position was explicitly changed, create a new tspan element
 			_span = new XMLElementNode("tspan");
 			if (_xchanged) {
+				if (_vertical) {
+					// align glyphs designed for horizontal layout properly
+					if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(_font.get()))
+						if (!pf->getMetrics()->verticalLayout())
+							x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
+				}
 				_span->addAttribute("x", x);
 				_xchanged = false;
 			}
@@ -166,9 +173,32 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			else if (_color.get() == Color::BLACK && _matrix.get().isIdentity())
 				node = _span = 0;
 		}
-
 		if (!node)
 			node = _pageContainerStack.empty() ? _page : _pageContainerStack.top();
+		if (font.verticalLayout()) {
+			// move glyph graphics so that its origin is located at the top center position
+			GlyphMetrics metrics;
+			font.getGlyphMetrics(c, _vertical, metrics);
+			x -= metrics.wl;
+			if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font)) {
+				// Center glyph between top and bottom border of the TFM box.
+				// This is just an approximation used until I find a way to compute
+				// the exact location in vertical mode.
+				GlyphMetrics exact_metrics;
+				pf->getExactGlyphBox(c, exact_metrics, false);
+				y += exact_metrics.h+(metrics.d-exact_metrics.h-exact_metrics.d)/2;
+			}
+			else
+				y += metrics.d;
+		}
+		Matrix rotation(1);
+		if (_vertical && !font.verticalLayout()) {
+			// alphabetic text designed for horizontal mode
+			// must be rotated by 90 degrees if in vertical mode
+			rotation.translate(-x, -y);
+			rotation.rotate(90);
+			rotation.translate(x, y);
+		}
 		if (CREATE_USE_ELEMENTS) {
 			ostringstream oss;
 			oss << "#g" << FontManager::instance().fontID(_font) << '-' << c;
@@ -176,18 +206,22 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			use->addAttribute("x", XMLString(x));
 			use->addAttribute("y", XMLString(y));
 			use->addAttribute("xlink:href", oss.str());
+			if (!rotation.isIdentity())
+				use->addAttribute("transform", rotation.getSVG());
 			node->append(use);
 		}
 		else {
 			Glyph glyph;
-			const PhysicalFont *font = dynamic_cast<const PhysicalFont*>(_font.get());
-			if (font && font->getGlyph(c, glyph)) {
-				double sx = font->scaledSize()/font->unitsPerEm();
+			const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
+			if (pf && pf->getGlyph(c, glyph)) {
+				double sx = pf->scaledSize()/pf->unitsPerEm();
 				double sy = -sx;
 				ostringstream oss;
 				glyph.writeSVG(oss, sx, sy, x, y);
 				XMLElementNode *glyph_node = new XMLElementNode("path");
 				glyph_node->addAttribute("d", oss.str());
+				if (!rotation.isIdentity())
+					glyph_node->addAttribute("transform", rotation.getSVG());
 				node->append(glyph_node);
 			}
 		}
@@ -209,12 +243,22 @@ void SVGTree::newTextNode (double x, double y) {
 			_text->addAttribute("font-family", font->name());
 			_text->addAttribute("font-size", font->scaledSize());
 		}
+		if (_vertical) {
+			_text->addAttribute("writing-mode", "tb");
+			// align glyphs designed for horizontal layout properly
+			if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(_font.get()))
+				if (!pf->getMetrics()->verticalLayout()) { // alphabetic text designed for horizontal layout?
+					x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
+					_text->addAttribute("glyph-orientation-vertical", 90); // ensure rotation
+				}
+		}
 	}
 	_text->addAttribute("x", x);
 	_text->addAttribute("y", y);
 	if (!_matrix.get().isIdentity())
 		_text->addAttribute("transform", _matrix.get().getSVG());
 	appendToPage(_text);
+	_vertical.changed(false);
 	_font.changed(false);
 	_matrix.changed(false);
 	_xchanged = false;
@@ -254,6 +298,7 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 		glyph_node = new XMLElementNode("glyph");
 		glyph_node->addAttribute("unicode", XMLString(font.unicode(c), false));
 		glyph_node->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)));
+		glyph_node->addAttribute("vert-adv-y", XMLString(font.vAdvance(c)));
 		string name = font.glyphName(c);
 		if (!name.empty())
 			glyph_node->addAttribute("glyph-name", name);
@@ -313,7 +358,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
 		faceNode->addAttribute("font-family", fontname);
 		faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
-		if (font.type() != PhysicalFont::MF) {
+		if (font.type() != PhysicalFont::MF && !font.verticalLayout()) {
 			faceNode->addAttribute("ascent", XMLString(font.ascent()));
 			faceNode->addAttribute("descent", XMLString(font.descent()));
 		}

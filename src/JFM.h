@@ -29,7 +29,7 @@ class JFM : public TFM
 {
    public:
       JFM (std::istream &is);
-		bool verticalMode () const  {return _vertical;}
+		bool verticalLayout () const  {return _vertical;}
 
 	protected:
 		void readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni);
@@ -37,7 +37,7 @@ class JFM : public TFM
 
    private:
 		UInt16 _minchar;  ///< character code of first entry in character type table
-		bool _vertical;   ///< true if in vertical mode
+		bool _vertical;   ///< true if metrics refer to vertical text layout
 		std::vector<UInt16> _charTypeTable;
 };
 

@@ -29,6 +29,7 @@
 #include "FontCache.h"
 #include "FontEncoding.h"
 #include "FontMap.h"
+#include "FontMetrics.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
 #include "GraphicPath.h"
@@ -43,6 +44,14 @@ struct FontMetrics;
 struct FontStyle;
 
 
+struct GlyphMetrics
+{
+	GlyphMetrics () : wl(0), wr(0), h(0), d(0) {}
+	GlyphMetrics (double wwl, double wwr, double hh, double dd) : wl(wwl), wr(wwr), h(hh), d(dd) {}
+	double wl, wr, h, d;
+};
+
+
 /** Abstract base for all font classes. */
 struct Font {
 	virtual ~Font () {}
@@ -51,7 +60,7 @@ struct Font {
 	virtual std::string name () const =0;
 	virtual double designSize () const =0;
 	virtual double scaledSize () const =0;
-	virtual double scaleFactor () const        {return scaledSize()/designSize();}
+	virtual double scaleFactor () const     {return scaledSize()/designSize();}
 	virtual double charWidth (int c) const =0;
 	virtual double charDepth (int c) const =0;
 	virtual double charHeight (int c) const =0;
@@ -60,12 +69,14 @@ struct Font {
 	virtual const char* path () const =0;
 	virtual const FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
+	virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
    virtual UInt32 unicode (UInt32 c) const;
    virtual void tidy () const {}
-	virtual bool findAndAssignBaseFontMap ()            {return true;}
-	virtual bool verifyChecksums () const               {return true;}
-	virtual int fontIndex () const                      {return 0;}
-	virtual const FontStyle* style () const             {return 0;}
+	virtual bool findAndAssignBaseFontMap () {return true;}
+	virtual bool verticalLayout () const     {return getMetrics() ? getMetrics()->verticalLayout() : false;}
+	virtual bool verifyChecksums () const    {return true;}
+	virtual int fontIndex () const           {return 0;}
+	virtual const FontStyle* style () const  {return 0;}
 	virtual const FontMap::Entry* fontMapEntry () const;
 };
 
@@ -105,12 +116,15 @@ class PhysicalFont : public virtual Font
 		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
 		virtual Type type () const =0;
 		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
-		virtual bool getGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
+		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
+		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb=0) const;
 		virtual bool isCIDFont () const;
 		virtual int hAdvance () const;
 		virtual double hAdvance (int c) const;
+		virtual double vAdvance (int c) const;
 		std::string glyphName (int c) const;
 		virtual int unitsPerEm () const;
+		virtual double scaledAscent () const;
 		virtual int ascent () const;
 		virtual int descent () const;
 		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=0) const;
@@ -124,6 +138,7 @@ class PhysicalFont : public virtual Font
 		Character decodeChar (UInt32 c) const;
 
    public:
+		static bool EXACT_BBOX;
 		static bool KEEP_TEMP_FILES;
 		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
 		static double METAFONT_MAG;    ///< magnification factor for Metafont calls

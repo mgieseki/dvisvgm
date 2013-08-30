@@ -385,9 +385,9 @@ int main (int argc, char *argv[]) {
 	SVGTree::CREATE_STYLE = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	SVGTree::CREATE_USE_ELEMENTS = args.no_fonts_arg() < 1;
-	DVIToSVGActions::EXACT_BBOX = args.exact_given();
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	Message::LEVEL = args.verbosity_arg();
+	PhysicalFont::EXACT_BBOX = args.exact_given();
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));

@@ -33,7 +33,7 @@ struct FontMetrics
 	virtual double getCharHeight (int c) const =0;
 	virtual double getCharDepth (int c) const =0;
 	virtual double getItalicCorr (int c) const =0;
-	virtual bool verticalMode () const =0;
+	virtual bool verticalLayout () const =0;
 	virtual UInt32 getChecksum () const =0;
 	virtual UInt16 firstChar () const =0;
 	virtual UInt16 lastChar () const =0;
@@ -48,7 +48,7 @@ struct NullFontMetric : public FontMetrics
 	double getCharHeight (int c) const {return 0;}
 	double getCharDepth (int c) const  {return 0;}
 	double getItalicCorr (int c) const {return 0;}
-	bool verticalMode () const         {return false;}
+	bool verticalLayout () const       {return false;}
 	UInt32 getChecksum () const        {return 0;}
 	UInt16 firstChar () const          {return 0;}
 	UInt16 lastChar () const           {return 0;}

@@ -81,6 +81,7 @@ class SVGTree
 		void setY (double y)              {_ychanged = true;}
 		void setMatrix (const Matrix &m)  {_matrix.set(m);}
 		void setColor (const Color &c)    {_color.set(c);}
+		void setVertical (bool state)     {_vertical.set(state);}
 		void transformPage (const Matrix *m);
 		const Color& getColor () const    {return _color.get();}
 		const Matrix& getMatrix () const  {return _matrix.get();}
@@ -98,6 +99,7 @@ class SVGTree
 		XMLDocument _doc;
 		XMLElementNode *_root, *_page, *_text, *_span, *_defs;
 		bool _xchanged, _ychanged;
+		Property<bool> _vertical;  ///< true if in vertical writing mode
 		Property<const Font*> _font;
 		Property<Color> _color;
 		Property<Matrix> _matrix;

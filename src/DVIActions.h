@@ -37,8 +37,9 @@ struct DVIActions
 	static const double CM;
 	static const double MM;
 	virtual ~DVIActions () {}
-	virtual void setChar (double x, double y, unsigned c, const Font *f) {}
+	virtual void setChar (double x, double y, unsigned c, bool vertical, const Font *f) {}
 	virtual void setRule (double x, double y, double height, double width) {}
+	virtual void setTextOrientation (bool vertical) {}
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
 	virtual bool fontProcessingEnabled () const {return true;}

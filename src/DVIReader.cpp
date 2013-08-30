@@ -32,12 +32,13 @@
 #include "VectorStream.h"
 #include "macros.h"
 
+
 using namespace std;
 
 bool DVIReader::COMPUTE_PAGE_LENGTH = false;
 
 
-DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _actions(a)
+DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat(DVI_NONE), _actions(a)
 {
 	_inPage = false;
 	_pageHeight = _pageWidth = 0;
@@ -114,6 +115,10 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 		length = 0;
 		param = opcode-171;
 	}
+	else if (opcode == 255 && _dviFormat == DVI_PTEX) {
+		handler = &DVIReader::cmdDir;
+		length = 1;
+	}
 	else if (opcode >= 250) {
 		ostringstream oss;
 		oss << "undefined DVI command (opcode " << opcode << ')';
@@ -161,9 +166,9 @@ int DVIReader::executeCommand () {
 	streampos pos = in().tellg();
 	int opcode = evalCommand(false, handler, len, param);
 	(this->*handler)(param);
-	if (_currPos.v+_ty != _prevYPos) {
+	if (_dviState.v+_ty != _prevYPos) {
 		_tx = _ty = 0;
-		_prevYPos = _currPos.v;
+		_prevYPos = _dviState.v;
 	}
 	if (COMPUTE_PAGE_LENGTH && _inPage && _actions) {
 		// ensure progress() is called at 0%
@@ -195,28 +200,6 @@ void DVIReader::executeAll () {
 }
 
 
-#if 0
-/** Executes all DVI commands from the preamble to postpost. */
-bool DVIReader::executeDocument () {
-	in().clear();   // reset all status bits
-	if (!in())
-		return false;
-	in().seekg(0);  // move file pointer to first byte of the input stream
-	while (!in().eof() && executeCommand() != 249); // stop reading after postpost (249)
-	return true;
-}
-
-bool DVIReader::executeAllPages () {
-	in().clear();   // reset all status bits
-	if (!in())
-		return false;
-	in().seekg(0);  // move file pointer to first byte of the input stream
-	while (!in().eof() && executeCommand() != 248); // stop reading when postamble (248) is reached
-	return true;
-}
-#endif
-
-
 /** Reads and executes the commands of a single page.
  *  This methods stops reading after the page's eop command has been executed.
  *  @param[in] n number of page to be executed
@@ -236,10 +219,10 @@ bool DVIReader::executePage (unsigned n) {
 	if (n < 1 || n > _totalPages)
 		return false;
 	in().seekg(_prevBop, ios_base::beg); // now on last bop
-	_inPostamble = false;               // we jumped out of the postamble
+	_inPostamble = false;                // we jumped out of the postamble
 	unsigned pageCount = _totalPages;
 	for (; pageCount > n && _prevBop > 0; pageCount--) {
-		in().seekg(41, ios_base::cur);   // skip bop and 10*4 \count bytes => now on pointer to prev bop
+		in().seekg(41, ios_base::cur);    // skip bop and 10*4 \count bytes => now on pointer to prev bop
 		_prevBop = readSigned(4);
 		in().seekg(_prevBop, ios_base::beg);
 	}
@@ -266,10 +249,10 @@ bool DVIReader::executePages (unsigned first, unsigned last) {
 	first = max(1u, min(first, _totalPages));
 	last = max(1u, min(last, _totalPages));
 	in().seekg(_prevBop, ios_base::beg); // now on last bop
-	_inPostamble = false;               // we jumped out of the postamble
+	_inPostamble = false;                // we jumped out of the postamble
 	unsigned count = _totalPages;
 	for (; count > first && _prevBop > 0; count--) {
-		in().seekg(41, ios_base::cur);   // skip bop and 10*4 \count bytes => now on pointer to prev bop
+		in().seekg(41, ios_base::cur);    // skip bop and 10*4 \count bytes => now on pointer to prev bop
 		_prevBop = readSigned(4);
 		in().seekg(_prevBop, ios_base::beg);
 	}
@@ -311,14 +294,14 @@ void DVIReader::executePostamble () {
 /** Returns the current x coordinate in TeX point units.
  *  This is the horizontal position where the next output would be placed. */
 double DVIReader::getXPos () const {
-	return _currPos.h+_tx;
+	return _dviState.h+_tx;
 }
 
 
 /** Returns the current y coordinate in TeX point units.
  *  This is the vertical position where the next output would be placed. */
 double DVIReader::getYPos () const {
-	return _currPos.v+_ty;
+	return _dviState.v+_ty;
 }
 
 
@@ -331,21 +314,30 @@ double DVIReader::getPageWidth () const {
 	return _pageWidth;
 }
 
+
+void DVIReader::verifyDVIFormat (int id) const {
+	switch (id) {
+		case DVI_STANDARD:
+		case DVI_PTEX:
+			break;
+		default:
+			ostringstream oss;
+			oss << "DVI format version " << id << " not supported";
+			throw DVIException(oss.str());
+	}
+}
+
 /////////////////////////////////////
 
 /** Reads and executes DVI preamble command. */
 void DVIReader::cmdPre (int) {
-	UInt32 i   = readUnsigned(1);  // identification number (should be 2)
+	_dviFormat = max(_dviFormat, (DVIFormat)readUnsigned(1)); // identification number
+	verifyDVIFormat(_dviFormat);
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
 	_mag = readUnsigned(4);        // magnification
 	UInt32 k   = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
-	if (i != 2) {
-		ostringstream oss;
-		oss << "DVI format version " << i << " not supported";
-		throw DVIException(oss.str());
-	}
 	// 1 dviunit * num/den == multiples of 0.0000001m
 	// 1 dviunit * _scaleFactor: length of 1 dviunit in TeX points * _mag/1000
 	_scaleFactor = num/25400000.0*7227.0/den*_mag/1000.0;
@@ -367,7 +359,7 @@ void DVIReader::cmdPost (int) {
 	// 1 dviunit * num/den == multiples of 0.0000001m
 	// 1 dviunit * _scaleFactor: length of 1 dviunit in TeX points * _mag/1000
 	_scaleFactor = num/25400000.0*7227.0/den*_mag/1000.0;
-	_pageHeight *= _scaleFactor;     // to pt units
+	_pageHeight *= _scaleFactor;   // to pt units
 	_pageWidth *= _scaleFactor;
 	_inPostamble = true;
 	if (_actions)
@@ -378,12 +370,10 @@ void DVIReader::cmdPost (int) {
 /** Reads and executes DVI postpost command. */
 void DVIReader::cmdPostPost (int) {
 	_inPostamble = false;
-	readUnsigned(4);               // pointer to begin of postamble
-	UInt32 i = readUnsigned(1);    // identification byte (should be 2)
-	if (i == 2)
-		while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
-	else
-		throw DVIException("invalid identification value in postpost");
+	readUnsigned(4);   // pointer to begin of postamble
+	_dviFormat = max(_dviFormat, (DVIFormat)readUnsigned(1));  // identification byte
+	verifyDVIFormat(_dviFormat);
+	while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
 }
 
 
@@ -393,9 +383,9 @@ void DVIReader::cmdBop (int) {
 	for (int i=0; i < 10; i++)
 		c[i] = readSigned(4);
 	readSigned(4);        // pointer to peceeding bop (-1 in case of first page)
-	_currPos.reset();     // set all DVI registers to 0
-	while (!_posStack.empty())
-		_posStack.pop();
+	_dviState.reset();     // set all DVI registers to 0
+	while (!_stateStack.empty())
+		_stateStack.pop();
 	_currFontNum = 0;
 	_inPage = true;
 	_pageLength = 0;
@@ -421,7 +411,7 @@ void DVIReader::cmdBop (int) {
 
 /** Reads and executes End-Of-Page command. */
 void DVIReader::cmdEop (int) {
-	if (!_posStack.empty())
+	if (!_stateStack.empty())
 		throw DVIException("stack not empty at end of page");
 	_inPage = false;
 	endPage(_currPageNum);
@@ -432,23 +422,25 @@ void DVIReader::cmdEop (int) {
 
 /** Reads and executes push command. */
 void DVIReader::cmdPush (int) {
-	_posStack.push(_currPos);
+	_stateStack.push(_dviState);
 }
 
 
 /** Reads and executes pop command (restores pushed position information). */
 void DVIReader::cmdPop (int) {
-	if (_posStack.empty())
+	if (_stateStack.empty())
 		throw DVIException("stack empty at pop command");
 	else {
-		DVIPosition prevPos = _currPos;
-		_currPos = _posStack.top();
-		_posStack.pop();
+		DVIState prevState = _dviState;
+		_dviState = _stateStack.top();
+		_stateStack.pop();
 		if (_actions) {
-			if (prevPos.h != _currPos.h)
-				_actions->moveToX(_currPos.h + _tx);
-			if (prevPos.v != _currPos.v)
-				_actions->moveToY(_currPos.v + _ty);
+			if (prevState.h != _dviState.h)
+				_actions->moveToX(_dviState.h + _tx);
+			if (prevState.v != _dviState.v)
+				_actions->moveToY(_dviState.v + _ty);
+			if (prevState.d != _dviState.d)
+				_actions->setTextOrientation(_dviState.d != WMODE_LR);
 		}
 	}
 }
@@ -474,10 +466,10 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
 		vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
 		if (dvi) {
-			DVIPosition pos = _currPos;       // save current cursor position
-			_currPos.x = _currPos.y = _currPos.w = _currPos.z = 0;
+			DVIState pos = _dviState;        // save current cursor position
+			_dviState.x = _dviState.y = _dviState.w = _dviState.z = 0;
 			int save_fontnum = _currFontNum; // save current font number
-			fm.enterVF(vf);        // new font number context
+			fm.enterVF(vf);                  // new font number context
 			cmdFontNum0(fm.vfFirstFontNum(vf));
 			double save_scale = _scaleFactor;
 			_scaleFactor = vf->scaledSize()/(1 << 20);
@@ -494,14 +486,20 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 			_scaleFactor = save_scale;  // restore previous scale factor
 			fm.leaveVF();               // restore previous font number context
 			cmdFontNum0(save_fontnum);  // restore previous font number
-			_currPos = pos;             // restore previous cursor position
+			_dviState = pos;            // restore previous cursor position
 		}
 	}
-	else if (_actions) {
-		_actions->setChar(_currPos.h+_tx, _currPos.v+_ty, c, font);
+	else if (_actions)
+		_actions->setChar(_dviState.h+_tx, _dviState.v+_ty, c, _dviState.d != WMODE_LR, font);
+
+	if (moveCursor) {
+		double dist = font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
+		switch (_dviState.d) {
+			case WMODE_LR: _dviState.h += dist; break;
+			case WMODE_TB: _dviState.v += dist; break;
+			case WMODE_BT: _dviState.v -= dist; break;
+		}
 	}
-	if (moveCursor)
-		_currPos.h += font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
 }
 
 
@@ -546,10 +544,8 @@ void DVIReader::cmdSetRule (int) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
 		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_currPos.h+_tx, _currPos.v+_ty, height, width);
-		_currPos.h += width;
-		if (_actions && (height <= 0 || width <= 0))
-			_actions->moveToX(_currPos.h+_tx);
+			_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
+		moveRight(width, (height <= 0 || width <= 0));
 	}
 	else
 		throw DVIException("set_rule outside of page");
@@ -564,25 +560,71 @@ void DVIReader::cmdPutRule (int) {
 		double height = _scaleFactor*readSigned(4);
 		double width  = _scaleFactor*readSigned(4);
 		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_currPos.h+_tx, _currPos.v+_ty, height, width);
+			_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
 	}
 	else
 		throw DVIException("put_rule outside of page");
 }
 
 
+void DVIReader::moveRight (double x, bool callAction) {
+	switch (_dviState.d) {
+		case WMODE_LR: _dviState.h += x; break;
+		case WMODE_TB: _dviState.v += x; break;
+		case WMODE_BT: _dviState.v -= x; break;
+	}
+	if (_actions && callAction) {
+		if (_dviState.d == WMODE_LR)
+			_actions->moveToX(x+_tx);
+		else
+			_actions->moveToY(x+_ty);
+	}
+}
+
+
+void DVIReader::moveDown (double y) {
+	switch (_dviState.d) {
+		case WMODE_LR: _dviState.v += y; break;
+		case WMODE_TB: _dviState.h -= y; break;
+		case WMODE_BT: _dviState.h += y; break;
+	}
+	if (_actions) {
+		if (_dviState.d == WMODE_LR)
+			_actions->moveToY(y+_ty);
+		else
+			_actions->moveToX(y+_tx);
+	}
+}
+
+
+void DVIReader::cmdRight (int len) {moveRight(_scaleFactor*readSigned(len));}
+void DVIReader::cmdDown (int len)  {moveDown(_scaleFactor*readSigned(len));}
+void DVIReader::cmdX0 (int)        {moveRight(_dviState.x);}
+void DVIReader::cmdY0 (int)        {moveDown(_dviState.y);}
+void DVIReader::cmdW0 (int)        {moveRight(_dviState.w);}
+void DVIReader::cmdZ0 (int)        {moveDown(_dviState.z);}
+void DVIReader::cmdX (int len)     {_dviState.x = _scaleFactor*readSigned(len); cmdX0(0);}
+void DVIReader::cmdY (int len)     {_dviState.y = _scaleFactor*readSigned(len); cmdY0(0);}
+void DVIReader::cmdW (int len)     {_dviState.w = _scaleFactor*readSigned(len); cmdW0(0);}
+void DVIReader::cmdZ (int len)     {_dviState.z = _scaleFactor*readSigned(len); cmdZ0(0);}
 void DVIReader::cmdNop (int)       {}
 
-void DVIReader::cmdRight (int len) {_currPos.h += _scaleFactor*readSigned(len); if (_actions) _actions->moveToX(_currPos.h+_tx);}
-void DVIReader::cmdDown (int len)  {_currPos.v += _scaleFactor*readSigned(len); if (_actions) _actions->moveToY(_currPos.v+_ty);}
-void DVIReader::cmdX0 (int)        {_currPos.h += _currPos.x;                   if (_actions) _actions->moveToX(_currPos.h+_tx);}
-void DVIReader::cmdY0 (int)        {_currPos.v += _currPos.y;                   if (_actions) _actions->moveToY(_currPos.v+_ty);}
-void DVIReader::cmdW0 (int)        {_currPos.h += _currPos.w;                   if (_actions) _actions->moveToX(_currPos.h+_tx);}
-void DVIReader::cmdZ0 (int)        {_currPos.v += _currPos.z;                   if (_actions) _actions->moveToY(_currPos.v+_ty);}
-void DVIReader::cmdX (int len)     {_currPos.x = _scaleFactor*readSigned(len);  cmdX0(0);}
-void DVIReader::cmdY (int len)     {_currPos.y = _scaleFactor*readSigned(len);  cmdY0(0);}
-void DVIReader::cmdW (int len)     {_currPos.w = _scaleFactor*readSigned(len);  cmdW0(0);}
-void DVIReader::cmdZ (int len)     {_currPos.z = _scaleFactor*readSigned(len);  cmdZ0(0);}
+
+/** Sets the text orientation (horizontal, vertical).
+ *  This command is only available in DVI files of format 3 (created by pTeX) */
+void DVIReader::cmdDir (int) {
+	UInt8 wmode = readUnsigned(1);
+	if (wmode == 4)  // yoko mode (4) equals default LR mode (0)
+		wmode = 0;
+	if (wmode == 2 || wmode > 3) {
+		ostringstream oss;
+		oss << "invalid writing mode value " << wmode << " (0, 1, or 3 expected)";
+		throw DVIException(oss.str());
+	}
+	_dviState.d = (WritingMode)wmode;
+	if (_actions)
+		_actions->setTextOrientation(_dviState.d != WMODE_LR);
+}
 
 
 void DVIReader::cmdXXX (int len) {

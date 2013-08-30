@@ -47,13 +47,16 @@ struct FileFinder;
 class DVIReader : public StreamReader, protected VFActions
 {
 	typedef void (DVIReader::*CommandHandler)(int);
+	enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3};
+	enum WritingMode {WMODE_LR=0, WMODE_TB=1, WMODE_BT=3};
 
-	struct DVIPosition
+	struct DVIState
 	{
-		double h, v;
-		double x, w, y, z;
-		DVIPosition () {reset();}
-		void reset ()  {h = v = x = w = y = z = 0.0;}
+		double h, v;        ///< horizontal and vertical cursor position
+		double x, w, y, z;  ///< additional registers to store horizontal (x, w) and vertical (y, z) positions
+		WritingMode d;      ///< direction: 0: horizontal, 1: vertical(top->bottom), 3: vertical (bottom->top)
+		DVIState ()   {reset();}
+		void reset () {h = v = x = w = y = z = 0.0; d=WMODE_LR;}
 	};
 
 	public:
@@ -70,8 +73,8 @@ class DVIReader : public StreamReader, protected VFActions
 		double getXPos () const;
 		double getYPos () const;
 		void finishLine ()                     {_prevYPos = std::numeric_limits<double>::min();}
-		void translateToX (double x)           {_tx=x-_currPos.h-_tx;}
-		void translateToY (double y)           {_ty=y-_currPos.v-_ty;}
+		void translateToX (double x)           {_tx=x-_dviState.h-_tx;}
+		void translateToY (double y)           {_ty=y-_dviState.v-_ty;}
 		double getPageWidth () const;
 		double getPageHeight () const;
 		int getCurrentFontNumber () const      {return _currFontNum;}
@@ -81,8 +84,11 @@ class DVIReader : public StreamReader, protected VFActions
 		DVIActions* replaceActions (DVIActions *a);
 
 	protected:
+		void verifyDVIFormat (int id) const;
 		int executeCommand ();
 		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
+		void moveRight (double x, bool callAction=true);
+		void moveDown (double y);
 		void putChar (UInt32 c, bool moveCursor);
 		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
 		virtual void beginPage (unsigned pageno, Int32 *c) {}
@@ -104,6 +110,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdEop (int len);
 		void cmdPush (int len);
 		void cmdPop (int len);
+		void cmdDir (int len);
 		void cmdRight (int len);
 		void cmdDown (int len);
 		void cmdX0 (int len);
@@ -123,6 +130,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdPostPost (int len);
 
 	private:
+		DVIFormat _dviFormat;    ///< format of DVI file currently processed
 		DVIActions *_actions;    ///< actions to be performed on various DVI events
 		bool _inPage;            ///< true if between bop and eop
 		unsigned _totalPages;    ///< total number of pages in dvi file
@@ -133,8 +141,8 @@ class DVIReader : public StreamReader, protected VFActions
 		bool _inPostamble;       ///< true if stream pointer is inside the postamble
 		Int32 _prevBop;          ///< pointer to previous bop
 		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
-		DVIPosition _currPos;    ///< current cursor position
-		std::stack<DVIPosition> _posStack;
+		DVIState _dviState;      ///< current cursor position
+		std::stack<DVIState> _stateStack;
 		double _prevYPos;        ///< previous vertical cursor position
 		double _tx, _ty;         ///< tranlation of cursor position
 		size_t _pageLength;      ///< number of bytes between current bop end eop

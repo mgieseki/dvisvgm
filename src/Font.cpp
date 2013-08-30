@@ -39,6 +39,7 @@
 #include "SVGTree.h"
 #include "macros.h"
 
+
 using namespace std;
 
 
@@ -81,6 +82,36 @@ const FontMap::Entry* Font::fontMapEntry () const {
 		fontname = fontname.substr(0, pos); // strip extension
 	return FontMap::instance().lookup(fontname);
 }
+
+
+/** Compute the extents of a given glyph.
+ *  @param[in] c character code of glyph
+ *  @param[in] vertical true if is glyph is part of vertical aligned text
+ *  @param[out] metrics the resulting extents */
+void Font::getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const {
+	double s = scaleFactor();
+	if (vertical) {  // get metrics for vertical text flow?
+		if (verticalLayout()) {  // is the font designed for vertical texts?
+			metrics.wl = s*charDepth(c);
+			metrics.wr = s*charHeight(c);
+			metrics.h  = 0;
+			metrics.d  = s*charWidth(c);
+		}
+		else {  // rotate box by 90 degrees for alphabetic text
+			metrics.wl = s*charDepth(c);
+			metrics.wr = s*charHeight(c);
+			metrics.h  = 0;
+			metrics.d  = s*(charWidth(c)+italicCorr(c));
+		}
+	}
+	else {
+		metrics.wl = 0;
+		metrics.wr = s*(charWidth(c)+italicCorr(c));
+		metrics.h  = s*charHeight(c);
+		metrics.d  = s*charDepth(c);
+	}
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,6 +176,7 @@ bool TFMFont::verifyChecksums () const {
 //////////////////////////////////////////////////////////////////////////////
 
 // static class variables
+bool PhysicalFont::EXACT_BBOX = false;
 bool PhysicalFont::KEEP_TEMP_FILES = false;
 const char *PhysicalFont::CACHE_PATH = 0;
 double PhysicalFont::METAFONT_MAG = 4;
@@ -225,6 +257,17 @@ double PhysicalFont::hAdvance (int c) const {
 }
 
 
+double PhysicalFont::vAdvance (int c) const {
+	if (type() == MF)
+		return unitsPerEm()*charWidth(c)/designSize();
+	FontEngine::instance().setFont(*this);
+	if (const FontMap::Entry *entry = fontMapEntry())
+		if (Subfont *sf = entry->subfont)
+			c = sf->decode(c);
+	return FontEngine::instance().getVAdvance(decodeChar(c));
+}
+
+
 string PhysicalFont::glyphName (int c) const {
 	if (type() == MF)
 		return "";
@@ -233,6 +276,11 @@ string PhysicalFont::glyphName (int c) const {
 		if (Subfont *sf = entry->subfont)
 			c = sf->decode(c);
 	return FontEngine::instance().getGlyphName(decodeChar(c));
+}
+
+
+double PhysicalFont::scaledAscent() const {
+	return ascent()*scaledSize()/unitsPerEm();
 }
 
 
@@ -356,7 +404,7 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
  *  @param[out] bbox the computed bounding box
  *  @param[in]  optional calback object forwarded to the tracer
  *  @return true if the box could be computed successfully */
-bool PhysicalFont::getGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
+bool PhysicalFont::getExactGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
 	Glyph glyph;
 	if (getGlyph(c, glyph, cb)) {
 		glyph.computeBBox(bbox);
@@ -365,6 +413,32 @@ bool PhysicalFont::getGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback
 		return true;
 	}
 	return false;
+}
+
+
+bool PhysicalFont::getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb) const {
+	BoundingBox charbox;
+	if (!getExactGlyphBox(c, charbox, cb))
+		return false;
+	if ((metrics.wl = -charbox.minX()) < 0) metrics.wl=0;
+	if ((metrics.wr = charbox.maxX()) < 0)  metrics.wr=0;
+	if ((metrics.h = charbox.maxY()) < 0)   metrics.h=0;
+	if ((metrics.d = -charbox.minY()) < 0)  metrics.d=0;
+	if (vertical) {  // vertical text orientation
+		if (verticalLayout()) {  // font designed for vertical layout?
+			metrics.wl = metrics.wr = (metrics.wl+metrics.wr)/2;
+			metrics.d += metrics.h;
+			metrics.h = 0;
+		}
+		else {
+			double depth = metrics.d;
+			metrics.d = metrics.wr;
+			metrics.wr = metrics.h;
+			metrics.h = metrics.wl;
+			metrics.wl = depth;
+		}
+	}
+	return true;
 }
 
 
@@ -465,6 +539,19 @@ int PhysicalFontImpl::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) con
 	return FontEngine::instance().getCharMapIDs(charMapIDs);
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+
+#if 0
+void PhysicalFontProxy::getGlyphMetrics (int c, double &wl, double &wr, double &h, double &d, GFGlyphTracer::Callback *cb) const {
+	_pf->getGlyphMetrics(c, wl, wr, h, d, cb);
+	double s = scaleFactor()/_pf->scaleFactor();
+	wl *= s;
+	wr *= s;
+	h  *= s;
+	d  *= s;
+}
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 

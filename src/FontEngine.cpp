@@ -225,6 +225,17 @@ int FontEngine::getHAdvance (const Character &c) const {
 }
 
 
+int FontEngine::getVAdvance (const Character &c) const {
+	if (_currentFace) {
+		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
+		if (FT_HAS_VERTICAL(_currentFace))
+			return _currentFace->glyph->metrics.vertAdvance;
+		return _currentFace->glyph->metrics.horiAdvance;
+	}
+	return 0;
+}
+
+
 int FontEngine::charIndex (const Character &c) const {
 	switch (c.type()) {
 		case Character::CHRCODE:
