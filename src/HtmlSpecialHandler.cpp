@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <sstream>
-
 #include "HtmlSpecialHandler.h"
 #include "InputReader.h"
 #include "Message.h"

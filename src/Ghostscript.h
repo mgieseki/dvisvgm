@@ -21,10 +21,7 @@
 #ifndef GHOSTSCRIPT_H
 #define GHOSTSCRIPT_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+#include <config.h>
 #include <string>
 
 #if defined(DISABLE_GS)

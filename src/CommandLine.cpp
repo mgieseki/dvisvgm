@@ -4,6 +4,7 @@
 // See file COPYING for further details.
 // (C) 2009-2013 Martin Gieseking <martin.gieseking@uos.de>
 
+#include <config.h>
 #include <cstdio>
 #include <iostream>
 #include <iomanip>

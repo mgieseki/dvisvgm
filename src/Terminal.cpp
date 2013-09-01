@@ -18,11 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "Terminal.h"
-
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
+#include "Terminal.h"
 
 #ifdef HAVE_TERMIOS_H
 #include <termios.h>

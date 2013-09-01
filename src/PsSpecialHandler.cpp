@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -33,9 +34,7 @@
 #include "XMLNode.h"
 #include "XMLString.h"
 
-
 using namespace std;
-
 
 static inline double str2double (const string &str) {
 	double ret;

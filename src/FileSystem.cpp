@@ -18,15 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include "FileSystem.h"
 #include "macros.h"
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>

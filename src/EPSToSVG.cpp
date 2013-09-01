@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <fstream>
 #include <istream>
 #include <sstream>
@@ -28,15 +29,10 @@
 #include "PsSpecialHandler.h"
 #include "SVGOutputBase.h"
 
-#ifdef HAVE_CONFIG_H
-	#include "config.h"
-	#ifdef TARGET_SYSTEM
-		#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
-	#else
-		#define VERSION_STR VERSION
-	#endif
+#ifdef TARGET_SYSTEM
+	#define VERSION_STR VERSION " (" TARGET_SYSTEM ")"
 #else
-	#define VERSION_STR ""
+	#define VERSION_STR VERSION
 #endif
 
 

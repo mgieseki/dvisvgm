@@ -18,13 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include "Ghostscript.h"
 #if !defined(DISABLE_GS)
-
 #include <cstring>
 #include <iomanip>
 #include <sstream>
-
 #if defined(HAVE_LIBGS)
    #include <ghostscript/ierrors.h>
 #else

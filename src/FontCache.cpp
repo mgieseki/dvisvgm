@@ -18,6 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+
+#include <config.h>
 #include <algorithm>
 #include <cstring>
 #include <fstream>
@@ -30,7 +32,6 @@
 #include "Pair.h"
 #include "StreamReader.h"
 #include "StreamWriter.h"
-//#include "gzstream.h"
 #include "types.h"
 
 using namespace std;

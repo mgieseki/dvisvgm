@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include "DVIActions.h"
 
 const double DVIActions::BP = 72.0/72.27;

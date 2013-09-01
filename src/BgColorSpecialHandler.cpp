@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include "BgColorSpecialHandler.h"
 #include "ColorSpecialHandler.h"
 #include "SpecialActions.h"

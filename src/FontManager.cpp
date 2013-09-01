@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
@@ -27,10 +28,10 @@
 #include "FontManager.h"
 #include "FontMap.h"
 #include "FileFinder.h"
+#include "FileSystem.h"
 #include "Message.h"
 #include "macros.h"
 #include "CMapManager.h"
-#include "FileSystem.h"
 
 using namespace std;
 

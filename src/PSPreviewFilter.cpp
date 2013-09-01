@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <config.h>
 #include <vector>
-
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "PSInterpreter.h"
