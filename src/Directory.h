@@ -24,7 +24,6 @@
 #include <string>
 #ifdef __WIN32__
 	#include <windows.h>
-	#undef max
 #else
 	#include <dirent.h>
 #endif
