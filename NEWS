@@ -1,3 +1,12 @@
+dvisvgm-1.5 (2013-09-02)
+- added support for DVI format 3 as created by pTeX in vertical/tate mode
+- added support for DVI format 5 (XDV) as created by XeTeX
+- replaced numeric entity references by corresponding UTF-8 characters in
+  generated SVG files
+- added px unit to font-size attributes as used in the stylesheet section
+  to ensure correct computation of font sizes (LP bug #1215857)
+- various code refactorings
+
 dvisvgm-1.4 (2013-08-02)
 - added basic support for CMap files and CID-based fonts
 - added character mapping from CIDs to char codes based on the encoding tables of a non-CID font
@@ -14,7 +23,7 @@ dvisvgm-1.3 (2013-05-13)
 - added support for hyperref specials
 - added command-line option --linkmarker to select the way how to mark hyperlinked areas
 - dvisvgm builds for MiKTeX now try to access the Ghostscript DLL provided by MiKTeX so that
-  it's no longer necessary to install Ghostscript seperately
+  it's no longer necessary to install Ghostscript separately
 - improved the handling of TFM files to avoid failures in case of malformed files
 - added evaluation of Japanese Font Metric (JFM) files
 - the bundled potrace library has been removed from the source tarball as it's easy to build
