@@ -368,7 +368,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool
 #endif
 			if (pswarning) {
 #if defined(DISABLE_GS)
-				Message::wstream() << "this build of dvisvgm doesn't support the processing of PostScript specials\n";
+				Message::wstream() << "processing of PostScript specials has been disabled permanently\n";
 #else
 				Message::wstream() << "processing of PostScript specials is disabled (Ghostscript not found)\n";
 #endif
