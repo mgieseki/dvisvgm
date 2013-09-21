@@ -46,6 +46,7 @@ struct Ghostscript
 
 	Ghostscript () {}
 	Ghostscript (int argc, const char **argv, void *caller=0) {}
+	bool init (int argc, const char **argv, void *caller=0) {return false;}
 	bool available () {return false;}
 	bool revision (gsapi_revision_t *r) {return false;}
 	std::string revision (bool revonly=false) {return "";}
@@ -54,6 +55,7 @@ struct Ghostscript
 	int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code) {return 0;}
 	int run_string_end (int user_errors, int *pexit_code) {return 0;}
 	int exit () {return 0;}
+	const char* error_name (int code) {return 0;}
 };
 
 #else

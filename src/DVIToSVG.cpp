@@ -141,6 +141,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 	}
 	last = min(last, getTotalPages());
 
+#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
 	// ensure loading of PostScript prologues given at the beginning of the first page
 	// (prologue files are always referenced in first page)
 	PSHeaderActions headerActions(*this);
@@ -153,6 +154,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		replaceActions(save);
 		throw;
 	}
+#endif
 
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);

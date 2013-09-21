@@ -388,7 +388,11 @@ int main (int argc, char *argv[]) {
 	if (!HtmlSpecialHandler::setLinkMarker(args.linkmark_arg()))
 		Message::wstream(true) << "invalid argument '"+args.linkmark_arg()+"' supplied for option --linkmark\n";
 	double start_time = System::time();
-	string inputfile = ensure_suffix(args.file(0), args.eps_given());
+	bool eps_given=false;
+#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
+	eps_given = args.eps_given();
+#endif
+	string inputfile = ensure_suffix(args.file(0), eps_given);
 	ifstream ifs(inputfile.c_str(), ios_base::binary|ios_base::in);
 	if (!ifs) {
 		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
@@ -397,6 +401,7 @@ int main (int argc, char *argv[]) {
 	try {
 		SVGOutput out(args.stdout_given() ? 0 : inputfile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
 		SignalHandler::instance().start();
+#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
 		if (args.eps_given()) {
 			EPSToSVG eps2svg(inputfile, out);
 			eps2svg.convert();
@@ -404,7 +409,9 @@ int main (int argc, char *argv[]) {
 			Message::mstream(false, Message::MC_PAGE_NUMBER)
 				<< "file converted in " << (System::time()-start_time) << " seconds\n";
 		}
-		else {
+		else
+#endif
+		{
 			DVIToSVG dvi2svg(ifs, out);
 			const char *ignore_specials = args.no_specials_given() ? (args.no_specials_arg().empty() ? "*" : args.no_specials_arg().c_str()) : 0;
 			dvi2svg.setProcessSpecials(ignore_specials, true);
