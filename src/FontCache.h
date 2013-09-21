@@ -27,10 +27,6 @@
 #include "types.h"
 #include "Glyph.h"
 
-#ifdef VERSION
-#undef VERSION
-#endif
-
 
 class FontCache
 {
@@ -65,7 +61,7 @@ class FontCache
 		static void fontinfo (const char *dirname, std::ostream &os, bool purge=false);
 
    private:
-		static const UInt8 VERSION;
+		static const UInt8 FORMAT_VERSION;
       std::string _fontname;
 		GlyphMap _glyphs;
 		bool _changed;

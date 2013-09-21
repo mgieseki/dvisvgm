@@ -36,7 +36,7 @@
 
 using namespace std;
 
-const UInt8 FontCache::VERSION = 5;
+const UInt8 FontCache::FORMAT_VERSION = 5;
 
 
 static Pair32 read_pair (int bytes, StreamReader &sr) {
@@ -162,7 +162,7 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 		CRC32 &_crc32;
 	} actions(sw, crc32);
 
-	sw.writeUnsigned(VERSION, 1, crc32);
+	sw.writeUnsigned(FORMAT_VERSION, 1, crc32);
 	sw.writeUnsigned(0, 4);  // space for checksum
 	sw.writeString(fontname, crc32, true);
 	sw.writeUnsigned(_glyphs.size(), 4, crc32);
@@ -214,7 +214,7 @@ bool FontCache::read (const char *fontname, istream &is) {
 
 	StreamReader sr(is);
 	CRC32 crc32;
-	if (sr.readUnsigned(1, crc32) != VERSION)
+	if (sr.readUnsigned(1, crc32) != FORMAT_VERSION)
 		return false;
 
 	UInt32 crc32_cmp = sr.readUnsigned(4);
@@ -307,7 +307,7 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 		is.seekg(0);
 		StreamReader sr(is);
 		CRC32 crc32;
-		if ((info.version = sr.readUnsigned(1, crc32)) != VERSION)
+		if ((info.version = sr.readUnsigned(1, crc32)) != FORMAT_VERSION)
 			return false;
 
 		info.checksum = sr.readUnsigned(4);
