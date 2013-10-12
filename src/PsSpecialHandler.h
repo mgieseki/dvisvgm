@@ -48,9 +48,9 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 			void dup (int saveID=-1);
 			void pop (int saveID=-1, bool grestore=false);
 			void clear ();
-			bool empty () {return _stack.empty();}
-			Path* top ();
-			int topID ()  {return _stack.empty() ? 0 : _stack.top().pathID;}
+			bool empty () const {return _stack.empty();}
+			const Path* top () const;
+			int topID () const  {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
 			struct Entry {

@@ -848,7 +848,7 @@ void PsSpecialHandler::ClippingStack::pop (int saveID, bool grestoreall) {
 
 
 /** Returns a pointer to the path on top of the stack, or 0 if the stack is empty. */
-PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () {
+const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () const {
 	return (!_stack.empty() && _stack.top().pathID)
 		? &_paths[_stack.top().pathID-1]
 		: 0;
