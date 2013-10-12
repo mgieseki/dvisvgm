@@ -87,7 +87,7 @@ class CharInputBuffer : public InputBuffer
 		CharInputBuffer (const char *buf, size_t size) : _pos(buf), _size(buf ? size : 0) {}
 
 		int get () {
-			if (_size <= 0)
+			if (_size == 0)
 				return -1;
 			else {
 				_size--;
@@ -103,8 +103,8 @@ class CharInputBuffer : public InputBuffer
 
 		void assign (const char *buf) {assign(buf, std::strlen(buf));}
 		int peek () const             {return _size > 0 ? *_pos : -1;}
-		int peek (size_t n) const   {return _size >= n ? _pos[n] : -1;}
-		bool eof () const             {return _size <= 0;}
+		int peek (size_t n) const     {return _size >= n ? _pos[n] : -1;}
+		bool eof () const             {return _size == 0;}
       void invalidate ()            {_size = 0;}
 
 	private:
