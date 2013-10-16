@@ -38,14 +38,18 @@ PSPreviewFilter::PSPreviewFilter (PSInterpreter &psi)
 /** Activates this filter so that the PS code will be redirected through it if
  *  it's hooked into the PSInterpreter. */
 void PSPreviewFilter::activate () {
-	_tightpage = _active = false;
-	// try to retrieve version string of preview package set in the PS header section
-	if (psInterpreter().executeRaw("SDict begin currentdict/preview@version known{preview@version}{0}ifelse end", 1))
-		_version = psInterpreter().rawData()[0];
-	// check if tightpage option was set
-	if (_version != "0" && psInterpreter().executeRaw("SDict begin preview@tightpage end", 1)) {
-		_tightpage = (psInterpreter().rawData()[0] == "true");
+	if (_tightpage)  // reactivate filter?
 		_active = true;
+	else {           // first activation?
+		_tightpage = _active = false;
+		// try to retrieve version string of preview package set in the PS header section
+		if (psInterpreter().executeRaw("SDict begin currentdict/preview@version known{preview@version}{0}ifelse end", 1))
+			_version = psInterpreter().rawData()[0];
+		// check if tightpage option was set
+		if (_version != "0" && psInterpreter().executeRaw("SDict begin preview@tightpage end", 1)) {
+			_tightpage = (psInterpreter().rawData()[0] == "true");
+			_active = true;
+		}
 	}
 	_boxExtents.clear();
 }
