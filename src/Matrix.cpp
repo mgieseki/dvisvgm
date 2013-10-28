@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <sstream>
