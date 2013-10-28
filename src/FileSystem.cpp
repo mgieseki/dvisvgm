@@ -287,7 +287,7 @@ bool FileSystem::isFile (const char *fname) {
 		return false;
 #ifdef __WIN32__
 	ifstream ifs(fname);
-	return ifs;
+	return (bool)ifs;
 #else
 	struct stat attr;
 	return stat(fname, &attr) == 0 && S_ISREG(attr.st_mode);

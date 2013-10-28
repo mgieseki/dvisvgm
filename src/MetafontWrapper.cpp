@@ -93,7 +93,7 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		}
 	}
 	ifstream gf((_fontname+".gf").c_str());
-	return gf;
+	return (bool)gf;
 }
 
 
