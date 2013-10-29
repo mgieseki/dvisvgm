@@ -1,3 +1,10 @@
+dvisvgm-1.5.1 (2013-10-29)
+- fixed processing of bounding box data created by the preview package
+- fixed processing of font definitions across DVI pages
+- fixed compilation issues occurred if processing of PS specials is disabled
+- don't print the logical page number if it's equal to the physical one
+- some minor code improvements
+
 dvisvgm-1.5 (2013-09-02)
 - added support for DVI format 3 as created by pTeX in vertical/tate mode
 - added support for DVI format 5 (XDV) as created by XeTeX
