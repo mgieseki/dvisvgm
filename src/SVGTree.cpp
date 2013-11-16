@@ -72,6 +72,21 @@ void SVGTree::setBBox (const BoundingBox &bbox) {
 }
 
 
+void SVGTree::setColor (const Color &c) {
+	if (!_font.get() || _font.get()->color() == Color::BLACK)
+		_color.set(c);
+}
+
+
+void SVGTree::setFont (int num, const Font *font) {
+	_font.set(font);
+	_fontnum = num;
+	// set default color assigned to the font
+	if (font->color() != Color::BLACK && _color.get() != font->color())
+		_color.set(font->color());
+}
+
+
 /** Starts a new page.
  *  @param[in] pageno number of new page */
 void SVGTree::newPage (int pageno) {
@@ -142,7 +157,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 				_span->addAttribute("y", y);
 				_ychanged = false;
 			}
-			if (_color.get() != Color::BLACK) {
+			if (_color.get() != font.color()) {
 					_span->addAttribute("fill", _color.get().rgbString());
 				_color.changed(false);
 			}
@@ -266,15 +281,6 @@ void SVGTree::newTextNode (double x, double y) {
 	_matrix.changed(false);
 	_xchanged = false;
 	_ychanged = false;
-}
-
-
-void SVGTree::setFont (int num, const Font *font) {
-	_font.set(font);
-	_fontnum = num;
-	// set default color assigned to the font
-	if (!USE_FONTS && _color.get() != font->color())
-		setColor(font->color());
 }
 
 

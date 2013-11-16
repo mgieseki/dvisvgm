@@ -80,7 +80,7 @@ class SVGTree
 		void setX (double x)              {_xchanged = true;}
 		void setY (double y)              {_ychanged = true;}
 		void setMatrix (const Matrix &m)  {_matrix.set(m);}
-		void setColor (const Color &c)    {_color.set(c);}
+		void setColor (const Color &c);
 		void setVertical (bool state)     {_vertical.set(state);}
 		void transformPage (const Matrix *m);
 		const Color& getColor () const    {return _color.get();}

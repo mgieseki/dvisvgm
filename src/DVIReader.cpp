@@ -773,6 +773,9 @@ void DVIReader::cmdXFontDef (int) {
 	if (flags & 0x0100) { // vertical?
 	}
 	if (flags & 0x0200) { // colored?
+		// The font color must not interfere with color specials. If the font color is not black,
+		// all color specials should be ignored, i.e. glyphs of a non-black font have a fixed color
+		// that can't be changed by colors specials.
 		UInt32 rgba = readUnsigned(4);
 		color.set(UInt8(rgba >> 24), UInt8((rgba >> 16) & 0xff), UInt8((rgba >> 8) & 0xff));
 	}
@@ -787,12 +790,8 @@ void DVIReader::cmdXFontDef (int) {
 		for (int i=0; i < num_variations; i++)
 			readUnsigned(4);
 	}
-	if (_inPage && _actions && _actions->fontProcessingEnabled()) {
+	if (_inPage && _actions && _actions->fontProcessingEnabled())
 		FontManager::instance().registerFont(fontnum, fontname, ptsize, style, color);
-//		if (NativeFont *font = dynamic_cast<NativeFont*>(FontManager::instance().getFontById(id))) {
-//			font->setStyle(style);
-//		}
-	}
 }
 
 
