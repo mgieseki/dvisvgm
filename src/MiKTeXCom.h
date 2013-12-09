@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MIKTEXCOM_H
-#define MIKTEXCOM_H
+#ifndef DVISVGM_MIKTEXCOM_H
+#define DVISVGM_MIKTEXCOM_H
 
 #include <string>
 

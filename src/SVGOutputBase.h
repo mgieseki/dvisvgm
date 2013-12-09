@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SVGOUTPUTBASE_H
-#define SVGOUTPUTBASE_H
+#ifndef DVISVGM_SVGOUTPUTBASE_H
+#define DVISVGM_SVGOUTPUTBASE_H
 
 #include <ostream>
 #include <string>

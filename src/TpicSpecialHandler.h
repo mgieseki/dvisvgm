@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef TPICSPECIALHANDLER_H
-#define TPICSPECIALHANDLER_H
+#ifndef DVISVGM_TPICSPECIALHANDLER_H
+#define DVISVGM_TPICSPECIALHANDLER_H
 
 #include <list>
 #include "Pair.h"

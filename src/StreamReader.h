@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef STREAMREADER_H
-#define STREAMREADER_H
+#ifndef DVISVGM_STREAMREADER_H
+#define DVISVGM_STREAMREADER_H
 
 #include <istream>
 #include <string>

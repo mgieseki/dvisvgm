@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SPECIALHANDLER_H
-#define SPECIALHANDLER_H
+#ifndef DVISVGM_SPECIALHANDLER_H
+#define DVISVGM_SPECIALHANDLER_H
 
 #include <istream>
 #include <list>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef DVISVGM_DEBUG_H
+#define DVISVGM_DEBUG_H
 
 #include <iostream>
 

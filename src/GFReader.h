@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GFREADER_H
-#define GFREADER_H
+#ifndef DVISVGM_GFREADER_H
+#define DVISVGM_GFREADER_H
 
 #include <istream>
 #include <map>

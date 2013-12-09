@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONT_H
-#define FONT_H
+#ifndef DVISVGM_FONT_H
+#define DVISVGM_FONT_H
 
 #include <map>
 #include <string>

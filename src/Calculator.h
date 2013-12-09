@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CALCULATOR_H
-#define CALCULATOR_H
+#ifndef DVISVGM_CALCULATOR_H
+#define DVISVGM_CALCULATOR_H
 
 #include <istream>
 #include <map>

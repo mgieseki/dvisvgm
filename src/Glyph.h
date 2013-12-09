@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GLYPH_H
-#define GLYPH_H
+#ifndef DVISVGM_GLYPH_H
+#define DVISVGM_GLYPH_H
 
 #include "GraphicPath.h"
 

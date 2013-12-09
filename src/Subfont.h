@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SUBFONT_H
-#define SUBFONT_H
+#ifndef DVISVGM_SUBFONT_H
+#define DVISVGM_SUBFONT_H
 
 #include <istream>
 #include <map>

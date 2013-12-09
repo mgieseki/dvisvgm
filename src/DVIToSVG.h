@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVITOSVG_H
-#define DVITOSVG_H
+#ifndef DVISVGM_DVITOSVG_H
+#define DVISVGM_DVITOSVG_H
 
 #include <iostream>
 #include <string>

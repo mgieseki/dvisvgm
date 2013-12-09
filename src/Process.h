@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PROCESS_H
-#define PROCESS_H
+#ifndef DVISVGM_PROCESS_H
+#define DVISVGM_PROCESS_H
 
 #include <string>
 

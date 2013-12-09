@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAP_H
-#define CMAP_H
+#ifndef DVISVGM_CMAP_H
+#define DVISVGM_CMAP_H
 
 #include <algorithm>
 #include <ostream>

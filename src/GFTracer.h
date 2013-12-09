@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GFTRACER_H
-#define GFTRACER_H
+#ifndef DVISVGM_GFTRACER_H
+#define DVISVGM_GFTRACER_H
 
 #include <istream>
 #include "GFReader.h"

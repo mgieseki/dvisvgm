@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef JFM_H
-#define JFM_H
+#ifndef DVISVGM_JFM_H
+#define DVISVGM_JFM_H
 
 #include <istream>
 #include "TFM.h"

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef DVISVGM_SYSTEM_H
+#define DVISVGM_SYSTEM_H
 
 namespace System
 {

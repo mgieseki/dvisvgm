@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMDLINEPARSERBASE_H
-#define CMDLINEPARSERBASE_H
+#ifndef DVISVGM_CMDLINEPARSERBASE_H
+#define DVISVGM_CMDLINEPARSERBASE_H
 
 #include <string>
 #include <vector>

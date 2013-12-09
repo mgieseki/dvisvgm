@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SPECIALMANAGER_H
-#define SPECIALMANAGER_H
+#ifndef DVISVGM_SPECIALMANAGER_H
+#define DVISVGM_SPECIALMANAGER_H
 
 #include <map>
 #include <ostream>

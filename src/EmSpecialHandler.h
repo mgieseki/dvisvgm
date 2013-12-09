@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef EMSPECIALHANDLER_H
-#define EMSPECIALHANDLER_H
+#ifndef DVISVGM_EMSPECIALHANDLER_H
+#define DVISVGM_EMSPECIALHANDLER_H
 
 #include <list>
 #include <map>

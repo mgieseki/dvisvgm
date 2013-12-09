@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PSPREVIEWFILTER_H
-#define PSPREVIEWFILTER_H
+#ifndef DVISVGM_PSPREVIEWFILTER_H
+#define DVISVGM_PSPREVIEWFILTER_H
 
 #include <string>
 #include <vector>

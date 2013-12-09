@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FILEPATH_H
-#define FILEPATH_H
+#ifndef DVISVGM_FILEPATH_H
+#define DVISVGM_FILEPATH_H
 
 #include <string>
 #include <vector>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTMANAGER_H
-#define FONTMANAGER_H
+#ifndef DVISVGM_FONTMANAGER_H
+#define DVISVGM_FONTMANAGER_H
 
 #include <map>
 #include <ostream>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PDFSPECIALHANDLER_H
-#define PDFSPECIALHANDLER_H
+#ifndef DVISVGM_PDFSPECIALHANDLER_H
+#define DVISVGM_PDFSPECIALHANDLER_H
 
 #include "SpecialHandler.h"
 

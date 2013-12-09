@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVIACTIONS_H
-#define DVIACTIONS_H
+#ifndef DVISVGM_DVIACTIONS_H
+#define DVISVGM_DVIACTIONS_H
 
 #include <string>
 #include "Message.h"

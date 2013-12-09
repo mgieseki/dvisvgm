@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTENCODING_H
-#define FONTENCODING_H
+#ifndef DVISVGM_FONTENCODING_H
+#define DVISVGM_FONTENCODING_H
 
 #include <string>
 #include "Character.h"

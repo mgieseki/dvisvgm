@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef DVISVGM_CHARACTER_H
+#define DVISVGM_CHARACTER_H
 
 #include "types.h"
 

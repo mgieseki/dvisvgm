@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MESSAGEEXCEPTION_H
-#define MESSAGEEXCEPTION_H
+#ifndef DVISVGM_MESSAGEEXCEPTION_H
+#define DVISVGM_MESSAGEEXCEPTION_H
 
 #include <exception>
 #include <string>

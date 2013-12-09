@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef VECTORSTREAM_H
-#define VECTORSTREAM_H
+#ifndef DVISVGM_VECTORSTREAM_H
+#define DVISVGM_VECTORSTREAM_H
 
 #include <istream>
 #include <vector>

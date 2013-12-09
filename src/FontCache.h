@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTCACHE_H
-#define FONTCACHE_H
+#ifndef DVISVGM_FONTCACHE_H
+#define DVISVGM_FONTCACHE_H
 
 #include <iostream>
 #include <string>

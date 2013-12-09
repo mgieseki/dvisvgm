@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GRAPHICPATH_H
-#define GRAPHICPATH_H
+#ifndef DVISVGM_GRAPHICPATH_H
+#define DVISVGM_GRAPHICPATH_H
 
 #include <list>
 #include <ostream>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DIRECTORY_H
-#define DIRECTORY_H
+#ifndef DVISVGM_DIRECTORY_H
+#define DVISVGM_DIRECTORY_H
 
 #include <string>
 #ifdef __WIN32__

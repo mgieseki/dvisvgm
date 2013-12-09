@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef HTMLSPECIALHANDLER_H
-#define HTMLSPECIALHANDLER_H
+#ifndef DVISVGM_HTMLSPECIALHANDLER_H
+#define DVISVGM_HTMLSPECIALHANDLER_H
 
 #include <map>
 #include <string>

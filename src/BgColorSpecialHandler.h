@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef BGCOLORSPECIALHANDLER_H
-#define BGCOLORSPECIALHANDLER_H
+#ifndef DVISVGM_BGCOLORSPECIALHANDLER_H
+#define DVISVGM_BGCOLORSPECIALHANDLER_H
 
 #include "SpecialHandler.h"
 

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTENGINE_H
-#define FONTENGINE_H
+#ifndef DVISVGM_FONTENGINE_H
+#define DVISVGM_FONTENGINE_H
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

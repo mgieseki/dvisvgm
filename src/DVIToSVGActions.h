@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVITOSVGACTIONS_H
-#define DVITOSVGACTIONS_H
+#ifndef DVISVGM_DVITOSVGACTIONS_H
+#define DVISVGM_DVITOSVGACTIONS_H
 
 #include <map>
 #include <set>

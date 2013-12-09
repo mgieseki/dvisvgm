@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef KPSFILEFINDER_H
-#define KPSFILEFINDER_H
+#ifndef DVISVGM_KPSFILEFINDER_H
+#define DVISVGM_KPSFILEFINDER_H
 
 #include <string>
 

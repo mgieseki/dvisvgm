@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MAPLINE_H
-#define MAPLINE_H
+#ifndef DVISVGM_MAPLINE_H
+#define DVISVGM_MAPLINE_H
 
 #include <istream>
 #include <string>

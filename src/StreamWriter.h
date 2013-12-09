@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef STREAMWRITER_H
-#define STREAMWRITER_H
+#ifndef DVISVGM_STREAMWRITER_H
+#define DVISVGM_STREAMWRITER_H
 
 #include <ostream>
 #include "types.h"

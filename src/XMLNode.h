@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef XMLNODE_H
-#define XMLNODE_H
+#ifndef DVISVGM_XMLNODE_H
+#define DVISVGM_XMLNODE_H
 
 #include <list>
 #include <map>

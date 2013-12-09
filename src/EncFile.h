@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef ENCFILE_H
-#define ENCFILE_H
+#ifndef DVISVGM_ENCFILE_H
+#define DVISVGM_ENCFILE_H
 
 #include <istream>
 #include <map>

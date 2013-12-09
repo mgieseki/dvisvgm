@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef XMLSTRING_H
-#define XMLSTRING_H
+#ifndef DVISVGM_XMLSTRING_H
+#define DVISVGM_XMLSTRING_H
 
 #include <string>
 

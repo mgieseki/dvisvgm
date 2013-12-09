@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef BOUNDINGBOX_H
-#define BOUNDINGBOX_H
+#ifndef DVISVGM_BOUNDINGBOX_H
+#define DVISVGM_BOUNDINGBOX_H
 
 #include <ostream>
 #include <string>

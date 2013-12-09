@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef VFREADER_H
-#define VFREADER_H
+#ifndef DVISVGM_VFREADER_H
+#define DVISVGM_VFREADER_H
 
 #include "MessageException.h"
 #include "StreamReader.h"

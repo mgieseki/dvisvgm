@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SIGNALHANDLER_H
-#define SIGNALHANDLER_H
+#ifndef DVISVGM_SIGNALHANDLER_H
+#define DVISVGM_SIGNALHANDLER_H
 
 #include <exception>
 

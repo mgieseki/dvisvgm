@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef DVISVGM_TYPES_H
+#define DVISVGM_TYPES_H
 
 namespace internal {
    template<unsigned BYTES>

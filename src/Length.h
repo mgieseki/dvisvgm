@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef LENGTH_H
-#define LENGTH_H
+#ifndef DVISVGM_LENGTH_H
+#define DVISVGM_LENGTH_H
 
 #include <string>
 #include "MessageException.h"

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FONTMETRICS_H
-#define FONTMETRICS_H
+#ifndef DVISVGM_FONTMETRICS_H
+#define DVISVGM_FONTMETRICS_H
 
 #include <istream>
 #include "MessageException.h"

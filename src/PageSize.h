@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PAGESIZE_H
-#define PAGESIZE_H
+#ifndef DVISVGM_PAGESIZE_H
+#define DVISVGM_PAGESIZE_H
 
 #include "MessageException.h"
 

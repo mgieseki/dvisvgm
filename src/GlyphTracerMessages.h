@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GLYPHTRACERMESSAGES_H
-#define GLYPHTRACERMESSAGES_H
+#ifndef DVISVGM_GLYPHTRACERMESSAGES_H
+#define DVISVGM_GLYPHTRACERMESSAGES_H
 
 #include <sstream>
 #include "GFGlyphTracer.h"

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAPMANAGER_H
-#define CMAPMANAGER_H
+#ifndef DVISVGM_CMAPMANAGER_H
+#define DVISVGM_CMAPMANAGER_H
 
 #include <map>
 #include <set>

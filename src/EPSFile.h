@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef EPSFILE_H
-#define EPSFILE_H
+#ifndef DVISVGM_EPSFILE_H
+#define DVISVGM_EPSFILE_H
 
 #include <fstream>
 #include <string>

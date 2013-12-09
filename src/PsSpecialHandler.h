@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PSSPECIALHANDLER_H
-#define PSSPECIALHANDLER_H
+#ifndef DVISVGM_PSSPECIALHANDLER_H
+#define DVISVGM_PSSPECIALHANDLER_H
 
 #include <set>
 #include <stack>

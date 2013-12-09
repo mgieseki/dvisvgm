@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef VFACTIONS_H
-#define VFACTIONS_H
+#ifndef DVISVGM_VFACTIONS_H
+#define DVISVGM_VFACTIONS_H
 
 #include <string>
 #include <vector>

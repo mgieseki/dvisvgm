@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CMAPREADER_H
-#define CMAPREADER_H
+#ifndef DVISVGM_CMAPREADER_H
+#define DVISVGM_CMAPREADER_H
 
 #include <cstdlib>
 #include <istream>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PAIR_H
-#define PAIR_H
+#ifndef DVISVGM_PAIR_H
+#define DVISVGM_PAIR_H
 
 #include <cmath>
 #include <ostream>

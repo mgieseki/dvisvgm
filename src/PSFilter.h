@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PSFILTER_H
-#define PSFILTER_H
+#ifndef DVISVGM_PSFILTER_H
+#define DVISVGM_PSFILTER_H
 
 class PSInterpreter;
 

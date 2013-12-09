@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef GHOSTSCRIPT_H
-#define GHOSTSCRIPT_H
+#ifndef DVISVGM_GHOSTSCRIPT_H
+#define DVISVGM_GHOSTSCRIPT_H
 
 #include <config.h>
 #include <string>

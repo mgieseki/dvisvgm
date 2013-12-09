@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef TERMINAL_H
-#define TERMINAL_H
+#ifndef DVISVGM_TERMINAL_H
+#define DVISVGM_TERMINAL_H
 
 #include <ostream>
 

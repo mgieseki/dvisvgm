@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef EPSTOSVG_H
-#define EPSTOSVG_H
+#ifndef DVISVGM_EPSTOSVG_H
+#define DVISVGM_EPSTOSVG_H
 
 #include <string>
 #include "SpecialActions.h"

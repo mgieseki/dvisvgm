@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef BITMAP_H
-#define BITMAP_H
+#ifndef DVISVGM_BITMAP_H
+#define DVISVGM_BITMAP_H
 
 #include <ostream>
 #include <vector>

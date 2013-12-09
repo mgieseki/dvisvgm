@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MACROS_H
-#define MACROS_H
+#ifndef DVISVGM_MACROS_H
+#define DVISVGM_MACROS_H
 
 #define FORALL(container, itertype, itervar) \
 	for (itertype itervar=(container).begin(); itervar != (container).end(); ++itervar)

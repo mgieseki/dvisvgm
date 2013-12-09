@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVIREADER_H
-#define DVIREADER_H
+#ifndef DVISVGM_DVIREADER_H
+#define DVISVGM_DVIREADER_H
 
 #include <limits>
 #include <map>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef COLORSPECIALHANDLER_H
-#define COLORSPECIALHANDLER_H
+#ifndef DVISVGM_COLORSPECIALHANDLER_H
+#define DVISVGM_COLORSPECIALHANDLER_H
 
 #include <stack>
 #include <vector>

@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CHARMAPID_H
-#define CHARMAPID_H
+#ifndef DVISVGM_CHARMAPID_H
+#define DVISVGM_CHARMAPID_H
 
 #include "types.h"
 

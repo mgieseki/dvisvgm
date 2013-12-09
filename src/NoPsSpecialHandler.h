@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef NOPSSPECIALHANDLER_H
-#define NOPSSPECIALHANDLER_H
+#ifndef DVISVGM_NOPSSPECIALHANDLER_H
+#define DVISVGM_NOPSSPECIALHANDLER_H
 
 #include "SpecialHandler.h"
 

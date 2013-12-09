@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SVGTREE_H
-#define SVGTREE_H
+#ifndef DVISVGM_SVGTREE_H
+#define DVISVGM_SVGTREE_H
 
 #include <map>
 #include <set>

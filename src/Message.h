@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef DVISVGM_MESSAGE_H
+#define DVISVGM_MESSAGE_H
 
 #include <algorithm>
 #include <string>

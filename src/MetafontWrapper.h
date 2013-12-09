@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef METAFONTWRAPPER_H
-#define METAFONTWRAPPER_H
+#ifndef DVISVGM_METAFONTWRAPPER_H
+#define DVISVGM_METAFONTWRAPPER_H
 
 #include <string>
 

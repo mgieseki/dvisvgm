@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PSINTERPRETER_H
-#define PSINTERPRETER_H
+#ifndef DVISVGM_PSINTERPRETER_H
+#define DVISVGM_PSINTERPRETER_H
 
 #include <cstring>
 #include <istream>

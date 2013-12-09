@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef DVISVGM_MATRIX_H
+#define DVISVGM_MATRIX_H
 
 #include <istream>
 #include <string>

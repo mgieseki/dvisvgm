@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DLLOADER_H
-#define DLLOADER_H
+#ifndef DVISVGM_DLLOADER_H
+#define DVISVGM_DLLOADER_H
 
 #ifdef __WIN32__
 	#include <windows.h>

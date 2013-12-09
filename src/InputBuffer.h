@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef INPUTBUFFER_H
-#define INPUTBUFFER_H
+#ifndef DVISVGM_INPUTBUFFER_H
+#define DVISVGM_INPUTBUFFER_H
 
 #include <algorithm>
 #include <cstring>

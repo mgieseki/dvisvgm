@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PAGERANGES_H
-#define PAGERANGES_H
+#ifndef DVISVGM_PAGERANGES_H
+#define DVISVGM_PAGERANGES_H
 
 #include <list>
 #include <string>

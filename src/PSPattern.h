@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PSPATTERN_H
-#define PSPATTERN_H
+#ifndef DVISVGM_PSPATTERN_H
+#define DVISVGM_PSPATTERN_H
 
 #include <set>
 #include <string>

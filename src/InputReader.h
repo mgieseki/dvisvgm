@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef INPUTREADER_H
-#define INPUTREADER_H
+#ifndef DVISVGM_INPUTREADER_H
+#define DVISVGM_INPUTREADER_H
 
 #include <istream>
 #include <map>

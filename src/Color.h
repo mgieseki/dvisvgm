@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef DVISVGM_COLOR_H
+#define DVISVGM_COLOR_H
 
 #include <string>
 #include <vector>

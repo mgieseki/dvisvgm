@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#ifndef DVISVGM_FILESYSTEM_H
+#define DVISVGM_FILESYSTEM_H
 
 #include <string>
 #include <vector>

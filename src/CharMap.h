@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef CHARMAP_H
-#define CHARMAP_H
+#ifndef DVISVGM_CHARMAP_H
+#define DVISVGM_CHARMAP_H
 
 #include <utility>
 #include <vector>

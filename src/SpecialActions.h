@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SPECIALACTIONS_H
-#define SPECIALACTIONS_H
+#ifndef DVISVGM_SPECIALACTIONS_H
+#define DVISVGM_SPECIALACTIONS_H
 
 #include <string>
 #include "BoundingBox.h"
