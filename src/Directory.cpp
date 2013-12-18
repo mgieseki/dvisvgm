@@ -42,8 +42,15 @@ Directory::Directory () {
 
 
 Directory::Directory (string dirname) {
+#if __WIN32__
+	handle = INVALID_HANDLE_VALUE;
+#else
+	dir = 0;
+	dirent = 0;
+#endif
 	open(dirname);
 }
+
 
 Directory::~Directory () {
 	close();

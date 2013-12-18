@@ -53,6 +53,8 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat
 	_currPageNum = 0;
 	_pageLength = 0;
 	_pagePos = 0;
+	_prevBop = 0;
+	_mag = 1;
 }
 
 

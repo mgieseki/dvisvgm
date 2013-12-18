@@ -47,6 +47,10 @@ static inline double scaled2double (Int32 scaled) {
 GFReader::GFReader (istream &is) : _in(is), _penDown(false)
 {
 	_minX = _maxX = _minY = _maxY = _x = _y = 0;
+	_currentChar = 0;
+	_designSize = 0;
+	_hppp = _vppp = 0;
+	_checksum = 0;
 }
 
 
