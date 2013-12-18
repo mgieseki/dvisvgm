@@ -349,6 +349,8 @@ void DVIReader::cmdPre (int) {
 	verifyDVIFormat(_dviFormat);
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
+	if (den == 0)
+		throw DVIException("denominator of measurement unit is zero");
 	_mag = readUnsigned(4);        // magnification
 	UInt32 k   = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
@@ -365,6 +367,8 @@ void DVIReader::cmdPost (int) {
 	_prevBop   = readUnsigned(4);  // pointer to previous bop
 	UInt32 num = readUnsigned(4);
 	UInt32 den = readUnsigned(4);
+	if (den == 0)
+		throw DVIException("denominator of measurement unit is zero");
 	_mag = readUnsigned(4);
 	_pageHeight = readUnsigned(4); // height of tallest page in dvi units
 	_pageWidth  = readUnsigned(4); // width of widest page in dvi units
