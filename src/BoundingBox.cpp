@@ -61,7 +61,7 @@ BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &
 
 
 BoundingBox::BoundingBox (const string &boxstr)
-	: _valid(false), _locked(false)
+	: _ulx(0), _uly(0), _lrx(0), _lry(0), _valid(false), _locked(false)
 {
 	set(boxstr);
 }
