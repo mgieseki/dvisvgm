@@ -91,11 +91,9 @@ bool FontCache::write (const char *fontname, const char *dir) const {
 		return true;
 
 	if (fontname && strlen(fontname) > 0) {
-		if (dir == 0 || strlen(dir) == 0)
-			dir = FileSystem::getcwd().c_str();
+		string dirstr = (dir == 0 || strlen(dir) == 0) ? FileSystem::getcwd() : dir;
 		ostringstream oss;
-		oss << dir << '/' << fontname << ".fgd";
-//		ogzstream ofs(oss.str().c_str(), 9, ios::binary|ios::out);
+		oss << dirstr << '/' << fontname << ".fgd";
 		ofstream ofs(oss.str().c_str(), ios::binary);
 		return write(fontname, ofs);
 	}
@@ -188,12 +186,10 @@ bool FontCache::read (const char *fontname, const char *dir) {
 		return true;
 	clear();
 	if (fontname && strlen(fontname) > 0) {
-		if (dir == 0 || strlen(dir) == 0)
-			dir = FileSystem::getcwd().c_str();
+		string dirstr = (dir == 0 || strlen(dir) == 0) ? FileSystem::getcwd() : dir;
 		ostringstream oss;
-		oss << dir << '/' << fontname << ".fgd";
+		oss << dirstr << '/' << fontname << ".fgd";
 		ifstream ifs(oss.str().c_str(), ios::binary);
-//		igzstream ifs(oss.str().c_str(), 9, ios::binary|ios::in);
 		return read(fontname, ifs);
 	}
 	return false;
