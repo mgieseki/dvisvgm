@@ -182,17 +182,16 @@ bool FontCache::write (const char *fontname, ostream &os) const {
  *  @param[in] dir directory where the cache files are located
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, const char *dir) {
+	if (!fontname || strlen(fontname) == 0)
+		return false;
 	if (_fontname == fontname)
 		return true;
 	clear();
-	if (fontname && strlen(fontname) > 0) {
-		string dirstr = (dir == 0 || strlen(dir) == 0) ? FileSystem::getcwd() : dir;
-		ostringstream oss;
-		oss << dirstr << '/' << fontname << ".fgd";
-		ifstream ifs(oss.str().c_str(), ios::binary);
-		return read(fontname, ifs);
-	}
-	return false;
+	string dirstr = (dir == 0 || strlen(dir) == 0) ? FileSystem::getcwd() : dir;
+	ostringstream oss;
+	oss << dirstr << '/' << fontname << ".fgd";
+	ifstream ifs(oss.str().c_str(), ios::binary);
+	return read(fontname, ifs);
 }
 
 

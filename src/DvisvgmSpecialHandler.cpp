@@ -160,19 +160,21 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 
 
 static void img (InputReader &in, SpecialActions *actions) {
-	double w = in.getDouble();
-	double h = in.getDouble();
-	string f = in.getString();
-	update_bbox(w, h, 0, actions);
-	XMLElementNode *img = new XMLElementNode("image");
-	img->addAttribute("x", actions->getX());
-	img->addAttribute("y", actions->getY());
-	img->addAttribute("width", w);
-	img->addAttribute("height", h);
-	img->addAttribute("xlink:href", f);
-	if (actions && !actions->getMatrix().isIdentity())
-		img->addAttribute("transform", actions->getMatrix().getSVG());
-	actions->appendToPage(img);
+	if (actions) {
+		double w = in.getDouble();
+		double h = in.getDouble();
+		string f = in.getString();
+		update_bbox(w, h, 0, actions);
+		XMLElementNode *img = new XMLElementNode("image");
+		img->addAttribute("x", actions->getX());
+		img->addAttribute("y", actions->getY());
+		img->addAttribute("width", w);
+		img->addAttribute("height", h);
+		img->addAttribute("xlink:href", f);
+		if (!actions->getMatrix().isIdentity())
+			img->addAttribute("transform", actions->getMatrix().getSVG());
+		actions->appendToPage(img);
+	}
 }
 
 
