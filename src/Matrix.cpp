@@ -342,7 +342,7 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
    }
 	string expr;
 	while (is && !isupper(is.peek()) && is.peek() != ',')
-		expr += is.get();
+		expr += (char)is.get();
    if (expr.length() == 0) {
       if (optional)
          return def;
@@ -358,7 +358,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 	while (is) {
       while (isspace(is.peek()))
          is.get();
-		char cmd = is.get();
+		int cmd = is.get();
 		switch (cmd) {
 			case 'T': {
 				double tx = getArgument(is, calc, 0, false, false);
@@ -382,7 +382,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
             break;
 			}
 			case 'F': {
-				char c = is.get();
+				int c = is.get();
 				if (c != 'H' && c != 'V')
 					throw ParserException("'H' or 'V' expected");
 				double a = getArgument(is, calc, 0, false, false);
@@ -390,7 +390,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				break;
 			}
 			case 'K': {
-				char c = is.get();
+				int c = is.get();
 				if (c != 'X' && c != 'Y')
 					throw ParserException("transformation command 'K' must be followed by 'X' or 'Y'");
 				double a = getArgument(is, calc, 0, false, false);
