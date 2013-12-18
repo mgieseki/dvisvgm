@@ -353,6 +353,7 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
  *  @param[in] purge if true, outdated and corrupted cache files are removed */
 void FontCache::fontinfo (const char *dirname, ostream &os, bool purge) {
 	if (dirname) {
+		ios::fmtflags osflags(os.flags());
 		vector<FontInfo> infos;
 		vector<string> invalid_files;
 		if (fontinfo(dirname, infos, invalid_files)) {
@@ -379,5 +380,6 @@ void FontCache::fontinfo (const char *dirname, ostream &os, bool purge) {
 			if (FileSystem::remove(path))
 				os << "invalid cache file " << (*it) << " removed\n";
 		}
+		os.flags(osflags);  // restore format flags
 	}
 }

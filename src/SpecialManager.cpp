@@ -153,6 +153,7 @@ void SpecialManager::notifyPositionChange (double x, double y) const {
 
 
 void SpecialManager::writeHandlerInfo (ostream &os) const {
+	ios::fmtflags osflags(os.flags());
 	typedef map<string, SpecialHandler*> SortMap;
 	SortMap m;
 	FORALL(_handlers, ConstIterator, it)
@@ -164,5 +165,6 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 			os << it->second->info();
 		os << endl;
 	}
+	os.flags(osflags);  // restore format flags
 }
 
