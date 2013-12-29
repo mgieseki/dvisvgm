@@ -85,17 +85,17 @@ void Directory::close () {
 /** Reads first/next directory entry.
  *  @param[in] type type of entry to return (a: file or dir, f: file, d: dir)
  *  @return name of entry */
-const char* Directory::read (char type) {
+const char* Directory::read (EntryType type) {
 #ifdef __WIN32__
 	if (handle == INVALID_HANDLE_VALUE)
 		return 0;
 	while (firstread || FindNextFile(handle, &fileData)) {
 		firstread = false;
 		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-			if (type == 'a' || type == 'd')
+			if (type == ET_FILE_OR_DIR || type == ET_DIR)
 				return fileData.cFileName;
 		}
-		else if (type == 'a' || type == 'f')
+		else if (type == ET_FILE_OR_DIR || type == ET_FILE)
 			return fileData.cFileName;
 	}
 	FindClose(handle);
@@ -107,13 +107,14 @@ const char* Directory::read (char type) {
 	while ((dirent = readdir(dir))) {
 		string path = string(_dirname) + "/" + dirent->d_name;
 		struct stat stats;
-		stat(path.c_str(), &stats);
-		if (S_ISDIR(stats.st_mode)) {
-			if (type == 'a' || type == 'd')
+		if (stat(path.c_str(), &stats) == 0) {
+			if (S_ISDIR(stats.st_mode)) {
+				if (type == ET_FILE_OR_DIR || type == ET_DIR)
+					return dirent->d_name;
+			}
+			else if (type == ET_FILE_OR_DIR || type == ET_FILE)
 				return dirent->d_name;
 		}
-		else if (type == 'a' || type == 'f')
-			return dirent->d_name;
 	}
 	closedir(dir);
 	dir = 0;

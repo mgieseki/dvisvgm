@@ -37,7 +37,7 @@ TEST(DirectoryTest, dirs) {
 	const char *dirs_to_find[] = {"doc", "src", 0};
 	set<string> found_dirs;
 	Directory dir("..");
-	while (const char *dname = dir.read('d'))
+	while (const char *dname = dir.read(Directory::ET_DIR))
 		found_dirs.insert(dname);
 	for (const char **p=dirs_to_find; *p; ++p) {
 		EXPECT_TRUE(found_dirs.find(*p) != found_dirs.end());
@@ -57,7 +57,7 @@ TEST(DirectoryTest, file) {
 	};
 	set<string> found_files;
 	Directory dir(string(SRCDIR)+"/../src");
-	while (const char *fname = dir.read('f'))
+	while (const char *fname = dir.read(Directory::ET_FILE))
 		found_files.insert(fname);
 	for (const char **p=files_to_find; *p; ++p) {
 		EXPECT_TRUE(found_files.find(*p) != found_files.end());
