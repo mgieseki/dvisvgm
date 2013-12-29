@@ -300,48 +300,53 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 	if (is) {
 		is.clear();
 		is.seekg(0);
-		StreamReader sr(is);
-		CRC32 crc32;
-		if ((info.version = sr.readUnsigned(1, crc32)) != FORMAT_VERSION)
-			return false;
+		try {
+			StreamReader sr(is);
+			CRC32 crc32;
+			if ((info.version = sr.readUnsigned(1, crc32)) != FORMAT_VERSION)
+				return false;
 
-		info.checksum = sr.readUnsigned(4);
-		crc32.update(is);
-		if (crc32.get() != info.checksum)
-			return false;
+			info.checksum = sr.readUnsigned(4);
+			crc32.update(is);
+			if (crc32.get() != info.checksum)
+				return false;
 
-		is.clear();
-		is.seekg(5);  // continue reading after checksum
+			is.clear();
+			is.seekg(5);  // continue reading after checksum
 
-		info.name = sr.readString();
-		info.numchars = sr.readUnsigned(4);
-		for (UInt32 i=0; i < info.numchars; i++) {
-			sr.readUnsigned(4);  // character code
-			UInt16 s = sr.readUnsigned(2);  // number of path commands
-			while (s-- > 0) {
-				UInt8 cmdval = sr.readUnsigned(1);
-				UInt8 cmdchar = (cmdval & 0x1f) + 'A';
-				int bytes = cmdval >> 5;
-				int bc = 0;
-				switch (cmdchar) {
-					case 'C': bc = 6*bytes; break;
-					case 'H':
-					case 'L':
-					case 'M':
-					case 'T':
-					case 'V': bc = 2*bytes; break;
-					case 'Q':
-					case 'S': bc = 4*bytes; break;
-					case 'Z': break;
-					default : return false;
+			info.name = sr.readString();
+			info.numchars = sr.readUnsigned(4);
+			for (UInt32 i=0; i < info.numchars; i++) {
+				sr.readUnsigned(4);  // character code
+				UInt16 s = sr.readUnsigned(2);  // number of path commands
+				while (s-- > 0) {
+					UInt8 cmdval = sr.readUnsigned(1);
+					UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+					int bytes = cmdval >> 5;
+					int bc = 0;
+					switch (cmdchar) {
+						case 'C': bc = 6*bytes; break;
+						case 'H':
+						case 'L':
+						case 'M':
+						case 'T':
+						case 'V': bc = 2*bytes; break;
+						case 'Q':
+						case 'S': bc = 4*bytes; break;
+						case 'Z': break;
+						default : return false;
+					}
+					info.numbytes += bc+1; // command length + command
+					info.numcmds++;
+					is.seekg(bc, ios_base::cur);
 				}
-				info.numbytes += bc+1; // command length + command
-				info.numcmds++;
-				is.seekg(bc, ios_base::cur);
+				info.numbytes += 6; // number of path commands + char code
 			}
-			info.numbytes += 6; // number of path commands + char code
+			info.numbytes += 6+info.name.length(); // version + 0-byte + fontname + number of chars
 		}
-		info.numbytes += 6+info.name.length(); // version + 0-byte + fontname + number of chars
+		catch (StreamReaderException &e) {
+			return false;
+		}
 	}
 	return true;
 }
