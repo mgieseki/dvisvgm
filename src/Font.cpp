@@ -591,7 +591,8 @@ PhysicalFont::Type NativeFont::type () const {
 
 double NativeFont::charWidth (int c) const {
 	FontEngine::instance().setFont(*this);
-	double w = scaledSize()*FontEngine::instance().getAdvance(c)/FontEngine::instance().getUnitsPerEM()*_style.extend;
+	int upem = FontEngine::instance().getUnitsPerEM();
+	double w = upem ? (scaledSize()*FontEngine::instance().getAdvance(c)/upem*_style.extend) : 0;
 	w += fabs(_style.slant*charHeight(c));
 	return w;
 }
@@ -599,13 +600,15 @@ double NativeFont::charWidth (int c) const {
 
 double NativeFont::charHeight (int c) const {
 	FontEngine::instance().setFont(*this);
-	return scaledSize()*FontEngine::instance().getAscender()/FontEngine::instance().getUnitsPerEM();
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getAscender()/upem) : 0;
 }
 
 
 double NativeFont::charDepth (int c) const {
 	FontEngine::instance().setFont(*this);
-	return -scaledSize()*FontEngine::instance().getDescender()/FontEngine::instance().getUnitsPerEM();
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (-scaledSize()*FontEngine::instance().getDescender()/upem) : 0;
 }
 
 
