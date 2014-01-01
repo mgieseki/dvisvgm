@@ -38,18 +38,22 @@ MiKTeXCom::MiKTeXCom () : _session(0) {
 #else
 	HRESULT hres = CoCreateInstance(CLSID_MiKTeXSession2_9, 0, CLSCTX_INPROC_SERVER, IID_ISession2, (void**)&_session);
 #endif
-	if (FAILED(hres))
+	if (FAILED(hres)) {
+		CoUninitialize();
 		throw MessageException("MiKTeX.Session could not be initialized");
+	}
 }
 
 
 MiKTeXCom::~MiKTeXCom () {
+	if (_session) {
 #ifdef _MSC_VER
-	_session.Release();
+		_session.Release();
 #else
-	_session->Release();
+		_session->Release();
 #endif
-	_session = 0; // avoid automatic calling of Release() after CoUninitialize()
+		_session = 0; // avoid automatic calling of Release() after CoUninitialize()
+	}
 	CoUninitialize();
 }
 
