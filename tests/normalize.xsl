@@ -2,7 +2,7 @@
 <!-- *********************************************************************
 ** Stylesheet to rearrange font-/path-elements in an SVG file.          **
 ** It's part of the dvisvgm package.                                    **
-** (C) 2009-2010 Martin Gieseking <martin.gieseking@uos.de>             **
+** (C) 2009-2014 Martin Gieseking <martin.gieseking@uos.de>             **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
