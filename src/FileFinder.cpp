@@ -157,7 +157,12 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		process.run(&buf);
 		return buf.empty() ? 0 : buf.c_str();
 	}
-	return miktex->findFile(fname.c_str());
+	try {
+		return miktex->findFile(fname.c_str());
+	}
+	catch (const MessageException &e) {
+		return 0;
+	}
 #else
 #ifdef TEXLIVEWIN32
 	if (ext == "exe") {
