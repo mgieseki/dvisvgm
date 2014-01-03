@@ -34,6 +34,8 @@ using namespace std;
 Directory::Directory () {
 #if __WIN32__
 	handle = INVALID_HANDLE_VALUE;
+	firstread = true;
+	memset(&fileData, 0, sizeof(WIN32_FIND_DATA));
 #else
 	dir = 0;
 	dirent = 0;
@@ -44,6 +46,8 @@ Directory::Directory () {
 Directory::Directory (string dirname) {
 #if __WIN32__
 	handle = INVALID_HANDLE_VALUE;
+	firstread = true;
+	memset(&fileData, 0, sizeof(WIN32_FIND_DATA));
 #else
 	dir = 0;
 	dirent = 0;
