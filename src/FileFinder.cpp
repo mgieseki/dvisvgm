@@ -112,7 +112,6 @@ std::string FileFinder::version () {
 	catch (MessageException &e) {
 		if (autoinit)
 			finish();
-		return "not available";
 	}
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))
