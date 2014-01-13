@@ -97,7 +97,8 @@ bool Ghostscript::available () {
 #if defined(HAVE_LIBGS)
 	return true;
 #else
-	return loaded();
+	gsapi_revision_t rev;
+	return loaded() && revision(&rev);
 #endif
 }
 
