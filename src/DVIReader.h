@@ -87,8 +87,8 @@ class DVIReader : public StreamReader, protected VFActions
 		void verifyDVIFormat (int id) const;
 		int executeCommand ();
 		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
-		void moveRight (double x, bool callAction=true);
-		void moveDown (double y);
+		void moveRight (double dx);
+		void moveDown (double dy);
 		void putChar (UInt32 c, bool moveCursor);
 		void putGlyphArray (bool xonly);
 		void defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);

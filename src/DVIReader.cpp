@@ -565,7 +565,7 @@ void DVIReader::cmdSetRule (int) {
 		double width  = _scaleFactor*readSigned(4);
 		if (_actions && height > 0 && width > 0)
 			_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
-		moveRight(width, (height <= 0 || width <= 0));
+		moveRight(width);
 	}
 	else
 		throw DVIException("set_rule outside of page");
@@ -587,32 +587,32 @@ void DVIReader::cmdPutRule (int) {
 }
 
 
-void DVIReader::moveRight (double x, bool callAction) {
+void DVIReader::moveRight (double dx) {
 	switch (_dviState.d) {
-		case WMODE_LR: _dviState.h += x; break;
-		case WMODE_TB: _dviState.v += x; break;
-		case WMODE_BT: _dviState.v -= x; break;
+		case WMODE_LR: _dviState.h += dx; break;
+		case WMODE_TB: _dviState.v += dx; break;
+		case WMODE_BT: _dviState.v -= dx; break;
 	}
-	if (_actions && callAction) {
+	if (_actions) {
 		if (_dviState.d == WMODE_LR)
-			_actions->moveToX(x+_tx);
+			_actions->moveToX(_dviState.h+_tx);
 		else
-			_actions->moveToY(x+_ty);
+			_actions->moveToY(_dviState.v+_ty);
 	}
 }
 
 
-void DVIReader::moveDown (double y) {
+void DVIReader::moveDown (double dy) {
 	switch (_dviState.d) {
-		case WMODE_LR: _dviState.v += y; break;
-		case WMODE_TB: _dviState.h -= y; break;
-		case WMODE_BT: _dviState.h += y; break;
+		case WMODE_LR: _dviState.v += dy; break;
+		case WMODE_TB: _dviState.h -= dy; break;
+		case WMODE_BT: _dviState.h += dy; break;
 	}
 	if (_actions) {
 		if (_dviState.d == WMODE_LR)
-			_actions->moveToY(y+_ty);
+			_actions->moveToY(_dviState.v+_ty);
 		else
-			_actions->moveToX(y+_tx);
+			_actions->moveToX(_dviState.h+_tx);
 	}
 }
 
