@@ -70,7 +70,7 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 
 void DVIToSVGActions::moveToX (double x) {
 	_dvisvg.specialManager().notifyPositionChange(getX(), getY());
-	_svg.setX(getX());        // get current horizontal DVI position
+	_svg.setX(x);
 }
 
 
