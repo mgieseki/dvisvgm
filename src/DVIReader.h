@@ -141,11 +141,11 @@ class DVIReader : public StreamReader, protected VFActions
 		unsigned _totalPages;    ///< total number of pages in dvi file
 		unsigned _currPageNum;   ///< current page number
 		int _currFontNum;        ///< current font number
-		double _scaleFactor;     ///< 1 dvi unit = scaleFactor * TeX points
+		double _dvi2bp;          ///< factor to convert dvi units to PS points
 		UInt32 _mag;             ///< magnification factor * 1000
 		bool _inPostamble;       ///< true if stream pointer is inside the postamble
 		Int32 _prevBop;          ///< pointer to previous bop
-		double _pageHeight, _pageWidth;  ///< page height and width in TeX points
+		double _pageHeight, _pageWidth;  ///< page height and width in PS points
 		DVIState _dviState;      ///< current cursor position
 		std::stack<DVIState> _stateStack;
 		double _prevYPos;        ///< previous vertical cursor position

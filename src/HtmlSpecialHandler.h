@@ -34,7 +34,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		NamedAnchor () : id(0), pos(0) {}
 		NamedAnchor (int i, double p) : id(i), pos(p) {}
 		int id;      ///< unique numerical ID (< 0 if anchor is unreferenced)
-		double pos;  ///< vertical position of named anchor (in TeX point units)
+		double pos;  ///< vertical position of named anchor (in PS point units)
 	};
 
 	enum AnchorType {AT_NONE, AT_HREF, AT_NAME};

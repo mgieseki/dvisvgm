@@ -45,7 +45,7 @@ GFTracer::GFTracer (istream &is)
 
 /** Constructs a new GFTracer.
  *  @param[in] is GF file is read from this stream
- *  @param[in] upp target units per TeX point */
+ *  @param[in] upp target units per PS point */
 GFTracer::GFTracer (istream &is, double upp)
 	: GFReader(is), _unitsPerPoint(upp)
 {

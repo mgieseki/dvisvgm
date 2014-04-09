@@ -41,7 +41,7 @@ class GFTracer : public GFReader
 		void unitsPerPoint(double upp) {_unitsPerPoint = upp;}
 
 	private:
-		double _unitsPerPoint; ///< target units per TeX point
+		double _unitsPerPoint; ///< target units per PS point
 };
 
 #endif

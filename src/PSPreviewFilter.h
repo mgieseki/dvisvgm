@@ -37,7 +37,7 @@ class PSPreviewFilter : public PSFilter
 		bool active () const                   {return _active;}
 		std::string version () const           {return _version;}
 		bool tightpage () const                {return _tightpage;}
-		void setDviScaleFactor (double dvi2pt) {_dvi2pt = dvi2pt;}
+		void setDviScaleFactor (double dvi2bp) {_dvi2bp = dvi2bp;}
 		bool getBorders (double &left, double &right, double &top, double &bottom) const;
 		void assignBorders (BoundingBox &bbox) const;
 		bool getBoundingBox (BoundingBox &bbox) const;
@@ -49,7 +49,7 @@ class PSPreviewFilter : public PSFilter
 		std::string _version;  ///< version string of preview package
 		bool _active;          ///< true if filter is active
 		bool _tightpage;       ///< true if tightpage option was given
-		double _dvi2pt;        ///< factor to convert dvi units to TeX points
+		double _dvi2bp;        ///< factor to convert dvi units to PS points
 		std::vector<int> _boxExtents;
 };
 

@@ -186,8 +186,8 @@ class TFMFont : public virtual Font
 		mutable FontMetrics *_metrics;
 		std::string _fontname;
 		UInt32 _checksum; ///< cheksum to be compared with TFM checksum
-		double _dsize;    ///< design size in TeX point units
-		double _ssize;    ///< scaled size
+		double _dsize;    ///< design size in PS point units
+		double _ssize;    ///< scaled size in PS point units
 };
 
 
@@ -220,8 +220,8 @@ class PhysicalFontProxy : public PhysicalFont
 
 	private:
 		const PhysicalFont *_pf;
-		double _dsize;  ///< design size in TeX point units
-		double _ssize;  ///< scaled size
+		double _dsize;  ///< design size in PS point units
+		double _ssize;  ///< scaled size in PS point units
 };
 
 
@@ -279,7 +279,7 @@ class NativeFont : public PhysicalFont
 		NativeFont (double ptsize, const FontStyle &style, Color color) : _ptsize(ptsize), _style(style), _color(color) {}
 
 	private:
-		double _ptsize;
+		double _ptsize;    ///< font size in PS point units
 		FontStyle _style;
 		Color _color;
 };
@@ -356,8 +356,8 @@ class VirtualFontProxy : public VirtualFont
 
 	private:
 		const VirtualFont *_vf;
-		double _dsize;  ///< design size in TeX point units
-		double _ssize;  ///< scaled size in TeX point units
+		double _dsize;  ///< design size in PS point units
+		double _ssize;  ///< scaled size in PS point units
 };
 
 

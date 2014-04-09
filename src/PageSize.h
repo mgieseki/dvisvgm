@@ -35,14 +35,14 @@ class PageSize
 		PageSize (std::string name);
 		void resize (std:: string name);
 		void resize (double w, double h);
-		double widthInPT () const  {return _width;}
-		double heightInPT () const {return _height;}
-		double widthInMM () const  {return _width*25.4/72.27;}
-		double heightInMM () const {return _height*25.4/72.27;}
+		double widthInBP () const  {return _width;}
+		double heightInBP () const {return _height;}
+		double widthInMM () const  {return _width*25.4/72;}
+		double heightInMM () const {return _height*25.4/72;}
 		bool valid () const        {return _width > 0 && _height > 0;}
 
    private:
-		double _width, _height; // in pt
+		double _width, _height; // in PS points
 };
 
 #endif

@@ -43,9 +43,10 @@ static void read_words (StreamReader &sr, vector<T> &v, unsigned n) {
 }
 
 
-/** Converts a TFM fix point value to double. */
+/** Converts a TFM fix point value to double (PS point units). */
 static double fix2double (FixWord fix) {
-	return double(fix)/(1 << 20);
+	const double pt2bp = 72/72.27;
+	return double(fix)/(1 << 20)*pt2bp;
 }
 
 
@@ -91,7 +92,7 @@ void TFM::readTables (StreamReader &sr, int nw, int nh, int nd, int ni) {
 }
 
 
-/** Returns the design size of this font in TeX point units. */
+/** Returns the design size of this font in PS point units. */
 double TFM::getDesignSize () const {
 	return fix2double(_designSize);
 }
@@ -115,7 +116,7 @@ int TFM::charIndex (int c) const {
 // xxxxxxxx | xxxx xxxx | xxxxxx xx | xxxxxxxx
 // w        | h    d    | it     tg | remainder
 
-/** Returns the width of char c in TeX point units. */
+/** Returns the width of char c in PS point units. */
 double TFM::getCharWidth (int c) const {
 	int index = charIndex(c);
 	if (index < 0)
@@ -125,7 +126,7 @@ double TFM::getCharWidth (int c) const {
 }
 
 
-/** Returns the height of char c in TeX point units. */
+/** Returns the height of char c in PS point units. */
 double TFM::getCharHeight (int c) const {
 	int index = charIndex(c);
 	if (index < 0)
@@ -135,7 +136,7 @@ double TFM::getCharHeight (int c) const {
 }
 
 
-/** Returns the depth of char c in TeX point units. */
+/** Returns the depth of char c in PS point units. */
 double TFM::getCharDepth (int c) const {
 	int index = charIndex(c);
 	if (index < 0)
@@ -145,7 +146,7 @@ double TFM::getCharDepth (int c) const {
 }
 
 
-/** Returns the italic correction of char c in TeX point units. */
+/** Returns the italic correction of char c in PS point units. */
 double TFM::getItalicCorr (int c) const {
 	int index = charIndex(c);
 	if (index < 0)

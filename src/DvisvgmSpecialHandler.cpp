@@ -75,9 +75,9 @@ static void expand_constants (string &str, SpecialActions *actions) {
 
 /** Embeds the virtual rectangle (x, y ,w , h) into the current bounding box,
  *  where (x,y) is the lower left vertex composed of the current DVI position.
- *  @param[in] w width of the rectangle in TeX point units
- *  @param[in] h height of the rectangle in TeX point units
- *  @param[in] d depth of the rectangle in TeX point units */
+ *  @param[in] w width of the rectangle in PS point units
+ *  @param[in] h height of the rectangle in PS point units
+ *  @param[in] d depth of the rectangle in PS point units */
 static void update_bbox (double w, double h, double d, SpecialActions *actions) {
 	double x = actions->getX();
 	double y = actions->getY();
@@ -120,6 +120,7 @@ static void raw (InputReader &in, SpecialActions *actions, bool group=false) {
  *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2>
  *  variant 4: dvisvgm:bbox n[ew] <name> */
 static void bbox (InputReader &in, SpecialActions *actions) {
+	const double pt2bp = 72/72.27;
 	in.skipSpace();
 	int c = in.peek();
 	if (isalpha(c)) {
@@ -137,7 +138,7 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 		else if (c == 'a' || c == 'f') {
 			double p[4];
 			for (int i=0; i < 4; i++)
-				p[i] = in.getDouble();
+				p[i] = in.getDouble()*pt2bp;
 			BoundingBox b(p[0], p[1], p[2], p[3]);
 			if (c == 'a')
 				actions->embed(b);
@@ -151,9 +152,9 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 		c = 'r';   // no mode specifier => relative box parameters
 
 	if (c == 'r') {
-		double w = in.getDouble();
-		double h = in.getDouble();
-		double d = in.getDouble();
+		double w = in.getDouble()*pt2bp;
+		double h = in.getDouble()*pt2bp;
+		double d = in.getDouble()*pt2bp;
 		update_bbox(w, h, d, actions);
 	}
 }
@@ -161,8 +162,9 @@ static void bbox (InputReader &in, SpecialActions *actions) {
 
 static void img (InputReader &in, SpecialActions *actions) {
 	if (actions) {
-		double w = in.getDouble();
-		double h = in.getDouble();
+		const double pt2bp = 72/72.27;
+		double w = in.getDouble()*pt2bp;
+		double h = in.getDouble()*pt2bp;
 		string f = in.getString();
 		update_bbox(w, h, 0, actions);
 		XMLElementNode *img = new XMLElementNode("image");

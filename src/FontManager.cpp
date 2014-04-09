@@ -174,8 +174,8 @@ static Font* create_font (const string &filename, const string &fontname, int fo
  *  @param[in] fontnum local font number, as used in DVI and VF files
  *  @param[in] name TFM fontname given in DVI file, e.g. cmr10
  *  @param[in] checksum checksum to be compared with TFM checksum
- *  @param[in] dsize design size in TeX point units
- *  @param[in] ssize scaled size in TeX point units
+ *  @param[in] dsize design size in PS point units
+ *  @param[in] ssize scaled size in PS point units
  *  @return id of registered font */
 int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);

@@ -71,7 +71,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		const char* info () const   {return "dvips PostScript specials";}
 		const char** prefixes () const;
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		void setDviScaleFactor (double dvi2pt) {_previewFilter.setDviScaleFactor(dvi2pt);}
+		void setDviScaleFactor (double dvi2bp) {_previewFilter.setDviScaleFactor(dvi2bp);}
 		void enterBodySection ();
 
 	protected:

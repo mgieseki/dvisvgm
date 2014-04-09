@@ -30,7 +30,7 @@
 using namespace std;
 
 
-EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4), _actions(0) {
+EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4*72/72.27), _actions(0) {
 }
 
 
@@ -64,11 +64,11 @@ static DPair cut_vector (char c, const DPair &v, double lw) {
 
 
 /** Creates the SVG element that will a the line.
- * @param[in] p1 first endpoint in TeX point units
- * @param[in] p2 second endpoint in TeX point units
+ * @param[in] p1 first endpoint in PS point units
+ * @param[in] p2 second endpoint in PS point units
  * @param[in] c1 cut method of first endpoint ('h', 'v' or 'p')
  * @param[in] c2 cut method of second endpoint ('h', 'v' or 'p')
- * @param[in] lw line width in TeX point units */
+ * @param[in] lw line width in PS point units */
 static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions *actions) {
 	XMLElementNode *node=0;
 	DPair dir = p2-p1;
@@ -134,7 +134,7 @@ static double read_length (InputReader &in) {
 			len *= p->factor;
 			break;
 		}
-	return len;
+	return len*72/72.27;
 }
 
 

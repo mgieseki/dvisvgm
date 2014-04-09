@@ -47,10 +47,6 @@ void PSPattern::apply (SpecialActions *actions) {
 PSTilingPattern::PSTilingPattern (int id, BoundingBox &bbox, Matrix &matrix, double xstep, double ystep)
 	: PSPattern(id), _bbox(bbox), _matrix(matrix), _xstep(xstep), _ystep(ystep), _groupNode(0)
 {
-	const double bp2pt = 72.27/72.0;  // factor to convert bp to pt
-	_bbox.scale(bp2pt, bp2pt);
-	_xstep *= bp2pt;
-	_ystep *= bp2pt;
 	_groupNode = PSTilingPattern::createGroupNode();
 }
 

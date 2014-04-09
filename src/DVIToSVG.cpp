@@ -82,10 +82,10 @@ class PSHeaderActions : public DVIActions
 	public :
 		PSHeaderActions (DVIToSVG &dvisvg) : _dvisvg(dvisvg) {}
 
-		void special (const std::string &str, double dvi2pt) {
+		void special (const std::string &str, double dvi2bp) {
 			// execute PS headers only
 			if (!str.empty() && (str[0] == '!' || str.substr(0, 7) == "header="))
-				_dvisvg.specialManager().process(str, dvi2pt, 0);
+				_dvisvg.specialManager().process(str, dvi2bp, 0);
 		}
 
 		bool fontProcessingEnabled () const {
@@ -234,8 +234,8 @@ void DVIToSVG::endPage (unsigned pageno) {
 			if (size.valid()) {
 				// convention: DVI position (0,0) equals (1in, 1in) relative
 				// to the upper left vertex of the page (see DVI specification)
-				const double border = -72.27;
-				bbox = BoundingBox(border, border, size.widthInPT()+border, size.heightInPT()+border);
+				const double border = -72;
+				bbox = BoundingBox(border, border, size.widthInBP()+border, size.heightInBP()+border);
 			}
 		}
 		else { // set/modify bounding box by explicitly given values
@@ -258,11 +258,13 @@ void DVIToSVG::endPage (unsigned pageno) {
 		else {
 			_svg.setBBox(bbox);
 
+			const double bp2pt = 72.27/72;
+			const double bp2mm = 25.4/72;
 			Message::mstream(false) << '\n';
-			Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()) << "pt"
-				" x " << XMLString(bbox.height()) << "pt"
-				" (" << XMLString(bbox.width()/72.27*25.4) << "mm"
-				" x " << XMLString(bbox.height()/72.27*25.4) << "mm)";
+			Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()*bp2pt) << "pt"
+				" x " << XMLString(bbox.height()*bp2pt) << "pt"
+				" (" << XMLString(bbox.width()*bp2mm) << "mm"
+				" x " << XMLString(bbox.height()*bp2mm) << "mm)";
 			Message::mstream(false) << '\n';
 		}
 	}
@@ -275,11 +277,12 @@ void DVIToSVG::getPageTransformation(Matrix &matrix) const {
 	else {
 		Calculator calc;
 		if (getActions()) {
+			const double bp2pt = 72.27/72;
 			BoundingBox &bbox = getActions()->bbox();
-			calc.setVariable("ux", bbox.minX());
-			calc.setVariable("uy", bbox.minY());
-			calc.setVariable("w",  bbox.width());
-			calc.setVariable("h",  bbox.height());
+			calc.setVariable("ux", bbox.minX()*bp2pt);
+			calc.setVariable("uy", bbox.minY()*bp2pt);
+			calc.setVariable("w",  bbox.width()*bp2pt);
+			calc.setVariable("h",  bbox.height()*bp2pt);
 		}
 		calc.setVariable("pt", 1);
 		calc.setVariable("in", 72.27);

@@ -75,8 +75,8 @@ class BoundingBox
 		XMLElementNode* toSVGRect () const;
 
    private:
-		double _ulx, _uly; ///< coordinates of upper left vertex (in TeX point units)
-		double _lrx, _lry; ///< coordinates of lower right vertex (in TeX point unitx)
+		double _ulx, _uly; ///< coordinates of upper left vertex (in PS point units)
+		double _lrx, _lry; ///< coordinates of lower right vertex (in PS point units)
 		bool _valid : 1;   ///< true if the box coordinates are properly set
 		bool _locked : 1;  ///< if true, the box data is read-only
 };

@@ -182,8 +182,8 @@ class GraphicPath
 		 *  @param[in] os output stream used to write the SVG commands to
 		 *  @param[in] sx horizontal scale factor
 		 *  @param[in] sy vertical scale factor
-		 *  @param[in] dx horizontal translation in TeX point units
-		 *  @param[in] sy vertical translation in TeX point units */
+		 *  @param[in] dx horizontal translation in PS point units
+		 *  @param[in] sy vertical translation in PS point units */
 		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
 			struct WriteActions : Actions {
 				WriteActions (std::ostream &os, double sx, double sy, double dx, double dy)

@@ -54,7 +54,7 @@ void TpicSpecialHandler::reset () {
 /** Creates SVG elements that draw lines through the recorded points.
  *  @param[in] stroke if true, the (out)line is drawn (in black)
  *  @param[in] fill if true, enclosed area is filled with current color
- *  @param[in] ddist dash/dot distance of line in TeX point units
+ *  @param[in] ddist dash/dot distance of line in PS point units
  *                   (0:solid line, >0:dashed line, <0:dotted line) */
 void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions) {
 	if (actions && !_points.empty()) {
@@ -245,12 +245,12 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 	if (!prefix || strlen(prefix) != 2)
 		return false;
 
-	const double PT=0.07227; // factor for milli-inch to TeX points
+	const double mi2bp=0.072; // factor for milli-inch to PS points
 	StreamInputBuffer ib(is);
 	BufferInputReader in(ib);
 	switch (cmd_id(prefix[0], prefix[1])) {
 		case cmd_id('p','n'): // set pen width in milli-inches
-			_penwidth = in.getDouble()*PT;
+			_penwidth = in.getDouble()*mi2bp;
 			break;
 		case cmd_id('b','k'): // set fill color to black
 			_fill = 0;
@@ -265,8 +265,8 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 		case cmd_id('t','x'): // set fill pattern
 			break;
 		case cmd_id('p','a'): { // add point to path
-			double x=in.getDouble()*PT;
-			double y=in.getDouble()*PT;
+			double x = in.getDouble()*mi2bp;
+			double y = in.getDouble()*mi2bp;
 			_points.push_back(DPair(x,y));
 			break;
 		}
@@ -277,10 +277,10 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			drawLines(false, true, 0, actions);
 			break;
 		case cmd_id('d','a'): // as fp but draw dashed lines
-			drawLines(true, _fill >= 0, in.getDouble()*72.27, actions);
+			drawLines(true, _fill >= 0, in.getDouble()*72, actions);
 			break;
 		case cmd_id('d','t'): // as fp but draw dotted lines
-			drawLines(true, _fill >= 0, -in.getDouble()*72.27, actions);
+			drawLines(true, _fill >= 0, -in.getDouble()*72, actions);
 			break;
 		case cmd_id('s','p'): { // draw quadratic splines through recorded points
 			double ddist = in.getDouble();
@@ -288,20 +288,20 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			break;
 		}
 		case cmd_id('a','r'): { // draw elliptical arc
-			double cx = in.getDouble()*PT;
-			double cy = in.getDouble()*PT;
-			double rx = in.getDouble()*PT;
-			double ry = in.getDouble()*PT;
+			double cx = in.getDouble()*mi2bp;
+			double cy = in.getDouble()*mi2bp;
+			double rx = in.getDouble()*mi2bp;
+			double ry = in.getDouble()*mi2bp;
 			double a1 = in.getDouble();
 			double a2 = in.getDouble();
 			drawArc(cx, cy, rx, ry, a1, a2, actions);
 			break;
 		}
 		case cmd_id('i','a'): { // fill elliptical arc
-			double cx = in.getDouble()*PT;
-			double cy = in.getDouble()*PT;
-			double rx = in.getDouble()*PT;
-			double ry = in.getDouble()*PT;
+			double cx = in.getDouble()*mi2bp;
+			double cy = in.getDouble()*mi2bp;
+			double rx = in.getDouble()*mi2bp;
+			double ry = in.getDouble()*mi2bp;
 			double a1 = in.getDouble();
 			double a2 = in.getDouble();
 			if (_fill < 0)

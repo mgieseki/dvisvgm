@@ -162,10 +162,6 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
  *  @param[in] height length of the vertical edges
  *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
-/*	x *= BP;
-	y *= BP;
-	height *= BP;
-	width  *= BP; */
 	// (x,y) is the lower left corner of the rectangle
 	XMLElementNode *rect = new XMLElementNode("rect");
 	rect->addAttribute("x", x);
@@ -198,10 +194,10 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 
 /** This method is called when a "special" command was found in the DVI file.
  *  @param[in] s the special expression
- *  @param[in] dvi2pt factor to scale DVI units to TeX points */
-void DVIToSVGActions::special (const string &s, double dvi2pt) {
+ *  @param[in] dvi2bp factor to scale DVI units to PS points */
+void DVIToSVGActions::special (const string &s, double dvi2bp) {
 	try {
-		_dvisvg.specialManager().process(s, dvi2pt, this, this);
+		_dvisvg.specialManager().process(s, dvi2bp, this, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {

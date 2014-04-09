@@ -60,15 +60,11 @@ void SVGTree::reset () {
 
 
 /** Sets the bounding box of the document.
- *  @param[in] bbox bounding box in TeX point units */
+ *  @param[in] bbox bounding box in PS point units */
 void SVGTree::setBBox (const BoundingBox &bbox) {
-	double bp = 72.0/72.27;  // pt -> bp
-	ScalingMatrix scale(bp, bp);
-	BoundingBox scaled_box = bbox;
-	scaled_box.transform(scale);
-	_root->addAttribute("width", XMLString(scaled_box.width())+"pt");
-	_root->addAttribute("height", XMLString(scaled_box.height())+"pt");
-	_root->addAttribute("viewBox", scaled_box.toSVGViewBox());
+	_root->addAttribute("width", XMLString(bbox.width())+"pt");
+	_root->addAttribute("height", XMLString(bbox.height())+"pt");
+	_root->addAttribute("viewBox", bbox.toSVGViewBox());
 }
 
 
@@ -285,12 +281,8 @@ void SVGTree::newTextNode (double x, double y) {
 
 
 void SVGTree::transformPage (const Matrix *usermatrix) {
-	double bp = 72.0/72.27;  // pt -> bp
-	ScalingMatrix matrix(bp, bp);
-	if (usermatrix)
-		matrix.rmultiply(*usermatrix);
-	if (!matrix.isIdentity())
-		_page->addAttribute("transform", matrix.getSVG());
+	if (usermatrix && !usermatrix->isIdentity())
+		_page->addAttribute("transform", usermatrix->getSVG());
 }
 
 

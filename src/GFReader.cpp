@@ -35,7 +35,7 @@ struct GFCommand
 
 
 static inline double fix2double (Int32 fix) {
-	return double(fix)/(1 << 20);
+	return double(fix)/(1 << 20)*72/72.27;
 }
 
 
@@ -171,22 +171,22 @@ bool GFReader::executePostamble () {
 }
 
 
-/** Returns the design size of this font int TeX point units. */
+/** Returns the design size of this font int PS point units. */
 double GFReader::getDesignSize () const {
 	return fix2double(_designSize);
 }
 
 /** Returns the number of horizontal pixels per point. */
 double GFReader::getHPixelsPerPoint () const {
-	return scaled2double(_hppp);
+	return scaled2double(_hppp)*72/72.27;
 }
 
 /** Returns the number of vertical pixels per point. */
 double GFReader::getVPixelsPerPoint () const {
-	return scaled2double(_vppp);
+	return scaled2double(_vppp)*72/72.27;
 }
 
-/** Returns the width of character c in TeX point units */
+/** Returns the width of character c in PS point units */
 double GFReader::getCharWidth (UInt32 c) const {
 	ConstIterator it = _charInfoMap.find(c%256);
 	return it == _charInfoMap.end() ? 0 : it->second.width*getDesignSize()/(1<<24);
@@ -210,7 +210,7 @@ void GFReader::cmdPre (int) {
 
 /** Reads the postamble. */
 void GFReader::cmdPost (int) {
-	readUnsigned(4);               // pointer to byte after final eoc
+	readUnsigned(4);                // pointer to byte after final eoc
 	_designSize = readUnsigned(4);  // design size of font in points
 	_checksum   = readUnsigned(4);  // checksum
 	_hppp       = readUnsigned(4);  // horizontal pixels per point (scaled int)

@@ -30,7 +30,7 @@ GFGlyphTracer::GFGlyphTracer () : GFTracer(_ifs, 0), _glyph(0), _callback(0)
 
 /** Constructs a new glyph tracer.
  *  @param[in] is GF input stream
- *  @param[in] upp target units per TeX point */
+ *  @param[in] upp target units per PS point */
 GFGlyphTracer::GFGlyphTracer (string &fname, double upp, Callback *cb)
    : GFTracer(_ifs, upp), _glyph(0), _callback(cb)
 {

@@ -58,7 +58,7 @@ struct SpecialHandler
 	virtual const char** prefixes () const=0;
 	virtual const char* info () const=0;
 	virtual const char* name () const=0;
-	virtual void setDviScaleFactor (double dvi2pt) {}
+	virtual void setDviScaleFactor (double dvi2bp) {}
 	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
 };
 

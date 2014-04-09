@@ -30,7 +30,7 @@
 using namespace std;
 
 PSPreviewFilter::PSPreviewFilter (PSInterpreter &psi)
-	: PSFilter(psi), _active(false), _tightpage(false), _dvi2pt(1.0/65536.0)
+	: PSFilter(psi), _active(false), _tightpage(false), _dvi2bp(1.0/65536.0)
 {
 }
 
@@ -81,7 +81,7 @@ void PSPreviewFilter::execute (const char *code, size_t len) {
 bool PSPreviewFilter::getBoundingBox (BoundingBox &bbox) const {
 	if (_boxExtents.size() < 7)
 		return false;
-	double left = -_boxExtents[0]*_dvi2pt;
+	double left = -_boxExtents[0]*_dvi2bp;
 	bbox = BoundingBox(-left, -height(), width()-left, depth());
 	return true;
 }
@@ -92,27 +92,27 @@ bool PSPreviewFilter::getBoundingBox (BoundingBox &bbox) const {
 bool PSPreviewFilter::getBorders (double &left, double &right, double &top, double &bottom) const {
 	if (_boxExtents.size() < 4)
 		return false;
-	left   = -_boxExtents[0]*_dvi2pt;
-	top    = -_boxExtents[1]*_dvi2pt;
-	right  = _boxExtents[2]*_dvi2pt;
-	bottom = _boxExtents[3]*_dvi2pt;
+	left   = -_boxExtents[0]*_dvi2bp;
+	top    = -_boxExtents[1]*_dvi2bp;
+	right  = _boxExtents[2]*_dvi2bp;
+	bottom = _boxExtents[3]*_dvi2bp;
 	return true;
 }
 
 
-/** Returns the box height in TeX points, or -1 if no data was found or read yet. */
+/** Returns the box height in PS points, or -1 if no data was found or read yet. */
 double PSPreviewFilter::height () const {
-	return _boxExtents.size() > 4 ? (_boxExtents[4]-_boxExtents[1])*_dvi2pt : -1;
+	return _boxExtents.size() > 4 ? (_boxExtents[4]-_boxExtents[1])*_dvi2bp : -1;
 }
 
 
-/** Returns the box depth in TeX points, or -1 if no data was found or read yet. */
+/** Returns the box depth in PS points, or -1 if no data was found or read yet. */
 double PSPreviewFilter::depth () const {
-	return _boxExtents.size() > 5 ? (_boxExtents[5]+_boxExtents[3])*_dvi2pt : -1;
+	return _boxExtents.size() > 5 ? (_boxExtents[5]+_boxExtents[3])*_dvi2bp : -1;
 }
 
 
-/** Returns the box width in TeX points, or -1 if no data was found or read yet. */
+/** Returns the box width in PS points, or -1 if no data was found or read yet. */
 double PSPreviewFilter::width () const {
-	return _boxExtents.size() > 6 ? (_boxExtents[6]+_boxExtents[2]-_boxExtents[0])*_dvi2pt : -1;
+	return _boxExtents.size() > 6 ? (_boxExtents[6]+_boxExtents[2]-_boxExtents[0])*_dvi2bp : -1;
 }

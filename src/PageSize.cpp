@@ -150,8 +150,8 @@ void PageSize::resize (string name) {
 	if (landscape)
 		swap(_width, _height);
 
-	const double ptpmm = 72.27/25.4; // TeX points per millimeter (72.27pt = 1in = 25.4mm)
-	_width *= ptpmm;
-	_height *= ptpmm;
+	const double bppmm = 72/25.4; // PS points per millimeter (72pt = 1in = 25.4mm)
+	_width *= bppmm;
+	_height *= bppmm;
 }
 

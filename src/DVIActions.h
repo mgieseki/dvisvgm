@@ -32,10 +32,6 @@ class  SpecialManager;
 
 struct DVIActions
 {
-	static const double BP;
-	static const double IN;
-	static const double CM;
-	static const double MM;
 	virtual ~DVIActions () {}
 	virtual void setChar (double x, double y, unsigned c, bool vertical, const Font *f) {}
 	virtual void setRule (double x, double y, double height, double width) {}
@@ -45,7 +41,7 @@ struct DVIActions
 	virtual bool fontProcessingEnabled () const {return true;}
 	virtual void defineFont (int num, const Font *font) {}
 	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const std::string &s, double dvi2pt) {}
+	virtual void special (const std::string &s, double dvi2bp) {}
 	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
 	virtual void beginPage (unsigned pageno, Int32 *c) {}
