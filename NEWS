@@ -1,3 +1,8 @@
+dvisvgm-1.5.3 (2014-04-11)
+- improved positioning of PostScript graphics
+- fixed positioning of DVI rules/rectangles
+- switched internal computations from TeX points (pt) to PostScript points (bp)
+
 dvisvgm-1.5.2 (2014-01-10)
 - fixed handling of global font colors and color specials
 - several code improvements
