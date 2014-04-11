@@ -239,7 +239,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 
 /** Handles psfile special.
  *  @param[in] fname EPS file to be included
- *  @param[in] attr attributes given with \special psfile */
+ *  @param[in] attr attributes given with \\special psfile */
 void PsSpecialHandler::psfile (const string &fname, const map<string,string> &attr) {
 	EPSFile epsfile(fname);
 	istream &is = epsfile.istream();

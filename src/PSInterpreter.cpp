@@ -146,6 +146,7 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 
 /** Executes a chunk of PostScript code read from a stream. The method returns on EOF.
  *  @param[in] is the input stream
+ *  @param[in] flush If true, a final 'flush' is sent which forces the output buffer to be written immediately.
  *  @return true if the assigned number of bytes have been read */
 bool PSInterpreter::execute (istream &is, bool flush) {
 	char buf[4096];

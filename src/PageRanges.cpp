@@ -33,7 +33,6 @@ using namespace std;
  *  Syntax: ([0-9]+(-[0-9]*)?)|(-[0-9]+)(,([0-9]+(-[0-9]*)?)|(-[0-9]+))*
  *  @param[in] str string to parse
  *  @param[in] max_page greatest allowed value
- *  @param[out] ranges the extracted range sequence
  *  @return true on success; false denotes a syntax error */
 bool PageRanges::parse (string str, int max_page) {
 	StringInputBuffer ib(str);

@@ -48,7 +48,7 @@ void SpecialManager::unregisterHandlers () {
 
 /** Registers a single special handler. This method doesn't check if a
  *  handler of the same class is already registered.
- *  @param[in] pointer to handler to be registered */
+ *  @param[in] handler pointer to handler to be registered */
 void SpecialManager::registerHandler (SpecialHandler *handler) {
 	if (handler) {
 		// get array of prefixes this handler is responsible for

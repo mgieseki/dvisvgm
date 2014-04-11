@@ -36,6 +36,8 @@ void CmdLineParserBase::init () {
 
 
 /** Parses all options given on the command line.
+ *  @param[in] argc number of command-line arguments
+ *  @param[in] argv array providing the command-line arguments
  *  @param[in] printErrors enable/disable printing of error messages */
 void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 	init();
@@ -132,7 +134,7 @@ void CmdLineParserBase::status () const {
 
 /** Returns the option information of a given short option name.
  *  If the option name can't be found 0 is returned.
- *  @param[in] longname long version of the option without leading hyphen (e.g. p, not -p) */
+ *  @param[in] shortname short version of the option without leading hyphen (e.g. p, not -p) */
 const CmdLineParserBase::Option* CmdLineParserBase::option (char shortname) const {
 	size_t numopts;  // number of available options
 	for (const Option *opts = options(&numopts); numopts > 0; ++opts) {

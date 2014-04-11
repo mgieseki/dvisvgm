@@ -133,7 +133,7 @@ void SegmentedCMap::adaptNeighbors (Ranges &ranges, Ranges::iterator it) {
 
 
 /** Adds a new code range. The range describes a mapping from character codes c to CIDs, where
- *  c \in [cmin,cmax] and CID(c):=cid+c-cmin.
+ *  \f$c \in [cmin,cmax]\f$ and \f$CID(c):=cid+c-cmin\f$.
  *  @param[in,out] ranges collection the new range is added to
  *  @param[in] cmin smallest character code in the range
  *  @param[in] cmax largest character code in the range
@@ -203,6 +203,7 @@ UInt32 SegmentedCMap::bfcode (UInt32 cid) const {
 
 
 /** Finds the index of the range that contains a given value c.
+ *  @param[in] ranges lookup value in these set of ranges
  *  @param[in] c find range that contains this value
  *  @return index of the range found, or -1 if range was not found */
 int SegmentedCMap::lookup (const Ranges &ranges, UInt32 c) const {

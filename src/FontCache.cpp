@@ -197,7 +197,7 @@ bool FontCache::read (const char *fontname, const char *dir) {
 
 /** Reads font glyph information from a stream.
  *  @param[in] fontname name of font data to read
- *  @param[in] dir input stream
+ *  @param[in] is input stream to read the glyph data from
  *  @return true if reading was successful */
 bool FontCache::read (const char *fontname, istream &is) {
 	if (_fontname == fontname)

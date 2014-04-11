@@ -106,7 +106,8 @@ class SVGOutput : public SVGOutputBase
 
 
 		/** Returns the name of the SVG file containing the given page.
-		 *  @param[in] page number of page */
+		 *  @param[in] page number of current page 
+		 *  @param[in] numPages total number of pages */
 		string filename (int page, int numPages) const {
 			if (_stdout)
 				return "";

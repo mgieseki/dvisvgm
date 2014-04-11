@@ -424,7 +424,7 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 /** Computes the exact bounding box of a glyph.
  *  @param[in]  c character code of the glyph
  *  @param[out] bbox the computed bounding box
- *  @param[in]  optional calback object forwarded to the tracer
+ *  @param[in]  cb optional calback object forwarded to the tracer
  *  @return true if the box could be computed successfully */
 bool PhysicalFont::getExactGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
 	Glyph glyph;

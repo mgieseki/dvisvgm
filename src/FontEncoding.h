@@ -35,7 +35,7 @@ struct FontEncoding
 	virtual Character decode (UInt32 c) const =0;
 	virtual bool mapsToCharIndex () const =0;
 	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}
-	static FontEncoding* encoding (const std::string &fontname);
+	static FontEncoding* encoding (const std::string &encname);
 };
 
 

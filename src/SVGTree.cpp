@@ -289,6 +289,7 @@ void SVGTree::transformPage (const Matrix *usermatrix) {
 /** Creates an SVG element for a single glyph.
  *  @param[in] c character number
  *  @param[in] font font to extract the glyph from
+ *  @param[in] cb pointer to callback object for sending feedback to the glyph tracer (may be 0)
  *  @return pointer to element node if glyph exists, 0 otherwise */
 static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
 	Glyph glyph;
@@ -351,7 +352,8 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 
 /** Appends glyph definitions of a given font to the defs section of the SVG tree.
  *  @param[in] font font to be appended
- *  @param[in] chars codes of the characters whose glyph outlines should be appended */
+ *  @param[in] chars codes of the characters whose glyph outlines should be appended
+ *  @param[in] cb pointer to callback object for sending feedback to the glyph tracer (may be 0) */
 void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTracer::Callback *cb) {
 	if (chars.empty())
 		return;

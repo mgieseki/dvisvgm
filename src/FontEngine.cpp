@@ -377,11 +377,11 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
  *  Each glyph is composed of straight lines, quadratic (conic) or cubic B�zier curves.
- *  This function takes all these outline segments and processes them by calling
- *  the corresponding functions. The functions must be provided in form of a
- *  FEGlyphCommands object.
- *  @param[in] index index of the glyph that will be traced
- *  @param[in] commands the drawing commands to be executed
+ *  This function creates a Glyph object representing these graphics segments.
+ *  @param[in] face FreeType object representing the font to scan
+ *  @param[in] font corresponding Font object providing additional data
+ *  @param[in] index index of the glyph to be traced
+ *  @param[out] glyph resulting Glyph object containing the graphics segments
  *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
 static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &glyph, bool scale) {
@@ -413,13 +413,10 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
  *  Each glyph is composed of straight lines, quadratic (conic) or cubic B�zier curves.
- *  This function takes all these outline segments and processes them by calling
- *  the corresponding functions. The functions must be provided in form of a
- *  FEGlyphCommands object.
- *  @param[in] chr the glyph of this character will be traced
- *  @param[in] commands the drawing commands to be executed
- *  @param[in] scale if true the current pt size will be considered otherwise
- *                   the plain TrueType units are used.
+ *  This function creates a Glyph object representing these graphics segments.
+ *  @param[in] c the glyph of this character will be traced
+ *  @param[out] glyph resulting Glyph object containing the graphics segments
+ *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
 bool FontEngine::traceOutline (const Character &c, Glyph &glyph, bool scale) const {
 	if (_currentFace)

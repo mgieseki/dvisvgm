@@ -77,7 +77,8 @@ static void expand_constants (string &str, SpecialActions *actions) {
  *  where (x,y) is the lower left vertex composed of the current DVI position.
  *  @param[in] w width of the rectangle in PS point units
  *  @param[in] h height of the rectangle in PS point units
- *  @param[in] d depth of the rectangle in PS point units */
+ *  @param[in] d depth of the rectangle in PS point units
+ *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 static void update_bbox (double w, double h, double d, SpecialActions *actions) {
 	double x = actions->getX();
 	double y = actions->getY();
@@ -183,7 +184,7 @@ static void img (InputReader &in, SpecialActions *actions) {
 /** Evaluates and executes a dvisvgm special statement.
  *  @param[in] prefix special prefix read by the SpecialManager
  *  @param[in] is the special statement is read from this stream
- *  @param[in,out] in the raw text is read from this input buffer */
+ *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (actions) {
 		StreamInputBuffer ib(is);

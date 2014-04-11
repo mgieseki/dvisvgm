@@ -68,7 +68,7 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
 /** Evaluates the next DVI command, and computes the corresponding handler.
  *  @param[in] compute_size if true, the size of variable-length parameters is computed
  *  @param[out] handler handler for current DVI command
- *  @param[out] number of parameter bytes
+ *  @param[out] length number of parameter bytes
  *  @param[out] param the handler must be called with this parameter
  *  @return opcode of current DVI command */
 int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param) {
@@ -692,7 +692,7 @@ void DVIReader::cmdFontNum (int len) {
 /** Helper function to handle a font definition.
  *  @param[in] fontnum local font number
  *  @param[in] name font name
- *  @param[in] checksum checksum to be compared with TFM checksum
+ *  @param[in] cs checksum to be compared with TFM checksum
  *  @param[in] ds design size in PS point units
  *  @param[in] ss scaled size in PS point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
@@ -734,6 +734,7 @@ void DVIReader::cmdFontDef (int len) {
 
 /** This template method is called by the VFReader after reading a font definition from a VF file.
  *  @param[in] fontnum local font number
+ *  @param[in] path path to font file
  *  @param[in] name font name
  *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] dsize design size in PS point units

@@ -85,6 +85,7 @@ void DVIToSVGActions::moveToY (double y) {
  *  @param[in] x horizontal position of left bounding box edge
  *  @param[in] y vertical position of the character's baseline
  *  @param[in] c character code relative to the current font
+ *  @param[in] vertical true if we're in vertical mode
  *  @param[in] font font to be used */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, const Font *font) {
 	// If we use SVG fonts there is no need to record all font name/char/size combinations
@@ -225,7 +226,8 @@ void DVIToSVGActions::postamble () {
 
 
 /** This method is called when a "begin of page (bop)" command was found in the DVI file.
- *  @param[in] c array with 10 components representing \count0 ... \count9. c[0] contains the
+ *  @param[in] pageno physical page number
+ *  @param[in] c array with 10 components representing \\count0 ... \\count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
 	_svg.newPage(++_pageCount);

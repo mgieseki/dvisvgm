@@ -184,7 +184,7 @@ UInt16 Subfont::decode (unsigned char c) {
 
 
 /** Skips the mapping data of a subfont entry.
- *  @param[in] stream to read from
+ *  @param[in] is stream to read from
  *  @return number of lines skipped */
 static int skip_mapping_data (istream &is) {
 	char buf[1024];
@@ -207,7 +207,8 @@ static int skip_mapping_data (istream &is) {
  *  @param[in] line the line of text to be scanned
  *  @param[in] lineno line number used in exception messages
  *  @param[in,out] mapping the mapping data
- *  @param[in,out] offest position/index of next mapping value
+ *  @param[in] fname name of the mapfile being scanned
+ *  @param[in,out] offset position/index of next mapping value
  *  @return true if the line is the last one the current mapping sequence, i.e. the line doesn't end with a backslash */
 static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, int &offset) {
 	const char *p=line;

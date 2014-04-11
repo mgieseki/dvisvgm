@@ -113,7 +113,7 @@ string FileSystem::getcwd () {
 
 
 /** Changes the work directory.
- *  @param[in] path to new work directory
+ *  @param[in] dir path to new work directory
  *  @return true on success */
 bool FileSystem::chdir (const char *dir) {
 	bool success = false;

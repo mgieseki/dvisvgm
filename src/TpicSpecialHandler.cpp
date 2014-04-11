@@ -55,7 +55,8 @@ void TpicSpecialHandler::reset () {
  *  @param[in] stroke if true, the (out)line is drawn (in black)
  *  @param[in] fill if true, enclosed area is filled with current color
  *  @param[in] ddist dash/dot distance of line in PS point units
- *                   (0:solid line, >0:dashed line, <0:dotted line) */
+ *                   (0:solid line, >0:dashed line, <0:dotted line)
+ *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, SpecialActions *actions) {
 	if (actions && !_points.empty()) {
 		XMLElementNode *elem=0;
@@ -114,7 +115,8 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
  *  with a straight line from the mid-point of the last line to the last point.
  *  If ddist=0, the spline is stroked solid. Otherwise ddist denotes the length
  *  of the dashes and the gaps inbetween.
- *  @param[in] ddist length of dashes and gaps */
+ *  @param[in] ddist length of dashes and gaps
+ *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 	if (actions && !_points.empty()) {
 		const size_t size = _points.size();
@@ -177,7 +179,8 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
  *  @param[in] rx length of horizonal semi-axis
  *  @param[in] ry length of vertical semi-axis
  *  @param[in] angle1 starting angle (clockwise) relative to x-axis
- *  @param[in] angle2 ending angle (clockwise) relative to x-axis */
+ *  @param[in] angle2 ending angle (clockwise) relative to x-axis 
+ *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {
 		const double PI2 = 4*asin(1.0);

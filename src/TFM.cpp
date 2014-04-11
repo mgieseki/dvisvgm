@@ -31,7 +31,7 @@ using namespace std;
 
 
 /** Reads a sequence of n TFM words (4 Bytes each).
- *  @param[in]  is reads from this stream
+ *  @param[in]  sr the TFM data is read from this object
  *  @param[out] v the read words
  *  @param[in]  n number of words to be read */
 template <typename T>

@@ -53,12 +53,12 @@ static void read_floats (istream &is, vector<float> &v) {
 
 /** Reads a color statement from an input stream and converts it to RGB.
  *  A color statement has the following syntax:
- *  <color model> <component values>
+ *  _color model_ _component values_
  *  Currently, the following color models are supported: rgb, cmyk, hsb and gray.
  *  Examples: rgb 1 0.5 0, gray 0.5
  *  @param[in]  model if model != "" this value specifies the model, otherwise it's read from the stream
  *  @param[in]  is stream to be read from
- *  @param[out] resulting RGB triple
+ *  @param[out] color italicresulting RGB triple
  *  @return true if statement has successfully been read */
 static void read_color (string model, istream &is, Color &color) {
 	if (model.empty())

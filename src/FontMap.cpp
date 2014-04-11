@@ -246,7 +246,7 @@ ostream& FontMap::write (ostream &os) const {
 
 
 /** Reads and evaluates all map files in the given directory.
- *  @param[in] path to directory containing the map files to be read */
+ *  @param[in] dirname path to directory containing the map files to be read */
 void FontMap::readdir (const string &dirname) {
 	Directory dir(dirname);
 	while (const char *fname = dir.read(Directory::ET_FILE)) {

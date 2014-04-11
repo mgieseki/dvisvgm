@@ -68,7 +68,8 @@ static DPair cut_vector (char c, const DPair &v, double lw) {
  * @param[in] p2 second endpoint in PS point units
  * @param[in] c1 cut method of first endpoint ('h', 'v' or 'p')
  * @param[in] c2 cut method of second endpoint ('h', 'v' or 'p')
- * @param[in] lw line width in PS point units */
+ * @param[in] lw line width in PS point units
+ * @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions *actions) {
 	XMLElementNode *node=0;
 	DPair dir = p2-p1;

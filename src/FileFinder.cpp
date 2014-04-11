@@ -209,7 +209,6 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 /** Checks whether the given file is mapped to a different name and if the
  *  file can be found under this name.
  *  @param[in] fname name of file to look up
- *  @param[in] fontmap font mappings
  *  @return file path on success, 0 otherwise */
 static const char* find_mapped_file (std::string fname) {
 	size_t pos = fname.rfind('.');

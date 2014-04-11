@@ -86,7 +86,7 @@ istream& EPSFile::istream () const {
 
 
 /** Extracts the bounding box information from the DSC header/footer (if present)
- *  @param[out] the extracted bounding box
+ *  @param[out] box the extracted bounding box
  *  @return true if %%BoundingBox data could be read successfully */
 bool EPSFile::bbox (BoundingBox &box) const {
 	std::istream &is = EPSFile::istream();

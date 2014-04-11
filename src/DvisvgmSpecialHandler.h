@@ -29,7 +29,7 @@ class DvisvgmSpecialHandler : public SpecialHandler
 		const char* name () const   {return "dvisvgm";}
 		const char* info () const   {return "special set for embedding raw SVG snippets";}
 		const char** prefixes () const;
-		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
+		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 };
 
 #endif
