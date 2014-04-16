@@ -172,7 +172,7 @@ However, each filename can be preceded by an optional mode specifier (*+*, *-*, 
  
   +mapfile;;
     Only those entries in the given map file that don't redefine a font mapping are applied.
-	 That's also the default mode if no mode specifier is given.
+    That's also the default mode if no mode specifier is given.
   
   -mapfile;;
     Ensures that none of the font mappings defined in the given map file are used, i.e. previously 
@@ -428,6 +428,12 @@ level. Valid values are in the range of 1 to 9 (default value is 9). Larger valu
 compression results but take more computation time.
 +
 CAUTION: This option cannot be combined with *-s, --stdout*.
+
+
+*-Z, --zoom*[='factor']::
+Multiplies the 'width' and 'height' attributes of the SVG root element by argument 'factor' while
+the coordinate system of the graphic is retained. As a result, most SVG viewers zoom the graphics
+accordingly. If a negative zoom factor is given, the 'width' and 'height' attributes are omitted.
 
 
 SUPPORT OF SPECIALS

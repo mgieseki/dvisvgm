@@ -90,6 +90,10 @@
 				<arg type="string" name="commands"/>
 				<description>transform page content</description>
 			</option>
+			<option long="zoom" short="Z">
+				<arg type="double" name="factor" default="1.0"/>
+				<description>zoom page content</description>
+			</option>
 		</section>
 		<section title="Processing options">
 			<option long="cache" short="C">

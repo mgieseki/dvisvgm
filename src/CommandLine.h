@@ -69,6 +69,8 @@ class CommandLine : public CmdLineParserBase
       bool version_arg () const {return _version_arg;}
       bool zip_given () const {return _zip_given;}
       int zip_arg () const {return _zip_arg;}
+      bool zoom_given () const {return _zoom_given;}
+      double zoom_arg () const {return _zoom_arg;}
 
    protected:
       void init ();
@@ -107,6 +109,7 @@ class CommandLine : public CmdLineParserBase
       void handle_verbosity (InputReader &ir, const Option &opt, bool longopt);
       void handle_version (InputReader &ir, const Option &opt, bool longopt);
       void handle_zip (InputReader &ir, const Option &opt, bool longopt);
+      void handle_zoom (InputReader &ir, const Option &opt, bool longopt);
 
    private:
       static const CmdLineParserBase::Option _options[];
@@ -164,6 +167,8 @@ class CommandLine : public CmdLineParserBase
       bool _version_arg;
       bool _zip_given;
       int _zip_arg;
+      bool _zoom_given;
+      double _zoom_arg;
 };
 
 #endif

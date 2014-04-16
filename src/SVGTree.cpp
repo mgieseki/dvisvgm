@@ -38,6 +38,7 @@ using namespace std;
 bool SVGTree::CREATE_STYLE=true;
 bool SVGTree::USE_FONTS=true;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
+double SVGTree::ZOOM_FACTOR=1.0;
 
 
 SVGTree::SVGTree () : _vertical(false), _font(0), _color(Color::BLACK), _matrix(1) {
@@ -62,8 +63,10 @@ void SVGTree::reset () {
 /** Sets the bounding box of the document.
  *  @param[in] bbox bounding box in PS point units */
 void SVGTree::setBBox (const BoundingBox &bbox) {
-	_root->addAttribute("width", XMLString(bbox.width())+"pt");
-	_root->addAttribute("height", XMLString(bbox.height())+"pt");
+	if (ZOOM_FACTOR >= 0) {
+		_root->addAttribute("width", XMLString(bbox.width()*ZOOM_FACTOR)+"pt");
+		_root->addAttribute("height", XMLString(bbox.height()*ZOOM_FACTOR)+"pt");
+	}
 	_root->addAttribute("viewBox", bbox.toSVGViewBox());
 }
 

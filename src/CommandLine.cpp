@@ -47,6 +47,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
    {'v', "verbosity", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
    {'V', "version", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
    {'z', "zip", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
+   {'Z', "zoom", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zoom)},
 };
 
 const CmdLineParserBase::Option* CommandLine::options (size_t *numopts) const {
@@ -91,6 +92,7 @@ void CommandLine::init () {
    _verbosity_given = false;
    _version_given = false;
    _zip_given = false;
+   _zoom_given = false;
 
    // set default option values
    _bbox_arg = "min";
@@ -116,6 +118,7 @@ void CommandLine::init () {
    _verbosity_arg = 7;
    _version_arg = false;
    _zip_arg = 9;
+   _zoom_arg = 1.0;
 }
 
 const char** CommandLine::helplines (size_t *numlines) const {
@@ -141,6 +144,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
       "o-c, --scale=sx[,sy]           scale page content",
       "o-t, --translate=tx[,ty]       shift page content",
       "o-T, --transform=commands      transform page content",
+      "o-Z, --zoom=factor             zoom page content [1.0]",
       "sProcessing options:",
       "o-C, --cache[=dir]             set/print path of cache directory",
       "o-e, --exact                   compute exact glyph boxes",
@@ -303,5 +307,10 @@ void CommandLine::handle_version (InputReader &ir, const Option &opt, bool longo
 void CommandLine::handle_zip (InputReader &ir, const Option &opt, bool longopt) {
    if (ir.eof() || getIntArg(ir, opt, longopt, _zip_arg))
       _zip_given = true;
+}
+
+void CommandLine::handle_zoom (InputReader &ir, const Option &opt, bool longopt) {
+   if (getDoubleArg(ir, opt, longopt, _zoom_arg))
+      _zoom_given = true;
 }
 
