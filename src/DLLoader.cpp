@@ -22,12 +22,15 @@
 #include "DLLoader.h"
 
 
-DLLoader::DLLoader (const char *dlname) {
+DLLoader::DLLoader (const char *dlname) : _handle(0)
+{
+	if (dlname && *dlname) {
 #ifdef __WIN32__
-	_handle = LoadLibrary(dlname);
+		_handle = LoadLibrary(dlname);
 #else
-	_handle = dlopen(dlname, RTLD_LAZY);
+		_handle = dlopen(dlname, RTLD_LAZY);
 #endif
+	}
 }
 
 
