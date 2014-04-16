@@ -32,24 +32,43 @@
 
 using namespace std;
 
-// default name of dynamic/shared Ghostscript library
-#if defined(__WIN64__)
-	#define GS_DL_NAME "gsdll64.dll"
-#elif defined(__WIN32__)
-	#define GS_DL_NAME "gsdll32.dll"
-#else
-	#define GS_DL_NAME "libgs.so"
-#endif
-
-
+// name of Ghostscript shared library set by the user
 string Ghostscript::LIBGS_NAME;
+
+
+#ifndef HAVE_LIBGS
+/** Try to detect name of the Ghostscript shared library depending on the user settings.
+ *  @param[in] fname path/filename given by the user
+ *  @return name of Ghostscript shared library */
+static string get_libgs (const string &fname) {
+	if (!fname.empty())
+		return fname;
+#if defined(__WIN64__)
+	return "gsdll64.dll";
+#elif defined(__WIN32__)
+	return "gsdll32.dll";
+#else
+	// try to find libgs.so.X on the user's system
+	const int abi_min=7, abi_max=9; // supported libgs ABI versions
+	for (int i=abi_max; i >= abi_min; i--) {
+		ostringstream oss;
+		oss << "libgs.so." << i;
+		DLLoader loader(oss.str().c_str());
+		if (loader.loaded())
+			return oss.str();
+	}
+#endif
+	// no appropriate library found
+	return "";
+}
+#endif // HAVE_LIBGS
 
 
 /** Loads the Ghostscript library but does not create an instance. This
  *  constructor should only be used to call available() and revision(). */
 Ghostscript::Ghostscript ()
 #if !defined(HAVE_LIBGS)
-	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
+	: DLLoader(get_libgs(LIBGS_NAME).c_str())
 #endif
 {
 	_inst = 0;
@@ -62,7 +81,7 @@ Ghostscript::Ghostscript ()
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !defined(HAVE_LIBGS)
-	: DLLoader(LIBGS_NAME.empty() ? GS_DL_NAME : LIBGS_NAME.c_str())
+	: DLLoader(get_libgs(LIBGS_NAME).c_str())
 #endif
 {
 	_inst = 0;
