@@ -28,6 +28,7 @@
    #include <ghostscript/ierrors.h>
 #else
    #include "ierrors.h"
+	#include "FileFinder.h"
 #endif
 
 using namespace std;
@@ -43,6 +44,16 @@ string Ghostscript::LIBGS_NAME;
 static string get_libgs (const string &fname) {
 	if (!fname.empty())
 		return fname;
+#ifdef MIKTEX
+#if defined(__WIN64__)
+	const char *gsdll = "mgsdll64.dll";
+#elif defined(__WIN32__)
+	const char *gsdll = "mgsdll32.dll";
+#endif
+	// try to look up the Ghostscript DLL coming with MiKTeX
+	if (const char *gsdll_path = FileFinder::lookup(gsdll))
+		return gsdll_path;
+#endif // MIKTEX
 #if defined(__WIN64__)
 	return "gsdll64.dll";
 #elif defined(__WIN32__)

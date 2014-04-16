@@ -106,7 +106,7 @@ class SVGOutput : public SVGOutputBase
 
 
 		/** Returns the name of the SVG file containing the given page.
-		 *  @param[in] page number of current page 
+		 *  @param[in] page number of current page
 		 *  @param[in] numPages total number of pages */
 		string filename (int page, int numPages) const {
 			if (_stdout)
@@ -193,18 +193,6 @@ static void set_libgs (CommandLine &args) {
 		Ghostscript::LIBGS_NAME = args.libgs_arg();
 	else if (getenv("LIBGS"))
 		Ghostscript::LIBGS_NAME = getenv("LIBGS");
-#ifdef MIKTEX
-	else {
-#ifdef __WIN64__
-		const char *gsdll = "mgsdll64.dll";
-#else
-		const char *gsdll = "mgsdll32.dll";
-#endif
-		// try to lookup the Ghostscript DLL coming with MiKTeX
-		if (const char *gsdll_path = FileFinder::lookup(gsdll))
-			Ghostscript::LIBGS_NAME = gsdll_path;
-	}
-#endif
 #endif
 }
 
