@@ -82,7 +82,7 @@ void HtmlSpecialHandler::hrefAnchor (string uri) {
 	anchor->addAttribute("xlink:title", uri);
 	_actions->pushContextElement(anchor);
 	_actions->bbox("{anchor}", true);  // start computing the bounding box of the linked area
-	_anchorYPos = _actions->getY();
+	_depthThreshold = _actions->getDVIStackDepth();
 	_anchorType = AT_HREF;
 }
 
@@ -112,6 +112,7 @@ void HtmlSpecialHandler::closeAnchor () {
 	if (_anchorType == AT_HREF) {
 		markLinkedBox();
 		_actions->popContextElement();
+		_depthThreshold = 0;
 	}
 	else if (_anchorType == AT_NAME)
 		_anchorName.clear();
@@ -180,9 +181,11 @@ void HtmlSpecialHandler::markLinkedBox () {
 /** This method is called every time the DVI position changes. */
 void HtmlSpecialHandler::dviMovedTo (double x, double y) {
 	if (_actions && _anchorType != AT_NONE) {
-		if (y != _anchorYPos) {  // does vertical position changed inside a linked area?
+		// Start a new box if the current depth of the DVI stack underruns
+		// the initial threshold which indicates a line break.
+		if (_actions->getDVIStackDepth() < _depthThreshold) {
 			markLinkedBox();
-			_anchorYPos = y;
+			_depthThreshold = _actions->getDVIStackDepth();
 			_actions->bbox("{anchor}", true);  // start a new box on the new line
 		}
 	}

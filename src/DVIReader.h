@@ -77,6 +77,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void translateToY (double y)           {_ty=y-_dviState.v-_ty;}
 		double getPageWidth () const;
 		double getPageHeight () const;
+		int getStackDepth () const             {return _stateStack.size();}
 		int getCurrentFontNumber () const      {return _currFontNum;}
 		unsigned getCurrentPageNumber () const {return _currPageNum;}
 		unsigned getTotalPages () const        {return _totalPages;}

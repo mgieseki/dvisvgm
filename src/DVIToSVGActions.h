@@ -55,6 +55,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		const Matrix& getMatrix () const               {return _svg.getMatrix();}
 		void getPageTransform (Matrix &matrix) const   {_dvisvg.getPageTransformation(matrix);}
 		Color getColor () const                        {return _svg.getColor();}
+		int getDVIStackDepth() const                   {return _dvisvg.getStackDepth();}
 		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
 		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}

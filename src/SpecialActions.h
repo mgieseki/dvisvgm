@@ -54,6 +54,7 @@ struct SpecialActions
 	virtual void embed (const BoundingBox &bbox) =0;
 	virtual void embed (const DPair &p, double r=0) =0;
 	virtual void progress (const char *id) {}
+	virtual int getDVIStackDepth () const {return 0;}
 };
 
 

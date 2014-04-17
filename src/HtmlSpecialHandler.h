@@ -41,7 +41,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 	typedef std::map<std::string, NamedAnchor> NamedAnchors;
 
    public:
-		HtmlSpecialHandler () : _actions(0), _anchorType(AT_NONE), _anchorYPos(0) {}
+		HtmlSpecialHandler () : _actions(0), _anchorType(AT_NONE), _depthThreshold(0) {}
 		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
 		const char* name () const  {return "html";}
 		const char* info () const  {return "hyperref specials";}
@@ -64,7 +64,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 	private:
 		SpecialActions *_actions;
 		AnchorType _anchorType;     ///< type of active anchor
-		double _anchorYPos;         ///< current vertical position inside linked area
+		int _depthThreshold;        ///< break anchor box if the DVI stack depth underruns this threshold
 		std::string _anchorName;    ///< name of currently active named anchor
 		std::string _base;          ///< base URL that is prepended to all relative targets
 		NamedAnchors _namedAnchors; ///< information about all named anchors processed
