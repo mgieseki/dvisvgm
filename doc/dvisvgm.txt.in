@@ -219,10 +219,10 @@ The latter has less precedence than the command-line option.
 
 *-L, --linkmark*='type'::
 Selects the method how to mark hyperlinked areas. The 'type' argument can take one of the values
-'none', 'box', and 'line', where the latter is the default, i.e. all links are underlined when
-dvisvgm is called without option *--linkmark*. Type 'box' draws a rectangle around the linked
-area, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
-Additionally, the argument 'type' can take a dvips color name as listed here:
+'none', 'box', and 'line', where 'box' is the default, i.e. a rectangle is drawn around
+the linked region if option *--linkmark* is omitted. Type 'line' just draws the lower edge of
+the bounding rectangle, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
+Additionally, argument 'type' can take a dvips color name as listed here:
 http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
 It's also possible to give an explicit hexadecimal RGB value of the form '#RRGGBB', e.g. '#0000ff'
 or simply '#ff' for blue. The color is used to highlight the linked area.
@@ -520,9 +520,9 @@ The hyperref specials allow the definition of hyperlinks inside DVI files in var
 the plain HyperTeX special constructs as created with hyperref package option 'hypertex'. Internal links, i.e.
 references to other parts of the same document, are only converted if the link and the corresponding link target
 are located on the same page. Links between different pages are not supported yet.
-By default, all linked areas of the document are underlined. Option *--linkmark* allows to change this behavior.
-See above for further details. Information on syntax and semantics of the HyperTeX specials can be found in the
-hyperref manual.
+By default, all linked areas of the document are marked by a rectangle. Option *--linkmark* allows to change
+this behavior. See above for further details. Information on syntax and semantics of the HyperTeX specials can be
+found in the hyperref manual.
 
 *pdf*::
 pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently, only

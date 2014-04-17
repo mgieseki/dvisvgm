@@ -102,7 +102,7 @@ void CommandLine::init () {
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
    _libgs_arg.clear();
 #endif
-   _linkmark_arg = "line";
+   _linkmark_arg = "box";
    _mag_arg = 4;
    _no_fonts_arg = 0;
    _no_specials_arg.clear();
@@ -132,7 +132,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #endif
       "sSVG output options:",
       "o-b, --bbox=size               set size of bounding box [min]",
-      "o-L, --linkmark=type           select how to mark hyperlinked areas [line]",
+      "o-L, --linkmark=type           select how to mark hyperlinked areas [box]",
       "o-o, --output=pattern          set name pattern of output files",
       "o-d, --precision=number        set number of decimal points (0-6) [0]",
       "o-s, --stdout                  write SVG output to stdout",
