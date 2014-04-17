@@ -40,8 +40,10 @@ using namespace std;
 
 
 void EPSToSVG::convert () {
+#ifndef HAVE_LIBGS
 	if (!Ghostscript().available())
 		throw MessageException("Ghostscript is required to process the EPS file");
+#endif
 	EPSFile epsfile(_fname);
 	if (!epsfile.hasValidHeader())
 		throw PSException("invalid EPS file");
@@ -55,7 +57,7 @@ void EPSToSVG::convert () {
 	_svg.newPage(1);
 	// create a psfile special and forward it to the PsSpecialHandler
 	stringstream ss;
-	ss << "\"" << _fname  << "\" "
+	ss << "\"" << _fname << "\" "
 			"llx=" << bbox.minX() << " "
 			"lly=" << bbox.minY() << " "
 			"urx=" << bbox.maxX() << " "

@@ -4,8 +4,8 @@
 // See file COPYING for further details.
 // (C) 2009-2014 Martin Gieseking <martin.gieseking@uos.de>
 
-#ifndef DVISVGM_COMMANDLINE_H
-#define DVISVGM_COMMANDLINE_H
+#ifndef COMMANDLINE_H
+#define COMMANDLINE_H
 
 #include <config.h>
 #include "CmdLineParserBase.h"

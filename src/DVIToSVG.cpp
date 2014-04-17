@@ -141,7 +141,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 	}
 	last = min(last, getTotalPages());
 
-#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
+#ifndef DISABLE_GS
 	// ensure loading of PostScript prologues given at the beginning of the first page
 	// (prologue files are always referenced in first page)
 	PSHeaderActions headerActions(*this);
@@ -363,22 +363,22 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool
 			0
 		};
 		SpecialHandler **p = handlers;
-#if !defined(DISABLE_GS)
+#ifndef DISABLE_GS
 		if (Ghostscript().available())
 			*p = new PsSpecialHandler;
 		else
 #endif
 		{
-#if defined(DISABLE_GS) || !defined(HAVE_LIBGS)
+#ifndef HAVE_LIBGS
 			*p = new NoPsSpecialHandler; // dummy PS special handler that only prints warning messages
-#endif
 			if (pswarning) {
-#if defined(DISABLE_GS)
+#ifdef DISABLE_GS
 				Message::wstream() << "processing of PostScript specials has been disabled permanently\n";
 #else
 				Message::wstream() << "processing of PostScript specials is disabled (Ghostscript not found)\n";
 #endif
 			}
+#endif
 		}
 		_specialManager.unregisterHandlers();
 		_specialManager.registerHandlers(p, ignorelist);
