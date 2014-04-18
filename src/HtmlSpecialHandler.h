@@ -49,10 +49,6 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 
 		static bool setLinkMarker (const std::string &type);
 
-		enum LinkMarker {LM_NONE, LM_LINE, LM_BOX, LM_BGCOLOR};
-		static LinkMarker LINK_MARKER;  ///< selects how linked areas are marked
-		static Color LINK_BGCOLOR;      ///< background color if anchor linkmark type == LT_BGCOLOR
-
 	protected:
 		void hrefAnchor (std::string uri);
 		void nameAnchor (const std::string &name);
@@ -60,6 +56,12 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		void dviMovedTo (double x, double y);
 		void closeAnchor ();
 		void markLinkedBox ();
+
+		enum MarkerType {MT_NONE, MT_LINE, MT_BOX, MT_BGCOLOR};
+		static MarkerType MARKER_TYPE;  ///< selects how linked areas are marked
+		static Color LINK_BGCOLOR;      ///< background color if linkmark type == LT_BGCOLOR
+		static Color LINK_LINECOLOR;    ///< line color if linkmark type is LM_LINE or LM_BOX
+		static bool USE_LINECOLOR;      ///< if true, LINK_LINECOLOR is applied
 
 	private:
 		SpecialActions *_actions;

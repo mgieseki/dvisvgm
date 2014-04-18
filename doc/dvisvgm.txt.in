@@ -222,10 +222,17 @@ Selects the method how to mark hyperlinked areas. The 'type' argument can take o
 'none', 'box', and 'line', where 'box' is the default, i.e. a rectangle is drawn around
 the linked region if option *--linkmark* is omitted. Type 'line' just draws the lower edge of
 the bounding rectangle, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
-Additionally, argument 'type' can take a dvips color name as listed here:
+The lines and boxes get the current text color selected. In order to apply a different, constant color,
+a colon followed by a color specifier can be appended to the type string. A 'color specifier' is either
+a hexadecimal RGB value of the form '#RRGGBB', or a dvips color name as listed here:
 http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
-It's also possible to give an explicit hexadecimal RGB value of the form '#RRGGBB', e.g. '#0000ff'
-or simply '#ff' for blue. The color is used to highlight the linked area.
++
+Moreover, argument 'type' can take a single color specifier to highlight the linked region by
+a borderless box filled with that color. An optional second color specifier separated by colon
+selects the border color.
++
+Example: *box:red* or *box:#ff0000* draws red boxes around the linked areas. *yellow:blue* creates
+yellow filled rectangles with blue borders.
 
 
 *-l, --list-specials*::
