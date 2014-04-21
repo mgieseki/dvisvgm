@@ -228,11 +228,11 @@ a hexadecimal RGB value of the form '#RRGGBB', or a dvips color name as listed h
 http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
 +
 Moreover, argument 'type' can take a single color specifier to highlight the linked region by
-a borderless box filled with that color. An optional second color specifier separated by colon
-selects the border color.
+a frameless box filled with that color. An optional second color specifier separated by colon
+selects the frame color.
 +
-Example: *box:red* or *box:#ff0000* draws red boxes around the linked areas. *yellow:blue* creates
-yellow filled rectangles with blue borders.
+Examples: *box:red* or *box:#ff0000* draws red boxes around the linked areas. *yellow:blue* creates
+yellow filled rectangles with blue frames.
 
 
 *-l, --list-specials*::
