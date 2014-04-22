@@ -1,3 +1,16 @@
+dvisvgm-1.6 (2014-04-22)
+- added option --zoom to "visually" scale the generated SVG graphics while
+  preserving the original size and position values of the graphic objects
+- extended argument syntax of option --linkmark to allow to select the
+  box/line color
+- changed default link marker from 'line' to 'box'
+- changed link markers to be only split on line breaks while extended in all
+  other cases
+- if libgs is not directly linked to the binary, dvisvgm now looks for
+  libgs.so.X instead of libgs.so (supported GS ABIs: X = 7, 8, 9)
+- removed time stamp and machine triplet from generated SVG files
+- some code improvements and refactorings
+
 dvisvgm-1.5.3 (2014-04-11)
 - improved positioning of PostScript graphics
 - fixed positioning of DVI rules/rectangles
