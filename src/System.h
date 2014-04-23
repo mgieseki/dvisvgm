@@ -24,6 +24,6 @@
 namespace System
 {
 	double time ();
-};
+}
 
 #endif
