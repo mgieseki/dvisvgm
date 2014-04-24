@@ -132,7 +132,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #endif
       "sSVG output options:",
       "o-b, --bbox=size               set size of bounding box [min]",
-      "o-L, --linkmark=type           select how to mark hyperlinked areas [box]",
+      "o-L, --linkmark=style          select how to mark hyperlinked areas [box]",
       "o-o, --output=pattern          set name pattern of output files",
       "o-d, --precision=number        set number of decimal points (0-6) [0]",
       "o-s, --stdout                  write SVG output to stdout",

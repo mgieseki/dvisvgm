@@ -217,17 +217,17 @@ Alternatively, it's also possible to set the GS library name by the environment 
 The latter has less precedence than the command-line option.
 
 
-*-L, --linkmark*='type'::
-Selects the method how to mark hyperlinked areas. The 'type' argument can take one of the values
+*-L, --linkmark*='style'::
+Selects the method how to mark hyperlinked areas. The 'style' argument can take one of the values
 'none', 'box', and 'line', where 'box' is the default, i.e. a rectangle is drawn around
-the linked region if option *--linkmark* is omitted. Type 'line' just draws the lower edge of
+the linked region if option *--linkmark* is omitted. Style argument 'line' just draws the lower edge of
 the bounding rectangle, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
 The lines and boxes get the current text color selected. In order to apply a different, constant color,
-a colon followed by a color specifier can be appended to the type string. A 'color specifier' is either
+a colon followed by a color specifier can be appended to the style string. A 'color specifier' is either
 a hexadecimal RGB value of the form '#RRGGBB', or a dvips color name as listed here:
 http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
 +
-Moreover, argument 'type' can take a single color specifier to highlight the linked region by
+Moreover, argument 'style' can take a single color specifier to highlight the linked region by
 a frameless box filled with that color. An optional second color specifier separated by colon
 selects the frame color.
 +

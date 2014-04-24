@@ -47,7 +47,7 @@
 				<description>set size of bounding box</description>
 			</option>
 			<option long="linkmark" short="L">
-				<arg type="string" name="type" default="box"/>
+				<arg type="string" name="style" default="box"/>
 				<description>select how to mark hyperlinked areas</description>
 			</option>
 			<option long="output" short="o">
