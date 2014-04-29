@@ -376,11 +376,6 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			faceNode->addAttribute("descent", XMLString(font.descent()));
 		}
 		fontNode->append(faceNode);
-
-		// add required missing-glyph element
-		XMLElementNode *missing = new XMLElementNode("missing-glyph");
-		missing->addAttribute("d", "");
-		fontNode->append(missing);
 		FORALL(chars, set<int>::const_iterator, i)
 			fontNode->append(createGlyphNode(*i, font, cb));
 	}
