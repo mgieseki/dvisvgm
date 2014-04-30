@@ -20,6 +20,7 @@
 
 #include "CharMapID.h"
 
+const CharMapID CharMapID::NONE(0, 0);
 const CharMapID CharMapID::WIN_SYMBOL(3, 0);
 const CharMapID CharMapID::WIN_UCS2(3, 1);
 const CharMapID CharMapID::WIN_SHIFTJIS(3, 2);

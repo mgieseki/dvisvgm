@@ -279,6 +279,12 @@ int FontEngine::getNextChar () const {
 }
 
 
+/** Returns the number of glyphs present in the current font face. */
+int FontEngine::getNumGlyphs () const {
+	return _currentFace ? _currentFace->num_glyphs : 0;
+}
+
+
 /** Returns the glyph name for a given charater code.
  * @param[in] c char code
  * @return glyph name */

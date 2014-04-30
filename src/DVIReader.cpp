@@ -753,7 +753,7 @@ void DVIReader::defineVFChar (UInt32 c, vector<UInt8> *dvi) {
 }
 
 
-/** XDV extension: include image or pdf file.
+/** XDV extension: includes image or pdf file.
  *  parameters: box[1] matrix[4][6] p[2] len[2] path[l] */
 void DVIReader::cmdXPic (int) {
 	// just skip the parameters
@@ -766,6 +766,7 @@ void DVIReader::cmdXPic (int) {
 }
 
 
+/** XDV extension: defines a native font */
 void DVIReader::cmdXFontDef (int) {
 	Int32 fontnum = readSigned(4);
 	double ptsize = _dvi2bp*readUnsigned(4);
@@ -782,8 +783,8 @@ void DVIReader::cmdXFontDef (int) {
 	}
 	if (flags & 0x0200) { // colored?
 		// The font color must not interfere with color specials. If the font color is not black,
-		// all color specials should be ignored, i.e. glyphs of a non-black font have a fixed color
-		// that can't be changed by colors specials.
+		// all color specials should be ignored, i.e. glyphs of a non-black fonts have a fixed color
+		// that can't be changed by color specials.
 		UInt32 rgba = readUnsigned(4);
 		color.set(UInt8(rgba >> 24), UInt8((rgba >> 16) & 0xff), UInt8((rgba >> 8) & 0xff));
 	}
@@ -803,16 +804,23 @@ void DVIReader::cmdXFontDef (int) {
 }
 
 
+/** XDV extension: prints an array of characters where each character
+ *  can take independent x and y coordinates.
+ *  parameters: w[4] n[2] x[4][n] y[4][n] c[2][n] */
 void DVIReader::cmdXGlyphA (int) {
 	putGlyphArray(false);
 }
 
-
+/** XDV extension: prints an array/string of characters where each character
+ *  can take independent x coordinates whereas all share a single y coordinate.
+ *  parameters: w[4] n[2] x[4][n] y[4] c[2][n] */
 void DVIReader::cmdXGlyphS (int) {
 	putGlyphArray(true);
 }
 
 
+/** Implements the common functionality of cmdXGlyphA and cmdXGlyphS.
+ *  @param[in] xonly indicates if the characters share a single y coordinate (xonly==true) */
 void DVIReader::putGlyphArray (bool xonly) {
 	double strwidth = _dvi2bp*readSigned(4);
 	UInt16 num_glyphs = readUnsigned(2);

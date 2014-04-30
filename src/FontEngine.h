@@ -59,6 +59,7 @@ class FontEngine
 		int getFirstChar () const;
 		int getNextChar () const;
 		int getCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
+		int getNumGlyphs () const;
 		CharMapID setUnicodeCharMap ();
 		CharMapID setCustomCharMap ();
 		std::vector<int> getPanose () const;

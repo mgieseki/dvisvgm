@@ -98,6 +98,13 @@ void Font::getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const {
 }
 
 
+const char* Font::filename () const {
+	const char *fname = strrchr(path(), '/');
+	if (fname)
+		return fname+1;
+	return path();
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
@@ -591,23 +598,25 @@ double NativeFont::charDepth (int c) const {
 }
 
 
-UInt32 NativeFont::unicode (UInt32 c) const {
-	UInt32 ucode = decodeChar(c).number();
-	return Unicode::isValidCodepoint(ucode) ? ucode : 0x3400+ucode;
-}
-
-
 bool NativeFontImpl::findAndAssignBaseFontMap () {
 	FontEngine &fe = FontEngine::instance();
 	fe.setFont(*this);
+	fe.setUnicodeCharMap();
 	fe.buildCharMap(_toUnicodeMap);
-	_charmapID = fe.setUnicodeCharMap();
+	if (!_toUnicodeMap.addMissingMappings(fe.getNumGlyphs()))
+		Message::wstream(true) << "incomplete unicode mapping for native font " << name() << " (" << filename() << ")\n";
 	return true;
 }
 
 
 Character NativeFontImpl::decodeChar (UInt32 c) const {
-	return Character(Character::CHRCODE, _toUnicodeMap.valueAt(c));
+	return Character(Character::INDEX, c);
+}
+
+
+UInt32 NativeFontImpl::unicode (UInt32 c) const {
+	UInt32 ucode = _toUnicodeMap.valueAt(c);
+	return Unicode::isValidCodepoint(ucode) ? ucode : 0x3400+ucode;
 }
 
 //////////////////////////////////////////////////////////////////////////////

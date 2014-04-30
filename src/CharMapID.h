@@ -38,6 +38,7 @@ struct CharMapID {
 
 	bool valid () const {return platform_id != 0 && encoding_id != 0;}
 
+	static const CharMapID NONE;
 	static const CharMapID WIN_SYMBOL;
 	static const CharMapID WIN_UCS2;
 	static const CharMapID WIN_SHIFTJIS;

@@ -36,6 +36,7 @@
 #include "GraphicPath.h"
 #include "MessageException.h"
 #include "RangeMap.h"
+#include "ToUnicodeMap.h"
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
@@ -67,6 +68,7 @@ struct Font {
 	virtual double italicCorr (int c) const =0;
 	virtual const FontMetrics* getMetrics () const =0;
 	virtual const char* path () const =0;
+	virtual const char* filename () const;
 	virtual const FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
 	virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
@@ -261,7 +263,6 @@ class NativeFont : public PhysicalFont
 		virtual Font* clone (double ds, double sc) const =0;
 		std::string name () const;
 		Type type () const;
-		UInt32 unicode (UInt32 c) const;
 		double designSize () const               {return _ptsize;}
 		double scaledSize () const               {return _ptsize;}
 		double charWidth (int c) const;
@@ -296,6 +297,7 @@ class NativeFontProxy : public NativeFont
 		const Font* uniqueFont () const          {return _nfont;}
 		const char* path () const                {return _nfont->path();}
 		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
+		UInt32 unicode (UInt32 c) const          {return _nfont->unicode(c);}
 		CharMapID getCharMapID () const          {return _nfont->getCharMapID();}
 
 	protected:
@@ -321,13 +323,13 @@ class NativeFontImpl : public NativeFont
 		const Font* uniqueFont () const          {return this;}
 		const char* path () const                {return _path.c_str();}
 		bool findAndAssignBaseFontMap ();
-		CharMapID getCharMapID () const          {return _charmapID;}
+		CharMapID getCharMapID () const          {return CharMapID::NONE;}
 		Character decodeChar (UInt32 c) const;
+		UInt32 unicode (UInt32 c) const;
 
 	private:
 		std::string _path;
-		RangeMap _toUnicodeMap; ///< maps from char indexes to unicode point
-		CharMapID _charmapID;   ///< unicode charmap ID
+		ToUnicodeMap _toUnicodeMap; ///< maps from char indexes to unicode points
 };
 
 
