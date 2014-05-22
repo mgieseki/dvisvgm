@@ -158,6 +158,11 @@ check_PROGRAMS += SubfontTest
 SubfontTest_SOURCES = SubfontTest.cpp
 SubfontTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
+TESTS += ToUnicodeMapTest
+check_PROGRAMS += ToUnicodeMapTest
+ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp
+ToUnicodeMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
 TESTS += TypesTest
 check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp

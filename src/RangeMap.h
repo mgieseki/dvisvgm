@@ -43,6 +43,7 @@ class RangeMap {
 			UInt32 min () const                    {return _min;}
 			UInt32 max () const                    {return _max;}
 			UInt32 minval () const                 {return _minval;}
+			UInt32 maxval () const                 {return valueAt(_max);}
 			UInt32 valueAt (UInt32 c) const        {return c-_min+_minval;}
 			bool operator < (const Range &r) const {return _min < r._min;}
 			std::ostream& write (std::ostream &os) const;
@@ -65,12 +66,14 @@ class RangeMap {
 		bool valueExists (UInt32 c) const         {return lookup(c) >= 0;}
 		UInt32 valueAt (UInt32 c) const;
 		size_t size () const                      {return _ranges.size();}
+		bool empty () const                       {return _ranges.empty();}
 		void clear ()                             {_ranges.clear();}
 		std::ostream& write (std::ostream &os) const;
 
 	protected:
 		void adaptNeighbors (Ranges::iterator it);
 		int lookup (UInt32 c) const;
+		const Range& rangeAt (size_t n) const     {return _ranges[n];}
 
 	private:
 		Ranges _ranges;
