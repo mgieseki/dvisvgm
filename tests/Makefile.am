@@ -128,6 +128,11 @@ check_PROGRAMS += PSInterpreterTest
 PSInterpreterTest_SOURCES = PSInterpreterTest.cpp
 PSInterpreterTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
+TESTS += RangeMapTest
+check_PROGRAMS += RangeMapTest
+RangeMapTest_SOURCES = RangeMapTest.cpp
+RangeMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp

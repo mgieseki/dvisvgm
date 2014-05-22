@@ -19,7 +19,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	FontStyle.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h Glyph.h GlyphTracerMessages.h GraphicPath.h HtmlSpecialHandler.h \
 	InputBuffer.h InputReader.h JFM.h Length.h macros.h MapLine.h Matrix.h Message.h MessageException.h MetafontWrapper.h \
 	NoPsSpecialHandler.h PageRanges.h PageSize.h Pair.h PdfSpecialHandler.h Process.h PSFilter.h PSInterpreter.h PSPattern.h \
-	PSPreviewFilter.h PsSpecialHandler.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h \
+	PSPreviewFilter.h PsSpecialHandler.h RangeMap.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h \
 	StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h Unicode.h \
 	VectorStream.h VFActions.h VFReader.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharMap.cpp CharMapID.cpp CMap.cpp CMapManager.cpp \
@@ -29,8 +29,8 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	FontManager.cpp FontMap.cpp FontMetrics.cpp GFReader.cpp GFGlyphTracer.cpp GFTracer.cpp Ghostscript.cpp HtmlSpecialHandler.cpp \
 	InputBuffer.cpp InputReader.cpp JFM.cpp Length.cpp MapLine.cpp Matrix.cpp Message.cpp MetafontWrapper.cpp NoPsSpecialHandler.cpp \
 	PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp Process.cpp psdefs.cpp PSInterpreter.cpp PSPattern.cpp PSPreviewFilter.cpp \
-	PsSpecialHandler.cpp SignalHandler.cpp SpecialManager.cpp StreamReader.cpp StreamWriter.cpp Subfont.cpp SVGTree.cpp System.cpp \
-	Terminal.cpp TFM.cpp TpicSpecialHandler.cpp Unicode.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
+	PsSpecialHandler.cpp RangeMap.cpp SignalHandler.cpp SpecialManager.cpp StreamReader.cpp StreamWriter.cpp Subfont.cpp SVGTree.cpp \
+	System.cpp Terminal.cpp TFM.cpp TpicSpecialHandler.cpp Unicode.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
 EXTRA_DIST = options.xml iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 

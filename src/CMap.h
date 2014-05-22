@@ -25,6 +25,7 @@
 #include <ostream>
 #include <vector>
 #include "FontEncoding.h"
+#include "RangeMap.h"
 #include "types.h"
 
 
@@ -87,52 +88,19 @@ class SegmentedCMap : public CMap
 {
 	friend class CMapReader;
 
-	class Range {
-		friend class SegmentedCMap;
-
-		public:
-			Range () : _min(0), _max(0), _cid(0) {}
-
-			Range (UInt32 min, UInt32 max, UInt32 cid) : _min(min), _max(max), _cid(cid) {
-				if (_min > _max)
-					std::swap(_min, _max);
-			}
-
-			UInt32 min () const            {return _min;}
-			UInt32 max () const            {return _max;}
-			UInt32 cid () const            {return _cid;}
-			UInt32 decode (UInt32 c) const {return c-_min+_cid;}
-			bool operator < (const Range &r) const {return _min < r._min;}
-
-		protected:
-			bool join (const Range &r);
-			void setMinAndAdaptCID (UInt32 c) {_cid = decode(c); _min = c;}
-
-		private:
-			UInt32 _min, _max;
-			UInt32 _cid;
-	};
-
-	typedef std::vector<Range> Ranges;
-
    public:
 		SegmentedCMap (const std::string &name) : _name(name), _basemap(0), _vertical(false), _mapsToCID(true) {}
 		const char* name () const {return _name.c_str();}
 		UInt32 cid (UInt32 c) const;
 		UInt32 bfcode (UInt32 cid) const;
-		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {addRange(_cidranges, first, last, cid);}
-		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {addRange(_bfranges, first, last, chrcode);}
+		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {_cidranges.addRange(first, last, cid);}
+		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {_bfranges.addRange(first, last, chrcode);}
 		void write (std::ostream &os) const;
 		bool vertical () const        {return _vertical;}
 		bool mapsToCID () const       {return _mapsToCID;}
 		size_t numCIDRanges () const  {return _cidranges.size();}
 		size_t numBFRanges () const   {return _bfranges.size();}
 		std::string getROString () const;
-
-	protected:
-		void addRange (Ranges &ranges, UInt32 first, UInt32 last, UInt32 cid);
-		void adaptNeighbors (Ranges &ranges, Ranges::iterator it);
-		int lookup (const Ranges &ranges, UInt32 c) const;
 
    private:
 		std::string _name;
@@ -141,8 +109,8 @@ class SegmentedCMap : public CMap
 		CMap *_basemap;
 		bool _vertical;
 		bool _mapsToCID;   // true: chrcode->CID, false: CID->charcode
-		Ranges _cidranges;
-		Ranges _bfranges;
+		RangeMap _cidranges;
+		RangeMap _bfranges;
 };
 
 #endif
