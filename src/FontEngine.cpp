@@ -150,37 +150,36 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) {
 
 /** Returns a character map that maps from character indexes to character codes
  *  of the current encoding.
- *  @param[out] charmap the resultig charmap */
-void FontEngine::buildCharMap (CharMap &charmap) {
+ *  @param[out] charmap the resulting charmap */
+void FontEngine::buildCharMap (RangeMap &charmap) {
 	charmap.clear();
 	FT_UInt glyph_index;
 	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
-		charmap.append(glyph_index, charcode);
+		charmap.addRange(glyph_index, glyph_index, charcode);
 		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
 	}
-	charmap.sort();
 }
 
 
 /** Creates a charmap that maps from the custom character encoding to unicode.
- *  @return pointer to charmap if is could be created, 0 otherwise */
-const CharMap* FontEngine::createCustomToUnicodeMap () {
+ *  @return pointer to charmap if it could be created, 0 otherwise */
+const RangeMap* FontEngine::createCustomToUnicodeMap () {
 	FT_CharMap ftcharmap = _currentFace->charmap;
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) != 0)
 		return 0;
-	CharMap index_to_source_chrcode;
+	RangeMap index_to_source_chrcode;
 	buildCharMap(index_to_source_chrcode);
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
 		return 0;
-	CharMap *charmap = new CharMap;
+	RangeMap *charmap = new RangeMap;
 	FT_UInt glyph_index;
-	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
+	UInt32 unicode_point = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
-		charmap->append(index_to_source_chrcode[glyph_index], charcode);
-		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
+		UInt32 custom_charcode = index_to_source_chrcode.valueAt(glyph_index);
+		charmap->addRange(custom_charcode, custom_charcode, unicode_point);
+		unicode_point = FT_Get_Next_Char(_currentFace, unicode_point, &glyph_index);
 	}
-	charmap->sort();
 	FT_Set_Charmap(_currentFace, ftcharmap);
 	return charmap;
 }

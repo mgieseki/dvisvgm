@@ -28,10 +28,10 @@
 #include <string>
 #include <vector>
 #include "Character.h"
-#include "CharMap.h"
 #include "CharMapID.h"
 #include "Font.h"
 #include "Glyph.h"
+#include "RangeMap.h"
 #include "types.h"
 
 
@@ -65,8 +65,8 @@ class FontEngine
 		std::string getGlyphName (const Character &c) const;
 		int getCharByGlyphName (const char *name) const;
 		bool setCharMap (const CharMapID &charMapID);
-		void buildCharMap (CharMap &charmap);
-		const CharMap* createCustomToUnicodeMap ();
+		void buildCharMap (RangeMap &charmap);
+		const RangeMap* createCustomToUnicodeMap ();
 
 	protected:
 		FontEngine ();

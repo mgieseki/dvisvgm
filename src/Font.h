@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include "Character.h"
-#include "CharMap.h"
 #include "CharMapID.h"
 #include "Color.h"
 #include "FontCache.h"
@@ -36,10 +35,10 @@
 #include "Glyph.h"
 #include "GraphicPath.h"
 #include "MessageException.h"
+#include "RangeMap.h"
 #include "VFActions.h"
 #include "VFReader.h"
 #include "types.h"
-#include "CharMap.h"
 
 
 struct FontStyle;
@@ -251,7 +250,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 		const FontMap::Entry *_fontMapEntry;
 		FontEncodingPair _encodingPair;
 		CharMapID _charmapID;  ///< ID of the font's charmap to use
-		const CharMap *_localCharMap;
+		const RangeMap *_localCharMap;
 };
 
 
@@ -327,7 +326,7 @@ class NativeFontImpl : public NativeFont
 
 	private:
 		std::string _path;
-		CharMap _toUnicodeMap;  ///< maps from char indexes to unicode point
+		RangeMap _toUnicodeMap; ///< maps from char indexes to unicode point
 		CharMapID _charmapID;   ///< unicode charmap ID
 };
 

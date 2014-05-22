@@ -503,7 +503,7 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 		return Font::unicode(c);
 
 	if (_localCharMap) {
-		if (UInt32 mapped_char = (*_localCharMap)[chr.number()])
+		if (UInt32 mapped_char = _localCharMap->valueAt(chr.number()))
 			return mapped_char;
 		// No unicode equivalent found in font file.
 		// Now we should look for a smart alternative but at the moment
@@ -607,7 +607,7 @@ bool NativeFontImpl::findAndAssignBaseFontMap () {
 
 
 Character NativeFontImpl::decodeChar (UInt32 c) const {
-	return Character(Character::CHRCODE, _toUnicodeMap[c]);
+	return Character(Character::CHRCODE, _toUnicodeMap.valueAt(c));
 }
 
 //////////////////////////////////////////////////////////////////////////////

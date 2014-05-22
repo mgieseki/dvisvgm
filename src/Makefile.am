@@ -12,7 +12,7 @@ dvisvgm_SOURCES      = gzstream.h \
 dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
-libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h Character.h CharMap.h CharMapID.h CMap.h \
+libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator.h Character.h CharMapID.h CMap.h \
 	CMapManager.h CMapReader.h CmdLineParserBase.h Color.h CRC32.h ColorSpecialHandler.h CommandLine.h Directory.h DLLoader.h \
 	DVIActions.h DVIReader.h DvisvgmSpecialHandler.h DVIToSVG.h DVIToSVGActions.h EncFile.h EmSpecialHandler.h EPSFile.h EPSToSVG.h \
 	FileFinder.h FilePath.h FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetrics.h \
@@ -22,7 +22,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	PSPreviewFilter.h PsSpecialHandler.h RangeMap.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h \
 	StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h Unicode.h \
 	VectorStream.h VFActions.h VFReader.h XMLDocument.h XMLNode.h XMLString.h \
-	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharMap.cpp CharMapID.cpp CMap.cpp CMapManager.cpp \
+	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharMapID.cpp CMap.cpp CMapManager.cpp \
 	CMapReader.cpp CmdLineParserBase.cpp Color.cpp ColorSpecialHandler.cpp CommandLine.cpp CRC32.cpp Directory.cpp DLLoader.cpp \
 	DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EncFile.cpp \
 	EPSFile.cpp EPSToSVG.cpp FileFinder.cpp FilePath.cpp FileSystem.cpp Font.cpp FontCache.cpp FontEncoding.cpp FontEngine.cpp \
