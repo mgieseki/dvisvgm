@@ -20,8 +20,8 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	InputBuffer.h InputReader.h JFM.h Length.h macros.h MapLine.h Matrix.h Message.h MessageException.h MetafontWrapper.h \
 	NoPsSpecialHandler.h PageRanges.h PageSize.h Pair.h PdfSpecialHandler.h Process.h PSFilter.h PSInterpreter.h PSPattern.h \
 	PSPreviewFilter.h PsSpecialHandler.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h \
-	StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h VectorStream.h \
-	VFActions.h VFReader.h XMLDocument.h XMLNode.h XMLString.h \
+	StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h Unicode.h \
+	VectorStream.h VFActions.h VFReader.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharMap.cpp CharMapID.cpp CMap.cpp CMapManager.cpp \
 	CMapReader.cpp CmdLineParserBase.cpp Color.cpp ColorSpecialHandler.cpp CommandLine.cpp CRC32.cpp Directory.cpp DLLoader.cpp \
 	DVIReader.cpp DvisvgmSpecialHandler.cpp DVIToSVG.cpp DVIToSVGActions.cpp EmSpecialHandler.cpp EncFile.cpp \
@@ -30,7 +30,7 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	InputBuffer.cpp InputReader.cpp JFM.cpp Length.cpp MapLine.cpp Matrix.cpp Message.cpp MetafontWrapper.cpp NoPsSpecialHandler.cpp \
 	PageRanges.cpp PageSize.cpp PdfSpecialHandler.cpp Process.cpp psdefs.cpp PSInterpreter.cpp PSPattern.cpp PSPreviewFilter.cpp \
 	PsSpecialHandler.cpp SignalHandler.cpp SpecialManager.cpp StreamReader.cpp StreamWriter.cpp Subfont.cpp SVGTree.cpp System.cpp \
-	Terminal.cpp TFM.cpp TpicSpecialHandler.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
+	Terminal.cpp TFM.cpp TpicSpecialHandler.cpp Unicode.cpp VFReader.cpp XMLDocument.cpp XMLNode.cpp XMLString.cpp
 
 EXTRA_DIST = options.xml iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 

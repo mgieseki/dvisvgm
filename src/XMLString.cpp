@@ -25,41 +25,12 @@
 #include <sstream>
 #include "macros.h"
 #include "types.h"
+#include "Unicode.h"
 #include "XMLString.h"
 
 using namespace std;
 
 int XMLString::DECIMAL_PLACES = 0;
-
-
-/** Converts a unicode value to a UTF-8 byte sequence.
- *  @param[in] c character code
- *  @return  utf8 seqence consisting of 1-4 bytes */
-static string to_utf8 (Int32 c) {
-	string utf8;
-	if (c >= 0) {
-		if (c < 0x80)
-			utf8 += c;
-		else if (c < 0x800) {
-			utf8 += 0xC0 + (c >> 6);
-			utf8 += 0x80 + (c & 0x3F);
-		}
-		else if (c == 0xFFFE || c == 0xFFFF)
-			utf8 += (c & 0xFF);
-		else if (c < 0x10000) {
-			utf8 += 0xE0 + (c >> 12);
-			utf8 += 0x80 + ((c >> 6) & 0x3F);
-			utf8 += 0x80 + (c & 0x3F);
-		}
-		else if (c < 0x110000) {
-			utf8 += 0xF0 + (c >> 18);
-			utf8 += 0x80 + ((c >> 12) & 0x3F);
-			utf8 += 0x80 + ((c >> 6) & 0x3F);
-			utf8 += 0x80 + (c & 0x3F);
-		}
-	}
-	return utf8;
-}
 
 
 static string translate (UInt32 c) {
@@ -69,7 +40,7 @@ static string translate (UInt32 c) {
 		case '"' : return "&quot;";
 		case '\'': return "&apos;";
 	}
-	return to_utf8(c);
+	return Unicode::utf8(c);
 }
 
 

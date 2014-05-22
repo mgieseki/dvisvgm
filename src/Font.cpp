@@ -38,37 +38,16 @@
 #include "SignalHandler.h"
 #include "Subfont.h"
 #include "SVGTree.h"
+#include "Unicode.h"
 #include "macros.h"
 
 
 using namespace std;
 
 
-/** Returns true if 'unicode' is a valid unicode value in XML documents.
- *  XML version 1.0 doesn't allow various unicode character references
- *  (&#1; for example).  */
-static bool valid_unicode (UInt32 unicode) {
-	if ((unicode & 0xffff) == 0xfffe || (unicode & 0xffff) == 0xffff)
-		return false;
-
-	UInt32 ranges[] = {
-		0x0000, 0x0020,
-		0x007f, 0x0084,
-		0x0086, 0x009f,
-		0x202a, 0x202e,  // bidi control characters
-		0xd800, 0xdfff,
-		0xfdd0, 0xfdef,
-	};
-	for (size_t i=0; i < sizeof(ranges)/sizeof(UInt32)/2; i++)
-		if (unicode >= ranges[2*i] && unicode <= ranges[2*i+1])
-			return false;
-	return true;
-}
-
-
 UInt32 Font::unicode (UInt32 c) const {
 	// @@ this should be optimized :-)
-	return valid_unicode(c) ? c : 0x3400+c;
+	return Unicode::isValidCodepoint(c) ? c : 0x3400+c;
 }
 
 
@@ -530,10 +509,10 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 		// Now we should look for a smart alternative but at the moment
 		// it's sufficient to simply choose a valid unused unicode value...
 		// Can we use the charcode itself as a unicode replacement?
-		if (!_localCharMap->valueExists(chr.number()) && valid_unicode(chr.number()))
+		if (!_localCharMap->valueExists(chr.number()) && Unicode::isValidCodepoint(chr.number()))
 			return chr.number();
 	}
-	if (valid_unicode(chr.number()))
+	if (Unicode::isValidCodepoint(chr.number()))
 		return chr.number();
 	return Font::unicode(chr.number());
 }
@@ -614,7 +593,7 @@ double NativeFont::charDepth (int c) const {
 
 UInt32 NativeFont::unicode (UInt32 c) const {
 	UInt32 ucode = decodeChar(c).number();
-	return valid_unicode(ucode) ? ucode : 0x3400+ucode;
+	return Unicode::isValidCodepoint(ucode) ? ucode : 0x3400+ucode;
 }
 
 
