@@ -38,7 +38,6 @@ class CharMap
 		UInt32 size () const {return _pairs.size();}
 		bool empty () const  {return _pairs.empty();}
 		void clear ()        {return _pairs.clear();}
-		void invert ();
 
 	protected:
 		void append (UInt32 from, UInt32 to) {_pairs.push_back(UInt32Pair(from, to));}

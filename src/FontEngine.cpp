@@ -148,19 +148,15 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) {
 }
 
 
-/** Returns a character map that maps from character codes of the current
- *  encoding to character indexes, or vice versa.
- *  @param[in] invert if true, the resulting charmap maps from char indexes to char codes
+/** Returns a character map that maps from character indexes to character codes
+ *  of the current encoding.
  *  @param[out] charmap the resultig charmap */
-void FontEngine::buildCharMap (bool invert, CharMap &charmap) {
+void FontEngine::buildCharMap (CharMap &charmap) {
 	charmap.clear();
 	FT_UInt glyph_index;
 	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
-		if (invert)
-			charmap.append(glyph_index, charcode);
-		else
-			charmap.append(charcode, glyph_index);
+		charmap.append(glyph_index, charcode);
 		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
 	}
 	charmap.sort();
@@ -174,7 +170,7 @@ const CharMap* FontEngine::createCustomToUnicodeMap () {
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) != 0)
 		return 0;
 	CharMap index_to_source_chrcode;
-	buildCharMap(true, index_to_source_chrcode);
+	buildCharMap(index_to_source_chrcode);
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
 		return 0;
 	CharMap *charmap = new CharMap;

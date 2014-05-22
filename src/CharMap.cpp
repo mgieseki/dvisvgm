@@ -44,14 +44,6 @@ bool CharMap::valueExists (UInt32 c) const {
 }
 
 
-/** Swaps key and value of all entries. */
-void CharMap::invert () {
-	for (std::vector<UInt32Pair>::iterator it=_pairs.begin(); it != _pairs.end(); ++it)
-		swap(it->first, it->second);
-	sort();
-}
-
-
 void CharMap::sort () {
 	std::sort(_pairs.begin(), _pairs.end(), &is_less);
 }

@@ -600,7 +600,7 @@ UInt32 NativeFont::unicode (UInt32 c) const {
 bool NativeFontImpl::findAndAssignBaseFontMap () {
 	FontEngine &fe = FontEngine::instance();
 	fe.setFont(*this);
-	fe.buildCharMap(true, _toUnicodeMap);
+	fe.buildCharMap(_toUnicodeMap);
 	_charmapID = fe.setUnicodeCharMap();
 	return true;
 }
