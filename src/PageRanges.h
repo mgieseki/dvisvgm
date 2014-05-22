@@ -24,26 +24,13 @@
 #include <list>
 #include <string>
 #include <utility>
+#include "NumericRanges.h"
 
-class PageRanges
+class PageRanges : public NumericRanges<int>
 {
-	public:
-		typedef std::pair<int,int> Range;
-		typedef std::list<Range> Container;
-		typedef Container::iterator Iterator;
-		typedef Container::const_iterator ConstIterator;
-
    public:
 		bool parse (std::string str, int max_page=0);
-		void insert (int first, int last);
-		size_t pages () const;
-		size_t size () const             {return _ranges.size();}
-		const Container& ranges () const {return _ranges;}
-		ConstIterator begin () const     {return _ranges.begin();}
-		ConstIterator end () const       {return _ranges.end();}
-
-   private:
-		Container _ranges;
+		size_t numberOfPages () const;
 };
 
 #endif

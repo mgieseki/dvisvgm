@@ -18,9 +18,9 @@ libdvisvgm_a_SOURCES = Bitmap.h BoundingBox.h BgColorSpecialHandler.h Calculator
 	FileFinder.h FilePath.h FileSystem.h Font.h FontCache.h FontEncoding.h FontEngine.h FontManager.h FontMap.h FontMetrics.h \
 	FontStyle.h GFReader.h GFTracer.h GFGlyphTracer.h Ghostscript.h Glyph.h GlyphTracerMessages.h GraphicPath.h HtmlSpecialHandler.h \
 	InputBuffer.h InputReader.h JFM.h Length.h macros.h MapLine.h Matrix.h Message.h MessageException.h MetafontWrapper.h \
-	NoPsSpecialHandler.h PageRanges.h PageSize.h Pair.h PdfSpecialHandler.h Process.h PSFilter.h PSInterpreter.h PSPattern.h \
-	PSPreviewFilter.h PsSpecialHandler.h RangeMap.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h StreamReader.h \
-	StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h Unicode.h \
+	NoPsSpecialHandler.h NumericRanges.h PageRanges.h PageSize.h Pair.h PdfSpecialHandler.h Process.h PSFilter.h PSInterpreter.h \
+	PSPattern.h PSPreviewFilter.h PsSpecialHandler.h RangeMap.h SignalHandler.h SpecialActions.h SpecialHandler.h SpecialManager.h \
+	StreamReader.h StreamWriter.h Subfont.h SVGOutputBase.h SVGTree.h System.h Terminal.h TpicSpecialHandler.h TFM.h types.h Unicode.h \
 	VectorStream.h VFActions.h VFReader.h XMLDocument.h XMLNode.h XMLString.h \
 	BgColorSpecialHandler.cpp Bitmap.cpp BoundingBox.cpp Calculator.cpp CharMapID.cpp CMap.cpp CMapManager.cpp \
 	CMapReader.cpp CmdLineParserBase.cpp Color.cpp ColorSpecialHandler.cpp CommandLine.cpp CRC32.cpp Directory.cpp DLLoader.cpp \

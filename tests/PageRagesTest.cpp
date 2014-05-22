@@ -51,7 +51,7 @@ TEST(PageRangesTest, single) {
 	ASSERT_TRUE(pr.parse("123"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(123,123));
-	ASSERT_EQ(pr.pages(), 1);
+	ASSERT_EQ(pr.numberOfPages(), 1);
 }
 
 
@@ -60,7 +60,7 @@ TEST(PageRangesTest, single_range) {
 	ASSERT_TRUE(pr.parse("3-19"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(3,19));
-	ASSERT_EQ(pr.pages(), 17);
+	ASSERT_EQ(pr.numberOfPages(), 17);
 }
 
 
@@ -69,7 +69,7 @@ TEST(PageRangesTest, single_range_inv) {
 	ASSERT_TRUE(pr.parse("19-3"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(3,19));
-	ASSERT_EQ(pr.pages(), 17);
+	ASSERT_EQ(pr.numberOfPages(), 17);
 }
 
 
@@ -78,7 +78,7 @@ TEST(PageRangesTest, single_range_lopen) {
 	ASSERT_TRUE(pr.parse("-19"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(1,19));
-	ASSERT_EQ(pr.pages(), 19);
+	ASSERT_EQ(pr.numberOfPages(), 19);
 }
 
 
@@ -87,7 +87,7 @@ TEST(PageRangesTest, single_range_ropen) {
 	ASSERT_TRUE(pr.parse("4-", 100));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(4,100));
-	ASSERT_EQ(pr.pages(), 97);
+	ASSERT_EQ(pr.numberOfPages(), 97);
 }
 
 
@@ -97,7 +97,7 @@ TEST(PageRangesTest, multiple1) {
 	ASSERT_EQ(pr.size(), 6);
 	Range cmp[] = {{1,1},{3,3},{6,6},{9,9},{11,11},{75,75}};
 	ASSERT_TRUE(is_equal(pr, cmp));
-	ASSERT_EQ(pr.pages(), 6);
+	ASSERT_EQ(pr.numberOfPages(), 6);
 }
 
 

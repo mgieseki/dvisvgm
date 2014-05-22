@@ -170,7 +170,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	FORALL(ranges, PageRanges::ConstIterator, it)
 		convert(it->first, it->second);
 	if (pageinfo) {
-		pageinfo->first = ranges.pages();
+		pageinfo->first = ranges.numberOfPages();
 		pageinfo->second = getTotalPages();
 	}
 }
