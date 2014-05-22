@@ -100,7 +100,7 @@ void RangeMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 vmin) {
 			const bool at_end = (it == _ranges.end());
 			if (at_end)
 				--it;
-			if (!it->join(range)) {
+			if (!it->join(range) && (it == _ranges.begin() || !(it-1)->join(range))) {
 				if (it->min() < cmin && it->max() > cmax) { // new range completely inside an existing range?
 					//split existing range
 					UInt32 itmax = it->max();
