@@ -222,58 +222,13 @@ bool DVIReader::executePage (unsigned n) {
 	clear();    // reset all status bits
 	if (!valid())
 		throw DVIException("invalid DVI file");
-	seek(-1, ios_base::end);        // stream pointer to last byte
-	while (peek() == 223)
-		seek(-1, ios_base::cur);     // skip fill bytes
-	seek(-4, ios_base::cur);        // now on first byte of q (pointer to begin of postamble)
-	UInt32 q = readUnsigned(4);     // pointer to begin of postamble
-	seek(q, ios_base::beg);         // now on begin of postamble
-	if (executeCommand() != 248)    // execute postamble command but not the fontdefs
-		return false;
 	if (n < 1 || n > numberOfPages())
 		return false;
-	seek(_prevBop, ios_base::beg);  // now on last bop
-	_inPostamble = false;           // we jumped out of the postamble
-	unsigned pageCount = numberOfPages();
-	for (; pageCount > n && _prevBop > 0; pageCount--) {
-		seek(41, ios_base::cur);     // skip bop and 10*4 \count bytes => now on pointer to prev bop
-		_prevBop = readSigned(4);
-		seek(_prevBop, ios_base::beg);
-	}
+
+	seek(_bopOffsets[n-1], ios_base::beg);  // goto bop of n-th page
+	_inPostamble = false;                   // not in postamble
 	_currPageNum = n;
-	while (pageCount == n && executeCommand() != 140); // 140 == eop
-	return true;
-}
-
-
-bool DVIReader::executePages (unsigned first, unsigned last) {
-	clear();
-	if (!valid())
-		throw DVIException("invalid DVI file");
-	if (first > last)
-		swap(first, last);
-	seek(-1, ios_base::end);       // stream pointer to last byte
-	while (peek() == 223)
-		seek(-1, ios_base::cur);    // skip fill bytes
-	seek(-4, ios_base::cur);       // now on first byte of q (pointer to begin of postamble)
-	UInt32 q = readUnsigned(4);    // pointer to begin of postamble
-	seek(q, ios_base::beg);        // now on begin of postamble
-	if (executeCommand() != 248)   // execute postamble command but not the fontdefs
-		return false;
-	first = max(1u, min(first, numberOfPages()));
-	last = max(1u, min(last, numberOfPages()));
-	seek(_prevBop, ios_base::beg); // now on last bop
-	_inPostamble = false;          // we jumped out of the postamble
-	unsigned count = numberOfPages();
-	for (; count > first && _prevBop > 0; count--) {
-		seek(41, ios_base::cur);    // skip bop and 10*4 \count bytes => now on pointer to prev bop
-		_prevBop = readSigned(4);
-		seek(_prevBop, ios_base::beg);
-	}
-	while (first <= last) {
-		_currPageNum = first++;
-		while (executeCommand () != 140); // 140 == eop
-	}
+	while (executeCommand() != 140);        // 140 == eop
 	return true;
 }
 

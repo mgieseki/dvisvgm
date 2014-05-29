@@ -68,7 +68,6 @@ class DVIReader : public StreamReader, protected VFActions
 		void executePreamble ();
 		void executePostamble ();
 		bool executePage (unsigned n);
-		bool executePages (unsigned first, unsigned last);
 		bool inPostamble () const              {return _inPostamble;}
 		double getXPos () const;
 		double getYPos () const;
