@@ -87,8 +87,9 @@ class DVIReader : public StreamReader, protected VFActions
 	protected:
 		void verifyDVIFormat (int id) const;
 		void collectBopOffsets ();
+		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
 		int executeCommand ();
-		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
+		int evalCommand (bool compute_size, CommandHandler &handler, int &param);
 		void moveRight (double dx);
 		void moveDown (double dy);
 		void putChar (UInt32 c, bool moveCursor);
@@ -140,7 +141,7 @@ class DVIReader : public StreamReader, protected VFActions
 		DVIFormat _dviFormat;    ///< format of DVI file currently processed
 		DVIActions *_actions;    ///< actions to be performed on various DVI events
 		bool _inPage;            ///< true if between bop and eop
-		unsigned _currPageNum;   ///< current page number
+		unsigned _currPageNum;   ///< current page number (1 is first page)
 		int _currFontNum;        ///< current font number
 		double _dvi2bp;          ///< factor to convert dvi units to PS points
 		UInt32 _mag;             ///< magnification factor * 1000
@@ -152,11 +153,10 @@ class DVIReader : public StreamReader, protected VFActions
 		std::vector<UInt32> _bopOffsets;
 		double _prevYPos;        ///< previous vertical cursor position
 		double _tx, _ty;         ///< tranlation of cursor position
-		size_t _pageLength;      ///< number of bytes between current bop end eop
 		std::streampos _pagePos; ///< distance of current DVI command from bop (in bytes)
 
 	public:
-		static bool COMPUTE_PAGE_LENGTH;  ///< if true, the bop handler computes the number of bytes of the current page
+		static bool COMPUTE_PROGRESS;  ///< if true, an action to handle the progress ratio of a page is triggered
 };
 
 #endif

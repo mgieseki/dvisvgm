@@ -362,7 +362,7 @@ int main (int argc, char *argv[]) {
 		return 1;
 
 	if (args.progress_given()) {
-		DVIReader::COMPUTE_PAGE_LENGTH = args.progress_given();
+		DVIReader::COMPUTE_PROGRESS = args.progress_given();
 		DVIToSVGActions::PROGRESSBAR_DELAY = args.progress_arg();
 	}
 	SVGTree::CREATE_STYLE = !args.no_styles_given();

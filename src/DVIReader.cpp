@@ -38,7 +38,7 @@
 
 using namespace std;
 
-bool DVIReader::COMPUTE_PAGE_LENGTH = false;
+bool DVIReader::COMPUTE_PROGRESS = false;
 
 
 DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat(DVI_NONE), _actions(a)
@@ -51,7 +51,6 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat
 	_inPostamble = false;
 	_currFontNum = 0;
 	_currPageNum = 0;
-	_pageLength = 0;
 	_pagePos = 0;
 	_prevBop = 0;
 	_mag = 1;
@@ -72,7 +71,7 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
  *  @param[out] length number of parameter bytes
  *  @param[out] param the handler must be called with this parameter
  *  @return opcode of current DVI command */
-int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param) {
+int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &param) {
 	struct DVICommand {
 		CommandHandler handler;
 		int length;  // number of parameter bytes
@@ -110,15 +109,14 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 	if (!valid() || opcode < 0)  // at end of file
 		throw InvalidDVIFileException("invalid file");
 
+	int num_param_bytes = 0;
 	param = -1;
 	if (opcode >= 0 && opcode <= 127) {
 		handler = &DVIReader::cmdSetChar0;
-		length = 0;
 		param = opcode;
 	}
 	else if (opcode >= 171 && opcode <= 234) {
 		handler = &DVIReader::cmdFontNum0;
-		length = 0;
 		param = opcode-171;
 	}
 	else if (opcode >= 251 && opcode <= 254 && _dviFormat == DVI_XDV) {  // XDV command?
@@ -133,7 +131,7 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 	}
 	else if (opcode == 255 && _dviFormat == DVI_PTEX) {  // direction command set by pTeX?
 		handler = &DVIReader::cmdDir;
-		length = 1;
+		num_param_bytes = 1;
 	}
 	else if (opcode >= 250) {
 		ostringstream oss;
@@ -144,13 +142,13 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 		const int offset = opcode <= 170 ? 128 : 235-(170-128+1);
 		handler = commands[opcode-offset].handler;
 		if (!compute_size)
-			length = commands[opcode-offset].length;
+			num_param_bytes = commands[opcode-offset].length;
 		else {
 			if (opcode >= 239 && opcode <= 242) { // specials
 				int len = opcode-238;
 				UInt32 bytes = readUnsigned(len);
 				seek(-len, ios_base::cur);
-				length = len+bytes;
+				num_param_bytes = len+bytes;
 			}
 			else if (opcode >= 243 && opcode <= 246) { // fontdefs
 				int len = opcode-242;
@@ -159,14 +157,14 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 				UInt32 bytes = readUnsigned(1);   // length of font path
 				bytes += readUnsigned(1);         // length of font name
 				seek(-len-2, ios_base::cur);
-				length = len+bytes;
+				num_param_bytes = len+bytes;
 			}
 			else
-				length = commands[opcode-offset].length;
+				num_param_bytes = commands[opcode-offset].length;
 		}
 	}
 	if (param < 0)
-		param = length;
+		param = num_param_bytes;
 	return opcode;
 }
 
@@ -177,25 +175,25 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &len
 int DVIReader::executeCommand () {
 	SignalHandler::instance().check();
 	CommandHandler handler;
-	int len;   // number of parameter bytes
 	int param; // parameter of handler
 	streampos pos = tell();
-	int opcode = evalCommand(false, handler, len, param);
+	int opcode = evalCommand(false, handler, param);
 	(this->*handler)(param);
 	if (_dviState.v+_ty != _prevYPos) {
 		_tx = _ty = 0;
 		_prevYPos = _dviState.v;
 	}
-	if (COMPUTE_PAGE_LENGTH && _inPage && _actions) {
+	if (COMPUTE_PROGRESS && _inPage && _actions) {
+		size_t pagelen = numberOfPageBytes(_currPageNum-1);
 		// ensure progress() is called at 0%
-		if (opcode == 139) // bop?
-			_actions->progress(0, _pageLength);
+		if (opcode == 139)  // bop?
+			_actions->progress(0, pagelen);
 		// ensure progress() is called at 100%
 		if (peek() == 140)  // eop reached?
-			_pagePos = _pageLength;
+			_pagePos = pagelen;
 		else
 			_pagePos += tell()-pos;
-		_actions->progress(_pagePos, _pageLength);
+		_actions->progress(_pagePos, pagelen);
 	}
 	return opcode;
 }
@@ -421,21 +419,7 @@ void DVIReader::cmdBop (int) {
 		_stateStack.pop();
 	_currFontNum = 0;
 	_inPage = true;
-	_pageLength = 0;
 	_pagePos = 0;
-	if (COMPUTE_PAGE_LENGTH) {
-		// compute number of bytes in current page
-		int length, param;
-		CommandHandler handler;
-		// read all commands until eop is found
-		while (evalCommand(true, handler, length, param) != 140) {
-			seek(length, ios_base::cur);
-			_pageLength += length+1;  // parameter length + opcode length (1 byte)
-		}
-		++_pageLength;  // add length of eop command (1 byte)
-		seek(-int(_pageLength), ios_base::cur);  // go back to first command following bop
-		_pageLength += 45; // add length of bop command
-	}
 	beginPage(_currPageNum, c);
 	if (_actions)
 		_actions->beginPage(_currPageNum, c);
