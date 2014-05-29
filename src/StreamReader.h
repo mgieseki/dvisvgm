@@ -34,6 +34,8 @@ class StreamReader
    public:
 		StreamReader (std::istream &s);
 		virtual ~StreamReader () {}
+		bool valid () const {return _is;}
+		void clear ()       {_is->clear();}
 		std::istream& replaceStream (std::istream &s);
 		UInt32 readUnsigned (int n);
 		UInt32 readUnsigned (int n, CRC32 &crc32);
@@ -47,7 +49,11 @@ class StreamReader
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
 		int readByte () {return _is->get();}
 		int readByte (CRC32 &crc32);
-		void seek (std::istream::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}
+		void seek (std::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}
+		std::streampos tell () const {return _is->tellg();}
+		int peek () const {return _is->peek();}
+		int get () const  {return _is->get();}
+
 
 	protected:
 		std::istream& in () {return *_is;}

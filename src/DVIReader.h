@@ -86,6 +86,7 @@ class DVIReader : public StreamReader, protected VFActions
 
 	protected:
 		void verifyDVIFormat (int id) const;
+		void collectBopOffsets ();
 		int executeCommand ();
 		int evalCommand (bool compute_size, CommandHandler &handler, int &length, int &param);
 		void moveRight (double dx);
@@ -149,6 +150,7 @@ class DVIReader : public StreamReader, protected VFActions
 		double _pageHeight, _pageWidth;  ///< page height and width in PS points
 		DVIState _dviState;      ///< current cursor position
 		std::stack<DVIState> _stateStack;
+		std::vector<UInt32> _bopOffsets;
 		double _prevYPos;        ///< previous vertical cursor position
 		double _tx, _ty;         ///< tranlation of cursor position
 		size_t _pageLength;      ///< number of bytes between current bop end eop
