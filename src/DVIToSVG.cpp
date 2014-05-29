@@ -94,7 +94,7 @@ class PSHeaderActions : public DVIActions
 char DVIToSVG::TRACE_MODE = 0;
 
 
-DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
+DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out), _scannedPostamble(false)
 {
 	replaceActions(new DVIToSVGActions(*this, _svg));
 }
@@ -110,20 +110,21 @@ DVIToSVG::~DVIToSVG () {
  *  @param[in] last number of last page to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
 void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
-	if (getTotalPages() == 0) {
+	if (!_scannedPostamble) { // pre- and postamble not scanned yet?
 		executePreamble();
 		executePostamble();    // collect scaling information
+		_scannedPostamble = true;
 	}
 	if (first > last)
 		swap(first, last);
-	if (first > getTotalPages()) {
+	if (first > numberOfPages()) {
 		ostringstream oss;
-		oss << "file contains only " << getTotalPages() << " page";
-		if (getTotalPages() > 1)
+		oss << "file contains only " << numberOfPages() << " page";
+		if (numberOfPages() > 1)
 			oss << 's';
 		throw DVIException(oss.str());
 	}
-	last = min(last, getTotalPages());
+	last = min(last, numberOfPages());
 
 #ifndef DISABLE_GS
 	// ensure loading of PostScript prologues given at the beginning of the first page
@@ -143,15 +144,15 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
 		embedFonts(_svg.rootNode());
-		_svg.write(_out.getPageStream(getCurrentPageNumber(), getTotalPages()));
-		string fname = _out.filename(i, getTotalPages());
+		_svg.write(_out.getPageStream(getCurrentPageNumber(), numberOfPages()));
+		string fname = _out.filename(i, numberOfPages());
 		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\npage written to " << (fname.empty() ? "<stdout>" : fname) << '\n';
 		_svg.reset();
 		static_cast<DVIToSVGActions*>(getActions())->reset();
 	}
 	if (pageinfo) {
 		pageinfo->first = last-first+1;
-		pageinfo->second = getTotalPages();
+		pageinfo->second = numberOfPages();
 	}
 }
 
@@ -160,18 +161,15 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
  *  @param[in] rangestr string describing the pages to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
 void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
-	if (getTotalPages() == 0) {
-		executePreamble();
-		executePostamble();    // collect scaling information
-	}
 	PageRanges ranges;
-	if (!ranges.parse(rangestr, getTotalPages()))
+	if (!ranges.parse(rangestr, numberOfPages()))
 		throw MessageException("invalid page range format");
+
 	FORALL(ranges, PageRanges::ConstIterator, it)
 		convert(it->first, it->second);
 	if (pageinfo) {
 		pageinfo->first = ranges.numberOfPages();
-		pageinfo->second = getTotalPages();
+		pageinfo->second = numberOfPages();
 	}
 }
 

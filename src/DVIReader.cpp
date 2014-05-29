@@ -49,7 +49,6 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat
 	_tx = _ty = 0;    // no cursor translation
 	_prevYPos = numeric_limits<double>::min();
 	_inPostamble = false;
-	_totalPages = 0;  // we don't know the correct value yet
 	_currFontNum = 0;
 	_currPageNum = 0;
 	_pageLength = 0;
@@ -233,11 +232,11 @@ bool DVIReader::executePage (unsigned n) {
 	seek(q, ios_base::beg);         // now on begin of postamble
 	if (executeCommand() != 248)    // execute postamble command but not the fontdefs
 		return false;
-	if (n < 1 || n > _totalPages)
+	if (n < 1 || n > numberOfPages())
 		return false;
 	seek(_prevBop, ios_base::beg);  // now on last bop
 	_inPostamble = false;           // we jumped out of the postamble
-	unsigned pageCount = _totalPages;
+	unsigned pageCount = numberOfPages();
 	for (; pageCount > n && _prevBop > 0; pageCount--) {
 		seek(41, ios_base::cur);     // skip bop and 10*4 \count bytes => now on pointer to prev bop
 		_prevBop = readSigned(4);
@@ -263,11 +262,11 @@ bool DVIReader::executePages (unsigned first, unsigned last) {
 	seek(q, ios_base::beg);        // now on begin of postamble
 	if (executeCommand() != 248)   // execute postamble command but not the fontdefs
 		return false;
-	first = max(1u, min(first, _totalPages));
-	last = max(1u, min(last, _totalPages));
+	first = max(1u, min(first, numberOfPages()));
+	last = max(1u, min(last, numberOfPages()));
 	seek(_prevBop, ios_base::beg); // now on last bop
 	_inPostamble = false;          // we jumped out of the postamble
-	unsigned count = _totalPages;
+	unsigned count = numberOfPages();
 	for (; count > first && _prevBop > 0; count--) {
 		seek(41, ios_base::cur);    // skip bop and 10*4 \count bytes => now on pointer to prev bop
 		_prevBop = readSigned(4);
@@ -342,16 +341,6 @@ double DVIReader::getYPos () const {
 }
 
 
-double DVIReader::getPageHeight () const {
-	return _pageHeight;
-}
-
-
-double DVIReader::getPageWidth () const {
-	return _pageWidth;
-}
-
-
 void DVIReader::verifyDVIFormat (int id) const {
 	switch (id) {
 		case DVI_STANDARD:
@@ -396,8 +385,10 @@ void DVIReader::cmdPost (int) {
 	_mag = readUnsigned(4);
 	_pageHeight = readUnsigned(4); // height of tallest page in dvi units
 	_pageWidth  = readUnsigned(4); // width of widest page in dvi units
-	readUnsigned(2);               // max. stack depth
-	_totalPages = readUnsigned(2); // total number of pages
+	readUnsigned(2);               // skip max. stack depth
+	if (readUnsigned(2) != numberOfPages())
+		throw DVIException("page count entry doesn't match actual number of pages");
+
 	// 1 dviunit * num/den == multiples of 0.0000001m
 	// 1 dviunit * _dvi2bp: length of 1 dviunit in PS points * _mag/1000
 	_dvi2bp = num/254000.0*72.0/den*_mag/1000.0;

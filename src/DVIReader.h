@@ -73,14 +73,14 @@ class DVIReader : public StreamReader, protected VFActions
 		double getXPos () const;
 		double getYPos () const;
 		void finishLine ()                     {_prevYPos = std::numeric_limits<double>::min();}
-		void translateToX (double x)           {_tx=x-_dviState.h-_tx;}
-		void translateToY (double y)           {_ty=y-_dviState.v-_ty;}
-		double getPageWidth () const;
-		double getPageHeight () const;
+		void translateToX (double x)           {_tx = x-_dviState.h-_tx;}
+		void translateToY (double y)           {_ty = y-_dviState.v-_ty;}
+		double getPageWidth () const           {return _pageWidth;}
+		double getPageHeight () const          {return _pageHeight;}
 		int getStackDepth () const             {return _stateStack.size();}
 		int getCurrentFontNumber () const      {return _currFontNum;}
 		unsigned getCurrentPageNumber () const {return _currPageNum;}
-		unsigned getTotalPages () const        {return _totalPages;}
+		unsigned numberOfPages () const        {return _bopOffsets.empty() ? 0 : _bopOffsets.size()-1;}
 		DVIActions* getActions () const        {return _actions;}
 		DVIActions* replaceActions (DVIActions *a);
 
@@ -140,7 +140,6 @@ class DVIReader : public StreamReader, protected VFActions
 		DVIFormat _dviFormat;    ///< format of DVI file currently processed
 		DVIActions *_actions;    ///< actions to be performed on various DVI events
 		bool _inPage;            ///< true if between bop and eop
-		unsigned _totalPages;    ///< total number of pages in dvi file
 		unsigned _currPageNum;   ///< current page number
 		int _currFontNum;        ///< current font number
 		double _dvi2bp;          ///< factor to convert dvi units to PS points
