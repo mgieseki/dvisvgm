@@ -107,7 +107,7 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &par
 
 	const int opcode = get();
 	if (!valid() || opcode < 0)  // at end of file
-		throw InvalidDVIFileException("invalid file");
+		throw InvalidDVIFileException("invalid DVI file");
 
 	int num_param_bytes = 0;
 	param = -1;
@@ -235,12 +235,14 @@ bool DVIReader::executePage (unsigned n) {
 
 void DVIReader::executePreamble () {
 	clear();
-	if (!valid())
-		throw DVIException("invalid DVI file");
-	seek(0, ios_base::beg);
-	if (get() != 247)
-		throw DVIException("invalid DVI file");
-	cmdPre(0);
+	if (valid()) {
+		seek(0, ios_base::beg);
+		if (get() == 247) {
+			cmdPre(0);
+			return;
+		}
+	}
+	throw DVIException("invalid DVI file");
 }
 
 
@@ -425,7 +427,7 @@ void DVIReader::cmdPop (int) {
  * @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (!_inPage)
-		throw DVIException("set_char or put_char outside of page");
+		throw DVIException("set_char/put_char outside of page");
 
 	if (_actions && !_actions->fontProcessingEnabled())
 		return;
@@ -513,15 +515,13 @@ void DVIReader::cmdPutChar (int len) {
  *  position and updates the cursor position.
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
-	if (_inPage) {
-		double height = _dvi2bp*readSigned(4);
-		double width  = _dvi2bp*readSigned(4);
-		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
-		moveRight(width);
-	}
-	else
+	if (!_inPage)
 		throw DVIException("set_rule outside of page");
+	double height = _dvi2bp*readSigned(4);
+	double width  = _dvi2bp*readSigned(4);
+	if (_actions && height > 0 && width > 0)
+		_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
+	moveRight(width);
 }
 
 
@@ -529,14 +529,12 @@ void DVIReader::cmdSetRule (int) {
  *  position but leaves the cursor position unchanged.
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
-	if (_inPage) {
-		double height = _dvi2bp*readSigned(4);
-		double width  = _dvi2bp*readSigned(4);
-		if (_actions && height > 0 && width > 0)
-			_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
-	}
-	else
+	if (!_inPage)
 		throw DVIException("put_rule outside of page");
+	double height = _dvi2bp*readSigned(4);
+	double width  = _dvi2bp*readSigned(4);
+	if (_actions && height > 0 && width > 0)
+		_actions->setRule(_dviState.h+_tx, _dviState.v+_ty, height, width);
 }
 
 
@@ -601,14 +599,12 @@ void DVIReader::cmdDir (int) {
 
 
 void DVIReader::cmdXXX (int len) {
-	if (_inPage) {
-		UInt32 numBytes = readUnsigned(len);
-		string s = readString(numBytes);
-		if (_actions)
-			_actions->special(s, _dvi2bp);
-	}
-	else
+	if (!_inPage)
 		throw DVIException("special outside of page");
+	UInt32 numBytes = readUnsigned(len);
+	string s = readString(numBytes);
+	if (_actions)
+		_actions->special(s, _dvi2bp);
 }
 
 

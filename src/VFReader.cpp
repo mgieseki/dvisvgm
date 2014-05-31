@@ -29,7 +29,7 @@ using namespace std;
 
 
 /** Converts a TFM fix point value to double (PS point units). */
-inline static double fix2double (FixWord fix) {
+static inline double fix2double (FixWord fix) {
 	const double pt2bp = 72/72.27;
 	return double(fix)/(1 << 20)*pt2bp;
 }
@@ -57,26 +57,26 @@ VFActions* VFReader::replaceActions (VFActions *a) {
  *  @param[in] approve function to approve invocation of the action assigned to command
  *  @return opcode of the executed command */
 int VFReader::executeCommand (ApproveAction approve) {
-	int opcode = in().get();
-	if (!in() || opcode < 0)  // at end of file
-		throw VFException("invalid file");
+	int opcode = get();
+	if (!valid() || opcode < 0)  // at end of file?
+		throw VFException("invalid VF file");
 
 	bool approved = !approve || approve(opcode);
 	VFActions *actions = _actions;
 	if (!approved)
-		replaceActions(0);   // disable actions
+		replaceActions(0);  // disable actions
 
-	if (opcode <= 241)      // short character definition?
+	if (opcode <= 241)     // short character definition?
 		cmdShortChar(opcode);
 	else if (opcode >= 243 && opcode <= 246)   // font definition?
 		cmdFontDef(opcode-243+1);
 	else {
 		switch (opcode) {
-			case 242: cmdLongChar(); break;      // long character definition
-			case 247: cmdPre();      break;      // preamble
-			case 248: cmdPost();     break;      // postamble
-			default : {                          // invalid opcode
-				replaceActions(actions);              // reenable actions
+			case 242: cmdLongChar(); break;  // long character definition
+			case 247: cmdPre();      break;  // preamble
+			case 248: cmdPost();     break;  // postamble
+			default : {                      // invalid opcode
+				replaceActions(actions);      // reenable actions
 				ostringstream oss;
 				oss << "undefined VF command (opcode " << opcode << ')';
 				throw VFException(oss.str());
