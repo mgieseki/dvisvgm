@@ -143,7 +143,7 @@ string StreamReader::readString (int length, CRC32 &crc32) {
 
 vector<UInt8>& StreamReader::readBytes (int n, vector<UInt8> &bytes) {
 	if (n > 0)
-		in().read((char*)&bytes[0], n);
+		_is->read((char*)&bytes[0], n);
 	return bytes;
 }
 

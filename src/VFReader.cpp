@@ -89,11 +89,11 @@ int VFReader::executeCommand (ApproveAction approve) {
 
 
 bool VFReader::executeAll () {
-  	in().clear();   // reset all status bits
-	if (!in())
+  	clear();  // reset all status bits
+	if (!valid())
 		return false;
-	in().seekg(0);  // move file pointer to first byte of the input stream
-	while (!in().eof() && executeCommand() != 248); // stop reading after post (248)
+	seek(0);  // move file pointer to first byte of the input stream
+	while (!eof() && executeCommand() != 248); // stop reading after post (248)
 	return true;
 }
 
@@ -104,21 +104,21 @@ static bool is_chardef (int op)        {return op < 243;}
 
 
 bool VFReader::executePreambleAndFontDefs () {
-	in().clear();
-	if (!in())
+	clear();
+	if (!valid())
 		return false;
-	in().seekg(0);  // move file pointer to first byte of the input stream
-	while (!in().eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
+	seek(0);  // move file pointer to first byte of the input stream
+	while (!eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
 	return true;
 }
 
 
 bool VFReader::executeCharDefs () {
-	in().clear();
-	if (!in())
+	clear();
+	if (!valid())
 		return false;
-	in().seekg(0);
-	while (!in().eof() && executeCommand(is_chardef) < 243); // stop reading after last char definition
+	seek(0);
+	while (!eof() && executeCommand(is_chardef) < 243); // stop reading after last char definition
 	return true;
 }
 
@@ -148,30 +148,30 @@ void VFReader::cmdPost () {
 
 void VFReader::cmdLongChar () {
 	UInt32 pl  = readUnsigned(4);      // packet length (length of DVI subroutine)
-	if (_actions) {
+	if (!_actions)
+		seek(8+pl, ios::cur);           // skip remaining char definition bytes
+	else {
 		UInt32 cc  = readUnsigned(4);   // character code
 		readUnsigned(4);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
 		_actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
-	else
-		in().seekg(8+pl, ios::cur);     // skip remaining char definition bytes
 }
 
 
 /** Reads and executes short_char_x command.
  *  @param[in] pl packet length (length of DVI subroutine) */
 void VFReader::cmdShortChar (int pl) {
-	if (_actions) {
+	if (!_actions)
+		seek(4+pl, ios::cur);     // skip char definition bytes
+	else {
 		UInt32 cc  = readUnsigned(1);   // character code
 		readUnsigned(3);                // character width from corresponding TFM file
 		vector<UInt8> *dvi = new vector<UInt8>(pl); // DVI subroutine
 		readBytes(pl, *dvi);
 		_actions->defineVFChar(cc, dvi); // call template method for user actions
 	}
-	else
-		in().seekg(4+pl, ios::cur);     // skip char definition bytes
 }
 
 

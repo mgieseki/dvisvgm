@@ -202,7 +202,7 @@ int DVIReader::executeCommand () {
 /** Executes all DVI commands read from the input stream. */
 void DVIReader::executeAll () {
 	int opcode = 0;
-	while (!in().eof() && opcode >= 0) {
+	while (!eof() && opcode >= 0) {
 		try {
 			opcode = executeCommand();
 		}
