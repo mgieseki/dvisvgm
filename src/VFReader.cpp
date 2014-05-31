@@ -57,8 +57,8 @@ VFActions* VFReader::replaceActions (VFActions *a) {
  *  @param[in] approve function to approve invocation of the action assigned to command
  *  @return opcode of the executed command */
 int VFReader::executeCommand (ApproveAction approve) {
-	int opcode = get();
-	if (!valid() || opcode < 0)  // at end of file?
+	int opcode = readByte();
+	if (!isStreamValid() || opcode < 0)  // at end of file?
 		throw VFException("invalid VF file");
 
 	bool approved = !approve || approve(opcode);
@@ -89,8 +89,8 @@ int VFReader::executeCommand (ApproveAction approve) {
 
 
 bool VFReader::executeAll () {
-  	clear();  // reset all status bits
-	if (!valid())
+  	clearStream();  // reset all status bits
+	if (!isStreamValid())
 		return false;
 	seek(0);  // move file pointer to first byte of the input stream
 	while (!eof() && executeCommand() != 248); // stop reading after post (248)
@@ -104,8 +104,8 @@ static bool is_chardef (int op)        {return op < 243;}
 
 
 bool VFReader::executePreambleAndFontDefs () {
-	clear();
-	if (!valid())
+	clearStream();
+	if (!isStreamValid())
 		return false;
 	seek(0);  // move file pointer to first byte of the input stream
 	while (!eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
@@ -114,8 +114,8 @@ bool VFReader::executePreambleAndFontDefs () {
 
 
 bool VFReader::executeCharDefs () {
-	clear();
-	if (!valid())
+	clearStream();
+	if (!isStreamValid())
 		return false;
 	seek(0);
 	while (!eof() && executeCommand(is_chardef) < 243); // stop reading after last char definition

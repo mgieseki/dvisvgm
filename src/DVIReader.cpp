@@ -105,8 +105,8 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &par
 		{&DVIReader::cmdXPic, 0},    {&DVIReader::cmdXFontDef, 0},{&DVIReader::cmdXGlyphA, 0}, {&DVIReader::cmdXGlyphS, 0}  // 251-254
 	};
 
-	const int opcode = get();
-	if (!valid() || opcode < 0)  // at end of file
+	const int opcode = readByte();
+	if (!isStreamValid() || opcode < 0)  // at end of file
 		throw InvalidDVIFileException("invalid DVI file");
 
 	int num_param_bytes = 0;
@@ -219,25 +219,25 @@ void DVIReader::executeAll () {
  *  @param[in] n number of page to be executed
  *  @returns true if page was read successfully */
 bool DVIReader::executePage (unsigned n) {
-	clear();    // reset all status bits
-	if (!valid())
+	clearStream();    // reset all status bits
+	if (!isStreamValid())
 		throw DVIException("invalid DVI file");
 	if (n < 1 || n > numberOfPages())
 		return false;
 
-	seek(_bopOffsets[n-1], ios_base::beg);  // goto bop of n-th page
-	_inPostamble = false;                   // not in postamble
+	seek(_bopOffsets[n-1]);           // goto bop of n-th page
+	_inPostamble = false;             // not in postamble
 	_currPageNum = n;
-	while (executeCommand() != 140);        // 140 == eop
+	while (executeCommand() != 140);  // 140 == eop
 	return true;
 }
 
 
 void DVIReader::executePreamble () {
-	clear();
-	if (valid()) {
-		seek(0, ios_base::beg);
-		if (get() == 247) {
+	clearStream();
+	if (isStreamValid()) {
+		seek(0);
+		if (readByte() == 247) {
 			cmdPre(0);
 			return;
 		}
@@ -248,15 +248,15 @@ void DVIReader::executePreamble () {
 
 /** Moves stream pointer to begin of postamble */
 static void to_postamble (StreamReader &reader) {
-	reader.clear();
-	if (!reader.valid())
+	reader.clearStream();
+	if (!reader.isStreamValid())
 		throw DVIException("invalid DVI file");
 	reader.seek(-1, ios_base::end);     // stream pointer to last byte
 	while (reader.peek() == 223)
 		reader.seek(-1, ios_base::cur);  // skip fill bytes
 	reader.seek(-4, ios_base::cur);     // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = reader.readUnsigned(4);  // pointer to begin of postamble
-	reader.seek(q, ios_base::beg);      // now on begin of postamble
+	reader.seek(q);                     // now on begin of postamble
 }
 
 
@@ -271,11 +271,11 @@ void DVIReader::executePostamble () {
 void DVIReader::collectBopOffsets () {
 	to_postamble(*this);
 	_bopOffsets.push_back(tell());     // also add offset of postamble
-	get();                             // skip post command
+	readByte();                        // skip post command
 	UInt32 offset = readUnsigned(4);   // offset of final bop
 	while ((Int32)offset > 0) {        // not yet on first bop?
 		_bopOffsets.push_back(offset);  // record offset
-		seek(offset+41, ios::beg);      // skip bop command and the 10 \count values => now on offset of previous bop
+		seek(offset+41);                // skip bop command and the 10 \count values => now on offset of previous bop
 		offset = readUnsigned(4);
 	}
 	reverse(_bopOffsets.begin(), _bopOffsets.end());
@@ -311,7 +311,8 @@ void DVIReader::verifyDVIFormat (int id) const {
 
 /////////////////////////////////////
 
-/** Reads and executes DVI preamble command. */
+/** Reads and executes DVI preamble command.
+ *  Format: pre ver[1] num[4] den[4] mag[4] cmtlen[1] cmt[cmtlen] */
 void DVIReader::cmdPre (int) {
 	_dviFormat = max(_dviFormat, (DVIFormat)readUnsigned(1)); // identification number
 	verifyDVIFormat(_dviFormat);
@@ -330,7 +331,8 @@ void DVIReader::cmdPre (int) {
 }
 
 
-/** Reads and executes DVI postamble command. */
+/** Reads and executes DVI postamble command.
+ *  Format: post p[4] num[4] den[4] mag[4] ph[4] pw[4] sd[2] np[2] */
 void DVIReader::cmdPost (int) {
 	_prevBop   = readUnsigned(4);  // pointer to previous bop
 	UInt32 num = readUnsigned(4);
@@ -365,7 +367,8 @@ void DVIReader::cmdPostPost (int) {
 }
 
 
-/** Reads and executes Begin-Of-Page command. */
+/** Reads and executes Begin-Of-Page command.
+ *  Format: bop c0[+4] ... c9[+4] p[+4] */
 void DVIReader::cmdBop (int) {
 	Int32 c[10];
 	for (int i=0; i < 10; i++)
@@ -513,6 +516,7 @@ void DVIReader::cmdPutChar (int len) {
 
 /** Reads and executes set_rule command. Puts a solid rectangle at the current
  *  position and updates the cursor position.
+ *  Format: set_rule h[+4] w[+4]
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
 	if (!_inPage)
@@ -527,6 +531,7 @@ void DVIReader::cmdSetRule (int) {
 
 /** Reads and executes set_rule command. Puts a solid rectangle at the current
  *  position but leaves the cursor position unchanged.
+ *  Format: put_rule h[+4] w[+4]
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
 	if (!_inPage)
