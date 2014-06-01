@@ -88,7 +88,7 @@ class DVIReader : public StreamReader, protected VFActions
 		void collectBopOffsets ();
 		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
 		int executeCommand ();
-		int evalCommand (bool compute_size, CommandHandler &handler, int &param);
+		int evalCommand (CommandHandler &handler, int &param);
 		void moveRight (double dx);
 		void moveDown (double dy);
 		void putChar (UInt32 c, bool moveCursor);

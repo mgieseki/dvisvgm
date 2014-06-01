@@ -71,7 +71,7 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
  *  @param[out] length number of parameter bytes
  *  @param[out] param the handler must be called with this parameter
  *  @return opcode of current DVI command */
-int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &param) {
+int DVIReader::evalCommand (CommandHandler &handler, int &param) {
 	struct DVICommand {
 		CommandHandler handler;
 		int length;  // number of parameter bytes
@@ -141,27 +141,7 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &par
 	else {
 		const int offset = opcode <= 170 ? 128 : 235-(170-128+1);
 		handler = commands[opcode-offset].handler;
-		if (!compute_size)
-			num_param_bytes = commands[opcode-offset].length;
-		else {
-			if (opcode >= 239 && opcode <= 242) { // specials
-				int len = opcode-238;
-				UInt32 bytes = readUnsigned(len);
-				seek(-len, ios_base::cur);
-				num_param_bytes = len+bytes;
-			}
-			else if (opcode >= 243 && opcode <= 246) { // fontdefs
-				int len = opcode-242;
-				len += 12;
-				seek(len, ios_base::cur);         // skip fontnum, checksum, ssize, dsize
-				UInt32 bytes = readUnsigned(1);   // length of font path
-				bytes += readUnsigned(1);         // length of font name
-				seek(-len-2, ios_base::cur);
-				num_param_bytes = len+bytes;
-			}
-			else
-				num_param_bytes = commands[opcode-offset].length;
-		}
+		num_param_bytes = commands[opcode-offset].length;
 	}
 	if (param < 0)
 		param = num_param_bytes;
@@ -171,13 +151,13 @@ int DVIReader::evalCommand (bool compute_size, CommandHandler &handler, int &par
 
 /** Reads a single DVI command from the current position of the input stream and calls the
  *  corresponding cmdFOO method.
- *  @return opcode of the executed command */
+ *  @return opcode of the command executed */
 int DVIReader::executeCommand () {
 	SignalHandler::instance().check();
 	CommandHandler handler;
 	int param; // parameter of handler
-	streampos pos = tell();
-	int opcode = evalCommand(false, handler, param);
+	const streampos cmdpos = tell();
+	int opcode = evalCommand(handler, param);
 	(this->*handler)(param);
 	if (_dviState.v+_ty != _prevYPos) {
 		_tx = _ty = 0;
@@ -192,7 +172,7 @@ int DVIReader::executeCommand () {
 		if (peek() == 140)  // eop reached?
 			_pagePos = pagelen;
 		else
-			_pagePos += tell()-pos;
+			_pagePos += tell()-cmdpos;
 		_actions->progress(_pagePos, pagelen);
 	}
 	return opcode;
