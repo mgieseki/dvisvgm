@@ -134,7 +134,7 @@ bool GFReader::executeChar (UInt8 c) {
 	_in.clear();
 	Iterator it = _charInfoMap.find(c);
 	if (_in && it != _charInfoMap.end()) {
-		_in.seekg(it->second.location, ios_base::beg);
+		_in.seekg(it->second.location);
 		while (executeCommand() != 69);  // execute all commands until eoc is reached
 		return true;
 	}
@@ -165,7 +165,7 @@ bool GFReader::executePostamble () {
 		_in.seekg(-1, ios_base::cur);
 	_in.seekg(-4, ios_base::cur);
 	UInt32 q = readUnsigned(4);      // pointer to begin of postamble
-	_in.seekg(q, ios_base::beg);      // now on begin of postamble
+	_in.seekg(q);                    // now on begin of postamble
 	while (executeCommand() != 249); // execute all commands until postpost is reached
 	return true;
 }

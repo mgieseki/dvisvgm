@@ -60,18 +60,18 @@ static size_t getline (istream &is, char *line, size_t n) {
 EPSFile::EPSFile (const std::string& fname) : _ifs(fname.c_str(), ios::binary), _headerValid(false), _offset(0), _pslength(0)
 {
 	if (_ifs) {
-		if (getUInt32(_ifs) != 0xC6D3D0C5)     // no binary header present?
-			_ifs.seekg(0, ios_base::beg);       // go back to the first byte
+		if (getUInt32(_ifs) != 0xC6D3D0C5)  // no binary header present?
+			_ifs.seekg(0);                   // go back to the first byte
 		else {
-			_offset = getUInt32(_ifs);          // stream offset where PS part of the file begins
-			_pslength = getUInt32(_ifs);        // length of PS section in bytes
-			_ifs.seekg(_offset, ios_base::beg); // continue reading at the beginning of the PS section
+			_offset = getUInt32(_ifs);       // stream offset where PS part of the file begins
+			_pslength = getUInt32(_ifs);     // length of PS section in bytes
+			_ifs.seekg(_offset);             // continue reading at the beginning of the PS section
 		}
 		string str;
 		str += _ifs.get();
 		str += _ifs.get();
 		_headerValid = (str == "%!");
-		_ifs.seekg(0, ios_base::beg);
+		_ifs.seekg(0);
 	}
 }
 
@@ -80,7 +80,7 @@ EPSFile::EPSFile (const std::string& fname) : _ifs(fname.c_str(), ios::binary), 
  *  to the beginning of the ASCII (PostScript) part of the file. */
 istream& EPSFile::istream () const {
 	_ifs.clear();
-	_ifs.seekg(_offset, ios_base::beg);
+	_ifs.seekg(_offset);
 	return _ifs;
 }
 
