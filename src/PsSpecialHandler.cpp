@@ -367,8 +367,13 @@ void PsSpecialHandler::dviEndPage (unsigned) {
 			_actions->bbox().lock();
 		}
 		Message::mstream() << "\napplying bounding box set by preview package (version " << _previewFilter.version() << ")\n";
-		if (horiz_baseline)
-			Message::mstream() << "width=" << XMLString(w) << "pt, " "height=" << XMLString(h) << "pt, " "depth=" << XMLString(d) << "pt\n";
+		if (horiz_baseline) {
+			const double bp2pt = 72.27/72.0;
+			Message::mstream() <<
+				"width=" << XMLString(w*bp2pt) << "pt, "
+				"height=" << XMLString(h*bp2pt) << "pt, "
+				"depth=" << XMLString(d*bp2pt) << "pt\n";
+		}
 		else
 			Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
 	}
