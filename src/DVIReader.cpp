@@ -52,7 +52,6 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat
 	_currFontNum = 0;
 	_currPageNum = 0;
 	_pagePos = 0;
-	_prevBop = 0;
 	_mag = 1;
 	collectBopOffsets();
 }
@@ -314,7 +313,7 @@ void DVIReader::cmdPre (int) {
 /** Reads and executes DVI postamble command.
  *  Format: post p[4] num[4] den[4] mag[4] ph[4] pw[4] sd[2] np[2] */
 void DVIReader::cmdPost (int) {
-	_prevBop   = readUnsigned(4);  // pointer to previous bop
+	readUnsigned(4);  // skip pointer to previous bop
 	UInt32 num = readUnsigned(4);
 	UInt32 den = readUnsigned(4);
 	if (den == 0)

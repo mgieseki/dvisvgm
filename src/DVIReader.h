@@ -145,7 +145,6 @@ class DVIReader : public StreamReader, protected VFActions
 		double _dvi2bp;          ///< factor to convert dvi units to PS points
 		UInt32 _mag;             ///< magnification factor * 1000
 		bool _inPostamble;       ///< true if stream pointer is inside the postamble
-		Int32 _prevBop;          ///< pointer to previous bop
 		double _pageHeight, _pageWidth;  ///< page height and width in PS points
 		DVIState _dviState;      ///< current cursor position
 		std::stack<DVIState> _stateStack;
