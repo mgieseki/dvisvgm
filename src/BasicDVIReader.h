@@ -54,6 +54,7 @@ class BasicDVIReader : public StreamReader
 		virtual void translateToY (double y) {}
 		virtual int getStackDepth () const   {return 0;}
 		virtual void getPageTransformation (Matrix &matrix) const {}
+		virtual unsigned getCurrentPageNumber () const {return 0;}
 
 	protected:
 		void setDVIFormat (DVIFormat format);

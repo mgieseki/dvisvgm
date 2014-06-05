@@ -72,3 +72,9 @@ void EPSToSVG::convert () {
 	Message::mstream(false, Message::MC_PAGE_WRITTEN) << "graphic written to " << (svgfname.empty() ? "<stdout>" : svgfname) << '\n';
 }
 
+
+string EPSToSVG::getSVGFilename (unsigned pageno) const {
+	if (pageno == 1)
+		return _out.filename(1, 1);
+	return "";
+}

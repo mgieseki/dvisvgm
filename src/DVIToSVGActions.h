@@ -56,6 +56,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void getPageTransform (Matrix &matrix) const   {_dvireader->getPageTransformation(matrix);}
 		Color getColor () const                        {return _svg.getColor();}
 		int getDVIStackDepth() const                   {return _dvireader->getStackDepth();}
+		unsigned getCurrentPageNumber() const          {return _dvireader->getCurrentPageNumber();}
 		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
 		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
@@ -85,6 +86,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		BoundingBox& bbox (const std::string &name, bool reset=false);
 		void embed (const BoundingBox &bbox);
 		void embed (const DPair &p, double r=0);
+		std::string getSVGFilename (unsigned pageno) const;
 
 	public:
 		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)

@@ -53,8 +53,10 @@ struct SpecialActions
 	virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
 	virtual void embed (const BoundingBox &bbox) =0;
 	virtual void embed (const DPair &p, double r=0) =0;
+	virtual unsigned getCurrentPageNumber () const =0;
+	virtual std::string getSVGFilename (unsigned pageno) const =0;
 	virtual void progress (const char *id) {}
-	virtual int getDVIStackDepth () const {return 0;}
+	virtual int getDVIStackDepth () const  {return 0;}
 };
 
 
@@ -81,11 +83,12 @@ class SpecialEmptyActions : public SpecialActions
 		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
 		void embed (const BoundingBox &bbox) {}
 		void embed (const DPair &p, double r=0) {}
+		unsigned getCurrentPageNumber() const {return 0;}
+		std::string getSVGFilename (unsigned pageno) const {return "";}
 
 	private:
 		BoundingBox _bbox;
 		Matrix _matrix;
 };
-
 
 #endif

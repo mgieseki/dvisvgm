@@ -24,6 +24,18 @@
 using namespace std;
 
 
+PreScanDVIReader::PreScanDVIReader (std::istream &is, DVIActions *actions)
+	: BasicDVIReader(is), _actions(actions), _currentPageNumber(0)
+{
+}
+
+
+void PreScanDVIReader::cmdBop (int) {
+	_currentPageNumber++;
+	BasicDVIReader::cmdBop(0);
+}
+
+
 void PreScanDVIReader::cmdXXX (int len) {
 	UInt32 numBytes = readUnsigned(len);
 	string s = readString(numBytes);

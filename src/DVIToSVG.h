@@ -41,6 +41,7 @@ class DVIToSVG : public DVIReader
 		void setPageSize (const std::string &name)           {_bboxString = name;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		void getPageTransformation (Matrix &matrix) const;
+		std::string getSVGFilename (unsigned pageno) const;
 
    public:
       static char TRACE_MODE;

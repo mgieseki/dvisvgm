@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include <cassert>
 #include <sstream>
 #include "HtmlSpecialHandler.h"
 #include "InputReader.h"
@@ -35,6 +36,53 @@ Color HtmlSpecialHandler::LINK_LINECOLOR;
 bool HtmlSpecialHandler::USE_LINECOLOR = false;
 
 
+void HtmlSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActions *actions) {
+	if (!actions)
+		return;
+	_actions = actions;
+	StreamInputReader ir(is);
+	ir.skipSpace();
+	// collect page number and ID of named anchors
+	map<string,string> attribs;
+	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
+		map<string,string>::iterator it;
+		if ((it = attribs.find("name")) != attribs.end())
+			preprocessNameAnchor(it->second);
+		else if ((it = attribs.find("href")) != attribs.end())
+			preprocessHrefAnchor(it->second);
+	}
+}
+
+
+void HtmlSpecialHandler::preprocessNameAnchor (const string &name) {
+	NamedAnchors::iterator it = _namedAnchors.find(name);
+	if (it == _namedAnchors.end()) {  // anchor completely undefined?
+		int id = _namedAnchors.size()+1;
+		_namedAnchors[name] = NamedAnchor(_actions->getCurrentPageNumber(), id, 0);
+	}
+	else if (it->second.id < 0) {  // anchor referenced but not defined yet?
+		it->second.id *= -1;
+		it->second.pageno = _actions->getCurrentPageNumber();
+	}
+	else
+		Message::wstream(true) << "named hyperref anchor '" << name << "' redefined\n";
+}
+
+
+void HtmlSpecialHandler::preprocessHrefAnchor (const string &uri) {
+	if (uri[0] != '#')
+		return;
+	string name = uri.substr(1);
+	NamedAnchors::iterator it = _namedAnchors.find(name);
+	if (it != _namedAnchors.end())  // anchor already defined?
+		it->second.referenced = true;
+	else {
+		int id = _namedAnchors.size()+1;
+		_namedAnchors[name] = NamedAnchor(0, -id, 0, true);
+	}
+}
+
+
 bool HtmlSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
 	if (!actions)
 		return true;
@@ -45,9 +93,9 @@ bool HtmlSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 	map<string,string>::iterator it;
 	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
 		if ((it = attribs.find("href")) != attribs.end())   // <a href="URI">
-			hrefAnchor(it->second);
+			processHrefAnchor(it->second);
 		else if ((it = attribs.find("name")) != attribs.end())  // <a name="ID">
-			nameAnchor(it->second);
+			processNameAnchor(it->second);
 		else
 			return false;  // none or only invalid attributes
 	}
@@ -63,15 +111,22 @@ bool HtmlSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 
 /** Handles anchors with href attribute: <a href="URI">...</a>
  *  @param uri value of href attribute */
-void HtmlSpecialHandler::hrefAnchor (string uri) {
+void HtmlSpecialHandler::processHrefAnchor (string uri) {
 	closeAnchor();
-	int id=0;
+	string name;
 	if (uri[0] == '#') {  // reference to named anchor?
-		string name = uri.substr(1);
+		name = uri.substr(1);
 		NamedAnchors::iterator it = _namedAnchors.find(name);
-		if (it == _namedAnchors.end()) {
-			id = _namedAnchors.size()+1;
-			_namedAnchors[name] = NamedAnchor(-id, 0);
+		if (it == _namedAnchors.end() || it->second.id < 0)
+			Message::wstream(true) << "reference to undefined anchor '" << name << "'\n";
+		else {
+			int id = it->second.id;
+			uri = "#loc"+XMLString(id);
+			if (_actions->getCurrentPageNumber() != it->second.pageno) {
+				ostringstream oss;
+				oss << _actions->getSVGFilename(it->second.pageno) << uri;
+				uri = oss.str();
+			}
 		}
 	}
 	if (!_base.empty() && uri.find("://") != string::npos) {
@@ -80,8 +135,8 @@ void HtmlSpecialHandler::hrefAnchor (string uri) {
 		uri = _base + uri;
 	}
 	XMLElementNode *anchor = new XMLElementNode("a");
-	anchor->addAttribute("xlink:href", id ? "#loc"+XMLString(id) : uri);
-	anchor->addAttribute("xlink:title", uri);
+	anchor->addAttribute("xlink:href", uri);
+	anchor->addAttribute("xlink:title", name.empty() ? uri : name);
 	_actions->pushContextElement(anchor);
 	_actions->bbox("{anchor}", true);  // start computing the bounding box of the linked area
 	_depthThreshold = _actions->getDVIStackDepth();
@@ -91,20 +146,11 @@ void HtmlSpecialHandler::hrefAnchor (string uri) {
 
 /** Handles anchors with name attribute: <a name="NAME">...</a>
  *  @param name value of name attribute */
-void HtmlSpecialHandler::nameAnchor (const string &name) {
+void HtmlSpecialHandler::processNameAnchor (const string &name) {
 	closeAnchor();
-	_anchorName = name;
 	NamedAnchors::iterator it = _namedAnchors.find(name);
-	if (it == _namedAnchors.end()) { // first occurrence of this anchor
-		int id = _namedAnchors.size()+1;
-		_namedAnchors[name] = NamedAnchor(id, _actions->getY());
-	}
-	else if (it->second.id < 0) {   // anchor referenced but not defined yet
-		it->second.id *= -1;
-		it->second.pos = _actions->getY();
-	}
-	else
-		Message::wstream(true) << "named hyperref anchor '" << name << "' redefined\n";
+	assert(it != _namedAnchors.end());
+	it->second.pos = _actions->getY();
 	_anchorType = AT_NAME;
 }
 
@@ -116,8 +162,6 @@ void HtmlSpecialHandler::closeAnchor () {
 		_actions->popContextElement();
 		_depthThreshold = 0;
 	}
-	else if (_anchorType == AT_NAME)
-		_anchorName.clear();
 	_anchorType = AT_NONE;
 }
 
@@ -206,7 +250,7 @@ void HtmlSpecialHandler::dviEndPage (unsigned pageno) {
 		// create views for all collected named anchors defined on the recent page
 		const BoundingBox &pagebox = _actions->bbox();
 		for (NamedAnchors::iterator it=_namedAnchors.begin(); it != _namedAnchors.end(); ++it) {
-			if (it->second.id > 0) {  // current anchor referenced?
+			if (it->second.pageno == pageno && it->second.referenced) {  // current anchor referenced?
 				ostringstream oss;
 				oss << pagebox.minX() << ' ' << it->second.pos << ' '
 					 << pagebox.width() << ' ' << pagebox.height();
@@ -217,7 +261,6 @@ void HtmlSpecialHandler::dviEndPage (unsigned pageno) {
 			}
 		}
 		closeAnchor();
-		_namedAnchors.clear();
 		_actions = 0;
 	}
 }

@@ -28,13 +28,16 @@ struct DVIActions;
 class PreScanDVIReader : public BasicDVIReader
 {
 	public:
-		PreScanDVIReader (std::istream &is, DVIActions *actions) : BasicDVIReader(is), _actions(actions) {}
+		PreScanDVIReader (std::istream &is, DVIActions *actions);
+		unsigned getCurrentPageNumber () const {return _currentPageNumber;}
 
 	protected:
+		void cmdBop (int);
 		void cmdXXX (int len);
 
 	private:
 		DVIActions *_actions;
+		unsigned _currentPageNumber;
 };
 
 #endif

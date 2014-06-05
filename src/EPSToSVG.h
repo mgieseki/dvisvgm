@@ -55,8 +55,10 @@ class EPSToSVG : protected SpecialActions
 		void popContextElement ()                      {_svg.popContextElement();}
 		void embed (const BoundingBox &bbox)           {_bbox.embed(bbox);}
 		void embed (const DPair &p, double r=0)        {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
+		unsigned getCurrentPageNumber() const          {return 0;}
 		BoundingBox& bbox ()                           {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
+		std::string getSVGFilename (unsigned pageno) const;
 
 	private:
 		std::string _fname;   ///< name of EPS file

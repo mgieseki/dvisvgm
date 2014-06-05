@@ -446,7 +446,7 @@ accordingly. If a negative zoom factor is given, the 'width' and 'height' attrib
 SUPPORT OF SPECIALS
 -------------------
 dvisvgm supports several sets of 'special commands' that can be used to enrich DVI files with additional
-features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to various
+features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
 handlers. Each handler is responsible for all special statements of the same command set, i.e. commands
 beginning with the same prefix. To get a list of actually provided special handlers, use option
 *--list-specials* (see above). This section gives an overview of the special commands currently supported.
@@ -523,10 +523,8 @@ dvisvgm supports only the line drawing statements and ignores all other em speci
 A description of the command syntax can be found in the DVI driver documentation coming with emTeX (see CTAN).
 
 *html*::
-The hyperref specials allow the definition of hyperlinks inside DVI files in various flavors. dvisvgm supports
-the plain HyperTeX special constructs as created with hyperref package option 'hypertex'. Internal links, i.e.
-references to other parts of the same document, are only converted if the link and the corresponding link target
-are located on the same page. Links between different pages are not supported yet.
+The hyperref specification defines several variants on how to mark hyperlinked areas in a DVI file. dvisvgm
+supports the plain HyperTeX special constructs as created with hyperref package option 'hypertex'.
 By default, all linked areas of the document are marked by a rectangle. Option *--linkmark* allows to change
 this behavior. See above for further details. Information on syntax and semantics of the HyperTeX specials can be
 found in the hyperref manual.

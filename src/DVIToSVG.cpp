@@ -326,3 +326,8 @@ void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 		SpecialManager::instance().registerHandlers(p, ignorelist);
 	}
 }
+
+
+string DVIToSVG::getSVGFilename (unsigned pageno) const {
+	return _out.filename(pageno, numberOfPages());
+}
