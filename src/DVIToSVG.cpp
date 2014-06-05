@@ -94,7 +94,7 @@ class PSHeaderActions : public DVIActions
 char DVIToSVG::TRACE_MODE = 0;
 
 
-DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out), _scannedPostamble(false)
+DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
 {
 	replaceActions(new DVIToSVGActions(*this, _svg));
 }
@@ -110,11 +110,6 @@ DVIToSVG::~DVIToSVG () {
  *  @param[in] last number of last page to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
 void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
-	if (!_scannedPostamble) { // pre- and postamble not scanned yet?
-		executePreamble();
-		executePostamble();    // collect scaling information
-		_scannedPostamble = true;
-	}
 	if (first > last)
 		swap(first, last);
 	if (first > numberOfPages()) {

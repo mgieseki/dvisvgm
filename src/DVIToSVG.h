@@ -60,7 +60,6 @@ class DVIToSVG : public DVIReader
 		std::string _bboxString;
 		std::string _transCmds;
 		SpecialManager _specialManager;
-		bool _scannedPostamble;
 };
 
 #endif

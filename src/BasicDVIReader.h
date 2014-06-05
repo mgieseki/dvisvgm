@@ -49,6 +49,7 @@ class BasicDVIReader : public StreamReader
 
 	protected:
 		void setDVIFormat (DVIFormat format);
+		DVIFormat getDVIFormat () const {return _dviFormat;}
 		virtual int evalCommand (CommandHandler &handler, int &param);
 		virtual int executeCommand ();
 		void executePostPost ();

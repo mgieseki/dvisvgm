@@ -54,6 +54,8 @@ DVIReader::DVIReader (istream &is, DVIActions *a) : BasicDVIReader(is), _actions
 	_pagePos = 0;
 	_mag = 1;
 	collectBopOffsets();
+	executePreamble();
+	executePostamble();
 }
 
 
