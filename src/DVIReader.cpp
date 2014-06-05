@@ -41,7 +41,7 @@ using namespace std;
 bool DVIReader::COMPUTE_PROGRESS = false;
 
 
-DVIReader::DVIReader (istream &is, DVIActions *a) : StreamReader(is), _dviFormat(DVI_NONE), _actions(a)
+DVIReader::DVIReader (istream &is, DVIActions *a) : BasicDVIReader(is), _actions(a)
 {
 	_inPage = false;
 	_pageHeight = _pageWidth = 0;
@@ -61,90 +61,6 @@ DVIActions* DVIReader::replaceActions (DVIActions *a) {
 	DVIActions *prev_actions = _actions;
 	_actions = a;
 	return prev_actions;
-}
-
-
-/** Evaluates the next DVI command, and computes the corresponding handler.
- *  @param[in] compute_size if true, the size of variable-length parameters is computed
- *  @param[out] handler handler for current DVI command
- *  @param[out] length number of parameter bytes
- *  @param[out] param the handler must be called with this parameter
- *  @return opcode of current DVI command */
-int DVIReader::evalCommand (CommandHandler &handler, int &param) {
-	struct DVICommand {
-		CommandHandler handler;
-		int length;  // number of parameter bytes
-	};
-
-   /* Each cmdFOO command reads the necessary number of bytes from the stream, so executeCommand
-   doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
-	DVI commands because they only differ in length of their parameters. */
-	static const DVICommand commands[] = {
-		{&DVIReader::cmdSetChar, 1}, {&DVIReader::cmdSetChar, 2}, {&DVIReader::cmdSetChar, 3}, {&DVIReader::cmdSetChar, 4}, // 128-131
-		{&DVIReader::cmdSetRule, 8},                                                                                        // 132
-		{&DVIReader::cmdPutChar, 1}, {&DVIReader::cmdPutChar, 2}, {&DVIReader::cmdPutChar, 3}, {&DVIReader::cmdPutChar, 4}, // 133-136
-		{&DVIReader::cmdPutRule, 8},                                                                                        // 137
-		{&DVIReader::cmdNop, 0},                                                                                            // 138
-		{&DVIReader::cmdBop, 44},    {&DVIReader::cmdEop, 0},                                                               // 139-140
-		{&DVIReader::cmdPush, 0},    {&DVIReader::cmdPop, 0},                                                               // 141-142
-		{&DVIReader::cmdRight, 1},   {&DVIReader::cmdRight, 2},   {&DVIReader::cmdRight, 3},   {&DVIReader::cmdRight, 4},   // 143-146
-		{&DVIReader::cmdW0, 0},                                                                                             // 147
-		{&DVIReader::cmdW, 1},       {&DVIReader::cmdW, 2},       {&DVIReader::cmdW, 3},       {&DVIReader::cmdW, 4},       // 148-151
-		{&DVIReader::cmdX0, 0},                                                                                             // 152
-		{&DVIReader::cmdX, 1},       {&DVIReader::cmdX, 2},       {&DVIReader::cmdX, 3},       {&DVIReader::cmdX, 4},       // 153-156
-		{&DVIReader::cmdDown, 1},    {&DVIReader::cmdDown, 2},    {&DVIReader::cmdDown, 3},    {&DVIReader::cmdDown, 4},    // 157-160
-		{&DVIReader::cmdY0, 0},                                                                                             // 161
-		{&DVIReader::cmdY, 1},       {&DVIReader::cmdY, 2},       {&DVIReader::cmdY, 3},       {&DVIReader::cmdY, 4},       // 162-165
-		{&DVIReader::cmdZ0, 0},                                                                                             // 166
-		{&DVIReader::cmdZ, 1},       {&DVIReader::cmdZ, 2},       {&DVIReader::cmdZ, 3},       {&DVIReader::cmdZ, 4},       // 167-170
-		{&DVIReader::cmdFontNum, 1}, {&DVIReader::cmdFontNum, 2}, {&DVIReader::cmdFontNum, 3}, {&DVIReader::cmdFontNum, 4}, // 235-238
-		{&DVIReader::cmdXXX, 1},     {&DVIReader::cmdXXX, 2},     {&DVIReader::cmdXXX, 3},     {&DVIReader::cmdXXX, 4},     // 239-242
-		{&DVIReader::cmdFontDef, 1}, {&DVIReader::cmdFontDef, 2}, {&DVIReader::cmdFontDef, 3}, {&DVIReader::cmdFontDef, 4}, // 243-246
-		{&DVIReader::cmdPre, 0},     {&DVIReader::cmdPost, 0},    {&DVIReader::cmdPostPost, 0},                             // 247-249
-		{&DVIReader::cmdXPic, 0},    {&DVIReader::cmdXFontDef, 0},{&DVIReader::cmdXGlyphA, 0}, {&DVIReader::cmdXGlyphS, 0}  // 251-254
-	};
-
-	const int opcode = readByte();
-	if (!isStreamValid() || opcode < 0)  // at end of file
-		throw InvalidDVIFileException("invalid DVI file");
-
-	int num_param_bytes = 0;
-	param = -1;
-	if (opcode >= 0 && opcode <= 127) {
-		handler = &DVIReader::cmdSetChar0;
-		param = opcode;
-	}
-	else if (opcode >= 171 && opcode <= 234) {
-		handler = &DVIReader::cmdFontNum0;
-		param = opcode-171;
-	}
-	else if (opcode >= 251 && opcode <= 254 && _dviFormat == DVI_XDV) {  // XDV command?
-		static const CommandHandler handlers[] = {
-			&DVIReader::cmdXPic,
-			&DVIReader::cmdXFontDef,
-			&DVIReader::cmdXGlyphA,
-			&DVIReader::cmdXGlyphS
-		};
-		handler = handlers[opcode-251];
-		param = 0;
-	}
-	else if (opcode == 255 && _dviFormat == DVI_PTEX) {  // direction command set by pTeX?
-		handler = &DVIReader::cmdDir;
-		num_param_bytes = 1;
-	}
-	else if (opcode >= 250) {
-		ostringstream oss;
-		oss << "undefined DVI command (opcode " << opcode << ')';
-		throw DVIException(oss.str());
-	}
-	else {
-		const int offset = opcode <= 170 ? 128 : 235-(170-128+1);
-		handler = commands[opcode-offset].handler;
-		num_param_bytes = commands[opcode-offset].length;
-	}
-	if (param < 0)
-		param = num_param_bytes;
-	return opcode;
 }
 
 
@@ -230,9 +146,16 @@ static void to_postamble (StreamReader &reader) {
 	reader.clearStream();
 	if (!reader.isStreamValid())
 		throw DVIException("invalid DVI file");
+
 	reader.seek(-1, ios_base::end);     // stream pointer to last byte
-	while (reader.peek() == 223)
+	int count=0;
+	while (reader.peek() == 223) {
 		reader.seek(-1, ios_base::cur);  // skip fill bytes
+		count++;
+	}
+	if (count < 4)  // the standard requires at least 4 trailing fill bytes
+		throw DVIException("missing fill bytes at end of file");
+
 	reader.seek(-4, ios_base::cur);     // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = reader.readUnsigned(4);  // pointer to begin of postamble
 	reader.seek(q);                     // now on begin of postamble
@@ -242,7 +165,7 @@ static void to_postamble (StreamReader &reader) {
 /** Reads and executes the commands of the postamble. */
 void DVIReader::executePostamble () {
 	to_postamble(*this);
-	while (executeCommand() != 249);  // executes all commands until postpost (= 249) is reached
+	while (executeCommand() != 249);  // executes all commands until post_post (= 249) is reached
 }
 
 
@@ -275,26 +198,12 @@ double DVIReader::getYPos () const {
 }
 
 
-void DVIReader::verifyDVIFormat (int id) const {
-	switch (id) {
-		case DVI_STANDARD:
-		case DVI_PTEX:
-		case DVI_XDV:
-			break;
-		default:
-			ostringstream oss;
-			oss << "DVI format version " << id << " not supported";
-			throw DVIException(oss.str());
-	}
-}
-
 /////////////////////////////////////
 
 /** Reads and executes DVI preamble command.
  *  Format: pre ver[1] num[4] den[4] mag[4] cmtlen[1] cmt[cmtlen] */
 void DVIReader::cmdPre (int) {
-	_dviFormat = max(_dviFormat, (DVIFormat)readUnsigned(1)); // identification number
-	verifyDVIFormat(_dviFormat);
+	setDVIFormat((DVIFormat)readUnsigned(1)); // identification number
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
 	if (den == 0)
@@ -336,12 +245,12 @@ void DVIReader::cmdPost (int) {
 }
 
 
-/** Reads and executes DVI postpost command. */
+/** Reads and executes DVI post_post command.
+ *  Format: post_post q[4] i[1] 223[>=4] */
 void DVIReader::cmdPostPost (int) {
 	_inPostamble = false;
 	readUnsigned(4);   // pointer to begin of postamble
-	_dviFormat = max(_dviFormat, (DVIFormat)readUnsigned(1));  // identification byte
-	verifyDVIFormat(_dviFormat);
+	setDVIFormat((DVIFormat)readUnsigned(1));  // identification byte
 	while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
 }
 

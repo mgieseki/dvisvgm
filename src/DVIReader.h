@@ -25,29 +25,17 @@
 #include <map>
 #include <stack>
 #include <string>
+#include "BasicDVIReader.h"
 #include "MessageException.h"
 #include "StreamReader.h"
 #include "VFActions.h"
 #include "types.h"
 
 
-struct DVIException : public MessageException
-{
-	DVIException (const std::string &msg) : MessageException(msg) {}
-};
-
-struct InvalidDVIFileException : public DVIException
-{
-	InvalidDVIFileException(const std::string &msg) : DVIException(msg) {}
-};
-
 struct DVIActions;
-struct FileFinder;
 
-class DVIReader : public StreamReader, protected VFActions
+class DVIReader : public BasicDVIReader, protected VFActions
 {
-	typedef void (DVIReader::*CommandHandler)(int);
-	enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV=5};
 	enum WritingMode {WMODE_LR=0, WMODE_TB=1, WMODE_BT=3};
 
 	struct DVIState
@@ -64,7 +52,6 @@ class DVIReader : public StreamReader, protected VFActions
 
 		bool executeDocument ();
 		void executeAll ();
-		bool executeAllPages ();
 		void executePreamble ();
 		void executePostamble ();
 		bool executePage (unsigned n);
@@ -84,11 +71,9 @@ class DVIReader : public StreamReader, protected VFActions
 		DVIActions* replaceActions (DVIActions *a);
 
 	protected:
-		void verifyDVIFormat (int id) const;
 		void collectBopOffsets ();
 		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
 		int executeCommand ();
-		int evalCommand (CommandHandler &handler, int &param);
 		void moveRight (double dx);
 		void moveDown (double dy);
 		void putChar (UInt32 c, bool moveCursor);
@@ -137,7 +122,6 @@ class DVIReader : public StreamReader, protected VFActions
 		void cmdXGlyphS (int len);
 
 	private:
-		DVIFormat _dviFormat;    ///< format of DVI file currently processed
 		DVIActions *_actions;    ///< actions to be performed on various DVI events
 		bool _inPage;            ///< true if between bop and eop
 		unsigned _currPageNum;   ///< current page number (1 is first page)

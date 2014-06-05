@@ -13,6 +13,8 @@ dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 
 libdvisvgm_a_SOURCES = \
+	BasicDVIReader.cpp \
+	BasicDVIReader.h \
 	BgColorSpecialHandler.cpp \
 	BgColorSpecialHandler.h \
 	Bitmap.cpp \
