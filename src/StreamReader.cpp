@@ -25,11 +25,6 @@
 
 using namespace std;
 
-StreamReader::StreamReader (istream &s)
-	: _is(&s)
-{
-}
-
 
 istream& StreamReader::replaceStream (istream &in) {
 	istream &ret = *_is;

@@ -54,38 +54,11 @@
 	#include "PsSpecialHandler.h"
 #endif
 #include "TpicSpecialHandler.h"
+#include "PreScanDVIReader.h"
 
 ///////////////////////////////////
 
-
 using namespace std;
-
-
-class PSHeaderActions : public DVIActions
-{
-	public :
-		PSHeaderActions (DVIToSVG &dvisvg) : _dvisvg(dvisvg) {}
-
-		void special (const std::string &str, double dvi2bp) {
-			// execute PS headers only
-			if (!str.empty() && (str[0] == '!' || str.substr(0, 7) == "header="))
-				_dvisvg.specialManager().process(str, dvi2bp, 0);
-		}
-
-		bool fontProcessingEnabled () const {
-			return false;
-		}
-
-		void endPage (unsigned) {
-			_dvisvg.specialManager().leavePSHeaderSection();
-		}
-
-		BoundingBox& bbox () {return _bbox;}
-
-	private:
-		DVIToSVG &_dvisvg;
-		BoundingBox _bbox;
-};
 
 
 /** 'a': trace all glyphs even if some of them are already cached
@@ -121,21 +94,6 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 	}
 	last = min(last, numberOfPages());
 
-#ifndef DISABLE_GS
-	// ensure loading of PostScript prologues given at the beginning of the first page
-	// (prologue files are always referenced in first page)
-	PSHeaderActions headerActions(*this);
-	DVIActions *save = replaceActions(&headerActions);
-	try {
-		executePage(1);
-		replaceActions(save);
-	}
-	catch (PSException &e) {
-		replaceActions(save);
-		throw;
-	}
-#endif
-
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
 		embedFonts(_svg.rootNode());
@@ -159,6 +117,10 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	PageRanges ranges;
 	if (!ranges.parse(rangestr, numberOfPages()))
 		throw MessageException("invalid page range format");
+
+	Message::mstream(false, Message::MC_PAGE_NUMBER) << "pre-processing DVI file (format "  << getDVIFormat() << ")\n";
+	PreScanDVIReader prescan(getInputStream(), getActions());
+	prescan.executeAllPages();
 
 	FORALL(ranges, PageRanges::ConstIterator, it)
 		convert(it->first, it->second);

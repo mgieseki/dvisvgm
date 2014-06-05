@@ -31,8 +31,8 @@ class CRC32;
 
 class StreamReader
 {
-   public:
-		StreamReader (std::istream &s);
+	public:
+		StreamReader (std::istream &is) : _is(&is) {}
 		virtual ~StreamReader () {}
 		bool isStreamValid () const {return _is;}
 		bool eof () const           {return _is->eof();}
@@ -48,14 +48,17 @@ class StreamReader
 		std::string readString (int length, CRC32 &crc32);
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
 		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
-		int readByte ()                {return _is->get();}
+		int readByte ()                 {return _is->get();}
 		int readByte (CRC32 &crc32);
 		void seek (std::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}
-		void seek (std::streampos pos) {_is->seekg(pos);}
-		std::streampos tell () const   {return _is->tellg();}
-		int peek () const              {return _is->peek();}
+		void seek (std::streampos pos)  {_is->seekg(pos);}
+		std::streampos tell () const    {return _is->tellg();}
+		int peek () const               {return _is->peek();}
 
-   private:
+	protected:
+		std::istream& getInputStream () {return *_is;}
+
+	private:
 		std::istream *_is;
 };
 

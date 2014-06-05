@@ -149,11 +149,33 @@ static void exec_and_syncpos (PSInterpreter &psi, istream &is, const DPair &pos,
 }
 
 
+void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActions *actions) {
+	initialize();
+	if (_psSection != PS_HEADERS)
+		return;
+
+	_actions = actions;
+	if (*prefix == '!') {
+		_headerCode += "\n";
+		_headerCode += string(istreambuf_iterator<char>(is), istreambuf_iterator<char>());
+	}
+	else if (strcmp(prefix, "header=") == 0) {
+		// read and execute PS header file
+		string fname;
+		is >> fname;
+		processHeaderFile(fname.c_str());
+	}
+}
+
 
 bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+	// process PS headers only once (in prescan)
+	if (*prefix == '!' || strcmp(prefix, "header=") == 0)
+		return true;
+
 	_actions = actions;
 	initialize();
-	if (_psSection != PS_BODY && *prefix != '!' && strcmp(prefix, "header=") != 0)
+	if (_psSection != PS_BODY)
 		enterBodySection();
 
 	if (*prefix == '"') {
@@ -162,20 +184,6 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		_psi.execute("\n@beginspecial @setspecial ");
 		_psi.execute(is);
 		_psi.execute("\n@endspecial ");
-	}
-	else if (*prefix == '!') {
-		if (_psSection == PS_HEADERS) {
-			_headerCode += "\n";
-			_headerCode += string(istreambuf_iterator<char>(is), istreambuf_iterator<char>());
-		}
-	}
-	else if (strcmp(prefix, "header=") == 0) {
-		if (_psSection == PS_HEADERS) {
-			// read and execute PS header file
-			string fname;
-			is >> fname;
-			processHeaderFile(fname.c_str());
-		}
 	}
 	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
 		if (_actions) {
@@ -876,4 +884,3 @@ const char** PsSpecialHandler::prefixes () const {
 	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", 0};
 	return pfx;
 }
-

@@ -1,5 +1,5 @@
 /*************************************************************************
-** SpecialHandler.h                                                     **
+** PreScanDVIReader.cpp                                                 **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2014 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,50 +18,15 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVISVGM_SPECIALHANDLER_H
-#define DVISVGM_SPECIALHANDLER_H
+#include "DVIActions.h"
+#include "PreScanDVIReader.h"
 
-#include <istream>
-#include <list>
-#include "MessageException.h"
+using namespace std;
 
 
-struct SpecialActions;
-class  SpecialManager;
-
-
-struct SpecialException : public MessageException
-{
-	SpecialException (const std::string &msg) : MessageException(msg) {}
-};
-
-
-struct DVIEndPageListener
-{
-	virtual ~DVIEndPageListener () {}
-	virtual void dviEndPage (unsigned pageno) =0;
-};
-
-
-struct DVIPositionListener
-{
-	virtual ~DVIPositionListener () {}
-	virtual void dviMovedTo (double x, double y) =0;
-};
-
-
-struct SpecialHandler
-{
-	friend class SpecialManager;
-
-	virtual ~SpecialHandler () {}
-	virtual const char** prefixes () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const=0;
-	virtual void setDviScaleFactor (double dvi2bp) {}
-	virtual void preprocess (const char *prefix, std::istream &is, SpecialActions *actions) {}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
-};
-
-
-#endif
+void PreScanDVIReader::cmdXXX (int len) {
+	UInt32 numBytes = readUnsigned(len);
+	string s = readString(numBytes);
+	if (_actions)
+		_actions->special(s, 0, true);  // pre-process special
+}

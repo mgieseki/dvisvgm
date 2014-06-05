@@ -31,14 +31,6 @@ struct SpecialActions;
 
 class SpecialManager
 {
-	public:
-		struct Listener
-		{
-			virtual ~Listener () {}
-			virtual void beginSpecial (const char *prefix)=0;
-			virtual void endSpecial (const char *prefix)=0;
-		};
-
 	private:
 		typedef std::vector<SpecialHandler*> HandlerPool;
 		typedef std::map<std::string,SpecialHandler*> HandlerMap;
@@ -51,7 +43,8 @@ class SpecialManager
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		void unregisterHandlers ();
-		bool process (const std::string &special, double dvi2bp, SpecialActions *actions, Listener *listener=0) const;
+		void preprocess (const std::string &special, SpecialActions *actions) const;
+		bool process (const std::string &special, double dvi2bp, SpecialActions *actions) const;
 		void notifyEndPage (unsigned pageno) const;
 		void notifyPositionChange (double x, double y) const;
 		void writeHandlerInfo (std::ostream &os) const;

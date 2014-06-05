@@ -37,7 +37,7 @@ struct FileFinder;
 struct Font;
 struct XMLNode;
 
-class DVIToSVGActions : public DVIActions, public SpecialActions, public SpecialManager::Listener
+class DVIToSVGActions : public DVIActions, public SpecialActions
 {
 	typedef std::map<const Font*, std::set<int> > CharMap;
 	typedef std::set<const Font*> FontSet;
@@ -65,13 +65,11 @@ class DVIToSVGActions : public DVIActions, public SpecialActions, public Special
 		void moveToX (double x);
 		void moveToY (double y);
 		void setFont (int num, const Font *font);
-		void special (const std::string &s, double dvi2bp);
+		void special (const std::string &s, double dvi2bp, bool preprocessing=false);
 		void preamble (const std::string &cmt);
 		void postamble ();
 		void beginPage (unsigned pageno, Int32 *c);
 		void endPage (unsigned pageno);
-		void beginSpecial (const char *prefix);
-		void endSpecial (const char *prefix);
 		void progress (size_t current, size_t total, const char *id=0);
 		void progress (const char *id);
 		CharMap& getUsedChars () const        {return _usedChars;}

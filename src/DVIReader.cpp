@@ -322,9 +322,6 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 	if (!_inPage)
 		throw DVIException("set_char/put_char outside of page");
 
-	if (_actions && !_actions->fontProcessingEnabled())
-		return;
-
 	FontManager &fm = FontManager::instance();
 	Font *font = fm.getFont(_currFontNum);
 	if (!font)
@@ -507,9 +504,6 @@ void DVIReader::cmdXXX (int len) {
  * @param[in] num font number
  * @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int num) {
-	if (_actions && !_actions->fontProcessingEnabled())
-		return;
-
 	if (Font *font = FontManager::instance().getFont(num)) {
 		_currFontNum = num;
 		if (_actions && !dynamic_cast<VirtualFont*>(font))
@@ -539,8 +533,9 @@ void DVIReader::cmdFontNum (int len) {
  *  @param[in] ds design size in PS point units
  *  @param[in] ss scaled size in PS point units */
 void DVIReader::defineFont (UInt32 fontnum, const string &name, UInt32 cs, double ds, double ss) {
-	if (_actions && !_actions->fontProcessingEnabled())
+	if (!_inPostamble)  // only process font definitions collected in the postamble; skip all others
 		return;
+
 	FontManager &fm = FontManager::instance();
 	int id = fm.registerFont(fontnum, name, cs, ds, ss);
 	Font *font = fm.getFontById(id);
@@ -570,7 +565,6 @@ void DVIReader::cmdFontDef (int len) {
 	string fontpath = readString(pathlen);
 	string fontname = readString(namelen);
 
-	// @@ TODO: avoid processing the font definitions in the postamble
 	defineFont(fontnum, fontname, checksum, dsize*_dvi2bp, ssize*_dvi2bp);
 }
 
@@ -642,7 +636,7 @@ void DVIReader::cmdXFontDef (int) {
 		for (int i=0; i < num_variations; i++)
 			readUnsigned(4);
 	}
-	if (_inPage && _actions && _actions->fontProcessingEnabled())
+	if (_inPage)
 		FontManager::instance().registerFont(fontnum, fontname, ptsize, style, color);
 }
 
@@ -673,7 +667,9 @@ void DVIReader::putGlyphArray (bool xonly) {
 		x[i] = readSigned(4);
 		y[i] = xonly ? 0 : readSigned(4);
 	}
-	if (_actions && _actions->fontProcessingEnabled()) {
+	if (!_actions)
+		seek(2*num_glyphs, ios::cur);
+	else {
 		if (Font *font = FontManager::instance().getFont(_currFontNum)) {
 			for (int i=0; i < num_glyphs; i++) {
 				UInt16 glyph_index = readUnsigned(2);
@@ -682,10 +678,6 @@ void DVIReader::putGlyphArray (bool xonly) {
 				_actions->setChar(xx, yy, glyph_index, false, font);
 			}
 		}
-	}
-	else {
-		for (int i=0; i < num_glyphs; i++)
-			readUnsigned(2);
 	}
 	moveRight(strwidth);
 }

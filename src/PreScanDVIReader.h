@@ -1,5 +1,5 @@
 /*************************************************************************
-** DVIToSVG.h                                                           **
+** PreScanDVIReader.h                                                   **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2014 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,48 +18,23 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVISVGM_DVITOSVG_H
-#define DVISVGM_DVITOSVG_H
+#ifndef PRESCANDVIREADER_H
+#define PRESCANDVIREADER_H
 
-#include <iostream>
-#include <string>
-#include <utility>
-#include "DVIReader.h"
-#include "SpecialManager.h"
-#include "SVGTree.h"
+#include "BasicDVIReader.h"
 
-class Matrix;
-struct SVGOutputBase;
+struct DVIActions;
 
-class DVIToSVG : public DVIReader
+class PreScanDVIReader : public BasicDVIReader
 {
-   public:
-      DVIToSVG (std::istream &is, SVGOutputBase &out);
-		~DVIToSVG ();
-		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
-		const SpecialManager* setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
-		const SpecialManager& specialManager () const        {return _specialManager;}
-		void setPageSize (const std::string &name)           {_bboxString = name;}
-		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
-		void getPageTransformation (Matrix &matrix) const;
-
-   public:
-      static char TRACE_MODE;
+	public:
+		PreScanDVIReader (std::istream &is, DVIActions *actions) : BasicDVIReader(is), _actions(actions) {}
 
 	protected:
-		DVIToSVG (const DVIToSVG &);
-		DVIToSVG operator = (const DVIToSVG &);
-		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
-		void beginPage (unsigned pageno, Int32 *c);
-		void endPage (unsigned pageno);
-		void embedFonts (XMLElementNode *svgElement);
+		void cmdXXX (int len);
 
-   private:
-		SVGTree _svg;
-		SVGOutputBase &_out;
-		std::string _bboxString;
-		std::string _transCmds;
-		SpecialManager _specialManager;
+	private:
+		DVIActions *_actions;
 };
 
 #endif

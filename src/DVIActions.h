@@ -38,16 +38,14 @@ struct DVIActions
 	virtual void setTextOrientation (bool vertical) {}
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
-	virtual bool fontProcessingEnabled () const {return true;}
 	virtual void defineFont (int num, const Font *font) {}
 	virtual void setFont (int num, const Font *font) {}
-	virtual void special (const std::string &s, double dvi2bp) {}
+	virtual void special (const std::string &s, double dvi2bp, bool preprocessing=false) {}
 	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
 	virtual void beginPage (unsigned pageno, Int32 *c) {}
 	virtual void endPage (unsigned pageno) {}
 	virtual BoundingBox& bbox () =0;
-	virtual const SpecialManager* setProcessSpecials (const char *ignorelist) {return 0;}
 	virtual void progress (size_t current, size_t total, const char *id=0) {}
 };
 

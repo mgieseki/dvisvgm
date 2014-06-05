@@ -125,6 +125,8 @@ libdvisvgm_a_SOURCES = \
 	Pair.h \
 	PdfSpecialHandler.cpp \
 	PdfSpecialHandler.h \
+	PreScanDVIReader.cpp \
+	PreScanDVIReader.h \
 	Process.cpp \
 	Process.h \
 	psdefs.cpp \

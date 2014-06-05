@@ -194,24 +194,20 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 
 
 /** This method is called when a "special" command was found in the DVI file.
- *  @param[in] s the special expression
- *  @param[in] dvi2bp factor to scale DVI units to PS points */
-void DVIToSVGActions::special (const string &s, double dvi2bp) {
+ *  @param[in] spc the special expression
+ *  @param[in] dvi2bp factor to scale DVI units to PS points
+ *  @param[in] preprocessing if true, the DVI file is being pre-processed */
+void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocessing) {
 	try {
-		_dvisvg.specialManager().process(s, dvi2bp, this, this);
+		if (preprocessing)
+			_dvisvg.specialManager().preprocess(spc, this);
+		else
+			_dvisvg.specialManager().process(spc, dvi2bp, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
-		Message::estream(true) << "error in special '" << s << "': " << e.what() << '\n';
+		Message::estream(true) << "error in special '" << spc << "': " << e.what() << '\n';
 	}
-}
-
-
-void DVIToSVGActions::beginSpecial (const char *prefix) {
-}
-
-
-void DVIToSVGActions::endSpecial (const char *) {
 }
 
 
