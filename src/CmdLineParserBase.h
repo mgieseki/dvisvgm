@@ -85,8 +85,8 @@ class CmdLineParserBase
 		bool getUIntArg (InputReader &ir, const Option &opt, bool longopt, unsigned &arg) const;
 		bool getDoubleArg (InputReader &ir, const Option &opt, bool longopt, double &arg) const;
 		bool getStringArg (InputReader &ir, const Option &opt, bool longopt, std::string &arg) const;
-      bool getBoolArg (InputReader &ir, const Option &opt, bool longopt, bool &arg) const;
-      bool getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const;
+		bool getBoolArg (InputReader &ir, const Option &opt, bool longopt, bool &arg) const;
+		bool getCharArg (InputReader &ir, const Option &opt, bool longopt, char &arg) const;
 		const Option* option (char shortname) const;
 		const Option* option (const std::string &longname) const;
 

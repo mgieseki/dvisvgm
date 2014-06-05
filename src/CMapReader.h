@@ -50,8 +50,8 @@ class CMapReader
 			std::string _value;
 	};
 
-   public:
-      CMapReader ();
+	public:
+		CMapReader ();
 		CMap* read (const std::string &fname);
 		CMap* read (std::istream &is, const std::string &name);
 
@@ -65,7 +65,7 @@ class CMapReader
 		void op_endcmap (InputReader &ir);
 		void op_usecmap (InputReader &ir);
 
-   private:
+	private:
 		SegmentedCMap *_cmap;        ///< CMap being read
 		std::vector<Token> _tokens;  ///< stack of tokens to be processed
 		bool _inCMap;                ///< operator begincmap has been executed

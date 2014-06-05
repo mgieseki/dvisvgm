@@ -29,7 +29,7 @@
 
 class ColorSpecialHandler : public SpecialHandler
 {
-   public:
+	public:
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 		const char* name () const   {return "color";}
 		const char* info () const   {return "complete support of color specials";}

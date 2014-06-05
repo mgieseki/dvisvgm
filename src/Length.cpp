@@ -30,8 +30,8 @@ using namespace std;
 
 void Length::set (const string &len) {
 	switch (len.length()) {
-		case 0: 
-			_pt = 0; 
+		case 0:
+			_pt = 0;
 			break;
 		case 1:
 			if (isdigit(len[0]))
@@ -42,7 +42,7 @@ void Length::set (const string &len) {
 		default:
 			istringstream iss(len);
 			StreamInputReader ir(iss);
-			double val; 
+			double val;
 			if (!ir.parseDouble(val))
 				throw UnitException("invalid length: "+len);
 			string unit = ir.getWord();

@@ -69,7 +69,7 @@ bool Color::set (string name, bool case_sensitive) {
 	if (name[0] == '#') {
 		char *p=0;
 		_rgb = UInt32(strtol(name.c_str()+1, &p, 16));
-	  	while (isspace(*p))
+		while (isspace(*p))
 			p++;
 		return (*p == 0 && _rgb <= 0xFFFFFF);
 	}

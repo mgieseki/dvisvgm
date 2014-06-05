@@ -72,11 +72,11 @@ SubfontDefinition::~SubfontDefinition () {
  *  @param[in] name name of subfont definition to lookup
  *  @return pointer to subfont definition object or 0 if it doesn't exist */
 SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
-   typedef map<string,SubfontDefinition*> SFDMap;
-   static SFDMap sfdMap;
-   SFDMap::iterator it = sfdMap.find(name);
-   if (it != sfdMap.end())
-      return it->second;
+	typedef map<string,SubfontDefinition*> SFDMap;
+	static SFDMap sfdMap;
+	SFDMap::iterator it = sfdMap.find(name);
+	if (it != sfdMap.end())
+		return it->second;
 	SubfontDefinition *sfd=0;
 	if (const char *path = FileFinder::lookup(name+".sfd", false)) {
 		sfd = new SubfontDefinition(name, path);
@@ -88,30 +88,30 @@ SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
 
 /** Returns the full path to the corresponding .sfd file or 0 if it can't be found. */
 const char* SubfontDefinition::path () const {
-   return FileFinder::lookup(filename(), false);
+	return FileFinder::lookup(filename(), false);
 }
 
 
 /** Returns the subfont with the given ID, or 0 if it doesn't exist. */
 Subfont* SubfontDefinition::subfont (const string &id) const {
-   ConstIterator it = _subfonts.find(id);
-   if (it != _subfonts.end())
-      return it->second;
-   return 0;
+	ConstIterator it = _subfonts.find(id);
+	if (it != _subfonts.end())
+		return it->second;
+	return 0;
 }
 
 
 /** Returns all subfonts defined in this SFD. */
 int SubfontDefinition::subfonts (vector<Subfont*> &sfs) const {
-   for (ConstIterator it=_subfonts.begin(); it != _subfonts.end(); ++it)
-      sfs.push_back(it->second);
-   return sfs.size();
+	for (ConstIterator it=_subfonts.begin(); it != _subfonts.end(); ++it)
+		sfs.push_back(it->second);
+	return sfs.size();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 Subfont::~Subfont () {
-   delete [] _mapping;
+	delete [] _mapping;
 }
 
 
@@ -128,7 +128,7 @@ Subfont::~Subfont () {
  *  to c=10, 11 and 12, respectively.
  *  @return true if the data has been read successfully */
 bool Subfont::read () {
-  	if (_mapping)  // if there's already a mapping assigned, we're finished here
+	if (_mapping)  // if there's already a mapping assigned, we're finished here
 		return true;
 	if (const char *p = _sfd.path()) {
 		ifstream is(p);

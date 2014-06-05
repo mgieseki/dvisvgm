@@ -29,14 +29,14 @@
 template <typename T>
 class Pair
 {
-   public:
-      Pair (T x=0, T y=0) : _x(x), _y(y) {}
+	public:
+		Pair (T x=0, T y=0) : _x(x), _y(y) {}
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
 		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
 		Pair operator *= (T c)                 {_x *= c; _y *= c; return *this;}
 		Pair operator /= (T c)                 {_x /= c; _y /= c; return *this;}
-      Pair ortho () const                    {return Pair(-_y, _x);}
-      double length () const                 {return std::sqrt(_x*_x + _y*_y);}
+		Pair ortho () const                    {return Pair(-_y, _x);}
+		double length () const                 {return std::sqrt(_x*_x + _y*_y);}
 		bool operator == (const Pair &p) const {return _x == p._x && _y == p._y;}
 		bool operator != (const Pair &p) const {return _x != p._x || _y != p._y;}
 		T x () const                           {return _x;}
@@ -45,14 +45,14 @@ class Pair
 		void y (const T &yy)                   {_y = yy;}
 		std::ostream& write (std::ostream &os) const {return os << '(' << _x << ',' << _y << ')';}
 
-   private:
+	private:
 		T _x, _y;
 };
 
 
 struct Pair32 : public Pair<Int32>
 {
-   Pair32 (Int32 x=0, Int32 y=0) : Pair<Int32>(x, y) {}
+	Pair32 (Int32 x=0, Int32 y=0) : Pair<Int32>(x, y) {}
 	explicit Pair32 (double x, double y) : Pair<Int32>(Int32(x+0.5), Int32(y+0.5)) {}
 	Pair32 (const Pair<Int32> &p) : Pair<Int32>(p) {}
 //	operator Pair<Int32> () {return *this;}

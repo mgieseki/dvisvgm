@@ -41,12 +41,12 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 {
 	typedef std::map<const Font*, std::set<int> > CharMap;
 	typedef std::set<const Font*> FontSet;
-   typedef std::map<std::string,BoundingBox> BoxMap;
+	typedef std::map<std::string,BoundingBox> BoxMap;
 
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
 		~DVIToSVGActions ();
-      void reset ();
+		void reset ();
 		void setChar (double x, double y, unsigned c, bool vertical, const Font *f);
 		void setRule (double x, double y, double height, double width);
 		void setBgColor (const Color &color);

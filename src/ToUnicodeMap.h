@@ -28,7 +28,7 @@
 /** Represents a mapping from character indexes to unicode points. */
 class ToUnicodeMap : public RangeMap
 {
-   public:
+	public:
 		bool addMissingMappings (UInt32 maxIndex);
 
 	protected:

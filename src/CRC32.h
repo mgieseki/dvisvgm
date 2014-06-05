@@ -27,8 +27,8 @@
 
 class CRC32
 {
-   public:
-      CRC32 ();
+	public:
+		CRC32 ();
 		void update (const UInt8 *bytes, size_t len);
 		void update (UInt32 n, int bytes=4);
 		void update (const char *str);
@@ -42,7 +42,7 @@ class CRC32
 	protected:
 		CRC32 (const CRC32 &crc32) {}
 
-   private:
+	private:
 		UInt32 _crc32;
 		UInt32 _tab[256];
 };

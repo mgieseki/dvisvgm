@@ -28,20 +28,20 @@
 
 class GFGlyphTracer : public GFTracer
 {
-   public:
-      struct Callback {
-         virtual ~Callback () {}
-         virtual void setFont (const std::string &fontname) {}
-         virtual void beginChar (UInt8 c) {}
-         virtual void endChar (UInt8 c) {}
-         virtual void emptyChar (UInt8 c) {}
-      };
+	public:
+		struct Callback {
+			virtual ~Callback () {}
+			virtual void setFont (const std::string &fontname) {}
+			virtual void beginChar (UInt8 c) {}
+			virtual void endChar (UInt8 c) {}
+			virtual void emptyChar (UInt8 c) {}
+		};
 
-   public:
+	public:
 		GFGlyphTracer ();
-      GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
+		GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
 		void reset (std::string &fname, double upp);
-      void setCallback (Callback *cb) {_callback = cb;}
+		void setCallback (Callback *cb) {_callback = cb;}
 		bool executeChar (UInt8 c);
 		void moveTo (double x, double y);
 		void lineTo (double x, double y);
@@ -51,10 +51,10 @@ class GFGlyphTracer : public GFTracer
 		void setGlyph (Glyph &glyph)   {_glyph = &glyph;}
 		const Glyph& getGlyph () const {return *_glyph;}
 
-   private:
+	private:
 		std::ifstream _ifs;
 		Glyph *_glyph;
-      Callback *_callback;
+		Callback *_callback;
 };
 
 #endif

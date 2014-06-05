@@ -60,8 +60,8 @@ class SVGTree
 			bool _changed;
 	};
 
-   public:
-      SVGTree ();
+	public:
+		SVGTree ();
 		void reset ();
 		void write (std::ostream &os) const    {_doc.write(os);}
 		void newPage (int pageno);
@@ -72,7 +72,7 @@ class SVGTree
 		void appendToRoot (XMLNode *node) {_root->append(node);}
 		void appendChar (int c, double x, double y, const Font &font);
 		void appendFontStyles (const std::set<const Font*> &fonts);
-      void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
+		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
 		void pushContextElement (XMLElementNode *node);
 		void popContextElement ();
 		void setBBox (const BoundingBox &bbox);
@@ -87,16 +87,16 @@ class SVGTree
 		const Matrix& getMatrix () const  {return _matrix.get();}
 		XMLElementNode* rootNode () const {return _root;}
 
-   public:
-      static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
-      static bool CREATE_STYLE; ///< should style elements and class attributes be used to reference fonts?
-      static bool CREATE_USE_ELEMENTS; ///< allow generation of <use/> elements?
+	public:
+		static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
+		static bool CREATE_STYLE; ///< should style elements and class attributes be used to reference fonts?
+		static bool CREATE_USE_ELEMENTS; ///< allow generation of <use/> elements?
 		static double ZOOM_FACTOR; ///< factor applied to width/height attribute
 
 	protected:
 		void newTextNode (double x, double y);
 
-   private:
+	private:
 		XMLDocument _doc;
 		XMLElementNode *_root, *_page, *_text, *_span, *_defs;
 		bool _xchanged, _ychanged;

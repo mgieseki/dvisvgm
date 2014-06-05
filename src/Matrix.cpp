@@ -36,7 +36,7 @@ double det (const Matrix &m) {
 	double sum=0;
 	for (int i=0; i < 3; ++i) {
 		sum += m._values[0][i] * m._values[1][(i+1)%3] * m._values[2][(i+2)%3]
-		     - m._values[0][2-i] * m._values[1][(4-i)%3] * m._values[2][(3-i)%3];
+			  - m._values[0][2-i] * m._values[1][(4-i)%3] * m._values[2][(3-i)%3];
 	}
 	return sum;
 }
@@ -55,13 +55,13 @@ double det (const Matrix &m, int row, int col) {
 	if (r1 > r2)
 		swap(r1, r2);
 	return m._values[r1][c1] * m._values[r2][c2]
-	     - m._values[r1][c2] * m._values[r2][c1];
+		  - m._values[r1][c2] * m._values[r2][c1];
 }
 
 
 static inline double deg2rad (double deg) {
-   const double PI = acos(-1.0);
-   return PI*deg/180.0;
+	const double PI = acos(-1.0);
+	return PI*deg/180.0;
 }
 
 
@@ -257,27 +257,27 @@ Matrix& Matrix::invert () {
 
 
 Matrix& Matrix::operator *= (double c) {
-   for (int i=0; i < 3; i++)
-      for (int j=0; j < 3; j++)
+	for (int i=0; i < 3; i++)
+		for (int j=0; j < 3; j++)
 			_values[i][j] *= c;
 	return *this;
 }
 
 
 DPair Matrix::operator * (const DPair &p) const {
-   double pp[] = {p.x(), p.y(), 1};
-   double ret[]= {0, 0};
-   for (int i=0; i < 2; i++)
-      for (int j=0; j < 3; j++)
-         ret[i] += _values[i][j] * pp[j];
+	double pp[] = {p.x(), p.y(), 1};
+	double ret[]= {0, 0};
+	for (int i=0; i < 2; i++)
+		for (int j=0; j < 3; j++)
+			ret[i] += _values[i][j] * pp[j];
 	return DPair(ret[0], ret[1]);
 }
 
 
 /** Returns true if this matrix equals. Checks equality by comparing the matrix components. */
 bool Matrix::operator == (const Matrix &m) const {
-   for (int i=0; i < 2; i++)
-      for (int j=0; j < 3; j++)
+	for (int i=0; i < 2; i++)
+		for (int j=0; j < 3; j++)
 			if (_values[i][j] != m._values[i][j])
 				return false;
 	return true;
@@ -286,8 +286,8 @@ bool Matrix::operator == (const Matrix &m) const {
 
 /** Returns true if this matrix doesn't equal m. Checks inequality by comparing the matrix components. */
 bool Matrix::operator != (const Matrix &m) const {
-   for (int i=0; i < 2; i++)
-      for (int j=0; j < 3; j++)
+	for (int i=0; i < 2; i++)
+		for (int j=0; j < 3; j++)
 			if (_values[i][j] != m._values[i][j])
 				return true;
 	return false;
@@ -296,8 +296,8 @@ bool Matrix::operator != (const Matrix &m) const {
 
 /** Returns true if this matrix is the identity matrix ((1,0,0),(0,1,0),(0,0,1)). */
 bool Matrix::isIdentity() const {
-   for (int i=0; i < 2; i++)
-      for (int j=0; j < 3; j++) {
+	for (int i=0; i < 2; i++)
+		for (int j=0; j < 3; j++) {
 			const double &v = _values[i][j];
 			if ((i == j && v != 1) || (i != j && v != 0))
 				return false;
@@ -314,8 +314,8 @@ bool Matrix::isIdentity() const {
 bool Matrix::isTranslation (double &tx, double &ty) const {
 	tx = _values[0][2];
 	ty = _values[1][2];
-   for (int i=0; i < 3; i++)
-      for (int j=0; j < 2; j++) {
+	for (int i=0; i < 3; i++)
+		for (int j=0; j < 2; j++) {
 			const double &v = _values[i][j];
 			if ((i == j && v != 1) || (i != j && v != 0))
 				return false;
@@ -336,18 +336,18 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
 		is.get();
 	if (!optional && leadingComma && is.peek() != ',')
 		throw ParserException("',' expected");
-   if (is.peek() == ',') {
-   	is.get();         // skip comma
-      optional = false; // now we expect a parameter
-   }
+	if (is.peek() == ',') {
+		is.get();         // skip comma
+		optional = false; // now we expect a parameter
+	}
 	string expr;
 	while (is && !isupper(is.peek()) && is.peek() != ',')
 		expr += (char)is.get();
-   if (expr.length() == 0) {
-      if (optional)
-         return def;
-      else
-         throw ParserException("parameter expected");
+	if (expr.length() == 0) {
+		if (optional)
+			return def;
+		else
+			throw ParserException("parameter expected");
 	}
 	return calc.eval(expr);
 }
@@ -356,21 +356,21 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
 Matrix& Matrix::parse (istream &is, Calculator &calc) {
 	*this = Matrix(1);
 	while (is) {
-      while (isspace(is.peek()))
-         is.get();
+		while (isspace(is.peek()))
+			is.get();
 		int cmd = is.get();
 		switch (cmd) {
 			case 'T': {
 				double tx = getArgument(is, calc, 0, false, false);
 				double ty = getArgument(is, calc, 0, true, true);
 				translate(tx, ty);
-            break;
+				break;
 			}
 			case 'S': {
 				double sx = getArgument(is, calc, 1, false, false);
 				double sy = getArgument(is, calc, sx, true, true );
 				scale(sx, sy);
-            break;
+				break;
 			}
 			case 'R': {
 				double a = getArgument(is, calc, 0, false, false);
@@ -379,7 +379,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				translate(-x, -y);
 				rotate(a);
 				translate(x, y);
-            break;
+				break;
 			}
 			case 'F': {
 				int c = is.get();
@@ -403,7 +403,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 					xskewByAngle(a);
 				else
 					yskewByAngle(a);
-            break;
+				break;
 			}
 			case 'M': {
 				double v[9];
@@ -414,12 +414,12 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				v[8] = 1;
 				Matrix tm(v);
 				rmultiply(tm);
-            break;
+				break;
 			}
-         default:
+			default:
 				ostringstream oss;
 				oss << "transformation command expected (found '" << cmd << "' instead)";
-            throw ParserException(oss.str());
+				throw ParserException(oss.str());
 		}
 	}
 	return *this;
@@ -427,9 +427,9 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 
 
 Matrix& Matrix::parse (const string &cmds, Calculator &calc) {
-   istringstream iss;
-   iss.str(cmds);
-   return parse(iss, calc);
+	istringstream iss;
+	iss.str(cmds);
+	return parse(iss, calc);
 }
 
 

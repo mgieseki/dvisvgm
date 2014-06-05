@@ -41,8 +41,8 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		int length;  // number of parameter bytes
 	};
 
-   /* Each cmdFOO command reads the necessary number of bytes from the stream, so executeCommand
-   doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
+	/* Each cmdFOO command reads the necessary number of bytes from the stream, so executeCommand
+	doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
 	DVI commands because they only differ in length of their parameters. */
 	static const DVICommand commands[] = {
 		{&BasicDVIReader::cmdSetChar, 1}, {&BasicDVIReader::cmdSetChar, 2},

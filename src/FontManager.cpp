@@ -44,8 +44,8 @@ FontManager::~FontManager () {
 
 /** Returns the singleton instance */
 FontManager& FontManager::instance () {
-   static FontManager fm;
-   return fm;
+	static FontManager fm;
+	return fm;
 }
 
 

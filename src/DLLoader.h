@@ -30,16 +30,16 @@
 
 class DLLoader
 {
-   public:
-      DLLoader (const char *dlname);
-      virtual ~DLLoader ();
+	public:
+		DLLoader (const char *dlname);
+		virtual ~DLLoader ();
 		bool loaded () const {return _handle != 0;}
 
 	protected:
 		DLLoader () : _handle(0) {}
 		void* loadSymbol (const char *name);
 
-   private:
+	private:
 #ifdef __WIN32__
 		HINSTANCE _handle;
 #else

@@ -52,9 +52,9 @@ class GFReader
 
 	typedef std::map<UInt8,CharInfo>::iterator Iterator;
 	typedef std::map<UInt8,CharInfo>::const_iterator ConstIterator;
-   public:
-      GFReader (std::istream &is);
-      virtual ~GFReader () {}
+	public:
+		GFReader (std::istream &is);
+		virtual ~GFReader () {}
 		bool executeChar (UInt8 c);
 		bool executeAllChars ();
 		bool executePostamble ();
@@ -94,7 +94,7 @@ class GFReader
 		void cmdCharLoc0 (int);
 		void cmdCharLoc (int);
 
-   private:
+	private:
 		std::istream &_in;
 		Int32 _minX, _maxX, _minY, _maxY;
 		Int32 _x, _y;            // current pen location (pixel units)

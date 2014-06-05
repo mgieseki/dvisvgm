@@ -527,13 +527,13 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 
 /** Delete all temporary font files created by Metafont. */
 void PhysicalFontImpl::tidy () const {
-   if (type() == MF) {
+	if (type() == MF) {
 		const char *ext[] = {"gf", "tfm", "log", 0};
 		for (const char **p=ext; *p; ++p) {
 			if (FileSystem::exists((name()+"."+(*p)).c_str()))
 				FileSystem::remove(name()+"."+(*p));
 		}
-   }
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////

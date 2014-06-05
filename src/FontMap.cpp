@@ -55,8 +55,8 @@ FontMap& FontMap::instance() {
  *  @return true if file could be opened */
 bool FontMap::read (const string &fname, FontMap::Mode mode) {
 	ifstream ifs(fname.c_str());
-   if (!ifs)
-      return false;
+	if (!ifs)
+		return false;
 
 	int line_number = 1;
 	while (ifs) {
@@ -78,7 +78,7 @@ bool FontMap::read (const string &fname, FontMap::Mode mode) {
 				Message::wstream(false) << e.what() << '\n';
 			}
 		}
-      line_number++;
+		line_number++;
 	}
 	return true;
 }
@@ -146,12 +146,12 @@ bool FontMap::read (const string &fname_seq) {
 			right = fname_seq.length();
 		}
 		if (!fname.empty()) {
-         if (!read(fname, modechar)) {
-            if (const char *path = FileFinder::lookup(fname, false))
-               found = found || read(path, modechar);
-            else
-               Message::wstream(true) << "map file " << fname << " not found\n";
-         }
+			if (!read(fname, modechar)) {
+				if (const char *path = FileFinder::lookup(fname, false))
+					found = found || read(path, modechar);
+				else
+					Message::wstream(true) << "map file " << fname << " not found\n";
+			}
 		}
 		left = right+1;
 	}
@@ -165,7 +165,7 @@ bool FontMap::read (const string &fname_seq) {
  *  @return true if data has been appended */
 bool FontMap::append (const MapLine &mapline) {
 	bool ret = false;
-   if (!mapline.texname().empty()) {
+	if (!mapline.texname().empty()) {
 		if (!mapline.fontfname().empty() || !mapline.encname().empty()) {
 			vector<Subfont*> subfonts;
 			if (mapline.sfd())
@@ -191,7 +191,7 @@ bool FontMap::append (const MapLine &mapline) {
  *  @param[in] mapline parsed font data
  *  @return true if data has been replaced */
 bool FontMap::replace (const MapLine &mapline) {
-   if (mapline.texname().empty())
+	if (mapline.texname().empty())
 		return false;
 	if (mapline.fontfname().empty() && mapline.encname().empty())
 		return remove(mapline);
@@ -219,7 +219,7 @@ bool FontMap::replace (const MapLine &mapline) {
  *  @return true if entry has been removed */
 bool FontMap::remove (const MapLine &mapline) {
 	bool ret = false;
-   if (!mapline.texname().empty()) {
+	if (!mapline.texname().empty()) {
 		vector<Subfont*> subfonts;
 		if (mapline.sfd())
 			mapline.sfd()->subfonts(subfonts);
@@ -233,8 +233,8 @@ bool FontMap::remove (const MapLine &mapline) {
 				ret = true;
 			}
 		}
-   }
-   return ret;
+	}
+	return ret;
 }
 
 
@@ -281,19 +281,19 @@ void FontMap::lockFont (const string& fontname) {
 /** Removes all (unlocked) entries from the font map.
  *  @param[in] unlocked_only if true, only unlocked entries are removed */
 void FontMap::clear (bool unlocked_only) {
-   if (!unlocked_only)
-      _entries.clear();
-   else {
-      Iterator it=_entries.begin();
-      while (it != _entries.end()) {
-         if (it->second->locked)
-            ++it;
-         else {
+	if (!unlocked_only)
+		_entries.clear();
+	else {
+		Iterator it=_entries.begin();
+		while (it != _entries.end()) {
+			if (it->second->locked)
+				++it;
+			else {
 				delete it->second;
-            _entries.erase(it++);
+				_entries.erase(it++);
 			}
-      }
-   }
+		}
+	}
 }
 
 /////////////////////////////////////////////////

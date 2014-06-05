@@ -31,8 +31,8 @@
 
 class EncFile : public NamedFontEncoding
 {
-   public:
-      EncFile (const std::string &name);
+	public:
+		EncFile (const std::string &name);
 		void read ();
 		void read (std::istream &is);
 		int size () const                  {return _table.size();}
@@ -42,7 +42,7 @@ class EncFile : public NamedFontEncoding
 		bool mapsToCharIndex () const      {return false;}
 		const char* path () const;
 
-   private:
+	private:
 		std::string _encname;
 		std::vector<std::string> _table;
 };

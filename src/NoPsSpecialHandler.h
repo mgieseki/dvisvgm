@@ -25,8 +25,8 @@
 
 class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
-   public:
-      NoPsSpecialHandler () : _count(0) {}
+	public:
+		NoPsSpecialHandler () : _count(0) {}
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 		const char* name () const   {return 0;}
 		const char* info () const   {return 0;}
@@ -35,7 +35,7 @@ class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
 	protected:
 		void dviEndPage (unsigned pageno);
 
-   private:
+	private:
 		unsigned _count;  // number of PS specials skipped
 };
 

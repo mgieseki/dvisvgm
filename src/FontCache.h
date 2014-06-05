@@ -43,26 +43,26 @@ class FontCache
 			UInt32 numcmds;   // number of path commands
 		};
 
-   public:
+	public:
 		FontCache ();
-      ~FontCache ();
+		~FontCache ();
 		bool read (const char *fontname, const char *dir);
 		bool read (const char *fontname, std::istream &is);
-      bool write (const char *dir) const;
+		bool write (const char *dir) const;
 		bool write (const char *fontname, const char *dir) const;
 		bool write (const char *fontname, std::ostream &os) const;
 		const Glyph* getGlyph (int c) const;
 		void setGlyph (int c, const Glyph &glyph);
 		void clear ();
-      const std::string& fontname () const {return _fontname;}
+		const std::string& fontname () const {return _fontname;}
 
 		static bool fontinfo (const char *dirname, std::vector<FontInfo> &infos, std::vector<std::string> &invalid);
 		static bool fontinfo (std::istream &is, FontInfo &info);
 		static void fontinfo (const char *dirname, std::ostream &os, bool purge=false);
 
-   private:
+	private:
 		static const UInt8 FORMAT_VERSION;
-      std::string _fontname;
+		std::string _fontname;
 		GlyphMap _glyphs;
 		bool _changed;
 };

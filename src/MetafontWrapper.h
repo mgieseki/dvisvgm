@@ -28,15 +28,15 @@ struct FileFinder;
 
 class MetafontWrapper
 {
-   public:
-      MetafontWrapper (const std::string &fontname);
+	public:
+		MetafontWrapper (const std::string &fontname);
 		bool call (const std::string &mode, double mag);
 		bool make (const std::string &mode, double mag);
 		bool success () const;
 		void removeOutputFiles (bool keepGF=false);
 		static void removeOutputFiles (const std::string &fontname, bool keepGF=false);
 
-   private:
+	private:
 		std::string _fontname;
 };
 

@@ -71,7 +71,7 @@ class FontMap
 	protected:
 		FontMap () {}
 
-   private:
+	private:
 		std::map<std::string,Entry*> _entries;
 };
 

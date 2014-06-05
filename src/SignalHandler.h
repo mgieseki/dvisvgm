@@ -29,22 +29,22 @@ struct SignalException : public std::exception {
 
 class SignalHandler
 {
-   public:
-      ~SignalHandler ();
-      static SignalHandler& instance ();
-      bool start ();
-      void stop ();
-      void check ();
+	public:
+		~SignalHandler ();
+		static SignalHandler& instance ();
+		bool start ();
+		void stop ();
+		void check ();
 		void trigger (bool notify);
-      bool active () const {return _active;}
+		bool active () const {return _active;}
 
-   protected:
-      SignalHandler () : _active(false) {}
-      static void callback (int signal);
+	protected:
+		SignalHandler () : _active(false) {}
+		static void callback (int signal);
 
-   private:
-      bool _active;       ///< true if listening for signals
-      static bool _break; ///< true if signal has been caught
+	private:
+		bool _active;       ///< true if listening for signals
+		static bool _break; ///< true if signal has been caught
 };
 
 #endif

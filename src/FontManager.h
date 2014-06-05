@@ -49,9 +49,9 @@ class FontManager
 	typedef std::map<VirtualFont*, UInt32> VfFirstFontMap;
 	typedef std::stack<VirtualFont*> VfStack;
 
-   public:
-      ~FontManager ();
-      static FontManager& instance ();
+	public:
+		~FontManager ();
+		static FontManager& instance ();
 		int registerFont (UInt32 fontnum, std::string fontname, UInt32 checksum, double dsize, double scale);
 		int registerFont (UInt32 fontnum, std::string fname, double ptsize, const FontStyle &style, Color color);
 		Font* getFont (int n) const;
@@ -69,10 +69,10 @@ class FontManager
 		const std::vector<Font*>& getFonts () const {return _fonts;}
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
 
-   protected:
-      FontManager () {}
+	protected:
+		FontManager () {}
 
-   private:
+	private:
 		std::vector<Font*> _fonts; ///< all registered Fonts
 		Num2IdMap      _num2id;    ///< DVI font number -> fontID
 		Name2IdMap     _name2id;   ///< fontname -> fontID

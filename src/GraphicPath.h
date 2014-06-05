@@ -96,7 +96,7 @@ class GraphicPath
 		typedef typename std::vector<Command>::const_iterator ConstIterator;
 		typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
 
-   public:
+	public:
 		void newpath () {
 			_commands.clear();
 		}
@@ -253,7 +253,7 @@ class GraphicPath
 
 		void iterate (Actions &actions, bool optimize) const;
 
-   private:
+	private:
 		std::vector<Command> _commands;
 };
 

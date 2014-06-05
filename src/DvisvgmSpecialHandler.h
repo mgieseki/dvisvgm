@@ -25,7 +25,7 @@
 
 class DvisvgmSpecialHandler : public SpecialHandler
 {
-   public:
+	public:
 		const char* name () const   {return "dvisvgm";}
 		const char* info () const   {return "special set for embedding raw SVG snippets";}
 		const char** prefixes () const;

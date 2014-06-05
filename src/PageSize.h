@@ -30,8 +30,8 @@ struct PageSizeException : public MessageException
 
 class PageSize
 {
-   public:
- 		PageSize (double w=0, double h=0) : _width(w), _height(h) {}
+	public:
+		PageSize (double w=0, double h=0) : _width(w), _height(h) {}
 		PageSize (std::string name);
 		void resize (std:: string name);
 		void resize (double w, double h);
@@ -41,7 +41,7 @@ class PageSize
 		double heightInMM () const {return _height*25.4/72;}
 		bool valid () const        {return _width > 0 && _height > 0;}
 
-   private:
+	private:
 		double _width, _height; // in PS points
 };
 

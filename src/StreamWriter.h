@@ -29,9 +29,9 @@ class CRC32;
 
 class StreamWriter
 {
-   public:
-      StreamWriter (std::ostream &os) : _os(os) {}
-      virtual ~StreamWriter () {}
+	public:
+		StreamWriter (std::ostream &os) : _os(os) {}
+		virtual ~StreamWriter () {}
 		void writeUnsigned (UInt32 val, int n);
 		void writeSigned (Int32 val, int n);
 		void writeString (const std::string &str, bool finalZero=false);
@@ -39,7 +39,7 @@ class StreamWriter
 		void writeSigned (Int32 val, int n, CRC32 &crc32);
 		void writeString (const std::string &str, CRC32 &crc32, bool finalZero=false);
 
-   private:
+	private:
 		std::ostream &_os;
 };
 

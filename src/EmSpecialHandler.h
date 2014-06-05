@@ -36,8 +36,8 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		double width; ///< line width
 	};
 
-   public:
-      EmSpecialHandler ();
+	public:
+		EmSpecialHandler ();
 		const char* name () const   {return "em";}
 		const char* info () const   {return "line drawing statements of the emTeX special set";}
 		const char** prefixes () const;
@@ -46,7 +46,7 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 	protected:
 		void dviEndPage (unsigned pageno);
 
-   private:
+	private:
 		std::map<int, DPair> _points; ///< points defined by special em:point
 		std::list<Line> _lines;       ///< list of lines with undefined end points
 		double _linewidth;            ///< global line width

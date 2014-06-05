@@ -37,7 +37,7 @@ class SpecialManager
 		typedef HandlerMap::iterator Iterator;
 		typedef HandlerMap::const_iterator ConstIterator;
 
-   public:
+	public:
 		~SpecialManager ();
 		static SpecialManager& instance ();
 		void registerHandler (SpecialHandler *handler);

@@ -43,8 +43,8 @@ class DVIToSVG : public DVIReader
 		void getPageTransformation (Matrix &matrix) const;
 		std::string getSVGFilename (unsigned pageno) const;
 
-   public:
-      static char TRACE_MODE;
+	public:
+		static char TRACE_MODE;
 
 	protected:
 		DVIToSVG (const DVIToSVG &);
@@ -54,7 +54,7 @@ class DVIToSVG : public DVIReader
 		void endPage (unsigned pageno);
 		void embedFonts (XMLElementNode *svgElement);
 
-   private:
+	private:
 		SVGTree _svg;
 		SVGOutputBase &_out;
 		std::string _bboxString;

@@ -39,11 +39,11 @@ class Length
 	public:
 		enum Unit {PT, BP, CM, MM, IN, PC};
 
-   public:
+	public:
 		Length () : _pt(0) {}
 		Length (double val, Unit unit=PT)            {set(val, unit);}
 		Length (double val, const std::string &unit) {set(val, unit);}
-      Length (const std::string &len)              {set(len);}
+		Length (const std::string &len)              {set(len);}
 		void set (double val, Unit unit);
 		void set (double val, std::string unit);
 		void set (const std::string &len);
@@ -55,7 +55,7 @@ class Length
 		double mm () const {return cm()*10;}
 		double pc () const {return in()*12;}
 
-   private:
+	private:
 		double _pt;  // length in TeX point units
 };
 

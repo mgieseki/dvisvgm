@@ -35,8 +35,8 @@ class Bitmap
 			virtual void pixel (int x, int y, bool set, const Bitmap &bm) {}
 		};
 
-   public:
-      Bitmap ();
+	public:
+		Bitmap ();
 		Bitmap (int minx, int maxx, int miny , int maxy);
 		void resize (int minx, int maxx, int miny , int maxy);
 		void setBits(int r, int c, int n);
@@ -58,7 +58,7 @@ class Bitmap
 
 		std::ostream& write (std::ostream &os) const;
 
-   private:
+	private:
 		int _rows, _cols;     ///< number of rows, columns
 		int _xshift, _yshift; ///< horizontal/vertical shift
 		int _bpr;             ///< number of bytes per row

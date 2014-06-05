@@ -75,7 +75,7 @@ Character FontEncodingPair::decode (UInt32 c) const {
 bool FontEncodingPair::mapsToCharIndex () const {
 	if (_enc2)
 		return _enc2->mapsToCharIndex();
-  	if (_enc1)
+	if (_enc1)
 		return _enc1->mapsToCharIndex();
 	return false;
 }
@@ -84,7 +84,7 @@ bool FontEncodingPair::mapsToCharIndex () const {
 const FontEncoding* FontEncodingPair::findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {
 	if (_enc2)
 		return _enc2->findCompatibleBaseFontMap(font, charmapID);
-  	if (_enc1)
+	if (_enc1)
 		return _enc1->findCompatibleBaseFontMap(font, charmapID);
 	return 0;
 }

@@ -51,7 +51,7 @@ static string translate (UInt32 c) {
 static inline double round (double x, long n) {
 	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
 	n--;
-   return floor(x*pow10[n]+0.5)/pow10[n];
+	return floor(x*pow10[n]+0.5)/pow10[n];
 }
 
 

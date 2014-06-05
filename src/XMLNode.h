@@ -45,7 +45,7 @@ class XMLElementNode : public XMLNode
 	typedef std::map<std::string,std::string> AttribMap;
 	typedef std::list<XMLNode*> ChildList;
 	public:
-      XMLElementNode (const std::string &name);
+		XMLElementNode (const std::string &name);
 		XMLElementNode (const XMLElementNode &node);
 		~XMLElementNode ();
 		XMLNode* clone () const {return new XMLElementNode(*this);}
@@ -62,8 +62,8 @@ class XMLElementNode : public XMLNode
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
 		bool empty () const                          {return _children.empty();}
-      const std::list<XMLNode*>& children () const {return _children;}
-      const std::string& getName () const          {return _name;}
+		const std::list<XMLNode*>& children () const {return _children;}
+		const std::string& getName () const          {return _name;}
 
 	private:
 		std::string _name;     // element name (<name a1="v1" .. an="vn">...</name>)

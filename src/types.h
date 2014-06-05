@@ -22,23 +22,23 @@
 #define DVISVGM_TYPES_H
 
 namespace internal {
-   template<unsigned BYTES>
-   class ERROR_inttype_not_available
-   {
-      ERROR_inttype_not_available();
-   };
+	template<unsigned BYTES>
+	class ERROR_inttype_not_available
+	{
+		ERROR_inttype_not_available();
+	};
 
-   template<bool FIRST, typename A, typename B>
-   struct select
-   {
-      typedef A T;
-   };
+	template<bool FIRST, typename A, typename B>
+	struct select
+	{
+		typedef A T;
+	};
 
-   template<typename A, typename B>
-   struct select<false, A, B>
-   {
-      typedef B T;
-   };
+	template<typename A, typename B>
+	struct select<false, A, B>
+	{
+		typedef B T;
+	};
 }
 
 
@@ -46,11 +46,11 @@ namespace internal {
 template<unsigned BYTES, bool SIGNED>
 struct int_t
 {
-   typedef typename internal::select<sizeof(signed char)       == BYTES, signed char,
-           typename internal::select<sizeof(signed short)      == BYTES, signed short,
-           typename internal::select<sizeof(signed int)        == BYTES, signed int,
-           typename internal::select<sizeof(signed long)       == BYTES, signed long,
-           typename internal::select<sizeof(signed long long)  == BYTES, signed long long,
+   typedef typename internal::select<sizeof(signed char)      == BYTES, signed char,
+           typename internal::select<sizeof(signed short)     == BYTES, signed short,
+           typename internal::select<sizeof(signed int)       == BYTES, signed int,
+           typename internal::select<sizeof(signed long)      == BYTES, signed long,
+           typename internal::select<sizeof(signed long long) == BYTES, signed long long,
            internal::ERROR_inttype_not_available<BYTES> >::T>::T>::T>::T>::T T;
 };
 

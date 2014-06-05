@@ -26,10 +26,10 @@
 
 class XMLString : public std::string
 {
-   public:
+	public:
 		XMLString () : std::string() {}
 		XMLString (const char *str, bool plain=false);
-      XMLString (const std::string &str, bool plain=false);
+		XMLString (const std::string &str, bool plain=false);
 		XMLString (int n, bool cast=true);
 		XMLString (double x);
 

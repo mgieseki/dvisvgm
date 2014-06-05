@@ -35,16 +35,16 @@ using namespace std;
 #ifdef __WIN32__
 	#include <direct.h>
 	#include <windows.h>
-  	const char *FileSystem::DEVNULL = "nul";
-  	const char FileSystem::PATHSEP = '\\';
+	const char *FileSystem::DEVNULL = "nul";
+	const char FileSystem::PATHSEP = '\\';
 	#define unlink _unlink
 #else
 	#include <dirent.h>
 	#include <pwd.h>
-  	#include <sys/stat.h>
-  	#include <sys/types.h>
-  	const char *FileSystem::DEVNULL = "/dev/null";
-  	const char FileSystem::PATHSEP = '/';
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	const char *FileSystem::DEVNULL = "/dev/null";
+	const char FileSystem::PATHSEP = '/';
 #endif
 
 
@@ -68,7 +68,7 @@ bool FileSystem::copy (const string &src, const string &dest, bool remove_src) {
 			ifs.close();
 			return remove(src);
 		}
-		else 
+		else
 			return !remove_src;
 	}
 	return false;
@@ -238,7 +238,7 @@ bool FileSystem::rmdir (const char *dirname) {
 				const char *fname = ent->d_name;
 				string path = string(fname) + "/" + fname;
 				if (isDirectory(path.c_str())) {
-				  	if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
+					if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
 						ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
 				}
 				else if (isFile(path.c_str()))

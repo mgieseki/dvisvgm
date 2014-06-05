@@ -33,15 +33,15 @@ class Directory
 	public:
 		enum EntryType {ET_FILE, ET_DIR, ET_FILE_OR_DIR};
 
-   public:
+	public:
 		Directory ();
-      Directory (std::string path);
+		Directory (std::string path);
 		~Directory ();
 		bool open (std::string path);
 		void close ();
 		const char* read (EntryType type=ET_FILE_OR_DIR);
 
-   private:
+	private:
 		std::string _dirname;
 #ifdef __WIN32__
 		bool firstread;

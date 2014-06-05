@@ -39,7 +39,7 @@
  *  It's a wrapper for the Freetype font library. */
 class FontEngine
 {
-   public:
+	public:
 		~FontEngine ();
 		static FontEngine& instance ();
 		static std::string version ();
@@ -74,7 +74,7 @@ class FontEngine
 		bool setFont (const std::string &fname, int fontindex, const CharMapID &charmapID);
 		int charIndex (const Character &c) const;
 
-   private:
+	private:
 		int _horDeviceRes, _vertDeviceRes;
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face _currentFace;

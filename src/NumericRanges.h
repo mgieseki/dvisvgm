@@ -46,7 +46,7 @@ class NumericRanges
 	protected:
 		static bool isLess (const Range &r1, const Range &r2) {return r1.first < r2.first;}
 
-   private:
+	private:
 		Container _ranges;
 };
 

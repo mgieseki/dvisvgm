@@ -66,9 +66,9 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 #endif
 	ostringstream oss;
 	oss << "\"\\mode=" << mode  << ";"
-		   "mag:=" << mag << ";"
-		   "batchmode;"
-		   "input " << _fontname << "\"";
+			"mag:=" << mag << ";"
+			"batchmode;"
+			"input " << _fontname << "\"";
 	Message::mstream(false, Message::MC_STATE) << "\nrunning Metafont for " << _fontname << '\n';
 	Process mf_process(cmd, oss.str().c_str());
 	mf_process.run();

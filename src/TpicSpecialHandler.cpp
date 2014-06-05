@@ -89,7 +89,7 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 				if (it != _points.begin())
 					oss << ' ';
 				double x = it->x()+actions->getX();
-			  	double y = it->y()+actions->getY();
+				double y = it->y()+actions->getY();
 				oss << XMLString(x) << ',' << XMLString(y);
 				actions->embed(DPair(x, y));
 			}
@@ -179,7 +179,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
  *  @param[in] rx length of horizonal semi-axis
  *  @param[in] ry length of vertical semi-axis
  *  @param[in] angle1 starting angle (clockwise) relative to x-axis
- *  @param[in] angle2 ending angle (clockwise) relative to x-axis 
+ *  @param[in] angle2 ending angle (clockwise) relative to x-axis
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {

@@ -42,7 +42,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 	enum AnchorType {AT_NONE, AT_HREF, AT_NAME};
 	typedef std::map<std::string, NamedAnchor> NamedAnchors;
 
-   public:
+	public:
 		HtmlSpecialHandler () : _actions(0), _anchorType(AT_NONE), _depthThreshold(0) {}
 		void preprocess(const char *prefix, std::istream &is, SpecialActions *actions);
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);

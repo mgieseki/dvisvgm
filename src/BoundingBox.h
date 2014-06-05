@@ -42,8 +42,8 @@ struct BoundingBoxException : MessageException
 
 class BoundingBox
 {
-   public:
-      BoundingBox ();
+	public:
+		BoundingBox ();
 		BoundingBox (double ulxx, double ulyy, double lrxx, double lryy);
 		BoundingBox (const DPair &p1, const DPair &p2);
 		BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy);
@@ -55,7 +55,7 @@ class BoundingBox
 		void embed (const DPair &c, double r);
 
 		template <typename T>
-      void embed (const Pair<T> &p) {embed(p.x(), p.y());}
+		void embed (const Pair<T> &p) {embed(p.x(), p.y());}
 
 		void expand (double m);
 		bool  intersect (const BoundingBox &bbox);
@@ -68,13 +68,13 @@ class BoundingBox
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
 		void operator += (const BoundingBox &bb);
-      void scale (double sx, double sy);
+		void scale (double sx, double sy);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;
 		XMLElementNode* toSVGRect () const;
 
-   private:
+	private:
 		double _ulx, _uly; ///< coordinates of upper left vertex (in PS point units)
 		double _lrx, _lry; ///< coordinates of lower right vertex (in PS point units)
 		bool _valid : 1;   ///< true if the box coordinates are properly set

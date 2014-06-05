@@ -25,9 +25,9 @@
 #include <iomanip>
 #include <sstream>
 #if defined(HAVE_LIBGS)
-   #include <ghostscript/ierrors.h>
+	#include <ghostscript/ierrors.h>
 #else
-   #include "ierrors.h"
+	#include "ierrors.h"
 	#include "FileFinder.h"
 #endif
 
@@ -172,7 +172,7 @@ int Ghostscript::new_instance (void **psinst, void *caller) {
 #else
 	if (PFN_gsapi_new_instance fn = (PFN_gsapi_new_instance)loadSymbol("gsapi_new_instance"))
 		return fn(psinst, caller);
-   *psinst = 0;
+	*psinst = 0;
 	return 0;
 #endif
 }

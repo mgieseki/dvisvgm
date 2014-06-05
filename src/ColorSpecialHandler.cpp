@@ -109,7 +109,7 @@ bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActio
 			_colorStack.push(color);
 		}
 		if (actions) {
-		  	if (_colorStack.empty())
+			if (_colorStack.empty())
 				actions->setColor(Color::BLACK);
 			else
 				actions->setColor(_colorStack.top());

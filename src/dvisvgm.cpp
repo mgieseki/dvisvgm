@@ -152,7 +152,7 @@ class SVGOutput : public SVGOutputBase
 static void show_help (const CommandLine &cmd) {
 	cout << PACKAGE_STRING "\n\n";
 	cmd.help(cmd.help_arg());
-   cout << "\nCopyright (C) 2005-2014 Martin Gieseking <martin.gieseking@uos.de> \n\n";
+	cout << "\nCopyright (C) 2005-2014 Martin Gieseking <martin.gieseking@uos.de> \n\n";
 }
 
 

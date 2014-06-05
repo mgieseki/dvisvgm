@@ -25,12 +25,12 @@
 #include <string>
 
 #if defined(DISABLE_GS)
-   #include "iapi.h"
+	#include "iapi.h"
 #elif defined(HAVE_LIBGS)
-   #include <ghostscript/iapi.h>
+	#include <ghostscript/iapi.h>
 #else
-   #include "DLLoader.h"
-   #include "iapi.h"
+	#include "DLLoader.h"
+	#include "iapi.h"
 #endif
 
 #if defined(__WIN32__) && !defined(_Windows)

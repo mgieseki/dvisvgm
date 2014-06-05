@@ -41,7 +41,7 @@ class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		void drawSplines (double ddist, SpecialActions *actions);
 		void drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions);
 
-   private:
+	private:
 		double _penwidth; ///< pen width in PS point units
 		double _fill;     ///< fill intensity [0,1]; if < 0, we don't fill anything
 		std::vector<DPair> _points;

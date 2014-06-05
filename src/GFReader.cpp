@@ -89,8 +89,8 @@ string GFReader::readString (int bytes) {
  *  @return opcode of the executed command */
 int GFReader::executeCommand () {
 	SignalHandler::instance().check();
-   /* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
-   doesn't need to know the exact GF command format. Some cmdFOO methods are used for multiple
+	/* Each cmdFOO command reads the necessary number of bytes from the stream so executeCommand
+	doesn't need to know the exact GF command format. Some cmdFOO methods are used for multiple
 	GF commands because they only differ in the size of their parameters. */
 	static const GFCommand commands[] = {
 		{&GFReader::cmdPaint, 1}, {&GFReader::cmdPaint, 2}, {&GFReader::cmdPaint, 3},                        // 64-66

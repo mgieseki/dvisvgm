@@ -91,7 +91,7 @@ SplittedCharInputBuffer::SplittedCharInputBuffer (const char *buf1, size_t s1, c
 	_buf[0] = buf1;
 	_buf[1] = buf2;
 	_size[0] = buf1 ? s1 : 0;
-  	_size[1] = buf2 ? s2 : 0;
+	_size[1] = buf2 ? s2 : 0;
 	_index = _size[0] ? 0 : 1;
 }
 

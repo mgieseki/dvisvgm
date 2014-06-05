@@ -67,7 +67,7 @@ class SpecialEmptyActions : public SpecialActions
 		double getY () const {return 0;}
 		void setX (double x) {}
 		void setY (double y) {}
-   	void finishLine ()  {}
+		void finishLine ()  {}
 		void setColor (const Color &color) {}
 		void setBgColor (const Color &color) {}
 		Color getColor () const {return Color::BLACK;}

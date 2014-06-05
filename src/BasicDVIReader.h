@@ -43,8 +43,8 @@ class BasicDVIReader : public StreamReader
 		typedef void (BasicDVIReader::*CommandHandler)(int);
 		enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV=5};
 
-   public:
-      BasicDVIReader (std::istream &is);
+	public:
+		BasicDVIReader (std::istream &is);
 		virtual ~BasicDVIReader () {}
 		virtual void executeAllPages ();
 		virtual double getXPos () const      {return 0;}
@@ -98,7 +98,7 @@ class BasicDVIReader : public StreamReader
 		virtual void cmdXGlyphA (int len);
 		virtual void cmdXGlyphS (int len);
 
-   private:
+	private:
 		DVIFormat _dviFormat;  ///< format of DVI file being processed
 };
 

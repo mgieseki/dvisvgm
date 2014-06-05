@@ -25,9 +25,9 @@
 
 class XMLDocument
 {
-   public:
-      XMLDocument (XMLElementNode *root=0);
-      ~XMLDocument ();
+	public:
+		XMLDocument (XMLElementNode *root=0);
+		~XMLDocument ();
 		void clear ();
 		void append (XMLNode *node);
 		void setRootNode (XMLElementNode *root);
@@ -35,7 +35,7 @@ class XMLDocument
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream& os, XMLNode *stopNode);
 
-   private:
+	private:
 		std::list<XMLNode*> _nodes;
 		XMLElementNode *_rootElement;
 		bool _emitted;

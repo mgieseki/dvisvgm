@@ -34,8 +34,8 @@ class XMLElementNode;
 
 class PSPattern
 {
-   public:
-      virtual ~PSPattern () {}
+	public:
+		virtual ~PSPattern () {}
 		virtual int psID () const {return _id;}
 		virtual std::string svgID () const;
 		virtual void apply (SpecialActions *actions);
@@ -44,7 +44,7 @@ class PSPattern
 		PSPattern (int id) : _id(id) {}
 		virtual XMLElementNode* createPatternNode () const =0;
 
-   private:
+	private:
 		int _id;  ///< PostSCript ID of this pattern
 };
 

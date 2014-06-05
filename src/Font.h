@@ -72,8 +72,8 @@ struct Font {
 	virtual const FontEncoding* encoding () const;
 	virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
 	virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
-   virtual UInt32 unicode (UInt32 c) const;
-   virtual void tidy () const {}
+	virtual UInt32 unicode (UInt32 c) const;
+	virtual void tidy () const {}
 	virtual bool findAndAssignBaseFontMap () {return true;}
 	virtual bool verticalLayout () const     {return getMetrics() ? getMetrics()->verticalLayout() : false;}
 	virtual bool verifyChecksums () const    {return true;}
@@ -112,8 +112,8 @@ struct EmptyFont : public Font
 /** Interface for all physical fonts. */
 class PhysicalFont : public virtual Font
 {
-   public:
-      enum Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
+	public:
+		enum Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
 
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
@@ -137,16 +137,16 @@ class PhysicalFont : public virtual Font
 		virtual Character decodeChar (UInt32 c) const;
 		const char* path () const;
 
-   protected:
+	protected:
 		bool createGF (std::string &gfname) const;
 
-   public:
+	public:
 		static bool EXACT_BBOX;
 		static bool KEEP_TEMP_FILES;
 		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
 		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
-   protected:
+	protected:
 		static FontCache _cache;
 };
 
@@ -230,17 +230,17 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont
 {
 	friend class PhysicalFont;
 	public:
-      ~PhysicalFontImpl();
+		~PhysicalFontImpl();
 		Font* clone (double ds, double ss) const    {return new PhysicalFontProxy(this, ds, ss);}
 		const Font* uniqueFont () const             {return this;}
-      Type type () const                          {return _filetype;}
+		Type type () const                          {return _filetype;}
 		int fontIndex() const                       {return _fontIndex;}
 		const FontStyle* style () const             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
 		const FontMap::Entry* fontMapEntry () const {return _fontMapEntry;}
 		const FontEncoding* encoding () const;
-      UInt32 unicode (UInt32 c) const;
+		UInt32 unicode (UInt32 c) const;
 		bool findAndAssignBaseFontMap ();
-      void tidy () const;
+		void tidy () const;
 		CharMapID getCharMapID () const             {return _charmapID;}
 
 	protected:

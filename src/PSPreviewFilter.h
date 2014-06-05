@@ -30,7 +30,7 @@ struct SpecialActions;
 
 class PSPreviewFilter : public PSFilter
 {
-   public:
+	public:
 		PSPreviewFilter (PSInterpreter &psi);
 		void activate ();
 		void execute (const char *code, size_t len);
@@ -45,7 +45,7 @@ class PSPreviewFilter : public PSFilter
 		double depth () const;
 		double width () const;
 
-   private:
+	private:
 		std::string _version;  ///< version string of preview package
 		bool _active;          ///< true if filter is active
 		bool _tightpage;       ///< true if tightpage option was given

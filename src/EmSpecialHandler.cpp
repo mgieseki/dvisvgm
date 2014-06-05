@@ -95,9 +95,9 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node = new XMLElementNode("polygon");
 		ostringstream oss;
 		oss << XMLString(q11.x()) << ',' << XMLString(q11.y()) << ' '
-		    << XMLString(q12.x()) << ',' << XMLString(q12.y()) << ' '
-		    << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
-		    << XMLString(q21.x()) << ',' << XMLString(q21.y());
+			 << XMLString(q12.x()) << ',' << XMLString(q12.y()) << ' '
+			 << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
+			 << XMLString(q21.x()) << ',' << XMLString(q21.y());
 		node->addAttribute("points", oss.str());
 		if (actions->getColor() != Color::BLACK)
 			node->addAttribute("fill", actions->getColor().rgbString());

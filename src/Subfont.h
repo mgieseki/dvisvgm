@@ -40,7 +40,7 @@ class SubfontDefinition
 	typedef std::map<std::string, Subfont*> Subfonts;
 	typedef Subfonts::iterator Iterator;
 	typedef Subfonts::const_iterator ConstIterator;
-   public:
+	public:
 		~SubfontDefinition ();
 		static SubfontDefinition* lookup (const std::string &name);
 //		int getIDs (std::vector<std::string> &ids) const;
@@ -54,7 +54,7 @@ class SubfontDefinition
 		SubfontDefinition (const std::string &name, const char *fpath);
 		SubfontDefinition (const SubfontDefinition &sfd) {}
 
-   private:
+	private:
 		std::string _sfname; ///< name of subfont
 		Subfonts _subfonts;  ///< all subfonts defined in the corresponding .sfd file
 };
@@ -63,20 +63,20 @@ class SubfontDefinition
 /** Represents a single subfont mapping defined in a SubfontDefinition (.sfd file). */
 class Subfont
 {
-   friend class SubfontDefinition;
-   public:
-      ~Subfont();
-      const std::string& id () const {return _id;}
-      UInt16 decode (unsigned char c);
+	friend class SubfontDefinition;
+	public:
+		~Subfont();
+		const std::string& id () const {return _id;}
+		UInt16 decode (unsigned char c);
 
-   protected:
-      Subfont (SubfontDefinition &sfd, const std::string &id) : _sfd(sfd), _id(id), _mapping(0) {}
-      bool read ();
+	protected:
+		Subfont (SubfontDefinition &sfd, const std::string &id) : _sfd(sfd), _id(id), _mapping(0) {}
+		bool read ();
 
-   private:
-      SubfontDefinition &_sfd;  ///< SubfontDefinition where this Subfont belongs to
-      const std::string &_id;   ///< id of this subfont as specified in the .sfd file
-      UInt16 *_mapping;         ///< the character mapping table with 256 entries
+	private:
+		SubfontDefinition &_sfd;  ///< SubfontDefinition where this Subfont belongs to
+		const std::string &_id;   ///< id of this subfont as specified in the .sfd file
+		UInt16 *_mapping;         ///< the character mapping table with 256 entries
 };
 
 
@@ -86,7 +86,7 @@ class SubfontException : public MessageException
 		SubfontException (const std::string &msg, const std::string &fname, int lineno=0)
 				  : MessageException(msg), _fname(fname), _lineno(lineno) {}
 
-  		SubfontException (const std::ostream &oss, const std::string &fname, int lineno=0)
+		SubfontException (const std::ostream &oss, const std::string &fname, int lineno=0)
 				  : MessageException(dynamic_cast<const std::ostringstream&>(oss).str()), _fname(fname), _lineno(lineno) {}
 
 		virtual ~SubfontException () throw() {}

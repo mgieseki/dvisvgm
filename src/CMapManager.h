@@ -34,8 +34,8 @@ class FontEncodingPair;
 class CMapManager
 {
 	typedef std::map<std::string, CMap*> CMaps;
-   public:
-      ~CMapManager ();
+	public:
+		~CMapManager ();
 		CMap* lookup (const std::string &name);
 		const CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
 		static CMapManager& instance ();
@@ -43,7 +43,7 @@ class CMapManager
 	protected:
 		CMapManager () : _level(0) {}
 
-   private:
+	private:
 		CMaps _cmaps;  ///< loaded cmaps
 		int _level;    ///< current inclusion depth; >0 if a cmap loaded by "usecmap" is being processed
 		std::set<std::string> _includedCMaps;  ///< names of cmaps loaded by "usecmap"

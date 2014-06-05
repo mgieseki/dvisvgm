@@ -41,7 +41,7 @@ struct PSException : public MessageException
 struct PSActions
 {
 	virtual ~PSActions () {}
-   virtual void applyscalevals (std::vector<double> &p) =0;
+	virtual void applyscalevals (std::vector<double> &p) =0;
 	virtual void clip (std::vector<double> &p) =0;
 	virtual void closepath (std::vector<double> &p) =0;
 	virtual void curveto (std::vector<double> &p) =0;
@@ -86,8 +86,8 @@ class PSInterpreter
 {
 	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};
 
-   public:
-      PSInterpreter (PSActions *actions=0);
+	public:
+		PSInterpreter (PSActions *actions=0);
 		bool execute (const char *str, size_t len, bool flush=true);
 		bool execute (const char *str, bool flush=true)        {return execute(str, std::strlen(str), flush);}
 		bool execute (const std::string &str, bool flush=true) {return execute(str.c_str(), flush);}
@@ -109,7 +109,7 @@ class PSInterpreter
 		void checkStatus (int status);
 		void callActions (InputReader &cib);
 
-   private:
+	private:
 		Ghostscript _gs;
 		Mode _mode;                        ///< current execution mode
 		PSActions *_actions;               ///< actions to be performed

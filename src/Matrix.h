@@ -40,14 +40,14 @@ class Matrix
 	friend double det (const Matrix &m);
 	friend double det (const Matrix &m, int row, int col);
 
-   public:
+	public:
 		Matrix (const std::string &cmds, Calculator &calc);
 		Matrix (double d=0);
-      Matrix (double v[], unsigned size=9);
-      Matrix (const std::vector<double> &v, int start=0);
+		Matrix (double v[], unsigned size=9);
+		Matrix (const std::vector<double> &v, int start=0);
 		Matrix& set (double d);
 		Matrix& set (double v[], unsigned size);
-      Matrix& set (const std::vector<double> &v, int start=0);
+		Matrix& set (const std::vector<double> &v, int start=0);
 		Matrix& set (const std::string &cmds, Calculator &calc);
 		double get (int row, int col) const {return _values[row][col];}
 		Matrix& transpose ();
@@ -73,7 +73,7 @@ class Matrix
 		std::string getSVG () const;
 		std::ostream& write (std::ostream &os) const;
 
-   private:
+	private:
 		double _values[3][3];  // row x col
 };
 

@@ -136,7 +136,7 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 				}
 			}
 		}
- 	}
+	}
 	return 0;
 }
 

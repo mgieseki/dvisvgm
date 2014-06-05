@@ -32,7 +32,7 @@ class StreamReader;
 
 class TFM : public FontMetrics
 {
-   public:
+	public:
 //		TFM (const char *fname);
 		TFM (std::istream &is);
 		double getDesignSize () const;
@@ -52,7 +52,7 @@ class TFM : public FontMetrics
 		virtual int charIndex (int c) const;
 		void setCharRange (int firstchar, int lastchar) {_firstChar=firstchar; _lastChar=lastchar;}
 
-   private:
+	private:
 		UInt32 _checksum;
 		UInt16 _firstChar, _lastChar;
 		FixWord _designSize;  ///< design size of the font in TeX points (7227 pt = 254 cm)

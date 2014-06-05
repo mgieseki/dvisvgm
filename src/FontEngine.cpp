@@ -69,16 +69,16 @@ FontEngine::FontEngine () : _currentFace(0), _currentFont(0)
 {
 	_currentChar = _currentGlyphIndex = 0;
 	_horDeviceRes = _vertDeviceRes = 300;
-   if (FT_Init_FreeType(&_library))
-      Message::estream(true) << "FontEngine: error initializing FreeType library\n";
+	if (FT_Init_FreeType(&_library))
+		Message::estream(true) << "FontEngine: error initializing FreeType library\n";
 }
 
 
 FontEngine::~FontEngine () {
-   if (_currentFace && FT_Done_Face(_currentFace))
-      Message::estream(true) << "FontEngine: error removing glyph\n";
-   if (FT_Done_FreeType(_library))
-      Message::estream(true) << "FontEngine: error removing FreeType library\n";
+	if (_currentFace && FT_Done_Face(_currentFace))
+		Message::estream(true) << "FontEngine: error removing glyph\n";
+	if (FT_Done_FreeType(_library))
+		Message::estream(true) << "FontEngine: error removing FreeType library\n";
 }
 
 
@@ -112,8 +112,8 @@ void FontEngine::setDeviceResolution (int x, int y) {
 bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
 	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
-      return false;
-   }
+		return false;
+	}
 	if (charMapID.valid())
 		setCharMap(charMapID);
 	return true;
@@ -389,8 +389,8 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 	if (face) {
 		if (FT_Load_Glyph(face, index, scale ? FT_LOAD_DEFAULT : FT_LOAD_NO_SCALE)) {
 			Message::estream(true) << "can't load glyph " << int(index) << '\n';
-         return false;
-      }
+			return false;
+		}
 		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
 			Message::estream(true) << "no outlines found in glyph " << int(index) << '\n';
 			return false;

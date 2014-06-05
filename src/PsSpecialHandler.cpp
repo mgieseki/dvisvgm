@@ -103,7 +103,7 @@ void PsSpecialHandler::enterBodySection () {
 		// push dictionary "TeXDict" with dvips definitions on dictionary stack
 		// and initialize basic dvips PostScript variables
 		oss << "\nTeXDict begin 0 0 1000 72 72 () @start 0 0 moveto ";
-  		if (_actions) {
+		if (_actions) {
 			float r, g, b;
 			_actions->getColor().getRGB(r, g, b);
 			oss << r << ' ' << g << ' ' << b << " setrgbcolor ";
@@ -126,10 +126,10 @@ void PsSpecialHandler::moveToDVIPos () {
 		const double x = _actions->getX();
 		const double y = _actions->getY();
 		ostringstream oss;
-      oss << '\n' << x << ' ' << y << " moveto ";
-      _psi.execute(oss.str());
-      _currentpoint = DPair(x, y);
-   }
+		oss << '\n' << x << ' ' << y << " moveto ";
+		_psi.execute(oss.str());
+		_currentpoint = DPair(x, y);
+	}
 }
 
 

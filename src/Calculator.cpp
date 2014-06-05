@@ -42,7 +42,7 @@ double Calculator::eval (istream &is) {
 	double ret = expr(is, false);
 	if (lookAhead(is) > 0)
 		throw CalculatorException("expression syntax error");
-   return ret;
+	return ret;
 }
 
 
@@ -58,22 +58,22 @@ double Calculator::eval (const string &expr) {
 
 /** Evaluates the root rule of the expression grammar. */
 double Calculator::expr (istream &is, bool skip) { // expr:
-   double left = term(is, skip);
-   while (1)
-      switch (lookAhead(is)) {
-         case '+': left += term(is, true); break;  // term '+' term => $1 + $3
-         case '-': left -= term(is, true); break;  // term '-' term => $1 - $3
-         default : return left;                    // term => $1
-      }
+	double left = term(is, skip);
+	while (1)
+		switch (lookAhead(is)) {
+			case '+': left += term(is, true); break;  // term '+' term => $1 + $3
+			case '-': left -= term(is, true); break;  // term '-' term => $1 - $3
+			default : return left;                    // term => $1
+		}
 }
 
 
 double Calculator::term (istream &is, bool skip) { // term:
-   double left = prim(is, skip);
-   while (1)
-      switch (lookAhead(is)) {
-         case '*': left *= prim(is, true); break;  // prim '*' prim => $1 * $3
-         case '/': {                               // prim '/' prim => $1 / $3
+	double left = prim(is, skip);
+	while (1)
+		switch (lookAhead(is)) {
+			case '*': left *= prim(is, true); break;  // prim '*' prim => $1 * $3
+			case '/': {                               // prim '/' prim => $1 / $3
 				double denom = prim(is, true);
 				if (denom == 0)
 					throw CalculatorException("division by zero");
@@ -87,16 +87,16 @@ double Calculator::term (istream &is, bool skip) { // term:
 				left -= denom*floor(left/denom);
 				break;
 			}
-         default:                                  // prim => $1
+			default:                                  // prim => $1
 				return left;
-      }
+		}
 }
 
 
 double Calculator::prim (istream &is, bool skip) { // prim:
-   if (skip)
-      lex(is);
-   switch (lookAhead(is)) {
+	if (skip)
+		lex(is);
+	switch (lookAhead(is)) {
 		case NUMBER: {                               // NUMBER => $1
 			lex(is);
 			double ret = _numValue;
@@ -112,32 +112,32 @@ double Calculator::prim (istream &is, bool skip) { // prim:
 		}
 		case '-':                                    // '-' prim => -$2
 			return -prim(is, true);
-      case '(': {                                  // '(' expr ')' => $2
-         double e = expr(is, true);
-         if (lookAhead(is) != ')')
+		case '(': {                                  // '(' expr ')' => $2
+			double e = expr(is, true);
+			if (lookAhead(is) != ')')
 				throw CalculatorException("')' expected");
-         lex(is);
-         return e;
-      }
+			lex(is);
+			return e;
+		}
 		default:
 			throw CalculatorException("primary expression expected");
-   }
+	}
 }
 
 
 /** Determines type of next token without swallowing it. That means
  *  the same token will be read again next time. */
 char Calculator::lookAhead (istream &is) {
-   while (isspace(is.peek()))  // skip whitespace
-      is.get();
-   if (is.eof())
-      return END;
-   int c = is.peek();
-   if (isdigit(c) || c == '.')
-      return NUMBER;
-   if (isalpha(c))
-      return NAME;
-   return char(c);
+	while (isspace(is.peek()))  // skip whitespace
+		is.get();
+	if (is.eof())
+		return END;
+	int c = is.peek();
+	if (isdigit(c) || c == '.')
+		return NUMBER;
+	if (isalpha(c))
+		return NAME;
+	return char(c);
 }
 
 

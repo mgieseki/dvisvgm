@@ -25,16 +25,16 @@
 
 class Process
 {
-   public:
-      Process (const std::string &cmd, const std::string &paramstr);
-      bool run (std::string *out=0);
+	public:
+		Process (const std::string &cmd, const std::string &paramstr);
+		bool run (std::string *out=0);
 
-   protected:
-      Process (const Process& orig) {}
+	protected:
+		Process (const Process& orig) {}
 
-   private:
-      std::string _cmd;
-      std::string _paramstr;
+	private:
+		std::string _cmd;
+		std::string _paramstr;
 };
 
 #endif

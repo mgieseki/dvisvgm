@@ -89,7 +89,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 
 
 bool VFReader::executeAll () {
-  	clearStream();  // reset all status bits
+	clearStream();  // reset all status bits
 	if (!isStreamValid())
 		return false;
 	seek(0);  // move file pointer to first byte of the input stream
@@ -134,8 +134,8 @@ void VFReader::cmdPre () {
 	_designSize = fix2double(ds);
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
-   if (_actions)
-      _actions->preamble(cmt, cs, ds);
+	if (_actions)
+		_actions->preamble(cmt, cs, ds);
 }
 
 

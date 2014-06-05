@@ -61,11 +61,11 @@ bool PdfSpecialHandler::process (const char *prefix, istream &is, SpecialActions
 			}
 		}
 		else { // mapfile
-         string fname = ir.getString();
-         if (!FontMap::instance().read(fname, modechar))
-            Message::wstream(true) << "can't open map file " << fname << '\n';
+			string fname = ir.getString();
+			if (!FontMap::instance().read(fname, modechar))
+				Message::wstream(true) << "can't open map file " << fname << '\n';
 		}
-      _maplineProcessed = true;
+		_maplineProcessed = true;
 	}
 	return true;
 }

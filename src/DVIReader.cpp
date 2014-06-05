@@ -382,8 +382,8 @@ void DVIReader::cmdSetChar0 (int c) {
  *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdSetChar (int len) {
-   // According to the dvi specification all character codes are unsigned
-   // except len == 4. At the moment all char codes are treated as unsigned...
+	// According to the dvi specification all character codes are unsigned
+	// except len == 4. At the moment all char codes are treated as unsigned...
 	UInt32 c = readUnsigned(len); // if len == 4 c may be signed
 	putChar(c, true);
 }
@@ -394,8 +394,8 @@ void DVIReader::cmdSetChar (int len) {
  *  @param[in] len number of parameter bytes (possible values: 1-4)
  *  @throw DVIException if method is called ouside a bop/eop pair */
 void DVIReader::cmdPutChar (int len) {
-   // According to the dvi specification all character codes are unsigned
-   // except len == 4. At the moment all char codes are treated as unsigned...
+	// According to the dvi specification all character codes are unsigned
+	// except len == 4. At the moment all char codes are treated as unsigned...
 	Int32 c = readUnsigned(len);
 	putChar(c, false);
 }
