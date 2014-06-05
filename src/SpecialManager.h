@@ -38,8 +38,8 @@ class SpecialManager
 		typedef HandlerMap::const_iterator ConstIterator;
 
    public:
-		SpecialManager () {}
-      virtual ~SpecialManager ();
+		~SpecialManager ();
+		static SpecialManager& instance ();
 		void registerHandler (SpecialHandler *handler);
 		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
 		void unregisterHandlers ();
@@ -51,11 +51,12 @@ class SpecialManager
 		void leavePSHeaderSection () const;
 
 	protected:
+		SpecialManager () {}
 		SpecialManager (const SpecialManager &) {}
 		void operator = (const SpecialManager &) {}
 		SpecialHandler* findHandler (const std::string &prefix) const;
 
-   private:
+	private:
 		HandlerPool _pool;     ///< stores pointers to all handlers
 		HandlerMap _handlers;  ///< pointers to handlers for corresponding prefixes
 		std::vector<DVIEndPageListener*> _endPageListeners;

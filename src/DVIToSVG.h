@@ -33,12 +33,11 @@ struct SVGOutputBase;
 
 class DVIToSVG : public DVIReader
 {
-   public:
-      DVIToSVG (std::istream &is, SVGOutputBase &out);
+	public:
+		DVIToSVG (std::istream &is, SVGOutputBase &out);
 		~DVIToSVG ();
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
-		const SpecialManager* setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
-		const SpecialManager& specialManager () const        {return _specialManager;}
+		void setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
 		void setPageSize (const std::string &name)           {_bboxString = name;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		void getPageTransformation (Matrix &matrix) const;
@@ -59,7 +58,6 @@ class DVIToSVG : public DVIReader
 		SVGOutputBase &_out;
 		std::string _bboxString;
 		std::string _transCmds;
-		SpecialManager _specialManager;
 };
 
 #endif

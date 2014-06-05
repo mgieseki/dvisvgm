@@ -35,6 +35,12 @@ SpecialManager::~SpecialManager () {
 }
 
 
+SpecialManager& SpecialManager::instance() {
+	static SpecialManager sm;
+	return sm;
+}
+
+
 /** Remove all registered handlers. */
 void SpecialManager::unregisterHandlers () {
 	FORALL(_pool, vector<SpecialHandler*>::iterator, it)

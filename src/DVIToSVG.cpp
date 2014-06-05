@@ -153,7 +153,7 @@ void DVIToSVG::endPage (unsigned pageno) {
 	if (!dynamic_cast<DVIToSVGActions*>(getActions()))
 		return;
 
-	_specialManager.notifyEndPage(pageno);
+	SpecialManager::instance().notifyEndPage(pageno);
 	// set bounding box and apply page transformations
 	BoundingBox &bbox = getActions()->bbox();
 	bbox.unlock();
@@ -283,9 +283,9 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
  *  @param[in] ignorelist list of special prefixes to ignore
  *  @param[in] pswarning if true, shows warning about disabled PS support
  *  @return the SpecialManager that handles special statements */
-const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
+void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
-		_specialManager.unregisterHandlers();
+		SpecialManager::instance().unregisterHandlers();
 	}
 	else {
 		// add special handlers
@@ -318,8 +318,7 @@ const SpecialManager* DVIToSVG::setProcessSpecials (const char *ignorelist, bool
 			}
 #endif
 		}
-		_specialManager.unregisterHandlers();
-		_specialManager.registerHandlers(p, ignorelist);
+		SpecialManager::instance().unregisterHandlers();
+		SpecialManager::instance().registerHandlers(p, ignorelist);
 	}
-	return &_specialManager;
 }

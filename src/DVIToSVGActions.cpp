@@ -69,13 +69,13 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 
 
 void DVIToSVGActions::moveToX (double x) {
-	_dvisvg.specialManager().notifyPositionChange(getX(), getY());
+	SpecialManager::instance().notifyPositionChange(getX(), getY());
 	_svg.setX(x);
 }
 
 
 void DVIToSVGActions::moveToY (double y) {
-	_dvisvg.specialManager().notifyPositionChange(getX(), getY());
+	SpecialManager::instance().notifyPositionChange(getX(), getY());
 	_svg.setY(y);
 }
 
@@ -200,9 +200,9 @@ void DVIToSVGActions::setFont (int num, const Font *font) {
 void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocessing) {
 	try {
 		if (preprocessing)
-			_dvisvg.specialManager().preprocess(spc, this);
+			SpecialManager::instance().preprocess(spc, this);
 		else
-			_dvisvg.specialManager().process(spc, dvi2bp, this);
+			SpecialManager::instance().process(spc, dvi2bp, this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
