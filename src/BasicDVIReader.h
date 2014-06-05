@@ -35,6 +35,7 @@ struct InvalidDVIFileException : public DVIException
 	InvalidDVIFileException(const std::string &msg) : DVIException(msg) {}
 };
 
+class Matrix;
 
 class BasicDVIReader : public StreamReader
 {
@@ -46,6 +47,13 @@ class BasicDVIReader : public StreamReader
       BasicDVIReader (std::istream &is);
 		virtual ~BasicDVIReader () {}
 		virtual void executeAllPages ();
+		virtual double getXPos () const      {return 0;}
+		virtual double getYPos () const      {return 0;}
+		virtual void finishLine ()           {}
+		virtual void translateToX (double x) {}
+		virtual void translateToY (double y) {}
+		virtual int getStackDepth () const   {return 0;}
+		virtual void getPageTransformation (Matrix &matrix) const {}
 
 	protected:
 		void setDVIFormat (DVIFormat format);

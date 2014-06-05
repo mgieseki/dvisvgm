@@ -40,7 +40,7 @@ double DVIToSVGActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (va
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvisvg(dvisvg), _pageMatrix(0), _bgcolor(Color::TRANSPARENT), _boxes(0)
+	: _svg(svg), _dvireader(&dvisvg), _pageMatrix(0), _bgcolor(Color::TRANSPARENT), _boxes(0)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;

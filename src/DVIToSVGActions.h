@@ -53,9 +53,9 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void setColor (const Color &color)             {_svg.setColor(color);}
 		void setMatrix (const Matrix &m)               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const               {return _svg.getMatrix();}
-		void getPageTransform (Matrix &matrix) const   {_dvisvg.getPageTransformation(matrix);}
+		void getPageTransform (Matrix &matrix) const   {_dvireader->getPageTransformation(matrix);}
 		Color getColor () const                        {return _svg.getColor();}
-		int getDVIStackDepth() const                   {return _dvisvg.getStackDepth();}
+		int getDVIStackDepth() const                   {return _dvireader->getStackDepth();}
 		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
 		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
 		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
@@ -74,23 +74,24 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void progress (const char *id);
 		CharMap& getUsedChars () const        {return _usedChars;}
 		const FontSet& getUsedFonts () const  {return _usedFonts;}
+		void setDVIReader (BasicDVIReader &r) {_dvireader = &r;}
 		void setPageMatrix (const Matrix &tm);
-		double getX() const   {return _dvisvg.getXPos();}
-		double getY() const   {return _dvisvg.getYPos();}
-		void setX (double x)  {_dvisvg.translateToX(x); _svg.setX(x);}
-		void setY (double y)  {_dvisvg.translateToY(y); _svg.setY(y);}
-      void finishLine ()    {_dvisvg.finishLine();}
+		double getX() const   {return _dvireader->getXPos();}
+		double getY() const   {return _dvireader->getYPos();}
+		void setX (double x)  {_dvireader->translateToX(x); _svg.setX(x);}
+		void setY (double y)  {_dvireader->translateToY(y); _svg.setY(y);}
+		void finishLine ()    {_dvireader->finishLine();}
 		BoundingBox& bbox ()  {return _bbox;}
-      BoundingBox& bbox (const std::string &name, bool reset=false);
-      void embed (const BoundingBox &bbox);
-      void embed (const DPair &p, double r=0);
+		BoundingBox& bbox (const std::string &name, bool reset=false);
+		void embed (const BoundingBox &bbox);
+		void embed (const DPair &p, double r=0);
 
 	public:
 		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
 
 	private:
 		SVGTree &_svg;
-		DVIToSVG &_dvisvg;
+		BasicDVIReader *_dvireader;
 		BoundingBox _bbox;
 		int _pageCount;
 		int _currentFontNum;
@@ -98,7 +99,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		FontSet _usedFonts;
 		Matrix *_pageMatrix;  // transformation of whole page
 		Color _bgcolor;
-      BoxMap *_boxes;
+		BoxMap *_boxes;
 };
 
 
