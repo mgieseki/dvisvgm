@@ -103,7 +103,7 @@ Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 /** Exits Ghostscript and unloads the dynamic library. */
 Ghostscript::~Ghostscript () {
 	if (_inst) {
-		exit();
+		this->exit();
 		delete_instance();
 	}
 }

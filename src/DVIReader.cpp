@@ -562,7 +562,7 @@ void DVIReader::cmdFontDef (int len) {
 	UInt32 dsize    = readUnsigned(4);     // design size of font in DVI units
 	UInt32 pathlen  = readUnsigned(1);     // length of font path
 	UInt32 namelen  = readUnsigned(1);     // length of font name
-	string fontpath = readString(pathlen);
+	readString(pathlen);                   // skip font path
 	string fontname = readString(namelen);
 
 	defineFont(fontnum, fontname, checksum, dsize*_dvi2bp, ssize*_dvi2bp);
