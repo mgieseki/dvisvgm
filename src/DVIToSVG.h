@@ -48,7 +48,6 @@ class DVIToSVG : public DVIReader
 
 	protected:
 		DVIToSVG (const DVIToSVG &);
-		DVIToSVG operator = (const DVIToSVG &);
 		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
 		void beginPage (unsigned pageno, Int32 *c);
 		void endPage (unsigned pageno);

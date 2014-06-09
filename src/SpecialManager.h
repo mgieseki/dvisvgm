@@ -53,7 +53,6 @@ class SpecialManager
 	protected:
 		SpecialManager () {}
 		SpecialManager (const SpecialManager &) {}
-		void operator = (const SpecialManager &) {}
 		SpecialHandler* findHandler (const std::string &prefix) const;
 
 	private:
