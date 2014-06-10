@@ -60,7 +60,7 @@ struct SpecialActions
 };
 
 
-class SpecialEmptyActions : public SpecialActions
+class EmptySpecialActions : public SpecialActions
 {
 	public:
 		double getX () const {return 0;}

@@ -26,7 +26,7 @@
 class ColorSpecialTest : public ::testing::Test
 {
 	protected:
-		struct SetColor : SpecialEmptyActions
+		struct SetColor : EmptySpecialActions
 		{
 			SetColor () : color(0) {}
 			void setColor (const Color &c) {color = c;}
