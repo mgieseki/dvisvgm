@@ -36,6 +36,13 @@ struct SpecialException : public MessageException
 };
 
 
+struct DVIPreprocessingListener
+{
+	virtual ~DVIPreprocessingListener () {}
+	virtual void dviPreprocessingFinished () =0;
+};
+
+
 struct DVIEndPageListener
 {
 	virtual ~DVIEndPageListener () {}

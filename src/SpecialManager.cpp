@@ -61,6 +61,8 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 		_pool.push_back(handler);
 		for (const char **p=handler->prefixes(); *p; ++p)
 			_handlers[*p] = handler;
+		if (DVIPreprocessingListener *listener = dynamic_cast<DVIPreprocessingListener*>(handler))
+			_preprocListeners.push_back(listener);
 		if (DVIEndPageListener *listener = dynamic_cast<DVIEndPageListener*>(handler))
 			_endPageListeners.push_back(listener);
 		if (DVIPositionListener *listener = dynamic_cast<DVIPositionListener*>(handler))
@@ -147,6 +149,12 @@ bool SpecialManager::process (const string &special, double dvi2bp, SpecialActio
 void SpecialManager::leavePSHeaderSection () const {
 	if (PsSpecialHandler *pshandler = dynamic_cast<PsSpecialHandler*>(findHandler("!")))
 		pshandler->enterBodySection();
+}
+
+
+void SpecialManager::notifyPreprocessingFinished () const {
+	FORALL(_preprocListeners, vector<DVIPreprocessingListener*>::const_iterator, it)
+		(*it)->dviPreprocessingFinished();
 }
 
 

@@ -124,6 +124,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 		actions->setDVIReader(prescan);
 		prescan.executeAllPages();
 		actions->setDVIReader(*this);
+		SpecialManager::instance().notifyPreprocessingFinished();
 	}
 
 	FORALL(ranges, PageRanges::ConstIterator, it)
