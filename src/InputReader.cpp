@@ -225,6 +225,8 @@ double InputReader::getDouble () {
 }
 
 
+/** Reads a string that consists of alphabetic letters only. Reading stops as
+ *  soon as a non-alphabetic character is found or EOF is reached. */
 string InputReader::getWord () {
 	string ret;
 	skipSpace();
@@ -234,6 +236,8 @@ string InputReader::getWord () {
 }
 
 
+/** Reads a single punctuation character.
+ *  @return the read character or 0 if there's no punctuation character at the current position */
 char InputReader::getPunct () {
 	skipSpace();
 	if (ispunct(peek()))
@@ -287,6 +291,17 @@ string InputReader::getString (size_t n) {
 	string ret;
 	while (n-- > 0)
 		ret += get();
+	return ret;
+}
+
+
+string InputReader::getLine () {
+	string ret;
+	skipSpace();
+	while (!eof() && peek() > 0 && peek() != '\n')
+		ret += get();
+	// trim trailing whitespace
+	ret.erase(std::find_if(ret.rbegin(), ret.rend(), not1(ptr_fun<int, int>(isspace))).base(), ret.end());
 	return ret;
 }
 
