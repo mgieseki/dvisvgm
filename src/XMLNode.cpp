@@ -19,6 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
+#include <map>
+#include <list>
 #include "macros.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -48,6 +50,13 @@ XMLElementNode::XMLElementNode (const XMLElementNode &node)
 XMLElementNode::~XMLElementNode () {
 	FORALL(_children, ChildList::iterator, i)
 		delete *i;
+}
+
+
+void XMLElementNode::clear () {
+	_attributes.clear();
+	FORALL(_children, ChildList::iterator, i)
+		(*i)->clear();
 }
 
 
@@ -277,6 +286,13 @@ XMLDeclarationNode::XMLDeclarationNode (const XMLDeclarationNode &node)
 XMLDeclarationNode::~XMLDeclarationNode () {
 	FORALL(_children, list<XMLDeclarationNode*>::iterator, i)
 		delete *i;
+}
+
+
+void XMLDeclarationNode::clear () {
+	_params.clear();
+	FORALL(_children, list<XMLDeclarationNode*>::iterator, i)
+		(*i)->clear();
 }
 
 

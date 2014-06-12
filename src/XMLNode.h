@@ -33,6 +33,7 @@ struct XMLNode
 {
 	virtual ~XMLNode () {}
 	virtual XMLNode* clone () const =0;
+	virtual void clear () =0;
 	virtual std::ostream& write (std::ostream &os) const =0;
 	virtual bool emit (std::ostream &os, XMLNode *stopElement);
 	virtual void append (XMLNode *child) {}
@@ -49,6 +50,7 @@ class XMLElementNode : public XMLNode
 		XMLElementNode (const XMLElementNode &node);
 		~XMLElementNode ();
 		XMLNode* clone () const {return new XMLElementNode(*this);}
+		void clear ();
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
 		void append (XMLNode *child);
@@ -78,11 +80,13 @@ class XMLTextNode : public XMLNode
 	public:
 		XMLTextNode (const std::string &str) : _text(str) {}
 		XMLNode* clone () const {return new XMLTextNode(*this);}
+		void clear ()           {_text.clear();}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
 		void append (const std::string &str);
 		void prepend (XMLNode *child);
 		std::ostream& write (std::ostream &os) const {return os << _text;}
+		const std::string& getText () const {return _text;}
 
 	private:
 		std::string _text;
@@ -94,6 +98,7 @@ class XMLCommentNode : public XMLNode
 	public:
 		XMLCommentNode (const std::string &str) : _text(str) {}
 		XMLNode* clone () const {return new XMLCommentNode(*this);}
+		void clear ()           {_text.clear();}
 		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->\n";}
 
 	private:
@@ -108,6 +113,7 @@ class XMLDeclarationNode : public XMLNode
 		XMLDeclarationNode (const XMLDeclarationNode &node);
 		~XMLDeclarationNode ();
 		XMLNode* clone () const {return new XMLDeclarationNode(*this);}
+		void clear ();
 		void append (XMLNode *child);
 		std::ostream& write (std::ostream &os) const;
 		bool emit (std::ostream &os, XMLNode *stopElement);
@@ -125,6 +131,7 @@ class XMLCDataNode : public XMLNode
 	public:
 		XMLCDataNode (const std::string &d) : _data(d) {}
 		XMLNode* clone () const {return new XMLCDataNode(*this);}
+		void clear ()           {return _data.clear();}
 		std::ostream& write (std::ostream &os) const;
 
 	private:
