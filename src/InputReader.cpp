@@ -20,6 +20,7 @@
 
 #include <config.h>
 #include <cmath>
+#include <functional>
 #include <vector>
 #include "InputReader.h"
 
