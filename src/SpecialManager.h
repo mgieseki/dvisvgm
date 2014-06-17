@@ -49,7 +49,6 @@ class SpecialManager
 		void notifyEndPage (unsigned pageno) const;
 		void notifyPositionChange (double x, double y) const;
 		void writeHandlerInfo (std::ostream &os) const;
-		void leavePSHeaderSection () const;
 
 	protected:
 		SpecialManager () {}

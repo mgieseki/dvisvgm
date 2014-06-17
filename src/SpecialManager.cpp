@@ -146,12 +146,6 @@ bool SpecialManager::process (const string &special, double dvi2bp, SpecialActio
 }
 
 
-void SpecialManager::leavePSHeaderSection () const {
-	if (PsSpecialHandler *pshandler = dynamic_cast<PsSpecialHandler*>(findHandler("!")))
-		pshandler->enterBodySection();
-}
-
-
 void SpecialManager::notifyPreprocessingFinished () const {
 	FORALL(_preprocListeners, vector<DVIPreprocessingListener*>::const_iterator, it)
 		(*it)->dviPreprocessingFinished();
