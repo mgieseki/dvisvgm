@@ -1,3 +1,19 @@
+dvisvgm-1.7 (2014-06-18)
+- all DVI files are pre-processed now to allow the implementation of
+  advanced features that rely on data not available on the pages being
+  converted
+- added support for internal hyperref links across pages
+- added \special command dvisvgm:rawdef to insert raw SVG fragments to
+  the <defs> section
+- added the new \special commands dvisvgm:rawset, dvisvgm:endrawset, and
+  dvisvgm:rawput to assign and access a sequence of SVG fragments via an
+  identifier (LP feature request #1215878)
+- removed redundant <missing-glyph> elements from SVG files
+- fixed support of external fonts containing characters not mapped by the
+  embedded unicode tables (LP bug #1276689)
+- fixed incorrect extent values shown in conjunction with the preview package
+- many refactorings and code improvements
+
 dvisvgm-1.6 (2014-04-22)
 - added option --zoom to "visually" scale the generated SVG graphics while
   preserving the original size and position values of the graphic objects
