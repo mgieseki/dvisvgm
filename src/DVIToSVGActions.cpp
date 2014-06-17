@@ -213,7 +213,7 @@ void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocess
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
-		Message::estream(true) << "error in special '" << spc << "': " << e.what() << '\n';
+		Message::estream(true) << "error in special: " << e.what() << '\n';
 	}
 }
 

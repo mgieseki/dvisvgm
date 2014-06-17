@@ -465,11 +465,31 @@ exact syntax, see the documentation of dvips, for instance.
 *dvisvgm*::
 dvisvgm offers its own small set of specials. The following list gives a brief overview.
   *dvisvgm:raw* 'text';;
-  Adds an arbitrary sequence of characters to the SVG output. dvisvgm does not perform any validation here,
-  thus the user has to ensure that the resulting SVG is still valid. Parameter 'text' may
-  contain the macros *{?x}*, *{?y}*, and *{?color}* that are expanded to the current 'x' or 'y' coordinate
-  and the current color, respectively. Also, macro *{?nl}* expands to a newline character.
+  Adds an arbitrary sequence of characters to the page section of the SVG document. dvisvgm does not perform
+  any validation here, thus the user has to ensure that the resulting SVG is still valid. Parameter 'text'
+  may contain the expressions *{?x}*, *{?y}*, and *{?color}* that expand to the current 'x' or 'y' coordinate
+  and the current color, respectively. Furthermore, *{?nl}* expands to a newline character.
  
+  *dvisvgm:rawdef* 'text';;
+  This command is similar to *dvisvgm:raw*, but puts the raw text into the <defs> section of the SVG document
+  currently being generated.
+
+  *dvisvgm:rawset* 'name' ... *dvisvgm:endrawset*;;
+  This pair of specials marks the begin and end of a definition of a named raw SVG fragment. All *dvisvgm:raw*
+  and *dvisvgm:rawdef* specials enclosed by *dvisvgm:rawset* and *dvisvgm:endrawset* are not evaluated
+  immediately but jointly stored under the given 'name' for later use. Once defined, the named fragment can be
+  referenced throughout the DVI file by *dvisvgm:rawput* (see below).
+  *dvisvgm:rawset* and *dvisvgm:endrawset* must not be nested, i.e. each call of *dvisvgm:rawset* has to be
+  followed by a corresponding call of *dvisvgm:endrawset* before another *dvisvgm:rawset* may occur.
+  Also, the identifier 'name' must be unique throughout the DVI file. Using *dvisvgm:rawset* multiple times
+  together with the same 'name' leads to a warning message.
+
+  *dvisvgm:rawput* 'name';;
+  Inserts raw SVG fragments previously stored under the given 'name'. dvisvgm distinguishes between fragments
+  that were specified with *dvisvgm:raw* or *dvisvgm:rawdef*, and handles them differently: It inserts all
+  *dvisvgm:raw* parts every time *dvisvgm:rawput* is called, whereas the *dvisvgm:rawdef* portions go to the
+  <defs> section of the current SVG document only once.
+
   *dvisvgm:img* 'width' 'height' 'file';;
   Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
   can be used here. However, dvisvgm does not check the file format or the file name suffix. The lengths 'width'

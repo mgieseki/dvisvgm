@@ -21,15 +21,47 @@
 #ifndef DVISVGM_DVISVGMSPECIALHANDLER_H
 #define DVISVGM_DVISVGMSPECIALHANDLER_H
 
+#include <map>
+#include <string>
+#include <vector>
 #include "SpecialHandler.h"
 
-class DvisvgmSpecialHandler : public SpecialHandler
+class InputReader;
+struct SpecialActions;
+
+class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingListener, public DVIEndPageListener
 {
+	typedef std::vector<std::string> StringVector;
+	typedef std::map<std::string, StringVector> MacroMap;
+
 	public:
+		DvisvgmSpecialHandler ();
 		const char* name () const   {return "dvisvgm";}
 		const char* info () const   {return "special set for embedding raw SVG snippets";}
 		const char** prefixes () const;
+		void preprocess (const char *prefix, std::istream &is, SpecialActions *actions);
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+
+	protected:
+		void preprocessRaw (InputReader &ir);
+		void preprocessRawDef (InputReader &ir);
+		void preprocessRawSet (InputReader &ir);
+		void preprocessEndRawSet (InputReader &ir);
+		void preprocessRawPut (InputReader &ir);
+		void processRaw (InputReader &ir, SpecialActions *actions);
+		void processRawDef (InputReader &ir, SpecialActions *actions);
+		void processRawSet (InputReader &ir, SpecialActions *actions);
+		void processEndRawSet (InputReader &ir, SpecialActions *actions);
+		void processRawPut (InputReader &ir, SpecialActions *actions);
+		void processBBox (InputReader &ir, SpecialActions *actions);
+		void processImg (InputReader &ir, SpecialActions *actions);
+		void dviPreprocessingFinished ();
+		void dviEndPage (unsigned pageno);
+
+	private:
+		MacroMap _macros;
+		MacroMap::iterator _currentMacro;
+		int _nestingLevel;
 };
 
 #endif

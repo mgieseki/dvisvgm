@@ -53,6 +53,11 @@ check_PROGRAMS += DirectoryTest
 DirectoryTest_SOURCES = DirectoryTest.cpp
 DirectoryTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
 
+TESTS += DvisvgmSpecialTest
+check_PROGRAMS += DvisvgmSpecialTest
+DvisvgmSpecialTest_SOURCES = DvisvgmSpecialTest.cpp
+DvisvgmSpecialTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+
 TESTS += FileFinderTest
 check_PROGRAMS += FileFinderTest
 FileFinderTest_SOURCES = FileFinderTest.cpp
