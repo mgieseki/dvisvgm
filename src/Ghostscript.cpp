@@ -47,7 +47,7 @@ static string get_libgs (const string &fname) {
 #ifdef MIKTEX
 #if defined(__WIN64__)
 	const char *gsdll = "mgsdll64.dll";
-#elif defined(__WIN32__)
+#else
 	const char *gsdll = "mgsdll32.dll";
 #endif
 	// try to look up the Ghostscript DLL coming with MiKTeX
@@ -63,7 +63,11 @@ static string get_libgs (const string &fname) {
 	const int abi_min=7, abi_max=9; // supported libgs ABI versions
 	for (int i=abi_max; i >= abi_min; i--) {
 		ostringstream oss;
+#if defined(__CYGWIN__)
+		oss << "cyggs-" << i << ".dll";
+#else
 		oss << "libgs.so." << i;
+#endif
 		DLLoader loader(oss.str().c_str());
 		if (loader.loaded())
 			return oss.str();
@@ -72,7 +76,7 @@ static string get_libgs (const string &fname) {
 	// no appropriate library found
 	return "";
 }
-#endif // HAVE_LIBGS
+#endif // !HAVE_LIBGS
 
 
 /** Loads the Ghostscript library but does not create an instance. This
