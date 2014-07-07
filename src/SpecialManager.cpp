@@ -131,7 +131,6 @@ void SpecialManager::preprocess (const string &special, SpecialActions *actions)
  *  @param[in] special the special expression
  *  @param[in] dvi2bp factor to convert DVI units to PS points
  *  @param[in] actions actions the special handlers can perform
- *  @param[in] listener object that wants to be notified about the processing state
  *  @return true if the special could be processed successfully
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, double dvi2bp, SpecialActions *actions) const {

@@ -78,7 +78,7 @@ static bool is_greater_or_equal (UInt32 a, UInt32 b) {return a >= b;}
 /** Adds index to unicode mappings for a given range of character indexes.
  *  @param[in] minIndex lower bound of range to fill
  *  @param[in] maxIndex upper bound of range to fill
- *  @param[in] value first unicode point to add (if possible)
+ *  @param[in] ucp first unicode point to add (if possible)
  *  @param[in,out] used_ucps unicode points already in use
  *  @param[in] ascending if true, fill range from lower to upper bound
  *  @return true on success */

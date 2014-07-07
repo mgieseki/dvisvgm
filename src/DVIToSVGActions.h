@@ -66,7 +66,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void moveToX (double x);
 		void moveToY (double y);
 		void setFont (int num, const Font *font);
-		void special (const std::string &s, double dvi2bp, bool preprocessing=false);
+		void special (const std::string &spc, double dvi2bp, bool preprocessing=false);
 		void preamble (const std::string &cmt);
 		void postamble ();
 		void beginPage (unsigned pageno, Int32 *c);

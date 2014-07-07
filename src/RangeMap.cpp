@@ -71,7 +71,7 @@ bool RangeMap::Range::join (const Range &r) {
 
 
 /** Adds a new number range. The range describes a mapping from c to v(c), where
- *  c \in [cmin,cmax] and v(cmin):=vmin, v(c):=vmin+c-cmin.
+ *  \f$c \in [cmin,cmax]\f$ and \f$v(cmin):=vmin, v(c):=vmin+c-cmin\f$.
  *  @param[in] cmin smallest number in the range
  *  @param[in] cmax largest number in the range
  *  @param[in] vmin map value of cmin */

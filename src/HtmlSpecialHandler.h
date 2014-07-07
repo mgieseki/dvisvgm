@@ -50,7 +50,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		const char* info () const  {return "hyperref specials";}
 		const char** prefixes () const;
 
-		static bool setLinkMarker (const std::string &type);
+		static bool setLinkMarker (const std::string &marker);
 
 	protected:
 		void preprocessHrefAnchor (const std::string &uri);
