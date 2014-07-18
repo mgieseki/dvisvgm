@@ -25,7 +25,9 @@
 #include "Color.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
+#include "GraphicPath.h"
 #include "SpecialActions.h"
+#include "SVGTree.h"
 #include "TpicSpecialHandler.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -118,56 +120,55 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
  *  @param[in] ddist length of dashes and gaps
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
-	if (actions && !_points.empty()) {
-		const size_t size = _points.size();
-		if (size < 3)
-			drawLines(true, false, ddist, actions);
-		else {
-			double x = actions->getX();
-			double y = actions->getY();
-			DPair p(x,y);
-			ostringstream oss;
-			oss << 'M' << XMLString(x+_points[0].x()) << ',' << XMLString(y+_points[0].y());
-			DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
-			oss << 'L' << XMLString(mid.x()) << ',' << XMLString(mid.y());
-			actions->embed(p+_points[0]);
-			for (size_t i=1; i < size-1; i++) {
-				const DPair p0 = p+_points[i-1];
-				const DPair p1 = p+_points[i];
-				const DPair p2 = p+_points[i+1];
-				mid = p1+(p2-p1)/2.0;
-				oss << 'Q' << XMLString(p1.x()) << ',' << XMLString(p1.y())
-					 << ' ' << XMLString(mid.x()) << ',' << XMLString(mid.y());
-				actions->embed(mid);
-				actions->embed((p0+p1*6.0+p2)/8.0, _penwidth);
-			}
-			if (_points[0] == _points[size-1])  // closed path?
-				oss << 'Z';
-			else {
-				oss << 'L' << XMLString(x+_points[size-1].x()) << ',' << XMLString(y+_points[size-1].y());
-				actions->embed(p+_points[size-1]);
-			}
-
-			Color color = actions->getColor();
-			color *= _fill;
-			XMLElementNode *path = new XMLElementNode("path");
-			if (_fill >= 0) {
-				if (_points[0] != _points[size-1])
-					oss << 'Z';
-				path->addAttribute("fill", color.rgbString());
-			}
-			else
-				path->addAttribute("fill", "none");
-
-			path->addAttribute("d", oss.str());
-			path->addAttribute("stroke", actions->getColor().rgbString());
-			path->addAttribute("stroke-width", XMLString(_penwidth));
-			if (ddist > 0)
-				path->addAttribute("stroke-dasharray", XMLString(ddist));
-			else if (ddist < 0)
-				path->addAttribute("stroke-dasharray", XMLString(_penwidth) + ' ' + XMLString(-ddist));
-			actions->appendToPage(path);
+	if (!actions || _points.empty())
+		return;
+	const size_t size = _points.size();
+	if (size < 3)
+		drawLines(true, false, ddist, actions);
+	else {
+		DPair p(actions->getX(), actions->getY());
+		GraphicPath<double> path;
+		path.moveto(p+_points[0]);
+		DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
+		path.lineto(mid);
+		actions->embed(p+_points[0]);
+		for (size_t i=1; i < size-1; i++) {
+			const DPair p0 = p+_points[i-1];
+			const DPair p1 = p+_points[i];
+			const DPair p2 = p+_points[i+1];
+			mid = p1+(p2-p1)/2.0;
+			path.conicto(p1, mid);
+			actions->embed(mid);
+			actions->embed((p0+p1*6.0+p2)/8.0, _penwidth);
 		}
+		if (_points[0] == _points[size-1])  // closed path?
+			path.closepath();
+		else {
+			path.lineto(p+_points[size-1]);
+			actions->embed(p+_points[size-1]);
+		}
+
+		Color color = actions->getColor();
+		color *= _fill;
+		XMLElementNode *pathElem = new XMLElementNode("path");
+		if (_fill >= 0) {
+			if (_points[0] != _points[size-1])
+				path.closepath();
+			pathElem->addAttribute("fill", color.rgbString());
+		}
+		else
+			pathElem->addAttribute("fill", "none");
+
+		ostringstream oss;
+		path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+		pathElem->addAttribute("d", oss.str());
+		pathElem->addAttribute("stroke", actions->getColor().rgbString());
+		pathElem->addAttribute("stroke-width", XMLString(_penwidth));
+		if (ddist > 0)
+			pathElem->addAttribute("stroke-dasharray", XMLString(ddist));
+		else if (ddist < 0)
+			pathElem->addAttribute("stroke-dasharray", XMLString(_penwidth) + ' ' + XMLString(-ddist));
+		actions->appendToPage(pathElem);
 	}
 	reset();
 }
