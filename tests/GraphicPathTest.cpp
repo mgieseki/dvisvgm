@@ -31,7 +31,7 @@ TEST(GraphicPathTest, svg) {
 	path.cubicto(20,20,30,30,40,40);
 	path.closepath();
 	ostringstream oss;
-	path.writeSVG(oss);
+	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M0 0L10 10C20 20 30 30 40 40Z");
 }
 
@@ -42,7 +42,7 @@ TEST(GraphicPathTest, optimize) {
 	path.lineto(10,0);
 	path.lineto(10,20);
 	ostringstream oss;
-	path.writeSVG(oss);
+	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M0 0H10V20");
 }
 
@@ -60,7 +60,7 @@ TEST(GraphicPathTest, transform) {
 	m.rotate(90);
 	path.transform(m);
 	ostringstream oss;
-	path.writeSVG(oss);
+	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M-100 10V12H-102V10Z");
 }
 
@@ -77,6 +77,19 @@ TEST(GraphicPathTest, closeOpenSubPaths) {
 	path.lineto(10,11);
 	path.closeOpenSubPaths();
 	ostringstream oss;
-	path.writeSVG(oss);
+	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M0 0H1V1H0ZM10 10H11V11H10Z");
+}
+
+
+TEST(GraphicPathTest, relative1) {
+	GraphicPath<int> path;
+	path.moveto(0,0);
+	path.lineto(10,10);
+	path.cubicto(20,20,30,30,40,40);
+	path.conicto(50, 50, 60, 60);
+	path.closepath();
+	ostringstream oss;
+	path.writeSVG(oss, true);
+	EXPECT_EQ(oss.str(), "m0 0l10 10c10 10 20 20 30 30q10 10 20 20z");
 }

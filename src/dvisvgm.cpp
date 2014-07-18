@@ -368,6 +368,7 @@ int main (int argc, char *argv[]) {
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	SVGTree::CREATE_USE_ELEMENTS = args.no_fonts_arg() < 1;
 	SVGTree::ZOOM_FACTOR = args.zoom_arg();
+	SVGTree::RELATIVE_PATH_CMDS = args.relative_given();
 	DVIToSVG::TRACE_MODE = args.trace_all_given() ? (args.trace_all_arg() ? 'a' : 'm') : 0;
 	Message::LEVEL = args.verbosity_arg();
 	PhysicalFont::EXACT_BBOX = args.exact_given();

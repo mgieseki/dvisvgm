@@ -31,10 +31,12 @@
 #include "PSPreviewFilter.h"
 #include "PsSpecialHandler.h"
 #include "SpecialActions.h"
+#include "SVGTree.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
 using namespace std;
+
 
 static inline double str2double (const string &str) {
 	double ret;
@@ -471,7 +473,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			bbox.expand(_linewidth/2);
 
 			ostringstream oss;
-			_path.writeSVG(oss);
+			_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 			path = new XMLElementNode("path");
 			path->addAttribute("d", oss.str());
 			path->addAttribute("stroke", _actions->getColor().rgbString());
@@ -532,7 +534,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		}
 
 		ostringstream oss;
-		_path.writeSVG(oss);
+		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 		XMLElementNode *path = new XMLElementNode("path");
 		path->addAttribute("d", oss.str());
 		if (_pattern)
@@ -677,7 +679,7 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 		int newID = _clipStack.topID();
 
 		ostringstream oss;
-		_path.writeSVG(oss);
+		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 		XMLElementNode *path = new XMLElementNode("path");
 		path->addAttribute("d", oss.str());
 		if (evenodd)

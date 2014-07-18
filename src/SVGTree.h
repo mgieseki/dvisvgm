@@ -88,10 +88,11 @@ class SVGTree
 		XMLElementNode* rootNode () const {return _root;}
 
 	public:
-		static bool USE_FONTS;    ///< if true, create font references and don't draw paths directly
-		static bool CREATE_STYLE; ///< should style elements and class attributes be used to reference fonts?
+		static bool USE_FONTS;           ///< if true, create font references and don't draw paths directly
+		static bool CREATE_STYLE;        ///<  use style elements and class attributes to reference fonts?
 		static bool CREATE_USE_ELEMENTS; ///< allow generation of <use/> elements?
-		static double ZOOM_FACTOR; ///< factor applied to width/height attribute
+		static bool RELATIVE_PATH_CMDS;  ///< relative path commands rather than absolute ones?
+		static double ZOOM_FACTOR;       ///< factor applied to width/height attribute
 
 	protected:
 		void newTextNode (double x, double y);

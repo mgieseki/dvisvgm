@@ -21,6 +21,7 @@
 #ifndef DVISVGM_GRAPHICPATH_H
 #define DVISVGM_GRAPHICPATH_H
 
+#include <cctype>
 #include <list>
 #include <ostream>
 #include <vector>
@@ -106,7 +107,6 @@ class GraphicPath
 			return _commands.empty();
 		}
 
-
 		/// Returns the number of path commands used to describe the path.
 		size_t size () const {
 			return _commands.size();
@@ -184,27 +184,41 @@ class GraphicPath
 		 *  @param[in] sy vertical scale factor
 		 *  @param[in] dx horizontal translation in PS point units
 		 *  @param[in] dy vertical translation in PS point units */
-		void writeSVG (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
+		void writeSVG (std::ostream &os, bool relative, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
 			struct WriteActions : Actions {
-				WriteActions (std::ostream &os, double sx, double sy, double dx, double dy)
-					: _os(os), _sx(sx), _sy(sy), _dx(dx), _dy(dy) {}
+				WriteActions (std::ostream &os, bool relative, double sx, double sy, double dx, double dy)
+					: _os(os), _relative(relative), _sx(sx), _sy(sy), _dx(dx), _dy(dy) {}
 
 				void draw (char cmd, const Point *points, int n) {
+					if (_relative)
+						cmd = tolower(cmd);
 					_os << cmd;
 					switch (cmd) {
+						case 'h': _os << XMLString(_sx*(points->x()-_currentPoint.x())+_dx); break;
+						case 'v': _os << XMLString(_sy*(points->y()-_currentPoint.y())+_dy); break;
+						case 'z': _currentPoint = _startPoint; break;
 						case 'H': _os << XMLString(_sx*points->x()+_dx); break;
 						case 'V': _os << XMLString(_sy*points->y()+_dy); break;
 						default :
 							for (int i=0; i < n; i++) {
 								if (i > 0)
 									_os << ' ';
-								_os << XMLString(_sx*points[i].x()+_dx) << ' ' << XMLString(_sy*points[i].y()+_dy);
+								Point p = points[i];
+								if (_relative)
+									p -= _currentPoint;
+								_os << XMLString(_sx*p.x()+_dx) << ' ' << XMLString(_sy*p.y()+_dy);
 							}
 					}
+					if (cmd == 'm')
+						_startPoint = points[0];
+					if (islower(cmd) && n > 0)
+						_currentPoint = points[n-1];
 				}
 				std::ostream &_os;
+				bool _relative;
 				double _sx, _sy, _dx, _dy;
-			} actions(os, sx, sy, dx, dy);
+				Point _startPoint, _currentPoint;
+			} actions(os, relative, sx, sy, dx, dy);
 			iterate(actions, true);
 		}
 

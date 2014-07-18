@@ -52,6 +52,7 @@ class CommandLine : public CmdLineParserBase
 		int precision_arg () const {return _precision_arg;}
 		bool progress_given () const {return _progress_given;}
 		double progress_arg () const {return _progress_arg;}
+		bool relative_given () const {return _relative_given;}
 		bool rotate_given () const {return _rotate_given;}
 		double rotate_arg () const {return _rotate_arg;}
 		bool scale_given () const {return _scale_given;}
@@ -99,6 +100,7 @@ class CommandLine : public CmdLineParserBase
 		void handle_page (InputReader &ir, const Option &opt, bool longopt);
 		void handle_precision (InputReader &ir, const Option &opt, bool longopt);
 		void handle_progress (InputReader &ir, const Option &opt, bool longopt);
+		void handle_relative (InputReader &ir, const Option &opt, bool longopt);
 		void handle_rotate (InputReader &ir, const Option &opt, bool longopt);
 		void handle_scale (InputReader &ir, const Option &opt, bool longopt);
 		void handle_stdout (InputReader &ir, const Option &opt, bool longopt);
@@ -149,6 +151,7 @@ class CommandLine : public CmdLineParserBase
 		int _precision_arg;
 		bool _progress_given;
 		double _progress_arg;
+		bool _relative_given;
 		bool _rotate_given;
 		double _rotate_arg;
 		bool _scale_given;

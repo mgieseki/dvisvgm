@@ -38,6 +38,7 @@ using namespace std;
 bool SVGTree::CREATE_STYLE=true;
 bool SVGTree::USE_FONTS=true;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
+bool SVGTree::RELATIVE_PATH_CMDS=false;
 double SVGTree::ZOOM_FACTOR=1.0;
 
 
@@ -232,7 +233,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 				double sx = pf->scaledSize()/pf->unitsPerEm();
 				double sy = -sx;
 				ostringstream oss;
-				glyph.writeSVG(oss, sx, sy, x, y);
+				glyph.writeSVG(oss, RELATIVE_PATH_CMDS, sx, sy, x, y);
 				XMLElementNode *glyph_node = new XMLElementNode("path");
 				glyph_node->addAttribute("d", oss.str());
 				if (!rotation.isIdentity())
@@ -321,7 +322,7 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 		sy = -sx;
 	}
 	ostringstream oss;
-	glyph.writeSVG(oss, sx, sy);
+	glyph.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS, sx, sy);
 	glyph_node->addAttribute("d", oss.str());
 	return glyph_node;
 }

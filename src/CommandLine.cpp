@@ -38,6 +38,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 	{'p', "page", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_page)},
 	{'d', "precision", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_precision)},
 	{'P', "progress", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_progress)},
+	{'R', "relative", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_relative)},
 	{'r', "rotate", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
 	{'c', "scale", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
 	{'s', "stdout", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_stdout)},
@@ -83,6 +84,7 @@ void CommandLine::init () {
 	_page_given = false;
 	_precision_given = false;
 	_progress_given = false;
+	_relative_given = false;
 	_rotate_given = false;
 	_scale_given = false;
 	_stdout_given = false;
@@ -135,6 +137,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 		"o-L, --linkmark=style          select how to mark hyperlinked areas [box]",
 		"o-o, --output=pattern          set name pattern of output files",
 		"o-d, --precision=number        set number of decimal points (0-6) [0]",
+		"o-R, --relative                create relative path commands",
 		"o-s, --stdout                  write SVG output to stdout",
 		"o-n, --no-fonts[=variant]      draw glyphs by using path elements [0]",
 		"o    --no-styles               don't use styles to reference fonts",
@@ -263,6 +266,10 @@ void CommandLine::handle_precision (InputReader &ir, const Option &opt, bool lon
 void CommandLine::handle_progress (InputReader &ir, const Option &opt, bool longopt) {
 	if (ir.eof() || getDoubleArg(ir, opt, longopt, _progress_arg))
 		_progress_given = true;
+}
+
+void CommandLine::handle_relative (InputReader &ir, const Option &opt, bool longopt) {
+	_relative_given = true;
 }
 
 void CommandLine::handle_rotate (InputReader &ir, const Option &opt, bool longopt) {
