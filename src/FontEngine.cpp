@@ -110,6 +110,8 @@ void FontEngine::setDeviceResolution (int x, int y) {
  * @param[in] fontindex index of font in font collection (multi-font files, like TTC)
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
+	if (_currentFace && FT_Done_Face(_currentFace))
+		Message::estream(true) << "FontEngine: error removing font\n";
 	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
 		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
 		return false;
