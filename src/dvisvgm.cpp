@@ -333,8 +333,7 @@ int main (int argc, char *argv[]) {
 		return 0;
 	}
 	if (args.list_specials_given()) {
-		SVGOutput out;
-		DVIToSVG dvisvg(cin, out);
+		DVIToSVG::setProcessSpecials();
 		SpecialManager::instance().writeHandlerInfo(cout);
 		return 0;
 	}

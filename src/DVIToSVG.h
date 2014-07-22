@@ -37,11 +37,11 @@ class DVIToSVG : public DVIReader
 		DVIToSVG (std::istream &is, SVGOutputBase &out);
 		~DVIToSVG ();
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
-		void setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
 		void setPageSize (const std::string &name)           {_bboxString = name;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		void getPageTransformation (Matrix &matrix) const;
 		std::string getSVGFilename (unsigned pageno) const;
+		static void setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
 
 	public:
 		static char TRACE_MODE;
