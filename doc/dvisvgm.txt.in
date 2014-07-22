@@ -137,6 +137,13 @@ dvisvgm prints the path of the default cache directory together with further inf
 Additionally, outdated and corrupted cache files are removed.
 
 
+*-j, --clipjoin*::
+This option tells dvisvgm to compute the intersection of clipping paths itself if necessary,
+and not to delegate this task to the SVG renderer. The resulting SVG files are more portable
+because some SVG renderers don't support intersections of clipping paths which are defined by
+'clipPath' elements that contain a 'clip-path' attribute.
+
+
 *--color*::
 Enables colorization of messages printed during the conversion process. The colors can be customized
 via the environment variable +DVISVGM_COLORS+. See the ENVIRONMENT section below for further information.

@@ -16,6 +16,7 @@ using namespace std;
 const CmdLineParserBase::Option CommandLine::_options[] = {
 	{'b', "bbox", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
 	{'C', "cache", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
+	{'j', "clipjoin", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_clipjoin)},
 	{'\0', "color", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
 #if !defined(DISABLE_GS)
 	{'E', "eps", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
@@ -62,6 +63,7 @@ void CommandLine::init () {
 	// disable all options by default
 	_bbox_given = false;
 	_cache_given = false;
+	_clipjoin_given = false;
 	_color_given = false;
 #if !defined(DISABLE_GS)
 	_eps_given = false;
@@ -134,6 +136,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #endif
 		"sSVG output options:",
 		"o-b, --bbox=size               set size of bounding box [min]",
+		"o-j, --clipjoin                compute intersection of clipping paths",
 		"o-L, --linkmark=style          select how to mark hyperlinked areas [box]",
 		"o-o, --output=pattern          set name pattern of output files",
 		"o-d, --precision=number        set number of decimal points (0-6) [0]",
@@ -179,6 +182,10 @@ void CommandLine::handle_bbox (InputReader &ir, const Option &opt, bool longopt)
 void CommandLine::handle_cache (InputReader &ir, const Option &opt, bool longopt) {
 	if (ir.eof() || getStringArg(ir, opt, longopt, _cache_arg))
 		_cache_given = true;
+}
+
+void CommandLine::handle_clipjoin (InputReader &ir, const Option &opt, bool longopt) {
+	_clipjoin_given = true;
 }
 
 void CommandLine::handle_color (InputReader &ir, const Option &opt, bool longopt) {

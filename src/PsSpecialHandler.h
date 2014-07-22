@@ -50,6 +50,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 			void clear ();
 			bool empty () const {return _stack.empty();}
 			const Path* top () const;
+			Path* getPath (size_t id);
 			int topID () const  {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
@@ -74,6 +75,9 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
 		void setDviScaleFactor (double dvi2bp) {_previewFilter.setDviScaleFactor(dvi2bp);}
 		void enterBodySection ();
+
+	public:
+		static bool COMPUTE_CLIPPATHS_INTERSECTIONS;
 
 	protected:
 		void initialize ();

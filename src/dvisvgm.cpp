@@ -44,6 +44,7 @@
 #include "Message.h"
 #include "PageSize.h"
 #include "PSInterpreter.h"
+#include "PsSpecialHandler.h"
 #include "SignalHandler.h"
 #include "SpecialManager.h"
 #include "SVGOutputBase.h"
@@ -375,6 +376,7 @@ int main (int argc, char *argv[]) {
 	PhysicalFont::EXACT_BBOX = args.exact_given();
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
+	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = args.clipjoin_given();
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
 	if (!HtmlSpecialHandler::setLinkMarker(args.linkmark_arg()))
 		Message::wstream(true) << "invalid argument '"+args.linkmark_arg()+"' supplied for option --linkmark\n";

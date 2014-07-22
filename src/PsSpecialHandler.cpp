@@ -27,6 +27,7 @@
 #include "FileFinder.h"
 #include "Ghostscript.h"
 #include "Message.h"
+#include "PathClipper.h"
 #include "PSPattern.h"
 #include "PSPreviewFilter.h"
 #include "PsSpecialHandler.h"
@@ -44,6 +45,9 @@ static inline double str2double (const string &str) {
 	iss >> ret;
 	return ret;
 }
+
+
+bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _previewFilter(_psi), _psSection(PS_NONE), _xmlnode(0)
@@ -665,34 +669,53 @@ void PsSpecialHandler::initclip (vector<double> &p) {
 }
 
 
-/** Assigns a new clipping path.
+/** Assigns a new clipping path to the graphics state using the current path.
+ *  If the graphics state already contains a clipping path, the new one is
+ *  computed by intersecting the current clipping path with the current graphics
+ *  path (see PS language reference, 3rd edition, pp. 193, 542)
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 	// when this method is called, _path contains the clipping path
-	if (!_path.empty() && _actions) {
-		if (!_actions->getMatrix().isIdentity())
-			_path.transform(_actions->getMatrix());
+	if (_path.empty() || !_actions)
+		return;
 
-		int oldID = _clipStack.topID();
+	Path::WindingRule windingRule = evenodd ? Path::WR_EVEN_ODD : Path::WR_NON_ZERO;
+	_path.setWindingRule(windingRule);
+
+	if (!_actions->getMatrix().isIdentity())
+		_path.transform(_actions->getMatrix());
+
+	int oldID = _clipStack.topID();
+
+	ostringstream oss;
+	if (!COMPUTE_CLIPPATHS_INTERSECTIONS || oldID < 1) {
 		_clipStack.replace(_path);
-		int newID = _clipStack.topID();
-
-		ostringstream oss;
 		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-		XMLElementNode *path = new XMLElementNode("path");
-		path->addAttribute("d", oss.str());
-		if (evenodd)
-			path->addAttribute("clip-rule", "evenodd");
-
-		XMLElementNode *clip = new XMLElementNode("clipPath");
-		clip->addAttribute("id", XMLString("clip")+XMLString(newID));
-		if (oldID)
-			clip->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
-
-		clip->append(path);
-		_actions->appendToDefs(clip);
 	}
+	else {
+		// compute the intersection of the current clipping path with the current graphics path
+		Path *oldPath = _clipStack.getPath(oldID);
+		Path intersectedPath(windingRule);
+		PathClipper clipper;
+		clipper.intersect(*oldPath, _path, intersectedPath);
+		_clipStack.replace(intersectedPath);
+		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+	}
+
+	XMLElementNode *pathElem = new XMLElementNode("path");
+	pathElem->addAttribute("d", oss.str());
+	if (evenodd)
+		pathElem->addAttribute("clip-rule", "evenodd");
+
+	int newID = _clipStack.topID();
+	XMLElementNode *clipElem = new XMLElementNode("clipPath");
+	clipElem->addAttribute("id", XMLString("clip")+XMLString(newID));
+	if (!COMPUTE_CLIPPATHS_INTERSECTIONS && oldID)
+		clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
+
+	clipElem->append(pathElem);
+	_actions->appendToDefs(clipElem);
 }
 
 
@@ -852,6 +875,11 @@ const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () const {
 	return (!_stack.empty() && _stack.top().pathID)
 		? &_paths[_stack.top().pathID-1]
 		: 0;
+}
+
+
+PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::getPath (size_t id) {
+	return (id > 0 && id <= _paths.size()) ? &_paths[id-1] : 0;
 }
 
 
