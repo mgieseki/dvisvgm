@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include <clipper.hpp>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -276,6 +277,7 @@ static void print_version (bool extended) {
 			oss << " (" TARGET_SYSTEM ")";
 		int len = oss.str().length();
 		oss << "\n" << string(len, '-') << "\n"
+			"clipper:     " << CLIPPER_VERSION "\n"
 			"freetype:    " << FontEngine::version() << "\n";
 
 		Ghostscript gs;

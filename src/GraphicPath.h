@@ -34,6 +34,7 @@
 template <typename T>
 class GraphicPath
 {
+	friend class PathClipper;
 	public:
 		enum WindingRule {WR_EVEN_ODD, WR_NON_ZERO};
 		typedef Pair<T> Point;
@@ -92,6 +93,7 @@ class GraphicPath
 			virtual void closepath () {}
 			virtual void draw (char cmd, const Point *points, int n) {}
 			virtual bool quit () {return false;}
+			virtual void finished () {}
 		};
 
 		typedef typename std::vector<Command>::iterator Iterator;
@@ -356,6 +358,7 @@ void GraphicPath<T>::iterate (Actions &actions, bool optimize) const {
 			cp = it->params[np-1];
 		prev = it;
 	}
+	actions.finished();
 }
 
 #endif

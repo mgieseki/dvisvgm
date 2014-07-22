@@ -15,6 +15,8 @@ dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
 libdvisvgm_a_SOURCES = \
 	BasicDVIReader.cpp \
 	BasicDVIReader.h \
+	Bezier.cpp \
+	Bezier.h \
 	BgColorSpecialHandler.cpp \
 	BgColorSpecialHandler.h \
 	Bitmap.cpp \
@@ -123,6 +125,8 @@ libdvisvgm_a_SOURCES = \
 	PageSize.cpp \
 	PageSize.h \
 	Pair.h \
+	PathClipper.cpp \
+	PathClipper.h \
 	PdfSpecialHandler.cpp \
 	PdfSpecialHandler.h \
 	PreScanDVIReader.cpp \

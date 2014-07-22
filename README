@@ -9,9 +9,14 @@ DESCRIPTION
 DEPENDENCIES
 
  dvisvgm relies on the following free libraries:
+   * Clipper (http://www.angusj.com/delphi/clipper.php)
+     To compute the insersections of two curved paths, dvisvgm
+     flattens the paths to polygons, intersects them using Clipper,
+     and reconstructs the curves afterwards.
+
    * FreeType 2 (http://www.freetype.org)
-     This library is used to extract glyph outlines
-     from PFB files.
+     This library is used to extract the glyph outlines
+     from vector fonts (PFB, OTF, TTF).
 
    * Ghostscript (http://pages.cs.wisc.edu/~ghost)
      The PostScript special handler requires the Ghostscript

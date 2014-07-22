@@ -4,10 +4,12 @@ _dvisvgm_ &ndash; A fast DVI to SVG converter
 Description
 -----------
 
-_dvisvgm_ is a utility for TeX/LaTeX users. It converts DVI files to the 
-XML-based scalable vector graphics format SVG. The latest releases support
-classic DVI files (format 2) as well as DVI output created by pTeX in vertical
-mode (format 3), or XeTeX (format 5, also knows as XDV).
+_dvisvgm_ is a utility for TeX/LaTeX users. It converts
+[DVI files](http://en.wikipedia.org/wiki/Device_independent_file_format) to the
+XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
+The latest releases support classic DVI files (format 2) as well as DVI output
+created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
+or [XeTeX](http://scripts.sil.org/xetex) (format 5, also knows as XDV).
 
 
 Dependencies
@@ -15,8 +17,13 @@ Dependencies
 
 _dvisvgm_ relies on the following free libraries:
 
+* [Clipper](http://www.angusj.com/delphi/clipper.php)  
+  To compute the insersection of two curved paths, _dvisvgm_ flattens the paths to
+  polygons, intersects them using a slightly modified version of Clipper, and reconstructs
+  the curves afterwards.
+
 * [FreeType 2](http://www.freetype.org)  
-  This library is used to extract glyph outlines from PFB files.
+  This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
 * [Ghostscript](http://pages.cs.wisc.edu/~ghost)  
   The PostScript special handler requires the Ghostscript library libgs.so (Linux)
@@ -24,11 +31,11 @@ _dvisvgm_ relies on the following free libraries:
   finds the corresponding Ghostscript development files on the system, it
   directly links against libgs.so. Otherwise, the library is looked up during
   runtime and the PostScript support is enabled only if libgs.so could be found.
-  Due to incompatible changes of the Ghostscript API, _dvisvgm_ requires 
+  Due to incompatible changes of the Ghostscript API, _dvisvgm_ requires
   Ghostscript 8.31 or later.
 
 * [Kpathsea](https://tug.org/kpathsea)  
-  This library is part of the Web2C package and is usually installed in 
+  This library is part of the Web2C package and is usually installed in
   conjunction with a TeX distribution. Kpathsea provides functions for searching
   files in the large texmf tree.
 
@@ -68,7 +75,7 @@ via a system call. Please ensure that Metafont is installed and
 reachable through the search path.
 
 If you don't like compiling the sources yourself, you can download
-pre-compiled binaries for Windows and MiKTeX from the 
+pre-compiled binaries for Windows and MiKTeX from the
 [project website](http://dvisvgm.sourceforge.net) instead.
 
 
@@ -81,13 +88,13 @@ options of _dvisvgm_, see the [manual page](http://dvisvgm.sourceforge.net/Manpa
 Additional Information
 ----------------------
 
-This package is available from [CTAN](http://ctan.org), and can be downloaded 
+This package is available from [CTAN](http://ctan.org), and can be downloaded
 from the [project website](http://dvisvgm.sourceforge.net) as well. There you
 can find the sources, pre-compiled binaries, the manual page, FAQs and further
 information about the converter and related topics.
 
-If you've found a bug, please let me know. You can either send me an email or 
-preferably use the [bug tracker at Launchpad](see https://launchpad.net/dvisvgm).
+If you've found a bug, please let me know. You can either send me an email or
+preferably use the [bug tracker at Launchpad](https://launchpad.net/dvisvgm).
 
 
 Copyright
