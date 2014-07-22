@@ -146,6 +146,7 @@ if test "$withval" != no; then
 	fi
 fi
 
+
 # Check if the kpathsea headers are C++ safe
 AC_MSG_CHECKING([if the kpathsea headers are C++ safe])
 AC_LANG_PUSH([C++])
@@ -161,6 +162,6 @@ AC_SUBST(DATE)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
-AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
+AC_CONFIG_FILES([Makefile clipper/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
 AC_OUTPUT
 

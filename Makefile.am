@@ -5,5 +5,5 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING LGPL-2.1.txt
-SUBDIRS = src tests doc
+SUBDIRS = clipper src tests doc
 
