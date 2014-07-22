@@ -35,6 +35,7 @@ template <typename T>
 class GraphicPath
 {
 	public:
+		enum WindingRule {WR_EVEN_ODD, WR_NON_ZERO};
 		typedef Pair<T> Point;
 
 		struct Command {
@@ -98,6 +99,11 @@ class GraphicPath
 		typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
 
 	public:
+		GraphicPath (WindingRule wr=WR_NON_ZERO) : _windingRule(wr) {}
+
+		void setWindingRule (WindingRule wr) {_windingRule = wr;}
+		WindingRule windingRule () const     {return _windingRule;}
+
 		void newpath () {
 			_commands.clear();
 		}
@@ -269,6 +275,7 @@ class GraphicPath
 
 	private:
 		std::vector<Command> _commands;
+		WindingRule _windingRule;
 };
 
 
