@@ -304,9 +304,9 @@ void PSInterpreter::callActions (InputReader &in) {
 		while (first <= last) {
 			int mid = first+(last-first)/2;
 			int cmp = in.compare(operators[mid].name);
-			if (cmp > 0)
+			if (cmp < 0)
 				last = mid-1;
-			else if (cmp < 0)
+			else if (cmp > 0)
 				first = mid+1;
 			else {
 				if (!operators[mid].op) {  // raw string data received

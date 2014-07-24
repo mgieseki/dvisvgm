@@ -87,8 +87,11 @@ int InputReader::compare (const char *s, bool consume) {
 	for (const char *p=s; *p; p++) {
 		int c = peek(count++);
 		if (c != *p)
-			return *p < c ? -1 : 1;
+			return c < *p ? -1 : 1;
 	}
+	int c = peek(count);
+	if (c < 0 || !isspace(c))
+		return 1;
 	if (consume)
 		skip(count);
 	return 0;
