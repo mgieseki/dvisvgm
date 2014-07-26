@@ -88,6 +88,6 @@ void GFGlyphTracer::closePath () {
 
 
 void GFGlyphTracer::endChar (UInt32 c) {
-	_glyph->newpath();
+	_glyph->clear();
 	GFTracer::endChar(c);
 }

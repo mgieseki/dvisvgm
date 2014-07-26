@@ -392,7 +392,7 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 				tracer.setGlyph(glyph);
 				for (int i=fchar; i <= lchar; i++) {
 					if (includeCached || !_cache.getGlyph(i)) {
-						glyph.newpath();
+						glyph.clear();
 						tracer.executeChar(i);
 						glyph.closeOpenSubPaths();
 						_cache.setGlyph(i, glyph);

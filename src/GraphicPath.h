@@ -106,7 +106,7 @@ class GraphicPath
 		void setWindingRule (WindingRule wr) {_windingRule = wr;}
 		WindingRule windingRule () const     {return _windingRule;}
 
-		void newpath () {
+		void clear () {
 			_commands.clear();
 		}
 

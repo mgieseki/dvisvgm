@@ -518,7 +518,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			_actions->appendToPage(path);
 			_actions->embed(bbox);
 		}
-		_path.newpath();
+		_path.clear();
 	}
 }
 
@@ -562,7 +562,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 			_actions->appendToPage(path);
 			_actions->embed(bbox);
 		}
-		_path.newpath();
+		_path.clear();
 	}
 }
 
@@ -721,7 +721,7 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 
 /** Clears current path */
 void PsSpecialHandler::newpath (vector<double> &p) {
-	_path.newpath();
+	_path.clear();
 }
 
 
