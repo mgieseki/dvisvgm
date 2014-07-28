@@ -31,6 +31,7 @@ class PSTestActions : public PSActions
 	public:
 		void applyscalevals (vector<double> &p)  {print("applyscalevals", p);}
 		void clip (vector<double> &p)            {print("clip", p);}
+		void clippath (vector<double> &p)        {print("clippath", p);}
 		void closepath (vector<double> &p)       {print("closepath", p);}
 		void curveto (vector<double> &p)         {print("curveto", p);}
 		void eoclip (vector<double> &p)          {print("eoclip", p);}
@@ -113,11 +114,11 @@ TEST(PSInterpreterTest, stroke_fill) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath stroke ");
-	ASSERT_EQ(actions.result(), "newpath;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
+	ASSERT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath fill ");
-	ASSERT_EQ(actions.result(), "newpath;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
+	ASSERT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
 }
 
 
@@ -129,7 +130,7 @@ TEST(PSInterpreterTest, clip) {
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath clip ");
-	ASSERT_EQ(actions.result(), "newpath;moveto 0 0;lineto 10 10;lineto 0 10;closepath;clip;");
+	ASSERT_EQ(actions.result(), "newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;clip;");
 }
 
 

@@ -42,22 +42,25 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 	class ClippingStack
 	{
 		public:
-			void push ();
+			void pushEmptyPath ();
 			void push (const Path &path, int saveID=-1);
 			void replace (const Path &path);
 			void dup (int saveID=-1);
 			void pop (int saveID=-1, bool grestore=false);
 			void clear ();
 			bool empty () const {return _stack.empty();}
+			bool clippathLoaded () const;
+			void setClippathLoaded (bool loaded);
 			const Path* top () const;
 			Path* getPath (size_t id);
 			int topID () const  {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
 			struct Entry {
-				int pathID;  ///< index referencing a path of the pool
-				int saveID;  ///< if >=0, path was pushed by 'save', and saveID holds the ID of the
-				Entry (int pid, int sid) : pathID(pid), saveID(sid) {}
+				int pathID;        ///< index referencing a path of the pool
+				int saveID;        ///< if >=0, path was pushed by 'save', and saveID holds the ID of the
+				bool cpathLoaded;  ///< true if clipping path was loaded into current path
+				Entry (int pid, int sid) : pathID(pid), saveID(sid), cpathLoaded(false) {}
 			};
 			std::vector<Path> _paths;  ///< pool of all clipping paths
 			std::stack<Entry> _stack;
@@ -92,6 +95,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void applyscalevals (std::vector<double> &p) {_sx = p[0]; _sy = p[1]; _cos = p[2];}
 		void clip (std::vector<double> &p)           {clip(p, false);}
 		void clip (std::vector<double> &p, bool evenodd);
+		void clippath (std::vector<double> &p);
 		void closepath (std::vector<double> &p);
 		void curveto (std::vector<double> &p);
 		void eoclip (std::vector<double> &p)         {clip(p, true);}

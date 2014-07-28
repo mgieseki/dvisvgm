@@ -263,6 +263,7 @@ void PSInterpreter::callActions (InputReader &in) {
 	} operators [] = {
 		{"applyscalevals",  3, &PSActions::applyscalevals},
 		{"clip",            0, &PSActions::clip},
+		{"clippath",        0, &PSActions::clippath},
 		{"closepath",       0, &PSActions::closepath},
 		{"curveto",         6, &PSActions::curveto},
 		{"eoclip",          0, &PSActions::eoclip},
@@ -275,7 +276,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"lineto",          2, &PSActions::lineto},
 		{"makepattern",    -1, &PSActions::makepattern},
 		{"moveto",          2, &PSActions::moveto},
-		{"newpath",         0, &PSActions::newpath},
+		{"newpath",         1, &PSActions::newpath},
 		{"querypos",        2, &PSActions::querypos},
 		{"raw",            -1, 0},
 		{"restore",         1, &PSActions::restore},

@@ -448,78 +448,80 @@ void PsSpecialHandler::closepath (vector<double> &p) {
 /** Draws the current path recorded by previously executed path commands (moveto, lineto,...).
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
-	if (!_path.empty() && _actions) {
-		BoundingBox bbox;
-		if (!_actions->getMatrix().isIdentity()) {
-			_path.transform(_actions->getMatrix());
-			if (!_xmlnode)
-				bbox.transform(_actions->getMatrix());
-		}
+	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
+		return;
 
-		XMLElementNode *path=0;
-		Pair<double> point;
-		if (_path.isDot(point)) {  // zero-length path?
-			if (_linecap == 1) {    // round line ends?  => draw dot
-				double x = point.x();
-				double y = point.y();
-				double r = _linewidth/2.0;
-				path = new XMLElementNode("circle");
-				path->addAttribute("cx", x);
-				path->addAttribute("cy", y);
-				path->addAttribute("r", r);
-				path->addAttribute("fill", _actions->getColor().rgbString());
-				bbox = BoundingBox(x-r, y-r, x+r, y+r);
-			}
-		}
-		else {
-			// compute bounding box
-			_path.computeBBox(bbox);
-			bbox.expand(_linewidth/2);
-
-			ostringstream oss;
-			_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-			path = new XMLElementNode("path");
-			path->addAttribute("d", oss.str());
-			path->addAttribute("stroke", _actions->getColor().rgbString());
-			path->addAttribute("fill", "none");
-			if (_linewidth != 1)
-				path->addAttribute("stroke-width", _linewidth);
-			if (_miterlimit != 4)
-				path->addAttribute("stroke-miterlimit", _miterlimit);
-			if (_linecap > 0)     // default value is "butt", no need to set it explicitly
-				path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
-			if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
-				path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
-			if (_opacityalpha < 1)
-				path->addAttribute("stroke-opacity", _opacityalpha);
-			if (!_dashpattern.empty()) {
-				ostringstream oss;
-				for (size_t i=0; i < _dashpattern.size(); i++) {
-					if (i > 0)
-						oss << ',';
-					oss << XMLString(_dashpattern[i]);
-				}
-				path->addAttribute("stroke-dasharray", oss.str());
-				if (_dashoffset != 0)
-					path->addAttribute("stroke-dashoffset", _dashoffset);
-			}
-		}
-		if (path && _clipStack.top()) {
-			// assign clipping path and clip bounding box
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
-			BoundingBox clipbox;
-			_clipStack.top()->computeBBox(clipbox);
-			bbox.intersect(clipbox);
-		}
-
-		if (_xmlnode)
-			_xmlnode->append(path);
-		else {
-			_actions->appendToPage(path);
-			_actions->embed(bbox);
-		}
-		_path.clear();
+	BoundingBox bbox;
+	if (!_actions->getMatrix().isIdentity()) {
+		_path.transform(_actions->getMatrix());
+		if (!_xmlnode)
+			bbox.transform(_actions->getMatrix());
 	}
+	if (_clipStack.clippathLoaded() && _clipStack.top())
+		_path.prepend(*_clipStack.top());
+	XMLElementNode *path=0;
+	Pair<double> point;
+	if (_path.isDot(point)) {  // zero-length path?
+		if (_linecap == 1) {    // round line ends?  => draw dot
+			double x = point.x();
+			double y = point.y();
+			double r = _linewidth/2.0;
+			path = new XMLElementNode("circle");
+			path->addAttribute("cx", x);
+			path->addAttribute("cy", y);
+			path->addAttribute("r", r);
+			path->addAttribute("fill", _actions->getColor().rgbString());
+			bbox = BoundingBox(x-r, y-r, x+r, y+r);
+		}
+	}
+	else {
+		// compute bounding box
+		_path.computeBBox(bbox);
+		bbox.expand(_linewidth/2);
+
+		ostringstream oss;
+		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+		path = new XMLElementNode("path");
+		path->addAttribute("d", oss.str());
+		path->addAttribute("stroke", _actions->getColor().rgbString());
+		path->addAttribute("fill", "none");
+		if (_linewidth != 1)
+			path->addAttribute("stroke-width", _linewidth);
+		if (_miterlimit != 4)
+			path->addAttribute("stroke-miterlimit", _miterlimit);
+		if (_linecap > 0)     // default value is "butt", no need to set it explicitly
+			path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
+		if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
+			path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
+		if (_opacityalpha < 1)
+			path->addAttribute("stroke-opacity", _opacityalpha);
+		if (!_dashpattern.empty()) {
+			ostringstream oss;
+			for (size_t i=0; i < _dashpattern.size(); i++) {
+				if (i > 0)
+					oss << ',';
+				oss << XMLString(_dashpattern[i]);
+			}
+			path->addAttribute("stroke-dasharray", oss.str());
+			if (_dashoffset != 0)
+				path->addAttribute("stroke-dashoffset", _dashoffset);
+		}
+	}
+	if (path && _clipStack.top()) {
+		// assign clipping path and clip bounding box
+		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+		BoundingBox clipbox;
+		_clipStack.top()->computeBBox(clipbox);
+		bbox.intersect(clipbox);
+		_clipStack.setClippathLoaded(false);
+	}
+	if (_xmlnode)
+		_xmlnode->append(path);
+	else {
+		_actions->appendToPage(path);
+		_actions->embed(bbox);
+	}
+	_path.clear();
 }
 
 
@@ -527,43 +529,47 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
-	if (!_path.empty() && _actions) {
-		// compute bounding box
-		BoundingBox bbox;
-		_path.computeBBox(bbox);
-		if (!_actions->getMatrix().isIdentity()) {
-			_path.transform(_actions->getMatrix());
-			if (!_xmlnode)
-				bbox.transform(_actions->getMatrix());
-		}
+	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
+		return;
 
-		ostringstream oss;
-		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-		XMLElementNode *path = new XMLElementNode("path");
-		path->addAttribute("d", oss.str());
-		if (_pattern)
-			path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
-		else if (_actions->getColor() != Color::BLACK || _savenode)
-			path->addAttribute("fill", _actions->getColor().rgbString());
-		if (_clipStack.top()) {
-			// assign clipping path and clip bounding box
-			path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
-			BoundingBox clipbox;
-			_clipStack.top()->computeBBox(clipbox);
-			bbox.intersect(clipbox);
-		}
-		if (evenodd)  // SVG default fill rule is "nonzero" algorithm
-			path->addAttribute("fill-rule", "evenodd");
-		if (_opacityalpha < 1)
-			path->addAttribute("fill-opacity", _opacityalpha);
-		if (_xmlnode)
-			_xmlnode->append(path);
-		else {
-			_actions->appendToPage(path);
-			_actions->embed(bbox);
-		}
-		_path.clear();
+	// compute bounding box
+	BoundingBox bbox;
+	_path.computeBBox(bbox);
+	if (!_actions->getMatrix().isIdentity()) {
+		_path.transform(_actions->getMatrix());
+		if (!_xmlnode)
+			bbox.transform(_actions->getMatrix());
 	}
+	if (_clipStack.clippathLoaded() && _clipStack.top())
+		_path.prepend(*_clipStack.top());
+
+	ostringstream oss;
+	_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+	XMLElementNode *path = new XMLElementNode("path");
+	path->addAttribute("d", oss.str());
+	if (_pattern)
+		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
+	else if (_actions->getColor() != Color::BLACK || _savenode)
+		path->addAttribute("fill", _actions->getColor().rgbString());
+	if (_clipStack.top()) {
+		// assign clipping path and clip bounding box
+		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+		BoundingBox clipbox;
+		_clipStack.top()->computeBBox(clipbox);
+		bbox.intersect(clipbox);
+		_clipStack.setClippathLoaded(false);
+	}
+	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
+		path->addAttribute("fill-rule", "evenodd");
+	if (_opacityalpha < 1)
+		path->addAttribute("fill-opacity", _opacityalpha);
+	if (_xmlnode)
+		_xmlnode->append(path);
+	else {
+		_actions->appendToPage(path);
+		_actions->embed(bbox);
+	}
+	_path.clear();
 }
 
 
@@ -664,8 +670,17 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 
 /** Clears the current clipping path.
  *  @param[in] p not used */
-void PsSpecialHandler::initclip (vector<double> &p) {
-	_clipStack.push();  // push empty path
+void PsSpecialHandler::initclip (vector<double> &) {
+	_clipStack.pushEmptyPath();
+}
+
+
+/** Assigns the current clipping path to the graphics path. */
+void PsSpecialHandler::clippath (std::vector<double>&) {
+	if (!_clipStack.empty()) {
+		_clipStack.setClippathLoaded(true);
+		_path.clear();
+	}
 }
 
 
@@ -675,7 +690,7 @@ void PsSpecialHandler::initclip (vector<double> &p) {
  *  path (see PS language reference, 3rd edition, pp. 193, 542)
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
-void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
+void PsSpecialHandler::clip (vector<double> &, bool evenodd) {
 	// when this method is called, _path contains the clipping path
 	if (_path.empty() || !_actions)
 		return;
@@ -721,7 +736,11 @@ void PsSpecialHandler::clip (vector<double> &p, bool evenodd) {
 
 /** Clears current path */
 void PsSpecialHandler::newpath (vector<double> &p) {
-	_path.clear();
+	bool drawing = (p[0] > 0);
+	if (!drawing || !_clipStack.clippathLoaded()) {
+		_path.clear();
+		_clipStack.setClippathLoaded(false);
+	}
 }
 
 
@@ -824,7 +843,7 @@ void PsSpecialHandler::executed () {
 
 ////////////////////////////////////////////
 
-void PsSpecialHandler::ClippingStack::push () {
+void PsSpecialHandler::ClippingStack::pushEmptyPath () {
 	if (!_stack.empty())
 		_stack.push(Entry(0, -1));
 }
@@ -880,6 +899,19 @@ const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () const {
 
 PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::getPath (size_t id) {
 	return (id > 0 && id <= _paths.size()) ? &_paths[id-1] : 0;
+}
+
+
+/** Returns true if the clipping path was loaded into the graphics path (via PS operator 'clippath') */
+bool PsSpecialHandler::ClippingStack::clippathLoaded () const {
+	return !_stack.empty() && _stack.top().cpathLoaded;
+}
+
+
+void PsSpecialHandler::ClippingStack::setClippathLoaded (bool loaded) {
+	if (_stack.empty())
+		return;
+	_stack.top().cpathLoaded = loaded;
 }
 
 

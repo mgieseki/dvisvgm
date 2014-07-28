@@ -43,6 +43,7 @@ struct PSActions
 	virtual ~PSActions () {}
 	virtual void applyscalevals (std::vector<double> &p) =0;
 	virtual void clip (std::vector<double> &p) =0;
+	virtual void clippath (std::vector<double> &p) =0;
 	virtual void closepath (std::vector<double> &p) =0;
 	virtual void curveto (std::vector<double> &p) =0;
 	virtual void eoclip (std::vector<double> &p) =0;

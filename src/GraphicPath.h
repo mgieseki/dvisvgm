@@ -110,7 +110,7 @@ class GraphicPath
 			_commands.clear();
 		}
 
-		/// Returns true if path is empty (there is nothing to draw)
+		/// Returns true if the path is empty, i.e. there is nothing to draw
 		bool empty () const {
 			return _commands.empty();
 		}
@@ -118,6 +118,11 @@ class GraphicPath
 		/// Returns the number of path commands used to describe the path.
 		size_t size () const {
 			return _commands.size();
+		}
+
+		/// Insert another path at the beginning of this one.
+		void prepend (const GraphicPath &path) {
+			_commands.insert(_commands.begin(), path._commands.begin(), path._commands.end());
 		}
 
 		void moveto (const T &x, const T &y) {
