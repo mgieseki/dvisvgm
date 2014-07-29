@@ -1,3 +1,15 @@
+dvisvgm-1.8 (2014-07-29)
+- added option --clipjoin which tells dvisvgm to compute intersections
+  of clipping paths itself and not to delegate this task to the SVG renderer
+- added option --relative to create relative rather than absolute path commands
+- added evaluation of PS operator 'clippath' which copies the current clipping
+  path into the graphics path
+- fixed PS operator 'show' to prevent the creation of unintended path overlays
+- fixed memory leak in class FontEngine  (patch by Khaled Hosny)
+- fixed unintended throwing of a DVIException when dvisvgm is called with
+  option --list-specials
+- Cygwin builds of dvisvgm now look for the proper filename of the Ghostscript DLL
+
 dvisvgm-1.7 (2014-06-18)
 - all DVI files are pre-processed now to allow the implementation of
   advanced features that rely on data not available on the pages being
