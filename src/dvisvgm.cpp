@@ -208,36 +208,16 @@ static bool set_cache_dir (const CommandLine &args) {
 		else
 			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)\n";
 	}
-	else {
-		if (const char *userdir = FileSystem::userdir()) {
-			static string path = userdir;
-			path += "/.dvisvgm";
-			path = FileSystem::adaptPathSeperators(path);
-			const string cachepath = path+"/cache";
-			if (!FileSystem::exists(cachepath.c_str())) {
-				if (!FileSystem::exists(path.c_str()))
-					FileSystem::mkdir(cachepath.c_str());
-				else {
-					FileSystem::mkdir(cachepath.c_str());
-					// move existing cache files from former location to new one
-					vector<string> files;
-					FileSystem::collect(path.c_str(), files);
-					FORALL(files, vector<string>::iterator, it) {
-						if (it->at(0) == 'f' && it->length() > 4 && it->substr(it->length()-4, 4) == ".fgd") {
-							const char *fname = it->c_str()+1;
-							FileSystem::copy(path+"/"+fname, cachepath+"/"+fname, true);
-						}
-					}
-				}
-			}
-			path = cachepath;
-			PhysicalFont::CACHE_PATH = path.c_str();
-		}
-		if (args.cache_given() && args.cache_arg().empty()) {
-			cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << '\n';
-			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
-			return false;
-		}
+	else if (const char *userdir = FileSystem::userdir()) {
+		static string cachepath = userdir + string("/.dvisvgm/cache");
+		if (!FileSystem::exists(cachepath.c_str()))
+			FileSystem::mkdir(cachepath.c_str());
+		PhysicalFont::CACHE_PATH = cachepath.c_str();
+	}
+	if (args.cache_given() && args.cache_arg().empty()) {
+		cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << '\n';
+		FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
+		return false;
 	}
 	return true;
 }
