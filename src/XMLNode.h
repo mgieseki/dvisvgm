@@ -35,7 +35,6 @@ struct XMLNode
 	virtual XMLNode* clone () const =0;
 	virtual void clear () =0;
 	virtual std::ostream& write (std::ostream &os) const =0;
-	virtual bool emit (std::ostream &os, XMLNode *stopElement);
 	virtual void append (XMLNode *child) {}
 	virtual void prepend (XMLNode *child) {}
 };
@@ -62,7 +61,6 @@ class XMLElementNode : public XMLNode
 		const char* getAttributeValue (const std::string &name) const;
 		bool findDescendants (const char *name, const char *attr_name, std::vector<XMLElementNode*> &descendants);
 		std::ostream& write (std::ostream &os) const;
-		bool emit (std::ostream &os, XMLNode *stopElement);
 		bool empty () const                          {return _children.empty();}
 		const std::list<XMLNode*>& children () const {return _children;}
 		const std::string& getName () const          {return _name;}
@@ -71,7 +69,6 @@ class XMLElementNode : public XMLNode
 		std::string _name;     // element name (<name a1="v1" .. an="vn">...</name>)
 		AttribMap _attributes;
 		ChildList _children;   // child nodes
-		bool _emitted;         // true if node has been (partly) emitted
 };
 
 
@@ -116,13 +113,11 @@ class XMLDeclarationNode : public XMLNode
 		void clear ();
 		void append (XMLNode *child);
 		std::ostream& write (std::ostream &os) const;
-		bool emit (std::ostream &os, XMLNode *stopElement);
 
 	private:
 		std::string _name;
 		std::string _params;
 		std::list<XMLDeclarationNode*> _children;
-		bool _emitted;
 };
 
 

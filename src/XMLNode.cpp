@@ -27,20 +27,13 @@
 
 using namespace std;
 
-bool XMLNode::emit (ostream &os, XMLNode *stopNode) {
-	if (this == stopNode)
-		return false;
-	write(os);
-	return true;
-}
 
-
-XMLElementNode::XMLElementNode (const string &n) : _name(n), _emitted(false) {
+XMLElementNode::XMLElementNode (const string &n) : _name(n) {
 }
 
 
 XMLElementNode::XMLElementNode (const XMLElementNode &node)
-	: _name(node._name), _attributes(node._attributes), _emitted(false)
+	: _name(node._name), _attributes(node._attributes)
 {
 	FORALL(node._children, ChildList::const_iterator, it)
 		_children.push_back((*it)->clone());
@@ -179,47 +172,6 @@ ostream& XMLElementNode::write (ostream &os) const {
 }
 
 
-/** Writes a part of the XML tree to the given output stream and removes
- *  the completely written nodes. The output stops when a stop node is reached
- *  (this node won't be printed at all). If a node was only partly emitted, i.e.
- *  its child was the stop node, a further call of emit will continue the output.
- *  @param[in] os stream to which the output is sent to
- *  @param[in] stopNode node where emitting stops (if 0 the whole tree will be emitted)
- *  @return true if node was emitted completely */
-bool XMLElementNode::emit (ostream &os, XMLNode *stopNode) {
-	if (this == stopNode)
-		return false;
-
-	if (!_emitted) {
-		os << '<' << _name;
-		FORALL(_attributes, AttribMap::iterator, i)
-			os << ' ' << i->first << "='" << i->second << '\'';
-		if (_children.empty())
-			os << "/>\n";
-		else {
-			os << '>';
-			if (dynamic_cast<XMLElementNode*>(_children.front()))
-				os << '\n';
-		}
-
-		_emitted = true;
-	}
-	if (!_children.empty()) {
-		FORALL(_children, ChildList::iterator, i) {
-			if ((*i)->emit(os, stopNode)) {
-				ChildList::iterator it = i++;  // prevent i from being invalidated...
-				_children.erase(it);              // ... by erase
-				--i;  // @@ what happens if i points to first child?
-			}
-			else
-				return false;
-		}
-		os << "</" << _name << ">\n";
-	}
-	return true;
-}
-
-
 /** Returns true if this element has an attribute of given name. */
 bool XMLElementNode::hasAttribute (const string &name) const {
 	return _attributes.find(name) != _attributes.end();
@@ -270,13 +222,13 @@ void XMLTextNode::prepend (XMLNode *node) {
 //////////////////////
 
 XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p)
-	: _name(n), _params(p), _emitted(false)
+	: _name(n), _params(p)
 {
 }
 
 
 XMLDeclarationNode::XMLDeclarationNode (const XMLDeclarationNode &node)
-	: _name(node._name), _params(node._params), _emitted(false)
+	: _name(node._name), _params(node._params)
 {
 	FORALL(node._children, list<XMLDeclarationNode*>::const_iterator, it)
 		_children.push_back(new XMLDeclarationNode(**it));
@@ -317,35 +269,6 @@ ostream& XMLDeclarationNode::write (ostream &os) const {
 		os << "]>\n";
 	}
 	return os;
-}
-
-
-bool XMLDeclarationNode::emit (ostream &os, XMLNode *stopNode) {
-	if (this == stopNode)
-		return false;
-
-	if (!_emitted) {
-		os << "<!" << _name << ' ' << _params;
-		if (_children.empty())
-			os << ">\n";
-		else
-			os << "[\n";
-		_emitted = true;
-	}
-	if (!_children.empty()) {
-		FORALL(_children, list<XMLDeclarationNode*>::iterator, i) {
-			if ((*i)->emit(os, stopNode)) {
-				list<XMLDeclarationNode*>::iterator it = i++;  // prevent i from being invalidated...
-				_children.erase(it);              // ... by erase
-				--i;  // @@ what happens if i points to first child?
-			}
-			else
-				return false;
-		}
-		os << "]>\n";
-	}
-	return true;
-
 }
 
 //////////////////////

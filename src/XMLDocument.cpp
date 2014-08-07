@@ -25,7 +25,7 @@
 using namespace std;
 
 XMLDocument::XMLDocument (XMLElementNode *root)
-	: _rootElement(root), _emitted(false)
+	: _rootElement(root)
 {
 }
 
@@ -71,31 +71,4 @@ ostream& XMLDocument::write (ostream &os) const {
 		_rootElement->write(os);
 	}
 	return os;
-}
-
-/** Writes a part of the XML document to the given output stream and removes
- *  the completely written nodes. The output stops when a stop node is reached
- *  (this node won't be printed at all). If a node was only partly emitted, i.e.
- *  its child was the stop node, a further call of emit will continue the output.
- *  @param[in] os stream to which the output is written
- *  @param[in] stopNode node where emitting stops (if 0 the whole tree will be emitted)
- *  @return true if node was completely emitted */
-bool XMLDocument::emit (ostream& os, XMLNode *stopNode) {
-	if (_rootElement) {  // no root element => no output
-		if (!_emitted) {
-			os << "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
-			_emitted = true;
-		}
-		FORALL(_nodes, list<XMLNode*>::iterator, i) {
-			if ((*i)->emit(os, stopNode)) {
-				list<XMLNode*>::iterator it = i++;  // prevent i from being invalidated...
-				_nodes.erase(it);              // ... by erase
-				--i;  // @@ what happens if i points to first child?
-			}
-			else
-				return false;
-		}
-		return _rootElement->emit(os, stopNode);
-	}
-	return true;
 }

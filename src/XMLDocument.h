@@ -33,12 +33,10 @@ class XMLDocument
 		void setRootNode (XMLElementNode *root);
 		const XMLElementNode* getRootElement () const {return _rootElement;}
 		std::ostream& write (std::ostream &os) const;
-		bool emit (std::ostream& os, XMLNode *stopNode);
 
 	private:
 		std::list<XMLNode*> _nodes;
 		XMLElementNode *_rootElement;
-		bool _emitted;
 };
 
 #endif
