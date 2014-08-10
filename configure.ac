@@ -139,11 +139,13 @@ AC_ARG_WITH(zlib,[  --with-zlib=DIR         location of the zlib library],
 
 if test "$withval" != no; then
 	if test -n "$ZLIB_DIR"; then
-		CPPFLAGS="$CPPFLAGS -I$ZLIB_DIR -I$ZLIB_DIR/include"
-		LDFLAGS="$LDFLAGS -L$ZLIB_DIR/lib"
+		ZLIB_CFLAGS="-I$ZLIB_DIR -I$ZLIB_DIR/include"
+		ZLIB_LIBS="-L$ZLIB_DIR/lib"
 	fi
 fi
 
+AC_SUBST([ZLIB_CFLAGS])
+AC_SUBST([ZLIB_LIBS])
 
 # Check if the kpathsea headers are C++ safe
 AC_MSG_CHECKING([if the kpathsea headers are C++ safe])

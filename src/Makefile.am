@@ -12,7 +12,8 @@ dvisvgm_SOURCES      = gzstream.h \
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../clipper/libclipper.a \
-	$(FREETYPE_LIBS)
+	$(FREETYPE_LIBS) \
+	$(ZLIB_LIBS)
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
 
@@ -192,7 +193,8 @@ EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/clipper \
-	$(FREETYPE_CFLAGS)
+	$(FREETYPE_CFLAGS) \
+	$(ZLIB_CFLAGS)
 
 # the command-line parser is generated from options.xml by opt2cpp
 CommandLine.cpp: options.xml
