@@ -9,8 +9,8 @@ noinst_LIBRARIES     = libdvisvgm.a
 dvisvgm_SOURCES      = gzstream.h \
 							  dvisvgm.cpp gzstream.cpp
 
-dvisvgm_LDADD        = $(noinst_LIBRARIES) @EXTRA_LIBS@ ../clipper/libclipper.a
-dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES) @EXTRA_LIBS@
+dvisvgm_LDADD        = $(noinst_LIBRARIES) ../clipper/libclipper.a
+dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
 
 libdvisvgm_a_SOURCES = \
 	BasicDVIReader.cpp \

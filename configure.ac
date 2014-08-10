@@ -159,7 +159,6 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <kpathsea/kpathsea.h>]],
 AC_LANG_POP([C++])
 
 AC_SUBST(DATE)
-AC_SUBST(EXTRA_LIBS)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([Makefile clipper/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
