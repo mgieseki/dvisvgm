@@ -24,7 +24,7 @@ for f in *.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lgtest -lgtest_main -lpthread
+${base}_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 EOT
 done
