@@ -7,9 +7,9 @@ Description
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 [DVI files](http://en.wikipedia.org/wiki/Device_independent_file_format) to the
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
-The latest releases support classic DVI files (format 2) as well as DVI output
+The latest releases support standard DVI files (format 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
-or [XeTeX](http://scripts.sil.org/xetex) (format 5, also knows as XDV).
+or [XeTeX](http://scripts.sil.org/xetex) (format 5, also known as XDV).
 
 
 Dependencies
@@ -66,7 +66,7 @@ For generic configuration instructions see the file INSTALL.
 
 The configure script should recognize all necessary parameters.
 If a library is installed but not detected, specify its location
-as commandline parameter of configure, e.g.
+as command-line parameter of configure, e.g.
 `./configure --with-freetype=/usr/local/freetype`
 (all available options can be displayed with `./configure --help`)
 
@@ -100,7 +100,7 @@ preferably use the [bug tracker at Launchpad](https://launchpad.net/dvisvgm).
 Copyright
 ---------
 
-Copyright (C) 2005-2014 [Martin Gieseking](mailto:martin.gieseking@uos.de)
+Copyright &copy; 2005&ndash;2014 [Martin Gieseking](mailto:martin.gieseking@uos.de)
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
