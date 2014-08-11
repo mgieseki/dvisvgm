@@ -103,8 +103,6 @@ PKG_PROG_PKG_CONFIG
 
 # Check for libraries.
 PKG_CHECK_MODULES([FREETYPE], [freetype2])
-CXXFLAGS="$CXXFLAGS ${FREETYPE_CFLAGS}"
-LIBS="$LIBS ${FREETYPE_LIBS}"
 
 AC_CHECK_LIB(z, gzopen)
 
@@ -141,11 +139,13 @@ AC_ARG_WITH(zlib,[  --with-zlib=DIR         location of the zlib library],
 
 if test "$withval" != no; then
 	if test -n "$ZLIB_DIR"; then
-		CPPFLAGS="$CPPFLAGS -I$ZLIB_DIR -I$ZLIB_DIR/include"
-		LDFLAGS="$LDFLAGS -L$ZLIB_DIR/lib"
+		ZLIB_CFLAGS="-I$ZLIB_DIR -I$ZLIB_DIR/include"
+		ZLIB_LIBS="-L$ZLIB_DIR/lib"
 	fi
 fi
 
+AC_SUBST([ZLIB_CFLAGS])
+AC_SUBST([ZLIB_LIBS])
 
 # Check if the kpathsea headers are C++ safe
 AC_MSG_CHECKING([if the kpathsea headers are C++ safe])
@@ -159,7 +159,6 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <kpathsea/kpathsea.h>]],
 AC_LANG_POP([C++])
 
 AC_SUBST(DATE)
-AC_SUBST(EXTRA_LIBS)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([Makefile clipper/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
