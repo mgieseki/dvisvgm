@@ -137,17 +137,17 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
 }
 
 
-/** Finds all descendant elements of a given name and given attribute.
+/** Gets all descendant elements with a given name and given attribute.
  *  @param[in] name name of elements to find
- *  @param[in] attr_name name of attribute to find
+ *  @param[in] attrName name of attribute to find
  *  @param[out] descendants all elements found
  *  @return true if at least one element was found  */
-bool XMLElementNode::findDescendants (const char *name, const char *attr_name, vector<XMLElementNode*> &descendants) {
-	FORALL(_children, ChildList::iterator, it) {
+bool XMLElementNode::getDescendants (const char *name, const char *attrName, vector<XMLElementNode*> &descendants) const {
+	FORALL(_children, ChildList::const_iterator, it) {
 		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
-			if ((!name || elem->getName() == name) && (!attr_name || elem->hasAttribute(attr_name)))
+			if ((!name || elem->getName() == name) && (!attrName || elem->hasAttribute(attrName)))
 				descendants.push_back(elem);
-			elem->findDescendants(name, attr_name, descendants);
+			elem->getDescendants(name, attrName, descendants);
 		}
 	}
 	return !descendants.empty();

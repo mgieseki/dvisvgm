@@ -154,7 +154,7 @@ void PSUncoloredTilingPattern::apply (SpecialActions* actions) {
 		vector<XMLElementNode*> colored_elems;
 		const char *attribs[] = {"fill", "stroke"};
 		for (int i=0; i < 2; i++) {
-			getGroupNode()->findDescendants(0, attribs[i], colored_elems);
+			getGroupNode()->getDescendants(0, attribs[i], colored_elems);
 			for (vector<XMLElementNode*>::iterator it=colored_elems.begin(); it != colored_elems.end(); ++it)
 				if (string((*it)->getAttributeValue(attribs[i])) != "none")
 					(*it)->addAttribute(attribs[i], _currentColor.rgbString());
