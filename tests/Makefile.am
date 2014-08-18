@@ -48,6 +48,11 @@ check_PROGRAMS += CRC32Test
 CRC32Test_SOURCES = CRC32Test.cpp
 CRC32Test_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
+TESTS += DependencyGraphTest
+check_PROGRAMS += DependencyGraphTest
+DependencyGraphTest_SOURCES = DependencyGraphTest.cpp
+DependencyGraphTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+
 TESTS += DirectoryTest
 check_PROGRAMS += DirectoryTest
 DirectoryTest_SOURCES = DirectoryTest.cpp

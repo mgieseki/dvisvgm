@@ -23,6 +23,7 @@
 #include <sstream>
 #include <string>
 #include "BoundingBox.h"
+#include "DependencyGraph.h"
 #include "DVIToSVG.h"
 #include "Font.h"
 #include "FontManager.h"
@@ -427,3 +428,45 @@ void SVGTree::popContextElement () {
 		_text = _span = 0; // ensure the creation of a new text element for the following characters added
 	}
 }
+
+
+/** Extracts the ID from a local URL reference like url(#abcde) */
+inline string extract_id_from_url (const string &url) {
+	return url.substr(5, url.length()-6);
+}
+
+
+/** Removes elements present in the SVH tree that are not required.
+ *  For now, only clipPath elements are removed. */
+void SVGTree::removeRedundantElements () {
+	vector<XMLElementNode*> clipElements;
+	if (!_defs || !_defs->getDescendants("clipPath", 0, clipElements))
+		return;
+
+	// collect dependencies between clipPath elements in the defs section of the SVG tree
+	DependencyGraph<string> idTree;
+	for (vector<XMLElementNode*>::iterator it=clipElements.begin(); it != clipElements.end(); ++it) {
+		if (const char *id = (*it)->getAttributeValue("id")) {
+			if (const char *url = (*it)->getAttributeValue("clip-path"))
+				idTree.insert(extract_id_from_url(url), id);
+			else
+				idTree.insert(id);
+		}
+	}
+	// collect elements that reference a clipPath (have a clip-path attribute)
+	vector<XMLElementNode*> descendants;
+	_page->getDescendants(0, "clip-path", descendants);
+	// remove referenced IDs and their dependencies from the dependency graph
+	for (vector<XMLElementNode*>::iterator it=descendants.begin(); it != descendants.end(); ++it) {
+		string idref = extract_id_from_url((*it)->getAttributeValue("clip-path"));
+		idTree.removeDependencyPath(idref);
+	}
+	descendants.clear();
+	vector<string> ids;
+	idTree.getKeys(ids);
+	for (vector<string>::iterator it=ids.begin(); it != ids.end(); ++it) {
+		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", it->c_str());
+		_defs->remove(node);
+	}
+}
+

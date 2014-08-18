@@ -154,6 +154,22 @@ bool XMLElementNode::getDescendants (const char *name, const char *attrName, vec
 }
 
 
+XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
+	FORALL(_children, ChildList::const_iterator, it) {
+		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
+			if (!name || elem->getName() == name) {
+				const char *value;
+				if (!attrName || !attrValue || !(value = elem->getAttributeValue(attrName)) || string(value) == attrValue)
+					return elem;
+			}
+			if (XMLElementNode *descendant = elem->getFirstDescendant(name, attrName, attrValue))
+				return descendant;
+		}
+	}
+	return 0;
+}
+
+
 ostream& XMLElementNode::write (ostream &os) const {
 	os << '<' << _name;
 	FORALL(_attributes, AttribMap::const_iterator, i)

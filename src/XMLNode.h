@@ -55,11 +55,13 @@ class XMLElementNode : public XMLNode
 		void append (XMLNode *child);
 		void append (const std::string &str);
 		void prepend (XMLNode *child);
+		void remove (XMLNode *child)                 {_children.remove(child);}
 		bool insertAfter (XMLNode *child, XMLNode *sibling);
 		bool insertBefore (XMLNode *child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
 		const char* getAttributeValue (const std::string &name) const;
 		bool getDescendants (const char *name, const char *attr_name, std::vector<XMLElementNode*> &descendants) const;
+		XMLElementNode* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
 		std::ostream& write (std::ostream &os) const;
 		bool empty () const                          {return _children.empty();}
 		const std::list<XMLNode*>& children () const {return _children;}

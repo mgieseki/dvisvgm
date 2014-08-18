@@ -49,6 +49,7 @@ libdvisvgm_a_SOURCES = \
 	CommandLine.h \
 	CRC32.cpp \
 	CRC32.h \
+	DependencyGraph.h \
 	Directory.cpp \
 	Directory.h \
 	DLLoader.cpp \

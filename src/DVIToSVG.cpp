@@ -96,6 +96,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
+		_svg.removeRedundantElements();
 		embedFonts(_svg.rootNode());
 		_svg.write(_out.getPageStream(getCurrentPageNumber(), numberOfPages()));
 		string fname = _out.filename(i, numberOfPages());

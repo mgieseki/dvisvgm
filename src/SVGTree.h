@@ -75,6 +75,7 @@ class SVGTree
 		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *cb=0);
 		void pushContextElement (XMLElementNode *node);
 		void popContextElement ();
+		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font *font);
 		void setX (double x)              {_xchanged = true;}
