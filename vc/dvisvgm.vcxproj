@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{86046918-771F-4654-AFC5-AF4F8AC974EF}</ProjectGuid>
+    <RootNamespace>dvisvgm-vc</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</EmbedManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</EmbedManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\clipper;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;__WIN32__;__MSVC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level1</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AssemblyDebug>true</AssemblyDebug>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\clipper;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;__WIN32__;__MSVC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level1</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <OmitDefaultLibName>true</OmitDefaultLibName>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+      <MinimumRequiredVersion />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\clipper;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;__WIN32__;__MSVC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>Full</Optimization>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\clipper;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;__WIN32__;__MSVC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <Optimization>Full</Optimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+      <MinimumRequiredVersion />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\BasicDVIReader.cpp" />
+    <ClCompile Include="..\src\Bezier.cpp" />
+    <ClCompile Include="..\src\BgColorSpecialHandler.cpp" />
+    <ClCompile Include="..\src\Bitmap.cpp" />
+    <ClCompile Include="..\src\BoundingBox.cpp" />
+    <ClCompile Include="..\src\Calculator.cpp" />
+    <ClCompile Include="..\src\CharMapID.cpp" />
+    <ClCompile Include="..\src\CMap.cpp" />
+    <ClCompile Include="..\src\CMapManager.cpp" />
+    <ClCompile Include="..\src\CMapReader.cpp" />
+    <ClCompile Include="..\src\CmdLineParserBase.cpp" />
+    <ClCompile Include="..\src\Color.cpp" />
+    <ClCompile Include="..\src\ColorSpecialHandler.cpp" />
+    <ClCompile Include="..\src\CommandLine.cpp" />
+    <ClCompile Include="..\src\CRC32.cpp" />
+    <ClCompile Include="..\src\Directory.cpp" />
+    <ClCompile Include="..\src\DLLoader.cpp" />
+    <ClCompile Include="..\src\DVIReader.cpp" />
+    <ClCompile Include="..\src\dvisvgm.cpp" />
+    <ClCompile Include="..\src\DvisvgmSpecialHandler.cpp" />
+    <ClCompile Include="..\src\DVIToSVG.cpp" />
+    <ClCompile Include="..\src\DVIToSVGActions.cpp" />
+    <ClCompile Include="..\src\EmSpecialHandler.cpp" />
+    <ClCompile Include="..\src\EncFile.cpp" />
+    <ClCompile Include="..\src\EPSFile.cpp" />
+    <ClCompile Include="..\src\EPSToSVG.cpp" />
+    <ClCompile Include="..\src\FileFinder.cpp" />
+    <ClCompile Include="..\src\FilePath.cpp" />
+    <ClCompile Include="..\src\FileSystem.cpp" />
+    <ClCompile Include="..\src\Font.cpp" />
+    <ClCompile Include="..\src\FontCache.cpp" />
+    <ClCompile Include="..\src\FontEncoding.cpp" />
+    <ClCompile Include="..\src\FontEngine.cpp" />
+    <ClCompile Include="..\src\FontManager.cpp" />
+    <ClCompile Include="..\src\FontMap.cpp" />
+    <ClCompile Include="..\src\FontMetrics.cpp" />
+    <ClCompile Include="..\src\GFGlyphTracer.cpp" />
+    <ClCompile Include="..\src\GFReader.cpp" />
+    <ClCompile Include="..\src\GFTracer.cpp" />
+    <ClCompile Include="..\src\Ghostscript.cpp" />
+    <ClCompile Include="..\src\gzstream.cpp" />
+    <ClCompile Include="..\src\HtmlSpecialHandler.cpp" />
+    <ClCompile Include="..\src\InputBuffer.cpp" />
+    <ClCompile Include="..\src\InputReader.cpp" />
+    <ClCompile Include="..\src\JFM.cpp" />
+    <ClCompile Include="..\src\Length.cpp" />
+    <ClCompile Include="..\src\MapLine.cpp" />
+    <ClCompile Include="..\src\Matrix.cpp" />
+    <ClCompile Include="..\src\Message.cpp" />
+    <ClCompile Include="..\src\MetafontWrapper.cpp" />
+    <ClCompile Include="..\src\MiKTeXCom.cpp" />
+    <ClCompile Include="..\src\NoPsSpecialHandler.cpp" />
+    <ClCompile Include="..\src\PageRanges.cpp" />
+    <ClCompile Include="..\src\PageSize.cpp" />
+    <ClCompile Include="..\src\PathClipper.cpp" />
+    <ClCompile Include="..\src\PdfSpecialHandler.cpp" />
+    <ClCompile Include="..\src\PreScanDVIReader.cpp" />
+    <ClCompile Include="..\src\Process.cpp" />
+    <ClCompile Include="..\src\psdefs.cpp" />
+    <ClCompile Include="..\src\PSInterpreter.cpp" />
+    <ClCompile Include="..\src\PSPattern.cpp" />
+    <ClCompile Include="..\src\PSPreviewFilter.cpp" />
+    <ClCompile Include="..\src\PsSpecialHandler.cpp" />
+    <ClCompile Include="..\src\RangeMap.cpp" />
+    <ClCompile Include="..\src\SignalHandler.cpp" />
+    <ClCompile Include="..\src\SpecialManager.cpp" />
+    <ClCompile Include="..\src\StreamReader.cpp" />
+    <ClCompile Include="..\src\StreamWriter.cpp" />
+    <ClCompile Include="..\src\Subfont.cpp" />
+    <ClCompile Include="..\src\SVGTree.cpp" />
+    <ClCompile Include="..\src\System.cpp" />
+    <ClCompile Include="..\src\Terminal.cpp" />
+    <ClCompile Include="..\src\TFM.cpp" />
+    <ClCompile Include="..\src\ToUnicodeMap.cpp" />
+    <ClCompile Include="..\src\TpicSpecialHandler.cpp" />
+    <ClCompile Include="..\src\Unicode.cpp" />
+    <ClCompile Include="..\src\VFReader.cpp" />
+    <ClCompile Include="..\src\XMLDocument.cpp" />
+    <ClCompile Include="..\src\XMLNode.cpp" />
+    <ClCompile Include="..\src\XMLString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\BasicDVIReader.h" />
+    <ClInclude Include="..\src\Bezier.h" />
+    <ClInclude Include="..\src\BgColorSpecialHandler.h" />
+    <ClInclude Include="..\src\Bitmap.h" />
+    <ClInclude Include="..\src\BoundingBox.h" />
+    <ClInclude Include="..\src\Calculator.h" />
+    <ClInclude Include="..\src\Character.h" />
+    <ClInclude Include="..\src\CharMapID.h" />
+    <ClInclude Include="..\src\CMap.h" />
+    <ClInclude Include="..\src\CMapManager.h" />
+    <ClInclude Include="..\src\CMapReader.h" />
+    <ClInclude Include="..\src\CmdLineParserBase.h" />
+    <ClInclude Include="..\src\Color.h" />
+    <ClInclude Include="..\src\ColorSpecialHandler.h" />
+    <ClInclude Include="..\src\CommandLine.h" />
+    <ClInclude Include="..\src\CRC32.h" />
+    <ClInclude Include="..\src\DependencyGraph.h" />
+    <ClInclude Include="..\src\EncFile.h" />
+    <ClInclude Include="..\src\EPSFile.h" />
+    <ClInclude Include="..\src\EPSToSVG.h" />
+    <ClInclude Include="..\src\FilePath.h" />
+    <ClInclude Include="..\src\FontMetrics.h" />
+    <ClInclude Include="..\src\HtmlSpecialHandler.h" />
+    <ClInclude Include="..\src\JFM.h" />
+    <ClInclude Include="..\src\MapLine.h" />
+    <ClInclude Include="..\src\MiKTeXCom.h" />
+    <ClInclude Include="..\src\NoPsSpecialHandler.h" />
+    <ClInclude Include="..\src\NumericRanges.h" />
+    <ClInclude Include="..\src\PageRanges.h" />
+    <ClInclude Include="..\src\PathClipper.h" />
+    <ClInclude Include="..\src\PdfSpecialHandler.h" />
+    <ClInclude Include="..\src\PreScanDVIReader.h" />
+    <ClInclude Include="..\src\Process.h" />
+    <ClInclude Include="..\src\PSFilter.h" />
+    <ClInclude Include="..\src\PSInterpreter.h" />
+    <ClInclude Include="..\src\PSPattern.h" />
+    <ClInclude Include="..\src\PSPreviewFilter.h" />
+    <ClInclude Include="..\src\PsSpecialHandler.h" />
+    <ClInclude Include="..\src\RangeMap.h" />
+    <ClInclude Include="..\src\SignalHandler.h" />
+    <ClInclude Include="..\src\Subfont.h" />
+    <ClInclude Include="..\src\System.h" />
+    <ClInclude Include="..\src\Terminal.h" />
+    <ClInclude Include="..\src\ToUnicodeMap.h" />
+    <ClInclude Include="..\src\Unicode.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="..\src\debug.h" />
+    <ClInclude Include="..\src\DVIActions.h" />
+    <ClInclude Include="..\src\DVIReader.h" />
+    <ClInclude Include="..\src\DvisvgmSpecialHandler.h" />
+    <ClInclude Include="..\src\DVIToSVG.h" />
+    <ClInclude Include="..\src\DVIToSVGActions.h" />
+    <ClInclude Include="..\src\FileFinder.h" />
+    <ClInclude Include="..\src\FileSystem.h" />
+    <ClInclude Include="..\src\Font.h" />
+    <ClInclude Include="..\src\FontCache.h" />
+    <ClInclude Include="..\src\FontEngine.h" />
+    <ClInclude Include="..\src\FontManager.h" />
+    <ClInclude Include="..\src\FontMap.h" />
+    <ClInclude Include="..\src\FontTracer.h" />
+    <ClInclude Include="..\src\GFGlyphTracer.h" />
+    <ClInclude Include="..\src\GFReader.h" />
+    <ClInclude Include="..\src\GFTracer.h" />
+    <ClInclude Include="..\src\Ghostscript.h" />
+    <ClInclude Include="..\src\global.h" />
+    <ClInclude Include="..\src\Glyph.h" />
+    <ClInclude Include="..\src\gzstream.h" />
+    <ClInclude Include="..\src\InputBuffer.h" />
+    <ClInclude Include="..\src\Length.h" />
+    <ClInclude Include="..\src\macros.h" />
+    <ClInclude Include="..\src\Message.h" />
+    <ClInclude Include="..\src\MessageException.h" />
+    <ClInclude Include="..\src\MetafontWrapper.h" />
+    <ClInclude Include="..\src\PageSize.h" />
+    <ClInclude Include="..\src\Pair.h" />
+    <ClInclude Include="..\src\SpecialActions.h" />
+    <ClInclude Include="..\src\SpecialHandler.h" />
+    <ClInclude Include="..\src\SpecialManager.h" />
+    <ClInclude Include="..\src\StreamCounter.h" />
+    <ClInclude Include="..\src\StreamWriter.h" />
+    <ClInclude Include="..\src\TFM.h" />
+    <ClInclude Include="..\src\TpicSpecialHandler.h" />
+    <ClInclude Include="..\src\types.h" />
+    <ClInclude Include="..\src\XMLDocument.h" />
+    <ClInclude Include="..\src\XMLNode.h" />
+    <ClInclude Include="..\src\XMLString.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="clipper\clipper.vcxproj">
+      <Project>{98d8e34d-75b4-48b6-b175-c3a7df11e52c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="freetype\freetype.vcxproj">
+      <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="potrace\libpotrace.vcxproj">
+      <Project>{6f17fbf1-4304-4af2-81a8-c78787e8d0a5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="zlib\zlib.vcxproj">
+      <Project>{f296e0c2-0d37-44cd-961d-87681418683f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

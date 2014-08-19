@@ -1,0 +1,27 @@
+In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2013 you
+need to download the source code archives of the following libraries:
+
+FreeType:   http://freetype.org
+Potrace:    http://potrace.sourceforge.net
+zlib:       http://zlib.net
+
+Additionally, the MiKTeX SDK is required:
+http://www.miktex.org/sdk
+
+Unpack the MiKTeX SDK into the "vc" directory so that the new subfolder
+miktex-2.9.4106-sdk is created there.
+
+The contents of the library archives go into the corresponding subfolders
+already present in the "vc" directory. Extract the archives and move the
+contents of the versioned root folders, e.g. zlib-1.2.8, to the dedicated
+subfolders of the "vc" directory.
+For example, the contents of zlib-1.2.8 should be moved to dvisvgm\vc\zlib.
+The versioned library folders are not required and can be deleted.
+
+Now open the Visual Studio IDE, load dvisvgm.sln, and start the build process.
+
+Alternatively, you can trigger the build process on the command-line with
+  msbuild /p:Configuration=Release /p:Platform=<platform> dvisvgm.sln
+where <platform> is either "win32" or "x64" for the 32 and 64bit binaries,
+respectively.
+
