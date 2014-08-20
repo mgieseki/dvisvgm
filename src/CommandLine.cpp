@@ -32,6 +32,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 	{'l', "list-specials", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
 	{'M', "mag", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
 	{'n', "no-fonts", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
+	{'\0', "no-merge", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_merge)},
 	{'\0', "no-mktexmf", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_mktexmf)},
 	{'S', "no-specials", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_specials)},
 	{'\0', "no-styles", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
@@ -79,6 +80,7 @@ void CommandLine::init () {
 	_list_specials_given = false;
 	_mag_given = false;
 	_no_fonts_given = false;
+	_no_merge_given = false;
 	_no_mktexmf_given = false;
 	_no_specials_given = false;
 	_no_styles_given = false;
@@ -144,6 +146,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 		"o-s, --stdout                  write SVG output to stdout",
 		"o-n, --no-fonts[=variant]      draw glyphs by using path elements [0]",
 		"o    --no-styles               don't use styles to reference fonts",
+		"o    --no-merge                don't merge adjacent text tags",
 		"o-z, --zip[=level]             create compressed .svgz file [9]",
 		"sSVG transformations:",
 		"o-r, --rotate=angle            rotate page content clockwise",
@@ -240,6 +243,10 @@ void CommandLine::handle_mag (InputReader &ir, const Option &opt, bool longopt) 
 void CommandLine::handle_no_fonts (InputReader &ir, const Option &opt, bool longopt) {
 	if (ir.eof() || getIntArg(ir, opt, longopt, _no_fonts_arg))
 		_no_fonts_given = true;
+}
+
+void CommandLine::handle_no_merge (InputReader &ir, const Option &opt, bool longopt) {
+	_no_merge_given = true;
 }
 
 void CommandLine::handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt) {

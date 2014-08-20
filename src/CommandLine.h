@@ -41,6 +41,7 @@ class CommandLine : public CmdLineParserBase
 		double mag_arg () const {return _mag_arg;}
 		bool no_fonts_given () const {return _no_fonts_given;}
 		int no_fonts_arg () const {return _no_fonts_arg;}
+		bool no_merge_given () const {return _no_merge_given;}
 		bool no_mktexmf_given () const {return _no_mktexmf_given;}
 		bool no_specials_given () const {return _no_specials_given;}
 		const std::string& no_specials_arg () const {return _no_specials_arg;}
@@ -95,6 +96,7 @@ class CommandLine : public CmdLineParserBase
 		void handle_list_specials (InputReader &ir, const Option &opt, bool longopt);
 		void handle_mag (InputReader &ir, const Option &opt, bool longopt);
 		void handle_no_fonts (InputReader &ir, const Option &opt, bool longopt);
+		void handle_no_merge (InputReader &ir, const Option &opt, bool longopt);
 		void handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt);
 		void handle_no_specials (InputReader &ir, const Option &opt, bool longopt);
 		void handle_no_styles (InputReader &ir, const Option &opt, bool longopt);
@@ -142,6 +144,7 @@ class CommandLine : public CmdLineParserBase
 		double _mag_arg;
 		bool _no_fonts_given;
 		int _no_fonts_arg;
+		bool _no_merge_given;
 		bool _no_mktexmf_given;
 		bool _no_specials_given;
 		std::string _no_specials_arg;
