@@ -40,25 +40,10 @@ static inline FT_Fixed to_16dot16 (double val) {
 	return static_cast<FT_Fixed>(val*65536.0 + 0.5);
 }
 
+
 /** Converts an integer to a 16.16 fixed point value. */
 static inline FT_Fixed to_16dot16 (int val) {
 	return static_cast<FT_Fixed>(val) << 16;
-}
-
-
-static inline double conv_16dot16_to_double (FT_Fixed fixed) {
-	return static_cast<double>(fixed)/(1 << 16);
-}
-
-
-/** Converts a floating point value to a 26.6 fixed point value. */
-static inline FT_F26Dot6 to_26dot6 (double val) {
-	return static_cast<FT_F26Dot6>(val*64.0 + 0.5);
-}
-
-/** Converts an integer to a 26.6 fixed point value. */
-static inline FT_F26Dot6 to_26dot6 (int val) {
-	return static_cast<FT_F26Dot6>(val) << 6;
 }
 
 

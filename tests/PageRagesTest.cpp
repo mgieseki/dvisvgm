@@ -24,10 +24,6 @@
 
 using namespace std;
 
-static ostream& operator << (ostream &os, const PageRanges::Range &r) {
-	return os << '(' << r.first << ',' << r.second << ')';
-}
-
 
 struct Range
 {
