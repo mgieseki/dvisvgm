@@ -1,3 +1,10 @@
+dvisvgm-1.8.1 (2014-08-29)
+- unreferenced clipPath elements are now removed from the SVG files
+- fixed side-effectes caused by unexpected bop/eop operators in
+  PS specials (LP bug #1350688)
+- few improvements to configure.ac (patches by Khaled Hosny)
+- removed redundant code
+
 dvisvgm-1.8 (2014-07-29)
 - added option --clipjoin which tells dvisvgm to compute intersections
   of clipping paths itself and not to delegate this task to the SVG renderer
