@@ -143,10 +143,10 @@ void BasicDVIReader::executePostPost () {
 	if (!isStreamValid())
 		throw DVIException("invalid DVI file");
 
-	seek(-1, ios_base::end);  // stream pointer to last byte
+	seek(-1, ios::end);       // stream pointer to last byte
 	int count=0;
 	while (peek() == 223) {   // count trailing fill bytes
-		seek(-1, ios_base::cur);
+		seek(-1, ios::cur);
 		count++;
 	}
 	if (count < 4)  // the standard requires at least 4 trailing fill bytes
@@ -185,23 +185,23 @@ void BasicDVIReader::setDVIFormat (DVIFormat format) {
  *  Format: pre i[1] num[4] den[4] mag[4] k[1] x[k] */
 void BasicDVIReader::cmdPre (int) {
 	setDVIFormat((DVIFormat)readUnsigned(1)); // identification number
-	seek(12, ios_base::cur);    // skip numerator, denominator, and mag factor
+	seek(12, ios::cur);         // skip numerator, denominator, and mag factor
 	UInt32 k = readUnsigned(1); // length of following comment
-	seek(k, ios_base::cur);     // skip comment
+	seek(k, ios::cur);          // skip comment
 }
 
 
 /** Executes postamble command.
  *  Format: post p[4] num[4] den[4] mag[4] l[4] u[4] s[2] t[2] */
 void BasicDVIReader::cmdPost (int) {
-	seek(28, ios_base::cur);
+	seek(28, ios::cur);
 }
 
 
 /** Executes postpost command.
  *  Format: postpost q[4] i[1] 223’s[>= 4] */
 void BasicDVIReader::cmdPostPost (int) {
-	seek(4, ios_base::cur);
+	seek(4, ios::cur);
 	setDVIFormat((DVIFormat)readUnsigned(1));  // identification byte
 	while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
 }
@@ -209,83 +209,83 @@ void BasicDVIReader::cmdPostPost (int) {
 
 /** Executes bop (begin of page) command.
  *  Format: bop c0[+4] ... c9[+4] p[+4] */
-void BasicDVIReader::cmdBop (int)         {seek(44, ios_base::cur);}
+void BasicDVIReader::cmdBop (int)         {seek(44, ios::cur);}
 void BasicDVIReader::cmdEop (int)         {}
 void BasicDVIReader::cmdPush (int)        {}
 void BasicDVIReader::cmdPop (int)         {}
 void BasicDVIReader::cmdSetChar0 (int)    {}
-void BasicDVIReader::cmdSetChar (int len) {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdPutChar (int len) {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdSetRule (int)     {seek(8, ios_base::cur);}
-void BasicDVIReader::cmdPutRule (int)     {seek(8, ios_base::cur);}
-void BasicDVIReader::cmdRight (int len)   {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdDown (int len)    {seek(len, ios_base::cur);}
+void BasicDVIReader::cmdSetChar (int len) {seek(len, ios::cur);}
+void BasicDVIReader::cmdPutChar (int len) {seek(len, ios::cur);}
+void BasicDVIReader::cmdSetRule (int)     {seek(8, ios::cur);}
+void BasicDVIReader::cmdPutRule (int)     {seek(8, ios::cur);}
+void BasicDVIReader::cmdRight (int len)   {seek(len, ios::cur);}
+void BasicDVIReader::cmdDown (int len)    {seek(len, ios::cur);}
 void BasicDVIReader::cmdX0 (int)          {}
 void BasicDVIReader::cmdY0 (int)          {}
 void BasicDVIReader::cmdW0 (int)          {}
 void BasicDVIReader::cmdZ0 (int)          {}
-void BasicDVIReader::cmdX (int len)       {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdY (int len)       {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdW (int len)       {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdZ (int len)       {seek(len, ios_base::cur);}
+void BasicDVIReader::cmdX (int len)       {seek(len, ios::cur);}
+void BasicDVIReader::cmdY (int len)       {seek(len, ios::cur);}
+void BasicDVIReader::cmdW (int len)       {seek(len, ios::cur);}
+void BasicDVIReader::cmdZ (int len)       {seek(len, ios::cur);}
 void BasicDVIReader::cmdNop (int)         {}
-void BasicDVIReader::cmdDir (int)         {seek(1, ios_base::cur);}
+void BasicDVIReader::cmdDir (int)         {seek(1, ios::cur);}
 void BasicDVIReader::cmdFontNum0 (int)    {}
-void BasicDVIReader::cmdFontNum (int len) {seek(len, ios_base::cur);}
-void BasicDVIReader::cmdXXX (int len)     {seek(readUnsigned(len), ios_base::cur);}
+void BasicDVIReader::cmdFontNum (int len) {seek(len, ios::cur);}
+void BasicDVIReader::cmdXXX (int len)     {seek(readUnsigned(len), ios::cur);}
 
 
 /** Executes fontdef command.
  *  Format fontdef k[len] c[4] s[4] d[4] a[1] l[1] n[a+l]
  * @param[in] len size of font number variable (in bytes) */
 void BasicDVIReader::cmdFontDef (int len) {
-	seek(len+12, ios_base::cur);     // skip font number
-	UInt32 pathlen  = readUnsigned(1);     // length of font path
-	UInt32 namelen  = readUnsigned(1);     // length of font name
-	seek(pathlen+namelen, ios_base::cur);
+	seek(len+12, ios::cur);             // skip font number
+	UInt32 pathlen  = readUnsigned(1);  // length of font path
+	UInt32 namelen  = readUnsigned(1);  // length of font name
+	seek(pathlen+namelen, ios::cur);
 }
 
 
 /** XDV extension: include image or pdf file.
  *  parameters: box[1] matrix[4][6] p[2] len[2] path[l] */
 void BasicDVIReader::cmdXPic (int) {
-	seek(1+24+2, ios_base::cur);
+	seek(1+24+2, ios::cur);
 	UInt16 len = readUnsigned(2);
-	seek(len, ios_base::cur);
+	seek(len, ios::cur);
 }
 
 
 void BasicDVIReader::cmdXFontDef (int) {
-	seek(4+4, ios_base::cur);
+	seek(4+4, ios::cur);
 	UInt16 flags = readUnsigned(2);
 	UInt8 psname_len = readUnsigned(1);
 	UInt8 fmname_len = readUnsigned(1);
 	UInt8 stname_len = readUnsigned(1);
-	seek(psname_len+fmname_len+stname_len, ios_base::cur);
+	seek(psname_len+fmname_len+stname_len, ios::cur);
 	if (flags & 0x0200)   // colored?
-		seek(4, ios_base::cur);
+		seek(4, ios::cur);
 	if (flags & 0x1000)   // extend?
-		seek(4, ios_base::cur);
+		seek(4, ios::cur);
 	if (flags & 0x2000)   // slant?
-		seek(4, ios_base::cur);
+		seek(4, ios::cur);
 	if (flags & 0x4000)   // embolden?
-		seek(4, ios_base::cur);
+		seek(4, ios::cur);
 	if (flags & 0x0800) { // variations?
 		UInt16 num_variations = readSigned(2);
-		seek(4*num_variations, ios_base::cur);
+		seek(4*num_variations, ios::cur);
 	}
 }
 
 
 void BasicDVIReader::cmdXGlyphA (int) {
-	seek(4, ios_base::cur);
+	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
-	seek(10*num_glyphs, ios_base::cur);
+	seek(10*num_glyphs, ios::cur);
 }
 
 
 void BasicDVIReader::cmdXGlyphS (int) {
-	seek(4, ios_base::cur);
+	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
-	seek(6*num_glyphs, ios_base::cur);
+	seek(6*num_glyphs, ios::cur);
 }

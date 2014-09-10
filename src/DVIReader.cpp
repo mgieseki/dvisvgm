@@ -149,16 +149,16 @@ static void to_postamble (StreamReader &reader) {
 	if (!reader.isStreamValid())
 		throw DVIException("invalid DVI file");
 
-	reader.seek(-1, ios_base::end);     // stream pointer to last byte
+	reader.seek(-1, ios::end);          // stream pointer to last byte
 	int count=0;
 	while (reader.peek() == 223) {
-		reader.seek(-1, ios_base::cur);  // skip fill bytes
+		reader.seek(-1, ios::cur);       // skip fill bytes
 		count++;
 	}
 	if (count < 4)  // the standard requires at least 4 trailing fill bytes
 		throw DVIException("missing fill bytes at end of file");
 
-	reader.seek(-4, ios_base::cur);     // now on first byte of q (pointer to begin of postamble)
+	reader.seek(-4, ios::cur);          // now on first byte of q (pointer to begin of postamble)
 	UInt32 q = reader.readUnsigned(4);  // pointer to begin of postamble
 	reader.seek(q);                     // now on begin of postamble
 }

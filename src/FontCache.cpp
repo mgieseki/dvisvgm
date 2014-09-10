@@ -338,7 +338,7 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 					}
 					info.numbytes += bc+1; // command length + command
 					info.numcmds++;
-					is.seekg(bc, ios_base::cur);
+					is.seekg(bc, ios::cur);
 				}
 				info.numbytes += 6; // number of path commands + char code
 			}

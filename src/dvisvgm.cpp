@@ -366,7 +366,7 @@ int main (int argc, char *argv[]) {
 	eps_given = args.eps_given();
 #endif
 	string inputfile = ensure_suffix(args.file(0), eps_given);
-	ifstream ifs(inputfile.c_str(), ios_base::binary|ios_base::in);
+	ifstream ifs(inputfile.c_str(), ios::binary|ios::in);
 	if (!ifs) {
 		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
 		return 0;

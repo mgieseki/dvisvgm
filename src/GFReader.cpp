@@ -160,10 +160,10 @@ bool GFReader::executePostamble () {
 	_in.clear();
 	if (!_in)
 		return false;
-	_in.seekg(-1, ios_base::end);
-	while (_in.peek() == 223)         // skip fill bytes
-		_in.seekg(-1, ios_base::cur);
-	_in.seekg(-4, ios_base::cur);
+	_in.seekg(-1, ios::end);
+	while (_in.peek() == 223)        // skip fill bytes
+		_in.seekg(-1, ios::cur);
+	_in.seekg(-4, ios::cur);
 	UInt32 q = readUnsigned(4);      // pointer to begin of postamble
 	_in.seekg(q);                    // now on begin of postamble
 	while (executeCommand() != 249); // execute all commands until postpost is reached
@@ -215,7 +215,7 @@ void GFReader::cmdPost (int) {
 	_checksum   = readUnsigned(4);  // checksum
 	_hppp       = readUnsigned(4);  // horizontal pixels per point (scaled int)
 	_vppp       = readUnsigned(4);  // vertical pixels per point (scaled int)
-	_in.seekg(16, ios_base::cur);   // skip x and y bounds
+	_in.seekg(16, ios::cur);        // skip x and y bounds
 	postamble();
 }
 
