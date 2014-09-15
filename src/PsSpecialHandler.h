@@ -85,6 +85,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 	protected:
 		void initialize ();
 		void moveToDVIPos ();
+		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
 		void dviEndPage (unsigned pageno);
@@ -141,6 +142,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		std::string _headerCode;    ///< collected literal PS header code
 		Path _path;
 		DPair _currentpoint;        ///< current PS position in bp units
+		Color _currentcolor;        ///< current stroke/fill color
 		double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
 		double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
 		double _linewidth;          ///< current linewidth
