@@ -198,10 +198,13 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	$(ZLIB_CFLAGS)
 
 # the command-line parser is generated from options.xml by opt2cpp
-CommandLine.cpp: options.xml
+$(srcdir)/CommandLine.cpp: options.xml
 	if test -f opt2cpp.xsl; then \
 		rm -f $@ $*.h; \
 		xsltproc opt2cpp.xsl $<; \
+	elif test -f $(srcdir)/opt2cpp.py; then \
+		rm -f $@ $*.h; \
+		python2 $(srcdir)/opt2cpp.py $< $@ $*.h; \
 	fi
 
 # Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter
