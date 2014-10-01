@@ -93,6 +93,7 @@ class SVGTree
 		static bool CREATE_STYLE;        ///<  use style elements and class attributes to reference fonts?
 		static bool CREATE_USE_ELEMENTS; ///< allow generation of <use/> elements?
 		static bool RELATIVE_PATH_CMDS;  ///< relative path commands rather than absolute ones?
+		static bool MERGE_CHARS;         ///< whether to merge chars with common properties into the same <text> tag
 		static double ZOOM_FACTOR;       ///< factor applied to width/height attribute
 
 	protected:

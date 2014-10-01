@@ -40,6 +40,7 @@ bool SVGTree::CREATE_STYLE=true;
 bool SVGTree::USE_FONTS=true;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
 bool SVGTree::RELATIVE_PATH_CMDS=false;
+bool SVGTree::MERGE_CHARS=true;
 double SVGTree::ZOOM_FACTOR=1.0;
 
 
@@ -136,12 +137,12 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 	XMLElementNode *node=_span;
 	if (USE_FONTS) {
 		// changes of fonts and transformations require a new text element
-		if (!_text || _font.changed() || _matrix.changed() || _vertical.changed()) {
+		if (!MERGE_CHARS || !_text || _font.changed() || _matrix.changed() || _vertical.changed()) {
 			newTextNode(x, y);
 			node = _text;
 			_color.changed(true);
 		}
-		if (_xchanged || _ychanged || (_color.changed() && _color.get() != Color::BLACK)) {
+		if (MERGE_CHARS && (_xchanged || _ychanged || (_color.changed() && _color.get() != Color::BLACK))) {
 			// if drawing position was explicitly changed, create a new tspan element
 			_span = new XMLElementNode("tspan");
 			if (_xchanged) {
@@ -171,6 +172,10 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			node = _text;
 		}
 		node->append(XMLString(font.unicode(c), false));
+		if (!MERGE_CHARS && _color.get() != font.color()) {
+			node->addAttribute("fill", _color.get().rgbString());
+			_color.changed(false);
+		}
 	}
 	else {
 		if (_color.changed() || _matrix.changed()) {
