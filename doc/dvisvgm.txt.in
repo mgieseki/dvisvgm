@@ -256,6 +256,12 @@ can cause Metafont arithmetic errors due to number overflows. So, use this optio
 The default setting usually produces nice results.
 
 
+*--no-merge*::
+Puts every single character in a separate 'text' element with corresponding 'x' and 'y' attributes.
+By default, new 'text' or 'tspan' elements are only created if a string starts at a location that
+differs from the regular position defined by the characters' advance values.
+
+
 *--no-mktexmf*::
 Suppresses the generation of missing font files. If dvisvgm can't find a font file
 through the kpathsea lookup mechanism, it calls the external tools mktextfm or mktexmf by.
