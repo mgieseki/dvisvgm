@@ -146,7 +146,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 		"o-s, --stdout                  write SVG output to stdout",
 		"o-n, --no-fonts[=variant]      draw glyphs by using path elements [0]",
 		"o    --no-styles               don't use styles to reference fonts",
-		"o    --no-merge                don't merge adjacent text tags",
+		"o    --no-merge                don't merge adjacent text elements",
 		"o-z, --zip[=level]             create compressed .svgz file [9]",
 		"sSVG transformations:",
 		"o-r, --rotate=angle            rotate page content clockwise",
