@@ -36,8 +36,50 @@ using namespace std;
 // name of Ghostscript shared library set by the user
 string Ghostscript::LIBGS_NAME;
 
-
 #ifndef HAVE_LIBGS
+
+#ifdef __WIN32__
+/** Looks up the path of the Ghostscript DLL in the Windows registry and returns it.
+ *  If there is no proper registry entry, the returned string is empty. */
+static string get_path_from_registry () {
+	REGSAM mode = KEY_READ|KEY_QUERY_VALUE;
+#ifdef KEY_WOW64_64KEY
+#ifdef __WIN64__
+	mode |= KEY_WOW64_64KEY;
+#else
+	mode |= KEY_WOW64_32KEY;
+#endif
+#endif
+	static const char *gs_companies[] = {"GPL", "GNU", "AFPL", "Aladdin"};
+	for (size_t i=0; i < sizeof(gs_companies)/sizeof(char*); i++) {
+		const string reg_path = string("SOFTWARE\\") + gs_companies[i] + " Ghostscript";
+		static HKEY reg_roots[] = {HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
+		for (size_t j=0; j < sizeof(reg_roots)/sizeof(HKEY); j++) {
+			HKEY hkey;
+			if (RegOpenKeyExA(reg_roots[j], reg_path.c_str(), 0, mode, &hkey) == ERROR_SUCCESS) {
+				char subkey[16];
+				for (int k=0; RegEnumKeyA(hkey, k, subkey, 16) == ERROR_SUCCESS; k++) {
+					istringstream iss(subkey);
+					int major_version;
+					iss >> major_version;
+					if (major_version >= 7) {
+						char dll_path[256];  // path to Ghostscript DLL stored in the registry
+						DWORD length;
+						if (RegGetValueA(hkey, subkey, "GS_DLL", RRF_RT_REG_SZ, 0, dll_path, &length) == ERROR_SUCCESS) {
+							RegCloseKey(hkey);
+							return dll_path;
+						}
+					}
+				}
+				RegCloseKey(hkey);
+			}
+		}
+	}
+	return "";
+}
+#endif
+
+
 /** Try to detect name of the Ghostscript shared library depending on the user settings.
  *  @param[in] fname path/filename given by the user
  *  @return name of Ghostscript shared library */
@@ -54,6 +96,12 @@ static string get_libgs (const string &fname) {
 	if (const char *gsdll_path = FileFinder::lookup(gsdll))
 		return gsdll_path;
 #endif // MIKTEX
+#if defined(__WIN32__)
+	// try to look up the path of the Ghostscript DLL in the Windows registry
+	string gsdll_path = get_path_from_registry();
+	if (!gsdll_path.empty())
+		return gsdll_path;
+#endif
 #if defined(__WIN64__)
 	return "gsdll64.dll";
 #elif defined(__WIN32__)
