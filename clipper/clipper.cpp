@@ -1,8 +1,8 @@
 /*******************************************************************************
 *                                                                              *
 * Author    :  Angus Johnson                                                   *
-* Version   :  6.1.5                                                           *
-* Date      :  16 July 2014                                                    *
+* Version   :  6.2.0                                                           *
+* Date      :  2 October 2014                                                  *
 * Website   :  http://www.angusj.com                                           *
 * Copyright :  Angus Johnson 2010-2014                                         *
 *                                                                              *
@@ -966,13 +966,16 @@ TEdge* ClipperBase::ProcessBound(TEdge* E, bool NextIsForward)
       EStart = E->Prev;
     else 
       EStart = E->Next;
-    if (IsHorizontal(*EStart)) //ie an adjoining horizontal skip edge
+    if (EStart->OutIdx != Skip)
     {
-      if (EStart->Bot.X != E->Bot.X && EStart->Top.X != E->Bot.X) 
+      if (IsHorizontal(*EStart)) //ie an adjoining horizontal skip edge
+      {
+        if (EStart->Bot.X != E->Bot.X && EStart->Top.X != E->Bot.X)
+          ReverseHorizontal(*E);
+      }
+      else if (EStart->Bot.X != E->Bot.X)
         ReverseHorizontal(*E);
     }
-    else if (EStart->Bot.X != E->Bot.X) 
-      ReverseHorizontal(*E);
   }
   
   EStart = E;
@@ -1347,7 +1350,7 @@ Clipper::~Clipper() //destructor
 //------------------------------------------------------------------------------
 
 #ifdef use_xyz  
-void Clipper::ZFillFunction(TZFillCallback zFillFunc)
+void Clipper::ZFillFunction(ZFillCallback zFillFunc)
 {  
   m_ZFill = zFillFunc;
 }
@@ -4047,7 +4050,7 @@ void Clipper::DoSimplePolygons()
   {
     OutRec* outrec = m_PolyOuts[i++];
     OutPt* op = outrec->Pts;
-    if (!op) continue;
+    if (!op || outrec->IsOpen) continue;
     do //for each Pt in Polygon until duplicate found do ...
     {
       OutPt* op2 = op->Next;
@@ -4151,10 +4154,10 @@ double DistanceFromLineSqrd(
   const IntPoint& pt, const IntPoint& ln1, const IntPoint& ln2)
 {
   //The equation of a line in general form (Ax + By + C = 0)
-  //given 2 points (x¹,y¹) & (x²,y²) is ...
-  //(y¹ - y²)x + (x² - x¹)y + (y² - y¹)x¹ - (x² - x¹)y¹ = 0
-  //A = (y¹ - y²); B = (x² - x¹); C = (y² - y¹)x¹ - (x² - x¹)y¹
-  //perpendicular distance of point (x³,y³) = (Ax³ + By³ + C)/Sqrt(A² + B²)
+  //given 2 points (x,y) & (x,y) is ...
+  //(y - y)x + (x - x)y + (y - y)x - (x - x)y = 0
+  //A = (y - y); B = (x - x); C = (y - y)x - (x - x)y
+  //perpendicular distance of point (x,y) = (Ax + By + C)/Sqrt(A + B)
   //see http://en.wikipedia.org/wiki/Perpendicular_distance
   double A = double(ln1.Y - ln2.Y);
   double B = double(ln2.X - ln1.X);
@@ -4446,19 +4449,5 @@ std::ostream& operator <<(std::ostream &s, const Paths &p)
   return s;
 }
 //------------------------------------------------------------------------------
-
-#ifdef use_deprecated
-
-void OffsetPaths(const Paths &in_polys, Paths &out_polys,
-  double delta, JoinType jointype, EndType_ endtype, double limit)
-{
-  ClipperOffset co(limit, limit);
-  co.AddPaths(in_polys, jointype, (EndType)endtype); 
-  co.Execute(out_polys, delta);
-}
-//------------------------------------------------------------------------------
-
-#endif
-
 
 } //ClipperLib namespace

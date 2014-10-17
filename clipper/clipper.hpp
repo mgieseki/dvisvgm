@@ -1,8 +1,8 @@
 /*******************************************************************************
 *                                                                              *
 * Author    :  Angus Johnson                                                   *
-* Version   :  6.1.5                                                           *
-* Date      :  16 July 2014                                                    *
+* Version   :  6.2.0                                                           *
+* Date      :  2 October 2014                                                  *
 * Website   :  http://www.angusj.com                                           *
 * Copyright :  Angus Johnson 2010-2014                                         *
 *                                                                              *
@@ -34,7 +34,7 @@
 #ifndef clipper_hpp
 #define clipper_hpp
 
-#define CLIPPER_VERSION "6.1.5"
+#define CLIPPER_VERSION "6.2.0"
 
 //use_int32: When enabled 32bit ints are used instead of 64bit ints. This
 //improve performance but coordinate values are limited to the range +/- 46340
@@ -46,9 +46,8 @@
 //use_lines: Enables line clipping. Adds a very minor cost to performance.
 #define use_lines
   
-//use_deprecated: Enables support for the obsolete OffsetPaths() function
-//which has been replace with the ClipperOffset class.
-//#define use_deprecated
+//use_deprecated: Enables temporary support for the obsolete functions
+//#define use_deprecated  
 
 #include <vector>
 #include <set>
@@ -105,8 +104,8 @@ inline std::ostream& operator << (std::ostream &os, const ZType &z) {
 
 #ifdef use_int32
   typedef int cInt;
-  static cInt const loRange = 46340;
-  static cInt const hiRange = 46340;
+  static cInt const loRange = 0x7FFF;
+  static cInt const hiRange = 0x7FFF;
 #else
   typedef Int64 cInt;
   static cInt const loRange = 0x3FFFFFFF;
@@ -157,7 +156,7 @@ struct DoublePoint
 //------------------------------------------------------------------------------
 
 #ifdef use_xyz
-typedef void (*TZFillCallback)(IntPoint& e1bot, IntPoint& e1top, IntPoint& e2bot, IntPoint& e2top, IntPoint& pt);
+typedef void (*ZFillCallback)(IntPoint& e1bot, IntPoint& e1top, IntPoint& e2bot, IntPoint& e2top, IntPoint& pt);
 #endif
 
 enum InitOptions {ioReverseSolution = 1, ioStrictlySimple = 2, ioPreserveCollinear = 4};
@@ -174,7 +173,7 @@ class PolyNode
 { 
 public:
     PolyNode();
-	 virtual ~PolyNode () {}
+    virtual ~PolyNode(){};
     Path Contour;
     PolyNodes Childs;
     PolyNode* Parent;
@@ -208,11 +207,6 @@ private:
 bool Orientation(const Path &poly);
 double Area(const Path &poly);
 int PointInPolygon(const IntPoint &pt, const Path &path);
-
-#ifdef use_deprecated
-  void OffsetPaths(const Paths &in_polys, Paths &out_polys,
-    double delta, JoinType jointype, EndType_ endtype, double limit = 0);
-#endif
 
 void SimplifyPolygon(const Path &in_poly, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
 void SimplifyPolygons(const Paths &in_polys, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
@@ -309,7 +303,7 @@ public:
   void StrictlySimple(bool value) {m_StrictSimple = value;};
   //set the callback function for z value filling on intersections (otherwise Z is 0)
 #ifdef use_xyz
-  void ZFillFunction(TZFillCallback zFillFunc);
+  void ZFillFunction(ZFillCallback zFillFunc);
 #endif
 protected:
   void Reset();
@@ -331,7 +325,7 @@ private:
   bool             m_UsingPolyTree; 
   bool             m_StrictSimple;
 #ifdef use_xyz
-  TZFillCallback   m_ZFill; //custom callback 
+  ZFillCallback   m_ZFill; //custom callback 
 #endif
   void SetWindingCount(TEdge& edge);
   bool IsEvenOddFillType(const TEdge& edge) const;
