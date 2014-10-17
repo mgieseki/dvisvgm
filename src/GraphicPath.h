@@ -193,6 +193,7 @@ class GraphicPath
 
 		/** Writes the path data as SVG path drawing command to a given output stream.
 		 *  @param[in] os output stream used to write the SVG commands to
+		 *  @param[in] relative if true, create relative rather than absolute coordinate values
 		 *  @param[in] sx horizontal scale factor
 		 *  @param[in] sy vertical scale factor
 		 *  @param[in] dx horizontal translation in PS point units

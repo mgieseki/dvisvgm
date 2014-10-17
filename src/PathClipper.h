@@ -28,11 +28,6 @@
 #include "GraphicPath.h"
 #include "MessageException.h"
 
-struct PathClipperException : public MessageException
-{
-	PathClipperException (const std::string &msg) : MessageException(msg) {}
-};
-
 
 using ClipperLib::IntPoint;
 
@@ -50,7 +45,7 @@ class PathClipper
 //		void divide (IntPoint &p1, IntPoint &p2, IntPoint &ip);
 		void reconstruct (const ClipperLib::Path &polygon, CurvedPath &path);
 		void reconstruct (const ClipperLib::Paths &polygons, CurvedPath &path);
-		static void callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, IntPoint &e2top, IntPoint &pt);
+		static void callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, IntPoint &e2top, IntPoint &ip);
 
 	private:
 		std::vector<Bezier> _curves;

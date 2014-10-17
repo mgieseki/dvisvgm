@@ -60,7 +60,7 @@ class XMLElementNode : public XMLNode
 		bool insertBefore (XMLNode *child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
 		const char* getAttributeValue (const std::string &name) const;
-		bool getDescendants (const char *name, const char *attr_name, std::vector<XMLElementNode*> &descendants) const;
+		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElementNode*> &descendants) const;
 		XMLElementNode* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
 		std::ostream& write (std::ostream &os) const;
 		bool empty () const                          {return _children.empty();}

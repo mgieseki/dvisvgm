@@ -229,9 +229,8 @@ inline ZLabel division_label (const IntPoint &p1, const IntPoint &p2, const IntP
  *  @param[in] e1bot first endpoint of edge 1
  *  @param[in] e1top second endpoint of edge 1
  *  @param[in] e2bot first endpoint of edge 2
- *  @param[in] e1top second endpoint of edge 2
- *  @param[in] ip intersection point of edge 1 and 2
- *  @param[in] userval pointer to PathClipper object set by ZFillFunction() */
+ *  @param[in] e2top second endpoint of edge 2
+ *  @param[in] ip intersection point of edge 1 and 2 */
 void PathClipper::callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, IntPoint &e2top, IntPoint &ip) {
 	ZLabel label1 = division_label(e1bot, e1top, ip);
 	ZLabel label2 = division_label(e2bot, e2top, ip);
@@ -241,7 +240,7 @@ void PathClipper::callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, I
 
 /** Iterates along the polygon edges until the endpoint of the current
  *  path segment is found and returns its vector index afterwards.
- *  @param[in] points the vertices of the polygon
+ *  @param[in] polygon the polygon to be processed
  *  @param[in] start index of the vertex where the iteration starts
  *  @param[out] label if not 0, retrieves the label of the endpoint
  *  @param[in] startLabel if true, the found endpoint is treated as start point and
@@ -322,9 +321,7 @@ inline PolyFillType polyFillType (CurvedPath::WindingRule wr) {
 
 /** Computes the intersection of to curved path.
  *  @param[in] p1 first curved path
- *  @param[in] wr1 winding rule to be applied to p1
  *  @param[in] p2 second curved path
- *  @param[in] wr2 winding rule to be applied to p2
  *  @param[out] result intersection of p1 and p2 */
 void PathClipper::intersect (const CurvedPath &p1, const CurvedPath &p2, CurvedPath &result) {
 	if (p1.size() < 2 || p2.size() < 2)
