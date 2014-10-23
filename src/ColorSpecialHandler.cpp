@@ -31,9 +31,9 @@
 using namespace std;
 
 
-static float read_float (istream &is) {
+static double read_double (istream &is) {
 	is.clear();
-	float v;
+	double v;
 	is >> v;
 	if (is.fail())
 		throw SpecialException("number expected");
@@ -41,13 +41,13 @@ static float read_float (istream &is) {
 }
 
 
-/** Reads multiple float values from a given stream. The number of
+/** Reads multiple double values from a given stream. The number of
  *  values read is determined by the size of the result vector.
  *  @param[in]  is stream to be read from
- *  @param[out] v  the resulting floats */
-static void read_floats (istream &is, vector<float> &v) {
+ *  @param[out] v the resulting values */
+static void read_doubles (istream &is, vector<double> &v) {
 	for (size_t i=0; i < v.size(); i++)
-		v[i] = read_float(is);
+		v[i] = read_double(is);
 }
 
 
@@ -64,22 +64,22 @@ static void read_color (string model, istream &is, Color &color) {
 	if (model.empty())
 		is >> model;
 	if (model == "rgb") {
-		vector<float> rgb(3);
-		read_floats(is, rgb);
+		vector<double> rgb(3);
+		read_doubles(is, rgb);
 		color.set(rgb[0], rgb[1], rgb[2]);
 	}
 	else if (model == "cmyk") {
-		vector<float> cmyk(4);
-		read_floats(is, cmyk);
+		vector<double> cmyk(4);
+		read_doubles(is, cmyk);
 		color.setCMYK(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
 	}
 	else if (model == "hsb") {
-		vector<float> hsb(3);
-		read_floats(is, hsb);
+		vector<double> hsb(3);
+		read_doubles(is, hsb);
 		color.setHSB(hsb[0], hsb[1], hsb[2]);
 	}
 	else if (model == "gray")
-		color.setGray(read_float(is));
+		color.setGray(read_double(is));
 	else if (!color.set(model, true))
 		throw SpecialException("unknown color statement");
 }

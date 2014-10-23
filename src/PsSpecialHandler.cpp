@@ -144,7 +144,7 @@ void PsSpecialHandler::moveToDVIPos () {
 void PsSpecialHandler::executeAndSync (istream &is, bool updatePos) {
 	if (_actions && _actions->getColor() != _currentcolor) {
 		// update the PS graphics state if the color has been changed by a color special
-		float r, g, b;
+		double r, g, b;
 		_actions->getColor().getRGB(r, g, b);
 		ostringstream oss;
 		oss << '\n' << r << ' ' << g << ' ' << b << " setrgbcolor ";
@@ -659,7 +659,7 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	int pattern_id = p[0];
 	Color color;
 	if (p.size() == 4)
-		color.set((float)p[1], (float)p[2], (float)p[3]);
+		color.set(p[1], p[2], p[3]);
 	map<int,PSPattern*>::iterator it = _patterns.find(pattern_id);
 	if (it == _patterns.end())
 		_pattern = 0;
@@ -797,7 +797,7 @@ void PsSpecialHandler::rotate (vector<double> &p) {
 
 void PsSpecialHandler::setgray (vector<double> &p) {
 	_pattern = 0;
-	_currentcolor.setGray((float)p[0]);
+	_currentcolor.setGray(p[0]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
 }
@@ -805,7 +805,7 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 
 void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 	_pattern= 0;
-	_currentcolor.set((float)p[0], (float)p[1], (float)p[2]);
+	_currentcolor.set(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
 }
@@ -813,7 +813,7 @@ void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 	_pattern = 0;
-	_currentcolor.setCMYK((float)p[0], (float)p[1], (float)p[2], (float)p[3]);
+	_currentcolor.setCMYK(p[0], p[1], p[2], p[3]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
 }
@@ -821,7 +821,7 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
 	_pattern = 0;
-	_currentcolor.setHSB((float)p[0], (float)p[1], (float)p[2]);
+	_currentcolor.setHSB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
 }

@@ -36,8 +36,8 @@ const Color Color::WHITE(UInt8(255), UInt8(255), UInt8(255));
 const Color Color::TRANSPARENT(UInt32(0xff000000));
 
 
-static inline UInt8 float_to_byte (float v) {
-	v = max(0.0f, min(1.0f, v));
+static inline UInt8 double_to_byte (double v) {
+	v = max(0.0, min(1.0, v));
 	return UInt8(floor(255*v+0.5));
 }
 
@@ -60,8 +60,8 @@ Color::Color (const string &name) {
 }
 
 
-void Color::set (float r, float g, float b) {
-	set(float_to_byte(r), float_to_byte(g), float_to_byte(b));
+void Color::set (double r, double g, double b) {
+	set(double_to_byte(r), double_to_byte(g), double_to_byte(b));
 }
 
 
@@ -179,8 +179,8 @@ bool Color::set (string name, bool case_sensitive) {
 }
 
 
-void Color::setHSB (float h, float s, float b) {
-	vector<float> hsb(3), rgb(3);
+void Color::setHSB (double h, double s, double b) {
+	vector<double> hsb(3), rgb(3);
 	hsb[0] = h;
 	hsb[1] = s;
 	hsb[2] = b;
@@ -189,8 +189,8 @@ void Color::setHSB (float h, float s, float b) {
 }
 
 
-void Color::setCMYK (float c, float m, float y, float k) {
-	vector<float> cmyk(4), rgb(3);
+void Color::setCMYK (double c, double m, double y, double k) {
+	vector<double> cmyk(4), rgb(3);
 	cmyk[0] = c;
 	cmyk[1] = m;
 	cmyk[2] = y;
@@ -225,25 +225,25 @@ string Color::rgbString () const {
  *  are expected to be normalized, i.e. 0 <= cmyk[i],rgb[j] <= 1.
  *  @param[in]  cmyk color in CMYK space
  *  @param[out] rgb  RGB approximation */
-void Color::CMYK2RGB (const vector<float> &cmyk, vector<float> &rgb) {
+void Color::CMYK2RGB (const vector<double> &cmyk, vector<double> &rgb) {
 	for (int i=0; i < 3; i++)
-		rgb[i] = 1.0f-max(0.0f, min(1.0f, cmyk[i]+cmyk[3]));
+		rgb[i] = 1.0-max(0.0, min(1.0, cmyk[i]+cmyk[3]));
 }
 
 
 /** Converts a color given in HSB coordinates to RGB.
  *  @param[in]  hsb color in HSB space
  *  @param[out] rgb color in RGB space */
-void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
+void Color::HSB2RGB (const vector<double> &hsb, vector<double> &rgb) {
 	if (hsb[1] == 0)
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
-		float h = hsb[0]-floor(hsb[0]);
+		double h = hsb[0]-floor(hsb[0]);
 		int i = int(6*h);
-		float f =  float(6.0*h-i);
-		float p = hsb[2]*(1-hsb[1]);
-		float q = hsb[2]*(1-hsb[1]*f);
-		float t = hsb[2]*(1-hsb[1]*(1-f));
+		double f =  double(6.0*h-i);
+		double p = hsb[2]*(1-hsb[1]);
+		double q = hsb[2]*(1-hsb[1]*f);
+		double t = hsb[2]*(1-hsb[1]*(1-f));
 		switch (i) {
 			case 0 : rgb[0]=hsb[2]; rgb[1]=t; rgb[2]=p; break;
 			case 1 : rgb[0]=q; rgb[1]=hsb[2]; rgb[2]=p; break;
@@ -257,8 +257,8 @@ void Color::HSB2RGB (const vector<float> &hsb, vector<float> &rgb) {
 }
 
 
-void Color::getRGB (float &r, float &g, float &b) const {
-	r = float(((_rgb >> 16) & 255) / 255.0);
-	g = float(((_rgb >> 8) & 255) / 255.0);
-	b = float((_rgb & 255) / 255.0);
+void Color::getRGB (double &r, double &g, double &b) const {
+	r = double(((_rgb >> 16) & 255) / 255.0);
+	g = double(((_rgb >> 8) & 255) / 255.0);
+	b = double((_rgb & 255) / 255.0);
 }

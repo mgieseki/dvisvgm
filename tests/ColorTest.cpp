@@ -24,7 +24,7 @@
 TEST(ColorTest, construct) {
 	Color c1(UInt8(1), UInt8(2), UInt8(3));
 	EXPECT_EQ(c1.rgbString(), "#010203");
-	Color c2(1.0f/255, 2.0f/255, 3.0f/255);
+	Color c2(1.0/255, 2.0/255, 3.0/255);
 	EXPECT_EQ(c2.rgbString(), "#010203");
 	Color c3 = "Blue";
 	EXPECT_EQ(c3.rgbString(), "#0000ff");
@@ -35,7 +35,7 @@ TEST(ColorTest, construct) {
 
 TEST(ColorTest, gray) {
 	Color c;
-	c.setGray(10.0f/255);
+	c.setGray(10.0/255);
 	EXPECT_EQ(c.rgbString(), "#0a0a0a");
 	c.setGray(UInt8(15));
 	EXPECT_EQ(c.rgbString(), "#0f0f0f");
@@ -44,18 +44,18 @@ TEST(ColorTest, gray) {
 
 TEST(ColorTest, hsb) {
 	Color c;
-	c.setHSB(0.0f, 1.0f, 1.0f);
+	c.setHSB(0.0, 1.0, 1.0);
 	EXPECT_EQ(c.rgbString(), "#ff0000");
-	c.setHSB(120.0f/360, 1.0f, 1.0f);
+	c.setHSB(120.0/360, 1.0, 1.0);
 	EXPECT_EQ(c.rgbString(), "#00ff00");
-	c.setHSB(20.0f/360, 0.75f, 0.8f);
+	c.setHSB(20.0/360, 0.75, 0.8);
 	EXPECT_EQ(c.rgbString(), "#cc6633");
 }
 
 
 TEST(ColorTest, cmyk) {
 	Color c;
-	c.setCMYK(0.5f, 0.4f, 0.6f, 0.2f);
+	c.setCMYK(0.5, 0.4, 0.6, 0.2);
 	EXPECT_EQ(c.rgbString(), "#4d6633");
 }
 
