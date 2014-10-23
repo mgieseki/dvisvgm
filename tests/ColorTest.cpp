@@ -21,6 +21,8 @@
 #include <gtest/gtest.h>
 #include "Color.h"
 
+using namespace std;
+
 TEST(ColorTest, construct) {
 	Color c1(UInt8(1), UInt8(2), UInt8(3));
 	EXPECT_EQ(c1.rgbString(), "#010203");
@@ -74,4 +76,68 @@ TEST(ColorTest, name) {
 	EXPECT_EQ(c.rgbString(), "#abcdef");
 	EXPECT_TRUE(c.setName("#89A"));
 	EXPECT_EQ(c.rgbString(), "#00089a");
+}
+
+
+TEST(ColorTest, getXYZ) {
+	Color c;
+	double x, y, z;
+	c.setRGB(1.0, 0, 0);
+	c.getXYZ(x, y, z);
+	EXPECT_NEAR(x, 0.412456, 0.000001);
+	EXPECT_NEAR(y, 0.212673, 0.000001);
+	EXPECT_NEAR(z, 0.019334, 0.000001);
+
+	c.setRGB(0, 1.0, 0);
+	c.getXYZ(x, y, z);
+	EXPECT_NEAR(x, 0.357576, 0.000001);
+	EXPECT_NEAR(y, 0.715152, 0.000001);
+	EXPECT_NEAR(z, 0.119192, 0.000001);
+
+	c.setRGB(0, 0, 1.0);
+	c.getXYZ(x, y, z);
+	EXPECT_NEAR(x, 0.180437, 0.000001);
+	EXPECT_NEAR(y, 0.072175, 0.000001);
+	EXPECT_NEAR(z, 0.950304, 0.000001);
+
+	valarray<double> rgb(3), xyz(3);
+	rgb[0] = 0.2;
+	rgb[1] = 0.75;
+	rgb[2] = 0.9;
+	Color::RGB2XYZ(rgb, xyz);
+	EXPECT_NEAR(xyz[0], 0.342574, 0.000001);
+	EXPECT_NEAR(xyz[1], 0.437554, 0.000001);
+	EXPECT_NEAR(xyz[2], 0.811202, 0.000001);
+}
+
+
+TEST(ColorTest, getLab) {
+	Color c;
+	double l, a, b;
+	c.setRGB(1.0, 0, 0);
+	c.getLab(l, a, b);
+	EXPECT_NEAR(l, 53.2408, 0.0001);
+	EXPECT_NEAR(a, 80.0925, 0.0001);
+	EXPECT_NEAR(b, 67.2032, 0.0001);
+
+	c.setRGB(0, 1.0, 0);
+	c.getLab(l, a, b);
+	EXPECT_NEAR(l, 87.7347, 0.0001);
+	EXPECT_NEAR(a, -86.1827, 0.0001);
+	EXPECT_NEAR(b, 83.1793, 0.0001);
+
+	c.setRGB(0, 0, 1.0);
+	c.getLab(l, a, b);
+	EXPECT_NEAR(l, 32.2970, 0.0001);
+	EXPECT_NEAR(a, 79.1875, 0.0001);
+	EXPECT_NEAR(b, -107.8602, 0.0001);
+
+	valarray<double> rgb(3), lab(3);
+	rgb[0] = 0.2;
+	rgb[1] = 0.75;
+	rgb[2] = 0.9;
+	Color::RGB2Lab(rgb, lab);
+	EXPECT_NEAR(lab[0], 72.0647, 0.0001);
+	EXPECT_NEAR(lab[1], -23.7597, 0.0001);
+	EXPECT_NEAR(lab[2], -29.4733, 0.0001);
 }
