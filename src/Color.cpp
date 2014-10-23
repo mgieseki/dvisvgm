@@ -180,23 +180,23 @@ bool Color::setName (string name, bool case_sensitive) {
 
 
 void Color::setHSB (double h, double s, double b) {
-	vector<double> hsb(3), rgb(3);
+	valarray<double> hsb(3), rgb(3);
 	hsb[0] = h;
 	hsb[1] = s;
 	hsb[2] = b;
 	HSB2RGB(hsb, rgb);
-	setRGB(rgb[0], rgb[1], rgb[2]);
+	setRGB(rgb);
 }
 
 
 void Color::setCMYK (double c, double m, double y, double k) {
-	vector<double> cmyk(4), rgb(3);
+	valarray<double> cmyk(4), rgb(3);
 	cmyk[0] = c;
 	cmyk[1] = m;
 	cmyk[2] = y;
 	cmyk[3] = k;
 	CMYK2RGB(cmyk, rgb);
-	setRGB(rgb[0], rgb[1], rgb[2]);
+	setRGB(rgb);
 }
 
 
@@ -225,7 +225,7 @@ string Color::rgbString () const {
  *  are expected to be normalized, i.e. 0 <= cmyk[i],rgb[j] <= 1.
  *  @param[in]  cmyk color in CMYK space
  *  @param[out] rgb  RGB approximation */
-void Color::CMYK2RGB (const vector<double> &cmyk, vector<double> &rgb) {
+void Color::CMYK2RGB (const valarray<double> &cmyk, valarray<double> &rgb) {
 	for (int i=0; i < 3; i++)
 		rgb[i] = 1.0-max(0.0, min(1.0, cmyk[i]+cmyk[3]));
 }
@@ -234,7 +234,7 @@ void Color::CMYK2RGB (const vector<double> &cmyk, vector<double> &rgb) {
 /** Converts a color given in HSB coordinates to RGB.
  *  @param[in]  hsb color in HSB space
  *  @param[out] rgb color in RGB space */
-void Color::HSB2RGB (const vector<double> &hsb, vector<double> &rgb) {
+void Color::HSB2RGB (const valarray<double> &hsb, valarray<double> &rgb) {
 	if (hsb[1] == 0)
 		rgb[0] = rgb[1] = rgb[2] = hsb[2];
 	else {
