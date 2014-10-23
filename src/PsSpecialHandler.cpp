@@ -659,7 +659,7 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	int pattern_id = p[0];
 	Color color;
 	if (p.size() == 4)
-		color.set(p[1], p[2], p[3]);
+		color.setRGB(p[1], p[2], p[3]);
 	map<int,PSPattern*>::iterator it = _patterns.find(pattern_id);
 	if (it == _patterns.end())
 		_pattern = 0;
@@ -805,7 +805,7 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 
 void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 	_pattern= 0;
-	_currentcolor.set(p[0], p[1], p[2]);
+	_currentcolor.setRGB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
 }

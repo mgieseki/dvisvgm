@@ -49,23 +49,23 @@ static void tolower (string &str) {
 
 
 Color::Color (const char *name) {
-	if (!set(name, false))
+	if (!setName(name, false))
 		setGray(UInt8(0));
 }
 
 
 Color::Color (const string &name) {
-	if (!set(name, false))
+	if (!setName(name, false))
 		setGray(UInt8(0));
 }
 
 
-void Color::set (double r, double g, double b) {
-	set(double_to_byte(r), double_to_byte(g), double_to_byte(b));
+void Color::setRGB (double r, double g, double b) {
+	setRGB(double_to_byte(r), double_to_byte(g), double_to_byte(b));
 }
 
 
-bool Color::set (string name, bool case_sensitive) {
+bool Color::setName (string name, bool case_sensitive) {
 	if (name[0] == '#') {
 		char *p=0;
 		_rgb = UInt32(strtol(name.c_str()+1, &p, 16));
@@ -185,7 +185,7 @@ void Color::setHSB (double h, double s, double b) {
 	hsb[1] = s;
 	hsb[2] = b;
 	HSB2RGB(hsb, rgb);
-	set(rgb[0], rgb[1], rgb[2]);
+	setRGB(rgb[0], rgb[1], rgb[2]);
 }
 
 
@@ -196,7 +196,7 @@ void Color::setCMYK (double c, double m, double y, double k) {
 	cmyk[2] = y;
 	cmyk[3] = k;
 	CMYK2RGB(cmyk, rgb);
-	set(rgb[0], rgb[1], rgb[2]);
+	setRGB(rgb[0], rgb[1], rgb[2]);
 }
 
 

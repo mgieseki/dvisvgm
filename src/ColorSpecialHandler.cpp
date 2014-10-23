@@ -66,7 +66,7 @@ static void read_color (string model, istream &is, Color &color) {
 	if (model == "rgb") {
 		vector<double> rgb(3);
 		read_doubles(is, rgb);
-		color.set(rgb[0], rgb[1], rgb[2]);
+		color.setRGB(rgb[0], rgb[1], rgb[2]);
 	}
 	else if (model == "cmyk") {
 		vector<double> cmyk(4);
@@ -80,7 +80,7 @@ static void read_color (string model, istream &is, Color &color) {
 	}
 	else if (model == "gray")
 		color.setGray(read_double(is));
-	else if (!color.set(model, true))
+	else if (!color.setName(model, true))
 		throw SpecialException("unknown color statement");
 }
 

@@ -286,13 +286,13 @@ bool HtmlSpecialHandler::setLinkMarker (const string &marker) {
 	else if (type == "box")
 		MARKER_TYPE = MT_BOX;
 	else {
-		if (!LINK_BGCOLOR.set(type, false))
+		if (!LINK_BGCOLOR.setName(type, false))
 			return false;
 		MARKER_TYPE = MT_BGCOLOR;
 	}
 	USE_LINECOLOR = false;
 	if (MARKER_TYPE != MT_NONE && !color.empty()) {
-		if (!LINK_LINECOLOR.set(color, false))
+		if (!LINK_LINECOLOR.setName(color, false))
 			return false;
 		USE_LINECOLOR = true;
 	}

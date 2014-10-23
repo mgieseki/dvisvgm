@@ -623,7 +623,7 @@ void DVIReader::cmdXFontDef (int) {
 		// all color specials should be ignored, i.e. glyphs of a non-black fonts have a fixed color
 		// that can't be changed by color specials.
 		UInt32 rgba = readUnsigned(4);
-		color.set(UInt8(rgba >> 24), UInt8((rgba >> 16) & 0xff), UInt8((rgba >> 8) & 0xff));
+		color.setRGB(UInt8(rgba >> 24), UInt8((rgba >> 16) & 0xff), UInt8((rgba >> 8) & 0xff));
 	}
 	if (flags & 0x1000)   // extend?
 		style.extend = _dvi2bp*readSigned(4);
