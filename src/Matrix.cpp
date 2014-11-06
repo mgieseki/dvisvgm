@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#define _USE_MATH_DEFINES
 #include <config.h>
 #include <algorithm>
 #include <cmath>
@@ -60,8 +61,7 @@ double det (const Matrix &m, int row, int col) {
 
 
 static inline double deg2rad (double deg) {
-	const double PI = acos(-1.0);
-	return PI*deg/180.0;
+	return M_PI*deg/180.0;
 }
 
 
