@@ -168,6 +168,11 @@ check_PROGRAMS += SubfontTest
 SubfontTest_SOURCES = SubfontTest.cpp
 SubfontTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
+TESTS += TensorProductPatchTest
+check_PROGRAMS += TensorProductPatchTest
+TensorProductPatchTest_SOURCES = TensorProductPatchTest.cpp
+TensorProductPatchTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+
 TESTS += ToUnicodeMapTest
 check_PROGRAMS += ToUnicodeMapTest
 ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp

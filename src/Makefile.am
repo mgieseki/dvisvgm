@@ -168,6 +168,8 @@ libdvisvgm_a_SOURCES = \
 	SVGTree.h \
 	System.cpp \
 	System.h \
+	TensorProductPatch.cpp \
+	TensorProductPatch.h \
 	Terminal.cpp \
 	Terminal.h \
 	TFM.cpp \

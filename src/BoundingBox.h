@@ -67,6 +67,7 @@ class BoundingBox
 		double height () const      {return _lry-_uly;}
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
+		void invalidate ()          {_valid = false;}
 		void operator += (const BoundingBox &bb);
 		void scale (double sx, double sy);
 		void transform (const Matrix &tm);

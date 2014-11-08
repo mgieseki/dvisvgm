@@ -22,23 +22,27 @@
 #define DVISVGM_BEZIER_H
 
 #include <vector>
+#include "BoundingBox.h"
 #include "Pair.h"
 
 class Bezier
 {
-   public:
+	public:
+		Bezier ();
 		Bezier (const DPair &p0, const DPair &p1, const DPair &p2);
-      Bezier (const DPair &p0, const DPair &p1, const DPair &p2, const DPair &p3);
+		Bezier (const DPair &p0, const DPair &p1, const DPair &p2, const DPair &p3);
 		Bezier (const Bezier &source, double t0, double t1);
+		void setPoints (const DPair &p0, const DPair &p1, const DPair &p2, const DPair &p3);
 		void reverse ();
 		DPair pointAt (double t) const;
+		DPair blossomValue (double u, double v, double w) const;
 		void subdivide (double t, Bezier *bezier1, Bezier *bezier2) const;
 		int approximate (double delta, std::vector<DPair> &p, std::vector<double> *t=0) const;
 		const DPair& point (int i) const {return _points[i];}
 		int reduceDegree (double delta, std::vector<DPair> &p) const;
+		void getBBox (BoundingBox &bbox) const;
 
 	protected:
-		Bezier ();
 		int approximate (double delta, double t0, double t1, std::vector<DPair> &p, std::vector<double> *t) const;
 
    private:

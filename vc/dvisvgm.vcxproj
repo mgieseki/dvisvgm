@@ -242,6 +242,7 @@
     <ClCompile Include="..\src\Subfont.cpp" />
     <ClCompile Include="..\src\SVGTree.cpp" />
     <ClCompile Include="..\src\System.cpp" />
+    <ClCompile Include="..\src\TensorProductPatch.cpp" />
     <ClCompile Include="..\src\Terminal.cpp" />
     <ClCompile Include="..\src\TFM.cpp" />
     <ClCompile Include="..\src\ToUnicodeMap.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="..\src\SignalHandler.h" />
     <ClInclude Include="..\src\Subfont.h" />
     <ClInclude Include="..\src\System.h" />
+    <ClInclude Include="..\src\TensorProductPatch.h" />
     <ClInclude Include="..\src\Terminal.h" />
     <ClInclude Include="..\src\ToUnicodeMap.h" />
     <ClInclude Include="..\src\Unicode.h" />

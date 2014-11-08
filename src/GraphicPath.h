@@ -236,6 +236,31 @@ class GraphicPath
 			iterate(actions, true);
 		}
 
+#if 0
+		void writePS (std::ostream &os, double sx=1.0, double sy=1.0, double dx=0.0, double dy=0.0) const {
+			struct WriteActions : Actions {
+				WriteActions (std::ostream &os, double sx, double sy, double dx, double dy)
+					: _os(os), _sx(sx), _sy(sy), _dx(dx), _dy(dy) {}
+				void draw (char cmd, const Point *points, int n) {
+					for (int i=0; i < n; i++)
+						_os << _sx*points[i].x()+_dx << ' ' << _sy*points[i].y()+_dy << ' ';
+					switch (cmd) {
+						case 'M': _os << "moveto"; break;
+						case 'L': _os << "lineto"; break;
+						case 'C': _os << "curveto"; break;
+						case 'Z': _os << "closepath"; break;
+						default: ;
+					}
+					_os << '\n';
+				}
+				std::ostream &_os;
+				bool _relative;
+				double _sx, _sy, _dx, _dy;
+			} actions(os, sx, sy, dx, dy);
+			iterate(actions, false);
+		}
+#endif
+
 
 		/** Computes the bounding box of the current path.
 		 *  @param[out] bbox the computed bounding box */

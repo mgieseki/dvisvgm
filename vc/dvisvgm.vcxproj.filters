@@ -251,6 +251,9 @@
     <ClCompile Include="..\src\Bezier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\TensorProductPatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.h">
@@ -511,5 +514,8 @@
     <ClInclude Include="..\src\DependencyGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\TensorProductPatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>	 
   </ItemGroup>
 </Project>
