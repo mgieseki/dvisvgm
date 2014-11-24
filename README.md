@@ -9,7 +9,30 @@ _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (format 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
-or [XeTeX](http://scripts.sil.org/xetex) (format 5, also known as XDV).
+and [XeTeX](http://scripts.sil.org/xetex) (format 5, also known as XDV).
+
+Short overview of the main features:
+
+* Complete font support including [virtual fonts](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=virtualfonts), evaluation of [font encodings](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=whatenc), CMap files, sub-font definitions and font maps.
+* Glyph outlines of all required fonts are embedded into the generated SVG files.
+* Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](http://en.wikipedia.org/wiki/Metafont)'s bitmap output.
+* _dvisvgm_ allows to replace [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
+* Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
+* Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
+* [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly in order to increase the compatibility of the generated SVG files.
+* Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
+* Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
+* Evaluation of color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
+* The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org)) systems.
+* _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive) and is therefore available for a wide range of operating systems.
+
+<a href="http://dvisvgm.sf.net/Downloads">![dvisvgm downloads](http://dvisvgm.sf.net/uploads/download.png)</a>
+
+
+Usage
+-----
+For detailed information about the command-line interface and all available
+options of _dvisvgm_, see the [manual page](http://dvisvgm.sourceforge.net/Manpage).
 
 
 Dependencies
@@ -77,12 +100,6 @@ reachable through the search path.
 If you don't like compiling the sources yourself, you can download
 pre-compiled binaries for Windows and MiKTeX from the
 [project website](http://dvisvgm.sourceforge.net) instead.
-
-
-Usage
------
-For detailed information about the command-line interface and all available
-options of _dvisvgm_, see the [manual page](http://dvisvgm.sourceforge.net/Manpage).
 
 
 Additional Information
