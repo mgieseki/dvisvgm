@@ -62,6 +62,7 @@ class PSTestActions : public PSActions
 		void setmiterlimit (vector<double> &p)   {print("setmiterlimit", p);}
 		void setopacityalpha (vector<double> &p) {print("setopacityalpha", p);}
 		void setrgbcolor (vector<double> &p)     {print("setrgbcolor", p);}
+		void shfill (vector<double> &p)          {print("shfill", p);}
 		void stroke (vector<double> &p)          {print("stroke", p);}
 		void translate (vector<double> &p)       {print("translate", p);}
 

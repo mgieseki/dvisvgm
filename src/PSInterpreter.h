@@ -74,6 +74,7 @@ struct PSActions
 	virtual void setopacityalpha (std::vector<double> &p) =0;
 	virtual void setpattern (std::vector<double> &p) =0;
 	virtual void setrgbcolor (std::vector<double> &rgb) =0;
+	virtual void shfill (std::vector<double> &rgb) =0;
 	virtual void stroke (std::vector<double> &p) =0;
 	virtual void translate (std::vector<double> &p) =0;
 	virtual void executed () {}  // triggered if one of the above PS operators has been executed

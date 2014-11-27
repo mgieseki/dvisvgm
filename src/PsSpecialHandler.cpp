@@ -33,8 +33,10 @@
 #include "PsSpecialHandler.h"
 #include "SpecialActions.h"
 #include "SVGTree.h"
+#include "TensorProductPatch.h"
 #include "XMLNode.h"
 #include "XMLString.h"
+
 
 using namespace std;
 
@@ -738,6 +740,132 @@ void PsSpecialHandler::clip (vector<double> &, bool evenodd) {
 
 	clipElem->append(pathElem);
 	_actions->appendToDefs(clipElem);
+}
+
+
+class TensorProductPatchCallback : public TensorProductPatch::Callback {
+	public:
+		TensorProductPatchCallback (SpecialActions *actions, XMLNode *parent)
+			: _actions(actions), _group(new XMLElementNode("g"))
+		{
+			if (parent)
+				parent->append(_group);
+			else
+				actions->appendToPage(_group);
+		}
+
+		void patchSegment (GraphicPath<double> &path, const Color &color) {
+			if (!_actions->getMatrix().isIdentity())
+				path.transform(_actions->getMatrix());
+
+			// draw a single patch segment
+			ostringstream oss;
+			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+			XMLElementNode *pathElem = new XMLElementNode("path");
+			pathElem->addAttribute("d", oss.str());
+			pathElem->addAttribute("fill", color.rgbString());
+//			pathElem->addAttribute("stroke", color.rgbString());
+//			pathElem->addAttribute("stroke-width", 0.25);
+//			pathElem->addAttribute("stroke-linejoin", "round");
+			_group->append(pathElem);
+		}
+
+	private:
+		SpecialActions *_actions;
+		XMLElementNode *_group;
+};
+
+
+/** Applies a gradient fill to the current graphics path. Vector p contains the shading parameters
+ *  in the following order:
+ *  - shading type (6=Coons, 7=tensor product)
+ *  - color space (1=gray, 3=rgb, 4=cmyk)
+ *  - 1.0 followed by the background color components based on the declared color space, or 0.0
+ *  - 1.0 followed by the bounding box coordinates, or 0.0
+ *  - geometry and color parameters depending on the shading type */
+void PsSpecialHandler::shfill (vector<double> &params) {
+	if (params.size() < 9)
+		return;
+
+	enum ShadingType {COONS_PATCH=6, TENSOR_PRODUCT_PATCH=7};  // see PS reference 3rd edition, p. 262
+	ShadingType shadingtype = static_cast<ShadingType>(params[0]);
+	if (shadingtype != COONS_PATCH && shadingtype != TENSOR_PRODUCT_PATCH)
+		return;
+
+	Color::ColorSpace colorSpace=Color::RGB_SPACE;
+	switch (static_cast<int>(params[1])) {
+		case 1: colorSpace = Color::GRAY_SPACE; break;
+		case 3: colorSpace = Color::RGB_SPACE; break;
+		case 4: colorSpace = Color::CMYK_SPACE; break;
+	}
+	vector<double>::const_iterator it = params.begin();
+	it += 2;     // skip shading type and color space
+	// Get color to fill the whole mesh area before drawing the gradient colors on top of that background.
+	// This is an optional parameter to shfill.
+	bool bgcolor_given = static_cast<bool>(*it++);
+	Color bgcolor;
+	if (bgcolor_given)
+		bgcolor.set(colorSpace, it);
+	// Get clipping rectangle to limit the drawing area of the gradient mesh.
+	// This is an optional parameter to shfill too.
+	bool bbox_given = static_cast<bool>(*it++);
+	if (bbox_given) { // bounding box given
+		it += 4;  // @@ skip for now
+	}
+
+	// format of each patch definition:
+	// edge flag = 0, x1, y1, ... , xn, yn, {color1}, {color2}, {color3}, {color4}
+	// edge flag > 0, x5, y5, ... , xn, yn, {color3}, {color4}
+	TensorProductPatch *previousPatch=0;
+	while (it != params.end()) {
+		// number of control points required to define a single patch
+		int numPoints = (shadingtype == COONS_PATCH ? 12 : 16);
+		int numColors = 4;
+		int edgeflag = static_cast<int>(*it++);
+		if (edgeflag > 0) {
+			numPoints -= 4;
+			numColors = 2;
+		}
+		vector<DPair> points(numPoints);
+		vector<Color> colors(numColors);
+		for (int i=0; i < numPoints; i++) {
+			double x = *it++;
+			double y = *it++;
+			points[i] = DPair(x, y);
+		}
+		for (int i=0; i < numColors; i++)
+			colors[i].set(colorSpace, it);
+
+		TensorProductPatch *patch=0;
+		try {
+			if (shadingtype == COONS_PATCH)
+				patch = new CoonsPatch(points, colors, colorSpace, edgeflag, static_cast<CoonsPatch*>(previousPatch));
+			else
+				patch = new TensorProductPatch(points, colors, colorSpace, edgeflag, previousPatch);
+			TensorProductPatchCallback callback(_actions, _xmlnode);
+			if (bgcolor_given) {
+				// fill whole patch area with given background color
+				GraphicPath<double> outline;
+				patch->getBoundaryPath(outline);
+				callback.patchSegment(outline, bgcolor);
+			}
+			patch->approximate(20, true, callback);  // @@
+			if (!_xmlnode) {
+				// update bounding box
+				BoundingBox bbox;
+				patch->getBBox(bbox);
+				bbox.transform(_actions->getMatrix());
+				_actions->embed(bbox);
+			}
+		}
+		catch (ShadingException &e) {
+			Message::estream(false) << "PostScript error: " << e.what() << '\n';
+			it = params.end();  // stop processing the remaining patch data
+		}
+		delete previousPatch;
+		previousPatch = patch;
+	}
+	delete previousPatch;
 }
 
 

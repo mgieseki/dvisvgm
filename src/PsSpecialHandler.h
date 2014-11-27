@@ -128,6 +128,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void setopacityalpha (std::vector<double> &p){_opacityalpha = p[0];}
 		void setpattern (std::vector<double> &p);
 		void setrgbcolor (std::vector<double> &rgb);
+		void shfill (std::vector<double> &p);
 		void stroke (std::vector<double> &p);
 		void translate (std::vector<double> &p);
 		void executed ();

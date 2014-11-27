@@ -295,6 +295,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"setopacityalpha", 1, &PSActions::setopacityalpha},
 		{"setpattern",     -1, &PSActions::setpattern},
 		{"setrgbcolor",     3, &PSActions::setrgbcolor},
+		{"shfill",         -1, &PSActions::shfill},
 		{"stroke",          0, &PSActions::stroke},
 		{"translate",       2, &PSActions::translate},
 	};
