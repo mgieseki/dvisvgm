@@ -357,14 +357,14 @@ int main (int argc, char *argv[]) {
 	PhysicalFont::EXACT_BBOX = args.exact_given();
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
 	PhysicalFont::METAFONT_MAG = args.mag_arg();
-	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = args.clipjoin_given();
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
 	if (!HtmlSpecialHandler::setLinkMarker(args.linkmark_arg()))
 		Message::wstream(true) << "invalid argument '"+args.linkmark_arg()+"' supplied for option --linkmark\n";
 	double start_time = System::time();
 	bool eps_given=false;
-#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
+#ifndef DISABLE_GS
 	eps_given = args.eps_given();
+	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = args.clipjoin_given();
 #endif
 	string inputfile = ensure_suffix(args.file(0), eps_given);
 	ifstream ifs(inputfile.c_str(), ios::binary|ios::in);
@@ -375,7 +375,7 @@ int main (int argc, char *argv[]) {
 	try {
 		SVGOutput out(args.stdout_given() ? 0 : inputfile.c_str(), args.output_arg(), args.zip_given() ? args.zip_arg() : 0);
 		SignalHandler::instance().start();
-#if defined(HAVE_LIBGS) || !defined(DISABLE_GS)
+#ifndef DISABLE_GS
 		if (args.eps_given()) {
 			EPSToSVG eps2svg(inputfile, out);
 			eps2svg.convert();

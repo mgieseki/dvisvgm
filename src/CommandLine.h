@@ -19,7 +19,9 @@ class CommandLine : public CmdLineParserBase
 		const std::string& bbox_arg () const {return _bbox_arg;}
 		bool cache_given () const {return _cache_given;}
 		const std::string& cache_arg () const {return _cache_arg;}
+#if !defined(DISABLE_GS)
 		bool clipjoin_given () const {return _clipjoin_given;}
+#endif
 		bool color_given () const {return _color_given;}
 #if !defined(DISABLE_GS)
 		bool eps_given () const {return _eps_given;}
@@ -80,7 +82,9 @@ class CommandLine : public CmdLineParserBase
 		const char** helplines (size_t *numlines) const;
 		void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
 		void handle_cache (InputReader &ir, const Option &opt, bool longopt);
+#if !defined(DISABLE_GS)
 		void handle_clipjoin (InputReader &ir, const Option &opt, bool longopt);
+#endif
 		void handle_color (InputReader &ir, const Option &opt, bool longopt);
 #if !defined(DISABLE_GS)
 		void handle_eps (InputReader &ir, const Option &opt, bool longopt);
@@ -122,7 +126,9 @@ class CommandLine : public CmdLineParserBase
 		std::string _bbox_arg;
 		bool _cache_given;
 		std::string _cache_arg;
+#if !defined(DISABLE_GS)
 		bool _clipjoin_given;
+#endif
 		bool _color_given;
 #if !defined(DISABLE_GS)
 		bool _eps_given;
