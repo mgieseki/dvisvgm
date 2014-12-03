@@ -244,8 +244,9 @@ string Color::rgbString () const {
  *  @param[in]  cmyk color in CMYK space
  *  @param[out] rgb  RGB approximation */
 void Color::CMYK2RGB (const valarray<double> &cmyk, valarray<double> &rgb) {
+	double kc = 1.0-cmyk[3];
 	for (int i=0; i < 3; i++)
-		rgb[i] = 1.0-max(0.0, min(1.0, cmyk[i]+cmyk[3]));
+		rgb[i] = min(1.0, max(0.0, (1.0-cmyk[i])*kc));
 }
 
 
