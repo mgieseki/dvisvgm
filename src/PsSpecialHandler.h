@@ -89,6 +89,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void processHeaderFile (const char *fname);
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
 		void dviEndPage (unsigned pageno);
+		void clip (Path &path, bool evenodd);
 
 		/// scale given value by current PS scale factors
 		double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}

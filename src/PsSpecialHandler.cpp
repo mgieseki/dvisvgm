@@ -700,29 +700,39 @@ void PsSpecialHandler::clippath (std::vector<double>&) {
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (vector<double> &, bool evenodd) {
-	// when this method is called, _path contains the clipping path
-	if (_path.empty() || !_actions)
+	clip(_path, evenodd);
+}
+
+
+/** Assigns a new clipping path to the graphics state using the current path.
+ *  If the graphics state already contains a clipping path, the new one is
+ *  computed by intersecting the current one with the given path.
+ *  @param[in] path path used to restrict the clipping region
+ *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
+void PsSpecialHandler::clip (Path &path, bool evenodd) {
+		// when this method is called, _path contains the clipping path
+	if (path.empty() || !_actions)
 		return;
 
 	Path::WindingRule windingRule = evenodd ? Path::WR_EVEN_ODD : Path::WR_NON_ZERO;
-	_path.setWindingRule(windingRule);
+	path.setWindingRule(windingRule);
 
 	if (!_actions->getMatrix().isIdentity())
-		_path.transform(_actions->getMatrix());
+		path.transform(_actions->getMatrix());
 
 	int oldID = _clipStack.topID();
 
 	ostringstream oss;
 	if (!COMPUTE_CLIPPATHS_INTERSECTIONS || oldID < 1) {
-		_clipStack.replace(_path);
-		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+		_clipStack.replace(path);
+		path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
 	else {
 		// compute the intersection of the current clipping path with the current graphics path
 		Path *oldPath = _clipStack.getPath(oldID);
 		Path intersectedPath(windingRule);
 		PathClipper clipper;
-		clipper.intersect(*oldPath, _path, intersectedPath);
+		clipper.intersect(*oldPath, path, intersectedPath);
 		_clipStack.replace(intersectedPath);
 		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
@@ -745,8 +755,8 @@ void PsSpecialHandler::clip (vector<double> &, bool evenodd) {
 
 class TensorProductPatchCallback : public TensorProductPatch::Callback {
 	public:
-		TensorProductPatchCallback (SpecialActions *actions, XMLNode *parent)
-			: _actions(actions), _group(new XMLElementNode("g"))
+		TensorProductPatchCallback (SpecialActions *actions, XMLNode *parent, int clippathID)
+			: _actions(actions), _group(new XMLElementNode("g")), _clippathID(clippathID)
 		{
 			if (parent)
 				parent->append(_group);
@@ -764,15 +774,15 @@ class TensorProductPatchCallback : public TensorProductPatch::Callback {
 			XMLElementNode *pathElem = new XMLElementNode("path");
 			pathElem->addAttribute("d", oss.str());
 			pathElem->addAttribute("fill", color.rgbString());
-//			pathElem->addAttribute("stroke", color.rgbString());
-//			pathElem->addAttribute("stroke-width", 0.25);
-//			pathElem->addAttribute("stroke-linejoin", "round");
+			if (_clippathID > 0)
+				pathElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clippathID)+")");
 			_group->append(pathElem);
 		}
 
 	private:
 		SpecialActions *_actions;
 		XMLElementNode *_group;
+		int _clippathID;
 };
 
 
@@ -810,7 +820,17 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 	// This is an optional parameter to shfill too.
 	bool bbox_given = static_cast<bool>(*it++);
 	if (bbox_given) { // bounding box given
-		it += 4;  // @@ skip for now
+		Path bboxPath;
+		const double &x1 = *it++;
+		const double &y1 = *it++;
+		const double &x2 = *it++;
+		const double &y2 = *it++;
+		bboxPath.moveto(x1, y1);
+		bboxPath.lineto(x2, y1);
+		bboxPath.lineto(x2, y2);
+		bboxPath.lineto(x1, y2);
+		bboxPath.closepath();
+		clip(bboxPath, false);
 	}
 
 	// format of each patch definition:
@@ -842,7 +862,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 				patch = new CoonsPatch(points, colors, colorSpace, edgeflag, static_cast<CoonsPatch*>(previousPatch));
 			else
 				patch = new TensorProductPatch(points, colors, colorSpace, edgeflag, previousPatch);
-			TensorProductPatchCallback callback(_actions, _xmlnode);
+			TensorProductPatchCallback callback(_actions, _xmlnode, _clipStack.topID());
 			if (bgcolor_given) {
 				// fill whole patch area with given background color
 				GraphicPath<double> outline;
@@ -866,6 +886,8 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		previousPatch = patch;
 	}
 	delete previousPatch;
+	if (bbox_given)
+		_clipStack.pop();
 }
 
 
