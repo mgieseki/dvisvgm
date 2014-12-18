@@ -178,6 +178,8 @@ libdvisvgm_a_SOURCES = \
 	ToUnicodeMap.h \
 	TpicSpecialHandler.cpp \
 	TpicSpecialHandler.h \
+	TriangularPatch.cpp \
+	TriangularPatch.h \
 	types.h \
 	Unicode.cpp \
 	Unicode.h \

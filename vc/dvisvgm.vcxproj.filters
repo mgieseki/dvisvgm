@@ -254,6 +254,9 @@
     <ClCompile Include="..\src\TensorProductPatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\TriangularPatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.h">
@@ -516,6 +519,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TensorProductPatch.h">
       <Filter>Header Files</Filter>
-    </ClInclude>	 
+    </ClInclude>
+    <ClInclude Include="..\src\TriangularPatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
