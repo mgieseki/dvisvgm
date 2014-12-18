@@ -151,6 +151,8 @@ libdvisvgm_a_SOURCES = \
 	PsSpecialHandler.h \
 	RangeMap.cpp \
 	RangeMap.h \
+	ShadingPatch.cpp \
+	ShadingPatch.h \
 	SignalHandler.cpp \
 	SignalHandler.h \
 	SpecialActions.h \

@@ -25,24 +25,8 @@
 using namespace std;
 
 
-TensorProductPatch::TensorProductPatch (const DPair points[4][4], const vector<Color> &colors, Color::ColorSpace cspace)
-	: _colorspace(cspace)
-{
-	setPoints(points);
-	setColors(colors);
-}
-
-
-TensorProductPatch::TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace)
-	: _colorspace(cspace)
-{
-	setPoints(points);
-	setColors(colors);
-}
-
-
 TensorProductPatch::TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch)
-	: _colorspace(cspace)
+	: ShadingPatch(cspace)
 {
 	setPoints(points, edgeflag, patch);
 	setColors(colors, edgeflag, patch);
@@ -61,11 +45,11 @@ void TensorProductPatch::setFirstMatrixColumn (DPair source[4][4], int col, bool
 }
 
 
-void TensorProductPatch::setPoints (const DPair points[4][4]) {
+/*void TensorProductPatch::setPoints (const DPair points[4][4]) {
 	for (int i=0; i < 4; i++)
 		for (int j=0; j < 4; j++)
 			_points[i][j] = points[i][j];
-}
+}*/
 
 
 /** Sets the control points defining the structure of the patch. If the edge flag is 0,
@@ -79,8 +63,9 @@ void TensorProductPatch::setPoints (const DPair points[4][4]) {
  *  @param[in] points the control points in "spiral" order as described in the PS reference, p. 286
  *  @param[in] edgeflag defines how to connect this patch with another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
-void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, TensorProductPatch *patch) {
-	if (edgeflag > 0 && !patch)
+void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) {
+	TensorProductPatch *tpPatch = dynamic_cast<TensorProductPatch*>(patch);
+	if (edgeflag > 0 && !tpPatch)
 		throw ShadingException("missing preceding data in definition of tensor-product patch");
 	if ((edgeflag == 0 && points.size() != 16) || (edgeflag > 0 && points.size() != 12))
 		throw ShadingException("invalid number of control points in tensor-product patch definition");
@@ -102,9 +87,9 @@ void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, Tensor
 	// populate the first column of the control point matrix
 	switch (edgeflag) {
 		case 0: setFirstMatrixColumn(&points[0], false); break;
-		case 1: setFirstMatrixColumn(patch->_points[3], false); break;
-		case 2: setFirstMatrixColumn(patch->_points, 3, true); break;
-		case 3: setFirstMatrixColumn(patch->_points[0], true); break;
+		case 1: setFirstMatrixColumn(tpPatch->_points[3], false); break;
+		case 2: setFirstMatrixColumn(tpPatch->_points, 3, true); break;
+		case 3: setFirstMatrixColumn(tpPatch->_points[0], true); break;
 	}
 }
 
@@ -122,8 +107,9 @@ void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, Tensor
  *  @param[in] points the color values in the order c00, c30, c33, c03
  *  @param[in] edgeflag defines how to connect this patch with another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
-void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, TensorProductPatch* patch) {
-	if (edgeflag > 0 && !patch)
+void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, ShadingPatch* patch) {
+	TensorProductPatch *tpPatch = dynamic_cast<TensorProductPatch*>(patch);
+	if (edgeflag > 0 && !tpPatch)
 		throw ShadingException("missing preceding data in definition of tensor-product patch");
 	if ((edgeflag == 0 && colors.size() != 4) || (edgeflag > 0 && colors.size() != 2))
 		throw ShadingException("invalid number of colors in tensor-product patch definition");
@@ -133,9 +119,9 @@ void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, TensorP
 	_colors[1] = colors[i+1];
 	switch (edgeflag) {
 		case 0: _colors[0] = colors[0]; _colors[2] = colors[1]; break;
-		case 1: _colors[0] = patch->_colors[2]; _colors[2] = patch->_colors[3]; break;
-		case 2: _colors[0] = patch->_colors[3]; _colors[2] = patch->_colors[1]; break;
-		case 3: _colors[0] = patch->_colors[1]; _colors[2] = patch->_colors[0]; break;
+		case 1: _colors[0] = tpPatch->_colors[2]; _colors[2] = tpPatch->_colors[3]; break;
+		case 2: _colors[0] = tpPatch->_colors[3]; _colors[2] = tpPatch->_colors[1]; break;
+		case 3: _colors[0] = tpPatch->_colors[1]; _colors[2] = tpPatch->_colors[0]; break;
 	}
 }
 
@@ -163,28 +149,6 @@ DPair TensorProductPatch::valueAt (double u, double v) const {
 	}
 	Bezier bezier(p[0], p[1], p[2], p[3]);
 	return bezier.pointAt(v);
-}
-
-
-/** Get functions to get/set the current color depending on the assigned color space. */
-void TensorProductPatch::colorQueryFuncs (ColorGetter &getter, ColorSetter &setter) const {
-	switch (_colorspace) {
-		case Color::CMYK_SPACE:
-			getter = &Color::getCMYK;
-			setter = &Color::setCMYK;
-			break;
-		case Color::LAB_SPACE:
-			getter = &Color::getLab;
-			setter = &Color::setLab;
-			break;
-		case Color::RGB_SPACE:
-			getter = &Color::getRGB;
-			setter = &Color::setRGB;
-			break;
-		case Color::GRAY_SPACE:
-			getter = &Color::getGray;
-			setter = &Color::setGray;
-	}
 }
 
 
@@ -485,14 +449,6 @@ void TensorProductPatch::approximate (int gridsize, Callback &callback) const {
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-CoonsPatch::CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace)
-	: TensorProductPatch(cspace)
-{
-	TensorProductPatch::setPoints(points);
-	TensorProductPatch::setColors(colors);
-}
-
-
 CoonsPatch::CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch)
 	: TensorProductPatch(cspace)
 {
@@ -528,8 +484,9 @@ DPair CoonsPatch::valueAt (double u, double v) const {
  *  @param[in] points the control points in cyclic order as described in the PS reference, p. 281
  *  @param[in] edgeflag defines how to connect this patch to another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
-void CoonsPatch::setPoints (const PointVec &points, int edgeflag, TensorProductPatch *patch) {
-	if (edgeflag > 0 && !patch)
+void CoonsPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) {
+	CoonsPatch *coonsPatch = dynamic_cast<CoonsPatch*>(patch);
+	if (edgeflag > 0 && !coonsPatch)
 		throw ShadingException("missing preceding data in definition of relative Coons patch");
 	if ((edgeflag == 0 && points.size() != 12) || (edgeflag > 0 && points.size() != 8))
 		throw ShadingException("invalid number of control points in Coons patch definition");
@@ -552,9 +509,9 @@ void CoonsPatch::setPoints (const PointVec &points, int edgeflag, TensorProductP
 	// set control points of first matrix column
 	switch (edgeflag) {
 		case 0: setFirstMatrixColumn(&points[0], false); break;
-		case 1: setFirstMatrixColumn(patch->_points[3], false); break;
-		case 2: setFirstMatrixColumn(patch->_points, 3, true); break;
-		case 3: setFirstMatrixColumn(patch->_points[0], true); break;
+		case 1: setFirstMatrixColumn(coonsPatch->_points[3], false); break;
+		case 2: setFirstMatrixColumn(coonsPatch->_points, 3, true); break;
+		case 3: setFirstMatrixColumn(coonsPatch->_points[0], true); break;
 	}
 	// compute inner control points of the tensor matrix
 	_points[1][1] = valueAt(1.0/3.0, 2.0/3.0);
@@ -564,8 +521,9 @@ void CoonsPatch::setPoints (const PointVec &points, int edgeflag, TensorProductP
 }
 
 
-void CoonsPatch::setColors (const ColorVec &colors, int edgeflag, TensorProductPatch *patch) {
-	if (edgeflag > 0 && !patch)
+void CoonsPatch::setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) {
+	CoonsPatch *coonsPatch = dynamic_cast<CoonsPatch*>(patch);
+	if (edgeflag > 0 && !coonsPatch)
 		throw ShadingException("missing preceding data in definition of relative Coons patch");
 	if ((edgeflag == 0 && colors.size() != 4) || (edgeflag > 0 && colors.size() != 2))
 		throw ShadingException("invalid number of colors in Coons patch definition");
@@ -575,9 +533,9 @@ void CoonsPatch::setColors (const ColorVec &colors, int edgeflag, TensorProductP
 	_colors[1] = colors[i+1];
 	switch (edgeflag) {
 		case 0: _colors[0] = colors[0]; _colors[2] = colors[1]; break;
-		case 1: _colors[0] = patch->_colors[2]; _colors[2] = patch->_colors[3]; break;
-		case 2: _colors[0] = patch->_colors[3]; _colors[2] = patch->_colors[1]; break;
-		case 3: _colors[0] = patch->_colors[1]; _colors[2] = patch->_colors[0]; break;
+		case 1: _colors[0] = coonsPatch->_colors[2]; _colors[2] = coonsPatch->_colors[3]; break;
+		case 2: _colors[0] = coonsPatch->_colors[3]; _colors[2] = coonsPatch->_colors[1]; break;
+		case 3: _colors[0] = coonsPatch->_colors[1]; _colors[2] = coonsPatch->_colors[0]; break;
 	}
 }
 

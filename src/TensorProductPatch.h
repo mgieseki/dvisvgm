@@ -26,14 +26,9 @@
 #include <vector>
 #include "Bezier.h"
 #include "Color.h"
-#include "GraphicPath.h"
 #include "MessageException.h"
 #include "Pair.h"
-
-
-struct ShadingException : public MessageException {
-	ShadingException (const std::string &msg) : MessageException(msg) {}
-};
+#include "ShadingPatch.h"
 
 
 /** This class represents a single tensor product patch P which is defined by 16 control points
@@ -41,30 +36,18 @@ struct ShadingException : public MessageException {
  *  \f[P(u,v):=\sum_{i=0}^3\sum_{j=0}^3 p_{ij} B_i(u) B_j(v)\f]
  *  where \f$B_k(t)={3\choose k}(1-t)^k t^k\f$ and \f$u,v \in [0,1]\f$. The four colors assigned
  *  to the vertices are interpolated bilinearily over the unit square. */
-class TensorProductPatch
+class TensorProductPatch : public ShadingPatch
 {
 	friend class CoonsPatch;
-	public:
-		struct Callback {
-			virtual ~Callback () {}
-			virtual void patchSegment (GraphicPath<double> &path, const Color &color) =0;
-		};
-		typedef std::vector<DPair> PointVec;
-		typedef std::vector<Color> ColorVec;
 
    public:
-		TensorProductPatch () : _colorspace(Color::RGB_SPACE) {}
-		TensorProductPatch (Color::ColorSpace &cspace) : _colorspace(cspace) {}
-      TensorProductPatch (const DPair points[4][4], const std::vector<Color> &colors, Color::ColorSpace cspace);
-      TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace);
+		TensorProductPatch () : ShadingPatch(Color::RGB_SPACE) {}
+		TensorProductPatch (Color::ColorSpace &cspace) : ShadingPatch(cspace) {}
 		TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch);
-		virtual ~TensorProductPatch() {}
-		void setPoints (const DPair points[4][4]);
-		void setPoints (const PointVec &points) {setPoints(points, 0, 0);}
-		void setColors (const ColorVec &colors) {setColors(colors, 0, 0);}
+		int psShadingType() const {return 7;}
 		void setPoints (const DPair points[4][4], int edgeflag, TensorProductPatch *patch);
-		virtual void setPoints (const PointVec &points, int edgeflag, TensorProductPatch *patch);
-		virtual void setColors (const ColorVec &colors, int edgeflag, TensorProductPatch *patch);
+		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
+		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
 		virtual DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
 		void horizontalCurve (double v, Bezier &bezier) const;
@@ -73,13 +56,12 @@ class TensorProductPatch
 		void subpatch (double u1, double u2, double v1, double v2, TensorProductPatch &patch) const;
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
 		DPair blossomValue (double u[3], double v[3]) const {return blossomValue(u[0], u[1], u[2], v[0], v[1], v[2]);}
-		void approximate (int gridsize, bool overlap, Callback &listener) const;
+		void approximate (int gridsize, bool overlap, Callback &callback) const;
 		void getBBox (BoundingBox &bbox) const;
+		int numPoints (int edgeflag) const {return edgeflag == 0 ? 16 : 12;}
+		int numColors (int edgeflag) const {return edgeflag == 0 ? 4 : 2;}
 
 	protected:
-		typedef void (Color::*ColorGetter)(std::valarray<double> &va) const;
-		typedef void (Color::*ColorSetter)(const std::valarray<double> &va);
-		void colorQueryFuncs (ColorGetter &getter, ColorSetter &setter) const;
 		Color averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const;
 		void approximateRow (double v1, double inc, bool overlap, const std::vector<Bezier> &beziers, Callback &callback) const;
 		void setFirstMatrixColumn (const DPair source[4], bool reverse);
@@ -88,7 +70,6 @@ class TensorProductPatch
    private:
 		DPair _points[4][4];  ///< control point matrix defining the patch surface
 		Color _colors[4];     ///< vertex colors cK (c0->p00, c1->p03, c2->p30, c3->p33)
-		Color::ColorSpace _colorspace;  ///< color interpolation is based on this color space
 };
 
 
@@ -100,11 +81,14 @@ class CoonsPatch : public TensorProductPatch
 {
 	public:
 		CoonsPatch () {}
-      CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace);
+		CoonsPatch (Color::ColorSpace cspace) : TensorProductPatch(cspace) {}
 		CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch);
-		virtual void setPoints (const PointVec &points, int edgeflag, TensorProductPatch *patch);
-		virtual void setColors (const ColorVec &colors, int edgeflag, TensorProductPatch *patch);
+		int psShadingType() const {return 6;}
+		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
+		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
 		virtual DPair valueAt (double u, double v) const;
+		int numPoints (int edgeflag) const {return edgeflag == 0 ? 12 : 8;}
+		int numColors (int edgeflag) const {return edgeflag == 0 ? 4 : 2;}
 };
 
 #endif

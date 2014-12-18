@@ -753,7 +753,7 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 }
 
 
-class TensorProductPatchCallback : public TensorProductPatch::Callback {
+class TensorProductPatchCallback : public ShadingPatch::Callback {
 	public:
 		TensorProductPatchCallback (SpecialActions *actions, XMLNode *parent, int clippathID)
 			: _actions(actions), _group(new XMLElementNode("g")), _clippathID(clippathID)

@@ -235,6 +235,7 @@
     <ClCompile Include="..\src\PSPreviewFilter.cpp" />
     <ClCompile Include="..\src\PsSpecialHandler.cpp" />
     <ClCompile Include="..\src\RangeMap.cpp" />
+    <ClCompile Include="..\src\ShadingPatch.cpp" />
     <ClCompile Include="..\src\SignalHandler.cpp" />
     <ClCompile Include="..\src\SpecialManager.cpp" />
     <ClCompile Include="..\src\StreamReader.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="..\src\PSPreviewFilter.h" />
     <ClInclude Include="..\src\PsSpecialHandler.h" />
     <ClInclude Include="..\src\RangeMap.h" />
+    <ClInclude Include="..\src\ShadingPatch.h" />
     <ClInclude Include="..\src\SignalHandler.h" />
     <ClInclude Include="..\src\Subfont.h" />
     <ClInclude Include="..\src\System.h" />
