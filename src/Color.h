@@ -25,6 +25,7 @@
 #include <valarray>
 #include <vector>
 #include "types.h"
+#include "VectorIterator.h"
 
 #ifdef TRANSPARENT
 #undef TRANSPARENT
@@ -47,7 +48,7 @@ class Color
 		Color (const std::valarray<double> &rgb) {setRGB(rgb);}
 		Color (const char *name);
 		Color (const std::string &name);
-		Color (ColorSpace colorSpace, std::vector<double>::const_iterator &it) {set(colorSpace, it);}
+//		Color (ColorSpace colorSpace, std::vector<double>::const_iterator &it) {set(colorSpace, it);}
 		operator UInt32 () const                 {return _rgb;}
 		bool operator == (const Color &c) const  {return _rgb == c._rgb;}
 		bool operator != (const Color &c) const  {return _rgb != c._rgb;}
@@ -65,7 +66,7 @@ class Color
 		void setXYZ (const std::valarray<double> &xyz);
 		void setLab (double l, double a, double b);
 		void setLab (const std::valarray<double> &lab);
-		void set (ColorSpace colorSpace, std::vector<double>::const_iterator &it);
+		void set (ColorSpace colorSpace, VectorIterator<double> &it);
 		double getGray () const;
 		void getGray (std::valarray<double> &gray) const;
 		void getRGB (double &r, double &g, double &b) const;

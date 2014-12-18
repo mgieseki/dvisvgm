@@ -38,6 +38,8 @@ class XMLElementNode;
 class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions
 {
 	typedef GraphicPath<double> Path;
+	typedef std::vector<double>::const_iterator DoubleVecIt;
+	typedef Color::ColorSpace ColorSpace;
 
 	class ClippingStack
 	{
@@ -90,6 +92,8 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
 		void dviEndPage (unsigned pageno);
 		void clip (Path &path, bool evenodd);
+		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);
+		void processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it);
 
 		/// scale given value by current PS scale factors
 		double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}

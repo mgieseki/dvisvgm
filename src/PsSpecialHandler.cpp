@@ -22,6 +22,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include "EPSFile.h"
 #include "FileFinder.h"
@@ -34,8 +35,10 @@
 #include "SpecialActions.h"
 #include "SVGTree.h"
 #include "TensorProductPatch.h"
+#include "VectorIterator.h"
 #include "XMLNode.h"
 #include "XMLString.h"
+#include "TriangularPatch.h"
 
 
 using namespace std;
@@ -753,39 +756,6 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 }
 
 
-class TensorProductPatchCallback : public ShadingPatch::Callback {
-	public:
-		TensorProductPatchCallback (SpecialActions *actions, XMLNode *parent, int clippathID)
-			: _actions(actions), _group(new XMLElementNode("g")), _clippathID(clippathID)
-		{
-			if (parent)
-				parent->append(_group);
-			else
-				actions->appendToPage(_group);
-		}
-
-		void patchSegment (GraphicPath<double> &path, const Color &color) {
-			if (!_actions->getMatrix().isIdentity())
-				path.transform(_actions->getMatrix());
-
-			// draw a single patch segment
-			ostringstream oss;
-			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-			XMLElementNode *pathElem = new XMLElementNode("path");
-			pathElem->addAttribute("d", oss.str());
-			pathElem->addAttribute("fill", color.rgbString());
-			if (_clippathID > 0)
-				pathElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clippathID)+")");
-			_group->append(pathElem);
-		}
-
-	private:
-		SpecialActions *_actions;
-		XMLElementNode *_group;
-		int _clippathID;
-};
-
-
 /** Applies a gradient fill to the current graphics path. Vector p contains the shading parameters
  *  in the following order:
  *  - shading type (6=Coons, 7=tensor product)
@@ -797,29 +767,26 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 	if (params.size() < 9)
 		return;
 
-	enum ShadingType {COONS_PATCH=6, TENSOR_PRODUCT_PATCH=7};  // see PS reference 3rd edition, p. 262
-	ShadingType shadingtype = static_cast<ShadingType>(params[0]);
-	if (shadingtype != COONS_PATCH && shadingtype != TENSOR_PRODUCT_PATCH)
-		return;
-
-	Color::ColorSpace colorSpace=Color::RGB_SPACE;
+	// collect common data relevant for all shading types
+	int shadingTypeID = static_cast<int>(params[0]);
+	ColorSpace colorSpace = Color::RGB_SPACE;
 	switch (static_cast<int>(params[1])) {
 		case 1: colorSpace = Color::GRAY_SPACE; break;
 		case 3: colorSpace = Color::RGB_SPACE; break;
 		case 4: colorSpace = Color::CMYK_SPACE; break;
 	}
-	vector<double>::const_iterator it = params.begin();
+	VectorIterator<double> it = params;
 	it += 2;     // skip shading type and color space
 	// Get color to fill the whole mesh area before drawing the gradient colors on top of that background.
 	// This is an optional parameter to shfill.
-	bool bgcolor_given = static_cast<bool>(*it++);
+	bool bgcolorGiven = static_cast<bool>(*it++);
 	Color bgcolor;
-	if (bgcolor_given)
+	if (bgcolorGiven)
 		bgcolor.set(colorSpace, it);
 	// Get clipping rectangle to limit the drawing area of the gradient mesh.
 	// This is an optional parameter to shfill too.
-	bool bbox_given = static_cast<bool>(*it++);
-	if (bbox_given) { // bounding box given
+	bool bboxGiven = static_cast<bool>(*it++);
+	if (bboxGiven) { // bounding box given
 		Path bboxPath;
 		const double &x1 = *it++;
 		const double &y1 = *it++;
@@ -832,62 +799,182 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		bboxPath.closepath();
 		clip(bboxPath, false);
 	}
+	try {
+		if (shadingTypeID == 5)
+			processLatticeTriangularPatchMesh(colorSpace, it);
+		else
+			processSequentialPatchMesh(shadingTypeID, colorSpace, it);
+	}
+	catch (ShadingException &e) {
+		Message::estream(false) << "PostScript error: " << e.what() << '\n';
+		it.invalidate();  // stop processing the remaining patch data
+	}
+	catch (IteratorException &e) {
+		Message::estream(false) << "PostScript error: incomplete shading data\n";
+	}
+	if (bboxGiven)
+		_clipStack.pop();
+}
 
-	// format of each patch definition:
-	// edge flag = 0, x1, y1, ... , xn, yn, {color1}, {color2}, {color3}, {color4}
-	// edge flag > 0, x5, y5, ... , xn, yn, {color3}, {color4}
-	TensorProductPatch *previousPatch=0;
-	while (it != params.end()) {
-		// number of control points required to define a single patch
-		int numPoints = (shadingtype == COONS_PATCH ? 12 : 16);
-		int numColors = 4;
-		int edgeflag = static_cast<int>(*it++);
-		if (edgeflag > 0) {
-			numPoints -= 4;
-			numColors = 2;
+
+/** Reads position and color data of a single shading patch from the data vector.
+ *  @param[in] shadingTypeID PS shading type ID identifying the format of the subsequent patch data
+ *  @param[in] edgeflag edge flag specifying how to connect the current patch to the preceding one
+ *  @param[in] cspace color space used to compute the color gradient
+ *  @param[in,out] it iterator used to sequentially access the patch data
+ *  @param[out] points the points defining the geometry of the patch
+ *  @param[out] colors the colors assigned to the vertices of the patch */
+static void read_patch_data (ShadingPatch &patch, int edgeflag,
+		VectorIterator<double> &it, vector<DPair> &points, vector<Color> &colors)
+{
+	// number of control points and colors required to define a single patch
+	int numPoints = patch.numPoints(edgeflag);
+	int numColors = patch.numColors(edgeflag);
+	points.resize(numPoints);
+	colors.resize(numColors);
+	if (patch.psShadingType() == 4) {
+		// format of a free-form triangular patch definition, where eN denotes
+		// the edge of the corresponding vertex:
+		// edge flag = 0, x1, y1, {color1}, e2, x2, y2, {color2}, e3, x3, y3, {color3}
+		// edge flag > 0, x1, y1, {color1}
+		for (int i=0; i < numPoints; i++) {
+			if (i > 0) ++it;  // skip redundant edge flag from free-form triangular patch
+			double x = *it++;
+			double y = *it++;
+			points[i] = DPair(x, y);
+			colors[i].set(patch.colorSpace(), it);
 		}
-		vector<DPair> points(numPoints);
-		vector<Color> colors(numColors);
+	}
+	else if (patch.psShadingType() == 6 || patch.psShadingType() == 7) {
+		// format of each Coons/tensor product patch definition:
+		// edge flag = 0, x1, y1, ... , xn, yn, {color1}, {color2}, {color3}, {color4}
+		// edge flag > 0, x5, y5, ... , xn, yn, {color3}, {color4}
 		for (int i=0; i < numPoints; i++) {
 			double x = *it++;
 			double y = *it++;
 			points[i] = DPair(x, y);
 		}
 		for (int i=0; i < numColors; i++)
-			colors[i].set(colorSpace, it);
+			colors[i].set(patch.colorSpace(), it);
+	}
+}
 
-		TensorProductPatch *patch=0;
-		try {
-			if (shadingtype == COONS_PATCH)
-				patch = new CoonsPatch(points, colors, colorSpace, edgeflag, static_cast<CoonsPatch*>(previousPatch));
+
+class ShadingCallback : public ShadingPatch::Callback {
+	public:
+		ShadingCallback (SpecialActions *actions, XMLElementNode *parent, int clippathID)
+			: _actions(actions), _group(new XMLElementNode("g"))
+		{
+			if (parent)
+				parent->append(_group);
 			else
-				patch = new TensorProductPatch(points, colors, colorSpace, edgeflag, previousPatch);
-			TensorProductPatchCallback callback(_actions, _xmlnode, _clipStack.topID());
-			if (bgcolor_given) {
-				// fill whole patch area with given background color
-				GraphicPath<double> outline;
-				patch->getBoundaryPath(outline);
-				callback.patchSegment(outline, bgcolor);
-			}
-			patch->approximate(20, true, callback);  // @@
-			if (!_xmlnode) {
-				// update bounding box
-				BoundingBox bbox;
-				patch->getBBox(bbox);
-				bbox.transform(_actions->getMatrix());
-				_actions->embed(bbox);
-			}
+				actions->appendToPage(_group);
+			if (clippathID > 0)
+				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
 		}
-		catch (ShadingException &e) {
-			Message::estream(false) << "PostScript error: " << e.what() << '\n';
-			it = params.end();  // stop processing the remaining patch data
+
+		void patchSegment (GraphicPath<double> &path, const Color &color) {
+			if (!_actions->getMatrix().isIdentity())
+				path.transform(_actions->getMatrix());
+
+			// draw a single patch segment
+			ostringstream oss;
+			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+			XMLElementNode *pathElem = new XMLElementNode("path");
+			pathElem->addAttribute("d", oss.str());
+			pathElem->addAttribute("fill", color.rgbString());
+			_group->append(pathElem);
 		}
-		delete previousPatch;
+
+	private:
+		SpecialActions *_actions;
+		XMLElementNode *_group;
+};
+
+
+/** Handle all patch meshes whose patches and their connections can be processed sequentially.
+ *  This comprises free-form triangular, Coons, and tensor-product patch meshes. */
+void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace colorSpace, VectorIterator<double> &it) {
+	auto_ptr<ShadingPatch> previousPatch;
+	while (it.valid()) {
+		int edgeflag = static_cast<int>(*it++);
+		vector<DPair> points;
+		vector<Color> colors;
+		auto_ptr<ShadingPatch> patch;
+
+		patch = auto_ptr<ShadingPatch>(ShadingPatch::create(shadingTypeID, colorSpace));
+		read_patch_data(*patch, edgeflag, it, points, colors);
+		patch->setPoints(points, edgeflag, previousPatch.get());
+		patch->setColors(colors, edgeflag, previousPatch.get());
+		ShadingCallback callback(_actions, _xmlnode, _clipStack.topID());
+#if 0
+		if (bgcolorGiven) {
+			// fill whole patch area with given background color
+			GraphicPath<double> outline;
+			patch->getBoundaryPath(outline);
+			callback.patchSegment(outline, bgcolor);
+		}
+#endif
+		patch->approximate(20, true, callback);  // @@
+		if (!_xmlnode) {
+			// update bounding box
+			BoundingBox bbox;
+			patch->getBBox(bbox);
+			bbox.transform(_actions->getMatrix());
+			_actions->embed(bbox);
+		}
 		previousPatch = patch;
 	}
-	delete previousPatch;
-	if (bbox_given)
-		_clipStack.pop();
+}
+
+
+struct PatchVertex {
+	DPair point;
+	Color color;
+};
+
+
+void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it) {
+	int verticesPerRow = static_cast<int>(*it++);
+	if (verticesPerRow < 2)
+		return;
+
+	// hold two adjacent rows of vertices and colors
+	vector<PatchVertex> row1(verticesPerRow);
+	vector<PatchVertex> row2(verticesPerRow);
+	vector<PatchVertex> *rowptr1 = &row1;
+	vector<PatchVertex> *rowptr2 = &row2;
+	// read data of first row
+	for (int i=0; i < verticesPerRow; i++) {
+		PatchVertex &vertex = (*rowptr1)[i];
+		vertex.point.x(*it++);
+		vertex.point.y(*it++);
+		vertex.color.set(colorSpace, it);
+	}
+	LatticeTriangularPatch patch(colorSpace);
+	ShadingCallback callback(_actions, _xmlnode, _clipStack.topID());
+	while (it.valid()) {
+		// read next row
+		for (int i=0; i < verticesPerRow; i++) {
+			PatchVertex &vertex = (*rowptr2)[i];
+			vertex.point.x(*it++);
+			vertex.point.y(*it++);
+			vertex.color.set(colorSpace, it);
+		}
+		// create triangular patches for the vertices of the two rows
+		for (int i=0; i < verticesPerRow-1; i++) {
+			const PatchVertex &v1 = (*rowptr1)[i], &v2 = (*rowptr1)[i+1];
+			const PatchVertex &v3 = (*rowptr2)[i], &v4 = (*rowptr2)[i+1];
+			patch.setPoints(v1.point, v2.point, v3.point);
+			patch.setColors(v1.color, v2.color, v3.color);
+			patch.approximate(20, true, callback);
+
+			patch.setPoints(v2.point, v3.point, v4.point);
+			patch.setColors(v2.color, v3.color, v4.color);
+			patch.approximate(20, true, callback);
+		}
+		swap(rowptr1, rowptr2);
+	}
 }
 
 

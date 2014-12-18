@@ -185,6 +185,7 @@ libdvisvgm_a_SOURCES = \
 	types.h \
 	Unicode.cpp \
 	Unicode.h \
+	VectorIterator.h \
 	VectorStream.h \
 	VFActions.h \
 	VFReader.cpp \

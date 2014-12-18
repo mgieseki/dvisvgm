@@ -529,5 +529,8 @@
     <ClInclude Include="..\src\ShadingPatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\VectorIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

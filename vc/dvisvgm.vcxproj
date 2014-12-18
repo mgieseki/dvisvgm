@@ -304,6 +304,7 @@
     <ClInclude Include="..\src\ToUnicodeMap.h" />
     <ClInclude Include="..\src\TriangularPatch.h" />
     <ClInclude Include="..\src\Unicode.h" />
+    <ClInclude Include="..\src\VectorIterator.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="..\src\debug.h" />
     <ClInclude Include="..\src\DVIActions.h" />

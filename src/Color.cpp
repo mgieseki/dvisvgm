@@ -208,7 +208,7 @@ void Color::setCMYK (const std::valarray<double> &cmyk) {
 }
 
 
-void Color::set (ColorSpace colorSpace, vector<double>::const_iterator &it) {
+void Color::set (ColorSpace colorSpace, VectorIterator<double> &it) {
 	switch (colorSpace) {
 		case GRAY_SPACE: setGray(*it++); break;
 		case RGB_SPACE : setRGB(*it, *(it+1), *(it+2)); it+=3; break;
