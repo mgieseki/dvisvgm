@@ -53,6 +53,9 @@ static inline double str2double (const string &str) {
 
 
 bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
+bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
+int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
+double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _previewFilter(_psi), _psSection(PS_NONE), _xmlnode(0)
@@ -915,7 +918,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 			callback.patchSegment(outline, bgcolor);
 		}
 #endif
-		patch->approximate(20, true, callback);  // @@
+		patch->approximate(SHADING_SEGMENT_SIZE, SHADING_SEGMENT_OVERLAP, SHADING_SIMPLIFY_DELTA, callback);
 		if (!_xmlnode) {
 			// update bounding box
 			BoundingBox bbox;
@@ -967,11 +970,11 @@ void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace,
 			const PatchVertex &v3 = (*rowptr2)[i], &v4 = (*rowptr2)[i+1];
 			patch.setPoints(v1.point, v2.point, v3.point);
 			patch.setColors(v1.color, v2.color, v3.color);
-			patch.approximate(20, true, callback);
+			patch.approximate(SHADING_SEGMENT_SIZE, SHADING_SEGMENT_OVERLAP, SHADING_SIMPLIFY_DELTA, callback);
 
 			patch.setPoints(v2.point, v3.point, v4.point);
 			patch.setColors(v2.color, v3.color, v4.color);
-			patch.approximate(20, true, callback);
+			patch.approximate(SHADING_SEGMENT_SIZE, SHADING_SEGMENT_OVERLAP, SHADING_SIMPLIFY_DELTA, callback);
 		}
 		swap(rowptr1, rowptr2);
 	}

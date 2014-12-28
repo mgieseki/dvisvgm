@@ -83,6 +83,9 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 
 	public:
 		static bool COMPUTE_CLIPPATHS_INTERSECTIONS;
+		static bool SHADING_SEGMENT_OVERLAP;
+		static int SHADING_SEGMENT_SIZE;
+		static double SHADING_SIMPLIFY_DELTA;
 
 	protected:
 		void initialize ();

@@ -25,6 +25,15 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 #endif
 	{'e', "exact", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
 	{'m', "fontmap", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_fontmap)},
+#if !defined(DISABLE_GS)
+	{'\0', "grad-overlap", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_overlap)},
+#endif
+#if !defined(DISABLE_GS)
+	{'\0', "grad-segments", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_segments)},
+#endif
+#if !defined(DISABLE_GS)
+	{'\0', "grad-simplify", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_simplify)},
+#endif
 	{'h', "help", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
 	{'\0', "keep", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -75,6 +84,15 @@ void CommandLine::init () {
 #endif
 	_exact_given = false;
 	_fontmap_given = false;
+#if !defined(DISABLE_GS)
+	_grad_overlap_given = false;
+#endif
+#if !defined(DISABLE_GS)
+	_grad_segments_given = false;
+#endif
+#if !defined(DISABLE_GS)
+	_grad_simplify_given = false;
+#endif
 	_help_given = false;
 	_keep_given = false;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -108,6 +126,12 @@ void CommandLine::init () {
 	_bbox_arg = "min";
 	_cache_arg.clear();
 	_fontmap_arg.clear();
+#if !defined(DISABLE_GS)
+	_grad_segments_arg = 20;
+#endif
+#if !defined(DISABLE_GS)
+	_grad_simplify_arg = 0.05;
+#endif
 	_help_arg = 0;
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
 	_libgs_arg.clear();
@@ -145,14 +169,23 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #if !defined(DISABLE_GS)
 		"o-j, --clipjoin                compute intersection of clipping paths",
 #endif
+#if !defined(DISABLE_GS)
+		"o    --grad-overlap            create operlapping color gradient segments",
+#endif
+#if !defined(DISABLE_GS)
+		"o    --grad-segments=number    number of color gradient segments per row [20]",
+#endif
+#if !defined(DISABLE_GS)
+		"o    --grad-simplify=delta     reduce level of detail for small segments [0.05]",
+#endif
 		"o-L, --linkmark=style          select how to mark hyperlinked areas [box]",
 		"o-o, --output=pattern          set name pattern of output files",
 		"o-d, --precision=number        set number of decimal points (0-6) [0]",
 		"o-R, --relative                create relative path commands",
 		"o-s, --stdout                  write SVG output to stdout",
 		"o-n, --no-fonts[=variant]      draw glyphs by using path elements [0]",
-		"o    --no-styles               don't use styles to reference fonts",
 		"o    --no-merge                don't merge adjacent text elements",
+		"o    --no-styles               don't use styles to reference fonts",
 		"o-z, --zip[=level]             create compressed .svgz file [9]",
 		"sSVG transformations:",
 		"o-r, --rotate=angle            rotate page content clockwise",
@@ -217,6 +250,26 @@ void CommandLine::handle_fontmap (InputReader &ir, const Option &opt, bool longo
 	if (getStringArg(ir, opt, longopt, _fontmap_arg))
 		_fontmap_given = true;
 }
+
+#if !defined(DISABLE_GS)
+void CommandLine::handle_grad_overlap (InputReader &ir, const Option &opt, bool longopt) {
+	_grad_overlap_given = true;
+}
+#endif
+
+#if !defined(DISABLE_GS)
+void CommandLine::handle_grad_segments (InputReader &ir, const Option &opt, bool longopt) {
+	if (getIntArg(ir, opt, longopt, _grad_segments_arg))
+		_grad_segments_given = true;
+}
+#endif
+
+#if !defined(DISABLE_GS)
+void CommandLine::handle_grad_simplify (InputReader &ir, const Option &opt, bool longopt) {
+	if (getDoubleArg(ir, opt, longopt, _grad_simplify_arg))
+		_grad_simplify_given = true;
+}
+#endif
 
 void CommandLine::handle_help (InputReader &ir, const Option &opt, bool longopt) {
 	if (ir.eof() || getIntArg(ir, opt, longopt, _help_arg))

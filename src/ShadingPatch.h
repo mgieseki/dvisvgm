@@ -41,7 +41,7 @@ class ShadingPatch
 		ShadingPatch (Color::ColorSpace colorSpace) : _colorspace(colorSpace) {}
 		virtual ~ShadingPatch () {}
 		virtual int psShadingType () const =0;
-		virtual void approximate (int gridsize, bool overlap, Callback &callback) const =0;
+		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;
 		virtual void getBBox (BoundingBox &bbox) const =0;
 		virtual void getBoundaryPath (GraphicPath<double> &path) const =0;
 		virtual void setPoints (const PointVec &points) {setPoints(points, 0, 0);}

@@ -49,6 +49,17 @@
 			<option long="clipjoin" short="j" if="!defined(DISABLE_GS)">
 				<description>compute intersection of clipping paths</description>
 			</option>
+			<option long="grad-overlap" if="!defined(DISABLE_GS)">
+				<description>create operlapping color gradient segments</description>
+			</option>
+			<option long="grad-segments" if="!defined(DISABLE_GS)">
+				<arg type="int" name="number" default="20"/>
+				<description>number of color gradient segments per row</description>
+			</option>
+			<option long="grad-simplify" if="!defined(DISABLE_GS)">
+				<arg type="double" name="delta" default="0.05"/>
+				<description>reduce level of detail for small segments</description>
+			</option>
 			<option long="linkmark" short="L">
 				<arg type="string" name="style" default="box"/>
 				<description>select how to mark hyperlinked areas</description>
@@ -71,11 +82,11 @@
 				<arg type="int" name="variant" default="0" optional="yes"/>
 				<description>draw glyphs by using path elements</description>
 			</option>
-			<option long="no-styles">
-				<description>don't use styles to reference fonts</description>
-			</option>
 			<option long="no-merge">
 				<description>don't merge adjacent text elements</description>
+			</option>
+			<option long="no-styles">
+				<description>don't use styles to reference fonts</description>
 			</option>
 			<option long="zip" short="z">
 				<arg type="int" name="level" default="9" optional="yes"/>

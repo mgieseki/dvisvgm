@@ -301,7 +301,7 @@ static inline double clip (double x) {
 
 
 /** Computes a single row of segments approximating the patch region between v1 and v1+inc. */
-void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, const vector<Bezier> &vbeziers, Callback &callback) const {
+void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, double delta, const vector<Bezier> &vbeziers, Callback &callback) const {
 	double v2 = clip(v1+inc);
 	double ov2 = (overlap && v2 < 1) ? clip(v2+inc) : v2;
 	Bezier hbezier1, hbezier2;
@@ -318,7 +318,7 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, co
 		Bezier b4(vbeziers[i-1], v1, ov2);
 		GraphicPath<double> path;
 		path.moveto(b1.point(0));
-		if (inc > 0.02) {  // @@
+		if (inc > delta) {
 			path.cubicto(b1.point(1), b1.point(2), b1.point(3));
 			path.cubicto(b2.point(1), b2.point(2), b2.point(3));
 			path.cubicto(b3.point(2), b3.point(1), b3.point(0));
@@ -343,8 +343,9 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, co
  *  with their right and bottom neighbors (which are drawn on top of the overlapping regions).
  *  @param[in] gridsize number of segments per row/column
  *  @param[in] overlap if true, enlarge each segment to overlap with its right and bottom neighbors
+ *  @param[in] delta reduce level of detail if the segment size is smaller than the given value
  *  @param[in] callback object notified */
-void TensorProductPatch::approximate (int gridsize, bool overlap, Callback &callback) const {
+void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2] && _colors[2] == _colors[3]) {
 		// simple case: monochromatic patch
 		GraphicPath<double> path;
@@ -363,7 +364,7 @@ void TensorProductPatch::approximate (int gridsize, bool overlap, Callback &call
 		// compute the segments row by row
 		double v=0;
 		for (int i=0; i < gridsize; i++) {
-			approximateRow(v, inc, overlap, vbeziers, callback);
+			approximateRow(v, inc, overlap, delta, vbeziers, callback);
 			v = clip(v+inc);
 		}
 	}

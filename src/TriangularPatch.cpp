@@ -150,8 +150,9 @@ static inline double clip (double x) {
  *  top of the overlapping regions).
  *  @param[in] gridsize number of segments per row/column
  *  @param[in] overlap if true, enlarge each segment to overlap with its right and bottom neighbors
+ *  @param[in] delta reduce level of detail if the segment size is smaller than the given value
  *  @param[in] callback object notified */
-void TriangularPatch::approximate (int gridsize, bool overlap, Callback &callback) const {
+void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2]) {
 		GraphicPath<double> path;
 		getBoundaryPath(path);
@@ -173,7 +174,7 @@ void TriangularPatch::approximate (int gridsize, bool overlap, Callback &callbac
 					path.lineto(pointAt(u1, ov2));
 					path.closepath();
 					callback.patchSegment(path, averageColor(colorAt(u1, v1), colorAt(u2, v1), colorAt(u1, v2)));
-					if (clip(u2+v2) <= 1 && (!overlap || inc > 0.02)) { // @@
+					if (clip(u2+v2) <= 1 && (!overlap || inc > delta)) {
 						// create triangular segments pointing in the opposite direction as the whole patch
 						path.clear();
 						path.moveto(pointAt(u1, v2));

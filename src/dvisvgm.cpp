@@ -356,7 +356,7 @@ int main (int argc, char *argv[]) {
 	Message::LEVEL = args.verbosity_arg();
 	PhysicalFont::EXACT_BBOX = args.exact_given();
 	PhysicalFont::KEEP_TEMP_FILES = args.keep_given();
-	PhysicalFont::METAFONT_MAG = args.mag_arg();
+	PhysicalFont::METAFONT_MAG = max(1.0, args.mag_arg());
 	XMLString::DECIMAL_PLACES = max(0, min(6, args.precision_arg()));
 	if (!HtmlSpecialHandler::setLinkMarker(args.linkmark_arg()))
 		Message::wstream(true) << "invalid argument '"+args.linkmark_arg()+"' supplied for option --linkmark\n";
@@ -365,6 +365,9 @@ int main (int argc, char *argv[]) {
 #ifndef DISABLE_GS
 	eps_given = args.eps_given();
 	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = args.clipjoin_given();
+	PsSpecialHandler::SHADING_SEGMENT_OVERLAP = args.grad_overlap_given();
+	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, args.grad_segments_arg());
+	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = args.grad_simplify_arg();
 #endif
 	string inputfile = ensure_suffix(args.file(0), eps_given);
 	ifstream ifs(inputfile.c_str(), ios::binary|ios::in);

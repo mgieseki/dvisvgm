@@ -29,6 +29,17 @@ class CommandLine : public CmdLineParserBase
 		bool exact_given () const {return _exact_given;}
 		bool fontmap_given () const {return _fontmap_given;}
 		const std::string& fontmap_arg () const {return _fontmap_arg;}
+#if !defined(DISABLE_GS)
+		bool grad_overlap_given () const {return _grad_overlap_given;}
+#endif
+#if !defined(DISABLE_GS)
+		bool grad_segments_given () const {return _grad_segments_given;}
+		int grad_segments_arg () const {return _grad_segments_arg;}
+#endif
+#if !defined(DISABLE_GS)
+		bool grad_simplify_given () const {return _grad_simplify_given;}
+		double grad_simplify_arg () const {return _grad_simplify_arg;}
+#endif
 		bool help_given () const {return _help_given;}
 		int help_arg () const {return _help_arg;}
 		bool keep_given () const {return _keep_given;}
@@ -91,6 +102,15 @@ class CommandLine : public CmdLineParserBase
 #endif
 		void handle_exact (InputReader &ir, const Option &opt, bool longopt);
 		void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
+#if !defined(DISABLE_GS)
+		void handle_grad_overlap (InputReader &ir, const Option &opt, bool longopt);
+#endif
+#if !defined(DISABLE_GS)
+		void handle_grad_segments (InputReader &ir, const Option &opt, bool longopt);
+#endif
+#if !defined(DISABLE_GS)
+		void handle_grad_simplify (InputReader &ir, const Option &opt, bool longopt);
+#endif
 		void handle_help (InputReader &ir, const Option &opt, bool longopt);
 		void handle_keep (InputReader &ir, const Option &opt, bool longopt);
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
@@ -136,6 +156,17 @@ class CommandLine : public CmdLineParserBase
 		bool _exact_given;
 		bool _fontmap_given;
 		std::string _fontmap_arg;
+#if !defined(DISABLE_GS)
+		bool _grad_overlap_given;
+#endif
+#if !defined(DISABLE_GS)
+		bool _grad_segments_given;
+		int _grad_segments_arg;
+#endif
+#if !defined(DISABLE_GS)
+		bool _grad_simplify_given;
+		double _grad_simplify_arg;
+#endif
 		bool _help_given;
 		int _help_arg;
 		bool _keep_given;

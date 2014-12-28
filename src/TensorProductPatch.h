@@ -56,14 +56,14 @@ class TensorProductPatch : public ShadingPatch
 		void subpatch (double u1, double u2, double v1, double v2, TensorProductPatch &patch) const;
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
 		DPair blossomValue (double u[3], double v[3]) const {return blossomValue(u[0], u[1], u[2], v[0], v[1], v[2]);}
-		void approximate (int gridsize, bool overlap, Callback &callback) const;
+		void approximate (int gridsize, bool overlap, double delta, Callback &callback) const;
 		void getBBox (BoundingBox &bbox) const;
 		int numPoints (int edgeflag) const {return edgeflag == 0 ? 16 : 12;}
 		int numColors (int edgeflag) const {return edgeflag == 0 ? 4 : 2;}
 
 	protected:
 		Color averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const;
-		void approximateRow (double v1, double inc, bool overlap, const std::vector<Bezier> &beziers, Callback &callback) const;
+		void approximateRow (double v1, double inc, bool overlap, double delta, const std::vector<Bezier> &beziers, Callback &callback) const;
 		void setFirstMatrixColumn (const DPair source[4], bool reverse);
 		void setFirstMatrixColumn (DPair source[4][4], int col, bool reverse);
 

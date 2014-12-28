@@ -173,7 +173,7 @@ font file names and encodings. dvisvgm does not provide its own map files but tr
 available ones coming with dvips or dvipdfm. If option *--fontmap* is omitted, dvisvgm looks for the
 default map files +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order). Otherwise, the
 listed files are used. Multiple filenames must be separated by commas without leading and/or trailing
-whitespace. 
+whitespace.
 The map files are evaluated in the given order. By default, redefined mappings do not replace previous ones.
 However, each filename can be preceded by an optional mode specifier (*+*, *-*, or *=*) to change this behavior:
  
@@ -182,7 +182,7 @@ However, each filename can be preceded by an optional mode specifier (*+*, *-*, 
     That's also the default mode if no mode specifier is given.
   
   -mapfile;;
-    Ensures that none of the font mappings defined in the given map file are used, i.e. previously 
+    Ensures that none of the font mappings defined in the given map file are used, i.e. previously
     defined mappings for the specified fonts are removed.
   
   =mapfile;;
@@ -200,6 +200,43 @@ where all redefinitions of `myfile1.map` replace previous entries. Afterwards, a
 given in `myfile2.map` are removed from the font map tree.
 +
 For further information about the map file formats and the mode specifiers, see the manuals of dvips and dvipdfm.
+
+
+*--grad-overlap*::
+Tells dvisvgm to create overlapping grid segments when approximating color gradient fills (also see
+option *--grad-segments* below). By default, adjacent segments don't overlap but only touch each other
+like separate tiles. Unfortunately, this alignment can lead to visible gaps between the segments
+because the background influences the color at the boundary of the segments if the SVG renderer uses
+anti-aliasing to create smooth contours.
+One way to avoid this and to create seamlessly touching color regions is to enlarge the segments so
+that they extent into the area of their right and bottom neighbors. Since the latter are drawn on top
+of the overlapping parts, the visible size of all segments keeps unchanged. Just the former gaps
+disappear as the background is now completely covered by the correct colors.
+Currently, dvisvgm computes the overlapping segments separately for each patch of the mesh (a patch mesh
+may consist of multiple patches of the same type). Therefore, there still might be visible gaps
+at the seam of two adjacent patches.
+
+
+*--grad-segments*='number'::
+Determines the maximal number of segments per column and row used to approximate gradient color fills.
+Since SVG 1.1 only supports a small subset of the shading algorithms available in PostScript,
+dvisvgm approximates some of them by subdividing the area to be filled into smaller, monochromatic
+segments. Each of these segments gets the average color of the region it covers. Thus, increasing the
+number of segments leads to smaller monochromatic areas and therefore results in a better approximation
+of the actual color gradient. As a drawback, more segments imply bigger SVG files because every
+segment is represented by a separate path element.
++
+Currently, dvisvgm supports free- and lattice-form triangular patch meshes as well as Coons and
+tensor-product patch meshes. They are approximated by subdividing the area of each patch into a
+__n__&#215;__n__ grid of smaller segments. The maximal number of segments per column and row can be
+changed with option *--grad-segments*.
+
+
+*--grad-simplify*='delta'::
+If the size of the segments created to approximate gradient color fills falls below the given delta
+value, dvisvgm reduces their level of detail. For example, Bézier curves are replaced by straight
+lines, and triangular segments are combined to tetragons. For a small delta these simplifications
+are usually not noticeable but reduce the size of the generated SVG files.
 
 
 *-h, --help*[='mode']::
@@ -221,7 +258,8 @@ to load the shared GS library dynamically during runtime. By default, it expects
 to be libgs.so.X (on Unix-like systems, where X is the ABI version of the library) or
 gsdll32.dll/gsdll64.dll (Windows). Option *--libgs* can be used to give a different name.
 Alternatively, it's also possible to set the GS library name by the environment variable +LIBGS+.
-The latter has less precedence than the command-line option.
+The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable +LIBGS+
+if *--libgs* is given.
 
 
 *-L, --linkmark*='style'::
@@ -580,24 +618,26 @@ dvipdfm font map format. For further information on the command syntax and seman
 *ps*::
 The famous DVI driver dvips introduced its own set of specials in order to embed PostScript code into DVI files,
 which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
-PostScript snippets and to convert a large amount of it to SVG. However, in contrast to dvips, dvisvgm uses floating point
-arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the coordinates. Therefore,
-the relative locations of the graphic elements may slightly differ from those computed by dvips.
+PostScript snippets and to convert as many of them as possible to SVG. In contrast to dvips, dvisvgm uses
+floating point arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the
+coordinates. Therefore, the relative locations of the graphic elements may slightly differ from those computed
+by dvips.
 +
-Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter but relies on
-Ghostscript instead. If the Ghostscript library was not linked to the dvisvgm binary, it is looked up and loaded dynamically
-during runtime. In this case, dvisvgm looks for 'libgs.so.X' on Unix-like systems (supported ABI versions: 7,8,9),
-and for 'gsdll32.dll' or 'gsdll64.dll' on Windows.
+Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter
+but relies on Ghostscript instead. If the Ghostscript library was not linked to the dvisvgm binary, it is looked up
+and loaded dynamically during runtime. In this case, dvisvgm looks for 'libgs.so.X' on Unix-like systems
+(supported ABI versions: 7,8,9), and for 'gsdll32.dll' or 'gsdll64.dll' on Windows.
 You can override the default file names with environment variable +LIBGS+ or the command-line option *--libgs*.
-The library must be reachable through the ld search path (\*nix) or the PATH environment variable (Windows). Alternatively,
-the absolute file path can be specified. If the library cannot be found, dvisvgm disables the processing of PostScript specials.
-Use option *--list-specials* to check whether PS support is available, i.e. entry 'ps' is present.
+The library must be reachable through the ld search path (\*nix) or the PATH environment variable (Windows).
+Alternatively, the absolute file path can be specified. If the library cannot be found, dvisvgm disables the
+processing of PostScript specials and prints a warning message.
+Use option *--list-specials* to check whether PostScript support is available, i.e. entry 'ps' is present.
 +
 The PostScript handler also recognizes and evaluates bounding box data generated by the 'preview' package with
 option 'tightpage'. If the data is present in a DVI file, dvisvgm adapts the bounding box of the generated SVG file
 accordingly, and prints a message showing the width, height, and depth of the box in TeX point units. Especially,
-the depth value can be used to vertically align the SVG graphics with the baseline of surrounding text in HTML or XSL-FO
-documents, for example.
+the depth value can be used to vertically align the SVG graphics with the baseline of surrounding text in HTML
+or XSL-FO documents, for example.
 
 *tpic*::
 The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
