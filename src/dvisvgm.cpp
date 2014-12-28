@@ -412,6 +412,7 @@ int main (int argc, char *argv[]) {
 		Message::estream() << "\nPostScript error: " << e.what() << '\n';
 	}
 	catch (SignalException &e) {
+		Message::wstream().clearline();
 		Message::wstream(true) << "execution interrupted by user\n";
 	}
 	catch (MessageException &e) {
