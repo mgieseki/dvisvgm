@@ -344,7 +344,7 @@ int main (int argc, char *argv[]) {
 
 	if (args.progress_given()) {
 		DVIReader::COMPUTE_PROGRESS = args.progress_given();
-		DVIToSVGActions::PROGRESSBAR_DELAY = args.progress_arg();
+		SpecialActions::PROGRESSBAR_DELAY = args.progress_arg();
 	}
 	SVGTree::CREATE_STYLE = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();

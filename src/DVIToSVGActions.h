@@ -88,9 +88,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void embed (const DPair &p, double r=0);
 		std::string getSVGFilename (unsigned pageno) const;
 
-	public:
-		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
-
 	private:
 		SVGTree &_svg;
 		BasicDVIReader *_dvireader;

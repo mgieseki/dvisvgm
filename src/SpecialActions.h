@@ -57,6 +57,8 @@ struct SpecialActions
 	virtual std::string getSVGFilename (unsigned pageno) const =0;
 	virtual void progress (const char *id) {}
 	virtual int getDVIStackDepth () const  {return 0;}
+
+	static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
 };
 
 

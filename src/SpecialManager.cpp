@@ -29,6 +29,8 @@
 
 using namespace std;
 
+double SpecialActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (values >= 1000 disable the progressbar)
+
 
 SpecialManager::~SpecialManager () {
 	unregisterHandlers();

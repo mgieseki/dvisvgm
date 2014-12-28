@@ -36,9 +36,6 @@
 using namespace std;
 
 
-double DVIToSVGActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (values >= 1000 disable the progressbar)
-
-
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
 	: _svg(svg), _dvireader(&dvisvg), _pageMatrix(0), _bgcolor(Color::TRANSPARENT), _boxes(0)
 {
