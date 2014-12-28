@@ -1,3 +1,19 @@
+dvisvgm-1.9 (2014-12-29)
+- added partial implementation of PostScript operator 'shfill' to create color
+  gradient fills (supported shading types: free-form triangular, lattice-form
+  triangular, Coons, and tensor-product patch meshes)
+- added options --grad-segments, --grad-overlap, and --grad-simplify to control
+  the approximation of color gradients
+- added option --no-merge to create separate text elements for each character
+  (patch by Khaled Hosny)
+- added a simple progress counter to the EPS to SVG converter
+- added opt2cpp.py as a free replacement for my non-free opt2cpp.xsl script
+  (thanks to Khaled Hosny for the implementation and for providing it for free)
+- added lookup of Ghostscript library in the Windows registry
+- fixed validity check of DVI files
+- fixed interaction of color specials and PostScript color operators
+- several code refactorings and improvements
+
 dvisvgm-1.8.1 (2014-08-29)
 - unreferenced clipPath elements are now removed from the SVG files
 - fixed side-effectes caused by unexpected bop/eop operators in
