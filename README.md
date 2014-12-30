@@ -117,7 +117,7 @@ preferably use the [bug tracker at Launchpad](https://launchpad.net/dvisvgm).
 Copyright
 ---------
 
-Copyright &copy; 2005&ndash;2014 [Martin Gieseking](mailto:martin.gieseking@uos.de)
+Copyright &copy; 2005&ndash;2015 [Martin Gieseking](mailto:martin.gieseking@uos.de)
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
