@@ -469,7 +469,7 @@ double Color::deltaE (const Color &c) const {
 	double c1 = sqrt(a1*a1 + b1*b1);
 	double c2 = sqrt(a2*a2 + b2*b2);
 	double cm = (c1+c2)/2;
-	double g  = (1-sqrt(pow(cm, 7)/(pow(cm, 7)+pow(25, 7))))/2;
+	double g  = (1-sqrt(pow(cm, 7)/(pow(cm, 7)+pow(25.0, 7))))/2;
 	double aa1 = a1*(1+g);
 	double aa2 = a2*(1+g);
 	double cc1 = sqrt(aa1*aa1 + b1*b1);
@@ -492,7 +492,7 @@ double Color::deltaE (const Color &c) const {
 	double sc = 1 + 0.045*ccm;
 	double sh = 1 + 0.015*ccm*t;
 	double dtheta = 30*exp(-sqr(hm-275)/25);
-	double rc = 2*sqrt(pow(ccm, 7)/(pow(ccm, 7)+pow(25, 7)));
+	double rc = 2*sqrt(pow(ccm, 7)/(pow(ccm, 7)+pow(25.0, 7)));
 	double rt = -rc*sin(2*dtheta);
 	return sqrt(sqr(dl/sl) + sqr(dcc/sc) + sqr(dhh/sh) + rt*dcc/sc*dhh/sh);
 }
