@@ -291,7 +291,9 @@ DPair TensorProductPatch::blossomValue (double u1, double u2, double u3, double 
 }
 
 
-static inline double clip (double x) {
+/** Snaps value x to the interval [0,1]. Values lesser than or near 0 are mapped to 0, values
+ *  greater than or near 1 are mapped to 1. */
+static inline double snap (double x) {
 	if (fabs(x) < 0.001)
 		return 0;
 	if (fabs(1-x) < 0.001)
@@ -302,15 +304,15 @@ static inline double clip (double x) {
 
 /** Computes a single row of segments approximating the patch region between v1 and v1+inc. */
 void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, double delta, const vector<Bezier> &vbeziers, Callback &callback) const {
-	double v2 = clip(v1+inc);
-	double ov2 = (overlap && v2 < 1) ? clip(v2+inc) : v2;
+	double v2 = snap(v1+inc);
+	double ov2 = (overlap && v2 < 1) ? snap(v2+inc) : v2;
 	Bezier hbezier1, hbezier2;
 	horizontalCurve(v1, hbezier1);
 	horizontalCurve(ov2, hbezier2);
 	double u1 = 0;
 	for (size_t i=1; i < vbeziers.size(); i++) {
-		double u2 = clip(u1+inc);
-		double ou2 = (overlap && u2 < 1) ? clip(u2+inc) : u2;
+		double u2 = snap(u1+inc);
+		double ou2 = (overlap && u2 < 1) ? snap(u2+inc) : u2;
 		// compute segment boundaries
 		Bezier b1(hbezier1, u1, ou2);
 		Bezier b2(vbeziers[i + (overlap && i < vbeziers.size()-1 ? 1 : 0)], v1, ov2);
@@ -359,13 +361,13 @@ void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, 
 		double u=0;
 		for (int i=0; i <= gridsize; i++) {
 			verticalCurve(u, vbeziers[i]);
-			u = clip(u+inc);
+			u = snap(u+inc);
 		}
 		// compute the segments row by row
 		double v=0;
 		for (int i=0; i < gridsize; i++) {
 			approximateRow(v, inc, overlap, delta, vbeziers, callback);
-			v = clip(v+inc);
+			v = snap(v+inc);
 		}
 	}
 }
@@ -392,14 +394,14 @@ void TensorProductPatch::approximate (int gridsize, Callback &callback) const {
 	Bezier ubezier1; verticalCurve(1, ubezier1);
 	Bezier vbezier0; horizontalCurve(0, vbezier0);
 	Bezier vbezier1; horizontalCurve(1, vbezier1);
-	for (double v1=0; v1 < 1; v1=clip(v1+inc)) {
-		double v2 = clip(v1+inc);
+	for (double v1=0; v1 < 1; v1=snap(v1+inc)) {
+		double v2 = snap(v1+inc);
 		DPair p0 = valueAt(0, v1);
 		DPair p2 = valueAt(0, v2);
 		Color c0 = colorAt(0, v1);
 		Color c2 = colorAt(0, v2);
 		double u1 = 0;
-		for (double u2=inc; u2 <= 1; u2=clip(u2+inc)) {
+		for (double u2=inc; u2 <= 1; u2=snap(u2+inc)) {
 			DPair p1 = valueAt(u2, v1);
 			DPair p3 = valueAt(u2, v2);
 			Color c1 = colorAt(u2, v1);

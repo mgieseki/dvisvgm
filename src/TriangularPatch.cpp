@@ -134,7 +134,9 @@ Color TriangularPatch::averageColor (const Color &c1, const Color &c2, const Col
 }
 
 
-static inline double clip (double x) {
+/** Snaps value x to the interval [0,1]. Values lesser than or near 0 are mapped to 0, values
+ *  greater than or near 1 are mapped to 1. */
+static inline double snap (double x) {
 	if (fabs(x) < 0.001)
 		return 0;
 	if (fabs(1-x) < 0.001)
@@ -160,13 +162,13 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 	}
 	else {
 		const double inc = 1.0/gridsize;
-		for (double u1=0; u1 < 1; u1=clip(u1+inc)) {
-			double u2 = clip(u1+inc);
-			double ou2 = (overlap && clip(u2+inc) <= 1 ? clip(u2+inc) : u2);
-			for (double v1=0; clip(u1+v1) < 1; v1=clip(v1+inc)) {
-				double v2 = clip(v1+inc);
-				double ov2 = (overlap && clip(v2+inc) <= 1 ? clip(v2+inc) : v2);
-				if (!overlap || (clip(u1+ov2) <= 1 && clip(ou2+v1) <= 1)) {
+		for (double u1=0; u1 < 1; u1=snap(u1+inc)) {
+			double u2 = snap(u1+inc);
+			double ou2 = (overlap && snap(u2+inc) <= 1 ? snap(u2+inc) : u2);
+			for (double v1=0; snap(u1+v1) < 1; v1=snap(v1+inc)) {
+				double v2 = snap(v1+inc);
+				double ov2 = (overlap && snap(v2+inc) <= 1 ? snap(v2+inc) : v2);
+				if (!overlap || (snap(u1+ov2) <= 1 && snap(ou2+v1) <= 1)) {
 					// create triangular segments pointing in the same orientation as the whole patch
 					GraphicPath<double> path;
 					path.moveto(pointAt(u1, v1));
@@ -174,7 +176,7 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 					path.lineto(pointAt(u1, ov2));
 					path.closepath();
 					callback.patchSegment(path, averageColor(colorAt(u1, v1), colorAt(u2, v1), colorAt(u1, v2)));
-					if (clip(u2+v2) <= 1 && (!overlap || inc > delta)) {
+					if (snap(u2+v2) <= 1 && (!overlap || inc > delta)) {
 						// create triangular segments pointing in the opposite direction as the whole patch
 						path.clear();
 						path.moveto(pointAt(u1, v2));
