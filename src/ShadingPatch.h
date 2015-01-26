@@ -44,9 +44,7 @@ class ShadingPatch
 		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;
 		virtual void getBBox (BoundingBox &bbox) const =0;
 		virtual void getBoundaryPath (GraphicPath<double> &path) const =0;
-		virtual void setPoints (const PointVec &points) {setPoints(points, 0, 0);}
 		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) =0;
-		virtual void setColors (const ColorVec &colors) {setColors(colors, 0, 0);}
 		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) =0;
 		virtual int numPoints (int edgeflag) const =0;
 		virtual int numColors (int edgeflag) const =0;
