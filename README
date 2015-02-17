@@ -10,7 +10,7 @@ DEPENDENCIES
 
  dvisvgm relies on the following free libraries:
    * Clipper (http://www.angusj.com/delphi/clipper.php)
-     To compute the insersections of two curved paths, dvisvgm
+     To compute the intersections of two curved paths, dvisvgm
      flattens the paths to polygons, intersects them using Clipper,
      and reconstructs the curves afterwards.
 

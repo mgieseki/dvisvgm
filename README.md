@@ -20,9 +20,10 @@ Short overview of the main features:
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
 * [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly in order to increase the compatibility of the generated SVG files.
+* Approximates PostScript [color gradient fills](http://dvisvgm.sourceforge.net/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
-* Evaluation of color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
+* Evaluates color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
 * The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org)) systems.
 * _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive) and is therefore available for a wide range of operating systems.
 
@@ -41,7 +42,7 @@ Dependencies
 _dvisvgm_ relies on the following free libraries:
 
 * [Clipper](http://www.angusj.com/delphi/clipper.php)  
-  To compute the insersection of two curved paths, _dvisvgm_ flattens the paths to
+  To compute the intersection of two curved paths, _dvisvgm_ flattens the paths to
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
   the curves afterwards.
 
