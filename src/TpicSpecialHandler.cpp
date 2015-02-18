@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#define _USE_MATH_DEFINES
 #include <config.h>
 #include <cmath>
 #include <cstring>
@@ -184,7 +185,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions *actions) {
 	if (actions) {
-		const double PI2 = 4*asin(1.0);
+		const double PI2 = 2*M_PI;
 		angle1 *= -1;
 		angle2 *= -1;
 		if (fabs(angle1) > PI2) {
@@ -209,7 +210,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 			if (angle2 < 0)
 				angle2 = PI2+angle2;
 			elem = new XMLElementNode("path");
-			int large_arg = fabs(angle1-angle2) > PI2/2 ? 0 : 1;
+			int large_arg = fabs(angle1-angle2) > M_PI ? 0 : 1;
 			int sweep_flag = angle1 > angle2 ? 0 : 1;
 			if (angle1 > angle2) {
 				large_arg = 1-large_arg;
