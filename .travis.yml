@@ -10,5 +10,6 @@ before_install:
 
 script:
    - ./autogen.sh
+   - ./configure
    - make
    - make check
