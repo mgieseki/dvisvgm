@@ -6,5 +6,9 @@ compiler:
 
 before_install:
    - sudo apt-get update -qq
-   - sudo apt-get install -qq autotools-dev libkpathsea-dev libpotrace-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml
+   - sudo apt-get install -qq autotools-dev libkpathsea-dev libpotrace-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml libgtest-dev
+
+script:
    - ./autogen.sh
+   - make
+   - make check
