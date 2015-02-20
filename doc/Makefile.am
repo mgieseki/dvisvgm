@@ -4,19 +4,24 @@
 ## Process this file with automake.
 
 man_MANS = dvisvgm.1
-EXTRA_DIST = $(man_MANS)
+EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl tweak-dblatex-pdf.xsl
 
-dvisvgm.1: dvisvgm.txt
-	if [ `type -p a2x` ]; then \
-		a2x -dmanpage -fmanpage -L -a icons -a 'iconsdir=.' $<; \
-		rm -f dvisvgm.xml; \
+CONF_DBLATEX_MAN  = $(top_srcdir)/doc/conf-dblatex-man.xsl
+CONF_DBLATEX_PDF  = $(top_srcdir)/doc/conf-dblatex-pdf.xsl
+TWEAK_DBLATEX_PDF = $(top_srcdir)/doc/tweak-dblatex-pdf.xsl
+
+DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.section.enabled=0
+
+dvisvgm.1: dvisvgm.xml $(CONF_DBLATEX_MAN)
+	if [ `type -p xmlto` ]; then \
+		xmlto -m $(CONF_DBLATEX_MAN) $(addprefix --stringparam , $(DB_VARS)) man $<; \
 	fi
 
-dvisvgm.pdf: dvisvgm.1
-	echo '[ /Author (Martin Gieseking) /Title (dvisvgm manual page) /Subject (manual page of dvisvgm @VERSION@) /DOCINFO pdfmark' >tmp.ps
-	man -t ./$< >>tmp.ps
-	ps2pdf tmp.ps $@
-	rm -f tmp.ps
+dvisvgm.pdf: dvisvgm.xml $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF)
+	mv $< $<.tmp
+	xsltproc -o $< $(TWEAK_DBLATEX_PDF) $<.tmp
+	dblatex -bxetex --texstyle=./dvisvgm.sty -p $(CONF_DBLATEX_PDF) $<
+	mv $<.tmp $<
 
 dvi-pdf: dvisvgm.dvi
 	dvipdfm $<
@@ -28,12 +33,19 @@ dvisvgm.dvi: dvisvgm.1
 dvisvgm.html: dvisvgm.txt
 	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -dmanpage $<
 
+dvisvgm.epub: dvisvgm.xml
+	a2x -dmanpage -fmanpage -L -a icons $<;
+
+dvisvgm.xml: dvisvgm.txt
+	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage $<
+
+epub: dvisvgm.epub
 html: dvisvgm.html
 man: dvisvgm.1
 pdf: dvisvgm.pdf
 
 clean:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt dvisvgm.dvi dvisvgm.epub
 
 distclean-local:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt dvisvgm.1
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.xml dvisvgm.txt dvisvgm.dvi dvisvgm.epub dvisvgm.1

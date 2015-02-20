@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="16.1">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="dvisvgm.xpr">
+        <file name="conf-dblatex-man.xsl"/>
+        <file name="conf-dblatex-pdf.xsl"/>
+        <file name="db2html.xsl"/>
+        <file name="dvisvgm.css"/>
+        <file name="dvisvgm.sty"/>
+        <file name="dvisvgm.xml"/>
+        <file name="tweak-dblatex-pdf.xsl"/>
+    </projectTree>
+</project>
