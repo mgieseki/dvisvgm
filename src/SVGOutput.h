@@ -41,6 +41,9 @@ class SVGOutput : public SVGOutputBase
 		std::ostream& getPageStream (int page, int numPages) const;
 		std::string filename (int page, int numPages) const;
 
+	protected:
+		void expandFormatString (std::string &str, int page, int numPages) const;
+
 	private:
 		FilePath _path;
 		std::string _pattern;
@@ -49,6 +52,5 @@ class SVGOutput : public SVGOutputBase
 		mutable int _page; ///< number of current page being written
 		mutable std::ostream *_os;
 };
-
 
 #endif

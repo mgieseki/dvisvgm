@@ -24,9 +24,11 @@
 #include <iostream>
 #include <sstream>
 #include "gzstream.h"
+#include "Calculator.h"
 #include "FileSystem.h"
-#include "MessageException.h"
+#include "Message.h"
 #include "SVGOutput.h"
+
 
 using namespace std;
 
@@ -57,7 +59,6 @@ ostream& SVGOutput::getPageStream (int page, int numPages) const {
 
 	_page = page;
 	delete _os;
-
 	if (_zipLevel > 0)
 		_os = new ogzstream(fname.c_str(), _zipLevel);
 	else
@@ -77,29 +78,97 @@ ostream& SVGOutput::getPageStream (int page, int numPages) const {
 string SVGOutput::filename (int page, int numPages) const {
 	if (_stdout)
 		return "";
-	string fname = _pattern;
-	if (fname.empty())
-		fname = numPages > 1 ? "%f-%p" : "%f";
-	else if (numPages > 1 && fname.find("%p") == string::npos)
-		fname += FileSystem::isDirectory(fname.c_str()) ? "/%f-%p" : "-%p";
-
-	// replace pattern variables by their actual values
-	// %f: basename of the DVI file
-	// %p: current page number
-	ostringstream oss;
-	oss << setfill('0') << setw(max(2, int(1+log10((double)numPages)))) << page;
-	size_t pos=0;
-	while ((pos = fname.find('%', pos)) != string::npos && pos < fname.length()-1) {
-		switch (fname[pos+1]) {
-			case 'f': fname.replace(pos, 2, _path.basename());  pos += _path.basename().length(); break;
-			case 'p': fname.replace(pos, 2, oss.str()); pos += oss.str().length(); break;
-			default : ++pos;
-		}
+	string pattern = _pattern;
+	expandFormatString(pattern, page, numPages);
+	// remove leading and trailing whitespace
+	stringstream trim;
+	trim << pattern;
+	pattern.clear();
+	trim >> pattern;
+	// set and expand default pattern if necessary
+	if (pattern.empty()) {
+		pattern = numPages > 1 ? "%f-%p" : "%f";
+		expandFormatString(pattern, page, numPages);
 	}
-	FilePath outpath(fname, true);
+	// append suffix if necessary
+	FilePath outpath(pattern, true);
 	if (outpath.suffix().empty())
 		outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
-	string apath = outpath.absolute();
-	string rpath = outpath.relative();
-	return apath.length() < rpath.length() ? apath : rpath;
+	string abspath = outpath.absolute();
+	string relpath = outpath.relative();
+	return abspath.length() < relpath.length() ? abspath : relpath;
+}
+
+
+static int ilog10 (int n) {
+	int result = 0;
+	while (n >= 10) {
+		result++;
+		n /= 10;
+	}
+	return result;
+}
+
+
+/** Replace expressions in a given string by the corresponing values.
+ *  Supported constructs:
+ *  %f: basename of the current file (filename without suffix)
+ *  %[0-9]?p: current page number
+ *  %[0-9]?P: number of pages in DVI file
+ *  %[0-9]?(expr): arithmetic expression */
+void SVGOutput::expandFormatString (string &str, int page, int numPages) const {
+	string result;
+	while (!str.empty()) {
+		size_t pos = str.find('%');
+		if (pos == string::npos) {
+			result += str;
+			str.clear();
+		}
+		else {
+			result += str.substr(0, pos);
+			str = str.substr(pos);
+			pos = 1;
+			ostringstream oss;
+			if (isdigit(str[pos])) {
+				oss << setw(str[pos]-'0') << setfill('0');
+				pos++;
+			}
+			else {
+				oss << setw(ilog10(numPages)+1) << setfill('0');
+			}
+			switch (str[pos]) {
+				case 'f':
+					result += _path.basename();
+					break;
+				case 'p':
+				case 'P':
+					oss << (str[pos] == 'p' ? page : numPages);
+					result += oss.str();
+					break;
+				case '(': {
+					size_t endpos = str.find(')', pos);
+					if (endpos == string::npos)
+						throw MessageException("missing ')' in filename pattern");
+					else if (endpos-pos-1 > 1) {
+						try {
+							Calculator calculator;
+							calculator.setVariable("p", page);
+							calculator.setVariable("P", numPages);
+							oss << floor(calculator.eval(str.substr(pos, endpos-pos+1)));
+							result += oss.str();
+						}
+						catch (CalculatorException &e) {
+							oss.str("");
+							oss << "error in filename pattern (" << e.what() << ")";
+							throw MessageException(oss.str());
+						}
+						pos = endpos;
+					}
+					break;
+				}
+			}
+			str = str.substr(pos+1);
+		}
+	}
+	str = result;
 }

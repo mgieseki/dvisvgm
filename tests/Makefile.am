@@ -11,182 +11,187 @@ check_PROGRAMS =
 TESTS += BoundingBoxTest
 check_PROGRAMS += BoundingBoxTest
 BoundingBoxTest_SOURCES = BoundingBoxTest.cpp
-BoundingBoxTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+BoundingBoxTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += CalculatorTest
 check_PROGRAMS += CalculatorTest
 CalculatorTest_SOURCES = CalculatorTest.cpp
-CalculatorTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+CalculatorTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += CMapReaderTest
 check_PROGRAMS += CMapReaderTest
 CMapReaderTest_SOURCES = CMapReaderTest.cpp
-CMapReaderTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+CMapReaderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += CMapTest
 check_PROGRAMS += CMapTest
 CMapTest_SOURCES = CMapTest.cpp
-CMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+CMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += ColorSpecialTest
 check_PROGRAMS += ColorSpecialTest
 ColorSpecialTest_SOURCES = ColorSpecialTest.cpp
-ColorSpecialTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+ColorSpecialTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += ColorTest
 check_PROGRAMS += ColorTest
 ColorTest_SOURCES = ColorTest.cpp
-ColorTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+ColorTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += CommandLineTest
 check_PROGRAMS += CommandLineTest
 CommandLineTest_SOURCES = CommandLineTest.cpp
-CommandLineTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+CommandLineTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += CRC32Test
 check_PROGRAMS += CRC32Test
 CRC32Test_SOURCES = CRC32Test.cpp
-CRC32Test_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+CRC32Test_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += DependencyGraphTest
 check_PROGRAMS += DependencyGraphTest
 DependencyGraphTest_SOURCES = DependencyGraphTest.cpp
-DependencyGraphTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+DependencyGraphTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += DirectoryTest
 check_PROGRAMS += DirectoryTest
 DirectoryTest_SOURCES = DirectoryTest.cpp
-DirectoryTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+DirectoryTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += DvisvgmSpecialTest
 check_PROGRAMS += DvisvgmSpecialTest
 DvisvgmSpecialTest_SOURCES = DvisvgmSpecialTest.cpp
-DvisvgmSpecialTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+DvisvgmSpecialTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += FileFinderTest
 check_PROGRAMS += FileFinderTest
 FileFinderTest_SOURCES = FileFinderTest.cpp
-FileFinderTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+FileFinderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += FilePathTest
 check_PROGRAMS += FilePathTest
 FilePathTest_SOURCES = FilePathTest.cpp
-FilePathTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+FilePathTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += FileSystemTest
 check_PROGRAMS += FileSystemTest
 FileSystemTest_SOURCES = FileSystemTest.cpp
-FileSystemTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+FileSystemTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += FontManagerTest
 check_PROGRAMS += FontManagerTest
 FontManagerTest_SOURCES = FontManagerTest.cpp
-FontManagerTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+FontManagerTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += FontMapTest
 check_PROGRAMS += FontMapTest
 FontMapTest_SOURCES = FontMapTest.cpp
-FontMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+FontMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += GFReaderTest
 check_PROGRAMS += GFReaderTest
 GFReaderTest_SOURCES = GFReaderTest.cpp
-GFReaderTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+GFReaderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += GraphicPathTest
 check_PROGRAMS += GraphicPathTest
 GraphicPathTest_SOURCES = GraphicPathTest.cpp
-GraphicPathTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+GraphicPathTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += LengthTest
 check_PROGRAMS += LengthTest
 LengthTest_SOURCES = LengthTest.cpp
-LengthTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+LengthTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += MapLineTest
 check_PROGRAMS += MapLineTest
 MapLineTest_SOURCES = MapLineTest.cpp
-MapLineTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+MapLineTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += MatrixTest
 check_PROGRAMS += MatrixTest
 MatrixTest_SOURCES = MatrixTest.cpp
-MatrixTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+MatrixTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += MessageExceptionTest
 check_PROGRAMS += MessageExceptionTest
 MessageExceptionTest_SOURCES = MessageExceptionTest.cpp
-MessageExceptionTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+MessageExceptionTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += PageRagesTest
 check_PROGRAMS += PageRagesTest
 PageRagesTest_SOURCES = PageRagesTest.cpp
-PageRagesTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+PageRagesTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += PageSizeTest
 check_PROGRAMS += PageSizeTest
 PageSizeTest_SOURCES = PageSizeTest.cpp
-PageSizeTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+PageSizeTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += PairTest
 check_PROGRAMS += PairTest
 PairTest_SOURCES = PairTest.cpp
-PairTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+PairTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += PSInterpreterTest
 check_PROGRAMS += PSInterpreterTest
 PSInterpreterTest_SOURCES = PSInterpreterTest.cpp
-PSInterpreterTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+PSInterpreterTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += RangeMapTest
 check_PROGRAMS += RangeMapTest
 RangeMapTest_SOURCES = RangeMapTest.cpp
-RangeMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+RangeMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp
-SplittedCharInputBufferTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+SplittedCharInputBufferTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += StreamInputBufferTest
 check_PROGRAMS += StreamInputBufferTest
 StreamInputBufferTest_SOURCES = StreamInputBufferTest.cpp
-StreamInputBufferTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+StreamInputBufferTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += StreamReaderTest
 check_PROGRAMS += StreamReaderTest
 StreamReaderTest_SOURCES = StreamReaderTest.cpp
-StreamReaderTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+StreamReaderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += StreamWriterTest
 check_PROGRAMS += StreamWriterTest
 StreamWriterTest_SOURCES = StreamWriterTest.cpp
-StreamWriterTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+StreamWriterTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += SubfontTest
 check_PROGRAMS += SubfontTest
 SubfontTest_SOURCES = SubfontTest.cpp
-SubfontTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+SubfontTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+
+TESTS += SVGOutputTest
+check_PROGRAMS += SVGOutputTest
+SVGOutputTest_SOURCES = SVGOutputTest.cpp
+SVGOutputTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += TensorProductPatchTest
 check_PROGRAMS += TensorProductPatchTest
 TensorProductPatchTest_SOURCES = TensorProductPatchTest.cpp
-TensorProductPatchTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+TensorProductPatchTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += ToUnicodeMapTest
 check_PROGRAMS += ToUnicodeMapTest
 ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp
-ToUnicodeMapTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+ToUnicodeMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += TypesTest
 check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp
-TypesTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+TypesTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += VectorStreamTest
 check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
-VectorStreamTest_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+VectorStreamTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg

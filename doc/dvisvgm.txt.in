@@ -336,13 +336,26 @@ prefer direct font references, the default behavior can be disabled with option 
 
 *-o, --output*='pattern'::
 Sets the name pattern of the output file. Parameter 'pattern' is a string that may
-contain the variables *%f* and *%p*. *%f* stands for the base name of the DVI file, i.e.
-the DVI filename without suffix, and *%p* is the current page number.
-The default pattern is *%f-%p.svg* if the DVI file consists of more than one page, and
+contain the variables *%f*, *%p*, and *%P*. *%f* expands to the base name of the DVI file, i.e.
+the filename without suffix, *%p* is the current page number, and *%P* the total number of
+pages in the DVI file. An optional number (0-9) given after the percent sign specifies
+the minimal number of digits to be written. If a particular value is shorter, the number is
+padded with leading zeros. Example: +%3p+ enforces 3 digits for the current page number
+(001, 002, etc.). Without an explicit width specifier, *%p* gets the same number of digits
+as *%P*.
++
+If you need more control over the numbering, you can use arithmetic expressions as part of
+a pattern. The syntax is *%(expr)* where 'expr' may contain additions (*+*), subtractions (*-*),
+multiplications (*****), and integer divisions (*/*) with common precedence. The variables
+*p* and *P* contain the current page number and the total number of pages, respectively.
+For example, +--output="%f-%(p-1)"+ creates filenames where the numbering starts with 0 rather
+than 1.
++
+The default pattern is +%f-%p.svg+ if the DVI file consists of more than one page, and
 *%f.svg* otherwise. That means, a DVI file 'foo.dvi' is converted to 'foo.svg' if 'foo.dvi'
 is a single-page document. Otherwise, multiple SVG files 'foo-01.svg', 'foo-02.svg', etc. are
 produced. In Windows environments, the percent sign indicates dereferenced environment
-variables, and must therefore be protected by a second percent sign, e.g. *--output=%%f-%%p*.
+variables, and must therefore be protected by a second percent sign, e.g. +--output=%%f-%%p+.
 
 
 *-p, --page*='ranges'::

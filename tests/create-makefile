@@ -1,5 +1,5 @@
 #!/bin/sh
-# This file is part of the dvisvgm package and published under the 
+# This file is part of the dvisvgm package and published under the
 # terms of the GNU General Public License version 3 or later.
 # See file COPYING for further details.
 # (C) 2009-2015 Martin Gieseking <martin.gieseking@uos.de>
@@ -20,11 +20,11 @@ EOT
 
 for f in *.cpp; do
 	base=`basename $f .cpp`
-	cat >>$out <<EOT	
+	cat >>$out <<EOT
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 EOT
 done
@@ -34,11 +34,11 @@ echo "TESTDATA =" >>$out
 for f in *.dvi; do
 	base=`basename $f .dvi`
    echo  "TESTDATA += ${base}.dvi ${base}-wf-cmp.svg ${base}-nf-cmp.svg" >>$out
-done  
+done
 
 cat >>$out <<EOT
 EXTRA_DIST = check-conv normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
 TESTS += check-conv
 EOT
 
-# vim: set syntax=sh: 
+# vim: set syntax=sh:
