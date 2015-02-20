@@ -25,7 +25,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 
 NAME
 ----
-dvisvgm - converts DVI files to the XML-based SVG format
+dvisvgm - converts DVI and EPS files to the XML-based SVG format
 
 
 SYNOPSIS
@@ -42,7 +42,7 @@ XML-based scalable vector graphics format SVG. It supports the classic DVI forma
 well as format 3 (created by pTeX in vertical mode), and format 5 which is also known as
 XDV (created by XeTeX). Besides the basic DVI commands, dvisvgm also evaluates many so-called
 'specials' which heavily extend the capabilities of the DVI format. For a more detailed
-overview, see section *support of specials* below.
+overview, see section <<specials,*Supported Specials*>> below.
 
 Since the current SVG standard 1.1 doesn't specify multi-page graphics, dvisvgm creates
 separate SVG files for each DVI page. Because of compatibility reasons, only the first page
@@ -60,7 +60,7 @@ In these cases, dvisvgm tries to vectorize Metafont's output by tracing the glyp
 The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are
 nonetheless really nice in most cases.
 
-When running dvisvgm without option *--no-fonts*, 'font' elements (<font>...</font>) are used to
+When running dvisvgm without option *--no-fonts*, 'font' elements (+<font>+...+</font>+) are used to
 embed the font data into the SVG files. Unfortunately, only few SVG renderes support these
 elements yet. Most web browsers and vector graphics applications don't evaluate them properly
 so that the text components of the resulting graphics might look strange. In order to create
@@ -81,7 +81,7 @@ By default, these glyphs are skipped. Setting argument 'retrace' to 'yes' or
 'true' forces dvisvgm to trace the corresponding bitmaps again.
 +
 [NOTE]
-This option only takes affect if font caching is active. Thus, *--trace-all* cannot be
+This option only takes effect if font caching is active. Therefore, *--trace-all* cannot be
 combined with option *--cache=none*.
 +
 
@@ -146,7 +146,7 @@ because some SVG renderers don't support intersections of clipping paths which a
 
 *--color*::
 Enables colorization of messages printed during the conversion process. The colors can be customized
-via the environment variable +DVISVGM_COLORS+. See the ENVIRONMENT section below for further information.
+via the environment variable *DVISVGM_COLORS*. See the ENVIRONMENT section below for further information.
 
 
 *-E, --eps*::
@@ -171,7 +171,7 @@ dvisvgm analyzes the actual shape of each character and derives a usually tight 
 Loads and evaluates a single or multiple font map files. These files are required to resolve
 font file names and encodings. dvisvgm does not provide its own map files but tries to read
 available ones coming with dvips or dvipdfm. If option *--fontmap* is omitted, dvisvgm looks for the
-default map files +ps2pk.map+, +dvipdfm.map+, and +psfonts.map+ (in this order). Otherwise, the
+default map files 'ps2pk.map', 'dvipdfm.map', and 'psfonts.map' (in this order). Otherwise, the
 listed files are used. Multiple filenames must be separated by commas without leading and/or trailing
 whitespace.
 The map files are evaluated in the given order. By default, redefined mappings do not replace previous ones.
@@ -193,11 +193,11 @@ If the first filename in the filename sequence is preceded by a mode specifier, 
 default font map (see above) and applies the other map files afterwards. Otherwise, none of default
 map files will be loaded automatically.
 +
-Examples: *--fontmap=myfile1.map,+myfile2.map* loads `myfile1.map` followed by `myfile2.map` where all
+Examples: +--fontmap=myfile1.map,+myfile2.map+ loads 'myfile1.map' followed by 'myfile2.map' where all
 redefinitions of `myfile2.map` are ignored.
-*--fontmap==myfile1.map,-myfile2.map* loads the default map file followed by `myfile1.map` and `myfile2.map`
-where all redefinitions of `myfile1.map` replace previous entries. Afterwards, all definitions for the fonts
-given in `myfile2.map` are removed from the font map tree.
++--fontmap==myfile1.map,-myfile2.map+ loads the default map file followed by 'myfile1.map' and 'myfile2.map'
+where all redefinitions of 'myfile1.map' replace previous entries. Afterwards, all definitions for the fonts
+given in 'myfile2.map' are removed from the font map tree.
 +
 For further information about the map file formats and the mode specifiers, see the manuals of dvips and dvipdfm.
 
@@ -257,8 +257,8 @@ PostScript support was not completely disabled during compilation. In this case,
 to load the shared GS library dynamically during runtime. By default, it expects the library's name
 to be libgs.so.X (on Unix-like systems, where X is the ABI version of the library) or
 gsdll32.dll/gsdll64.dll (Windows). Option *--libgs* can be used to give a different name.
-Alternatively, it's also possible to set the GS library name by the environment variable +LIBGS+.
-The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable +LIBGS+
+Alternatively, it's also possible to set the GS library name by the environment variable *LIBGS*.
+The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable *LIBGS*
 if *--libgs* is given.
 
 
@@ -269,14 +269,14 @@ the linked region if option *--linkmark* is omitted. Style argument 'line' just 
 the bounding rectangle, and 'none' tells dvisvgm not to add any visible objects to hyperlinks.
 The lines and boxes get the current text color selected. In order to apply a different, constant color,
 a colon followed by a color specifier can be appended to the style string. A 'color specifier' is either
-a hexadecimal RGB value of the form '#RRGGBB', or a dvips color name as listed here:
-http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips
+a hexadecimal RGB value of the form '#RRGGBB', or a
+http://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips[dvips color name].
 +
 Moreover, argument 'style' can take a single color specifier to highlight the linked region by
 a frameless box filled with that color. An optional second color specifier separated by colon
 selects the frame color.
 +
-Examples: *box:red* or *box:#ff0000* draws red boxes around the linked areas. *yellow:blue* creates
+Examples: +box:red+ or +box:#ff0000+ draws red boxes around the linked areas. +yellow:blue+ creates
 yellow filled rectangles with blue frames.
 
 
@@ -345,8 +345,8 @@ padded with leading zeros. Example: +%3p+ enforces 3 digits for the current page
 as *%P*.
 +
 If you need more control over the numbering, you can use arithmetic expressions as part of
-a pattern. The syntax is *%(expr)* where 'expr' may contain additions (*+*), subtractions (*-*),
-multiplications (*****), and integer divisions (*/*) with common precedence. The variables
+a pattern. The syntax is *%(expr)* where 'expr' may contain additions, subtractions,
+multiplications, and integer divisions with common precedence. The variables
 *p* and *P* contain the current page number and the total number of pages, respectively.
 For example, +--output="%f-%(p-1)"+ creates filenames where the numbering starts with 0 rather
 than 1.
@@ -368,8 +368,8 @@ In order to stay compatible with previous versions, the default page sequence is
 therefore converts only the first page and not the whole document in case option *--page* is omitted.
 Usually, page ranges consist of two numbers denoting the first and last page to be converted.
 If the conversion is to be started at page 1, or if it should continue up to the last DVI page, the
-first or second range number can be omitted, respectively. Example: *--page=-10* converts all
-pages up to page 10, *--page=10-* converts all pages starting with page 10.
+first or second range number can be omitted, respectively. Example: +--page=-10+ converts all
+pages up to page 10, +--page=10-+ converts all pages starting with page 10.
 Please consider that the page values don't refer to the page numbers printed on the page.
 Instead, the physical page count is expected, where the first page always gets number 1.
 
@@ -435,11 +435,11 @@ parameters. Following transformation commands are supported:
   
   *FH* ['y'];;
   Mirrors (flips) the page at the horizontal line through point (0,'y'). Omitting the optional argument
-  leads to 'y'='h'/2, where 'h' denotes the page height (see 'pre-defined constants' below).
+  leads to 'y'='h'/2, where 'h' denotes the page height (see <<constants,'pre-defined constants'>> below).
   
   *FV* ['x'];;
   Mirrors (flips) the page at the vertical line through point ('x',0). Omitting the optional argument
-  leads to 'x'='w'/2, where 'w' denotes the page width (see 'pre-defined constants' below).
+  leads to 'x'='w'/2, where 'w' denotes the page width (see <<constants,'pre-defined constants'>> below).
   
   *M* 'm1',...,'m6';;
   Applies a transformation described by the 3&#215;3 matrix
@@ -455,6 +455,7 @@ give plain numbers or arithmetic terms combined by the operators *+* (addition),
 *** (multiplication), */* (division) or *%* (modulo) with common associativity and
 precedence rules. Parentheses may be used as well.
 
+[[constants]]
 Additionally, some pre-defined constants are provided:
 
 [horizontal]
@@ -515,8 +516,9 @@ the coordinate system of the graphic is retained. As a result, most SVG viewers 
 accordingly. If a negative zoom factor is given, the 'width' and 'height' attributes are omitted.
 
 
-SUPPORT OF SPECIALS
--------------------
+[[specials]]
+SUPPORTED SPECIALS
+------------------
 dvisvgm supports several sets of 'special commands' that can be used to enrich DVI files with additional
 features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
 handlers. Each handler is responsible for all special statements of the same command set, i.e. commands
@@ -551,8 +553,8 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   and *dvisvgm:rawdef* specials enclosed by *dvisvgm:rawset* and *dvisvgm:endrawset* are not evaluated
   immediately but jointly stored under the given 'name' for later use. Once defined, the named fragment can be
   referenced throughout the DVI file by *dvisvgm:rawput* (see below).
-  *dvisvgm:rawset* and *dvisvgm:endrawset* must not be nested, i.e. each call of *dvisvgm:rawset* has to be
-  followed by a corresponding call of *dvisvgm:endrawset* before another *dvisvgm:rawset* may occur.
+  The two commands *dvisvgm:rawset* and *dvisvgm:endrawset* must not be nested, i.e. each call of *dvisvgm:rawset*
+  has to be followed by a corresponding call of *dvisvgm:endrawset* before another *dvisvgm:rawset* may occur.
   Also, the identifier 'name' must be unique throughout the DVI file. Using *dvisvgm:rawset* multiple times
   together with the same 'name' leads to a warning message.
 
@@ -599,6 +601,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 +
 The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:
 +
+[source,tex]
 ------------------------------------------------------------------------------------
 \special{dvisvgm:raw <circle cx='{?x}' cy='{?y}' r='10' stroke='black' fill='red'/>}
 \special{dvisvgm:bbox 20 10 10}
@@ -626,7 +629,7 @@ pdfTeX and dvipdfmx introduced several special commands related to the generatio
 two of them, 'pdf:mapfile' and 'pdf:mapline' are supported by dvisvgm. These specials allow modifying the font map
 tree during the processing of DVI files. They are used by CTeX, for example. dvisvgm supports both, the dvips and
 dvipdfm font map format. For further information on the command syntax and semantics, see the documentation of
-\pdfmapfile in the pdfTeX user manual.
++\pdfmapfile+ in the pdfTeX user manual.
 
 *ps*::
 The famous DVI driver dvips introduced its own set of specials in order to embed PostScript code into DVI files,
@@ -637,13 +640,13 @@ coordinates. Therefore, the relative locations of the graphic elements may sligh
 by dvips.
 +
 Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter
-but relies on Ghostscript instead. If the Ghostscript library was not linked to the dvisvgm binary, it is looked up
-and loaded dynamically during runtime. In this case, dvisvgm looks for 'libgs.so.X' on Unix-like systems
-(supported ABI versions: 7,8,9), and for 'gsdll32.dll' or 'gsdll64.dll' on Windows.
-You can override the default file names with environment variable +LIBGS+ or the command-line option *--libgs*.
-The library must be reachable through the ld search path (\*nix) or the PATH environment variable (Windows).
-Alternatively, the absolute file path can be specified. If the library cannot be found, dvisvgm disables the
-processing of PostScript specials and prints a warning message.
+but relies on http://ghostscript.com[Ghostscript] instead. If the Ghostscript library was not linked to the
+dvisvgm binary, it is looked up and loaded dynamically during runtime. In this case, dvisvgm looks for
+'libgs.so.X' on Unix-like systems (supported ABI versions: 7,8,9), and for 'gsdll32.dll' or 'gsdll64.dll' on
+Windows. You can override the default file names with environment variable *LIBGS* or the command-line
+option *--libgs*. The library must be reachable through the ld search path (\*nix) or the PATH environment
+variable (Windows). Alternatively, the absolute file path can be specified. If the library cannot be found,
+dvisvgm disables the processing of PostScript specials and prints a warning message.
 Use option *--list-specials* to check whether PostScript support is available, i.e. entry 'ps' is present.
 +
 The PostScript handler also recognizes and evaluates bounding box data generated by the 'preview' package with
@@ -687,7 +690,7 @@ dvisvgm uses the *kpathsea* library for locating the files that it opens.
 Hence, the environment variables described in the library's documentation influence the converter.
 
 If dvisvgm was linked without the Ghostscript library, and if PostScript support has not been disabled,
-the shared Ghostscript library is looked up during runtime via dlopen(). The environment variable +LIBGS+
+the shared Ghostscript library is looked up during runtime via dlopen(). The environment variable *LIBGS*
 can be used to specify path and file name of the library.
 
 The pre-compiled Windows versions of dvisvgm require a working installation of MiKTeX 2.9 or above.
@@ -697,8 +700,8 @@ To enable the evaluation of PostScript specials, the original Ghostscript DLL 'g
 and reachable through the search path. 64-bit Windows builds require the 64-bit Ghostscript DLL 'gsdll64.dll'.
 Both DLLs come with the corresponding Ghostscript installers available from www.ghostscript.com.
 
-The environment variable +DVISVGM_COLORS+ specifies the colors used to highlight various parts of dvisvgm's
-message output. It is only evaluated if option *--color* is given. The value of +DVISVGM_COLORS+ is a list of
+The environment variable *DVISVGM_COLORS* specifies the colors used to highlight various parts of dvisvgm's
+message output. It is only evaluated if option *--color* is given. The value of *DVISVGM_COLORS* is a list of
 colon-separated entries of the form 'gg'='BF', where 'gg' denotes one of the color group indicators listed
 below, and 'BF' are two hexadecimal digits specifying the background (first digit) and foreground/text color
 (second digit). The color values are defined as follows: 0=black, 1=red, 2=green, 3=yellow, 4=blue,
@@ -751,7 +754,8 @@ SourceForge project site::: http://sourceforge.net/projects/dvisvgm
 
 BUGS
 ----
-Please report bugs using the bug tracker at Launchpad (see https://launchpad.net/dvisvgm).
+Please report bugs using the bug tracker at https://launchpad.net/dvisvgm[Launchpad]
+or https://github.com/mgieseki/dvisvgm[GitHub].
 
 
 AUTHOR
