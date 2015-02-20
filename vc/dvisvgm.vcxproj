@@ -241,6 +241,7 @@
     <ClCompile Include="..\src\StreamReader.cpp" />
     <ClCompile Include="..\src\StreamWriter.cpp" />
     <ClCompile Include="..\src\Subfont.cpp" />
+    <ClCompile Include="..\src\SVGOutput.cpp" />
     <ClCompile Include="..\src\SVGTree.cpp" />
     <ClCompile Include="..\src\System.cpp" />
     <ClCompile Include="..\src\TensorProductPatch.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="..\src\ShadingPatch.h" />
     <ClInclude Include="..\src\SignalHandler.h" />
     <ClInclude Include="..\src\Subfont.h" />
+    <ClInclude Include="..\src\SVGOutput.h" />
     <ClInclude Include="..\src\System.h" />
     <ClInclude Include="..\src\TensorProductPatch.h" />
     <ClInclude Include="..\src\Terminal.h" />

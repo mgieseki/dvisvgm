@@ -20,9 +20,7 @@
 
 #include <config.h>
 #include <clipper.hpp>
-#include <cmath>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -47,7 +45,7 @@
 #include "PsSpecialHandler.h"
 #include "SignalHandler.h"
 #include "SpecialManager.h"
-#include "SVGOutputBase.h"
+#include "SVGOutput.h"
 #include "System.h"
 
 #ifdef __MSVC__
@@ -60,94 +58,6 @@ extern "C" {
 
 using namespace std;
 
-class SVGOutput : public SVGOutputBase
-{
-	public:
-		SVGOutput (const char *base=0, string pattern="", int zip_level=0)
-			: _path(base ? base : ""),
-			_pattern(pattern),
-			_stdout(base == 0),
-			_zipLevel(zip_level),
-			_page(-1),
-			_os(0) {}
-
-
-		~SVGOutput () {
-			delete _os;
-		}
-
-
-		/** Returns an output stream for the given page.
-		 *  @param[in] page number of current page
-		 *  @param[in] numPages total number of pages in the DVI file
-		 *  @return output stream for the given page */
-		ostream& getPageStream (int page, int numPages) const {
-			string fname = filename(page, numPages);
-			if (fname.empty()) {
-				delete _os;
-				_os = 0;
-				return cout;
-			}
-			if (page == _page)
-				return *_os;
-
-			_page = page;
-			delete _os;
-
-			if (_zipLevel > 0)
-				_os = new ogzstream(fname.c_str(), _zipLevel);
-			else
-				_os = new ofstream(fname.c_str());
-			if (!_os || !*_os) {
-				delete _os;
-				_os = 0;
-				throw MessageException("can't open file "+fname+" for writing");
-			}
-			return *_os;
-		}
-
-
-		/** Returns the name of the SVG file containing the given page.
-		 *  @param[in] page number of current page
-		 *  @param[in] numPages total number of pages */
-		string filename (int page, int numPages) const {
-			if (_stdout)
-				return "";
-			string fname = _pattern;
-			if (fname.empty())
-				fname = numPages > 1 ? "%f-%p" : "%f";
-			else if (numPages > 1 && fname.find("%p") == string::npos)
-				fname += FileSystem::isDirectory(fname.c_str()) ? "/%f-%p" : "-%p";
-
-			// replace pattern variables by their actual values
-			// %f: basename of the DVI file
-			// %p: current page number
-			ostringstream oss;
-			oss << setfill('0') << setw(max(2, int(1+log10((double)numPages)))) << page;
-			size_t pos=0;
-			while ((pos = fname.find('%', pos)) != string::npos && pos < fname.length()-1) {
-				switch (fname[pos+1]) {
-					case 'f': fname.replace(pos, 2, _path.basename());  pos += _path.basename().length(); break;
-					case 'p': fname.replace(pos, 2, oss.str()); pos += oss.str().length(); break;
-					default : ++pos;
-				}
-			}
-			FilePath outpath(fname, true);
-			if (outpath.suffix().empty())
-				outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
-			string apath = outpath.absolute();
-			string rpath = outpath.relative();
-			return apath.length() < rpath.length() ? apath : rpath;
-		}
-
-	private:
-		FilePath _path;
-		string _pattern;
-		bool _stdout;
-		int _zipLevel;
-		mutable int _page; // number of current page being written
-		mutable ostream *_os;
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 

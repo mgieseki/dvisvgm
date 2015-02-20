@@ -36,7 +36,7 @@
 #include "Message.h"
 #include "PageRanges.h"
 #include "PageSize.h"
-#include "SVGOutputBase.h"
+#include "SVGOutput.h"
 //
 ///////////////////////////////////
 // special handlers

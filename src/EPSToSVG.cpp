@@ -27,7 +27,7 @@
 #include "Message.h"
 #include "MessageException.h"
 #include "PsSpecialHandler.h"
-#include "SVGOutputBase.h"
+#include "SVGOutput.h"
 #include "System.h"
 
 

@@ -1,5 +1,5 @@
 /*************************************************************************
-** SVGOutputBase.h                                                      **
+** SVGOutput.h                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2015 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,16 +18,37 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DVISVGM_SVGOUTPUTBASE_H
-#define DVISVGM_SVGOUTPUTBASE_H
+#ifndef DVISVGM_SVGOUTPUT_H
+#define DVISVGM_SVGOUTPUT_H
 
 #include <ostream>
 #include <string>
+#include "FilePath.h"
+
 
 struct SVGOutputBase {
 	virtual ~SVGOutputBase () {}
 	virtual std::ostream& getPageStream (int page, int numPages) const =0;
 	virtual std::string filename (int page, int numPages) const =0;
 };
+
+
+class SVGOutput : public SVGOutputBase
+{
+	public:
+		SVGOutput (const char *base=0, std::string pattern="", int zipLevel=0);
+		~SVGOutput () {delete _os;}
+		std::ostream& getPageStream (int page, int numPages) const;
+		std::string filename (int page, int numPages) const;
+
+	private:
+		FilePath _path;
+		std::string _pattern;
+		bool _stdout;      ///< write to STDOUT?
+		int _zipLevel;     ///< compression level
+		mutable int _page; ///< number of current page being written
+		mutable std::ostream *_os;
+};
+
 
 #endif

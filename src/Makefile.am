@@ -165,7 +165,8 @@ libdvisvgm_a_SOURCES = \
 	StreamWriter.h \
 	Subfont.cpp \
 	Subfont.h \
-	SVGOutputBase.h \
+	SVGOutput.cpp \
+	SVGOutput.h \
 	SVGTree.cpp \
 	SVGTree.h \
 	System.cpp \
