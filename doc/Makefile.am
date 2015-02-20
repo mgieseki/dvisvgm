@@ -30,14 +30,17 @@ dvi-pdf: dvisvgm.dvi
 dvisvgm.dvi: dvisvgm.1
 	groff -Tdvi -mandoc ./$< >$@
 
-dvisvgm.html: dvisvgm.txt
-	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -dmanpage $<
+dvisvgm.html: dvisvgm.xml
+	xsltproc -o $@ db2html.xsl $<
 
 dvisvgm.epub: dvisvgm.xml
 	a2x -dmanpage -fmanpage -L -a icons $<;
 
 dvisvgm.xml: dvisvgm.txt
-	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage $<
+	if [ `type -p asciidoc` ]; then \
+		asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage $<; \
+		sed -i "s#\(</refmeta>\)#<refmiscinfo class='date'>$(shell stat -c %y $<)</refmiscinfo>\n\1#" $@; \
+	fi
 
 epub: dvisvgm.epub
 html: dvisvgm.html
