@@ -42,6 +42,7 @@ string Ghostscript::LIBGS_NAME;
 /** Looks up the path of the Ghostscript DLL in the Windows registry and returns it.
  *  If there is no proper registry entry, the returned string is empty. */
 static string get_path_from_registry () {
+#ifdef RRF_RT_REG_SZ   // RegGetValueA and RRF_RT_REG_SZ may not be defined for some oldish MinGW
 	REGSAM mode = KEY_READ|KEY_QUERY_VALUE;
 #ifdef KEY_WOW64_64KEY
 #ifdef __WIN64__
@@ -75,9 +76,10 @@ static string get_path_from_registry () {
 			}
 		}
 	}
+#endif  // RRF_RT_REG_SZ
 	return "";
 }
-#endif
+#endif  // __WIN32__
 
 
 /** Try to detect name of the Ghostscript shared library depending on the user settings.
