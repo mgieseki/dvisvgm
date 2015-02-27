@@ -35,7 +35,7 @@ const char NAME   = 2;
 
 
 /** Evaluates a given arithmetic expression and returns its value.
- *  The evaluator is implemented as a recursive descendent parser.
+ *  The evaluator is implemented as a recursive descent parser.
  *  @param[in] is reads expression from this stream
  *  @return expression value */
 double Calculator::eval (istream &is) {
@@ -59,18 +59,19 @@ double Calculator::eval (const string &expr) {
 /** Evaluates the root rule of the expression grammar. */
 double Calculator::expr (istream &is, bool skip) { // expr:
 	double left = term(is, skip);
-	while (1)
+	for (;;) {
 		switch (lookAhead(is)) {
 			case '+': left += term(is, true); break;  // term '+' term => $1 + $3
 			case '-': left -= term(is, true); break;  // term '-' term => $1 - $3
 			default : return left;                    // term => $1
 		}
+	}
 }
 
 
 double Calculator::term (istream &is, bool skip) { // term:
 	double left = prim(is, skip);
-	while (1)
+	for (;;)
 		switch (lookAhead(is)) {
 			case '*': left *= prim(is, true); break;  // prim '*' prim => $1 * $3
 			case '/': {                               // prim '/' prim => $1 / $3
