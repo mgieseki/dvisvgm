@@ -1,3 +1,10 @@
+dvisvgm-1.9.1 (2015-02-28)
+- extended --output pattern syntax by arithmetic expressions and width specifiers
+- improved formatting of manpage
+- fixed Clang build issue (patch by Peter Breitenlohner)
+- fixed a build issue occured with old MinGW compilers
+- code cleanup and refactorings
+
 dvisvgm-1.9 (2014-12-29)
 - added partial implementation of PostScript operator 'shfill' to create color
   gradient fills (supported shading types: free-form triangular, lattice-form

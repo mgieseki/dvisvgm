@@ -1,5 +1,7 @@
 _dvisvgm_ &ndash; A fast DVI to SVG converter
 =============================================
+[<img src="https://travis-ci.org/mgieseki/dvisvgm.svg?branch=master" height="18x">](https://travis-ci.org/mgieseki/dvisvgm)
+[<img src="https://scan.coverity.com/projects/1099/badge.svg" height="18x">](https://scan.coverity.com/projects/1099)
 
 Description
 -----------
@@ -44,7 +46,7 @@ _dvisvgm_ relies on the following free libraries:
 * [Clipper](http://www.angusj.com/delphi/clipper.php)  
   To compute the intersection of two curved paths, _dvisvgm_ flattens the paths to
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
-  the curves afterwards.
+  the curves afterwards. A slightly modified version of Clipper is bundled with the sources.
 
 * [FreeType 2](http://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
