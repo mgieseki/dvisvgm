@@ -10,6 +10,23 @@ before_install:
    # Ubuntu doesn't provide pre-built gtest libraries, so we have to build them here.
    - "cd /usr/src/gtest/ && sudo cmake . && sudo cmake --build . && sudo mv libgtest* /usr/local/lib/ ; cd -"
 
+env:
+   global:
+      # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+      # via the "travis encrypt" command using the project repo's public key
+      - secure: "MlOXG2PegI8ck67gSCoY0w4hncbaJ0UG+5VUOmzZ4blJDrA2BLOnQg8n/D65ic1pzmrooUuZJJMmgWI+6F+pyZyXTOpDP50cX4i8WpcuHY/phYp9w2jdN61YgqoUIgWgxsAxBUV2Lf1ULZbWYwUoI9fLkTE6owFXZPFT5ZQnwWA="
+
+addons:
+   coverity_scan:
+      project:
+         name: mgieseki/dvisvgm
+         description: "dvisvgm - A fast DVI to SVG converter"
+         version: 1.9.1
+      notification_email: martin.gieseking@uos.de
+      build_command_prepend: "./configure; make clean"
+      build_command: "make -j"
+      branch_pattern: coverity_scan
+
 script:
    - ./autogen.sh
    - ./configure
