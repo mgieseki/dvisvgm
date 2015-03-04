@@ -68,7 +68,8 @@ class BoundingBox
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
 		void invalidate ()          {_valid = false;}
-		void operator += (const BoundingBox &bb);
+		void operator += (const BoundingBox &bbox);
+		bool operator == (const BoundingBox &bbox) const;
 		void scale (double sx, double sy);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;

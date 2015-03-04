@@ -155,18 +155,18 @@ void BoundingBox::embed (double x, double y) {
 }
 
 
-/** Enlarges the box so that box bb is enclosed. */
-void BoundingBox::embed (const BoundingBox &bb) {
-	if (!_locked && bb._valid) {
+/** Enlarges the box so that the given bounding box is enclosed. */
+void BoundingBox::embed (const BoundingBox &bbox) {
+	if (!_locked && bbox._valid) {
 		if (_valid) {
-			embed(bb._ulx, bb._uly);
-			embed(bb._lrx, bb._lry);
+			embed(bbox._ulx, bbox._uly);
+			embed(bbox._lrx, bbox._lry);
 		}
 		else {
-			_ulx = bb._ulx;
-			_uly = bb._uly;
-			_lrx = bb._lrx;
-			_lry = bb._lry;
+			_ulx = bbox._ulx;
+			_uly = bbox._uly;
+			_lrx = bbox._lrx;
+			_lry = bbox._lry;
 			_valid = true;
 		}
 	}
@@ -203,13 +203,22 @@ bool BoundingBox::intersect (const BoundingBox &bbox) {
 }
 
 
-void BoundingBox::operator += (const BoundingBox &bb) {
+void BoundingBox::operator += (const BoundingBox &bbox) {
 	if (!_locked) {
-		_ulx += bb._ulx;
-		_uly += bb._uly;
-		_lrx += bb._lrx;
-		_lry += bb._lry;
+		_ulx += bbox._ulx;
+		_uly += bbox._uly;
+		_lrx += bbox._lrx;
+		_lry += bbox._lry;
 	}
+}
+
+
+bool BoundingBox::operator == (const BoundingBox &bbox) const {
+	return _valid && bbox._valid
+		&& _ulx == bbox._ulx
+		&& _uly == bbox._uly
+		&& _lrx == bbox._lrx
+		&& _lry == bbox._lry;
 }
 
 

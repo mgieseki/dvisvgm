@@ -8,6 +8,11 @@ AM_CXXFLAGS = -I$(srcdir)/../src -I$(srcdir)/../../src -Wall -DSRCDIR='"$(srcdir
 TESTS =
 check_PROGRAMS =
 
+TESTS += BezierTest
+check_PROGRAMS += BezierTest
+BezierTest_SOURCES = BezierTest.cpp
+BezierTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += BoundingBoxTest
 check_PROGRAMS += BoundingBoxTest
 BoundingBoxTest_SOURCES = BoundingBoxTest.cpp

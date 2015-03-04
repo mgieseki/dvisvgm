@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <utility>
 #include "Bezier.h"
 
@@ -150,8 +151,9 @@ int Bezier::approximate (double delta, double t0, double t1, vector<DPair> &p, v
 }
 
 
+/** Returns the signed area of the triangle (p1, p2, p3). */
 static inline double signed_area (const DPair &p1, const DPair &p2, const DPair &p3) {
-	return (p2.x()-p1.x())*(p3.y()-p1.y()) - (p3.x()-p1.x())*(p2.y()-p1.y());
+	return ((p2.x()-p1.x())*(p3.y()-p1.y()) - (p3.x()-p1.x())*(p2.y()-p1.y()))/2.0;
 }
 
 
@@ -160,12 +162,17 @@ static inline double dot_prod (const DPair &p1, const DPair &p2) {
 }
 
 
+/** Returns true if p3 is located between p1 and p2, i.e. p3 lays almost on the line
+ *  between p1 and p2. */
 static bool between (const DPair &p1, const DPair &p2, const DPair &p3, double delta) {
-	if (fabs(signed_area(p1, p2, p3)) < delta) {
-		double dotp = dot_prod(p2-p1, p3-p1);
-		return dotp > 0 && dotp < dot_prod(p2-p1, p2-p1);
-	}
-	return false;
+	double sqr_dist = dot_prod(p2-p1, p2-p1);
+	double factor = sqr_dist == 0.0 ? 1.0 : sqr_dist;
+	double area2 = fabs(signed_area(p1, p2, p3));
+	return area2*area2/factor < delta    // does p3 lay almost on the line through p1 and p2...
+		&& min(p1.x(), p2.x()) <= p3.x()  // ...and on or inside the rectangle spanned by p1 and p2?
+		&& max(p1.x(), p2.x()) >= p3.x()
+		&& min(p1.y(), p2.y()) <= p3.y()
+		&& max(p1.y(), p2.y()) >= p3.y();
 }
 
 
@@ -175,11 +182,17 @@ static inline bool near (const DPair &p1, const DPair &p2, double delta) {
 }
 
 
+/** Tries to reduce the degree of the Bézier curve. This only works if the number of
+ *  control points can be reduces without changing the shape of the curve significantly.
+ *  @param[in] delta deviation tolerance
+ *  @param[in] p control points of the reduced curve
+ *  @return degree of the reduced curve */
 int Bezier::reduceDegree (double delta, vector<DPair> &p) const {
+	p.clear();
 	if (near(_points[0], _points[1], delta) && near(_points[0], _points[2], delta) && near(_points[0], _points[3], delta))
 		p.push_back(_points[0]);
-	else if (between(_points[0], _points[1], _points[3], delta) && between(_points[0], _points[2], _points[3], delta)) {
-		p.push_back(_points[1]);
+	else if (between(_points[0], _points[3], _points[1], delta) && between(_points[0], _points[3], _points[2], delta)) {
+		p.push_back(_points[0]);
 		p.push_back(_points[3]);
 	}
 	else if (near((_points[1]-_points[0])*1.5+_points[0], (_points[2]-_points[3])*1.5+_points[3], delta)) {
@@ -188,8 +201,9 @@ int Bezier::reduceDegree (double delta, vector<DPair> &p) const {
 		p.push_back(_points[3]);
 	}
 	else {
+		p.resize(4);
 		for (int i=0; i < 4; i++)
-			p.push_back(p[i]);
+			p[i] = _points[i];
 	}
 	return p.size()-1;
 }
