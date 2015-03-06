@@ -173,11 +173,15 @@ void BoundingBox::embed (const BoundingBox &bbox) {
 }
 
 
+/** Embeds a virtual circle into the box and enlarges it accordingly.
+ * @param[in] c center of the circle
+ * @param[in] r radius of the circle */
 void BoundingBox::embed (const DPair &c, double r) {
 	embed(BoundingBox(c.x()-r, c.y()-r, c.x()+r, c.y()+r));
 }
 
 
+/** Expands the box in all four directions by a given value. */
 void BoundingBox::expand (double m) {
 	if (!_locked) {
 		_ulx -= m;
@@ -193,8 +197,10 @@ void BoundingBox::expand (double m) {
  *  @param[in] bbox box to intersect with
  *  @return false if *this is locked or both boxes are disjoint */
 bool BoundingBox::intersect (const BoundingBox &bbox) {
+	// check if the two boxes are disjoint
 	if (_locked || _lrx < bbox._ulx || _lry < bbox._uly || _ulx > bbox._lrx || _uly > bbox._lry)
 		return false;
+	// not disjoint: compute the intersection
 	_ulx = max(_ulx, bbox._ulx);
 	_uly = max(_uly, bbox._uly);
 	_lrx = min(_lrx, bbox._lrx);
@@ -219,6 +225,15 @@ bool BoundingBox::operator == (const BoundingBox &bbox) const {
 		&& _uly == bbox._uly
 		&& _lrx == bbox._lrx
 		&& _lry == bbox._lry;
+}
+
+
+bool BoundingBox::operator != (const BoundingBox &bbox) const {
+	return !_valid || !bbox._valid
+		|| _ulx != bbox._ulx
+		|| _uly != bbox._uly
+		|| _lrx != bbox._lrx
+		|| _lry != bbox._lry;
 }
 
 
@@ -261,7 +276,7 @@ ostream& BoundingBox::write (ostream &os) const {
 }
 
 
-XMLElementNode* BoundingBox::toSVGRect () const {
+XMLElementNode* BoundingBox::createSVGRect () const {
 	XMLElementNode *rect = new XMLElementNode("rect");
 	rect->addAttribute("x", minX());
 	rect->addAttribute("y", minY());

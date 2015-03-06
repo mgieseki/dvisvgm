@@ -65,16 +65,19 @@ class BoundingBox
 		double maxY () const        {return _lry;}
 		double width () const       {return _lrx-_ulx;}
 		double height () const      {return _lry-_uly;}
+		bool valid() const          {return _valid;}
+		bool locked() const         {return _locked;}
 		void lock ()                {_locked = true;}
 		void unlock ()              {_locked = false;}
 		void invalidate ()          {_valid = false;}
 		void operator += (const BoundingBox &bbox);
 		bool operator == (const BoundingBox &bbox) const;
+		bool operator != (const BoundingBox &bbox) const;
 		void scale (double sx, double sy);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;
 		std::ostream& write (std::ostream &os) const;
-		XMLElementNode* toSVGRect () const;
+		XMLElementNode* createSVGRect () const;
 
 	private:
 		double _ulx, _uly; ///< coordinates of upper left vertex (in PS point units)
