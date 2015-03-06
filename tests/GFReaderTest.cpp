@@ -33,7 +33,7 @@
 using namespace std;
 
 
-struct PixelActions : public Bitmap::ForAllData
+struct PixelActions : public Bitmap::Callback
 {
 	void pixel (int x, int y, bool set, const Bitmap &bm) {
 		if (charmap.size() == 0) {

@@ -29,26 +29,28 @@
 class Bitmap
 {
 	public:
-		struct ForAllData {
-			virtual ~ForAllData() {}
+		struct Callback {
+			virtual ~Callback() {}
 			virtual void pixel (int x, int y, bool set, Bitmap &bm) {}
 			virtual void pixel (int x, int y, bool set, const Bitmap &bm) {}
+			virtual void finish () {}
 		};
 
 	public:
 		Bitmap ();
 		Bitmap (int minx, int maxx, int miny , int maxy);
 		void resize (int minx, int maxx, int miny , int maxy);
-		void setBits(int r, int c, int n);
-		const UInt8* operator[] (int r) const {return &_bytes[r*_bpr];}
+		void setBits(int row, int col, int n);
+		const UInt8* rowPtr (int row) const   {return &_bytes[row*_bpr];}
 		int height () const                   {return _rows;}
 		int width () const                    {return _cols;}
 		int xshift () const                   {return _xshift;}
 		int yshift () const                   {return _yshift;}
 		int bytesPerRow () const              {return _bpr;}
 		bool empty () const                   {return (!_rows && !_cols) || _bytes.empty();}
-		void bbox (int &w, int &h) const;
-		void forAllPixels (ForAllData &data) const;
+		bool getBBox (int &minx, int &miny, int &maxx, int &maxy) const;
+		void getExtent (int &w, int &h) const;
+		void forAllPixels (Callback &callback) const;
 
 		template <typename T>
 		int copy (std::vector<T> &target, bool vflip=false) const;
@@ -56,7 +58,7 @@ class Bitmap
 //		template <typename T>
 //		void write (std::ostream &os, const std::vector<T> &v) const;
 
-		std::ostream& write (std::ostream &os) const;
+//		std::ostream& write (std::ostream &os) const;
 
 	private:
 		int _rows, _cols;     ///< number of rows, columns
@@ -66,9 +68,10 @@ class Bitmap
 };
 
 
-/** Copies the bitmap to a new target area and reorganize the bits.
+/** Copies the bitmap to a new target area and reorganizes the bits.
+ *  @tparam T component type of target vector
  *  @param[out] target points to first T of new bitmap (must be deleted after usage)
- *  @param[in]  vflip true if the new bitmap should be flipped vertically
+ *  @param[in] vflip true if the new bitmap should be flipped vertically
  *  @return number of Ts per row */
 template <typename T>
 int Bitmap::copy (std::vector<T> &target, bool vflip) const {

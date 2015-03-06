@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include "Bitmap.h"
 #include "macros.h"
 
@@ -56,62 +57,99 @@ void Bitmap::resize (int minx, int maxx, int miny , int maxy) {
 
 
 /** Sets n pixels of row r to 1 starting at pixel c.
- *  @param[in] r number of row
- *  @param[in] c number of column (pixel)
+ *  @param[in] row number of row
+ *  @param[in] col number of column (pixel)
  *  @param[in] n number of bits to be set */
-void Bitmap::setBits (int r, int c, int n) {
-	r -= _yshift;
-	c -= _xshift;
-	UInt8 *byte = &_bytes[r*_bpr + c/8];// + (c%8 ? 1 : 0);
-	while (n > 0) {
-		int b = 7 - c%8;            // number of leftmost bit in current byte to be set
+void Bitmap::setBits (int row, int col, int n) {
+	row -= _yshift;
+	col -= _xshift;
+	UInt8 *byte = &_bytes[row*_bpr + col/8];
+	if (byte < &_bytes[0])
+		return;
+	const UInt8 *maxptr = &_bytes[0]+_bytes.size()-1;
+	while (n > 0 && byte <= maxptr) {
+		int b = 7 - col%8;          // number of leftmost bit in current byte to be set
 		int m = min(n, b+1);        // number of bits to be set in current byte
 		int bitseq = (1 << m)-1;    // sequence of n set bits (bits 0..n-1 are set)
 		bitseq <<= b-m+1;           // move bit sequence so that bit b is the leftmost set bit
 		*byte |= UInt8(bitseq);     // apply bit sequence to current byte
 		byte++;
 		n -= m;
-		c += m;
+		col += m;
 	}
 }
 
 
-void Bitmap::forAllPixels (ForAllData &data) const {
-	for (int y=_rows-1; y >= 0 ; y--) {
-		for (int c=0; c < _bpr; c++) {
-			UInt8 byte = _bytes[y*_bpr+c];
+void Bitmap::forAllPixels (Callback &data) const {
+	for (int row=0; row < _rows ; row++) {
+		for (int col=0; col < _bpr; col++) {
+			UInt8 byte = _bytes[row*_bpr+col];
 			int x;
-			for (int b=7; (b >= 0) && ((x = 8*c+(7-b)) < _cols); b--) {
-				data.pixel(x, y, byte & (1 << b), *this);
+			for (int b=7; (b >= 0) && ((x = 8*col+(7-b)) < _cols); b--)
+				data.pixel(x, row, byte & (1 << b), *this);
+		}
+	}
+	data.finish();
+}
+
+
+class BBoxCallback : public Bitmap::Callback
+{
+	public:
+		BBoxCallback () : _changed(false), _minx(numeric_limits<int>::max()), _miny(_minx), _maxx(0), _maxy(0) {}
+		int minx () const   {return _minx;}
+		int miny () const   {return _miny;}
+		int maxx () const   {return _maxx;}
+		int maxy () const   {return _maxy;}
+		bool empty () const {return !_changed;}
+
+		void pixel (int x, int y, bool set, const Bitmap&) {
+			if (set) {
+				_minx = min(_minx, x);
+				_miny = min(_miny, y);
+				_maxx = max(_maxx, x);
+				_maxy = max(_maxy, y);
+				_changed = true;
 			}
 		}
-	}
-}
 
-
-struct BBoxData : public Bitmap::ForAllData
-{
-	BBoxData () : maxx(0), maxy(0) {}
-	void pixel (int x, int y, bool set, const Bitmap &bm) {
-		if (set) {
-			maxx = max(maxx, x);
-			maxy = max(maxy, y);
+		void finish () {
+			if (empty())
+				_minx = _miny = 0;
 		}
-	}
-	int maxx, maxy;
+
+	private:
+		bool _changed;
+		int _minx, _miny, _maxx, _maxy;
 };
 
 
-void Bitmap::bbox (int &w, int &h) const {
-	BBoxData data;
-	forAllPixels(data);
-	w = data.maxx+1;
-	h = data.maxy+1;
+/** Computes the bounding box that spans all set pixels. */
+bool Bitmap::getBBox (int &minx, int &miny, int &maxx, int &maxy) const {
+	BBoxCallback bboxCallback;
+	forAllPixels(bboxCallback);
+	minx = bboxCallback.minx();
+	miny = bboxCallback.miny();
+	maxx = bboxCallback.maxx();
+	maxy = bboxCallback.maxy();
+	return !bboxCallback.empty();
 }
 
 
-ostream& Bitmap::write (ostream &os) const {
+/** Computes width and height of the bounding box that spans all set pixels. */
+void Bitmap::getExtent (int &w, int &h) const {
+	int minx, miny, maxx, maxy;
+	if (getBBox(minx, miny, maxx, maxy)) {
+		w = maxx-minx+1;
+		h = maxy-miny+1;
+	}
+	else
+		w = h = 0;
+}
+
+
 #if 0
+ostream& Bitmap::write (ostream &os) const {
 	for (int r=_rows-1; r >= 0 ; r--) {
 		for (int c=0; c < _bpr; c++) {
 			UInt8 byte = _bytes[r*_bpr+c];
@@ -121,6 +159,6 @@ ostream& Bitmap::write (ostream &os) const {
 		}
 		os << endl;
 	}
-#endif
 	return os;
 }
+#endif
