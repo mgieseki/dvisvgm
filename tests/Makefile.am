@@ -203,6 +203,11 @@ check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
 VectorStreamTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
+TESTS += XMLStringTest
+check_PROGRAMS += XMLStringTest
+XMLStringTest_SOURCES = XMLStringTest.cpp
+XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
 TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg

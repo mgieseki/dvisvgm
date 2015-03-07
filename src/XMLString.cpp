@@ -44,20 +44,9 @@ static string translate (UInt32 c) {
 }
 
 
-/** Rounds a floating point value to a given number of decimal places.
- *  @param[in] x number to round
- *  @param[in] n number of decimal places (must be between 1 and 6)
- *  @return rounded value */
-static inline double round (double x, long n) {
-	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
-	n--;
-	return floor(x*pow10[n]+0.5)/pow10[n];
-}
-
-
 XMLString::XMLString (const string &str, bool plain) {
 	if (plain)
-		*this = str;
+		assign(str);
 	else {
 		FORALL(str, string::const_iterator, i)
 			*this += translate(*i);
@@ -68,7 +57,7 @@ XMLString::XMLString (const string &str, bool plain) {
 XMLString::XMLString (const char *str, bool plain) {
 	if (str) {
 		if (plain)
-			*this = str;
+			assign(str);
 		else {
 			while (*str)
 				*this += translate(*str++);
@@ -88,34 +77,28 @@ XMLString::XMLString (int n, bool cast) {
 }
 
 
+/** Rounds a floating point value to a given number of decimal places.
+ *  @param[in] x number to round
+ *  @param[in] n number of decimal places (must be between 1 and 6)
+ *  @return rounded value */
+static inline double round (double x, int n) {
+	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
+	const double eps = 1e-7;
+	n--;
+	if (x >= 0)
+		return floor(x*pow10[n]+0.5+eps)/pow10[n];
+	return ceil(x*pow10[n]-0.5-eps)/pow10[n];
+}
+
+
 XMLString::XMLString (double x) {
 	stringstream ss;
+	if (fabs(x) < 1e-8)
+		x = 0;
 	if (DECIMAL_PLACES > 0)
 		x = round(x, DECIMAL_PLACES);
-	else if (fabs(x) < 1e-8)
-		x = 0;
+	// don't use fixed and setprecision() manipulators here to avoid
+	// banker's rounding applied in some STL implementations
 	ss << x;
 	ss >> *this;
 }
-
-
-/*
-ostream& XMLString::write (ostream &os) const {
-	const string *self = static_cast<const string*>(this);
-	FORALL(*self, string::const_iterator, i) {
-		unsigned char c = *i;
-		switch (c) {
-			case '<' : os << "&lt;"; break;
-			case '&' : os << "&amp;"; break;
-			case '"' : os << "&quot;"; break;
-			case '\'': os << "&apos;"; break;
-			default  :
-				if (c >= 32 && c <= 126)
-					os << c;
-				else
-					os << "&#" << int(c) << ';';
-		}
-	}
-	return os;
-}
-*/
