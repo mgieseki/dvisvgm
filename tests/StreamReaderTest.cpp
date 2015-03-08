@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include "CRC32.h"
@@ -27,74 +28,101 @@
 using namespace std;
 
 TEST(StreamReaderTest, readString) {
-	istringstream iss("dvisvgm converts DVI files to SVG.");
+	string str1 = "dvisvgm converts DVI files to SVG.";
+	istringstream iss(str1);
 	StreamReader reader(iss);
-	string str = reader.readString(iss.str().length());
-	EXPECT_EQ(str, iss.str());
+	string str2 = reader.readString(iss.str().length());
+	EXPECT_EQ(str1, str2);
+	iss.str(str1);
+	str2 = reader.readString();
+	EXPECT_EQ(str1, str2);
 }
 
 
 TEST(StreamReaderTest, readStringCRC) {
-	istringstream iss("dvisvgm converts DVI files to SVG.");
+	string str1 = "dvisvgm converts DVI files to SVG.";
+	istringstream iss(str1);
 	StreamReader reader(iss);
 	CRC32 crc;
-	string str = reader.readString(iss.str().length(), crc);
-	EXPECT_EQ(str, iss.str());
+	string str2 = reader.readString(iss.str().length(), crc);
+	EXPECT_EQ(str1, str2);
+	EXPECT_EQ(crc.get(), 0x7c4ef359);
+	iss.str(str1);
+	crc.reset();
+	str2 = reader.readString(crc, false);
 	EXPECT_EQ(crc.get(), 0x7c4ef359);
 }
 
 
 TEST(StreamReaderTest, readUnsigned) {
-	string str;
-	str.push_back('\x00');
-	str.push_back('\x01');
-	str.push_back('\x02');
-	str.push_back('\x03');
+	string str = "\x01\x02\x03\x04";
 	istringstream iss(str);
 	StreamReader reader(iss);
 	UInt32 val = reader.readUnsigned(4);
-	EXPECT_EQ(val, 0x00010203);
+	EXPECT_EQ(val, 0x01020304);
 }
 
 
 TEST(StreamReaderTest, readUnsignedCRC) {
-	string str;
-	str.push_back('\x00');
-	str.push_back('\x01');
-	str.push_back('\x02');
-	str.push_back('\x03');
+	string str = "\x01\x02\x03\x04";
 	istringstream iss(str);
 	StreamReader reader(iss);
 	CRC32 crc;
 	UInt32 val = reader.readUnsigned(4, crc);
-	EXPECT_EQ(val, 0x00010203);
-	EXPECT_EQ(crc.get(), 0x8bb98613);
+	EXPECT_EQ(val, 0x01020304);
+	EXPECT_EQ(crc.get(), 0xb63cfbcd);
 }
 
 
 TEST(StreamReaderTest, readSigned) {
-	string str;
-	str.push_back('\xff');
-	str.push_back('\xee');
-	str.push_back('\xdd');
-	str.push_back('\xcc');
+	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	Int32 val = reader.readUnsigned(4);
+	Int32 val = reader.readSigned(4);
 	EXPECT_EQ(val, 0xffeeddcc);
 }
 
 
 TEST(StreamReaderTest, readSignedCRC) {
-	string str;
-	str.push_back('\xff');
-	str.push_back('\xee');
-	str.push_back('\xdd');
-	str.push_back('\xcc');
+	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
 	CRC32 crc;
-	Int32 val = reader.readUnsigned(4, crc);
+	Int32 val = reader.readSigned(4, crc);
 	EXPECT_EQ(val, 0xffeeddcc);
 	EXPECT_EQ(crc.get(), 0xfa79118e);
 }
+
+
+TEST(StreamReaderTest, readBytes) {
+	string str = "\xff\xee\xdd\xcc";
+	istringstream iss(str);
+	StreamReader reader(iss);
+	vector<UInt8> bytes(4);
+	memset(&bytes[0], 0, 4);
+	reader.readBytes(3, bytes);
+	EXPECT_EQ(bytes[0], 0xff);
+	EXPECT_EQ(bytes[1], 0xee);
+	EXPECT_EQ(bytes[2], 0xdd);
+	EXPECT_EQ(bytes[3], 0);
+}
+
+
+TEST(StreamReaderTest, readBytesCRC) {
+	string str = "\xff\xee\xdd\xcc";
+	istringstream iss(str);
+	StreamReader reader(iss);
+	vector<UInt8> bytes(4);
+	memset(&bytes[0], 0, 4);
+	CRC32 crc;
+	reader.readBytes(3, bytes, crc);
+	EXPECT_EQ(bytes[0], 0xff);
+	EXPECT_EQ(bytes[1], 0xee);
+	EXPECT_EQ(bytes[2], 0xdd);
+	EXPECT_EQ(bytes[3], 0);
+	EXPECT_EQ(crc.get(), 0x68ab9f15);
+	int byte = reader.readByte(crc);
+	EXPECT_EQ(byte, 0xcc);
+	EXPECT_EQ(crc.get(), 0x2d652e62);
+}
+
