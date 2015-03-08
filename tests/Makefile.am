@@ -11,12 +11,12 @@ check_PROGRAMS =
 TESTS += BezierTest
 check_PROGRAMS += BezierTest
 BezierTest_SOURCES = BezierTest.cpp
-BezierTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+BezierTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += BitmapTest
 check_PROGRAMS += BitmapTest
 BitmapTest_SOURCES = BitmapTest.cpp
-BitmapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+BitmapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTS += BoundingBoxTest
 check_PROGRAMS += BoundingBoxTest
@@ -198,6 +198,11 @@ check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp
 TypesTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
+TESTS += UnicodeTest
+check_PROGRAMS += UnicodeTest
+UnicodeTest_SOURCES = UnicodeTest.cpp
+UnicodeTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+
 TESTS += VectorStreamTest
 check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
@@ -206,7 +211,7 @@ VectorStreamTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -
 TESTS += XMLStringTest
 check_PROGRAMS += XMLStringTest
 XMLStringTest_SOURCES = XMLStringTest.cpp
-XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
