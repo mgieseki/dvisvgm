@@ -69,3 +69,11 @@ TEST(CRC32Test, update_string) {
 	crc.update("It is published under the GNU General Public License.");
 	EXPECT_EQ(crc.get(), 0xa732081b);
 }
+
+
+TEST(CRC32Test, compute) {
+	EXPECT_EQ(CRC32::compute("dvisvgm converts DVI files to SVG."), 0x7c4ef359);
+	istringstream iss;
+	iss.str("It is published under the GNU General Public License.");
+	EXPECT_EQ(CRC32::compute(iss), 0xbc02ba40);
+}
