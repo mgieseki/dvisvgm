@@ -30,9 +30,13 @@ TEST(GraphicPathTest, svg) {
 	path.lineto(10,10);
 	path.cubicto(20,20,30,30,40,40);
 	path.closepath();
+	EXPECT_FALSE(path.empty());
+	EXPECT_EQ(path.size(), 4);
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M0 0L10 10C20 20 30 30 40 40Z");
+	path.clear();
+	EXPECT_TRUE(path.empty());
 }
 
 
@@ -86,10 +90,26 @@ TEST(GraphicPathTest, relative1) {
 	GraphicPath<int> path;
 	path.moveto(0,0);
 	path.lineto(10,10);
+	path.lineto(10,20);
 	path.cubicto(20,20,30,30,40,40);
 	path.conicto(50, 50, 60, 60);
+	path.lineto(100,60);
 	path.closepath();
 	ostringstream oss;
 	path.writeSVG(oss, true);
-	EXPECT_EQ(oss.str(), "m0 0l10 10c10 10 20 20 30 30q10 10 20 20z");
+	EXPECT_EQ(oss.str(), "m0 0l10 10v10c10 0 20 10 30 20q10 10 20 20h40z");
+}
+
+
+TEST(GraphicPathTest, computeBBox) {
+	GraphicPath<int> path;
+	path.moveto(10,10);
+	path.lineto(100,10);
+	path.conicto(10,100,40,80);
+	path.cubicto(5,5,30,10,90,70);
+	path.lineto(20,30);
+	path.closepath();
+	BoundingBox bbox;
+	path.computeBBox(bbox);
+	EXPECT_EQ(bbox, BoundingBox(5, 5, 100, 100));
 }
