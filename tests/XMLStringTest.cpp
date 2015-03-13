@@ -19,13 +19,12 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "types.h"
 #include "XMLString.h"
 
 using namespace std;
 
 
-TEST(TypesTest, stringcast) {
+TEST(XMLStringTest, stringcast) {
 	const char *cstr = "special characters: &\"'<>";
 	string str = cstr;
 	EXPECT_EQ(XMLString(cstr, true), string("special characters: &\"'<>"));
@@ -35,13 +34,13 @@ TEST(TypesTest, stringcast) {
 }
 
 
-TEST(TypesTest, intcast) {
+TEST(XMLStringTest, intcast) {
 	EXPECT_EQ(XMLString(65, true), string("65"));
 	EXPECT_EQ(XMLString(65, false), string("A"));
 }
 
 
-TEST(TypesTest, doublecast) {
+TEST(XMLStringTest, doublecast) {
 	EXPECT_EQ(XMLString(1.2345), string("1.2345"));
 	XMLString::DECIMAL_PLACES = 3;
 	EXPECT_EQ(XMLString(1.2345), string("1.235"));
