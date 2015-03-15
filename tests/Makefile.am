@@ -208,6 +208,11 @@ check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
 VectorStreamTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
 
+TESTS += XMLNodeTest
+check_PROGRAMS += XMLNodeTest
+XMLNodeTest_SOURCES = XMLNodeTest.cpp
+XMLNodeTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+
 TESTS += XMLStringTest
 check_PROGRAMS += XMLStringTest
 XMLStringTest_SOURCES = XMLStringTest.cpp

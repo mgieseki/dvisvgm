@@ -41,15 +41,19 @@ XMLElementNode::XMLElementNode (const XMLElementNode &node)
 
 
 XMLElementNode::~XMLElementNode () {
-	FORALL(_children, ChildList::iterator, i)
-		delete *i;
+	while (!_children.empty()) {
+		delete _children.back();
+		_children.pop_back();
+	}
 }
 
 
 void XMLElementNode::clear () {
 	_attributes.clear();
-	FORALL(_children, ChildList::iterator, i)
-		(*i)->clear();
+	while (!_children.empty()) {
+		delete _children.back();
+		_children.pop_back();
+	}
 }
 
 
@@ -93,7 +97,7 @@ void XMLElementNode::prepend (XMLNode *child) {
 	if (!textNode1 || _children.empty())
 		_children.push_front(child);
 	else {
-		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.back()))
+		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.front()))
 			textNode2->prepend(textNode1);  // merge two consecutive text nodes
 		else
 			_children.push_front(child);
@@ -111,11 +115,10 @@ bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
 	ChildList::iterator it = _children.begin();
 	while (it != _children.end() && *it != sibling)
 		++it;
-	if (it != _children.end()) {
-		_children.insert(it, child);
-		return true;
-	}
-	return false;
+	if (it == _children.end())
+		return false;
+	_children.insert(it, child);
+	return true;
 }
 
 
@@ -129,11 +132,10 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
 	ChildList::iterator it = _children.begin();
 	while (it != _children.end() && *it != sibling)
 		++it;
-	if (it != _children.end()) {
-		_children.insert(++it, child);
-		return true;
-	}
-	return false;
+	if (it == _children.end())
+		return false;
+	_children.insert(++it, child);
+	return true;
 }
 
 
@@ -154,12 +156,17 @@ bool XMLElementNode::getDescendants (const char *name, const char *attrName, vec
 }
 
 
+/** Returns the first descendant element that matches the given properties in depth first order.
+ *  @param[in] name element name; if 0, all elements are taken into account
+ *  @param[in] attrName if not 0, only elements with an attribute of this name are considered
+ *  @param[in] attrValue if not 0, only elements with attribute attrName="attrValue" are considered
+ *  @return pointer to the found element or 0 */
 XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
 	FORALL(_children, ChildList::const_iterator, it) {
 		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
 			if (!name || elem->getName() == name) {
 				const char *value;
-				if (!attrName || !attrValue || !(value = elem->getAttributeValue(attrName)) || string(value) == attrValue)
+				if (!attrName || (((value = elem->getAttributeValue(attrName)) != 0) && (!attrValue || string(value) == attrValue)))
 					return elem;
 			}
 			if (XMLElementNode *descendant = elem->getFirstDescendant(name, attrName, attrValue))
@@ -229,7 +236,7 @@ void XMLTextNode::append (const string &str) {
 
 void XMLTextNode::prepend (XMLNode *node) {
 	if (XMLTextNode *tn = dynamic_cast<XMLTextNode*>(node))
-		prepend(tn);
+		_text = tn->_text + _text;
 	else
 		delete node;
 }
@@ -237,62 +244,10 @@ void XMLTextNode::prepend (XMLNode *node) {
 
 //////////////////////
 
-XMLDeclarationNode::XMLDeclarationNode (const string &n, const string &p)
-	: _name(n), _params(p)
-{
-}
-
-
-XMLDeclarationNode::XMLDeclarationNode (const XMLDeclarationNode &node)
-	: _name(node._name), _params(node._params)
-{
-	FORALL(node._children, list<XMLDeclarationNode*>::const_iterator, it)
-		_children.push_back(new XMLDeclarationNode(**it));
-}
-
-
-XMLDeclarationNode::~XMLDeclarationNode () {
-	FORALL(_children, list<XMLDeclarationNode*>::iterator, i)
-		delete *i;
-}
-
-
-void XMLDeclarationNode::clear () {
-	_params.clear();
-	FORALL(_children, list<XMLDeclarationNode*>::iterator, i)
-		(*i)->clear();
-}
-
-
-/** Appends another declaration node to this one.
- *  @param[in] child child to append, must be of type XMLDeclarationNode */
-void XMLDeclarationNode::append (XMLNode *child) {
-	if (XMLDeclarationNode *decl_node = dynamic_cast<XMLDeclarationNode*>(child))
-		_children.push_back(decl_node);
-	else
-		delete child;
-}
-
-
-ostream& XMLDeclarationNode::write (ostream &os) const {
-	os << "<!" << _name << ' ' << _params;
-	if (_children.empty())
-		os << ">\n";
-	else {
-		os << "[\n";
-		FORALL(_children, list<XMLDeclarationNode*>::const_iterator, i)
-			(*i)->write(os);
-		os << "]>\n";
-	}
-	return os;
-}
-
-//////////////////////
 
 ostream& XMLCDataNode::write (ostream &os) const {
-	os << "<![CDATA[\n"
-		<< _data
-		<< "]]>\n";
+	if (!_data.empty())
+		os << "<![CDATA[\n" << _data << "]]>\n";
 	return os;
 }
 
