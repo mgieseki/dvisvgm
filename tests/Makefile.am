@@ -203,6 +203,11 @@ check_PROGRAMS += UnicodeTest
 UnicodeTest_SOURCES = UnicodeTest.cpp
 UnicodeTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += VectorIteratorTest
+check_PROGRAMS += VectorIteratorTest
+VectorIteratorTest_SOURCES = VectorIteratorTest.cpp
+VectorIteratorTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += VectorStreamTest
 check_PROGRAMS += VectorStreamTest
 VectorStreamTest_SOURCES = VectorStreamTest.cpp
