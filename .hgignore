@@ -5,6 +5,8 @@ syntax: glob
 *.obj
 *.dvi
 *.gch
+*.gcda
+*.gcno
 *.lib
 *.log
 *.lpro
@@ -56,3 +58,4 @@ nbproject
 stamp-h1
 a.out
 test*.*
+lcov

@@ -8,6 +8,7 @@ AC_INIT([dvisvgm],[1.9.1],[martin.gieseking@uos.de])
 DATE="February 2015"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
@@ -157,6 +158,15 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <kpathsea/kpathsea.h>]],
                 AC_DEFINE([KPSE_CXX_UNSAFE], 1,
                           [Define to 1 if the kpathsea headers are not C++ safe.])])
 AC_LANG_POP([C++])
+
+AX_CODE_COVERAGE
+AS_IF([ test "$enable_code_coverage" = "yes" ], [
+	# disable optimization
+	changequote({,})
+	CFLAGS=`echo $CFLAGS | sed 's/-O[1-9s]//g'`
+	CXXFLAGS=`echo $CXXFLAGS | sed 's/-O[1-9s]//g'`
+	changequote([,])
+])
 
 AC_SUBST(DATE)
 AC_SUBST(AM_CPPFLAGS)

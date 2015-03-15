@@ -203,7 +203,10 @@ EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/clipper \
 	$(FREETYPE_CFLAGS) \
-	$(ZLIB_CFLAGS)
+	$(ZLIB_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS)
+
+AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 
 # the command-line parser is generated from options.xml by opt2cpp
 $(srcdir)/CommandLine.cpp: options.xml
@@ -223,3 +226,6 @@ $(srcdir)/psdefs.cpp: psdefs.ps
 
 psdefs.ps: ;
 
+@CODE_COVERAGE_RULES@
+
+CLEANFILES = *.gcda *.gcno

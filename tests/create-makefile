@@ -11,7 +11,7 @@ cat >$out <<EOT
 ##
 ## Process this file with automake.
 
-AM_CXXFLAGS = -I\$(srcdir)/../src -I\$(srcdir)/../../src -Wall -DSRCDIR='"\$(srcdir)"'
+AM_CXXFLAGS = -I\$(srcdir)/../src -I\$(srcdir)/../../src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
 
 TESTS =
 check_PROGRAMS =
@@ -24,7 +24,7 @@ for f in *.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread
+${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
 
 EOT
 done
@@ -39,6 +39,10 @@ done
 cat >>$out <<EOT
 EXTRA_DIST = check-conv normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
 TESTS += check-conv
+
+@CODE_COVERAGE_RULES@
+
+CLEANFILES = *.gcda *.gcno
 EOT
 
 # vim: set syntax=sh:

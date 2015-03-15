@@ -1,4 +1,3 @@
-syntax: glob
 .*
 *.a
 *.o
@@ -6,6 +5,8 @@ syntax: glob
 *.obj
 *.dvi
 *.gch
+*.gcda
+*.gcno
 *.lib
 *.log
 *.lpro
@@ -39,6 +40,7 @@ dvisvgm
 aclocal.*
 missing
 cov-int
+lcov
 /config.*
 doc/buildman
 doc/dvisvgm.txt
