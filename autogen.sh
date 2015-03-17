@@ -1,7 +1,7 @@
 #!/bin/sh
 #                        a u t o g e n . s h
 #
-# Copyright (c) 2005-2007 United States Government as represented by
+# Copyright (c) 2005-2010 United States Government as represented by
 # the U.S. Army Research Laboratory.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 ###
 #
 # Script for automatically preparing the sources for compilation by
-# performing the myrid of necessary steps.  The script attempts to
+# performing the myriad of necessary steps.  The script attempts to
 # detect proper version support, and outputs warnings about particular
 # systems that have autotool peculiarities.
 #
@@ -69,19 +69,24 @@
 #   To verbosely try running with an older (unsupported) autoconf:
 #     AUTOCONF_VERSION=2.50 ./autogen.sh --verbose
 #
-# Author: Christopher Sean Morrison <morrison@brlcad.org>
+# Author:
+#   Christopher Sean Morrison <morrison@brlcad.org>
+#
+# Patches:
+#   Sebastian Pipping <sebastian@pipping.org>
+#   Tom Browder <tbrowder2@users.sourceforge.net>
 #
 ######################################################################
 
-# set to minimum acceptible version of autoconf
+# set to minimum acceptable version of autoconf
 if [ "x$AUTOCONF_VERSION" = "x" ] ; then
     AUTOCONF_VERSION=2.52
 fi
-# set to minimum acceptible version of automake
+# set to minimum acceptable version of automake
 if [ "x$AUTOMAKE_VERSION" = "x" ] ; then
     AUTOMAKE_VERSION=1.6.0
 fi
-# set to minimum acceptible version of libtool
+# set to minimum acceptable version of libtool
 if [ "x$LIBTOOL_VERSION" = "x" ] ; then
     LIBTOOL_VERSION=1.4.2
 fi
@@ -98,13 +103,14 @@ ident ( ) {
     fi
 
     # extract version from CVS Id string
-    __id="$Id: autogen.sh,v 14.97 2007/06/18 22:25:02 brlcad Exp $"
+    __id="$Id$"
     __version="`echo $__id | sed 's/.*\([0-9][0-9][0-9][0-9]\)[-\/]\([0-9][0-9]\)[-\/]\([0-9][0-9]\).*/\1\2\3/'`"
     if [ "x$__version" = "x" ] ; then
 	__version=""
     fi
 
     echo "autogen.sh build preparation script by Christopher Sean Morrison"
+    echo "  + config.guess download patch by Sebastian Pipping (2008-12-03)"
     echo "revised 3-clause BSD-style license, copyright (c) $__copyright"
     echo "script version $__version, ISO/IEC 9945 POSIX shell script"
 }
@@ -114,11 +120,12 @@ ident ( ) {
 # USAGE FUNCTION #
 ##################
 usage ( ) {
-    echo "Usage: $AUTOGEN_SH [-h|--help] [-v|--verbose] [-q|--quiet] [--version]"
-    echo "    --help     Help on $NAME_OF_AUTOGEN usage"
-    echo "    --verbose  Verbose progress output"
-    echo "    --quiet    Quiet suppressed progress output"
-    echo "    --version  Only perform GNU Build System version checks"
+    echo "Usage: $AUTOGEN_SH [-h|--help] [-v|--verbose] [-q|--quiet] [-d|--download] [--version]"
+    echo "    --help      Help on $NAME_OF_AUTOGEN usage"
+    echo "    --verbose   Verbose progress output"
+    echo "    --quiet     Quiet suppressed progress output"
+    echo "    --download  Download the latest config.guess from gnulib"
+    echo "    --version   Only perform GNU Build System version checks"
     echo
     echo "Description: This script will validate that minimum versions of the"
     echo "GNU Build System tools are installed and then run autoreconf for you."
@@ -268,6 +275,9 @@ fi
 if [ "x$VERSION_ONLY" = "x" ] ; then
     VERSION_ONLY=no
 fi
+if [ "x$DOWNLOAD" = "x" ] ; then
+    DOWNLOAD=no
+fi
 if [ "x$AUTORECONF_OPTIONS" = "x" ] ; then
     AUTORECONF_OPTIONS="-i -f"
 fi
@@ -288,6 +298,9 @@ fi
 if [ "x$AUTOHEADER_OPTIONS" = "x" ] ; then
     AUTOHEADER_OPTIONS=""
 fi
+if [ "x$CONFIG_GUESS_URL" = "x" ] ; then
+    CONFIG_GUESS_URL="http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;f=build-aux/config.guess;hb=HEAD"
+fi
 for arg in $ARGS ; do
     case "x$arg" in
 	x--help) HELP=yes ;;
@@ -295,6 +308,8 @@ for arg in $ARGS ; do
 	x--quiet) QUIET=yes ;;
 	x-[qQ]) QUIET=yes ;;
 	x--verbose) VERBOSE=yes ;;
+	x-[dD]) DOWNLOAD=yes ;;
+	x--download) DOWNLOAD=yes ;;
 	x-[vV]) VERBOSE=yes ;;
 	x--version) VERSION_ONLY=yes ;;
 	*)
@@ -313,11 +328,14 @@ done
 
 # sanity check before recursions potentially begin
 if [ ! -f "$AUTOGEN_SH" ] ; then
-    echo "INTERNAL ERROR: $AUTOGEN_SH does not exist"
-    if [ ! "x$0" = "x$AUTOGEN_SH" ] ; then
-	echo "INTERNAL ERROR: dirname/basename inconsistency: $0 != $AUTOGEN_SH"
+    if test -f ./autogen.sh ; then
+	PATH_TO_AUTOGEN="."
+	NAME_OF_AUTOGEN="autogen.sh"
+	AUTOGEN_SH="$PATH_TO_AUTOGEN/$NAME_OF_AUTOGEN"
+    else
+	echo "INTERNAL ERROR: $AUTOGEN_SH does not exist"
+	exit 1
     fi
-    exit 1
 fi
 
 # force locale setting to C so things like date output as expected
@@ -325,7 +343,7 @@ LC_ALL=C
 
 # commands that this script expects
 for __cmd in echo head tail pwd ; do
-    echo "test" | $__cmd > /dev/null 2>&1
+    echo "test" > /dev/null 2>&1 | $__cmd > /dev/null 2>&1
     if [ $? != 0 ] ; then
 	echo "INTERNAL ERROR: '${__cmd}' command is required"
 	exit 2
@@ -584,7 +602,7 @@ else
 	_version="0.0.0"
     fi
     $ECHO "Found GNU Automake version $_version"
-    version_check "$AUTOMAKE_VERSION" "$_version" 
+    version_check "$AUTOMAKE_VERSION" "$_version"
     if [ $? -ne 0 ] ; then
 	_report_error=yes
     fi
@@ -686,7 +704,7 @@ else
 	_version="0.0.0"
     fi
     $ECHO "Found GNU Libtool version $_version"
-    version_check "$LIBTOOL_VERSION" "$_version" 
+    version_check "$LIBTOOL_VERSION" "$_version"
     if [ $? -ne 0 ] ; then
 	_report_error=yes
     fi
@@ -756,24 +774,17 @@ protect_from_clobber ( ) {
     # prevalent behavior, so we protect against it by keeping a backup
     # of the file that can later be restored.
 
-    if test -f COPYING ; then
-	if test -f COPYING.$$.protect_from_automake.backup ; then
-	    $VERBOSE_ECHO "Already backed up COPYING in `pwd`"
-	else
-	    $VERBOSE_ECHO "Backing up COPYING in `pwd`"
-	    $VERBOSE_ECHO "cp -p COPYING COPYING.$$.protect_from_automake.backup"
-	    cp -p COPYING COPYING.$$.protect_from_automake.backup
+    for file in COPYING INSTALL ; do
+	if test -f ${file} ; then
+	    if test -f ${file}.$$.protect_from_automake.backup ; then
+		$VERBOSE_ECHO "Already backed up ${file} in `pwd`"
+	    else
+		$VERBOSE_ECHO "Backing up ${file} in `pwd`"
+		$VERBOSE_ECHO "cp -p ${file} ${file}.$$.protect_from_automake.backup"
+		cp -p ${file} ${file}.$$.protect_from_automake.backup
+	    fi
 	fi
-    fi
-    if test -f INSTALL ; then
-	if test -f INSTALL.$$.protect_from_automake.backup ; then
-	    $VERBOSE_ECHO "Already backed up INSTALL in `pwd`"
-	else
-	    $VERBOSE_ECHO "Backing up INSTALL in `pwd`"
-	    $VERBOSE_ECHO "cp -p INSTALL INSTALL.$$.protect_from_automake.backup"
-	    cp -p INSTALL INSTALL.$$.protect_from_automake.backup
-	fi
-    fi
+    done
 }
 
 
@@ -840,57 +851,32 @@ restore_clobbered ( ) {
 
     spacer=no
 
-    # COPYING
-    if test -f COPYING.$$.protect_from_automake.backup ; then
-	if test -f COPYING ; then
+    for file in COPYING INSTALL ; do
+	if test -f ${file}.$$.protect_from_automake.backup ; then
+	    if test -f ${file} ; then
 	    # compare entire content, restore if needed
-	    if test "x`cat COPYING`" != "x`cat COPYING.$$.protect_from_automake.backup`" ; then
+	    if test "x`cat ${file}`" != "x`cat ${file}.$$.protect_from_automake.backup`" ; then
 		if test "x$spacer" = "xno" ; then
 		    $VERBOSE_ECHO
 		    spacer=yes
 		fi
 		# restore the backup
-		$VERBOSE_ECHO "Restoring COPYING from backup (automake -f likely clobbered it)"
-		$VERBOSE_ECHO "rm -f COPYING"
-		rm -f COPYING
-		$VERBOSE_ECHO "mv COPYING.$$.protect_from_automake.backup COPYING"
-		mv COPYING.$$.protect_from_automake.backup COPYING
+		$VERBOSE_ECHO "Restoring ${file} from backup (automake -f likely clobbered it)"
+		$VERBOSE_ECHO "rm -f ${file}"
+		rm -f ${file}
+		$VERBOSE_ECHO "mv ${file}.$$.protect_from_automake.backup ${file}"
+		mv ${file}.$$.protect_from_automake.backup ${file}
 	    fi # check contents
-	elif test -f COPYING.$$.protect_from_automake.backup ; then
-	    $VERBOSE_ECHO "mv COPYING.$$.protect_from_automake.backup COPYING"
-	    mv COPYING.$$.protect_from_automake.backup COPYING
-	fi # -f COPYING
-
-	# just in case
-	$VERBOSE_ECHO "rm -f COPYING.$$.protect_from_automake.backup"
-	rm -f COPYING.$$.protect_from_automake.backup
-    fi # -f COPYING.$$.protect_from_automake.backup
-
-    # INSTALL
-    if test -f INSTALL.$$.protect_from_automake.backup ; then
-	if test -f INSTALL ; then
-	    # compare entire content, restore if needed
-	    if test "x`cat INSTALL`" != "x`cat INSTALL.$$.protect_from_automake.backup`" ; then
-		if test "x$spacer" = "xno" ; then
-		    $VERBOSE_ECHO
-		    spacer=yes
-		fi
-		# restore the backup
-		$VERBOSE_ECHO "Restoring INSTALL from backup (automake -f likely clobbered it)"
-		$VERBOSE_ECHO "rm -f INSTALL"
-		rm -f INSTALL
-		$VERBOSE_ECHO "mv INSTALL.$$.protect_from_automake.backup INSTALL"
-		mv INSTALL.$$.protect_from_automake.backup INSTALL
-	    fi # check contents
-	elif test -f INSTALL.$$.protect_from_automake.backup ; then
-	    $VERBOSE_ECHO "mv INSTALL.$$.protect_from_automake.backup INSTALL"
-	    mv INSTALL.$$.protect_from_automake.backup INSTALL
-	fi # -f INSTALL
-
-	# just in case
-	$VERBOSE_ECHO "rm -f INSTALL.$$.protect_from_automake.backup"
-	rm -f INSTALL.$$.protect_from_automake.backup
-    fi # -f INSTALL.$$.protect_from_automake.backup
+	    elif test -f ${file}.$$.protect_from_automake.backup ; then
+		$VERBOSE_ECHO "mv ${file}.$$.protect_from_automake.backup ${file}"
+		mv ${file}.$$.protect_from_automake.backup ${file}
+	    fi # -f ${file}
+	
+	    # just in case
+	    $VERBOSE_ECHO "rm -f ${file}.$$.protect_from_automake.backup"
+	    rm -f ${file}.$$.protect_from_automake.backup
+	fi # -f ${file}.$$.protect_from_automake.backup
+    done
 
     CONFIGURE="`locate_configure_template`"
     if [ "x$CONFIGURE" = "x" ] ; then
@@ -1003,15 +989,50 @@ initialize ( ) {
 	fi
     done
 
-    ##########################################
-    # make sure certain required files exist #
-    ##########################################
-    for file in AUTHORS COPYING ChangeLog INSTALL NEWS README ; do
-	if test ! -f $file ; then
-	    $VERBOSE_ECHO "Touching ${file} since it does not exist"
-	    touch $file
+    ###########################################################
+    # make sure certain required files exist for GNU projects #
+    ###########################################################
+    _marker_found=""
+    _marker_found_message_intro='Detected non-GNU marker "'
+    _marker_found_message_mid='" in '
+    for marker in foreign cygnus ; do
+	_marker_found_message=${_marker_found_message_intro}${marker}${_marker_found_message_mid}
+	_marker_found="`grep 'AM_INIT_AUTOMAKE.*'${marker} $CONFIGURE`"
+	if [ ! "x$_marker_found" = "x" ] ; then
+	    $VERBOSE_ECHO "${_marker_found_message}`basename \"$CONFIGURE\"`"
+	    break
+	fi
+	if test -f "`dirname \"$CONFIGURE\"/Makefile.am`" ; then
+	    _marker_found="`grep 'AUTOMAKE_OPTIONS.*'${marker} Makefile.am`"
+	    if [ ! "x$_marker_found" = "x" ] ; then
+		$VERBOSE_ECHO "${_marker_found_message}Makefile.am"
+		break
+	    fi
 	fi
     done
+    if [ "x${_marker_found}" = "x" ] ; then
+	_suggest_foreign=no
+	for file in AUTHORS COPYING ChangeLog INSTALL NEWS README ; do
+	    if [ ! -f $file ] ; then
+		$VERBOSE_ECHO "Touching ${file} since it does not exist"
+		_suggest_foreign=yes
+		touch $file
+	    fi
+	done
+
+	if [ "x${_suggest_foreign}" = "xyes" ] ; then
+	    $ECHO
+	    $ECHO "Warning: Several files expected of projects that conform to the GNU"
+	    $ECHO "coding standards were not found.  The files were automatically added"
+	    $ECHO "for you since you do not have a 'foreign' declaration specified."
+	    $ECHO
+	    $ECHO "Consider adding 'foreign' to AM_INIT_AUTOMAKE in `basename \"$CONFIGURE\"`"
+	    if test -f "`dirname \"$CONFIGURE\"/Makefile.am`" ; then
+		$ECHO "or to AUTOMAKE_OPTIONS in your top-level Makefile.am file."
+	    fi
+	    $ECHO
+	fi
+    fi
 
     ##################################################
     # make sure certain generated files do not exist #
@@ -1030,7 +1051,7 @@ initialize ( ) {
     for dir in m4 ; do
 	if [ -d $dir ] ; then
 	    $VERBOSE_ECHO "Found extra aclocal search directory: $dir"
-	    SEARCH_DIRS="$SEARCH_DIRS -I $dir"
+	    SEARCH_DIRS="$SEARCH_DIRS -I `pwd`/$dir"
 	fi
     done
 
@@ -1070,6 +1091,75 @@ cd "$START_PATH"
 
 # get ready to process
 initialize
+
+
+#########################################
+# DOWNLOAD_GNULIB_CONFIG_GUESS FUNCTION #
+#########################################
+
+# TODO - should make sure wget/curl exist and/or work before trying to
+# use them.
+
+download_gnulib_config_guess () {
+    # abuse gitweb to download gnulib's latest config.guess via HTTP
+    config_guess_temp="config.guess.$$.download"
+    ret=1
+    for __cmd in wget curl fetch ; do
+	$VERBOSE_ECHO "Checking for command ${__cmd}"
+	${__cmd} --version > /dev/null 2>&1
+	ret=$?
+	if [ ! $ret = 0 ] ; then
+	    continue
+        fi
+
+	__cmd_version=`${__cmd} --version | head -n 1 | sed -e 's/^[^0-9]\+//' -e 's/ .*//'`
+	$VERBOSE_ECHO "Found ${__cmd} ${__cmd_version}"
+
+	opts=""
+	case ${__cmd} in
+	    wget)
+		opts="-O" 
+		;;
+	    curl)
+		opts="-o"
+		;;
+	    fetch)
+		opts="-t 5 -f"
+		;;
+	esac
+
+	$VERBOSE_ECHO "Running $__cmd \"${CONFIG_GUESS_URL}\" $opts \"${config_guess_temp}\""
+	eval "$__cmd \"${CONFIG_GUESS_URL}\" $opts \"${config_guess_temp}\"" > /dev/null 2>&1
+	if [ $? = 0 ] ; then
+	    mv -f "${config_guess_temp}" ${_aux_dir}/config.guess
+	    ret=0
+	    break
+	fi
+    done
+
+    if [ ! $ret = 0 ] ; then
+	$ECHO "Warning: config.guess download failed from: $CONFIG_GUESS_URL"
+	rm -f "${config_guess_temp}"
+    fi
+}
+
+
+##############################
+# LIBTOOLIZE_NEEDED FUNCTION #
+##############################
+libtoolize_needed () {
+    ret=1 # means no, don't need libtoolize
+    for feature in AC_PROG_LIBTOOL AM_PROG_LIBTOOL LT_INIT ; do
+	$VERBOSE_ECHO "Searching for $feature in $CONFIGURE"
+	found="`grep \"^$feature.*\" $CONFIGURE`"
+	if [ ! "x$found" = "x" ] ; then
+	    ret=0 # means yes, need to run libtoolize
+	    break
+	fi
+    done
+    return ${ret}
+}
+
 
 
 ############################################
@@ -1115,6 +1205,12 @@ if [ "x$HAVE_AUTORECONF" = "xyes" ] ; then
 
 	$ECHO "Attempting to run the preparation steps individually"
 	reconfigure_manually=yes
+    else
+	if [ "x$DOWNLOAD" = "xyes" ] ; then
+	    if libtoolize_needed ; then
+		download_gnulib_config_guess
+	    fi
+	fi
     fi
 else
     reconfigure_manually=yes
@@ -1193,22 +1289,13 @@ manual_autogen ( ) {
     ##############
     # libtoolize #
     ##############
-    need_libtoolize=no
-    for feature in AC_PROG_LIBTOOL LT_INIT ; do
-	$VERBOSE_ECHO "Searching for $feature in $CONFIGURE"
-	found="`grep \"^$feature.*\" $CONFIGURE`"
-	if [ ! "x$found" = "x" ] ; then
-	    need_libtoolize=yes
-	    break
-	fi
-    done
-    if [ "x$need_libtoolize" = "xyes" ] ; then
+    if libtoolize_needed ; then
 	if [ "x$HAVE_LIBTOOLIZE" = "xyes" ] ; then
 	    $VERBOSE_ECHO "$LIBTOOLIZE $LIBTOOLIZE_OPTIONS"
 	    libtoolize_output="`$LIBTOOLIZE $LIBTOOLIZE_OPTIONS 2>&1`"
 	    ret=$?
 	    $VERBOSE_ECHO "$libtoolize_output"
-	    
+
 	    if [ ! $ret = 0 ] ; then $ECHO "ERROR: $LIBTOOLIZE failed" && exit 2 ; fi
 	else
 	    if [ "x$HAVE_ALT_LIBTOOLIZE" = "xyes" ] ; then
@@ -1216,7 +1303,7 @@ manual_autogen ( ) {
 		libtoolize_output="`$LIBTOOLIZE $ALT_LIBTOOLIZE_OPTIONS 2>&1`"
 		ret=$?
 		$VERBOSE_ECHO "$libtoolize_output"
-		
+
 		if [ ! $ret = 0 ] ; then $ECHO "ERROR: $LIBTOOLIZE failed" && exit 2 ; fi
 	    fi
 	fi
@@ -1244,7 +1331,11 @@ manual_autogen ( ) {
 		$ECHO $ECHO_N "Continuing build preparation ... $ECHO_C"
 	    fi
 	fi # ltmain.sh
-    fi # need_libtoolize
+
+	if [ "x$DOWNLOAD" = "xyes" ] ; then
+	    download_gnulib_config_guess
+	fi
+    fi # libtoolize_needed
 
     ############
     # autoconf #
@@ -1257,23 +1348,35 @@ manual_autogen ( ) {
 
     if [ ! $ret = 0 ] ; then
 	# retry without the -f and check for usage of macros that are too new
-	ac2_59_macros="AC_C_RESTRICT AC_INCLUDES_DEFAULT AC_LANG_ASSERT AC_LANG_WERROR AS_SET_CATFILE"
+	ac2_65_macros="AT_CHECK_EUNIT AC_PROG_OBJCXX AC_PROG_OBJCXXCPP"
+	ac2_64_macros="AT_CHECK_UNQUOTED AT_FAIL_IF AT_SKIP_IF AC_ERLANG_SUBST_ERTS_VER"
+	ac2_62_macros="AC_AUTOCONF_VERSION AC_OPENMP AC_PATH_PROGS_FEATURE_CHECK"
+	ac2_60_macros="AC_C_FLEXIBLE_ARRAY_MEMBER AC_C_VARARRAYS"
+	ac2_59_macros="AC_C_RESTRICT AC_INCLUDES_DEFAULT AC_LANG_ASSERT AC_LANG_WERROR AS_SET_CATFILE AC_PROG_SED AC_PROG_GREP AC_REQUIRE_AUX_FILE AC_CHECK_TARGET_TOOL AC_PATH_TARGET_TOOL AC_CHECK_TARGET_TOOLS AC_CHECK_ALIGNOF AC_PROG_OBJC AC_PROG_OBJCPP AC_ERLANG_SUBST_INSTALL_LIB_DIR AC_ERLANG_SUBST_INSTALL_LIB_SUBDIR AC_ERLANG_PATH_ERLC AC_ERLANG_NEED_ERLC AC_ERLANG_PATH_ERL AC_ERLANG_NEED_ERL AC_ERLANG_CHECK_LIB AC_ERLANG_SUBST_ROOT_DIR AC_ERLANG_SUBST_LIB_DIR AT_COPYRIGHT AS_BOURNE_COMPATIBLE AS_SHELL_SANITIZE AS_CASE AH_HEADER AC_USE_SYSTEM_EXTENSIONS AC_TYPE_INT8_T AC_TYPE_INT16_T AC_TYPE_INT32_T AC_TYPE_INT64_T AC_TYPE_INTMAX_T AC_TYPE_INTPTR_T AC_TYPE_LONG_LONG_INT AC_TYPE_SSIZE_T AC_TYPE_UINT8_T AC_TYPE_UINT16_T AC_TYPE_UINT32_T AC_TYPE_UINT64_T AC_TYPE_UINTMAX_T AC_TYPE_UINTPTR_T AC_TYPE_UNSIGNED_LONG_LONG_INT AC_TYPE_LONG_DOUBLE AC_TYPE_LONG_DOUBLE_WIDER AC_STRUCT_DIRENT_D_INO AC_STRUCT_DIRENT_D_TYPE AC_PROG_CC_C89 AC_PROG_CC_C99 AC_PRESERVE_HELP_ORDER AC_HEADER_ASSERT AC_FUNC_STRTOLD AC_C_TYPEOF AC_PROG_MKDIR_P AC_PROG_CXX_C_O"
 	ac2_55_macros="AC_COMPILER_IFELSE AC_FUNC_MBRTOWC AC_HEADER_STDBOOL AC_LANG_CONFTEST AC_LANG_SOURCE AC_LANG_PROGRAM AC_LANG_CALL AC_LANG_FUNC_TRY_LINK AC_MSG_FAILURE AC_PREPROC_IFELSE"
 	ac2_54_macros="AC_C_BACKSLASH_A AC_CONFIG_LIBOBJ_DIR AC_GNU_SOURCE AC_PROG_EGREP AC_PROG_FGREP AC_REPLACE_FNMATCH AC_FUNC_FNMATCH_GNU AC_FUNC_REALLOC AC_TYPE_MBSTATE_T"
 
 	macros_to_search=""
 	ac_major="`echo ${AUTOCONF_VERSION}. | cut -d. -f1 | sed 's/[^0-9]//g'`"
 	ac_minor="`echo ${AUTOCONF_VERSION}. | cut -d. -f2 | sed 's/[^0-9]//g'`"
-	
+
 	if [ $ac_major -lt 2 ] ; then
-	    macros_to_search="$ac2_59_macros $ac2_55_macros $ac2_54_macros"
+	    macros_to_search="$ac2_65 $ac2_64 $ac2_62 $ac2_60 $ac2_59 $ac2_55 $ac2_54"
 	else
 	    if [ $ac_minor -lt 54 ] ; then
-		macros_to_search="$ac2_59_macros $ac2_55_macros $ac2_54_macros"
+		macros_to_search="$ac2_65 $ac2_64 $ac2_62 $ac2_60 $ac2_59 $ac2_55 $ac2_54"
 	    elif [ $ac_minor -lt 55 ] ; then
-		macros_to_search="$ac2_59_macros $ac2_55_macros"
+		macros_to_search="$ac2_65 $ac2_64 $ac2_62 $ac2_60 $ac2_59 $ac2_55"
 	    elif [ $ac_minor -lt 59 ] ; then
-		macros_to_search="$ac2_59_macros"
+		macros_to_search="$ac2_65 $ac2_64 $ac2_62 $ac2_60 $ac2_59"
+	    elif [ $ac_minor -lt 60 ] ; then
+		macros_to_search="$ac2_65 $ac2_64 $ac2_62 $ac2_60"
+	    elif [ $ac_minor -lt 62 ] ; then
+		macros_to_search="$ac2_65 $ac2_64 $ac2_62"
+	    elif [ $ac_minor -lt 64 ] ; then
+		macros_to_search="$ac2_65 $ac2_64"
+	    elif [ $ac_minor -lt 65 ] ; then
+		macros_to_search="$ac2_65"
 	    fi
 	fi
 
@@ -1293,7 +1396,7 @@ manual_autogen ( ) {
 	    $ECHO
 	    $ECHO "Warning:  Unsupported macros were found in $CONFIGURE"
 	    $ECHO
-	    $ECHO "The `echo $CONFIGURE | basename` file was scanned in order to determine if any"
+	    $ECHO "The `basename \"$CONFIGURE\"` file was scanned in order to determine if any"
 	    $ECHO "unsupported macros are used that exceed the minimum version"
 	    $ECHO "settings specified within this file.  As such, the following macros"
 	    $ECHO "should be removed from configure.ac or the version numbers in this"
@@ -1337,7 +1440,7 @@ EOF
 		$ECHO "	$AUTOGEN_SH --verbose"
 	    else
 		$ECHO "reviewing the minimum GNU Autotools version settings contained in"
-		$ECHO "this script along with the macros being used in your `echo $CONFIGURE | basename` file."
+		$ECHO "this script along with the macros being used in your `basename \"$CONFIGURE\"` file."
 	    fi
 	    $ECHO
 	    $ECHO $ECHO_N "Continuing build preparation ... $ECHO_C"
@@ -1382,7 +1485,7 @@ EOF
 	automake_output="`$AUTOMAKE $AUTOMAKE_OPTIONS 2>&1`"
 	ret=$?
 	$VERBOSE_ECHO "$automake_output"
-	
+
 	if [ ! $ret = 0 ] ; then
 
 	    ###################
@@ -1394,7 +1497,7 @@ EOF
 	    automake_output="`$AUTOMAKE $ALT_AUTOMAKE_OPTIONS 2>&1`"
 	    ret=$?
 	    $VERBOSE_ECHO "$automake_output"
-	    
+
 	    if [ ! $ret = 0 ] ; then
 	 	# test if libtool is busted
 		libtool_failure "$automake_output"
@@ -1480,6 +1583,8 @@ else
     $ECHO "  make"
 fi
 
+# finish up where we started
+cd "$START_PATH"
 
 # Local Variables:
 # mode: sh
