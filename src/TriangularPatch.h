@@ -32,7 +32,7 @@ class TriangularPatch : public ShadingPatch
 		TriangularPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TriangularPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TriangularPatch *patch);
 		int psShadingType() const {return 4;}
-		DPair pointAt (double u, double v) const;
+		DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
 		Color averageColor() const;
 		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);

@@ -145,10 +145,10 @@ DPair TensorProductPatch::valueAt (double u, double v) const {
 	DPair p[4];
 	for (int i=0; i < 4; i++) {
 		Bezier bezier(_points[i][0], _points[i][1], _points[i][2], _points[i][3]);
-		p[i] = bezier.pointAt(u);
+		p[i] = bezier.valueAt(u);
 	}
 	Bezier bezier(p[0], p[1], p[2], p[3]);
-	return bezier.pointAt(v);
+	return bezier.valueAt(v);
 }
 
 
@@ -230,7 +230,7 @@ void TensorProductPatch::verticalCurve (double u, Bezier &bezier) const {
 		DPair p[4];
 		for (int i=0; i < 4; i++) {
 			Bezier bezier(_points[i][0], _points[i][1], _points[i][2], _points[i][3]);
-			p[i] = bezier.pointAt(u);
+			p[i] = bezier.valueAt(u);
 		}
 		bezier.setPoints(p[0], p[1], p[2], p[3]);
 	}
@@ -252,7 +252,7 @@ void TensorProductPatch::horizontalCurve (double v, Bezier &bezier) const {
 		DPair p[4];
 		for (int i=0; i < 4; i++) {
 			Bezier bezier(_points[0][i], _points[1][i], _points[2][i], _points[3][i]);
-			p[i] = bezier.pointAt(v);
+			p[i] = bezier.valueAt(v);
 		}
 		bezier.setPoints(p[0], p[1], p[2], p[3]);
 	}
@@ -473,8 +473,8 @@ DPair CoonsPatch::valueAt (double u, double v) const {
 	Bezier bezier2(_points[0][0], _points[0][1], _points[0][2], _points[0][3]);
 	Bezier bezier3(_points[3][0], _points[2][0], _points[1][0], _points[0][0]);
 	Bezier bezier4(_points[3][3], _points[2][3], _points[1][3], _points[0][3]);
-	DPair ph = bezier1.pointAt(u)*(1-v) + bezier2.pointAt(u)*v;
-	DPair pv = bezier3.pointAt(v)*(1-u) + bezier4.pointAt(v)*u;
+	DPair ph = bezier1.valueAt(u)*(1-v) + bezier2.valueAt(u)*v;
+	DPair pv = bezier3.valueAt(v)*(1-u) + bezier4.valueAt(v)*u;
 	DPair pc = (_points[3][0]*(1-u) + _points[3][3]*u)*(1-v) + (_points[0][0]*(1-u) + _points[0][3]*u)*v;
 	return ph+pv-pc;
 }

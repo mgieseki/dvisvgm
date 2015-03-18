@@ -46,7 +46,7 @@ Bezier::Bezier (const DPair &p0, const DPair &p1, const DPair &p2, const DPair &
  *  @param[in] t1 'time' parameter \f$\in[0,1]\f$ of source curve where the subcurve ends */
 Bezier::Bezier (const Bezier &source, double t0, double t1) {
 	if (t0 == t1)
-		_points[0] = _points[1] = _points[2] = _points[3] = source.pointAt(t0);
+		_points[0] = _points[1] = _points[2] = _points[3] = source.valueAt(t0);
 	else {
 		if (t0 > t1)
 			swap(t0, t1);
@@ -77,7 +77,7 @@ void Bezier::reverse() {
 }
 
 
-DPair Bezier::pointAt (double t) const {
+DPair Bezier::valueAt (double t) const {
 	const double s = 1-t;
 	return _points[0]*s*s*s + _points[1]*3.0*s*s*t + _points[2]*3.0*s*t*t + _points[3]*t*t*t;
 }
@@ -241,15 +241,15 @@ void Bezier::getBBox (BoundingBox &bbox) const {
 	double t1, t2;
 	if (solve_quadratic_equation(pa.x(), pb.x(), pc.x(), t1, t2)) {
 		if (t1 > 0.001 && t1 < 0.999)
-			bbox.embed(pointAt(t1));
+			bbox.embed(valueAt(t1));
 		if (t1 != t2 && t2 > 0.001 && t2 < 0.999)
-			bbox.embed(pointAt(t2));
+			bbox.embed(valueAt(t2));
 	}
 	if (solve_quadratic_equation(pa.y(), pb.y(), pc.y(), t1, t2)) {
 		if (t1 > 0.001 && t1 < 0.999)
-			bbox.embed(pointAt(t1));
+			bbox.embed(valueAt(t1));
 		if (t1 != t2 && t2 > 0.001 && t2 < 0.999)
-			bbox.embed(pointAt(t2));
+			bbox.embed(valueAt(t2));
 	}
 	bbox.embed(_points[0]);
 	bbox.embed(_points[3]);

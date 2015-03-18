@@ -43,34 +43,34 @@ TEST(TriangularPatchTest, construct) {
 }
 
 
-TEST(TriangularPatchTest, pointAt) {
+TEST(TriangularPatchTest, valueAt) {
 	vector<DPair> points(3);
 	points[0] = DPair(0, 0);
 	points[1] = DPair(10, 0);
 	points[2] = DPair(0, 10);
 	vector<Color> colors(3);
 	TriangularPatch tp1(points, colors, Color::RGB_SPACE, 0, 0);
-	EXPECT_EQ(tp1.pointAt(0, 0), DPair(0,0));
-	EXPECT_EQ(tp1.pointAt(1, 0), DPair(10,0));
-	EXPECT_EQ(tp1.pointAt(0, 1), DPair(0,10));
+	EXPECT_EQ(tp1.valueAt(0, 0), DPair(0,0));
+	EXPECT_EQ(tp1.valueAt(1, 0), DPair(10,0));
+	EXPECT_EQ(tp1.valueAt(0, 1), DPair(0,10));
 
 	points.resize(1);
 	colors.resize(1);
 	points[0] = DPair(10, 10);
 	TriangularPatch tp2(points, colors, Color::RGB_SPACE, 1, &tp1);
-	EXPECT_EQ(tp2.pointAt(0, 0), DPair(10,10));
-	EXPECT_EQ(tp2.pointAt(1, 0), DPair(10,0));
-	EXPECT_EQ(tp2.pointAt(0, 1), DPair(0,10));
+	EXPECT_EQ(tp2.valueAt(0, 0), DPair(10,10));
+	EXPECT_EQ(tp2.valueAt(1, 0), DPair(10,0));
+	EXPECT_EQ(tp2.valueAt(0, 1), DPair(0,10));
 
 	TriangularPatch tp3(points, colors, Color::RGB_SPACE, 2, &tp1);
-	EXPECT_EQ(tp3.pointAt(0, 0), DPair(10,10));
-	EXPECT_EQ(tp3.pointAt(1, 0), DPair(0,10));
-	EXPECT_EQ(tp3.pointAt(0, 1), DPair(0,0));
+	EXPECT_EQ(tp3.valueAt(0, 0), DPair(10,10));
+	EXPECT_EQ(tp3.valueAt(1, 0), DPair(0,10));
+	EXPECT_EQ(tp3.valueAt(0, 1), DPair(0,0));
 
 	tp1.setPoints(DPair(20,20), DPair(20,40), DPair(40,20));
-	EXPECT_EQ(tp1.pointAt(0, 0), DPair(20,20));
-	EXPECT_EQ(tp1.pointAt(1, 0), DPair(20,40));
-	EXPECT_EQ(tp1.pointAt(0, 1), DPair(40,20));
+	EXPECT_EQ(tp1.valueAt(0, 0), DPair(20,20));
+	EXPECT_EQ(tp1.valueAt(1, 0), DPair(20,40));
+	EXPECT_EQ(tp1.valueAt(0, 1), DPair(40,20));
 }
 
 

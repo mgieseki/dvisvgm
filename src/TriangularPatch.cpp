@@ -96,7 +96,7 @@ void TriangularPatch::setColors (const Color &c1, const Color &c2, const Color &
  *  of a point of the triangle, where \f$u, v \in [0,1]\f$ and \f$u+v \le 1\f$.
  *  The relation between the vertices of the triangle and their barycentric coordinates
  *  is as follows: \f$(1,0,0)=p_1, (0,1,0)=p_2, (0,0,1)=p_0\f$. */
-DPair TriangularPatch::pointAt (double u, double v) const {
+DPair TriangularPatch::valueAt (double u, double v) const {
 	return _points[0] + (_points[1]-_points[0])*u + (_points[2]-_points[0])*v;
 }
 
@@ -176,17 +176,17 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 				if (!overlap || (snap(u1+ov2) <= 1 && snap(ou2+v1) <= 1)) {
 					// create triangular segments pointing in the same orientation as the whole patch
 					GraphicPath<double> path;
-					path.moveto(pointAt(u1, v1));
-					path.lineto(pointAt(ou2, v1));
-					path.lineto(pointAt(u1, ov2));
+					path.moveto(valueAt(u1, v1));
+					path.lineto(valueAt(ou2, v1));
+					path.lineto(valueAt(u1, ov2));
 					path.closepath();
 					callback.patchSegment(path, averageColor(colorAt(u1, v1), colorAt(u2, v1), colorAt(u1, v2)));
 					if (snap(u2+v2) <= 1 && (!overlap || inc > delta)) {
 						// create triangular segments pointing in the opposite direction as the whole patch
 						path.clear();
-						path.moveto(pointAt(u1, v2));
-						path.lineto(pointAt(u2, v1));
-						path.lineto(pointAt(u2, v2));
+						path.moveto(valueAt(u1, v2));
+						path.lineto(valueAt(u2, v1));
+						path.lineto(valueAt(u2, v2));
 						path.closepath();
 						callback.patchSegment(path, averageColor(colorAt(u1, v2), colorAt(u2, v1), colorAt(u2, v2)));
 					}

@@ -34,7 +34,7 @@ class Bezier
 		Bezier (const Bezier &source, double t0, double t1);
 		void setPoints (const DPair &p0, const DPair &p1, const DPair &p2, const DPair &p3);
 		void reverse ();
-		DPair pointAt (double t) const;
+		DPair valueAt (double t) const;
 		DPair blossomValue (double u, double v, double w) const;
 		void subdivide (double t, Bezier *bezier1, Bezier *bezier2) const;
 		int approximate (double delta, std::vector<DPair> &p, std::vector<double> *t=0) const;
