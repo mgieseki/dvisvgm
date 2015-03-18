@@ -119,6 +119,11 @@ Color TriangularPatch::colorAt (double u, double v) const {
 }
 
 
+Color TriangularPatch::averageColor () const {
+	return averageColor(_colors[0], _colors[1], _colors[2]);
+}
+
+
 /** Compute the average of three given colors depending on the assigned color space. */
 Color TriangularPatch::averageColor (const Color &c1, const Color &c2, const Color &c3) const {
 	ColorGetter getComponents;

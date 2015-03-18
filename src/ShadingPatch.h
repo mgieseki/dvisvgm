@@ -48,6 +48,7 @@ class ShadingPatch
 		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) =0;
 		virtual int numPoints (int edgeflag) const =0;
 		virtual int numColors (int edgeflag) const =0;
+		virtual Color averageColor() const =0;
 		Color::ColorSpace colorSpace () const {return _colorspace;}
 		static ShadingPatch* create (int psShadingType, Color::ColorSpace cspace);
 

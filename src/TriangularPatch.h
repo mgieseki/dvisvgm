@@ -34,6 +34,7 @@ class TriangularPatch : public ShadingPatch
 		int psShadingType() const {return 4;}
 		DPair pointAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
+		Color averageColor() const;
 		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
 		void setPoints (const DPair &p1, const DPair &p2, const DPair &p3);
 		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);

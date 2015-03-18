@@ -50,6 +50,7 @@ class TensorProductPatch : public ShadingPatch
 		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
 		virtual DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
+		Color averageColor () const;
 		void horizontalCurve (double v, Bezier &bezier) const;
 		void verticalCurve (double u, Bezier &bezier) const;
 		void getBoundaryPath (GraphicPath<double> &path) const;

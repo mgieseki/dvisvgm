@@ -193,6 +193,11 @@ check_PROGRAMS += ToUnicodeMapTest
 ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp
 ToUnicodeMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += TriangularPatchTest
+check_PROGRAMS += TriangularPatchTest
+TriangularPatchTest_SOURCES = TriangularPatchTest.cpp
+TriangularPatchTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += TypesTest
 check_PROGRAMS += TypesTest
 TypesTest_SOURCES = TypesTest.cpp

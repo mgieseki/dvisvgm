@@ -181,6 +181,11 @@ Color TensorProductPatch::colorAt (double u, double v) const {
 }
 
 
+Color TensorProductPatch::averageColor () const {
+	return averageColor(_colors[0], _colors[1], _colors[2], _colors[3]);
+}
+
+
 /** Compute the average of four given colors depending on the assigned color space. */
 Color TensorProductPatch::averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const {
 	ColorGetter getComponents;
