@@ -30,24 +30,24 @@ class TensorProductPatchTest : public ::testing::Test
 {
 	protected:
 		void SetUp () {
-			vector<DPair> points(16);
-			points[0]  = DPair(10, 10);
-			points[1]  = DPair(0, 30);
-			points[2]  = DPair(20, 40);
-			points[3]  = DPair(10, 70);
-			points[4]  = DPair(20, 100);
-			points[5]  = DPair(70, 100);
-			points[6]  = DPair(100, 70);
-			points[7]  = DPair(90, 60);
-			points[8]  = DPair(80, 50);
-			points[9]  = DPair(70, 20);
-			points[10] = DPair(50, 30);
-			points[11] = DPair(20, 0);
-			points[12] = DPair(30, 40);
-			points[13] = DPair(40, 80);
-			points[14] = DPair(60, 70);
-			points[15] = DPair(40, 40);
-			_patch.setPoints(points, 0, 0);
+			_points.resize(16);
+			_points[0]  = DPair(10, 10);
+			_points[1]  = DPair(0, 30);
+			_points[2]  = DPair(20, 40);
+			_points[3]  = DPair(10, 70);
+			_points[4]  = DPair(20, 100);
+			_points[5]  = DPair(70, 100);
+			_points[6]  = DPair(100, 70);
+			_points[7]  = DPair(90, 60);
+			_points[8]  = DPair(80, 50);
+			_points[9]  = DPair(70, 20);
+			_points[10] = DPair(50, 30);
+			_points[11] = DPair(20, 0);
+			_points[12] = DPair(30, 40);
+			_points[13] = DPair(40, 80);
+			_points[14] = DPair(60, 70);
+			_points[15] = DPair(40, 40);
+			_patch.setPoints(_points, 0, 0);
 
 			vector<Color> colors(4);
 			colors[0].setRGB(1.0, 0.0, 0.0);
@@ -74,10 +74,88 @@ class TensorProductPatchTest : public ::testing::Test
 			EXPECT_DOUBLE_EQ(p1.y(), p2.y());
 		}
 
-
 	protected:
+		vector<DPair> _points;
 		TensorProductPatch _patch;
 };
+
+
+TEST_F(TensorProductPatchTest, construct) {
+	EXPECT_EQ(_patch.psShadingType(), 7);
+	EXPECT_EQ(_patch.numPoints(0), 16);
+	EXPECT_EQ(_patch.numColors(0), 4);
+	EXPECT_EQ(_patch.numPoints(1), 12);
+	EXPECT_EQ(_patch.numColors(1), 2);
+
+	CoonsPatch cp(Color::RGB_SPACE);
+	EXPECT_EQ(cp.psShadingType(), 6);
+	EXPECT_EQ(cp.numPoints(0), 12);
+	EXPECT_EQ(cp.numColors(0), 4);
+	EXPECT_EQ(cp.numPoints(1), 8);
+	EXPECT_EQ(cp.numColors(1), 2);
+}
+
+
+TEST_F(TensorProductPatchTest, valueAt) {
+	EXPECT_EQ(_patch.valueAt(0, 0), DPair(10, 10));
+	EXPECT_EQ(_patch.valueAt(1, 0), DPair(70, 20));
+	EXPECT_EQ(_patch.valueAt(0, 1), DPair(10, 70));
+	EXPECT_EQ(_patch.valueAt(1, 1), DPair(100, 70));
+
+	vector<DPair> points = _points;
+	vector<Color> colors(2);
+	points.resize(12);
+	TensorProductPatch tpp1(points, colors, Color::RGB_SPACE, 1, &_patch);
+	EXPECT_EQ(tpp1.valueAt(0, 0), DPair(10, 70));
+	EXPECT_EQ(tpp1.valueAt(0, 1), DPair(100, 70));
+	EXPECT_EQ(tpp1.valueAt(1, 0), DPair(70, 100));
+	EXPECT_EQ(tpp1.valueAt(1, 1), DPair(20, 40));
+
+	TensorProductPatch tpp2(points, colors, Color::RGB_SPACE, 2, &_patch);
+	EXPECT_EQ(tpp2.valueAt(0, 0), DPair(100, 70));
+	EXPECT_EQ(tpp2.valueAt(0, 1), DPair(70, 20));
+	EXPECT_EQ(tpp2.valueAt(1, 0), DPair(70, 100));
+	EXPECT_EQ(tpp2.valueAt(1, 1), DPair(20, 40));
+
+	TensorProductPatch tpp3(points, colors, Color::RGB_SPACE, 3, &_patch);
+	EXPECT_EQ(tpp3.valueAt(0, 0), DPair(70, 20));
+	EXPECT_EQ(tpp3.valueAt(0, 1), DPair(10, 10));
+	EXPECT_EQ(tpp3.valueAt(1, 0), DPair(70, 100));
+	EXPECT_EQ(tpp3.valueAt(1, 1), DPair(20, 40));
+
+	colors.resize(4);
+	CoonsPatch cp1(points, colors, Color::RGB_SPACE, 0, 0);
+	EXPECT_EQ(cp1.valueAt(0, 0), DPair(10, 70));
+	EXPECT_EQ(cp1.valueAt(0, 1), DPair(10, 10));
+	EXPECT_EQ(cp1.valueAt(1, 0), DPair(100, 70));
+	EXPECT_EQ(cp1.valueAt(1, 1), DPair(70, 20));
+
+	points.resize(8);
+	colors.resize(2);
+	CoonsPatch cp2(points, colors, Color::RGB_SPACE, 1, &cp1);
+	EXPECT_EQ(cp2.valueAt(0, 0), DPair(100, 70));
+	EXPECT_EQ(cp2.valueAt(0, 1), DPair(10, 70));
+	EXPECT_EQ(cp2.valueAt(1, 0), DPair(20, 40));
+	EXPECT_EQ(cp2.valueAt(1, 1), DPair(70, 100));
+
+	CoonsPatch cp3(points, colors, Color::RGB_SPACE, 2, &cp1);
+	EXPECT_EQ(cp3.valueAt(0, 0), DPair(70, 20));
+	EXPECT_EQ(cp3.valueAt(0, 1), DPair(100, 70));
+	EXPECT_EQ(cp3.valueAt(1, 0), DPair(20, 40));
+	EXPECT_EQ(cp3.valueAt(1, 1), DPair(70, 100));
+
+	CoonsPatch cp4(points, colors, Color::RGB_SPACE, 3, &cp1);
+	EXPECT_EQ(cp4.valueAt(0, 0), DPair(10, 10));
+	EXPECT_EQ(cp4.valueAt(0, 1), DPair(70, 20));
+	EXPECT_EQ(cp4.valueAt(1, 0), DPair(20, 40));
+	EXPECT_EQ(cp4.valueAt(1, 1), DPair(70, 100));
+}
+
+
+TEST_F(TensorProductPatchTest, averageColor) {
+	EXPECT_EQ(_patch.averageColor().rgbString(), "#bf8040");
+}
+
 
 
 TEST_F(TensorProductPatchTest, vertices) {
@@ -144,9 +222,82 @@ TEST_F(TensorProductPatchTest, values) {
 }
 
 
+TEST_F(TensorProductPatchTest, boundaryPath) {
+	GraphicPath<double> path;
+	_patch.getBoundaryPath(path);
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
+}
+
+
+TEST_F(TensorProductPatchTest, subpatch) {
+	TensorProductPatch tpp;
+	_patch.subpatch(0, 0.5, 0, 0.5, tpp);
+	GraphicPath<double> path;
+	tpp.getBoundaryPath(path);
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10C5 20 7.5 27.5 10 36.25C20.625 46.875 31.25 52.1875 43.2812 54.2188C40 40.9375 36.25 27.5 36.25 15C25 10 15 5 10 10Z");
+	EXPECT_EQ(tpp.colorAt(0, 0).rgbString(), "#ff0000");
+	EXPECT_EQ(tpp.colorAt(0, 1).rgbString(), "#ff8000");
+	EXPECT_EQ(tpp.colorAt(1, 0).rgbString(), "#808000");
+	EXPECT_EQ(tpp.colorAt(1, 1).rgbString(), "#bf8040");
+}
+
+
+TEST_F(TensorProductPatchTest, bbox) {
+	BoundingBox bbox;
+	_patch.getBBox(bbox);
+	EXPECT_NEAR(bbox.minX(), 7.1132, 0.0001);
+	EXPECT_NEAR(bbox.minY(), 7.9289, 0.0001);
+	EXPECT_DOUBLE_EQ(bbox.maxX(), 100.0);
+	EXPECT_DOUBLE_EQ(bbox.maxY(), 92.5);
+}
+
+
+class Callback : public ShadingPatch::Callback {
+	public:
+		void patchSegment (GraphicPath<double> &path, const Color &color) {
+			ostringstream oss;
+			path.writeSVG(oss, false);
+			_pathstr += oss.str();
+			_colorstr += color.rgbString();
+		}
+		string pathstr() const  {return _pathstr;}
+		string colorstr() const {return _colorstr;}
+		void reset ()           {_pathstr.clear(); _colorstr.clear();}
+
+	private:
+		string _pathstr;
+		string _colorstr;
+};
+
+
+TEST_F(TensorProductPatchTest, approximate) {
+	Callback callback;
+	vector<Color> colors(4);
+	TensorProductPatch tpp(_points, colors, Color::RGB_SPACE, 0, 0);
+	tpp.approximate(2, false, 0.1, callback);
+	EXPECT_EQ(callback.pathstr(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
+	EXPECT_EQ(callback.colorstr(), "#000000");
+
+	callback.reset();
+	_patch.approximate(2, false, 0.1, callback);
+	EXPECT_EQ(
+		callback.pathstr(),
+		"M10 10C15 5 25 10 36.25 15C36.25 27.5 40 40.9375 43.2812 54.2188C31.25 52.1875 20.625 46.875 10 36.25C7.5 27.5 5 20 10 10Z"
+		"M36.25 15C47.5 20 60 25 70 20C75 35 80 45 85 52.5C68.75 55 55.3125 56.25 43.2812 54.2188C40 40.9375 36.25 27.5 36.25 15Z"
+		"M10 36.25C20.625 46.875 31.25 52.1875 43.2812 54.2188C46.5625 67.5 49.375 80.625 47.5 92.5C30 92.5 15 85 10 70C15 55 12.5 45 10 36.25Z"
+		"M43.2812 54.2188C55.3125 56.25 68.75 55 85 52.5C90 60 95 65 100 70C85 85 65 92.5 47.5 92.5C49.375 80.625 46.5625 67.5 43.2812 54.2188Z");
+	EXPECT_EQ(callback.colorstr(), "#cf6010#70a030#efa030#cf6090");
+}
+
+
+
 TEST_F(TensorProductPatchTest, fail) {
 	// edge flag == 0
-	vector<DPair> points(15); // too few points
+	vector<DPair> points(15);
 	EXPECT_THROW(_patch.setPoints(points, 0, 0), ShadingException);
 	points.resize(17);  // too many points
 	EXPECT_THROW(_patch.setPoints(points, 0, 0), ShadingException);
@@ -157,13 +308,27 @@ TEST_F(TensorProductPatchTest, fail) {
 	EXPECT_THROW(_patch.setColors(colors, 0, 0), ShadingException);
 
 	// edge flag > 0
+	points.resize(16);
+	EXPECT_THROW(_patch.setPoints(points, 1, 0), ShadingException);
 	points.resize(11);  // too few points
 	EXPECT_THROW(_patch.setPoints(points, 1, &_patch), ShadingException);
 	points.resize(13);  // too many points
 	EXPECT_THROW(_patch.setPoints(points, 1, &_patch), ShadingException);
 
+	colors.resize(4);
+	EXPECT_THROW(_patch.setColors(colors, 1, 0), ShadingException);
 	colors.resize(1);  // too few colors
 	EXPECT_THROW(_patch.setColors(colors, 1, &_patch), ShadingException);
 	colors.resize(3);  // too many colors
 	EXPECT_THROW(_patch.setColors(colors, 1, &_patch), ShadingException);
+
+	CoonsPatch cp;
+	points.resize(8);
+	EXPECT_THROW(cp.setPoints(points, 1, 0), ShadingException);
+	points.resize(11);
+	EXPECT_THROW(cp.setPoints(points, 0, 0), ShadingException);
+	colors.resize(2);
+	EXPECT_THROW(cp.setColors(colors, 1, 0), ShadingException);
+	colors.resize(5);
+	EXPECT_THROW(cp.setColors(colors, 0, 0), ShadingException);
 }

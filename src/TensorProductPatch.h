@@ -42,7 +42,7 @@ class TensorProductPatch : public ShadingPatch
 
    public:
 		TensorProductPatch () : ShadingPatch(Color::RGB_SPACE) {}
-		TensorProductPatch (Color::ColorSpace &cspace) : ShadingPatch(cspace) {}
+		TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch);
 		int psShadingType() const {return 7;}
 		void setPoints (const DPair points[4][4], int edgeflag, TensorProductPatch *patch);
