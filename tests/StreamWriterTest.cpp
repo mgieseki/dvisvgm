@@ -89,12 +89,8 @@ TEST(StreamWriterTest, writeUnsignedCRC) {
 TEST(StreamWriterTest, writeSigned) {
 	ostringstream oss;
 	StreamWriter writer(oss);
-	writer.writeUnsigned(0xffeeddcc, 4);
-	string str;
-	str.push_back('\xff');
-	str.push_back('\xee');
-	str.push_back('\xdd');
-	str.push_back('\xcc');
+	writer.writeSigned(0xffeeddcc, 4);
+	string str = "\xff\xee\xdd\xcc";
 	EXPECT_EQ(oss.str(), str);
 }
 
@@ -103,12 +99,8 @@ TEST(StreamWriterTest, writeSignedCRC) {
 	ostringstream oss;
 	StreamWriter writer(oss);
 	CRC32 crc;
-	writer.writeUnsigned(0xffeeddcc, 4, crc);
-	string str;
-	str.push_back('\xff');
-	str.push_back('\xee');
-	str.push_back('\xdd');
-	str.push_back('\xcc');
+	writer.writeSigned(0xffeeddcc, 4, crc);
+	string str = "\xff\xee\xdd\xcc";
 	EXPECT_EQ(oss.str(), str);
 	EXPECT_EQ(crc.get(), 0xfa79118e);
 }
