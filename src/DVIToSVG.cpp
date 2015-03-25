@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <set>
 #include <sstream>
 #include "Calculator.h"
 #include "DVIToSVG.h"
@@ -263,12 +264,16 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	collect_chars(usedChars);
 
 	GlyphTracerMessages messages;
+	set<const Font*> tracedFonts;  // collect unique fonts already traced
 	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
 		const Font *font = it->first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
-			if (TRACE_MODE)
+			// Check if glyphs should be traced. Only trace the glyphs of unique fonts, i.e.
+			// avoid retracing the same glyphs again if they are referenced in various sizes.
+			if (TRACE_MODE != 0 && tracedFonts.find(ph_font->uniqueFont()) == tracedFonts.end()) {
 				ph_font->traceAllGlyphs(TRACE_MODE == 'a', &messages);
-
+				tracedFonts.insert(ph_font->uniqueFont());
+			}
 			if (font->path())  // does font file exist?
 				_svg.append(*ph_font, it->second, &messages);
 			else
