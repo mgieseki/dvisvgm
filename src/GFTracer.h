@@ -30,10 +30,10 @@ class GFTracer : public GFReader
 		GFTracer (std::istream &is);
 		GFTracer (std::istream &is, double upp);
 		virtual ~GFTracer () {}
-		virtual void moveTo (double x, double y) {}
-		virtual void lineTo (double x, double y) {}
-		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) {}
-		virtual void closePath () {}
+		virtual void moveTo (double x, double y) =0;
+		virtual void lineTo (double x, double y) =0;
+		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) =0;
+		virtual void closePath () =0;
 		void beginChar (UInt32 c);
 		void endChar (UInt32 c);
 

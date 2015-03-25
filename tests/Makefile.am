@@ -98,6 +98,11 @@ check_PROGRAMS += FontMapTest
 FontMapTest_SOURCES = FontMapTest.cpp
 FontMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += GFGlyphTracerTest
+check_PROGRAMS += GFGlyphTracerTest
+GFGlyphTracerTest_SOURCES = GFGlyphTracerTest.cpp
+GFGlyphTracerTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += GFReaderTest
 check_PROGRAMS += GFReaderTest
 GFReaderTest_SOURCES = GFReaderTest.cpp

@@ -51,19 +51,19 @@ void GFGlyphTracer::reset (string &fname, double upp) {
 
 
 bool GFGlyphTracer::executeChar (UInt8 c) {
-	if (_glyph) {
-		if (_callback)
-			_callback->beginChar(c);
-		bool ok = GFTracer::executeChar(c);
-		if (_callback) {
-			if (ok)
-				_callback->endChar(c);
-			else
-				_callback->emptyChar(c);
-			return ok;
-		}
+	if (!_glyph)
+		return false;
+
+	if (_callback)
+		_callback->beginChar(c);
+	bool ok = GFTracer::executeChar(c);
+	if (_callback) {
+		if (ok)
+			_callback->endChar(c);
+		else
+			_callback->emptyChar(c);
 	}
-	return false;
+	return ok;
 }
 
 
