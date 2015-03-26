@@ -222,6 +222,40 @@ static void check_letter (const char **lettermap, const vector<string> &charmap)
 }
 
 
+class LoggingGFReader : public GFReader {
+	public:
+		LoggingGFReader (istream &is) : GFReader(is) {}
+		void preamble (const string &str) {_info = str;}
+		string getInfo () const {return _info;}
+
+	private:
+		string _info;
+};
+
+
+TEST(GFReaderTest, preamble) {
+	string gf = string(SRCDIR)+"/cmr10.600gf";
+	ifstream ifs(gf.c_str(), ios::binary);
+	ASSERT_TRUE(ifs);
+	LoggingGFReader gfReader(ifs);
+	gfReader.executePreamble();
+	ASSERT_EQ(gfReader.getInfo(), " METAFONT output 2010.06.18:1911");
+}
+
+
+TEST(GFReaderTest, postamble) {
+	string gf = string(SRCDIR)+"/cmr10.600gf";
+	ifstream ifs(gf.c_str(), ios::binary);
+	ASSERT_TRUE(ifs);
+	GFReader gfReader(ifs);
+	gfReader.executePostamble();
+	const double bp2pt = 72.27/72.0;
+	ASSERT_DOUBLE_EQ(gfReader.getDesignSize()*bp2pt, 10);
+	ASSERT_NEAR(gfReader.getHPixelsPerPoint()*bp2pt, 8.302, 0.001);
+	ASSERT_NEAR(gfReader.getVPixelsPerPoint()*bp2pt, 8.302, 0.001);
+}
+
+
 TEST(GFReaderTest, executeChar) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
@@ -250,3 +284,14 @@ TEST(GFReaderTest, executeChar) {
 	check_letter(letter_M, actions.charmap);
 }
 
+
+TEST(GFReaderTest, executeAllChars) {
+	string gf = string(SRCDIR)+"/cmr10.600gf";
+	ifstream ifs(gf.c_str(), ios::binary);
+	ASSERT_TRUE(ifs);
+	GFReader gfReader(ifs);
+	gfReader.executeAllChars();
+	const double bp2pt = 72.27/72.0;
+	ASSERT_NEAR(gfReader.getCharWidth('M')*bp2pt, 0.573, 0.001);
+	ASSERT_NEAR(gfReader.getCharWidth('g')*bp2pt, 0.313, 0.001);
+}

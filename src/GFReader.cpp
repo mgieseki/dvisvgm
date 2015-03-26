@@ -34,6 +34,7 @@ struct GFCommand
 };
 
 
+/** Converts a fix point length to double (PS point units) */
 static inline double fix2double (Int32 fix) {
 	return double(fix)/(1 << 20)*72/72.27;
 }
@@ -156,6 +157,16 @@ bool GFReader::executeAllChars () {
 }
 
 
+bool GFReader::executePreamble () {
+	_in.clear();
+	if (!_in)
+		return false;
+	_in.seekg(0);
+	executeCommand();
+	return true;
+}
+
+
 bool GFReader::executePostamble () {
 	_in.clear();
 	if (!_in)
@@ -171,7 +182,7 @@ bool GFReader::executePostamble () {
 }
 
 
-/** Returns the design size of this font int PS point units. */
+/** Returns the design size of this font in PS point units. */
 double GFReader::getDesignSize () const {
 	return fix2double(_designSize);
 }

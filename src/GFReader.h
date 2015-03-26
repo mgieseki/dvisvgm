@@ -57,6 +57,7 @@ class GFReader
 		virtual ~GFReader () {}
 		bool executeChar (UInt8 c);
 		bool executeAllChars ();
+		bool executePreamble ();
 		bool executePostamble ();
 		virtual void preamble (const std::string &str) {}
 		virtual void postamble () {}
