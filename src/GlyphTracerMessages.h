@@ -29,11 +29,21 @@
 class GlyphTracerMessages : public GFGlyphTracer::Callback
 {
 	public:
-		GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl) {}
+		GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl), _traced(false) {}
 
 		~GlyphTracerMessages () {
 			if (_autonl)
 				Message::mstream() << '\n';
+		}
+
+		void beginChar (UInt8 c) {
+			if (!_traced) {
+				if (!_fname.empty())
+					Message::mstream() << '\n';
+				Message::mstream(false, Message::MC_STATE)
+					<< "tracing glyphs of " << _fname.substr(0, _fname.length()-3) << '\n';
+				_traced = true;
+			}
 		}
 
 		void endChar (UInt8 c) {
@@ -49,16 +59,15 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 
 		void setFont (const std::string &fname) {
 			if (_sfmsg && fname != _fname) {
-				if (!_fname.empty())
-					Message::mstream() << '\n';
-				Message::mstream(false, Message::MC_STATE) << "tracing glyphs of " << fname.substr(0, fname.length()-3) << '\n';
 				_fname = fname;
+				_traced = false;
 			}
 		}
 
 	private:
 		std::string _fname;
 		bool _sfmsg, _autonl;
+		bool _traced;  ///< true if a glyph of the current font has already been traced?
 };
 
 
