@@ -8,7 +8,7 @@ Description
 -----------
 
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
-[DVI files](http://en.wikipedia.org/wiki/Device_independent_file_format) to the
+[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) ans EPS files to the
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (format 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
@@ -19,7 +19,7 @@ Short overview of the main features:
 * Complete font support including [virtual fonts](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=virtualfonts), evaluation of [font encodings](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=whatenc), CMap files, sub-font definitions and font maps.
 * Glyph outlines of all required fonts are embedded into the generated SVG files.
 * Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](http://en.wikipedia.org/wiki/Metafont)'s bitmap output.
-* _dvisvgm_ allows to replace [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
+* _dvisvgm_ allows to replace font definitions by [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
 * [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly in order to increase the compatibility of the generated SVG files.
