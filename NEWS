@@ -1,8 +1,15 @@
+dvisvgm-1.9.2 (2015-04-08)
+- avoid retracing of fonts if option --no-fonts and --trace-all=y are given
+- skip tracer messages if no glyphs have been traced
+- extended the build system to generate code coverage reports
+- improved some tests of the test suite
+- some general code refactorings and improvements
+
 dvisvgm-1.9.1 (2015-02-28)
 - extended --output pattern syntax by arithmetic expressions and width specifiers
 - improved formatting of manpage
 - fixed Clang build issue (patch by Peter Breitenlohner)
-- fixed a build issue occured with old MinGW compilers
+- fixed a build issue occurred with old MinGW compilers
 - code cleanup and refactorings
 
 dvisvgm-1.9 (2014-12-29)
@@ -23,7 +30,7 @@ dvisvgm-1.9 (2014-12-29)
 
 dvisvgm-1.8.1 (2014-08-29)
 - unreferenced clipPath elements are now removed from the SVG files
-- fixed side-effectes caused by unexpected bop/eop operators in
+- fixed side-effects caused by unexpected bop/eop operators in
   PS specials (LP bug #1350688)
 - few improvements to configure.ac (patches by Khaled Hosny)
 - removed redundant code

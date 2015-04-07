@@ -8,7 +8,7 @@ Description
 -----------
 
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
-[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) ans EPS files to the
+[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) and EPS files to the
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (format 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
