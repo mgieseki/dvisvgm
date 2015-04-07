@@ -263,7 +263,7 @@ void SVGTree::newTextNode (double x, double y) {
 			_text->addAttribute("class", string("f")+XMLString(_fontnum));
 		else {
 			_text->addAttribute("font-family", font->name());
-			_text->addAttribute("font-size", font->scaledSize());
+			_text->addAttribute("font-size", XMLString(font->scaledSize()));
 			if (font->color() != Color::BLACK)
 				_text->addAttribute("fill", font->color().rgbString());
 		}
@@ -349,7 +349,7 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		FORALL(sortmap, SortMap::const_iterator, it) {
 			style << "text.f"     << it->first << ' '
 				<< "{font-family:" << it->second->name()
-				<< ";font-size:"   << it->second->scaledSize() << "px";
+				<< ";font-size:"   << XMLString(it->second->scaledSize()) << "px";
 			if (it->second->color() != Color::BLACK)
 				style << ";fill:" << it->second->color().rgbString();
 			style << "}\n";
