@@ -133,7 +133,7 @@ TEST(BezierTest, approximate) {
 	}
 }
 
-#include "debug.h"
+
 TEST(BezierTest, reduceDegree) {
 	vector<DPair> points;
 	Bezier bezier(DPair(0,0), DPair(5,10), DPair(10,5));
