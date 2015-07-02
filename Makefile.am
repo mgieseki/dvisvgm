@@ -5,7 +5,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING LGPL-2.1.txt
-SUBDIRS = clipper src tests doc
+SUBDIRS = clipper xxHash src tests doc
 
 if CODE_COVERAGE_ENABLED
 lcov_dir=$(top_builddir)/lcov
