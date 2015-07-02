@@ -502,10 +502,17 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 }
 
 
+/** Returns the unicode point for a given DVI character. */
 UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (type() == MF)
 		return Font::unicode(c);
 	Character chr = decodeChar(c);
+	if (type() == PFB) {
+		// try to get the unicode point from the character name
+		string glyphname = glyphName(c);
+		if (!glyphname.empty())
+			return Unicode::psName2Codepoint(glyphname);
+	}
 	if (chr.type() == Character::NAME || chr.number() == 0)
 		return Font::unicode(c);
 

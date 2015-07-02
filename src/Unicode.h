@@ -28,6 +28,7 @@ struct Unicode
 {
 	static bool isValidCodepoint (UInt32 code);
 	static std::string utf8 (Int32 c);
+	static Int32 psName2Codepoint (const std::string &psname);
 };
 
 #endif

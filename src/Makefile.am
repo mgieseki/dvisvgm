@@ -12,6 +12,7 @@ dvisvgm_SOURCES      = gzstream.h \
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../clipper/libclipper.a \
+	../xxHash/libxxhash.a \
 	$(FREETYPE_LIBS) \
 	$(ZLIB_LIBS)
 
@@ -202,6 +203,7 @@ EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/clipper \
+	-I$(top_srcdir)/xxHash \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)

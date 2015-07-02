@@ -11,7 +11,7 @@ cat >$out <<EOT
 ##
 ## Process this file with automake.
 
-AM_CXXFLAGS = -I\$(srcdir)/../src -I\$(srcdir)/../../src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
+AM_CXXFLAGS = -I\$(top_srcdir)/src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
 
 TESTS =
 check_PROGRAMS =
@@ -24,7 +24,7 @@ for f in *.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
+${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
 
 EOT
 done
