@@ -28,9 +28,11 @@
 using namespace std;
 
 
+/** Constructs a COM object representing a MiKTeX session. */
 MiKTeXCom::MiKTeXCom () : _session(0) {
 	if (FAILED(CoInitialize(0)))
 		throw MessageException("COM library could not be initialized\n");
+	// try to initialize the MiKTeX session object
 #ifdef _MSC_VER
 	HRESULT hres = _session.CreateInstance(L"MiKTeX.Session");
 #elif defined(__WIN64__)
@@ -40,7 +42,7 @@ MiKTeXCom::MiKTeXCom () : _session(0) {
 #endif
 	if (FAILED(hres)) {
 		CoUninitialize();
-		throw MessageException("MiKTeX.Session could not be initialized");
+		throw MessageException("MiKTeX session could not be initialized");
 	}
 }
 
@@ -52,12 +54,13 @@ MiKTeXCom::~MiKTeXCom () {
 #else
 		_session->Release();
 #endif
-		_session = 0; // avoid automatic calling of Release() after CoUninitialize()
+		_session = 0; // prevent automatic call of Release() after CoUninitialize()
 	}
 	CoUninitialize();
 }
 
 
+/** Returns the MiKTeX version number. */
 string MiKTeXCom::getVersion () {
 #ifdef _MSC_VER
 	MiKTeXSetupInfo info = _session->GetMiKTeXSetupInfo();
@@ -70,6 +73,7 @@ string MiKTeXCom::getVersion () {
 }
 
 
+/** Returns the path of the directory where the MiKTeX binaries are located. */
 string MiKTeXCom::getBinDir () {
 #ifdef _MSC_VER
 	MiKTeXSetupInfo info = _session->GetMiKTeXSetupInfo();
@@ -82,6 +86,9 @@ string MiKTeXCom::getBinDir () {
 }
 
 
+/** Try to lookup a given file in the MiKTeX directory tree.
+ *  @param[in] fname name of file to lookup
+ *  @return path of the file or 0 if it can't be found */
 const char* MiKTeXCom::findFile (const char *fname) {
 	try {
 		_bstr_t path;
