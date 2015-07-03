@@ -210,6 +210,11 @@ int main (int argc, char *argv[]) {
 	if (args.error())
 		return 1;
 
+	if (argc == 1 || args.help_given()) {
+		show_help(args);
+		return 0;
+	}
+
 	Message::COLORIZE = args.color_given();
 
 	try {
@@ -233,11 +238,6 @@ int main (int argc, char *argv[]) {
 
 	if (!set_cache_dir(args))
 		return 0;
-
-	if (argc == 1 || args.help_given()) {
-		show_help(args);
-		return 0;
-	}
 
 	if (argc > 1 && args.numFiles() < 1) {
 		Message::estream(true) << "no input file given\n";
