@@ -1,11 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dvisvgm", "dvisvgm.vcxproj", "{86046918-771F-4654-AFC5-AF4F8AC974EF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{98D8E34D-75B4-48B6-B175-C3A7DF11E52C} = {98D8E34D-75B4-48B6-B175-C3A7DF11E52C}
+		{B3A84395-D889-4419-B313-B410350727FA} = {B3A84395-D889-4419-B313-B410350727FA}
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B} = {78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}
 		{F296E0C2-0D37-44CD-961D-87681418683F} = {F296E0C2-0D37-44CD-961D-87681418683F}
 		{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5} = {6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}
@@ -18,6 +19,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "freetype\freetype.vcxproj", "{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpotrace", "potrace\libpotrace.vcxproj", "{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xxhash", "..\xxHash\xxhash.vcxproj", "{B3A84395-D889-4419-B313-B410350727FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +70,14 @@ Global
 		{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}.Release|Win32.Build.0 = Release|Win32
 		{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}.Release|x64.ActiveCfg = Release|x64
 		{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}.Release|x64.Build.0 = Release|x64
+		{B3A84395-D889-4419-B313-B410350727FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3A84395-D889-4419-B313-B410350727FA}.Debug|Win32.Build.0 = Debug|Win32
+		{B3A84395-D889-4419-B313-B410350727FA}.Debug|x64.ActiveCfg = Debug|x64
+		{B3A84395-D889-4419-B313-B410350727FA}.Debug|x64.Build.0 = Debug|x64
+		{B3A84395-D889-4419-B313-B410350727FA}.Release|Win32.ActiveCfg = Release|Win32
+		{B3A84395-D889-4419-B313-B410350727FA}.Release|Win32.Build.0 = Release|Win32
+		{B3A84395-D889-4419-B313-B410350727FA}.Release|x64.ActiveCfg = Release|x64
+		{B3A84395-D889-4419-B313-B410350727FA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
