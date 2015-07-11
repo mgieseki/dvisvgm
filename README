@@ -2,53 +2,54 @@ dvisvgm -- A DVI to SVG converter
 
 DESCRIPTION
 
- dvisvgm is a utility for TeX/LaTeX users. It converts
- DVI files to the XML-based scalable vector graphics format SVG.
+ dvisvgm is a utility for TeX/LaTeX users. It converts DVI and EPS files to
+ the XML-based scalable vector graphics format SVG.
 
 
 DEPENDENCIES
 
  dvisvgm relies on the following free libraries:
-   * Clipper (http://www.angusj.com/delphi/clipper.php)
-     To compute the intersections of two curved paths, dvisvgm
-     flattens the paths to polygons, intersects them using Clipper,
-     and reconstructs the curves afterwards.
+ * Clipper (http://www.angusj.com/delphi/clipper.php)
+   To compute the intersections of two curved paths, dvisvgm flattens the paths
+   to polygons, intersects them using Clipper, and reconstructs the curves
+   afterwards.
 
-   * FreeType 2 (http://www.freetype.org)
-     This library is used to extract the glyph outlines
-     from vector fonts (PFB, OTF, TTF).
+ * FreeType 2 (http://www.freetype.org)
+   This library is used to extract the glyph outlines from vector fonts
+   (PFB, OTF, TTF).
 
-   * Ghostscript (http://pages.cs.wisc.edu/~ghost)
-     The PostScript special handler requires the Ghostscript
-     library libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows)
-	  to be installed. If the configure script finds the corresponding
-     Ghostscript development files on the system, it directly
-     links against libgs.so. Otherwise, the library is looked up
-     at runtime and PostScript support is enabled only if libgs.so
-     could be found.
-     Due to incompatible changes of the Ghostscript API, dvisvgm
-     requires Ghostscript 8.31 or later.
+ * Ghostscript (http://www.ghostscript.com)
+   The PostScript special handler requires the Ghostscript library
+   libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows) to be installed.
+   If the configure script finds the corresponding Ghostscript development
+   files on the system, it directly links against libgs.so. Otherwise, the
+   library is looked up at runtime, and PostScript support is enabled only if
+   libgs.so can be found. Due to incompatible changes of the Ghostscript API,
+   dvisvgm requires Ghostscript 8.31 or later.
 
-   * kpathsea
-     This library is part of the Web2C package and is
-     usually installed in conjunction with a TeX distribution.
-     kpathsea provides functions for searching files in the
-     large texmf tree.
+ * kpathsea (https://tug.org/kpathsea)
+   This library is part of the Web2C package and is usually installed in
+   conjunction with a TeX distribution. kpathsea provides functions for
+   searching files in the large texmf tree.
 
-   * potracelib (http://potrace.sourceforge.net)
-     Peter Selinger's bitmap tracing library is utilized to
-     vectorize Metafont's bitmap output.
+ * potracelib (http://potrace.sourceforge.net)
+   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
+   bitmap output.
 
-   * zlib (http://www.zlib.org)
-     Compressed SVG files are produced by using functions
-     of this library and the Gzstream wrapper classes
-     (http://www.cs.unc.edu/Research/compgeom/gzstream)
-     which are licensed under LGPL version 2.1 (or optionally any
-     later version) and should be included with this package.
+ * xxHash (https://github.com/Cyan4973/xxHash)
+   The xxHash library provides a fast hash algorithm. dvisvgm uses it to
+   create unique integer values from PostScript character names in order to
+   store them in a compact way together with their Unicode points. A recent
+   version of xxHash is bundled with the dvisvgm sources.
 
- If you want to build and run the testsuite located in the tests
- subdirectory, you also need the googletest libraries
- (http://code.google.com/p/googletest).
+ * zlib (http://www.zlib.org)
+   Compressed SVG files are produced by using functions of this library and the
+   Gzstream wrapper classes (http://www.cs.unc.edu/Research/compgeom/gzstream)
+   which are licensed under LGPL version 2.1 (or optionally any later version)
+   and should be included with this package.
+
+ If you want to build and run the test suite located in the tests subdirectory,
+ you also need the googletest libraries (http://code.google.com/p/googletest).
 
 
 COMPILATION
@@ -76,22 +77,22 @@ COMPILATION
 
 
 USAGE
- Information about the command-line interface and the available options
- can be found in the manual page.
+ Information about the command-line interface and the available options can be
+ found in the manual page.
 
 
 ADDITIONAL INFORMATION
- This package is available from CTAN (dviware/dvisvgm) and can
- be downloaded from the project website at sourceforge.net as well:
+ This package is available from CTAN (dviware/dvisvgm) and can be downloaded
+ from the project website at sourceforge.net as well:
 
     http://dvisvgm.sourceforge.net
 
  Here you can find the sources, pre-compiled binaries and further additional
  information about the converter and related topics.
 
- If you've found a bug, please let me know. You can either send me an
- email or preferably use the bug tracker at Launchpad
- (see https://launchpad.net/dvisvgm).
+ If you've found a bug, please let me know. You can either send me an email or
+ preferably use the bug tracker at GitHub (https://github.com/mgieseki/dvisvgm)
+ or Launchpad (https://launchpad.net/dvisvgm).
 
 
 COPYRIGHT

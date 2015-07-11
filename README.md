@@ -22,7 +22,7 @@ Short overview of the main features:
 * _dvisvgm_ allows to replace font definitions by [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
-* [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly in order to increase the compatibility of the generated SVG files.
+* [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
 * Approximates PostScript [color gradient fills](http://dvisvgm.sourceforge.net/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
@@ -52,12 +52,12 @@ _dvisvgm_ relies on the following free libraries:
 * [FreeType 2](http://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
-* [Ghostscript](http://pages.cs.wisc.edu/~ghost)  
+* [Ghostscript](http://www.ghostscript.com)  
   The PostScript special handler requires the Ghostscript library libgs.so (Linux)
   or gsdll32.dll/gsdll64.dll (Windows) to be installed. If the configure script
   finds the corresponding Ghostscript development files on the system, it
   directly links against libgs.so. Otherwise, the library is looked up during
-  runtime and the PostScript support is enabled only if libgs.so could be found.
+  runtime, and the PostScript support is enabled only if libgs.so can be found.
   Due to incompatible changes of the Ghostscript API, _dvisvgm_ requires
   Ghostscript 8.31 or later.
 
@@ -70,13 +70,19 @@ _dvisvgm_ relies on the following free libraries:
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
   bitmap output.
 
+* [xxHash](https://github.com/Cyan4973/xxHash)  
+  The xxHash library provides a fast hash algorithm. dvisvgm uses it to create
+  unique integer values from PostScript character names in order to store them in
+  a compact way together with their Unicode points. A recent version of xxHash is
+  bundled with the dvisvgm sources.
+
 * [zlib](http://www.zlib.org)  
   Compressed SVG files are produced by using functions of this library and the
   [Gzstream wrapper classes](http://www.cs.unc.edu/Research/compgeom/gzstream)
   which are licensed under LGPL version 2.1 (or optionally any later version)
   and should be included with this package.
 
-If you want to build and run the testsuite located in the _tests_
+If you want to build and run the test suite located in the _tests_
 subdirectory, you also need the [googletest](http://code.google.com/p/googletest)
 libraries.
 
@@ -115,7 +121,8 @@ can find the sources, pre-compiled binaries, the manual page, FAQs and further
 information about the converter and related topics.
 
 If you've found a bug, please let me know. You can either send me an email or
-preferably use the [bug tracker at Launchpad](https://launchpad.net/dvisvgm).
+preferably use the bug tracker at [GitHub](https://github.com/mgieseki/dvisvgm)
+or [Launchpad](https://launchpad.net/dvisvgm).
 
 
 Copyright
