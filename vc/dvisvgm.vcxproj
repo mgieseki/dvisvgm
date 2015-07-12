@@ -350,9 +350,6 @@
     <ClInclude Include="..\src\XMLString.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\xxHash\xxhash.vcxproj">
-      <Project>{b3a84395-d889-4419-b313-b410350727fa}</Project>
-    </ProjectReference>
     <ProjectReference Include="clipper\clipper.vcxproj">
       <Project>{98d8e34d-75b4-48b6-b175-c3a7df11e52c}</Project>
     </ProjectReference>
@@ -361,6 +358,9 @@
     </ProjectReference>
     <ProjectReference Include="potrace\libpotrace.vcxproj">
       <Project>{6f17fbf1-4304-4af2-81a8-c78787e8d0a5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="xxHash\xxhash.vcxproj">
+      <Project>{b3a84395-d889-4419-b313-b410350727fa}</Project>
     </ProjectReference>
     <ProjectReference Include="zlib\zlib.vcxproj">
       <Project>{f296e0c2-0d37-44cd-961d-87681418683f}</Project>

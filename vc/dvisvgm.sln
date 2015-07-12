@@ -20,7 +20,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "freetype\freety
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpotrace", "potrace\libpotrace.vcxproj", "{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xxhash", "..\xxHash\xxhash.vcxproj", "{B3A84395-D889-4419-B313-B410350727FA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xxhash", "xxHash\xxhash.vcxproj", "{B3A84395-D889-4419-B313-B410350727FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
