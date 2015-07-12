@@ -54,6 +54,7 @@ class FontManager
 		static FontManager& instance ();
 		int registerFont (UInt32 fontnum, std::string fontname, UInt32 checksum, double dsize, double scale);
 		int registerFont (UInt32 fontnum, std::string fname, double ptsize, const FontStyle &style, Color color);
+		int registerFont (UInt32 fontnum, std::string fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
 		Font* getFont (int n) const;
 		Font* getFont (const std::string &name) const;
 		Font* getFontById (int id) const;

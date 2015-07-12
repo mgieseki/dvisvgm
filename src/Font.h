@@ -296,6 +296,7 @@ class NativeFontProxy : public NativeFont
 		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
 		const Font* uniqueFont () const          {return _nfont;}
 		const char* path () const                {return _nfont->path();}
+		int fontIndex () const                   {return _nfont->fontIndex();}
 		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
 		UInt32 unicode (UInt32 c) const          {return _nfont->unicode(c);}
 		CharMapID getCharMapID () const          {return _nfont->getCharMapID();}
@@ -312,8 +313,8 @@ class NativeFontProxy : public NativeFont
 class NativeFontImpl : public NativeFont
 {
 	public:
-		NativeFontImpl (const std::string &fname, double ptsize, const FontStyle &style, Color color)
-			: NativeFont(ptsize, style, color), _path(fname) {}
+		NativeFontImpl (const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color)
+			: NativeFont(ptsize, style, color), _path(fname), _fontIndex(fontIndex) {}
 
 		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const {
 			return new NativeFontProxy(this, ptsize, style, color);
@@ -322,6 +323,7 @@ class NativeFontImpl : public NativeFont
 		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
 		const Font* uniqueFont () const          {return this;}
 		const char* path () const                {return _path.c_str();}
+		int fontIndex() const                    {return _fontIndex;}
 		bool findAndAssignBaseFontMap ();
 		CharMapID getCharMapID () const          {return CharMapID::NONE;}
 		Character decodeChar (UInt32 c) const;
@@ -329,6 +331,7 @@ class NativeFontImpl : public NativeFont
 
 	private:
 		std::string _path;
+		int _fontIndex;
 		ToUnicodeMap _toUnicodeMap; ///< maps from char indexes to unicode points
 };
 

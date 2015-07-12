@@ -609,11 +609,14 @@ void DVIReader::cmdXFontDef (int) {
 	double ptsize = _dvi2bp*readUnsigned(4);
 	UInt16 flags = readUnsigned(2);
 	UInt8 psname_len = readUnsigned(1);
-	UInt8 fmname_len = readUnsigned(1);
-	UInt8 stname_len = readUnsigned(1);
+	UInt8 fmname_len = getDVIFormat() == DVI_XDVOLD ? readUnsigned(1) : 0;
+	UInt8 stname_len = getDVIFormat() == DVI_XDVOLD ? readUnsigned(1) : 0;
 	string fontname = readString(psname_len);
-	readString(fmname_len);
-	readString(stname_len);
+	UInt32 fontIndex=0;
+	if (getDVIFormat() == DVI_XDVOLD)
+		seek(fmname_len+stname_len, ios::cur);
+	else
+		fontIndex = readUnsigned(4);
 	FontStyle style;
 	Color color;
 	if (flags & 0x0100) { // vertical?
@@ -631,27 +634,28 @@ void DVIReader::cmdXFontDef (int) {
 		style.slant = _dvi2bp*readSigned(4);
 	if (flags & 0x4000)   // embolden?
 		style.bold = _dvi2bp*readSigned(4);
-	if (flags & 0x0800) { // variations?
+	if ((flags & 0x0800) && (getDVIFormat() == DVI_XDVOLD)) { // variations?
 		UInt16 num_variations = readSigned(2);
 		for (int i=0; i < num_variations; i++)
 			readUnsigned(4);
 	}
 	if (_inPage)
-		FontManager::instance().registerFont(fontnum, fontname, ptsize, style, color);
+		FontManager::instance().registerFont(fontnum, fontname, fontIndex, ptsize, style, color);
 }
 
 
 /** XDV extension: prints an array of characters where each character
  *  can take independent x and y coordinates.
  *  parameters: w[4] n[2] x[4][n] y[4][n] c[2][n] */
-void DVIReader::cmdXGlyphA (int) {
+void DVIReader::cmdXGlyphArray (int) {
 	putGlyphArray(false);
 }
+
 
 /** XDV extension: prints an array/string of characters where each character
  *  can take independent x coordinates whereas all share a single y coordinate.
  *  parameters: w[4] n[2] x[4][n] y[4] c[2][n] */
-void DVIReader::cmdXGlyphS (int) {
+void DVIReader::cmdXGlyphString (int) {
 	putGlyphArray(true);
 }
 

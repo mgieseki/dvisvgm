@@ -45,41 +45,40 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 	doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
 	DVI commands because they only differ in length of their parameters. */
 	static const DVICommand commands[] = {
-		{&BasicDVIReader::cmdSetChar, 1}, {&BasicDVIReader::cmdSetChar, 2},
-		{&BasicDVIReader::cmdSetChar, 3}, {&BasicDVIReader::cmdSetChar, 4}, // 128-131
-		{&BasicDVIReader::cmdSetRule, 8},                                   // 132
-		{&BasicDVIReader::cmdPutChar, 1}, {&BasicDVIReader::cmdPutChar, 2},
-		{&BasicDVIReader::cmdPutChar, 3}, {&BasicDVIReader::cmdPutChar, 4}, // 133-136
-		{&BasicDVIReader::cmdPutRule, 8},                                   // 137
-		{&BasicDVIReader::cmdNop, 0},                                       // 138
-		{&BasicDVIReader::cmdBop, 44},    {&BasicDVIReader::cmdEop, 0},     // 139-140
-		{&BasicDVIReader::cmdPush, 0},    {&BasicDVIReader::cmdPop, 0},     // 141-142
-		{&BasicDVIReader::cmdRight, 1},   {&BasicDVIReader::cmdRight, 2},
-		{&BasicDVIReader::cmdRight, 3},   {&BasicDVIReader::cmdRight, 4},   // 143-146
-		{&BasicDVIReader::cmdW0, 0},                                        // 147
-		{&BasicDVIReader::cmdW, 1},       {&BasicDVIReader::cmdW, 2},
-		{&BasicDVIReader::cmdW, 3},       {&BasicDVIReader::cmdW, 4},       // 148-151
-		{&BasicDVIReader::cmdX0, 0},                                        // 152
-		{&BasicDVIReader::cmdX, 1},       {&BasicDVIReader::cmdX, 2},
-		{&BasicDVIReader::cmdX, 3},       {&BasicDVIReader::cmdX, 4},       // 153-156
-		{&BasicDVIReader::cmdDown, 1},    {&BasicDVIReader::cmdDown, 2},
-		{&BasicDVIReader::cmdDown, 3},    {&BasicDVIReader::cmdDown, 4},    // 157-160
-		{&BasicDVIReader::cmdY0, 0},                                        // 161
-		{&BasicDVIReader::cmdY, 1},       {&BasicDVIReader::cmdY, 2},
-		{&BasicDVIReader::cmdY, 3},       {&BasicDVIReader::cmdY, 4},       // 162-165
-		{&BasicDVIReader::cmdZ0, 0},                                        // 166
-		{&BasicDVIReader::cmdZ, 1},       {&BasicDVIReader::cmdZ, 2},
-		{&BasicDVIReader::cmdZ, 3},       {&BasicDVIReader::cmdZ, 4},       // 167-170
-		{&BasicDVIReader::cmdFontNum, 1}, {&BasicDVIReader::cmdFontNum, 2},
-		{&BasicDVIReader::cmdFontNum, 3}, {&BasicDVIReader::cmdFontNum, 4}, // 235-238
-		{&BasicDVIReader::cmdXXX, 1},     {&BasicDVIReader::cmdXXX, 2},
-		{&BasicDVIReader::cmdXXX, 3},     {&BasicDVIReader::cmdXXX, 4},     // 239-242
-		{&BasicDVIReader::cmdFontDef, 1}, {&BasicDVIReader::cmdFontDef, 2},
-		{&BasicDVIReader::cmdFontDef, 3}, {&BasicDVIReader::cmdFontDef, 4}, // 243-246
-		{&BasicDVIReader::cmdPre, 0},     {&BasicDVIReader::cmdPost, 0},
-		{&BasicDVIReader::cmdPostPost, 0},                                  // 247-249
-		{&BasicDVIReader::cmdXPic, 0},    {&BasicDVIReader::cmdXFontDef, 0},
-		{&BasicDVIReader::cmdXGlyphA, 0}, {&BasicDVIReader::cmdXGlyphS, 0}  // 251-254
+		{&BasicDVIReader::cmdSetChar, 1},     {&BasicDVIReader::cmdSetChar, 2},      // 128-129
+		{&BasicDVIReader::cmdSetChar, 3},     {&BasicDVIReader::cmdSetChar, 4},      // 130-131
+		{&BasicDVIReader::cmdSetRule, 8},                                            // 132
+		{&BasicDVIReader::cmdPutChar, 1},     {&BasicDVIReader::cmdPutChar, 2},      // 133-134
+		{&BasicDVIReader::cmdPutChar, 3},     {&BasicDVIReader::cmdPutChar, 4},      // 135-136
+		{&BasicDVIReader::cmdPutRule, 8},                                            // 137
+		{&BasicDVIReader::cmdNop, 0},                                                // 138
+		{&BasicDVIReader::cmdBop, 44},        {&BasicDVIReader::cmdEop, 0},          // 139-140
+		{&BasicDVIReader::cmdPush, 0},        {&BasicDVIReader::cmdPop, 0},          // 141-142
+		{&BasicDVIReader::cmdRight, 1},       {&BasicDVIReader::cmdRight, 2},        // 143-144
+		{&BasicDVIReader::cmdRight, 3},       {&BasicDVIReader::cmdRight, 4},        // 145-146
+		{&BasicDVIReader::cmdW0, 0},                                                 // 147
+		{&BasicDVIReader::cmdW, 1},           {&BasicDVIReader::cmdW, 2},            // 148-149
+		{&BasicDVIReader::cmdW, 3},           {&BasicDVIReader::cmdW, 4},            // 150-151
+		{&BasicDVIReader::cmdX0, 0},                                                 // 152
+		{&BasicDVIReader::cmdX, 1},           {&BasicDVIReader::cmdX, 2},            // 153-154
+		{&BasicDVIReader::cmdX, 3},           {&BasicDVIReader::cmdX, 4},            // 155-156
+		{&BasicDVIReader::cmdDown, 1},        {&BasicDVIReader::cmdDown, 2},         // 157-158
+		{&BasicDVIReader::cmdDown, 3},        {&BasicDVIReader::cmdDown, 4},         // 159-160
+		{&BasicDVIReader::cmdY0, 0},                                                 // 161
+		{&BasicDVIReader::cmdY, 1},           {&BasicDVIReader::cmdY, 2},            // 162-163
+		{&BasicDVIReader::cmdY, 3},           {&BasicDVIReader::cmdY, 4},            // 164-165
+		{&BasicDVIReader::cmdZ0, 0},                                                 // 166
+		{&BasicDVIReader::cmdZ, 1},           {&BasicDVIReader::cmdZ, 2},            // 167-168
+		{&BasicDVIReader::cmdZ, 3},           {&BasicDVIReader::cmdZ, 4},            // 169-170
+
+		{&BasicDVIReader::cmdFontNum, 1},     {&BasicDVIReader::cmdFontNum, 2},      // 235-236
+		{&BasicDVIReader::cmdFontNum, 3},     {&BasicDVIReader::cmdFontNum, 4},      // 237-238
+		{&BasicDVIReader::cmdXXX, 1},         {&BasicDVIReader::cmdXXX, 2},          // 239-240
+		{&BasicDVIReader::cmdXXX, 3},         {&BasicDVIReader::cmdXXX, 4},          // 241-242
+		{&BasicDVIReader::cmdFontDef, 1},     {&BasicDVIReader::cmdFontDef, 2},      // 243-244
+		{&BasicDVIReader::cmdFontDef, 3},     {&BasicDVIReader::cmdFontDef, 4},      // 245-246
+		{&BasicDVIReader::cmdPre, 0},         {&BasicDVIReader::cmdPost, 0},         // 247-248
+		{&BasicDVIReader::cmdPostPost, 0},                                           // 249
 	};
 
 	const int opcode = readByte();
@@ -96,12 +95,13 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		handler = &BasicDVIReader::cmdFontNum0;
 		param = opcode-171;
 	}
-	else if (_dviFormat == DVI_XDV && opcode >= 251 && opcode <= 254) {  // XDV command?
+	else if ((_dviFormat == DVI_XDVOLD && opcode >= 251 && opcode <= 254)
+			  || (_dviFormat == DVI_XDVNEW && opcode >= 252 && opcode <= 253)) {  // XDV command?
 		static const CommandHandler handlers[] = {
 			&BasicDVIReader::cmdXPic,
 			&BasicDVIReader::cmdXFontDef,
-			&BasicDVIReader::cmdXGlyphA,
-			&BasicDVIReader::cmdXGlyphS
+			&BasicDVIReader::cmdXGlyphArray,
+			&BasicDVIReader::cmdXGlyphString
 		};
 		handler = handlers[opcode-251];
 		param = 0;
@@ -169,7 +169,8 @@ void BasicDVIReader::setDVIFormat (DVIFormat format) {
 	switch (_dviFormat) {
 		case DVI_STANDARD:
 		case DVI_PTEX:
-		case DVI_XDV:
+		case DVI_XDVOLD:
+		case DVI_XDVNEW:
 			break;
 		default:
 			ostringstream oss;
@@ -177,7 +178,6 @@ void BasicDVIReader::setDVIFormat (DVIFormat format) {
 			throw DVIException(oss.str());
 	}
 }
-
 
 /////////////////////////////////////
 
@@ -258,10 +258,12 @@ void BasicDVIReader::cmdXPic (int) {
 void BasicDVIReader::cmdXFontDef (int) {
 	seek(4+4, ios::cur);
 	UInt16 flags = readUnsigned(2);
-	UInt8 psname_len = readUnsigned(1);
-	UInt8 fmname_len = readUnsigned(1);
-	UInt8 stname_len = readUnsigned(1);
-	seek(psname_len+fmname_len+stname_len, ios::cur);
+	UInt8 len = readUnsigned(1);
+	if (_dviFormat == DVI_XDVOLD)
+		len += readUnsigned(1)+readUnsigned(1);
+	seek(len, ios::cur);
+	if (_dviFormat == DVI_XDVNEW)
+		seek(4, ios::cur); // skip subfont index
 	if (flags & 0x0200)   // colored?
 		seek(4, ios::cur);
 	if (flags & 0x1000)   // extend?
@@ -270,21 +272,21 @@ void BasicDVIReader::cmdXFontDef (int) {
 		seek(4, ios::cur);
 	if (flags & 0x4000)   // embolden?
 		seek(4, ios::cur);
-	if (flags & 0x0800) { // variations?
+	if ((flags & 0x0800) && (_dviFormat == DVI_XDVOLD)) { // variations?
 		UInt16 num_variations = readSigned(2);
 		seek(4*num_variations, ios::cur);
 	}
 }
 
 
-void BasicDVIReader::cmdXGlyphA (int) {
+void BasicDVIReader::cmdXGlyphArray (int) {
 	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
 	seek(10*num_glyphs, ios::cur);
 }
 
 
-void BasicDVIReader::cmdXGlyphS (int) {
+void BasicDVIReader::cmdXGlyphString (int) {
 	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
 	seek(6*num_glyphs, ios::cur);

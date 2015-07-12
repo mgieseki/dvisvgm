@@ -118,8 +118,8 @@ class DVIReader : public BasicDVIReader, protected VFActions
 		void cmdPostPost (int len);
 		void cmdXPic (int len);
 		void cmdXFontDef (int len);
-		void cmdXGlyphA (int len);
-		void cmdXGlyphS (int len);
+		void cmdXGlyphArray (int len);
+		void cmdXGlyphString (int len);
 
 	private:
 		DVIActions *_actions;    ///< actions to be performed on various DVI events

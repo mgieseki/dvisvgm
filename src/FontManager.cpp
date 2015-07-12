@@ -239,8 +239,12 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
 }
 
 
-
 int FontManager::registerFont (UInt32 fontnum, string filename, double ptsize, const FontStyle &style, Color color) {
+	return registerFont(fontnum, filename, 0, ptsize, style, color);
+}
+
+
+int FontManager::registerFont (UInt32 fontnum, string filename, int fontIndex, double ptsize, const FontStyle &style, Color color) {
 	int id = fontID(fontnum);
 	if (id >= 0)
 		return id;
@@ -260,7 +264,7 @@ int FontManager::registerFont (UInt32 fontnum, string filename, double ptsize, c
 		if (!FileSystem::exists(path))
 			path = FileFinder::lookup(filename, false);
 		if (path) {
-			newfont = new NativeFontImpl(path, ptsize, style, color);
+			newfont = new NativeFontImpl(path, fontIndex, ptsize, style, color);
 			newfont->findAndAssignBaseFontMap();
 		}
 		if (!newfont) {
