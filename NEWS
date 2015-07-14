@@ -1,3 +1,7 @@
+dvisvgm-1.10 (2015-07-15)
+- added support for the new XDV format 6 created by XeTeX 0.99992
+- improved mapping of PostScript character names to Unicode points
+
 dvisvgm-1.9.2 (2015-04-08)
 - avoid retracing of fonts if option --no-fonts and --trace-all=y are given
 - skip tracer messages if no glyphs have been traced
