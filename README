@@ -73,7 +73,7 @@ COMPILATION
 
  If you don't like compiling the sources yourself, you can
  download pre-compiled executables for Windows and MiKTeX
- from sourceforge.net instead (see below).
+ from the project website instead (see below).
 
 
 USAGE
@@ -83,9 +83,9 @@ USAGE
 
 ADDITIONAL INFORMATION
  This package is available from CTAN (dviware/dvisvgm) and can be downloaded
- from the project website at sourceforge.net as well:
+ from the project website as well:
 
-    http://dvisvgm.sourceforge.net
+    http://dvisvgm.2ix.de
 
  Here you can find the sources, pre-compiled binaries and further additional
  information about the converter and related topics.

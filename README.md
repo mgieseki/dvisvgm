@@ -22,21 +22,21 @@ Short overview of the main features:
 * _dvisvgm_ allows to replace font definitions by [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
-* [Intersections of clipping paths](http://dvisvgm.sf.net/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
-* Approximates PostScript [color gradient fills](http://dvisvgm.sourceforge.net/Gradients) not directly supported by SVG 1.1.
+* [Intersections of clipping paths](http://dvisvgm.2ix.de/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
+* Approximates PostScript [color gradient fills](http://dvisvgm.2ix.de/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
 * The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org)) systems.
 * _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive) and is therefore available for a wide range of operating systems.
 
-<a href="http://dvisvgm.sf.net/Downloads">![dvisvgm downloads](http://dvisvgm.sf.net/uploads/download.png)</a>
+<a href="http://dvisvgm.2ix.de/Downloads">![dvisvgm downloads](http://dvisvgm.2ix.de/uploads/download.png)</a>
 
 
 Usage
 -----
 For detailed information about the command-line interface and all available
-options of _dvisvgm_, see the [manual page](http://dvisvgm.sourceforge.net/Manpage).
+options of _dvisvgm_, see the [manual page](http://dvisvgm.2ix.de/Manpage).
 
 
 Dependencies
@@ -109,14 +109,14 @@ reachable through the search path.
 
 If you don't like compiling the sources yourself, you can download
 pre-compiled binaries for Windows and MiKTeX from the
-[project website](http://dvisvgm.sourceforge.net) instead.
+[project website](http://dvisvgm.2ix.de) instead.
 
 
 Additional Information
 ----------------------
 
 This package is available from [CTAN](http://ctan.org), and can be downloaded
-from the [project website](http://dvisvgm.sourceforge.net) as well. There you
+from the [project website](http://dvisvgm.2ix.de) as well. There you
 can find the sources, pre-compiled binaries, the manual page, FAQs and further
 information about the converter and related topics.
 
