@@ -748,13 +748,14 @@ SEE ALSO
 
 RESOURCES
 ---------
-Project home page::: http://dvisvgm.2ix.de
+Project home page::: http://dvisvgm.bplaced.net
+Code repository::: https://github.com/mgieseki/dvisvgm
 
 
 BUGS
 ----
-Please report bugs using the bug tracker at https://launchpad.net/dvisvgm[Launchpad]
-or https://github.com/mgieseki/dvisvgm[GitHub].
+Please report bugs using the bug tracker at https://github.com/mgieseki/dvisvgm/issues[GitHub]
+or https://bugs.launchpad.net/dvisvgm[Launchpad].
 
 
 AUTHOR
