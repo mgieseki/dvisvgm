@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include <cstring>
 #include "CommandLine.h"
 
 TEST(CommandLineTest, noarg_short) {
@@ -193,8 +192,8 @@ TEST(CommandLineTest, file) {
 	EXPECT_EQ(cmd.zip_arg(), 5);
 	EXPECT_TRUE(cmd.list_specials_given());
 	EXPECT_EQ(cmd.numFiles(), 2);
-	EXPECT_EQ(strcmp(cmd.file(0), "myfile1"), 0);
-	EXPECT_EQ(strcmp(cmd.file(1), "myfile2"), 0);
+	EXPECT_STREQ(cmd.file(0), "myfile1");
+	EXPECT_STREQ(cmd.file(1), "myfile2");
 	EXPECT_FALSE(cmd.error());
 }
 
@@ -210,7 +209,7 @@ TEST(CommandLineTest, files_only) {
 	EXPECT_TRUE(cmd.zip_given());
 	EXPECT_EQ(cmd.zip_arg(), 5);
 	EXPECT_EQ(cmd.numFiles(), 2);
-	EXPECT_EQ(strcmp(cmd.file(0), "-l"), 0);
-	EXPECT_EQ(strcmp(cmd.file(1), "myfile"), 0);
+	EXPECT_STREQ(cmd.file(0), "-l");
+	EXPECT_STREQ(cmd.file(1), "myfile");
 }
 

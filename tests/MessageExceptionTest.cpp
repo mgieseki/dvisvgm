@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include <cstring>
 #include "MessageException.h"
 
 using namespace std;
@@ -37,7 +36,7 @@ TEST(MessageExceptionTest, catch_direct) {
 		FAIL();
 	}
 	catch (MessageException &e) {
-		ASSERT_TRUE(strcmp(e.what(), "test message") == 0);
+		ASSERT_STREQ(e.what(), "test message");
 		caught = true;
 	}
 	catch (...) {
@@ -54,7 +53,7 @@ TEST(MessageExceptionTest, catch_indirect1) {
 		FAIL();
 	}
 	catch (exception &e) {
-		ASSERT_TRUE(strcmp(e.what(), "test message") == 0);
+		ASSERT_STREQ(e.what(), "test message");
 		caught = true;
 	}
 	catch (...) {
