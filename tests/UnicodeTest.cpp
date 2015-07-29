@@ -24,7 +24,7 @@
 using namespace std;
 
 
-TEST(TypesTest, isValidCodepoint) {
+TEST(UnicodeTest, isValidCodepoint) {
 	for (UInt32 i=0; i <= 0x20; i++)
 		EXPECT_FALSE(Unicode::isValidCodepoint(i));
 	for (UInt32 i=0x21; i <= 0x7e; i++)
@@ -35,7 +35,7 @@ TEST(TypesTest, isValidCodepoint) {
 }
 
 
-TEST(TypesTest, utf8) {
+TEST(UnicodeTest, utf8) {
 	EXPECT_EQ(Unicode::utf8(0x1), string("\x01"));
 	EXPECT_EQ(Unicode::utf8(0x47), string("\x47"));
 	EXPECT_EQ(Unicode::utf8(0x7f), string("\x7f"));
@@ -48,4 +48,14 @@ TEST(TypesTest, utf8) {
 	EXPECT_EQ(Unicode::utf8(0x10000), string("\xf0\x90\x80\x80"));
 	EXPECT_EQ(Unicode::utf8(0x10ffff), string("\xf4\x8f\xbf\xbf"));
 	EXPECT_TRUE(Unicode::utf8(0x110000).empty());
+}
+
+
+TEST(UnicodeTest, psName2Codepoint) {
+	EXPECT_EQ(Unicode::psName2Codepoint("does not exist"), 0);
+	EXPECT_EQ(Unicode::psName2Codepoint("Eogonek"), 0x118);
+	EXPECT_EQ(Unicode::psName2Codepoint("alpha"), 0x03b1);
+	EXPECT_EQ(Unicode::psName2Codepoint("Alpha"), 0x0391);
+	EXPECT_EQ(Unicode::psName2Codepoint("alphatonos"), 0x03ac);
+	EXPECT_EQ(Unicode::psName2Codepoint("SF460000"), 0x2568);
 }
