@@ -1,4 +1,4 @@
-In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2013 you
+In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2015 you
 need to download the source code archives of the following libraries:
 
 FreeType:   http://freetype.org
