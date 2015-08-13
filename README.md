@@ -27,10 +27,8 @@ Short overview of the main features:
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
-* The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org)) systems.
+* The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
 * _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive) and is therefore available for a wide range of operating systems.
-
-<a href="http://dvisvgm.bplaced.net/Downloads">![dvisvgm downloads](http://dvisvgm.bplaced.net/img/download.png)</a>
 
 
 Usage
@@ -91,6 +89,7 @@ Compilation
 -----------
 
 Quick installation info:
+* type `./autogen.sh`
 * type `./configure`
 * type `make`
 * type `make install` as root (or `sudo make install`)
@@ -115,14 +114,13 @@ pre-compiled binaries for Windows and MiKTeX from the
 Additional Information
 ----------------------
 
-This package is available from [CTAN](http://ctan.org), and can be downloaded
-from the [project website](http://dvisvgm.bplaced.net) as well. There you
-can find the sources, pre-compiled binaries, the manual page, FAQs and further
-information about the converter and related topics.
+This package is available from [CTAN](http://ctan.org/pkg/dvisvgm), and can be
+downloaded from the [project website](http://dvisvgm.bplaced.net) as well.
+There you can find the sources, pre-compiled binaries, the manual page, FAQs
+and further information about the converter and related topics.
 
 If you've found a bug, please let me know. You can either send me an email or
-preferably use the bug tracker at [GitHub](https://github.com/mgieseki/dvisvgm)
-or [Launchpad](https://launchpad.net/dvisvgm).
+preferably use the bug tracker at [GitHub](https://github.com/mgieseki/dvisvgm).
 
 
 Copyright
