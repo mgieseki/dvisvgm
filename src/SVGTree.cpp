@@ -116,6 +116,8 @@ void SVGTree::appendToPage (XMLNode *node) {
 		_page->append(node);
 	else
 		_pageContainerStack.top()->append(node);
+	if (node != _text) // if the appended node differ from text element currently in use,
+		_text = 0;      // then force creating a new text element for the following characters
 }
 
 
