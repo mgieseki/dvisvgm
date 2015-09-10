@@ -510,8 +510,9 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (type() == PFB) {
 		// try to get the unicode point from the character name
 		string glyphname = glyphName(c);
-		if (!glyphname.empty())
-			return Unicode::psName2Codepoint(glyphname);
+		UInt32 codepoint;
+		if (!glyphname.empty() && (codepoint = Unicode::psName2Codepoint(glyphname)) != 0)
+			return codepoint;
 	}
 	if (chr.type() == Character::NAME || chr.number() == 0)
 		return Font::unicode(c);
