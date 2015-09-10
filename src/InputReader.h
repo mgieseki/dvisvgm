@@ -27,34 +27,35 @@
 #include "InputBuffer.h"
 
 
-struct InputReader
+class InputReader
 {
-	virtual ~InputReader() {}
-	virtual int get () =0;
-	virtual int peek () const =0;
-	virtual int peek (size_t n) const =0;
-	virtual bool eof () const =0;
-	virtual bool check (char c) const {return peek() == c;}
-	virtual bool check (const char *s, bool consume=true);
-	virtual int compare (const char *s, bool consume=true);
-	virtual void skip (size_t n);
-	virtual bool skipUntil (const char *s, bool consume=true);
-	virtual int find (char c) const;
-	virtual void skipSpace ();
-	virtual int getInt ();
-	virtual bool parseInt (int &val, bool accept_sign=true);
-	virtual bool parseInt (int base, int &val);
-	virtual bool parseUInt (unsigned &val);
-	virtual char parseDouble (double &val);
-	virtual double getDouble ();
-	virtual std::string getWord ();
-	virtual char getPunct ();
-	virtual std::string getQuotedString (char quotechar);
-	virtual std::string getString ();
-	virtual std::string getString (size_t n);
-	virtual std::string getLine ();
-	virtual int parseAttributes (std::map<std::string,std::string> &attr, char quotechar=0);
-	virtual operator bool () const {return !eof();}
+	public:
+		virtual ~InputReader() {}
+		virtual int get () =0;
+		virtual int peek () const =0;
+		virtual int peek (size_t n) const =0;
+		virtual bool eof () const =0;
+		virtual bool check (char c) const {return peek() == c;}
+		virtual bool check (const char *s, bool consume=true);
+		virtual int compare (const char *s, bool consume=true);
+		virtual void skip (size_t n);
+		virtual bool skipUntil (const char *s, bool consume=true);
+		virtual int find (char c) const;
+		virtual void skipSpace ();
+		virtual int getInt ();
+		virtual bool parseInt (int &val, bool accept_sign=true);
+		virtual bool parseInt (int base, int &val);
+		virtual bool parseUInt (unsigned &val);
+		virtual char parseDouble (double &val);
+		virtual double getDouble ();
+		virtual std::string getWord ();
+		virtual char getPunct ();
+		virtual std::string getQuotedString (char quotechar);
+		virtual std::string getString ();
+		virtual std::string getString (size_t n);
+		virtual std::string getLine ();
+		virtual int parseAttributes (std::map<std::string,std::string> &attr, char quotechar=0);
+		virtual operator bool () const {return !eof();}
 };
 
 
