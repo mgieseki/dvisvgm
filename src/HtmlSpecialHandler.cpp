@@ -136,7 +136,7 @@ void HtmlSpecialHandler::processHrefAnchor (string uri) {
 	}
 	XMLElementNode *anchor = new XMLElementNode("a");
 	anchor->addAttribute("xlink:href", uri);
-	anchor->addAttribute("xlink:title", name.empty() ? uri : name);
+	anchor->addAttribute("xlink:title", XMLString(name.empty() ? uri : name, false));
 	_actions->pushContextElement(anchor);
 	_actions->bbox("{anchor}", true);  // start computing the bounding box of the linked area
 	_depthThreshold = _actions->getDVIStackDepth();
