@@ -35,6 +35,19 @@ TEST(UnicodeTest, isValidCodepoint) {
 }
 
 
+TEST(UnicodeTest, charToCodepoint) {
+	for (UInt32 i=0; i <= 0x20; i++)
+		EXPECT_EQ(Unicode::charToCodepoint(i), 0xe000+i);
+	for (UInt32 i=0x21; i <= 0x7e; i++)
+		EXPECT_EQ(Unicode::charToCodepoint(i), i);
+	for (UInt32 i=0x7f; i <= 0x9f; i++)
+		EXPECT_EQ(Unicode::charToCodepoint(i), 0xe021+i-0x7f);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10fffd), 0x10fffd);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10fffe), 0xe887);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10ffff), 0xe888);
+}
+
+
 TEST(UnicodeTest, utf8) {
 	EXPECT_EQ(Unicode::utf8(0x1), string("\x01"));
 	EXPECT_EQ(Unicode::utf8(0x47), string("\x47"));

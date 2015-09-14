@@ -26,7 +26,7 @@ using namespace std;
 
 
 /** Adds valid but random mappings for all missing character indexes.
- *  If a font's cmap table doensn't provide unicode mappings for all
+ *  If a font's cmap table doesn't provide Unicode mappings for some
  *  glyphs in the font, it's necessary to fill the gaps in order to
  *  handle all characters correctly. This functions assumes that the
  *  characters are numbered from 1 to maxIndex.
@@ -34,14 +34,14 @@ using namespace std;
  *  @return true on success */
 bool ToUnicodeMap::addMissingMappings (UInt32 maxIndex) {
 	bool success=true;
-	// collect unicode points already in assigned
+	// collect Unicode points already in assigned
 	NumericRanges<UInt32> codepoints;
 	for (size_t i=0; i < size() && success; i++)
 		codepoints.addRange(rangeAt(i).minval(), rangeAt(i).maxval());
 	// fill unmapped ranges
-	if (empty()) // no unicode mapping present at all?
+	if (empty()) // no Unicode mapping present at all?
 		success = fillRange(1, maxIndex, 1, codepoints, true);
-	else {   // (partial) unicode mapping present?
+	else {   // (partial) Unicode mapping present?
 		success = fillRange(1, rangeAt(0).min()-1, rangeAt(0).minval()-1, codepoints, false);
 		for (size_t i=0; i < size()-1 && success; i++)
 			success = fillRange(rangeAt(i).max()+1, rangeAt(i+1).min()-1, rangeAt(i).maxval()+1, codepoints, true);
@@ -64,7 +64,7 @@ static bool fix_codepoint (UInt32 &ucp, const NumericRanges<UInt32> &used_codepo
 			ucp = (ucp == numeric_limits<UInt32>::max()) ? 0 : ucp+1;
 		else
 			ucp = (ucp == 0) ? numeric_limits<UInt32>::max() : ucp-1;
-		if (ucp == start) // no free unicode point found
+		if (ucp == start) // no free Unicode point found
 			return false;
 	}
 	return true;
@@ -75,11 +75,11 @@ static bool is_less_or_equal (UInt32 a, UInt32 b) {return a <= b;}
 static bool is_greater_or_equal (UInt32 a, UInt32 b) {return a >= b;}
 
 
-/** Adds index to unicode mappings for a given range of character indexes.
+/** Adds index to Unicode mappings for a given range of character indexes.
  *  @param[in] minIndex lower bound of range to fill
  *  @param[in] maxIndex upper bound of range to fill
- *  @param[in] ucp first unicode point to add (if possible)
- *  @param[in,out] used_ucps unicode points already in use
+ *  @param[in] ucp first Unicode point to add (if possible)
+ *  @param[in,out] used_ucps Unicode points already in use
  *  @param[in] ascending if true, fill range from lower to upper bound
  *  @return true on success */
 bool ToUnicodeMap::fillRange (UInt32 minIndex, UInt32 maxIndex, UInt32 ucp, NumericRanges<UInt32> &used_ucps, bool ascending) {
@@ -98,7 +98,7 @@ bool ToUnicodeMap::fillRange (UInt32 minIndex, UInt32 maxIndex, UInt32 ucp, Nume
 			else {
 				addRange(i, i, ucp);
 				used_ucps.addRange(ucp);
-				ucp += inc;  // preferred unicode point for the next character of the current range
+				ucp += inc;  // preferred Unicode point for the next character of the current range
 			}
 		}
 	}

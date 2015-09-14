@@ -46,8 +46,7 @@ using namespace std;
 
 
 UInt32 Font::unicode (UInt32 c) const {
-	// @@ this should be optimized :-)
-	return Unicode::isValidCodepoint(c) ? c : 0x3400+c;
+	return Unicode::charToCodepoint(c);
 }
 
 
@@ -502,34 +501,35 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 }
 
 
-/** Returns the unicode point for a given DVI character. */
+/** Returns the Unicode point for a given DVI character. */
 UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 	if (type() == MF)
 		return Font::unicode(c);
 	Character chr = decodeChar(c);
 	if (type() == PFB) {
-		// try to get the unicode point from the character name
+		// try to get the Unicode point from the character name
 		string glyphname = glyphName(c);
 		UInt32 codepoint;
 		if (!glyphname.empty() && (codepoint = Unicode::psName2Codepoint(glyphname)) != 0)
 			return codepoint;
+		if (c <= 0x1900)  // does character code c fit into Private Use Zone U+E000?
+			return 0xe000+c;
+//		Message::wstream() << "can't properly map PS character '" << glyphname << "' (0x" << hex << c << ") to Unicode\n";
+		// If we get here, there is no easy mapping. As for now, we use the character code as Unicode point.
+		// Although quite unlikely, it might collide with properly mapped characters.
+		return Unicode::charToCodepoint(c);
 	}
 	if (chr.type() == Character::NAME || chr.number() == 0)
-		return Font::unicode(c);
+		return Unicode::charToCodepoint(chr.number());
 
 	if (_localCharMap) {
 		if (UInt32 mapped_char = _localCharMap->valueAt(chr.number()))
 			return mapped_char;
-		// No unicode equivalent found in font file.
-		// Now we should look for a smart alternative but at the moment
-		// it's sufficient to simply choose a valid unused unicode value...
-		// Can we use the charcode itself as a unicode replacement?
-		if (!_localCharMap->valueExists(chr.number()) && Unicode::isValidCodepoint(chr.number()))
-			return chr.number();
 	}
-	if (Unicode::isValidCodepoint(chr.number()))
-		return chr.number();
-	return Font::unicode(chr.number());
+	// No Unicode equivalent found in the font file.
+	// Now we should look for a smart alternative but at the moment
+	// it's sufficient to simply choose a valid unused codepoint.
+	return Unicode::charToCodepoint(chr.number());
 }
 
 
@@ -612,7 +612,7 @@ bool NativeFontImpl::findAndAssignBaseFontMap () {
 	fe.setUnicodeCharMap();
 	fe.buildCharMap(_toUnicodeMap);
 	if (!_toUnicodeMap.addMissingMappings(fe.getNumGlyphs()))
-		Message::wstream(true) << "incomplete unicode mapping for native font " << name() << " (" << filename() << ")\n";
+		Message::wstream(true) << "incomplete Unicode mapping for native font " << name() << " (" << filename() << ")\n";
 	return true;
 }
 
@@ -624,7 +624,7 @@ Character NativeFontImpl::decodeChar (UInt32 c) const {
 
 UInt32 NativeFontImpl::unicode (UInt32 c) const {
 	UInt32 ucode = _toUnicodeMap.valueAt(c);
-	return Unicode::isValidCodepoint(ucode) ? ucode : 0x3400+ucode;
+	return Unicode::charToCodepoint(ucode);
 }
 
 //////////////////////////////////////////////////////////////////////////////

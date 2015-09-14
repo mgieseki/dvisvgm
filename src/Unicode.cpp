@@ -25,31 +25,65 @@
 using namespace std;
 
 
-/** Returns true if c is a valid unicode point in XML documents.
- *  XML version 1.0 doesn't allow various unicode character references
+/** Returns true if c is a valid Unicode point in XML documents.
+ *  XML version 1.0 doesn't allow various Unicode character references
  *  (&#1; for example). */
 bool Unicode::isValidCodepoint (UInt32 c) {
 	if ((c & 0xffff) == 0xfffe || (c & 0xffff) == 0xffff)
 		return false;
 
 	UInt32 ranges[] = {
-		0x0000, 0x0020,
-		0x007f, 0x0084,
-		0x0086, 0x009f,
+		0x0000, 0x0020,  // basic control characters + space
+		0x007f, 0x009f,  // use of control characters is discouraged by the XML standard
 		0x202a, 0x202e,  // bidi control characters
-		0xd800, 0xdfff,
-		0xfdd0, 0xfdef,
+		0xd800, 0xdfff,  // High Surrogates are not allowed in XML
+		0xfdd0, 0xfdef,  // non-characters for internal use by applications
 	};
-	for (size_t i=0; i < sizeof(ranges)/sizeof(UInt32)/2; i++)
-		if (c >= ranges[2*i] && c <= ranges[2*i+1])
+	for (size_t i=0; i < sizeof(ranges)/sizeof(UInt32) && c >= ranges[i]; i+=2)
+		if (c <= ranges[i+1])
 			return false;
 	return true;
 }
 
 
-/** Converts a unicode value to a UTF-8 byte sequence.
+/** Returns a valid Unicode point for the given character code. Character codes
+ *  that are invalid code points because the XML standard forbids or discourages
+ *  their usage, are mapped to the Private Use Zone U+E000-U+F8FF. */
+UInt32 Unicode::charToCodepoint (UInt32 c) {
+	UInt32 ranges[] = {
+		0x0000, 0x0020, 0xe000, // basic control characters + space
+		0x007f, 0x009f, 0xe021, // use of control characters is discouraged by the XML standard
+		0x202a, 0x202e, 0xe042, // bidi control characters
+		0xd800, 0xdfff, 0xe047, // High Surrogates are not allowed in XML
+		0xfdd0, 0xfdef, 0xe847, // non-characters for internal use by applications
+		0xfffe, 0xffff, 0xe867,
+		0x1fffe, 0x1ffff, 0xe869,
+		0x2fffe, 0x2ffff, 0xe86b,
+		0x3fffe, 0x3ffff, 0xe86d,
+		0x4fffe, 0x4ffff, 0xe86f,
+		0x5fffe, 0x5ffff, 0xe871,
+		0x6fffe, 0x6ffff, 0xe873,
+		0x7fffe, 0x7ffff, 0xe875,
+		0x8fffe, 0x8ffff, 0xe877,
+		0x9fffe, 0x9ffff, 0xe879,
+		0xafffe, 0xaffff, 0xe87b,
+		0xbfffe, 0xbffff, 0xe87d,
+		0xcfffe, 0xcffff, 0xe87f,
+		0xdfffe, 0xdffff, 0xe881,
+		0xefffe, 0xeffff, 0xe883,
+		0xffffe, 0xfffff, 0xe885,
+		0x10fffe, 0x10ffff, 0xe887
+	};
+	for (size_t i=0; i < sizeof(ranges)/sizeof(unsigned) && c >= ranges[i]; i+=3)
+		if (c <= ranges[i+1])
+			return ranges[i+2]+c-ranges[i];
+	return c;
+}
+
+
+/** Converts a Unicode value to a UTF-8 byte sequence.
  *  @param[in] c character code
- *  @return  utf8 seqence consisting of 1-4 bytes */
+ *  @return  utf8 sequence consisting of 1-4 bytes */
 string Unicode::utf8 (Int32 c) {
 	string utf8;
 	if (c >= 0) {
@@ -77,7 +111,7 @@ string Unicode::utf8 (Int32 c) {
 
 
 /* The following table provides a compact mapping from PostScript character names
- * to unicode points. Instead of using the character names directly it maps the
+ * to Unicode points. Instead of using the character names directly it maps the
  * hash values (xxhash32) of the names to the corresponding code points.
  * The character mapping is derived from
  * http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt and
@@ -4499,7 +4533,7 @@ static struct Hash2Unicode {
 };
 
 
-/** Returns the unicode point for a given PostScript character name.
+/** Returns the Unicode point for a given PostScript character name.
  * @param psname PostScript name of the character to look up
  * @return codepoint of the character */
 Int32 Unicode::psName2Codepoint (const string &psname) {
