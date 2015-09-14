@@ -4536,7 +4536,7 @@ static struct Hash2Unicode {
 /** Returns the Unicode point for a given PostScript character name.
  * @param psname PostScript name of the character to look up
  * @return codepoint of the character */
-Int32 Unicode::psName2Codepoint (const string &psname) {
+Int32 Unicode::psNameToCodepoint (const string &psname) {
 	UInt32 hash = XXH32(&psname[0], psname.length(), 0);
 	int left=0;
 	int right=sizeof(hash2unicode)/sizeof(Hash2Unicode)-1;
