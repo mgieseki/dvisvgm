@@ -1,3 +1,10 @@
+dvisvgm-1.11 (2015-09-21)
+- improved mapping of unknown characters to Unicode
+- improved handling of text elements in conjunction with \specials (patch by Till Tantau)
+- fixed an issue that could lead to (invalid) U+0000 codepoints
+- prevent creating invalid XML by quoting xlink:title attributes properly
+- documentation: updated links to new website address
+
 dvisvgm-1.10 (2015-07-15)
 - added support for the new XDV format 6 created by XeTeX 0.99992
 - improved mapping of PostScript character names to Unicode points

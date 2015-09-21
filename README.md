@@ -8,7 +8,8 @@ Description
 -----------
 
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
-[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) and EPS files to the
+[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) and
+[EPS](http://en.wikipedia.org/wiki/Encapsulated_PostScript) files to the
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (format 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
@@ -54,15 +55,16 @@ _dvisvgm_ relies on the following free libraries:
   The PostScript special handler requires the Ghostscript library libgs.so (Linux)
   or gsdll32.dll/gsdll64.dll (Windows) to be installed. If the configure script
   finds the corresponding Ghostscript development files on the system, it
-  directly links against libgs.so. Otherwise, the library is looked up during
-  runtime, and the PostScript support is enabled only if libgs.so can be found.
-  Due to incompatible changes of the Ghostscript API, _dvisvgm_ requires
-  Ghostscript 8.31 or later.
+  directly links against `libgs.so.N`, where _N_ is the library's ABI version.
+  Otherwise, the library is looked up during runtime, and the PostScript support is
+  enabled only if `libgs.so` can be found. Due to incompatible changes of the Ghostscript API,
+  _dvisvgm_ requires Ghostscript 8.31 or later.
 
 * [Kpathsea](https://tug.org/kpathsea)  
   This library is part of the Web2C package and is usually installed in
   conjunction with a TeX distribution. Kpathsea provides functions for searching
-  files in the large texmf tree.
+  files in the large texmf tree. Please ensure that you use the kpathsea version
+  coming with or matching your TeX system.
 
 * [potracelib](http://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
@@ -89,7 +91,7 @@ Compilation
 -----------
 
 Quick installation info:
-* type `./autogen.sh`
+* type `./autogen.sh` if `configure` is not present in the dvisvgm root folder
 * type `./configure`
 * type `make`
 * type `make install` as root (or `sudo make install`)

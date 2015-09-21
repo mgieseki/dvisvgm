@@ -22,15 +22,17 @@ DEPENDENCIES
    The PostScript special handler requires the Ghostscript library
    libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows) to be installed.
    If the configure script finds the corresponding Ghostscript development
-   files on the system, it directly links against libgs.so. Otherwise, the
-   library is looked up at runtime, and PostScript support is enabled only if
-   libgs.so can be found. Due to incompatible changes of the Ghostscript API,
-   dvisvgm requires Ghostscript 8.31 or later.
+   files on the system, it directly links against libgs.so.N, where N is the
+   library's ABI version. Otherwise, the library is looked up at runtime,
+   and PostScript support is enabled only if libgs.so can be found. Due to
+   incompatible changes of the Ghostscript API, dvisvgm requires Ghostscript 8.31
+   or later.
 
  * kpathsea (https://tug.org/kpathsea)
    This library is part of the Web2C package and is usually installed in
    conjunction with a TeX distribution. kpathsea provides functions for
-   searching files in the large texmf tree.
+   searching files in the large texmf tree. Please ensure that you use the
+   kpathsea version coming with or matching your TeX system.
 
  * potracelib (http://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
