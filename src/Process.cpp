@@ -72,9 +72,9 @@ static inline void close_handle (HANDLE handle) {
 #else
 
 /** Extracts whitespace-sparated parameters from a string.
- *  @param[in] paramstr the parameter string
+ *  @param[in,out] paramstr the parameter string
  *  @param[out] params vector holding the extracted parameters */
-static void split_paramstr (string paramstr, vector<const char*> &params) {
+static void split_paramstr (string &paramstr, vector<const char*> &params) {
 	size_t left=0, right=0;  // index of first and last character of current parameter
 	char quote=0;            // current quote character, 0=none
 	const size_t len = paramstr.length();
@@ -163,7 +163,8 @@ bool Process::run (string *out) {
 		}
 		vector<const char*> params;
 		params.push_back(_cmd.c_str());
-		split_paramstr(_paramstr, params);
+		string paramstr = _paramstr;  // private copy to be changed by split_paramstr()
+		split_paramstr(paramstr, params);
 		params.push_back(0);     // trailing NULL marks end
 		execvp(_cmd.c_str(), const_cast<char* const*>(&params[0]));
 		exit(1);

@@ -34,7 +34,7 @@ class Process
 
 	private:
 		std::string _cmd;
-		std::string _paramstr;
+		const std::string _paramstr;
 };
 
 #endif
