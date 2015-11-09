@@ -81,7 +81,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("x2", p2.x());
 		node->addAttribute("y2", p2.y());
 		node->addAttribute("stroke-width", lw);
-		node->addAttribute("stroke", actions->getColor().rgbString());
+		node->addAttribute("stroke", actions->getColor().svgColorString());
 		// update bounding box
 		actions->embed(p1);
 		actions->embed(p2);
@@ -100,7 +100,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 			 << XMLString(q21.x()) << ',' << XMLString(q21.y());
 		node->addAttribute("points", oss.str());
 		if (actions->getColor() != Color::BLACK)
-			node->addAttribute("fill", actions->getColor().rgbString());
+			node->addAttribute("fill", actions->getColor().svgColorString());
 		// update bounding box
 		actions->embed(q11);
 		actions->embed(q12);

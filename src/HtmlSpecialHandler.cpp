@@ -182,22 +182,22 @@ void HtmlSpecialHandler::markLinkedBox () {
 			double h = linewidth;
 			const Color &linecolor = USE_LINECOLOR ? LINK_LINECOLOR : _actions->getColor();
 			if (MARKER_TYPE == MT_LINE)
-				rect->addAttribute("fill", linecolor.rgbString());
+				rect->addAttribute("fill", linecolor.svgColorString());
 			else {
 				x -= linewidth;
 				y = bbox.minY()-linewidth;
 				w += 2*linewidth;
 				h += bbox.height()+linewidth;
 				if (MARKER_TYPE == MT_BGCOLOR) {
-					rect->addAttribute("fill", LINK_BGCOLOR.rgbString());
+					rect->addAttribute("fill", LINK_BGCOLOR.svgColorString());
 					if (USE_LINECOLOR) {
-						rect->addAttribute("stroke", linecolor.rgbString());
+						rect->addAttribute("stroke", linecolor.svgColorString());
 						rect->addAttribute("stroke-width", linewidth);
 					}
 				}
 				else {  // LM_BOX
 					rect->addAttribute("fill", "none");
-					rect->addAttribute("stroke", linecolor.rgbString());
+					rect->addAttribute("stroke", linecolor.svgColorString());
 					rect->addAttribute("stroke-width", linewidth);
 				}
 			}

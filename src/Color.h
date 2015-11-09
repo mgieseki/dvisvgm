@@ -34,6 +34,7 @@
 class Color
 {
 	public:
+		static bool SUPPRESS_COLOR_NAMES;
 		static const Color BLACK;
 		static const Color WHITE;
 		static const Color TRANSPARENT;
@@ -79,6 +80,8 @@ class Color
 		void operator *= (double c);
 		double deltaE (const Color &c) const;
 		std::string rgbString () const;
+		std::string svgColorString (bool rgbonly) const;
+		std::string svgColorString () const {return svgColorString(SUPPRESS_COLOR_NAMES);}
 		static void CMYK2RGB (const std::valarray<double> &cmyk, std::valarray<double> &rgb);
 		static void RGB2CMYK (const std::valarray<double> &rgb, std::valarray<double> &cmyk);
 		static void HSB2RGB (const std::valarray<double> &hsb, std::valarray<double> &rgb);

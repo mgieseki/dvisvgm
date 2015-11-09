@@ -152,6 +152,14 @@ customized via the environment variable *DVISVGM_COLORS*. See the <<environment,
 below for further information.
 
 
+*--colornames*::
+By default, dvisvgm exclusively uses RGB values of the form '#RRGGBB' to represent colors in
+the SVG file. According to the SVG standard, it's also possible to use color names (like +black+
+and +darkblue+) for a limited number of predefined colors. In order to apply these color names
+rather than their RGB values, call dvisvgm with option *--colornames*. All colors without an
+SVG color name will still be represented by RGB values.
+
+
 *-E, --eps*::
 If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
 it to SVG. In order to do so, a single 'psfile' special command is created and forwarded to the

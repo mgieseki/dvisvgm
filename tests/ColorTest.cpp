@@ -141,3 +141,18 @@ TEST(ColorTest, getLab) {
 	EXPECT_NEAR(lab[1], -23.7597, 0.0001);
 	EXPECT_NEAR(lab[2], -29.4733, 0.0001);
 }
+
+
+TEST(ColorTest, svgColorString) {
+	EXPECT_EQ(Color(UInt32(0x000000)).svgColorString(false), "black");
+	EXPECT_EQ(Color(UInt32(0xffffff)).svgColorString(false), "white");
+	EXPECT_EQ(Color(UInt32(0xff0000)).svgColorString(false), "red");
+	EXPECT_EQ(Color(UInt32(0x9400d3)).svgColorString(false), "darkviolet");
+	EXPECT_EQ(Color(UInt32(0x000001)).svgColorString(false), "#000001");
+
+	EXPECT_EQ(Color(UInt32(0x000000)).svgColorString(true), "#000000");
+	EXPECT_EQ(Color(UInt32(0xffffff)).svgColorString(true), "#ffffff");
+	EXPECT_EQ(Color(UInt32(0xff0000)).svgColorString(true), "#ff0000");
+	EXPECT_EQ(Color(UInt32(0x9400d3)).svgColorString(true), "#9400d3");
+	EXPECT_EQ(Color(UInt32(0x000001)).svgColorString(true), "#000001");
+}

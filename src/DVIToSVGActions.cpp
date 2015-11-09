@@ -176,7 +176,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	if (!getMatrix().isIdentity())
 		rect->addAttribute("transform", getMatrix().getSVG());
 	if (getColor() != Color::BLACK)
-		rect->addAttribute("fill", _svg.getColor().rgbString());
+		rect->addAttribute("fill", _svg.getColor().svgColorString());
 	_svg.appendToPage(rect);
 
 	// update bounding box
@@ -247,7 +247,7 @@ void DVIToSVGActions::endPage (unsigned pageno) {
 		r->addAttribute("y", _bbox.minY());
 		r->addAttribute("width", _bbox.width());
 		r->addAttribute("height", _bbox.height());
-		r->addAttribute("fill", _bgcolor.rgbString());
+		r->addAttribute("fill", _bgcolor.svgColorString());
 		_svg.prependToPage(r);
 	}
 }

@@ -49,6 +49,9 @@
 			<option long="clipjoin" short="j" if="!defined(DISABLE_GS)">
 				<description>compute intersection of clipping paths</description>
 			</option>
+			<option long="colornames">
+				<description>prefer color names to RGB values if possible</description>
+			</option>
 			<option long="grad-overlap" if="!defined(DISABLE_GS)">
 				<description>create operlapping color gradient segments</description>
 			</option>

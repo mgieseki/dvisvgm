@@ -20,6 +20,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 	{'j', "clipjoin", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_clipjoin)},
 #endif
 	{'\0', "color", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
+	{'\0', "colornames", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_colornames)},
 #if !defined(DISABLE_GS)
 	{'E', "eps", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
 #endif
@@ -79,6 +80,7 @@ void CommandLine::init () {
 	_clipjoin_given = false;
 #endif
 	_color_given = false;
+	_colornames_given = false;
 #if !defined(DISABLE_GS)
 	_eps_given = false;
 #endif
@@ -169,6 +171,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 #if !defined(DISABLE_GS)
 		"o-j, --clipjoin                compute intersection of clipping paths",
 #endif
+		"o    --colornames              prefer color names to RGB values if possible",
 #if !defined(DISABLE_GS)
 		"o    --grad-overlap            create operlapping color gradient segments",
 #endif
@@ -234,6 +237,10 @@ void CommandLine::handle_clipjoin (InputReader &ir, const Option &opt, bool long
 
 void CommandLine::handle_color (InputReader &ir, const Option &opt, bool longopt) {
 	_color_given = true;
+}
+
+void CommandLine::handle_colornames (InputReader &ir, const Option &opt, bool longopt) {
+	_colornames_given = true;
 }
 
 #if !defined(DISABLE_GS)

@@ -485,7 +485,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("cx", x);
 			path->addAttribute("cy", y);
 			path->addAttribute("r", r);
-			path->addAttribute("fill", _actions->getColor().rgbString());
+			path->addAttribute("fill", _actions->getColor().svgColorString());
 			bbox = BoundingBox(x-r, y-r, x+r, y+r);
 		}
 	}
@@ -498,7 +498,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 		path = new XMLElementNode("path");
 		path->addAttribute("d", oss.str());
-		path->addAttribute("stroke", _actions->getColor().rgbString());
+		path->addAttribute("stroke", _actions->getColor().svgColorString());
 		path->addAttribute("fill", "none");
 		if (_linewidth != 1)
 			path->addAttribute("stroke-width", _linewidth);
@@ -565,7 +565,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (_pattern)
 		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
 	else if (_actions->getColor() != Color::BLACK || _savenode)
-		path->addAttribute("fill", _actions->getColor().rgbString());
+		path->addAttribute("fill", _actions->getColor().svgColorString());
 	if (_clipStack.top()) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
@@ -885,7 +885,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 			XMLElementNode *pathElem = new XMLElementNode("path");
 			pathElem->addAttribute("d", oss.str());
-			pathElem->addAttribute("fill", color.rgbString());
+			pathElem->addAttribute("fill", color.svgColorString());
 			_group->append(pathElem);
 		}
 

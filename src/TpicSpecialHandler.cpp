@@ -85,7 +85,7 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 				Color color = actions->getColor();
 				color *= _fill;
 				elem = new XMLElementNode("polygon");
-				elem->addAttribute("fill", fill ? color.rgbString() : "none");
+				elem->addAttribute("fill", fill ? color.svgColorString() : "none");
 			}
 			ostringstream oss;
 			FORALL(_points, vector<DPair>::iterator, it) {
@@ -155,7 +155,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 		if (_fill >= 0) {
 			if (_points[0] != _points[size-1])
 				path.closepath();
-			pathElem->addAttribute("fill", color.rgbString());
+			pathElem->addAttribute("fill", color.svgColorString());
 		}
 		else
 			pathElem->addAttribute("fill", "none");
@@ -163,7 +163,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 		ostringstream oss;
 		path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 		pathElem->addAttribute("d", oss.str());
-		pathElem->addAttribute("stroke", actions->getColor().rgbString());
+		pathElem->addAttribute("stroke", actions->getColor().svgColorString());
 		pathElem->addAttribute("stroke-width", XMLString(_penwidth));
 		if (ddist > 0)
 			pathElem->addAttribute("stroke-dasharray", XMLString(ddist));
@@ -227,13 +227,13 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 			elem->addAttribute("d", oss.str());
 		}
 		elem->addAttribute("stroke-width", _penwidth);
-		elem->addAttribute("stroke", actions->getColor().rgbString());
+		elem->addAttribute("stroke", actions->getColor().svgColorString());
 		elem->addAttribute("stroke-linecap", "round");
 		elem->addAttribute("fill", "none");
 		if (_fill >= 0) {
 			Color color=actions->getColor();
 			color *= _fill;
-			elem->addAttribute("fill", color.rgbString());
+			elem->addAttribute("fill", color.svgColorString());
 		}
 		else
 			elem->addAttribute("fill", "none");

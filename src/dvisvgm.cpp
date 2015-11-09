@@ -256,6 +256,7 @@ int main (int argc, char *argv[]) {
 		DVIReader::COMPUTE_PROGRESS = args.progress_given();
 		SpecialActions::PROGRESSBAR_DELAY = args.progress_arg();
 	}
+	Color::SUPPRESS_COLOR_NAMES = !args.colornames_given();
 	SVGTree::CREATE_STYLE = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	SVGTree::CREATE_USE_ELEMENTS = args.no_fonts_arg() < 1;

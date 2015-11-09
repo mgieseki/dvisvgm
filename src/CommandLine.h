@@ -23,6 +23,7 @@ class CommandLine : public CmdLineParserBase
 		bool clipjoin_given () const {return _clipjoin_given;}
 #endif
 		bool color_given () const {return _color_given;}
+		bool colornames_given () const {return _colornames_given;}
 #if !defined(DISABLE_GS)
 		bool eps_given () const {return _eps_given;}
 #endif
@@ -97,6 +98,7 @@ class CommandLine : public CmdLineParserBase
 		void handle_clipjoin (InputReader &ir, const Option &opt, bool longopt);
 #endif
 		void handle_color (InputReader &ir, const Option &opt, bool longopt);
+		void handle_colornames (InputReader &ir, const Option &opt, bool longopt);
 #if !defined(DISABLE_GS)
 		void handle_eps (InputReader &ir, const Option &opt, bool longopt);
 #endif
@@ -150,6 +152,7 @@ class CommandLine : public CmdLineParserBase
 		bool _clipjoin_given;
 #endif
 		bool _color_given;
+		bool _colornames_given;
 #if !defined(DISABLE_GS)
 		bool _eps_given;
 #endif

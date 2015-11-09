@@ -154,7 +154,7 @@ static void expand_constants (string &str, SpecialActions *actions) {
 	constants[] = {
 		{"x", XMLString(actions->getX())},
 		{"y", XMLString(actions->getY())},
-		{"color", actions->getColor().rgbString()},
+		{"color", actions->getColor().svgColorString()},
 		{"nl", "\n"},
 		{0, ""}
 	};

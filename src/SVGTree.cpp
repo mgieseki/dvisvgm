@@ -162,7 +162,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 				_ychanged = false;
 			}
 			if (_color.get() != font.color()) {
-					_span->addAttribute("fill", _color.get().rgbString());
+					_span->addAttribute("fill", _color.get().svgColorString());
 				_color.changed(false);
 			}
 			_text->append(_span);
@@ -175,7 +175,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 		}
 		node->append(XMLString(font.unicode(c), false));
 		if (!MERGE_CHARS && _color.get() != font.color()) {
-			node->addAttribute("fill", _color.get().rgbString());
+			node->addAttribute("fill", _color.get().svgColorString());
 			_color.changed(false);
 		}
 	}
@@ -186,7 +186,7 @@ void SVGTree::appendChar (int c, double x, double y, const Font &font) {
 			if (set_color || set_matrix) {
 				_span = new XMLElementNode("g");
 				if (_color.get() != Color::BLACK)
-					_span->addAttribute("fill", _color.get().rgbString());
+					_span->addAttribute("fill", _color.get().svgColorString());
 				if (!_matrix.get().isIdentity())
 					_span->addAttribute("transform", _matrix.get().getSVG());
 				appendToPage(_span);
@@ -267,7 +267,7 @@ void SVGTree::newTextNode (double x, double y) {
 			_text->addAttribute("font-family", font->name());
 			_text->addAttribute("font-size", XMLString(font->scaledSize()));
 			if (font->color() != Color::BLACK)
-				_text->addAttribute("fill", font->color().rgbString());
+				_text->addAttribute("fill", font->color().svgColorString());
 		}
 		if (_vertical) {
 			_text->addAttribute("writing-mode", "tb");
@@ -353,7 +353,7 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 				<< "{font-family:" << it->second->name()
 				<< ";font-size:"   << XMLString(it->second->scaledSize()) << "px";
 			if (it->second->color() != Color::BLACK)
-				style << ";fill:" << it->second->color().rgbString();
+				style << ";fill:" << it->second->color().svgColorString();
 			style << "}\n";
 		}
 		XMLCDataNode *cdata = new XMLCDataNode(style.str());

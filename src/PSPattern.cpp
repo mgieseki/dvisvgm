@@ -157,7 +157,7 @@ void PSUncoloredTilingPattern::apply (SpecialActions* actions) {
 			getGroupNode()->getDescendants(0, attribs[i], colored_elems);
 			for (vector<XMLElementNode*>::iterator it=colored_elems.begin(); it != colored_elems.end(); ++it)
 				if (string((*it)->getAttributeValue(attribs[i])) != "none")
-					(*it)->addAttribute(attribs[i], _currentColor.rgbString());
+					(*it)->addAttribute(attribs[i], _currentColor.svgColorString());
 			colored_elems.clear();
 		}
 		PSPattern::apply(actions);
