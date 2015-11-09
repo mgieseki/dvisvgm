@@ -80,7 +80,7 @@ static void read_color (string model, istream &is, Color &color) {
 	}
 	else if (model == "gray")
 		color.setGray(read_double(is));
-	else if (!color.setName(model, true))
+	else if (!color.setPSName(model, true))
 		throw SpecialException("unknown color statement");
 }
 

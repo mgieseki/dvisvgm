@@ -49,14 +49,14 @@ static void tolower (string &str) {
 }
 
 
-Color::Color (const char *name) {
-	if (!setName(name, false))
+Color::Color (const char *psname) {
+	if (!setPSName(psname, false))
 		setGray(UInt8(0));
 }
 
 
-Color::Color (const string &name) {
-	if (!setName(name, false))
+Color::Color (const string &psname) {
+	if (!setPSName(psname, false))
 		setGray(UInt8(0));
 }
 
@@ -66,7 +66,11 @@ void Color::setRGB (double r, double g, double b) {
 }
 
 
-bool Color::setName (string name, bool case_sensitive) {
+/** Expects a PostScript color name and sets the color accordingly.
+ *  @param[in] name PS color name
+ *  @param[in] case_sensitive if true, upper/lower case spelling is significant
+ *  @return true if color name could be applied properly */
+bool Color::setPSName (string name, bool case_sensitive) {
 	if (name[0] == '#') {
 		char *p=0;
 		_rgb = UInt32(strtol(name.c_str()+1, &p, 16));

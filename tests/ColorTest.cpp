@@ -64,17 +64,17 @@ TEST(ColorTest, cmyk) {
 
 TEST(ColorTest, name) {
 	Color c;
-	EXPECT_TRUE(c.setName("Magenta"));
+	EXPECT_TRUE(c.setPSName("Magenta"));
 	EXPECT_EQ(c.rgbString(), "#ff00ff");
-	EXPECT_FALSE(c.setName("mulberry"));
-	EXPECT_TRUE(c.setName("mulberry", false));
+	EXPECT_FALSE(c.setPSName("mulberry"));
+	EXPECT_TRUE(c.setPSName("mulberry", false));
 	EXPECT_EQ(c.rgbString(), "#a314f9");
 
-	EXPECT_FALSE(c.setName("#Magenta"));
-	EXPECT_FALSE(c.setName("#bcdefg"));
-	EXPECT_TRUE(c.setName("#abcdef"));
+	EXPECT_FALSE(c.setPSName("#Magenta"));
+	EXPECT_FALSE(c.setPSName("#bcdefg"));
+	EXPECT_TRUE(c.setPSName("#abcdef"));
 	EXPECT_EQ(c.rgbString(), "#abcdef");
-	EXPECT_TRUE(c.setName("#89A"));
+	EXPECT_TRUE(c.setPSName("#89A"));
 	EXPECT_EQ(c.rgbString(), "#00089a");
 }
 
