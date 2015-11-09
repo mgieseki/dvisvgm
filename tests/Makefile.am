@@ -163,10 +163,10 @@ check_PROGRAMS += RangeMapTest
 RangeMapTest_SOURCES = RangeMapTest.cpp
 RangeMapTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
-TESTS += ShadingPatch
-check_PROGRAMS += ShadingPatch
-ShadingPatch_SOURCES = ShadingPatch.cpp
-ShadingPatch_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+TESTS += ShadingPatchTest
+check_PROGRAMS += ShadingPatchTest
+ShadingPatchTest_SOURCES = ShadingPatchTest.cpp
+ShadingPatchTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest

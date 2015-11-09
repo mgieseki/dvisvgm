@@ -26,7 +26,7 @@
 using namespace std;
 
 
-TEST(ShadingPatch, create) {
+TEST(ShadingPatchTest, create) {
 	ShadingPatch *patch=0;
 	patch = ShadingPatch::create(4, Color::RGB_SPACE);
 	EXPECT_TRUE(dynamic_cast<TriangularPatch*>(patch));
@@ -43,14 +43,14 @@ TEST(ShadingPatch, create) {
 }
 
 
-TEST(ShadingPatch, fail) {
+TEST(ShadingPatchTest, fail) {
 	for (int i=0; i < 4; i++) {
 		EXPECT_THROW(ShadingPatch::create(i, Color::RGB_SPACE), ShadingException);
 	}
 }
 
 
-TEST(ShadingPatch, colorQueryFuncs) {
+TEST(ShadingPatchTest, colorQueryFuncs) {
 	vector<DPair> points(3);
 	vector<Color> colors(3);
 	colors[0].setRGB(1.0, 0.0, 0.0);
