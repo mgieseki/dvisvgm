@@ -83,7 +83,7 @@ _dvisvgm_ relies on the following free libraries:
   and should be included with this package.
 
 If you want to build and run the test suite located in the _tests_
-subdirectory, you also need the [googletest](http://code.google.com/p/googletest)
+subdirectory, you also need the [Google Test](https://github.com/google/googletest)
 libraries.
 
 

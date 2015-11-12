@@ -51,7 +51,7 @@ DEPENDENCIES
    and should be included with this package.
 
  If you want to build and run the test suite located in the tests subdirectory,
- you also need the googletest libraries (http://code.google.com/p/googletest).
+ you also need the Google Test libraries (https://github.com/google/googletest).
 
 
 COMPILATION
