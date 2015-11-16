@@ -31,7 +31,6 @@
 #include "FileSystem.h"
 #include "Message.h"
 #include "macros.h"
-#include "CMapManager.h"
 
 using namespace std;
 
