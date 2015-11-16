@@ -239,6 +239,8 @@ int FontEngine::getVAdvance (const Character &c) const {
 
 
 int FontEngine::charIndex (const Character &c) const {
+	if (!_currentFace || !_currentFace->charmap)
+		return c.type() == Character::NAME ? 0 : c.number();
 	switch (c.type()) {
 		case Character::CHRCODE:
 			return FT_Get_Char_Index(_currentFace, (FT_ULong)c.number());
