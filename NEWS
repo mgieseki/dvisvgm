@@ -1,3 +1,8 @@
+dvisvgm-1.12 (2015-11-18)
+- added option --colornames to replace RGB values by SVG color names
+- fixed resolving of character codes for fonts without supported chracater maps
+- fixed a memory issue that could occur when calling Metafont
+
 dvisvgm-1.11 (2015-09-21)
 - improved mapping of unknown characters to Unicode
 - improved handling of text elements in conjunction with \specials (patch by Till Tantau)
