@@ -91,6 +91,6 @@ const char *PSInterpreter::PSDEFS =
 "rrentcolorspace aload length -1 roll pop]setcolorspace/setcolor sysexec XUID a"
 "load pop exch pop currentrgbcolor :grestore 4}ifelse(setpattern)prcmd}{/setpat"
 "tern sysexec}ifelse end}def/setcolor{dup type/dicttype eq{setpattern}{/setcolo"
-"r sysexec}ifelse}def/setgray 1 defpr/setcmykcolor 4 defpr/sethsbcolor 3 defpr/"
-"setrgbcolor 3 defpr/.setopacityalpha{dup/.setopacityalpha sysexec 1(setopacity"
-"alpha)prcmd}def ";
+"r sysexec/currentrgbcolor sysexec setrgbcolor}ifelse}def/setgray 1 defpr/setcm"
+"ykcolor 4 defpr/sethsbcolor 3 defpr/setrgbcolor 3 defpr/.setopacityalpha{dup/."
+"setopacityalpha sysexec 1(setopacityalpha)prcmd}def ";
