@@ -215,16 +215,6 @@ void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocess
 }
 
 
-/** This method is called when the DVI preamble was read
- *  @param[in] cmt preamble comment text. */
-void DVIToSVGActions::preamble (const string &cmt) {
-}
-
-
-void DVIToSVGActions::postamble () {
-}
-
-
 /** This method is called when a "begin of page (bop)" command was found in the DVI file.
  *  @param[in] pageno physical page number
  *  @param[in] c array with 10 components representing \\count0 ... \\count9. c[0] contains the

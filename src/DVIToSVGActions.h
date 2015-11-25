@@ -29,7 +29,6 @@
 #include "SpecialActions.h"
 #include "SpecialManager.h"
 #include "SVGTree.h"
-#include "DVIReader.h"
 
 
 class  DVIToSVG;
@@ -67,8 +66,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void moveToY (double y);
 		void setFont (int num, const Font *font);
 		void special (const std::string &spc, double dvi2bp, bool preprocessing=false);
-		void preamble (const std::string &cmt);
-		void postamble ();
 		void beginPage (unsigned pageno, Int32 *c);
 		void endPage (unsigned pageno);
 		void progress (size_t current, size_t total, const char *id=0);
