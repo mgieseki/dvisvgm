@@ -57,8 +57,14 @@ void EPSToSVG::convert () {
 			"lly=" << bbox.minY() << " "
 			"urx=" << bbox.maxX() << " "
 			"ury=" << bbox.maxY();
-	PsSpecialHandler pshandler;
-	pshandler.process("psfile=", ss, this);
+	try {
+		PsSpecialHandler pshandler;
+		pshandler.process("psfile=", ss, this);
+	}
+	catch (...) {
+		progress(0);  // remove progress message
+		throw;
+	}
 	progress(0);
 	// output SVG file
 	_svg.setBBox(_bbox);

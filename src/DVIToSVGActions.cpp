@@ -295,7 +295,7 @@ BoundingBox& DVIToSVGActions::bbox(const string& name, bool reset) {
 void DVIToSVGActions::progress (const char *id) {
 	if (PROGRESSBAR_DELAY < 1000) {
 		static double time=0;
-		// slow down updating of the progress indicator to prevent flickering
+		// slow down updating the progress indicator to prevent flickering
 		if (System::time() - time > 0.1) {
 			progress(0, 0, id);
 			time = System::time();
