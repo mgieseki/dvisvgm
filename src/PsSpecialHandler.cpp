@@ -464,6 +464,7 @@ void PsSpecialHandler::closepath (vector<double>&) {
 /** Draws the current path recorded by previously executed path commands (moveto, lineto,...).
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
+	_path.removeRedundantCommands();
 	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
 		return;
 
@@ -545,6 +546,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
+	_path.removeRedundantCommands();
 	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
 		return;
 
@@ -717,7 +719,8 @@ void PsSpecialHandler::clip (vector<double>&, bool evenodd) {
  *  @param[in] path path used to restrict the clipping region
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (Path &path, bool evenodd) {
-		// when this method is called, _path contains the clipping path
+	// when this method is called, _path contains the clipping path
+	_path.removeRedundantCommands();
 	if (path.empty() || !_actions)
 		return;
 

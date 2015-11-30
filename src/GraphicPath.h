@@ -176,7 +176,7 @@ class GraphicPath
 		 *	 in the glyph's outline description. All open paths are automatically closed by the renderer.
 		 *	 This method detects all open paths and adds the missing closePath statement. */
 		void closeOpenSubPaths () {
-			Command *prevCommand = 0;
+			Command *prevCommand=0;
 			FORALL(_commands, Iterator, it) {
 				if (it->type == Command::MOVETO && prevCommand && prevCommand->type != Command::CLOSEPATH) {
 					prevCommand = &(*it);
@@ -189,6 +189,24 @@ class GraphicPath
 			if (!_commands.empty() && _commands.back().type != Command::CLOSEPATH)
 				closepath();
 		}
+
+
+	   /** Removes redundant path commands commands. Currently, it only removes movetos. */
+	   void removeRedundantCommands () {
+		   // remove trailing moveto commands
+		   while (_commands.back().type == Command::MOVETO)
+			   _commands.pop_back();
+		   // resolve intermediate sequences of moveto commands
+		   Iterator it=_commands.begin();
+		   if (it == _commands.end())
+			   return;
+		   Iterator prev = it;
+		   for (++it; it != _commands.end(); ++it) {
+			   if (prev->type == Command::MOVETO && it->type == Command::MOVETO)
+					_commands.erase(prev);
+			   prev = it;
+		   }
+	   }
 
 
 		/** Writes the path data as SVG path drawing command to a given output stream.
