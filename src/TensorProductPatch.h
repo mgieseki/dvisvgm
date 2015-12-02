@@ -53,7 +53,7 @@ class TensorProductPatch : public ShadingPatch
 		Color averageColor () const;
 		void horizontalCurve (double v, Bezier &bezier) const;
 		void verticalCurve (double u, Bezier &bezier) const;
-		void getBoundaryPath (GraphicPath<double> &path) const;
+		void getBoundaryPath (GraphicsPath<double> &path) const;
 		void subpatch (double u1, double u2, double v1, double v2, TensorProductPatch &patch) const;
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
 		DPair blossomValue (double u[3], double v[3]) const {return blossomValue(u[0], u[1], u[2], v[0], v[1], v[2]);}

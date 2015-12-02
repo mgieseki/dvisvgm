@@ -22,7 +22,7 @@
 #define DVISVGM_SHADINGPATCH_H
 
 #include "Color.h"
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 #include "MessageException.h"
 
 
@@ -31,7 +31,7 @@ class ShadingPatch
 	public:
 		struct Callback {
 			virtual ~Callback () {}
-			virtual void patchSegment (GraphicPath<double> &path, const Color &color) =0;
+			virtual void patchSegment (GraphicsPath<double> &path, const Color &color) =0;
 		};
 
 		typedef std::vector<DPair> PointVec;
@@ -43,7 +43,7 @@ class ShadingPatch
 		virtual int psShadingType () const =0;
 		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;
 		virtual void getBBox (BoundingBox &bbox) const =0;
-		virtual void getBoundaryPath (GraphicPath<double> &path) const =0;
+		virtual void getBoundaryPath (GraphicsPath<double> &path) const =0;
 		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) =0;
 		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) =0;
 		virtual int numPoints (int edgeflag) const =0;

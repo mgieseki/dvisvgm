@@ -26,7 +26,7 @@
 #include "Color.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 #include "SpecialActions.h"
 #include "SVGTree.h"
 #include "TpicSpecialHandler.h"
@@ -128,7 +128,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions *actions) {
 		drawLines(true, false, ddist, actions);
 	else {
 		DPair p(actions->getX(), actions->getY());
-		GraphicPath<double> path;
+		GraphicsPath<double> path;
 		path.moveto(p+_points[0]);
 		DPair mid = p+_points[0]+(_points[1]-_points[0])/2.0;
 		path.lineto(mid);

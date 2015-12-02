@@ -21,8 +21,8 @@
 #ifndef DVISVGM_GLYPH_H
 #define DVISVGM_GLYPH_H
 
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 
-typedef GraphicPath<Int32> Glyph;
+typedef GraphicsPath<Int32> Glyph;
 
 #endif

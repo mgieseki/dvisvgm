@@ -312,7 +312,7 @@ int PhysicalFont::descent () const {
  *  @param[out] glyph path segments of the glyph outline
  *  @param[in]  cb optional callback object for tracer class
  *  @return true if outline could be computed */
-bool PhysicalFont::getGlyph (int c, GraphicPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
+bool PhysicalFont::getGlyph (int c, GraphicsPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
 	if (type() == MF) {
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {

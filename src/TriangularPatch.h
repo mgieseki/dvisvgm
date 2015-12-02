@@ -41,7 +41,7 @@ class TriangularPatch : public ShadingPatch
 		void setColors (const Color &c1, const Color &c2, const Color &c3);
 		void approximate (int gridsize, bool overlap, double delta, Callback &listener) const;
 		void getBBox (BoundingBox &bbox) const;
-		void getBoundaryPath(GraphicPath<double> &path) const;
+		void getBoundaryPath(GraphicsPath<double> &path) const;
 		int numPoints (int edgeflag) const {return edgeflag == 0 ? 3 : 1;}
 		int numColors (int edgeflag) const {return edgeflag == 0 ? 3 : 1;}
 

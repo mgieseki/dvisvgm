@@ -25,7 +25,7 @@
 #include <stack>
 #include <string>
 #include <vector>
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 #include "PSInterpreter.h"
 #include "SpecialHandler.h"
 #include "PSPattern.h"
@@ -37,7 +37,7 @@ class XMLElementNode;
 
 class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions
 {
-	typedef GraphicPath<double> Path;
+	typedef GraphicsPath<double> Path;
 	typedef std::vector<double>::const_iterator DoubleVecIt;
 	typedef Color::ColorSpace ColorSpace;
 

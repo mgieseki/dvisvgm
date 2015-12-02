@@ -103,7 +103,7 @@ libdvisvgm_a_SOURCES = \
 	Ghostscript.h \
 	Glyph.h \
 	GlyphTracerMessages.h \
-	GraphicPath.h \
+	GraphicsPath.h \
 	HtmlSpecialHandler.cpp \
 	HtmlSpecialHandler.h \
 	InputBuffer.cpp \

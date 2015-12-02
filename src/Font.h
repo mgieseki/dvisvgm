@@ -33,7 +33,7 @@
 #include "FontMetrics.h"
 #include "GFGlyphTracer.h"
 #include "Glyph.h"
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 #include "MessageException.h"
 #include "RangeMap.h"
 #include "ToUnicodeMap.h"

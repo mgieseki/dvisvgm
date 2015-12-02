@@ -161,7 +161,7 @@ static inline double snap (double x) {
  *  @param[in] callback object notified */
 void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2]) {
-		GraphicPath<double> path;
+		GraphicsPath<double> path;
 		getBoundaryPath(path);
 		callback.patchSegment(path, _colors[0]);
 	}
@@ -175,7 +175,7 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 				double ov2 = (overlap && snap(v2+inc) <= 1 ? snap(v2+inc) : v2);
 				if (!overlap || (snap(u1+ov2) <= 1 && snap(ou2+v1) <= 1)) {
 					// create triangular segments pointing in the same orientation as the whole patch
-					GraphicPath<double> path;
+					GraphicsPath<double> path;
 					path.moveto(valueAt(u1, v1));
 					path.lineto(valueAt(ou2, v1));
 					path.lineto(valueAt(u1, ov2));
@@ -197,7 +197,7 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 }
 
 
-void TriangularPatch::getBoundaryPath(GraphicPath<double> &path) const {
+void TriangularPatch::getBoundaryPath(GraphicsPath<double> &path) const {
 	path.clear();
 	path.moveto(_points[0]);
 	path.lineto(_points[1]);

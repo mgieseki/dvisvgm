@@ -113,10 +113,10 @@ check_PROGRAMS += GhostscriptTest
 GhostscriptTest_SOURCES = GhostscriptTest.cpp
 GhostscriptTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
-TESTS += GraphicPathTest
-check_PROGRAMS += GraphicPathTest
-GraphicPathTest_SOURCES = GraphicPathTest.cpp
-GraphicPathTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+TESTS += GraphicsPathTest
+check_PROGRAMS += GraphicsPathTest
+GraphicsPathTest_SOURCES = GraphicsPathTest.cpp
+GraphicsPathTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
 TESTS += LengthTest
 check_PROGRAMS += LengthTest

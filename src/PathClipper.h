@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 #include "Bezier.h"
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 #include "MessageException.h"
 
 
@@ -34,7 +34,7 @@ using ClipperLib::IntPoint;
 class PathClipper
 {
 	public:
-		typedef GraphicPath<double> CurvedPath;
+		typedef GraphicsPath<double> CurvedPath;
 
 	public:
 		PathClipper () : _numLines(0) {}

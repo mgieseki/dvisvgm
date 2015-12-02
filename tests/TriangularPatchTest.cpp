@@ -136,7 +136,7 @@ TEST(TriangularPatchTest, boundaryPath) {
 	points[2] = DPair(0, 10);
 	vector<Color> colors(3);
 	TriangularPatch tp(points, colors, Color::RGB_SPACE, 0, 0);
-	GraphicPath<double> path;
+	GraphicsPath<double> path;
 	tp.getBoundaryPath(path);
 	ostringstream oss;
 	path.writeSVG(oss, false);
@@ -146,7 +146,7 @@ TEST(TriangularPatchTest, boundaryPath) {
 
 class Callback : public ShadingPatch::Callback {
 	public:
-		void patchSegment (GraphicPath<double> &path, const Color &color) {
+		void patchSegment (GraphicsPath<double> &path, const Color &color) {
 			ostringstream oss;
 			path.writeSVG(oss, false);
 			_pathstr += oss.str();

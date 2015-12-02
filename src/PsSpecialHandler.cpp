@@ -880,7 +880,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
 		}
 
-		void patchSegment (GraphicPath<double> &path, const Color &color) {
+		void patchSegment (GraphicsPath<double> &path, const Color &color) {
 			if (!_actions->getMatrix().isIdentity())
 				path.transform(_actions->getMatrix());
 
@@ -917,7 +917,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 #if 0
 		if (bgcolorGiven) {
 			// fill whole patch area with given background color
-			GraphicPath<double> outline;
+			GraphicsPath<double> outline;
 			patch->getBoundaryPath(outline);
 			callback.patchSegment(outline, bgcolor);
 		}

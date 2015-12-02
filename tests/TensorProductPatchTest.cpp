@@ -223,7 +223,7 @@ TEST_F(TensorProductPatchTest, values) {
 
 
 TEST_F(TensorProductPatchTest, boundaryPath) {
-	GraphicPath<double> path;
+	GraphicsPath<double> path;
 	_patch.getBoundaryPath(path);
 	ostringstream oss;
 	path.writeSVG(oss, false);
@@ -234,7 +234,7 @@ TEST_F(TensorProductPatchTest, boundaryPath) {
 TEST_F(TensorProductPatchTest, subpatch) {
 	TensorProductPatch tpp;
 	_patch.subpatch(0, 0.5, 0, 0.5, tpp);
-	GraphicPath<double> path;
+	GraphicsPath<double> path;
 	tpp.getBoundaryPath(path);
 	ostringstream oss;
 	path.writeSVG(oss, false);
@@ -258,7 +258,7 @@ TEST_F(TensorProductPatchTest, bbox) {
 
 class Callback : public ShadingPatch::Callback {
 	public:
-		void patchSegment (GraphicPath<double> &path, const Color &color) {
+		void patchSegment (GraphicsPath<double> &path, const Color &color) {
 			ostringstream oss;
 			path.writeSVG(oss, false);
 			_pathstr += oss.str();

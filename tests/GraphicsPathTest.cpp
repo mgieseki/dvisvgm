@@ -1,5 +1,5 @@
 /*************************************************************************
-** GraphicPathTest.cpp                                                  **
+** GraphicsPathTest.cpp                                                 **
 **                                                                      **
 ** This file is part of dvisvgm -- the DVI to SVG converter             **
 ** Copyright (C) 2005-2015 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -20,12 +20,12 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "GraphicPath.h"
+#include "GraphicsPath.h"
 
 using std::ostringstream;
 
-TEST(GraphicPathTest, svg) {
-	GraphicPath<int> path;
+TEST(GraphicsPathTest, svg) {
+	GraphicsPath<int> path;
 	path.moveto(0,0);
 	path.lineto(10,10);
 	path.cubicto(20,20,30,30,40,40);
@@ -40,8 +40,8 @@ TEST(GraphicPathTest, svg) {
 }
 
 
-TEST(GraphicPathTest, optimize) {
-	GraphicPath<int> path;
+TEST(GraphicsPathTest, optimize) {
+	GraphicsPath<int> path;
 	path.moveto(0,0);
 	path.lineto(10,0);
 	path.lineto(10,20);
@@ -51,8 +51,8 @@ TEST(GraphicPathTest, optimize) {
 }
 
 
-TEST(GraphicPathTest, transform) {
-	GraphicPath<double> path;
+TEST(GraphicsPathTest, transform) {
+	GraphicsPath<double> path;
 	path.moveto(0,0);
 	path.lineto(1,0);
 	path.lineto(1,1);
@@ -69,8 +69,8 @@ TEST(GraphicPathTest, transform) {
 }
 
 
-TEST(GraphicPathTest, closeOpenSubPaths) {
-	GraphicPath<double> path;
+TEST(GraphicsPathTest, closeOpenSubPaths) {
+	GraphicsPath<double> path;
 	path.moveto(0,0);
 	path.lineto(1,0);
 	path.lineto(1,1);
@@ -86,8 +86,8 @@ TEST(GraphicPathTest, closeOpenSubPaths) {
 }
 
 
-TEST(GraphicPathTest, relative1) {
-	GraphicPath<int> path;
+TEST(GraphicsPathTest, relative1) {
+	GraphicsPath<int> path;
 	path.moveto(0,0);
 	path.lineto(10,10);
 	path.lineto(10,20);
@@ -101,8 +101,8 @@ TEST(GraphicPathTest, relative1) {
 }
 
 
-TEST(GraphicPathTest, computeBBox) {
-	GraphicPath<int> path;
+TEST(GraphicsPathTest, computeBBox) {
+	GraphicsPath<int> path;
 	path.moveto(10,10);
 	path.lineto(100,10);
 	path.conicto(10,100,40,80);

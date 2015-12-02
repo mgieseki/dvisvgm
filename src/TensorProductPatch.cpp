@@ -202,7 +202,7 @@ Color TensorProductPatch::averageColor (const Color &c1, const Color &c2, const 
 }
 
 
-void TensorProductPatch::getBoundaryPath (GraphicPath<double> &path) const {
+void TensorProductPatch::getBoundaryPath (GraphicsPath<double> &path) const {
 	// Simple approach: Use the outer curves as boundary path. This doesn't always lead
 	// to correct results since, depending on the control points, P(u,v) might exceed
 	// the simple boundary.
@@ -323,7 +323,7 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, do
 		Bezier b2(vbeziers[i + (overlap && i < vbeziers.size()-1 ? 1 : 0)], v1, ov2);
 		Bezier b3(hbezier2, u1, ou2);
 		Bezier b4(vbeziers[i-1], v1, ov2);
-		GraphicPath<double> path;
+		GraphicsPath<double> path;
 		path.moveto(b1.point(0));
 		if (inc > delta) {
 			path.cubicto(b1.point(1), b1.point(2), b1.point(3));
@@ -355,7 +355,7 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, do
 void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2] && _colors[2] == _colors[3]) {
 		// simple case: monochromatic patch
-		GraphicPath<double> path;
+		GraphicsPath<double> path;
 		getBoundaryPath(path);
 		callback.patchSegment(path, _colors[0]);
 	}
@@ -415,7 +415,7 @@ void TensorProductPatch::approximate (int gridsize, Callback &callback) const {
 			// patch boundary are drawn as Bézier curves, all other edges are approximated
 			// with straight lines. This ensures a smooth outline and reduces the number of
 			// time consuming computations.
-			GraphicPath<double> path;
+			GraphicsPath<double> path;
 			path.moveto(p0);
 			if (v1 > 0)
 				path.lineto(p1);
