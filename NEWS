@@ -1,3 +1,12 @@
+dvisvgm-1.13 (2015-12-08)
+- added evaluation of PS operators 'ashow', 'awidthshow', and widthshow (GH bug #49)
+- improved conversion of fonts referenced by PS code to graphics paths
+- redundant 'moveto' commands are now removed from paths
+- fixed issue concerning evaluation of PS operator 'setcolor'
+- fixed output of PS error messages
+- updated bundled xxHash library to revision 42
+- minor code refactorings and cleanup
+
 dvisvgm-1.12 (2015-11-18)
 - added option --colornames to replace RGB values by SVG color names
 - fixed resolving of character codes for fonts without supported chracater maps
