@@ -115,7 +115,9 @@ std::string FileFinder::version () {
 	}
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))
-		return v+1;
+		return (std::string(KPSEVERSION).substr(0, 9) == "kpathsea ") ? v+1 : KPSEVERSION;
+	if (strlen(KPSEVERSION) > 0)
+		return KPSEVERSION;
 #endif
 	return "unknown";
 }
