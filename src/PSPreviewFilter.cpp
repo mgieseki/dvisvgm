@@ -64,6 +64,9 @@ void PSPreviewFilter::execute (const char *code, size_t len) {
 	if (!_tightpage)
 		psInterpreter().execute(code, len);
 	else {
+		// Read bounding box information pushed on the operand stack by the preview package.
+		// It consists of 7 values in DVI units:
+		// llx, lly, urx, ury, height, depth, width
 		CharInputBuffer ib(code, len);
 		BufferInputReader ir(ib);
 		ir.skipSpace();
@@ -87,7 +90,7 @@ bool PSPreviewFilter::getBoundingBox (BoundingBox &bbox) const {
 }
 
 
-/** Gets the 4 border values set by the preview package.
+/** Gets the 4 border position values set by the preview package (in bp units).
  *  @return true if the border data is available */
 bool PSPreviewFilter::getBorders (double &left, double &right, double &top, double &bottom) const {
 	if (_boxExtents.size() < 4)

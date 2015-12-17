@@ -60,6 +60,7 @@ class EPSToSVG : protected SpecialActions
 		BoundingBox& bbox ()                           {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
 		std::string getSVGFilename (unsigned pageno) const;
+		std::string getBBoxFormatString () const       {return "";}
 
 	private:
 		std::string _fname;   ///< name of EPS file

@@ -84,6 +84,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void embed (const BoundingBox &bbox);
 		void embed (const DPair &p, double r=0);
 		std::string getSVGFilename (unsigned pageno) const;
+		std::string getBBoxFormatString () const;
 
 	private:
 		SVGTree &_svg;

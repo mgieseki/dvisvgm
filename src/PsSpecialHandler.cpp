@@ -383,29 +383,74 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 
 void PsSpecialHandler::dviEndPage (unsigned) {
 	BoundingBox bbox;
-	if (_previewFilter.getBoundingBox(bbox)) {
-		double w = _previewFilter.width();
-		double h = _previewFilter.height();
-		double d = _previewFilter.depth();
-		bool horiz_baseline = true;
-		if (_actions) {
-			_actions->bbox() = bbox;
+	if (_previewFilter.getBoundingBox(bbox)) {  // is there any data written by preview package?
+		double w = max(0.0, _previewFilter.width());
+		double h = max(0.0, _previewFilter.height());
+		double d = max(0.0, _previewFilter.depth());
+		bool isBaselineHorizontal = true;
+		if (_actions && (_actions->getBBoxFormatString() == "preview" || _actions->getBBoxFormatString() == "min")) {
+			if (_actions->getBBoxFormatString() == "preview") {
+				_actions->bbox() = bbox;
+				Message::mstream() << "\napplying bounding box set by";
+			}
+			else {
+				// compute height, depth and width depending on the
+				// tight bounding box derived from the objects on the page
+				double y0 = bbox.maxY()-h;      // y coordinate of the baseline
+				h = _actions->bbox().maxY()-y0;
+				if (h < 0) {
+					h = 0;
+					d = _actions->bbox().height();
+				}
+				else {
+					d = y0-_actions->bbox().minY();
+					if (d < 0) {
+						h = _actions->bbox().height();
+						d = 0;
+					}
+				}
+				w = _actions->bbox().width();
+				Message::mstream() << "\ncomputing extents based on data set by";
+			}
+			Message::mstream() << " preview package (version " << _previewFilter.version() << ")\n";
+
 			// apply page transformations to box extents
 			Matrix pagetrans;
 			_actions->getPageTransform(pagetrans);
-			horiz_baseline = transform_box_extents(pagetrans, w, h, d);
+			isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
 			_actions->bbox().lock();
+
+			if (isBaselineHorizontal) {
+				const double bp2pt = 72.27/72.0;
+				Message::mstream() <<
+					"width=" << XMLString(w*bp2pt) << "pt, "
+					"height=" << XMLString(h*bp2pt) << "pt, "
+					"depth=" << XMLString(d*bp2pt) << "pt\n";
+			}
+			else
+				Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
 		}
-		Message::mstream() << "\napplying bounding box set by preview package (version " << _previewFilter.version() << ")\n";
-		if (horiz_baseline) {
-			const double bp2pt = 72.27/72.0;
-			Message::mstream() <<
-				"width=" << XMLString(w*bp2pt) << "pt, "
-				"height=" << XMLString(h*bp2pt) << "pt, "
-				"depth=" << XMLString(d*bp2pt) << "pt\n";
+#if 0
+		XMLElementNode *rect = new XMLElementNode("rect");
+		rect->addAttribute("x", _actions->bbox().minX());
+		rect->addAttribute("y", _actions->bbox().minY());
+		rect->addAttribute("width", w);
+		rect->addAttribute("height", h+d);
+		rect->addAttribute("fill", "none");
+		rect->addAttribute("stroke", "red");
+		rect->addAttribute("stroke-width", "0.5");
+		_actions->appendToPage(rect);
+		if (d > 0) {
+			XMLElementNode *line = new XMLElementNode("line");
+			line->addAttribute("x1", _actions->bbox().minX());
+			line->addAttribute("y1", _actions->bbox().minY()+h);
+			line->addAttribute("x2", _actions->bbox().maxX());
+			line->addAttribute("y2", _actions->bbox().minY()+h);
+			line->addAttribute("stroke", "blue");
+			line->addAttribute("stroke-width", "0.5");
+			_actions->appendToPage(line);
 		}
-		else
-			Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
+#endif
 	}
 	// close dictionary TeXDict and execute end-hook if defined
 	if (_psSection == PS_BODY) {

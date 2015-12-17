@@ -167,15 +167,21 @@ void DVIToSVG::endPage (unsigned pageno) {
 	Matrix matrix;
 	getPageTransformation(matrix);
 	static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
-	if (_bboxString == "min")
+	if (_bboxFormatString == "min" || _bboxFormatString == "preview")
 		bbox.transform(matrix);
-	if (string("dvi none min").find(_bboxString) == string::npos) {
-		istringstream iss(_bboxString);
+	else if (_bboxFormatString == "dvi") {
+		// center page content
+		double dx = (getPageWidth()-bbox.width())/2;
+		double dy = (getPageHeight()-bbox.height())/2;
+		bbox += BoundingBox(-dx, -dy, dx, dy);
+	}
+	else if (_bboxFormatString != "none") {
+		istringstream iss(_bboxFormatString);
 		StreamInputReader ir(iss);
 		ir.skipSpace();
 		if (isalpha(ir.peek())) {
 			// set explicitly given page format
-			PageSize size(_bboxString);
+			PageSize size(_bboxFormatString);
 			if (size.valid()) {
 				// convention: DVI position (0,0) equals (1in, 1in) relative
 				// to the upper left vertex of the page (see DVI specification)
@@ -185,33 +191,25 @@ void DVIToSVG::endPage (unsigned pageno) {
 		}
 		else { // set/modify bounding box by explicitly given values
 			try {
-				bbox.set(_bboxString);
+				bbox.set(_bboxFormatString);
 			}
 			catch (const MessageException &e) {
 			}
 		}
 	}
-	else if (_bboxString == "dvi") {
-		// center page content
-		double dx = (getPageWidth()-bbox.width())/2;
-		double dy = (getPageHeight()-bbox.height())/2;
-		bbox += BoundingBox(-dx, -dy, dx, dy);
-	}
-	if (_bboxString != "none") {
-		if (bbox.width() == 0)
-			Message::wstream(false) << "\npage is empty\n";
-		else {
-			_svg.setBBox(bbox);
+	if (bbox.width() == 0)
+		Message::wstream(false) << "\npage is empty\n";
+	if (_bboxFormatString != "none") {
+		_svg.setBBox(bbox);
 
-			const double bp2pt = 72.27/72;
-			const double bp2mm = 25.4/72;
-			Message::mstream(false) << '\n';
-			Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()*bp2pt) << "pt"
-				" x " << XMLString(bbox.height()*bp2pt) << "pt"
-				" (" << XMLString(bbox.width()*bp2mm) << "mm"
-				" x " << XMLString(bbox.height()*bp2mm) << "mm)";
-			Message::mstream(false) << '\n';
-		}
+		const double bp2pt = 72.27/72;
+		const double bp2mm = 25.4/72;
+		Message::mstream(false) << '\n';
+		Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()*bp2pt) << "pt"
+			" x " << XMLString(bbox.height()*bp2pt) << "pt"
+			" (" << XMLString(bbox.width()*bp2mm) << "mm"
+			" x " << XMLString(bbox.height()*bp2mm) << "mm)";
+		Message::mstream(false) << '\n';
 	}
 }
 

@@ -37,10 +37,11 @@ class DVIToSVG : public DVIReader
 		DVIToSVG (std::istream &is, SVGOutputBase &out);
 		~DVIToSVG ();
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
-		void setPageSize (const std::string &name)           {_bboxString = name;}
+		void setPageSize (const std::string &format)         {_bboxFormatString = format;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		void getPageTransformation (Matrix &matrix) const;
 		std::string getSVGFilename (unsigned pageno) const;
+		std::string getUserBBoxString () const               {return _bboxFormatString;}
 		static void setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
 
 	public:
@@ -56,8 +57,8 @@ class DVIToSVG : public DVIReader
 	private:
 		SVGTree _svg;
 		SVGOutputBase &_out;
-		std::string _bboxString;
-		std::string _transCmds;
+		std::string _bboxFormatString;  ///< bounding box size/format set by the user
+		std::string _transCmds;         ///< page transformation commands set by the user
 };
 
 #endif

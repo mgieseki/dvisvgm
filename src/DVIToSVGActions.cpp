@@ -84,6 +84,13 @@ string DVIToSVGActions::getSVGFilename (unsigned pageno) const {
 }
 
 
+string DVIToSVGActions::getBBoxFormatString () const {
+	if (DVIToSVG *dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
+		return dvi2svg->getUserBBoxString();
+	return "";
+}
+
+
 /** This method is called when a "set char" command was found in the DVI file.
  *  It draws a character of the current font.
  *  @param[in] x horizontal position of left bounding box edge

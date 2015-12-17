@@ -50,7 +50,7 @@ class PSPreviewFilter : public PSFilter
 		bool _active;          ///< true if filter is active
 		bool _tightpage;       ///< true if tightpage option was given
 		double _dvi2bp;        ///< factor to convert dvi units to PS points
-		std::vector<int> _boxExtents;
+		std::vector<int> _boxExtents;  ///< bounding box data set by the preview package (in DVI units)
 };
 
 #endif

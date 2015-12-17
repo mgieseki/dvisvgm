@@ -55,6 +55,7 @@ struct SpecialActions
 	virtual void embed (const DPair &p, double r=0) =0;
 	virtual unsigned getCurrentPageNumber () const =0;
 	virtual std::string getSVGFilename (unsigned pageno) const =0;
+	virtual std::string getBBoxFormatString () const =0;
 	virtual void progress (const char *id) {}
 	virtual int getDVIStackDepth () const  {return 0;}
 
@@ -87,6 +88,7 @@ class EmptySpecialActions : public SpecialActions
 		void embed (const DPair &p, double r=0) {}
 		unsigned getCurrentPageNumber() const {return 0;}
 		std::string getSVGFilename (unsigned pageno) const {return "";}
+		std::string getBBoxFormatString () const {return "";}
 
 	private:
 		BoundingBox _bbox;
