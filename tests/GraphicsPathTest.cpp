@@ -113,3 +113,21 @@ TEST(GraphicsPathTest, computeBBox) {
 	path.computeBBox(bbox);
 	EXPECT_EQ(bbox, BoundingBox(5, 5, 100, 100));
 }
+
+
+TEST(GraphicsPathTest, removeRedundantCommands) {
+	GraphicsPath<int> path;
+	path.moveto(10,10);
+	path.lineto(100,10);
+	path.conicto(10,100,40,80);
+	path.cubicto(5,5,30,10,90,70);
+	path.moveto(10,10);
+	path.moveto(20,20);
+	path.lineto(20,30);
+	path.moveto(10,10);
+	path.moveto(20,20);
+	path.removeRedundantCommands();
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10H100Q10 100 40 80C5 5 30 10 90 70M20 20V30");
+}

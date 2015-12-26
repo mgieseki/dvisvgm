@@ -191,22 +191,23 @@ class GraphicsPath
 		}
 
 
-	   /** Removes redundant path commands commands. Currently, it only removes movetos. */
-	   void removeRedundantCommands () {
-		   // remove trailing moveto commands
-		   while (_commands.back().type == Command::MOVETO)
-			   _commands.pop_back();
-		   // resolve intermediate sequences of moveto commands
-		   Iterator it=_commands.begin();
-		   if (it == _commands.end())
-			   return;
-		   Iterator prev = it;
-		   for (++it; it != _commands.end(); ++it) {
-			   if (prev->type == Command::MOVETO && it->type == Command::MOVETO)
+		/** Removes redundant path commands commands. Currently, it only removes movetos. */
+		void removeRedundantCommands () {
+			// remove trailing moveto commands
+			while (!_commands.empty() && _commands.back().type == Command::MOVETO)
+				_commands.pop_back();
+			// resolve intermediate sequences of moveto commands
+			Iterator it=_commands.begin();
+			if (it == _commands.end())
+				return;
+			Iterator prev = it++;
+			while (it != _commands.end()) {
+				if (prev->type == Command::MOVETO && it->type == Command::MOVETO)
 					_commands.erase(prev);
-			   prev = it;
-		   }
-	   }
+				else
+					prev = it++;
+			}
+		}
 
 
 		/** Writes the path data as SVG path drawing command to a given output stream.
