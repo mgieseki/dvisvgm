@@ -199,7 +199,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	if (_psSection != PS_BODY)
 		enterBodySection();
 
-	if (*prefix == '"') {
+	if (*prefix == '"' || strcmp(prefix, "pst:") == 0) {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
 		moveToDVIPos();
 		_psi.execute("\n@beginspecial @setspecial ");
@@ -242,7 +242,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 			executeAndSync(is, true);
 		}
 	}
-	else { // ps: ...
+	else { // ps: ... or PST: ...
 		if (_actions)
 			_actions->finishLine();
 		moveToDVIPos();
@@ -1234,6 +1234,6 @@ void PsSpecialHandler::ClippingStack::dup (int saveID) {
 
 
 const char** PsSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", 0};
+	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", "pst:", "PST:", 0};
 	return pfx;
 }
