@@ -1,5 +1,14 @@
+dvisvgm-1.14 (2015-12-28)
+- added evaluation of PSTricks specials 'pst:' and 'PST:'
+- the bounding box data created by the preview package is now adapted to create a tight box by default
+- added option --bbox=preview to apply the unmodified bounding box data created by the preview package
+- improved lookup of files located in the current working directory
+- fixed a memory issue related to graphics paths
+- improved extraction of kapathsea version number
+- minor code and test improvements
+
 dvisvgm-1.13 (2015-12-08)
-- added evaluation of PS operators 'ashow', 'awidthshow', and widthshow (GH bug #49)
+- added evaluation of PS operators 'ashow', 'awidthshow', and 'widthshow' (GH bug #49)
 - improved conversion of fonts referenced by PS code to graphics paths
 - redundant 'moveto' commands are now removed from paths
 - fixed issue concerning evaluation of PS operator 'setcolor'
