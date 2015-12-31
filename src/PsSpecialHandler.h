@@ -89,6 +89,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 
 	protected:
 		void initialize ();
+		void initgraphics ();
 		void moveToDVIPos ();
 		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
