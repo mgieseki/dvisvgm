@@ -118,7 +118,7 @@ Additional Information
 
 This package is available from [CTAN](http://ctan.org/pkg/dvisvgm), and can be
 downloaded from the [project website](http://dvisvgm.bplaced.net) as well.
-There you can find the sources, pre-compiled binaries, the manual page, FAQs
+There you find the sources, pre-compiled binaries, the manual page, FAQs
 and further information about the converter and related topics.
 
 If you've found a bug, please let me know. You can either send me an email or
@@ -128,7 +128,7 @@ preferably use the bug tracker at [GitHub](https://github.com/mgieseki/dvisvgm).
 Copyright
 ---------
 
-Copyright &copy; 2005&ndash;2015 [Martin Gieseking](mailto:martin.gieseking@uos.de)
+Copyright &copy; 2005&ndash;2016 [Martin Gieseking](mailto:martin.gieseking@uos.de)
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the

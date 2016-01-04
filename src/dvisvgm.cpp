@@ -1,8 +1,8 @@
 /*************************************************************************
 ** dvisvgm.cpp                                                          **
 **                                                                      **
-** This file is part of dvisvgm -- the DVI to SVG converter             **
-** Copyright (C) 2005-2015 Martin Gieseking <martin.gieseking@uos.de>   **
+** This file is part of dvisvgm -- a fast DVI to SVG converter          **
+** Copyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -64,7 +64,7 @@ using namespace std;
 static void show_help (const CommandLine &cmd) {
 	cout << PACKAGE_STRING "\n\n";
 	cmd.help(cmd.help_arg());
-	cout << "\nCopyright (C) 2005-2015 Martin Gieseking <martin.gieseking@uos.de> \n\n";
+	cout << "\nCopyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de> \n\n";
 }
 
 

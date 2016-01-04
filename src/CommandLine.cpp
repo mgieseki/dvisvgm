@@ -2,7 +2,7 @@
 // It is part of the dvisvgm package and published under the terms
 // of the GNU General Public License version 3, or (at your option) any later version.
 // See file COPYING for further details.
-// (C) 2009-2015 Martin Gieseking <martin.gieseking@uos.de>
+// (C) 2009-2016 Martin Gieseking <martin.gieseking@uos.de>
 
 #include <config.h>
 #include <cstdio>
