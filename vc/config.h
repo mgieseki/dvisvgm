@@ -10,7 +10,7 @@
 #define PACKAGE_NAME "dvisvgm"
 
 /* Version number of package */
-#define VERSION "1.14"
+#define VERSION "1.14.1"
 
 /* Define to the full name and version of this package. */
 #define PACKAGE_STRING "dvisvgm " VERSION
