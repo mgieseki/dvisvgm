@@ -1,3 +1,7 @@
+sudo: required
+dist: precise
+group: legacy
+
 language: cpp
 
 compiler:
