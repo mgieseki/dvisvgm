@@ -98,13 +98,14 @@ class GFReader
 	private:
 		std::istream &_in;
 		Int32 _minX, _maxX, _minY, _maxY;
-		Int32 _x, _y;            // current pen location (pixel units)
+		Int32 _x, _y;            ///< current pen location (pixel units)
 		Int32 _currentChar;
-		Bitmap _bitmap;         // bitmap of current char
-		FixWord _designSize;    // designSize
-		ScaledInt _hppp, _vppp;  // horizontal and vertical pixel per point
+		Bitmap _bitmap;          ///< bitmap of current char
+		FixWord _designSize;     ///< designSize
+		ScaledInt _hppp, _vppp;  ///< horizontal and vertical pixel per point
 		UInt32 _checksum;
 		std::map<UInt8,CharInfo> _charInfoMap;
+		bool _insideCharDef;     ///< true if inside a character definition (between BOC and EOC)
 		bool _penDown;
 };
 

@@ -45,7 +45,7 @@ static inline double scaled2double (Int32 scaled) {
 }
 
 
-GFReader::GFReader (istream &is) : _in(is), _penDown(false)
+GFReader::GFReader (istream &is) : _in(is), _insideCharDef(false), _penDown(false)
 {
 	_minX = _maxX = _minY = _maxY = _x = _y = 0;
 	_currentChar = 0;
@@ -209,13 +209,13 @@ double GFReader::getCharWidth (UInt32 c) const {
 /** Reads the preamble. */
 void GFReader::cmdPre (int) {
 	UInt32 i = readUnsigned(1);
-	if (i == 131) {
+	if (i != 131)
+		throw GFException("invalid identification number in GF preamble");
+	else {
 		UInt32 k = readUnsigned(1);
 		string s = readString(k);
 		preamble(s);
 	}
-	else
-		throw GFException("invalid identification number in GF preamble");
 }
 
 
@@ -235,10 +235,9 @@ void GFReader::cmdPost (int) {
 void GFReader::cmdPostPost (int) {
 	readUnsigned(4);   // pointer to begin of postamble
 	UInt32 i = readUnsigned(1);
-	if (i == 131)
-		while (readUnsigned(1) == 223); // skip fill bytes
-	else
+	if (i != 131)
 		throw GFException("invalid identification number in GF preamble");
+	while (readUnsigned(1) == 223); // skip fill bytes
 }
 
 
@@ -246,6 +245,8 @@ void GFReader::cmdPostPost (int) {
  *  and advances the cursor by n.
  *  @param[in] n number of pixels to be inverted */
 void GFReader::cmdPaint0 (int n) {
+	if (!_insideCharDef)
+		throw GFException("character-related command outside BOC and EOC");
 	if (_penDown)                    // set pixels?
 		_bitmap.setBits(_y, _x, n);
 	_x += n;
@@ -275,6 +276,7 @@ void GFReader::cmdBoc (int) {
 	_y = _maxY;
 	_penDown = false;
 	_bitmap.resize(_minX, _maxX, _minY, _maxY);
+	_insideCharDef = true;
 	beginChar(_currentChar);
 }
 
@@ -292,12 +294,16 @@ void GFReader::cmdBoc1 (int) {
 	_y = _maxY;
 	_penDown = false;
 	_bitmap.resize(_minX, _maxX, _minY, _maxY);
+	_insideCharDef = true;
 	beginChar(_currentChar);
 }
 
 
 /** End of character. */
 void GFReader::cmdEoc (int) {
+	if (!_insideCharDef)
+		throw GFException("misplaced EOC");
+	_insideCharDef = false;
 	endChar(_currentChar);
 }
 
@@ -307,6 +313,8 @@ void GFReader::cmdEoc (int) {
  *  @param[in] len if 0: move to next row, otherwise: number of bytes to read.
  *                 The read value denotes the number of rows to be skipped.  */
 void GFReader::cmdSkip (int len) {
+	if (!_insideCharDef)
+		throw GFException("character-related command outside BOC and EOC");
 	if (len == 0)
 		_y--;
 	else
@@ -320,6 +328,8 @@ void GFReader::cmdSkip (int len) {
  *  the paint color to black.
  *  @param[in] col pixel/column number */
 void GFReader::cmdNewRow (int col) {
+	if (!_insideCharDef)
+		throw GFException("character-related command outside BOC and EOC");
 	_x = _minX + col ;
 	_y--;
 	_penDown = true;
