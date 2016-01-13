@@ -174,7 +174,7 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 				double v2 = snap(v1+inc);
 				double ov2 = (overlap && snap(v2+inc) <= 1 ? snap(v2+inc) : v2);
 				if (!overlap || (snap(u1+ov2) <= 1 && snap(ou2+v1) <= 1)) {
-					// create triangular segments pointing in the same orientation as the whole patch
+					// create triangular segments pointing in the same direction as the whole patch
 					GraphicsPath<double> path;
 					path.moveto(valueAt(u1, v1));
 					path.lineto(valueAt(ou2, v1));
