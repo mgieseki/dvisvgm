@@ -46,6 +46,7 @@ class SpecialManager
 		void preprocess (const std::string &special, SpecialActions *actions) const;
 		bool process (const std::string &special, double dvi2bp, SpecialActions *actions) const;
 		void notifyPreprocessingFinished () const;
+		void notifyBeginPage (unsigned pageno) const;
 		void notifyEndPage (unsigned pageno) const;
 		void notifyPositionChange (double x, double y) const;
 		void writeHandlerInfo (std::ostream &os) const;
@@ -59,6 +60,7 @@ class SpecialManager
 		HandlerPool _pool;     ///< stores pointers to all handlers
 		HandlerMap _handlers;  ///< pointers to handlers for corresponding prefixes
 		std::vector<DVIPreprocessingListener*> _preprocListeners;
+		std::vector<DVIBeginPageListener*> _beginPageListeners;
 		std::vector<DVIEndPageListener*> _endPageListeners;
 		std::vector<DVIPositionListener*> _positionListeners;
 };

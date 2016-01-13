@@ -43,6 +43,13 @@ struct DVIPreprocessingListener
 };
 
 
+struct DVIBeginPageListener
+{
+	virtual ~DVIBeginPageListener () {}
+	virtual void dviBeginPage (unsigned pageno) =0;
+};
+
+
 struct DVIEndPageListener
 {
 	virtual ~DVIEndPageListener () {}

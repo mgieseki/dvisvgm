@@ -65,6 +65,8 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
 			_handlers[*p] = handler;
 		if (DVIPreprocessingListener *listener = dynamic_cast<DVIPreprocessingListener*>(handler))
 			_preprocListeners.push_back(listener);
+		if (DVIBeginPageListener *listener = dynamic_cast<DVIBeginPageListener*>(handler))
+			_beginPageListeners.push_back(listener);
 		if (DVIEndPageListener *listener = dynamic_cast<DVIEndPageListener*>(handler))
 			_endPageListeners.push_back(listener);
 		if (DVIPositionListener *listener = dynamic_cast<DVIPositionListener*>(handler))
@@ -150,6 +152,12 @@ bool SpecialManager::process (const string &special, double dvi2bp, SpecialActio
 void SpecialManager::notifyPreprocessingFinished () const {
 	FORALL(_preprocListeners, vector<DVIPreprocessingListener*>::const_iterator, it)
 		(*it)->dviPreprocessingFinished();
+}
+
+
+void SpecialManager::notifyBeginPage (unsigned pageno) const {
+	FORALL(_beginPageListeners, vector<DVIBeginPageListener*>::const_iterator, it)
+		(*it)->dviBeginPage(pageno);
 }
 
 

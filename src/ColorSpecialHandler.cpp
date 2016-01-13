@@ -19,10 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include <algorithm>
-#include <cmath>
 #include <cstring>
-#include <iomanip>
 #include <sstream>
 #include <vector>
 #include "ColorSpecialHandler.h"
@@ -51,18 +48,16 @@ static void read_doubles (istream &is, vector<double> &v) {
 }
 
 
-/** Reads a color statement from an input stream and converts it to RGB.
+/** Reads a color statement from an input stream and converts it to a color object.
  *  A color statement has the following syntax:
  *  _color model_ _component values_
  *  Currently, the following color models are supported: rgb, cmyk, hsb and gray.
  *  Examples: rgb 1 0.5 0, gray 0.5
- *  @param[in]  model if model != "" this value specifies the model, otherwise it's read from the stream
+ *  @param[in]  model the color model
  *  @param[in]  is stream to be read from
- *  @param[out] color italicresulting RGB triple
- *  @return true if statement has successfully been read */
-static void read_color (string model, istream &is, Color &color) {
-	if (model.empty())
-		is >> model;
+ *  @return resulting Color object */
+Color ColorSpecialHandler::readColor (const string &model, istream &is) const {
+	Color color;
 	if (model == "rgb") {
 		vector<double> rgb(3);
 		read_doubles(is, rgb);
@@ -82,31 +77,37 @@ static void read_color (string model, istream &is, Color &color) {
 		color.setGray(read_double(is));
 	else if (!color.setPSName(model, true))
 		throw SpecialException("unknown color statement");
+	return color;
+}
+
+
+/** Reads the color model (rgb, cmyk, hsb, or gray) and the corresponding color compontents
+ *  from a given input stream.
+ *  @param[in] is stream to be read from
+ *  @return resulting Color object */
+Color ColorSpecialHandler::readColor (istream &is) const {
+	string model;
+	is >> model;
+	return readColor(model, is);
 }
 
 
 bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	Color color;
-	if (prefix && strcmp(prefix, "background") == 0) {
-		read_color("", is, color);
-		actions->setBgColor(color);
-	}
+	if (prefix && strcmp(prefix, "background") == 0)
+		actions->setBgColor(readColor(is));
 	else {
 		string cmd;
 		is >> cmd;
-		if (cmd == "push") {             // color push <model> <params>
-			read_color("", is, color);
-			_colorStack.push(color);
-		}
+		if (cmd == "push")               // color push <model> <params>
+			_colorStack.push(readColor(is));
 		else if (cmd == "pop") {
 			if (!_colorStack.empty())     // color pop
 				_colorStack.pop();
 		}
 		else {                           // color <model> <params>
-			read_color(cmd, is, color);
 			while (!_colorStack.empty())
 				_colorStack.pop();
-			_colorStack.push(color);
+			_colorStack.push(readColor(cmd, is));
 		}
 		if (actions) {
 			if (_colorStack.empty())

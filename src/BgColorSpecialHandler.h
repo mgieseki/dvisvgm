@@ -21,14 +21,26 @@
 #ifndef DVISVGM_BGCOLORSPECIALHANDLER_H
 #define DVISVGM_BGCOLORSPECIALHANDLER_H
 
+#include <vector>
+#include "Color.h"
 #include "SpecialHandler.h"
 
-struct BgColorSpecialHandler : SpecialHandler
+
+class BgColorSpecialHandler : public SpecialHandler, public DVIBeginPageListener
 {
-	const char* info () const   {return "background color special";}
-	const char* name () const   {return "bgcolor";}
-	const char**  prefixes () const;
-	bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+	public:
+		BgColorSpecialHandler () : _actions(0) {}
+		void preprocess (const char *prefix, std::istream &is, SpecialActions *actions);
+		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+		void dviBeginPage (unsigned pageno);
+		const char* info () const   {return "background color special";}
+		const char* name () const   {return "bgcolor";}
+		const char**  prefixes () const;
+
+	private:
+		typedef std::pair<unsigned,Color> PageColor;  // page number and color
+		SpecialActions *_actions;
+		std::vector<PageColor> _pageColors;
 };
 
 #endif

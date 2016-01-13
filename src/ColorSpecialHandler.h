@@ -22,6 +22,7 @@
 #define DVISVGM_COLORSPECIALHANDLER_H
 
 #include <stack>
+#include <string>
 #include <vector>
 #include "Color.h"
 #include "SpecialHandler.h"
@@ -31,6 +32,8 @@ class ColorSpecialHandler : public SpecialHandler
 {
 	public:
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
+		Color readColor (std::istream &is) const;
+		Color readColor (const std::string &model, std::istream &is) const;
 		const char* name () const   {return "color";}
 		const char* info () const   {return "complete support of color specials";}
 		const char** prefixes () const;

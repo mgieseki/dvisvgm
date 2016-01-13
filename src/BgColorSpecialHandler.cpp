@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include <algorithm>
 #include "BgColorSpecialHandler.h"
 #include "ColorSpecialHandler.h"
 #include "SpecialActions.h"
@@ -26,9 +27,47 @@
 using namespace std;
 
 
-bool BgColorSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+/** Collect all background color changes while preprocessing the DVI file.
+ *  We need them in order to apply the correct background colors even if
+ *  not all but only selected DVI pages are converted. */
+void BgColorSpecialHandler::preprocess (const char*, std::istream &is, SpecialActions *actions) {
 	ColorSpecialHandler csh;
-	return csh.process(prefix, is, actions);
+	Color color = csh.readColor(is);
+	unsigned pageno = actions->getCurrentPageNumber();
+	if (_pageColors.empty() || _pageColors.back().second != color) {
+		if (!_pageColors.empty() && _pageColors.back().first == pageno)
+			_pageColors.back().second = color;
+		else
+			_pageColors.push_back(PageColor(pageno, color));
+	}
+	_actions = actions;
+}
+
+
+bool BgColorSpecialHandler::process (const char*, istream&, SpecialActions*) {
+	return true;
+}
+
+
+static bool operator < (const pair<unsigned,Color> &pc1, const pair<unsigned,Color> &pc2) {
+	// order PageColor objects by page number
+	return pc1.first < pc2.first;
+}
+
+
+void BgColorSpecialHandler::dviBeginPage (unsigned pageno) {
+	// Ensure that the background color of the preceeding page is set as the
+	// default background color of the current page because this special affects
+	// the current and all subsequent pages until the next change.
+	// See the documentation of the color package, section 3.5.
+	if (_pageColors.empty())
+		return;
+	// find number of page with bg color change not lower than the current one
+	vector<PageColor>::iterator it = lower_bound(_pageColors.begin(), _pageColors.end(), PageColor(pageno, Color::BLACK));
+	if (it != _pageColors.end() && it->first == pageno)
+		_actions->setBgColor(it->second);
+	else if (it != _pageColors.begin())
+		_actions->setBgColor((--it)->second);
 }
 
 
