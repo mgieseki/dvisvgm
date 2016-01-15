@@ -38,6 +38,21 @@ class ColorSpecialTest : public ::testing::Test
 };
 
 
+TEST_F(ColorSpecialTest, readColor) {
+	std::istringstream iss("rgb 1 0 1");
+	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#ff00ff");
+	iss.clear();
+	iss.str("hsb 1 0.5 1");
+	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#ff8080");
+	iss.clear();
+	iss.str("0 1 0");
+	EXPECT_EQ(ColorSpecialHandler::readColor("rgb", iss).rgbString(), "#00ff00");
+	iss.clear();
+	iss.str("1 0.5 1");
+	EXPECT_EQ(ColorSpecialHandler::readColor("hsb", iss).rgbString(), "#ff8080");
+}
+
+
 TEST_F(ColorSpecialTest, rgb) {
 	std::istringstream iss("rgb 1 0 1");
 	handler.process(0, iss, &actions);

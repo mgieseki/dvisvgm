@@ -56,7 +56,7 @@ static void read_doubles (istream &is, vector<double> &v) {
  *  @param[in]  model the color model
  *  @param[in]  is stream to be read from
  *  @return resulting Color object */
-Color ColorSpecialHandler::readColor (const string &model, istream &is) const {
+Color ColorSpecialHandler::readColor (const string &model, istream &is) {
 	Color color;
 	if (model == "rgb") {
 		vector<double> rgb(3);
@@ -85,36 +85,32 @@ Color ColorSpecialHandler::readColor (const string &model, istream &is) const {
  *  from a given input stream.
  *  @param[in] is stream to be read from
  *  @return resulting Color object */
-Color ColorSpecialHandler::readColor (istream &is) const {
+Color ColorSpecialHandler::readColor (istream &is) {
 	string model;
 	is >> model;
 	return readColor(model, is);
 }
 
 
-bool ColorSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
-	if (prefix && strcmp(prefix, "background") == 0)
-		actions->setBgColor(readColor(is));
-	else {
-		string cmd;
-		is >> cmd;
-		if (cmd == "push")               // color push <model> <params>
-			_colorStack.push(readColor(is));
-		else if (cmd == "pop") {
-			if (!_colorStack.empty())     // color pop
-				_colorStack.pop();
-		}
-		else {                           // color <model> <params>
-			while (!_colorStack.empty())
-				_colorStack.pop();
-			_colorStack.push(readColor(cmd, is));
-		}
-		if (actions) {
-			if (_colorStack.empty())
-				actions->setColor(Color::BLACK);
-			else
-				actions->setColor(_colorStack.top());
-		}
+bool ColorSpecialHandler::process (const char*, istream &is, SpecialActions *actions) {
+	string cmd;
+	is >> cmd;
+	if (cmd == "push")               // color push <model> <params>
+		_colorStack.push(readColor(is));
+	else if (cmd == "pop") {
+		if (!_colorStack.empty())     // color pop
+			_colorStack.pop();
+	}
+	else {                           // color <model> <params>
+		while (!_colorStack.empty())
+			_colorStack.pop();
+		_colorStack.push(readColor(cmd, is));
+	}
+	if (actions) {
+		if (_colorStack.empty())
+			actions->setColor(Color::BLACK);
+		else
+			actions->setColor(_colorStack.top());
 	}
 	return true;
 }

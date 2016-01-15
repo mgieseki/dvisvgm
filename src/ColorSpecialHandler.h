@@ -32,8 +32,8 @@ class ColorSpecialHandler : public SpecialHandler
 {
 	public:
 		bool process (const char *prefix, std::istream &is, SpecialActions *actions);
-		Color readColor (std::istream &is) const;
-		Color readColor (const std::string &model, std::istream &is) const;
+		static Color readColor (std::istream &is);
+		static Color readColor (const std::string &model, std::istream &is);
 		const char* name () const   {return "color";}
 		const char* info () const   {return "complete support of color specials";}
 		const char** prefixes () const;

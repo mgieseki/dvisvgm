@@ -31,8 +31,7 @@ using namespace std;
  *  We need them in order to apply the correct background colors even if
  *  not all but only selected DVI pages are converted. */
 void BgColorSpecialHandler::preprocess (const char*, std::istream &is, SpecialActions *actions) {
-	ColorSpecialHandler csh;
-	Color color = csh.readColor(is);
+	Color color = ColorSpecialHandler::readColor(is);
 	unsigned pageno = actions->getCurrentPageNumber();
 	if (_pageColors.empty() || _pageColors.back().second != color) {
 		if (!_pageColors.empty() && _pageColors.back().first == pageno)
