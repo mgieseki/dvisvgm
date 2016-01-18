@@ -24,6 +24,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <xxhash.h>
 #include "gzstream.h"
 #include "CommandLine.h"
 #include "DVIToSVG.h"
@@ -175,6 +176,7 @@ static void print_version (bool extended) {
 		string gsver = gs.revision(true);
 		if (!gsver.empty())
 			oss << "Ghostscript: " << gsver + "\n";
+		const unsigned xxh_ver = XXH_versionNumber();
 		oss <<
 #ifdef MIKTEX
 			"MiKTeX:      " << FileFinder::version() << "\n"
@@ -182,6 +184,7 @@ static void print_version (bool extended) {
 			"kpathsea:    " << FileFinder::version() << "\n"
 #endif
 			"potrace:     " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
+			"xxhash:      " << xxh_ver/10000 << '.' << (xxh_ver/100)%100 << '.' << xxh_ver%100 << "\n"
 			"zlib:        " << zlibVersion();
 	}
 	cout << oss.str() << endl;
