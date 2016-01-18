@@ -71,11 +71,19 @@ by plain graphics paths.
 
 OPTIONS
 -------
+dvisvgm provides a POSIX-compliant command-line interface with short and long option names.
+They may be given before and/or after the name of the file to be converted. Also, the order of
+specifying the options is not significant, i.e. you can add them in any order without changing
+dvisvgm's behavior. Certain options accept or require additional parameters which are directly
+appended to or separated by whitespace from a short option (e.g. +-v0+ or +-v 0+). Long options
+require an additional equals sign (+=+) between option name and argument but without any surrounding
+whitespace (e.g. +--verbosity=0+).
+
 *-a, --trace-all*=['retrace']::
 This option forces dvisvgm to vectorize not only the glyphs actually required to render the
 SVG file correctly – which is the default –, but processes all glyphs of all fonts referenced in
-the DVI file. Because dvisvgm stores the tracing results a font cache, all following conversions these
-fonts will speed up significantly.
+the DVI file. Because dvisvgm stores the tracing results in a font cache, all following conversions
+of these fonts will speed up significantly.
 The boolean option 'retrace' determines how to handle glyphs already stored in the cache.
 By default, these glyphs are skipped. Setting argument 'retrace' to 'yes' or 'true' forces dvisvgm
 to retrace the corresponding bitmaps again.
