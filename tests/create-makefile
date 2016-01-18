@@ -13,12 +13,17 @@ cat >$out <<EOT
 
 AM_CXXFLAGS = -I\$(top_srcdir)/src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
 
-TESTS =
-check_PROGRAMS =
+TESTS = hashcheck
+check_PROGRAMS = hashcheck
+nodist_hashcheck_SOURCES = hashcheck.cpp
+hashcheck_LDADD = ../xxHash/libxxhash.a
+hashcheck_CPPFLAGS = -I\$(top_srcdir)/xxHash
+hashcheck.cpp: genhashcheck.py \$(top_srcdir)/src/Unicode.cpp \$(top_srcdir)/xxHash/xxhash.h
+	python \$^ >\$@
 
 EOT
 
-for f in *.cpp; do
+for f in *Test.cpp; do
 	base=`basename $f .cpp`
 	cat >>$out <<EOT
 TESTS += $base
@@ -37,12 +42,12 @@ for f in *.dvi; do
 done
 
 cat >>$out <<EOT
-EXTRA_DIST = check-conv normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@
 
-CLEANFILES = *.gcda *.gcno
+CLEANFILES = *.gcda *.gcno hashcheck.cpp
 EOT
 
 # vim: set syntax=sh:

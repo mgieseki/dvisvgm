@@ -5,8 +5,13 @@
 
 AM_CXXFLAGS = -I$(top_srcdir)/src -Wall -DSRCDIR='"$(srcdir)"' $(CODE_COVERAGE_CFLAGS)
 
-TESTS =
-check_PROGRAMS =
+TESTS = hashcheck
+check_PROGRAMS = hashcheck
+nodist_hashcheck_SOURCES = hashcheck.cpp
+hashcheck_LDADD = ../xxHash/libxxhash.a
+hashcheck_CPPFLAGS = -I$(top_srcdir)/xxHash
+hashcheck.cpp: genhashcheck.py $(top_srcdir)/src/Unicode.cpp $(top_srcdir)/xxHash/xxhash.h
+	python $^ >$@
 
 TESTS += BezierTest
 check_PROGRAMS += BezierTest
@@ -246,9 +251,9 @@ XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
 TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
-EXTRA_DIST = check-conv normalize.xsl cmr10.600gf sample.sfd $(TESTDATA)
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl cmr10.600gf sample.sfd $(TESTDATA)
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@
 
-CLEANFILES = *.gcda *.gcno
+CLEANFILES = *.gcda *.gcno hashcheck.cpp
