@@ -1,3 +1,11 @@
+dvisvgm-1.14.2 (2016-01-20)
+- fixed handling of background color specials (now they affect all succeeding pages until the next change)
+- fixed a potential memory issue caused by accessing an invalid iterator
+- updated xxHash to version 0.5.0
+- added xxHash to the output of --version=1
+- minor additions to the manpage
+- added test case to validate the hash values used in Unicode.cpp
+
 dvisvgm-1.14.1 (2016-01-05)
 - fixed an issue in the PostScript handler that could lead to invalid SVG files
   if multiple DVI pages were converted
