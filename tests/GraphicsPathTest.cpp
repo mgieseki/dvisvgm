@@ -122,6 +122,7 @@ TEST(GraphicsPathTest, removeRedundantCommands) {
 	path.conicto(10,100,40,80);
 	path.cubicto(5,5,30,10,90,70);
 	path.moveto(10,10);
+	path.moveto(15,10);
 	path.moveto(20,20);
 	path.lineto(20,30);
 	path.moveto(10,10);

@@ -202,10 +202,12 @@ class GraphicsPath
 				return;
 			Iterator prev = it++;
 			while (it != _commands.end()) {
-				if (prev->type == Command::MOVETO && it->type == Command::MOVETO)
-					_commands.erase(prev);
-				else
+				if (prev->type != Command::MOVETO || it->type != Command::MOVETO)
 					prev = it++;
+				else {
+					prev = _commands.erase(prev);  // remove leading MOVETO and advance 'prev' to 'it'
+					++it;
+				}
 			}
 		}
 
