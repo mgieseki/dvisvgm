@@ -42,7 +42,8 @@ for f in *.dvi; do
 done
 
 cat >>$out <<EOT
-EXTRA_DIST = check-conv genhashcheck.py normalize.xsl cmr10.600gf sample.sfd \$(TESTDATA)
+TESTDATA += cmr10.600gf sample.sfd cmr10.tfm cidjmgr0-h.tfm
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl \$(TESTDATA)
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@

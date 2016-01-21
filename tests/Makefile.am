@@ -123,6 +123,11 @@ check_PROGRAMS += GraphicsPathTest
 GraphicsPathTest_SOURCES = GraphicsPathTest.cpp
 GraphicsPathTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += JFMReaderTest
+check_PROGRAMS += JFMReaderTest
+JFMReaderTest_SOURCES = JFMReaderTest.cpp
+JFMReaderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += LengthTest
 check_PROGRAMS += LengthTest
 LengthTest_SOURCES = LengthTest.cpp
@@ -208,6 +213,11 @@ check_PROGRAMS += TensorProductPatchTest
 TensorProductPatchTest_SOURCES = TensorProductPatchTest.cpp
 TensorProductPatchTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += TFMReaderTest
+check_PROGRAMS += TFMReaderTest
+TFMReaderTest_SOURCES = TFMReaderTest.cpp
+TFMReaderTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += ToUnicodeMapTest
 check_PROGRAMS += ToUnicodeMapTest
 ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp
@@ -251,7 +261,8 @@ XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.
 TESTDATA =
 TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
 TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
-EXTRA_DIST = check-conv genhashcheck.py normalize.xsl cmr10.600gf sample.sfd $(TESTDATA)
+TESTDATA += cmr10.600gf sample.sfd cmr10.tfm cidjmgr0-h.tfm
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl $(TESTDATA)
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@
