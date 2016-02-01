@@ -28,9 +28,7 @@
 #include "Message.h"
 #include "MetafontWrapper.h"
 #include "Process.h"
-#include "SignalHandler.h"
 #include "XMLString.h"
-#include "macros.h"
 
 using namespace std;
 

@@ -38,7 +38,6 @@
 #include <fstream>
 #include <map>
 #include <set>
-#include <string>
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "FontMap.h"

@@ -23,7 +23,6 @@
 #include "Font.h"
 #include "VFActions.h"
 #include "VFReader.h"
-#include "macros.h"
 
 using namespace std;
 

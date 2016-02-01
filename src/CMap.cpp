@@ -21,12 +21,9 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include <set>
-#include <vector>
 #include "CMap.h"
 #include "CMapManager.h"
 #include "FileFinder.h"
-#include "InputReader.h"
 
 using namespace std;
 

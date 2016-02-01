@@ -27,10 +27,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "GlyphTracerMessages.h"
-#include "SpecialManager.h"
 #include "System.h"
-#include "XMLNode.h"
-#include "XMLString.h"
 
 
 using namespace std;
@@ -114,7 +111,6 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 	GlyphTracerMessages callback(fontname != font->name(), false);
 	fontname = font->name();
 
-	BoundingBox charbox;
 	GlyphMetrics metrics;
 	font->getGlyphMetrics(c, vertical, metrics);
 	const PhysicalFont* pf = dynamic_cast<const PhysicalFont*>(font);

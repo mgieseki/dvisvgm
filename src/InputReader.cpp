@@ -107,7 +107,7 @@ int InputReader::compare (const char *s, bool consume) {
 bool InputReader::parseInt (int &val, bool accept_sign) {
 	val = 0;
 	int fac=1;
-	char sign;    // explicitly given sign
+	int sign;    // explicitly given sign
 	if (accept_sign && ((sign = peek()) == '+' || sign == '-')) {
 		if (isdigit(peek(1))) {
 			get();  // skip sign
@@ -143,7 +143,7 @@ bool InputReader::parseInt (int base, int &val) {
 
 	const char *digits = "0123456789abcdefghijklmnopqrstuvwxyz";
 	const char maxdigit = digits[base-1];
-	char c;
+	int c;
 	if (!isalnum(c = tolower(peek())) || c > maxdigit)
 		return false;
 
@@ -167,7 +167,7 @@ char InputReader::parseDouble (double &val) {
 	int int_part=0;
 	bool is_float = false;
 	skipSpace();
-	char sign = peek();
+	int sign = peek();
 	if (parseInt(int_part)) { // match [+-]?[0-9]+\.?
 		if (peek() == '.') {
 			get();
@@ -179,7 +179,6 @@ char InputReader::parseDouble (double &val) {
 		}
 	}
 	else {  // match [+-]?\.
-		char sign;   // explicitly given sign
 		if ((sign = peek()) == '+' || sign == '-') { // match [+-]?\.[0-9]
 			if (peek(1) != '.' || !isdigit(peek(2)))
 				return 0;
@@ -199,7 +198,7 @@ char InputReader::parseDouble (double &val) {
 		frac_part += (get()-'0')/u;
 	val = (int_part + frac_part) * fac;
 	// parse exponent
-	char c;
+	int c;
 	if (tolower(peek()) == 'e' && (isdigit(c=peek(1)) || ((c == '+' || c == '-') && isdigit(peek(2))))) {
 		get(); // skip 'e'
 		int exp;
@@ -245,7 +244,7 @@ string InputReader::getWord () {
 char InputReader::getPunct () {
 	skipSpace();
 	if (ispunct(peek()))
-		return get();
+		return char(get());
 	return 0;
 }
 

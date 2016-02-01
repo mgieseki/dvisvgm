@@ -21,7 +21,6 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include <string>
 #include "BoundingBox.h"
 #include "Matrix.h"
 #include "XMLNode.h"

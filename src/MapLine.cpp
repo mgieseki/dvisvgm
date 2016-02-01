@@ -169,7 +169,7 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
 	ir.skipSpace();
 	while (ir.peek() == '-') {
 		ir.get();
-		char option = ir.get();
+		int option = ir.get();
 		if (!isprint(option))
 			throw MapLineException("option character expected");
 		ir.skipSpace();

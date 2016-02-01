@@ -25,7 +25,6 @@
 #include "SpecialHandler.h"
 #include "SpecialManager.h"
 #include "PsSpecialHandler.h"
-#include "macros.h"
 
 using namespace std;
 

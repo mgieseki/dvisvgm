@@ -45,7 +45,7 @@ bool PdfSpecialHandler::process (const char *prefix, istream &is, SpecialActions
 		// read mode selector ('+', '-', or '=')
 		char modechar = '+';           // default mode (append if new, do not replace existing mapping)
 		if (strchr("=+-", ir.peek()))  // leading modifier given?
-			modechar = ir.get();
+			modechar = char(ir.get());
 		else if (!_maplineProcessed) { // no modifier given?
 			// remove default map entries if this is the first mapline/mapfile special called
 			FontMap::instance().clear();

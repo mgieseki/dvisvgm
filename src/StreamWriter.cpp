@@ -30,7 +30,7 @@ using namespace std;
  *  @param[in] n number of bytes to be considered */
 void StreamWriter::writeUnsigned (UInt32 val, int n) {
 	for (n--; n >= 0; n--)
-		_os.put((val >> (8*n)) & 0xff);
+		_os.put(char((val >> (8*n)) & 0xff));
 }
 
 

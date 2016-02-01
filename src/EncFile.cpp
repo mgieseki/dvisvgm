@@ -22,7 +22,6 @@
 #include <fstream>
 #include "Font.h"
 #include "EncFile.h"
-#include "FontMap.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
 #include "FileFinder.h"

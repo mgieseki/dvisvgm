@@ -20,26 +20,19 @@
 
 #include <config.h>
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include "CMap.h"
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Font.h"
-#include "FontEncoding.h"
 #include "FontEngine.h"
-#include "GFGlyphTracer.h"
-#include "Glyph.h"
 #include "Message.h"
 #include "MetafontWrapper.h"
-#include "TFM.h"
-#include "VFReader.h"
 #include "SignalHandler.h"
 #include "Subfont.h"
 #include "SVGTree.h"
 #include "Unicode.h"
-#include "macros.h"
 
 
 using namespace std;

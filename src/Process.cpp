@@ -176,7 +176,7 @@ bool Process::run (string *out) {
 				//
 				out->clear();
 				char buf[512];
-				size_t len;
+				ssize_t len;
 				while ((len = read(pipefd[0], buf, sizeof(buf)-1)) > 0) {
 					buf[len] = 0;
 					*out += string(buf);

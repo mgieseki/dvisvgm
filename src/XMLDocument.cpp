@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <config.h>
-#include "macros.h"
 #include "XMLDocument.h"
 
 using namespace std;
@@ -47,8 +46,8 @@ void XMLDocument::clear () {
 void XMLDocument::append (XMLNode *node) {
 	if (!node)
 		return;
-	XMLElementNode *newRoot = dynamic_cast<XMLElementNode*>(node);
-	if (newRoot) {             // there can only be one root element node in the document
+	if (XMLElementNode *newRoot = dynamic_cast<XMLElementNode*>(node)) {
+		// there can only be one root element node in the document
 		delete _rootElement;     // so if there is already one...
 		_rootElement = newRoot;  // ...we replace it
 	}

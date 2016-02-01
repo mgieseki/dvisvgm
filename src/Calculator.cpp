@@ -31,9 +31,6 @@ const char NUMBER = 1;
 const char NAME   = 2;
 
 
-#include <iostream>
-
-
 /** Evaluates a given arithmetic expression and returns its value.
  *  The evaluator is implemented as a recursive descent parser.
  *  @param[in] is reads expression from this stream

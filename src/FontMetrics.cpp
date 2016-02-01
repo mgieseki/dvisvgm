@@ -23,7 +23,6 @@
 #include "FileFinder.h"
 #include "FontMetrics.h"
 #include "JFM.h"
-#include "TFM.h"
 
 using namespace std;
 

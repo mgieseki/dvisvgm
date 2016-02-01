@@ -19,10 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
-#include <iostream>
 #include <sstream>
 #include "GFReader.h"
-#include "macros.h"
 #include "SignalHandler.h"
 
 using namespace std;

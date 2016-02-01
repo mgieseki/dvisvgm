@@ -30,9 +30,7 @@
 #include "SpecialActions.h"
 #include "SVGTree.h"
 #include "TpicSpecialHandler.h"
-#include "XMLNode.h"
-#include "XMLString.h"
-#include "types.h"
+
 
 using namespace std;
 

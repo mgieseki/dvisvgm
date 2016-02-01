@@ -48,8 +48,8 @@ class Directory
 		HANDLE handle;
 		WIN32_FIND_DATA fileData;
 #else
-		DIR *dir;
-		struct dirent *dirent;
+		DIR *_dir;
+		struct dirent *_dirent;
 #endif
 };
 

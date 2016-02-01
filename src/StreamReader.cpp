@@ -39,7 +39,7 @@ istream& StreamReader::replaceStream (istream &in) {
 UInt32 StreamReader::readUnsigned (int bytes) {
 	UInt32 ret = 0;
 	for (bytes--; bytes >= 0 && !_is->eof(); bytes--) {
-		UInt32 b = _is->get();
+		UInt32 b = UInt32(_is->get());
 		ret |= b << (8*bytes);
 	}
 	return ret;
@@ -61,7 +61,7 @@ UInt32 StreamReader::readUnsigned (int bytes, CRC32 &crc32) {
  *  @param[in] bytes number of bytes to read (max. 4)
  *  @return read integer */
 Int32 StreamReader::readSigned (int bytes) {
-	Int32 ret = _is->get();
+	Int32 ret = Int32(_is->get());
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
 	for (bytes-=2; bytes >= 0 && !_is->eof(); bytes--)
@@ -76,7 +76,7 @@ Int32 StreamReader::readSigned (int bytes) {
  *  @return read integer */
 Int32 StreamReader::readSigned (int bytes, CRC32 &crc32) {
 	Int32 ret = readSigned(bytes);
-	crc32.update(ret, bytes);
+	crc32.update(UInt32(ret), bytes);
 	return ret;
 }
 

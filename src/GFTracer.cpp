@@ -19,9 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include <iostream>
 #include <fstream>
-#include <sstream>
 #include "GFTracer.h"
 #include "Glyph.h"
 #include "Message.h"

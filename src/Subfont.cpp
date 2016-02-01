@@ -24,15 +24,16 @@
 #include <fstream>
 #include <limits>
 #include "FileFinder.h"
-#include "Subfont.h"
 #include "Message.h"
+#include "Subfont.h"
+
 
 using namespace std;
 
 // helper functions
 
 static int skip_mapping_data (istream &is);
-static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, int &pos);
+static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, long &pos);
 
 
 /** Constructs a new SubfontDefinition object.
@@ -105,7 +106,7 @@ Subfont* SubfontDefinition::subfont (const string &id) const {
 int SubfontDefinition::subfonts (vector<Subfont*> &sfs) const {
 	for (ConstIterator it=_subfonts.begin(); it != _subfonts.end(); ++it)
 		sfs.push_back(it->second);
-	return sfs.size();
+	return int(sfs.size());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -153,7 +154,7 @@ bool Subfont::read () {
 					// build mapping array
 					_mapping = new UInt16[256];
 					memset(_mapping, 0, 256*sizeof(UInt16));
-					int pos=0;
+					long pos=0;
 					char buf[1024];
 					bool complete=false;
 					while (!complete) {
@@ -210,7 +211,7 @@ static int skip_mapping_data (istream &is) {
  *  @param[in] fname name of the mapfile being scanned
  *  @param[in,out] offset position/index of next mapping value
  *  @return true if the line is the last one the current mapping sequence, i.e. the line doesn't end with a backslash */
-static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, int &offset) {
+static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, long &offset) {
 	const char *p=line;
 	char *q;
 	for (; *p && isspace(*p); p++);
@@ -222,7 +223,7 @@ static bool scan_line (const char *line, int lineno, UInt16 *mapping, const stri
 		}
 		else {
 			long val1 = strtol(p, &q, 0); // first value of range
-			long val2;                    // last value of range
+			long val2 = -1;               // last value of range
 			ostringstream oss; // output stream for exception messages
 			switch (*q) {
 				case ':':

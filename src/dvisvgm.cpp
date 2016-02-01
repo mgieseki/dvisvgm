@@ -23,7 +23,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <xxhash.h>
 #include "gzstream.h"
 #include "CommandLine.h"
@@ -31,21 +30,15 @@
 #include "DVIToSVGActions.h"
 #include "EPSToSVG.h"
 #include "FileFinder.h"
-#include "FilePath.h"
 #include "FileSystem.h"
 #include "Font.h"
-#include "FontCache.h"
 #include "FontEngine.h"
-#include "FontMap.h"
 #include "Ghostscript.h"
 #include "HtmlSpecialHandler.h"
-#include "InputReader.h"
-#include "Message.h"
 #include "PageSize.h"
 #include "PSInterpreter.h"
 #include "PsSpecialHandler.h"
 #include "SignalHandler.h"
-#include "SpecialManager.h"
 #include "SVGOutput.h"
 #include "System.h"
 

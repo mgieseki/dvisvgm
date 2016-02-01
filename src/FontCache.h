@@ -21,7 +21,6 @@
 #ifndef DVISVGM_FONTCACHE_H
 #define DVISVGM_FONTCACHE_H
 
-#include <iostream>
 #include <string>
 #include <map>
 #include "types.h"

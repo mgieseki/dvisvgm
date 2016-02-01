@@ -21,12 +21,10 @@
 #include <config.h>
 #include <cmath>
 #include <fstream>
-#include <iostream>
 #include <memory>
 #include <sstream>
 #include "EPSFile.h"
 #include "FileFinder.h"
-#include "Ghostscript.h"
 #include "Message.h"
 #include "PathClipper.h"
 #include "PSPattern.h"
@@ -35,9 +33,6 @@
 #include "SpecialActions.h"
 #include "SVGTree.h"
 #include "TensorProductPatch.h"
-#include "VectorIterator.h"
-#include "XMLNode.h"
-#include "XMLString.h"
 #include "TriangularPatch.h"
 
 
@@ -396,7 +391,6 @@ void PsSpecialHandler::dviEndPage (unsigned) {
 		double w = max(0.0, _previewFilter.width());
 		double h = max(0.0, _previewFilter.height());
 		double d = max(0.0, _previewFilter.depth());
-		bool isBaselineHorizontal = true;
 		if (_actions && (_actions->getBBoxFormatString() == "preview" || _actions->getBBoxFormatString() == "min")) {
 			if (_actions->getBBoxFormatString() == "preview") {
 				_actions->bbox() = bbox;
@@ -426,7 +420,7 @@ void PsSpecialHandler::dviEndPage (unsigned) {
 			// apply page transformations to box extents
 			Matrix pagetrans;
 			_actions->getPageTransform(pagetrans);
-			isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
+			bool isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
 			_actions->bbox().lock();
 
 			if (isBaselineHorizontal) {
@@ -722,7 +716,7 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
  *  1-3: (optional) RGB values for uncolored tiling patterns
  *  further parameters depend on the pattern type */
 void PsSpecialHandler::setpattern (vector<double> &p) {
-	int pattern_id = p[0];
+	int pattern_id = static_cast<int>(p[0]);
 	Color color;
 	if (p.size() == 4)
 		color.setRGB(p[1], p[2], p[3]);

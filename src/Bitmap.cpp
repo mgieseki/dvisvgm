@@ -21,7 +21,6 @@
 #include <config.h>
 #include <algorithm>
 #include <cstdlib>
-#include <iostream>
 #include <limits>
 #include "Bitmap.h"
 #include "macros.h"
@@ -86,7 +85,7 @@ void Bitmap::forAllPixels (Callback &data) const {
 			UInt8 byte = _bytes[row*_bpr+col];
 			int x;
 			for (int b=7; (b >= 0) && ((x = 8*col+(7-b)) < _cols); b--)
-				data.pixel(x, row, byte & (1 << b), *this);
+				data.pixel(x, row, bool(byte & (1 << b)), *this);
 		}
 	}
 	data.finish();

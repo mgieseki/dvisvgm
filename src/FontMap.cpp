@@ -21,7 +21,6 @@
 #include <config.h>
 #include <cstring>
 #include <fstream>
-#include <iostream>
 #include <limits>
 #include <vector>
 #include "CMap.h"

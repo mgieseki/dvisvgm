@@ -21,7 +21,6 @@
 #include <config.h>
 #include <cstring>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include "FileFinder.h"
 #include "InputReader.h"

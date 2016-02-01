@@ -37,6 +37,8 @@ TEST(XMLStringTest, stringcast) {
 TEST(XMLStringTest, intcast) {
 	EXPECT_EQ(XMLString(65, true), string("65"));
 	EXPECT_EQ(XMLString(65, false), string("A"));
+	EXPECT_EQ(XMLString(1000, true), string("1000"));
+	EXPECT_EQ(XMLString(1000, false), string("\xCF\xA8"));  // UTF-8
 }
 
 

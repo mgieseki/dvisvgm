@@ -25,7 +25,6 @@
 #include "InputReader.h"
 #include "Message.h"
 #include "SVGTree.h"
-#include "XMLNode.h"
 
 using namespace std;
 
@@ -57,7 +56,7 @@ void HtmlSpecialHandler::preprocess (const char *prefix, istream &is, SpecialAct
 void HtmlSpecialHandler::preprocessNameAnchor (const string &name) {
 	NamedAnchors::iterator it = _namedAnchors.find(name);
 	if (it == _namedAnchors.end()) {  // anchor completely undefined?
-		int id = _namedAnchors.size()+1;
+		int id = static_cast<int>(_namedAnchors.size())+1;
 		_namedAnchors[name] = NamedAnchor(_actions->getCurrentPageNumber(), id, 0);
 	}
 	else if (it->second.id < 0) {  // anchor referenced but not defined yet?
@@ -77,7 +76,7 @@ void HtmlSpecialHandler::preprocessHrefAnchor (const string &uri) {
 	if (it != _namedAnchors.end())  // anchor already defined?
 		it->second.referenced = true;
 	else {
-		int id = _namedAnchors.size()+1;
+		int id = static_cast<int>(_namedAnchors.size())+1;
 		_namedAnchors[name] = NamedAnchor(0, -id, 0, true);
 	}
 }

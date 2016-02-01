@@ -21,7 +21,6 @@
 #ifndef DVISVGM_DVITOSVG_H
 #define DVISVGM_DVITOSVG_H
 
-#include <iostream>
 #include <string>
 #include <utility>
 #include "DVIReader.h"

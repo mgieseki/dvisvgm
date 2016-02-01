@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <config.h>
-#include <iostream>
 #include <sstream>
 #include <ft2build.h>
 #include FT_ADVANCES_H

@@ -20,7 +20,6 @@
 
 #include <config.h>
 #include <fstream>
-#include <istream>
 #include <sstream>
 #include "EPSFile.h"
 #include "EPSToSVG.h"

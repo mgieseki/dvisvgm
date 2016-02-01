@@ -26,11 +26,9 @@
 #include "CMap.h"
 #include "Font.h"
 #include "FontManager.h"
-#include "FontMap.h"
 #include "FileFinder.h"
 #include "FileSystem.h"
 #include "Message.h"
-#include "macros.h"
 
 using namespace std;
 

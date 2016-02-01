@@ -22,18 +22,14 @@
 #include <algorithm>
 #include <cstdarg>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include "Color.h"
 #include "DVIActions.h"
 #include "DVIReader.h"
 #include "Font.h"
 #include "FontManager.h"
-#include "Message.h"
 #include "SignalHandler.h"
 #include "VectorStream.h"
-#include "macros.h"
-#include "types.h"
 
 
 using namespace std;

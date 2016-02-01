@@ -20,7 +20,6 @@
 
 #include <config.h>
 #include "GFGlyphTracer.h"
-#include "Pair.h"
 
 using namespace std;
 

@@ -23,7 +23,6 @@
 #include "CMap.h"
 #include "CMapManager.h"
 #include "CMapReader.h"
-#include "Font.h"
 #include "FileFinder.h"
 #include "Message.h"
 
@@ -121,7 +120,7 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 	vector<CharMapID> charmapIDs;
 	font->collectCharMapIDs(charmapIDs);
 
-	const bool is_unicode_map = dynamic_cast<const UnicodeCMap*>(cmap);
+	const bool is_unicode_map = bool(dynamic_cast<const UnicodeCMap*>(cmap));
 	const size_t num_encodings = is_unicode_map ? 2 : sizeof(encodings)/sizeof(CharMapIDToEncName);
 
 	// try to find a compatible encoding CMap
