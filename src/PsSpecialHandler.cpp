@@ -775,7 +775,6 @@ void PsSpecialHandler::clip (vector<double>&, bool evenodd) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (Path &path, bool evenodd) {
 	// when this method is called, _path contains the clipping path
-	_path.removeRedundantCommands();
 	if (path.empty() || !_actions)
 		return;
 
