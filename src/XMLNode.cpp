@@ -21,6 +21,7 @@
 #include <config.h>
 #include <map>
 #include <list>
+#include <sstream>
 #include "macros.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -215,10 +216,17 @@ const char* XMLElementNode::getAttributeValue(const std::string& name) const {
 //////////////////////
 
 void XMLTextNode::append (XMLNode *node) {
+	if (!node)
+		return;
 	if (XMLTextNode *tn = dynamic_cast<XMLTextNode*>(node))
 		append(tn);
-	else
+	else {
+		// append text representation of the node
+		ostringstream oss;
+		node->write(oss);
+		append(XMLString(oss.str()));
 		delete node;
+	}
 }
 
 

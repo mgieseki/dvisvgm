@@ -26,6 +26,14 @@
 
 using namespace std;
 
+class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler
+{
+	public:
+		void finishPreprocessing () {dviPreprocessingFinished();}
+		void finishPage ()          {dviEndPage(0);}
+};
+
+
 class DvisvgmSpecialTest : public ::testing::Test
 {
 	protected:
@@ -35,17 +43,24 @@ class DvisvgmSpecialTest : public ::testing::Test
 				ActionsRecorder () : defs(""), page("") {}
 				void appendToDefs (XMLNode *node)         {defs.append(node);}
 				void appendToPage (XMLNode *node)         {page.append(node);}
-				void clear ()                             {defs.clear(); page.clear();}
+				void embed (const BoundingBox &bb)        {bbox.embed(bb);}
+				double getX () const                      {return 0;}
+				double getY () const                      {return 0;}
+				void clear ()                             {defs.clear(); page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
 				bool defsEquals (const string &str) const {return defs.getText() == str;}
 				bool pageEquals (const string &str) const {return page.getText() == str;}
+				bool bboxEquals (const string &str) const {return bbox.toSVGViewBox() == str;}
+				const Matrix& getMatrix () const          {static Matrix m(1); return m;}
 
 				void write (ostream &os) const {
 					os << "defs: " << defs.getText() << '\n'
-						<< "page: " << page.getText() << '\n';
+						<< "page: " << page.getText() << '\n'
+						<< "bbox: " << bbox.toSVGViewBox() << '\n';
 				}
 
 			private:
 				XMLTextNode defs, page;
+				BoundingBox bbox;
 		};
 
 		void SetUp () {
@@ -53,21 +68,26 @@ class DvisvgmSpecialTest : public ::testing::Test
 		}
 
 	protected:
-		DvisvgmSpecialHandler handler;
+		MyDvisvgmSpecialHandler handler;
 		ActionsRecorder recorder;
 };
 
 
-TEST_F(DvisvgmSpecialTest, raw) {
-	istringstream iss("raw first");
-	handler.process(0, iss, &recorder);
-	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("first"));
+TEST_F(DvisvgmSpecialTest, basic) {
+	EXPECT_EQ(handler.name(), "dvisvgm");
+}
 
-	iss.clear(); iss.str("raw \t second \t");
+
+TEST_F(DvisvgmSpecialTest, raw) {
+	istringstream iss("raw first{?nl}");
 	handler.process(0, iss, &recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("firstsecond"));
+	EXPECT_TRUE(recorder.pageEquals("first\n"));
+
+	iss.clear(); iss.str("raw \t second {?bbox dummy} \t");
+	handler.process(0, iss, &recorder);
+	EXPECT_TRUE(recorder.defsEquals(""));
+	EXPECT_TRUE(recorder.pageEquals("first\nsecond 0 0 0 0"));
 }
 
 
@@ -98,10 +118,12 @@ TEST_F(DvisvgmSpecialTest, pattern1) {
 		std::istringstream iss(cmds[i]);
 		handler.preprocess(0, iss, &recorder);
 	}
+	handler.finishPreprocessing();
 	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
 		std::istringstream iss(cmds[i]);
 		handler.process(0, iss, &recorder);
 	}
+	handler.finishPage();
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals("firsttext1text2text1text2"));
 }
@@ -121,10 +143,12 @@ TEST_F(DvisvgmSpecialTest, pattern2) {
 		std::istringstream iss(cmds[i]);
 		handler.preprocess(0, iss, &recorder);
 	}
+	handler.finishPreprocessing();
 	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
 		std::istringstream iss(cmds[i]);
 		handler.process(0, iss, &recorder);
 	}
+	handler.finishPage();
 	EXPECT_TRUE(recorder.defsEquals("firsttext1text2"));
 	EXPECT_TRUE(recorder.pageEquals(""));
 }
@@ -145,16 +169,55 @@ TEST_F(DvisvgmSpecialTest, pattern3) {
 		std::istringstream iss(cmds[i]);
 		handler.preprocess(0, iss, &recorder);
 	}
+	handler.finishPreprocessing();
 	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
 		std::istringstream iss(cmds[i]);
 		handler.process(0, iss, &recorder);
 	}
 	EXPECT_TRUE(recorder.defsEquals("firsttext2"));
 	EXPECT_TRUE(recorder.pageEquals("secondtext1text1"));
+	handler.finishPage();
 }
 
 
 TEST_F(DvisvgmSpecialTest, fail1) {
-	std::istringstream iss("rawset");
+	std::istringstream iss("rawset");  // pattern name missing
 	EXPECT_THROW(handler.preprocess(0, iss, &recorder), SpecialException);
+	handler.finishPreprocessing();
+}
+
+
+TEST_F(DvisvgmSpecialTest, fail2) {
+	std::istringstream iss("rawset pat");  // endrawset missing
+	handler.preprocess(0, iss, &recorder);
+	EXPECT_THROW(handler.finishPreprocessing(), SpecialException);
+}
+
+
+TEST_F(DvisvgmSpecialTest, processImg) {
+	std::istringstream iss("img 72.27 72.27 test.png");
+	handler.process(0, iss, &recorder);
+	EXPECT_TRUE(recorder.defsEquals(""));
+	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;72&apos; width=&apos;72&apos; x=&apos;0&apos; xlink:href=&apos;test.png&apos; y=&apos;0&apos;/>\n"));
+}
+
+
+TEST_F(DvisvgmSpecialTest, processBBox) {
+	std::istringstream iss("bbox abs 0 0 72.27 72.27");
+	handler.process(0, iss, &recorder);
+	EXPECT_TRUE(recorder.defsEquals(""));
+	EXPECT_TRUE(recorder.pageEquals(""));
+	EXPECT_TRUE(recorder.bboxEquals("0 0 72 72"));
+
+	recorder.clear();
+	iss.clear();
+	iss.str("bbox 72.27 72.27");
+	handler.process(0, iss, &recorder);
+	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+
+	recorder.clear();
+	iss.clear();
+	iss.str("bbox new name");
+	handler.process(0, iss, &recorder);
+	EXPECT_TRUE(recorder.bboxEquals("0 0 0 0"));
 }
