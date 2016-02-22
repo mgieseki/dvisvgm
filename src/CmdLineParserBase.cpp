@@ -344,18 +344,26 @@ static bool cmp_long (const char *line1, const char *line2) {
 }
 
 
+static void write_line (const char *str) {
+	fputs(str, stdout);
+}
+
+
 /** Prints the help text to stdout.
  *  @param[in] mode format of help text */
-void CmdLineParserBase::help (int mode) const {
+void CmdLineParserBase::help (int mode, void (*out)(const char*)) const {
 	size_t numlines;
 	const char **lines = helplines(&numlines);
+	if (out == 0)
+		out = write_line;
 	if (mode == 0) {  // list options with section headers
 		for (size_t i=0; i < numlines; i++) {
 			switch (*lines[i]) {
-				case 's': fputc('\n', stdout); break;  // section header
-				case 'o': fputs("  ", stdout); break;  // option info
+				case 's': out("\n"); break;  // section header
+				case 'o': out("  "); break;  // option info
 			}
-			puts(lines[i]+1);
+			out(lines[i]+1);
+			out("\n");
 		}
 	}
 	else {
@@ -363,9 +371,10 @@ void CmdLineParserBase::help (int mode) const {
 		sort(linevec.begin(), linevec.end(), mode == 1 ? cmp_short : cmp_long);
 		for (vector<const char*>::iterator it=linevec.begin(); it != linevec.end(); ++it) {
 			if (**it != 's') { // skip section headers
-				puts(*it+1);
+				out(*it+1);
+				out("\n");
 				if (**it == 'd')
-					puts("\nOptions:");
+					out("\nOptions:\n");
 			}
 		}
 	}

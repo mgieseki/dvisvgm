@@ -38,9 +38,9 @@ TEST(CommandLineTest, noarg_short) {
 
 TEST(CommandLineTest, noarg_long) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "--no-fonts", "--stdout", "--help"};
+	const char *args[] = {"progname", "--no-fonts", "--stdout", "--help", "--verbosity=5"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	cmd.parse(5, argv, false);
 
 	EXPECT_TRUE(cmd.stdout_given());
 	EXPECT_TRUE(cmd.no_fonts_given());
@@ -48,14 +48,16 @@ TEST(CommandLineTest, noarg_long) {
 	EXPECT_FALSE(cmd.list_specials_given());
 	EXPECT_FALSE(cmd.error());
 	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_TRUE(cmd.verbosity_given());
+	EXPECT_EQ(cmd.verbosity_arg(), 5);
 }
 
 
 TEST(CommandLineTest, arg_short) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-p5", "-r45", "-omyfile.xyz", "-ayes"};
+	const char *args[] = {"progname", "-p5", "-r45", "-omyfile.xyz", "-ayes", "-v3"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(5, argv, false);
+	cmd.parse(6, argv, false);
 
 	EXPECT_TRUE(cmd.page_given());
 	EXPECT_EQ(cmd.page_arg(), "5");
@@ -69,6 +71,8 @@ TEST(CommandLineTest, arg_short) {
 	EXPECT_EQ(cmd.numFiles(), 0);
 	EXPECT_TRUE(cmd.trace_all_given());
 	EXPECT_TRUE(cmd.trace_all_arg());
+	EXPECT_TRUE(cmd.verbosity_given());
+	EXPECT_EQ(cmd.verbosity_arg(), 3);
 }
 
 
@@ -213,3 +217,13 @@ TEST(CommandLineTest, files_only) {
 	EXPECT_STREQ(cmd.file(1), "myfile");
 }
 
+
+static void out (const char *) {}
+
+TEST(CommandLineTest, help) {
+	// only check whether help() succeeds
+	CommandLine cmd;
+	cmd.help(0, out);
+	cmd.help(1, out);
+	cmd.help(2, out);
+}
