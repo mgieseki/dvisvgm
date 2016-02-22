@@ -236,7 +236,7 @@ class LoggingGFReader : public GFReader {
 TEST(GFReaderTest, preamble) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
-	ASSERT_TRUE(ifs);
+	ASSERT_TRUE(bool(ifs));
 	LoggingGFReader gfReader(ifs);
 	gfReader.executePreamble();
 	ASSERT_EQ(gfReader.getInfo(), " METAFONT output 2010.06.18:1911");
@@ -246,7 +246,7 @@ TEST(GFReaderTest, preamble) {
 TEST(GFReaderTest, postamble) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
-	ASSERT_TRUE(ifs);
+	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);
 	gfReader.executePostamble();
 	const double bp2pt = 72.27/72.0;
@@ -259,7 +259,7 @@ TEST(GFReaderTest, postamble) {
 TEST(GFReaderTest, executeChar) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
-	ASSERT_TRUE(ifs);
+	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);
 	PixelActions actions;
 
@@ -288,7 +288,7 @@ TEST(GFReaderTest, executeChar) {
 TEST(GFReaderTest, executeAllChars) {
 	string gf = string(SRCDIR)+"/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
-	ASSERT_TRUE(ifs);
+	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);
 	gfReader.executeAllChars();
 	const double bp2pt = 72.27/72.0;

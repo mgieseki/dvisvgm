@@ -42,7 +42,7 @@ TEST_F(FileFinderTest, find_base_file) {
 	const char *path = FileFinder::lookup("cmr10.tfm");
 	EXPECT_TRUE(path);
 	ifstream ifs(path);
-	EXPECT_TRUE(ifs);
+	EXPECT_TRUE(bool(ifs));
 }
 
 
@@ -52,7 +52,7 @@ TEST_F(FileFinderTest, find_mapped_file) {
 	if (const char *path = FileFinder::lookup("circle10.tfm")) {
 		EXPECT_TRUE(path);
 		ifstream ifs(path);
-		EXPECT_TRUE(ifs);
+		EXPECT_TRUE(bool(ifs));
 	}
 
 	// mapped lm font => should be resolved using dvisvgm's FontMap
@@ -61,7 +61,7 @@ TEST_F(FileFinderTest, find_mapped_file) {
 	if (have_lmodern) {  // package lmodern installed?
 		if (const char *path = FileFinder::lookup("cork-lmr10.pfb")) {
 			ifstream ifs(path);
-			EXPECT_TRUE(ifs);
+			EXPECT_TRUE(bool(ifs));
 		}
 	}
 }
@@ -71,7 +71,7 @@ TEST_F(FileFinderTest, mktexmf) {
 	// ensure availability of ec font => call mktexmf if necessary
 	if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
 		ifstream ifs(path);
-		EXPECT_TRUE(ifs);
+		EXPECT_TRUE(bool(ifs));
 	}
 }
 
