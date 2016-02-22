@@ -53,7 +53,6 @@ static inline FT_Fixed to_16dot16 (int val) {
 FontEngine::FontEngine () : _currentFace(0), _currentFont(0)
 {
 	_currentChar = _currentGlyphIndex = 0;
-	_horDeviceRes = _vertDeviceRes = 300;
 	if (FT_Init_FreeType(&_library))
 		Message::estream(true) << "FontEngine: error initializing FreeType library\n";
 }
@@ -81,12 +80,6 @@ string FontEngine::version () {
 	ostringstream oss;
 	oss << major << '.' << minor << '.' << patch;
 	return oss.str();
-}
-
-
-void FontEngine::setDeviceResolution (int x, int y) {
-	_horDeviceRes = x;
-	_vertDeviceRes = y;
 }
 
 
@@ -409,8 +402,5 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
  *  @param[in] scale if true the current pt size will be considered otherwise the plain TrueType units are used.
  *  @return false on errors */
 bool FontEngine::traceOutline (const Character &c, Glyph &glyph, bool scale) const {
-	if (_currentFace)
-		return trace_outline(_currentFace, _currentFont, charIndex(c), glyph, scale);
-	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
-	return false;
+	return trace_outline(_currentFace, _currentFont, charIndex(c), glyph, scale);
 }

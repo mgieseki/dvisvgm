@@ -43,7 +43,6 @@ class FontEngine
 		~FontEngine ();
 		static FontEngine& instance ();
 		static std::string version ();
-		void setDeviceResolution (int x, int y);
 		bool setFont (const Font &font);
 		bool isCIDFont() const;
 		bool traceOutline (const Character &c, Glyph &glyph, bool scale=true) const;
@@ -75,7 +74,6 @@ class FontEngine
 		int charIndex (const Character &c) const;
 
 	private:
-		int _horDeviceRes, _vertDeviceRes;
 		mutable unsigned int _currentChar, _currentGlyphIndex;
 		FT_Face _currentFace;
 		FT_Library _library;
