@@ -22,6 +22,10 @@
 #include <fstream>
 #include "FileFinder.h"
 
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
 using std::ifstream;
 
 
@@ -30,6 +34,7 @@ class FileFinderTest : public ::testing::Test
 	protected:
 		void SetUp () {
 			FileFinder::init("FileFinderTest", "FileFinderTest", false);
+			FileFinder::addLookupDir(SRCDIR"/data");
 		}
 
 		void TearDown () {
@@ -39,7 +44,13 @@ class FileFinderTest : public ::testing::Test
 
 
 TEST_F(FileFinderTest, find_base_file) {
-	const char *path = FileFinder::lookup("cmr10.tfm");
+	const char *path = FileFinder::lookup(SRCDIR"/FileFinderTest.cpp");
+	EXPECT_TRUE(path);
+	path = FileFinder::lookup("Does-not-exist");
+	EXPECT_FALSE(path);
+	path = FileFinder::lookup("frktest.dvi");
+	EXPECT_TRUE(path);
+	path = FileFinder::lookup("cmr10.tfm");
 	EXPECT_TRUE(path);
 	ifstream ifs(path);
 	EXPECT_TRUE(bool(ifs));

@@ -38,7 +38,7 @@ class TFMReaderTest : public ::testing::Test
 		TFMReaderTest () : tfm(0) {}
 
 		void SetUp () {
-			ifstream ifs((string(SRCDIR)+"/cmr10.tfm").c_str());
+			ifstream ifs((string(SRCDIR)+"/data/cmr10.tfm").c_str());
 			tfm = new TFM(ifs);
 		}
 

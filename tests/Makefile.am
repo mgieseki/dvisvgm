@@ -3,6 +3,8 @@
 ##
 ## Process this file with automake.
 
+SUBDIRS = data
+
 AM_CXXFLAGS = -I$(top_srcdir)/src -Wall -DSRCDIR='"$(srcdir)"' $(CODE_COVERAGE_CFLAGS)
 
 TESTS = hashcheck
@@ -258,11 +260,7 @@ check_PROGRAMS += XMLStringTest
 XMLStringTest_SOURCES = XMLStringTest.cpp
 XMLStringTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
-TESTDATA =
-TESTDATA += frktest.dvi frktest-wf-cmp.svg frktest-nf-cmp.svg
-TESTDATA += sample.dvi sample-wf-cmp.svg sample-nf-cmp.svg
-TESTDATA += cmr10.600gf sample.sfd cmr10.tfm cidjmgr0-h.tfm
-EXTRA_DIST = check-conv genhashcheck.py normalize.xsl $(TESTDATA)
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@

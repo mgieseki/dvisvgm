@@ -62,7 +62,7 @@ static string scaled_pathstr (const Glyph &glyph) {
 
 
 TEST(GFGlyphTracerTest, executeChar) {
-	string gfname = string(SRCDIR)+"/cmr10.600gf";
+	string gfname = string(SRCDIR)+"/data/cmr10.600gf";
 	Callback callback;
 	GFGlyphTracer tracer(gfname, 10000, &callback);
 	Glyph glyph;
@@ -99,7 +99,7 @@ TEST(GFGlyphTracerTest, executeChar) {
 
 
 TEST(GFGlyphTracerTest, defaultCallback) {
-	string gfname = string(SRCDIR)+"/cmr10.600gf";
+	string gfname = string(SRCDIR)+"/data/cmr10.600gf";
 	GFGlyphTracer::Callback callback;
 	GFGlyphTracer tracer(gfname, 1000, &callback);
 	Glyph glyph;
@@ -118,7 +118,7 @@ TEST(GFGlyphTracerTest, fail) {
 	tracer.setGlyph(glyph);
 	EXPECT_THROW(tracer.executeChar('M'), GFException);
 
-	string gfname = string(SRCDIR)+"/cmr10.600gf";
+	string gfname = string(SRCDIR)+"/data/cmr10.600gf";
 	tracer.reset(gfname, 1000);
 	EXPECT_TRUE(tracer.executeChar('M'));
 }

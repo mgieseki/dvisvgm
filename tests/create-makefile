@@ -11,6 +11,8 @@ cat >$out <<EOT
 ##
 ## Process this file with automake.
 
+SUBDIRS = data
+
 AM_CXXFLAGS = -I\$(top_srcdir)/src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
 
 TESTS = hashcheck
@@ -34,16 +36,15 @@ ${base}_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L..
 EOT
 done
 
-echo "TESTDATA =" >>$out
-
-for f in *.dvi; do
-	base=`basename $f .dvi`
-   echo  "TESTDATA += ${base}.dvi ${base}-wf-cmp.svg ${base}-nf-cmp.svg" >>$out
-done
+#echo "TESTDATA =" >>$out
+#
+#for f in *.dvi; do
+#	base=`basename $f .dvi`
+#   echo  "TESTDATA += ${base}.dvi ${base}-wf-cmp.svg ${base}-nf-cmp.svg" >>$out
+#done
 
 cat >>$out <<EOT
-TESTDATA += cmr10.600gf sample.sfd cmr10.tfm cidjmgr0-h.tfm
-EXTRA_DIST = check-conv genhashcheck.py normalize.xsl \$(TESTDATA)
+EXTRA_DIST = check-conv genhashcheck.py normalize.xsl
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@

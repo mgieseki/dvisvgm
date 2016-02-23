@@ -37,6 +37,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <map>
+#include <set>
 #include <string>
 #include "FileFinder.h"
 #include "FileSystem.h"
@@ -48,6 +49,7 @@
 
 static bool _initialized = false;
 static bool _mktex_enabled = false;
+static std::set<std::string> _additional_dirs;
 
 // ---------------------------------------------------
 
@@ -66,6 +68,7 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 		return;
 
 	_mktex_enabled = enable_mktexmf;
+	addLookupDir(".");  // always lookup files in the current working directory
 #ifdef MIKTEX
 	miktex = new MiKTeXCom;
 #else
@@ -123,6 +126,11 @@ std::string FileFinder::version () {
 }
 
 
+void FileFinder::addLookupDir (const std::string &path) {
+	_additional_dirs.insert(path);
+}
+
+
 /** Determines filetype by the filename extension and calls kpse_find_file
  *  to actually look up the file.
  *  @param[in] fname name of file to look up
@@ -133,10 +141,16 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		return 0;
 
 	static std::string buf;
-	// try to lookup the file in the current working directory
-	buf = FileSystem::getcwd()+"/"+fname;
-	if (FileSystem::exists(buf.c_str()))
-		return buf.c_str();
+	// try to lookup the file in the additionally specified directories
+	for (std::set<std::string>::iterator it=_additional_dirs.begin(); it != _additional_dirs.end(); ++it) {
+		if (it->at(0) == '/')
+			buf.clear();
+		else
+			buf = FileSystem::getcwd()+"/";
+		buf += (*it) + "/" + fname;
+		if (FileSystem::exists(buf.c_str()))
+			return buf.c_str();
+	}
 
 	std::string ext;
 	if (ftype)

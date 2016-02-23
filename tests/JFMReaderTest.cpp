@@ -38,7 +38,7 @@ class JFMReaderTest : public ::testing::Test
 		JFMReaderTest () : jfm(0) {}
 
 		void SetUp () {
-			ifstream ifs((string(SRCDIR)+"/cidjmgr0-h.tfm").c_str());
+			ifstream ifs((string(SRCDIR)+"/data/cidjmgr0-h.tfm").c_str());
 			jfm = new JFM(ifs);
 		}
 

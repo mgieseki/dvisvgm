@@ -171,6 +171,14 @@ AS_IF([ test "$enable_code_coverage" = "yes" ], [
 AC_SUBST(DATE)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
-AC_CONFIG_FILES([Makefile clipper/Makefile xxHash/Makefile src/Makefile tests/Makefile doc/dvisvgm.txt doc/Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	clipper/Makefile 
+	xxHash/Makefile
+	src/Makefile
+	tests/Makefile
+	tests/data/Makefile
+	doc/dvisvgm.txt
+	doc/Makefile])
 AC_OUTPUT
 

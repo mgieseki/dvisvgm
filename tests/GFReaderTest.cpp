@@ -234,7 +234,7 @@ class LoggingGFReader : public GFReader {
 
 
 TEST(GFReaderTest, preamble) {
-	string gf = string(SRCDIR)+"/cmr10.600gf";
+	string gf = string(SRCDIR)+"/data/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
 	ASSERT_TRUE(bool(ifs));
 	LoggingGFReader gfReader(ifs);
@@ -244,7 +244,7 @@ TEST(GFReaderTest, preamble) {
 
 
 TEST(GFReaderTest, postamble) {
-	string gf = string(SRCDIR)+"/cmr10.600gf";
+	string gf = string(SRCDIR)+"/data/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
 	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);
@@ -257,7 +257,7 @@ TEST(GFReaderTest, postamble) {
 
 
 TEST(GFReaderTest, executeChar) {
-	string gf = string(SRCDIR)+"/cmr10.600gf";
+	string gf = string(SRCDIR)+"/data/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
 	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);
@@ -286,7 +286,7 @@ TEST(GFReaderTest, executeChar) {
 
 
 TEST(GFReaderTest, executeAllChars) {
-	string gf = string(SRCDIR)+"/cmr10.600gf";
+	string gf = string(SRCDIR)+"/data/cmr10.600gf";
 	ifstream ifs(gf.c_str(), ios::binary);
 	ASSERT_TRUE(bool(ifs));
 	GFReader gfReader(ifs);

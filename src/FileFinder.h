@@ -28,6 +28,7 @@ struct FileFinder
 	static void init (const char *argv0, const char *progname, bool enable_mktexmf);
 	static void finish ();
 	static std::string version ();
+	static void addLookupDir (const std::string &path);
 	static const char* lookup (const std::string &fname, const char *ftype, bool extended=true);
 	static const char* lookup (const std::string &fname, bool extended=true) {return lookup(fname, 0, extended);}
 };
