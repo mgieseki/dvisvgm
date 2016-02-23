@@ -54,15 +54,15 @@ FontEngine::FontEngine () : _currentFace(0), _currentFont(0)
 {
 	_currentChar = _currentGlyphIndex = 0;
 	if (FT_Init_FreeType(&_library))
-		Message::estream(true) << "FontEngine: error initializing FreeType library\n";
+		Message::estream(true) << "failed to initialize FreeType library\n";
 }
 
 
 FontEngine::~FontEngine () {
 	if (_currentFace && FT_Done_Face(_currentFace))
-		Message::estream(true) << "FontEngine: error removing glyph\n";
+		Message::estream(true) << "failed to release font\n";
 	if (FT_Done_FreeType(_library))
-		Message::estream(true) << "FontEngine: error removing FreeType library\n";
+		Message::estream(true) << "failed to release FreeType library\n";
 }
 
 
@@ -89,9 +89,9 @@ string FontEngine::version () {
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
 	if (_currentFace && FT_Done_Face(_currentFace))
-		Message::estream(true) << "FontEngine: error removing font\n";
+		Message::estream(true) << "failed to release font\n";
 	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
-		Message::estream(true) << "FontEngine: error reading file " << fname << '\n';
+		Message::estream(true) << "can't read font file " << fname << '\n';
 		return false;
 	}
 	if (charMapID.valid())
@@ -389,7 +389,7 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 		FT_Outline_Decompose(&outline, &funcs, &glyph);
 		return true;
 	}
-	Message::wstream(true) << "FontEngine: can't trace outline, no font face selected\n";
+	Message::wstream(true) << "can't trace outline (no font selected)\n";
 	return false;
 }
 
