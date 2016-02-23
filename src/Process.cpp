@@ -151,41 +151,55 @@ bool Process::run (string *out) {
 	close_handle(devnull);
 	return exitcode == 0;
 #else
+	int pipefd[2];
+	pipe(pipefd);
 	pid_t pid = fork();
 	if (pid == 0) {   // child process
-		if (!out) {
-			int devnull = open(FileSystem::DEVNULL, O_WRONLY);
-			if (devnull >= 0) {
-				dup2(devnull, STDOUT_FILENO);
-				dup2(devnull, STDERR_FILENO);
-				close(devnull);
-			}
-		}
+		dup2(pipefd[1], STDOUT_FILENO);  // redirect stdout to the pipe
+		dup2(pipefd[1], STDERR_FILENO);  // redirect stderr to the pipe
+		close(pipefd[0]);
+		close(pipefd[1]);
+
 		vector<const char*> params;
 		params.push_back(_cmd.c_str());
 		string paramstr = _paramstr;  // private copy to be changed by split_paramstr()
 		split_paramstr(paramstr, params);
-		params.push_back(0);     // trailing NULL marks end
+		params.push_back(0);     // trailing NULL marks end of parameter list
 		execvp(_cmd.c_str(), const_cast<char* const*>(&params[0]));
 		exit(1);
 	}
-	if (pid > 0) {    // main process
-		int status;
+	close(pipefd[1]);
+	bool ok = false;
+	if (pid > 0) {		// parent process
 		for (;;) {
+			if (out) {
+				//
+				out->clear();
+				char buf[512];
+				size_t len;
+				while ((len = read(pipefd[0], buf, sizeof(buf)-1)) > 0) {
+					buf[len] = 0;
+					*out += string(buf);
+				}
+			}
+			int status;
 			waitpid(pid, &status, WNOHANG);
-			if (WIFEXITED(status)) // child process exited normally
-				return WEXITSTATUS(status) == 0;
-
+			if (WIFEXITED(status)) { // child process exited normally
+				ok = (WEXITSTATUS(status) == 0);
+				break;
+			}
 			try {
 				SignalHandler::instance().check();
 			}
 			catch (SignalException &e) { // caught ctrl-c
+				close(pipefd[0]);
 				kill(pid, SIGKILL);
 				throw;
 			}
 		}
 	}
-	return false;
+	close(pipefd[0]);
+	return ok;
 #endif
 }
 

@@ -29,6 +29,7 @@
 #include "MetafontWrapper.h"
 #include "Process.h"
 #include "SignalHandler.h"
+#include "XMLString.h"
 #include "macros.h"
 
 using namespace std;
@@ -65,35 +66,36 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 	const char *cmd = "mf";
 #endif
 	ostringstream oss;
-	oss << "\"\\mode=" << mode  << ";"
-			"mag:=" << mag << ";"
-			"batchmode;"
-			"input " << _fontname << "\"";
+	oss << "\"\\mode=" << mode  << ";"  // set MF mode, e.g. 'proof', 'ljfour' or 'localfont'
+		"mode_setup;"                    // initialize MF variables
+		"mag:=" << mag << ";"            // set magnification factor
+		"show pixels_per_inch*mag;"      // print character resolution to stdout
+		"batchmode;"                     // don't halt on errors and don't print informational messages
+		"input " << _fontname << "\"";   // load font description
 	Message::mstream(false, Message::MC_STATE) << "\nrunning Metafont for " << _fontname << '\n';
 	Process mf_process(cmd, oss.str().c_str());
-	mf_process.run();
+	string mf_messages;
+	mf_process.run(&mf_messages);
 
-	// try to read Metafont's logfile and get name of created GF file
-	ifstream ifs((_fontname+".log").c_str());
-	if (ifs) {
-		char buf[128];
-		while (ifs) {
-			ifs.getline(buf, 128);
-			string line = buf;
-			if (line.substr(0, 15) == "! Interruption.")
-				SignalHandler::instance().trigger(true);
-			if (line.substr(0, 17) == "Output written on") {
-				size_t pos = line.find("gf ", 18+_fontname.length());
-				if (pos != string::npos) {
-					string gfname = line.substr(18, pos-16);  // GF filename found
-					FileSystem::rename(gfname, _fontname+".gf");
-				}
-				break;
-			}
+	// get resolution value from stdout created by above MF command
+	char buf[256];
+	istringstream iss(mf_messages);
+	int resolution = 0;
+	while (iss) {
+		iss.getline(buf, sizeof(buf));
+		string line = buf;
+		if (line.substr(0, 3) == ">> ") {
+			resolution = atoi(line.substr(3).c_str());
+			break;
 		}
 	}
-	ifstream gf((_fontname+".gf").c_str());
-	return (bool)gf;
+	// compose expected name of GF file (see Metafont Book, p. 324)
+	string gfname = _fontname + ".";
+	if (resolution > 0)
+		gfname += XMLString(resolution);
+	gfname += "gf";
+	FileSystem::rename(gfname, _fontname+".gf");  // remove resolution from filename
+	return FileSystem::exists((_fontname+".gf").c_str());
 }
 
 
