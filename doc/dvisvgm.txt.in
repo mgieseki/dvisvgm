@@ -168,6 +168,9 @@ and +darkblue+) for a limited number of predefined colors. In order to apply the
 rather than their RGB values, call dvisvgm with option *--colornames*. All colors without an
 SVG color name will still be represented by RGB values.
 
+*--comments*::
+Adds comments with further information about selected data to the SVG file. Currently, only
+font elements and font CSS rules related to native fonts are annotated.
 
 *-E, --eps*::
 If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert

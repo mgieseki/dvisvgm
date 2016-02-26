@@ -307,6 +307,25 @@ int PhysicalFont::descent () const {
 }
 
 
+std::string PhysicalFont::familyName () const {
+	if (type() == MF)
+		return "";
+	FontEngine::instance().setFont(*this);
+	const char *family = FontEngine::instance().getFamilyName();
+	return family ? family : "";
+}
+
+
+std::string PhysicalFont::styleName () const {
+	if (type() == MF)
+		return "";
+	FontEngine::instance().setFont(*this);
+	const char *style = FontEngine::instance().getStyleName();
+	return style ? style : "";
+}
+
+
+
 /** Extracts the glyph outlines of a given character.
  *  @param[in]  c character code of requested glyph
  *  @param[out] glyph path segments of the glyph outline

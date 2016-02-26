@@ -123,6 +123,8 @@ class PhysicalFont : public virtual Font
 		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb=0) const;
 		virtual bool isCIDFont () const;
 		virtual int hAdvance () const;
+		virtual std::string familyName () const;
+		virtual std::string styleName () const;
 		virtual double hAdvance (int c) const;
 		virtual double vAdvance (int c) const;
 		std::string glyphName (int c) const;
@@ -324,6 +326,7 @@ class NativeFontImpl : public NativeFont
 		const Font* uniqueFont () const          {return this;}
 		const char* path () const                {return _path.c_str();}
 		int fontIndex() const                    {return _fontIndex;}
+		std::string fontFamily () const;
 		bool findAndAssignBaseFontMap ();
 		CharMapID getCharMapID () const          {return CharMapID::NONE;}
 		Character decodeChar (UInt32 c) const;

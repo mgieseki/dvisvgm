@@ -21,6 +21,7 @@ const CmdLineParserBase::Option CommandLine::_options[] = {
 #endif
 	{'\0', "color", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
 	{'\0', "colornames", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_colornames)},
+	{'\0', "comments", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_comments)},
 #if !defined(DISABLE_GS)
 	{'E', "eps", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
 #endif
@@ -81,6 +82,7 @@ void CommandLine::init () {
 #endif
 	_color_given = false;
 	_colornames_given = false;
+	_comments_given = false;
 #if !defined(DISABLE_GS)
 	_eps_given = false;
 #endif
@@ -172,6 +174,7 @@ const char** CommandLine::helplines (size_t *numlines) const {
 		"o-j, --clipjoin                compute intersection of clipping paths",
 #endif
 		"o    --colornames              prefer color names to RGB values if possible",
+		"o    --comments                add comments with additional information",
 #if !defined(DISABLE_GS)
 		"o    --grad-overlap            create operlapping color gradient segments",
 #endif
@@ -241,6 +244,10 @@ void CommandLine::handle_color (InputReader &ir, const Option &opt, bool longopt
 
 void CommandLine::handle_colornames (InputReader &ir, const Option &opt, bool longopt) {
 	_colornames_given = true;
+}
+
+void CommandLine::handle_comments (InputReader &ir, const Option &opt, bool longopt) {
+	_comments_given = true;
 }
 
 #if !defined(DISABLE_GS)

@@ -41,6 +41,7 @@ bool SVGTree::USE_FONTS=true;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
 bool SVGTree::RELATIVE_PATH_CMDS=false;
 bool SVGTree::MERGE_CHARS=true;
+bool SVGTree::ADD_COMMENTS=false;
 double SVGTree::ZOOM_FACTOR=1.0;
 
 
@@ -336,6 +337,23 @@ static XMLElementNode* createGlyphNode (int c, const PhysicalFont &font, GFGlyph
 }
 
 
+static string font_info (const Font &font) {
+	ostringstream oss;
+	if (const NativeFont *nf = dynamic_cast<const NativeFont*>(&font)) {
+		oss << nf->familyName() << ' ' << nf->styleName() << "; " << nf->filename();
+		if (nf->style()) {
+			if (nf->style()->bold != 0)
+				oss << ", bold:" << XMLString(nf->style()->bold) << "pt";
+			if (nf->style()->extend != 1)
+				oss << ", extent:" << XMLString(nf->style()->extend);
+			if (nf->style()->slant != 0)
+				oss << ", slant:" << XMLString(nf->style()->slant);
+		}
+	}
+	return oss.str();
+}
+
+
 void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 	if (CREATE_STYLE && USE_FONTS && !fonts.empty() && _defs) {
 		XMLElementNode *styleNode = new XMLElementNode("style");
@@ -354,7 +372,13 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 				<< ";font-size:"   << XMLString(it->second->scaledSize()) << "px";
 			if (it->second->color() != Color::BLACK)
 				style << ";fill:" << it->second->color().svgColorString();
-			style << "}\n";
+			style << '}';
+			if (ADD_COMMENTS) {
+				string info = font_info(*it->second);
+				if (!info.empty())
+					style << " /* " << info << " */";
+			}
+			style << '\n';
 		}
 		XMLCDataNode *cdata = new XMLCDataNode(style.str());
 		styleNode->append(cdata);
@@ -371,6 +395,11 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		return;
 
 	if (USE_FONTS) {
+		if (ADD_COMMENTS) {
+			string info = font_info(font);
+			if (!info.empty())
+				appendToDefs(new XMLCommentNode(string(" font: ")+info+" "));
+		}
 		XMLElementNode *fontNode = new XMLElementNode("font");
 		string fontname = font.name();
 		fontNode->addAttribute("id", fontname);

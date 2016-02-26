@@ -52,6 +52,9 @@
 			<option long="colornames">
 				<description>prefer color names to RGB values if possible</description>
 			</option>
+			<option long="comments">
+				<description>add comments with additional information</description>
+			</option>
 			<option long="grad-overlap" if="!defined(DISABLE_GS)">
 				<description>create operlapping color gradient segments</description>
 			</option>
