@@ -29,7 +29,7 @@ struct Unicode
 	static bool isValidCodepoint (UInt32 code);
 	static UInt32 charToCodepoint (UInt32 c);
 	static std::string utf8 (Int32 c);
-	static Int32 psNameToCodepoint (const std::string &psname);
+	static Int32 aglNameToCodepoint (const std::string &name);
 };
 
 #endif

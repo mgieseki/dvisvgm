@@ -529,7 +529,7 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 		// try to get the Unicode point from the character name
 		string glyphname = glyphName(c);
 		UInt32 codepoint;
-		if (!glyphname.empty() && (codepoint = Unicode::psNameToCodepoint(glyphname)) != 0)
+		if (!glyphname.empty() && (codepoint = Unicode::aglNameToCodepoint(glyphname)) != 0)
 			return codepoint;
 		if (c <= 0x1900)  // does character code c fit into Private Use Zone U+E000?
 			return 0xe000+c;

@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <xxhash.h>
+#include <cctype>
 #include <cstddef>
 #include "Unicode.h"
 
@@ -113,8 +114,8 @@ string Unicode::utf8 (Int32 c) {
 /* The following table provides a compact mapping from PostScript character names
  * to Unicode points. Instead of using the character names directly it maps the
  * hash values (xxhash32) of the names to the corresponding code points.
- * The character mapping is derived from
- * http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt and
+ * The character mapping is derived from the Adobe Glyph List (AGL):
+ * https://github.com/adobe-type-tools/agl-aglfn
  * http://tug.ctan.org/macros/latex/contrib/pdfx/glyphtounicode-cmr.tex */
 static struct Hash2Unicode {
 	UInt32 hash;
@@ -4533,11 +4534,50 @@ static struct Hash2Unicode {
 };
 
 
-/** Returns the Unicode point for a given PostScript character name.
- * @param psname PostScript name of the character to look up
+#if 0
+/** Tries to extract the codepoint from character names like "uni1234" or "u1234".
+ *  Valid names must match ^u(ni)?[0-9A-F]{4,}(\..*)?$.
+ *  @param[in] psname character name
+ *  @return the extracted codepoint or 0 on failure */
+static Int32 name_as_codepoint (const string &name) {
+	int offset=1;
+	if (name.length() >= 7 && name.substr(0, 3) == "uni")
+		offset = 3;
+	else if (name.length() < 5 || name[0] != 'u')
+		return 0;
+
+	Int32 cp=0;
+	for (string::const_iterator it=name.begin()+offset; it != name.end() && *it != '.'; ++it) {
+		if (!isdigit(*it) && (*it < 'A' || *it > 'F'))
+			return 0;
+		cp = (cp*16) + (*it - (isdigit(*it) ? '0' : 'A'));
+	}
+	return cp;
+}
+
+
+static const char* get_suffix (const string &name) {
+	static const char *suffixes[] = {
+		"small", "swash", "superior", "inferior", "numerator", "denominator", "oldstyle",
+		"display", "text", "big", "bigg", "Big", "Bigg", 0
+	};
+	size_t pos = name.rfind('.');
+	if (pos != string::npos) {
+		string suffix = name.substr(pos+1);
+		for (const char **p=suffixes; *p; p++)
+			if (suffix == *p)
+				return *p;
+	}
+	return 0;
+}
+#endif
+
+
+/** Returns the Unicode point for a given AGL character name.
+ * @param name AGL name of the character to look up
  * @return codepoint of the character */
-Int32 Unicode::psNameToCodepoint (const string &psname) {
-	UInt32 hash = XXH32(&psname[0], psname.length(), 0);
+Int32 Unicode::aglNameToCodepoint (const string &name) {
+	UInt32 hash = XXH32(&name[0], name.length(), 0);
 	int left=0;
 	int right=sizeof(hash2unicode)/sizeof(Hash2Unicode)-1;
 	while (left <= right) {

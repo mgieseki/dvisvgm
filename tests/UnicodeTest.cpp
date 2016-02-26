@@ -64,11 +64,11 @@ TEST(UnicodeTest, utf8) {
 }
 
 
-TEST(UnicodeTest, psNameToCodepoint) {
-	EXPECT_EQ(Unicode::psNameToCodepoint("does not exist"), 0);
-	EXPECT_EQ(Unicode::psNameToCodepoint("Eogonek"), 0x118);
-	EXPECT_EQ(Unicode::psNameToCodepoint("alpha"), 0x03b1);
-	EXPECT_EQ(Unicode::psNameToCodepoint("Alpha"), 0x0391);
-	EXPECT_EQ(Unicode::psNameToCodepoint("alphatonos"), 0x03ac);
-	EXPECT_EQ(Unicode::psNameToCodepoint("SF460000"), 0x2568);
+TEST(UnicodeTest, aglNameToCodepoint) {
+	EXPECT_EQ(Unicode::aglNameToCodepoint("does not exist"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("Eogonek"), 0x118);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("alpha"), 0x03b1);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("Alpha"), 0x0391);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("alphatonos"), 0x03ac);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("SF460000"), 0x2568);
 }
