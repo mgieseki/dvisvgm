@@ -93,7 +93,7 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		gfname += XMLString(resolution);
 	gfname += "gf";
 	FileSystem::rename(gfname, _fontname+".gf");  // remove resolution from filename
-	return FileSystem::exists((_fontname+".gf").c_str());
+	return FileSystem::exists(_fontname+".gf");
 }
 
 

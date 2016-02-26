@@ -115,13 +115,13 @@ string FileSystem::getcwd () {
 /** Changes the work directory.
  *  @param[in] dir path to new work directory
  *  @return true on success */
-bool FileSystem::chdir (const char *dir) {
+bool FileSystem::chdir (const std::string &dirname) {
 	bool success = false;
-	if (dir) {
+	if (const char *cdirname = dirname.c_str()) {
 #ifdef __WIN32__
-		success = (_chdir(dir) == 0);
+		success = (_chdir(cdirname) == 0);
 #else
-		success = (chdir(dir) == 0);
+		success = (chdir(cdirname) == 0);
 #endif
 	}
 	return success;
@@ -155,24 +155,24 @@ const char* FileSystem::userdir () {
 /** Private wrapper function for mkdir: creates a single folder.
  *  @param[in] dir folder name
  *  @return true on success */
-static bool s_mkdir (const char *dir) {
+static bool s_mkdir (const string &dirname) {
 	bool success = true;
-	if (!FileSystem::exists(dir)) {
+	if (!FileSystem::exists(dirname)) {
 #ifdef __WIN32__
-		success = (_mkdir(dir) == 0);
+		success = (_mkdir(dirname.c_str()) == 0);
 #else
-		success = (mkdir(dir, 0776) == 0);
+		success = (mkdir(dirname.c_str(), 0775) == 0);
 #endif
 	}
 	return success;
 }
 
 
-static bool inline s_rmdir (const char *dir) {
+static bool inline s_rmdir (const string &dirname) {
 #ifdef __WIN32__
-	return (_rmdir(dir) == 0);
+	return (_rmdir(dirname.c_str()) == 0);
 #else
-	return (rmdir(dir) == 0);
+	return (rmdir(dirname.c_str()) == 0);
 #endif
 }
 
@@ -192,14 +192,14 @@ static string trim (const string &str) {
  *  the parent folders are also created.
  *  @param[in] dir single folder name or path to folder
  *  @return true if folder(s) could be created */
-bool FileSystem::mkdir (const char *dir) {
+bool FileSystem::mkdir (const string &dirname) {
 	bool success = false;
-	if (dir) {
+	if (const char *cdirname = dirname.c_str()) {
 		success = true;
-		const string dirstr = adaptPathSeperators(trim(dir));
+		const string dirstr = adaptPathSeperators(trim(cdirname));
 		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++)
-			success &= s_mkdir(dirstr.substr(0, pos).c_str());
-		success &= s_mkdir(dirstr.c_str());
+			success &= s_mkdir(dirstr.substr(0, pos));
+		success &= s_mkdir(dirstr);
 	}
 	return success;
 }
@@ -208,23 +208,23 @@ bool FileSystem::mkdir (const char *dir) {
 /** Removes a directory and its contents.
  *  @param[in] dirname path to directory
  *  @return true on success */
-bool FileSystem::rmdir (const char *dirname) {
+bool FileSystem::rmdir (const string &dirname) {
 	bool ok = false;
-	if (dirname && isDirectory(dirname)) {
+	if (isDirectory(dirname)) {
 		ok = true;
 #ifdef __WIN32__
-		string pattern = string(dirname) + "/*";
+		string pattern = dirname + "/*";
 		WIN32_FIND_DATA data;
 		HANDLE h = FindFirstFile(pattern.c_str(), &data);
 		bool ready = (h == INVALID_HANDLE_VALUE);
 		while (!ready && ok) {
 			const char *fname = data.cFileName;
-			string path = string(dirname) + "/" + fname;
-			if (isDirectory(path.c_str())) {
+			string path = dirname + "/" + fname;
+			if (isDirectory(path)) {
 				if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
-					ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
+					ok = rmdir(path) && s_rmdir(path);
 			}
-			else if (isFile(path.c_str()))
+			else if (isFile(path))
 				ok = remove(path);
 			else
 				ok = false;
@@ -232,16 +232,16 @@ bool FileSystem::rmdir (const char *dirname) {
 		}
 		FindClose(h);
 #else
-		if (DIR *dir = opendir(dirname)) {
+		if (DIR *dir = opendir(dirname.c_str())) {
 			struct dirent *ent;
 			while ((ent = readdir(dir)) && ok) {
 				const char *fname = ent->d_name;
 				string path = string(fname) + "/" + fname;
-				if (isDirectory(path.c_str())) {
+				if (isDirectory(path)) {
 					if (strcmp(fname, ".") != 0 && strcmp(fname, "..") != 0)
-						ok = rmdir(path.c_str()) && s_rmdir(path.c_str());
+						ok = rmdir(path) && s_rmdir(path);
 				}
-				else if (isFile(path.c_str()))
+				else if (isFile(path))
 					ok = remove(path);
 				else
 					ok = false;
@@ -256,42 +256,46 @@ bool FileSystem::rmdir (const char *dirname) {
 
 
 /** Checks if a file or directory exits. */
-bool FileSystem::exists (const char *fname) {
-	if (!fname)
-		return false;
+bool FileSystem::exists (const string &fname) {
+	if (const char *cfname = fname.c_str()) {
+
 #ifdef __WIN32__
-	return GetFileAttributes(fname) != INVALID_FILE_ATTRIBUTES;
+		return GetFileAttributes(cfname) != INVALID_FILE_ATTRIBUTES;
 #else
-	struct stat attr;
-	return stat(fname, &attr) == 0;
+		struct stat attr;
+		return stat(cfname, &attr) == 0;
 #endif
+	}
+	return false;
 }
 
 
 /** Returns true if 'fname' references a directory. */
-bool FileSystem::isDirectory (const char *fname) {
-	if (!fname)
-		return false;
+bool FileSystem::isDirectory (const string &fname) {
+	if (const char *cfname = fname.c_str()) {
 #ifdef __WIN32__
-	return GetFileAttributes(fname) & FILE_ATTRIBUTE_DIRECTORY;
+		return GetFileAttributes(cfname) & FILE_ATTRIBUTE_DIRECTORY;
 #else
-	struct stat attr;
-	return stat(fname, &attr) == 0 && S_ISDIR(attr.st_mode);
+		struct stat attr;
+		return stat(cfname, &attr) == 0 && S_ISDIR(attr.st_mode);
 #endif
+	}
+	return false;
 }
 
 
 /** Returns true if 'fname' references a file. */
-bool FileSystem::isFile (const char *fname) {
-	if (!fname)
-		return false;
+bool FileSystem::isFile (const string &fname) {
+	if (const char *cfname = fname.c_str()) {
 #ifdef __WIN32__
-	ifstream ifs(fname);
-	return (bool)ifs;
+		ifstream ifs(cfname);
+		return (bool)ifs;
 #else
-	struct stat attr;
-	return stat(fname, &attr) == 0 && S_ISREG(attr.st_mode);
+		struct stat attr;
+		return stat(cfname, &attr) == 0 && S_ISREG(attr.st_mode);
 #endif
+	}
+	return false;
 }
 
 
@@ -305,7 +309,7 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 	while (!ready) {
 		string fname = data.cFileName;
 		string path = string(dirname)+"/"+fname;
-		string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
+		string typechar = isFile(path) ? "f" : isDirectory(path) ? "d" : "?";
 		if (fname != "." && fname != "..")
 			entries.push_back(typechar+fname);
 		ready = !FindNextFile(h, &data);
@@ -317,7 +321,7 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 		while ((ent = readdir(dir))) {
 			string fname = ent->d_name;
 			string path = string(dirname)+"/"+fname;
-			string typechar = isFile(path.c_str()) ? "f" : isDirectory(path.c_str()) ? "d" : "?";
+			string typechar = isFile(path) ? "f" : isDirectory(path) ? "d" : "?";
 			if (fname != "." && fname != "..")
 				entries.push_back(typechar+fname);
 		}

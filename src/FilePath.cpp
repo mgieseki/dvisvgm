@@ -54,7 +54,7 @@ static char adapt_current_path (string &path, char target_drive) {
 			if (target_drive == 0)
 				target_drive = current_drive;
 			if (path.empty() || path[0] != '/') {
-				if (FileSystem::chdir((string(1, target_drive) + ":").c_str())) {
+				if (FileSystem::chdir(string(1, target_drive) + ":")) {
 					path.insert(0, FileSystem::getcwd()+"/");
 					strip_drive_letter(path);
 				}

@@ -147,7 +147,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		else
 			buf = FileSystem::getcwd()+"/";
 		buf += (*it) + "/" + fname;
-		if (FileSystem::exists(buf.c_str()))
+		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}
 
@@ -165,7 +165,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 	if (ext == "dll" || ext == "exe") {
 		// lookup dll and exe files in the MiKTeX bin directory first
 		buf = miktex->getBinDir() + "/" + fname;
-		if (FileSystem::exists(buf.c_str()))
+		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}
 	else if (ext == "cmap") {
@@ -188,7 +188,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		// lookup exe files in directory where dvisvgm is located
 		if (const char *path = kpse_var_value("SELFAUTOLOC")) {
 			buf = std::string(path) + "/" + fname;
-			return FileSystem::exists(buf.c_str()) ? buf.c_str() : 0;
+			return FileSystem::exists(buf) ? buf.c_str() : 0;
 		}
 		return 0;
 	}

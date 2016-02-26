@@ -107,15 +107,15 @@ static bool set_cache_dir (const CommandLine &args) {
 	if (args.cache_given() && !args.cache_arg().empty()) {
 		if (args.cache_arg() == "none")
 			PhysicalFont::CACHE_PATH = 0;
-		else if (FileSystem::exists(args.cache_arg().c_str()))
+		else if (FileSystem::exists(args.cache_arg()))
 			PhysicalFont::CACHE_PATH = args.cache_arg().c_str();
 		else
 			Message::wstream(true) << "cache directory '" << args.cache_arg() << "' does not exist (caching disabled)\n";
 	}
 	else if (const char *userdir = FileSystem::userdir()) {
 		static string cachepath = userdir + string("/.dvisvgm/cache");
-		if (!FileSystem::exists(cachepath.c_str()))
-			FileSystem::mkdir(cachepath.c_str());
+		if (!FileSystem::exists(cachepath))
+			FileSystem::mkdir(cachepath);
 		PhysicalFont::CACHE_PATH = cachepath.c_str();
 	}
 	if (args.cache_given() && args.cache_arg().empty()) {

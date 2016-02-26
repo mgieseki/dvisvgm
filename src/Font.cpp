@@ -550,7 +550,7 @@ void PhysicalFontImpl::tidy () const {
 	if (type() == MF) {
 		const char *ext[] = {"gf", "tfm", "log", 0};
 		for (const char **p=ext; *p; ++p) {
-			if (FileSystem::exists((name()+"."+(*p)).c_str()))
+			if (FileSystem::exists(name()+"."+(*p)))
 				FileSystem::remove(name()+"."+(*p));
 		}
 	}
