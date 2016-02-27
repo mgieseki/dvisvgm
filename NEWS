@@ -1,3 +1,9 @@
+dvisvgm-1.15 (2016-02-27)
+- added option --comments to add additional information to the SVG file
+- fixed a clipping bug in the PostScript handler
+- some code improvements and refactorings
+- moved test data files to a separate folder
+
 dvisvgm-1.14.2 (2016-01-20)
 - fixed handling of background color specials (now they affect all succeeding pages until the next change)
 - fixed a potential memory issue caused by accessing an invalid iterator
