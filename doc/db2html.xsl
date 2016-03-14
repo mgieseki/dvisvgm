@@ -9,6 +9,7 @@
 	extension-element-prefixes="exsl func">
 
 	<xsl:output method="html"/>
+	<xsl:strip-space elements="*"/>
 
 	<xsl:template match="/">
 		<html>
@@ -82,6 +83,22 @@
 	</xsl:template>
 
 	<xsl:template match="varlistentry">
+		<xsl:variable name="id">
+			<xsl:choose>
+				<xsl:when test="substring-after(term/emphasis, '--')">
+					<xsl:value-of select="concat('opt-', substring-after(term/emphasis, '--'))"/>
+				</xsl:when>
+				<xsl:when test="term/emphasis">
+					<xsl:if test="ancestor::refsect1/@id[not(starts-with(., '_'))]">
+						<xsl:value-of select="concat(ancestor::refsect1/@id, '-')"/>
+					</xsl:if>
+					<xsl:value-of select="term/emphasis"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="normalize-space($id)">
+			<a name="{normalize-space($id)}" class="linktarget"/>
+		</xsl:if>
 		<dt class="hdlist1">
 			<xsl:apply-templates/>
 		</dt>
