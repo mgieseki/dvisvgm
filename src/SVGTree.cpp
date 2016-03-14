@@ -129,125 +129,146 @@ void SVGTree::prependToPage (XMLNode *node) {
 }
 
 
-/** Appends a single charater to the current text node. If necessary, and depending on output mode
- *  and further output states, new XML elements (text, tspan, g, ...) are created.
+/** Appends a single character or its path represenatation to the current context node.
+ *  If necessary, and depending on the selected output mode and further output states,
+ *  new XML elements (text, tspan, g, use, ...) are created.
  *  @param[in] c character to be added
  *  @param[in] x x coordinate
  *  @param[in] y y coordinate
  *  @param[in] font font to be used */
 void SVGTree::appendChar (int c, double x, double y, const Font &font) {
+	if (USE_FONTS)
+		appendCharAsText(c, x, y, font);
+	else
+		appendCharAsPath(c, x, y, font);
+}
+
+
+/** Appends a single text character to the current context node.
+ *  @param[in] c character to be added
+ *  @param[in] x x coordinate
+ *  @param[in] y y coordinate
+ *  @param[in] font font to be used */
+void SVGTree::appendCharAsText (int c, double x, double y, const Font &font) {
 	XMLElementNode *node=_span;
-	if (USE_FONTS) {
-		// changes of fonts and transformations require a new text element
-		if (!MERGE_CHARS || !_text || _font.changed() || _matrix.changed() || _vertical.changed()) {
-			newTextNode(x, y);
-			node = _text;
-			_color.changed(true);
-		}
-		if (MERGE_CHARS && (_xchanged || _ychanged || (_color.changed() && _color.get() != Color::BLACK))) {
-			// if drawing position was explicitly changed, create a new tspan element
-			_span = new XMLElementNode("tspan");
-			if (_xchanged) {
-				if (_vertical) {
-					// align glyphs designed for horizontal layout properly
-					if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(_font.get()))
-						if (!pf->getMetrics()->verticalLayout())
-							x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
-				}
-				_span->addAttribute("x", x);
-				_xchanged = false;
+	// changes of fonts and transformations require a new text element
+	if (!MERGE_CHARS || !_text || _font.changed() || _matrix.changed() || _vertical.changed()) {
+		newTextNode(x, y);
+		node = _text;
+		_color.changed(true);
+	}
+	if (MERGE_CHARS && (_xchanged || _ychanged || (_color.changed() && _color.get() != Color::BLACK))) {
+		// if drawing position was explicitly changed, create a new tspan element
+		_span = new XMLElementNode("tspan");
+		if (_xchanged) {
+			if (_vertical) {
+				// align glyphs designed for horizontal layout properly
+				if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(_font.get()))
+					if (!pf->getMetrics()->verticalLayout())
+						x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
 			}
-			if (_ychanged) {
-				_span->addAttribute("y", y);
-				_ychanged = false;
-			}
-			if (_color.get() != font.color()) {
-					_span->addAttribute("fill", _color.get().svgColorString());
-				_color.changed(false);
-			}
-			_text->append(_span);
-			node = _span;
+			_span->addAttribute("x", x);
+			_xchanged = false;
 		}
-		if (!node) {
-			if (!_text)
-				newTextNode(x, y);
-			node = _text;
+		if (_ychanged) {
+			_span->addAttribute("y", y);
+			_ychanged = false;
 		}
-		node->append(XMLString(font.unicode(c), false));
-		if (!MERGE_CHARS && _color.get() != font.color()) {
-			node->addAttribute("fill", _color.get().svgColorString());
+		if (_color.get() != font.color()) {
+				_span->addAttribute("fill", _color.get().svgColorString());
 			_color.changed(false);
 		}
+		_text->append(_span);
+		node = _span;
+	}
+	if (!node) {
+		if (!_text)
+			newTextNode(x, y);
+		node = _text;
+	}
+	node->append(XMLString(font.unicode(c), false));
+	if (!MERGE_CHARS && _color.get() != font.color()) {
+		node->addAttribute("fill", _color.get().svgColorString());
+		_color.changed(false);
+	}
+}
+
+
+/** Appends a reference to the path representation of a single character to
+ *  the current context node.
+ *  @param[in] c character to be added
+ *  @param[in] x x coordinate
+ *  @param[in] y y coordinate
+ *  @param[in] font font to be used */
+void SVGTree::appendCharAsPath (int c, double x, double y, const Font &font) {
+	XMLElementNode *node=_span;
+	if (_color.changed() || _matrix.changed()) {
+		bool set_color = (_color.changed() && _color.get() != Color::BLACK);
+		bool set_matrix = (_matrix.changed() && !_matrix.get().isIdentity());
+		if (set_color || set_matrix) {
+			_span = new XMLElementNode("g");
+			if (_color.get() != Color::BLACK)
+				_span->addAttribute("fill", _color.get().svgColorString());
+			if (!_matrix.get().isIdentity())
+				_span->addAttribute("transform", _matrix.get().getSVG());
+			appendToPage(_span);
+			node = _span;
+			_color.changed(false);
+			_matrix.changed(false);
+		}
+		else if (_color.get() == Color::BLACK && _matrix.get().isIdentity())
+			node = _span = 0;
+	}
+	if (!node)
+		node = _pageContainerStack.empty() ? _page : _pageContainerStack.top();
+	if (font.verticalLayout()) {
+		// move glyph graphics so that its origin is located at the top center position
+		GlyphMetrics metrics;
+		font.getGlyphMetrics(c, _vertical, metrics);
+		x -= metrics.wl;
+		if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font)) {
+			// Center glyph between top and bottom border of the TFM box.
+			// This is just an approximation used until I find a way to compute
+			// the exact location in vertical mode.
+			GlyphMetrics exact_metrics;
+			pf->getExactGlyphBox(c, exact_metrics, false);
+			y += exact_metrics.h+(metrics.d-exact_metrics.h-exact_metrics.d)/2;
+		}
+		else
+			y += metrics.d;
+	}
+	Matrix rotation(1);
+	if (_vertical && !font.verticalLayout()) {
+		// alphabetic text designed for horizontal mode
+		// must be rotated by 90 degrees if in vertical mode
+		rotation.translate(-x, -y);
+		rotation.rotate(90);
+		rotation.translate(x, y);
+	}
+	if (CREATE_USE_ELEMENTS) {
+		ostringstream oss;
+		oss << "#g" << FontManager::instance().fontID(_font) << '-' << c;
+		XMLElementNode *use = new XMLElementNode("use");
+		use->addAttribute("x", XMLString(x));
+		use->addAttribute("y", XMLString(y));
+		use->addAttribute("xlink:href", oss.str());
+		if (!rotation.isIdentity())
+			use->addAttribute("transform", rotation.getSVG());
+		node->append(use);
 	}
 	else {
-		if (_color.changed() || _matrix.changed()) {
-			bool set_color = (_color.changed() && _color.get() != Color::BLACK);
-			bool set_matrix = (_matrix.changed() && !_matrix.get().isIdentity());
-			if (set_color || set_matrix) {
-				_span = new XMLElementNode("g");
-				if (_color.get() != Color::BLACK)
-					_span->addAttribute("fill", _color.get().svgColorString());
-				if (!_matrix.get().isIdentity())
-					_span->addAttribute("transform", _matrix.get().getSVG());
-				appendToPage(_span);
-				node = _span;
-				_color.changed(false);
-				_matrix.changed(false);
-			}
-			else if (_color.get() == Color::BLACK && _matrix.get().isIdentity())
-				node = _span = 0;
-		}
-		if (!node)
-			node = _pageContainerStack.empty() ? _page : _pageContainerStack.top();
-		if (font.verticalLayout()) {
-			// move glyph graphics so that its origin is located at the top center position
-			GlyphMetrics metrics;
-			font.getGlyphMetrics(c, _vertical, metrics);
-			x -= metrics.wl;
-			if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font)) {
-				// Center glyph between top and bottom border of the TFM box.
-				// This is just an approximation used until I find a way to compute
-				// the exact location in vertical mode.
-				GlyphMetrics exact_metrics;
-				pf->getExactGlyphBox(c, exact_metrics, false);
-				y += exact_metrics.h+(metrics.d-exact_metrics.h-exact_metrics.d)/2;
-			}
-			else
-				y += metrics.d;
-		}
-		Matrix rotation(1);
-		if (_vertical && !font.verticalLayout()) {
-			// alphabetic text designed for horizontal mode
-			// must be rotated by 90 degrees if in vertical mode
-			rotation.translate(-x, -y);
-			rotation.rotate(90);
-			rotation.translate(x, y);
-		}
-		if (CREATE_USE_ELEMENTS) {
+		Glyph glyph;
+		const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
+		if (pf && pf->getGlyph(c, glyph)) {
+			double sx = pf->scaledSize()/pf->unitsPerEm();
+			double sy = -sx;
 			ostringstream oss;
-			oss << "#g" << FontManager::instance().fontID(_font) << '-' << c;
-			XMLElementNode *use = new XMLElementNode("use");
-			use->addAttribute("x", XMLString(x));
-			use->addAttribute("y", XMLString(y));
-			use->addAttribute("xlink:href", oss.str());
+			glyph.writeSVG(oss, RELATIVE_PATH_CMDS, sx, sy, x, y);
+			XMLElementNode *glyph_node = new XMLElementNode("path");
+			glyph_node->addAttribute("d", oss.str());
 			if (!rotation.isIdentity())
-				use->addAttribute("transform", rotation.getSVG());
-			node->append(use);
-		}
-		else {
-			Glyph glyph;
-			const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
-			if (pf && pf->getGlyph(c, glyph)) {
-				double sx = pf->scaledSize()/pf->unitsPerEm();
-				double sy = -sx;
-				ostringstream oss;
-				glyph.writeSVG(oss, RELATIVE_PATH_CMDS, sx, sy, x, y);
-				XMLElementNode *glyph_node = new XMLElementNode("path");
-				glyph_node->addAttribute("d", oss.str());
-				if (!rotation.isIdentity())
-					glyph_node->addAttribute("transform", rotation.getSVG());
-				node->append(glyph_node);
-			}
+				glyph_node->addAttribute("transform", rotation.getSVG());
+			node->append(glyph_node);
 		}
 	}
 }

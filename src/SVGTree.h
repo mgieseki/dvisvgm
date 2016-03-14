@@ -99,6 +99,8 @@ class SVGTree
 
 	protected:
 		void newTextNode (double x, double y);
+		void appendCharAsText (int c, double x, double y, const Font &font);
+		void appendCharAsPath (int c, double x, double y, const Font &font);
 
 	private:
 		XMLDocument _doc;
