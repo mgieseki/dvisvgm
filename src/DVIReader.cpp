@@ -503,7 +503,7 @@ void DVIReader::cmdFontNum0 (int num) {
 	if (Font *font = FontManager::instance().getFont(num)) {
 		_currFontNum = num;
 		if (_actions && !dynamic_cast<VirtualFont*>(font))
-			_actions->setFont(FontManager::instance().fontID(num), font);  // all fonts get a recomputed ID
+			_actions->setFont(FontManager::instance().fontID(num), *font);  // all fonts get a recomputed ID
 	}
 	else {
 		ostringstream oss;

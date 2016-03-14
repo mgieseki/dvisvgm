@@ -64,7 +64,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void setTextOrientation(bool vertical)         {_svg.setVertical(vertical);}
 		void moveToX (double x);
 		void moveToY (double y);
-		void setFont (int num, const Font *font);
+		void setFont (int num, const Font &font);
 		void special (const std::string &spc, double dvi2bp, bool preprocessing=false);
 		void beginPage (unsigned pageno, Int32 *c);
 		void endPage (unsigned pageno);

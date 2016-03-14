@@ -80,12 +80,12 @@ void SVGTree::setColor (const Color &c) {
 }
 
 
-void SVGTree::setFont (int num, const Font *font) {
-	_font.set(font);
+void SVGTree::setFont (int num, const Font &font) {
+	_font.set(&font);
 	_fontnum = num;
 	// set default color assigned to the font
-	if (font->color() != Color::BLACK && _color.get() != font->color())
-		_color.set(font->color());
+	if (font.color() != Color::BLACK && _color.get() != font.color())
+		_color.set(font.color());
 }
 
 
@@ -466,7 +466,7 @@ void SVGTree::popContextElement () {
 
 
 /** Extracts the ID from a local URL reference like url(#abcde) */
-inline string extract_id_from_url (const string &url) {
+static inline string extract_id_from_url (const string &url) {
 	return url.substr(5, url.length()-6);
 }
 

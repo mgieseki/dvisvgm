@@ -39,7 +39,7 @@ struct DVIActions
 	virtual void moveToX (double x) {}
 	virtual void moveToY (double y) {}
 	virtual void defineFont (int num, const Font *font) {}
-	virtual void setFont (int num, const Font *font) {}
+	virtual void setFont (int num, const Font &font) {}
 	virtual void special (const std::string &s, double dvi2bp, bool preprocessing=false) {}
 	virtual void preamble (const std::string &cmt) {}
 	virtual void postamble () {}
