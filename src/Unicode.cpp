@@ -21,6 +21,8 @@
 #include <xxhash.h>
 #include <cctype>
 #include <cstddef>
+#include <iomanip>
+#include <sstream>
 #include "Unicode.h"
 
 using namespace std;
@@ -82,28 +84,28 @@ UInt32 Unicode::charToCodepoint (UInt32 c) {
 }
 
 
-/** Converts a Unicode value to a UTF-8 byte sequence.
- *  @param[in] c character code
+/** Converts a Unicode point to a UTF-8 byte sequence.
+ *  @param[in] cp code point
  *  @return  utf8 sequence consisting of 1-4 bytes */
-string Unicode::utf8 (Int32 c) {
+string Unicode::utf8 (Int32 cp) {
 	string utf8;
-	if (c >= 0) {
-		if (c < 0x80)
-			utf8 += c;
-		else if (c < 0x800) {
-			utf8 += 0xC0 + (c >> 6);
-			utf8 += 0x80 + (c & 0x3F);
+	if (cp >= 0) {
+		if (cp < 0x80)
+			utf8 += cp;
+		else if (cp < 0x800) {
+			utf8 += 0xC0 + (cp >> 6);
+			utf8 += 0x80 + (cp & 0x3F);
 		}
-		else if (c < 0x10000) {
-			utf8 += 0xE0 + (c >> 12);
-			utf8 += 0x80 + ((c >> 6) & 0x3F);
-			utf8 += 0x80 + (c & 0x3F);
+		else if (cp < 0x10000) {
+			utf8 += 0xE0 + (cp >> 12);
+			utf8 += 0x80 + ((cp >> 6) & 0x3F);
+			utf8 += 0x80 + (cp & 0x3F);
 		}
-		else if (c < 0x110000) {
-			utf8 += 0xF0 + (c >> 18);
-			utf8 += 0x80 + ((c >> 12) & 0x3F);
-			utf8 += 0x80 + ((c >> 6) & 0x3F);
-			utf8 += 0x80 + (c & 0x3F);
+		else if (cp < 0x110000) {
+			utf8 += 0xF0 + (cp >> 18);
+			utf8 += 0x80 + ((cp >> 12) & 0x3F);
+			utf8 += 0x80 + ((cp >> 6) & 0x3F);
+			utf8 += 0x80 + (cp & 0x3F);
 		}
 		// UTF-8 does not support codepoints >= 0x110000
 	}
@@ -4534,28 +4536,44 @@ static struct Hash2Unicode {
 };
 
 
-#if 0
-/** Tries to extract the codepoint from character names like "uni1234" or "u1234".
- *  Valid names must match ^u(ni)?[0-9A-F]{4,}(\..*)?$.
- *  @param[in] psname character name
- *  @return the extracted codepoint or 0 on failure */
-static Int32 name_as_codepoint (const string &name) {
-	int offset=1;
-	if (name.length() >= 7 && name.substr(0, 3) == "uni")
-		offset = 3;
-	else if (name.length() < 5 || name[0] != 'u')
-		return 0;
-
-	Int32 cp=0;
-	for (string::const_iterator it=name.begin()+offset; it != name.end() && *it != '.'; ++it) {
-		if (!isdigit(*it) && (*it < 'A' || *it > 'F'))
-			return 0;
-		cp = (cp*16) + (*it - (isdigit(*it) ? '0' : 'A'));
-	}
-	return cp;
+static inline bool is_hex_digit (char c) {
+	return isdigit(c) || (c >= 'A' && c <= 'F');
 }
 
 
+/** Tries to extract the codepoint from AGL character names like "uni1234" or "u1234".
+ *  Returns 0 if the given name doesn't satisfy the constraints.
+ *  https://github.com/adobe-type-tools/agl-specification
+ *  @param[in] name AGL character name
+ *  @return the extracted codepoint or 0 on failure */
+static Int32 extract_codepoint_from_name (const string &name) {
+	size_t offset=1;
+	if (name.substr(0, 3) == "uni" && is_hex_digit(name[4]) && name.length() >= 7)
+		offset = 3;
+	else if (name[0] != 'u' || !is_hex_digit(name[1]) || name.length() < 5)
+		return 0;
+
+	string::const_iterator it = name.begin()+offset;
+	while (it != name.end() && is_hex_digit(*it) && *it != '.' && *it != '_')
+		++it;
+	if (it != name.end() && *it != '.' && *it != '_')
+		return 0;
+
+	string hexstr(name.begin()+offset, it);
+	if (hexstr.length() < 4 || (offset == 3 && hexstr.length() % 4 != 0))
+		return 0;
+	if (offset == 3)
+		hexstr = hexstr.substr(0, 4);
+	Int32 codepoint;
+	istringstream iss(hexstr);
+	iss >> hex >> codepoint;
+	if (!iss.fail() && (codepoint <= 0xD7FF || (codepoint >= 0xE000 && codepoint <= 0x10FFFF)))
+		return codepoint;
+	return 0;
+}
+
+
+#if 0
 static const char* get_suffix (const string &name) {
 	static const char *suffixes[] = {
 		"small", "swash", "superior", "inferior", "numerator", "denominator", "oldstyle",
@@ -4577,6 +4595,9 @@ static const char* get_suffix (const string &name) {
  * @param name AGL name of the character to look up
  * @return codepoint of the character */
 Int32 Unicode::aglNameToCodepoint (const string &name) {
+	if (Int32 cp = extract_codepoint_from_name(name))
+		return cp;
+
 	UInt32 hash = XXH32(&name[0], name.length(), 0);
 	int left=0;
 	int right=sizeof(hash2unicode)/sizeof(Hash2Unicode)-1;

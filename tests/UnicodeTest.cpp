@@ -64,11 +64,41 @@ TEST(UnicodeTest, utf8) {
 }
 
 
-TEST(UnicodeTest, aglNameToCodepoint) {
+TEST(UnicodeTest, aglNameToCodepoint1) {
 	EXPECT_EQ(Unicode::aglNameToCodepoint("does not exist"), 0);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("Eogonek"), 0x118);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("alpha"), 0x03b1);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("Alpha"), 0x0391);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("alphatonos"), 0x03ac);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("SF460000"), 0x2568);
+}
+
+
+TEST(UnicodeTest, aglNameToCodepoint2) {
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni1234"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni1234.suffix"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni1234_part2"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni12345678"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni123"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni12345"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni1234567"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni100000"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni123E"), 0x123e);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uni123e"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uniD7FF"), 0xd7ff);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uniD800"), 0);
+
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u1234"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u1234.suffix"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u1234_part2"), 0x1234);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u12345678"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u123.suffix"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u123"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u12345"), 0x12345);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u1234567"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u100000"), 0x100000);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u123E"), 0x123e);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("u123e"), 0);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uD7FF"), 0xd7ff);
+	EXPECT_EQ(Unicode::aglNameToCodepoint("uD800"), 0);
 }
