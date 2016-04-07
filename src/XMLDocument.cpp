@@ -64,7 +64,7 @@ void XMLDocument::setRootNode (XMLElementNode *root) {
 
 ostream& XMLDocument::write (ostream &os) const {
 	if (_rootElement) { // no root element => no output
-		os << "<?xml version='1.0'?>\n";
+		os << "<?xml version='1.0' encoding='UTF-8'?>\n";
 		FORALL(_nodes, list<XMLNode*>::const_iterator, i)
 			(*i)->write(os);
 		_rootElement->write(os);
