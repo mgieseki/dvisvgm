@@ -19,6 +19,7 @@ dvisvgm_LDADD = \
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
 
 libdvisvgm_a_SOURCES = \
+	AGLTable.h \
 	BasicDVIReader.cpp \
 	BasicDVIReader.h \
 	Bezier.cpp \

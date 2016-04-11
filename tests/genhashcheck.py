@@ -43,7 +43,12 @@ print """\
 
 int main () {
 	unsigned prev_hash=0;
-	for (unsigned i=0; i < sizeof(nameHashes)/sizeof(NameHash); i++) {
+	size_t size = sizeof(nameHashes)/sizeof(NameHash);
+	if (size == 0) {
+		cout << "hash table is empty\\n";
+		return 1;
+	}
+	for (unsigned i=0; i < size; i++) {
 		const string &name = nameHashes[i].name;
 		const unsigned hash = nameHashes[i].hash;
 		if (XXH32(&name[0], name.length(), 0) != hash) {
