@@ -24,7 +24,23 @@
 
 using namespace std;
 
-const char *cmap1 =
+
+class CMapReaderTest : public ::testing::Test
+{
+	protected:
+		void SetUp () {
+			istringstream iss(cmapsrc);
+			CMapReader reader;
+			cmap = reader.read(iss, "Test-Map");
+		}
+
+		static const char *cmapsrc;
+		CMap *cmap;
+};
+
+
+const char *CMapReaderTest::cmapsrc =
+"% This is a comment line\n"
 "/CIDInit /ProcSet findresource begin\n"
 "12 dict begin\n"
 "begincmap\n"
@@ -56,15 +72,22 @@ const char *cmap1 =
 "<5833> <5834> <8c86>\n"
 "<5837> <5838> <8c9b>\n"
 "endbfrange\n"
+"2 begincidrange\n"
+"<1234> <1240> 100\n"
+"<1300> <1302> 200\n"
+"endcidrange\n"
 "endcmap\n"
 "CMapName currentdict /CMap defineresource pop\n";
 
 
+TEST_F(CMapReaderTest, rostring) {
+	ASSERT_TRUE(cmap != 0);
+	ASSERT_EQ(cmap->getROString(), "Adobe-Adobe_Japan1_UCS2");
+	ASSERT_FALSE(cmap->vertical());
+}
 
-TEST(CMapReader, read) {
-	istringstream iss(cmap1);
-	CMapReader reader;
-	CMap *cmap = reader.read(iss, "Test-Map");
+
+TEST_F(CMapReaderTest, bfcode) {
 	ASSERT_TRUE(cmap != 0);
 	ASSERT_EQ(cmap->getROString(), "Adobe-Adobe_Japan1_UCS2");
 	ASSERT_FALSE(cmap->vertical());
@@ -81,3 +104,18 @@ TEST(CMapReader, read) {
 	ASSERT_EQ(cmap->bfcode(0x5839), 0);
 }
 
+TEST_F(CMapReaderTest, cid) {
+	SegmentedCMap *seg_cmap = dynamic_cast<SegmentedCMap*>(cmap);
+	ASSERT_TRUE(seg_cmap != 0);
+	ASSERT_EQ(seg_cmap->numBFRanges(), 9);
+	ASSERT_EQ(seg_cmap->numCIDRanges(), 2);
+	ASSERT_EQ(seg_cmap->cid(0x1233), 0);
+	ASSERT_EQ(seg_cmap->cid(0x1234), 100);
+	ASSERT_EQ(seg_cmap->cid(0x1240), 112);
+	ASSERT_EQ(seg_cmap->cid(0x1241), 0);
+	ASSERT_EQ(seg_cmap->cid(0x12FF), 0);
+	ASSERT_EQ(seg_cmap->cid(0x1300), 200);
+	ASSERT_EQ(seg_cmap->cid(0x1301), 201);
+	ASSERT_EQ(seg_cmap->cid(0x1302), 202);
+	ASSERT_EQ(seg_cmap->cid(0x1303), 0);
+}
