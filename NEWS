@@ -1,3 +1,9 @@
+dvisvgm-1.15.1 (2016-04-19)
+- added explicit encoding attribute to the XML declaration again (GH bug #54)
+- added support for AGL character names of the form 'uFOO' and 'uniFOO'
+- fixed parsing of transformation parameters given on the command-line
+- minor code and test improvements
+
 dvisvgm-1.15 (2016-02-27)
 - added option --comments to add additional information to the SVG file
 - fixed a clipping bug in the PostScript handler

@@ -29,7 +29,7 @@ Short overview of the main features:
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
 * The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
-* _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive) and is therefore available for a wide range of operating systems.
+* _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](http://www.miktex.org). It is therefore available for a wide range of operating systems.
 
 
 Usage
@@ -140,8 +140,5 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
 Public License for more details.
 
-You should have received a copy of the GNU General Public License along
-with this program; if not, see <http://www.gnu.org/licenses/>.
-
-See the file COPYING for details.
+See file COPYING for details.
 
