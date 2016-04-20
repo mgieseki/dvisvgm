@@ -35,6 +35,11 @@ check_PROGRAMS += CalculatorTest
 CalculatorTest_SOURCES = CalculatorTest.cpp
 CalculatorTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += CMapManagerTest
+check_PROGRAMS += CMapManagerTest
+CMapManagerTest_SOURCES = CMapManagerTest.cpp
+CMapManagerTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += CMapReaderTest
 check_PROGRAMS += CMapReaderTest
 CMapReaderTest_SOURCES = CMapReaderTest.cpp

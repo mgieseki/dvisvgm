@@ -15,5 +15,6 @@ EXTRA_DIST = \
 	sample.dvi \
 	sample-nf-cmp.svg \
 	sample.sfd \
-	sample-wf-cmp.svg
+	sample-wf-cmp.svg \
+	ot1.cmap
 
