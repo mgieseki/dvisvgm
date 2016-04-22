@@ -173,8 +173,6 @@ bool Process::run (string *out) {
 	if (pid > 0) {		// parent process
 		for (;;) {
 			if (out) {
-				//
-				out->clear();
 				char buf[512];
 				ssize_t len;
 				while ((len = read(pipefd[0], buf, sizeof(buf)-1)) > 0) {
