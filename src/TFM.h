@@ -39,15 +39,20 @@ class TFM : public FontMetrics
 		double getCharDepth (int c) const;
 		double getItalicCorr (int c) const;
 		double getDesignSize () const {return _designSize;}
+		double getSpace () const;
+		double getSpaceStretch () const;
+		double getSpaceShrink () const;
+		double getQuad () const;
 		bool verticalLayout () const  {return false;}
 		UInt32 getChecksum () const   {return _checksum;}
 		UInt16 firstChar () const     {return _firstChar;}
 		UInt16 lastChar () const      {return _lastChar;}
 
 	protected:
-		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0) {}
+		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _params(7) {}
 		void readHeader (StreamReader &reader);
 		void readTables (StreamReader &reader, int nw, int nh, int nd, int ni);
+		void readParameters (StreamReader &reader, int np);
 		virtual int charIndex (int c) const;
 		void setCharRange (int firstchar, int lastchar) {_firstChar=firstchar; _lastChar=lastchar;}
 
@@ -60,6 +65,7 @@ class TFM : public FontMetrics
 		std::vector<FixWord> _heightTable;   ///< character height in design size units
 		std::vector<FixWord> _depthTable;    ///< character depth in design size units
 		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
+		std::vector<FixWord> _params;        ///< values of the TFM's param section
 };
 
 #endif

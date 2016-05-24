@@ -73,6 +73,8 @@ TFM::TFM (istream &is) {
 	readHeader(reader);
 	is.seekg(24+lh*4);  // move to char info table
 	readTables(reader, nw, nh, nd, ni);
+	is.seekg(4*(lf-np), ios::beg);  // move to param section
+	readParameters(reader, np);
 }
 
 
@@ -88,6 +90,42 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
 	read_words(reader, _heightTable, nh);
 	read_words(reader, _depthTable, nd);
 	read_words(reader, _italicTable, ni);
+}
+
+
+/** Read the values from the param section of the TFM file.
+ *  @param[in] reader read from this stream
+ *  @param[in] np number of paramaters to read */
+void TFM::readParameters (StreamReader &reader, int np) {
+	_params.resize(7);
+	for (int i=0; i < np; i++)
+		_params[i] = reader.readUnsigned(4);
+	for (int i=np; i < 7; i++)
+		_params[i] = 0;
+}
+
+
+/** Returns the optimal space width between words (in PS point units). */
+double TFM::getSpace () const {
+	return fix2double(_params[1])*_designSize;
+}
+
+
+/** Returns the amount of glue stretching between words (in PS point units). */
+double TFM::getSpaceStretch () const {
+	return fix2double(_params[2])*_designSize;
+}
+
+
+/** Returns the amount of glue shrinking between words (in PS point units). */
+double TFM::getSpaceShrink () const {
+	return fix2double(_params[3])*_designSize;
+}
+
+
+/** Returns the size of one EM unit (in PS point units). */
+double TFM::getQuad () const {
+	return fix2double(_params[5])*_designSize;
 }
 
 
