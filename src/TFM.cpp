@@ -42,10 +42,9 @@ static void read_words (StreamReader &reader, vector<T> &v, unsigned n) {
 }
 
 
-/** Converts a TFM fix point value to double (PS point units). */
-static double fix2double (FixWord fix) {
-	const double pt2bp = 72/72.27;
-	return double(fix)/(1 << 20)*pt2bp;
+/** Converts a TFM fix point value to double. */
+static inline double fix2double (FixWord fix) {
+	return double(fix)/(1 << 20);
 }
 
 
@@ -80,7 +79,8 @@ TFM::TFM (istream &is) {
 
 void TFM::readHeader (StreamReader &reader) {
 	_checksum = reader.readUnsigned(4);
-	_designSize = fix2double(reader.readUnsigned(4));
+	const double pt2bp = 72/72.27;
+	_designSize = fix2double(reader.readUnsigned(4))*pt2bp;
 }
 
 
