@@ -34,7 +34,7 @@ class JFM : public TFM
 		UInt16 maxChar () const       {return static_cast<UInt16>(_minchar+_charTypeTable.size()-1);}
 
 	protected:
-		void readTables (StreamReader &sr, int nt, int nw, int nh, int nd, int ni);
+		void readTables (StreamReader &reader, int nt, int nw, int nh, int nd, int ni);
 		int charIndex (int c) const;
 
 	private:
