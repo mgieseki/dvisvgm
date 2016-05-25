@@ -98,6 +98,7 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
  *  @param[in] np number of paramaters to read */
 void TFM::readParameters (StreamReader &reader, int np) {
 	_params.resize(7);
+	np = min(np, 7);
 	for (int i=0; i < np; i++)
 		_params[i] = reader.readUnsigned(4);
 	for (int i=np; i < 7; i++)
