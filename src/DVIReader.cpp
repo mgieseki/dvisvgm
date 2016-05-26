@@ -642,7 +642,7 @@ void DVIReader::cmdXFontDef (int) {
 
 /** XDV extension: prints an array of characters where each character
  *  can take independent x and y coordinates.
- *  parameters: w[4] n[2] x[4][n] y[4][n] c[2][n] */
+ *  parameters: w[4] n[2] xy[(4+4)n] g[2n] */
 void DVIReader::cmdXGlyphArray (int) {
 	putGlyphArray(false);
 }
@@ -650,13 +650,13 @@ void DVIReader::cmdXGlyphArray (int) {
 
 /** XDV extension: prints an array/string of characters where each character
  *  can take independent x coordinates whereas all share a single y coordinate.
- *  parameters: w[4] n[2] x[4][n] y[4] c[2][n] */
+ *  parameters: w[4] n[2] x[4n] y[4] g[2n] */
 void DVIReader::cmdXGlyphString (int) {
 	putGlyphArray(true);
 }
 
 
-/** Implements the common functionality of cmdXGlyphA and cmdXGlyphS.
+/** Implements the common functionality of cmdXGlyphArray and cmdXGlyphString.
  *  @param[in] xonly indicates if the characters share a single y coordinate (xonly==true) */
 void DVIReader::putGlyphArray (bool xonly) {
 	double strwidth = _dvi2bp*readSigned(4);

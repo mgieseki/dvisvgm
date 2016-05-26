@@ -41,7 +41,7 @@ class BasicDVIReader : public StreamReader
 {
 	protected:
 		typedef void (BasicDVIReader::*CommandHandler)(int);
-		enum DVIVersion {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV5=5, DVI_XDV6=6};
+		enum DVIVersion {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV5=5, DVI_XDV6=6, DVI_XDV7=7};
 
 	public:
 		BasicDVIReader (std::istream &is);
@@ -62,6 +62,7 @@ class BasicDVIReader : public StreamReader
 		virtual int evalCommand (CommandHandler &handler, int &param);
 		virtual int executeCommand ();
 		void executePostPost ();
+      bool evalXDVOpcode (int op, CommandHandler &handler) const;
 
 		// the following methods represent the DVI commands
 		// they are called by executeCommand and should not be used directly
@@ -93,10 +94,11 @@ class BasicDVIReader : public StreamReader
 		virtual void cmdPre (int len);
 		virtual void cmdPost (int len);
 		virtual void cmdPostPost (int len);
-		virtual void cmdXFontDef (int len);     // XDV only
-		virtual void cmdXGlyphArray (int len);  // XDV only
-		virtual void cmdXGlyphString (int len); // XDV version 5 only
-		virtual void cmdXPic (int len);         // XDV version 5 only
+		virtual void cmdXFontDef (int len);       // XDV only
+		virtual void cmdXGlyphArray (int len);    // XDV only
+		virtual void cmdXGlyphString (int len);   // XDV version 5 only
+		virtual void cmdXPic (int len);           // XDV version 5 only
+		virtual void cmdXTextAndGlyphs (int len); // XDV version 7 only
 
 	private:
 		DVIVersion _dviVersion;  ///< DVI version of file being processed

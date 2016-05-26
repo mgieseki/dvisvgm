@@ -95,17 +95,8 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		handler = &BasicDVIReader::cmdFontNum0;
 		param = opcode-171;
 	}
-	else if ((_dviVersion == DVI_XDV5 && opcode >= 251 && opcode <= 254)
-			  || (_dviVersion == DVI_XDV6 && opcode >= 252 && opcode <= 253)) {  // XDV command?
-		static const CommandHandler handlers[] = {
-			&BasicDVIReader::cmdXPic,
-			&BasicDVIReader::cmdXFontDef,
-			&BasicDVIReader::cmdXGlyphArray,
-			&BasicDVIReader::cmdXGlyphString
-		};
-		handler = handlers[opcode-251];
-		param = 0;
-	}
+   else if (evalXDVOpcode(opcode, handler))
+      num_param_bytes = 0;
 	else if (_dviVersion == DVI_PTEX && opcode == 255) {  // direction command set by pTeX?
 		handler = &BasicDVIReader::cmdDir;
 		num_param_bytes = 1;
@@ -123,6 +114,36 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 	if (param < 0)
 		param = num_param_bytes;
 	return opcode;
+}
+
+
+/** Checks if a given opcode belongs to an XDV extension.
+ *  @param[in] op the opcode to check
+ *  @param[out] handler corresponding command handler if opcode is valid */
+bool BasicDVIReader::evalXDVOpcode (int op, CommandHandler &handler) const {
+   static const struct {
+      int min, max;  // minimal and maximal opcode in XDV section
+   } xdvranges[] = {
+      {251, 254},  // XDV5
+      {252, 253},  // XDV6
+      {252, 254},  // XDV7
+   };
+   int index = _dviVersion-DVI_XDV5;
+   if (_dviVersion < DVI_XDV5 || _dviVersion > DVI_XDV7 || op < xdvranges[index].min || op > xdvranges[index].max)
+      return false;
+
+   static const CommandHandler handlers[] = {
+      &BasicDVIReader::cmdXPic,
+      &BasicDVIReader::cmdXFontDef,
+      &BasicDVIReader::cmdXGlyphArray,
+      &BasicDVIReader::cmdXTextAndGlyphs,
+      &BasicDVIReader::cmdXGlyphString
+   };
+   index = op-251;
+   if (_dviVersion == DVI_XDV5 && op == 254)
+      index++;
+   handler = handlers[index];
+   return true;
 }
 
 
@@ -171,6 +192,7 @@ void BasicDVIReader::setDVIVersion (DVIVersion version) {
 		case DVI_PTEX:
 		case DVI_XDV5:
 		case DVI_XDV6:
+		case DVI_XDV7:
 			break;
 		default:
 			ostringstream oss;
@@ -236,7 +258,7 @@ void BasicDVIReader::cmdXXX (int len)     {seek(readUnsigned(len), ios::cur);}
 
 
 /** Executes fontdef command.
- *  Format fontdef k[len] c[4] s[4] d[4] a[1] l[1] n[a+l]
+ *  Format: fontdef k[len] c[4] s[4] d[4] a[1] l[1] n[a+l]
  * @param[in] len size of font number variable (in bytes) */
 void BasicDVIReader::cmdFontDef (int len) {
 	seek(len+12, ios::cur);             // skip font number
@@ -279,6 +301,9 @@ void BasicDVIReader::cmdXFontDef (int) {
 }
 
 
+/** XDV extension: prints an array of characters where each character
+ *  can take independent x and y coordinates.
+ *  parameters: w[4] n[2] xy[(4+4)n] g[2n] */
 void BasicDVIReader::cmdXGlyphArray (int) {
 	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
@@ -286,8 +311,24 @@ void BasicDVIReader::cmdXGlyphArray (int) {
 }
 
 
+/** XDV extension: prints an array/string of characters where each character
+ *  can take independent x coordinates whereas all share a single y coordinate.
+ *  parameters: w[4] n[2] x[4n] y[4] g[2n] */
 void BasicDVIReader::cmdXGlyphString (int) {
 	seek(4, ios::cur);
 	UInt16 num_glyphs = readUnsigned(2);
 	seek(6*num_glyphs, ios::cur);
+}
+
+
+/** XDV extension: Same as cmdXGlyphArray plus a leading array of UTF-16 characters
+ *  that specify the "actual text" represented by the glyphs to be printed. It usually
+ *  contains the text with special characters (like ligatures) expanded so that it
+ *  can be used for text search, plain text copy & paste etc. This XDV command was
+ *  introduced with XeTeX 0.99995 and can be triggered by <tt>\\XeTeXgenerateactualtext1</tt>.
+ *  parameters: l[2] t[2l] w[4] n[2] xy[8n] g[2n] */
+void BasicDVIReader::cmdXTextAndGlyphs (int) {
+	UInt16 l = readUnsigned(2);
+	seek(2*l, ios::cur);
+	cmdXGlyphArray(0);
 }

@@ -13,7 +13,7 @@ _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
-and [XeTeX](http://scripts.sil.org/xetex) (version 5 and 6, also known as XDV).
+and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
 
 Short overview of the main features:
 
