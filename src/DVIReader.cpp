@@ -201,7 +201,7 @@ double DVIReader::getYPos () const {
 /** Reads and executes DVI preamble command.
  *  Format: pre ver[1] num[4] den[4] mag[4] cmtlen[1] cmt[cmtlen] */
 void DVIReader::cmdPre (int) {
-	setDVIFormat((DVIFormat)readUnsigned(1)); // identification number
+	setDVIVersion((DVIVersion)readUnsigned(1)); // identification number
 	UInt32 num = readUnsigned(4);  // numerator units of measurement
 	UInt32 den = readUnsigned(4);  // denominator units of measurement
 	if (den == 0)
@@ -248,7 +248,7 @@ void DVIReader::cmdPost (int) {
 void DVIReader::cmdPostPost (int) {
 	_inPostamble = false;
 	readUnsigned(4);   // pointer to begin of postamble
-	setDVIFormat((DVIFormat)readUnsigned(1));  // identification byte
+	setDVIVersion((DVIVersion)readUnsigned(1));  // identification byte
 	while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
 }
 
@@ -470,7 +470,7 @@ void DVIReader::cmdNop (int)       {}
 
 
 /** Sets the text orientation (horizontal, vertical).
- *  This command is only available in DVI files of format 3 (created by pTeX) */
+ *  This command is only available in DVI version 3 (created by pTeX) */
 void DVIReader::cmdDir (int) {
 	UInt8 wmode = readUnsigned(1);
 	if (wmode == 4)  // yoko mode (4) equals default LR mode (0)
@@ -605,11 +605,11 @@ void DVIReader::cmdXFontDef (int) {
 	double ptsize = _dvi2bp*readUnsigned(4);
 	UInt16 flags = readUnsigned(2);
 	UInt8 psname_len = readUnsigned(1);
-	UInt8 fmname_len = getDVIFormat() == DVI_XDVOLD ? readUnsigned(1) : 0;
-	UInt8 stname_len = getDVIFormat() == DVI_XDVOLD ? readUnsigned(1) : 0;
+	UInt8 fmname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;
+	UInt8 stname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;
 	string fontname = readString(psname_len);
 	UInt32 fontIndex=0;
-	if (getDVIFormat() == DVI_XDVOLD)
+	if (getDVIVersion() == DVI_XDV5)
 		seek(fmname_len+stname_len, ios::cur);
 	else
 		fontIndex = readUnsigned(4);
@@ -630,7 +630,7 @@ void DVIReader::cmdXFontDef (int) {
 		style.slant = _dvi2bp*readSigned(4);
 	if (flags & 0x4000)   // embolden?
 		style.bold = _dvi2bp*readSigned(4);
-	if ((flags & 0x0800) && (getDVIFormat() == DVI_XDVOLD)) { // variations?
+	if ((flags & 0x0800) && (getDVIVersion() == DVI_XDV5)) { // variations?
 		UInt16 num_variations = readSigned(2);
 		for (int i=0; i < num_variations; i++)
 			readUnsigned(4);

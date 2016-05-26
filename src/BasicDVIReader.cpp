@@ -26,7 +26,7 @@
 using namespace std;
 
 
-BasicDVIReader::BasicDVIReader (std::istream &is) : StreamReader(is), _dviFormat(DVI_NONE)
+BasicDVIReader::BasicDVIReader (std::istream &is) : StreamReader(is), _dviVersion(DVI_NONE)
 {
 }
 
@@ -95,8 +95,8 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		handler = &BasicDVIReader::cmdFontNum0;
 		param = opcode-171;
 	}
-	else if ((_dviFormat == DVI_XDVOLD && opcode >= 251 && opcode <= 254)
-			  || (_dviFormat == DVI_XDVNEW && opcode >= 252 && opcode <= 253)) {  // XDV command?
+	else if ((_dviVersion == DVI_XDV5 && opcode >= 251 && opcode <= 254)
+			  || (_dviVersion == DVI_XDV6 && opcode >= 252 && opcode <= 253)) {  // XDV command?
 		static const CommandHandler handlers[] = {
 			&BasicDVIReader::cmdXPic,
 			&BasicDVIReader::cmdXFontDef,
@@ -106,7 +106,7 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		handler = handlers[opcode-251];
 		param = 0;
 	}
-	else if (_dviFormat == DVI_PTEX && opcode == 255) {  // direction command set by pTeX?
+	else if (_dviVersion == DVI_PTEX && opcode == 255) {  // direction command set by pTeX?
 		handler = &BasicDVIReader::cmdDir;
 		num_param_bytes = 1;
 	}
@@ -152,29 +152,29 @@ void BasicDVIReader::executePostPost () {
 	if (count < 4)  // the standard requires at least 4 trailing fill bytes
 		throw DVIException("missing fill bytes at end of file");
 
-	setDVIFormat((DVIFormat)readUnsigned(1));
+	setDVIVersion((DVIVersion)readUnsigned(1));
 }
 
 
 void BasicDVIReader::executeAllPages () {
-	if (_dviFormat == DVI_NONE)
+	if (_dviVersion == DVI_NONE)
 		executePostPost();             // get version ID from post_post
 	seek(0);                          // go to preamble
 	while (executeCommand() != 248);  // execute all commands until postamble is reached
 }
 
 
-void BasicDVIReader::setDVIFormat (DVIFormat format) {
-	_dviFormat = max(_dviFormat, format);
-	switch (_dviFormat) {
+void BasicDVIReader::setDVIVersion (DVIVersion version) {
+	_dviVersion = max(_dviVersion, version);
+	switch (_dviVersion) {
 		case DVI_STANDARD:
 		case DVI_PTEX:
-		case DVI_XDVOLD:
-		case DVI_XDVNEW:
+		case DVI_XDV5:
+		case DVI_XDV6:
 			break;
 		default:
 			ostringstream oss;
-			oss << "DVI format " << _dviFormat << " not supported";
+			oss << "DVI version " << _dviVersion << " not supported";
 			throw DVIException(oss.str());
 	}
 }
@@ -184,7 +184,7 @@ void BasicDVIReader::setDVIFormat (DVIFormat format) {
 /** Executes preamble command.
  *  Format: pre i[1] num[4] den[4] mag[4] k[1] x[k] */
 void BasicDVIReader::cmdPre (int) {
-	setDVIFormat((DVIFormat)readUnsigned(1)); // identification number
+	setDVIVersion((DVIVersion)readUnsigned(1)); // identification number
 	seek(12, ios::cur);         // skip numerator, denominator, and mag factor
 	UInt32 k = readUnsigned(1); // length of following comment
 	seek(k, ios::cur);          // skip comment
@@ -199,10 +199,10 @@ void BasicDVIReader::cmdPost (int) {
 
 
 /** Executes postpost command.
- *  Format: postpost q[4] i[1] 223’s[>= 4] */
+ *  Format: postpost q[4] i[1] 223's[>= 4] */
 void BasicDVIReader::cmdPostPost (int) {
 	seek(4, ios::cur);
-	setDVIFormat((DVIFormat)readUnsigned(1));  // identification byte
+	setDVIVersion((DVIVersion)readUnsigned(1));  // identification byte
 	while (readUnsigned(1) == 223);  // skip fill bytes (223), eof bit should be set now
 }
 
@@ -259,10 +259,10 @@ void BasicDVIReader::cmdXFontDef (int) {
 	seek(4+4, ios::cur);
 	UInt16 flags = readUnsigned(2);
 	UInt8 len = readUnsigned(1);
-	if (_dviFormat == DVI_XDVOLD)
+	if (_dviVersion == DVI_XDV5)
 		len += readUnsigned(1)+readUnsigned(1);
 	seek(len, ios::cur);
-	if (_dviFormat == DVI_XDVNEW)
+	if (_dviVersion == DVI_XDV6)
 		seek(4, ios::cur); // skip subfont index
 	if (flags & 0x0200)   // colored?
 		seek(4, ios::cur);
@@ -272,7 +272,7 @@ void BasicDVIReader::cmdXFontDef (int) {
 		seek(4, ios::cur);
 	if (flags & 0x4000)   // embolden?
 		seek(4, ios::cur);
-	if ((flags & 0x0800) && (_dviFormat == DVI_XDVOLD)) { // variations?
+	if ((flags & 0x0800) && (_dviVersion == DVI_XDV5)) { // variations?
 		UInt16 num_variations = readSigned(2);
 		seek(4*num_variations, ios::cur);
 	}

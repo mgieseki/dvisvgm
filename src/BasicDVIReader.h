@@ -41,7 +41,7 @@ class BasicDVIReader : public StreamReader
 {
 	protected:
 		typedef void (BasicDVIReader::*CommandHandler)(int);
-		enum DVIFormat {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDVOLD=5, DVI_XDVNEW=6};
+		enum DVIVersion {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV5=5, DVI_XDV6=6};
 
 	public:
 		BasicDVIReader (std::istream &is);
@@ -57,8 +57,8 @@ class BasicDVIReader : public StreamReader
 		virtual unsigned getCurrentPageNumber () const {return 0;}
 
 	protected:
-		void setDVIFormat (DVIFormat format);
-		DVIFormat getDVIFormat () const {return _dviFormat;}
+		void setDVIVersion (DVIVersion version);
+		DVIVersion getDVIVersion () const {return _dviVersion;}
 		virtual int evalCommand (CommandHandler &handler, int &param);
 		virtual int executeCommand ();
 		void executePostPost ();
@@ -95,11 +95,11 @@ class BasicDVIReader : public StreamReader
 		virtual void cmdPostPost (int len);
 		virtual void cmdXFontDef (int len);     // XDV only
 		virtual void cmdXGlyphArray (int len);  // XDV only
-		virtual void cmdXGlyphString (int len); // XDV format 5 only
-		virtual void cmdXPic (int len);         // XDV format 5 only
+		virtual void cmdXGlyphString (int len); // XDV version 5 only
+		virtual void cmdXPic (int len);         // XDV version 5 only
 
 	private:
-		DVIFormat _dviFormat;  ///< format of DVI file being processed
+		DVIVersion _dviVersion;  ///< DVI version of file being processed
 };
 
 #endif

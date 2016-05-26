@@ -11,9 +11,9 @@ _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 [DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) and
 [EPS](http://en.wikipedia.org/wiki/Encapsulated_PostScript) files to the
 XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
-The latest releases support standard DVI files (format 2) as well as DVI output
-created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (format 3),
-and [XeTeX](http://scripts.sil.org/xetex) (format 5 and 6, also known as XDV).
+The latest releases support standard DVI files (version 2) as well as DVI output
+created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
+and [XeTeX](http://scripts.sil.org/xetex) (version 5 and 6, also known as XDV).
 
 Short overview of the main features:
 

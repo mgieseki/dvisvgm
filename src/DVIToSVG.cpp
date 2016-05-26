@@ -117,7 +117,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	if (!ranges.parse(rangestr, numberOfPages()))
 		throw MessageException("invalid page range format");
 
-	Message::mstream(false, Message::MC_PAGE_NUMBER) << "pre-processing DVI file (format "  << getDVIFormat() << ")\n";
+	Message::mstream(false, Message::MC_PAGE_NUMBER) << "pre-processing DVI file (format version "  << getDVIVersion() << ")\n";
 	if (DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(getActions())) {
 		PreScanDVIReader prescan(getInputStream(), actions);
 		actions->setDVIReader(prescan);
