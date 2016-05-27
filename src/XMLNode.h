@@ -96,7 +96,7 @@ class XMLCommentNode : public XMLNode
 		XMLCommentNode (const std::string &str) : _text(str) {}
 		XMLCommentNode* clone () const {return new XMLCommentNode(*this);}
 		void clear () {_text.clear();}
-		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->\n";}
+		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->";}
 
 	private:
 		std::string _text;
