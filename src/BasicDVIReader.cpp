@@ -284,7 +284,7 @@ void BasicDVIReader::cmdXFontDef (int) {
 	if (_dviVersion == DVI_XDV5)
 		len += readUnsigned(1)+readUnsigned(1);
 	seek(len, ios::cur);
-	if (_dviVersion == DVI_XDV6)
+	if (_dviVersion >= DVI_XDV6)
 		seek(4, ios::cur); // skip subfont index
 	if (flags & 0x0200)   // colored?
 		seek(4, ios::cur);

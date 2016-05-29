@@ -605,8 +605,8 @@ void DVIReader::cmdXFontDef (int) {
 	double ptsize = _dvi2bp*readUnsigned(4);
 	UInt16 flags = readUnsigned(2);
 	UInt8 psname_len = readUnsigned(1);
-	UInt8 fmname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;
-	UInt8 stname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;
+	UInt8 fmname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;  // length of family name
+	UInt8 stname_len = getDVIVersion() == DVI_XDV5 ? readUnsigned(1) : 0;  // length of style name
 	string fontname = readString(psname_len);
 	UInt32 fontIndex=0;
 	if (getDVIVersion() == DVI_XDV5)
