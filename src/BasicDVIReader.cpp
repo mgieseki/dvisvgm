@@ -45,40 +45,40 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 	doesn't need to know the exact DVI command format. Some cmdFOO methods are used for multiple
 	DVI commands because they only differ in length of their parameters. */
 	static const DVICommand commands[] = {
-		{&BasicDVIReader::cmdSetChar, 1},     {&BasicDVIReader::cmdSetChar, 2},      // 128-129
-		{&BasicDVIReader::cmdSetChar, 3},     {&BasicDVIReader::cmdSetChar, 4},      // 130-131
-		{&BasicDVIReader::cmdSetRule, 8},                                            // 132
-		{&BasicDVIReader::cmdPutChar, 1},     {&BasicDVIReader::cmdPutChar, 2},      // 133-134
-		{&BasicDVIReader::cmdPutChar, 3},     {&BasicDVIReader::cmdPutChar, 4},      // 135-136
-		{&BasicDVIReader::cmdPutRule, 8},                                            // 137
-		{&BasicDVIReader::cmdNop, 0},                                                // 138
-		{&BasicDVIReader::cmdBop, 44},        {&BasicDVIReader::cmdEop, 0},          // 139-140
-		{&BasicDVIReader::cmdPush, 0},        {&BasicDVIReader::cmdPop, 0},          // 141-142
-		{&BasicDVIReader::cmdRight, 1},       {&BasicDVIReader::cmdRight, 2},        // 143-144
-		{&BasicDVIReader::cmdRight, 3},       {&BasicDVIReader::cmdRight, 4},        // 145-146
-		{&BasicDVIReader::cmdW0, 0},                                                 // 147
-		{&BasicDVIReader::cmdW, 1},           {&BasicDVIReader::cmdW, 2},            // 148-149
-		{&BasicDVIReader::cmdW, 3},           {&BasicDVIReader::cmdW, 4},            // 150-151
-		{&BasicDVIReader::cmdX0, 0},                                                 // 152
-		{&BasicDVIReader::cmdX, 1},           {&BasicDVIReader::cmdX, 2},            // 153-154
-		{&BasicDVIReader::cmdX, 3},           {&BasicDVIReader::cmdX, 4},            // 155-156
-		{&BasicDVIReader::cmdDown, 1},        {&BasicDVIReader::cmdDown, 2},         // 157-158
-		{&BasicDVIReader::cmdDown, 3},        {&BasicDVIReader::cmdDown, 4},         // 159-160
-		{&BasicDVIReader::cmdY0, 0},                                                 // 161
-		{&BasicDVIReader::cmdY, 1},           {&BasicDVIReader::cmdY, 2},            // 162-163
-		{&BasicDVIReader::cmdY, 3},           {&BasicDVIReader::cmdY, 4},            // 164-165
-		{&BasicDVIReader::cmdZ0, 0},                                                 // 166
-		{&BasicDVIReader::cmdZ, 1},           {&BasicDVIReader::cmdZ, 2},            // 167-168
-		{&BasicDVIReader::cmdZ, 3},           {&BasicDVIReader::cmdZ, 4},            // 169-170
+		{&BasicDVIReader::cmdSetChar, 1},  {&BasicDVIReader::cmdSetChar, 2},  // 128-129
+		{&BasicDVIReader::cmdSetChar, 3},  {&BasicDVIReader::cmdSetChar, 4},  // 130-131
+		{&BasicDVIReader::cmdSetRule, 8},                                     // 132
+		{&BasicDVIReader::cmdPutChar, 1},  {&BasicDVIReader::cmdPutChar, 2},  // 133-134
+		{&BasicDVIReader::cmdPutChar, 3},  {&BasicDVIReader::cmdPutChar, 4},  // 135-136
+		{&BasicDVIReader::cmdPutRule, 8},                                     // 137
+		{&BasicDVIReader::cmdNop, 0},                                         // 138
+		{&BasicDVIReader::cmdBop, 44},     {&BasicDVIReader::cmdEop, 0},      // 139-140
+		{&BasicDVIReader::cmdPush, 0},     {&BasicDVIReader::cmdPop, 0},      // 141-142
+		{&BasicDVIReader::cmdRight, 1},    {&BasicDVIReader::cmdRight, 2},    // 143-144
+		{&BasicDVIReader::cmdRight, 3},    {&BasicDVIReader::cmdRight, 4},    // 145-146
+		{&BasicDVIReader::cmdW0, 0},                                          // 147
+		{&BasicDVIReader::cmdW, 1},        {&BasicDVIReader::cmdW, 2},        // 148-149
+		{&BasicDVIReader::cmdW, 3},        {&BasicDVIReader::cmdW, 4},        // 150-151
+		{&BasicDVIReader::cmdX0, 0},                                          // 152
+		{&BasicDVIReader::cmdX, 1},        {&BasicDVIReader::cmdX, 2},        // 153-154
+		{&BasicDVIReader::cmdX, 3},        {&BasicDVIReader::cmdX, 4},        // 155-156
+		{&BasicDVIReader::cmdDown, 1},     {&BasicDVIReader::cmdDown, 2},     // 157-158
+		{&BasicDVIReader::cmdDown, 3},     {&BasicDVIReader::cmdDown, 4},     // 159-160
+		{&BasicDVIReader::cmdY0, 0},                                          // 161
+		{&BasicDVIReader::cmdY, 1},        {&BasicDVIReader::cmdY, 2},        // 162-163
+		{&BasicDVIReader::cmdY, 3},        {&BasicDVIReader::cmdY, 4},        // 164-165
+		{&BasicDVIReader::cmdZ0, 0},                                          // 166
+		{&BasicDVIReader::cmdZ, 1},        {&BasicDVIReader::cmdZ, 2},        // 167-168
+		{&BasicDVIReader::cmdZ, 3},        {&BasicDVIReader::cmdZ, 4},        // 169-170
 
-		{&BasicDVIReader::cmdFontNum, 1},     {&BasicDVIReader::cmdFontNum, 2},      // 235-236
-		{&BasicDVIReader::cmdFontNum, 3},     {&BasicDVIReader::cmdFontNum, 4},      // 237-238
-		{&BasicDVIReader::cmdXXX, 1},         {&BasicDVIReader::cmdXXX, 2},          // 239-240
-		{&BasicDVIReader::cmdXXX, 3},         {&BasicDVIReader::cmdXXX, 4},          // 241-242
-		{&BasicDVIReader::cmdFontDef, 1},     {&BasicDVIReader::cmdFontDef, 2},      // 243-244
-		{&BasicDVIReader::cmdFontDef, 3},     {&BasicDVIReader::cmdFontDef, 4},      // 245-246
-		{&BasicDVIReader::cmdPre, 0},         {&BasicDVIReader::cmdPost, 0},         // 247-248
-		{&BasicDVIReader::cmdPostPost, 0},                                           // 249
+		{&BasicDVIReader::cmdFontNum, 1},  {&BasicDVIReader::cmdFontNum, 2},  // 235-236
+		{&BasicDVIReader::cmdFontNum, 3},  {&BasicDVIReader::cmdFontNum, 4},  // 237-238
+		{&BasicDVIReader::cmdXXX, 1},      {&BasicDVIReader::cmdXXX, 2},      // 239-240
+		{&BasicDVIReader::cmdXXX, 3},      {&BasicDVIReader::cmdXXX, 4},      // 241-242
+		{&BasicDVIReader::cmdFontDef, 1},  {&BasicDVIReader::cmdFontDef, 2},  // 243-244
+		{&BasicDVIReader::cmdFontDef, 3},  {&BasicDVIReader::cmdFontDef, 4},  // 245-246
+		{&BasicDVIReader::cmdPre, 0},      {&BasicDVIReader::cmdPost, 0},     // 247-248
+		{&BasicDVIReader::cmdPostPost, 0},                                    // 249
 	};
 
 	const int opcode = readByte();
@@ -95,8 +95,8 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 		handler = &BasicDVIReader::cmdFontNum0;
 		param = opcode-171;
 	}
-   else if (evalXDVOpcode(opcode, handler))
-      num_param_bytes = 0;
+	else if (evalXDVOpcode(opcode, handler))
+		num_param_bytes = 0;
 	else if (_dviVersion == DVI_PTEX && opcode == 255) {  // direction command set by pTeX?
 		handler = &BasicDVIReader::cmdDir;
 		num_param_bytes = 1;
@@ -121,29 +121,29 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
  *  @param[in] op the opcode to check
  *  @param[out] handler corresponding command handler if opcode is valid */
 bool BasicDVIReader::evalXDVOpcode (int op, CommandHandler &handler) const {
-   static const struct {
-      int min, max;  // minimal and maximal opcode in XDV section
-   } xdvranges[] = {
-      {251, 254},  // XDV5
-      {252, 253},  // XDV6
-      {252, 254},  // XDV7
-   };
-   int index = _dviVersion-DVI_XDV5;
-   if (_dviVersion < DVI_XDV5 || _dviVersion > DVI_XDV7 || op < xdvranges[index].min || op > xdvranges[index].max)
-      return false;
+	static const struct {
+		int min, max;  // minimal and maximal opcode in XDV section
+	} xdvranges[] = {
+		{251, 254},  // XDV5
+		{252, 253},  // XDV6
+		{252, 254},  // XDV7
+	};
+	int index = _dviVersion-DVI_XDV5;
+	if (_dviVersion < DVI_XDV5 || _dviVersion > DVI_XDV7 || op < xdvranges[index].min || op > xdvranges[index].max)
+		return false;
 
-   static const CommandHandler handlers[] = {
-      &BasicDVIReader::cmdXPic,
-      &BasicDVIReader::cmdXFontDef,
-      &BasicDVIReader::cmdXGlyphArray,
-      &BasicDVIReader::cmdXTextAndGlyphs,
-      &BasicDVIReader::cmdXGlyphString
-   };
-   index = op-251;
-   if (_dviVersion == DVI_XDV5 && op == 254)
-      index++;
-   handler = handlers[index];
-   return true;
+	static const CommandHandler handlers[] = {
+		&BasicDVIReader::cmdXPic,
+		&BasicDVIReader::cmdXFontDef,
+		&BasicDVIReader::cmdXGlyphArray,
+		&BasicDVIReader::cmdXTextAndGlyphs,
+		&BasicDVIReader::cmdXGlyphString
+	};
+	index = op-251;
+	if (_dviVersion == DVI_XDV5 && op == 254)
+		index++;
+	handler = handlers[index];
+	return true;
 }
 
 

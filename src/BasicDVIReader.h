@@ -62,7 +62,7 @@ class BasicDVIReader : public StreamReader
 		virtual int evalCommand (CommandHandler &handler, int &param);
 		virtual int executeCommand ();
 		void executePostPost ();
-      bool evalXDVOpcode (int op, CommandHandler &handler) const;
+		bool evalXDVOpcode (int op, CommandHandler &handler) const;
 
 		// the following methods represent the DVI commands
 		// they are called by executeCommand and should not be used directly
