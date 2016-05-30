@@ -105,7 +105,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 
 	// However, we record all required fonts
 	_usedFonts.insert(font);
-	_svg.appendChar(c, x, y, *font);
+	_svg.appendChar(c, x, y);
 
 	static string fontname;
 	GlyphTracerMessages callback(fontname != font->name(), false);

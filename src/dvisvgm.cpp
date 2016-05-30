@@ -253,7 +253,7 @@ int main (int argc, char *argv[]) {
 		SpecialActions::PROGRESSBAR_DELAY = args.progress_arg();
 	}
 	Color::SUPPRESS_COLOR_NAMES = !args.colornames_given();
-	SVGTree::CREATE_STYLE = !args.no_styles_given();
+	SVGTree::CREATE_CSS = !args.no_styles_given();
 	SVGTree::USE_FONTS = !args.no_fonts_given();
 	SVGTree::CREATE_USE_ELEMENTS = args.no_fonts_arg() < 1;
 	SVGTree::ZOOM_FACTOR = args.zoom_arg();

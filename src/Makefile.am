@@ -167,8 +167,18 @@ libdvisvgm_a_SOURCES = \
 	StreamWriter.h \
 	Subfont.cpp \
 	Subfont.h \
+	SVGCharHandler.cpp \
+	SVGCharHandler.h \
+	SVGCharHandlerFactory.cpp \
+	SVGCharHandlerFactory.h \
+	SVGCharPathHandler.cpp \
+	SVGCharPathHandler.h \
+	SVGCharTspanTextHandler.cpp \
+	SVGCharTspanTextHandler.h \
 	SVGOutput.cpp \
 	SVGOutput.h \
+	SVGSingleCharTextHandler.cpp \
+	SVGSingleCharTextHandler.h \
 	SVGTree.cpp \
 	SVGTree.h \
 	System.cpp \

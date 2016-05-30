@@ -241,6 +241,11 @@
     <ClCompile Include="..\src\StreamReader.cpp" />
     <ClCompile Include="..\src\StreamWriter.cpp" />
     <ClCompile Include="..\src\Subfont.cpp" />
+    <ClCompile Include="..\src\SVGCharHandler.cpp" />
+    <ClCompile Include="..\src\SVGCharHandlerFactory.cpp" />
+    <ClCompile Include="..\src\SVGCharPathHandler.cpp" />
+    <ClCompile Include="..\src\SVGSingleCharTextHandler.cpp" />
+    <ClCompile Include="..\src\SVGCharTspanTextHandler.cpp" />
     <ClCompile Include="..\src\SVGOutput.cpp" />
     <ClCompile Include="..\src\SVGTree.cpp" />
     <ClCompile Include="..\src\System.cpp" />
@@ -299,6 +304,11 @@
     <ClInclude Include="..\src\ShadingPatch.h" />
     <ClInclude Include="..\src\SignalHandler.h" />
     <ClInclude Include="..\src\Subfont.h" />
+    <ClInclude Include="..\src\SVGCharHandler.h" />
+    <ClInclude Include="..\src\SVGCharHandlerFactory.h" />
+    <ClInclude Include="..\src\SVGCharPathHandler.h" />
+    <ClInclude Include="..\src\SVGSingleCharTextHandler.h" />
+    <ClInclude Include="..\src\SVGCharTspanTextHandler.h" />
     <ClInclude Include="..\src\SVGOutput.h" />
     <ClInclude Include="..\src\System.h" />
     <ClInclude Include="..\src\TensorProductPatch.h" />
