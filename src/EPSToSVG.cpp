@@ -76,7 +76,7 @@ void EPSToSVG::convert () {
 		" x " << XMLString(bbox.height()*bp2pt) << "pt"
 		" (" << XMLString(bbox.width()*bp2mm) << "mm"
 		" x " << XMLString(bbox.height()*bp2mm) << "mm)\n";
-	Message::mstream(false, Message::MC_PAGE_WRITTEN) << "graphic written to " << (svgfname.empty() ? "<stdout>" : svgfname) << '\n';
+	Message::mstream(false, Message::MC_PAGE_WRITTEN) << "output written to " << (svgfname.empty() ? "<stdout>" : svgfname) << '\n';
 }
 
 

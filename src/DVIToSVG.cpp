@@ -98,7 +98,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		embedFonts(_svg.rootNode());
 		_svg.write(_out.getPageStream(getCurrentPageNumber(), numberOfPages()));
 		string fname = _out.filename(i, numberOfPages());
-		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\npage written to " << (fname.empty() ? "<stdout>" : fname) << '\n';
+		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << (fname.empty() ? "<stdout>" : fname) << '\n';
 		_svg.reset();
 		static_cast<DVIToSVGActions*>(getActions())->reset();
 	}
@@ -203,7 +203,7 @@ void DVIToSVG::endPage (unsigned pageno) {
 		const double bp2pt = 72.27/72;
 		const double bp2mm = 25.4/72;
 		Message::mstream(false) << '\n';
-		Message::mstream(false, Message::MC_PAGE_SIZE) << "page size: " << XMLString(bbox.width()*bp2pt) << "pt"
+		Message::mstream(false, Message::MC_PAGE_SIZE) << "graphic size: " << XMLString(bbox.width()*bp2pt) << "pt"
 			" x " << XMLString(bbox.height()*bp2pt) << "pt"
 			" (" << XMLString(bbox.width()*bp2mm) << "mm"
 			" x " << XMLString(bbox.height()*bp2mm) << "mm)";
