@@ -160,8 +160,7 @@ void DVIToSVG::endPage (unsigned pageno) {
 
 	SpecialManager::instance().notifyEndPage(pageno);
 	// set bounding box and apply page transformations
-	BoundingBox &bbox = getActions()->bbox();
-	bbox.unlock();
+	BoundingBox bbox = getActions()->bbox();
 	Matrix matrix;
 	getPageTransformation(matrix);
 	static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
