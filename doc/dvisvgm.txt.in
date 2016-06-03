@@ -120,7 +120,8 @@ Additionally, dvisvgm also supports the following format specifiers:
    *dvi*::: page size stored in the DVI file
    *min*::: computes the minimal/tightest bounding box
    *none*::: no bounding box is assigned
-	*preview*::: bounding box data computed by the preview package (if present in the dvi file)
+	*papersize*::: box sizes specified by 'papersize' specials present in the DVI file
+	*preview*::: bounding box data computed by the preview package (if present in the DVI file)
 //
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
@@ -653,6 +654,14 @@ supports the plain HyperTeX special constructs as created with hyperref package 
 By default, all linked areas of the document are marked by a rectangle. Option *--linkmark* allows to change
 this behavior. See above for further details. Information on syntax and semantics of the HyperTeX specials can be
 found in the http://www.ctan.org/pkg/hyperref[hyperref manual].
+
+*papersize*::
+The 'papersize' special, which is an extension introduced by dvips, can be used to specify the widths and
+heights of the pages in the DVI file. It affects the page it appears on as well as all following pages until
+another papersize special is found. If there is more than one papersize special present on a page, dvisvgm
+applies the last one. However, in order to stay compatible with previous versions of dvisvgm that did not
+evaluate these specials, their processing must be explicitly enabled by adding option *--bbox=papersize* on
+the command-line. Otherwise, dvisvgm ignores them and computes tight bounding boxes.
 
 *pdf*::
 pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently, only

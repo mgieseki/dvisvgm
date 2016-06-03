@@ -128,7 +128,7 @@ static bool set_cache_dir (const CommandLine &args) {
 
 
 static bool check_bbox (const string &bboxstr) {
-	const char *formats[] = {"none", "min", "preview", "dvi", 0};
+	const char *formats[] = {"none", "min", "preview", "papersize", "dvi", 0};
 	for (const char **p=formats; *p; ++p)
 		if (bboxstr == *p)
 			return true;

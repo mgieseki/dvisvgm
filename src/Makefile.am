@@ -133,6 +133,8 @@ libdvisvgm_a_SOURCES = \
 	PageSize.cpp \
 	PageSize.h \
 	Pair.h \
+	PapersizeSpecialHandler.cpp \
+	PapersizeSpecialHandler.h \
 	PathClipper.cpp \
 	PathClipper.h \
 	PdfSpecialHandler.cpp \

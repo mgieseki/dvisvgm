@@ -263,6 +263,9 @@
     <ClCompile Include="..\src\psdefs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PapersizeSpecialHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BasicDVIReader.h">
@@ -536,6 +539,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PapersizeSpecialHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AGLTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

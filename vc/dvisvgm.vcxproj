@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -225,6 +225,7 @@
     <ClCompile Include="..\src\NoPsSpecialHandler.cpp" />
     <ClCompile Include="..\src\PageRanges.cpp" />
     <ClCompile Include="..\src\PageSize.cpp" />
+    <ClCompile Include="..\src\PapersizeSpecialHandler.cpp" />
     <ClCompile Include="..\src\PathClipper.cpp" />
     <ClCompile Include="..\src\PdfSpecialHandler.cpp" />
     <ClCompile Include="..\src\PreScanDVIReader.cpp" />
@@ -262,6 +263,7 @@
     <ClCompile Include="..\src\XMLString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\AGLTable.h" />
     <ClInclude Include="..\src\BasicDVIReader.h" />
     <ClInclude Include="..\src\Bezier.h" />
     <ClInclude Include="..\src\BgColorSpecialHandler.h" />
@@ -291,6 +293,7 @@
     <ClInclude Include="..\src\NoPsSpecialHandler.h" />
     <ClInclude Include="..\src\NumericRanges.h" />
     <ClInclude Include="..\src\PageRanges.h" />
+    <ClInclude Include="..\src\PapersizeSpecialHandler.h" />
     <ClInclude Include="..\src\PathClipper.h" />
     <ClInclude Include="..\src\PdfSpecialHandler.h" />
     <ClInclude Include="..\src\PreScanDVIReader.h" />

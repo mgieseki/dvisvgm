@@ -34,8 +34,9 @@
 #include "InputReader.h"
 #include "PageRanges.h"
 #include "PageSize.h"
+#include "PreScanDVIReader.h"
 #include "SVGOutput.h"
-//
+
 ///////////////////////////////////
 // special handlers
 
@@ -43,8 +44,9 @@
 #include "ColorSpecialHandler.h"
 #include "DvisvgmSpecialHandler.h"
 #include "EmSpecialHandler.h"
-#include "PdfSpecialHandler.h"
 #include "HtmlSpecialHandler.h"
+#include "PapersizeSpecialHandler.h"
+#include "PdfSpecialHandler.h"
 #ifndef HAVE_LIBGS
 	#include "NoPsSpecialHandler.h"
 #endif
@@ -52,7 +54,6 @@
 	#include "PsSpecialHandler.h"
 #endif
 #include "TpicSpecialHandler.h"
-#include "PreScanDVIReader.h"
 
 ///////////////////////////////////
 
@@ -159,7 +160,7 @@ void DVIToSVG::leaveEndPage (unsigned) {
 
 	// set bounding box and apply page transformations
 	BoundingBox bbox = getActions()->bbox();  // bounding box derived from the DVI commands executed
-	if (_bboxFormatString == "min" || _bboxFormatString == "preview") {
+	if (_bboxFormatString == "min" || _bboxFormatString == "preview" || _bboxFormatString == "papersize") {
 		Matrix matrix;
 		getPageTransformation(matrix);
 		bbox.transform(matrix);
@@ -293,14 +294,15 @@ void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 	else {
 		// add special handlers
 		SpecialHandler *handlers[] = {
-			0,                          // placeholder for PsSpecialHandler
-			new BgColorSpecialHandler,  // handles background color special
-			new ColorSpecialHandler,    // handles color specials
-			new DvisvgmSpecialHandler,  // handles raw SVG embeddings
-			new EmSpecialHandler,       // handles emTeX specials
-			new HtmlSpecialHandler,     // handles hyperref specials
-			new PdfSpecialHandler,      // handles pdf specials
-			new TpicSpecialHandler,     // handles tpic specials
+			0,                           // placeholder for PsSpecialHandler
+			new BgColorSpecialHandler,   // handles background color special
+			new ColorSpecialHandler,     // handles color specials
+			new DvisvgmSpecialHandler,   // handles raw SVG embeddings
+			new EmSpecialHandler,        // handles emTeX specials
+			new HtmlSpecialHandler,      // handles hyperref specials
+			new PapersizeSpecialHandler, // handles papersize special
+			new PdfSpecialHandler,       // handles pdf specials
+			new TpicSpecialHandler,      // handles tpic specials
 			0
 		};
 		SpecialHandler **p = handlers;

@@ -423,15 +423,15 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 			bool isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
 			actions.bbox().lock();
 
-			if (isBaselineHorizontal) {
+			if (!isBaselineHorizontal)
+				Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
+			else {
 				const double bp2pt = 72.27/72.0;
 				Message::mstream() <<
 					"width=" << XMLString(w*bp2pt) << "pt, "
 					"height=" << XMLString(h*bp2pt) << "pt, "
 					"depth=" << XMLString(d*bp2pt) << "pt\n";
 			}
-			else
-				Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
 		}
 #if 0
 		XMLElementNode *rect = new XMLElementNode("rect");
@@ -1237,6 +1237,16 @@ void PsSpecialHandler::ClippingStack::dup (int saveID) {
 
 
 const char** PsSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", "pst:", "PST:", 0};
+	static const char *pfx[] = {
+		"header=",    // read and execute PS header file prior to the following PS statements
+		"psfile=",    // read and execute PS file
+		"PSfile=",    // dito
+		"ps:",        // execute literal PS code wrapped by @beginspecial and @endspecial
+		"ps::",       // execute literal PS code without additional adaption of the drawing position
+		"!",          // execute literal PS header code following this prefix
+		"\"",         // execute literal PS code following this prefix
+		"pst:",       // dito
+		"PST:",       // same as "ps:"
+		0};
 	return pfx;
 }
