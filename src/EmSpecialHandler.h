@@ -41,17 +41,16 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		const char* name () const   {return "em";}
 		const char* info () const   {return "line drawing statements of the emTeX special set";}
 		const char** prefixes () const;
-		bool process (const char *prefix, std::istream &in, SpecialActions *actions);
+		bool process (const char *prefix, std::istream &in, SpecialActions &actions);
 
 	protected:
-		void dviEndPage (unsigned pageno);
+		void dviEndPage (unsigned pageno, SpecialActions &actions);
 
 	private:
 		std::map<int, DPair> _points; ///< points defined by special em:point
 		std::list<Line> _lines;       ///< list of lines with undefined end points
 		double _linewidth;            ///< global line width
 		DPair _pos;                   ///< current position of "graphic cursor"
-		SpecialActions *_actions;
 };
 
 #endif

@@ -55,52 +55,52 @@ TEST_F(ColorSpecialTest, readColor) {
 
 TEST_F(ColorSpecialTest, rgb) {
 	std::istringstream iss("rgb 1 0 1");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff00ff));
 }
 
 
 TEST_F(ColorSpecialTest, hsb) {
 	std::istringstream iss("hsb 1 0.5 1");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff8080));
 }
 
 
 TEST_F(ColorSpecialTest, cmyk) {
 	std::istringstream iss("cmyk 0.1 0.2 0.4 0.6");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0x5c523d));
 }
 
 
 TEST_F(ColorSpecialTest, stack) {
 	std::istringstream iss("push rgb 1 0 0");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
 	iss.clear();
 	iss.str("push Blue");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0x0000ff));
 	iss.clear();
 	iss.str("pop");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
 }
 
 
 TEST_F(ColorSpecialTest, constant) {
 	std::istringstream iss("RedViolet");
-	handler.process(0, iss, &actions);
+	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0x9600a8));
 }
 
 
 TEST_F(ColorSpecialTest, errors) {
 	std::istringstream iss("UnknownColor");
-	EXPECT_THROW(handler.process(0, iss, &actions), SpecialException);
+	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
 	iss.clear();
 	iss.str("blue");
-	EXPECT_THROW(handler.process(0, iss, &actions), SpecialException);
+	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
 }
 

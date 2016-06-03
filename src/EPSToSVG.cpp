@@ -58,7 +58,7 @@ void EPSToSVG::convert () {
 			"ury=" << bbox.maxY();
 	try {
 		PsSpecialHandler pshandler;
-		pshandler.process("psfile=", ss, this);
+		pshandler.process("psfile=", ss, *this);
 	}
 	catch (...) {
 		progress(0);  // remove progress message

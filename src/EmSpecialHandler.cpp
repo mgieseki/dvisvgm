@@ -30,7 +30,7 @@
 using namespace std;
 
 
-EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4*72/72.27), _actions(0) {
+EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4*72/72.27) {
 }
 
 
@@ -70,7 +70,7 @@ static DPair cut_vector (char c, const DPair &v, double lw) {
  * @param[in] c2 cut method of second endpoint ('h', 'v' or 'p')
  * @param[in] lw line width in PS point units
  * @param[in] actions object providing the actions that can be performed by the SpecialHandler */
-static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions *actions) {
+static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions &actions) {
 	XMLElementNode *node=0;
 	DPair dir = p2-p1;
 	if (dir.x() == 0 || dir.y() == 0 || (c1 == 'p' && c2 == 'p')) {
@@ -81,10 +81,10 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		node->addAttribute("x2", p2.x());
 		node->addAttribute("y2", p2.y());
 		node->addAttribute("stroke-width", lw);
-		node->addAttribute("stroke", actions->getColor().svgColorString());
+		node->addAttribute("stroke", actions.getColor().svgColorString());
 		// update bounding box
-		actions->embed(p1);
-		actions->embed(p2);
+		actions.embed(p1);
+		actions.embed(p2);
 	}
 	else {
 		// draw polygon
@@ -99,15 +99,15 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 			 << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
 			 << XMLString(q21.x()) << ',' << XMLString(q21.y());
 		node->addAttribute("points", oss.str());
-		if (actions->getColor() != Color::BLACK)
-			node->addAttribute("fill", actions->getColor().svgColorString());
+		if (actions.getColor() != Color::BLACK)
+			node->addAttribute("fill", actions.getColor().svgColorString());
 		// update bounding box
-		actions->embed(q11);
-		actions->embed(q12);
-		actions->embed(q21);
-		actions->embed(q22);
+		actions.embed(q11);
+		actions.embed(q12);
+		actions.embed(q21);
+		actions.embed(q22);
 	}
-	actions->appendToPage(node);
+	actions.appendToPage(node);
 }
 
 
@@ -139,7 +139,7 @@ static double read_length (InputReader &in) {
 }
 
 
-bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
 	// em:moveto => move graphic cursor to dvi cursor
 	// em:lineto => draw line from graphic cursor to dvi cursor, move graphic cursor to dvi cursor
 	// em:linewidth <w> => set line width to <w>
@@ -156,53 +156,50 @@ bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	// supported length units: pt, pc, in, bp, cm, mm, dd, cc, sp
 	// default line width: 0.4pt
 
-	if (actions) {
-		_actions = actions;  // save pointer to SpecialActions for later use in endPage
-		StreamInputBuffer ib(is, 128);
-		BufferInputReader in(ib);
-		string cmd = in.getWord();
-		if (cmd == "moveto")
-			_pos = DPair(actions->getX(), actions->getY());
-		else if (cmd == "lineto") {
-			DPair p(actions->getX(), actions->getY());
-			create_line(_pos, p, 'p', 'p', _linewidth, actions);
-			_pos = p;
-		}
-		else if (cmd == "linewidth")
-			_linewidth = read_length(in);
-		else if (cmd == "point") {
-			DPair p(actions->getX(), actions->getY());
-			int n = in.getInt();
-			if (in.getPunct() == ',') {
-				p.x(in.getDouble());
-				if (in.getPunct() == ',')
-					p.y(in.getDouble());
-			}
-			_points[n] = p;
-		}
-		else if (cmd == "line") {
-			int n1 = in.getInt();
-			int c1 = 'p';
-			if (isalpha(in.peek()))
-				c1 = in.get();
-			in.getPunct();
-			int n2 = in.getInt();
-			int c2 = 'p';
-			if (isalpha(in.peek()))
-				c2 = in.get();
-			double lw = _linewidth;
+	StreamInputBuffer ib(is, 128);
+	BufferInputReader in(ib);
+	string cmd = in.getWord();
+	if (cmd == "moveto")
+		_pos = DPair(actions.getX(), actions.getY());
+	else if (cmd == "lineto") {
+		DPair p(actions.getX(), actions.getY());
+		create_line(_pos, p, 'p', 'p', _linewidth, actions);
+		_pos = p;
+	}
+	else if (cmd == "linewidth")
+		_linewidth = read_length(in);
+	else if (cmd == "point") {
+		DPair p(actions.getX(), actions.getY());
+		int n = in.getInt();
+		if (in.getPunct() == ',') {
+			p.x(in.getDouble());
 			if (in.getPunct() == ',')
-				lw = read_length(in);
-			map<int,DPair>::iterator it1=_points.find(n1);
-			map<int,DPair>::iterator it2=_points.find(n2);
-			if (it1 != _points.end() && it2 != _points.end())
-				create_line(it1->second, it2->second, char(c1), char(c2), lw, actions);
-			else {
-				// Line endpoints havn't necessarily to be defined before
-				// a line definition. If a point wasn't defined yet we push the line
-				// in a wait list and process the lines at the end of the page.
-				_lines.push_back(Line(n1, n2, char(c1), char(c2), lw));
-			}
+				p.y(in.getDouble());
+		}
+		_points[n] = p;
+	}
+	else if (cmd == "line") {
+		int n1 = in.getInt();
+		int c1 = 'p';
+		if (isalpha(in.peek()))
+			c1 = in.get();
+		in.getPunct();
+		int n2 = in.getInt();
+		int c2 = 'p';
+		if (isalpha(in.peek()))
+			c2 = in.get();
+		double lw = _linewidth;
+		if (in.getPunct() == ',')
+			lw = read_length(in);
+		map<int,DPair>::iterator it1=_points.find(n1);
+		map<int,DPair>::iterator it2=_points.find(n2);
+		if (it1 != _points.end() && it2 != _points.end())
+			create_line(it1->second, it2->second, char(c1), char(c2), lw, actions);
+		else {
+			// Line endpoints havn't necessarily to be defined before
+			// a line definition. If a point wasn't defined yet we push the line
+			// in a wait list and process the lines at the end of the page.
+			_lines.push_back(Line(n1, n2, char(c1), char(c2), lw));
 		}
 	}
 	return true;
@@ -211,15 +208,13 @@ bool EmSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 
 /** This method is called at the end of a DVI page. Here we have to draw all pending
  *   lines that are still in the line list. All line endpoints must be defined until here. */
-void EmSpecialHandler::dviEndPage (unsigned pageno) {
-	if (_actions) {
-		FORALL(_lines, list<Line>::iterator, it) {
-			map<int,DPair>::iterator pit1=_points.find(it->p1);
-			map<int,DPair>::iterator pit2=_points.find(it->p2);
-			if (pit1 != _points.end() && pit2 != _points.end())
-				create_line(pit1->second, pit2->second, it->c1, it->c2, it->width, _actions);
-			// all lines with still undefined points are ignored
-		}
+void EmSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
+	FORALL(_lines, list<Line>::iterator, it) {
+		map<int,DPair>::iterator pit1=_points.find(it->p1);
+		map<int,DPair>::iterator pit2=_points.find(it->p2);
+		if (pit1 != _points.end() && pit2 != _points.end())
+			create_line(pit1->second, pit2->second, it->c1, it->c2, it->width, actions);
+		// all lines with still undefined points are ignored
 	}
 	// line and point definitions are local to a page
 	_lines.clear();

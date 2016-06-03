@@ -63,13 +63,13 @@ void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
 
 
 void DVIToSVGActions::moveToX (double x) {
-	SpecialManager::instance().notifyPositionChange(getX(), getY());
+	SpecialManager::instance().notifyPositionChange(getX(), getY(), *this);
 	_svg.setX(x);
 }
 
 
 void DVIToSVGActions::moveToY (double y) {
-	SpecialManager::instance().notifyPositionChange(getX(), getY());
+	SpecialManager::instance().notifyPositionChange(getX(), getY(), *this);
 	_svg.setY(y);
 }
 
@@ -207,9 +207,9 @@ void DVIToSVGActions::setFont (int num, const Font &font) {
 void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocessing) {
 	try {
 		if (preprocessing)
-			SpecialManager::instance().preprocess(spc, this);
+			SpecialManager::instance().preprocess(spc, *this);
 		else
-			SpecialManager::instance().process(spc, dvi2bp, this);
+			SpecialManager::instance().process(spc, dvi2bp, *this);
 		// @@ output message in case of unsupported specials?
 	}
 	catch (const SpecialException &e) {
@@ -223,6 +223,7 @@ void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocess
  *  @param[in] c array with 10 components representing \\count0 ... \\count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
+	SpecialManager::instance().notifyBeginPage(pageno, *this);
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
 	if (_boxes)
@@ -232,6 +233,7 @@ void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage (unsigned pageno) {
+	SpecialManager::instance().notifyEndPage(pageno, *this);
 	_svg.transformPage(_pageMatrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color

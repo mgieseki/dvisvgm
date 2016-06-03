@@ -174,12 +174,12 @@ void PsSpecialHandler::executeAndSync (istream &is, bool updatePos) {
 }
 
 
-void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActions *actions) {
+void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActions &actions) {
 	initialize();
 	if (_psSection != PS_HEADERS)
 		return;
 
-	_actions = actions;
+	_actions = &actions;
 	if (*prefix == '!') {
 		_headerCode += "\n";
 		_headerCode += string(istreambuf_iterator<char>(is), istreambuf_iterator<char>());
@@ -193,12 +193,12 @@ void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActio
 }
 
 
-bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions *actions) {
+bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
 	// process PS headers only once (in prescan)
 	if (*prefix == '!' || strcmp(prefix, "header=") == 0)
 		return true;
 
-	_actions = actions;
+	_actions = &actions;
 	initialize();
 	if (_psSection != PS_BODY)
 		enterBodySection();
@@ -385,43 +385,43 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 }
 
 
-void PsSpecialHandler::dviEndPage (unsigned) {
+void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 	BoundingBox bbox;
 	if (_previewFilter.getBoundingBox(bbox)) {  // is there any data written by preview package?
 		double w = max(0.0, _previewFilter.width());
 		double h = max(0.0, _previewFilter.height());
 		double d = max(0.0, _previewFilter.depth());
-		if (_actions && (_actions->getBBoxFormatString() == "preview" || _actions->getBBoxFormatString() == "min")) {
-			if (_actions->getBBoxFormatString() == "preview") {
-				_actions->bbox() = bbox;
+		if (actions.getBBoxFormatString() == "preview" || actions.getBBoxFormatString() == "min") {
+			if (actions.getBBoxFormatString() == "preview") {
+				actions.bbox() = bbox;
 				Message::mstream() << "\napplying bounding box set by";
 			}
 			else {
 				// compute height, depth and width depending on the
 				// tight bounding box derived from the objects on the page
 				double y0 = bbox.maxY()-h;      // y coordinate of the baseline
-				h = _actions->bbox().maxY()-y0;
+				h = actions.bbox().maxY()-y0;
 				if (h < 0) {
 					h = 0;
-					d = _actions->bbox().height();
+					d = actions.bbox().height();
 				}
 				else {
-					d = y0-_actions->bbox().minY();
+					d = y0-actions.bbox().minY();
 					if (d < 0) {
-						h = _actions->bbox().height();
+						h = actions.bbox().height();
 						d = 0;
 					}
 				}
-				w = _actions->bbox().width();
+				w = actions.bbox().width();
 				Message::mstream() << "\ncomputing extents based on data set by";
 			}
 			Message::mstream() << " preview package (version " << _previewFilter.version() << ")\n";
 
 			// apply page transformations to box extents
 			Matrix pagetrans;
-			_actions->getPageTransform(pagetrans);
+			actions.getPageTransform(pagetrans);
 			bool isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
-			_actions->bbox().lock();
+			actions.bbox().lock();
 
 			if (isBaselineHorizontal) {
 				const double bp2pt = 72.27/72.0;
@@ -435,23 +435,23 @@ void PsSpecialHandler::dviEndPage (unsigned) {
 		}
 #if 0
 		XMLElementNode *rect = new XMLElementNode("rect");
-		rect->addAttribute("x", _actions->bbox().minX());
-		rect->addAttribute("y", _actions->bbox().minY());
+		rect->addAttribute("x", actions.bbox().minX());
+		rect->addAttribute("y", actions.bbox().minY());
 		rect->addAttribute("width", w);
 		rect->addAttribute("height", h+d);
 		rect->addAttribute("fill", "none");
 		rect->addAttribute("stroke", "red");
 		rect->addAttribute("stroke-width", "0.5");
-		_actions->appendToPage(rect);
+		actions.appendToPage(rect);
 		if (d > 0) {
 			XMLElementNode *line = new XMLElementNode("line");
-			line->addAttribute("x1", _actions->bbox().minX());
-			line->addAttribute("y1", _actions->bbox().minY()+h);
-			line->addAttribute("x2", _actions->bbox().maxX());
-			line->addAttribute("y2", _actions->bbox().minY()+h);
+			line->addAttribute("x1", actions.bbox().minX());
+			line->addAttribute("y1", actions.bbox().minY()+h);
+			line->addAttribute("x2", actions.bbox().maxX());
+			line->addAttribute("y2", actions.bbox().minY()+h);
 			line->addAttribute("stroke", "blue");
 			line->addAttribute("stroke-width", "0.5");
-			_actions->appendToPage(line);
+			actions.appendToPage(line);
 		}
 #endif
 	}
@@ -726,7 +726,7 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	else {
 		if (PSUncoloredTilingPattern *pattern = dynamic_cast<PSUncoloredTilingPattern*>(it->second))
 			pattern->setColor(color);
-		it->second->apply(_actions);
+		it->second->apply(*_actions);
 		if (PSTilingPattern *pattern = dynamic_cast<PSTilingPattern*>(it->second))
 			_pattern = pattern;
 		else
@@ -917,20 +917,20 @@ static void read_patch_data (ShadingPatch &patch, int edgeflag,
 
 class ShadingCallback : public ShadingPatch::Callback {
 	public:
-		ShadingCallback (SpecialActions *actions, XMLElementNode *parent, int clippathID)
+		ShadingCallback (SpecialActions &actions, XMLElementNode *parent, int clippathID)
 			: _actions(actions), _group(new XMLElementNode("g"))
 		{
 			if (parent)
 				parent->append(_group);
 			else
-				actions->appendToPage(_group);
+				actions.appendToPage(_group);
 			if (clippathID > 0)
 				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
 		}
 
 		void patchSegment (GraphicsPath<double> &path, const Color &color) {
-			if (!_actions->getMatrix().isIdentity())
-				path.transform(_actions->getMatrix());
+			if (!_actions.getMatrix().isIdentity())
+				path.transform(_actions.getMatrix());
 
 			// draw a single patch segment
 			ostringstream oss;
@@ -942,7 +942,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 		}
 
 	private:
-		SpecialActions *_actions;
+		SpecialActions &_actions;
 		XMLElementNode *_group;
 };
 
@@ -961,7 +961,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 		read_patch_data(*patch, edgeflag, it, points, colors);
 		patch->setPoints(points, edgeflag, previousPatch.get());
 		patch->setColors(colors, edgeflag, previousPatch.get());
-		ShadingCallback callback(_actions, _xmlnode, _clipStack.topID());
+		ShadingCallback callback(*_actions, _xmlnode, _clipStack.topID());
 #if 0
 		if (bgcolorGiven) {
 			// fill whole patch area with given background color
@@ -1007,7 +1007,7 @@ void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace,
 		vertex.color.set(colorSpace, it);
 	}
 	LatticeTriangularPatch patch(colorSpace);
-	ShadingCallback callback(_actions, _xmlnode, _clipStack.topID());
+	ShadingCallback callback(*_actions, _xmlnode, _clipStack.topID());
 	while (it.valid()) {
 		// read next row
 		for (int i=0; i < verticesPerRow; i++) {

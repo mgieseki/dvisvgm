@@ -46,21 +46,21 @@ struct DVIPreprocessingListener
 struct DVIBeginPageListener
 {
 	virtual ~DVIBeginPageListener () {}
-	virtual void dviBeginPage (unsigned pageno) =0;
+	virtual void dviBeginPage (unsigned pageno, SpecialActions &actions) =0;
 };
 
 
 struct DVIEndPageListener
 {
 	virtual ~DVIEndPageListener () {}
-	virtual void dviEndPage (unsigned pageno) =0;
+	virtual void dviEndPage (unsigned pageno, SpecialActions &actions) =0;
 };
 
 
 struct DVIPositionListener
 {
 	virtual ~DVIPositionListener () {}
-	virtual void dviMovedTo (double x, double y) =0;
+	virtual void dviMovedTo (double x, double y, SpecialActions &actions) =0;
 };
 
 
@@ -73,8 +73,8 @@ struct SpecialHandler
 	virtual const char* info () const=0;
 	virtual const char* name () const=0;
 	virtual void setDviScaleFactor (double dvi2bp) {}
-	virtual void preprocess (const char *prefix, std::istream &is, SpecialActions *actions) {}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions *actions)=0;
+	virtual void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) {}
+	virtual bool process (const char *prefix, std::istream &is, SpecialActions &actions)=0;
 };
 
 
