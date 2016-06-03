@@ -73,7 +73,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		CharMap& getUsedChars () const        {return _usedChars;}
 		const FontSet& getUsedFonts () const  {return _usedFonts;}
 		void setDVIReader (BasicDVIReader &r) {_dvireader = &r;}
-		void setPageMatrix (const Matrix &tm);
 		double getX() const   {return _dvireader->getXPos();}
 		double getY() const   {return _dvireader->getYPos();}
 		void setX (double x)  {_dvireader->translateToX(x); _svg.setX(x);}
@@ -94,7 +93,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		int _currentFontNum;
 		mutable CharMap _usedChars;
 		FontSet _usedFonts;
-		Matrix *_pageMatrix;  // transformation of whole page
 		Color _bgcolor;
 		BoxMap *_boxes;
 };

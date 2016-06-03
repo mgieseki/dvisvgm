@@ -34,7 +34,7 @@ using namespace std;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvireader(&dvisvg), _pageMatrix(0), _bgcolor(Color::TRANSPARENT), _boxes(0)
+	: _svg(svg), _dvireader(&dvisvg), _bgcolor(Color::TRANSPARENT), _boxes(0)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;
@@ -42,7 +42,6 @@ DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
 
 
 DVIToSVGActions::~DVIToSVGActions () {
-	delete _pageMatrix;
 	delete _boxes;
 }
 
@@ -53,12 +52,6 @@ void DVIToSVGActions::reset() {
 	_bbox = BoundingBox();
 	_currentFontNum = -1;
 	_bgcolor = Color::TRANSPARENT;
-}
-
-
-void DVIToSVGActions::setPageMatrix (const Matrix &matrix) {
-	delete _pageMatrix;
-	_pageMatrix = new Matrix(matrix);
 }
 
 
@@ -234,7 +227,9 @@ void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage (unsigned pageno) {
 	SpecialManager::instance().notifyEndPage(pageno, *this);
-	_svg.transformPage(_pageMatrix);
+	Matrix matrix;
+	_dvireader->getPageTransformation(matrix);
+	_svg.transformPage(matrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color
 		XMLElementNode *r = new XMLElementNode("rect");

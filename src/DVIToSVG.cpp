@@ -139,7 +139,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
  *  executing the BOP actions.
  *  @param[in] pageno physical page number (1 = first page)
  *  @param[in] c contains information about the page (page number etc.) */
-void DVIToSVG::beginPage (unsigned pageno, Int32 *c) {
+void DVIToSVG::enterBeginPage (unsigned pageno, Int32 *c) {
 	if (dynamic_cast<DVIToSVGActions*>(getActions())) {
 		Message::mstream().indent(0);
 		Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing page " << pageno;
@@ -151,19 +151,19 @@ void DVIToSVG::beginPage (unsigned pageno, Int32 *c) {
 }
 
 
-/** This template method is called by parent class DVIReader before
+/** This template method is called by DVIReader::cmdEop() after
  *  executing the EOP actions. */
-void DVIToSVG::endPage (unsigned pageno) {
+void DVIToSVG::leaveEndPage (unsigned) {
 	if (!dynamic_cast<DVIToSVGActions*>(getActions()))
 		return;
 
 	// set bounding box and apply page transformations
-	BoundingBox bbox = getActions()->bbox();
-	Matrix matrix;
-	getPageTransformation(matrix);
-	static_cast<DVIToSVGActions*>(getActions())->setPageMatrix(matrix);
-	if (_bboxFormatString == "min" || _bboxFormatString == "preview")
+	BoundingBox bbox = getActions()->bbox();  // bounding box derived from the DVI commands executed
+	if (_bboxFormatString == "min" || _bboxFormatString == "preview") {
+		Matrix matrix;
+		getPageTransformation(matrix);
 		bbox.transform(matrix);
+	}
 	else if (_bboxFormatString == "dvi") {
 		// center page content
 		double dx = (getPageWidth()-bbox.width())/2;
@@ -196,7 +196,6 @@ void DVIToSVG::endPage (unsigned pageno) {
 		Message::wstream(false) << "\npage is empty\n";
 	if (_bboxFormatString != "none") {
 		_svg.setBBox(bbox);
-
 		const double bp2pt = 72.27/72;
 		const double bp2mm = 25.4/72;
 		Message::mstream(false) << '\n';

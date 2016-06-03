@@ -266,7 +266,7 @@ void DVIReader::cmdBop (int) {
 	_currFontNum = 0;
 	_inPage = true;
 	_pagePos = 0;
-	beginPage(_currPageNum, c);
+	enterBeginPage(_currPageNum, c);
 	if (_actions)
 		_actions->beginPage(_currPageNum, c);
 }
@@ -277,9 +277,9 @@ void DVIReader::cmdEop (int) {
 	if (!_stateStack.empty())
 		throw DVIException("stack not empty at end of page");
 	_inPage = false;
-	endPage(_currPageNum);
 	if (_actions)
 		_actions->endPage(_currPageNum);
+	leaveEndPage(_currFontNum);
 }
 
 

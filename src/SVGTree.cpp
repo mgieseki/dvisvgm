@@ -131,9 +131,9 @@ void SVGTree::prependToPage (XMLNode *node) {
 }
 
 
-void SVGTree::transformPage (const Matrix *usermatrix) {
-	if (usermatrix && !usermatrix->isIdentity())
-		_page->addAttribute("transform", usermatrix->getSVG());
+void SVGTree::transformPage (const Matrix &usermatrix) {
+	if (!usermatrix.isIdentity())
+		_page->addAttribute("transform", usermatrix.getSVG());
 }
 
 

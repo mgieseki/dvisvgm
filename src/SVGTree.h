@@ -62,7 +62,7 @@ class SVGTree {
 		void setMatrix (const Matrix &m)  {_charHandler->setMatrix(m);}
 		void setColor (const Color &c);
 		void setVertical (bool state)     {_charHandler->setVertical(state);}
-		void transformPage (const Matrix *m);
+		void transformPage (const Matrix &m);
 		Color getColor () const           {return _charHandler->getColor();}
 		const Matrix& getMatrix () const  {return _charHandler->getMatrix();}
 		XMLElementNode* rootNode () const {return _root;}
