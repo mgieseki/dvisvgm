@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include "macros.h"
 #include "XMLDocument.h"
 
 using namespace std;

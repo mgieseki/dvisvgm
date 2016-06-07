@@ -33,8 +33,8 @@
 
 class  DVIToSVG;
 struct FileFinder;
-struct Font;
-struct XMLNode;
+class Font;
+class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {

@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include "SVGCharHandler.h"
+#include "XMLNode.h"
 
 using namespace std;
 

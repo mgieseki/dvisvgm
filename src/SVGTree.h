@@ -33,7 +33,7 @@
 
 class  BoundingBox;
 class  Color;
-struct Font;
+class Font;
 class  Matrix;
 class  PhysicalFont;
 

@@ -26,8 +26,8 @@
 #include "MessageException.h"
 
 
-struct SpecialActions;
-class  SpecialManager;
+class SpecialActions;
+class SpecialManager;
 
 
 struct SpecialException : public MessageException
@@ -64,17 +64,17 @@ struct DVIPositionListener
 };
 
 
-struct SpecialHandler
+class SpecialHandler
 {
 	friend class SpecialManager;
-
-	virtual ~SpecialHandler () {}
-	virtual const char** prefixes () const=0;
-	virtual const char* info () const=0;
-	virtual const char* name () const=0;
-	virtual void setDviScaleFactor (double dvi2bp) {}
-	virtual void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) {}
-	virtual bool process (const char *prefix, std::istream &is, SpecialActions &actions)=0;
+	public:
+		virtual ~SpecialHandler () {}
+		virtual const char** prefixes () const=0;
+		virtual const char* info () const=0;
+		virtual const char* name () const=0;
+		virtual void setDviScaleFactor (double dvi2bp) {}
+		virtual void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) {}
+		virtual bool process (const char *prefix, std::istream &is, SpecialActions &actions)=0;
 };
 
 

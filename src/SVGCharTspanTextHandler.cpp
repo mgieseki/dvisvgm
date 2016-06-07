@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include "SVGCharTspanTextHandler.h"
+#include "XMLNode.h"
 
 using namespace std;
 

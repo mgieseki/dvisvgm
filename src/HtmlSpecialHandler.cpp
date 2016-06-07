@@ -24,6 +24,7 @@
 #include "HtmlSpecialHandler.h"
 #include "InputReader.h"
 #include "Message.h"
+#include "SpecialActions.h"
 #include "SVGTree.h"
 
 using namespace std;

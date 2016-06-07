@@ -27,7 +27,7 @@
 #include "SpecialHandler.h"
 
 class InputReader;
-struct SpecialActions;
+class SpecialActions;
 
 class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingListener, public DVIEndPageListener
 {

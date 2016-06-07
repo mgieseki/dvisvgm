@@ -25,16 +25,16 @@
 #include <map>
 #include <ostream>
 #include <string>
+#include <vector>
 
-#include "SpecialActions.h"
 
-
-struct XMLNode
+class XMLNode
 {
-	virtual ~XMLNode () {}
-	virtual XMLNode* clone () const =0;
-	virtual void clear () =0;
-	virtual std::ostream& write (std::ostream &os) const =0;
+	public:
+		virtual ~XMLNode () {}
+		virtual XMLNode* clone () const =0;
+		virtual void clear () =0;
+		virtual std::ostream& write (std::ostream &os) const =0;
 };
 
 

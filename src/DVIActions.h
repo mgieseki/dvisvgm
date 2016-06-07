@@ -26,7 +26,7 @@
 #include "types.h"
 
 class  BoundingBox;
-struct Font;
+class Font;
 class  SpecialManager;
 
 

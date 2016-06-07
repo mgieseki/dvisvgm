@@ -25,7 +25,6 @@
 #include "Color.h"
 #include "Font.h"
 #include "Matrix.h"
-#include "XMLNode.h"
 #include "types.h"
 
 
@@ -52,7 +51,10 @@ class CharProperty {
 };
 
 
-/** Base class for all "character handlers". These handlers create SVG representations
+class XMLElementNode;
+
+
+/** Base class for all character handlers. These handlers create SVG representations
  *  for the added characters and append them to the SVG tree. */
 class SVGCharHandler {
 	public:
@@ -91,7 +93,7 @@ class SVGCharHandler {
 };
 
 
-/** Base class for all "character sequence builders" that create SVG text elements. */
+/** Base class for all character handlers that create SVG <text> elements. */
 class SVGCharTextHandler : public SVGCharHandler {
 	public:
 		SVGCharTextHandler (bool selectFontByClass) : _selectFontByClass(selectFontByClass) {}

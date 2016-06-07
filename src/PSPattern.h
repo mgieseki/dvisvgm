@@ -28,7 +28,7 @@
 #include "Matrix.h"
 
 
-struct SpecialActions;
+class SpecialActions;
 class SVGTree;
 class XMLElementNode;
 

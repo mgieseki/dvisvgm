@@ -26,7 +26,7 @@
 #include "Color.h"
 #include "SpecialHandler.h"
 
-struct SpecialActions;
+class SpecialActions;
 
 class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, public DVIPositionListener
 {

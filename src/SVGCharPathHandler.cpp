@@ -22,6 +22,7 @@
 #include "Font.h"
 #include "FontManager.h"
 #include "SVGCharPathHandler.h"
+#include "XMLNode.h"
 
 using namespace std;
 

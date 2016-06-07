@@ -33,7 +33,7 @@
 
 
 struct FileFinder;
-struct Font;
+class Font;
 class  VirtualFont;
 
 /** This class provides methods for easy DVI font handling.
