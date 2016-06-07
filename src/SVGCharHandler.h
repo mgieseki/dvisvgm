@@ -58,7 +58,7 @@ class XMLElementNode;
  *  for the added characters and append them to the SVG tree. */
 class SVGCharHandler {
 	public:
-		SVGCharHandler () : _color(Color::BLACK), _font(0), _matrix(1), _vertical(false), _initialContextNode(0) {}
+		SVGCharHandler () : _color(Color::BLACK), _font(0), _fontnum(0), _matrix(1), _vertical(false), _initialContextNode(0) {}
 		virtual ~SVGCharHandler() {}
 		virtual void setInitialContextNode (XMLElementNode *node);
 		virtual void appendChar (UInt32 c, double x, double y) =0;
@@ -83,9 +83,9 @@ class SVGCharHandler {
 
 		CharProperty<Color> _color;       ///< current color
 		CharProperty<const Font*> _font;  ///< current font
+		int _fontnum;                     ///< current font ID
 		CharProperty<Matrix> _matrix;     ///< current transformation
 		CharProperty<bool> _vertical;     ///< current writing mode
-		int _fontnum;                     ///< current font ID
 
 	private:
 		XMLElementNode *_initialContextNode;  ///< SVG element the generated character nodes are attached to
