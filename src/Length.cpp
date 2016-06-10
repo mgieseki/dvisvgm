@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
 #include <sstream>
 #include "InputReader.h"
 #include "Length.h"
@@ -28,23 +27,23 @@
 using namespace std;
 
 
-void Length::set (const string &len) {
-	switch (len.length()) {
+void Length::set (const string &lenstr) {
+	switch (lenstr.length()) {
 		case 0:
 			_pt = 0;
 			break;
 		case 1:
-			if (isdigit(len[0]))
-				_pt = len[0] - '0';
+			if (isdigit(lenstr[0]))
+				_pt = lenstr[0] - '0';
 			else
-				throw UnitException("invalid length: "+len);
+				throw UnitException(string("invalid length: ")+lenstr);
 			break;
 		default:
-			istringstream iss(len);
+			istringstream iss(lenstr);
 			StreamInputReader ir(iss);
 			double val;
 			if (!ir.parseDouble(val))
-				throw UnitException("invalid length: "+len);
+				throw UnitException(string("invalid length: ")+lenstr);
 			string unit = ir.getWord();
 			set(val, unit);
 	}
@@ -59,27 +58,71 @@ void Length::set (double val, Unit unit) {
 		case CM: _pt = val/2.54*72.27; break;
 		case MM: _pt = val/25.4*72.27; break;
 		case PC: _pt = val/12*72.27; break;
+		default:
+			// this isn't supposed to happen
+			ostringstream oss;
+			oss << "invalid length unit: (" << unit << ")";
+			throw UnitException(oss.str());
 	}
 }
 
+
+double Length::get (Unit unit) const {
+	switch (unit) {
+		case PT: return pt();
+		case BP: return bp();
+		case IN: return in();
+		case CM: return cm();
+		case MM: return mm();
+		case PC: return pc();
+	}
+	// this isn't supposed to happen
+	ostringstream oss;
+	oss << "invalid length unit: (" << unit << ")";
+	throw UnitException(oss.str());
+}
+
+
+string Length::toString (Unit unit) const {
+	ostringstream oss;
+	oss << get(unit) << unitToString(unit);
+	return oss.str();
+}
+
+
+Length::Unit Length::unit (const std::string &unitstr) {
+	if (unitstr.length() == 2) {
+		switch (UNIT(unitstr[0], unitstr[1])) {
+			case UNIT('p','t'): return PT;
+			case UNIT('b','p'): return BP;
+			case UNIT('i','n'): return IN;
+			case UNIT('c','m'): return CM;
+			case UNIT('m','m'): return MM;
+			case UNIT('p','c'): return PC;
+		}
+	}
+	throw UnitException(string("invalid length unit: ")+unitstr);
+}
+
+
+string Length::unitToString (Unit unit) {
+	switch (unit) {
+		case PT: return "pt";
+		case BP: return "bp";
+		case IN: return "in";
+		case CM: return "cm";
+		case MM: return "mm";
+		case PC: return "pc";
+	}
+	// this isn't supposed to happen
+	return "??";
+}
 
 void Length::set (double val, string unitstr) {
 	if (unitstr.empty())
 		unitstr = "pt";
 	else if (unitstr.length() != 2)
-		throw UnitException("invalid length unit: "+unitstr);
-
-	Unit unit;
-	switch (UNIT(unitstr[0], unitstr[1])) {
-		case UNIT('p','t'): unit = PT; break;
-		case UNIT('b','p'): unit = BP; break;
-		case UNIT('i','n'): unit = IN; break;
-		case UNIT('c','m'): unit = CM; break;
-		case UNIT('m','m'): unit = MM; break;
-		case UNIT('p','c'): unit = PC; break;
-		default:
-			throw UnitException("invalid length unit: "+unitstr);
-	}
-	set(val, unit);
+		throw UnitException(string("invalid length unit: ")+unitstr);
+	set(val, unit(unitstr));
 }
 

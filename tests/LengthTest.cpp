@@ -25,7 +25,7 @@ TEST(LengthTest, set1) {
 	Length len;
 	len.set(1, Length::PT);
 	EXPECT_EQ(len.pt(), 1);
-	
+
 	len.set(72, Length::BP);
 	EXPECT_EQ(len.pt(), 72.27);
 	EXPECT_EQ(len.bp(), 72);
@@ -54,7 +54,7 @@ TEST(LengthTest, set2) {
 	Length len;
 	len.set(1, "pt");
 	EXPECT_EQ(len.pt(), 1);
-	
+
 	len.set(72, "bp");
 	EXPECT_EQ(len.pt(), 72.27);
 	EXPECT_EQ(len.bp(), 72);
@@ -88,7 +88,7 @@ TEST(LengthTest, set3) {
 	Length len;
 	len.set("1pt");
 	EXPECT_EQ(len.pt(), 1);
-	
+
 	len.set("72bp");
 	EXPECT_EQ(len.pt(), 72.27);
 	EXPECT_EQ(len.bp(), 72);
@@ -117,4 +117,18 @@ TEST(LengthTest, set3) {
 
 	ASSERT_THROW(len.set("1xy"), UnitException);
 	ASSERT_THROW(len.set("pt"), UnitException);
+}
+
+
+TEST(LengthTest, unit) {
+	EXPECT_EQ(Length::unit("pt"), Length::PT);
+	EXPECT_EQ(Length::unit("bp"), Length::BP);
+	EXPECT_EQ(Length::unit("in"), Length::IN);
+	EXPECT_EQ(Length::unit("cm"), Length::CM);
+	EXPECT_EQ(Length::unit("mm"), Length::MM);
+	EXPECT_EQ(Length::unit("pc"), Length::PC);
+
+	ASSERT_THROW(Length::unit(""), UnitException);
+	ASSERT_THROW(Length::unit("CM"), UnitException);
+	ASSERT_THROW(Length::unit("pta"), UnitException);
 }

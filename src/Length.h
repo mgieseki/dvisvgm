@@ -41,12 +41,12 @@ class Length
 
 	public:
 		Length () : _pt(0) {}
-		Length (double val, Unit unit=PT)            {set(val, unit);}
-		Length (double val, const std::string &unit) {set(val, unit);}
-		Length (const std::string &len)              {set(len);}
+		Length (double val, Unit unit=PT)               {set(val, unit);}
+		Length (double val, const std::string &unitstr) {set(val, unitstr);}
+		Length (const std::string &lenstr)              {set(lenstr);}
 		void set (double val, Unit unit);
 		void set (double val, std::string unit);
-		void set (const std::string &len);
+		void set (const std::string &lenstr);
 
 		double pt () const {return _pt;}
 		double in () const {return _pt/72.27;}
@@ -54,9 +54,14 @@ class Length
 		double cm () const {return in()*2.54;}
 		double mm () const {return cm()*10;}
 		double pc () const {return in()*12;}
+		double get (Unit unit) const;
+		std::string toString (Unit unit) const;
+
+		static Unit unit (const std::string &unitstr);
+		static std::string unitToString (Unit unit);
 
 	private:
-		double _pt;  // length in TeX point units
+		double _pt;  // length in TeX point units (72.27pt = 1in)
 };
 
 #endif
