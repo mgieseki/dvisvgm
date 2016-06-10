@@ -6,7 +6,6 @@
 
 #include <config.h>
 #include <cstdio>
-#include <iomanip>
 #include "InputReader.h"
 #include "CommandLine.h"
 
