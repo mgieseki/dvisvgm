@@ -32,7 +32,7 @@
 
 using namespace std;
 
-#ifdef __WIN32__
+#ifdef _WIN32
 	#include <direct.h>
 	#include <windows.h>
 	const char *FileSystem::DEVNULL = "nul";
@@ -81,7 +81,7 @@ bool FileSystem::rename (const string &oldname, const string &newname) {
 
 
 UInt64 FileSystem::filesize (const string &fname) {
-#ifdef __WIN32__
+#ifdef _WIN32
 	// unfortunately, stat doesn't work properly under Windows
 	// so we have to use this freaky code
 	WIN32_FILE_ATTRIBUTE_DATA attr;
@@ -104,7 +104,7 @@ string FileSystem::adaptPathSeperators (string path) {
 
 string FileSystem::getcwd () {
 	char buf[1024];
-#ifdef __WIN32__
+#ifdef _WIN32
 	return adaptPathSeperators(_getcwd(buf, 1024));
 #else
 	return ::getcwd(buf, 1024);
@@ -118,7 +118,7 @@ string FileSystem::getcwd () {
 bool FileSystem::chdir (const std::string &dirname) {
 	bool success = false;
 	if (const char *cdirname = dirname.c_str()) {
-#ifdef __WIN32__
+#ifdef _WIN32
 		success = (_chdir(cdirname) == 0);
 #else
 		success = (chdir(cdirname) == 0);
@@ -130,7 +130,7 @@ bool FileSystem::chdir (const std::string &dirname) {
 
 /** Returns the user's home directory. */
 const char* FileSystem::userdir () {
-#ifdef __WIN32__
+#ifdef _WIN32
 	const char *drive=getenv("HOMEDRIVE");
 	const char *path=getenv("HOMEPATH");
 	if (drive && path) {
@@ -158,7 +158,7 @@ const char* FileSystem::userdir () {
 static bool s_mkdir (const string &dirname) {
 	bool success = true;
 	if (!FileSystem::exists(dirname)) {
-#ifdef __WIN32__
+#ifdef _WIN32
 		success = (_mkdir(dirname.c_str()) == 0);
 #else
 		success = (mkdir(dirname.c_str(), 0775) == 0);
@@ -169,7 +169,7 @@ static bool s_mkdir (const string &dirname) {
 
 
 static bool inline s_rmdir (const string &dirname) {
-#ifdef __WIN32__
+#ifdef _WIN32
 	return (_rmdir(dirname.c_str()) == 0);
 #else
 	return (rmdir(dirname.c_str()) == 0);
@@ -212,7 +212,7 @@ bool FileSystem::rmdir (const string &dirname) {
 	bool ok = false;
 	if (isDirectory(dirname)) {
 		ok = true;
-#ifdef __WIN32__
+#ifdef _WIN32
 		string pattern = dirname + "/*";
 		WIN32_FIND_DATA data;
 		HANDLE h = FindFirstFile(pattern.c_str(), &data);
@@ -259,7 +259,7 @@ bool FileSystem::rmdir (const string &dirname) {
 bool FileSystem::exists (const string &fname) {
 	if (const char *cfname = fname.c_str()) {
 
-#ifdef __WIN32__
+#ifdef _WIN32
 		return GetFileAttributes(cfname) != INVALID_FILE_ATTRIBUTES;
 #else
 		struct stat attr;
@@ -273,7 +273,7 @@ bool FileSystem::exists (const string &fname) {
 /** Returns true if 'fname' references a directory. */
 bool FileSystem::isDirectory (const string &fname) {
 	if (const char *cfname = fname.c_str()) {
-#ifdef __WIN32__
+#ifdef _WIN32
 		return GetFileAttributes(cfname) & FILE_ATTRIBUTE_DIRECTORY;
 #else
 		struct stat attr;
@@ -287,7 +287,7 @@ bool FileSystem::isDirectory (const string &fname) {
 /** Returns true if 'fname' references a file. */
 bool FileSystem::isFile (const string &fname) {
 	if (const char *cfname = fname.c_str()) {
-#ifdef __WIN32__
+#ifdef _WIN32
 		ifstream ifs(cfname);
 		return (bool)ifs;
 #else
@@ -301,7 +301,7 @@ bool FileSystem::isFile (const string &fname) {
 
 int FileSystem::collect (const char *dirname, vector<string> &entries) {
 	entries.clear();
-#ifdef __WIN32__
+#ifdef _WIN32
 	string pattern = string(dirname) + "/*";
 	WIN32_FIND_DATA data;
 	HANDLE h = FindFirstFile(pattern.c_str(), &data);

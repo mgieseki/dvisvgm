@@ -22,6 +22,7 @@
 #include <clipper.hpp>
 #include <fstream>
 #include <iostream>
+#include <potracelib.h>
 #include <sstream>
 #include <xxhash.h>
 #include "gzstream.h"
@@ -41,14 +42,6 @@
 #include "SignalHandler.h"
 #include "SVGOutput.h"
 #include "System.h"
-
-#ifdef __MSVC__
-#include <potracelib.h>
-#else
-extern "C" {
-#include <potracelib.h>
-}
-#endif
 
 using namespace std;
 

@@ -22,7 +22,7 @@
 #define DVISVGM_DIRECTORY_H
 
 #include <string>
-#ifdef __WIN32__
+#ifdef _WIN32
 	#include <windows.h>
 #else
 	#include <dirent.h>
@@ -43,7 +43,7 @@ class Directory
 
 	private:
 		std::string _dirname;
-#ifdef __WIN32__
+#ifdef _WIN32
 		bool firstread;
 		HANDLE handle;
 		WIN32_FIND_DATA fileData;

@@ -23,7 +23,7 @@
 
 using namespace std;
 
-#ifdef __WIN32__
+#ifdef _WIN32
 	#include <windows.h>
 #else
 	#include <errno.h>
@@ -32,7 +32,7 @@ using namespace std;
 
 
 Directory::Directory () {
-#if __WIN32__
+#if _WIN32
 	handle = INVALID_HANDLE_VALUE;
 	firstread = true;
 	memset(&fileData, 0, sizeof(WIN32_FIND_DATA));
@@ -44,7 +44,7 @@ Directory::Directory () {
 
 
 Directory::Directory (string dirname) {
-#if __WIN32__
+#if _WIN32
 	handle = INVALID_HANDLE_VALUE;
 	firstread = true;
 	memset(&fileData, 0, sizeof(WIN32_FIND_DATA));
@@ -63,7 +63,7 @@ Directory::~Directory () {
 
 bool Directory::open (string dname) {
 	_dirname = dname;
-#ifdef __WIN32__
+#ifdef _WIN32
 	firstread = true;
 	if (dname[dname.length()-1] == '/' || dname[dname.length()-1] == '\\')
 		dname = dname.substr(0, dname.length()-1);
@@ -78,7 +78,7 @@ bool Directory::open (string dname) {
 
 
 void Directory::close () {
-#ifdef __WIN32__
+#ifdef _WIN32
 	FindClose(handle);
 #else
 	closedir(_dir);
@@ -90,7 +90,7 @@ void Directory::close () {
  *  @param[in] type type of entry to return (a: file or dir, f: file, d: dir)
  *  @return name of entry */
 const char* Directory::read (EntryType type) {
-#ifdef __WIN32__
+#ifdef _WIN32
 	if (handle == INVALID_HANDLE_VALUE)
 		return 0;
 	while (firstread || FindNextFile(handle, &fileData)) {
