@@ -99,8 +99,8 @@ Sets the bounding box of the generated graphic to the specified format. The para
 takes either one of the format specifiers listed below, or a sequence of four comma- or
 whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define the absolute
 coordinates of two diagonal corners of the bounding box. Each length value consists of a floating
-point number and an optional length unit (pt, bp, cm, mm, in, or pc). If the unit is omitted,
-TeX points (pt) are assumed.
+point number and an optional length unit (pt, bp, cm, mm, in, pc, dd, cc, or sp). If the unit is
+omitted, TeX points (pt) are assumed.
 +
 It's also possible to give only one length value 'l'. In this case, the minimal bounding box
 is computed and enlarged by adding (-'l',-'l') to the upper left and ('l','l') to the lower

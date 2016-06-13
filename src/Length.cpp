@@ -22,9 +22,16 @@
 #include "InputReader.h"
 #include "Length.h"
 
-#define UNIT(c1,c2) ((c1 << 8)|c2)
-
 using namespace std;
+
+const double Length::pt2in = 1.0/72.27;
+const double Length::pt2bp = pt2in*72;
+const double Length::pt2cm = pt2in*2.54;
+const double Length::pt2mm = pt2cm*10;
+const double Length::pt2pc = 1.0/12;
+const double Length::pt2dd = 1157.0/1238;
+const double Length::pt2cc = pt2dd/12;
+const double Length::pt2sp = 65536.0;
 
 
 void Length::set (const string &lenstr) {
@@ -53,11 +60,14 @@ void Length::set (const string &lenstr) {
 void Length::set (double val, Unit unit) {
 	switch (unit) {
 		case PT: _pt = val; break;
-		case BP: _pt = val*72.27/72; break;
-		case IN: _pt = val*72.27; break;
-		case CM: _pt = val/2.54*72.27; break;
-		case MM: _pt = val/25.4*72.27; break;
-		case PC: _pt = val/12*72.27; break;
+		case BP: _pt = val/pt2bp; break;
+		case IN: _pt = val/pt2in; break;
+		case CM: _pt = val/pt2cm; break;
+		case MM: _pt = val/pt2mm; break;
+		case PC: _pt = val/pt2pc; break;
+		case DD: _pt = val/pt2dd; break;
+		case CC: _pt = val/pt2cc; break;
+		case SP: _pt = val/pt2sp; break;
 		default:
 			// this isn't supposed to happen
 			ostringstream oss;
@@ -75,6 +85,9 @@ double Length::get (Unit unit) const {
 		case CM: return cm();
 		case MM: return mm();
 		case PC: return pc();
+		case DD: return dd();
+		case CC: return cc();
+		case SP: return sp();
 	}
 	// this isn't supposed to happen
 	ostringstream oss;
@@ -90,7 +103,9 @@ string Length::toString (Unit unit) const {
 }
 
 
-Length::Unit Length::unit (const std::string &unitstr) {
+#define UNIT(c1, c2) ((c1 << 8)|c2)
+
+Length::Unit Length::stringToUnit (const std::string &unitstr) {
 	if (unitstr.length() == 2) {
 		switch (UNIT(unitstr[0], unitstr[1])) {
 			case UNIT('p','t'): return PT;
@@ -99,6 +114,9 @@ Length::Unit Length::unit (const std::string &unitstr) {
 			case UNIT('c','m'): return CM;
 			case UNIT('m','m'): return MM;
 			case UNIT('p','c'): return PC;
+			case UNIT('d','d'): return DD;
+			case UNIT('c','c'): return CC;
+			case UNIT('s','p'): return SP;
 		}
 	}
 	throw UnitException(string("invalid length unit: ")+unitstr);
@@ -113,16 +131,19 @@ string Length::unitToString (Unit unit) {
 		case CM: return "cm";
 		case MM: return "mm";
 		case PC: return "pc";
+		case DD: return "dd";
+		case CC: return "cc";
+		case SP: return "sp";
 	}
 	// this isn't supposed to happen
 	return "??";
 }
+
 
 void Length::set (double val, string unitstr) {
 	if (unitstr.empty())
 		unitstr = "pt";
 	else if (unitstr.length() != 2)
 		throw UnitException(string("invalid length unit: ")+unitstr);
-	set(val, unit(unitstr));
+	set(val, stringToUnit(unitstr));
 }
-
