@@ -72,7 +72,7 @@ class BoundingBox
 		void invalidate ()          {_valid = false;}
 		void operator += (const BoundingBox &bbox);
 		bool operator == (const BoundingBox &bbox) const;
-		bool operator != (const BoundingBox &bbox) const;
+		bool operator != (const BoundingBox &bbox) const {return !(*this == bbox);}
 		void scale (double sx, double sy);
 		void transform (const Matrix &tm);
 		std::string toSVGViewBox () const;

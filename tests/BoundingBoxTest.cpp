@@ -37,53 +37,53 @@ TEST(BoundingBoxTest, construct) {
 	BoundingBox bbox2(50, 20, 5, 2);
 	EXPECT_TRUE(bbox2.valid());
 	EXPECT_FALSE(bbox2.locked());
-	EXPECT_EQ(bbox2.minX(), 5);
-	EXPECT_EQ(bbox2.maxX(), 50);
-	EXPECT_EQ(bbox2.minY(), 2);
-	EXPECT_EQ(bbox2.maxY(), 20);
+	EXPECT_DOUBLE_EQ(bbox2.minX(), 5);
+	EXPECT_DOUBLE_EQ(bbox2.maxX(), 50);
+	EXPECT_DOUBLE_EQ(bbox2.minY(), 2);
+	EXPECT_DOUBLE_EQ(bbox2.maxY(), 20);
 	EXPECT_EQ(bbox2, BoundingBox(DPair(50, 20), DPair(5, 2)));
 
-	BoundingBox bbox3(" 1pt    2pt  3pt 4pt  ");
+	BoundingBox bbox3(" 1bp    2bp  3bp 4bp  ");
 	EXPECT_TRUE(bbox2.valid());
 	EXPECT_FALSE(bbox2.locked());
-	EXPECT_EQ(bbox3.minX(), 1);
-	EXPECT_EQ(bbox3.minY(), 2);
-	EXPECT_EQ(bbox3.maxX(), 3);
-	EXPECT_EQ(bbox3.maxY(), 4);
+	EXPECT_DOUBLE_EQ(bbox3.minX(), 1);
+	EXPECT_DOUBLE_EQ(bbox3.minY(), 2);
+	EXPECT_DOUBLE_EQ(bbox3.maxX(), 3);
+	EXPECT_DOUBLE_EQ(bbox3.maxY(), 4);
 
 	Length len(2, Length::CM);
-	double pt = len.pt();
+	double bp = len.bp();
 	BoundingBox bbox4(len, len, len, len);
-	EXPECT_DOUBLE_EQ(bbox4.minX(), pt);
-	EXPECT_DOUBLE_EQ(bbox4.minY(), pt);
-	EXPECT_DOUBLE_EQ(bbox4.maxX(), pt);
-	EXPECT_DOUBLE_EQ(bbox4.maxY(), pt);
+	EXPECT_DOUBLE_EQ(bbox4.minX(), bp);
+	EXPECT_DOUBLE_EQ(bbox4.minY(), bp);
+	EXPECT_DOUBLE_EQ(bbox4.maxX(), bp);
+	EXPECT_DOUBLE_EQ(bbox4.maxY(), bp);
 }
 
 
 TEST(BoundingBoxTest, extent) {
 	BoundingBox bbox(5, 10, 30, 30);
-	EXPECT_EQ(bbox.width(), 25);
-	EXPECT_EQ(bbox.height(), 20);
+	EXPECT_DOUBLE_EQ(bbox.width(), 25);
+	EXPECT_DOUBLE_EQ(bbox.height(), 20);
 }
 
 
 TEST(BoundingBoxTest, set) {
 	BoundingBox bbox;
-	bbox.set("1pt 2pt 3pt 4pt");
+	bbox.set("1bp 2bp 3bp 4bp");
 	EXPECT_EQ(bbox, BoundingBox(1, 2, 3, 4));
 
-	bbox.set("4pt 3pt 2pt 1pt");
+	bbox.set("4bp 3bp 2bp 1bp");
 	EXPECT_EQ(bbox, BoundingBox(2, 1, 4, 3));
 
-	bbox.set("1pt");
+	bbox.set("1bp");
 	EXPECT_EQ(bbox, BoundingBox(1, 0, 5, 4));
 
-	bbox.set("2pt 3pt");
+	bbox.set("2bp 3bp");
 	EXPECT_EQ(bbox, BoundingBox(-1, -3, 7, 7));
 
 	EXPECT_THROW(bbox.set(""), BoundingBoxException);
-	EXPECT_THROW(bbox.set("1pt 2pt 3pt"), BoundingBoxException);
+	EXPECT_THROW(bbox.set("1bp 2bp 3bp"), BoundingBoxException);
 }
 
 

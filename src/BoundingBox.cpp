@@ -52,8 +52,8 @@ BoundingBox::BoundingBox (const DPair &p1, const DPair &p2)
 
 
 BoundingBox::BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy)
-	: _ulx(min(ulxx.pt(),lrxx.pt())), _uly(min(ulyy.pt(),lryy.pt())),
-	  _lrx(max(ulxx.pt(),lrxx.pt())), _lry(max(ulyy.pt(),lryy.pt())),
+	: _ulx(min(ulxx.bp(),lrxx.bp())), _uly(min(ulyy.bp(),lryy.bp())),
+	  _lrx(max(ulxx.bp(),lrxx.bp())), _lry(max(ulyy.bp(),lryy.bp())),
 	  _valid(true), _locked(false)
 {
 }
@@ -108,22 +108,22 @@ void BoundingBox::set (string boxstr) {
 
 	switch (coord.size()) {
 		case 1:
-			_ulx -= coord[0].pt();
-			_uly -= coord[0].pt();
-			_lrx += coord[0].pt();
-			_lry += coord[0].pt();
+			_ulx -= coord[0].bp();
+			_uly -= coord[0].bp();
+			_lrx += coord[0].bp();
+			_lry += coord[0].bp();
 			break;
 		case 2:
-			_ulx -= coord[0].pt();
-			_uly -= coord[1].pt();
-			_lrx += coord[0].pt();
-			_lry += coord[1].pt();
+			_ulx -= coord[0].bp();
+			_uly -= coord[1].bp();
+			_lrx += coord[0].bp();
+			_lry += coord[1].bp();
 			break;
 		case 4:
-			_ulx = min(coord[0].pt(), coord[2].pt());
-			_uly = min(coord[1].pt(), coord[3].pt());
-			_lrx = max(coord[0].pt(), coord[2].pt());
-			_lry = max(coord[1].pt(), coord[3].pt());
+			_ulx = min(coord[0].bp(), coord[2].bp());
+			_uly = min(coord[1].bp(), coord[3].bp());
+			_lrx = max(coord[0].bp(), coord[2].bp());
+			_lry = max(coord[1].bp(), coord[3].bp());
 			break;
 		default:
 			throw BoundingBoxException("1, 2 or 4 length parameters expected");
@@ -218,21 +218,17 @@ void BoundingBox::operator += (const BoundingBox &bbox) {
 }
 
 
-bool BoundingBox::operator == (const BoundingBox &bbox) const {
-	return _valid && bbox._valid
-		&& _ulx == bbox._ulx
-		&& _uly == bbox._uly
-		&& _lrx == bbox._lrx
-		&& _lry == bbox._lry;
+static inline bool almost_equal (double v1, double v2) {
+	return fabs(v1-v2) < 1e-10;
 }
 
 
-bool BoundingBox::operator != (const BoundingBox &bbox) const {
-	return !_valid || !bbox._valid
-		|| _ulx != bbox._ulx
-		|| _uly != bbox._uly
-		|| _lrx != bbox._lrx
-		|| _lry != bbox._lry;
+bool BoundingBox::operator == (const BoundingBox &bbox) const {
+	return _valid && bbox._valid
+		&& almost_equal(_ulx, bbox._ulx)
+		&& almost_equal(_uly, bbox._uly)
+		&& almost_equal(_lrx, bbox._lrx)
+		&& almost_equal(_lry, bbox._lry);
 }
 
 
@@ -270,8 +266,10 @@ string BoundingBox::toSVGViewBox () const {
 
 
 ostream& BoundingBox::write (ostream &os) const {
-	return os << '('  << _ulx << ", " << _uly
-				 << ", " << _lrx << ", " << _lry << ')';
+	os << '('  << _ulx << ", " << _uly << ", " << _lrx << ", " << _lry << ')';
+	if (!_valid)
+		os << " (invalid)";
+	return os;
 }
 
 
