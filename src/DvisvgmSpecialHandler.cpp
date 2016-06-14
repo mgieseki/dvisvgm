@@ -24,6 +24,7 @@
 #include "DvisvgmSpecialHandler.h"
 #include "InputBuffer.h"
 #include "InputReader.h"
+#include "Length.h"
 #include "SpecialActions.h"
 #include "XMLNode.h"
 #include "XMLString.h"
@@ -261,7 +262,6 @@ static void update_bbox (double w, double h, double d, SpecialActions &actions) 
  *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2>
  *  variant 4: dvisvgm:bbox n[ew] <name> */
 void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &actions) {
-	const double pt2bp = 72/72.27;
 	ir.skipSpace();
 	int c = ir.peek();
 	if (isalpha(c)) {
@@ -279,7 +279,7 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 		else if (c == 'a' || c == 'f') {
 			double p[4];
 			for (int i=0; i < 4; i++)
-				p[i] = ir.getDouble()*pt2bp;
+				p[i] = ir.getDouble()*Length::pt2bp;
 			BoundingBox b(p[0], p[1], p[2], p[3]);
 			if (c == 'a')
 				actions.embed(b);
@@ -293,18 +293,17 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 		c = 'r';   // no mode specifier => relative box parameters
 
 	if (c == 'r') {
-		double w = ir.getDouble()*pt2bp;
-		double h = ir.getDouble()*pt2bp;
-		double d = ir.getDouble()*pt2bp;
+		double w = ir.getDouble()*Length::pt2bp;
+		double h = ir.getDouble()*Length::pt2bp;
+		double d = ir.getDouble()*Length::pt2bp;
 		update_bbox(w, h, d, actions);
 	}
 }
 
 
 void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions) {
-	const double pt2bp = 72/72.27;
-	double w = ir.getDouble()*pt2bp;
-	double h = ir.getDouble()*pt2bp;
+	double w = ir.getDouble()*Length::pt2bp;
+	double h = ir.getDouble()*Length::pt2bp;
 	string f = ir.getString();
 	update_bbox(w, h, 0, actions);
 	XMLElementNode *img = new XMLElementNode("image");

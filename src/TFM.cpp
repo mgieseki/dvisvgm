@@ -22,6 +22,7 @@
 #include <fstream>
 #include <vector>
 #include "FileFinder.h"
+#include "Length.h"
 #include "Message.h"
 #include "StreamReader.h"
 #include "TFM.h"
@@ -79,8 +80,7 @@ TFM::TFM (istream &is) {
 
 void TFM::readHeader (StreamReader &reader) {
 	_checksum = reader.readUnsigned(4);
-	const double pt2bp = 72/72.27;
-	_designSize = fix2double(reader.readUnsigned(4))*pt2bp;
+	_designSize = fix2double(reader.readUnsigned(4))*Length::pt2bp;
 }
 
 
