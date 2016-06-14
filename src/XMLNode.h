@@ -115,4 +115,10 @@ class XMLCDataNode : public XMLNode
 		std::string _data;
 };
 
+
+inline std::ostream& operator << (std::ostream &os, const XMLElementNode &node) {return node.write(os);}
+inline std::ostream& operator << (std::ostream &os, const XMLTextNode &node) {return node.write(os);}
+inline std::ostream& operator << (std::ostream &os, const XMLCommentNode &node) {return node.write(os);}
+inline std::ostream& operator << (std::ostream &os, const XMLCDataNode &node) {return node.write(os);}
+
 #endif
