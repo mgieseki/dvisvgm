@@ -26,6 +26,8 @@
 #include "Pair.h"
 #include "SpecialHandler.h"
 
+class InputReader;
+class SpecialActions;
 
 class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
@@ -45,6 +47,11 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 
 	protected:
 		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void linewidth (InputReader &ir, SpecialActions &actions);
+		void moveto (InputReader &ir, SpecialActions &actions);
+		void lineto (InputReader &ir, SpecialActions &actions);
+		void line (InputReader &ir, SpecialActions &actions);
+		void point (InputReader &ir, SpecialActions &actions);
 
 	private:
 		std::map<int, DPair> _points; ///< points defined by special em:point

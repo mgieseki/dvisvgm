@@ -85,6 +85,11 @@ check_PROGRAMS += DvisvgmSpecialTest
 DvisvgmSpecialTest_SOURCES = DvisvgmSpecialTest.cpp
 DvisvgmSpecialTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += EmSpecialTest
+check_PROGRAMS += EmSpecialTest
+EmSpecialTest_SOURCES = EmSpecialTest.cpp
+EmSpecialTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += FileFinderTest
 check_PROGRAMS += FileFinderTest
 FileFinderTest_SOURCES = FileFinderTest.cpp
