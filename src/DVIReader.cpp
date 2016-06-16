@@ -324,14 +324,13 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		throw DVIException("no font selected");
 
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {    // is current font a virtual font?
-		vector<UInt8> *dvi = const_cast<vector<UInt8>*>(vf->getDVI(c)); // get DVI snippet that describes character c
-		if (dvi) {
+		if (const vector<UInt8> *dvi = vf->getDVI(c)) { // try to get DVI snippet that represents character c
 			DVIState pos = _dviState;        // save current cursor position
 			_dviState.x = _dviState.y = _dviState.w = _dviState.z = 0;
-			int save_fontnum = _currFontNum; // save current font number
+			int savedFontNum = _currFontNum; // save current font number
 			fm.enterVF(vf);                  // new font number context
 			cmdFontNum0(fm.vfFirstFontNum(vf));
-			double save_scale = _dvi2bp;
+			double savedScale = _dvi2bp;
 			// DVI units in virtual fonts are multiples of 1^(-20) times the scaled size of the VF
 			_dvi2bp = vf->scaledSize()/(1 << 20);
 
@@ -344,9 +343,9 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 				//					Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
 			}
 			replaceStream(is);          // restore previous input stream
-			_dvi2bp = save_scale;       // restore previous scale factor
+			_dvi2bp = savedScale;       // restore previous scale factor
 			fm.leaveVF();               // restore previous font number context
-			cmdFontNum0(save_fontnum);  // restore previous font number
+			cmdFontNum0(savedFontNum);  // restore previous font number
 			_dviState = pos;            // restore previous cursor position
 		}
 	}
@@ -354,11 +353,11 @@ void DVIReader::putChar (UInt32 c, bool moveCursor) {
 		_actions->setChar(_dviState.h+_tx, _dviState.v+_ty, c, _dviState.d != WMODE_LR, font);
 
 	if (moveCursor) {
-		double dist = font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
+		double width = font->charWidth(c) * font->scaleFactor() * _mag/1000.0;
 		switch (_dviState.d) {
-			case WMODE_LR: _dviState.h += dist; break;
-			case WMODE_TB: _dviState.v += dist; break;
-			case WMODE_BT: _dviState.v -= dist; break;
+			case WMODE_LR: _dviState.h += width; break;
+			case WMODE_TB: _dviState.v += width; break;
+			case WMODE_BT: _dviState.v -= width; break;
 		}
 	}
 }

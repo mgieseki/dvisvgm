@@ -25,7 +25,7 @@
 using std::string;
 using std::vector;
 
-TEST(VectorStreamTest, read) {
+TEST(VectorStreamTest, read1) {
 	const char *str = "abcdefghijklm\0nopqrstuvwxyz";
 	vector<char> vec(str, str+27);
 	VectorInputStream<char> vs(vec);
@@ -40,3 +40,24 @@ TEST(VectorStreamTest, read) {
 	}
 }
 
+
+TEST(VectorStreamTest, read2) {
+	vector<int> vec;
+	VectorInputStream<int> vs(vec);
+	EXPECT_EQ(vs.get(), -1);
+}
+
+
+TEST(VectorStreamTest, read3) {
+	vector<int> vec;
+	vec.push_back(-2);
+	vec.push_back(-1);
+	vec.push_back(0);
+	vec.push_back(1);
+	VectorInputStream<int> vs(vec);
+	EXPECT_EQ(vs.get(), 254);
+	EXPECT_EQ(vs.get(), 255);
+	EXPECT_EQ(vs.get(), 0);
+	EXPECT_EQ(vs.get(), 1);
+	EXPECT_EQ(vs.get(), -1);
+}
