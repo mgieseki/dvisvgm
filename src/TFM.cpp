@@ -50,6 +50,8 @@ static inline double fix2double (FixWord fix) {
 
 
 TFM::TFM (istream &is) {
+   if (!is)
+      return;
 	is.seekg(0);
 	StreamReader reader(is);
 	UInt16 lf = UInt16(reader.readUnsigned(2)); // length of entire file in 4 byte words

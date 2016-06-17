@@ -38,7 +38,9 @@ class TFMReaderTest : public ::testing::Test
 		TFMReaderTest () : tfm(0) {}
 
 		void SetUp () {
-			ifstream ifs((string(SRCDIR)+"/data/cmr10.tfm").c_str());
+			string fname = string(SRCDIR)+"/data/cmr10.tfm";
+			ifstream ifs(fname.c_str(), ios::binary);
+			ASSERT_TRUE(ifs.is_open()) << "failed opening " << fname;
 			tfm = new TFM(ifs);
 		}
 
@@ -51,9 +53,8 @@ class TFMReaderTest : public ::testing::Test
 };
 
 
-
-
 TEST_F(TFMReaderTest, properties) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_EQ(tfm->getChecksum(), 0x4BF16079);
 	ASSERT_FALSE(tfm->verticalLayout());
 	ASSERT_EQ(tfm->firstChar(), 0);
@@ -63,6 +64,7 @@ TEST_F(TFMReaderTest, properties) {
 
 
 TEST_F(TFMReaderTest, charWidth) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_NEAR(tfm->getCharWidth('M'), 9.132, 0.001);
 	ASSERT_NEAR(tfm->getCharWidth('g'), 4.981, 0.001);
 	ASSERT_DOUBLE_EQ(tfm->getCharWidth(200), 0);
@@ -70,6 +72,7 @@ TEST_F(TFMReaderTest, charWidth) {
 
 
 TEST_F(TFMReaderTest, charHeight) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_NEAR(tfm->getCharHeight('M'), 6.808, 0.001);
 	ASSERT_NEAR(tfm->getCharHeight('g'), 4.289, 0.001);
 	ASSERT_DOUBLE_EQ(tfm->getCharHeight(200), 0);
@@ -77,6 +80,7 @@ TEST_F(TFMReaderTest, charHeight) {
 
 
 TEST_F(TFMReaderTest, charDepth) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_DOUBLE_EQ(tfm->getCharDepth('M'), 0);
 	ASSERT_NEAR(tfm->getCharDepth('g'), 1.937, 0.001);
 	ASSERT_DOUBLE_EQ(tfm->getCharDepth(200), 0);
@@ -84,6 +88,7 @@ TEST_F(TFMReaderTest, charDepth) {
 
 
 TEST_F(TFMReaderTest, italicCorr) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_DOUBLE_EQ(tfm->getItalicCorr('M'), 0);
 	ASSERT_NEAR(tfm->getItalicCorr('g'), 0.138, 0.001);
 	ASSERT_DOUBLE_EQ(tfm->getItalicCorr(200), 0);
@@ -91,6 +96,7 @@ TEST_F(TFMReaderTest, italicCorr) {
 
 
 TEST_F(TFMReaderTest, params) {
+	ASSERT_TRUE(tfm != 0);
 	ASSERT_NEAR(tfm->getSpace(), 3.321, 0.001);
 	ASSERT_NEAR(tfm->getSpaceShrink(), 1.107, 0.001);
 	ASSERT_NEAR(tfm->getSpaceStretch(), 1.66, 0.001);
