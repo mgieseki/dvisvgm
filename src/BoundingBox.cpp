@@ -80,13 +80,10 @@ static string& strip (string &str) {
 }
 
 
-/** Sets or modifies the bounding box. If 'boxstr' consists of 4 length values,
- *  they denote the absolute position of two diagonal corners of the box. In case
- *  of a single length value l the current box is enlarged by adding (-l,-l) the upper
- *  left and (l,l) to the lower right corner.
- *  @param[in] boxstr whitespace and/or comma separated string of lengths. */
-void BoundingBox::set (string boxstr) {
-	vector<Length> coord;
+/** Extracts a sequence of length values from a given string.
+ *  @param[in] boxstr whitespace and/or comma separated string of lengths.
+ *  @param[out] the extracted lengths */
+void BoundingBox::extractLengths (string boxstr, vector<Length> &lengths) {
 	const size_t len = boxstr.length();
 	size_t l=0;
 	strip(boxstr);
@@ -99,13 +96,28 @@ void BoundingBox::set (string boxstr) {
 			r++;
 		lenstr = boxstr.substr(l, r-l);
 		if (!lenstr.empty()) {
-			coord.push_back(Length(lenstr));
+			lengths.push_back(Length(lenstr));
 			if (boxstr[r] == ',')
 				r++;
 			l = r;
 		}
-	} while (!lenstr.empty() && coord.size() < 4);
+	} while (!lenstr.empty() && lengths.size() < 4);
+}
 
+
+/** Sets or modifies the bounding box. If 'boxstr' consists of 4 length values,
+ *  they denote the absolute position of two diagonal corners of the box. In case
+ *  of a single length value l the current box is enlarged by adding (-l,-l) the upper
+ *  left and (l,l) to the lower right corner.
+ *  @param[in] boxstr whitespace and/or comma separated string of lengths. */
+void BoundingBox::set (const string &boxstr) {
+	vector<Length> coord;
+	extractLengths(boxstr, coord);
+	set(coord);
+}
+
+
+void BoundingBox::set (const std::vector<Length> &coord) {
 	switch (coord.size()) {
 		case 1:
 			_ulx -= coord[0].bp();

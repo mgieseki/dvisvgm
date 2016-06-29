@@ -136,6 +136,7 @@ static bool check_bbox (const string &bboxstr) {
 		}
 	}
 	try {
+		// check if given bbox argument is valid, i.e. doesn't throw an exception
 		BoundingBox bbox;
 		bbox.set(bboxstr);
 		return true;

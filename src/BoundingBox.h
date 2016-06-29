@@ -23,6 +23,7 @@
 
 #include <ostream>
 #include <string>
+#include <vector>
 #include "Length.h"
 #include "MessageException.h"
 #include "Pair.h"
@@ -48,11 +49,14 @@ class BoundingBox
 		BoundingBox (const DPair &p1, const DPair &p2);
 		BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy);
 		BoundingBox (const std::string &boxstr);
-		void set (std::string boxstr);
+		void set (const std::string &boxstr);
+		void set (const std::vector<Length> &lengths);
 		void embed (double x, double y);
 		void embed (const BoundingBox &bb);
 		void embed (const DPair &p) {embed(p.x(), p.y());}
 		void embed (const DPair &c, double r);
+
+		static void extractLengths (std::string boxstr, std::vector<Length> &lengths);
 
 		template <typename T>
 		void embed (const Pair<T> &p) {embed(p.x(), p.y());}

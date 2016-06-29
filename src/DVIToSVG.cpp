@@ -187,7 +187,15 @@ void DVIToSVG::leaveEndPage (unsigned) {
 		}
 		else { // set/modify bounding box by explicitly given values
 			try {
-				bbox.set(_bboxFormatString);
+				vector<Length> lengths;
+				BoundingBox::extractLengths(_bboxFormatString, lengths);
+				if (lengths.size() == 1 || lengths.size() == 2) {  // relative box size?
+					// apply the page transformation and adjust the bbox afterwards
+					Matrix matrix;
+					getPageTransformation(matrix);
+					bbox.transform(matrix);
+				}
+				bbox.set(lengths);
 			}
 			catch (const MessageException &e) {
 			}
