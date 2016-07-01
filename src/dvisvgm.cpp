@@ -36,6 +36,7 @@
 #include "FontEngine.h"
 #include "Ghostscript.h"
 #include "HtmlSpecialHandler.h"
+#include "Message.h"
 #include "PageSize.h"
 #include "PSInterpreter.h"
 #include "PsSpecialHandler.h"
@@ -243,7 +244,7 @@ int main (int argc, char *argv[]) {
 		return 1;
 
 	if (args.progress_given()) {
-		DVIReader::COMPUTE_PROGRESS = args.progress_given();
+		DVIToSVG::COMPUTE_PROGRESS = args.progress_given();
 		SpecialActions::PROGRESSBAR_DELAY = args.progress_arg();
 	}
 	Color::SUPPRESS_COLOR_NAMES = !args.colornames_given();

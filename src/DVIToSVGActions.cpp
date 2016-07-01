@@ -88,25 +88,25 @@ string DVIToSVGActions::getBBoxFormatString () const {
  *  @param[in] c character code relative to the current font
  *  @param[in] vertical true if we're in vertical mode
  *  @param[in] font font to be used */
-void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, const Font *font) {
+void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, const Font &font) {
 	// If we use SVG fonts there is no need to record all font name/char/size combinations
 	// because the SVG font mechanism handles this automatically. It's sufficient to
 	// record font names and chars. The various font sizes can be ignored here.
 	// For a given font object, Font::uniqueFont() returns the same unique font object for
 	// all fonts with the same name.
-	_usedChars[SVGTree::USE_FONTS ? font->uniqueFont() : font].insert(c);
+	_usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(c);
 
 	// However, we record all required fonts
-	_usedFonts.insert(font);
+	_usedFonts.insert(&font);
 	_svg.appendChar(c, x, y);
 
 	static string fontname;
-	GlyphTracerMessages callback(fontname != font->name(), false);
-	fontname = font->name();
+	GlyphTracerMessages callback(fontname != font.name(), false);
+	fontname = font.name();
 
 	GlyphMetrics metrics;
-	font->getGlyphMetrics(c, vertical, metrics);
-	const PhysicalFont* pf = dynamic_cast<const PhysicalFont*>(font);
+	font.getGlyphMetrics(c, vertical, metrics);
+	const PhysicalFont* pf = dynamic_cast<const PhysicalFont*>(&font);
 	if (PhysicalFont::EXACT_BBOX && pf) {
 		GlyphMetrics exact_metrics;
 		pf->getExactGlyphBox(c, exact_metrics, vertical, &callback);
@@ -215,7 +215,7 @@ void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocess
  *  @param[in] pageno physical page number
  *  @param[in] c array with 10 components representing \\count0 ... \\count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
-void DVIToSVGActions::beginPage (unsigned pageno, Int32 *c) {
+void DVIToSVGActions::beginPage (unsigned pageno, const vector<Int32>&) {
 	SpecialManager::instance().notifyBeginPage(pageno, *this);
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
