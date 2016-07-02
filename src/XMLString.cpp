@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
-#include "macros.h"
 #include "types.h"
 #include "Unicode.h"
 #include "XMLString.h"
@@ -48,8 +47,8 @@ XMLString::XMLString (const string &str, bool plain) {
 	if (plain)
 		assign(str);
 	else {
-		FORALL(str, string::const_iterator, i)
-			*this += translate(*i);
+		for (char c : str)
+			*this += translate(c);
 	}
 }
 

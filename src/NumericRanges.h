@@ -31,7 +31,6 @@ class NumericRanges
 	public:
 		typedef std::pair<T,T> Range;
 		typedef std::list<Range> Container;
-		typedef typename Container::iterator Iterator;
 		typedef typename Container::const_iterator ConstIterator;
 
 	public:

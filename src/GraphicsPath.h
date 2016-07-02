@@ -96,10 +96,6 @@ class GraphicsPath
 			virtual void finished () {}
 		};
 
-		typedef typename std::vector<Command>::iterator Iterator;
-		typedef typename std::vector<Command>::const_iterator ConstIterator;
-		typedef typename std::vector<Command>::const_reverse_iterator ConstRevIterator;
-
 	public:
 		GraphicsPath (WindingRule wr=WR_NON_ZERO) : _windingRule(wr) {}
 
@@ -165,7 +161,6 @@ class GraphicsPath
 			_commands.push_back(Command(Command::CLOSEPATH));
 		}
 
-
 		const std::vector<Command>& commands () const {
 			return _commands;
 		}
@@ -177,11 +172,10 @@ class GraphicsPath
 		 *	 This method detects all open paths and adds the missing closePath statement. */
 		void closeOpenSubPaths () {
 			Command *prevCommand=0;
-			FORALL(_commands, Iterator, it) {
+			for (auto it=_commands.begin(); it != _commands.end(); ++it) {
 				if (it->type == Command::MOVETO && prevCommand && prevCommand->type != Command::CLOSEPATH) {
 					prevCommand = &(*it);
 					it = _commands.insert(it, Command(Command::CLOSEPATH))+1;
-//					++it; // skip inserted closePath command in next iteration step
 				}
 				else
 					prevCommand = &(*it);
@@ -197,10 +191,10 @@ class GraphicsPath
 			while (!_commands.empty() && _commands.back().type == Command::MOVETO)
 				_commands.pop_back();
 			// resolve intermediate sequences of moveto commands
-			Iterator it=_commands.begin();
+			auto it=_commands.begin();
 			if (it == _commands.end())
 				return;
-			Iterator prev = it++;
+			auto prev = it++;
 			while (it != _commands.end()) {
 				if (prev->type != Command::MOVETO || it->type != Command::MOVETO)
 					prev = it++;
@@ -321,8 +315,8 @@ class GraphicsPath
 		/** Transforms the path according to a given Matrix.
 		 *  @param[in] matrix Matrix describing the affine transformation */
 		void transform (const Matrix &matrix) {
-			FORALL(_commands, Iterator, it)
-				it->transform(matrix);
+			for (Command &command : _commands)
+				command.transform(matrix);
 		}
 
 		void iterate (Actions &actions, bool optimize) const;
@@ -342,11 +336,11 @@ class GraphicsPath
  *  @param[in] optimize if true, shorthand drawing commands (hlineto, vlineto,...) are considered */
 template <typename T>
 void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
-	ConstIterator prev = _commands.end();  // pointer to preceding command
+	auto prev = _commands.end();  // pointer to preceding command
 	Point fp; // first point of current path
 	Point cp; // current point
 	Point pstore[2];
-	for (ConstIterator it=_commands.begin(); it != _commands.end() && !actions.quit(); ++it) {
+	for (auto it=_commands.begin(); it != _commands.end() && !actions.quit(); ++it) {
 		const Point *params = it->params;
 		switch (it->type) {
 			case Command::MOVETO:

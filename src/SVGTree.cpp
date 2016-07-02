@@ -197,22 +197,21 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		XMLElementNode *styleNode = new XMLElementNode("style");
 		styleNode->addAttribute("type", "text/css");
 		_root->insertAfter(styleNode, _defs);
-		typedef map<int, const Font*> SortMap;
-		SortMap sortmap;
-		FORALL(fonts, set<const Font*>::const_iterator, it)
-			if (!dynamic_cast<const VirtualFont*>(*it))   // skip virtual fonts
-				sortmap[FontManager::instance().fontID(*it)] = *it;
+		map<int, const Font*> sortmap;
+		for (const Font *font : fonts)
+			if (!dynamic_cast<const VirtualFont*>(font))   // skip virtual fonts
+				sortmap[FontManager::instance().fontID(font)] = font;
 		ostringstream style;
 		// add font style definitions in ascending order
-		FORALL(sortmap, SortMap::const_iterator, it) {
-			style << "text.f"     << it->first << ' '
-				<< "{font-family:" << it->second->name()
-				<< ";font-size:"   << XMLString(it->second->scaledSize()) << "px";
-			if (it->second->color() != Color::BLACK)
-				style << ";fill:" << it->second->color().svgColorString();
+		for (auto &idfontpair : sortmap) {
+			style << "text.f"     << idfontpair.first << ' '
+				<< "{font-family:" << idfontpair.second->name()
+				<< ";font-size:"   << XMLString(idfontpair.second->scaledSize()) << "px";
+			if (idfontpair.second->color() != Color::BLACK)
+				style << ";fill:" << idfontpair.second->color().svgColorString();
 			style << '}';
 			if (ADD_COMMENTS) {
-				string info = font_info(*it->second);
+				string info = font_info(*idfontpair.second);
 				if (!info.empty())
 					style << " /* " << info << " */";
 			}
@@ -227,8 +226,8 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 /** Appends glyph definitions of a given font to the defs section of the SVG tree.
  *  @param[in] font font to be appended
  *  @param[in] chars codes of the characters whose glyph outlines should be appended
- *  @param[in] cb pointer to callback object for sending feedback to the glyph tracer (may be 0) */
-void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTracer::Callback *cb) {
+ *  @param[in] callback pointer to callback object for sending feedback to the glyph tracer (may be 0) */
+void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTracer::Callback *callback) {
 	if (chars.empty())
 		return;
 
@@ -252,21 +251,21 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			faceNode->addAttribute("descent", XMLString(font.descent()));
 		}
 		fontNode->append(faceNode);
-		FORALL(chars, set<int>::const_iterator, i)
-			fontNode->append(createGlyphNode(*i, font, cb));
+		for (int c : chars)
+			fontNode->append(createGlyphNode(c, font, callback));
 	}
 	else if (CREATE_USE_ELEMENTS && &font != font.uniqueFont()) {
 		// If the same character is used in various sizes, we don't want to embed the complete (lengthy) path
 		// descriptions multiple times. Because they would only differ by a scale factor, it's better to
 		// reference the already embedded path together with a transformation attribute and let the SVG renderer
 		// scale the glyphs properly. This is only necessary if we don't want to use font but path elements.
-		FORALL(chars, set<int>::const_iterator, it) {
+		for (int c : chars) {
 			ostringstream oss;
 			XMLElementNode *use = new XMLElementNode("use");
-			oss << 'g' << FontManager::instance().fontID(&font) << '-' << *it;
+			oss << 'g' << FontManager::instance().fontID(&font) << '-' << c;
 			use->addAttribute("id", oss.str());
 			oss.str("");
-			oss << "#g" << FontManager::instance().fontID(font.uniqueFont()) << '-' << *it;
+			oss << "#g" << FontManager::instance().fontID(font.uniqueFont()) << '-' << c;
 			use->addAttribute("xlink:href", oss.str());
 			double scale = font.scaledSize()/font.uniqueFont()->scaledSize();
 			if (scale != 1.0) {
@@ -278,8 +277,8 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		}
 	}
 	else {
-		FORALL(chars, set<int>::const_iterator, i)
-			appendToDefs(createGlyphNode(*i, font, cb));
+		for (int c : chars)
+			appendToDefs(createGlyphNode(c, font, callback));
 	}
 }
 
@@ -318,9 +317,9 @@ void SVGTree::removeRedundantElements () {
 
 	// collect dependencies between clipPath elements in the defs section of the SVG tree
 	DependencyGraph<string> idTree;
-	for (vector<XMLElementNode*>::iterator it=clipElements.begin(); it != clipElements.end(); ++it) {
-		if (const char *id = (*it)->getAttributeValue("id")) {
-			if (const char *url = (*it)->getAttributeValue("clip-path"))
+	for (const XMLElementNode *clip : clipElements) {
+		if (const char *id = clip->getAttributeValue("id")) {
+			if (const char *url = clip->getAttributeValue("clip-path"))
 				idTree.insert(extract_id_from_url(url), id);
 			else
 				idTree.insert(id);
@@ -330,15 +329,15 @@ void SVGTree::removeRedundantElements () {
 	vector<XMLElementNode*> descendants;
 	_page->getDescendants(0, "clip-path", descendants);
 	// remove referenced IDs and their dependencies from the dependency graph
-	for (vector<XMLElementNode*>::iterator it=descendants.begin(); it != descendants.end(); ++it) {
-		string idref = extract_id_from_url((*it)->getAttributeValue("clip-path"));
+	for (const XMLElementNode *elem : descendants) {
+		string idref = extract_id_from_url(elem->getAttributeValue("clip-path"));
 		idTree.removeDependencyPath(idref);
 	}
 	descendants.clear();
 	vector<string> ids;
 	idTree.getKeys(ids);
-	for (vector<string>::iterator it=ids.begin(); it != ids.end(); ++it) {
-		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", it->c_str());
+	for (const string &str : ids) {
+		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
 		_defs->remove(node);
 	}
 }

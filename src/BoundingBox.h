@@ -27,7 +27,6 @@
 #include "Length.h"
 #include "MessageException.h"
 #include "Pair.h"
-#include "macros.h"
 #include "types.h"
 
 
@@ -90,6 +89,9 @@ class BoundingBox
 		bool _locked : 1;  ///< if true, the box data is read-only
 };
 
-IMPLEMENT_OUTPUT_OPERATOR(BoundingBox)
+
+inline std::ostream& operator << (std::ostream &os, const BoundingBox &bbox) {
+	return bbox.write(os);
+}
 
 #endif

@@ -248,11 +248,11 @@ void DVIToSVGActions::setBgColor (const Color &color) {
 }
 
 
-void DVIToSVGActions::embed(const BoundingBox& bbox) {
+void DVIToSVGActions::embed(const BoundingBox &bbox) {
 	_bbox.embed(bbox);
 	if (_boxes) {
-		FORALL(*_boxes, BoxMap::iterator, it)
-			it->second.embed(bbox);
+		for (auto &strboxpair : *_boxes)
+			strboxpair.second.embed(bbox);
 	}
 }
 
@@ -263,8 +263,8 @@ void DVIToSVGActions::embed(const DPair& p, double r) {
 	else
 		_bbox.embed(p, r);
 	if (_boxes)
-		FORALL(*_boxes, BoxMap::iterator, it)
-			it->second.embed(p, r);
+		for (auto &strboxpair : *_boxes)
+			strboxpair.second.embed(p, r);
 }
 
 

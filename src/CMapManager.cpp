@@ -31,8 +31,8 @@ using namespace std;
 
 
 CMapManager::~CMapManager () {
-	for (CMaps::iterator it=_cmaps.begin(); it != _cmaps.end(); ++it)
-		delete it->second;
+	for (auto &entry : _cmaps)
+		delete entry.second;
 }
 
 

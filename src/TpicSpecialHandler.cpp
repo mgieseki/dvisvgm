@@ -86,7 +86,7 @@ void TpicSpecialHandler::drawLines (bool stroke, bool fill, double ddist, Specia
 				elem->addAttribute("fill", fill ? color.svgColorString() : "none");
 			}
 			ostringstream oss;
-			FORALL(_points, vector<DPair>::iterator, it) {
+			for (auto it=_points.begin(); it != _points.end(); ++it) {
 				if (it != _points.begin())
 					oss << ' ';
 				double x = it->x()+actions.getX();

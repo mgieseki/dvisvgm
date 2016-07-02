@@ -34,8 +34,6 @@ class SpecialManager
 	private:
 		typedef std::vector<SpecialHandler*> HandlerPool;
 		typedef std::map<std::string,SpecialHandler*> HandlerMap;
-		typedef HandlerMap::iterator Iterator;
-		typedef HandlerMap::const_iterator ConstIterator;
 
 	public:
 		~SpecialManager ();

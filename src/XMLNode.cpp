@@ -22,7 +22,6 @@
 #include <map>
 #include <list>
 #include <sstream>
-#include "macros.h"
 #include "XMLNode.h"
 #include "XMLString.h"
 
@@ -36,8 +35,8 @@ XMLElementNode::XMLElementNode (const string &n) : _name(n) {
 XMLElementNode::XMLElementNode (const XMLElementNode &node)
 	: _name(node._name), _attributes(node._attributes)
 {
-	FORALL(node._children, ChildList::const_iterator, it)
-		_children.push_back((*it)->clone());
+	for (const XMLNode *child : node._children)
+		_children.push_back(child->clone());
 }
 
 
@@ -146,8 +145,8 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
  *  @param[out] descendants all elements found
  *  @return true if at least one element was found  */
 bool XMLElementNode::getDescendants (const char *name, const char *attrName, vector<XMLElementNode*> &descendants) const {
-	FORALL(_children, ChildList::const_iterator, it) {
-		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
+	for (XMLNode *child : _children) {
+		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(child)) {
 			if ((!name || elem->getName() == name) && (!attrName || elem->hasAttribute(attrName)))
 				descendants.push_back(elem);
 			elem->getDescendants(name, attrName, descendants);
@@ -163,8 +162,8 @@ bool XMLElementNode::getDescendants (const char *name, const char *attrName, vec
  *  @param[in] attrValue if not 0, only elements with attribute attrName="attrValue" are considered
  *  @return pointer to the found element or 0 */
 XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
-	FORALL(_children, ChildList::const_iterator, it) {
-		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(*it)) {
+	for (XMLNode *child : _children) {
+		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(child)) {
 			if (!name || elem->getName() == name) {
 				const char *value;
 				if (!attrName || (((value = elem->getAttributeValue(attrName)) != 0) && (!attrValue || string(value) == attrValue)))
@@ -180,8 +179,8 @@ XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char
 
 ostream& XMLElementNode::write (ostream &os) const {
 	os << '<' << _name;
-	FORALL(_attributes, AttribMap::const_iterator, it)
-		os << ' ' << it->first << "='" << it->second << '\'';
+	for (const auto &attrib : _attributes)
+		os << ' ' << attrib.first << "='" << attrib.second << '\'';
 	if (_children.empty())
 		os << "/>";
 	else {
@@ -190,10 +189,10 @@ ostream& XMLElementNode::write (ostream &os) const {
 		// SVG specification, pure whitespace nodes are ignored by the SVG renderer.
 		if (!dynamic_cast<XMLTextNode*>(_children.front()))
 			os << '\n';
-		FORALL(_children, ChildList::const_iterator, it) {
+		for (auto it=_children.begin(); it != _children.end(); ++it) {
 			(*it)->write(os);
 			if (!dynamic_cast<XMLTextNode*>(*it)) {
-				ChildList::const_iterator next=it;
+				auto next=it;
 				if (++next == _children.end() || !dynamic_cast<XMLTextNode*>(*next))
 					os << '\n';
 			}

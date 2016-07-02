@@ -246,11 +246,11 @@ void EmSpecialHandler::line (InputReader &ir, SpecialActions& actions) {
 /** This method is called at the end of a DVI page. Here we have to draw all pending
  *   lines that are still in the line list. All line endpoints must be defined until here. */
 void EmSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
-	FORALL(_lines, list<Line>::iterator, it) {
-		map<int,DPair>::iterator pit1=_points.find(it->p1);
-		map<int,DPair>::iterator pit2=_points.find(it->p2);
+	for (const Line &line : _lines) {
+		auto pit1=_points.find(line.p1);
+		auto pit2=_points.find(line.p2);
 		if (pit1 != _points.end() && pit2 != _points.end())
-			create_line(pit1->second, pit2->second, it->c1, it->c2, it->width, actions);
+			create_line(pit1->second, pit2->second, line.c1, line.c2, line.width, actions);
 		// all lines with still undefined points are ignored
 	}
 	// line and point definitions are local to a page

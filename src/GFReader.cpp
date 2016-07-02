@@ -131,7 +131,7 @@ bool GFReader::executeChar (UInt8 c) {
 	if (_charInfoMap.empty())
 		executePostamble();          // read character info
 	_in.clear();
-	Iterator it = _charInfoMap.find(c);
+	auto it = _charInfoMap.find(c);
 	if (_in && it != _charInfoMap.end()) {
 		_in.seekg(it->second.location);
 		while (executeCommand() != 69);  // execute all commands until eoc is reached
@@ -201,7 +201,7 @@ double GFReader::getVPixelsPerPoint () const {
 
 /** Returns the width of character c in PS point units */
 double GFReader::getCharWidth (UInt32 c) const {
-	ConstIterator it = _charInfoMap.find(c%256);
+	auto it = _charInfoMap.find(c%256);
 	return it == _charInfoMap.end() ? 0 : it->second.width*getDesignSize()/(1<<24);
 }
 

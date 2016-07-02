@@ -50,8 +50,6 @@ class GFReader
 		UInt32 location;
 	};
 
-	typedef std::map<UInt8,CharInfo>::iterator Iterator;
-	typedef std::map<UInt8,CharInfo>::const_iterator ConstIterator;
 	public:
 		GFReader (std::istream &is);
 		virtual ~GFReader () {}

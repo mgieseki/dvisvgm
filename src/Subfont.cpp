@@ -52,7 +52,7 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
 			while (is && !isspace(is.peek()))
 				id += is.get();
 			if (!id.empty()) {
-				pair<Iterator, bool> state = _subfonts.insert(pair<string,Subfont*>(id, (Subfont*)0));
+				auto state = _subfonts.insert(pair<string,Subfont*>(id, (Subfont*)0));
 				if (state.second) // id was not present in map already
 					state.first->second = new Subfont(*this, state.first->first);
 				skip_mapping_data(is);
@@ -63,8 +63,8 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
 
 
 SubfontDefinition::~SubfontDefinition () {
-	for (Iterator it=_subfonts.begin(); it != _subfonts.end(); ++it)
-		delete it->second;
+	for (auto &entry : _subfonts)
+		delete entry.second;
 }
 
 
@@ -95,7 +95,7 @@ const char* SubfontDefinition::path () const {
 
 /** Returns the subfont with the given ID, or 0 if it doesn't exist. */
 Subfont* SubfontDefinition::subfont (const string &id) const {
-	ConstIterator it = _subfonts.find(id);
+	auto it = _subfonts.find(id);
 	if (it != _subfonts.end())
 		return it->second;
 	return 0;
@@ -104,8 +104,8 @@ Subfont* SubfontDefinition::subfont (const string &id) const {
 
 /** Returns all subfonts defined in this SFD. */
 int SubfontDefinition::subfonts (vector<Subfont*> &sfs) const {
-	for (ConstIterator it=_subfonts.begin(); it != _subfonts.end(); ++it)
-		sfs.push_back(it->second);
+	for (const auto &strsfpair : _subfonts)
+		sfs.push_back(strsfpair.second);
 	return int(sfs.size());
 }
 

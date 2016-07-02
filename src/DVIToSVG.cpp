@@ -132,8 +132,8 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 		SpecialManager::instance().notifyPreprocessingFinished();
 	}
 
-	FORALL(ranges, PageRanges::ConstIterator, it)
-		convert(it->first, it->second);
+	for (const auto &range : ranges)
+		convert(range.first, range.second);
 	if (pageinfo) {
 		pageinfo->first = ranges.numberOfPages();
 		pageinfo->second = numberOfPages();
@@ -261,12 +261,11 @@ void DVIToSVG::getPageTransformation(Matrix &matrix) const {
 }
 
 
-static void collect_chars (map<const Font*, set<int> > &fm) {
-	typedef const map<const Font*, set<int> > UsedCharsMap;
-	FORALL(fm, UsedCharsMap::const_iterator, it) {
-		if (it->first->uniqueFont() != it->first) {
-			FORALL(it->second, set<int>::const_iterator, cit)
-				fm[it->first->uniqueFont()].insert(*cit);
+static void collect_chars (map<const Font*, set<int>> &fontmap) {
+	for (const auto &entry : fontmap) {
+		if (entry.first->uniqueFont() != entry.first) {
+			for (int c : entry.second)
+				fontmap[entry.first->uniqueFont()].insert(c);
 		}
 	}
 }
@@ -280,16 +279,15 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 	if (!_actions)  // no dvi actions => no chars written => no fonts to embed
 		return;
 
-	typedef map<const Font*, set<int> > UsedCharsMap;
 	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(_actions);
-	UsedCharsMap &usedChars = svgActions->getUsedChars();
+	map<const Font*,set<int>> &usedCharsMap = svgActions->getUsedChars();
 
-	collect_chars(usedChars);
+	collect_chars(usedCharsMap);
 
 	GlyphTracerMessages messages;
 	set<const Font*> tracedFonts;  // collect unique fonts already traced
-	FORALL(usedChars, UsedCharsMap::const_iterator, it) {
-		const Font *font = it->first;
+	for (const auto &fontchar : usedCharsMap) {
+		const Font *font = fontchar.first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
 			// Check if glyphs should be traced. Only trace the glyphs of unique fonts, i.e.
 			// avoid retracing the same glyphs again if they are referenced in various sizes.
@@ -298,7 +296,7 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 				tracedFonts.insert(ph_font->uniqueFont());
 			}
 			if (font->path())  // does font file exist?
-				_svg.append(*ph_font, it->second, &messages);
+				_svg.append(*ph_font, fontchar.second, &messages);
 			else
 				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}

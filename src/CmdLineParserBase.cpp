@@ -369,11 +369,11 @@ void CmdLineParserBase::help (int mode, void (*out)(const char*)) const {
 	else {
 		vector<const char*> linevec(lines, lines+numlines);
 		sort(linevec.begin(), linevec.end(), mode == 1 ? cmp_short : cmp_long);
-		for (vector<const char*>::iterator it=linevec.begin(); it != linevec.end(); ++it) {
-			if (**it != 's') { // skip section headers
-				out(*it+1);
+		for (const char *line : linevec) {
+			if (*line != 's') { // skip section headers
+				out(line+1);
 				out("\n");
-				if (**it == 'd')
+				if (*line == 'd')
 					out("\nOptions:\n");
 			}
 		}

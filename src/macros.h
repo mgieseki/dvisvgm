@@ -21,9 +21,6 @@
 #ifndef DVISVGM_MACROS_H
 #define DVISVGM_MACROS_H
 
-#define FORALL(container, itertype, itervar) \
-	for (itertype itervar=(container).begin(); itervar != (container).end(); ++itervar)
-
 #define IMPLEMENT_ARITHMETIC_OPERATOR(class, op)        \
 	inline class operator op (class a, const class &b) { \
 		return a op##= b;                                 \

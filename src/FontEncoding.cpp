@@ -31,8 +31,8 @@ using namespace std;
 struct EncodingMap : public map<string, EncFile*>
 {
 	~EncodingMap () {
-		for (EncodingMap::iterator it=begin(); it != end(); ++it)
-			delete it->second;
+		for (auto &entry : *this)
+			delete entry.second;
 	}
 };
 

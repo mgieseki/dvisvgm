@@ -244,13 +244,13 @@ void HtmlSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
 	if (_active) {
 		// create views for all collected named anchors defined on the recent page
 		const BoundingBox &pagebox = actions.bbox();
-		for (NamedAnchors::iterator it=_namedAnchors.begin(); it != _namedAnchors.end(); ++it) {
-			if (it->second.pageno == pageno && it->second.referenced) {  // current anchor referenced?
+		for (auto &stranchorpair : _namedAnchors) {
+			if (stranchorpair.second.pageno == pageno && stranchorpair.second.referenced) {  // current anchor referenced?
 				ostringstream oss;
-				oss << pagebox.minX() << ' ' << it->second.pos << ' '
+				oss << pagebox.minX() << ' ' << stranchorpair.second.pos << ' '
 					 << pagebox.width() << ' ' << pagebox.height();
 				XMLElementNode *view = new XMLElementNode("view");
-				view->addAttribute("id", "loc"+XMLString(it->second.id));
+				view->addAttribute("id", "loc"+XMLString(stranchorpair.second.id));
 				view->addAttribute("viewBox", oss.str());
 				actions.appendToDefs(view);
 			}

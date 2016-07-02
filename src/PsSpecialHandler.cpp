@@ -60,8 +60,8 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _previewFilter(
 
 PsSpecialHandler::~PsSpecialHandler () {
 	_psi.setActions(0);     // ensure no further PS actions are performed
-	for (map<int, PSPattern*>::iterator it=_patterns.begin(); it != _patterns.end(); ++it)
-		delete it->second;
+	for (auto &entry : _patterns)
+		delete entry.second;
 }
 
 

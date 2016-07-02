@@ -27,8 +27,6 @@
 class FilePath
 {
 	typedef std::vector<std::string> Directories;
-	typedef Directories::iterator Iterator;
-	typedef Directories::const_iterator ConstIterator;
 	public:
 		FilePath (const std::string &path);
 		FilePath (const std::string &path, bool isfile, std::string current_dir="");

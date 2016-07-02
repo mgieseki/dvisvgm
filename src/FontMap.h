@@ -45,10 +45,6 @@ class FontMap
 			FontStyle style;
 		};
 
-	protected:
-		typedef std::map<std::string,Entry*>::iterator Iterator;
-		typedef std::map<std::string,Entry*>::const_iterator ConstIterator;
-
 	public:
 		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
 

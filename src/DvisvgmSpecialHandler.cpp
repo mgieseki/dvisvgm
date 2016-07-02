@@ -225,10 +225,10 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 	if (it == _macros.end())
 		throw SpecialException("undefined SVG fragment '" + id + "' referenced");
 
-	StringVector &defs = it->second;
-	for (StringVector::iterator defs_it=defs.begin(); defs_it != defs.end(); ++defs_it) {
-		char &type = defs_it->at(0);
-		string def = defs_it->substr(1);
+	StringVector &defvector = it->second;
+	for (string &defstr : defvector) {
+		char &type = defstr[0];
+		string def = defstr.substr(1);
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
 			if (type == 'P')
@@ -331,12 +331,12 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 
 
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions&) {
-	for (MacroMap::iterator map_it=_macros.begin(); map_it != _macros.end(); ++map_it) {
-		StringVector &vec = map_it->second;
-		for (StringVector::iterator str_it=vec.begin(); str_it != vec.end(); ++str_it) {
+	for (auto &strvecpair : _macros) {
+		StringVector &vec = strvecpair.second;
+		for (string &str : vec) {
 			// activate locked parts of a pattern again
-			if (str_it->at(0) == 'L')
-				str_it->at(0) = 'D';
+			if (str[0] == 'L')
+				str[0] = 'D';
 		}
 	}
 }

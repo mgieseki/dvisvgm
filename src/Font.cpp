@@ -648,8 +648,8 @@ VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss)
 
 VirtualFontImpl::~VirtualFontImpl () {
 	// delete dvi vectors received by VFReaderAction
-	for (map<UInt32, DVIVector*>::iterator i=_charDefs.begin(); i != _charDefs.end(); ++i)
-		delete i->second;
+	for (auto &chardvipair : _charDefs)
+		delete chardvipair.second;
 }
 
 

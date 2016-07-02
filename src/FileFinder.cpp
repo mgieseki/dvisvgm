@@ -141,12 +141,12 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 
 	static std::string buf;
 	// try to lookup the file in the additionally specified directories
-	for (std::set<std::string>::iterator it=_additional_dirs.begin(); it != _additional_dirs.end(); ++it) {
-		if (it->at(0) == '/')
+	for (const std::string &dir : _additional_dirs) {
+		if (dir[0] == '/')
 			buf.clear();
 		else
 			buf = FileSystem::getcwd()+"/";
-		buf += (*it) + "/" + fname;
+		buf += dir + "/" + fname;
 		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}

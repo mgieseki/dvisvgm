@@ -38,8 +38,6 @@ class Subfont;
 class SubfontDefinition
 {
 	typedef std::map<std::string, Subfont*> Subfonts;
-	typedef Subfonts::iterator Iterator;
-	typedef Subfonts::const_iterator ConstIterator;
 	public:
 		~SubfontDefinition ();
 		static SubfontDefinition* lookup (const std::string &name);
@@ -84,10 +82,10 @@ class SubfontException : public MessageException
 {
 	public:
 		SubfontException (const std::string &msg, const std::string &fname, int lineno=0)
-				  : MessageException(msg), _fname(fname), _lineno(lineno) {}
+			: MessageException(msg), _fname(fname), _lineno(lineno) {}
 
 		SubfontException (const std::ostream &oss, const std::string &fname, int lineno=0)
-				  : MessageException(dynamic_cast<const std::ostringstream&>(oss).str()), _fname(fname), _lineno(lineno) {}
+			: MessageException(dynamic_cast<const std::ostringstream&>(oss).str()), _fname(fname), _lineno(lineno) {}
 
 		virtual ~SubfontException () throw() {}
 

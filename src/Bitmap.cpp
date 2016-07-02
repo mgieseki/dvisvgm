@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <limits>
 #include "Bitmap.h"
-#include "macros.h"
 
 using namespace std;
 
@@ -50,8 +49,8 @@ void Bitmap::resize (int minx, int maxx, int miny , int maxy) {
 	_yshift = miny;
 	_bpr  = _cols/8 + (_cols % 8 ? 1 : 0);  // bytes per row
 	_bytes.resize(_rows*_bpr);
-	FORALL(_bytes, vector<UInt8>::iterator, it)
-		*it = 0;
+	for (UInt8 &byte : _bytes)
+		byte = 0;
 }
 
 

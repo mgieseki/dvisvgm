@@ -164,9 +164,9 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 	sw.writeUnsigned(0, 4);  // space for checksum
 	sw.writeString(fontname, crc32, true);
 	sw.writeUnsigned(_glyphs.size(), 4, crc32);
-	FORALL(_glyphs, GlyphMap::const_iterator, it) {
-		const Glyph &glyph = it->second;
-		sw.writeUnsigned(it->first, 4, crc32);
+	for (const auto &charglyphpair : _glyphs) {
+		const Glyph &glyph = charglyphpair.second;
+		sw.writeUnsigned(charglyphpair.first, 4, crc32);
 		sw.writeUnsigned(glyph.size(), 2, crc32);
 		glyph.iterate(actions, false);
 	}
@@ -274,15 +274,15 @@ bool FontCache::fontinfo (const char *dirname, vector<FontInfo> &infos, vector<s
 	if (dirname) {
 		vector<string> fnames;
 		FileSystem::collect(dirname, fnames);
-		FORALL(fnames, vector<string>::iterator, it) {
-			if ((*it)[0] == 'f' && it->length() > 5 && it->substr(it->length()-4) == ".fgd") {
+		for (const string &fname : fnames) {
+			if (fname[0] == 'f' && fname.length() > 5 && fname.substr(fname.length()-4) == ".fgd") {
 				FontInfo info;
-				string path = string(dirname)+"/"+(it->substr(1));
+				string path = string(dirname)+"/"+(fname.substr(1));
 				ifstream ifs(path.c_str(), ios::binary);
 				if (fontinfo(ifs, info))
 					infos.push_back(info);
 				else
-					invalid.push_back(it->substr(1));
+					invalid.push_back(fname.substr(1));
 			}
 		}
 	}
@@ -361,29 +361,27 @@ void FontCache::fontinfo (const char *dirname, ostream &os, bool purge) {
 		ios::fmtflags osflags(os.flags());
 		vector<FontInfo> infos;
 		vector<string> invalid_files;
-		if (fontinfo(dirname, infos, invalid_files)) {
+		if (!fontinfo(dirname, infos, invalid_files))
+			os << "cache is empty\n";
+		else {
 			os << "cache format version " << infos[0].version << endl;
-			typedef map<string,FontInfo*> SortMap;
-			SortMap sortmap;
-			FORALL(infos, vector<FontInfo>::iterator, it)
-				sortmap[it->name] = &(*it);
-
-			FORALL(sortmap, SortMap::iterator, it) {
+			map<string, const FontInfo*> sortmap;
+			for (const FontInfo &info : infos)
+				sortmap[info.name] = &info;
+			for (const auto &strinfopair : sortmap) {
 				os	<< dec << setfill(' ') << left
-					<< setw(10) << left  << it->second->name
-					<< setw(5)  << right << it->second->numchars << " glyph" << (it->second->numchars == 1 ? ' ':'s')
-					<< setw(10) << right << it->second->numcmds  << " cmd"   << (it->second->numcmds == 1 ? ' ':'s')
-					<< setw(12) << right << it->second->numbytes << " byte"  << (it->second->numbytes == 1 ? ' ':'s')
-					<< setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << it->second->checksum
+					<< setw(10) << left  << strinfopair.second->name
+					<< setw(5)  << right << strinfopair.second->numchars << " glyph" << (strinfopair.second->numchars == 1 ? ' ':'s')
+					<< setw(10) << right << strinfopair.second->numcmds  << " cmd"   << (strinfopair.second->numcmds == 1 ? ' ':'s')
+					<< setw(12) << right << strinfopair.second->numbytes << " byte"  << (strinfopair.second->numbytes == 1 ? ' ':'s')
+					<< setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << strinfopair.second->checksum
 					<< endl;
 			}
 		}
-		else
-			os << "cache is empty\n";
-		FORALL(invalid_files, vector<string>::iterator, it) {
-			string path=string(dirname)+"/"+(*it);
+		for (const string &str : invalid_files) {
+			string path=string(dirname)+"/"+str;
 			if (FileSystem::remove(path))
-				os << "invalid cache file " << (*it) << " removed\n";
+				os << "invalid cache file " << str << " removed\n";
 		}
 		os.flags(osflags);  // restore format flags
 	}

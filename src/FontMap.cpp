@@ -36,8 +36,8 @@ using namespace std;
 
 
 FontMap::~FontMap () {
-	for (Iterator it=_entries.begin(); it != _entries.end(); ++it)
-		delete it->second;
+	for (auto &entry : _entries)
+		delete entry.second;
 }
 
 
@@ -173,7 +173,7 @@ bool FontMap::append (const MapLine &mapline) {
 				subfonts.push_back(0);
 			for (size_t i=0; i < subfonts.size(); i++) {
 				string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
-				Iterator it = _entries.find(fontname);
+				auto it = _entries.find(fontname);
 				if (it == _entries.end()) {
 					_entries[fontname] = new Entry(mapline, subfonts[i]);
 					ret = true;
@@ -202,7 +202,7 @@ bool FontMap::replace (const MapLine &mapline) {
 		subfonts.push_back(0);
 	for (size_t i=0; i < subfonts.size(); i++) {
 		string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
-		Iterator it = _entries.find(fontname);
+		auto it = _entries.find(fontname);
 		if (it == _entries.end())
 			_entries[fontname] = new Entry(mapline, subfonts[i]);
 		else if (!it->second->locked)
@@ -226,7 +226,7 @@ bool FontMap::remove (const MapLine &mapline) {
 			subfonts.push_back(0);
 		for (size_t i=0; i < subfonts.size(); i++) {
 			string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
-			Iterator it = _entries.find(fontname);
+			auto it = _entries.find(fontname);
 			if (it != _entries.end() && !it->second->locked) {
 				_entries.erase(it);
 				ret = true;
@@ -238,8 +238,8 @@ bool FontMap::remove (const MapLine &mapline) {
 
 
 ostream& FontMap::write (ostream &os) const {
-	for (ConstIterator it=_entries.begin(); it != _entries.end(); ++it)
-		os << it->first << " -> " << it->second->fontname << " [" << it->second->encname << "]\n";
+	for (const auto &entry : _entries)
+		os << entry.first << " -> " << entry.second->fontname << " [" << entry.second->encname << "]\n";
 	return os;
 }
 
@@ -261,7 +261,7 @@ void FontMap::readdir (const string &dirname) {
  * @param[in] fontname name of font whose mapped name is retrieved
  * @returns name of mapped font */
 const FontMap::Entry* FontMap::lookup (const string &fontname) const {
-	ConstIterator it = _entries.find(fontname);
+	auto it = _entries.find(fontname);
 	if (it == _entries.end())
 		return 0;
 	return it->second;
@@ -271,7 +271,7 @@ const FontMap::Entry* FontMap::lookup (const string &fontname) const {
 /** Sets the lock flag for the given font in order to avoid changing the map data of this font.
  *  @param[in] fontname name of font to be locked */
 void FontMap::lockFont (const string& fontname) {
-	Iterator it = _entries.find(fontname);
+	auto it = _entries.find(fontname);
 	if (it != _entries.end())
 		it->second->locked = true;
 }
@@ -283,7 +283,7 @@ void FontMap::clear (bool unlocked_only) {
 	if (!unlocked_only)
 		_entries.clear();
 	else {
-		Iterator it=_entries.begin();
+		auto it=_entries.begin();
 		while (it != _entries.end()) {
 			if (it->second->locked)
 				++it;

@@ -34,8 +34,8 @@ using namespace std;
 
 
 FontManager::~FontManager () {
-	FORALL(_fonts, vector<Font*>::iterator, i)
-		delete *i;
+	for (Font *font : _fonts)
+		delete font;
 }
 
 
@@ -91,18 +91,17 @@ int FontManager::fontnum (int id) const {
 	if (id < 0 || size_t(id) > _fonts.size())
 		return -1;
 	if (_vfStack.empty()) {
-		FORALL(_num2id, Num2IdMap::const_iterator, i)
-			if (i->second == id)
-				return i->first;
+		for (const auto &entry : _num2id)
+			if (entry.second == id)
+				return entry.first;
 	}
 	else {
-		VfNum2IdMap::const_iterator it = _vfnum2id.find(_vfStack.top());
+		auto it = _vfnum2id.find(_vfStack.top());
 		if (it == _vfnum2id.end())
 			return -1;
-		const Num2IdMap &num2id = it->second;
-		FORALL(num2id, Num2IdMap::const_iterator, i)
-			if (i->second == id)
-				return i->first;
+		for (const auto &entry : it->second)
+			if (entry.second == id)
+				return entry.first;
 	}
 	return -1;
 }
@@ -328,8 +327,8 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 #if 0
 	if (font) {
 		int id = -1;
-		for (int i=0; i < fonts.size() && id < 0; i++)
-			if (fonts[i] == font)
+		for (int i=0; i < _fonts.size() && id < 0; i++)
+			if (_fonts[i] == font)
 				id = i;
 
 		VirtualFont *vf = dynamic_cast<VirtualFont*>(font);
@@ -343,17 +342,17 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 
 		if (vf) {
 			enterVF(vf);
-			const Num2IdMap &num2id = vfnum2id.find(vf)->second;
-			FORALL(num2id, Num2IdMap::const_iterator, i) {
-				Font *font = fonts[i->second];
+			const Num2IdMap &num2id = _vfnum2id.find(vf)->second;
+			for (const auto &entry : num2id) {
+				Font *font = _fonts[entry.second];
 				write(os, font, level+1);
 			}
 			leaveVF();
 		}
 	}
 	else {
-		for (int i=0; i < fonts.size(); i++)
-			write(os, fonts[i], level);
+		for (int i=0; i < _fonts.size(); i++)
+			write(os, _fonts[i], level);
 		os << endl;
 	}
 #endif

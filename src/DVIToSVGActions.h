@@ -38,7 +38,7 @@ class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {
-	typedef std::map<const Font*, std::set<int> > CharMap;
+	typedef std::map<const Font*, std::set<int>> CharMap;
 	typedef std::set<const Font*> FontSet;
 	typedef std::map<std::string,BoundingBox> BoxMap;
 

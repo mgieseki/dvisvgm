@@ -30,7 +30,6 @@ class DependencyGraph
 {
 	struct GraphNode {
 		typedef typename std::vector<GraphNode*> Dependees;
-		typedef typename Dependees::iterator Iterator;
 
 		GraphNode (const T &k) : key(k), dependent(0) {}
 
