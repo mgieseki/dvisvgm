@@ -26,13 +26,13 @@
 class SVGCharTspanTextHandler : public SVGCharTextHandler {
 	public:
 		SVGCharTspanTextHandler (bool selectFontByClass);
-		void notifyXAdjusted () {_xchanged = true;}
-		void notifyYAdjusted()  {_ychanged = true;}
-		void appendChar (UInt32 c, double x, double y);
-		void setInitialContextNode (XMLElementNode *node);
+		void notifyXAdjusted () override {_xchanged = true;}
+		void notifyYAdjusted()  override {_ychanged = true;}
+		void appendChar (UInt32 c, double x, double y) override;
+		void setInitialContextNode (XMLElementNode *node) override;
 
 	protected:
-		void resetContextNode ();
+		void resetContextNode () override;
 
 	private:
 		bool _xchanged, _ychanged;

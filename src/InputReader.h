@@ -63,10 +63,10 @@ class StreamInputReader : public InputReader
 {
 	public:
 		StreamInputReader (std::istream &is) : _is(is) {}
-		int get ()                {return _is.get();}
-		int peek () const         {return _is.peek();}
-		int peek (size_t n) const;
-		bool eof () const         {return !_is || _is.eof();}
+		int get () override        {return _is.get();}
+		int peek () const override {return _is.peek();}
+		int peek (size_t n) const override;
+		bool eof () const override {return !_is || _is.eof();}
 
 	private:
 		std::istream &_is;
@@ -78,10 +78,10 @@ class BufferInputReader : public InputReader
 	public:
 		BufferInputReader (InputBuffer &ib) : _ib(&ib) {}
 		void assign (InputBuffer &ib) {_ib = &ib;}
-		int get ()                    {return _ib->get();}
-		int peek () const             {return _ib->peek();}
-		int peek (size_t n) const     {return _ib->peek(n);}
-		bool eof () const             {return _ib->eof();}
+		int get () override                {return _ib->get();}
+		int peek () const override         {return _ib->peek();}
+		int peek (size_t n) const override {return _ib->peek(n);}
+		bool eof () const override         {return _ib->eof();}
 
 	private:
 		InputBuffer *_ib;

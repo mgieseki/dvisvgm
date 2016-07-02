@@ -27,13 +27,13 @@ class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
 	public:
 		NoPsSpecialHandler () : _count(0) {}
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
-		const char* name () const   {return 0;}
-		const char* info () const   {return 0;}
-		const char** prefixes () const;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		const char* name () const override {return 0;}
+		const char* info () const override {return 0;}
+		const char** prefixes () const override;
 
 	protected:
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 
 	private:
 		unsigned _count;  // number of PS specials skipped

@@ -38,12 +38,12 @@ class DVIToSVG : public DVIReader
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
 		void setPageSize (const std::string &format)         {_bboxFormatString = format;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
-		void getPageTransformation (Matrix &matrix) const;
-		void translateToX (double x) {_tx = x-currState().h-_tx;}
-		void translateToY (double y) {_ty = y-currState().v-_ty;}
-		double getXPos() const       {return currState().h+_tx;}
-		double getYPos() const       {return currState().v+_ty;}
-		void finishLine ()           {_prevYPos = std::numeric_limits<double>::min();}
+		void getPageTransformation (Matrix &matrix) const override;
+		void translateToX (double x) override {_tx = x-currState().h-_tx;}
+		void translateToY (double y) override {_ty = y-currState().v-_ty;}
+		double getXPos() const override       {return currState().h+_tx;}
+		double getYPos() const override       {return currState().v+_ty;}
+		void finishLine () override           {_prevYPos = std::numeric_limits<double>::min();}
 
 		std::string getSVGFilename (unsigned pageno) const;
 		std::string getUserBBoxString () const  {return _bboxFormatString;}
@@ -56,28 +56,28 @@ class DVIToSVG : public DVIReader
 	protected:
 		DVIToSVG (const DVIToSVG&);
 		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
-		int executeCommand ();
+		int executeCommand () override;
 		void enterBeginPage (unsigned pageno, const std::vector<Int32> &c);
 		void leaveEndPage (unsigned pageno);
 		void embedFonts (XMLElementNode *svgElement);
-		void moveRight (double dx);
-		void moveDown (double dy);
+		void moveRight (double dx) override;
+		void moveDown (double dy) override;
 
-		void dviPost (UInt16 stdepth, UInt16 pages, UInt32 pw, UInt32 ph, UInt32 mag, UInt32 num, UInt32 den, UInt32 lbopofs);
-		void dviBop (const std::vector<Int32> &c, Int32 prevBopOffset);
-		void dviEop ();
-		void dviSetChar0 (UInt32 c, const Font *font);
-		void dviSetChar (UInt32 c, const Font *font);
-		void dviPutChar (UInt32 c, const Font *font);
-		void dviSetRule (double h, double w);
-		void dviPutRule (double h, double w);
-		void dviPop ();
-		void dviFontNum (UInt32 fontnum, SetFontMode mode, const Font *font);
-		void dviDir (WritingMode dir);
-		void dviXXX (const std::string &str);
-		void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &glyphs, const Font &font);
-		void dviXGlyphString (std::vector<double> &dx, std::vector<UInt16> &glyphs, const Font &font);
-		void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &chars, std::vector<UInt16> &glyphs, const Font &font);
+		void dviPost (UInt16 stdepth, UInt16 pages, UInt32 pw, UInt32 ph, UInt32 mag, UInt32 num, UInt32 den, UInt32 lbopofs) override;
+		void dviBop (const std::vector<Int32> &c, Int32 prevBopOffset) override;
+		void dviEop () override;
+		void dviSetChar0 (UInt32 c, const Font *font) override;
+		void dviSetChar (UInt32 c, const Font *font) override;
+		void dviPutChar (UInt32 c, const Font *font) override;
+		void dviSetRule (double h, double w) override;
+		void dviPutRule (double h, double w) override;
+		void dviPop () override;
+		void dviFontNum (UInt32 fontnum, SetFontMode mode, const Font *font) override;
+		void dviDir (WritingMode dir) override;
+		void dviXXX (const std::string &str) override;
+		void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &glyphs, const Font &font) override;
+		void dviXGlyphString (std::vector<double> &dx, std::vector<UInt16> &glyphs, const Font &font) override;
+		void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &chars, std::vector<UInt16> &glyphs, const Font &font) override;
 
 	private:
 		SVGTree _svg;

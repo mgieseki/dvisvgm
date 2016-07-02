@@ -42,12 +42,12 @@ class GFGlyphTracer : public GFTracer
 		GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
 		void reset (std::string &fname, double upp);
 		void setCallback (Callback *cb) {_callback = cb;}
-		bool executeChar (UInt8 c);
-		void moveTo (double x, double y);
-		void lineTo (double x, double y);
-		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y);
-		void closePath ();
-		void endChar (UInt32 c);
+		bool executeChar (UInt8 c) override;
+		void moveTo (double x, double y) override;
+		void lineTo (double x, double y) override;
+		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) override;
+		void closePath () override;
+		void endChar (UInt32 c) override;
 		void setGlyph (Glyph &glyph)   {_glyph = &glyph;}
 		const Glyph& getGlyph () const {return *_glyph;}
 

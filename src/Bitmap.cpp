@@ -101,7 +101,7 @@ class BBoxCallback : public Bitmap::Callback
 		int maxy () const   {return _maxy;}
 		bool empty () const {return !_changed;}
 
-		void pixel (int x, int y, bool set, const Bitmap&) {
+		void pixel (int x, int y, bool set, const Bitmap&) override {
 			if (set) {
 				_minx = min(_minx, x);
 				_miny = min(_miny, y);
@@ -111,7 +111,7 @@ class BBoxCallback : public Bitmap::Callback
 			}
 		}
 
-		void finish () {
+		void finish () override {
 			if (empty())
 				_minx = _miny = 0;
 		}

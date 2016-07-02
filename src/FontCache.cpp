@@ -147,7 +147,7 @@ bool FontCache::write (const char *fontname, ostream &os) const {
 	struct WriteActions : Glyph::Actions {
 		WriteActions (StreamWriter &sw, CRC32 &crc32) : _sw(sw), _crc32(crc32) {}
 
-		void draw (char cmd, const Glyph::Point *points, int n) {
+		void draw (char cmd, const Glyph::Point *points, int n) override {
 			int bytes = max_int_size(points, n);
 			int cmdchar = (bytes << 5) | (cmd - 'A');
 			_sw.writeUnsigned(cmdchar, 1, _crc32);

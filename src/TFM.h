@@ -34,19 +34,19 @@ class TFM : public FontMetrics
 {
 	public:
 		TFM (std::istream &is);
-		double getCharWidth (int c) const;
-		double getCharHeight (int c) const;
-		double getCharDepth (int c) const;
-		double getItalicCorr (int c) const;
-		double getDesignSize () const {return _designSize;}
-		double getSpace () const;
-		double getSpaceStretch () const;
-		double getSpaceShrink () const;
-		double getQuad () const;
-		bool verticalLayout () const  {return false;}
-		UInt32 getChecksum () const   {return _checksum;}
-		UInt16 firstChar () const     {return _firstChar;}
-		UInt16 lastChar () const      {return _lastChar;}
+		double getCharWidth (int c) const override;
+		double getCharHeight (int c) const override;
+		double getCharDepth (int c) const override;
+		double getItalicCorr (int c) const override;
+		double getDesignSize () const override {return _designSize;}
+		double getSpace () const override;
+		double getSpaceStretch () const override;
+		double getSpaceShrink () const override;
+		double getQuad () const override;
+		bool verticalLayout () const override {return false;}
+		UInt32 getChecksum () const override  {return _checksum;}
+		UInt16 firstChar () const override    {return _firstChar;}
+		UInt16 lastChar () const override     {return _lastChar;}
 
 	protected:
 		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _params(7) {}

@@ -40,9 +40,9 @@ class %(class)s : public CmdLineParserBase
 \t\t%(class)s () {init();}
 \t\t%(class)s (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
 %(public)s\tprotected:
-\t\tvoid init ();
-\t\tconst CmdLineParserBase::Option* options (size_t *numopts) const;
-\t\tconst char** helplines (size_t *numlines) const;
+\t\tvoid init () override;
+\t\tconst CmdLineParserBase::Option* options (size_t *numopts) const override;
+\t\tconst char** helplines (size_t *numlines) const override;
 %(protected)s
 \tprivate:
 \t\tstatic const CmdLineParserBase::Option _options[];

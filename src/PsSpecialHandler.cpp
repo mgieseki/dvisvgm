@@ -928,7 +928,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
 		}
 
-		void patchSegment (GraphicsPath<double> &path, const Color &color) {
+		void patchSegment (GraphicsPath<double> &path, const Color &color) override {
 			if (!_actions.getMatrix().isIdentity())
 				path.transform(_actions.getMatrix());
 

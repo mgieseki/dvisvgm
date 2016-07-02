@@ -31,17 +31,17 @@ class VectorStreamBuffer : public std::streambuf
 		VectorStreamBuffer (const std::vector<T> &v) : _begin(&v[0]), _end(&v[0]+v.size()), _curr(&v[0]) {}
 
 	protected:
-		int_type underflow () {return _curr == _end ? traits_type::eof() : traits_type::to_int_type(*_curr);}
-		int_type uflow()      {return _curr == _end ? traits_type::eof() : traits_type::to_int_type(*_curr++);}
-		std::streamsize showmanyc () {return _end-_curr;}
+		int_type underflow () override {return _curr == _end ? traits_type::eof() : traits_type::to_int_type(*_curr);}
+		int_type uflow() override {return _curr == _end ? traits_type::eof() : traits_type::to_int_type(*_curr++);}
+		std::streamsize showmanyc () override {return _end-_curr;}
 
-		int_type pbackfail (int_type c) {
+		int_type pbackfail (int_type c) override {
 			if (_curr == _begin || (c != traits_type::eof() && c != _curr[-1]))
 				return traits_type::eof();
 			return traits_type::to_int_type(*--_curr);
 		}
 
-		pos_type seekoff (off_type off, std::ios_base::seekdir dir, std::ios_base::openmode which=std::ios_base::in) {
+		pos_type seekoff (off_type off, std::ios_base::seekdir dir, std::ios_base::openmode which=std::ios_base::in) override {
 			switch (dir) {
 				case std::ios_base::cur:
 					_curr += off; break;

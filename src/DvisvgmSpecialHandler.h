@@ -36,11 +36,11 @@ class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingList
 
 	public:
 		DvisvgmSpecialHandler ();
-		const char* name () const   {return "dvisvgm";}
-		const char* info () const   {return "special set for embedding raw SVG snippets";}
-		const char** prefixes () const;
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions);
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
+		const char* name () const override {return "dvisvgm";}
+		const char* info () const override {return "special set for embedding raw SVG snippets";}
+		const char** prefixes () const override;
+		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 
 	protected:
 		void preprocessRaw (InputReader &ir);
@@ -55,8 +55,8 @@ class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingList
 		void processRawPut (InputReader &ir, SpecialActions &actions);
 		void processBBox (InputReader &ir, SpecialActions &actions);
 		void processImg (InputReader &ir, SpecialActions &actions);
-		void dviPreprocessingFinished ();
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void dviPreprocessingFinished () override;
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 
 	private:
 		MacroMap _macros;

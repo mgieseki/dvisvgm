@@ -55,7 +55,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 			void setClippathLoaded (bool loaded);
 			const Path* top () const;
 			Path* getPath (size_t id);
-			int topID () const  {return _stack.empty() ? 0 : _stack.top().pathID;}
+			int topID () const {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
 			struct Entry {
@@ -73,12 +73,12 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 	public:
 		PsSpecialHandler ();
 		~PsSpecialHandler ();
-		const char* name () const   {return "ps";}
-		const char* info () const   {return "dvips PostScript specials";}
-		const char** prefixes () const;
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions);
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
-		void setDviScaleFactor (double dvi2bp) {_previewFilter.setDviScaleFactor(dvi2bp);}
+		const char* name () const override {return "ps";}
+		const char* info () const override {return "dvips PostScript specials";}
+		const char** prefixes () const override;
+		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		void setDviScaleFactor (double dvi2bp) override {_previewFilter.setDviScaleFactor(dvi2bp);}
 		void enterBodySection ();
 
 	public:
@@ -94,7 +94,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
 		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path &path, bool evenodd);
 		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);
 		void processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it);
@@ -102,45 +102,45 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		/// scale given value by current PS scale factors
 		double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}
 
-		void applyscalevals (std::vector<double> &p) {_sx = p[0]; _sy = p[1]; _cos = p[2];}
-		void clip (std::vector<double> &p)           {clip(p, false);}
+		void applyscalevals (std::vector<double> &p) override  {_sx = p[0]; _sy = p[1]; _cos = p[2];}
+		void clip (std::vector<double> &p) override            {clip(p, false);}
 		void clip (std::vector<double> &p, bool evenodd);
-		void clippath (std::vector<double> &p);
-		void closepath (std::vector<double> &p);
-		void curveto (std::vector<double> &p);
-		void eoclip (std::vector<double> &p)         {clip(p, true);}
-		void eofill (std::vector<double> &p)         {fill(p, true);}
+		void clippath (std::vector<double> &p) override;
+		void closepath (std::vector<double> &p) override;
+		void curveto (std::vector<double> &p) override;
+		void eoclip (std::vector<double> &p) override          {clip(p, true);}
+		void eofill (std::vector<double> &p) override          {fill(p, true);}
 		void fill (std::vector<double> &p, bool evenodd);
-		void fill (std::vector<double> &p)           {fill(p, false);}
-		void grestore (std::vector<double> &p);
-		void grestoreall (std::vector<double> &p);
-		void gsave (std::vector<double> &p);
-		void initclip (std::vector<double> &p);
-		void lineto (std::vector<double> &p);
-		void makepattern (std::vector<double> &p);
-		void moveto (std::vector<double> &p);
-		void newpath (std::vector<double> &p);
-		void querypos (std::vector<double> &p)       {_currentpoint = DPair(p[0], p[1]);}
-		void restore (std::vector<double> &p);
-		void rotate (std::vector<double> &p);
-		void save (std::vector<double> &p);
-		void scale (std::vector<double> &p);
-		void setcmykcolor (std::vector<double> &cmyk);
-		void setdash (std::vector<double> &p);
-		void setgray (std::vector<double> &p);
-		void sethsbcolor (std::vector<double> &hsb);
-		void setlinecap (std::vector<double> &p)     {_linecap = UInt8(p[0]);}
-		void setlinejoin (std::vector<double> &p)    {_linejoin = UInt8(p[0]);}
-		void setlinewidth (std::vector<double> &p)   {_linewidth = p[0] ? scale(p[0])*1.00375 : 0.5;}
-		void setmatrix (std::vector<double> &p);
-		void setmiterlimit (std::vector<double> &p)  {_miterlimit = p[0]*1.00375;}
-		void setopacityalpha (std::vector<double> &p){_opacityalpha = p[0];}
-		void setpattern (std::vector<double> &p);
-		void setrgbcolor (std::vector<double> &rgb);
-		void shfill (std::vector<double> &p);
-		void stroke (std::vector<double> &p);
-		void translate (std::vector<double> &p);
-		void executed ();
+		void fill (std::vector<double> &p) override            {fill(p, false);}
+		void grestore (std::vector<double> &p) override;
+		void grestoreall (std::vector<double> &p) override;
+		void gsave (std::vector<double> &p) override;
+		void initclip (std::vector<double> &p) override;
+		void lineto (std::vector<double> &p) override;
+		void makepattern (std::vector<double> &p) override;
+		void moveto (std::vector<double> &p) override;
+		void newpath (std::vector<double> &p) override;
+		void querypos (std::vector<double> &p) override        {_currentpoint = DPair(p[0], p[1]);}
+		void restore (std::vector<double> &p) override;
+		void rotate (std::vector<double> &p) override;
+		void save (std::vector<double> &p) override;
+		void scale (std::vector<double> &p) override;
+		void setcmykcolor (std::vector<double> &cmyk) override;
+		void setdash (std::vector<double> &p) override;
+		void setgray (std::vector<double> &p) override;
+		void sethsbcolor (std::vector<double> &hsb) override;
+		void setlinecap (std::vector<double> &p) override      {_linecap = UInt8(p[0]);}
+		void setlinejoin (std::vector<double> &p) override     {_linejoin = UInt8(p[0]);}
+		void setlinewidth (std::vector<double> &p) override    {_linewidth = p[0] ? scale(p[0])*1.00375 : 0.5;}
+		void setmatrix (std::vector<double> &p) override;
+		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0]*1.00375;}
+		void setopacityalpha (std::vector<double> &p) override {_opacityalpha = p[0];}
+		void setpattern (std::vector<double> &p) override;
+		void setrgbcolor (std::vector<double> &rgb) override;
+		void shfill (std::vector<double> &p) override;
+		void stroke (std::vector<double> &p) override;
+		void translate (std::vector<double> &p) override;
+		void executed () override;
 
 	private:
 		PSInterpreter _psi;

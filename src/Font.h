@@ -91,18 +91,18 @@ class Font {
 class EmptyFont : public Font {
 	public:
 		EmptyFont (std::string name) : _fontname(name) {}
-		Font* clone (double ds, double sc) const  {return new EmptyFont(*this);}
-		const Font* uniqueFont () const           {return this;}
-		std::string name () const                 {return _fontname;}
-		double designSize () const                {return 10;}    // cmr10 design size in pt
-		double scaledSize () const                {return 10;}    // cmr10 scaled size in pt
-		double charWidth (int c) const            {return 9.164;} // width of cmr10's 'M' in pt
-		double charHeight (int c) const           {return 6.833;} // height of cmr10's 'M' in pt
-		double charDepth (int c) const            {return 0;}
-		double italicCorr (int c) const           {return 0;}
-		const FontMetrics* getMetrics () const    {return 0;}
-		const char* path () const                 {return 0;}
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
+		Font* clone (double ds, double sc) const override  {return new EmptyFont(*this);}
+		const Font* uniqueFont () const override           {return this;}
+		std::string name () const override                 {return _fontname;}
+		double designSize () const override                {return 10;}    // cmr10 design size in pt
+		double scaledSize () const override                {return 10;}    // cmr10 scaled size in pt
+		double charWidth (int c) const override            {return 9.164;} // width of cmr10's 'M' in pt
+		double charHeight (int c) const override           {return 6.833;} // height of cmr10's 'M' in pt
+		double charDepth (int c) const override            {return 0;}
+		double italicCorr (int c) const override           {return 0;}
+		const FontMetrics* getMetrics () const override    {return 0;}
+		const char* path () const override                 {return 0;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
 
 	private:
 		std::string _fontname;
@@ -117,7 +117,7 @@ class PhysicalFont : public virtual Font {
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
 		virtual Type type () const =0;
-		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const;
+		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override;
 		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
 		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb=0) const;
 		virtual bool isCIDFont () const;
@@ -136,7 +136,7 @@ class PhysicalFont : public virtual Font {
 		virtual CharMapID getCharMapID () const =0;
 		virtual void setCharMapID (const CharMapID &id) {}
 		virtual Character decodeChar (UInt32 c) const;
-		const char* path () const;
+		const char* path () const override;
 
 	protected:
 		bool createGF (std::string &gfname) const;
@@ -161,7 +161,7 @@ class VirtualFont : public virtual Font {
 	public:
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
 
 	protected:
 		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;
@@ -172,15 +172,15 @@ class TFMFont : public virtual Font {
 	public:
 		TFMFont (std::string name, UInt32 checksum, double dsize, double ssize);
 		~TFMFont ();
-		const FontMetrics* getMetrics () const;
-		std::string name () const   {return _fontname;}
-		double designSize () const  {return _dsize;}
-		double scaledSize () const  {return _ssize;}
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-		double italicCorr (int c) const;
-		bool verifyChecksums () const;
+		const FontMetrics* getMetrics () const override;
+		std::string name () const override  {return _fontname;}
+		double designSize () const override {return _dsize;}
+		double scaledSize () const override {return _ssize;}
+		double charWidth (int c) const override;
+		double charDepth (int c) const override;
+		double charHeight (int c) const override;
+		double italicCorr (int c) const override;
+		bool verifyChecksums () const override;
 
 	private:
 		mutable FontMetrics *_metrics;
@@ -194,24 +194,24 @@ class TFMFont : public virtual Font {
 class PhysicalFontProxy : public PhysicalFont {
 	friend class PhysicalFontImpl;
 	public:
-		Font* clone (double ds, double sc) const    {return new PhysicalFontProxy(*this, ds, sc);}
-		const Font* uniqueFont () const             {return _pf;}
-		std::string name () const                   {return _pf->name();}
-		double designSize () const                  {return _dsize;}
-		double scaledSize () const                  {return _ssize;}
-		double charWidth (int c) const              {return _pf->charWidth(c);}
-		double charDepth (int c) const              {return _pf->charDepth(c);}
-		double charHeight (int c) const             {return _pf->charHeight(c);}
-		double italicCorr (int c) const             {return _pf->italicCorr(c);}
-		const FontMetrics* getMetrics () const      {return _pf->getMetrics();}
-		Type type () const                          {return _pf->type();}
-		UInt32 unicode (UInt32 c) const             {return _pf->unicode(c);}
-		int fontIndex () const                      {return _pf->fontIndex();}
-		const FontStyle* style () const             {return _pf->style();}
-		const FontMap::Entry* fontMapEntry () const {return _pf->fontMapEntry();}
-		const FontEncoding* encoding () const       {return _pf->encoding();}
-		CharMapID getCharMapID () const             {return _pf->getCharMapID();}
-		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const {return _pf->collectCharMapIDs(charmapIDs);}
+		Font* clone (double ds, double sc) const override    {return new PhysicalFontProxy(*this, ds, sc);}
+		const Font* uniqueFont () const override             {return _pf;}
+		std::string name () const override                   {return _pf->name();}
+		double designSize () const override                  {return _dsize;}
+		double scaledSize () const override                  {return _ssize;}
+		double charWidth (int c) const override              {return _pf->charWidth(c);}
+		double charDepth (int c) const override              {return _pf->charDepth(c);}
+		double charHeight (int c) const override             {return _pf->charHeight(c);}
+		double italicCorr (int c) const override             {return _pf->italicCorr(c);}
+		const FontMetrics* getMetrics () const override      {return _pf->getMetrics();}
+		Type type () const override                          {return _pf->type();}
+		UInt32 unicode (UInt32 c) const override             {return _pf->unicode(c);}
+		int fontIndex () const override                      {return _pf->fontIndex();}
+		const FontStyle* style () const override             {return _pf->style();}
+		const FontMap::Entry* fontMapEntry () const override {return _pf->fontMapEntry();}
+		const FontEncoding* encoding () const override       {return _pf->encoding();}
+		CharMapID getCharMapID () const override             {return _pf->getCharMapID();}
+		int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const override {return _pf->collectCharMapIDs(charmapIDs);}
 
 	protected:
 		PhysicalFontProxy (const PhysicalFont *font, double ds, double ss) : _pf(font), _dsize(ds), _ssize(ss) {}
@@ -228,17 +228,17 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 	friend class PhysicalFont;
 	public:
 		~PhysicalFontImpl();
-		Font* clone (double ds, double ss) const    {return new PhysicalFontProxy(this, ds, ss);}
-		const Font* uniqueFont () const             {return this;}
-		Type type () const                          {return _filetype;}
-		int fontIndex() const                       {return _fontIndex;}
-		const FontStyle* style () const             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
-		const FontMap::Entry* fontMapEntry () const {return _fontMapEntry;}
-		const FontEncoding* encoding () const;
-		UInt32 unicode (UInt32 c) const;
-		bool findAndAssignBaseFontMap ();
-		void tidy () const;
-		CharMapID getCharMapID () const             {return _charmapID;}
+		Font* clone (double ds, double ss) const override    {return new PhysicalFontProxy(this, ds, ss);}
+		const Font* uniqueFont () const override             {return this;}
+		Type type () const override                          {return _filetype;}
+		int fontIndex() const override                       {return _fontIndex;}
+		const FontStyle* style () const override             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
+		const FontMap::Entry* fontMapEntry () const override {return _fontMapEntry;}
+		const FontEncoding* encoding () const override;
+		UInt32 unicode (UInt32 c) const override;
+		bool findAndAssignBaseFontMap () override;
+		void tidy () const override;
+		CharMapID getCharMapID () const override             {return _charmapID;}
 
 	protected:
 		PhysicalFontImpl (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
@@ -256,19 +256,19 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 class NativeFont : public PhysicalFont {
 	public:
 		virtual NativeFont* clone (double ptsize, const FontStyle &style, Color color) const =0;
-		virtual Font* clone (double ds, double sc) const =0;
-		std::string name () const;
-		Type type () const;
-		double designSize () const               {return _ptsize;}
-		double scaledSize () const               {return _ptsize;}
-		double charWidth (int c) const;
-		double charDepth (int c) const;
-		double charHeight (int c) const;
-		double italicCorr (int c) const          {return 0;}
-		const FontMetrics* getMetrics () const   {return 0;}
-		const FontStyle* style () const          {return &_style;}
-		Color color () const                     {return _color;}
-		const FontMap::Entry* fontMapEntry () const {return 0;}
+		virtual Font* clone (double ds, double sc) const override =0;
+		std::string name () const override;
+		Type type () const override;
+		double designSize () const override  {return _ptsize;}
+		double scaledSize () const override  {return _ptsize;}
+		double charWidth (int c) const override;
+		double charDepth (int c) const override;
+		double charHeight (int c) const override;
+		double italicCorr (int c) const override         {return 0;}
+		const FontMetrics* getMetrics () const override  {return 0;}
+		const FontStyle* style () const override         {return &_style;}
+		Color color () const override                    {return _color;}
+		const FontMap::Entry* fontMapEntry () const override {return 0;}
 		static std::string uniqueName (const std::string &path, const FontStyle &style);
 
 	protected:
@@ -284,17 +284,17 @@ class NativeFont : public PhysicalFont {
 class NativeFontProxy : public NativeFont {
 	friend class NativeFontImpl;
 	public:
-		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const {
+		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const override {
 			return new NativeFontProxy(this, ptsize, style, color);
 		}
 
-		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
-		const Font* uniqueFont () const          {return _nfont;}
-		const char* path () const                {return _nfont->path();}
-		int fontIndex () const                   {return _nfont->fontIndex();}
-		Character decodeChar (UInt32 c) const    {return _nfont->decodeChar(c);}
-		UInt32 unicode (UInt32 c) const          {return _nfont->unicode(c);}
-		CharMapID getCharMapID () const          {return _nfont->getCharMapID();}
+		Font* clone (double ds, double sc) const override {return new NativeFontProxy(this , sc, *style(), color());}
+		const Font* uniqueFont () const override          {return _nfont;}
+		const char* path () const override                {return _nfont->path();}
+		int fontIndex () const override                   {return _nfont->fontIndex();}
+		Character decodeChar (UInt32 c) const override    {return _nfont->decodeChar(c);}
+		UInt32 unicode (UInt32 c) const override          {return _nfont->unicode(c);}
+		CharMapID getCharMapID () const override          {return _nfont->getCharMapID();}
 
 	protected:
 		NativeFontProxy (const NativeFont *nfont, double ptsize, const FontStyle &style, Color color)
@@ -310,19 +310,19 @@ class NativeFontImpl : public NativeFont {
 		NativeFontImpl (const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color)
 			: NativeFont(ptsize, style, color), _path(fname), _fontIndex(fontIndex) {}
 
-		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const {
+		NativeFont* clone (double ptsize, const FontStyle &style, Color color) const override {
 			return new NativeFontProxy(this, ptsize, style, color);
 		}
 
-		Font* clone (double ds, double sc) const {return new NativeFontProxy(this , sc, *style(), color());}
-		const Font* uniqueFont () const          {return this;}
-		const char* path () const                {return _path.c_str();}
-		int fontIndex() const                    {return _fontIndex;}
+		Font* clone (double ds, double sc) const override {return new NativeFontProxy(this , sc, *style(), color());}
+		const Font* uniqueFont () const override          {return this;}
+		const char* path () const override                {return _path.c_str();}
+		int fontIndex() const override                    {return _fontIndex;}
 		std::string fontFamily () const;
-		bool findAndAssignBaseFontMap ();
-		CharMapID getCharMapID () const          {return CharMapID::NONE;}
-		Character decodeChar (UInt32 c) const;
-		UInt32 unicode (UInt32 c) const;
+		bool findAndAssignBaseFontMap () override;
+		CharMapID getCharMapID () const override          {return CharMapID::NONE;}
+		Character decodeChar (UInt32 c) const override;
+		UInt32 unicode (UInt32 c) const override;
 
 	private:
 		std::string _path;
@@ -334,23 +334,23 @@ class NativeFontImpl : public NativeFont {
 class VirtualFontProxy : public VirtualFont {
 	friend class VirtualFontImpl;
 	public:
-		Font* clone (double ds, double ss) const {return new VirtualFontProxy(*this, ds, ss);}
-		const Font* uniqueFont () const          {return _vf;}
-		std::string name () const                {return _vf->name();}
-		const DVIVector* getDVI (int c) const    {return _vf->getDVI(c);}
-		double designSize () const               {return _dsize;}
-		double scaledSize () const               {return _ssize;}
-		double charWidth (int c) const           {return _vf->charWidth(c);}
-		double charDepth (int c) const           {return _vf->charDepth(c);}
-		double charHeight (int c) const          {return _vf->charHeight(c);}
-		double italicCorr (int c) const          {return _vf->italicCorr(c);}
-		const FontMetrics* getMetrics () const   {return _vf->getMetrics();}
-		const char* path () const                {return _vf->path();}
+		Font* clone (double ds, double ss) const override {return new VirtualFontProxy(*this, ds, ss);}
+		const Font* uniqueFont () const override          {return _vf;}
+		std::string name () const override                {return _vf->name();}
+		const DVIVector* getDVI (int c) const override    {return _vf->getDVI(c);}
+		double designSize () const override               {return _dsize;}
+		double scaledSize () const override               {return _ssize;}
+		double charWidth (int c) const override           {return _vf->charWidth(c);}
+		double charDepth (int c) const override           {return _vf->charDepth(c);}
+		double charHeight (int c) const override          {return _vf->charHeight(c);}
+		double italicCorr (int c) const override          {return _vf->italicCorr(c);}
+		const FontMetrics* getMetrics () const override   {return _vf->getMetrics();}
+		const char* path () const override                {return _vf->path();}
 
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : _vf(font), _dsize(ds), _ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : _vf(proxy._vf), _dsize(ds), _ssize(ss) {}
-		void assignChar (UInt32 c, DVIVector *dvi) {delete dvi;}
+		void assignChar (UInt32 c, DVIVector *dvi) override {delete dvi;}
 
 	private:
 		const VirtualFont *_vf;
@@ -363,14 +363,14 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 	friend class VirtualFont;
 	public:
 		~VirtualFontImpl ();
-		Font* clone (double ds, double ss) const {return new VirtualFontProxy(this, ds, ss);}
-		const Font* uniqueFont () const   {return this;}
-		const DVIVector* getDVI (int c) const;
-		const char* path () const;
+		Font* clone (double ds, double ss) const override {return new VirtualFontProxy(this, ds, ss);}
+		const Font* uniqueFont () const override {return this;}
+		const DVIVector* getDVI (int c) const override;
+		const char* path () const override;
 
 	protected:
 		VirtualFontImpl (std::string name, UInt32 checksum, double dsize, double ssize);
-		void assignChar (UInt32 c, DVIVector *dvi);
+		void assignChar (UInt32 c, DVIVector *dvi) override;
 
 	private:
 		std::map<UInt32, DVIVector*> _charDefs; ///< dvi subroutines defining the characters

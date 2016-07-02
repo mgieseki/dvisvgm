@@ -90,9 +90,9 @@ class CommandLine : public CmdLineParserBase
 		bool zoom_given () const {return _zoom_given;}
 		double zoom_arg () const {return _zoom_arg;}
 	protected:
-		void init ();
-		const CmdLineParserBase::Option* options (size_t *numopts) const;
-		const char** helplines (size_t *numlines) const;
+		void init () override;
+		const CmdLineParserBase::Option* options (size_t *numopts) const override;
+		const char** helplines (size_t *numlines) const override;
 		void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
 		void handle_cache (InputReader &ir, const Option &opt, bool longopt);
 #if !defined(DISABLE_GS)

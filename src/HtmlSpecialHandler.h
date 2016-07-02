@@ -44,11 +44,11 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 
 	public:
 		HtmlSpecialHandler () : _active(false), _anchorType(AT_NONE), _depthThreshold(0) {}
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions);
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
-		const char* name () const  {return "html";}
-		const char* info () const  {return "hyperref specials";}
-		const char** prefixes () const;
+		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		const char* name () const override {return "html";}
+		const char* info () const override {return "hyperref specials";}
+		const char** prefixes () const override;
 
 		static bool setLinkMarker (const std::string &marker);
 
@@ -57,8 +57,8 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		void preprocessNameAnchor (const std::string &name, SpecialActions &actions);
 		void processHrefAnchor (std::string uri, SpecialActions &actions);
 		void processNameAnchor (const std::string &name, SpecialActions &actions);
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
-		void dviMovedTo (double x, double y, SpecialActions &actions);
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
+		void dviMovedTo (double x, double y, SpecialActions &actions) override;
 		void closeAnchor (SpecialActions &actions);
 		void markLinkedBox (SpecialActions &actions);
 

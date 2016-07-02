@@ -57,7 +57,7 @@ class FlattenActions : public CurvedPath::Actions {
 		FlattenActions (vector<Bezier> &curves, Polygons &polygons, int &numLines)
 			: _polygons(polygons), _curves(curves), _numLines(numLines) {}
 
-		void moveto (const CurvedPath::Point &p) {
+		void moveto (const CurvedPath::Point &p) override {
 			if (p == _currentPoint && !_currentPoly.empty())
 				return;
 			closepath();
@@ -65,7 +65,7 @@ class FlattenActions : public CurvedPath::Actions {
 			_currentPoint = _startPoint = p;
 		}
 
-		void lineto (const CurvedPath::Point &p) {
+		void lineto (const CurvedPath::Point &p) override {
 			if (p == _currentPoint && !_currentPoly.empty())
 				return;
 			if (_currentPoly.empty()) // this shouldn't happen but in case it does...
@@ -76,17 +76,17 @@ class FlattenActions : public CurvedPath::Actions {
 			_currentPoint = p;
 		}
 
-		void conicto (const CurvedPath::Point &p1, const CurvedPath::Point &p2) {
+		void conicto (const CurvedPath::Point &p1, const CurvedPath::Point &p2) override {
 			Bezier bezier(_currentPoint, p1, p2);
 			addCurvePoints(bezier);
 		}
 
-		void cubicto (const CurvedPath::Point &p1, const CurvedPath::Point &p2, const CurvedPath::Point &p3) {
+		void cubicto (const CurvedPath::Point &p1, const CurvedPath::Point &p2, const CurvedPath::Point &p3) override {
 			Bezier bezier(_currentPoint, p1, p2, p3);
 			addCurvePoints(bezier);
 		}
 
-		void closepath () {
+		void closepath () override {
 			if (_currentPoly.empty())
 				return;
 			_numLines--;
@@ -96,7 +96,7 @@ class FlattenActions : public CurvedPath::Actions {
 			_currentPoly.clear();
 		}
 
-		void finished () {
+		void finished () override {
 			closepath();
 		}
 

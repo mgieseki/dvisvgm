@@ -40,13 +40,13 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 
 	public:
 		EmSpecialHandler ();
-		const char* name () const   {return "em";}
-		const char* info () const   {return "line drawing statements of the emTeX special set";}
-		const char** prefixes () const;
-		bool process (const char *prefix, std::istream &in, SpecialActions &actions);
+		const char* name () const override {return "em";}
+		const char* info () const override {return "line drawing statements of the emTeX special set";}
+		const char** prefixes () const override;
+		bool process (const char *prefix, std::istream &in, SpecialActions &actions) override;
 
 	protected:
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void linewidth (InputReader &ir, SpecialActions &actions);
 		void moveto (InputReader &ir, SpecialActions &actions);
 		void lineto (InputReader &ir, SpecialActions &actions);

@@ -51,9 +51,9 @@ class FontEncodingPair : public FontEncoding
 	public:
 		FontEncodingPair (const FontEncoding *enc1) : _enc1(enc1), _enc2(0) {}
 		FontEncodingPair (const FontEncoding *enc1, const FontEncoding *enc2) : _enc1(enc1), _enc2(enc2) {}
-		Character decode (UInt32 c) const;
-		bool mapsToCharIndex () const;
-		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
+		Character decode (UInt32 c) const override;
+		bool mapsToCharIndex () const override;
+		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const override;
 		const FontEncoding* enc1 () const       {return _enc1;}
 		const FontEncoding* enc2 () const       {return _enc2;}
 		void assign (const FontEncoding *enc);

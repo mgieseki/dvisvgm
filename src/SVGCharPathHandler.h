@@ -29,12 +29,12 @@ class SVGCharPathHandler : public SVGCharHandler {
 
 	public:
 		SVGCharPathHandler (bool createUseElements, bool relativePathsCommands);
-		void appendChar (UInt32 c, double x, double y);
+		void appendChar (UInt32 c, double x, double y) override;
 
 	protected:
 		void appendUseElement (UInt32 c, double x, double y, const Matrix &matrix);
 		void appendPathElement (UInt32 c, double x, double y, const Matrix &matrix);
-		void resetContextNode ();
+		void resetContextNode () override;
 
 	private:
 		AppendMethod _appendChar;       ///< method called to append a single character

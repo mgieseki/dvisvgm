@@ -218,7 +218,7 @@ class GraphicsPath
 				WriteActions (std::ostream &os, bool relative, double sx, double sy, double dx, double dy)
 					: _os(os), _relative(relative), _sx(sx), _sy(sy), _dx(dx), _dy(dy) {}
 
-				void draw (char cmd, const Point *points, int n) {
+				void draw (char cmd, const Point *points, int n) override {
 					if (_relative)
 						cmd = tolower(cmd);
 					_os << cmd;
@@ -282,10 +282,10 @@ class GraphicsPath
 		void computeBBox (BoundingBox &bbox) const {
 			struct BBoxActions : Actions {
 				BBoxActions (BoundingBox &bb) : bbox(bb) {}
-				void moveto (const Point &p) {bbox.embed(p);}
-				void lineto (const Point &p) {bbox.embed(p);}
-				void conicto (const Point &p1, const Point &p2) {bbox.embed(p1); bbox.embed(p2);}
-				void cubicto (const Point &p1, const Point &p2, const Point &p3) {bbox.embed(p1); bbox.embed(p2); bbox.embed(p3);}
+				void moveto (const Point &p) override {bbox.embed(p);}
+				void lineto (const Point &p) override {bbox.embed(p);}
+				void conicto (const Point &p1, const Point &p2) override {bbox.embed(p1); bbox.embed(p2);}
+				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {bbox.embed(p1); bbox.embed(p2); bbox.embed(p3);}
 				BoundingBox &bbox;
 			} actions(bbox);
 			iterate(actions, false);
@@ -298,11 +298,11 @@ class GraphicsPath
 		bool isDot (Point &p) const {
 			struct DotActions : Actions {
 				DotActions () : differs(false) {}
-				void moveto (const Point &p) {point = p;}
-				void lineto (const Point &p) {differs = (p != point);}
-				void conicto (const Point &p1, const Point &p2) {differs = (point != p1 || point != p2);}
-				void cubicto (const Point &p1, const Point &p2, const Point &p3) {differs = (point != p1 || point != p2 || point != p3);}
-				bool quit () {return differs;}
+				void moveto (const Point &p) override {point = p;}
+				void lineto (const Point &p) override {differs = (p != point);}
+				void conicto (const Point &p1, const Point &p2) override {differs = (point != p1 || point != p2);}
+				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {differs = (point != p1 || point != p2 || point != p3);}
+				bool quit () override {return differs;}
 				Point point;
 				bool differs;
 			} actions;

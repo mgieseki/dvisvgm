@@ -37,30 +37,30 @@ class EPSToSVG : protected SpecialActions
 
 	protected:
 		// implement abstract base class SpecialActions
-		double getX () const                           {return _x;}
-		double getY () const                           {return _y;}
-		void setX (double x)                           {_x = x; _svg.setX(x);}
-		void setY (double y)                           {_y = y; _svg.setY(y);}
-		void finishLine ()                             {}
-		void setColor (const Color &color)             {_svg.setColor(color);}
-		Color getColor () const                        {return _svg.getColor();}
-		void setMatrix (const Matrix &m)               {_svg.setMatrix(m);}
-		const Matrix& getMatrix () const               {return _svg.getMatrix();}
-		void getPageTransform (Matrix &matrix) const   {}
-		void setBgColor (const Color &color)           {}
-		void appendToPage (XMLNode *node)              {_svg.appendToPage(node);}
-		void appendToDefs (XMLNode *node)              {_svg.appendToDefs(node);}
-		void prependToPage (XMLNode *node)             {_svg.prependToPage(node);}
-		void pushContextElement (XMLElementNode *node) {_svg.pushContextElement(node);}
-		void popContextElement ()                      {_svg.popContextElement();}
-		void embed (const BoundingBox &bbox)           {_bbox.embed(bbox);}
-		void embed (const DPair &p, double r=0)        {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
-		void progress (const char *id);
-		unsigned getCurrentPageNumber() const          {return 0;}
-		BoundingBox& bbox ()                           {return _bbox;}
-		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
-		std::string getSVGFilename (unsigned pageno) const;
-		std::string getBBoxFormatString () const       {return "";}
+		double getX () const override                           {return _x;}
+		double getY () const override                           {return _y;}
+		void setX (double x) override                           {_x = x; _svg.setX(x);}
+		void setY (double y) override                           {_y = y; _svg.setY(y);}
+		void finishLine () override                             {}
+		void setColor (const Color &color) override             {_svg.setColor(color);}
+		Color getColor () const override                        {return _svg.getColor();}
+		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
+		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
+		void getPageTransform (Matrix &matrix) const override   {}
+		void setBgColor (const Color &color) override           {}
+		void appendToPage (XMLNode *node) override              {_svg.appendToPage(node);}
+		void appendToDefs (XMLNode *node) override              {_svg.appendToDefs(node);}
+		void prependToPage (XMLNode *node) override             {_svg.prependToPage(node);}
+		void pushContextElement (XMLElementNode *node) override {_svg.pushContextElement(node);}
+		void popContextElement () override                      {_svg.popContextElement();}
+		void embed (const BoundingBox &bbox) override           {_bbox.embed(bbox);}
+		void embed (const DPair &p, double r=0) override        {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
+		void progress (const char *id) override;
+		unsigned getCurrentPageNumber() const override          {return 0;}
+		BoundingBox& bbox () override                           {return _bbox;}
+		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}
+		std::string getSVGFilename (unsigned pageno) const override;
+		std::string getBBoxFormatString () const override {return "";}
 
 	private:
 		std::string _fname;   ///< name of EPS file

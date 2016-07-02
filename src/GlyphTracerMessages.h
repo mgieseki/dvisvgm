@@ -36,7 +36,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 				Message::mstream() << '\n';
 		}
 
-		void beginChar (UInt8 c) {
+		void beginChar (UInt8 c) override {
 			if (!_traced) {
 				if (!_fname.empty())
 					Message::mstream() << '\n';
@@ -46,7 +46,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 			}
 		}
 
-		void endChar (UInt8 c) {
+		void endChar (UInt8 c) override {
 			std::ostringstream oss;
 			oss << '[';
 			if (isprint(c))
@@ -57,7 +57,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 			Message::mstream(false, Message::MC_TRACING) << oss.str();
 		}
 
-		void setFont (const std::string &fname) {
+		void setFont (const std::string &fname) override {
 			if (_sfmsg && fname != _fname) {
 				_fname = fname;
 				_traced = false;

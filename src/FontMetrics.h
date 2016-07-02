@@ -47,19 +47,19 @@ struct FontMetrics
 
 struct NullFontMetric : public FontMetrics
 {
-	double getDesignSize () const      {return 1;}
-	double getCharWidth (int c) const  {return 0;}
-	double getCharHeight (int c) const {return 0;}
-	double getCharDepth (int c) const  {return 0;}
-	double getItalicCorr (int c) const {return 0;}
-	double getSpace () const           {return 0;}
-	double getSpaceStretch () const    {return 0;}
-	double getSpaceShrink () const     {return 0;}
-	double getQuad () const            {return 0;}
-	bool verticalLayout () const       {return false;}
-	UInt32 getChecksum () const        {return 0;}
-	UInt16 firstChar () const          {return 0;}
-	UInt16 lastChar () const           {return 0;}
+	double getDesignSize () const override      {return 1;}
+	double getCharWidth (int c) const override  {return 0;}
+	double getCharHeight (int c) const override {return 0;}
+	double getCharDepth (int c) const override  {return 0;}
+	double getItalicCorr (int c) const override {return 0;}
+	double getSpace () const override           {return 0;}
+	double getSpaceStretch () const override    {return 0;}
+	double getSpaceShrink () const override     {return 0;}
+	double getQuad () const override            {return 0;}
+	bool verticalLayout () const override       {return false;}
+	UInt32 getChecksum () const override        {return 0;}
+	UInt16 firstChar () const override          {return 0;}
+	UInt16 lastChar () const override           {return 0;}
 };
 
 

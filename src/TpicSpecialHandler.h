@@ -29,13 +29,13 @@ class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
 {
 	public:
 		TpicSpecialHandler ();
-		const char* info () const   {return "TPIC specials";}
-		const char* name () const   {return "tpic";}
-		const char** prefixes () const;
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
+		const char* info () const override {return "TPIC specials";}
+		const char* name () const override {return "tpic";}
+		const char** prefixes () const override;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 
 	protected:
-		void dviEndPage (unsigned pageno, SpecialActions &actions);
+		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void reset ();
 		void drawLines (bool stroke, bool fill, double ddist, SpecialActions &actions);
 		void drawSplines (double ddist, SpecialActions &actions);

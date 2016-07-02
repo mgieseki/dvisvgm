@@ -44,23 +44,23 @@ class TensorProductPatch : public ShadingPatch
 		TensorProductPatch () : ShadingPatch(Color::RGB_SPACE) {}
 		TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch);
-		int psShadingType() const {return 7;}
+		int psShadingType() const override {return 7;}
 		void setPoints (const DPair points[4][4], int edgeflag, TensorProductPatch *patch);
-		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
-		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
+		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;
+		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
 		virtual DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
-		Color averageColor () const;
+		Color averageColor () const override;
 		void horizontalCurve (double v, Bezier &bezier) const;
 		void verticalCurve (double u, Bezier &bezier) const;
-		void getBoundaryPath (GraphicsPath<double> &path) const;
+		void getBoundaryPath (GraphicsPath<double> &path) const override;
 		void subpatch (double u1, double u2, double v1, double v2, TensorProductPatch &patch) const;
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
 		DPair blossomValue (double u[3], double v[3]) const {return blossomValue(u[0], u[1], u[2], v[0], v[1], v[2]);}
-		void approximate (int gridsize, bool overlap, double delta, Callback &callback) const;
-		void getBBox (BoundingBox &bbox) const;
-		int numPoints (int edgeflag) const {return edgeflag == 0 ? 16 : 12;}
-		int numColors (int edgeflag) const {return edgeflag == 0 ? 4 : 2;}
+		void approximate (int gridsize, bool overlap, double delta, Callback &callback) const override;
+		void getBBox (BoundingBox &bbox) const override;
+		int numPoints (int edgeflag) const override {return edgeflag == 0 ? 16 : 12;}
+		int numColors (int edgeflag) const override {return edgeflag == 0 ? 4 : 2;}
 
 	protected:
 		Color averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const;
@@ -84,12 +84,12 @@ class CoonsPatch : public TensorProductPatch
 		CoonsPatch () {}
 		CoonsPatch (Color::ColorSpace cspace) : TensorProductPatch(cspace) {}
 		CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch);
-		int psShadingType() const {return 6;}
-		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
-		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
-		virtual DPair valueAt (double u, double v) const;
-		int numPoints (int edgeflag) const {return edgeflag == 0 ? 12 : 8;}
-		int numColors (int edgeflag) const {return edgeflag == 0 ? 4 : 2;}
+		int psShadingType() const override {return 6;}
+		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;
+		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
+		virtual DPair valueAt (double u, double v) const override;
+		int numPoints (int edgeflag) const override {return edgeflag == 0 ? 12 : 8;}
+		int numColors (int edgeflag) const override {return edgeflag == 0 ? 4 : 2;}
 };
 
 #endif

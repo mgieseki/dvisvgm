@@ -29,14 +29,14 @@
 class BgColorSpecialHandler : public SpecialHandler, public DVIBeginPageListener
 {
 	public:
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions);
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions);
-		const char* info () const   {return "background color special";}
-		const char* name () const   {return "bgcolor";}
-		const char**  prefixes () const;
+		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		const char* info () const override {return "background color special";}
+		const char* name () const override {return "bgcolor";}
+		const char**  prefixes () const override;
 
 	protected:
-		void dviBeginPage (unsigned pageno, SpecialActions &actions);
+		void dviBeginPage (unsigned pageno, SpecialActions &actions) override;
 
 	private:
 		typedef std::pair<unsigned,Color> PageColor;  // page number and color

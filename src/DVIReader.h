@@ -57,16 +57,16 @@ class DVIReader : public BasicDVIReader, public VFActions
 		void executePreamble ();
 		void executePostamble ();
 		bool executePage (unsigned n);
-		bool inPostamble () const            {return _inPostamble;}
-		double getXPos () const              {return _currDviState.h;}
-		double getYPos () const              {return _currDviState.v;}
-		int stackDepth () const              {return _stateStack.size();}
-		int currentFontNumber () const       {return _currFontNum;}
-		unsigned currentPageNumber () const  {return _currPageNum;}
-		unsigned numberOfPages () const      {return _bopOffsets.empty() ? 0 : _bopOffsets.size()-1;}
+		bool inPostamble () const                    {return _inPostamble;}
+		double getXPos () const override             {return _currDviState.h;}
+		double getYPos () const override             {return _currDviState.v;}
+		int stackDepth () const override             {return _stateStack.size();}
+		int currentFontNumber () const               {return _currFontNum;}
+		unsigned currentPageNumber () const override {return _currPageNum;}
+		unsigned numberOfPages () const              {return _bopOffsets.empty() ? 0 : _bopOffsets.size()-1;}
 
 	protected:
-		int executeCommand ();
+		int executeCommand () override;
 		void collectBopOffsets ();
 		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
 		virtual void moveRight (double dx);
@@ -81,8 +81,8 @@ class DVIReader : public BasicDVIReader, public VFActions
 		bool inPage () const   {return _inPage;}
 
 		// VFAction methods
-		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize);
-		void defineVFChar (UInt32 c, std::vector<UInt8> *dvi);
+		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize) override;
+		void defineVFChar (UInt32 c, std::vector<UInt8> *dvi) override;
 
 		// The following template methods provide higher-level access to the DVI commands.
 		// In contrast to their cmdXXX pendants, they don't require any handling of the input stream.
@@ -125,39 +125,39 @@ class DVIReader : public BasicDVIReader, public VFActions
 	private:
 		// The following low-level methods evaluate the DVI commands read from
 		// the input stream and call the corresponding dviXXX methods.
-		void cmdSetChar0 (int c);
-		void cmdSetChar (int len);
-		void cmdPutChar (int len);
-		void cmdSetRule (int len);
-		void cmdPutRule (int len);
-		void cmdNop (int len);
-		void cmdBop (int len);
-		void cmdEop (int len);
-		void cmdPush (int len);
-		void cmdPop (int len);
-		void cmdDir (int len);
-		void cmdRight (int len);
-		void cmdDown (int len);
-		void cmdX0 (int len);
-		void cmdY0 (int len);
-		void cmdW0 (int len);
-		void cmdZ0 (int len);
-		void cmdX (int len);
-		void cmdY (int len);
-		void cmdW (int len);
-		void cmdZ (int len);
-		void cmdFontDef (int len);
-		void cmdFontNum0 (int n);
-		void cmdFontNum (int len);
-		void cmdXXX (int len);
-		void cmdPre (int len);
-		void cmdPost (int len);
-		void cmdPostPost (int len);
-		void cmdXPic (int len);
-		void cmdXFontDef (int len);
-		void cmdXGlyphArray (int len);
-		void cmdXGlyphString (int len);
-		void cmdXTextAndGlyphs (int len);
+		void cmdSetChar0 (int c) override;
+		void cmdSetChar (int len) override;
+		void cmdPutChar (int len) override;
+		void cmdSetRule (int len) override;
+		void cmdPutRule (int len) override;
+		void cmdNop (int len) override;
+		void cmdBop (int len) override;
+		void cmdEop (int len) override;
+		void cmdPush (int len) override;
+		void cmdPop (int len) override;
+		void cmdDir (int len) override;
+		void cmdRight (int len) override;
+		void cmdDown (int len) override;
+		void cmdX0 (int len) override;
+		void cmdY0 (int len) override;
+		void cmdW0 (int len) override;
+		void cmdZ0 (int len) override;
+		void cmdX (int len) override;
+		void cmdY (int len) override;
+		void cmdW (int len) override;
+		void cmdZ (int len) override;
+		void cmdFontDef (int len) override;
+		void cmdFontNum0 (int n) override;
+		void cmdFontNum (int len) override;
+		void cmdXXX (int len) override;
+		void cmdPre (int len) override;
+		void cmdPost (int len) override;
+		void cmdPostPost (int len) override;
+		void cmdXPic (int len) override;
+		void cmdXFontDef (int len) override;
+		void cmdXGlyphArray (int len) override;
+		void cmdXGlyphString (int len) override;
+		void cmdXTextAndGlyphs (int len) override;
 
 	private:
 		bool _inPage;            ///< true if stream pointer is between bop and eop

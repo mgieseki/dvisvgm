@@ -33,8 +33,8 @@ class PSPreviewFilter : public PSFilter
 	public:
 		PSPreviewFilter (PSInterpreter &psi);
 		void activate ();
-		void execute (const char *code, size_t len);
-		bool active () const                   {return _active;}
+		void execute (const char *code, size_t len) override;
+		bool active () const override          {return _active;}
 		std::string version () const           {return _version;}
 		bool tightpage () const                {return _tightpage;}
 		void setDviScaleFactor (double dvi2bp) {_dvi2bp = dvi2bp;}

@@ -46,8 +46,8 @@ class XMLElementNode : public XMLNode
 		XMLElementNode (const std::string &name);
 		XMLElementNode (const XMLElementNode &node);
 		~XMLElementNode ();
-		XMLElementNode* clone () const {return new XMLElementNode(*this);}
-		void clear ();
+		XMLElementNode* clone () const override {return new XMLElementNode(*this);}
+		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
 		void append (XMLNode *child);
@@ -60,7 +60,7 @@ class XMLElementNode : public XMLNode
 		const char* getAttributeValue (const std::string &name) const;
 		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElementNode*> &descendants) const;
 		XMLElementNode* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
-		std::ostream& write (std::ostream &os) const;
+		std::ostream& write (std::ostream &os) const override;
 		bool empty () const                          {return _children.empty();}
 		const std::list<XMLNode*>& children () const {return _children;}
 		const std::string& getName () const          {return _name;}
@@ -76,13 +76,13 @@ class XMLTextNode : public XMLNode
 {
 	public:
 		XMLTextNode (const std::string &str) : _text(str) {}
-		XMLTextNode* clone () const {return new XMLTextNode(*this);}
-		void clear ()           {_text.clear();}
+		XMLTextNode* clone () const override {return new XMLTextNode(*this);}
+		void clear () override {_text.clear();}
 		void append (XMLNode *node);
 		void append (XMLTextNode *node);
 		void append (const std::string &str);
 		void prepend (XMLNode *child);
-		std::ostream& write (std::ostream &os) const {return os << _text;}
+		std::ostream& write (std::ostream &os) const override {return os << _text;}
 		const std::string& getText () const {return _text;}
 
 	private:
@@ -94,9 +94,9 @@ class XMLCommentNode : public XMLNode
 {
 	public:
 		XMLCommentNode (const std::string &str) : _text(str) {}
-		XMLCommentNode* clone () const {return new XMLCommentNode(*this);}
-		void clear () {_text.clear();}
-		std::ostream& write (std::ostream &os) const {return os << "<!--" << _text << "-->";}
+		XMLCommentNode* clone () const override {return new XMLCommentNode(*this);}
+		void clear () override {_text.clear();}
+		std::ostream& write (std::ostream &os) const override {return os << "<!--" << _text << "-->";}
 
 	private:
 		std::string _text;
@@ -107,9 +107,9 @@ class XMLCDataNode : public XMLNode
 {
 	public:
 		XMLCDataNode (const std::string &d) : _data(d) {}
-		XMLCDataNode* clone () const {return new XMLCDataNode(*this);}
-		void clear () {_data.clear();}
-		std::ostream& write (std::ostream &os) const;
+		XMLCDataNode* clone () const override {return new XMLCDataNode(*this);}
+		void clear () override                {_data.clear();}
+		std::ostream& write (std::ostream &os) const override;
 
 	private:
 		std::string _data;

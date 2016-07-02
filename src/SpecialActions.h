@@ -66,29 +66,29 @@ class SpecialActions
 class EmptySpecialActions : public SpecialActions
 {
 	public:
-		double getX () const {return 0;}
-		double getY () const {return 0;}
-		void setX (double x) {}
-		void setY (double y) {}
-		void finishLine ()  {}
-		void setColor (const Color &color) {}
-		void setBgColor (const Color &color) {}
-		Color getColor () const {return Color::BLACK;}
-		void setMatrix (const Matrix &m) {}
-		const Matrix& getMatrix () const {return _matrix;}
-		void getPageTransform (Matrix &matrix) const {}
-		void appendToPage (XMLNode *node) {}
-		void appendToDefs (XMLNode *node) {}
-		void prependToPage (XMLNode *node) {}
-		void pushContextElement (XMLElementNode *node) {}
-		void popContextElement () {}
-		BoundingBox& bbox () {return _bbox;}
-		BoundingBox& bbox (const std::string &name, bool reset=false) {return _bbox;}
-		void embed (const BoundingBox &bbox) {}
-		void embed (const DPair &p, double r=0) {}
-		unsigned getCurrentPageNumber() const {return 0;}
-		std::string getSVGFilename (unsigned pageno) const {return "";}
-		std::string getBBoxFormatString () const {return "";}
+		double getX () const override {return 0;}
+		double getY () const override {return 0;}
+		void setX (double x) override {}
+		void setY (double y) override {}
+		void finishLine ()  override {}
+		void setColor (const Color &color) override {}
+		void setBgColor (const Color &color) override {}
+		Color getColor () const override {return Color::BLACK;}
+		void setMatrix (const Matrix &m) override {}
+		const Matrix& getMatrix () const override {return _matrix;}
+		void getPageTransform (Matrix &matrix) const override {}
+		void appendToPage (XMLNode *node) override {}
+		void appendToDefs (XMLNode *node) override {}
+		void prependToPage (XMLNode *node) override {}
+		void pushContextElement (XMLElementNode *node) override {}
+		void popContextElement () override {}
+		BoundingBox& bbox () override {return _bbox;}
+		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}
+		void embed (const BoundingBox &bbox) override {}
+		void embed (const DPair &p, double r=0) override {}
+		unsigned getCurrentPageNumber() const override {return 0;}
+		std::string getSVGFilename (unsigned pageno) const override {return "";}
+		std::string getBBoxFormatString () const override {return "";}
 
 	private:
 		BoundingBox _bbox;

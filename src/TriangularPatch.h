@@ -31,19 +31,19 @@ class TriangularPatch : public ShadingPatch
 		TriangularPatch ();
 		TriangularPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TriangularPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TriangularPatch *patch);
-		int psShadingType() const {return 4;}
+		int psShadingType() const override {return 4;}
 		DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
-		Color averageColor() const;
-		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch);
+		Color averageColor() const override;
+		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;
 		void setPoints (const DPair &p1, const DPair &p2, const DPair &p3);
-		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch);
+		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
 		void setColors (const Color &c1, const Color &c2, const Color &c3);
-		void approximate (int gridsize, bool overlap, double delta, Callback &listener) const;
-		void getBBox (BoundingBox &bbox) const;
-		void getBoundaryPath(GraphicsPath<double> &path) const;
-		int numPoints (int edgeflag) const {return edgeflag == 0 ? 3 : 1;}
-		int numColors (int edgeflag) const {return edgeflag == 0 ? 3 : 1;}
+		void approximate (int gridsize, bool overlap, double delta, Callback &listener) const override;
+		void getBBox (BoundingBox &bbox) const override;
+		void getBoundaryPath(GraphicsPath<double> &path) const override;
+		int numPoints (int edgeflag) const override {return edgeflag == 0 ? 3 : 1;}
+		int numColors (int edgeflag) const override {return edgeflag == 0 ? 3 : 1;}
 
 	protected:
 		Color averageColor (const Color &c1, const Color &c2, const Color &c3) const;
@@ -58,7 +58,7 @@ class LatticeTriangularPatch : public TriangularPatch
 {
 	public:
 		LatticeTriangularPatch (Color::ColorSpace cspace) : TriangularPatch(cspace) {}
-		int psShadingType() const {return 5;}
+		int psShadingType() const override {return 5;}
 };
 
 #endif

@@ -53,8 +53,8 @@ class GFReader
 	public:
 		GFReader (std::istream &is);
 		virtual ~GFReader () {}
-		bool executeChar (UInt8 c);
-		bool executeAllChars ();
+		virtual bool executeChar (UInt8 c);
+		virtual bool executeAllChars ();
 		bool executePreamble ();
 		bool executePostamble ();
 		virtual void preamble (const std::string &str) {}

@@ -34,14 +34,14 @@ struct CMap : public NamedFontEncoding
 	virtual ~CMap () {}
 	virtual bool vertical () const =0;
 	virtual bool mapsToCID () const =0;
-	virtual const char* path () const;
 	virtual UInt32 cid (UInt32 c) const =0;
 	virtual UInt32 bfcode (UInt32 cid) const =0;
 	virtual std::string getROString () const =0;
-	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const;
-	virtual bool mapsToCharIndex () const {return mapsToCID();}
+	const char* path () const override;
+	const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const override;
+	bool mapsToCharIndex () const override {return mapsToCID();}
 
-	Character decode (UInt32 c) const {
+	Character decode (UInt32 c) const override {
 		if (mapsToCID())
 			return Character(Character::INDEX, cid(c));
 		return Character(Character::CHRCODE, bfcode(c));
@@ -51,36 +51,36 @@ struct CMap : public NamedFontEncoding
 
 struct IdentityCMap : public CMap
 {
-	UInt32 cid (UInt32 c) const         {return c;}
-	UInt32 bfcode (UInt32 cid) const    {return 0;}
-	std::string getROString () const    {return "Adobe-Identity";}
-	bool mapsToCID() const              {return true;}
+	UInt32 cid (UInt32 c) const override      {return c;}
+	UInt32 bfcode (UInt32 cid) const override {return 0;}
+	std::string getROString () const override {return "Adobe-Identity";}
+	bool mapsToCID() const override           {return true;}
 };
 
 
 struct IdentityHCMap : public IdentityCMap
 {
-	bool vertical () const    {return false;}
-	const char* name () const {return "Identity-H";}
+	bool vertical () const override    {return false;}
+	const char* name () const override {return "Identity-H";}
 };
 
 
 struct IdentityVCMap : public IdentityCMap
 {
-	bool vertical () const    {return true;}
-	const char* name () const {return "Identity-V";}
+	bool vertical () const override    {return true;}
+	const char* name () const override {return "Identity-V";}
 };
 
 
 struct UnicodeCMap : public CMap
 {
-	bool vertical () const           {return false;}
-	const char* name () const        {return "unicode";}
-	bool mapsToCID () const          {return false;}
-	const char* path () const        {return 0;}
-	UInt32 cid (UInt32 c) const      {return c;}
-	UInt32 bfcode (UInt32 cid) const {return cid;}
-	std::string getROString () const {return "";}
+	bool vertical () const override           {return false;}
+	const char* name () const override        {return "unicode";}
+	bool mapsToCID () const override          {return false;}
+	const char* path () const override        {return 0;}
+	UInt32 cid (UInt32 c) const override      {return c;}
+	UInt32 bfcode (UInt32 cid) const override {return cid;}
+	std::string getROString () const override {return "";}
 };
 
 
@@ -90,17 +90,17 @@ class SegmentedCMap : public CMap
 
 	public:
 		SegmentedCMap (const std::string &fname) : _filename(fname), _basemap(0), _vertical(false), _mapsToCID(true) {}
-		const char* name () const {return _filename.c_str();}
-		UInt32 cid (UInt32 c) const;
-		UInt32 bfcode (UInt32 cid) const;
+		const char* name () const override {return _filename.c_str();}
+		UInt32 cid (UInt32 c) const override;
+		UInt32 bfcode (UInt32 cid) const override;
 		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {_cidranges.addRange(first, last, cid);}
 		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {_bfranges.addRange(first, last, chrcode);}
 		void write (std::ostream &os) const;
-		bool vertical () const        {return _vertical;}
-		bool mapsToCID () const       {return _mapsToCID;}
-		size_t numCIDRanges () const  {return _cidranges.size();}
-		size_t numBFRanges () const   {return _bfranges.size();}
-		std::string getROString () const;
+		bool vertical () const override  {return _vertical;}
+		bool mapsToCID () const override {return _mapsToCID;}
+		size_t numCIDRanges () const     {return _cidranges.size();}
+		size_t numBFRanges () const      {return _bfranges.size();}
+		std::string getROString () const override;
 
 	private:
 		std::string _filename;

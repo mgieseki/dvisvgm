@@ -54,11 +54,11 @@ class PSTilingPattern : public PSPattern
 	public:
 		~PSTilingPattern ();
 		virtual XMLElementNode* getContainerNode ()     {return _groupNode;}
-		void apply (SpecialActions &actions);
+		void apply (SpecialActions &actions) override;
 
 	protected:
 		PSTilingPattern (int id, BoundingBox &bbox, Matrix &matrix, double xstep, double ystep);
-		XMLElementNode* createPatternNode () const;
+		XMLElementNode* createPatternNode () const override;
 		virtual XMLElementNode* createClipNode () const;
 		virtual XMLElementNode* createGroupNode () const;
 		virtual XMLElementNode* getGroupNode () const    {return _groupNode;}
@@ -84,12 +84,12 @@ class PSUncoloredTilingPattern : public PSTilingPattern
 	public:
 		PSUncoloredTilingPattern (int id, BoundingBox &bbox, Matrix &matrix, double xstep, double ystep);
 		~PSUncoloredTilingPattern ();
-		std::string svgID () const;
+		std::string svgID () const override;
 		void setColor (Color color) {_currentColor = color;}
-		void apply (SpecialActions &actions);
+		void apply (SpecialActions &actions) override;
 
 	protected:
-		XMLElementNode* createClipNode () const;
+		XMLElementNode* createClipNode () const override;
 
 	private:
 		std::set<Color> _colors;  ///< colors this pattern has already been drawn with

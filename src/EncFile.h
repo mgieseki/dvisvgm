@@ -35,12 +35,12 @@ class EncFile : public NamedFontEncoding
 		EncFile (const std::string &name);
 		void read ();
 		void read (std::istream &is);
-		int size () const                  {return _table.size();}
-		const char* name () const          {return _encname.c_str();}
+		int size () const {return _table.size();}
+		const char* name () const override {return _encname.c_str();}
 		const char* charName (UInt32 c) const;
-		Character decode (UInt32 c) const  {return Character(charName(c));}
-		bool mapsToCharIndex () const      {return false;}
-		const char* path () const;
+		Character decode (UInt32 c) const override {return Character(charName(c));}
+		bool mapsToCharIndex () const override {return false;}
+		const char* path () const override;
 
 	private:
 		std::string _encname;

@@ -44,7 +44,7 @@ class CmdLineParserBase
 			public:
 				OptionHandlerImpl (LocalHandler handler) : _handler(handler) {}
 
-				void operator () (CmdLineParserBase *obj, InputReader &ir, const Option &opt, bool longopt) const {
+				void operator () (CmdLineParserBase *obj, InputReader &ir, const Option &opt, bool longopt) const override {
 					if (T *tobj = dynamic_cast<T*>(obj))
 						(tobj->*_handler)(ir, opt, longopt);
 				}
