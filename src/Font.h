@@ -56,7 +56,7 @@ struct GlyphMetrics
 /** Abstract base for all font classes. */
 class Font {
 	public:
-		virtual ~Font () {}
+		virtual ~Font () =default;
 		virtual Font* clone (double ds, double sc) const =0;
 		virtual const Font* uniqueFont () const =0;
 		virtual std::string name () const =0;

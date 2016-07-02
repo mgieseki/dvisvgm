@@ -30,7 +30,7 @@ class GFGlyphTracer : public GFTracer
 {
 	public:
 		struct Callback {
-			virtual ~Callback () {}
+			virtual ~Callback () =default;
 			virtual void setFont (const std::string &fontname) {}
 			virtual void beginChar (UInt8 c) {}
 			virtual void endChar (UInt8 c) {}

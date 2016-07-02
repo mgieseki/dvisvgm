@@ -30,7 +30,7 @@ class Bitmap
 {
 	public:
 		struct Callback {
-			virtual ~Callback() {}
+			virtual ~Callback() =default;
 			virtual void pixel (int x, int y, bool set, Bitmap &bm) {}
 			virtual void pixel (int x, int y, bool set, const Bitmap &bm) {}
 			virtual void finish () {}

@@ -59,7 +59,7 @@ class XMLElementNode;
 class SVGCharHandler {
 	public:
 		SVGCharHandler () : _color(Color::BLACK), _font(0), _fontnum(0), _matrix(1), _vertical(false), _initialContextNode(0) {}
-		virtual ~SVGCharHandler() {}
+		virtual ~SVGCharHandler() =default;
 		virtual void setInitialContextNode (XMLElementNode *node);
 		virtual void appendChar (UInt32 c, double x, double y) =0;
 		virtual void notifyXAdjusted () {}

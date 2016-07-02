@@ -30,7 +30,7 @@
 
 struct InputBuffer
 {
-	virtual ~InputBuffer () {}
+	virtual ~InputBuffer () =default;
 	virtual int get () =0;
 	virtual int peek () const =0;
 	virtual int peek (size_t n) const =0;

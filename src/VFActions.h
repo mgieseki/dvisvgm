@@ -28,7 +28,7 @@
 
 struct VFActions
 {
-	virtual ~VFActions () {}
+	virtual ~VFActions () =default;
 	virtual void preamble (std::string comment, UInt32 checksum, double dsize) {}
 	virtual void postamble () {}
 	virtual void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize) {}

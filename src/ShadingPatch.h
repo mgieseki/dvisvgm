@@ -30,7 +30,7 @@ class ShadingPatch
 {
 	public:
 		struct Callback {
-			virtual ~Callback () {}
+			virtual ~Callback () =default;
 			virtual void patchSegment (GraphicsPath<double> &path, const Color &color) =0;
 		};
 
@@ -39,7 +39,7 @@ class ShadingPatch
 
 	public:
 		ShadingPatch (Color::ColorSpace colorSpace) : _colorspace(colorSpace) {}
-		virtual ~ShadingPatch () {}
+		virtual ~ShadingPatch () =default;
 		virtual int psShadingType () const =0;
 		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;
 		virtual void getBBox (BoundingBox &bbox) const =0;

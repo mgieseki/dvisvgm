@@ -31,7 +31,7 @@ class Font;
 
 struct DVIActions
 {
-	virtual ~DVIActions () {}
+	virtual ~DVIActions () =default;
 	virtual void setChar (double x, double y, unsigned c, bool vertical, const Font &f) {}
 	virtual void setRule (double x, double y, double height, double width) {}
 	virtual void setTextOrientation (bool vertical) {}

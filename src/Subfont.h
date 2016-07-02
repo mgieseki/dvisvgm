@@ -87,7 +87,7 @@ class SubfontException : public MessageException
 		SubfontException (const std::ostream &oss, const std::string &fname, int lineno=0)
 			: MessageException(dynamic_cast<const std::ostringstream&>(oss).str()), _fname(fname), _lineno(lineno) {}
 
-		virtual ~SubfontException () throw() {}
+		virtual ~SubfontException () throw() =default;
 
 		const char* filename () const {return _fname.c_str();}
 		int lineno () const {return _lineno;}

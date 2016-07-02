@@ -26,8 +26,8 @@ class PSInterpreter;
 class PSFilter
 {
 	public:
-		PSFilter (PSInterpreter &psi) : _psi(psi) {}
-		virtual ~PSFilter () {}
+		explicit PSFilter (PSInterpreter &psi) : _psi(psi) {}
+		virtual ~PSFilter () =default;
 		virtual void execute (const char *code, size_t len) =0;
 		virtual bool active () const =0;
 

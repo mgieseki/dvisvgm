@@ -27,7 +27,7 @@
 
 struct FontMetrics
 {
-	virtual ~FontMetrics () {}
+	virtual ~FontMetrics () =default;
 	virtual double getDesignSize () const =0;
 	virtual double getCharWidth (int c) const =0;
 	virtual double getCharHeight (int c) const =0;

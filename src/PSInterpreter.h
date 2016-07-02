@@ -40,7 +40,7 @@ struct PSException : public MessageException
  *  Each method corresponds to a PostScript operator of the same name. */
 struct PSActions
 {
-	virtual ~PSActions () {}
+	virtual ~PSActions () =default;
 	virtual void applyscalevals (std::vector<double> &p) =0;
 	virtual void clip (std::vector<double> &p) =0;
 	virtual void clippath (std::vector<double> &p) =0;
@@ -89,7 +89,8 @@ class PSInterpreter
 	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};
 
 	public:
-		PSInterpreter (PSActions *actions=0);
+		explicit PSInterpreter (PSActions *actions=0);
+		PSInterpreter (const PSInterpreter &psi) =delete;
 		bool execute (const char *str, size_t len, bool flush=true);
 		bool execute (const char *str, bool flush=true)        {return execute(str, std::strlen(str), flush);}
 		bool execute (const std::string &str, bool flush=true) {return execute(str.c_str(), flush);}

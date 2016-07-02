@@ -31,7 +31,7 @@ class PhysicalFont;
 
 struct FontEncoding
 {
-	virtual ~FontEncoding () {}
+	virtual ~FontEncoding () =default;
 	virtual Character decode (UInt32 c) const =0;
 	virtual bool mapsToCharIndex () const =0;
 	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}

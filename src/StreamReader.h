@@ -33,7 +33,7 @@ class StreamReader
 {
 	public:
 		StreamReader (std::istream &is) : _is(&is) {}
-		virtual ~StreamReader () {}
+		virtual ~StreamReader () =default;
 		bool isStreamValid () const {return _is;}
 		bool eof () const           {return _is->eof();}
 		void clearStream ()         {_is->clear();}

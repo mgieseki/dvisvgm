@@ -30,7 +30,7 @@
 class InputReader
 {
 	public:
-		virtual ~InputReader() {}
+		virtual ~InputReader() =default;
 		virtual int get () =0;
 		virtual int peek () const =0;
 		virtual int peek (size_t n) const =0;

@@ -31,7 +31,7 @@
 
 struct CMap : public NamedFontEncoding
 {
-	virtual ~CMap () {}
+	virtual ~CMap () =default;
 	virtual bool vertical () const =0;
 	virtual bool mapsToCID () const =0;
 	virtual UInt32 cid (UInt32 c) const =0;

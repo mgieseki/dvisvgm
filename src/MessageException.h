@@ -29,7 +29,7 @@ class MessageException : public std::exception
 {
 	public:
 		MessageException (const std::string &msg) : _message(msg) {}
-		virtual ~MessageException () throw() {}
+		virtual ~MessageException () throw() =default;
 		const char* what () const throw() override {return _message.c_str();}
 
 	private:

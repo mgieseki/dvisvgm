@@ -38,28 +38,28 @@ struct SpecialException : public MessageException
 
 struct DVIPreprocessingListener
 {
-	virtual ~DVIPreprocessingListener () {}
+	virtual ~DVIPreprocessingListener () =default;
 	virtual void dviPreprocessingFinished () =0;
 };
 
 
 struct DVIBeginPageListener
 {
-	virtual ~DVIBeginPageListener () {}
+	virtual ~DVIBeginPageListener () =default;
 	virtual void dviBeginPage (unsigned pageno, SpecialActions &actions) =0;
 };
 
 
 struct DVIEndPageListener
 {
-	virtual ~DVIEndPageListener () {}
+	virtual ~DVIEndPageListener () =default;
 	virtual void dviEndPage (unsigned pageno, SpecialActions &actions) =0;
 };
 
 
 struct DVIPositionListener
 {
-	virtual ~DVIPositionListener () {}
+	virtual ~DVIPositionListener () =default;
 	virtual void dviMovedTo (double x, double y, SpecialActions &actions) =0;
 };
 
@@ -68,7 +68,7 @@ class SpecialHandler
 {
 	friend class SpecialManager;
 	public:
-		virtual ~SpecialHandler () {}
+		virtual ~SpecialHandler () =default;
 		virtual const char** prefixes () const=0;
 		virtual const char* info () const=0;
 		virtual const char* name () const=0;

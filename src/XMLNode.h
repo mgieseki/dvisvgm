@@ -31,7 +31,7 @@
 class XMLNode
 {
 	public:
-		virtual ~XMLNode () {}
+		virtual ~XMLNode () =default;
 		virtual XMLNode* clone () const =0;
 		virtual void clear () =0;
 		virtual std::ostream& write (std::ostream &os) const =0;

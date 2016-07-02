@@ -35,7 +35,7 @@ class XMLElementNode;
 class PSPattern
 {
 	public:
-		virtual ~PSPattern () {}
+		virtual ~PSPattern () =default;
 		virtual int psID () const {return _id;}
 		virtual std::string svgID () const;
 		virtual void apply (SpecialActions &actions);

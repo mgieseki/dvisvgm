@@ -31,7 +31,7 @@ class StreamWriter
 {
 	public:
 		StreamWriter (std::ostream &os) : _os(os) {}
-		virtual ~StreamWriter () {}
+		virtual ~StreamWriter () =default;
 		void writeUnsigned (UInt32 val, int n);
 		void writeSigned (Int32 val, int n);
 		void writeString (const std::string &str, bool finalZero=false);

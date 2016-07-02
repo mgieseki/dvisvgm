@@ -27,7 +27,7 @@
 
 
 struct SVGOutputBase {
-	virtual ~SVGOutputBase () {}
+	virtual ~SVGOutputBase () =default;
 	virtual std::ostream& getPageStream (int page, int numPages) const =0;
 	virtual std::string filename (int page, int numPages) const =0;
 };
@@ -36,7 +36,7 @@ struct SVGOutputBase {
 class SVGOutput : public SVGOutputBase
 {
 	public:
-		SVGOutput (const char *base=0, std::string pattern="", int zipLevel=0);
+		explicit SVGOutput (const char *base=0, std::string pattern="", int zipLevel=0);
 		~SVGOutput () {delete _os;}
 		std::ostream& getPageStream (int page, int numPages) const override;
 		std::string filename (int page, int numPages) const override;
