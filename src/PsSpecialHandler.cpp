@@ -950,14 +950,14 @@ class ShadingCallback : public ShadingPatch::Callback {
 /** Handle all patch meshes whose patches and their connections can be processed sequentially.
  *  This comprises free-form triangular, Coons, and tensor-product patch meshes. */
 void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace colorSpace, VectorIterator<double> &it) {
-	auto_ptr<ShadingPatch> previousPatch;
+	unique_ptr<ShadingPatch> previousPatch;
 	while (it.valid()) {
 		int edgeflag = static_cast<int>(*it++);
 		vector<DPair> points;
 		vector<Color> colors;
-		auto_ptr<ShadingPatch> patch;
+		unique_ptr<ShadingPatch> patch;
 
-		patch = auto_ptr<ShadingPatch>(ShadingPatch::create(shadingTypeID, colorSpace));
+		patch = unique_ptr<ShadingPatch>(ShadingPatch::create(shadingTypeID, colorSpace));
 		read_patch_data(*patch, edgeflag, it, points, colors);
 		patch->setPoints(points, edgeflag, previousPatch.get());
 		patch->setColors(colors, edgeflag, previousPatch.get());
@@ -978,7 +978,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 			bbox.transform(_actions->getMatrix());
 			_actions->embed(bbox);
 		}
-		previousPatch = patch;
+		previousPatch = std::move(patch);
 	}
 }
 
