@@ -143,10 +143,10 @@ void VFReader::cmdLongChar () {
 		seek(8+pl, ios::cur);           // skip remaining char definition bytes
 	else {
 		uint32_t cc  = readUnsigned(4); // character code
-		readUnsigned(4);                // character width from corresponding TFM file
-		vector<uint8_t> *dvi = new vector<uint8_t>(pl); // DVI subroutine
-		readBytes(pl, *dvi);
-		_actions->defineVFChar(cc, dvi); // call template method for user actions
+		readUnsigned(4);                // equals character width from corresponding TFM file
+		vector<uint8_t> dvi(pl);        // DVI subroutine
+		readBytes(pl, dvi);
+		_actions->defineVFChar(cc, std::move(dvi)); // call template method for user actions
 	}
 }
 
@@ -159,9 +159,9 @@ void VFReader::cmdShortChar (int pl) {
 	else {
 		uint32_t cc  = readUnsigned(1); // character code
 		readUnsigned(3);                // character width from corresponding TFM file
-		vector<uint8_t> *dvi = new vector<uint8_t>(pl); // DVI subroutine
-		readBytes(pl, *dvi);
-		_actions->defineVFChar(cc, dvi); // call template method for user actions
+		vector<uint8_t> dvi(pl);        // DVI subroutine
+		readBytes(pl, dvi);
+		_actions->defineVFChar(cc, std::move(dvi)); // call template method for user actions
 	}
 }
 

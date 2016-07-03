@@ -537,8 +537,8 @@ void DVIReader::defineVFFont (uint32_t fontnum, string path, string name, uint32
 /** This template method is called by the VFReader after reading a character definition from a VF file.
  *  @param[in] c character number
  *  @param[in] dvi DVI fragment describing the character */
-void DVIReader::defineVFChar (uint32_t c, vector<uint8_t> *dvi) {
-	FontManager::instance().assignVfChar(c, dvi);
+void DVIReader::defineVFChar (uint32_t c, vector<uint8_t> &&dvi) {
+	FontManager::instance().assignVFChar(c, std::move(dvi));
 }
 
 

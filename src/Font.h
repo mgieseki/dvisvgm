@@ -163,7 +163,7 @@ class VirtualFont : public virtual Font {
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
 
 	protected:
-		virtual void assignChar (uint32_t c, DVIVector *dvi) =0;
+		virtual void assignChar (uint32_t c, DVIVector &&dvi) =0;
 };
 
 
@@ -349,7 +349,7 @@ class VirtualFontProxy : public VirtualFont {
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : _vf(font), _dsize(ds), _ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : _vf(proxy._vf), _dsize(ds), _ssize(ss) {}
-		void assignChar (uint32_t c, DVIVector *dvi) override {delete dvi;}
+		void assignChar (uint32_t c, DVIVector &&dvi) override {}
 
 	private:
 		const VirtualFont *_vf;
@@ -361,7 +361,6 @@ class VirtualFontProxy : public VirtualFont {
 class VirtualFontImpl : public VirtualFont, public TFMFont {
 	friend class VirtualFont;
 	public:
-		~VirtualFontImpl ();
 		Font* clone (double ds, double ss) const override {return new VirtualFontProxy(this, ds, ss);}
 		const Font* uniqueFont () const override {return this;}
 		const DVIVector* getDVI (int c) const override;
@@ -369,10 +368,10 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 
 	protected:
 		VirtualFontImpl (std::string name, uint32_t checksum, double dsize, double ssize);
-		void assignChar (uint32_t c, DVIVector *dvi) override;
+		void assignChar (uint32_t c, DVIVector &&dvi) override;
 
 	private:
-		std::map<uint32_t, DVIVector*> _charDefs; ///< dvi subroutines defining the characters
+		std::map<uint32_t, DVIVector> _charDefs; ///< dvi subroutines defining the characters
 };
 
 

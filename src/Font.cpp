@@ -646,30 +646,21 @@ VirtualFontImpl::VirtualFontImpl (string name, uint32_t cs, double ds, double ss
 }
 
 
-VirtualFontImpl::~VirtualFontImpl () {
-	// delete dvi vectors received by VFReaderAction
-	for (auto &chardvipair : _charDefs)
-		delete chardvipair.second;
-}
-
-
 const char* VirtualFontImpl::path () const {
 	return FileFinder::lookup(name()+".vf");
 }
 
 
-void VirtualFontImpl::assignChar (uint32_t c, DVIVector *dvi) {
-	if (dvi) {
-		if (_charDefs.find(c) == _charDefs.end())
-			_charDefs[c] = dvi;
-		else
-			delete dvi;
-	}
+void VirtualFontImpl::assignChar (uint32_t c, DVIVector &&dvi) {
+	_charDefs.emplace(c, std::move(dvi));
 }
 
 
+/** Returns the DVI sippet that describes a given character of the virtual font.
+ *  @param[in] c character code
+ *  @return pointer to vector of DVI commands, or 0 if character doesn't exist */
 const vector<uint8_t>* VirtualFontImpl::getDVI (int c) const {
-	map<uint32_t,DVIVector*>::const_iterator it = _charDefs.find(c);
-	return (it == _charDefs.end() ? 0 : it->second);
+	auto it = _charDefs.find(c);
+	return (it == _charDefs.end() ? 0 : &it->second);
 }
 

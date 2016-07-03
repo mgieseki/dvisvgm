@@ -31,7 +31,7 @@ struct VFActions
 	virtual void preamble (std::string comment, uint32_t checksum, double dsize) {}
 	virtual void postamble () {}
 	virtual void defineVFFont (uint32_t fontnum, std::string path, std::string name, uint32_t checksum, double dsize, double ssize) {}
-	virtual void defineVFChar (uint32_t c, std::vector<uint8_t> *dvi) {}
+	virtual void defineVFChar (uint32_t c, std::vector<uint8_t> &&dvi) {}
 };
 
 #endif

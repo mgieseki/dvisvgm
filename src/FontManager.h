@@ -65,7 +65,7 @@ class FontManager
 		int vfFirstFontNum (const VirtualFont *vf) const;
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
-		void assignVfChar (int c, std::vector<uint8_t> *dvi);
+		void assignVFChar (int c, std::vector<uint8_t> &&dvi);
 		const std::vector<Font*>& getFonts () const {return _fonts;}
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
 
