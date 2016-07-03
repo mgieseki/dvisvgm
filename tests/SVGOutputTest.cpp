@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "gzstream.h"
 #include "FileSystem.h"
 #include "MessageException.h"
 #include "SVGOutput.h"
+#include "ZLibOutputStream.h"
 
 using namespace std;
 
@@ -113,7 +113,7 @@ TEST(SVGOutputTest, getPageStream) {
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f-%p", 9);
 		ostream *os = &out.getPageStream(1, 10);
-		EXPECT_TRUE(dynamic_cast<ogzstream*>(os));
+		EXPECT_TRUE(dynamic_cast<ZLibOutputStream*>(os));
 		FileSystem::remove("SVGOutputTest-01.svgz");
 	}
 }

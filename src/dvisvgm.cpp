@@ -25,7 +25,7 @@
 #include <potracelib.h>
 #include <sstream>
 #include <xxhash.h>
-#include "gzstream.h"
+#include <zlib.h>
 #include "CommandLine.h"
 #include "DVIToSVG.h"
 #include "DVIToSVGActions.h"
@@ -45,7 +45,6 @@
 #include "System.h"
 
 using namespace std;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 

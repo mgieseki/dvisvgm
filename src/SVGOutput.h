@@ -21,6 +21,7 @@
 #ifndef DVISVGM_SVGOUTPUT_H
 #define DVISVGM_SVGOUTPUT_H
 
+#include <memory>
 #include <ostream>
 #include <string>
 #include "FilePath.h"
@@ -37,7 +38,6 @@ class SVGOutput : public SVGOutputBase
 {
 	public:
 		explicit SVGOutput (const char *base=0, std::string pattern="", int zipLevel=0);
-		~SVGOutput () {delete _os;}
 		std::ostream& getPageStream (int page, int numPages) const override;
 		std::string filename (int page, int numPages) const override;
 
@@ -50,7 +50,7 @@ class SVGOutput : public SVGOutputBase
 		bool _stdout;      ///< write to STDOUT?
 		int _zipLevel;     ///< compression level
 		mutable int _page; ///< number of current page being written
-		mutable std::ostream *_os;
+		mutable std::unique_ptr<std::ostream> _osptr;
 };
 
 #endif

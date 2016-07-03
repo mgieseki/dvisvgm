@@ -4,7 +4,7 @@
 ## Process this file with automake.
 
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = COPYING LGPL-2.1.txt
+EXTRA_DIST = COPYING
 SUBDIRS = clipper xxHash src tests doc
 
 if CODE_COVERAGE_ENABLED

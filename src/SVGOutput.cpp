@@ -20,25 +20,20 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include "gzstream.h"
 #include "Calculator.h"
 #include "FileSystem.h"
 #include "Message.h"
 #include "SVGOutput.h"
-
+#include "ZLibOutputStream.h"
 
 using namespace std;
 
 SVGOutput::SVGOutput (const char *base, string pattern, int zipLevel)
-	: _path(base ? base : ""),
-	_pattern(pattern),
-	_stdout(base == 0),
-	_zipLevel(zipLevel),
-	_page(-1),
-	_os(0)
+	: _path(base ? base : ""),	_pattern(pattern), _stdout(base == 0),	_zipLevel(zipLevel),	_page(-1)
 {
 }
 
@@ -50,25 +45,20 @@ SVGOutput::SVGOutput (const char *base, string pattern, int zipLevel)
 ostream& SVGOutput::getPageStream (int page, int numPages) const {
 	string fname = filename(page, numPages);
 	if (fname.empty()) {
-		delete _os;
-		_os = 0;
+		_osptr.reset();
 		return cout;
 	}
 	if (page == _page)
-		return *_os;
+		return *_osptr;
 
 	_page = page;
-	delete _os;
 	if (_zipLevel > 0)
-		_os = new ogzstream(fname.c_str(), _zipLevel);
+		_osptr.reset(new ZLibOutputStream(fname, _zipLevel));
 	else
-		_os = new ofstream(fname.c_str());
-	if (!_os || !*_os) {
-		delete _os;
-		_os = 0;
+		_osptr.reset(new ofstream(fname.c_str()));
+	if (!_osptr)
 		throw MessageException("can't open file "+fname+" for writing");
-	}
-	return *_os;
+	return *_osptr;
 }
 
 

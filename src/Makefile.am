@@ -6,8 +6,7 @@
 bin_PROGRAMS         = dvisvgm
 noinst_LIBRARIES     = libdvisvgm.a
 
-dvisvgm_SOURCES      = gzstream.h \
-							  dvisvgm.cpp gzstream.cpp
+dvisvgm_SOURCES      = dvisvgm.cpp
 
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
@@ -210,7 +209,8 @@ libdvisvgm_a_SOURCES = \
 	XMLNode.cpp \
 	XMLNode.h \
 	XMLString.cpp \
-	XMLString.h
+	XMLString.h \
+	ZLibOutputStream.h
 
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.h MiKTeXCom.cpp
 

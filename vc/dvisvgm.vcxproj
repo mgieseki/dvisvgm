@@ -160,6 +160,7 @@
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -213,7 +214,6 @@
     <ClCompile Include="..\src\GFReader.cpp" />
     <ClCompile Include="..\src\GFTracer.cpp" />
     <ClCompile Include="..\src\Ghostscript.cpp" />
-    <ClCompile Include="..\src\gzstream.cpp" />
     <ClCompile Include="..\src\HtmlSpecialHandler.cpp" />
     <ClCompile Include="..\src\InputBuffer.cpp" />
     <ClCompile Include="..\src\InputReader.cpp" />
@@ -323,6 +323,7 @@
     <ClInclude Include="..\src\TriangularPatch.h" />
     <ClInclude Include="..\src\Unicode.h" />
     <ClInclude Include="..\src\VectorIterator.h" />
+    <ClInclude Include="..\src\ZLibOutputStream.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="..\src\debug.h" />
     <ClInclude Include="..\src\DVIActions.h" />
