@@ -42,9 +42,6 @@ class NumericRanges
 		ConstIterator end () const       {return _ranges.end();}
 		const Container& ranges () const {return _ranges;}
 
-	protected:
-		static bool isLess (const Range &r1, const Range &r2) {return r1.first < r2.first;}
-
 	private:
 		Container _ranges;
 };
@@ -101,7 +98,10 @@ void NumericRanges<T>::addRange (T first, T last) {
 
 template <class T>
 bool NumericRanges<T>::valueExists (T value) const {
-	ConstIterator it = std::lower_bound(_ranges.begin(), _ranges.end(), Range(value, 0), &isLess);
+	ConstIterator it = std::lower_bound(_ranges.begin(), _ranges.end(), Range(value, 0),
+		[](const Range &r1, const Range &r2) {
+			return r1.first < r2.first;
+		});
 	return (it != _ranges.end() && it->first <= value && it->second >= value);
 }
 

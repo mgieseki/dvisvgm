@@ -114,11 +114,6 @@ string Unicode::utf8 (Int32 cp) {
 
 #include "AGLTable.h"
 
-static inline bool is_hex_digit (char c) {
-	return isdigit(c) || (c >= 'A' && c <= 'F');
-}
-
-
 /** Tries to extract the codepoint from AGL character names like "uni1234" or "u1234".
  *  Returns 0 if the given name doesn't satisfy the constraints.
  *  https://github.com/adobe-type-tools/agl-specification
@@ -126,6 +121,7 @@ static inline bool is_hex_digit (char c) {
  *  @return the extracted codepoint or 0 on failure */
 static Int32 extract_codepoint_from_name (const string &name) {
 	size_t offset=1;
+	auto is_hex_digit = [](char c) {return isdigit(c) || (c >= 'A' && c <= 'F');};
 	if (name.substr(0, 3) == "uni" && is_hex_digit(name[4]) && name.length() >= 7)
 		offset = 3;
 	else if (name[0] != 'u' || !is_hex_digit(name[1]) || name.length() < 5)

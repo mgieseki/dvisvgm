@@ -97,16 +97,12 @@ bool VFReader::executeAll () {
 }
 
 
-/// Returns true if op indicates the preamble or a font definition
-static bool is_pre_or_fontdef (int op) {return op > 242;}
-static bool is_chardef (int op)        {return op < 243;}
-
-
 bool VFReader::executePreambleAndFontDefs () {
 	clearStream();
 	if (!isStreamValid())
 		return false;
 	seek(0);  // move file pointer to first byte of the input stream
+	auto is_pre_or_fontdef = [](int op) {return op > 242;};
 	while (!eof() && executeCommand(is_pre_or_fontdef) > 242); // stop reading after last font definition
 	return true;
 }
@@ -117,6 +113,7 @@ bool VFReader::executeCharDefs () {
 	if (!isStreamValid())
 		return false;
 	seek(0);
+	auto is_chardef = [](int op) {return op < 243;};
 	while (!eof() && executeCommand(is_chardef) < 243); // stop reading after last char definition
 	return true;
 }
