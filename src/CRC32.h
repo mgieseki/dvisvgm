@@ -23,28 +23,27 @@
 
 #include <cstdlib>
 #include <istream>
-#include "types.h"
 
 class CRC32
 {
 	public:
 		CRC32 ();
-		void update (const UInt8 *bytes, size_t len);
-		void update (UInt32 n, int bytes=4);
+		void update (const uint8_t *bytes, size_t len);
+		void update (uint32_t n, int bytes=4);
 		void update (const char *str);
 		void update (std::istream &is);
-		UInt32 get () const;
+		uint32_t get () const;
 		void reset ();
-		static UInt32 compute (const UInt8 *bytes, size_t len);
-		static UInt32 compute (const char *str);
-		static UInt32 compute (std::istream &is);
+		static uint32_t compute (const uint8_t *bytes, size_t len);
+		static uint32_t compute (const char *str);
+		static uint32_t compute (std::istream &is);
 
 	protected:
 		CRC32 (const CRC32 &crc32) {}
 
 	private:
-		UInt32 _crc32;
-		UInt32 _tab[256];
+		uint32_t _crc32;
+		uint32_t _tab[256];
 };
 
 

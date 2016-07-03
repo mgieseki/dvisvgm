@@ -80,13 +80,13 @@ bool FileSystem::rename (const string &oldname, const string &newname) {
 }
 
 
-UInt64 FileSystem::filesize (const string &fname) {
+uint64_t FileSystem::filesize (const string &fname) {
 #ifdef _WIN32
 	// unfortunately, stat doesn't work properly under Windows
 	// so we have to use this freaky code
 	WIN32_FILE_ATTRIBUTE_DATA attr;
 	GetFileAttributesExA(fname.c_str(), GetFileExInfoStandard, &attr);
-	return (static_cast<UInt64>(attr.nFileSizeHigh) << (8*sizeof(attr.nFileSizeLow))) | attr.nFileSizeLow;
+	return (static_cast<uint64_t>(attr.nFileSizeHigh) << (8*sizeof(attr.nFileSizeLow))) | attr.nFileSizeLow;
 #else
 	struct stat attr;
 	return (stat(fname.c_str(), &attr) == 0) ? attr.st_size : 0;

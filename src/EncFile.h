@@ -26,7 +26,6 @@
 #include <string>
 #include <vector>
 #include "FontEncoding.h"
-#include "types.h"
 
 
 class EncFile : public NamedFontEncoding
@@ -37,8 +36,8 @@ class EncFile : public NamedFontEncoding
 		void read (std::istream &is);
 		int size () const {return _table.size();}
 		const char* name () const override {return _encname.c_str();}
-		const char* charName (UInt32 c) const;
-		Character decode (UInt32 c) const override {return Character(charName(c));}
+		const char* charName (uint32_t c) const;
+		Character decode (uint32_t c) const override {return Character(charName(c));}
 		bool mapsToCharIndex () const override {return false;}
 		const char* path () const override;
 

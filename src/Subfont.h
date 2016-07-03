@@ -27,7 +27,6 @@
 #include <string>
 #include <vector>
 #include "MessageException.h"
-#include "types.h"
 
 
 class Subfont;
@@ -65,7 +64,7 @@ class Subfont
 	public:
 		~Subfont();
 		const std::string& id () const {return _id;}
-		UInt16 decode (unsigned char c);
+		uint16_t decode (unsigned char c);
 
 	protected:
 		Subfont (SubfontDefinition &sfd, const std::string &id) : _sfd(sfd), _id(id), _mapping(0) {}
@@ -74,7 +73,7 @@ class Subfont
 	private:
 		SubfontDefinition &_sfd;  ///< SubfontDefinition where this Subfont belongs to
 		const std::string &_id;   ///< id of this subfont as specified in the .sfd file
-		UInt16 *_mapping;         ///< the character mapping table with 256 entries
+		uint16_t *_mapping;       ///< the character mapping table with 256 entries
 };
 
 

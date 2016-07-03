@@ -24,8 +24,8 @@
 #include <istream>
 #include <string>
 #include <vector>
+#include "FixWord.h"
 #include "FontMetrics.h"
-#include "types.h"
 #include "StreamReader.h"
 
 class StreamReader;
@@ -43,10 +43,10 @@ class TFM : public FontMetrics
 		double getSpaceStretch () const override;
 		double getSpaceShrink () const override;
 		double getQuad () const override;
-		bool verticalLayout () const override {return false;}
-		UInt32 getChecksum () const override  {return _checksum;}
-		UInt16 firstChar () const override    {return _firstChar;}
-		UInt16 lastChar () const override     {return _lastChar;}
+		bool verticalLayout () const override  {return false;}
+		uint32_t getChecksum () const override {return _checksum;}
+		uint16_t firstChar () const override   {return _firstChar;}
+		uint16_t lastChar () const override    {return _lastChar;}
 
 	protected:
 		TFM () : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _params(7) {}
@@ -57,10 +57,10 @@ class TFM : public FontMetrics
 		void setCharRange (int firstchar, int lastchar) {_firstChar=firstchar; _lastChar=lastchar;}
 
 	private:
-		UInt32 _checksum;
-		UInt16 _firstChar, _lastChar;
+		uint32_t _checksum;
+		uint16_t _firstChar, _lastChar;
 		double _designSize;  ///< design size of the font in PS points (72bp = 1in)
-		std::vector<UInt32>  _charInfoTable;
+		std::vector<uint32_t>  _charInfoTable;
 		std::vector<FixWord> _widthTable;    ///< character widths in design size units
 		std::vector<FixWord> _heightTable;   ///< character height in design size units
 		std::vector<FixWord> _depthTable;    ///< character depth in design size units

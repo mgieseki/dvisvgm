@@ -23,7 +23,6 @@
 
 #include "MessageException.h"
 #include "StreamReader.h"
-#include "types.h"
 
 
 struct VFException : public MessageException
@@ -59,7 +58,7 @@ class VFReader : public StreamReader
 
 	private:
 		VFActions *_actions; ///< actions to execute when reading a VF command
-		double _designSize; ///< design size of currently read VF
+		double _designSize;  ///< design size of currently read VF in PS points
 };
 
 #endif

@@ -49,7 +49,7 @@ void GFGlyphTracer::reset (string &fname, double upp) {
 }
 
 
-bool GFGlyphTracer::executeChar (UInt8 c) {
+bool GFGlyphTracer::executeChar (uint8_t c) {
 	if (!_glyph)
 		return false;
 
@@ -86,7 +86,7 @@ void GFGlyphTracer::closePath () {
 }
 
 
-void GFGlyphTracer::endChar (UInt32 c) {
+void GFGlyphTracer::endChar (uint32_t c) {
 	_glyph->clear();
 	GFTracer::endChar(c);
 }

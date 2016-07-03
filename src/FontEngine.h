@@ -31,7 +31,6 @@
 #include "CharMapID.h"
 #include "Glyph.h"
 #include "RangeMap.h"
-#include "types.h"
 
 class Font;
 

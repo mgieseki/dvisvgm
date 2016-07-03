@@ -24,7 +24,6 @@
 #include <sstream>
 #include "GFGlyphTracer.h"
 #include "Message.h"
-#include "types.h"
 
 class GlyphTracerMessages : public GFGlyphTracer::Callback
 {
@@ -36,7 +35,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 				Message::mstream() << '\n';
 		}
 
-		void beginChar (UInt8 c) override {
+		void beginChar (uint8_t c) override {
 			if (!_traced) {
 				if (!_fname.empty())
 					Message::mstream() << '\n';
@@ -46,7 +45,7 @@ class GlyphTracerMessages : public GFGlyphTracer::Callback
 			}
 		}
 
-		void endChar (UInt8 c) override {
+		void endChar (uint8_t c) override {
 			std::ostringstream oss;
 			oss << '[';
 			if (isprint(c))

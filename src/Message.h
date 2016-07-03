@@ -22,11 +22,11 @@
 #define DVISVGM_MESSAGE_H
 
 #include <algorithm>
+#include <cstdint>
 #include <string>
 #include <ostream>
 #include <sstream>
 #include "Terminal.h"
-#include "types.h"
 
 
 class Message;
@@ -73,11 +73,11 @@ class Message
 {
 	struct Color {
 		Color () : foreground(-1), background(-1) {}
-		Color (Int8 fgcolor) : foreground(fgcolor), background(-1) {}
-		Color (Int8 fgcolor, bool light) : foreground(fgcolor + (light ? 8 : 0)), background(-1) {}
-		Color (Int8 fgcolor, Int8 bgcolor) : foreground(fgcolor), background(bgcolor) {}
-		Int8 foreground;
-		Int8 background;
+		Color (int8_t fgcolor) : foreground(fgcolor), background(-1) {}
+		Color (int8_t fgcolor, bool light) : foreground(fgcolor + (light ? 8 : 0)), background(-1) {}
+		Color (int8_t fgcolor, int8_t bgcolor) : foreground(fgcolor), background(bgcolor) {}
+		int8_t foreground;
+		int8_t background;
 	};
 
 	public:

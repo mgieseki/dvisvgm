@@ -25,8 +25,8 @@
  * https://github.com/adobe-type-tools/agl-aglfn
  * http://tug.ctan.org/macros/latex/contrib/pdfx/glyphtounicode-cmr.tex */
 static struct Hash2Unicode {
-	UInt32 hash;
-	UInt32 codepoint;
+	uint32_t hash;
+	uint32_t codepoint;
 } hash2unicode[] = {
 	{0x001cf4a9, 0x0118}, // Eogonek
 	{0x003b11fb, 0x055f}, // abbreviationmarkarmenian

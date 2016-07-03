@@ -24,7 +24,7 @@
 using namespace std;
 
 TEST(ColorTest, construct) {
-	Color c1(UInt8(1), UInt8(2), UInt8(3));
+	Color c1(uint8_t(1), uint8_t(2), uint8_t(3));
 	EXPECT_EQ(c1.rgbString(), "#010203");
 	Color c2(1.0/255, 2.0/255, 3.0/255);
 	EXPECT_EQ(c2.rgbString(), "#010203");
@@ -39,7 +39,7 @@ TEST(ColorTest, gray) {
 	Color c;
 	c.setGray(10.0/255);
 	EXPECT_EQ(c.rgbString(), "#0a0a0a");
-	c.setGray(UInt8(15));
+	c.setGray(uint8_t(15));
 	EXPECT_EQ(c.rgbString(), "#0f0f0f");
 }
 
@@ -144,15 +144,15 @@ TEST(ColorTest, getLab) {
 
 
 TEST(ColorTest, svgColorString) {
-	EXPECT_EQ(Color(UInt32(0x000000)).svgColorString(false), "black");
-	EXPECT_EQ(Color(UInt32(0xffffff)).svgColorString(false), "white");
-	EXPECT_EQ(Color(UInt32(0xff0000)).svgColorString(false), "red");
-	EXPECT_EQ(Color(UInt32(0x9400d3)).svgColorString(false), "darkviolet");
-	EXPECT_EQ(Color(UInt32(0x000001)).svgColorString(false), "#000001");
+	EXPECT_EQ(Color(uint32_t(0x000000)).svgColorString(false), "black");
+	EXPECT_EQ(Color(uint32_t(0xffffff)).svgColorString(false), "white");
+	EXPECT_EQ(Color(uint32_t(0xff0000)).svgColorString(false), "red");
+	EXPECT_EQ(Color(uint32_t(0x9400d3)).svgColorString(false), "darkviolet");
+	EXPECT_EQ(Color(uint32_t(0x000001)).svgColorString(false), "#000001");
 
-	EXPECT_EQ(Color(UInt32(0x000000)).svgColorString(true), "#000000");
-	EXPECT_EQ(Color(UInt32(0xffffff)).svgColorString(true), "#ffffff");
-	EXPECT_EQ(Color(UInt32(0xff0000)).svgColorString(true), "#ff0000");
-	EXPECT_EQ(Color(UInt32(0x9400d3)).svgColorString(true), "#9400d3");
-	EXPECT_EQ(Color(UInt32(0x000001)).svgColorString(true), "#000001");
+	EXPECT_EQ(Color(uint32_t(0x000000)).svgColorString(true), "#000000");
+	EXPECT_EQ(Color(uint32_t(0xffffff)).svgColorString(true), "#ffffff");
+	EXPECT_EQ(Color(uint32_t(0xff0000)).svgColorString(true), "#ff0000");
+	EXPECT_EQ(Color(uint32_t(0x9400d3)).svgColorString(true), "#9400d3");
+	EXPECT_EQ(Color(uint32_t(0x000001)).svgColorString(true), "#000001");
 }

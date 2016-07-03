@@ -22,14 +22,13 @@
 #define DVISVGM_UNICODE_H
 
 #include <string>
-#include "types.h"
 
 struct Unicode
 {
-	static bool isValidCodepoint (UInt32 code);
-	static UInt32 charToCodepoint (UInt32 c);
-	static std::string utf8 (Int32 c);
-	static Int32 aglNameToCodepoint (const std::string &name);
+	static bool isValidCodepoint (uint32_t code);
+	static uint32_t charToCodepoint (uint32_t c);
+	static std::string utf8 (int32_t c);
+	static int32_t aglNameToCodepoint (const std::string &name);
 };
 
 #endif

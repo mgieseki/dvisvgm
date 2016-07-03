@@ -25,9 +25,9 @@ using namespace std;
 
 
 TEST(UnicodeTest, isValidCodepoint) {
-	for (UInt32 i=0; i <= 0x20; i++)
+	for (uint32_t i=0; i <= 0x20; i++)
 		EXPECT_FALSE(Unicode::isValidCodepoint(i));
-	for (UInt32 i=0x21; i <= 0x7e; i++)
+	for (uint32_t i=0x21; i <= 0x7e; i++)
 		EXPECT_TRUE(Unicode::isValidCodepoint(i));
 	EXPECT_FALSE(Unicode::isValidCodepoint(0xfffe));
 	EXPECT_FALSE(Unicode::isValidCodepoint(0xffff));
@@ -36,11 +36,11 @@ TEST(UnicodeTest, isValidCodepoint) {
 
 
 TEST(UnicodeTest, charToCodepoint) {
-	for (UInt32 i=0; i <= 0x20; i++)
+	for (uint32_t i=0; i <= 0x20; i++)
 		EXPECT_EQ(Unicode::charToCodepoint(i), 0xe000+i);
-	for (UInt32 i=0x21; i <= 0x7e; i++)
+	for (uint32_t i=0x21; i <= 0x7e; i++)
 		EXPECT_EQ(Unicode::charToCodepoint(i), i);
-	for (UInt32 i=0x7f; i <= 0x9f; i++)
+	for (uint32_t i=0x7f; i <= 0x9f; i++)
 		EXPECT_EQ(Unicode::charToCodepoint(i), 0xe021+i-0x7f);
 	EXPECT_EQ(Unicode::charToCodepoint(0x10fffd), 0x10fffd);
 	EXPECT_EQ(Unicode::charToCodepoint(0x10fffe), 0xe887);

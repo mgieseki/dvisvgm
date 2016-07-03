@@ -23,7 +23,6 @@
 
 #include <ostream>
 #include <vector>
-#include "types.h"
 
 
 class Bitmap
@@ -41,7 +40,7 @@ class Bitmap
 		Bitmap (int minx, int maxx, int miny , int maxy);
 		void resize (int minx, int maxx, int miny , int maxy);
 		void setBits(int row, int col, int n);
-		const UInt8* rowPtr (int row) const   {return &_bytes[row*_bpr];}
+		const uint8_t* rowPtr (int row) const {return &_bytes[row*_bpr];}
 		int height () const                   {return _rows;}
 		int width () const                    {return _cols;}
 		int xshift () const                   {return _xshift;}
@@ -64,7 +63,7 @@ class Bitmap
 		int _rows, _cols;     ///< number of rows, columns
 		int _xshift, _yshift; ///< horizontal/vertical shift
 		int _bpr;             ///< number of bytes per row
-		std::vector<UInt8> _bytes;
+		std::vector<uint8_t> _bytes;
 };
 
 

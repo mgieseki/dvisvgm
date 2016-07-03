@@ -287,6 +287,7 @@
     <ClInclude Include="..\src\EPSFile.h" />
     <ClInclude Include="..\src\EPSToSVG.h" />
     <ClInclude Include="..\src\FilePath.h" />
+    <ClInclude Include="..\src\FixWord.h" />
     <ClInclude Include="..\src\FontMetrics.h" />
     <ClInclude Include="..\src\HtmlSpecialHandler.h" />
     <ClInclude Include="..\src\JFM.h" />

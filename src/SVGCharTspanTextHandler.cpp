@@ -30,7 +30,7 @@ SVGCharTspanTextHandler::SVGCharTspanTextHandler (bool selectFontByClass)
 }
 
 
-void SVGCharTspanTextHandler::appendChar (UInt32 c, double x, double y) {
+void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	// changes of fonts and transformations require a new text element
 	if (!_textNode || _font.changed() || _matrix.changed() || _vertical.changed()) {
 		resetContextNode();

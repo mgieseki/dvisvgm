@@ -23,16 +23,15 @@
 
 #include <string>
 #include <vector>
-#include "types.h"
 
 
 struct VFActions
 {
 	virtual ~VFActions () =default;
-	virtual void preamble (std::string comment, UInt32 checksum, double dsize) {}
+	virtual void preamble (std::string comment, uint32_t checksum, double dsize) {}
 	virtual void postamble () {}
-	virtual void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize) {}
-	virtual void defineVFChar (UInt32 c, std::vector<UInt8> *dvi) {}
+	virtual void defineVFFont (uint32_t fontnum, std::string path, std::string name, uint32_t checksum, double dsize, double ssize) {}
+	virtual void defineVFChar (uint32_t c, std::vector<uint8_t> *dvi) {}
 };
 
 #endif

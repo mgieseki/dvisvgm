@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include "MessageException.h"
-#include "types.h"
 
 class CRC32;
 
@@ -38,16 +37,16 @@ class StreamReader
 		bool eof () const           {return _is->eof();}
 		void clearStream ()         {_is->clear();}
 		std::istream& replaceStream (std::istream &s);
-		UInt32 readUnsigned (int n);
-		UInt32 readUnsigned (int n, CRC32 &crc32);
-		Int32 readSigned (int n);
-		Int32 readSigned (int n, CRC32 &crc32);
+		uint32_t readUnsigned (int n);
+		uint32_t readUnsigned (int n, CRC32 &crc32);
+		int32_t readSigned (int n);
+		int32_t readSigned (int n, CRC32 &crc32);
 		std::string readString ();
 		std::string readString (CRC32 &crc32, bool finalZero=false);
 		std::string readString (int length);
 		std::string readString (int length, CRC32 &crc32);
-		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes);
-		std::vector<UInt8>& readBytes (int n, std::vector<UInt8> &bytes, CRC32 &crc32);
+		std::vector<uint8_t>& readBytes (int n, std::vector<uint8_t> &bytes);
+		std::vector<uint8_t>& readBytes (int n, std::vector<uint8_t> &bytes, CRC32 &crc32);
 		int readByte ()                 {return _is->get();}
 		int readByte (CRC32 &crc32);
 		void seek (std::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}

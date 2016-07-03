@@ -22,7 +22,6 @@
 #define DVISVGM_STREAMWRITER_H
 
 #include <ostream>
-#include "types.h"
 
 
 class CRC32;
@@ -32,11 +31,11 @@ class StreamWriter
 	public:
 		StreamWriter (std::ostream &os) : _os(os) {}
 		virtual ~StreamWriter () =default;
-		void writeUnsigned (UInt32 val, int n);
-		void writeSigned (Int32 val, int n);
+		void writeUnsigned (uint32_t val, int n);
+		void writeSigned (int32_t val, int n);
 		void writeString (const std::string &str, bool finalZero=false);
-		void writeUnsigned (UInt32 val, int n, CRC32 &crc32);
-		void writeSigned (Int32 val, int n, CRC32 &crc32);
+		void writeUnsigned (uint32_t val, int n, CRC32 &crc32);
+		void writeSigned (int32_t val, int n, CRC32 &crc32);
 		void writeString (const std::string &str, CRC32 &crc32, bool finalZero=false);
 
 	private:

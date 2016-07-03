@@ -126,7 +126,7 @@ static bool valid_name_char (int c) {
 /** Returns an entry of the encoding table.
  * @param[in] c character code
  * @return character name assigned to character code c*/
-const char* EncFile::charName (UInt32 c) const {
+const char* EncFile::charName (uint32_t c) const {
 	if (c < _table.size())
 		return !_table[c].empty() ? _table[c].c_str() : 0;
 	return 0;

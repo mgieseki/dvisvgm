@@ -240,11 +240,6 @@ check_PROGRAMS += TriangularPatchTest
 TriangularPatchTest_SOURCES = TriangularPatchTest.cpp
 TriangularPatchTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
-TESTS += TypesTest
-check_PROGRAMS += TypesTest
-TypesTest_SOURCES = TypesTest.cpp
-TypesTest_LDADD = ../src/libdvisvgm.a ../src/gzstream.o ../xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
-
 TESTS += UnicodeTest
 check_PROGRAMS += UnicodeTest
 UnicodeTest_SOURCES = UnicodeTest.cpp

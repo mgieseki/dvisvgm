@@ -139,7 +139,7 @@ void CMapReader::op_usecmap (InputReader &) {
 }
 
 
-static UInt32 parse_hexentry (InputReader &ir) {
+static uint32_t parse_hexentry (InputReader &ir) {
 	ir.skipSpace();
 	if (ir.get() != '<')
 		throw CMapReaderException("invalid range entry ('<' expected)");
@@ -148,7 +148,7 @@ static UInt32 parse_hexentry (InputReader &ir) {
 		throw CMapReaderException("invalid range entry (hexadecimal value expected)");
 	if (ir.get() != '>')
 		throw CMapReaderException("invalid range entry ('>' expected)");
-	return UInt32(val);
+	return uint32_t(val);
 }
 
 
@@ -157,9 +157,9 @@ void CMapReader::op_begincidrange (InputReader &ir) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
-			UInt32 first = parse_hexentry(ir);
-			UInt32 last =  parse_hexentry(ir);
-			UInt32 cid;
+			uint32_t first = parse_hexentry(ir);
+			uint32_t last = parse_hexentry(ir);
+			uint32_t cid;
 			ir.skipSpace();
 			if (!ir.parseUInt(cid))
 				throw CMapReaderException("invalid range entry (decimal value expected)");
@@ -175,9 +175,9 @@ void CMapReader::op_beginbfrange (InputReader &ir) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
-			UInt32 first = parse_hexentry(ir);
-			UInt32 last =  parse_hexentry(ir);
-			UInt32 chrcode = parse_hexentry(ir);
+			uint32_t first = parse_hexentry(ir);
+			uint32_t last = parse_hexentry(ir);
+			uint32_t chrcode = parse_hexentry(ir);
 			_cmap->addBFRange(first, last, chrcode);
 			ir.skipSpace();
 		}
@@ -191,11 +191,11 @@ void CMapReader::op_beginbfchar (InputReader &ir) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
-			UInt32 cid = parse_hexentry(ir);
+			uint32_t cid = parse_hexentry(ir);
 			ir.skipSpace();
 			if (ir.peek() == '/')
 				throw CMapReaderException("mapping of named characters is not supported");
-			UInt32 chrcode = parse_hexentry(ir);
+			uint32_t chrcode = parse_hexentry(ir);
 			_cmap->addBFRange(cid, cid, chrcode);
 			ir.skipSpace();
 		}

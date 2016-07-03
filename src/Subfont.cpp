@@ -33,7 +33,7 @@ using namespace std;
 // helper functions
 
 static int skip_mapping_data (istream &is);
-static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, long &pos);
+static bool scan_line (const char *line, int lineno, uint16_t *mapping, const string &fname, long &pos);
 
 
 /** Constructs a new SubfontDefinition object.
@@ -152,8 +152,8 @@ bool Subfont::read () {
 					lineno += skip_mapping_data(is);
 				else {
 					// build mapping array
-					_mapping = new UInt16[256];
-					memset(_mapping, 0, 256*sizeof(UInt16));
+					_mapping = new uint16_t[256];
+					memset(_mapping, 0, 256*sizeof(uint16_t));
 					long pos=0;
 					char buf[1024];
 					bool complete=false;
@@ -174,7 +174,7 @@ bool Subfont::read () {
  *  (local) character code of the subfont.
  *  @param[in] c local character code relative to the subfont
  *  @return character code of the target font */
-UInt16 Subfont::decode (unsigned char c) {
+uint16_t Subfont::decode (unsigned char c) {
 	if (!_mapping && !read())
 		return 0;
 	return _mapping[c];
@@ -211,7 +211,7 @@ static int skip_mapping_data (istream &is) {
  *  @param[in] fname name of the mapfile being scanned
  *  @param[in,out] offset position/index of next mapping value
  *  @return true if the line is the last one the current mapping sequence, i.e. the line doesn't end with a backslash */
-static bool scan_line (const char *line, int lineno, UInt16 *mapping, const string &fname, long &offset) {
+static bool scan_line (const char *line, int lineno, uint16_t *mapping, const string &fname, long &offset) {
 	const char *p=line;
 	char *q;
 	for (; *p && isspace(*p); p++);
@@ -256,7 +256,7 @@ static bool scan_line (const char *line, int lineno, UInt16 *mapping, const stri
 				for (long v=val1; v <= val2; v++) {
 					if (mapping[offset])
 						throw SubfontException(oss << "mapping of character " << offset << " already defined", fname, lineno);
-					mapping[offset++] = static_cast<UInt16>(v);
+					mapping[offset++] = static_cast<uint16_t>(v);
 				}
 			}
 			for (p=q; *p && isspace(*p); p++);

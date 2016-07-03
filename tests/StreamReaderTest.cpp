@@ -58,7 +58,7 @@ TEST(StreamReaderTest, readUnsigned) {
 	string str = "\x01\x02\x03\x04";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	UInt32 val = reader.readUnsigned(4);
+	uint32_t val = reader.readUnsigned(4);
 	EXPECT_EQ(val, 0x01020304);
 }
 
@@ -68,7 +68,7 @@ TEST(StreamReaderTest, readUnsignedCRC) {
 	istringstream iss(str);
 	StreamReader reader(iss);
 	CRC32 crc;
-	UInt32 val = reader.readUnsigned(4, crc);
+	uint32_t val = reader.readUnsigned(4, crc);
 	EXPECT_EQ(val, 0x01020304);
 	EXPECT_EQ(crc.get(), 0xb63cfbcd);
 }
@@ -78,7 +78,7 @@ TEST(StreamReaderTest, readSigned) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	Int32 val = reader.readSigned(4);
+	int32_t val = reader.readSigned(4);
 	EXPECT_EQ(val, 0xffeeddcc);
 }
 
@@ -88,7 +88,7 @@ TEST(StreamReaderTest, readSignedCRC) {
 	istringstream iss(str);
 	StreamReader reader(iss);
 	CRC32 crc;
-	Int32 val = reader.readSigned(4, crc);
+	int32_t val = reader.readSigned(4, crc);
 	EXPECT_EQ(val, 0xffeeddcc);
 	EXPECT_EQ(crc.get(), 0xfa79118e);
 }
@@ -98,7 +98,7 @@ TEST(StreamReaderTest, readBytes) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	vector<UInt8> bytes(4);
+	vector<uint8_t> bytes(4);
 	memset(&bytes[0], 0, 4);
 	reader.readBytes(3, bytes);
 	EXPECT_EQ(bytes[0], 0xff);
@@ -112,7 +112,7 @@ TEST(StreamReaderTest, readBytesCRC) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	vector<UInt8> bytes(4);
+	vector<uint8_t> bytes(4);
 	memset(&bytes[0], 0, 4);
 	CRC32 crc;
 	reader.readBytes(3, bytes, crc);

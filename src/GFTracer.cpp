@@ -43,11 +43,11 @@ GFTracer::GFTracer (istream &is, double upp)
 }
 
 
-void GFTracer::beginChar (UInt32 c) {
+void GFTracer::beginChar (uint32_t c) {
 }
 
 
-void GFTracer::endChar (UInt32 c) {
+void GFTracer::endChar (uint32_t c) {
 	const Bitmap &bitmap = getBitmap();
 	if (bitmap.empty())
 		return;

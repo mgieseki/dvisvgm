@@ -129,8 +129,8 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void setdash (std::vector<double> &p) override;
 		void setgray (std::vector<double> &p) override;
 		void sethsbcolor (std::vector<double> &hsb) override;
-		void setlinecap (std::vector<double> &p) override      {_linecap = UInt8(p[0]);}
-		void setlinejoin (std::vector<double> &p) override     {_linejoin = UInt8(p[0]);}
+		void setlinecap (std::vector<double> &p) override      {_linecap = uint8_t(p[0]);}
+		void setlinejoin (std::vector<double> &p) override     {_linejoin = uint8_t(p[0]);}
 		void setlinewidth (std::vector<double> &p) override    {_linewidth = p[0] ? scale(p[0])*1.00375 : 0.5;}
 		void setmatrix (std::vector<double> &p) override;
 		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0]*1.00375;}
@@ -158,8 +158,8 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		double _linewidth;          ///< current linewidth
 		double _miterlimit;         ///< current miter limit
 		double _opacityalpha;       ///< opacity level (0=fully transparent, ..., 1=opaque)
-		UInt8 _linecap  : 2;        ///< current line cap (0=butt, 1=round, 2=projecting square)
-		UInt8 _linejoin : 2;        ///< current line join (0=miter, 1=round, 2=bevel)
+		uint8_t _linecap  : 2;      ///< current line cap (0=butt, 1=round, 2=projecting square)
+		uint8_t _linejoin : 2;      ///< current line join (0=miter, 1=round, 2=bevel)
 		double _dashoffset;         ///< current dash offset
 		std::vector<double> _dashpattern;
 		ClippingStack _clipStack;

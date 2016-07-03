@@ -23,7 +23,6 @@
 
 #include <string>
 #include <map>
-#include "types.h"
 #include "Glyph.h"
 
 
@@ -34,12 +33,12 @@ class FontCache
 	public:
 		struct FontInfo
 		{
-			std::string name; // fontname
-			UInt16 version;   // file format version
-			UInt32 checksum;  // CRC32 checksum of file data
-			UInt32 numchars;  // number of characters
-			UInt32 numbytes;  // number of bytes
-			UInt32 numcmds;   // number of path commands
+			std::string name;   // fontname
+			uint16_t version;   // file format version
+			uint32_t checksum;  // CRC32 checksum of file data
+			uint32_t numchars;  // number of characters
+			uint32_t numbytes;  // number of bytes
+			uint32_t numcmds;   // number of path commands
 		};
 
 	public:
@@ -60,7 +59,7 @@ class FontCache
 		static void fontinfo (const char *dirname, std::ostream &os, bool purge=false);
 
 	private:
-		static const UInt8 FORMAT_VERSION;
+		static const uint8_t FORMAT_VERSION;
 		std::string _fontname;
 		GlyphMap _glyphs;
 		bool _changed;

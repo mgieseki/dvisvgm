@@ -33,14 +33,14 @@ using namespace std;
 
 bool Color::SUPPRESS_COLOR_NAMES = true;
 
-const Color Color::BLACK(UInt32(0));
-const Color Color::WHITE(UInt8(255), UInt8(255), UInt8(255));
-const Color Color::TRANSPARENT(UInt32(0xff000000));
+const Color Color::BLACK(uint32_t(0));
+const Color Color::WHITE(uint8_t(255), uint8_t(255), uint8_t(255));
+const Color Color::TRANSPARENT(uint32_t(0xff000000));
 
 
-static inline UInt8 double_to_byte (double v) {
+static inline uint8_t double_to_byte (double v) {
 	v = max(0.0, min(1.0, v));
-	return UInt8(floor(255*v+0.5));
+	return uint8_t(floor(255*v+0.5));
 }
 
 
@@ -52,13 +52,13 @@ static void tolower (string &str) {
 
 Color::Color (const char *psname) {
 	if (!setPSName(psname, false))
-		setGray(UInt8(0));
+		setGray(uint8_t(0));
 }
 
 
 Color::Color (const string &psname) {
 	if (!setPSName(psname, false))
-		setGray(UInt8(0));
+		setGray(uint8_t(0));
 }
 
 
@@ -74,7 +74,7 @@ void Color::setRGB (double r, double g, double b) {
 bool Color::setPSName (string name, bool case_sensitive) {
 	if (name[0] == '#') {
 		char *p=0;
-		_rgb = UInt32(strtol(name.c_str()+1, &p, 16));
+		_rgb = uint32_t(strtol(name.c_str()+1, &p, 16));
 		while (isspace(*p))
 			p++;
 		return (*p == 0 && _rgb <= 0xFFFFFF);
@@ -82,7 +82,7 @@ bool Color::setPSName (string name, bool case_sensitive) {
 	// converted color constants from color.pro
 	static const struct ColorConstant {
 		const char *name;
-		const UInt32 rgb;
+		const uint32_t rgb;
 	}
 	constants[] = {
 		{"Apricot",        0xFFAD7A},
@@ -224,9 +224,9 @@ void Color::set (ColorSpace colorSpace, VectorIterator<double> &it) {
 
 
 void Color::operator *= (double c) {
-	UInt32 rgb=0;
+	uint32_t rgb=0;
 	for (int i=0; i < 3; i++) {
-		rgb |= UInt32(floor((_rgb & 0xff)*c+0.5)) << (8*i);
+		rgb |= uint32_t(floor((_rgb & 0xff)*c+0.5)) << (8*i);
 		_rgb >>= 8;
 	}
 	_rgb = rgb;
@@ -251,7 +251,7 @@ string Color::rgbString () const {
 string Color::svgColorString (bool rgbonly) const {
 	if (!rgbonly) {
 		static const struct ColorName {
-			UInt32 rgb;
+			uint32_t rgb;
 			const char *name;
 		} colornames[] = {
 			{0x000000, "black"},

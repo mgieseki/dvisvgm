@@ -75,7 +75,7 @@ bool RangeMap::Range::join (const Range &r) {
  *  @param[in] cmin smallest number in the range
  *  @param[in] cmax largest number in the range
  *  @param[in] vmin map value of cmin */
-void RangeMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 vmin) {
+void RangeMap::addRange (uint32_t cmin, uint32_t cmax, uint32_t vmin) {
 	if (cmin > cmax)
 		swap(cmin, cmax);
 
@@ -103,7 +103,7 @@ void RangeMap::addRange (UInt32 cmin, UInt32 cmax, UInt32 vmin) {
 			if (!it->join(range) && (it == _ranges.begin() || !(it-1)->join(range))) {
 				if (it->min() < cmin && it->max() > cmax) { // new range completely inside an existing range?
 					//split existing range
-					UInt32 itmax = it->max();
+					uint32_t itmax = it->max();
 					it->max(cmin-1);
 					it = _ranges.insert(it+1, Range(cmax+1, itmax, it->valueAt(cmax+1)));
 				}
@@ -154,7 +154,7 @@ void RangeMap::adaptNeighbors (Ranges::iterator it) {
 /** Finds the index of the range that contains a given value c.
  *  @param[in] c find range that contains this value
  *  @return index of the range found, or -1 if range was not found */
-int RangeMap::lookup (UInt32 c) const {
+int RangeMap::lookup (uint32_t c) const {
 	// simple binary search
 	int left=0, right=_ranges.size()-1;
 	while (left <= right) {
@@ -170,7 +170,7 @@ int RangeMap::lookup (UInt32 c) const {
 }
 
 
-UInt32 RangeMap::valueAt (UInt32 c) const {
+uint32_t RangeMap::valueAt (uint32_t c) const {
 	int pos = lookup(c);
 	return pos < 0 ? 0 : _ranges[pos].valueAt(c);
 }

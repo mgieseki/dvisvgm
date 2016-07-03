@@ -39,7 +39,6 @@
 #include "ToUnicodeMap.h"
 #include "VFActions.h"
 #include "VFReader.h"
-#include "types.h"
 
 
 struct FontStyle;
@@ -73,7 +72,7 @@ class Font {
 		virtual const FontEncoding* encoding () const;
 		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const =0;
 		virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
-		virtual UInt32 unicode (UInt32 c) const;
+		virtual uint32_t unicode (uint32_t c) const;
 		virtual void tidy () const {}
 		virtual bool findAndAssignBaseFontMap () {return true;}
 		virtual bool verticalLayout () const     {return getMetrics() ? getMetrics()->verticalLayout() : false;}
@@ -114,8 +113,8 @@ class PhysicalFont : public virtual Font {
 	public:
 		enum class Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
 
-		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
-		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);
+		static Font* create (std::string name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
+		static Font* create (std::string name, int fontindex, uint32_t checksum, double dsize, double ssize);
 		virtual Type type () const =0;
 		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override;
 		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
@@ -135,7 +134,7 @@ class PhysicalFont : public virtual Font {
 		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		virtual CharMapID getCharMapID () const =0;
 		virtual void setCharMapID (const CharMapID &id) {}
-		virtual Character decodeChar (UInt32 c) const;
+		virtual Character decodeChar (uint32_t c) const;
 		const char* path () const override;
 
 	protected:
@@ -156,21 +155,21 @@ class PhysicalFont : public virtual Font {
 class VirtualFont : public virtual Font {
 	friend class FontManager;
 	public:
-		typedef std::vector<UInt8> DVIVector;
+		typedef std::vector<uint8_t> DVIVector;
 
 	public:
-		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize);
+		static Font* create (std::string name, uint32_t checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
 
 	protected:
-		virtual void assignChar (UInt32 c, DVIVector *dvi) =0;
+		virtual void assignChar (uint32_t c, DVIVector *dvi) =0;
 };
 
 
 class TFMFont : public virtual Font {
 	public:
-		TFMFont (std::string name, UInt32 checksum, double dsize, double ssize);
+		TFMFont (std::string name, uint32_t checksum, double dsize, double ssize);
 		~TFMFont ();
 		const FontMetrics* getMetrics () const override;
 		std::string name () const override  {return _fontname;}
@@ -185,7 +184,7 @@ class TFMFont : public virtual Font {
 	private:
 		mutable FontMetrics *_metrics;
 		std::string _fontname;
-		UInt32 _checksum; ///< cheksum to be compared with TFM checksum
+		uint32_t _checksum; ///< cheksum to be compared with TFM checksum
 		double _dsize;    ///< design size in PS point units
 		double _ssize;    ///< scaled size in PS point units
 };
@@ -205,7 +204,7 @@ class PhysicalFontProxy : public PhysicalFont {
 		double italicCorr (int c) const override             {return _pf->italicCorr(c);}
 		const FontMetrics* getMetrics () const override      {return _pf->getMetrics();}
 		Type type () const override                          {return _pf->type();}
-		UInt32 unicode (UInt32 c) const override             {return _pf->unicode(c);}
+		uint32_t unicode (uint32_t c) const override         {return _pf->unicode(c);}
 		int fontIndex () const override                      {return _pf->fontIndex();}
 		const FontStyle* style () const override             {return _pf->style();}
 		const FontMap::Entry* fontMapEntry () const override {return _pf->fontMapEntry();}
@@ -235,13 +234,13 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 		const FontStyle* style () const override             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
 		const FontMap::Entry* fontMapEntry () const override {return _fontMapEntry;}
 		const FontEncoding* encoding () const override;
-		UInt32 unicode (UInt32 c) const override;
+		uint32_t unicode (uint32_t c) const override;
 		bool findAndAssignBaseFontMap () override;
 		void tidy () const override;
 		CharMapID getCharMapID () const override             {return _charmapID;}
 
 	protected:
-		PhysicalFontImpl (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
+		PhysicalFontImpl (std::string name, int fontindex, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
 
 	private:
 		Type _filetype;
@@ -292,8 +291,8 @@ class NativeFontProxy : public NativeFont {
 		const Font* uniqueFont () const override          {return _nfont;}
 		const char* path () const override                {return _nfont->path();}
 		int fontIndex () const override                   {return _nfont->fontIndex();}
-		Character decodeChar (UInt32 c) const override    {return _nfont->decodeChar(c);}
-		UInt32 unicode (UInt32 c) const override          {return _nfont->unicode(c);}
+		Character decodeChar (uint32_t c) const override  {return _nfont->decodeChar(c);}
+		uint32_t unicode (uint32_t c) const override      {return _nfont->unicode(c);}
 		CharMapID getCharMapID () const override          {return _nfont->getCharMapID();}
 
 	protected:
@@ -321,8 +320,8 @@ class NativeFontImpl : public NativeFont {
 		std::string fontFamily () const;
 		bool findAndAssignBaseFontMap () override;
 		CharMapID getCharMapID () const override          {return CharMapID::NONE;}
-		Character decodeChar (UInt32 c) const override;
-		UInt32 unicode (UInt32 c) const override;
+		Character decodeChar (uint32_t c) const override;
+		uint32_t unicode (uint32_t c) const override;
 
 	private:
 		std::string _path;
@@ -350,7 +349,7 @@ class VirtualFontProxy : public VirtualFont {
 	protected:
 		VirtualFontProxy (const VirtualFont *font, double ds, double ss) : _vf(font), _dsize(ds), _ssize(ss) {}
 		VirtualFontProxy (const VirtualFontProxy &proxy, double ds, double ss) : _vf(proxy._vf), _dsize(ds), _ssize(ss) {}
-		void assignChar (UInt32 c, DVIVector *dvi) override {delete dvi;}
+		void assignChar (uint32_t c, DVIVector *dvi) override {delete dvi;}
 
 	private:
 		const VirtualFont *_vf;
@@ -369,11 +368,11 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 		const char* path () const override;
 
 	protected:
-		VirtualFontImpl (std::string name, UInt32 checksum, double dsize, double ssize);
-		void assignChar (UInt32 c, DVIVector *dvi) override;
+		VirtualFontImpl (std::string name, uint32_t checksum, double dsize, double ssize);
+		void assignChar (uint32_t c, DVIVector *dvi) override;
 
 	private:
-		std::map<UInt32, DVIVector*> _charDefs; ///< dvi subroutines defining the characters
+		std::map<uint32_t, DVIVector*> _charDefs; ///< dvi subroutines defining the characters
 };
 
 

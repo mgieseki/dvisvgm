@@ -61,7 +61,7 @@ FontEncoding* FontEncoding::encoding (const string &encname) {
 
 /////////////////////////////////////////////////////////////////////////
 
-Character FontEncodingPair::decode (UInt32 c) const {
+Character FontEncodingPair::decode (uint32_t c) const {
 	if (_enc1) {
 		Character chr = _enc1->decode(c);
 		if (_enc2 && chr.type() != Character::NAME)

@@ -21,7 +21,6 @@
 #include <config.h>
 #include "Bezier.h"
 #include "PathClipper.h"
-#include "types.h"
 
 using namespace std;
 using namespace ClipperLib;
@@ -180,7 +179,7 @@ void PathClipper::flatten (const CurvedPath &curvedPath, Polygons &polygons) {
  *  @param[out] t1 time paramater of p1
  *  @param[out] t2 time paramater of p2
  *  @return id of edge between p1 and p2, or 0 if it's not possible to identify the segment */
-static Int32 segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, double &t2) {
+static int32_t segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, double &t2) {
 	const ZType &z1=p1.Z, &z2=p2.Z;
 	if (z1 == z2 && z1.minLabel().id < 0) return z1.minLabel().id;
 	if (z1.label1 == z2.label2) {t1=z1.label1.t; t2=z2.label2.t; return z1.label1.id;}
@@ -193,7 +192,7 @@ static Int32 segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, dou
 }
 
 
-inline Int32 edge_id (const IntPoint &p1, const IntPoint &p2) {
+inline int32_t edge_id (const IntPoint &p1, const IntPoint &p2) {
 	double t;
 	return segment_id(p1, p2, t, t);
 }
@@ -217,7 +216,7 @@ static double division_ratio (const IntPoint &p1, const IntPoint &p2, const IntP
 inline ZLabel division_label (const IntPoint &p1, const IntPoint &p2, const IntPoint &q) {
 	double t1, t2;
 	double s=0;
-	Int32 id = segment_id(p1, p2, t1, t2);
+	int32_t id = segment_id(p1, p2, t1, t2);
 	if (id > 0)
 		s = t1+(t2-t1)*division_ratio(p1, p2, q);
 	return ZLabel(id, s);
@@ -252,8 +251,8 @@ static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabe
 	const size_t num_points = polygon.size();
 	int i = start%num_points;
 	double t1, t2; // time parameters of start and endpoint of current edge
-	Int32 id1 = segment_id(polygon[i], polygon[(i+1)%num_points], t1, t2);
-	Int32 id2 = id1;
+	int32_t id1 = segment_id(polygon[i], polygon[(i+1)%num_points], t1, t2);
+	int32_t id2 = id1;
 	double t = t2; // time parameter of resulting endpoint
 	for (size_t j=1; id1 == id2 && j < num_points; j++) {
 		t = t2;

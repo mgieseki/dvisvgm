@@ -23,7 +23,6 @@
 
 #include <string>
 #include <vector>
-#include "types.h"
 
 class BoundingBox;
 class Font;
@@ -39,7 +38,7 @@ struct DVIActions
 	virtual void moveToY (double y) {}
 	virtual void setFont (int num, const Font &font) {}
 	virtual void special (const std::string &s, double dvi2bp, bool preprocessing=false) {}
-	virtual void beginPage (unsigned pageno, const std::vector<Int32> &c) {}
+	virtual void beginPage (unsigned pageno, const std::vector<int32_t> &c) {}
 	virtual void endPage (unsigned pageno) {}
 	virtual BoundingBox& bbox () =0;
 	virtual void progress (size_t current, size_t total, const char *id=0) {}

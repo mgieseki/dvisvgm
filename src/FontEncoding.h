@@ -23,7 +23,6 @@
 
 #include <string>
 #include "Character.h"
-#include "types.h"
 
 
 struct CharMapID;
@@ -32,7 +31,7 @@ class PhysicalFont;
 struct FontEncoding
 {
 	virtual ~FontEncoding () =default;
-	virtual Character decode (UInt32 c) const =0;
+	virtual Character decode (uint32_t c) const =0;
 	virtual bool mapsToCharIndex () const =0;
 	virtual const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const {return 0;}
 	static FontEncoding* encoding (const std::string &encname);
@@ -51,7 +50,7 @@ class FontEncodingPair : public FontEncoding
 	public:
 		FontEncodingPair (const FontEncoding *enc1) : _enc1(enc1), _enc2(0) {}
 		FontEncodingPair (const FontEncoding *enc1, const FontEncoding *enc2) : _enc1(enc1), _enc2(enc2) {}
-		Character decode (UInt32 c) const override;
+		Character decode (uint32_t c) const override;
 		bool mapsToCharIndex () const override;
 		const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const override;
 		const FontEncoding* enc1 () const       {return _enc1;}

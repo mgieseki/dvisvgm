@@ -28,7 +28,7 @@ class SVGCharTspanTextHandler : public SVGCharTextHandler {
 		SVGCharTspanTextHandler (bool selectFontByClass);
 		void notifyXAdjusted () override {_xchanged = true;}
 		void notifyYAdjusted()  override {_ychanged = true;}
-		void appendChar (UInt32 c, double x, double y) override;
+		void appendChar (uint32_t c, double x, double y) override;
 		void setInitialContextNode (XMLElementNode *node) override;
 
 	protected:

@@ -251,8 +251,8 @@ TEST(GFReaderTest, postamble) {
 	gfReader.executePostamble();
 	const double bp2pt = 72.27/72.0;
 	ASSERT_DOUBLE_EQ(gfReader.getDesignSize()*bp2pt, 10);
-	ASSERT_NEAR(gfReader.getHPixelsPerPoint()*bp2pt, 8.302, 0.001);
-	ASSERT_NEAR(gfReader.getVPixelsPerPoint()*bp2pt, 8.302, 0.001);
+	ASSERT_NEAR(gfReader.getHPixelsPerPoint(), 8.333, 0.001);
+	ASSERT_NEAR(gfReader.getVPixelsPerPoint(), 8.333, 0.001);
 }
 
 

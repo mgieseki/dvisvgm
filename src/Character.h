@@ -21,23 +21,22 @@
 #ifndef DVISVGM_CHARACTER_H
 #define DVISVGM_CHARACTER_H
 
-#include "types.h"
 
 class Character
 {
 	public:
 		enum Type {CHRCODE, INDEX, NAME};
 		Character (const char *name) : _type(NAME), _name(name) {}
-		Character (Type type, UInt32 val) : _type(type), _number(val) {}
+		Character (Type type, uint32_t val) : _type(type), _number(val) {}
 		Character (Type type, const Character &c) : _type(type), _number(c.type() != NAME ? c._number : 0) {}
 		Type type () const {return _type;}
-		const char* name () const              {return _name;}
-		UInt32 number () const                 {return _number;}
+		const char* name () const {return _name;}
+		uint32_t number () const  {return _number;}
 
 	private:
 		Type _type;
 		union {
-			UInt32 _number;
+			uint32_t _number;
 			const char *_name;
 		};
 };

@@ -29,10 +29,10 @@
 class ToUnicodeMap : public RangeMap
 {
 	public:
-		bool addMissingMappings (UInt32 maxIndex);
+		bool addMissingMappings (uint32_t maxIndex);
 
 	protected:
-		bool fillRange (UInt32 minIndex, UInt32 maxIndex, UInt32 ucp, NumericRanges<UInt32> &used_ucps, bool ascending);
+		bool fillRange (uint32_t minIndex, uint32_t maxIndex, uint32_t ucp, NumericRanges<uint32_t> &used_ucps, bool ascending);
 };
 
 #endif

@@ -28,7 +28,6 @@
 #include "BasicDVIReader.h"
 #include "Color.h"
 #include "VFActions.h"
-#include "types.h"
 
 class Font;
 class FontStyle;
@@ -71,9 +70,9 @@ class DVIReader : public BasicDVIReader, public VFActions
 		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
 		virtual void moveRight (double dx);
 		virtual void moveDown (double dy);
-		void putVFChar (Font *font, UInt32 c);
-		void putGlyphArray (bool xonly, std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &glyphs);
-		const Font* defineFont (UInt32 fontnum, const std::string &name, UInt32 cs, double ds, double ss);
+		void putVFChar (Font *font, uint32_t c);
+		void putGlyphArray (bool xonly, std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs);
+		const Font* defineFont (uint32_t fontnum, const std::string &name, uint32_t cs, double ds, double ss);
 		void setFont (int num, SetFontMode mode);
 		const DVIState& currState() const {return _currDviState;}
 		const DVIState& prevState() const {return _prevDviState;}
@@ -81,22 +80,22 @@ class DVIReader : public BasicDVIReader, public VFActions
 		bool inPage () const   {return _inPage;}
 
 		// VFAction methods
-		void defineVFFont (UInt32 fontnum, std::string path, std::string name, UInt32 checksum, double dsize, double ssize) override;
-		void defineVFChar (UInt32 c, std::vector<UInt8> *dvi) override;
+		void defineVFFont (uint32_t fontnum, std::string path, std::string name, uint32_t checksum, double dsize, double ssize) override;
+		void defineVFChar (uint32_t c, std::vector<uint8_t> *dvi) override;
 
 		// The following template methods provide higher-level access to the DVI commands.
 		// In contrast to their cmdXXX pendants, they don't require any handling of the input stream.
 		// All command arguments are delivered as function parameters. These methods are called after
 		// the DVI registers have been updated, i.e. currState() represents the state after executing
 		// the command. If the previous register state is required, prevState() can be used.
-		virtual void dviPre (UInt8 id, UInt32 numer, UInt32 denom, UInt32 mag, const std::string &comment) {}
-		virtual void dviPost (UInt16 stdepth, UInt16 pages, UInt32 pw, UInt32 ph, UInt32 mag, UInt32 num, UInt32 den, UInt32 lbopofs) {}
-		virtual void dviPostPost (UInt8 id, UInt32 postOffset) {}
-		virtual void dviBop (const std::vector<Int32> &c, Int32 prevBopOffset) {}
+		virtual void dviPre (uint8_t id, uint32_t numer, uint32_t denom, uint32_t mag, const std::string &comment) {}
+		virtual void dviPost (uint16_t stdepth, uint16_t pages, uint32_t pw, uint32_t ph, uint32_t mag, uint32_t num, uint32_t den, uint32_t lbopofs) {}
+		virtual void dviPostPost (uint8_t id, uint32_t postOffset) {}
+		virtual void dviBop (const std::vector<int32_t> &c, int32_t prevBopOffset) {}
 		virtual void dviEop () {}
-		virtual void dviSetChar0 (UInt32 c, const Font *font) {}
-		virtual void dviSetChar (UInt32 c, const Font *font) {}
-		virtual void dviPutChar (UInt32 c, const Font *font) {}
+		virtual void dviSetChar0 (uint32_t c, const Font *font) {}
+		virtual void dviSetChar (uint32_t c, const Font *font) {}
+		virtual void dviPutChar (uint32_t c, const Font *font) {}
 		virtual void dviSetRule (double h, double w) {}
 		virtual void dviPutRule (double h, double w) {}
 		virtual void dviNop () {}
@@ -112,15 +111,15 @@ class DVIReader : public BasicDVIReader, public VFActions
 		virtual void dviY (double y) {}
 		virtual void dviW (double w) {}
 		virtual void dviZ (double z) {}
-		virtual void dviFontDef (UInt32 fontnum, UInt32 checksum, const Font *font) {}
-		virtual void dviFontNum (UInt32 fontnum, SetFontMode mode, const Font *font) {}
+		virtual void dviFontDef (uint32_t fontnum, uint32_t checksum, const Font *font) {}
+		virtual void dviFontNum (uint32_t fontnum, SetFontMode mode, const Font *font) {}
 		virtual void dviDir (WritingMode dir) {}
 		virtual void dviXXX (const std::string &str) {}
-		virtual void dviXPic (UInt8 box, const std::vector<Int32> &matrix, Int16 page, const std::string &path) {}
-		virtual void dviXFontDef (UInt32 fontnum, const NativeFont *font) {}
-		virtual void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &glyphs, const Font &font) {}
-		virtual void dviXGlyphString (std::vector<double> &dx, std::vector<UInt16> &glyphs, const Font &font) {}
-		virtual void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &chars, std::vector<UInt16> &glyphs, const Font &font) {}
+		virtual void dviXPic (uint8_t box, const std::vector<int32_t> &matrix, int16_t page, const std::string &path) {}
+		virtual void dviXFontDef (uint32_t fontnum, const NativeFont *font) {}
+		virtual void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs, const Font &font) {}
+		virtual void dviXGlyphString (std::vector<double> &dx, std::vector<uint16_t> &glyphs, const Font &font) {}
+		virtual void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &chars, std::vector<uint16_t> &glyphs, const Font &font) {}
 
 	private:
 		// The following low-level methods evaluate the DVI commands read from
@@ -164,12 +163,12 @@ class DVIReader : public BasicDVIReader, public VFActions
 		unsigned _currPageNum;   ///< current page number (1 is first page)
 		int _currFontNum;        ///< current font number
 		double _dvi2bp;          ///< factor to convert dvi units to PS points
-		UInt32 _mag;             ///< magnification factor * 1000
+		uint32_t _mag;           ///< magnification factor * 1000
 		bool _inPostamble;       ///< true if stream pointer is inside the postamble
 		DVIState _currDviState;  ///< current state of the DVI registers
 		DVIState _prevDviState;  ///< previous state of the DVI registers
 		std::stack<DVIState> _stateStack;
-		std::vector<UInt32> _bopOffsets;
+		std::vector<uint32_t> _bopOffsets;
 };
 
 #endif

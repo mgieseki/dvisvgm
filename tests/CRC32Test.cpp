@@ -34,7 +34,7 @@ TEST(CRC32Test, init) {
 
 TEST(CRC32Test, update_numbers) {
 	CRC32 crc;
-	const UInt32 comp[]={0xf8923be6, 0x4dcd2866, 0x4fdbb57a, 0xcb40f3bf, 0xf1a33887, 0x3422c816, 0x3a8b92a4, 0xedafc4ce, 0x4f5d17ec, 0x4a9f2f68};
+	const uint32_t comp[]={0xf8923be6, 0x4dcd2866, 0x4fdbb57a, 0xcb40f3bf, 0xf1a33887, 0x3422c816, 0x3a8b92a4, 0xedafc4ce, 0x4f5d17ec, 0x4a9f2f68};
 	for (int i=-5; i < 5; ++i) {
 		crc.update(i);
 		EXPECT_EQ(crc.get(), comp[i+5]);
@@ -53,7 +53,7 @@ TEST(CRC32Test, update_numbers) {
 
 TEST(CRC32Test, update_array) {
 	CRC32 crc;
-	UInt8 vals[256];
+	uint8_t vals[256];
 	// add 8 bit values
 	for (int i=0; i < 256; ++i)
 		vals[i] = i;

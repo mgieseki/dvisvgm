@@ -23,6 +23,6 @@
 
 #include "GraphicsPath.h"
 
-typedef GraphicsPath<Int32> Glyph;
+typedef GraphicsPath<int32_t> Glyph;
 
 #endif

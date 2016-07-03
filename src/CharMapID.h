@@ -21,12 +21,12 @@
 #ifndef DVISVGM_CHARMAPID_H
 #define DVISVGM_CHARMAPID_H
 
-#include "types.h"
+#include <cstdint>
 
 /** Represents a character map of a font. */
 struct CharMapID {
 	CharMapID () : platform_id(0), encoding_id(0) {}
-	CharMapID (UInt8 plf_id, UInt8 enc_id) : platform_id(plf_id), encoding_id(enc_id) {}
+	CharMapID (uint8_t plf_id, uint8_t enc_id) : platform_id(plf_id), encoding_id(enc_id) {}
 
 	bool operator == (const CharMapID &ids) const {
 		return platform_id == ids.platform_id && encoding_id == ids.encoding_id;
@@ -52,8 +52,8 @@ struct CharMapID {
 	static const CharMapID MAC_SIMPLCHINESE;
 	static const CharMapID MAC_KOREAN;
 
-	UInt8 platform_id;
-	UInt8 encoding_id;
+	uint8_t platform_id;
+	uint8_t encoding_id;
 };
 
 #endif

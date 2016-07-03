@@ -31,18 +31,18 @@ using namespace std;
 /** Returns true if c is a valid Unicode point in XML documents.
  *  XML version 1.0 doesn't allow various Unicode character references
  *  (&#1; for example). */
-bool Unicode::isValidCodepoint (UInt32 c) {
+bool Unicode::isValidCodepoint (uint32_t c) {
 	if ((c & 0xffff) == 0xfffe || (c & 0xffff) == 0xffff)
 		return false;
 
-	UInt32 ranges[] = {
+	uint32_t ranges[] = {
 		0x0000, 0x0020,  // basic control characters + space
 		0x007f, 0x009f,  // use of control characters is discouraged by the XML standard
 		0x202a, 0x202e,  // bidi control characters
 		0xd800, 0xdfff,  // High Surrogates are not allowed in XML
 		0xfdd0, 0xfdef,  // non-characters for internal use by applications
 	};
-	for (size_t i=0; i < sizeof(ranges)/sizeof(UInt32) && c >= ranges[i]; i+=2)
+	for (size_t i=0; i < sizeof(ranges)/sizeof(uint32_t) && c >= ranges[i]; i+=2)
 		if (c <= ranges[i+1])
 			return false;
 	return true;
@@ -52,8 +52,8 @@ bool Unicode::isValidCodepoint (UInt32 c) {
 /** Returns a valid Unicode point for the given character code. Character codes
  *  that are invalid code points because the XML standard forbids or discourages
  *  their usage, are mapped to the Private Use Zone U+E000-U+F8FF. */
-UInt32 Unicode::charToCodepoint (UInt32 c) {
-	UInt32 ranges[] = {
+uint32_t Unicode::charToCodepoint (uint32_t c) {
+	uint32_t ranges[] = {
 		0x0000, 0x0020, 0xe000, // basic control characters + space
 		0x007f, 0x009f, 0xe021, // use of control characters is discouraged by the XML standard
 		0x202a, 0x202e, 0xe042, // bidi control characters
@@ -87,7 +87,7 @@ UInt32 Unicode::charToCodepoint (UInt32 c) {
 /** Converts a Unicode point to a UTF-8 byte sequence.
  *  @param[in] cp code point
  *  @return  utf8 sequence consisting of 1-4 bytes */
-string Unicode::utf8 (Int32 cp) {
+string Unicode::utf8 (int32_t cp) {
 	string utf8;
 	if (cp >= 0) {
 		if (cp < 0x80)
@@ -119,7 +119,7 @@ string Unicode::utf8 (Int32 cp) {
  *  https://github.com/adobe-type-tools/agl-specification
  *  @param[in] name AGL character name
  *  @return the extracted codepoint or 0 on failure */
-static Int32 extract_codepoint_from_name (const string &name) {
+static int32_t extract_codepoint_from_name (const string &name) {
 	size_t offset=1;
 	auto is_hex_digit = [](char c) {return isdigit(c) || (c >= 'A' && c <= 'F');};
 	if (name.substr(0, 3) == "uni" && is_hex_digit(name[4]) && name.length() >= 7)
@@ -138,7 +138,7 @@ static Int32 extract_codepoint_from_name (const string &name) {
 		return 0;
 	if (offset == 3)
 		hexstr = hexstr.substr(0, 4);
-	Int32 codepoint;
+	int32_t codepoint;
 	istringstream iss(hexstr);
 	iss >> hex >> codepoint;
 	if (!iss.fail() && (codepoint <= 0xD7FF || (codepoint >= 0xE000 && codepoint <= 0x10FFFF)))
@@ -168,11 +168,11 @@ static const char* get_suffix (const string &name) {
 /** Returns the Unicode point for a given AGL character name.
  * @param name AGL name of the character to look up
  * @return codepoint of the character */
-Int32 Unicode::aglNameToCodepoint (const string &name) {
-	if (Int32 cp = extract_codepoint_from_name(name))
+int32_t Unicode::aglNameToCodepoint (const string &name) {
+	if (int32_t cp = extract_codepoint_from_name(name))
 		return cp;
 
-	UInt32 hash = XXH32(&name[0], name.length(), 0);
+	uint32_t hash = XXH32(&name[0], name.length(), 0);
 	int left=0;
 	int right=sizeof(hash2unicode)/sizeof(Hash2Unicode)-1;
 	while (left <= right) {

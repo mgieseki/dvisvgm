@@ -34,8 +34,8 @@ class GFTracer : public GFReader
 		virtual void lineTo (double x, double y) =0;
 		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) =0;
 		virtual void closePath () =0;
-		void beginChar (UInt32 c) override;
-		void endChar (UInt32 c) override;
+		void beginChar (uint32_t c) override;
+		void endChar (uint32_t c) override;
 
 	protected:
 		void unitsPerPoint(double upp) {_unitsPerPoint = upp;}

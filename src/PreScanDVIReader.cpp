@@ -37,7 +37,7 @@ void PreScanDVIReader::cmdBop (int) {
 
 
 void PreScanDVIReader::cmdXXX (int len) {
-	UInt32 numBytes = readUnsigned(len);
+	uint32_t numBytes = readUnsigned(len);
 	string s = readString(numBytes);
 	if (_actions)
 		_actions->special(s, 0, true);  // pre-process special

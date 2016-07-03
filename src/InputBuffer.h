@@ -26,7 +26,6 @@
 #include <istream>
 #include <string>
 #include <ostream>
-#include "types.h"
 
 struct InputBuffer
 {
@@ -51,17 +50,17 @@ class StreamInputBuffer : public InputBuffer
 		void invalidate () override {_bufptr = _buf1+_size1; _size2 = 0;}
 
 	protected:
-		int fillBuffer (UInt8 *buf);
+		int fillBuffer (uint8_t *buf);
 		size_t pos () const  {return _bufptr-_buf1;}
 
 	private:
 		std::istream &_is;
 		const size_t _bufsize;  ///< maximal number of bytes each buffer can hold
-		UInt8 *_buf1;        ///< pointer to first buffer
-		UInt8 *_buf2;        ///< pointer to second buffer
-		size_t _size1;     ///< number of bytes in buffer 1
-		size_t _size2;     ///< number of bytes in buffer 2
-		UInt8 *_bufptr;      ///< pointer to next byte to read
+		uint8_t *_buf1;         ///< pointer to first buffer
+		uint8_t *_buf2;         ///< pointer to second buffer
+		size_t _size1;          ///< number of bytes in buffer 1
+		size_t _size2;          ///< number of bytes in buffer 2
+		uint8_t *_bufptr;       ///< pointer to next byte to read
 };
 
 

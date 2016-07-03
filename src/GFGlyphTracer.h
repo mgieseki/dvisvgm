@@ -32,9 +32,9 @@ class GFGlyphTracer : public GFTracer
 		struct Callback {
 			virtual ~Callback () =default;
 			virtual void setFont (const std::string &fontname) {}
-			virtual void beginChar (UInt8 c) {}
-			virtual void endChar (UInt8 c) {}
-			virtual void emptyChar (UInt8 c) {}
+			virtual void beginChar (uint8_t c) {}
+			virtual void endChar (uint8_t c) {}
+			virtual void emptyChar (uint8_t c) {}
 		};
 
 	public:
@@ -42,12 +42,12 @@ class GFGlyphTracer : public GFTracer
 		GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
 		void reset (std::string &fname, double upp);
 		void setCallback (Callback *cb) {_callback = cb;}
-		bool executeChar (UInt8 c) override;
+		bool executeChar (uint8_t c) override;
 		void moveTo (double x, double y) override;
 		void lineTo (double x, double y) override;
 		void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) override;
 		void closePath () override;
-		void endChar (UInt32 c) override;
+		void endChar (uint32_t c) override;
 		void setGlyph (Glyph &glyph)   {_glyph = &glyph;}
 		const Glyph& getGlyph () const {return *_glyph;}
 

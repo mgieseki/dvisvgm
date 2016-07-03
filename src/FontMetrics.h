@@ -23,7 +23,6 @@
 
 #include <istream>
 #include "MessageException.h"
-#include "types.h"
 
 struct FontMetrics
 {
@@ -38,9 +37,9 @@ struct FontMetrics
 	virtual double getSpaceShrink () const =0;
 	virtual double getQuad () const =0;
 	virtual bool verticalLayout () const =0;
-	virtual UInt32 getChecksum () const =0;
-	virtual UInt16 firstChar () const =0;
-	virtual UInt16 lastChar () const =0;
+	virtual uint32_t getChecksum () const =0;
+	virtual uint16_t firstChar () const =0;
+	virtual uint16_t lastChar () const =0;
 	static FontMetrics* read (const char *fontname);
 };
 
@@ -57,9 +56,9 @@ struct NullFontMetric : public FontMetrics
 	double getSpaceShrink () const override     {return 0;}
 	double getQuad () const override            {return 0;}
 	bool verticalLayout () const override       {return false;}
-	UInt32 getChecksum () const override        {return 0;}
-	UInt16 firstChar () const override          {return 0;}
-	UInt16 lastChar () const override           {return 0;}
+	uint32_t getChecksum () const override      {return 0;}
+	uint16_t firstChar () const override        {return 0;}
+	uint16_t lastChar () const override         {return 0;}
 };
 
 
@@ -67,6 +66,5 @@ struct FontMetricException : public MessageException
 {
 	FontMetricException (const std::string &msg) : MessageException(msg) {}
 };
-
 
 #endif

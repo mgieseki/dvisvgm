@@ -37,7 +37,7 @@
 using namespace std;
 
 
-UInt32 Font::unicode (UInt32 c) const {
+uint32_t Font::unicode (uint32_t c) const {
 	return Unicode::charToCodepoint(c);
 }
 
@@ -98,7 +98,7 @@ const char* Font::filename () const {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-TFMFont::TFMFont (string name, UInt32 cs, double ds, double ss)
+TFMFont::TFMFont (string name, uint32_t cs, double ds, double ss)
 	: _metrics(0), _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
 {
 }
@@ -168,12 +168,12 @@ double PhysicalFont::METAFONT_MAG = 4;
 FontCache PhysicalFont::_cache;
 
 
-Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type) {
+Font* PhysicalFont::create (string name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, 0, checksum, dsize, ssize, type);
 }
 
 
-Font* PhysicalFont::create (string name, int fontindex, UInt32 checksum, double dsize, double ssize) {
+Font* PhysicalFont::create (string name, int fontindex, uint32_t checksum, double dsize, double ssize) {
 	return new PhysicalFontImpl(name, fontindex, checksum, dsize, ssize, PhysicalFont::Type::TTC);
 }
 
@@ -218,7 +218,7 @@ int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
  *  address the correct character in the font.
  *  @param[in] c DVI character to decode
  *  @return target character code or name */
-Character PhysicalFont::decodeChar (UInt32 c) const {
+Character PhysicalFont::decodeChar (uint32_t c) const {
 	if (const FontEncoding *enc = encoding())
 		return enc->decode(c);
 	return Character(Character::CHRCODE, c);
@@ -323,7 +323,7 @@ std::string PhysicalFont::styleName () const {
  *  @param[out] glyph path segments of the glyph outline
  *  @param[in]  cb optional callback object for tracer class
  *  @return true if outline could be computed */
-bool PhysicalFont::getGlyph (int c, GraphicsPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
+bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer::Callback *cb) const {
 	if (type() == Type::MF) {
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {
@@ -460,7 +460,7 @@ bool PhysicalFont::getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical
 }
 
 
-Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ssize) {
+Font* VirtualFont::create (string name, uint32_t checksum, double dsize, double ssize) {
 	return new VirtualFontImpl(name, checksum, dsize, ssize);
 }
 
@@ -468,7 +468,7 @@ Font* VirtualFont::create (string name, UInt32 checksum, double dsize, double ss
 //////////////////////////////////////////////////////////////////////////////
 
 
-PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, UInt32 cs, double ds, double ss, PhysicalFont::Type type)
+PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, uint32_t cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss),
 	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding()), _localCharMap(0)
 {
@@ -513,14 +513,14 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 
 
 /** Returns the Unicode point for a given DVI character. */
-UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
+uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 	if (type() == Type::MF)
 		return Font::unicode(c);
 	Character chr = decodeChar(c);
 	if (type() == Type::PFB) {
 		// try to get the Unicode point from the character name
 		string glyphname = glyphName(c);
-		UInt32 codepoint;
+		uint32_t codepoint;
 		if (!glyphname.empty() && (codepoint = Unicode::aglNameToCodepoint(glyphname)) != 0)
 			return codepoint;
 		if (c <= 0x1900)  // does character code c fit into Private Use Zone U+E000?
@@ -534,7 +534,7 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 		return Unicode::charToCodepoint(chr.number());
 
 	if (_localCharMap) {
-		if (UInt32 mapped_char = _localCharMap->valueAt(chr.number()))
+		if (uint32_t mapped_char = _localCharMap->valueAt(chr.number()))
 			return mapped_char;
 	}
 	// No Unicode equivalent found in the font file.
@@ -628,19 +628,19 @@ bool NativeFontImpl::findAndAssignBaseFontMap () {
 }
 
 
-Character NativeFontImpl::decodeChar (UInt32 c) const {
+Character NativeFontImpl::decodeChar (uint32_t c) const {
 	return Character(Character::INDEX, c);
 }
 
 
-UInt32 NativeFontImpl::unicode (UInt32 c) const {
-	UInt32 ucode = _toUnicodeMap.valueAt(c);
+uint32_t NativeFontImpl::unicode (uint32_t c) const {
+	uint32_t ucode = _toUnicodeMap.valueAt(c);
 	return Unicode::charToCodepoint(ucode);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-VirtualFontImpl::VirtualFontImpl (string name, UInt32 cs, double ds, double ss)
+VirtualFontImpl::VirtualFontImpl (string name, uint32_t cs, double ds, double ss)
 	: TFMFont(name, cs, ds, ss)
 {
 }
@@ -658,7 +658,7 @@ const char* VirtualFontImpl::path () const {
 }
 
 
-void VirtualFontImpl::assignChar (UInt32 c, DVIVector *dvi) {
+void VirtualFontImpl::assignChar (uint32_t c, DVIVector *dvi) {
 	if (dvi) {
 		if (_charDefs.find(c) == _charDefs.end())
 			_charDefs[c] = dvi;
@@ -668,8 +668,8 @@ void VirtualFontImpl::assignChar (UInt32 c, DVIVector *dvi) {
 }
 
 
-const vector<UInt8>* VirtualFontImpl::getDVI (int c) const {
-	map<UInt32,DVIVector*>::const_iterator it = _charDefs.find(c);
+const vector<uint8_t>* VirtualFontImpl::getDVI (int c) const {
+	map<uint32_t,DVIVector*>::const_iterator it = _charDefs.find(c);
 	return (it == _charDefs.end() ? 0 : it->second);
 }
 

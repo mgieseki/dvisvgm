@@ -63,7 +63,7 @@ TEST(BitmapTest, setBits) {
 
 TEST(BitmapTest, copy) {
 	Bitmap bitmap(-4, 10, 3, 10);
-	vector<UInt16> target;
+	vector<uint16_t> target;
 	bitmap.setBits(4, 5, 5);
 	bitmap.copy(target, false);
 	EXPECT_EQ(target.size(), 8);

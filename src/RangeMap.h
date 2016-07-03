@@ -24,7 +24,6 @@
 #include <algorithm>
 #include <ostream>
 #include <vector>
-#include "types.h"
 
 
 class RangeMap {
@@ -35,45 +34,45 @@ class RangeMap {
 		public:
 			Range () : _min(0), _max(0), _minval(0) {}
 
-			Range (UInt32 min, UInt32 max, UInt32 minval) : _min(min), _max(max), _minval(minval) {
+			Range (uint32_t min, uint32_t max, uint32_t minval) : _min(min), _max(max), _minval(minval) {
 				if (_min > _max)
 					std::swap(_min, _max);
 			}
 
-			UInt32 min () const                    {return _min;}
-			UInt32 max () const                    {return _max;}
-			UInt32 minval () const                 {return _minval;}
-			UInt32 maxval () const                 {return valueAt(_max);}
-			UInt32 valueAt (UInt32 c) const        {return c-_min+_minval;}
+			uint32_t min () const                  {return _min;}
+			uint32_t max () const                  {return _max;}
+			uint32_t minval () const               {return _minval;}
+			uint32_t maxval () const               {return valueAt(_max);}
+			uint32_t valueAt (uint32_t c) const    {return c-_min+_minval;}
 			bool operator < (const Range &r) const {return _min < r._min;}
 			std::ostream& write (std::ostream &os) const;
 
 		protected:
-			void min (UInt32 m)                 {_min = m;}
-			void max (UInt32 m)                 {_max = m;}
-			void setMinAndAdaptValue (UInt32 c) {_minval = valueAt(c); _min = c;}
+			void min (uint32_t m)                 {_min = m;}
+			void max (uint32_t m)                 {_max = m;}
+			void setMinAndAdaptValue (uint32_t c) {_minval = valueAt(c); _min = c;}
 			bool join (const Range &r);
 
 		private:
-			UInt32 _min, _max;
-			UInt32 _minval;
+			uint32_t _min, _max;
+			uint32_t _minval;
 	};
 
 	typedef std::vector<Range> Ranges;
 
 	public:
-		void addRange (UInt32 first, UInt32 last, UInt32 cid);
-		bool valueExists (UInt32 c) const         {return lookup(c) >= 0;}
-		UInt32 valueAt (UInt32 c) const;
-		size_t size () const                      {return _ranges.size();}
-		bool empty () const                       {return _ranges.empty();}
-		void clear ()                             {_ranges.clear();}
+		void addRange (uint32_t first, uint32_t last, uint32_t cid);
+		bool valueExists (uint32_t c) const  {return lookup(c) >= 0;}
+		uint32_t valueAt (uint32_t c) const;
+		size_t size () const                 {return _ranges.size();}
+		bool empty () const                  {return _ranges.empty();}
+		void clear ()                        {_ranges.clear();}
 		std::ostream& write (std::ostream &os) const;
 
 	protected:
 		void adaptNeighbors (Ranges::iterator it);
-		int lookup (UInt32 c) const;
-		const Range& rangeAt (size_t n) const     {return _ranges[n];}
+		int lookup (uint32_t c) const;
+		const Range& rangeAt (size_t n) const {return _ranges[n];}
 
 	private:
 		Ranges _ranges;

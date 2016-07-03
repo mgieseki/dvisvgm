@@ -45,19 +45,19 @@
 
 //use_lines: Enables line clipping. Adds a very minor cost to performance.
 #define use_lines
-  
+
 //use_deprecated: Enables temporary support for the obsolete functions
-//#define use_deprecated  
+//#define use_deprecated
 
 #include <vector>
 #include <set>
 #include <stdexcept>
+#include <cstdint>
 #include <cstring>
 #include <cstdlib>
 #include <ostream>
 #include <functional>
 #include <queue>
-#include "../src/types.h"
 
 namespace ClipperLib {
 
@@ -71,10 +71,10 @@ enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
 
 struct ZLabel {
 	ZLabel () : id(0), t(0) {}
-	ZLabel (Int32 ii) : id(ii), t(0) {}
-	ZLabel (Int32 ii, double tt) : id(ii), t(tt) {}
+	ZLabel (int32_t ii) : id(ii), t(0) {}
+	ZLabel (int32_t ii, double tt) : id(ii), t(tt) {}
 	bool operator == (const ZLabel &l) const {return id == l.id;}
-	Int32 id;
+	int32_t id;
 	double t;
 };
 
@@ -83,8 +83,8 @@ inline std::ostream& operator << (std::ostream &os, const ZLabel &l) {
 }
 
 struct ZType {
-	ZType (UInt64 v) : label1(v >> 32), label2(v & 0xffffffff) {}
-	ZType (Int32 id1, Int32 id2) : label1(id1), label2(id2) {}
+	ZType (uint64_t v) : label1(v >> 32), label2(v & 0xffffffff) {}
+	ZType (int32_t id1, int32_t id2) : label1(id1), label2(id2) {}
 	ZType (const ZLabel &l1, const ZLabel &l2) : label1(l1), label2(l2) {}
 	const ZLabel& minLabel () const {return (label1.id < label2.id) ? label1 : label2;}
 	const ZLabel& maxLabel () const {return (label1.id > label2.id) ? label1 : label2;}
@@ -94,7 +94,7 @@ struct ZType {
 	}
 
 	bool operator == (const ZType &p) const {return minLabel() == p.minLabel() && maxLabel() == p.maxLabel();}
-	operator UInt64 () const {return (UInt64(label1.id) << 32) & label2.id;}
+	operator uint64_t () const {return (uint64_t(label1.id) << 32) & label2.id;}
 	ZLabel label1, label2;
 };
 
@@ -131,7 +131,7 @@ struct IntPoint {
   }
   friend inline bool operator!= (const IntPoint& a, const IntPoint& b)
   {
-    return a.X != b.X  || a.Y != b.Y; 
+    return a.X != b.X  || a.Y != b.Y;
   }
 };
 //------------------------------------------------------------------------------
@@ -166,8 +166,8 @@ enum EndType {etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRou
 class PolyNode;
 typedef std::vector< PolyNode* > PolyNodes;
 
-class PolyNode 
-{ 
+class PolyNode
+{
 public:
     PolyNode();
     virtual ~PolyNode(){};
@@ -186,11 +186,11 @@ private:
     PolyNode* GetNextSiblingUp() const;
     void AddChild(PolyNode& child);
     friend class Clipper; //to access Index
-    friend class ClipperOffset; 
+    friend class ClipperOffset;
 };
 
 class PolyTree: public PolyNode
-{ 
+{
 public:
     ~PolyTree(){Clear();};
     PolyNode* GetFirst() const;
@@ -319,10 +319,10 @@ private:
   PolyFillType     m_ClipFillType;
   PolyFillType     m_SubjFillType;
   bool             m_ReverseOutput;
-  bool             m_UsingPolyTree; 
+  bool             m_UsingPolyTree;
   bool             m_StrictSimple;
 #ifdef use_xyz
-  ZFillCallback   m_ZFill; //custom callback 
+  ZFillCallback   m_ZFill; //custom callback
 #endif
   void SetWindingCount(TEdge& edge);
   bool IsEvenOddFillType(const TEdge& edge) const;
@@ -380,7 +380,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class ClipperOffset 
+class ClipperOffset
 {
 public:
   ClipperOffset(double miterLimit = 2.0, double roundPrecision = 0.25);

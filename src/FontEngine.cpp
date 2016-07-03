@@ -133,7 +133,7 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) {
 void FontEngine::buildCharMap (RangeMap &charmap) {
 	charmap.clear();
 	FT_UInt glyph_index;
-	UInt32 charcode = FT_Get_First_Char(_currentFace, &glyph_index);
+	uint32_t charcode = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
 		charmap.addRange(glyph_index, glyph_index, charcode);
 		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
@@ -153,9 +153,9 @@ const RangeMap* FontEngine::createCustomToUnicodeMap () {
 		return 0;
 	RangeMap *charmap = new RangeMap;
 	FT_UInt glyph_index;
-	UInt32 unicode_point = FT_Get_First_Char(_currentFace, &glyph_index);
+	uint32_t unicode_point = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
-		UInt32 custom_charcode = index_to_source_chrcode.valueAt(glyph_index);
+		uint32_t custom_charcode = index_to_source_chrcode.valueAt(glyph_index);
 		charmap->addRange(custom_charcode, custom_charcode, unicode_point);
 		unicode_point = FT_Get_Next_Char(_currentFace, unicode_point, &glyph_index);
 	}

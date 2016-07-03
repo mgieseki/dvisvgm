@@ -27,7 +27,6 @@
 #include "Length.h"
 #include "MessageException.h"
 #include "Pair.h"
-#include "types.h"
 
 
 class Matrix;

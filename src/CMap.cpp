@@ -48,7 +48,7 @@ string SegmentedCMap::getROString() const {
 
 
 /** Returns the CID for a given character code. */
-UInt32 SegmentedCMap::cid (UInt32 c) const {
+uint32_t SegmentedCMap::cid (uint32_t c) const {
 	if (_cidranges.valueExists(c))
 		return _cidranges.valueAt(c);
 	if (_basemap)
@@ -58,7 +58,7 @@ UInt32 SegmentedCMap::cid (UInt32 c) const {
 
 
 /** Returns the character code of a base font for a given CID. */
-UInt32 SegmentedCMap::bfcode (UInt32 cid) const {
+uint32_t SegmentedCMap::bfcode (uint32_t cid) const {
 	if (_bfranges.valueExists(cid))
 		return _bfranges.valueAt(cid);
 	if (_basemap)

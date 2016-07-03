@@ -26,7 +26,6 @@
 #include <string>
 #include "Bitmap.h"
 #include "MessageException.h"
-#include "types.h"
 
 
 class CharInfo;
@@ -43,36 +42,36 @@ class GFReader
 	struct CharInfo
 	{
 		CharInfo () : dx(0), dy(0), width(0), location(0) {}
-		CharInfo (Int32 dxx, Int32 dyy, Int32 w, UInt32 p) : dx(dxx), dy(dyy), width(w), location(p) {}
+		CharInfo (int32_t dxx, int32_t dyy, int32_t w, uint32_t p) : dx(dxx), dy(dyy), width(w), location(p) {}
 
-		Int32 dx, dy;
-		Int32 width;  // 2^24 * (true width)/(design size)
-		UInt32 location;
+		int32_t dx, dy;
+		int32_t width;  // 2^24 * (true width)/(design size)
+		uint32_t location;
 	};
 
 	public:
 		explicit GFReader (std::istream &is);
 		virtual ~GFReader () =default;
-		virtual bool executeChar (UInt8 c);
+		virtual bool executeChar (uint8_t c);
 		virtual bool executeAllChars ();
 		bool executePreamble ();
 		bool executePostamble ();
 		virtual void preamble (const std::string &str) {}
 		virtual void postamble () {}
-		virtual void beginChar (UInt32 c) {}
-		virtual void endChar (UInt32 c) {}
+		virtual void beginChar (uint32_t c) {}
+		virtual void endChar (uint32_t c) {}
 		virtual void special (std::string str) {}
-		virtual void numspecial (Int32 y) {}
-		const Bitmap& getBitmap () const {return _bitmap;}
-		double getDesignSize () const;
-		double getHPixelsPerPoint () const;
-		double getVPixelsPerPoint () const;
-		double getCharWidth (UInt32 c) const;
-		UInt32 getChecksum () const  {return _checksum;}
+		virtual void numspecial (int32_t y) {}
+		const Bitmap& getBitmap () const   {return _bitmap;}
+		double getDesignSize () const      {return _designSize;}
+		double getHPixelsPerPoint () const {return _hppp;}
+		double getVPixelsPerPoint () const {return _vppp;};
+		double getCharWidth (uint32_t c) const;
+		uint32_t getChecksum () const      {return _checksum;}
 
 	protected:
-		Int32 readSigned (int bytes);
-		UInt32 readUnsigned (int bytes);
+		int32_t readSigned (int bytes);
+		uint32_t readUnsigned (int bytes);
 		std::string readString (int len);
 		int executeCommand ();
 		std::istream& getInputStream () const {return _in;}
@@ -95,15 +94,15 @@ class GFReader
 
 	private:
 		std::istream &_in;
-		Int32 _minX, _maxX, _minY, _maxY;
-		Int32 _x, _y;            ///< current pen location (pixel units)
-		Int32 _currentChar;
-		Bitmap _bitmap;          ///< bitmap of current char
-		FixWord _designSize;     ///< designSize
-		ScaledInt _hppp, _vppp;  ///< horizontal and vertical pixel per point
-		UInt32 _checksum;
-		std::map<UInt8,CharInfo> _charInfoMap;
-		bool _insideCharDef;     ///< true if inside a character definition (between BOC and EOC)
+		int32_t _minX, _maxX, _minY, _maxY;
+		int32_t _x, _y;        ///< current pen location (pixel units)
+		int32_t _currentChar;
+		Bitmap _bitmap;        ///< bitmap of current char
+		double _designSize;    ///< designSize in PS points
+		double _hppp, _vppp;   ///< horizontal and vertical pixel per point
+		uint32_t _checksum;
+		std::map<uint8_t,CharInfo> _charInfoMap;
+		bool _insideCharDef;   ///< true if inside a character definition (between BOC and EOC)
 		bool _penDown;
 };
 

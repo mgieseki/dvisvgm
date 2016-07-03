@@ -25,7 +25,6 @@
 #include "Color.h"
 #include "Font.h"
 #include "Matrix.h"
-#include "types.h"
 
 
 template <typename T>
@@ -61,7 +60,7 @@ class SVGCharHandler {
 		SVGCharHandler () : _color(Color::BLACK), _font(0), _fontnum(0), _matrix(1), _vertical(false), _initialContextNode(0) {}
 		virtual ~SVGCharHandler() =default;
 		virtual void setInitialContextNode (XMLElementNode *node);
-		virtual void appendChar (UInt32 c, double x, double y) =0;
+		virtual void appendChar (uint32_t c, double x, double y) =0;
 		virtual void notifyXAdjusted () {}
 		virtual void notifyYAdjusted () {}
 		void setColor (const Color &color)      {_color.set(color);}

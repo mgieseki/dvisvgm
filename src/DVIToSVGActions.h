@@ -66,7 +66,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		void moveToY (double y) override;
 		void setFont (int num, const Font &font) override;
 		void special (const std::string &spc, double dvi2bp, bool preprocessing=false) override;
-		void beginPage (unsigned pageno, const std::vector<Int32> &c) override;
+		void beginPage (unsigned pageno, const std::vector<int32_t> &c) override;
 		void endPage (unsigned pageno) override;
 		void progress (size_t current, size_t total, const char *id=0) override;
 		void progress (const char *id) override;

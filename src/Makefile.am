@@ -79,6 +79,7 @@ libdvisvgm_a_SOURCES = \
 	FilePath.h \
 	FileSystem.cpp \
 	FileSystem.h \
+	FixWord.h \
 	Font.cpp \
 	Font.h \
 	FontCache.cpp \
@@ -197,7 +198,6 @@ libdvisvgm_a_SOURCES = \
 	TpicSpecialHandler.h \
 	TriangularPatch.cpp \
 	TriangularPatch.h \
-	types.h \
 	Unicode.cpp \
 	Unicode.h \
 	VectorIterator.h \

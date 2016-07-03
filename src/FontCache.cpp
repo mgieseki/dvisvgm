@@ -32,16 +32,15 @@
 #include "Pair.h"
 #include "StreamReader.h"
 #include "StreamWriter.h"
-#include "types.h"
 
 using namespace std;
 
-const UInt8 FontCache::FORMAT_VERSION = 5;
+const uint8_t FontCache::FORMAT_VERSION = 5;
 
 
 static Pair32 read_pair (int bytes, StreamReader &sr) {
-	Int32 x = sr.readSigned(bytes);
-	Int32 y = sr.readSigned(bytes);
+	int32_t x = sr.readSigned(bytes);
+	int32_t y = sr.readSigned(bytes);
 	return Pair32(x, y);
 }
 
@@ -107,8 +106,8 @@ bool FontCache::write (const char* dir) const {
 
 
 /** Returns the minimal number of bytes needed to store the given value. */
-static int max_int_size (Int32 value) {
-	Int32 limit = 0x7f;
+static int max_int_size (int32_t value) {
+	int32_t limit = 0x7f;
 	for (int i=1; i <= 4; i++) {
 		if ((value < 0  && -value <= limit+1) || (value >= 0 && value <= limit))
 			return i;
@@ -120,7 +119,7 @@ static int max_int_size (Int32 value) {
 
 /** Returns the minimal number of bytes needed to store the biggest
  *  pair component of the given vector. */
-static int max_int_size (const Pair<Int32> *pairs, size_t n) {
+static int max_int_size (const Pair<int32_t> *pairs, size_t n) {
 	int ret=0;
 	for (size_t i=0; i < n; i++) {
 		ret = max(ret, max_int_size(pairs[i].x()));
@@ -212,7 +211,7 @@ bool FontCache::read (const char *fontname, istream &is) {
 	if (sr.readUnsigned(1, crc32) != FORMAT_VERSION)
 		return false;
 
-	UInt32 crc32_cmp = sr.readUnsigned(4);
+	uint32_t crc32_cmp = sr.readUnsigned(4);
 	crc32.update(is);
 	if (crc32.get() != crc32_cmp)
 		return false;
@@ -224,14 +223,14 @@ bool FontCache::read (const char *fontname, istream &is) {
 	if (fname != fontname)
 		return false;
 
-	UInt32 num_glyphs = sr.readUnsigned(4);
+	uint32_t num_glyphs = sr.readUnsigned(4);
 	while (num_glyphs-- > 0) {
-		UInt32 c = sr.readUnsigned(4);  // character code
-		UInt16 s = sr.readUnsigned(2);  // number of path commands
+		uint32_t c = sr.readUnsigned(4);  // character code
+		uint16_t s = sr.readUnsigned(2);  // number of path commands
 		Glyph &glyph = _glyphs[c];
 		while (s-- > 0) {
-			UInt8 cmdval = sr.readUnsigned(1);
-			UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+			uint8_t cmdval = sr.readUnsigned(1);
+			uint8_t cmdchar = (cmdval & 0x1f) + 'A';
 			int bytes = cmdval >> 5;
 			switch (cmdchar) {
 				case 'C': {
@@ -316,12 +315,12 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 
 			info.name = sr.readString();
 			info.numchars = sr.readUnsigned(4);
-			for (UInt32 i=0; i < info.numchars; i++) {
+			for (uint32_t i=0; i < info.numchars; i++) {
 				sr.readUnsigned(4);  // character code
-				UInt16 s = sr.readUnsigned(2);  // number of path commands
+				uint16_t s = sr.readUnsigned(2);  // number of path commands
 				while (s-- > 0) {
-					UInt8 cmdval = sr.readUnsigned(1);
-					UInt8 cmdchar = (cmdval & 0x1f) + 'A';
+					uint8_t cmdval = sr.readUnsigned(1);
+					uint8_t cmdchar = (cmdval & 0x1f) + 'A';
 					int bytes = cmdval >> 5;
 					int bc = 0;
 					switch (cmdchar) {

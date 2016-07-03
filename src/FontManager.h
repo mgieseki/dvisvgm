@@ -29,7 +29,6 @@
 #include <vector>
 #include "Color.h"
 #include "FontStyle.h"
-#include "types.h"
 
 
 struct FileFinder;
@@ -43,18 +42,18 @@ class  VirtualFont;
  *  appear anywhere in the output. */
 class FontManager
 {
-	typedef std::map<UInt32,int> Num2IdMap;
+	typedef std::map<uint32_t,int> Num2IdMap;
 	typedef std::map<std::string,int> Name2IdMap;
 	typedef std::map<const VirtualFont*,Num2IdMap> VfNum2IdMap;
-	typedef std::map<const VirtualFont*, UInt32> VfFirstFontMap;
+	typedef std::map<const VirtualFont*, uint32_t> VfFirstFontMap;
 	typedef std::stack<VirtualFont*> VfStack;
 
 	public:
 		~FontManager ();
 		static FontManager& instance ();
-		int registerFont (UInt32 fontnum, std::string fontname, UInt32 checksum, double dsize, double scale);
-		int registerFont (UInt32 fontnum, std::string fname, double ptsize, const FontStyle &style, Color color);
-		int registerFont (UInt32 fontnum, std::string fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
+		int registerFont (uint32_t fontnum, std::string fontname, uint32_t checksum, double dsize, double scale);
+		int registerFont (uint32_t fontnum, std::string fname, double ptsize, const FontStyle &style, Color color);
+		int registerFont (uint32_t fontnum, std::string fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
 		Font* getFont (int n) const;
 		Font* getFont (const std::string &name) const;
 		Font* getFontById (int id) const;
@@ -66,7 +65,7 @@ class FontManager
 		int vfFirstFontNum (const VirtualFont *vf) const;
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
-		void assignVfChar (int c, std::vector<UInt8> *dvi);
+		void assignVfChar (int c, std::vector<uint8_t> *dvi);
 		const std::vector<Font*>& getFonts () const {return _fonts;}
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
 

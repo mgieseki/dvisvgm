@@ -32,7 +32,7 @@ FontMetrics* FontMetrics::read (const char *fontname) {
 	ifstream ifs(path, ios::binary);
 	if (!ifs)
 		return 0;
-	UInt16 id = 256*ifs.get();
+	uint16_t id = 256*ifs.get();
 	id += ifs.get();
 	if (id == 9 || id == 11)  // Japanese font metric file?
 		return new JFM(ifs);

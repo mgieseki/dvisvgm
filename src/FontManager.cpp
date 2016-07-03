@@ -143,7 +143,7 @@ const VirtualFont* FontManager::getVF () const {
 }
 
 
-static Font* create_font (const string &filename, const string &fontname, int fontindex, UInt32 checksum, double dsize, double ssize) {
+static Font* create_font (const string &filename, const string &fontname, int fontindex, uint32_t checksum, double dsize, double ssize) {
 	string ext;
 	if (const char *dot = strrchr(filename.c_str(), '.'))
 		ext = dot+1;
@@ -173,7 +173,7 @@ static Font* create_font (const string &filename, const string &fontname, int fo
  *  @param[in] dsize design size in PS point units
  *  @param[in] ssize scaled size in PS point units
  *  @return id of registered font */
-int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, double dsize, double ssize) {
+int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);
 	if (id >= 0)
 		return id;
@@ -243,7 +243,7 @@ int FontManager::registerFont (UInt32 fontnum, string name, UInt32 checksum, dou
  *  @param[in] style font style parameters
  *  @param[in] color global font color
  *  @return global font id */
-int FontManager::registerFont (UInt32 fontnum, string filename, double ptsize, const FontStyle &style, Color color) {
+int FontManager::registerFont (uint32_t fontnum, string filename, double ptsize, const FontStyle &style, Color color) {
 	return registerFont(fontnum, filename, 0, ptsize, style, color);
 }
 
@@ -257,7 +257,7 @@ int FontManager::registerFont (UInt32 fontnum, string filename, double ptsize, c
  *  @param[in] style font style parameters
  *  @param[in] color global font color
  *  @return global font id */
-int FontManager::registerFont (UInt32 fontnum, string filename, int fontIndex, double ptsize, const FontStyle &style, Color color) {
+int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex, double ptsize, const FontStyle &style, Color color) {
 	int id = fontID(fontnum);
 	if (id >= 0)
 		return id;
@@ -317,7 +317,7 @@ void FontManager::leaveVF () {
 /** Assigns a sequence of DVI commands to a char code.
  * @param[in] c character code
  * @param[in] dvi points to vector with DVI commands */
-void FontManager::assignVfChar (int c, vector<UInt8> *dvi) {
+void FontManager::assignVfChar (int c, vector<uint8_t> *dvi) {
 	if (!_vfStack.empty() && dvi)
 		_vfStack.top()->assignChar(c, dvi);
 }

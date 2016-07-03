@@ -30,8 +30,8 @@ class ColorSpecialTest : public ::testing::Test
 		{
 			SetColor () : color(0) {}
 			void setColor (const Color &c) {color = c;}
-			bool equals (UInt32 c) {return color == c;}
-			UInt32 color;
+			bool equals (uint32_t c) {return color == c;}
+			uint32_t color;
 		};
 		ColorSpecialHandler handler;
 		SetColor actions;

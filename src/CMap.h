@@ -26,7 +26,6 @@
 #include <vector>
 #include "FontEncoding.h"
 #include "RangeMap.h"
-#include "types.h"
 
 
 struct CMap : public NamedFontEncoding
@@ -34,14 +33,14 @@ struct CMap : public NamedFontEncoding
 	virtual ~CMap () =default;
 	virtual bool vertical () const =0;
 	virtual bool mapsToCID () const =0;
-	virtual UInt32 cid (UInt32 c) const =0;
-	virtual UInt32 bfcode (UInt32 cid) const =0;
+	virtual uint32_t cid (uint32_t c) const =0;
+	virtual uint32_t bfcode (uint32_t cid) const =0;
 	virtual std::string getROString () const =0;
 	const char* path () const override;
 	const FontEncoding* findCompatibleBaseFontMap (const PhysicalFont *font, CharMapID &charmapID) const override;
 	bool mapsToCharIndex () const override {return mapsToCID();}
 
-	Character decode (UInt32 c) const override {
+	Character decode (uint32_t c) const override {
 		if (mapsToCID())
 			return Character(Character::INDEX, cid(c));
 		return Character(Character::CHRCODE, bfcode(c));
@@ -51,10 +50,10 @@ struct CMap : public NamedFontEncoding
 
 struct IdentityCMap : public CMap
 {
-	UInt32 cid (UInt32 c) const override      {return c;}
-	UInt32 bfcode (UInt32 cid) const override {return 0;}
-	std::string getROString () const override {return "Adobe-Identity";}
-	bool mapsToCID() const override           {return true;}
+	uint32_t cid (uint32_t c) const override      {return c;}
+	uint32_t bfcode (uint32_t cid) const override {return 0;}
+	std::string getROString () const override     {return "Adobe-Identity";}
+	bool mapsToCID() const override               {return true;}
 };
 
 
@@ -74,13 +73,13 @@ struct IdentityVCMap : public IdentityCMap
 
 struct UnicodeCMap : public CMap
 {
-	bool vertical () const override           {return false;}
-	const char* name () const override        {return "unicode";}
-	bool mapsToCID () const override          {return false;}
-	const char* path () const override        {return 0;}
-	UInt32 cid (UInt32 c) const override      {return c;}
-	UInt32 bfcode (UInt32 cid) const override {return cid;}
-	std::string getROString () const override {return "";}
+	bool vertical () const override               {return false;}
+	const char* name () const override            {return "unicode";}
+	bool mapsToCID () const override              {return false;}
+	const char* path () const override            {return 0;}
+	uint32_t cid (uint32_t c) const override      {return c;}
+	uint32_t bfcode (uint32_t cid) const override {return cid;}
+	std::string getROString () const override     {return "";}
 };
 
 
@@ -91,10 +90,10 @@ class SegmentedCMap : public CMap
 	public:
 		SegmentedCMap (const std::string &fname) : _filename(fname), _basemap(0), _vertical(false), _mapsToCID(true) {}
 		const char* name () const override {return _filename.c_str();}
-		UInt32 cid (UInt32 c) const override;
-		UInt32 bfcode (UInt32 cid) const override;
-		void addCIDRange (UInt32 first, UInt32 last, UInt32 cid)    {_cidranges.addRange(first, last, cid);}
-		void addBFRange (UInt32 first, UInt32 last, UInt32 chrcode) {_bfranges.addRange(first, last, chrcode);}
+		uint32_t cid (uint32_t c) const override;
+		uint32_t bfcode (uint32_t cid) const override;
+		void addCIDRange (uint32_t first, uint32_t last, uint32_t cid)    {_cidranges.addRange(first, last, cid);}
+		void addBFRange (uint32_t first, uint32_t last, uint32_t chrcode) {_bfranges.addRange(first, last, chrcode);}
 		void write (std::ostream &os) const;
 		bool vertical () const override  {return _vertical;}
 		bool mapsToCID () const override {return _mapsToCID;}

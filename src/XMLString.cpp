@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
-#include "types.h"
 #include "Unicode.h"
 #include "XMLString.h"
 
@@ -32,7 +31,7 @@ using namespace std;
 int XMLString::DECIMAL_PLACES = 0;
 
 
-static string translate (UInt32 c) {
+static string translate (uint32_t c) {
 	switch (c) {
 		case '<' : return "&lt;";
 		case '&' : return "&amp;";

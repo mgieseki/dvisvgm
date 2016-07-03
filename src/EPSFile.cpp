@@ -30,8 +30,8 @@ using namespace std;
 
 
 /** Reads a little-endian 32-bit integer from the given input stream. */
-static UInt32 getUInt32 (istream &is) {
-	UInt32 value=0;
+static uint32_t getUInt32 (istream &is) {
+	uint32_t value=0;
 	char buf[4];
 	is.read(buf, 4);
 	for (int i=0; i < 4; i++)

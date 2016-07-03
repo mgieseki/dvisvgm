@@ -57,27 +57,27 @@ class DVIToSVG : public DVIReader
 		DVIToSVG (const DVIToSVG&);
 		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
 		int executeCommand () override;
-		void enterBeginPage (unsigned pageno, const std::vector<Int32> &c);
+		void enterBeginPage (unsigned pageno, const std::vector<int32_t> &c);
 		void leaveEndPage (unsigned pageno);
 		void embedFonts (XMLElementNode *svgElement);
 		void moveRight (double dx) override;
 		void moveDown (double dy) override;
 
-		void dviPost (UInt16 stdepth, UInt16 pages, UInt32 pw, UInt32 ph, UInt32 mag, UInt32 num, UInt32 den, UInt32 lbopofs) override;
-		void dviBop (const std::vector<Int32> &c, Int32 prevBopOffset) override;
+		void dviPost (uint16_t stdepth, uint16_t pages, uint32_t pw, uint32_t ph, uint32_t mag, uint32_t num, uint32_t den, uint32_t lbopofs) override;
+		void dviBop (const std::vector<int32_t> &c, int32_t prevBopOffset) override;
 		void dviEop () override;
-		void dviSetChar0 (UInt32 c, const Font *font) override;
-		void dviSetChar (UInt32 c, const Font *font) override;
-		void dviPutChar (UInt32 c, const Font *font) override;
+		void dviSetChar0 (uint32_t c, const Font *font) override;
+		void dviSetChar (uint32_t c, const Font *font) override;
+		void dviPutChar (uint32_t c, const Font *font) override;
 		void dviSetRule (double h, double w) override;
 		void dviPutRule (double h, double w) override;
 		void dviPop () override;
-		void dviFontNum (UInt32 fontnum, SetFontMode mode, const Font *font) override;
+		void dviFontNum (uint32_t fontnum, SetFontMode mode, const Font *font) override;
 		void dviDir (WritingMode dir) override;
 		void dviXXX (const std::string &str) override;
-		void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &glyphs, const Font &font) override;
-		void dviXGlyphString (std::vector<double> &dx, std::vector<UInt16> &glyphs, const Font &font) override;
-		void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<UInt16> &chars, std::vector<UInt16> &glyphs, const Font &font) override;
+		void dviXGlyphArray (std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs, const Font &font) override;
+		void dviXGlyphString (std::vector<double> &dx, std::vector<uint16_t> &glyphs, const Font &font) override;
+		void dviXTextAndGlyphs (std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &chars, std::vector<uint16_t> &glyphs, const Font &font) override;
 
 	private:
 		SVGTree _svg;

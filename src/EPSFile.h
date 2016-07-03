@@ -24,7 +24,6 @@
 #include <fstream>
 #include <string>
 #include "BoundingBox.h"
-#include "types.h"
 
 class EPSFile
 {
@@ -33,14 +32,13 @@ class EPSFile
 		std::istream& istream () const;
 		bool hasValidHeader () const {return _headerValid;}
 		bool bbox (BoundingBox &box) const;
-		UInt32 pslength () const {return _pslength;}
+		uint32_t pslength () const {return _pslength;}
 
 	private:
 		mutable std::ifstream _ifs;
-		bool _headerValid; ///< true if file has a valid header
-		UInt32 _offset;    ///< stream offset where ASCII part of the file begins
-		UInt32 _pslength;  ///< length of PS section (in bytes)
+		bool _headerValid;   ///< true if file has a valid header
+		uint32_t _offset;    ///< stream offset where ASCII part of the file begins
+		uint32_t _pslength;  ///< length of PS section (in bytes)
 };
 
 #endif
-

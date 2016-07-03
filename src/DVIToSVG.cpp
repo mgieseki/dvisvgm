@@ -162,7 +162,7 @@ int DVIToSVG::executeCommand () {
  *  executing the BOP actions.
  *  @param[in] pageno physical page number (1 = first page)
  *  @param[in] c contains information about the page (page number etc.) */
-void DVIToSVG::enterBeginPage (unsigned pageno, const vector<Int32> &c) {
+void DVIToSVG::enterBeginPage (unsigned pageno, const vector<int32_t> &c) {
 	if (dynamic_cast<DVIToSVGActions*>(_actions)) {
 		Message::mstream().indent(0);
 		Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing page " << pageno;
@@ -384,13 +384,13 @@ void DVIToSVG::moveDown (double dy) {
 }
 
 
-void DVIToSVG::dviPost (UInt16, UInt16 pages, UInt32 pw, UInt32 ph, UInt32, UInt32, UInt32, UInt32) {
+void DVIToSVG::dviPost (uint16_t, uint16_t pages, uint32_t pw, uint32_t ph, uint32_t, uint32_t, uint32_t, uint32_t) {
 	_pageHeight = ph; // height of tallest page in dvi units
 	_pageWidth  = pw; // width of widest page in dvi units
 }
 
 
-void DVIToSVG::dviBop (const std::vector<Int32> &c, Int32) {
+void DVIToSVG::dviBop (const std::vector<int32_t> &c, int32_t) {
 	_pageByte = 0;
 	enterBeginPage(currentPageNumber(), c);
 	if (_actions) {
@@ -410,18 +410,18 @@ void DVIToSVG::dviEop () {
 }
 
 
-void DVIToSVG::dviSetChar0 (UInt32 c, const Font *font) {
+void DVIToSVG::dviSetChar0 (uint32_t c, const Font *font) {
 	if (_actions && !dynamic_cast<const VirtualFont*>(font))
 		_actions->setChar(prevState().h+_tx, prevState().v+_ty, c, prevState().d != WritingMode::LR, *font);
 }
 
 
-void DVIToSVG::dviSetChar (UInt32 c, const Font *font) {
+void DVIToSVG::dviSetChar (uint32_t c, const Font *font) {
 	dviSetChar0(c, font);
 }
 
 
-void DVIToSVG::dviPutChar (UInt32 c, const Font *font) {
+void DVIToSVG::dviPutChar (uint32_t c, const Font *font) {
 	dviSetChar0(c, font);
 }
 
@@ -449,7 +449,7 @@ void DVIToSVG::dviPop () {
 }
 
 
-void DVIToSVG::dviFontNum (UInt32 fontnum, SetFontMode, const Font *font) {
+void DVIToSVG::dviFontNum (uint32_t fontnum, SetFontMode, const Font *font) {
 	if (_actions && font && !dynamic_cast<const VirtualFont*>(font))
 		_actions->setFont(FontManager::instance().fontID(fontnum), *font);  // all fonts get a recomputed ID
 }
@@ -467,7 +467,7 @@ void DVIToSVG::dviXXX (const std::string &str) {
 }
 
 
-void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vector<UInt16> &glyphs, const Font &font) {
+void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
 			_actions->setChar(prevState().h+dx[i]+_tx, prevState().v+dy[i]+_ty, glyphs[i], false, font);
@@ -475,7 +475,7 @@ void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vect
 }
 
 
-void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<UInt16> &glyphs, const Font &font) {
+void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
 			_actions->setChar(prevState().h+dx[i]+_tx, prevState().v+_ty, glyphs[i], false, font);
@@ -483,7 +483,7 @@ void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<UInt16> &glyphs, cons
 }
 
 
-void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector<UInt16>&, vector<UInt16> &glyphs, const Font &font) {
+void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector<uint16_t>&, vector<uint16_t> &glyphs, const Font &font) {
 	dviXGlyphArray(dx, dy, glyphs, font);
 }
 

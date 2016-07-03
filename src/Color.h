@@ -24,7 +24,6 @@
 #include <string>
 #include <valarray>
 #include <vector>
-#include "types.h"
 #include "VectorIterator.h"
 
 #ifdef TRANSPARENT
@@ -43,21 +42,20 @@ class Color
 
 	public:
 		Color () : _rgb(0) {}
-		Color (UInt32 rgb) : _rgb(rgb)           {}
-		Color (UInt8 r, UInt8 g, UInt8 b)        {setRGB(r,g,b);}
+		Color (uint32_t rgb) : _rgb(rgb)         {}
+		Color (uint8_t r, uint8_t g, uint8_t b)  {setRGB(r,g,b);}
 		Color (double r, double g, double b)     {setRGB(r,g,b);}
 		Color (const std::valarray<double> &rgb) {setRGB(rgb);}
 		Color (const char *name);
 		Color (const std::string &name);
-//		Color (ColorSpace colorSpace, std::vector<double>::const_iterator &it) {set(colorSpace, it);}
-		operator UInt32 () const                 {return _rgb;}
-		bool operator == (const Color &c) const  {return _rgb == c._rgb;}
-		bool operator != (const Color &c) const  {return _rgb != c._rgb;}
-		void setRGB (UInt8 r, UInt8 g, UInt8 b)  {_rgb = (r << 16) | (g << 8) | b;}
+		operator uint32_t () const                     {return _rgb;}
+		bool operator == (const Color &c) const        {return _rgb == c._rgb;}
+		bool operator != (const Color &c) const        {return _rgb != c._rgb;}
+		void setRGB (uint8_t r, uint8_t g, uint8_t b)  {_rgb = (r << 16) | (g << 8) | b;}
 		void setRGB (double r, double g, double b);
 		void setRGB (const std::valarray<double> &rgb) {setRGB(rgb[0], rgb[1], rgb[2]);}
 		bool setPSName (std::string name, bool case_sensitive=true);
-		void setGray (UInt8 g)  {setRGB(g,g,g);}
+		void setGray (uint8_t g)  {setRGB(g,g,g);}
 		void setGray (double g) {setRGB(g,g,g);}
 		void setGray (const std::valarray<double> &gray) {setRGB(gray[0], gray[0], gray[0]);}
 		void setHSB (double h, double s, double b);
@@ -92,7 +90,7 @@ class Color
 		static int numComponents (ColorSpace colorSpace);
 
 	private:
-		UInt32 _rgb;
+		uint32_t _rgb;
 };
 
 #endif

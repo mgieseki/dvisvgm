@@ -1,5 +1,5 @@
 /*************************************************************************
-** TypesTest.cpp                                                        **
+** FixWord.h                                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,40 +18,19 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <gtest/gtest.h>
-#include "types.h"
+#ifndef FIXWORD_H
+#define FIXWORD_H
 
-using namespace std;
+#include <cstdint>
 
+class FixWord {
+	public:
+		FixWord () : _value(0) {}
+		FixWord (int32_t fw) : _value(fw) {}
+		explicit operator double () const {return double(_value)/(1 << 20);}
 
-TEST(TypesTest, size_signed) {
-	ASSERT_EQ(sizeof(Int8),  1);
-	ASSERT_EQ(sizeof(Int16), 2);
-	ASSERT_EQ(sizeof(Int32), 4);
-	ASSERT_EQ(sizeof(Int64), 8);
-}
+	private:
+		int32_t _value;
+};
 
-
-TEST(TypesTest, neg_signed) {
-	ASSERT_LT(Int8(-1),  0);
-	ASSERT_LT(Int16(-1), 0);
-	ASSERT_LT(Int32(-1), 0);
-	ASSERT_LT(Int64(-1), 0);
-}
-
-
-TEST(TypesTest, unsigned_types) {
-	ASSERT_EQ(sizeof(UInt8),  1);
-	ASSERT_EQ(sizeof(UInt16), 2);
-	ASSERT_EQ(sizeof(UInt32), 4);
-	ASSERT_EQ(sizeof(UInt64), 8);
-}
-
-
-TEST(TypesTest, neg_unsigned) {
-	ASSERT_GT(UInt8(-1),  0);
-	ASSERT_GT(UInt16(-1), 0);
-	ASSERT_GT(UInt32(-1), 0);
-	ASSERT_GT(UInt64(-1), 0);
-}
-
+#endif

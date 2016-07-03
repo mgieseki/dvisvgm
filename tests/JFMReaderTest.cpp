@@ -65,8 +65,8 @@ TEST_F(JFMReaderTest, properties) {
 
 
 TEST_F(JFMReaderTest, charWidth) {
-	UInt16 minchar = jfm->minChar();
-	UInt16 maxchar = jfm->maxChar();
+	uint16_t minchar = jfm->minChar();
+	uint16_t maxchar = jfm->maxChar();
 	ASSERT_NEAR(jfm->getCharWidth(0), 9.963, 0.001);
 	ASSERT_NEAR(jfm->getCharWidth(minchar), 4.981, 0.001);
 	ASSERT_NEAR(jfm->getCharWidth(minchar+1), 4.981, 0.001);
@@ -76,8 +76,8 @@ TEST_F(JFMReaderTest, charWidth) {
 
 
 TEST_F(JFMReaderTest, charHeight) {
-	UInt16 minchar = jfm->minChar();
-	UInt16 maxchar = jfm->maxChar();
+	uint16_t minchar = jfm->minChar();
+	uint16_t maxchar = jfm->maxChar();
 	ASSERT_NEAR(jfm->getCharHeight(0), 8.767, 0.001);
 	ASSERT_NEAR(jfm->getCharHeight(minchar), 8.767, 0.001);
 	ASSERT_NEAR(jfm->getCharHeight(minchar+1), 8.767, 0.001);
@@ -87,8 +87,8 @@ TEST_F(JFMReaderTest, charHeight) {
 
 
 TEST_F(JFMReaderTest, charDepth) {
-	UInt16 minchar = jfm->minChar();
-	UInt16 maxchar = jfm->maxChar();
+	uint16_t minchar = jfm->minChar();
+	uint16_t maxchar = jfm->maxChar();
 	ASSERT_NEAR(jfm->getCharDepth(0), 1.195, 0.001);
 	ASSERT_NEAR(jfm->getCharDepth(minchar), 1.195, 0.001);
 	ASSERT_NEAR(jfm->getCharDepth(minchar+1), 1.195, 0.001);
@@ -98,8 +98,8 @@ TEST_F(JFMReaderTest, charDepth) {
 
 
 TEST_F(JFMReaderTest, italicCorr) {
-	UInt16 minchar = jfm->minChar();
-	UInt16 maxchar = jfm->maxChar();
+	uint16_t minchar = jfm->minChar();
+	uint16_t maxchar = jfm->maxChar();
 	ASSERT_DOUBLE_EQ(jfm->getItalicCorr(0), 0);
 	ASSERT_DOUBLE_EQ(jfm->getItalicCorr(minchar), 0);
 	ASSERT_DOUBLE_EQ(jfm->getItalicCorr(minchar+1), 0);
