@@ -19,6 +19,7 @@ AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+AX_CXX_COMPILE_STDCXX([11], [noext])
 
 AC_PROG_RANLIB
 AC_LANG(C)
