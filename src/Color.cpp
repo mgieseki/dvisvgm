@@ -215,10 +215,10 @@ void Color::setCMYK (const std::valarray<double> &cmyk) {
 
 void Color::set (ColorSpace colorSpace, VectorIterator<double> &it) {
 	switch (colorSpace) {
-		case GRAY_SPACE: setGray(*it++); break;
-		case RGB_SPACE : setRGB(*it, *(it+1), *(it+2)); it+=3; break;
-		case LAB_SPACE : setLab(*it, *(it+1), *(it+2)); it+=3; break;
-		case CMYK_SPACE: setCMYK(*it, *(it+1), *(it+2), *(it+3)); it+=4; break;
+		case ColorSpace::GRAY: setGray(*it++); break;
+		case ColorSpace::RGB : setRGB(*it, *(it+1), *(it+2)); it+=3; break;
+		case ColorSpace::LAB : setLab(*it, *(it+1), *(it+2)); it+=3; break;
+		case ColorSpace::CMYK: setCMYK(*it, *(it+1), *(it+2), *(it+3)); it+=4; break;
 	}
 }
 
@@ -670,10 +670,10 @@ double Color::deltaE (const Color &c) const {
 
 int Color::numComponents (ColorSpace colorSpace) {
 	switch (colorSpace) {
-		case GRAY_SPACE: return 1;
-		case LAB_SPACE:
-		case RGB_SPACE:  return 3;
-		case CMYK_SPACE: return 4;
+		case ColorSpace::GRAY: return 1;
+		case ColorSpace::LAB:
+		case ColorSpace::RGB:  return 3;
+		case ColorSpace::CMYK: return 4;
 	}
 	return 0;
 }

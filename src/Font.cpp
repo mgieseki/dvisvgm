@@ -174,18 +174,18 @@ Font* PhysicalFont::create (string name, UInt32 checksum, double dsize, double s
 
 
 Font* PhysicalFont::create (string name, int fontindex, UInt32 checksum, double dsize, double ssize) {
-	return new PhysicalFontImpl(name, fontindex, checksum, dsize, ssize, PhysicalFont::TTC);
+	return new PhysicalFontImpl(name, fontindex, checksum, dsize, ssize, PhysicalFont::Type::TTC);
 }
 
 
 const char* PhysicalFont::path () const {
 	const char *ext=0;
 	switch (type()) {
-		case OTF: ext = "otf"; break;
-		case PFB: ext = "pfb"; break;
-		case TTC: ext = "ttc"; break;
-		case TTF: ext = "ttf"; break;
-		case MF : ext = "mf";  break;
+		case Type::OTF: ext = "otf"; break;
+		case Type::PFB: ext = "pfb"; break;
+		case Type::TTC: ext = "ttc"; break;
+		case Type::TTF: ext = "ttf"; break;
+		case Type::MF : ext = "mf";  break;
 		default : ext = 0;
 	}
 	if (ext)
@@ -196,7 +196,7 @@ const char* PhysicalFont::path () const {
 
 /** Returns true if this font is CID-based. */
 bool PhysicalFont::isCIDFont () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return false;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().isCIDFont();
@@ -207,7 +207,7 @@ bool PhysicalFont::isCIDFont () const {
  *  @param[out] charMapIDs IDs of the found character maps
  *  @return number of found character maps */
 int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getCharMapIDs(charMapIDs);
@@ -230,7 +230,7 @@ Character PhysicalFont::decodeChar (UInt32 c) const {
  *  lower left corner of this square, while the upper right corner is located at (m,m), where m
  *  is an integer value defined with the font, and returned by this function. */
 int PhysicalFont::unitsPerEm() const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return 1000;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getUnitsPerEM();
@@ -238,7 +238,7 @@ int PhysicalFont::unitsPerEm() const {
 
 
 int PhysicalFont::hAdvance () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getHAdvance();
@@ -246,7 +246,7 @@ int PhysicalFont::hAdvance () const {
 
 
 double PhysicalFont::hAdvance (int c) const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return unitsPerEm()*charWidth(c)/designSize();
 	FontEngine::instance().setFont(*this);
 	if (const FontMap::Entry *entry = fontMapEntry())
@@ -257,7 +257,7 @@ double PhysicalFont::hAdvance (int c) const {
 
 
 double PhysicalFont::vAdvance (int c) const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return unitsPerEm()*charWidth(c)/designSize();
 	FontEngine::instance().setFont(*this);
 	if (const FontMap::Entry *entry = fontMapEntry())
@@ -268,7 +268,7 @@ double PhysicalFont::vAdvance (int c) const {
 
 
 string PhysicalFont::glyphName (int c) const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return "";
 	FontEngine::instance().setFont(*this);
 	if (const FontMap::Entry *entry = fontMapEntry())
@@ -284,7 +284,7 @@ double PhysicalFont::scaledAscent() const {
 
 
 int PhysicalFont::ascent () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getAscender();
@@ -292,7 +292,7 @@ int PhysicalFont::ascent () const {
 
 
 int PhysicalFont::descent () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getDescender();
@@ -300,7 +300,7 @@ int PhysicalFont::descent () const {
 
 
 std::string PhysicalFont::familyName () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return "";
 	FontEngine::instance().setFont(*this);
 	const char *family = FontEngine::instance().getFamilyName();
@@ -309,7 +309,7 @@ std::string PhysicalFont::familyName () const {
 
 
 std::string PhysicalFont::styleName () const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return "";
 	FontEngine::instance().setFont(*this);
 	const char *style = FontEngine::instance().getStyleName();
@@ -324,7 +324,7 @@ std::string PhysicalFont::styleName () const {
  *  @param[in]  cb optional callback object for tracer class
  *  @return true if outline could be computed */
 bool PhysicalFont::getGlyph (int c, GraphicsPath<Int32> &glyph, GFGlyphTracer::Callback *cb) const {
-	if (type() == MF) {
+	if (type() == Type::MF) {
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {
 			_cache.write(CACHE_PATH);
@@ -389,7 +389,7 @@ bool PhysicalFont::createGF (string &gfname) const {
  *  @return number of glyphs traced */
 int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
 	int count = 0;
-	if (type() == MF && CACHE_PATH) {
+	if (type() == Type::MF && CACHE_PATH) {
 		if (const FontMetrics *metrics = getMetrics()) {
 			int fchar = metrics->firstChar();
 			int lchar = metrics->lastChar();
@@ -501,7 +501,7 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 		else
 			return false;
 	}
-	else if (type() != MF) {
+	else if (type() != Type::MF) {
 		FontEngine::instance().setFont(*this);
 		if ((_localCharMap = FontEngine::instance().createCustomToUnicodeMap()) != 0)
 			_charmapID = FontEngine::instance().setCustomCharMap();
@@ -514,10 +514,10 @@ bool PhysicalFontImpl::findAndAssignBaseFontMap () {
 
 /** Returns the Unicode point for a given DVI character. */
 UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
-	if (type() == MF)
+	if (type() == Type::MF)
 		return Font::unicode(c);
 	Character chr = decodeChar(c);
-	if (type() == PFB) {
+	if (type() == Type::PFB) {
 		// try to get the Unicode point from the character name
 		string glyphname = glyphName(c);
 		UInt32 codepoint;
@@ -546,7 +546,7 @@ UInt32 PhysicalFontImpl::unicode (UInt32 c) const {
 
 /** Delete all temporary font files created by Metafont. */
 void PhysicalFontImpl::tidy () const {
-	if (type() == MF) {
+	if (type() == Type::MF) {
 		const char *ext[] = {"gf", "tfm", "log", 0};
 		for (const char **p=ext; *p; ++p) {
 			if (FileSystem::exists(name()+"."+(*p)))
@@ -583,14 +583,14 @@ PhysicalFont::Type NativeFont::type () const {
 		if (const char *p =strrchr(filepath, '.')) {
 			string ext = p+1;
 			if (ext == "otf")
-				return PhysicalFont::OTF;
+				return PhysicalFont::Type::OTF;
 			if (ext == "ttf")
-				return PhysicalFont::TTF;
+				return PhysicalFont::Type::TTF;
 			if (ext == "pfb")
-				return PhysicalFont::PFB;
+				return PhysicalFont::Type::PFB;
 		}
 	}
-	return PhysicalFont::UNKNOWN;
+	return PhysicalFont::Type::UNKNOWN;
 }
 
 

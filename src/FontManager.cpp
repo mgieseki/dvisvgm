@@ -149,17 +149,17 @@ static Font* create_font (const string &filename, const string &fontname, int fo
 		ext = dot+1;
 	if (!ext.empty() && FileFinder::lookup(filename)) {
 		if (ext == "pfb")
-			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::PFB);
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::Type::PFB);
 		if (ext == "otf")
-			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::OTF);
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::Type::OTF);
 		if (ext == "ttf")
-			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::TTF);
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::Type::TTF);
 		if (ext == "ttc")
 			return PhysicalFont::create(fontname, fontindex, checksum, dsize, ssize);
 		if (ext == "vf")
 			return VirtualFont::create(fontname, checksum, dsize, ssize);
 		if (ext == "mf")
-			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::MF);
+			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::Type::MF);
 	}
 	return 0;
 }

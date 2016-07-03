@@ -246,7 +246,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		XMLElementNode *faceNode = new XMLElementNode("font-face");
 		faceNode->addAttribute("font-family", fontname);
 		faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
-		if (font.type() != PhysicalFont::MF && !font.verticalLayout()) {
+		if (font.type() != PhysicalFont::Type::MF && !font.verticalLayout()) {
 			faceNode->addAttribute("ascent", XMLString(font.ascent()));
 			faceNode->addAttribute("descent", XMLString(font.descent()));
 		}

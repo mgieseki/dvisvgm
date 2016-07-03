@@ -24,16 +24,6 @@
 
 using namespace std;
 
-const double Length::pt2in = 1.0/72.27;
-const double Length::pt2bp = pt2in*72;
-const double Length::pt2cm = pt2in*2.54;
-const double Length::pt2mm = pt2cm*10;
-const double Length::pt2pc = 1.0/12;
-const double Length::pt2dd = 1157.0/1238;
-const double Length::pt2cc = pt2dd/12;
-const double Length::pt2sp = 65536.0;
-
-
 void Length::set (const string &lenstr) {
 	switch (lenstr.length()) {
 		case 0:
@@ -59,19 +49,19 @@ void Length::set (const string &lenstr) {
 
 void Length::set (double val, Unit unit) {
 	switch (unit) {
-		case PT: _pt = val; break;
-		case BP: _pt = val/pt2bp; break;
-		case IN: _pt = val/pt2in; break;
-		case CM: _pt = val/pt2cm; break;
-		case MM: _pt = val/pt2mm; break;
-		case PC: _pt = val/pt2pc; break;
-		case DD: _pt = val/pt2dd; break;
-		case CC: _pt = val/pt2cc; break;
-		case SP: _pt = val/pt2sp; break;
+		case Unit::PT: _pt = val; break;
+		case Unit::BP: _pt = val/pt2bp; break;
+		case Unit::IN: _pt = val/pt2in; break;
+		case Unit::CM: _pt = val/pt2cm; break;
+		case Unit::MM: _pt = val/pt2mm; break;
+		case Unit::PC: _pt = val/pt2pc; break;
+		case Unit::DD: _pt = val/pt2dd; break;
+		case Unit::CC: _pt = val/pt2cc; break;
+		case Unit::SP: _pt = val/pt2sp; break;
 		default:
 			// this isn't supposed to happen
 			ostringstream oss;
-			oss << "invalid length unit: (" << unit << ")";
+			oss << "invalid length unit: (" << static_cast<int>(unit) << ")";
 			throw UnitException(oss.str());
 	}
 }
@@ -79,19 +69,19 @@ void Length::set (double val, Unit unit) {
 
 double Length::get (Unit unit) const {
 	switch (unit) {
-		case PT: return pt();
-		case BP: return bp();
-		case IN: return in();
-		case CM: return cm();
-		case MM: return mm();
-		case PC: return pc();
-		case DD: return dd();
-		case CC: return cc();
-		case SP: return sp();
+		case Unit::PT: return pt();
+		case Unit::BP: return bp();
+		case Unit::IN: return in();
+		case Unit::CM: return cm();
+		case Unit::MM: return mm();
+		case Unit::PC: return pc();
+		case Unit::DD: return dd();
+		case Unit::CC: return cc();
+		case Unit::SP: return sp();
 	}
 	// this isn't supposed to happen
 	ostringstream oss;
-	oss << "invalid length unit: (" << unit << ")";
+	oss << "invalid length unit: (" << static_cast<int>(unit) << ")";
 	throw UnitException(oss.str());
 }
 
@@ -108,15 +98,15 @@ string Length::toString (Unit unit) const {
 Length::Unit Length::stringToUnit (const std::string &unitstr) {
 	if (unitstr.length() == 2) {
 		switch (UNIT(unitstr[0], unitstr[1])) {
-			case UNIT('p','t'): return PT;
-			case UNIT('b','p'): return BP;
-			case UNIT('i','n'): return IN;
-			case UNIT('c','m'): return CM;
-			case UNIT('m','m'): return MM;
-			case UNIT('p','c'): return PC;
-			case UNIT('d','d'): return DD;
-			case UNIT('c','c'): return CC;
-			case UNIT('s','p'): return SP;
+			case UNIT('p','t'): return Unit::PT;
+			case UNIT('b','p'): return Unit::BP;
+			case UNIT('i','n'): return Unit::IN;
+			case UNIT('c','m'): return Unit::CM;
+			case UNIT('m','m'): return Unit::MM;
+			case UNIT('p','c'): return Unit::PC;
+			case UNIT('d','d'): return Unit::DD;
+			case UNIT('c','c'): return Unit::CC;
+			case UNIT('s','p'): return Unit::SP;
 		}
 	}
 	throw UnitException(string("invalid length unit: ")+unitstr);
@@ -125,15 +115,15 @@ Length::Unit Length::stringToUnit (const std::string &unitstr) {
 
 string Length::unitToString (Unit unit) {
 	switch (unit) {
-		case PT: return "pt";
-		case BP: return "bp";
-		case IN: return "in";
-		case CM: return "cm";
-		case MM: return "mm";
-		case PC: return "pc";
-		case DD: return "dd";
-		case CC: return "cc";
-		case SP: return "sp";
+		case Unit::PT: return "pt";
+		case Unit::BP: return "bp";
+		case Unit::IN: return "in";
+		case Unit::CM: return "cm";
+		case Unit::MM: return "mm";
+		case Unit::PC: return "pc";
+		case Unit::DD: return "dd";
+		case Unit::CC: return "cc";
+		case Unit::SP: return "sp";
 	}
 	// this isn't supposed to happen
 	return "??";

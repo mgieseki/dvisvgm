@@ -51,7 +51,7 @@ TEST(BoundingBoxTest, construct) {
 	EXPECT_DOUBLE_EQ(bbox3.maxX(), 3);
 	EXPECT_DOUBLE_EQ(bbox3.maxY(), 4);
 
-	Length len(2, Length::CM);
+	Length len(2, Length::Unit::CM);
 	double bp = len.bp();
 	BoundingBox bbox4(len, len, len, len);
 	EXPECT_DOUBLE_EQ(bbox4.minX(), bp);

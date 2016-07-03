@@ -315,7 +315,7 @@ void PathClipper::reconstruct (const Polygon &polygon, CurvedPath &path) {
 
 
 inline PolyFillType polyFillType (CurvedPath::WindingRule wr) {
-	return (wr == CurvedPath::WR_NON_ZERO) ? pftNonZero : pftEvenOdd;
+	return (wr == CurvedPath::WindingRule::NON_ZERO) ? pftNonZero : pftEvenOdd;
 }
 
 

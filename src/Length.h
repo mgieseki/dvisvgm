@@ -37,11 +37,11 @@ struct UnitException : MessageException
 class Length
 {
 	public:
-		enum Unit {PT, BP, CM, MM, IN, PC, DD, CC, SP};
+		enum class Unit {PT, BP, CM, MM, IN, PC, DD, CC, SP};
 
 	public:
 		Length () : _pt(0) {}
-		Length (double val, Unit unit=PT)               {set(val, unit);}
+		Length (double val, Unit unit=Unit::PT)         {set(val, unit);}
 		Length (double val, const std::string &unitstr) {set(val, unitstr);}
 		Length (const std::string &lenstr)              {set(lenstr);}
 		void set (double val, Unit unit);
@@ -63,14 +63,14 @@ class Length
 		static std::string unitToString (Unit unit);
 
 	public:
-		static const double pt2bp;
-		static const double pt2in;
-		static const double pt2cm;
-		static const double pt2mm;
-		static const double pt2pc;
-		static const double pt2dd;
-		static const double pt2cc;
-		static const double pt2sp;
+		static constexpr double pt2in = 1.0/72.27;
+		static constexpr double pt2bp = pt2in*72;
+		static constexpr double pt2cm = pt2in*2.54;
+		static constexpr double pt2mm = pt2cm*10;
+		static constexpr double pt2pc = 1.0/12;
+		static constexpr double pt2dd = 1157.0/1238;
+		static constexpr double pt2cc = pt2dd/12;
+		static constexpr double pt2sp = 65536.0;
 
 	private:
 		double _pt;  // length in TeX point units (72.27pt = 1in)

@@ -41,7 +41,7 @@ class TensorProductPatch : public ShadingPatch
 	friend class CoonsPatch;
 
 	public:
-		TensorProductPatch () : ShadingPatch(Color::RGB_SPACE) {}
+		TensorProductPatch () : ShadingPatch(Color::ColorSpace::RGB) {}
 		TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch);
 		int psShadingType() const override {return 7;}

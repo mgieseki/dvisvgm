@@ -74,13 +74,13 @@ void CmdLineParserBase::parse (int argc, char **argv, bool printErrors) {
 				do {
 					int shortname = ir.get();
 					if (const Option *opt = option(shortname)) {
-						if (!combined || opt->argmode == ARG_NONE) {
-							if (opt->argmode == ARG_REQUIRED && strlen(argv[i]) == 2) { // required argument separated by whitespace?
+						if (!combined || opt->argmode == ArgMode::NONE) {
+							if (opt->argmode == ArgMode::REQUIRED && strlen(argv[i]) == 2) { // required argument separated by whitespace?
 								if (i+1 < argc && argv[i+1][0] != '-')
 									ib.assign(argv[++i]);
 							}
 							(*opt->handler)(this, ir, *opt, false);
-							if (opt->argmode == ARG_NONE)
+							if (opt->argmode == ArgMode::NONE)
 								combined = true;
 						}
 						else {

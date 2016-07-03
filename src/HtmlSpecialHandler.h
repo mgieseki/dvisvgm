@@ -39,11 +39,11 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		bool referenced;  ///< true if a reference to this anchor exists
 	};
 
-	enum AnchorType {AT_NONE, AT_HREF, AT_NAME};
+	enum class AnchorType {NONE, HREF, NAME};
 	typedef std::map<std::string, NamedAnchor> NamedAnchors;
 
 	public:
-		HtmlSpecialHandler () : _active(false), _anchorType(AT_NONE), _depthThreshold(0) {}
+		HtmlSpecialHandler () : _active(false), _anchorType(AnchorType::NONE), _depthThreshold(0) {}
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		const char* name () const override {return "html";}
@@ -62,7 +62,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		void closeAnchor (SpecialActions &actions);
 		void markLinkedBox (SpecialActions &actions);
 
-		enum MarkerType {MT_NONE, MT_LINE, MT_BOX, MT_BGCOLOR};
+		enum class MarkerType {NONE, LINE, BOX, BGCOLOR};
 		static MarkerType MARKER_TYPE;  ///< selects how to mark linked areas
 		static Color LINK_BGCOLOR;      ///< background color if linkmark type == LT_BGCOLOR
 		static Color LINK_LINECOLOR;    ///< line color if linkmark type is LM_LINE or LM_BOX

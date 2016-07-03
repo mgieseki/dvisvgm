@@ -36,7 +36,7 @@ class CMapReader
 	class Token
 	{
 		public:
-			enum Type {TT_UNKNOWN, TT_EOF, TT_DELIM, TT_NUMBER, TT_STRING, TT_NAME, TT_OPERATOR};
+			enum class Type {UNKNOWN, END, DELIM, NUMBER, STRING, NAME, OPERATOR};
 
 		public:
 			Token (InputReader &ir);

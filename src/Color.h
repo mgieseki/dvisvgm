@@ -39,7 +39,7 @@ class Color
 		static const Color WHITE;
 		static const Color TRANSPARENT;
 
-		enum ColorSpace {GRAY_SPACE, RGB_SPACE, CMYK_SPACE, LAB_SPACE};
+		enum class ColorSpace {GRAY, RGB, CMYK, LAB};
 
 	public:
 		Color () : _rgb(0) {}

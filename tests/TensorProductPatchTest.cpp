@@ -87,7 +87,7 @@ TEST_F(TensorProductPatchTest, construct) {
 	EXPECT_EQ(_patch.numPoints(1), 12);
 	EXPECT_EQ(_patch.numColors(1), 2);
 
-	CoonsPatch cp(Color::RGB_SPACE);
+	CoonsPatch cp(Color::ColorSpace::RGB);
 	EXPECT_EQ(cp.psShadingType(), 6);
 	EXPECT_EQ(cp.numPoints(0), 12);
 	EXPECT_EQ(cp.numColors(0), 4);
@@ -105,26 +105,26 @@ TEST_F(TensorProductPatchTest, valueAt) {
 	vector<DPair> points = _points;
 	vector<Color> colors(2);
 	points.resize(12);
-	TensorProductPatch tpp1(points, colors, Color::RGB_SPACE, 1, &_patch);
+	TensorProductPatch tpp1(points, colors, Color::ColorSpace::RGB, 1, &_patch);
 	EXPECT_EQ(tpp1.valueAt(0, 0), DPair(10, 70));
 	EXPECT_EQ(tpp1.valueAt(0, 1), DPair(100, 70));
 	EXPECT_EQ(tpp1.valueAt(1, 0), DPair(70, 100));
 	EXPECT_EQ(tpp1.valueAt(1, 1), DPair(20, 40));
 
-	TensorProductPatch tpp2(points, colors, Color::RGB_SPACE, 2, &_patch);
+	TensorProductPatch tpp2(points, colors, Color::ColorSpace::RGB, 2, &_patch);
 	EXPECT_EQ(tpp2.valueAt(0, 0), DPair(100, 70));
 	EXPECT_EQ(tpp2.valueAt(0, 1), DPair(70, 20));
 	EXPECT_EQ(tpp2.valueAt(1, 0), DPair(70, 100));
 	EXPECT_EQ(tpp2.valueAt(1, 1), DPair(20, 40));
 
-	TensorProductPatch tpp3(points, colors, Color::RGB_SPACE, 3, &_patch);
+	TensorProductPatch tpp3(points, colors, Color::ColorSpace::RGB, 3, &_patch);
 	EXPECT_EQ(tpp3.valueAt(0, 0), DPair(70, 20));
 	EXPECT_EQ(tpp3.valueAt(0, 1), DPair(10, 10));
 	EXPECT_EQ(tpp3.valueAt(1, 0), DPair(70, 100));
 	EXPECT_EQ(tpp3.valueAt(1, 1), DPair(20, 40));
 
 	colors.resize(4);
-	CoonsPatch cp1(points, colors, Color::RGB_SPACE, 0, 0);
+	CoonsPatch cp1(points, colors, Color::ColorSpace::RGB, 0, 0);
 	EXPECT_EQ(cp1.valueAt(0, 0), DPair(10, 70));
 	EXPECT_EQ(cp1.valueAt(0, 1), DPair(10, 10));
 	EXPECT_EQ(cp1.valueAt(1, 0), DPair(100, 70));
@@ -132,19 +132,19 @@ TEST_F(TensorProductPatchTest, valueAt) {
 
 	points.resize(8);
 	colors.resize(2);
-	CoonsPatch cp2(points, colors, Color::RGB_SPACE, 1, &cp1);
+	CoonsPatch cp2(points, colors, Color::ColorSpace::RGB, 1, &cp1);
 	EXPECT_EQ(cp2.valueAt(0, 0), DPair(100, 70));
 	EXPECT_EQ(cp2.valueAt(0, 1), DPair(10, 70));
 	EXPECT_EQ(cp2.valueAt(1, 0), DPair(20, 40));
 	EXPECT_EQ(cp2.valueAt(1, 1), DPair(70, 100));
 
-	CoonsPatch cp3(points, colors, Color::RGB_SPACE, 2, &cp1);
+	CoonsPatch cp3(points, colors, Color::ColorSpace::RGB, 2, &cp1);
 	EXPECT_EQ(cp3.valueAt(0, 0), DPair(70, 20));
 	EXPECT_EQ(cp3.valueAt(0, 1), DPair(100, 70));
 	EXPECT_EQ(cp3.valueAt(1, 0), DPair(20, 40));
 	EXPECT_EQ(cp3.valueAt(1, 1), DPair(70, 100));
 
-	CoonsPatch cp4(points, colors, Color::RGB_SPACE, 3, &cp1);
+	CoonsPatch cp4(points, colors, Color::ColorSpace::RGB, 3, &cp1);
 	EXPECT_EQ(cp4.valueAt(0, 0), DPair(10, 10));
 	EXPECT_EQ(cp4.valueAt(0, 1), DPair(70, 20));
 	EXPECT_EQ(cp4.valueAt(1, 0), DPair(20, 40));
@@ -277,7 +277,7 @@ class Callback : public ShadingPatch::Callback {
 TEST_F(TensorProductPatchTest, approximate) {
 	Callback callback;
 	vector<Color> colors(4);
-	TensorProductPatch tpp(_points, colors, Color::RGB_SPACE, 0, 0);
+	TensorProductPatch tpp(_points, colors, Color::ColorSpace::RGB, 0, 0);
 	tpp.approximate(2, false, 0.1, callback);
 	EXPECT_EQ(callback.pathstr(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
 	EXPECT_EQ(callback.colorstr(), "#000000");

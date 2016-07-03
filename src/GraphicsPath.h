@@ -36,11 +36,11 @@ class GraphicsPath
 {
 	friend class PathClipper;
 	public:
-		enum WindingRule {WR_EVEN_ODD, WR_NON_ZERO};
+		enum class WindingRule {EVEN_ODD, NON_ZERO};
 		typedef Pair<T> Point;
 
 		struct Command {
-			enum Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
+			enum class Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
 
 			Command (Type t) : type(t) {}
 
@@ -61,11 +61,11 @@ class GraphicsPath
 
 			int numParams () const {
 				switch (type) {
-					case CLOSEPATH : return 0;
-					case MOVETO    :
-					case LINETO    : return 1;
-					case CONICTO   : return 2;
-					case CUBICTO   : return 3;
+					case Type::CLOSEPATH : return 0;
+					case Type::MOVETO    :
+					case Type::LINETO    : return 1;
+					case Type::CONICTO   : return 2;
+					case Type::CUBICTO   : return 3;
 				}
 				return 0;
 			}
@@ -97,7 +97,7 @@ class GraphicsPath
 		};
 
 	public:
-		GraphicsPath (WindingRule wr=WR_NON_ZERO) : _windingRule(wr) {}
+		GraphicsPath (WindingRule wr=WindingRule::NON_ZERO) : _windingRule(wr) {}
 
 		void setWindingRule (WindingRule wr) {_windingRule = wr;}
 		WindingRule windingRule () const     {return _windingRule;}
@@ -127,8 +127,8 @@ class GraphicsPath
 
 		void moveto (const Point &p) {
 			// avoid sequences of several MOVETOs; always use latest
-			if (_commands.empty() || _commands.back().type != Command::MOVETO)
-				_commands.push_back(Command(Command::MOVETO, p));
+			if (_commands.empty() || _commands.back().type != Command::Type::MOVETO)
+				_commands.push_back(Command(Command::Type::MOVETO, p));
 			else
 				_commands.back().params[0] = p;
 		}
@@ -138,7 +138,7 @@ class GraphicsPath
 		}
 
 		void lineto (const Point &p) {
-			_commands.push_back(Command(Command::LINETO, p));
+			_commands.push_back(Command(Command::Type::LINETO, p));
 		}
 
 		void conicto (const T &x1, const T &y1, const T &x2, const T &y2) {
@@ -146,7 +146,7 @@ class GraphicsPath
 		}
 
 		void conicto (const Point &p1, const Point &p2) {
-			_commands.push_back(Command(Command::CONICTO, p1, p2));
+			_commands.push_back(Command(Command::Type::CONICTO, p1, p2));
 		}
 
 		void cubicto (const T &x1, const T &y1, const T &x2, const T &y2, const T &x3, const T &y3) {
@@ -154,11 +154,11 @@ class GraphicsPath
 		}
 
 		void cubicto (const Point &p1, const Point &p2, const Point &p3) {
-			_commands.push_back(Command(Command::CUBICTO, p1, p2, p3));
+			_commands.push_back(Command(Command::Type::CUBICTO, p1, p2, p3));
 		}
 
 		void closepath () {
-			_commands.push_back(Command(Command::CLOSEPATH));
+			_commands.push_back(Command(Command::Type::CLOSEPATH));
 		}
 
 		const std::vector<Command>& commands () const {
@@ -173,14 +173,14 @@ class GraphicsPath
 		void closeOpenSubPaths () {
 			Command *prevCommand=0;
 			for (auto it=_commands.begin(); it != _commands.end(); ++it) {
-				if (it->type == Command::MOVETO && prevCommand && prevCommand->type != Command::CLOSEPATH) {
+				if (it->type == Command::Type::MOVETO && prevCommand && prevCommand->type != Command::Type::CLOSEPATH) {
 					prevCommand = &(*it);
-					it = _commands.insert(it, Command(Command::CLOSEPATH))+1;
+					it = _commands.insert(it, Command(Command::Type::CLOSEPATH))+1;
 				}
 				else
 					prevCommand = &(*it);
 			}
-			if (!_commands.empty() && _commands.back().type != Command::CLOSEPATH)
+			if (!_commands.empty() && _commands.back().type != Command::Type::CLOSEPATH)
 				closepath();
 		}
 
@@ -188,7 +188,7 @@ class GraphicsPath
 		/** Removes redundant path commands commands. Currently, it only removes movetos. */
 		void removeRedundantCommands () {
 			// remove trailing moveto commands
-			while (!_commands.empty() && _commands.back().type == Command::MOVETO)
+			while (!_commands.empty() && _commands.back().type == Command::Type::MOVETO)
 				_commands.pop_back();
 			// resolve intermediate sequences of moveto commands
 			auto it=_commands.begin();
@@ -196,7 +196,7 @@ class GraphicsPath
 				return;
 			auto prev = it++;
 			while (it != _commands.end()) {
-				if (prev->type != Command::MOVETO || it->type != Command::MOVETO)
+				if (prev->type != Command::Type::MOVETO || it->type != Command::Type::MOVETO)
 					prev = it++;
 				else {
 					prev = _commands.erase(prev);  // remove leading MOVETO and advance 'prev' to 'it'
@@ -343,12 +343,12 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 	for (auto it=_commands.begin(); it != _commands.end() && !actions.quit(); ++it) {
 		const Point *params = it->params;
 		switch (it->type) {
-			case Command::MOVETO:
+			case Command::Type::MOVETO:
 				actions.moveto(params[0]);
 				actions.draw('M', params, 1);
 				fp = params[0];
 				break;
-			case Command::LINETO:
+			case Command::Type::LINETO:
 				if (optimize) {
 					if (cp.x() == params[0].x()) {
 						actions.vlineto(params[0].y());
@@ -368,8 +368,8 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 					actions.draw('L', params, 1);
 				}
 				break;
-			case Command::CONICTO:
-				if (optimize && prev != _commands.end() && prev->type == Command::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+			case Command::Type::CONICTO:
+				if (optimize && prev != _commands.end() && prev->type == Command::Type::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.conicto(params[1]);
 					actions.draw('T', params+1, 1);
 				}
@@ -380,9 +380,9 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				pstore[0] = params[0]; // store control point and
 				pstore[1] = params[1]; // curve endpoint
 				break;
-			case Command::CUBICTO:
+			case Command::Type::CUBICTO:
 				// is first control point reflection of preceding second control point?
-				if (optimize && prev != _commands.end() && prev->type == Command::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+				if (optimize && prev != _commands.end() && prev->type == Command::Type::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
 					actions.cubicto(params[1], params[2]);
 					actions.draw('S', params+1, 2);
 				}
@@ -393,7 +393,7 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				pstore[0] = params[1]; // store second control point and
 				pstore[1] = params[2]; // curve endpoint
 				break;
-			case Command::CLOSEPATH:
+			case Command::Type::CLOSEPATH:
 				actions.closepath();
 				actions.draw('Z', params, 0);
 				cp = fp;

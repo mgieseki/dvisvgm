@@ -12,56 +12,56 @@
 using namespace std;
 
 const CmdLineParserBase::Option CommandLine::_options[] = {
-	{'b', "bbox", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
-	{'C', "cache", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
+	{'b', "bbox", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_bbox)},
+	{'C', "cache", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_cache)},
 #if !defined(DISABLE_GS)
-	{'j', "clipjoin", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_clipjoin)},
+	{'j', "clipjoin", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_clipjoin)},
 #endif
-	{'\0', "color", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
-	{'\0', "colornames", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_colornames)},
-	{'\0', "comments", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_comments)},
+	{'\0', "color", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_color)},
+	{'\0', "colornames", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_colornames)},
+	{'\0', "comments", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_comments)},
 #if !defined(DISABLE_GS)
-	{'E', "eps", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
+	{'E', "eps", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_eps)},
 #endif
-	{'e', "exact", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
-	{'m', "fontmap", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_fontmap)},
+	{'e', "exact", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_exact)},
+	{'m', "fontmap", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_fontmap)},
 #if !defined(DISABLE_GS)
-	{'\0', "grad-overlap", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_overlap)},
-#endif
-#if !defined(DISABLE_GS)
-	{'\0', "grad-segments", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_segments)},
+	{'\0', "grad-overlap", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_overlap)},
 #endif
 #if !defined(DISABLE_GS)
-	{'\0', "grad-simplify", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_simplify)},
+	{'\0', "grad-segments", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_segments)},
 #endif
-	{'h', "help", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
-	{'\0', "keep", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
+#if !defined(DISABLE_GS)
+	{'\0', "grad-simplify", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_grad_simplify)},
+#endif
+	{'h', "help", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_help)},
+	{'\0', "keep", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_keep)},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
-	{'\0', "libgs", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_libgs)},
+	{'\0', "libgs", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_libgs)},
 #endif
-	{'L', "linkmark", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_linkmark)},
-	{'l', "list-specials", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
-	{'M', "mag", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
-	{'n', "no-fonts", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
-	{'\0', "no-merge", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_merge)},
-	{'\0', "no-mktexmf", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_mktexmf)},
-	{'S', "no-specials", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_specials)},
-	{'\0', "no-styles", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
-	{'o', "output", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_output)},
-	{'p', "page", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_page)},
-	{'d', "precision", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_precision)},
-	{'P', "progress", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_progress)},
-	{'R', "relative", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_relative)},
-	{'r', "rotate", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
-	{'c', "scale", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
-	{'s', "stdout", ARG_NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_stdout)},
-	{'a', "trace-all", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_trace_all)},
-	{'T', "transform", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_transform)},
-	{'t', "translate", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_translate)},
-	{'v', "verbosity", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
-	{'V', "version", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
-	{'z', "zip", ARG_OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
-	{'Z', "zoom", ARG_REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zoom)},
+	{'L', "linkmark", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_linkmark)},
+	{'l', "list-specials", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_list_specials)},
+	{'M', "mag", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_mag)},
+	{'n', "no-fonts", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_fonts)},
+	{'\0', "no-merge", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_merge)},
+	{'\0', "no-mktexmf", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_mktexmf)},
+	{'S', "no-specials", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_specials)},
+	{'\0', "no-styles", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_no_styles)},
+	{'o', "output", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_output)},
+	{'p', "page", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_page)},
+	{'d', "precision", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_precision)},
+	{'P', "progress", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_progress)},
+	{'R', "relative", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_relative)},
+	{'r', "rotate", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_rotate)},
+	{'c', "scale", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_scale)},
+	{'s', "stdout", ArgMode::NONE, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_stdout)},
+	{'a', "trace-all", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_trace_all)},
+	{'T', "transform", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_transform)},
+	{'t', "translate", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_translate)},
+	{'v', "verbosity", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_verbosity)},
+	{'V', "version", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_version)},
+	{'z', "zip", ArgMode::OPTIONAL, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zip)},
+	{'Z', "zoom", ArgMode::REQUIRED, new OptionHandlerImpl<CommandLine>(&CommandLine::handle_zoom)},
 };
 
 const CmdLineParserBase::Option* CommandLine::options (size_t *numopts) const {

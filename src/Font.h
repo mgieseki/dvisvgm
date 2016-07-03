@@ -112,7 +112,7 @@ class EmptyFont : public Font {
 /** Interface for all physical fonts. */
 class PhysicalFont : public virtual Font {
 	public:
-		enum Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
+		enum class Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
 
 		static Font* create (std::string name, UInt32 checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static Font* create (std::string name, int fontindex, UInt32 checksum, double dsize, double ssize);

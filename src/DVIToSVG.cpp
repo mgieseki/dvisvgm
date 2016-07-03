@@ -365,7 +365,7 @@ string DVIToSVG::getSVGFilename (unsigned pageno) const {
 void DVIToSVG::moveRight (double dx) {
 	DVIReader::moveRight(dx);
 	if (_actions) {
-		if (currState().d == WMODE_LR)
+		if (currState().d == WritingMode::LR)
 			_actions->moveToX(currState().h+_tx);
 		else
 			_actions->moveToY(currState().v+_ty);
@@ -376,7 +376,7 @@ void DVIToSVG::moveRight (double dx) {
 void DVIToSVG::moveDown (double dy) {
 	DVIReader::moveDown(dy);
 	if (_actions) {
-		if (currState().d == WMODE_LR)
+		if (currState().d == WritingMode::LR)
 			_actions->moveToY(currState().v+_ty);
 		else
 			_actions->moveToX(currState().h+_tx);
@@ -412,7 +412,7 @@ void DVIToSVG::dviEop () {
 
 void DVIToSVG::dviSetChar0 (UInt32 c, const Font *font) {
 	if (_actions && !dynamic_cast<const VirtualFont*>(font))
-		_actions->setChar(prevState().h+_tx, prevState().v+_ty, c, prevState().d != WMODE_LR, *font);
+		_actions->setChar(prevState().h+_tx, prevState().v+_ty, c, prevState().d != WritingMode::LR, *font);
 }
 
 
@@ -444,7 +444,7 @@ void DVIToSVG::dviPop () {
 		if (prevState().v != currState().v)
 			_actions->moveToY(currState().v + _ty);
 		if (prevState().d != currState().d)
-			_actions->setTextOrientation(currState().d != WMODE_LR);
+			_actions->setTextOrientation(currState().d != WritingMode::LR);
 	}
 }
 
@@ -457,7 +457,7 @@ void DVIToSVG::dviFontNum (UInt32 fontnum, SetFontMode, const Font *font) {
 
 void DVIToSVG::dviDir (WritingMode dir) {
 	if (_actions)
-		_actions->setTextOrientation(dir != WMODE_LR);
+		_actions->setTextOrientation(dir != WritingMode::LR);
 }
 
 

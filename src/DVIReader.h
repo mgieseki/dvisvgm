@@ -38,8 +38,8 @@ class VirtualFont;
 class DVIReader : public BasicDVIReader, public VFActions
 {
 	protected:
-		enum WritingMode {WMODE_LR=0, WMODE_TB=1, WMODE_BT=3};
-		enum SetFontMode {SF_SHORT, SF_LONG, VF_ENTER, VF_LEAVE};
+		enum class WritingMode {LR=0, TB=1, BT=3};
+		enum class SetFontMode {SF_SHORT, SF_LONG, VF_ENTER, VF_LEAVE};
 
 		struct DVIState
 		{
@@ -47,7 +47,7 @@ class DVIReader : public BasicDVIReader, public VFActions
 			double x, w, y, z;  ///< additional registers to store horizontal (x, w) and vertical (y, z) positions
 			WritingMode d;      ///< direction: 0: horizontal, 1: vertical(top->bottom), 3: vertical (bottom->top)
 			DVIState ()   {reset();}
-			void reset () {h = v = x = w = y = z = 0.0; d=WMODE_LR;}
+			void reset () {h = v = x = w = y = z = 0.0; d=WritingMode::LR;}
 		};
 
 	public:

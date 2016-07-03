@@ -53,7 +53,7 @@ class CmdLineParserBase
 				LocalHandler _handler;
 		};
 
-		enum ArgMode {ARG_NONE, ARG_OPTIONAL, ARG_REQUIRED};
+		enum class ArgMode {NONE, OPTIONAL, REQUIRED};
 
 		struct Option {
 			~Option () {delete handler;}

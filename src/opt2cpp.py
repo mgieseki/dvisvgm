@@ -163,13 +163,13 @@ def main(optfile):
         if arg is not None:
             options[name]["arg_type"] = arg.get("type")
             if arg.get("optional") and arg.get("optional") == "yes":
-                options[name]["arg_mode"] = "ARG_OPTIONAL"
+                options[name]["arg_mode"] = "ArgMode::OPTIONAL"
             else:
-                options[name]["arg_mode"] = "ARG_REQUIRED"
+                options[name]["arg_mode"] = "ArgMode::REQUIRED"
             options[name]["arg_default"] = arg.get("default")
         else:
             options[name]["arg_type"] = None
-            options[name]["arg_mode"] = "ARG_NONE"
+            options[name]["arg_mode"] = "ArgMode::NONE"
 
     keys = sorted(options.keys())
 

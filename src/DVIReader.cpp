@@ -253,7 +253,7 @@ void DVIReader::putVFChar (Font *font, UInt32 c) {
 			_currDviState.x = _currDviState.y = _currDviState.w = _currDviState.z = 0;
 			int savedFontNum = _currFontNum; // save current font number
 			fm.enterVF(vf);                  // enter VF font number context
-			setFont(fm.vfFirstFontNum(vf), VF_ENTER);
+			setFont(fm.vfFirstFontNum(vf), SetFontMode::VF_ENTER);
 			double savedScale = _dvi2bp;
 			// DVI units in virtual fonts are multiples of 1^(-20) times the scaled size of the VF
 			_dvi2bp = vf->scaledSize()/(1 << 20);
@@ -265,11 +265,11 @@ void DVIReader::putVFChar (Font *font, UInt32 c) {
 			catch (const DVIException &e) {
 				// Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
 			}
-			replaceStream(is);                // restore previous input stream
-			_dvi2bp = savedScale;             // restore previous scale factor
-			fm.leaveVF();                     // restore previous font number context
-			setFont(savedFontNum, VF_LEAVE);  // restore previous font number
-			_currDviState = pos;              // restore previous cursor position
+			replaceStream(is);     // restore previous input stream
+			_dvi2bp = savedScale;  // restore previous scale factor
+			fm.leaveVF();          // restore previous font number context
+			setFont(savedFontNum, SetFontMode::VF_LEAVE);  // restore previous font number
+			_currDviState = pos;   // restore previous cursor position
 		}
 	}
 }
@@ -351,18 +351,18 @@ void DVIReader::cmdPutRule (int) {
 
 void DVIReader::moveRight (double dx) {
 	switch (_currDviState.d) {
-		case WMODE_LR: _currDviState.h += dx; break;
-		case WMODE_TB: _currDviState.v += dx; break;
-		case WMODE_BT: _currDviState.v -= dx; break;
+		case WritingMode::LR: _currDviState.h += dx; break;
+		case WritingMode::TB: _currDviState.v += dx; break;
+		case WritingMode::BT: _currDviState.v -= dx; break;
 	}
 }
 
 
 void DVIReader::moveDown (double dy) {
 	switch (_currDviState.d) {
-		case WMODE_LR: _currDviState.v += dy; break;
-		case WMODE_TB: _currDviState.h -= dy; break;
-		case WMODE_BT: _currDviState.h += dy; break;
+		case WritingMode::LR: _currDviState.v += dy; break;
+		case WritingMode::TB: _currDviState.h -= dy; break;
+		case WritingMode::BT: _currDviState.h += dy; break;
 	}
 }
 
@@ -466,7 +466,7 @@ void DVIReader::setFont (int fontnum, SetFontMode mode) {
  *  @param[in] fontnum font number
  *  @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum0 (int fontnum) {
-	setFont(fontnum, SF_SHORT);
+	setFont(fontnum, SetFontMode::SF_SHORT);
 }
 
 
@@ -475,7 +475,7 @@ void DVIReader::cmdFontNum0 (int fontnum) {
  *  @throw DVIException if font number is undefined */
 void DVIReader::cmdFontNum (int len) {
 	UInt32 fontnum = readUnsigned(len);
-	setFont(fontnum, SF_LONG);
+	setFont(fontnum, SetFontMode::SF_LONG);
 }
 
 

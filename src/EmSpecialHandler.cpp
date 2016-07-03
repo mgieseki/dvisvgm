@@ -129,7 +129,7 @@ static double read_length (InputReader &in) {
 	string unitstr;
 	if (isalpha(in.peek())) unitstr += in.get();
 	if (isalpha(in.peek())) unitstr += in.get();
-	Length::Unit unit = Length::PT;
+	Length::Unit unit = Length::Unit::PT;
 	try {
 		unit = Length::stringToUnit(unitstr);
 	}

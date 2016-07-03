@@ -60,15 +60,15 @@ CMap* CMapReader::read (std::istream& is, const string &name) {
 	try {
 		while (ir) {
 			Token token(ir);
-			if (token.type() == Token::TT_EOF)
+			if (token.type() == Token::Type::END)
 				break;
 			if (_inCMap) {
-				if (token.type() == Token::TT_OPERATOR)
+				if (token.type() == Token::Type::OPERATOR)
 					executeOperator(token.strvalue(), ir);
 				else
 					_tokens.push_back(token);
 			}
-			else if (token.type() == Token::TT_OPERATOR && token.strvalue() == "begincmap")
+			else if (token.type() == Token::Type::OPERATOR && token.strvalue() == "begincmap")
 				_inCMap = true;
 		}
 	}
@@ -153,7 +153,7 @@ static UInt32 parse_hexentry (InputReader &ir) {
 
 
 void CMapReader::op_begincidrange (InputReader &ir) {
-	if (!_tokens.empty() && _tokens.back().type() == Token::TT_NUMBER) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
@@ -171,7 +171,7 @@ void CMapReader::op_begincidrange (InputReader &ir) {
 
 
 void CMapReader::op_beginbfrange (InputReader &ir) {
-	if (!_tokens.empty() && _tokens.back().type() == Token::TT_NUMBER) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
@@ -187,7 +187,7 @@ void CMapReader::op_beginbfrange (InputReader &ir) {
 
 
 void CMapReader::op_beginbfchar (InputReader &ir) {
-	if (!_tokens.empty() && _tokens.back().type() == Token::TT_NUMBER) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
@@ -220,12 +220,12 @@ void CMapReader::Token::scan (InputReader &ir) {
 	}
 	ir.skipSpace();
 	if (ir.eof())
-		_type = TT_EOF;
+		_type = Type::END;
 	else if (ir.peek() == '/') { // PS name?
 		ir.get();
 		while (!strchr("[]{}<>", ir.peek()) && !isspace(ir.peek()))
 			_value += ir.get();
-		_type = TT_NAME;
+		_type = Type::NAME;
 	}
 	else if (ir.peek() == '(') { // string?
 		ir.get();
@@ -238,11 +238,11 @@ void CMapReader::Token::scan (InputReader &ir) {
 			_value += ir.get();
 		}
 		ir.get();  // skip ')'
-		_type = TT_STRING;
+		_type = Type::STRING;
 	}
 	else if (strchr("[]{}<>", ir.peek())) {  // PS delimiter
 		_value = ir.get();
-		_type = TT_DELIM;
+		_type = Type::DELIM;
 	}
 	else if (isdigit(ir.peek())) {  // number?
 		double val;
@@ -250,12 +250,12 @@ void CMapReader::Token::scan (InputReader &ir) {
 			ostringstream oss;
 			oss << val;
 			_value = oss.str();
-			_type = TT_NUMBER;
+			_type = Type::NUMBER;
 		}
 	}
 	else {
 		while (!strchr("[]{}<>", ir.peek()) && !isspace(ir.peek()))
 			_value += ir.get();
-		_type = TT_OPERATOR;
+		_type = Type::OPERATOR;
 	}
 }

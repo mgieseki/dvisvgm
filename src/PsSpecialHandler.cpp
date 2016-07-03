@@ -772,7 +772,7 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 	if (path.empty() || !_actions)
 		return;
 
-	Path::WindingRule windingRule = evenodd ? Path::WR_EVEN_ODD : Path::WR_NON_ZERO;
+	Path::WindingRule windingRule = evenodd ? Path::WindingRule::EVEN_ODD : Path::WindingRule::NON_ZERO;
 	path.setWindingRule(windingRule);
 
 	if (!_actions->getMatrix().isIdentity())
@@ -824,11 +824,11 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 
 	// collect common data relevant for all shading types
 	int shadingTypeID = static_cast<int>(params[0]);
-	ColorSpace colorSpace = Color::RGB_SPACE;
+	ColorSpace colorSpace = Color::ColorSpace::RGB;
 	switch (static_cast<int>(params[1])) {
-		case 1: colorSpace = Color::GRAY_SPACE; break;
-		case 3: colorSpace = Color::RGB_SPACE; break;
-		case 4: colorSpace = Color::CMYK_SPACE; break;
+		case 1: colorSpace = Color::ColorSpace::GRAY; break;
+		case 3: colorSpace = Color::ColorSpace::RGB; break;
+		case 4: colorSpace = Color::ColorSpace::CMYK; break;
 	}
 	VectorIterator<double> it = params;
 	it += 2;     // skip shading type and color space

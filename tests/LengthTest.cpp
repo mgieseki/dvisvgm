@@ -26,37 +26,37 @@ using namespace std;
 
 TEST(LengthTest, set1) {
 	Length len;
-	len.set(1, Length::PT);
+	len.set(1, Length::Unit::PT);
 	EXPECT_DOUBLE_EQ(len.pt(), 1);
 
-	len.set(72, Length::BP);
+	len.set(72, Length::Unit::BP);
 	EXPECT_DOUBLE_EQ(len.pt(), 72.27);
 	EXPECT_DOUBLE_EQ(len.bp(), 72);
 	EXPECT_DOUBLE_EQ(len.in(), 1);
 
-	len.set(1, Length::IN);
+	len.set(1, Length::Unit::IN);
 	EXPECT_DOUBLE_EQ(len.pt(), 72.27);
 
-	len.set(1, Length::PC);
+	len.set(1, Length::Unit::PC);
 	EXPECT_DOUBLE_EQ(len.pt(), 12);
 
-	len.set(2.54, Length::CM);
+	len.set(2.54, Length::Unit::CM);
 	EXPECT_DOUBLE_EQ(len.pt(), 72.27);
 	EXPECT_DOUBLE_EQ(len.cm(), 2.54);
 	EXPECT_DOUBLE_EQ(len.mm(), 25.4);
 
-	len.set(25.4, Length::MM);
+	len.set(25.4, Length::Unit::MM);
 	EXPECT_DOUBLE_EQ(len.pt(), 72.27);
 	EXPECT_DOUBLE_EQ(len.cm(), 2.54);
 	EXPECT_DOUBLE_EQ(len.mm(), 25.4);
 
-	len.set(1, Length::DD);
+	len.set(1, Length::Unit::DD);
 	EXPECT_DOUBLE_EQ(len.pt(), 1238.0/1157);
 
-	len.set(1, Length::CC);
+	len.set(1, Length::Unit::CC);
 	EXPECT_DOUBLE_EQ(len.dd(), 12.0);
 
-	len.set(1, Length::SP);
+	len.set(1, Length::Unit::SP);
 	EXPECT_DOUBLE_EQ(len.pt(), 1.0/65536);
 }
 
@@ -150,15 +150,15 @@ TEST(LengthTest, set3) {
 
 
 TEST(LengthTest, str2unit) {
-	EXPECT_EQ(Length::stringToUnit("pt"), Length::PT);
-	EXPECT_EQ(Length::stringToUnit("bp"), Length::BP);
-	EXPECT_EQ(Length::stringToUnit("in"), Length::IN);
-	EXPECT_EQ(Length::stringToUnit("cm"), Length::CM);
-	EXPECT_EQ(Length::stringToUnit("mm"), Length::MM);
-	EXPECT_EQ(Length::stringToUnit("pc"), Length::PC);
-	EXPECT_EQ(Length::stringToUnit("cc"), Length::CC);
-	EXPECT_EQ(Length::stringToUnit("dd"), Length::DD);
-	EXPECT_EQ(Length::stringToUnit("sp"), Length::SP);
+	EXPECT_EQ(Length::stringToUnit("pt"), Length::Unit::PT);
+	EXPECT_EQ(Length::stringToUnit("bp"), Length::Unit::BP);
+	EXPECT_EQ(Length::stringToUnit("in"), Length::Unit::IN);
+	EXPECT_EQ(Length::stringToUnit("cm"), Length::Unit::CM);
+	EXPECT_EQ(Length::stringToUnit("mm"), Length::Unit::MM);
+	EXPECT_EQ(Length::stringToUnit("pc"), Length::Unit::PC);
+	EXPECT_EQ(Length::stringToUnit("cc"), Length::Unit::CC);
+	EXPECT_EQ(Length::stringToUnit("dd"), Length::Unit::DD);
+	EXPECT_EQ(Length::stringToUnit("sp"), Length::Unit::SP);
 
 	ASSERT_THROW(Length::stringToUnit(""), UnitException);
 	ASSERT_THROW(Length::stringToUnit("CM"), UnitException);
@@ -167,15 +167,15 @@ TEST(LengthTest, str2unit) {
 
 
 TEST(LengthTest, unit2str) {
-	EXPECT_EQ(Length::unitToString(Length::PT), string("pt"));
-	EXPECT_EQ(Length::unitToString(Length::BP), string("bp"));
-	EXPECT_EQ(Length::unitToString(Length::IN), string("in"));
-	EXPECT_EQ(Length::unitToString(Length::CM), string("cm"));
-	EXPECT_EQ(Length::unitToString(Length::MM), string("mm"));
-	EXPECT_EQ(Length::unitToString(Length::PC), string("pc"));
-	EXPECT_EQ(Length::unitToString(Length::CC), string("cc"));
-	EXPECT_EQ(Length::unitToString(Length::DD), string("dd"));
-	EXPECT_EQ(Length::unitToString(Length::SP), string("sp"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::PT), string("pt"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::BP), string("bp"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::IN), string("in"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::CM), string("cm"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::MM), string("mm"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::PC), string("pc"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::CC), string("cc"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::DD), string("dd"));
+	EXPECT_EQ(Length::unitToString(Length::Unit::SP), string("sp"));
 
 	EXPECT_EQ(Length::unitToString(Length::Unit(300)), string("??"));
 }
