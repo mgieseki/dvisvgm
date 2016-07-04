@@ -1,3 +1,13 @@
+dvisvgm-1.16 (2016-07-04)
+- added support of XDV version 7 introduced by XeTeX 0.99995
+- added optional processing of papersize specials
+- added support of length units cc, dd, and sp
+- fixed unit conversion in computation of bounding boxes
+- fixed propagation of resolution value to the glyph vectorizer
+- fixed transformation of background rectangle
+- prevent processing of corrupted GF files
+- major refactorings of the DVI reader and the SVG backend
+
 dvisvgm-1.15.1 (2016-04-19)
 - added explicit encoding attribute to the XML declaration again (GH bug #54)
 - added support for AGL character names of the form 'uFOO' and 'uniFOO'

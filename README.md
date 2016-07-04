@@ -27,7 +27,7 @@ Short overview of the main features:
 * Approximates PostScript [color gradient fills](http://dvisvgm.bplaced.net/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
-* Evaluates color, emTeX, tpic, hyperref/HyperTeX, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
+* Evaluates color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
 * The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
 * _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](http://www.miktex.org). It is therefore available for a wide range of operating systems.
 
