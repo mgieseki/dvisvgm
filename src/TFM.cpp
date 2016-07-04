@@ -49,7 +49,7 @@ static inline double fix2double (FixWord fix) {
 }
 
 
-TFM::TFM (istream &is) {
+TFM::TFM (istream &is) : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0) {
    if (!is)
       return;
 	is.seekg(0);
@@ -110,25 +110,25 @@ void TFM::readParameters (StreamReader &reader, int np) {
 
 /** Returns the optimal space width between words (in PS point units). */
 double TFM::getSpace () const {
-	return fix2double(_params[1])*_designSize;
+	return _params.empty() ? 0 : fix2double(_params[1])*_designSize;
 }
 
 
 /** Returns the amount of glue stretching between words (in PS point units). */
 double TFM::getSpaceStretch () const {
-	return fix2double(_params[2])*_designSize;
+	return _params.empty() ? 0 : fix2double(_params[2])*_designSize;
 }
 
 
 /** Returns the amount of glue shrinking between words (in PS point units). */
 double TFM::getSpaceShrink () const {
-	return fix2double(_params[3])*_designSize;
+	return _params.empty() ? 0 : fix2double(_params[3])*_designSize;
 }
 
 
 /** Returns the size of one EM unit (in PS point units). */
 double TFM::getQuad () const {
-	return fix2double(_params[5])*_designSize;
+	return _params.empty() ? 0 : fix2double(_params[5])*_designSize;
 }
 
 
