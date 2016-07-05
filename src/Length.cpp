@@ -93,20 +93,22 @@ string Length::toString (Unit unit) const {
 }
 
 
-#define UNIT(c1, c2) ((c1 << 8)|c2)
+static constexpr int unit_id (int c1, int c2) {
+	return (c1 << 8) | c2;
+}
 
 Length::Unit Length::stringToUnit (const std::string &unitstr) {
 	if (unitstr.length() == 2) {
-		switch (UNIT(unitstr[0], unitstr[1])) {
-			case UNIT('p','t'): return Unit::PT;
-			case UNIT('b','p'): return Unit::BP;
-			case UNIT('i','n'): return Unit::IN;
-			case UNIT('c','m'): return Unit::CM;
-			case UNIT('m','m'): return Unit::MM;
-			case UNIT('p','c'): return Unit::PC;
-			case UNIT('d','d'): return Unit::DD;
-			case UNIT('c','c'): return Unit::CC;
-			case UNIT('s','p'): return Unit::SP;
+		switch (unit_id(unitstr[0], unitstr[1])) {
+			case unit_id('p','t'): return Unit::PT;
+			case unit_id('b','p'): return Unit::BP;
+			case unit_id('i','n'): return Unit::IN;
+			case unit_id('c','m'): return Unit::CM;
+			case unit_id('m','m'): return Unit::MM;
+			case unit_id('p','c'): return Unit::PC;
+			case unit_id('d','d'): return Unit::DD;
+			case unit_id('c','c'): return Unit::CC;
+			case unit_id('s','p'): return Unit::SP;
 		}
 	}
 	throw UnitException(string("invalid length unit: ")+unitstr);
