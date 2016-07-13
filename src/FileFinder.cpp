@@ -193,23 +193,22 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		return 0;
 	}
 #endif
-	static std::map<std::string, kpse_file_format_type> types;
-	if (types.empty()) {
-		types["tfm"]  = kpse_tfm_format;
-		types["pfb"]  = kpse_type1_format;
-		types["vf"]   = kpse_vf_format;
-		types["mf"]   = kpse_mf_format;
-		types["ttc"]  = kpse_truetype_format;
-		types["ttf"]  = kpse_truetype_format;
-		types["otf"]  = kpse_opentype_format;
-		types["map"]  = kpse_fontmap_format;
-		types["cmap"] = kpse_cmap_format;
-		types["sty"]  = kpse_tex_format;
-		types["enc"]  = kpse_enc_format;
-		types["pro"]  = kpse_tex_ps_header_format;
-		types["sfd"]  = kpse_sfd_format;
-	}
-	std::map<std::string, kpse_file_format_type>::iterator it = types.find(ext.c_str());
+	static std::map<std::string, kpse_file_format_type> types = {
+		{"tfm",  kpse_tfm_format},
+		{"pfb",  kpse_type1_format},
+		{"vf",   kpse_vf_format},
+		{"mf",   kpse_mf_format},
+		{"ttc",  kpse_truetype_format},
+		{"ttf",  kpse_truetype_format},
+		{"otf",  kpse_opentype_format},
+		{"map",  kpse_fontmap_format},
+		{"cmap", kpse_cmap_format},
+		{"sty",  kpse_tex_format},
+		{"enc",  kpse_enc_format},
+		{"pro",  kpse_tex_ps_header_format},
+		{"sfd",  kpse_sfd_format},
+	};
+	auto it = types.find(ext.c_str());
 	if (it == types.end())
 		return 0;
 
