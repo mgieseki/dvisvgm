@@ -18,11 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <xxhash.h>
+#include <algorithm>
 #include <cctype>
 #include <cstddef>
 #include <iomanip>
 #include <sstream>
+#include <xxhash.h>
 #include "Unicode.h"
 
 using namespace std;
@@ -173,16 +174,13 @@ int32_t Unicode::aglNameToCodepoint (const string &name) {
 		return cp;
 
 	uint32_t hash = XXH32(&name[0], name.length(), 0);
-	int left=0;
-	int right=sizeof(hash2unicode)/sizeof(Hash2Unicode)-1;
-	while (left <= right) {
-		int mid = left+(right-left)/2;
-		if (hash == hash2unicode[mid].hash)
-			return hash2unicode[mid].codepoint;
-		if (hash < hash2unicode[mid].hash)
-			right = mid-1;
-		else
-			left = mid+1;
-	}
+	const HashCodepointPair cmppair = {hash, 0};
+	auto it = lower_bound(hash2unicode.begin(), hash2unicode.end(), cmppair,
+		[](const HashCodepointPair &p1, const HashCodepointPair &p2) {
+			return p1.hash < p2.hash;
+		}
+	);
+	if (it != hash2unicode.end() && it->hash == hash)
+		return it->codepoint;
 	return 0;
 }

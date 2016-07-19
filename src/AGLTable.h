@@ -24,10 +24,15 @@
  * The character mapping is derived from the Adobe Glyph List (AGL):
  * https://github.com/adobe-type-tools/agl-aglfn
  * http://tug.ctan.org/macros/latex/contrib/pdfx/glyphtounicode-cmr.tex */
-static struct Hash2Unicode {
+
+#include <array>
+
+struct HashCodepointPair {
 	uint32_t hash;
 	uint32_t codepoint;
-} hash2unicode[] = {
+};
+
+std::array<HashCodepointPair, 4410> hash2unicode = {{
 	{0x001cf4a9, 0x0118}, // Eogonek
 	{0x003b11fb, 0x055f}, // abbreviationmarkarmenian
 	{0x0050a316, 0x0444}, // afii10086
@@ -4438,5 +4443,4 @@ static struct Hash2Unicode {
 	{0xffce1162, 0xf734}, // fouroldstyle
 	{0xffe38169, 0x043f}, // pecyrillic
 	{0xfffadc30, 0x2568}, // SF460000
-};
-
+}};

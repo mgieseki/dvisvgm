@@ -12,7 +12,7 @@ def extract_hashes (fname):
 		lines = f.readlines()
 		found = False
 		for line in lines:
-			if line == '} hash2unicode[] = {\n':
+			if ' hash2unicode = {{\n' in line:
 				found = True
 			elif found:
 				match = re.search(r'^\s*{(0x[0-9a-f]{8}),\s*0x[0-9a-f]{4}}, //\s*(.+)\s*$', line)

@@ -20,6 +20,7 @@
 
 #define _USE_MATH_DEFINES
 #include <config.h>
+#include <array>
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -41,12 +42,6 @@ const Color Color::TRANSPARENT(uint32_t(0xff000000));
 static inline uint8_t double_to_byte (double v) {
 	v = max(0.0, min(1.0, v));
 	return uint8_t(floor(255*v+0.5));
-}
-
-
-static void tolower (string &str) {
-	for (size_t i=0; i < str.length(); i++)
-		str[i] = tolower(str[i]);
 }
 
 
@@ -79,12 +74,13 @@ bool Color::setPSName (string name, bool case_sensitive) {
 			p++;
 		return (*p == 0 && _rgb <= 0xFFFFFF);
 	}
-	// converted color constants from color.pro
-	static const struct ColorConstant {
+
+	struct ColorConstant {
 		const char *name;
 		const uint32_t rgb;
-	}
-	constants[] = {
+	};
+	// converted color constants from color.pro
+	static const array<ColorConstant, 68> constants = {{
 		{"Apricot",        0xFFAD7A},
 		{"Aquamarine",     0x2DFFB2},
 		{"Bittersweet",    0xC10200},
@@ -153,31 +149,28 @@ bool Color::setPSName (string name, bool case_sensitive) {
 		{"Yellow",         0xFFFF00},
 		{"YellowGreen",    0x8EFF42},
 		{"YellowOrange",   0xFF9300},
-	};
-	if (!case_sensitive) {
-		tolower(name);
-		for (size_t i=0; i < sizeof(constants)/sizeof(ColorConstant); i++) {
-			string cmpname = constants[i].name;
-			tolower(cmpname);
-			if (name == cmpname) {
-				_rgb = constants[i].rgb;
-				return true;
+	}};
+	if (case_sensitive) {
+		const ColorConstant cmppair = {name.c_str(), 0};
+		auto it = lower_bound(constants.begin(), constants.end(), cmppair,
+			[](const ColorConstant &c1, const ColorConstant &c2) {
+				return strcmp(c1.name, c2.name) < 0;
 			}
+		);
+		if (it != constants.end() && it->name == name) {
+			_rgb = it->rgb;
+			return true;
 		}
-		return false;
 	}
-
-	// binary search
-	int first=0, last=sizeof(constants)/sizeof(ColorConstant)-1;
-	while (first <= last) {
-		int mid = first+(last-first)/2;
-		int cmp = strcmp(constants[mid].name, name.c_str());
-		if (cmp > 0)
-			last = mid-1;
-		else if (cmp < 0)
-			first = mid+1;
-		else {
-			_rgb = constants[mid].rgb;
+	else {
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		auto it = find_if(constants.begin(), constants.end(), [&](const ColorConstant &cc) {
+			string cmpname = cc.name;
+			transform(cmpname.begin(), cmpname.end(), cmpname.begin(), ::tolower);
+			return name == cmpname;
+		});
+		if (it != constants.end()) {
+			_rgb = it->rgb;
 			return true;
 		}
 	}
@@ -250,10 +243,11 @@ string Color::rgbString () const {
  *  define a name for the current color. */
 string Color::svgColorString (bool rgbonly) const {
 	if (!rgbonly) {
-		static const struct ColorName {
+		struct ColorName {
 			uint32_t rgb;
 			const char *name;
-		} colornames[] = {
+		};
+		static const array<ColorName, 138> colornames = {{
 			{0x000000, "black"},
 			{0x000080, "navy"},
 			{0x00008b, "darkblue"},
@@ -392,18 +386,13 @@ string Color::svgColorString (bool rgbonly) const {
 			{0xffffe0, "lightyellow"},
 			{0xfffff0, "ivory"},
 			{0xffffff, "white"}
-		};
-		int left=0;
-		int right=sizeof(colornames)/sizeof(ColorName)-1;
-		while (left <= right) {
-			int mid = left+(right-left)/2;
-			if (colornames[mid].rgb == _rgb)
-				return colornames[mid].name;
-			if (colornames[mid].rgb > _rgb)
-				right = mid-1;
-			else
-				left = mid+1;
-		}
+		}};
+		ColorName cmppair = {_rgb, 0};
+		auto it = lower_bound(colornames.begin(), colornames.end(), cmppair, [](const ColorName &c1, const ColorName &c2) {
+			return c1.rgb < c2.rgb;
+		});
+		if (it != colornames.end() && it->rgb == _rgb)
+			return it->name;
 	}
 	return rgbString();
 }
