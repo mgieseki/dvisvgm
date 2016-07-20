@@ -34,15 +34,10 @@ using namespace std;
 
 
 DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvireader(&dvisvg), _bgcolor(Color::TRANSPARENT), _boxes(0)
+	: _svg(svg), _dvireader(&dvisvg), _bgcolor(Color::TRANSPARENT)
 {
 	_currentFontNum = -1;
 	_pageCount = 0;
-}
-
-
-DVIToSVGActions::~DVIToSVGActions () {
-	delete _boxes;
 }
 
 
@@ -219,8 +214,7 @@ void DVIToSVGActions::beginPage (unsigned pageno, const vector<int32_t>&) {
 	SpecialManager::instance().notifyBeginPage(pageno, *this);
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
-	if (_boxes)
-		_boxes->clear();
+	_boxes.clear();
 }
 
 
@@ -250,10 +244,8 @@ void DVIToSVGActions::setBgColor (const Color &color) {
 
 void DVIToSVGActions::embed(const BoundingBox &bbox) {
 	_bbox.embed(bbox);
-	if (_boxes) {
-		for (auto &strboxpair : *_boxes)
-			strboxpair.second.embed(bbox);
-	}
+	for (auto &strboxpair : _boxes)
+		strboxpair.second.embed(bbox);
 }
 
 
@@ -262,16 +254,13 @@ void DVIToSVGActions::embed(const DPair& p, double r) {
 		_bbox.embed(p);
 	else
 		_bbox.embed(p, r);
-	if (_boxes)
-		for (auto &strboxpair : *_boxes)
-			strboxpair.second.embed(p, r);
+	for (auto &strboxpair : _boxes)
+		strboxpair.second.embed(p, r);
 }
 
 
 BoundingBox& DVIToSVGActions::bbox(const string& name, bool reset) {
-	if (!_boxes)
-		_boxes = new BoxMap;
-	BoundingBox &box = (*_boxes)[name];
+	BoundingBox &box = _boxes[name];
 	if (reset)
 		box = BoundingBox();
 	return box;

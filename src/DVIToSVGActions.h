@@ -44,7 +44,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
-		~DVIToSVGActions ();
 		void reset ();
 		void setChar (double x, double y, unsigned c, bool vertical, const Font &f) override;
 		void setRule (double x, double y, double height, double width) override;
@@ -94,7 +93,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions
 		mutable CharMap _usedChars;
 		FontSet _usedFonts;
 		Color _bgcolor;
-		BoxMap *_boxes;
+		BoxMap _boxes;
 };
 
 
