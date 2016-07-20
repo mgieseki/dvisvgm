@@ -32,8 +32,8 @@ TEST(XMLNodeTest, appendElement) {
 	root.append(new XMLElementNode("child2"));
 	EXPECT_EQ(root.children().size(), 2);
 	EXPECT_FALSE(root.empty());
-	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front());
-	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back());
+	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front().get());
+	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back().get());
 	EXPECT_TRUE(child1 != 0);
 	EXPECT_TRUE(child2 != 0);
 	EXPECT_EQ(string(child1->getName()), "child1");
@@ -48,8 +48,8 @@ TEST(XMLNodeTest, prependElement) {
 	root.prepend(new XMLElementNode("child1"));
 	root.prepend(new XMLElementNode("child2"));
 	EXPECT_EQ(root.children().size(), 2);
-	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front());
-	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back());
+	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front().get());
+	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back().get());
 	EXPECT_TRUE(child1 != 0);
 	EXPECT_TRUE(child2 != 0);
 	EXPECT_EQ(string(child1->getName()), "child2");
@@ -61,31 +61,31 @@ TEST(XMLNodeTest, appendText) {
 	XMLElementNode root("root");
 	root.append(new XMLTextNode("first string"));
 	EXPECT_EQ(root.children().size(), 1);
-	XMLTextNode *lastChild = dynamic_cast<XMLTextNode*>(root.children().back());
+	XMLTextNode *lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
 	EXPECT_TRUE(lastChild != 0);
 	EXPECT_EQ(lastChild->getText(), "first string");
 
 	root.append(new XMLTextNode(",second string"));
 	EXPECT_EQ(root.children().size(), 1);
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back());
+	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
 	EXPECT_TRUE(lastChild != 0);
 	EXPECT_EQ(lastChild->getText(), "first string,second string");
 
 	root.append(",third string");
 	EXPECT_EQ(root.children().size(), 1);
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back());
+	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
 	EXPECT_TRUE(lastChild != 0);
 	EXPECT_EQ(lastChild->getText(), "first string,second string,third string");
 
 	root.append(new XMLElementNode("separator"));
 	root.append(",fourth string");
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back());
+	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
 	EXPECT_TRUE(lastChild != 0);
 	EXPECT_EQ(lastChild->getText(), ",fourth string");
 
 	root.append(new XMLElementNode("separator"));
 	root.append(new XMLTextNode(",fifth string"));
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back());
+	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
 	EXPECT_TRUE(lastChild != 0);
 	EXPECT_EQ(lastChild->getText(), ",fifth string");
 
@@ -98,19 +98,19 @@ TEST(XMLNodeTest, prependText) {
 	XMLElementNode root("root");
 	root.prepend(new XMLTextNode("first string"));
 	EXPECT_EQ(root.children().size(), 1);
-	XMLTextNode *firstChild = dynamic_cast<XMLTextNode*>(root.children().front());
+	XMLTextNode *firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
 	EXPECT_TRUE(firstChild != 0);
 	EXPECT_EQ(firstChild->getText(), "first string");
 
 	root.prepend(new XMLTextNode("second string,"));
 	EXPECT_EQ(root.children().size(), 1);
-	firstChild = dynamic_cast<XMLTextNode*>(root.children().front());
+	firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
 	EXPECT_TRUE(firstChild != 0);
 	EXPECT_EQ(firstChild->getText(), "second string,first string");
 
 	root.prepend(new XMLElementNode("separator"));
 	root.prepend(new XMLTextNode("third string,"));
-	firstChild = dynamic_cast<XMLTextNode*>(root.children().front());
+	firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
 	EXPECT_TRUE(firstChild != 0);
 	EXPECT_EQ(firstChild->getText(), "third string,");
 }
@@ -160,13 +160,13 @@ TEST(XMLNodeTest, insertBefore) {
 	EXPECT_EQ(root.children().size(), 2);
 	EXPECT_TRUE(root.insertBefore(new XMLElementNode("child3"), child1));
 	EXPECT_EQ(root.children().size(), 3);
-	XMLElementNode *child = dynamic_cast<XMLElementNode*>(root.children().front());
+	XMLElementNode *child = dynamic_cast<XMLElementNode*>(root.children().front().get());
 	EXPECT_EQ(string(child->getName()), "child3");
 	EXPECT_TRUE(root.insertBefore(new XMLElementNode("child4"), child2));
 	const char *names[] = {"child3", "child1", "child4", "child2"};
 	const char **p = names;
-	for (list<XMLNode*>::const_iterator it = root.children().begin(); it != root.children().end(); ++it)
-		EXPECT_EQ(dynamic_cast<XMLElementNode*>(*it)->getName(), *p++);
+	for (const auto &node : root.children())
+		EXPECT_EQ(dynamic_cast<XMLElementNode*>(node.get())->getName(), *p++);
 }
 
 
@@ -185,8 +185,8 @@ TEST(XMLNodeTest, insertAfter) {
 	EXPECT_EQ(root.children().size(), 4);
 	const char *names[] = {"child1", "child3", "child2", "child4"};
 	const char **p = names;
-	for (list<XMLNode*>::const_iterator it = root.children().begin(); it != root.children().end(); ++it)
-		EXPECT_EQ(dynamic_cast<XMLElementNode*>(*it)->getName(), *p++);
+	for (const auto &node : root.children())
+		EXPECT_EQ(dynamic_cast<XMLElementNode*>(node.get())->getName(), *p++);
 }
 
 
@@ -210,24 +210,24 @@ TEST(XMLNodeTest, getDescendants) {
 	{
 		XMLElementNode *nodes[] = {child1, child3, child4};
 		XMLElementNode **p = nodes;
-		for (vector<XMLElementNode*>::iterator it = elements.begin(); it != elements.end(); ++it)
-			EXPECT_EQ(*it, *p++);
+		for (const XMLElementNode *elem : elements)
+			EXPECT_EQ(elem, *p++);
 	}{
 		elements.clear();
 		root.getDescendants("child", "attr", elements);
 		EXPECT_EQ(elements.size(), 2);
 		XMLElementNode *nodes[] = {child1, child3};
 		XMLElementNode **p = nodes;
-		for (vector<XMLElementNode*>::iterator it = elements.begin(); it != elements.end(); ++it)
-			EXPECT_EQ(*it, *p++);
+		for (const XMLElementNode *elem : elements)
+			EXPECT_EQ(elem, *p++);
 	}{
 		elements.clear();
 		root.getDescendants(0, "attr", elements);
 		EXPECT_EQ(elements.size(), 3);
 		XMLElementNode *nodes[] = {child1, child2, child3};
 		XMLElementNode **p = nodes;
-		for (vector<XMLElementNode*>::iterator it = elements.begin(); it != elements.end(); ++it)
-			EXPECT_EQ(*it, *p++);
+		for (const XMLElementNode *elem : elements)
+			EXPECT_EQ(elem, *p++);
 	}
 }
 

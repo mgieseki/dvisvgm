@@ -21,22 +21,22 @@
 #ifndef DVISVGM_XMLDOCUMENT_H
 #define DVISVGM_XMLDOCUMENT_H
 
+#include <memory>
 #include "XMLNode.h"
 
 class XMLDocument
 {
 	public:
 		XMLDocument (XMLElementNode *root=0);
-		~XMLDocument ();
 		void clear ();
 		void append (XMLNode *node);
 		void setRootNode (XMLElementNode *root);
-		const XMLElementNode* getRootElement () const {return _rootElement;}
+		const XMLElementNode* getRootElement () const {return _rootElement.get();}
 		std::ostream& write (std::ostream &os) const;
 
 	private:
-		std::list<XMLNode*> _nodes;
-		XMLElementNode *_rootElement;
+		std::list<std::unique_ptr<XMLNode>> _nodes;
+		std::unique_ptr<XMLElementNode> _rootElement;
 };
 
 #endif

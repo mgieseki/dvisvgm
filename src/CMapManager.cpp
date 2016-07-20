@@ -30,12 +30,6 @@
 using namespace std;
 
 
-CMapManager::~CMapManager () {
-	for (auto &entry : _cmaps)
-		delete entry.second;
-}
-
-
 CMapManager& CMapManager::instance () {
 	static CMapManager cmm;
 	return cmm;
@@ -46,7 +40,7 @@ CMapManager& CMapManager::instance () {
 CMap* CMapManager::lookup (const string &name) {
 	CMaps::iterator it = _cmaps.find(name);
 	if (it != _cmaps.end())
-		return it->second;
+		return it->second.get();
 
 	if (_includedCMaps.find(name) != _includedCMaps.end()) {
 		_level = 0;
@@ -63,7 +57,7 @@ CMap* CMapManager::lookup (const string &name) {
 	else if (name == "unicode")
 		cmap = new UnicodeCMap;
 	if (cmap) {
-		_cmaps[name] = cmap;
+		_cmaps[name].reset(cmap);
 		return cmap;
 	}
 	// Load cmap data of file <name> and also process all cmaps referenced by operator "usecmap".
@@ -78,7 +72,7 @@ CMap* CMapManager::lookup (const string &name) {
 			_level = 1;
 			Message::wstream(true) << "CMap file '" << name << "' not found\n";
 		}
-		_cmaps[name] = cmap;
+		_cmaps[name].reset(cmap);
 	}
 	catch (const CMapReaderException &e) {
 		Message::estream(true) << "CMap file " << name << ": " << e.what() << "\n";

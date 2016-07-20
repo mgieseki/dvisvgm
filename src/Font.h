@@ -22,6 +22,7 @@
 #define DVISVGM_FONT_H
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 #include "Character.h"
@@ -170,7 +171,6 @@ class VirtualFont : public virtual Font {
 class TFMFont : public virtual Font {
 	public:
 		TFMFont (std::string name, uint32_t checksum, double dsize, double ssize);
-		~TFMFont ();
 		const FontMetrics* getMetrics () const override;
 		std::string name () const override  {return _fontname;}
 		double designSize () const override {return _dsize;}
@@ -182,7 +182,7 @@ class TFMFont : public virtual Font {
 		bool verifyChecksums () const override;
 
 	private:
-		mutable FontMetrics *_metrics;
+		mutable std::unique_ptr<FontMetrics> _metrics;
 		std::string _fontname;
 		uint32_t _checksum; ///< cheksum to be compared with TFM checksum
 		double _dsize;    ///< design size in PS point units

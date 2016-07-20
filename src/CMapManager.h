@@ -22,6 +22,7 @@
 #define DVISVGM_CMAPMANAGER_H
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include "CharMapID.h"
@@ -33,9 +34,8 @@ class PhysicalFont;
 
 class CMapManager
 {
-	typedef std::map<std::string, CMap*> CMaps;
+	typedef std::map<std::string, std::unique_ptr<CMap>> CMaps;
 	public:
-		~CMapManager ();
 		CMap* lookup (const std::string &name);
 		const CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);
 		static CMapManager& instance ();

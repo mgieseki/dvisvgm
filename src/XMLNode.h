@@ -23,6 +23,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -40,12 +41,13 @@ class XMLNode
 
 class XMLElementNode : public XMLNode
 {
-	typedef std::map<std::string,std::string> AttribMap;
-	typedef std::list<XMLNode*> ChildList;
+	public:
+		typedef std::map<std::string,std::string> AttribMap;
+		typedef std::list<std::unique_ptr<XMLNode>> ChildList;
+
 	public:
 		XMLElementNode (const std::string &name);
 		XMLElementNode (const XMLElementNode &node);
-		~XMLElementNode ();
 		XMLElementNode* clone () const override {return new XMLElementNode(*this);}
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
@@ -53,7 +55,7 @@ class XMLElementNode : public XMLNode
 		void append (XMLNode *child);
 		void append (const std::string &str);
 		void prepend (XMLNode *child);
-		void remove (XMLNode *child)                 {_children.remove(child);}
+		void remove (const XMLNode *child);
 		bool insertAfter (XMLNode *child, XMLNode *sibling);
 		bool insertBefore (XMLNode *child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
@@ -61,9 +63,9 @@ class XMLElementNode : public XMLNode
 		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElementNode*> &descendants) const;
 		XMLElementNode* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
 		std::ostream& write (std::ostream &os) const override;
-		bool empty () const                          {return _children.empty();}
-		const std::list<XMLNode*>& children () const {return _children;}
-		const std::string& getName () const          {return _name;}
+		bool empty () const                  {return _children.empty();}
+		const ChildList& children () const   {return _children;}
+		const std::string& getName () const  {return _name;}
 
 	private:
 		std::string _name;     // element name (<name a1="v1" .. an="vn">...</name>)

@@ -99,13 +99,8 @@ const char* Font::filename () const {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 TFMFont::TFMFont (string name, uint32_t cs, double ds, double ss)
-	: _metrics(0), _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
+	: _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
 {
-}
-
-
-TFMFont::~TFMFont () {
-	delete _metrics;
 }
 
 
@@ -114,18 +109,18 @@ TFMFont::~TFMFont () {
 const FontMetrics* TFMFont::getMetrics () const {
 	if (!_metrics) {
 		try {
-			_metrics = FontMetrics::read(_fontname.c_str());
+			_metrics.reset(FontMetrics::read(_fontname.c_str()));
 			if (!_metrics) {
-				_metrics = new NullFontMetric;
+				_metrics.reset(new NullFontMetric);
 				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
 			}
 		}
 		catch (FontMetricException &e) {
-			_metrics = new NullFontMetric;
+			_metrics.reset(new NullFontMetric);
 			Message::wstream(true) << e.what() << " in " << _fontname << ".tfm\n";
 		}
 	}
-	return _metrics;
+	return _metrics.get();
 }
 
 

@@ -21,9 +21,10 @@
 #include <config.h>
 
 #ifdef MIKTEX
+	#include <memory>
 	#include "MessageException.h"
 	#include "MiKTeXCom.h"
-	static MiKTeXCom *miktex=0;
+	static std::unique_ptr<MiKTeXCom> miktex;
 #else
 	#ifdef KPSE_CXX_UNSAFE
 	extern "C" {
@@ -69,7 +70,7 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 	_mktex_enabled = enable_mktexmf;
 	addLookupDir(".");  // always lookup files in the current working directory
 #ifdef MIKTEX
-	miktex = new MiKTeXCom;
+	miktex.reset(new MiKTeXCom);
 #else
 	kpse_set_program_name(argv0, progname);
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
@@ -87,12 +88,6 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 /** Cleans up the FileFinder. This function must be called before leaving the
  *  application's main() function. */
 void FileFinder::finish () {
-#ifdef MIKTEX
-	if (miktex) {
-		delete miktex;
-		miktex = 0;
-	}
-#endif
 	_initialized = false;
 }
 
