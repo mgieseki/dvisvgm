@@ -20,9 +20,9 @@
 
 #include <config.h>
 #include <algorithm>
-#include "BgColorSpecialHandler.h"
-#include "ColorSpecialHandler.h"
-#include "SpecialActions.h"
+#include "BgColorSpecialHandler.hpp"
+#include "ColorSpecialHandler.hpp"
+#include "SpecialActions.hpp"
 
 using namespace std;
 

@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
-#include "Bezier.h"
-#include "PathClipper.h"
+#include "Bezier.hpp"
+#include "PathClipper.hpp"
 
 using namespace std;
 using namespace ClipperLib;

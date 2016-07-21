@@ -22,9 +22,8 @@
 #include <iostream>
 #include <set>
 #include <unistd.h>
-#include "Directory.h"
-#include "FileSystem.h"
-#include "macros.h"
+#include "Directory.hpp"
+#include "FileSystem.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

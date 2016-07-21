@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Unicode.h"
+#include "Unicode.hpp"
 
 using namespace std;
 

@@ -20,11 +20,9 @@
 
 #include <config.h>
 #include <sstream>
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "PageRanges.h"
-
-#include "macros.h"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "PageRanges.hpp"
 
 using namespace std;
 

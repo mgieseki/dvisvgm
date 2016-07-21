@@ -21,10 +21,10 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include "BoundingBox.h"
-#include "Matrix.h"
-#include "XMLNode.h"
-#include "XMLString.h"
+#include "BoundingBox.hpp"
+#include "Matrix.hpp"
+#include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

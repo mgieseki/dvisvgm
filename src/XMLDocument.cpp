@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include "XMLDocument.h"
+#include "XMLDocument.hpp"
 
 using namespace std;
 

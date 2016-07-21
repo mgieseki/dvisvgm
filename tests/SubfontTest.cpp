@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "FileFinder.h"
-#include "Subfont.h"
+#include "FileFinder.hpp"
+#include "Subfont.hpp"
 
 using namespace std;
 

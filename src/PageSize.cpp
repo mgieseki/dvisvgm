@@ -23,7 +23,7 @@
 #include <cctype>
 #include <cmath>
 #include <sstream>
-#include "PageSize.h"
+#include "PageSize.hpp"
 
 using namespace std;
 

@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "XMLString.h"
+#include "XMLString.hpp"
 
 using namespace std;
 

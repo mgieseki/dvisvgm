@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "VectorIterator.h"
+#include "VectorIterator.hpp"
 
 using namespace std;
 

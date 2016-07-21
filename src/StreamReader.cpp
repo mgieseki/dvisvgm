@@ -19,9 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
-#include "CRC32.h"
-#include "StreamReader.h"
-#include "macros.h"
+#include "CRC32.hpp"
+#include "StreamReader.hpp"
 
 using namespace std;
 

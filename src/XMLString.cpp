@@ -23,8 +23,8 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
-#include "Unicode.h"
-#include "XMLString.h"
+#include "Unicode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

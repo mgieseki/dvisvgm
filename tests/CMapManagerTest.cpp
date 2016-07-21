@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "CMap.h"
-#include "CMapManager.h"
-#include "FileFinder.h"
-#include "Message.h"
+#include "CMap.hpp"
+#include "CMapManager.hpp"
+#include "FileFinder.hpp"
+#include "Message.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

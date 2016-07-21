@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "PSInterpreter.h"
+#include "PSInterpreter.hpp"
 
 const char *PSInterpreter::PSDEFS =
 "<</Install{matrix setmatrix}/HWResolution[72 72]/PageSize[10000 10000]/Imaging"

@@ -22,8 +22,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "CRC32.h"
-#include "StreamReader.h"
+#include "CRC32.hpp"
+#include "StreamReader.hpp"
 
 using namespace std;
 

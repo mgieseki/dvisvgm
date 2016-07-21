@@ -21,8 +21,8 @@
 #include <gtest/gtest.h>
 #include <cstring>
 #include <sstream>
-#include "InputBuffer.h"
-#include "InputReader.h"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
 
 using std::istringstream;
 

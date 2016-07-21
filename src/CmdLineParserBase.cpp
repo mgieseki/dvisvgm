@@ -22,10 +22,10 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
-#include "CmdLineParserBase.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "Message.h"
+#include "CmdLineParserBase.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

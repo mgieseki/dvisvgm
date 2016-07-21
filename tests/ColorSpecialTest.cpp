@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "ColorSpecialHandler.h"
-#include "SpecialActions.h"
+#include "ColorSpecialHandler.hpp"
+#include "SpecialActions.hpp"
 
 class ColorSpecialTest : public ::testing::Test
 {

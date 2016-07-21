@@ -21,9 +21,9 @@
 #include <config.h>
 #include <fstream>
 #include <potracelib.h>
-#include "GFTracer.h"
-#include "Glyph.h"
-#include "Message.h"
+#include "GFTracer.hpp"
+#include "Glyph.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

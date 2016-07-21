@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Bezier.h"
+#include "Bezier.hpp"
 
 using namespace std;
 

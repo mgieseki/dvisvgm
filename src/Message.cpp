@@ -24,8 +24,8 @@
 #include <cstring>
 #include <iostream>
 #include <map>
-#include "Message.h"
-#include "Terminal.h"
+#include "Message.hpp"
+#include "Terminal.hpp"
 
 using namespace std;
 

@@ -23,7 +23,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "JFM.h"
+#include "JFM.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

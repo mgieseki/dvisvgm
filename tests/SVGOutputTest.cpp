@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "FileSystem.h"
-#include "MessageException.h"
-#include "SVGOutput.h"
-#include "ZLibOutputStream.h"
+#include "FileSystem.hpp"
+#include "MessageException.hpp"
+#include "SVGOutput.hpp"
+#include "ZLibOutputStream.hpp"
 
 using namespace std;
 

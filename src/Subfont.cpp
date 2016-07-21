@@ -23,9 +23,9 @@
 #include <cstring>
 #include <fstream>
 #include <limits>
-#include "FileFinder.h"
-#include "Message.h"
-#include "Subfont.h"
+#include "FileFinder.hpp"
+#include "Message.hpp"
+#include "Subfont.hpp"
 
 
 using namespace std;

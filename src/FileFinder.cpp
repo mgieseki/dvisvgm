@@ -22,8 +22,8 @@
 
 #ifdef MIKTEX
 	#include <memory>
-	#include "MessageException.h"
-	#include "MiKTeXCom.h"
+	#include "MessageException.hpp"
+	#include "MiKTeXCom.hpp"
 	static std::unique_ptr<MiKTeXCom> miktex;
 #else
 	#ifdef KPSE_CXX_UNSAFE
@@ -39,11 +39,11 @@
 #include <fstream>
 #include <map>
 #include <set>
-#include "FileFinder.h"
-#include "FileSystem.h"
-#include "FontMap.h"
-#include "Message.h"
-#include "Process.h"
+#include "FileFinder.hpp"
+#include "FileSystem.hpp"
+#include "FontMap.hpp"
+#include "Message.hpp"
+#include "Process.hpp"
 
 // ---------------------------------------------------
 

@@ -6,8 +6,8 @@
 
 #include <config.h>
 #include <cstdio>
-#include "InputReader.h"
-#include "CommandLine.h"
+#include "InputReader.hpp"
+#include "CommandLine.hpp"
 
 using namespace std;
 

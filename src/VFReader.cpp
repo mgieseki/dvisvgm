@@ -20,11 +20,11 @@
 
 #include <config.h>
 #include <sstream>
-#include "FixWord.h"
-#include "Font.h"
-#include "Length.h"
-#include "VFActions.h"
-#include "VFReader.h"
+#include "FixWord.hpp"
+#include "Font.hpp"
+#include "Length.hpp"
+#include "VFActions.hpp"
+#include "VFReader.hpp"
 
 using namespace std;
 

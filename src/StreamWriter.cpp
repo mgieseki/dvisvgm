@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
-#include "CRC32.h"
-#include "StreamWriter.h"
+#include "CRC32.hpp"
+#include "StreamWriter.hpp"
 
 using namespace std;
 

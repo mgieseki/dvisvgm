@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "CMap.h"
+#include "CMap.hpp"
 
 using namespace std;
 

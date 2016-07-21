@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "GraphicsPath.h"
+#include "GraphicsPath.hpp"
 
 using std::ostringstream;
 

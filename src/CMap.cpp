@@ -21,9 +21,9 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include "CMap.h"
-#include "CMapManager.h"
-#include "FileFinder.h"
+#include "CMap.hpp"
+#include "CMapManager.hpp"
+#include "FileFinder.hpp"
 
 using namespace std;
 

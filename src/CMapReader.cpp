@@ -21,11 +21,11 @@
 #include <config.h>
 #include <fstream>
 #include <sstream>
-#include "CMap.h"
-#include "CMapManager.h"
-#include "CMapReader.h"
-#include "FileFinder.h"
-#include "InputReader.h"
+#include "CMap.hpp"
+#include "CMapManager.hpp"
+#include "CMapReader.hpp"
+#include "FileFinder.hpp"
+#include "InputReader.hpp"
 
 using namespace std;
 

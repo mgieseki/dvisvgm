@@ -20,9 +20,9 @@
 
 #include <config.h>
 #include <fstream>
-#include "FileFinder.h"
-#include "FontMetrics.h"
-#include "JFM.h"
+#include "FileFinder.hpp"
+#include "FontMetrics.hpp"
+#include "JFM.hpp"
 
 using namespace std;
 

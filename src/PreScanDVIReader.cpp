@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "DVIActions.h"
-#include "PreScanDVIReader.h"
+#include "DVIActions.hpp"
+#include "PreScanDVIReader.hpp"
 
 using namespace std;
 

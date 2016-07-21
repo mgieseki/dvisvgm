@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Calculator.h"
+#include "Calculator.hpp"
 
 TEST(CalculatorTest, eval) {
 	Calculator calc;

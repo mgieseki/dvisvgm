@@ -28,7 +28,7 @@
 #include <cstring>
 #include <iomanip>
 #include <sstream>
-#include "Color.h"
+#include "Color.hpp"
 
 using namespace std;
 

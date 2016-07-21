@@ -22,10 +22,10 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <sstream>
-#include "BoundingBox.h"
-#include "Length.h"
-#include "Matrix.h"
-#include "XMLNode.h"
+#include "BoundingBox.hpp"
+#include "Length.hpp"
+#include "Matrix.hpp"
+#include "XMLNode.hpp"
 
 using namespace std;
 

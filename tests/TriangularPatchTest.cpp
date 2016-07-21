@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "TriangularPatch.h"
+#include "TriangularPatch.hpp"
 
 using namespace std;
 

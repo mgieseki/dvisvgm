@@ -21,16 +21,16 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include "BoundingBox.h"
-#include "DependencyGraph.h"
-#include "DVIToSVG.h"
-#include "Font.h"
-#include "FontManager.h"
-#include "SVGCharHandlerFactory.h"
-#include "SVGTree.h"
-#include "XMLDocument.h"
-#include "XMLNode.h"
-#include "XMLString.h"
+#include "BoundingBox.hpp"
+#include "DependencyGraph.hpp"
+#include "DVIToSVG.hpp"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "SVGCharHandlerFactory.hpp"
+#include "SVGTree.hpp"
+#include "XMLDocument.hpp"
+#include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

@@ -23,8 +23,8 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-#include "JFM.h"
-#include "StreamReader.h"
+#include "JFM.hpp"
+#include "StreamReader.hpp"
 
 using namespace std;
 

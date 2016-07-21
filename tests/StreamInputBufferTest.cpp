@@ -22,8 +22,8 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include "InputBuffer.h"
-#include "InputReader.h"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
 
 using std::istringstream;
 using std::map;

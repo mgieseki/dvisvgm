@@ -21,7 +21,7 @@
 #include <config.h>
 #include <algorithm>
 #include <sstream>
-#include "BasicDVIReader.h"
+#include "BasicDVIReader.hpp"
 
 using namespace std;
 

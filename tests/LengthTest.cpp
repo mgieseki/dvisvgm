@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "Length.h"
+#include "Length.hpp"
 
 using namespace std;
 

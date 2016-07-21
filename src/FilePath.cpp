@@ -20,9 +20,9 @@
 
 #include <config.h>
 #include <cctype>
-#include "FilePath.h"
-#include "FileSystem.h"
-#include "MessageException.h"
+#include "FilePath.hpp"
+#include "FileSystem.hpp"
+#include "MessageException.hpp"
 
 using namespace std;
 

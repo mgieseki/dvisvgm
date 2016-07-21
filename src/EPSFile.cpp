@@ -22,9 +22,9 @@
 #include <cstring>
 #include <istream>
 #include <limits>
-#include "EPSFile.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
+#include "EPSFile.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
 
 using namespace std;
 

@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "DependencyGraph.h"
+#include "DependencyGraph.hpp"
 
 static void populate (DependencyGraph<int> &tree) {
 	tree.insert(1);

@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include "Ghostscript.h"
+#include "Ghostscript.hpp"
 #if !defined(DISABLE_GS)
 #include <cstring>
 #include <iomanip>
@@ -28,7 +28,7 @@
 	#include <ghostscript/ierrors.h>
 #else
 	#include "ierrors.h"
-	#include "FileFinder.h"
+	#include "FileFinder.hpp"
 #endif
 
 using namespace std;

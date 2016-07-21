@@ -1,7 +1,7 @@
-#include "Length.h"
-#include "Message.h"
-#include "PapersizeSpecialHandler.h"
-#include "SpecialActions.h"
+#include "Length.hpp"
+#include "Message.hpp"
+#include "PapersizeSpecialHandler.hpp"
+#include "SpecialActions.hpp"
 
 using namespace std;
 

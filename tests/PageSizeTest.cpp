@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <limits>
-#include "PageSize.h"
+#include "PageSize.hpp"
 
 
 class PageSizeTest : public ::testing::Test

@@ -23,8 +23,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "GFReader.h"
-#include "macros.h"
+#include "GFReader.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

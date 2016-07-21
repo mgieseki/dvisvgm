@@ -24,37 +24,37 @@
 #include <fstream>
 #include <set>
 #include <sstream>
-#include "Calculator.h"
-#include "DVIToSVG.h"
-#include "DVIToSVGActions.h"
-#include "Font.h"
-#include "FontManager.h"
-#include "GlyphTracerMessages.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "PageRanges.h"
-#include "PageSize.h"
-#include "PreScanDVIReader.h"
-#include "SignalHandler.h"
-#include "SVGOutput.h"
+#include "Calculator.hpp"
+#include "DVIToSVG.hpp"
+#include "DVIToSVGActions.hpp"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "GlyphTracerMessages.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "PageRanges.hpp"
+#include "PageSize.hpp"
+#include "PreScanDVIReader.hpp"
+#include "SignalHandler.hpp"
+#include "SVGOutput.hpp"
 
 ///////////////////////////////////
 // special handlers
 
-#include "BgColorSpecialHandler.h"
-#include "ColorSpecialHandler.h"
-#include "DvisvgmSpecialHandler.h"
-#include "EmSpecialHandler.h"
-#include "HtmlSpecialHandler.h"
-#include "PapersizeSpecialHandler.h"
-#include "PdfSpecialHandler.h"
+#include "BgColorSpecialHandler.hpp"
+#include "ColorSpecialHandler.hpp"
+#include "DvisvgmSpecialHandler.hpp"
+#include "EmSpecialHandler.hpp"
+#include "HtmlSpecialHandler.hpp"
+#include "PapersizeSpecialHandler.hpp"
+#include "PdfSpecialHandler.hpp"
 #ifndef HAVE_LIBGS
-	#include "NoPsSpecialHandler.h"
+	#include "NoPsSpecialHandler.hpp"
 #endif
 #ifndef DISABLE_GS
-	#include "PsSpecialHandler.h"
+	#include "PsSpecialHandler.hpp"
 #endif
-#include "TpicSpecialHandler.h"
+#include "TpicSpecialHandler.hpp"
 
 ///////////////////////////////////
 

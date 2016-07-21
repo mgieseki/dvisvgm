@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "PSInterpreter.h"
+#include "PSInterpreter.hpp"
 
 #include <sstream>
 #include <vector>

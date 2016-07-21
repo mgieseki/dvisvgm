@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <vector>
-#include "Matrix.h"
+#include "Matrix.hpp"
 
 using namespace std;
 

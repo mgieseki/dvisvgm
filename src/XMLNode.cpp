@@ -22,8 +22,8 @@
 #include <map>
 #include <list>
 #include <sstream>
-#include "XMLNode.h"
-#include "XMLString.h"
+#include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

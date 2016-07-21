@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "FileFinder.h"
-#include "MapLine.h"
-#include "Subfont.h"
+#include "FileFinder.hpp"
+#include "MapLine.hpp"
+#include "Subfont.hpp"
 
 using namespace std;
 

@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <ostream>
-#include "PageRanges.h"
+#include "PageRanges.hpp"
 
 using namespace std;
 

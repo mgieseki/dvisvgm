@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "MessageException.h"
+#include "MessageException.hpp"
 
 using namespace std;
 

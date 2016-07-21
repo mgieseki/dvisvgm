@@ -23,14 +23,14 @@
 #include <fstream>
 #include <limits>
 #include <vector>
-#include "CMap.h"
-#include "Directory.h"
-#include "FileFinder.h"
-#include "FontManager.h"
-#include "FontMap.h"
-#include "MapLine.h"
-#include "Message.h"
-#include "Subfont.h"
+#include "CMap.hpp"
+#include "Directory.hpp"
+#include "FileFinder.hpp"
+#include "FontManager.hpp"
+#include "FontMap.hpp"
+#include "MapLine.hpp"
+#include "Message.hpp"
+#include "Subfont.hpp"
 
 using namespace std;
 

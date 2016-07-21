@@ -20,12 +20,12 @@
 
 #include <config.h>
 #include <sstream>
-#include "CMap.h"
-#include "CMapManager.h"
-#include "CMapReader.h"
-#include "FileFinder.h"
-#include "Font.h"
-#include "Message.h"
+#include "CMap.hpp"
+#include "CMapManager.hpp"
+#include "CMapReader.hpp"
+#include "FileFinder.hpp"
+#include "Font.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

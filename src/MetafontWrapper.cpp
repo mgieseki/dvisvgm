@@ -23,12 +23,12 @@
 #include <cctype>
 #include <fstream>
 #include <sstream>
-#include "FileSystem.h"
-#include "FileFinder.h"
-#include "Message.h"
-#include "MetafontWrapper.h"
-#include "Process.h"
-#include "XMLString.h"
+#include "FileSystem.hpp"
+#include "FileFinder.hpp"
+#include "Message.hpp"
+#include "MetafontWrapper.hpp"
+#include "Process.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 #include <vector>
-#include "Color.h"
-#include "TensorProductPatch.h"
+#include "Color.hpp"
+#include "TensorProductPatch.hpp"
 
 using namespace std;
 

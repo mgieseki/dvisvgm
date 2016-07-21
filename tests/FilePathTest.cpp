@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "FilePath.h"
-#include "FileSystem.h"
+#include "FilePath.hpp"
+#include "FileSystem.hpp"
 
 using namespace std;
 

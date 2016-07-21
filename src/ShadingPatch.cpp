@@ -19,9 +19,9 @@
 *************************************************************************/
 
 #include <sstream>
-#include "ShadingPatch.h"
-#include "TensorProductPatch.h"
-#include "TriangularPatch.h"
+#include "ShadingPatch.hpp"
+#include "TensorProductPatch.hpp"
+#include "TriangularPatch.hpp"
 
 using namespace std;
 

@@ -21,7 +21,7 @@
 #include <config.h>
 #include <cmath>
 #include <cstring>
-#include "InputBuffer.h"
+#include "InputBuffer.hpp"
 
 using namespace std;
 

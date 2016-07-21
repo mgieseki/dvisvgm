@@ -21,11 +21,11 @@
 #include <config.h>
 #include <sstream>
 #include <vector>
-#include "BoundingBox.h"
-#include "PSPattern.h"
-#include "SpecialActions.h"
-#include "SVGTree.h"
-#include "XMLNode.h"
+#include "BoundingBox.hpp"
+#include "PSPattern.hpp"
+#include "SpecialActions.hpp"
+#include "SVGTree.hpp"
+#include "XMLNode.hpp"
 
 using namespace std;
 

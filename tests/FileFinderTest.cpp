@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "FileFinder.h"
+#include "FileFinder.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <limits>
-#include "ToUnicodeMap.h"
-#include "Unicode.h"
+#include "ToUnicodeMap.hpp"
+#include "Unicode.hpp"
 
 using namespace std;
 

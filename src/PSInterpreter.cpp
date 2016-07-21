@@ -22,12 +22,12 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-#include "FileFinder.h"
-#include "InputReader.h"
-#include "Message.h"
-#include "PSFilter.h"
-#include "PSInterpreter.h"
-#include "SignalHandler.h"
+#include "FileFinder.hpp"
+#include "InputReader.hpp"
+#include "Message.hpp"
+#include "PSFilter.hpp"
+#include "PSInterpreter.hpp"
+#include "SignalHandler.hpp"
 
 using namespace std;
 

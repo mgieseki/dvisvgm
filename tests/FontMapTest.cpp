@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "FontMap.h"
+#include "FontMap.hpp"
 
 using std::ifstream;
 

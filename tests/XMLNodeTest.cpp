@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <cstring>
-#include "XMLNode.h"
+#include "XMLNode.hpp"
 
 using namespace std;
 

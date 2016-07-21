@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "RangeMap.h"
+#include "RangeMap.hpp"
 
 using namespace std;
 

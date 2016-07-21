@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "CMap.h"
-#include "CMapReader.h"
+#include "CMap.hpp"
+#include "CMapReader.hpp"
 
 using namespace std;
 

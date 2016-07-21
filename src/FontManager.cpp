@@ -23,12 +23,12 @@
 #include <cstdlib>
 #include <fstream>
 #include <set>
-#include "CMap.h"
-#include "Font.h"
-#include "FontManager.h"
-#include "FileFinder.h"
-#include "FileSystem.h"
-#include "Message.h"
+#include "CMap.hpp"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "FileFinder.hpp"
+#include "FileSystem.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

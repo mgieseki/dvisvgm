@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Ghostscript.h"
+#include "Ghostscript.hpp"
 
 
 TEST(GhostscriptTest, available1) {

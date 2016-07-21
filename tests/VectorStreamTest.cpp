@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <vector>
-#include "VectorStream.h"
+#include "VectorStream.hpp"
 
 using std::string;
 using std::vector;

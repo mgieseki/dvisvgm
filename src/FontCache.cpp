@@ -25,13 +25,13 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include "CRC32.h"
-#include "FileSystem.h"
-#include "FontCache.h"
-#include "Glyph.h"
-#include "Pair.h"
-#include "StreamReader.h"
-#include "StreamWriter.h"
+#include "CRC32.hpp"
+#include "FileSystem.hpp"
+#include "FontCache.hpp"
+#include "Glyph.hpp"
+#include "Pair.hpp"
+#include "StreamReader.hpp"
+#include "StreamWriter.hpp"
 
 using namespace std;
 

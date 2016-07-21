@@ -19,10 +19,10 @@
 *************************************************************************/
 
 #include <sstream>
-#include "Font.h"
-#include "FontManager.h"
-#include "SVGCharPathHandler.h"
-#include "XMLNode.h"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "SVGCharPathHandler.hpp"
+#include "XMLNode.hpp"
 
 using namespace std;
 

@@ -21,11 +21,11 @@
 #include <config.h>
 #include <cassert>
 #include <sstream>
-#include "HtmlSpecialHandler.h"
-#include "InputReader.h"
-#include "Message.h"
-#include "SpecialActions.h"
-#include "SVGTree.h"
+#include "HtmlSpecialHandler.hpp"
+#include "InputReader.hpp"
+#include "Message.hpp"
+#include "SpecialActions.hpp"
+#include "SVGTree.hpp"
 
 using namespace std;
 

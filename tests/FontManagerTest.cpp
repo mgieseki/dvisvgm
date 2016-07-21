@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "Font.h"
-#include "FontManager.h"
-#include "FileFinder.h"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "FileFinder.hpp"
 
 class FontManagerTest : public ::testing::Test
 {

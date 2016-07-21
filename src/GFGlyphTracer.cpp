@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include "GFGlyphTracer.h"
+#include "GFGlyphTracer.hpp"
 
 using namespace std;
 

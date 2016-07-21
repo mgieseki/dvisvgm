@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "ToUnicodeMap.h"
+#include "ToUnicodeMap.hpp"
 
 using namespace std;
 

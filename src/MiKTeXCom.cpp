@@ -21,9 +21,8 @@
 #include <config.h>
 #include <comdef.h>
 #include <string>
-#include "MessageException.h"
-#include "MiKTeXCom.h"
-#include "macros.h"
+#include "MessageException.hpp"
+#include "MiKTeXCom.hpp"
 
 using namespace std;
 

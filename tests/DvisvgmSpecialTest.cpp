@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "DvisvgmSpecialHandler.h"
-#include "SpecialActions.h"
-#include "XMLNode.h"
+#include "DvisvgmSpecialHandler.hpp"
+#include "SpecialActions.hpp"
+#include "XMLNode.hpp"
 
 using namespace std;
 

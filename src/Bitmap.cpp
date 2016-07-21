@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <limits>
-#include "Bitmap.h"
+#include "Bitmap.hpp"
 
 using namespace std;
 

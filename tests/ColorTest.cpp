@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Color.h"
+#include "Color.hpp"
 
 using namespace std;
 

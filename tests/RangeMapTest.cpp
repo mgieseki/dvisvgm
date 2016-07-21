@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "RangeMap.h"
+#include "RangeMap.hpp"
 
 using namespace std;
 

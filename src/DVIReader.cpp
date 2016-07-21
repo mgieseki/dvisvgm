@@ -23,12 +23,12 @@
 #include <cstdarg>
 #include <fstream>
 #include <sstream>
-#include "Color.h"
-#include "DVIActions.h"
-#include "DVIReader.h"
-#include "Font.h"
-#include "FontManager.h"
-#include "VectorStream.h"
+#include "Color.hpp"
+#include "DVIActions.hpp"
+#include "DVIReader.hpp"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "VectorStream.hpp"
 
 using namespace std;
 

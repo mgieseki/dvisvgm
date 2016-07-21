@@ -22,8 +22,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include "FileSystem.h"
-#include "macros.h"
+#include "FileSystem.hpp"
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>

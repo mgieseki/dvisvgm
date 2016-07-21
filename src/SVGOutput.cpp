@@ -24,11 +24,11 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include "Calculator.h"
-#include "FileSystem.h"
-#include "Message.h"
-#include "SVGOutput.h"
-#include "ZLibOutputStream.h"
+#include "Calculator.hpp"
+#include "FileSystem.hpp"
+#include "Message.hpp"
+#include "SVGOutput.hpp"
+#include "ZLibOutputStream.hpp"
 
 using namespace std;
 

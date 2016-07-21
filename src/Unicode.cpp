@@ -24,7 +24,7 @@
 #include <iomanip>
 #include <sstream>
 #include <xxhash.h>
-#include "Unicode.h"
+#include "Unicode.hpp"
 
 using namespace std;
 
@@ -113,7 +113,7 @@ string Unicode::utf8 (int32_t cp) {
 	return utf8;
 }
 
-#include "AGLTable.h"
+#include "AGLTable.hpp"
 
 /** Tries to extract the codepoint from AGL character names like "uni1234" or "u1234".
  *  Returns 0 if the given name doesn't satisfy the constraints.

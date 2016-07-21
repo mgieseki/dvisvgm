@@ -21,13 +21,13 @@
 #include <config.h>
 #include <cstring>
 #include <ctime>
-#include "BoundingBox.h"
-#include "DVIToSVG.h"
-#include "DVIToSVGActions.h"
-#include "Font.h"
-#include "FontManager.h"
-#include "GlyphTracerMessages.h"
-#include "System.h"
+#include "BoundingBox.hpp"
+#include "DVIToSVG.hpp"
+#include "DVIToSVGActions.hpp"
+#include "Font.hpp"
+#include "FontManager.hpp"
+#include "GlyphTracerMessages.hpp"
+#include "System.hpp"
 
 
 using namespace std;

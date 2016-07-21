@@ -21,13 +21,13 @@
 #include <config.h>
 #include <cstring>
 #include <utility>
-#include "DvisvgmSpecialHandler.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "Length.h"
-#include "SpecialActions.h"
-#include "XMLNode.h"
-#include "XMLString.h"
+#include "DvisvgmSpecialHandler.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "Length.hpp"
+#include "SpecialActions.hpp"
+#include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 

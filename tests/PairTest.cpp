@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "Pair.h"
+#include "Pair.hpp"
 
 using namespace std;
 

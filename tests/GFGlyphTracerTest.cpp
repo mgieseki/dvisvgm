@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "GFGlyphTracer.h"
+#include "GFGlyphTracer.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

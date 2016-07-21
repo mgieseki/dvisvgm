@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
-#include "FileSystem.h"
+#include "FileSystem.hpp"
 
 #ifndef SRCDIR
 #define SRCDIR "."

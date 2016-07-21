@@ -20,12 +20,12 @@
 
 #include <config.h>
 #include <fstream>
-#include "Font.h"
-#include "EncFile.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "FileFinder.h"
-#include "Message.h"
+#include "Font.hpp"
+#include "EncFile.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "FileFinder.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

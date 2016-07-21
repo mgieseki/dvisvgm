@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include "Directory.h"
+#include "Directory.hpp"
 
 using namespace std;
 

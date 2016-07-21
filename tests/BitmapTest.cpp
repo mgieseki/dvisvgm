@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Bitmap.h"
+#include "Bitmap.hpp"
 
 using namespace std;
 

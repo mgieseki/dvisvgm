@@ -19,11 +19,11 @@
 *************************************************************************/
 
 #include <config.h>
-#include "CMap.h"
-#include "CMapManager.h"
-#include "EncFile.h"
-#include "FileFinder.h"
-#include "FontEncoding.h"
+#include "CMap.hpp"
+#include "CMapManager.hpp"
+#include "EncFile.hpp"
+#include "FileFinder.hpp"
+#include "FontEncoding.hpp"
 
 using namespace std;
 

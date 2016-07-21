@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
-#include "DLLoader.h"
+#include "DLLoader.hpp"
 
 
 DLLoader::DLLoader (const char *dlname) : _handle(0)

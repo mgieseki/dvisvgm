@@ -20,10 +20,10 @@
 
 #include <config.h>
 #include <sstream>
-#include "FixWord.h"
-#include "GFReader.h"
-#include "Length.h"
-#include "SignalHandler.h"
+#include "FixWord.hpp"
+#include "GFReader.hpp"
+#include "Length.hpp"
+#include "SignalHandler.hpp"
 
 using namespace std;
 

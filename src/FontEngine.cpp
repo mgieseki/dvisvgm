@@ -26,10 +26,10 @@
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
 #include FT_TYPES_H
-#include "Font.h"
-#include "FontEngine.h"
-#include "FontStyle.h"
-#include "Message.h"
+#include "Font.hpp"
+#include "FontEngine.hpp"
+#include "FontStyle.hpp"
+#include "Message.hpp"
 
 using namespace std;
 

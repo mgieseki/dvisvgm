@@ -23,13 +23,13 @@
 #include <cmath>
 #include <cstring>
 #include <sstream>
-#include "Color.h"
-#include "InputBuffer.h"
-#include "InputReader.h"
-#include "GraphicsPath.h"
-#include "SpecialActions.h"
-#include "SVGTree.h"
-#include "TpicSpecialHandler.h"
+#include "Color.hpp"
+#include "InputBuffer.hpp"
+#include "InputReader.hpp"
+#include "GraphicsPath.hpp"
+#include "SpecialActions.hpp"
+#include "SVGTree.hpp"
+#include "TpicSpecialHandler.hpp"
 
 
 using namespace std;

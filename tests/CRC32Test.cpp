@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "CRC32.h"
+#include "CRC32.hpp"
 
 using namespace std;
 

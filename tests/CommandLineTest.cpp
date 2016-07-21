@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "CommandLine.h"
+#include "CommandLine.hpp"
 
 TEST(CommandLineTest, noarg_short) {
 	CommandLine cmd;

@@ -21,11 +21,11 @@
 #include <config.h>
 #include <fstream>
 #include <vector>
-#include "FileFinder.h"
-#include "Length.h"
-#include "Message.h"
-#include "StreamReader.h"
-#include "TFM.h"
+#include "FileFinder.hpp"
+#include "Length.hpp"
+#include "Message.hpp"
+#include "StreamReader.hpp"
+#include "TFM.hpp"
 
 using namespace std;
 

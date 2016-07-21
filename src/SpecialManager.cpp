@@ -21,10 +21,10 @@
 #include <config.h>
 #include <iomanip>
 #include <sstream>
-#include "SpecialActions.h"
-#include "SpecialHandler.h"
-#include "SpecialManager.h"
-#include "PsSpecialHandler.h"
+#include "SpecialActions.hpp"
+#include "SpecialHandler.hpp"
+#include "SpecialManager.hpp"
+#include "PsSpecialHandler.hpp"
 
 using namespace std;
 

@@ -23,17 +23,17 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
-#include "EPSFile.h"
-#include "FileFinder.h"
-#include "Message.h"
-#include "PathClipper.h"
-#include "PSPattern.h"
-#include "PSPreviewFilter.h"
-#include "PsSpecialHandler.h"
-#include "SpecialActions.h"
-#include "SVGTree.h"
-#include "TensorProductPatch.h"
-#include "TriangularPatch.h"
+#include "EPSFile.hpp"
+#include "FileFinder.hpp"
+#include "Message.hpp"
+#include "PathClipper.hpp"
+#include "PSPattern.hpp"
+#include "PSPreviewFilter.hpp"
+#include "PsSpecialHandler.hpp"
+#include "SpecialActions.hpp"
+#include "SVGTree.hpp"
+#include "TensorProductPatch.hpp"
+#include "TriangularPatch.hpp"
 
 
 using namespace std;

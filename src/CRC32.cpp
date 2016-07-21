@@ -20,7 +20,7 @@
 
 #include <config.h>
 #include <cstring>
-#include "CRC32.h"
+#include "CRC32.hpp"
 
 using namespace std;
 

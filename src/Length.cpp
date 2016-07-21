@@ -19,8 +19,8 @@
 *************************************************************************/
 
 #include <sstream>
-#include "InputReader.h"
-#include "Length.h"
+#include "InputReader.hpp"
+#include "Length.hpp"
 
 using namespace std;
 

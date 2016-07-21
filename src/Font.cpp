@@ -22,16 +22,16 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
-#include "CMap.h"
-#include "FileFinder.h"
-#include "FileSystem.h"
-#include "Font.h"
-#include "FontEngine.h"
-#include "Message.h"
-#include "MetafontWrapper.h"
-#include "SignalHandler.h"
-#include "Subfont.h"
-#include "Unicode.h"
+#include "CMap.hpp"
+#include "FileFinder.hpp"
+#include "FileSystem.hpp"
+#include "Font.hpp"
+#include "FontEngine.hpp"
+#include "Message.hpp"
+#include "MetafontWrapper.hpp"
+#include "SignalHandler.hpp"
+#include "Subfont.hpp"
+#include "Unicode.hpp"
 
 
 using namespace std;

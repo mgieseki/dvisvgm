@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 #include <sstream>
-#include "EmSpecialHandler.h"
-#include "SpecialActions.h"
-#include "XMLNode.h"
-#include "XMLString.h"
+#include "EmSpecialHandler.hpp"
+#include "SpecialActions.hpp"
+#include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 
