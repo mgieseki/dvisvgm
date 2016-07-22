@@ -33,12 +33,6 @@
 using namespace std;
 
 
-FontManager::~FontManager () {
-	for (Font *font : _fonts)
-		delete font;
-}
-
-
 /** Returns the singleton instance */
 FontManager& FontManager::instance () {
 	static FontManager fm;
@@ -51,14 +45,14 @@ FontManager& FontManager::instance () {
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (int n) const {
 	if (_vfStack.empty()) {
-		Num2IdMap::const_iterator it = _num2id.find(n);
+		auto it = _num2id.find(n);
 		return (it == _num2id.end()) ? -1 : it->second;
 	}
 	VfNum2IdMap::const_iterator vit = _vfnum2id.find(_vfStack.top());
 	if (vit == _vfnum2id.end())
 		return -1;
 	const Num2IdMap &num2id = vit->second;
-	Num2IdMap::const_iterator it = num2id.find(n);
+	auto it = num2id.find(n);
 	return (it == num2id.end()) ? -1 : it->second;
 }
 
@@ -70,7 +64,7 @@ int FontManager::fontID (int n) const {
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const Font *font) const {
 	for (size_t i=0; i < _fonts.size(); i++)
-		if (_fonts[i] == font)
+		if (_fonts[i].get() == font)
 			return i;
 	return -1;
 }
@@ -80,7 +74,7 @@ int FontManager::fontID (const Font *font) const {
  *  @param[in] name name of font to be identified, e.g. cmr10
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const string &name) const {
-	map<string,int>::const_iterator it = _name2id.find(name);
+	auto it = _name2id.find(name);
 	if (it == _name2id.end())
 		return -1;
 	return it->second;
@@ -118,7 +112,7 @@ int FontManager::vfFirstFontNum (const VirtualFont *vf) const {
  *  @return pointer to font if font was found, 0 otherwise */
 Font* FontManager::getFont (int n) const {
 	int id = fontID(n);
-	return (id < 0) ? 0 : _fonts[id];
+	return (id < 0) ? 0 : _fonts[id].get();
 }
 
 
@@ -126,14 +120,14 @@ Font* FontManager::getFont (const string &name) const {
 	int id = fontID(name);
 	if (id < 0)
 		return 0;
-	return _fonts[id];
+	return _fonts[id].get();
 }
 
 
 Font* FontManager::getFontById (int id) const {
 	if (id < 0 || size_t(id) >= _fonts.size())
 		return 0;
-	return _fonts[id];
+	return _fonts[id].get();
 }
 
 
@@ -178,12 +172,12 @@ int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum,
 	if (id >= 0)
 		return id;
 
-	Font *newfont = 0;
+	unique_ptr<Font> newfont;
 	const int newid = _fonts.size();   // the new font gets this ID
 	Name2IdMap::iterator it = _name2id.find(name);
 	if (it != _name2id.end()) {  // font with same name already registered?
-		Font *font = _fonts[it->second];
-		newfont = font->clone(dsize, ssize);
+		const auto &font = _fonts[it->second];
+		newfont.reset(font->clone(dsize, ssize));
 	}
 	else {
 		string filename = name;
@@ -195,12 +189,12 @@ int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum,
 		}
 		// try to find font file with the exact given name
 		if (filename.rfind(".") != string::npos)
-			newfont = create_font(filename, name, fontindex, checksum, dsize, ssize);
+			newfont.reset(create_font(filename, name, fontindex, checksum, dsize, ssize));
 		else {
 			// try various font file formats if the given file has no extension
 			const char *exts[] = {"pfb", "otf", "ttc", "ttf", "vf", "mf", 0};
 			for (const char **p = exts; *p && !newfont; ++p)
-				newfont = create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize);
+				newfont.reset(create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize));
 		}
 		if (newfont) {
 			if (!newfont->findAndAssignBaseFontMap())
@@ -210,7 +204,7 @@ int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum,
 		}
 		else {
 			// create dummy font as a placeholder if the proper font is not available
-			newfont = new EmptyFont(name);
+			newfont.reset(new EmptyFont(name));
 			if (filename.rfind(".") == string::npos)
 				filename += ".mf";
 			// print warning message about missing font file (only once for each filename)
@@ -222,11 +216,11 @@ int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum,
 		}
 		_name2id[name] = newid;
 	}
-	_fonts.push_back(newfont);
+	_fonts.push_back(std::move(newfont));
 	if (_vfStack.empty())  // register font referenced in dvi file?
 		_num2id[fontnum] = newid;
 	else {  // register font referenced in vf file
-		VirtualFont *vf = const_cast<VirtualFont*>(_vfStack.top());
+		const VirtualFont *vf = _vfStack.top();
 		_vfnum2id[vf][fontnum] = newid;
 		if (_vfFirstFontMap.find(vf) == _vfFirstFontMap.end()) // first fontdef of VF?
 			_vfFirstFontMap[vf] = fontnum;
@@ -266,23 +260,23 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 		filename = filename.substr(1, filename.size()-2);
 	string fontname = NativeFont::uniqueName(filename, style);
 	const char *path = filename.c_str();
-	Font *newfont=0;
+	unique_ptr<Font> newfont;
 	const int newid = _fonts.size();   // the new font gets this ID
 	Name2IdMap::iterator it = _name2id.find(fontname);
 	if (it != _name2id.end()) {  // font with same name already registered?
-		if (NativeFont *font = dynamic_cast<NativeFont*>(_fonts[it->second]))
-			newfont = font->clone(ptsize, style, color);
+		if (NativeFont *font = dynamic_cast<NativeFont*>(_fonts[it->second].get()))
+			newfont.reset(font->clone(ptsize, style, color));
 	}
 	else {
 		if (!FileSystem::exists(path))
 			path = FileFinder::lookup(filename, false);
 		if (path) {
-			newfont = new NativeFontImpl(path, fontIndex, ptsize, style, color);
+			newfont.reset(new NativeFontImpl(path, fontIndex, ptsize, style, color));
 			newfont->findAndAssignBaseFontMap();
 		}
 		if (!newfont) {
 			// create dummy font as a placeholder if the proper font is not available
-			newfont = new EmptyFont(filename);
+			newfont.reset(new EmptyFont(filename));
 			// print warning message about missing font file (only once for each filename)
 			static set<string> missing_fonts;
 			if (missing_fonts.find(filename) == missing_fonts.end()) {
@@ -292,7 +286,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 		}
 		_name2id[fontname] = newid;
 	}
-	_fonts.push_back(newfont);
+	_fonts.push_back(std::move(newfont));
 	_num2id[fontnum] = newid;
 	return newid;
 }
@@ -358,4 +352,3 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 #endif
 	return os;
 }
-

@@ -22,6 +22,7 @@
 #define FONTMANAGER_HPP
 
 #include <map>
+#include <memory>
 #include <ostream>
 #include <set>
 #include <string>
@@ -49,7 +50,6 @@ class FontManager
 	typedef std::stack<VirtualFont*> VfStack;
 
 	public:
-		~FontManager ();
 		static FontManager& instance ();
 		int registerFont (uint32_t fontnum, std::string fontname, uint32_t checksum, double dsize, double scale);
 		int registerFont (uint32_t fontnum, std::string fname, double ptsize, const FontStyle &style, Color color);
@@ -66,14 +66,13 @@ class FontManager
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
 		void assignVFChar (int c, std::vector<uint8_t> &&dvi);
-		const std::vector<Font*>& getFonts () const {return _fonts;}
 		std::ostream& write (std::ostream &os, Font *font=0, int level=0);
 
 	protected:
-		FontManager () {}
+		FontManager () =default;
 
 	private:
-		std::vector<Font*> _fonts; ///< all registered Fonts
+		std::vector<std::unique_ptr<Font>> _fonts; ///< all registered Fonts
 		Num2IdMap      _num2id;    ///< DVI font number -> fontID
 		Name2IdMap     _name2id;   ///< fontname -> fontID
 		VfNum2IdMap    _vfnum2id;
