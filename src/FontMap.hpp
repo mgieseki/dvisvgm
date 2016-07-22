@@ -22,6 +22,7 @@
 #define FONTMAP_HPP
 
 #include <map>
+#include <memory>
 #include <ostream>
 #include <string>
 #include "FontStyle.hpp"
@@ -37,6 +38,9 @@ class FontMap
 		struct Entry
 		{
 			Entry (const MapLine &mapline, Subfont *subfont=0);
+			Entry (const Entry &entry) =delete;
+			Entry (Entry &&entry) =default;
+			Entry& operator = (Entry &&entry) =default;
 			std::string fontname; ///< target font name
 			std::string encname;  ///< name of font encoding
 			Subfont *subfont;
@@ -46,9 +50,8 @@ class FontMap
 		};
 
 	public:
-		enum Mode {FM_APPEND, FM_REMOVE, FM_REPLACE};
+		enum class Mode {APPEND, REMOVE, REPLACE};
 
-		~FontMap ();
 		static FontMap& instance ();
 		bool read (const std::string &fname, Mode mode);
 		bool read (const std::string &fname, char modechar);
@@ -62,13 +65,13 @@ class FontMap
 		void lockFont (const std::string &fontname);
 		void clear (bool unlocked_only=false);
 		std::ostream& write (std::ostream &os) const;
-		const Entry* lookup(const std::string &fontname) const;
+		const Entry* lookup (const std::string &fontname) const;
 
 	protected:
-		FontMap () {}
+		FontMap () =default;
 
 	private:
-		std::map<std::string,Entry*> _entries;
+		std::map<std::string,std::unique_ptr<Entry>> _entries;
 };
 
 #endif

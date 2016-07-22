@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <config.h>
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <limits>
@@ -33,13 +34,6 @@
 #include "Subfont.hpp"
 
 using namespace std;
-
-
-FontMap::~FontMap () {
-	for (auto &entry : _entries)
-		delete entry.second;
-}
-
 
 /** Returns the singleton instance. */
 FontMap& FontMap::instance() {
@@ -86,9 +80,9 @@ bool FontMap::read (const string &fname, FontMap::Mode mode) {
 bool FontMap::read (const string &fname, char modechar) {
 	Mode mode;
 	switch (modechar) {
-		case '=': mode = FM_REPLACE; break;
-		case '-': mode = FM_REMOVE; break;
-		default : mode = FM_APPEND;
+		case '=': mode = Mode::REPLACE; break;
+		case '-': mode = Mode::REMOVE; break;
+		default : mode = Mode::APPEND;
 	}
 	return read(fname, mode);
 }
@@ -100,9 +94,9 @@ bool FontMap::read (const string &fname, char modechar) {
  *  @return true in case of success */
 bool FontMap::apply (const MapLine& mapline, FontMap::Mode mode) {
 	switch (mode) {
-		case FM_APPEND:
+		case Mode::APPEND:
 			return append(mapline);
-		case FM_REMOVE:
+		case Mode::REMOVE:
 			return remove(mapline);
 		default:
 			return replace(mapline);
@@ -117,9 +111,9 @@ bool FontMap::apply (const MapLine& mapline, FontMap::Mode mode) {
 bool FontMap::apply (const MapLine& mapline, char modechar) {
 	Mode mode;
 	switch (modechar) {
-		case '=': mode = FM_REPLACE; break;
-		case '-': mode = FM_REMOVE; break;
-		default : mode = FM_APPEND;
+		case '=': mode = Mode::REPLACE; break;
+		case '-': mode = Mode::REMOVE; break;
+		default : mode = Mode::APPEND;
 	}
 	return apply(mapline, mode);
 }
@@ -163,7 +157,7 @@ bool FontMap::read (const string &fname_seq) {
  *  @param[in] mapline parsed font data
  *  @return true if data has been appended */
 bool FontMap::append (const MapLine &mapline) {
-	bool ret = false;
+	bool appended = false;
 	if (!mapline.texname().empty()) {
 		if (!mapline.fontfname().empty() || !mapline.encname().empty()) {
 			vector<Subfont*> subfonts;
@@ -171,17 +165,17 @@ bool FontMap::append (const MapLine &mapline) {
 				mapline.sfd()->subfonts(subfonts);
 			else
 				subfonts.push_back(0);
-			for (size_t i=0; i < subfonts.size(); i++) {
-				string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+			for (Subfont *subfont : subfonts) {
+				string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 				auto it = _entries.find(fontname);
 				if (it == _entries.end()) {
-					_entries[fontname] = new Entry(mapline, subfonts[i]);
-					ret = true;
+					_entries[fontname].reset(new Entry(mapline, subfont));
+					appended = true;
 				}
 			}
 		}
 	}
-	return ret;
+	return appended;
 }
 
 
@@ -200,13 +194,13 @@ bool FontMap::replace (const MapLine &mapline) {
 		mapline.sfd()->subfonts(subfonts);
 	else
 		subfonts.push_back(0);
-	for (size_t i=0; i < subfonts.size(); i++) {
-		string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+	for (Subfont *subfont : subfonts) {
+		string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 		auto it = _entries.find(fontname);
 		if (it == _entries.end())
-			_entries[fontname] = new Entry(mapline, subfonts[i]);
+			_entries[fontname].reset(new Entry(mapline, subfont));
 		else if (!it->second->locked)
-			*it->second = Entry(mapline, subfonts[i]);
+			*it->second = Entry(mapline, subfont);
 	}
 	return true;
 }
@@ -217,23 +211,23 @@ bool FontMap::replace (const MapLine &mapline) {
  *  @param[in] mapline parsed font data
  *  @return true if entry has been removed */
 bool FontMap::remove (const MapLine &mapline) {
-	bool ret = false;
+	bool removed = false;
 	if (!mapline.texname().empty()) {
 		vector<Subfont*> subfonts;
 		if (mapline.sfd())
 			mapline.sfd()->subfonts(subfonts);
 		else
 			subfonts.push_back(0);
-		for (size_t i=0; i < subfonts.size(); i++) {
-			string fontname = mapline.texname()+(subfonts[i] ? subfonts[i]->id() : "");
+		for (const Subfont *subfont : subfonts) {
+			string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 			auto it = _entries.find(fontname);
 			if (it != _entries.end() && !it->second->locked) {
 				_entries.erase(it);
-				ret = true;
+				removed = true;
 			}
 		}
 	}
-	return ret;
+	return removed;
 }
 
 
@@ -264,7 +258,7 @@ const FontMap::Entry* FontMap::lookup (const string &fontname) const {
 	auto it = _entries.find(fontname);
 	if (it == _entries.end())
 		return 0;
-	return it->second;
+	return it->second.get();
 }
 
 
@@ -287,10 +281,8 @@ void FontMap::clear (bool unlocked_only) {
 		while (it != _entries.end()) {
 			if (it->second->locked)
 				++it;
-			else {
-				delete it->second;
-				_entries.erase(it++);
-			}
+			else
+				it = _entries.erase(it);
 		}
 	}
 }
