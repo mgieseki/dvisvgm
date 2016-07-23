@@ -193,12 +193,12 @@ static int32_t segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, d
 
 
 inline int32_t edge_id (const IntPoint &p1, const IntPoint &p2) {
-	double t;
+	double t=0;
 	return segment_id(p1, p2, t, t);
 }
 
 
-/** This function expects 3 colinear points p1, p2, and q where q lies between p1 and p2,
+/** This function expects 3 colinear points p1, p2, and q, where q lies between p1 and p2,
  *  i.e. q divides the line \f$ \overline{p_1 p_2} \f$ somewhere. The function returns
  *  the corresponding division ratio. */
 static double division_ratio (const IntPoint &p1, const IntPoint &p2, const IntPoint &q) {
@@ -274,8 +274,8 @@ static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabe
  *  @param[in] polygons set of polygons to reconstruct
  *  @param[out] path the reconstructed curved path */
 void PathClipper::reconstruct (const Polygons &polygons, CurvedPath &path) {
-	for (size_t i=0; i < polygons.size(); i++)
-		reconstruct(polygons[i], path);
+	for (const Polygon &polygon : polygons)
+		reconstruct(polygon, path);
 }
 
 
@@ -318,7 +318,7 @@ inline PolyFillType polyFillType (CurvedPath::WindingRule wr) {
 }
 
 
-/** Computes the intersection of to curved path.
+/** Computes the intersection of to curved paths.
  *  @param[in] p1 first curved path
  *  @param[in] p2 second curved path
  *  @param[out] result intersection of p1 and p2 */
