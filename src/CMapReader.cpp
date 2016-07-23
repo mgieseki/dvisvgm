@@ -19,6 +19,8 @@
 *************************************************************************/
 
 #include <config.h>
+#include <algorithm>
+#include <array>
 #include <fstream>
 #include <sstream>
 #include "CMap.hpp"
@@ -81,25 +83,27 @@ CMap* CMapReader::read (std::istream& is, const string &name) {
 }
 
 
-void CMapReader::executeOperator (const string &op, InputReader &ir) {
-	const struct Operator {
+/** Executes a PS operator from the CMap file.
+ *  @param[in] opname name of operator to execute
+ *  @param[in] ir reader object used to read the CMap stream */
+void CMapReader::executeOperator (const string &opname, InputReader &ir) {
+	struct Operator {
 		const char *name;
 		void (CMapReader::*handler)(InputReader&);
-	} operators[] = {
+	};
+	array<Operator, 6> operators = {{
 		{"beginbfchar",   &CMapReader::op_beginbfchar},
 		{"beginbfrange",  &CMapReader::op_beginbfrange},
 		{"begincidrange", &CMapReader::op_begincidrange},
 		{"def",           &CMapReader::op_def},
 		{"endcmap",       &CMapReader::op_endcmap},
 		{"usecmap",       &CMapReader::op_usecmap},
-	};
-
-	for (size_t i=0; i < sizeof(operators)/sizeof(Operator); i++) {
-		if (operators[i].name == op) {
-			(this->*operators[i].handler)(ir);
-			break;
-		}
-	}
+	}};
+	auto it = find_if(operators.begin(), operators.end(), [&](const Operator &op) {
+		return op.name == opname;
+	});
+	if (it != operators.end())
+		(this->*it->handler)(ir);
 	_tokens.clear();
 }
 
