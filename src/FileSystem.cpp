@@ -310,7 +310,7 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 		string path = string(dirname)+"/"+fname;
 		string typechar = isFile(path) ? "f" : isDirectory(path) ? "d" : "?";
 		if (fname != "." && fname != "..")
-			entries.push_back(typechar+fname);
+			entries.emplace_back(typechar+fname);
 		ready = !FindNextFile(h, &data);
 	}
 	FindClose(h);
@@ -322,7 +322,7 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 			string path = string(dirname)+"/"+fname;
 			string typechar = isFile(path) ? "f" : isDirectory(path) ? "d" : "?";
 			if (fname != "." && fname != "..")
-				entries.push_back(typechar+fname);
+				entries.emplace_back(typechar+fname);
 		}
 		closedir(dir);
 	}

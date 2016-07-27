@@ -40,7 +40,7 @@ void XMLDocument::append (XMLNode *node) {
 		if (XMLElementNode *newRoot = dynamic_cast<XMLElementNode*>(node))
 			_rootElement.reset(newRoot);
 		else
-			_nodes.push_back(unique_ptr<XMLNode>(node));
+			_nodes.emplace_back(unique_ptr<XMLNode>(node));
 	}
 }
 

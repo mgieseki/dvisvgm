@@ -81,18 +81,18 @@ void RangeMap::addRange (uint32_t cmin, uint32_t cmax, uint32_t vmin) {
 
 	Range range(cmin, cmax, vmin);
 	if (_ranges.empty())
-		_ranges.push_back(range);
+		_ranges.emplace_back(std::move(range));
 	else {
 		// check for simple cases that can be handled pretty fast
 		Range &lrange = *_ranges.begin();
 		Range &rrange = *_ranges.rbegin();
 		if (cmin > rrange.max()) {       // non-overlapping range at end of vector?
 			if (!rrange.join(range))
-				_ranges.push_back(range);
+				_ranges.emplace_back(std::move(range));
 		}
 		else if (cmax < lrange.min()) {  // non-overlapping range at begin of vector?
 			if (!lrange.join(range))
-				_ranges.insert(_ranges.begin(), range);
+				_ranges.emplace(_ranges.begin(), std::move(range));
 		}
 		else {
 			// ranges overlap and/or must be inserted somewhere inside the vector
@@ -105,11 +105,11 @@ void RangeMap::addRange (uint32_t cmin, uint32_t cmax, uint32_t vmin) {
 					//split existing range
 					uint32_t itmax = it->max();
 					it->max(cmin-1);
-					it = _ranges.insert(it+1, Range(cmax+1, itmax, it->valueAt(cmax+1)));
+					it = _ranges.emplace(it+1, Range(cmax+1, itmax, it->valueAt(cmax+1)));
 				}
 				else if (at_end)        // does new range overlap right side of last range in vector?
 					it = _ranges.end();  // => append new range at end of vector
-				it = _ranges.insert(it, range);
+				it = _ranges.emplace(it, std::move(range));
 			}
 			adaptNeighbors(it);  // resolve overlaps
 		}

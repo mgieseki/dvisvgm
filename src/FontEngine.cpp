@@ -299,7 +299,7 @@ int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
 	if (_currentFace) {
 		for (int i=0; i < _currentFace->num_charmaps; i++) {
 			FT_CharMap charmap = _currentFace->charmaps[i];
-			charmapIDs.push_back(CharMapID(charmap->platform_id, charmap->encoding_id));
+			charmapIDs.emplace_back(CharMapID(charmap->platform_id, charmap->encoding_id));
 		}
 	}
 	return charmapIDs.size();

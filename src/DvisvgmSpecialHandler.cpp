@@ -76,7 +76,7 @@ void DvisvgmSpecialHandler::preprocessRawSet (InputReader &ir) {
 		throw SpecialException("redefinition of SVG fragment '" + id + "'");
 	}
 	pair<string, StringVector> entry(id, StringVector());
-	pair<MacroMap::iterator, bool> state = _macros.insert(entry);
+	pair<MacroMap::iterator, bool> state = _macros.emplace(move(entry));
 	_currentMacro = state.first;
 }
 
@@ -92,7 +92,7 @@ void DvisvgmSpecialHandler::preprocessRaw (InputReader &ir) {
 		return;
 	string str = ir.getLine();
 	if (!str.empty())
-		_currentMacro->second.push_back(string("P")+str);
+		_currentMacro->second.emplace_back(string("P")+str);
 }
 
 
@@ -101,7 +101,7 @@ void DvisvgmSpecialHandler::preprocessRawDef (InputReader &ir) {
 		return;
 	string str = ir.getLine();
 	if (!str.empty())
-		_currentMacro->second.push_back(string("D")+str);
+		_currentMacro->second.emplace_back(string("D")+str);
 }
 
 

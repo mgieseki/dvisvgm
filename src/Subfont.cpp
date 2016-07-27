@@ -52,7 +52,7 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
 			while (is && !isspace(is.peek()))
 				id += is.get();
 			if (!id.empty()) {
-				auto state = _subfonts.insert(pair<string,Subfont*>(id, (Subfont*)0));
+				auto state = _subfonts.emplace(pair<string,Subfont*>(id, (Subfont*)0));
 				if (state.second) // id was not present in map already
 					state.first->second = new Subfont(*this, state.first->first);
 				skip_mapping_data(is);

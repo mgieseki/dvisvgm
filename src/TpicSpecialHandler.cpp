@@ -270,7 +270,7 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 		case cmd_id('p','a'): { // add point to path
 			double x = ir.getDouble()*mi2bp;
 			double y = ir.getDouble()*mi2bp;
-			_points.push_back(DPair(x,y));
+			_points.emplace_back(DPair(x,y));
 			break;
 		}
 		case cmd_id('f','p'): // draw solid lines through recorded points; close and fill path if fill color was defined

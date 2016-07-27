@@ -36,7 +36,7 @@ XMLElementNode::XMLElementNode (const XMLElementNode &node)
 	: _name(node._name), _attributes(node._attributes)
 {
 	for (const auto &child : node._children)
-		_children.push_back(unique_ptr<XMLNode>(child->clone()));
+		_children.emplace_back(unique_ptr<XMLNode>(child->clone()));
 }
 
 
@@ -61,19 +61,19 @@ void XMLElementNode::append (XMLNode *child) {
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
 	if (!textNode1 || _children.empty())
-		_children.push_back(unique_ptr<XMLNode>(child));
+		_children.emplace_back(unique_ptr<XMLNode>(child));
 	else {
 		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.back().get()))
 			textNode2->append(textNode1);  // merge two consecutive text nodes
 		else
-			_children.push_back(unique_ptr<XMLNode>(child));
+			_children.emplace_back(unique_ptr<XMLNode>(child));
 	}
 }
 
 
 void XMLElementNode::append (const string &str) {
 	if (_children.empty() || !dynamic_cast<XMLTextNode*>(_children.back().get()))
-		_children.push_back(unique_ptr<XMLNode>(new XMLTextNode(str)));
+		_children.emplace_back(unique_ptr<XMLNode>(new XMLTextNode(str)));
 	else
 		static_cast<XMLTextNode*>(_children.back().get())->append(str);
 }
@@ -84,12 +84,12 @@ void XMLElementNode::prepend (XMLNode *child) {
 		return;
 	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child);
 	if (!textNode1 || _children.empty())
-		_children.push_front(unique_ptr<XMLNode>(child));
+		_children.emplace_front(unique_ptr<XMLNode>(child));
 	else {
 		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.front().get()))
 			textNode2->prepend(textNode1);  // merge two consecutive text nodes
 		else
-			_children.push_front(unique_ptr<XMLNode>(child));
+			_children.emplace_front(unique_ptr<XMLNode>(child));
 	}
 }
 
@@ -106,7 +106,7 @@ bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
 		++it;
 	if (it == _children.end())
 		return false;
-	_children.insert(it, unique_ptr<XMLNode>(child));
+	_children.emplace(it, unique_ptr<XMLNode>(child));
 	return true;
 }
 
@@ -123,7 +123,7 @@ bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
 		++it;
 	if (it == _children.end())
 		return false;
-	_children.insert(++it, unique_ptr<XMLNode>(child));
+	_children.emplace(++it, unique_ptr<XMLNode>(child));
 	return true;
 }
 

@@ -22,7 +22,6 @@
 #define GRAPHICSPATH_HPP
 
 #include <cctype>
-#include <list>
 #include <ostream>
 #include <vector>
 #include "BoundingBox.hpp"
@@ -128,7 +127,7 @@ class GraphicsPath
 		void moveto (const Point &p) {
 			// avoid sequences of several MOVETOs; always use latest
 			if (_commands.empty() || _commands.back().type != Command::Type::MOVETO)
-				_commands.push_back(Command(Command::Type::MOVETO, p));
+				_commands.emplace_back(Command(Command::Type::MOVETO, p));
 			else
 				_commands.back().params[0] = p;
 		}
@@ -138,7 +137,7 @@ class GraphicsPath
 		}
 
 		void lineto (const Point &p) {
-			_commands.push_back(Command(Command::Type::LINETO, p));
+			_commands.emplace_back(Command(Command::Type::LINETO, p));
 		}
 
 		void conicto (const T &x1, const T &y1, const T &x2, const T &y2) {
@@ -146,7 +145,7 @@ class GraphicsPath
 		}
 
 		void conicto (const Point &p1, const Point &p2) {
-			_commands.push_back(Command(Command::Type::CONICTO, p1, p2));
+			_commands.emplace_back(Command(Command::Type::CONICTO, p1, p2));
 		}
 
 		void cubicto (const T &x1, const T &y1, const T &x2, const T &y2, const T &x3, const T &y3) {
@@ -154,11 +153,11 @@ class GraphicsPath
 		}
 
 		void cubicto (const Point &p1, const Point &p2, const Point &p3) {
-			_commands.push_back(Command(Command::Type::CUBICTO, p1, p2, p3));
+			_commands.emplace_back(Command(Command::Type::CUBICTO, p1, p2, p3));
 		}
 
 		void closepath () {
-			_commands.push_back(Command(Command::Type::CLOSEPATH));
+			_commands.emplace_back(Command(Command::Type::CLOSEPATH));
 		}
 
 		const std::vector<Command>& commands () const {

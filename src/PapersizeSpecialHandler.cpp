@@ -24,7 +24,7 @@ void PapersizeSpecialHandler::preprocess (const char*, std::istream &is, Special
 		if (!_pageSizes.empty() && _pageSizes.back().first == pageno)
 			_pageSizes.back().second = whpair;
 		else
-			_pageSizes.push_back(PageSize(pageno, whpair));
+			_pageSizes.emplace_back(PageSize(pageno, whpair));
 	}
 }
 

@@ -60,7 +60,7 @@ class FlattenActions : public CurvedPath::Actions {
 			if (p == _currentPoint && !_currentPoly.empty())
 				return;
 			closepath();
-			_currentPoly.push_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), 0));
+			_currentPoly.emplace_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), 0));
 			_currentPoint = _startPoint = p;
 		}
 
@@ -68,10 +68,10 @@ class FlattenActions : public CurvedPath::Actions {
 			if (p == _currentPoint && !_currentPoly.empty())
 				return;
 			if (_currentPoly.empty()) // this shouldn't happen but in case it does...
-				_currentPoly.push_back(IntPoint(0, 0, 0)); // ...add a start point first
+				_currentPoly.emplace_back(IntPoint(0, 0, 0)); // ...add a start point first
 			_numLines--;
 			_currentPoly.back().Z.label2 = _numLines;
-			_currentPoly.push_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), ZType(_numLines, 0)));
+			_currentPoly.emplace_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), ZType(_numLines, 0)));
 			_currentPoint = p;
 		}
 
@@ -102,7 +102,7 @@ class FlattenActions : public CurvedPath::Actions {
 	protected:
 		void addCurvePoints (const Bezier &bezier) {
 			if (_currentPoly.empty()) // this shouldn't happen but in case it does, ...
-				_currentPoly.push_back(IntPoint(0, 0, 0)); // ...add a start point first
+				_currentPoly.emplace_back(IntPoint(0, 0, 0)); // ...add a start point first
 			vector<DPair> points;  // points of flattened curve
 			vector<double> t;      // corresponding 'time' parameters
 			bezier.approximate(0.01, points, &t);
@@ -115,7 +115,7 @@ class FlattenActions : public CurvedPath::Actions {
 					continue;
 				_currentPoly.back().Z.label2 = ZLabel(_curves.size(), t[i-1]);
 				ZLabel label(_curves.size(), t[i]);
-				_currentPoly.push_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), ZType(label, label)));
+				_currentPoly.emplace_back(IntPoint(to_cInt(p.x()), to_cInt(p.y()), ZType(label, label)));
 				_currentPoint = p;
 			}
 		}

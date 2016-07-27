@@ -238,7 +238,7 @@ void EmSpecialHandler::line (InputReader &ir, SpecialActions& actions) {
 		// Line endpoints don't necessarily have to be defined before
 		// a line definition. If a point isn't defined yet, we put the line
 		// in a wait list and process the lines at the end of the page.
-		_lines.push_back(Line(pointnum1, pointnum2, char(cut1), char(cut2), linewidth));
+		_lines.emplace_back(Line(pointnum1, pointnum2, char(cut1), char(cut2), linewidth));
 	}
 }
 

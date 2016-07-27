@@ -96,7 +96,7 @@ void BoundingBox::extractLengths (string boxstr, vector<Length> &lengths) {
 			r++;
 		lenstr = boxstr.substr(l, r-l);
 		if (!lenstr.empty()) {
-			lengths.push_back(Length(lenstr));
+			lengths.emplace_back(Length(lenstr));
 			if (boxstr[r] == ',')
 				r++;
 			l = r;
