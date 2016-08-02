@@ -19,75 +19,84 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <sstream>
 #include "CommandLine.hpp"
+
+using namespace std;
 
 TEST(CommandLineTest, noarg_short) {
 	CommandLine cmd;
 	const char *args[] = {"progname", "-s", "-n", "-h"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	cmd.parse(4, argv);
 
-	EXPECT_TRUE(cmd.stdout_given());
-	EXPECT_TRUE(cmd.no_fonts_given());
-	EXPECT_TRUE(cmd.help_given());
-	EXPECT_FALSE(cmd.list_specials_given());
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_TRUE(cmd.stdoutOpt.given());
+	EXPECT_TRUE(cmd.noFontsOpt.given());
+	EXPECT_TRUE(cmd.helpOpt.given());
+	EXPECT_FALSE(cmd.listSpecialsOpt.given());
+	EXPECT_FALSE(cmd.verbosityOpt.given());
+	EXPECT_EQ(cmd.verbosityOpt.value(), 7);
+	EXPECT_EQ(cmd.filenames().size(), 0);
 }
 
 
 TEST(CommandLineTest, noarg_long) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "--no-fonts", "--stdout", "--help", "--verbosity=5"};
+	const char *args[] = {"progname", "--progress", "--no-fonts", "--stdout", "--help", "--verbosity=5"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(5, argv, false);
+	cmd.parse(6, argv);
 
-	EXPECT_TRUE(cmd.stdout_given());
-	EXPECT_TRUE(cmd.no_fonts_given());
-	EXPECT_TRUE(cmd.help_given());
-	EXPECT_FALSE(cmd.list_specials_given());
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
-	EXPECT_TRUE(cmd.verbosity_given());
-	EXPECT_EQ(cmd.verbosity_arg(), 5);
+	EXPECT_TRUE(cmd.progressOpt.given());
+	EXPECT_DOUBLE_EQ(cmd.progressOpt.value(), 0.5);
+	EXPECT_TRUE(cmd.stdoutOpt.given());
+	EXPECT_TRUE(cmd.noFontsOpt.given());
+	EXPECT_TRUE(cmd.helpOpt.given());
+	EXPECT_FALSE(cmd.listSpecialsOpt.given());
+	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_TRUE(cmd.verbosityOpt.given());
+	EXPECT_EQ(cmd.verbosityOpt.value(), 5);
 }
 
 
 TEST(CommandLineTest, arg_short) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-p5", "-r45", "-omyfile.xyz", "-ayes", "-v3"};
+	const char *args[] = {"progname", "-P", "-p5", "-r45", "-omyfile.xyz", "-ayes", "-v3"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(6, argv, false);
+	cmd.parse(7, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "5");
-	EXPECT_TRUE(cmd.rotate_given());
-	EXPECT_EQ(cmd.rotate_arg(), 45);
-	EXPECT_TRUE(cmd.output_given());
-	EXPECT_EQ(cmd.output_arg(), "myfile.xyz");
-	EXPECT_FALSE(cmd.bbox_given());
-	EXPECT_EQ(cmd.bbox_arg(), "min");
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
-	EXPECT_TRUE(cmd.trace_all_given());
-	EXPECT_TRUE(cmd.trace_all_arg());
-	EXPECT_TRUE(cmd.verbosity_given());
-	EXPECT_EQ(cmd.verbosity_arg(), 3);
+	EXPECT_TRUE(cmd.progressOpt.given());
+	EXPECT_DOUBLE_EQ(cmd.progressOpt.value(), 0.5);
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "5");
+	EXPECT_TRUE(cmd.rotateOpt.given());
+	EXPECT_EQ(cmd.rotateOpt.value(), 45);
+	EXPECT_TRUE(cmd.outputOpt.given());
+	EXPECT_EQ(cmd.outputOpt.value(), "myfile.xyz");
+	EXPECT_FALSE(cmd.bboxOpt.given());
+	EXPECT_EQ(cmd.bboxOpt.value(), "min");
+	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_TRUE(cmd.traceAllOpt.given());
+	EXPECT_TRUE(cmd.traceAllOpt.value());
+	EXPECT_TRUE(cmd.verbosityOpt.given());
+	EXPECT_EQ(cmd.verbosityOpt.value(), 3);
 }
 
 
 TEST(CommandLineTest, arg_combined) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-lse", "-p5", "-omyfile.xyz"};
-	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	const char *args1[] = {"progname", "-lse", "-p5", "-omyfile.xyz"};
+	char **argv = const_cast<char**>(args1);
+	cmd.parse(4, argv);
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "5");
+	EXPECT_TRUE(cmd.listSpecialsOpt.given());
+	EXPECT_TRUE(cmd.stdoutOpt.given());
+	EXPECT_TRUE(cmd.exactOpt.given());
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "5");
-	EXPECT_TRUE(cmd.list_specials_given());
-	EXPECT_TRUE(cmd.stdout_given());
-	EXPECT_TRUE(cmd.exact_given());
-	EXPECT_FALSE(cmd.error());
+	// can't combine short options that accept optional parameters
+	const char *args2[] = {"progname", "-nls", "-p5", "-omyfile.xyz"};
+	argv = const_cast<char**>(args2);
+	EXPECT_THROW(cmd.parse(4, argv), CL::CommandLineException);
 }
 
 
@@ -95,16 +104,15 @@ TEST(CommandLineTest, arg_separated) {
 	CommandLine cmd;
 	const char *args[] = {"progname", "-p", "5", "-r",  "45", "myfile.xyz", "-afalse"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(7, argv, false);
+	cmd.parse(7, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "5");
-	EXPECT_TRUE(cmd.rotate_given());
-	EXPECT_EQ(cmd.rotate_arg(), 45);
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 1);
-	EXPECT_TRUE(cmd.trace_all_given());
-	EXPECT_FALSE(cmd.trace_all_arg());
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "5");
+	EXPECT_TRUE(cmd.rotateOpt.given());
+	EXPECT_EQ(cmd.rotateOpt.value(), 45);
+	EXPECT_EQ(cmd.filenames().size(), 1);
+	EXPECT_TRUE(cmd.traceAllOpt.given());
+	EXPECT_FALSE(cmd.traceAllOpt.value());
 }
 
 
@@ -112,39 +120,51 @@ TEST(CommandLineTest, arg_long) {
 	CommandLine cmd;
 	const char *args[] = {"progname", "--page=9", "--rotate=-45.5", "--trace-all", "--output=myfile.zyx"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(5, argv, false);
+	cmd.parse(5, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "9");
-	EXPECT_TRUE(cmd.rotate_given());
-	EXPECT_EQ(cmd.rotate_arg(), -45.5);
-	EXPECT_TRUE(cmd.output_given());
-	EXPECT_EQ(cmd.output_arg(), "myfile.zyx");
-	EXPECT_FALSE(cmd.bbox_given());
-	EXPECT_EQ(cmd.bbox_arg(), "min");
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
-	EXPECT_TRUE(cmd.trace_all_given());
-	EXPECT_FALSE(cmd.trace_all_arg());
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "9");
+	EXPECT_TRUE(cmd.rotateOpt.given());
+	EXPECT_EQ(cmd.rotateOpt.value(), -45.5);
+	EXPECT_TRUE(cmd.outputOpt.given());
+	EXPECT_EQ(cmd.outputOpt.value(), "myfile.zyx");
+	EXPECT_FALSE(cmd.bboxOpt.given());
+	EXPECT_EQ(cmd.bboxOpt.value(), "min");
+	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_TRUE(cmd.traceAllOpt.given());
+	EXPECT_FALSE(cmd.traceAllOpt.value());
+}
+
+
+TEST(CommandLineTest, string_arg) {
+	CommandLine cmd;
+	const char *args[] = {"progname", "--page=9 - 10", "-m first second"};
+	char **argv = const_cast<char**>(args);
+	cmd.parse(3, argv);
+
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "9 - 10");
+	EXPECT_TRUE(cmd.fontmapOpt.given());
+	EXPECT_EQ(cmd.fontmapOpt.value(), "first second");
 }
 
 
 TEST(CommandLineTest, abbrev_long) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "--pa=9", "--rot=-45.5", "--out=myfile.zyx"};
+	const char *args[] = {"progname", "--pa=9", "--rot=-45.5", "--out=myfile.zyx", "--color"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(4, argv, false);
+	cmd.parse(5, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "9");
-	EXPECT_TRUE(cmd.rotate_given());
-	EXPECT_EQ(cmd.rotate_arg(), -45.5);
-	EXPECT_TRUE(cmd.output_given());
-	EXPECT_EQ(cmd.output_arg(), "myfile.zyx");
-	EXPECT_FALSE(cmd.bbox_given());
-	EXPECT_EQ(cmd.bbox_arg(), "min");
-	EXPECT_FALSE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "9");
+	EXPECT_TRUE(cmd.rotateOpt.given());
+	EXPECT_EQ(cmd.rotateOpt.value(), -45.5);
+	EXPECT_TRUE(cmd.outputOpt.given());
+	EXPECT_EQ(cmd.outputOpt.value(), "myfile.zyx");
+	EXPECT_FALSE(cmd.bboxOpt.given());
+	EXPECT_EQ(cmd.bboxOpt.value(), "min");
+	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_TRUE(cmd.colorOpt.given());
 }
 
 
@@ -153,34 +173,30 @@ TEST(CommandLineTest, error) {
 	// error on wrong argument type
 	const char *args1[] = {"progname", "--rotate=x"};
 	char **argv = const_cast<char**>(args1);
-	cmd.parse(2, argv, false);
 
-	EXPECT_FALSE(cmd.rotate_given());
-	EXPECT_TRUE(cmd.error());
+	EXPECT_THROW(cmd.parse(2, argv), CL::CommandLineException);
 
 	// error on missing arguments
 	const char *args2[] = {"progname", "--page", "--zip"};
 	argv = const_cast<char**>(args2);
-	cmd.parse(3, argv, false);
-	EXPECT_TRUE(cmd.zip_given());
-	EXPECT_EQ(cmd.zip_arg(), 9);
-	EXPECT_FALSE(cmd.page_given());
-	EXPECT_FALSE(cmd.rotate_given());
-	EXPECT_TRUE(cmd.error());
-	EXPECT_EQ(cmd.numFiles(), 0);
+	EXPECT_THROW(cmd.parse(3, argv), CL::CommandLineException);
+	EXPECT_FALSE(cmd.zipOpt.given());
+	EXPECT_EQ(cmd.zipOpt.value(), 9);
+	EXPECT_FALSE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "1");
+	EXPECT_FALSE(cmd.rotateOpt.given());
+	EXPECT_EQ(cmd.filenames().size(), 0);
 
 	// error on ambiguous abbreviation of long option
 	const char *args3[] = {"progname", "--no"};
 	argv = const_cast<char**>(args3);
-	cmd.parse(2, argv, false);
-	EXPECT_TRUE(cmd.error());
+	EXPECT_THROW(cmd.parse(2, argv), CL::CommandLineException);
 
 	// incorrect boolean value
 	const char *args4[] = {"progname", "--trace-all=nope"};
 	argv = const_cast<char**>(args4);
-	cmd.parse(2, argv, false);
-	EXPECT_FALSE(cmd.trace_all_given());
-	EXPECT_TRUE(cmd.error());
+	EXPECT_THROW(cmd.parse(2, argv), CL::CommandLineException);
+	EXPECT_FALSE(cmd.traceAllOpt.given());
 }
 
 
@@ -188,17 +204,16 @@ TEST(CommandLineTest, file) {
 	CommandLine cmd;
 	const char *args1[] = {"progname", "--page=3", "-z5", "myfile1", "-l", "myfile2"};
 	char **argv = const_cast<char**>(args1);
-	cmd.parse(6, argv, false);
+	cmd.parse(6, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "3");
-	EXPECT_TRUE(cmd.zip_given());
-	EXPECT_EQ(cmd.zip_arg(), 5);
-	EXPECT_TRUE(cmd.list_specials_given());
-	EXPECT_EQ(cmd.numFiles(), 2);
-	EXPECT_STREQ(cmd.file(0), "myfile1");
-	EXPECT_STREQ(cmd.file(1), "myfile2");
-	EXPECT_FALSE(cmd.error());
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "3");
+	EXPECT_TRUE(cmd.zipOpt.given());
+	EXPECT_EQ(cmd.zipOpt.value(), 5);
+	EXPECT_TRUE(cmd.listSpecialsOpt.given());
+	EXPECT_EQ(cmd.filenames().size(), 2);
+	EXPECT_EQ(cmd.filenames()[0], "myfile1");
+	EXPECT_EQ(cmd.filenames()[1], "myfile2");
 }
 
 
@@ -206,15 +221,15 @@ TEST(CommandLineTest, files_only) {
 	CommandLine cmd;
 	const char *args1[] = {"progname", "--page=3", "-z5", "--", "-l", "myfile"};
 	char **argv = const_cast<char**>(args1);
-	cmd.parse(6, argv, false);
+	cmd.parse(6, argv);
 
-	EXPECT_TRUE(cmd.page_given());
-	EXPECT_EQ(cmd.page_arg(), "3");
-	EXPECT_TRUE(cmd.zip_given());
-	EXPECT_EQ(cmd.zip_arg(), 5);
-	EXPECT_EQ(cmd.numFiles(), 2);
-	EXPECT_STREQ(cmd.file(0), "-l");
-	EXPECT_STREQ(cmd.file(1), "myfile");
+	EXPECT_TRUE(cmd.pageOpt.given());
+	EXPECT_EQ(cmd.pageOpt.value(), "3");
+	EXPECT_TRUE(cmd.zipOpt.given());
+	EXPECT_EQ(cmd.zipOpt.value(), 5);
+	EXPECT_EQ(cmd.filenames().size(), 2);
+	EXPECT_EQ(cmd.filenames()[0], "-l");
+	EXPECT_EQ(cmd.filenames()[1], "myfile");
 }
 
 
@@ -223,7 +238,8 @@ static void out (const char *) {}
 TEST(CommandLineTest, help) {
 	// only check whether help() succeeds
 	CommandLine cmd;
-	cmd.help(0, out);
-	cmd.help(1, out);
-	cmd.help(2, out);
+	ostringstream oss;
+	cmd.help(oss, 0);
+	cmd.help(oss, 1);
+	cmd.help(oss, 2);
 }

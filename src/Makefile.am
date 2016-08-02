@@ -34,19 +34,19 @@ libdvisvgm_a_SOURCES = \
 	Character.hpp \
 	CharMapID.cpp \
 	CharMapID.hpp \
+	CLCommandLine.cpp \
+	CLCommandLine.hpp \
+	CLOption.hpp \
 	CMap.cpp \
 	CMap.hpp \
 	CMapManager.cpp \
 	CMapManager.hpp \
 	CMapReader.cpp \
 	CMapReader.hpp \
-	CmdLineParserBase.cpp \
-	CmdLineParserBase.hpp \
 	Color.cpp \
 	Color.hpp \
 	ColorSpecialHandler.cpp \
 	ColorSpecialHandler.hpp \
-	CommandLine.cpp \
 	CommandLine.hpp \
 	CRC32.cpp \
 	CRC32.hpp \
@@ -223,15 +223,10 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 
 AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 
-# the command-line parser is generated from options.xml by opt2cpp
-$(srcdir)/CommandLine.cpp: options.xml
-	if test -f opt2cpp.xsl; then \
-		rm -f $@ $*.hpp; \
-		xsltproc opt2cpp.xsl $<; \
-	elif test -f $(srcdir)/opt2cpp.py; then \
-		rm -f $@ $*.hpp; \
-		python2 $(srcdir)/opt2cpp.py $< $@ $*.hpp; \
-	fi
+# the command-line parser class is generated from options.xml by opt2cpp
+$(srcdir)/CommandLine.hpp: options.xml
+	rm -f $@ $*.hpp
+	python $(srcdir)/opt2cpp.py $< >$@
 
 # Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter
 $(srcdir)/psdefs.cpp: psdefs.ps

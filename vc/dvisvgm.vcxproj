@@ -181,13 +181,12 @@
     <ClCompile Include="..\src\BoundingBox.cpp" />
     <ClCompile Include="..\src\Calculator.cpp" />
     <ClCompile Include="..\src\CharMapID.cpp" />
+    <ClCompile Include="..\src\CLCommandLine.cpp" />
     <ClCompile Include="..\src\CMap.cpp" />
     <ClCompile Include="..\src\CMapManager.cpp" />
     <ClCompile Include="..\src\CMapReader.cpp" />
-    <ClCompile Include="..\src\CmdLineParserBase.cpp" />
     <ClCompile Include="..\src\Color.cpp" />
     <ClCompile Include="..\src\ColorSpecialHandler.cpp" />
-    <ClCompile Include="..\src\CommandLine.cpp" />
     <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
@@ -274,10 +273,10 @@
     <ClInclude Include="..\src\Calculator.hpp" />
     <ClInclude Include="..\src\Character.hpp" />
     <ClInclude Include="..\src\CharMapID.hpp" />
+    <ClInclude Include="..\src\CLCommandLine.hpp" />
     <ClInclude Include="..\src\CMap.hpp" />
     <ClInclude Include="..\src\CMapManager.hpp" />
     <ClInclude Include="..\src\CMapReader.hpp" />
-    <ClInclude Include="..\src\CmdLineParserBase.hpp" />
     <ClInclude Include="..\src\Color.hpp" />
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />

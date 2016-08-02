@@ -2,224 +2,139 @@
 // It is part of the dvisvgm package and published under the terms
 // of the GNU General Public License version 3, or (at your option) any later version.
 // See file COPYING for further details.
-// (C) 2009-2016 Martin Gieseking <martin.gieseking@uos.de>
+// (C) 2016 Martin Gieseking <martin.gieseking@uos.de>
 
 #ifndef COMMANDLINE_HPP
 #define COMMANDLINE_HPP
 
 #include <config.h>
-#include "CmdLineParserBase.hpp"
+#include <array>
+#include <vector>
+#include "CLCommandLine.hpp"
 
-class CommandLine : public CmdLineParserBase
+using CL::Option;
+using CL::TypedOption;
+
+class CommandLine : public CL::CommandLine
 {
 	public:
-		CommandLine () {init();}
-		CommandLine (int argc, char **argv, bool printErrors) {parse(argc, argv, printErrors);}
-		bool bbox_given () const {return _bbox_given;}
-		const std::string& bbox_arg () const {return _bbox_arg;}
-		bool cache_given () const {return _cache_given;}
-		const std::string& cache_arg () const {return _cache_arg;}
-#if !defined(DISABLE_GS)
-		bool clipjoin_given () const {return _clipjoin_given;}
-#endif
-		bool color_given () const {return _color_given;}
-		bool colornames_given () const {return _colornames_given;}
-		bool comments_given () const {return _comments_given;}
-#if !defined(DISABLE_GS)
-		bool eps_given () const {return _eps_given;}
-#endif
-		bool exact_given () const {return _exact_given;}
-		bool fontmap_given () const {return _fontmap_given;}
-		const std::string& fontmap_arg () const {return _fontmap_arg;}
-#if !defined(DISABLE_GS)
-		bool grad_overlap_given () const {return _grad_overlap_given;}
-#endif
-#if !defined(DISABLE_GS)
-		bool grad_segments_given () const {return _grad_segments_given;}
-		int grad_segments_arg () const {return _grad_segments_arg;}
-#endif
-#if !defined(DISABLE_GS)
-		bool grad_simplify_given () const {return _grad_simplify_given;}
-		double grad_simplify_arg () const {return _grad_simplify_arg;}
-#endif
-		bool help_given () const {return _help_given;}
-		int help_arg () const {return _help_arg;}
-		bool keep_given () const {return _keep_given;}
-#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
-		bool libgs_given () const {return _libgs_given;}
-		const std::string& libgs_arg () const {return _libgs_arg;}
-#endif
-		bool linkmark_given () const {return _linkmark_given;}
-		const std::string& linkmark_arg () const {return _linkmark_arg;}
-		bool list_specials_given () const {return _list_specials_given;}
-		bool mag_given () const {return _mag_given;}
-		double mag_arg () const {return _mag_arg;}
-		bool no_fonts_given () const {return _no_fonts_given;}
-		int no_fonts_arg () const {return _no_fonts_arg;}
-		bool no_merge_given () const {return _no_merge_given;}
-		bool no_mktexmf_given () const {return _no_mktexmf_given;}
-		bool no_specials_given () const {return _no_specials_given;}
-		const std::string& no_specials_arg () const {return _no_specials_arg;}
-		bool no_styles_given () const {return _no_styles_given;}
-		bool output_given () const {return _output_given;}
-		const std::string& output_arg () const {return _output_arg;}
-		bool page_given () const {return _page_given;}
-		const std::string& page_arg () const {return _page_arg;}
-		bool precision_given () const {return _precision_given;}
-		int precision_arg () const {return _precision_arg;}
-		bool progress_given () const {return _progress_given;}
-		double progress_arg () const {return _progress_arg;}
-		bool relative_given () const {return _relative_given;}
-		bool rotate_given () const {return _rotate_given;}
-		double rotate_arg () const {return _rotate_arg;}
-		bool scale_given () const {return _scale_given;}
-		const std::string& scale_arg () const {return _scale_arg;}
-		bool stdout_given () const {return _stdout_given;}
-		bool trace_all_given () const {return _trace_all_given;}
-		bool trace_all_arg () const {return _trace_all_arg;}
-		bool transform_given () const {return _transform_given;}
-		const std::string& transform_arg () const {return _transform_arg;}
-		bool translate_given () const {return _translate_given;}
-		const std::string& translate_arg () const {return _translate_arg;}
-		bool verbosity_given () const {return _verbosity_given;}
-		unsigned verbosity_arg () const {return _verbosity_arg;}
-		bool version_given () const {return _version_given;}
-		bool version_arg () const {return _version_arg;}
-		bool zip_given () const {return _zip_given;}
-		int zip_arg () const {return _zip_arg;}
-		bool zoom_given () const {return _zoom_given;}
-		double zoom_arg () const {return _zoom_arg;}
+		CommandLine () : CL::CommandLine(
+			"dvisvgm",
+			"This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.",
+			"[options] dvifile\n-E [options] epsfile",
+			"Copyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de>"
+		) {}
+
+		CommandLine (int argc, char **argv) : CommandLine() {
+			parse(argc, argv);
+		}
+
+		// option variables
+		TypedOption<std::string, Option::ArgMode::REQUIRED> bboxOpt {"bbox", 'b', "size", "min", "set size of bounding box"};
+		TypedOption<std::string, Option::ArgMode::OPTIONAL> cacheOpt {"cache", 'C', "dir", "set/print path of cache directory"};
+		Option clipjoinOpt {"clipjoin", 'j', "compute intersection of clipping paths"};
+		Option colorOpt {"color", '\0', "colorize messages"};
+		Option colornamesOpt {"colornames", '\0', "prefer color names to RGB values if possible"};
+		Option commentsOpt {"comments", '\0', "add comments with additional information"};
+		Option epsOpt {"eps", 'E', "convert an EPS file to SVG"};
+		Option exactOpt {"exact", 'e', "compute exact glyph boxes"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> fontmapOpt {"fontmap", 'm', "filenames", "evaluate (additional) font map files"};
+		Option gradOverlapOpt {"grad-overlap", '\0', "create operlapping color gradient segments"};
+		TypedOption<int, Option::ArgMode::REQUIRED> gradSegmentsOpt {"grad-segments", '\0', "number", 20, "number of color gradient segments per row"};
+		TypedOption<double, Option::ArgMode::REQUIRED> gradSimplifyOpt {"grad-simplify", '\0', "delta", 0.05, "reduce level of detail for small segments"};
+		TypedOption<int, Option::ArgMode::OPTIONAL> helpOpt {"help", 'h', "mode", 0, "print this summary of options and exit"};
+		Option keepOpt {"keep", '\0', "keep temporary files"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> libgsOpt {"libgs", '\0', "filename", "set name of Ghostscript shared library"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> linkmarkOpt {"linkmark", 'L', "style", "box", "select how to mark hyperlinked areas"};
+		Option listSpecialsOpt {"list-specials", 'l', "print supported special sets and exit"};
+		TypedOption<double, Option::ArgMode::REQUIRED> magOpt {"mag", 'M', "factor", 4, "magnification of Metafont output"};
+		TypedOption<int, Option::ArgMode::OPTIONAL> noFontsOpt {"no-fonts", 'n', "variant", 0, "draw glyphs by using path elements"};
+		Option noMergeOpt {"no-merge", '\0', "don't merge adjacent text elements"};
+		Option noMktexmfOpt {"no-mktexmf", '\0', "don't try to create missing fonts"};
+		TypedOption<std::string, Option::ArgMode::OPTIONAL> noSpecialsOpt {"no-specials", 'S', "prefixes", "don't process [selected] specials"};
+		Option noStylesOpt {"no-styles", '\0', "don't use styles to reference fonts"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> outputOpt {"output", 'o', "pattern", "set name pattern of output files"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> pageOpt {"page", 'p', "ranges", "1", "choose page(s) to convert"};
+		TypedOption<int, Option::ArgMode::REQUIRED> precisionOpt {"precision", 'd', "number", 0, "set number of decimal points (0-6)"};
+		TypedOption<double, Option::ArgMode::OPTIONAL> progressOpt {"progress", 'P', "delay", 0.5, "enable progess indicator"};
+		Option relativeOpt {"relative", 'R', "create relative path commands"};
+		TypedOption<double, Option::ArgMode::REQUIRED> rotateOpt {"rotate", 'r', "angle", "rotate page content clockwise"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> scaleOpt {"scale", 'c', "sx[,sy]", "scale page content"};
+		Option stdoutOpt {"stdout", 's', "write SVG output to stdout"};
+		TypedOption<bool, Option::ArgMode::OPTIONAL> traceAllOpt {"trace-all", 'a', "retrace", false, "trace all glyphs of bitmap fonts"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> transformOpt {"transform", 'T', "commands", "transform page content"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> translateOpt {"translate", 't', "tx[,ty]", "shift page content"};
+		TypedOption<unsigned, Option::ArgMode::REQUIRED> verbosityOpt {"verbosity", 'v', "level", 7, "set verbosity level (0-7)"};
+		TypedOption<bool, Option::ArgMode::OPTIONAL> versionOpt {"version", 'V', "extended", false, "print version and exit"};
+		TypedOption<int, Option::ArgMode::OPTIONAL> zipOpt {"zip", 'z', "level", 9, "create compressed .svgz file"};
+		TypedOption<double, Option::ArgMode::REQUIRED> zoomOpt {"zoom", 'Z', "factor", 1.0, "zoom page content"};
+
 	protected:
-		void init () override;
-		const CmdLineParserBase::Option* options (size_t *numopts) const override;
-		const char** helplines (size_t *numlines) const override;
-		void handle_bbox (InputReader &ir, const Option &opt, bool longopt);
-		void handle_cache (InputReader &ir, const Option &opt, bool longopt);
-#if !defined(DISABLE_GS)
-		void handle_clipjoin (InputReader &ir, const Option &opt, bool longopt);
-#endif
-		void handle_color (InputReader &ir, const Option &opt, bool longopt);
-		void handle_colornames (InputReader &ir, const Option &opt, bool longopt);
-		void handle_comments (InputReader &ir, const Option &opt, bool longopt);
-#if !defined(DISABLE_GS)
-		void handle_eps (InputReader &ir, const Option &opt, bool longopt);
-#endif
-		void handle_exact (InputReader &ir, const Option &opt, bool longopt);
-		void handle_fontmap (InputReader &ir, const Option &opt, bool longopt);
-#if !defined(DISABLE_GS)
-		void handle_grad_overlap (InputReader &ir, const Option &opt, bool longopt);
-#endif
-#if !defined(DISABLE_GS)
-		void handle_grad_segments (InputReader &ir, const Option &opt, bool longopt);
-#endif
-#if !defined(DISABLE_GS)
-		void handle_grad_simplify (InputReader &ir, const Option &opt, bool longopt);
-#endif
-		void handle_help (InputReader &ir, const Option &opt, bool longopt);
-		void handle_keep (InputReader &ir, const Option &opt, bool longopt);
-#if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
-		void handle_libgs (InputReader &ir, const Option &opt, bool longopt);
-#endif
-		void handle_linkmark (InputReader &ir, const Option &opt, bool longopt);
-		void handle_list_specials (InputReader &ir, const Option &opt, bool longopt);
-		void handle_mag (InputReader &ir, const Option &opt, bool longopt);
-		void handle_no_fonts (InputReader &ir, const Option &opt, bool longopt);
-		void handle_no_merge (InputReader &ir, const Option &opt, bool longopt);
-		void handle_no_mktexmf (InputReader &ir, const Option &opt, bool longopt);
-		void handle_no_specials (InputReader &ir, const Option &opt, bool longopt);
-		void handle_no_styles (InputReader &ir, const Option &opt, bool longopt);
-		void handle_output (InputReader &ir, const Option &opt, bool longopt);
-		void handle_page (InputReader &ir, const Option &opt, bool longopt);
-		void handle_precision (InputReader &ir, const Option &opt, bool longopt);
-		void handle_progress (InputReader &ir, const Option &opt, bool longopt);
-		void handle_relative (InputReader &ir, const Option &opt, bool longopt);
-		void handle_rotate (InputReader &ir, const Option &opt, bool longopt);
-		void handle_scale (InputReader &ir, const Option &opt, bool longopt);
-		void handle_stdout (InputReader &ir, const Option &opt, bool longopt);
-		void handle_trace_all (InputReader &ir, const Option &opt, bool longopt);
-		void handle_transform (InputReader &ir, const Option &opt, bool longopt);
-		void handle_translate (InputReader &ir, const Option &opt, bool longopt);
-		void handle_verbosity (InputReader &ir, const Option &opt, bool longopt);
-		void handle_version (InputReader &ir, const Option &opt, bool longopt);
-		void handle_zip (InputReader &ir, const Option &opt, bool longopt);
-		void handle_zoom (InputReader &ir, const Option &opt, bool longopt);
+		std::vector<OptSectPair>& options () const override {return _options;}
+		const char* section (size_t n) const override {return n < _sections.size() ? _sections[n] : nullptr;}
 
 	private:
-		static const CmdLineParserBase::Option _options[];
-		bool _bbox_given;
-		std::string _bbox_arg;
-		bool _cache_given;
-		std::string _cache_arg;
+		std::array<const char*, 5> _sections = {{
+			"Input options",
+			"SVG output options",
+			"SVG transformations",
+			"Processing options",
+			"Message options",
+		}};
+
+		mutable std::vector<OptSectPair> _options = {
+			{&pageOpt, 0},
+			{&fontmapOpt, 0},
 #if !defined(DISABLE_GS)
-		bool _clipjoin_given;
+			{&epsOpt, 0},
 #endif
-		bool _color_given;
-		bool _colornames_given;
-		bool _comments_given;
+			{&bboxOpt, 1},
 #if !defined(DISABLE_GS)
-		bool _eps_given;
+			{&clipjoinOpt, 1},
 #endif
-		bool _exact_given;
-		bool _fontmap_given;
-		std::string _fontmap_arg;
+			{&colornamesOpt, 1},
+			{&commentsOpt, 1},
 #if !defined(DISABLE_GS)
-		bool _grad_overlap_given;
+			{&gradOverlapOpt, 1},
 #endif
 #if !defined(DISABLE_GS)
-		bool _grad_segments_given;
-		int _grad_segments_arg;
+			{&gradSegmentsOpt, 1},
 #endif
 #if !defined(DISABLE_GS)
-		bool _grad_simplify_given;
-		double _grad_simplify_arg;
+			{&gradSimplifyOpt, 1},
 #endif
-		bool _help_given;
-		int _help_arg;
-		bool _keep_given;
+			{&linkmarkOpt, 1},
+			{&outputOpt, 1},
+			{&precisionOpt, 1},
+			{&relativeOpt, 1},
+			{&stdoutOpt, 1},
+			{&noFontsOpt, 1},
+			{&noMergeOpt, 1},
+			{&noStylesOpt, 1},
+			{&zipOpt, 1},
+			{&rotateOpt, 2},
+			{&scaleOpt, 2},
+			{&translateOpt, 2},
+			{&transformOpt, 2},
+			{&zoomOpt, 2},
+			{&cacheOpt, 3},
+			{&exactOpt, 3},
+			{&keepOpt, 3},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
-		bool _libgs_given;
-		std::string _libgs_arg;
+			{&libgsOpt, 3},
 #endif
-		bool _linkmark_given;
-		std::string _linkmark_arg;
-		bool _list_specials_given;
-		bool _mag_given;
-		double _mag_arg;
-		bool _no_fonts_given;
-		int _no_fonts_arg;
-		bool _no_merge_given;
-		bool _no_mktexmf_given;
-		bool _no_specials_given;
-		std::string _no_specials_arg;
-		bool _no_styles_given;
-		bool _output_given;
-		std::string _output_arg;
-		bool _page_given;
-		std::string _page_arg;
-		bool _precision_given;
-		int _precision_arg;
-		bool _progress_given;
-		double _progress_arg;
-		bool _relative_given;
-		bool _rotate_given;
-		double _rotate_arg;
-		bool _scale_given;
-		std::string _scale_arg;
-		bool _stdout_given;
-		bool _trace_all_given;
-		bool _trace_all_arg;
-		bool _transform_given;
-		std::string _transform_arg;
-		bool _translate_given;
-		std::string _translate_arg;
-		bool _verbosity_given;
-		unsigned _verbosity_arg;
-		bool _version_given;
-		bool _version_arg;
-		bool _zip_given;
-		int _zip_arg;
-		bool _zoom_given;
-		double _zoom_arg;
+			{&magOpt, 3},
+			{&noMktexmfOpt, 3},
+			{&noSpecialsOpt, 3},
+			{&traceAllOpt, 3},
+			{&colorOpt, 4},
+			{&helpOpt, 4},
+			{&listSpecialsOpt, 4},
+			{&progressOpt, 4},
+			{&verbosityOpt, 4},
+			{&versionOpt, 4},
+		};
 };
 
 #endif
+

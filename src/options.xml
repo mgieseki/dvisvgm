@@ -26,12 +26,13 @@
 		<usage>[options] dvifile</usage>
 		<usage>-E [options] epsfile</usage>
       <description>This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.</description>
+		<copyright>Copyright (C) 2005-2016 Martin Gieseking &lt;martin.gieseking@uos.de></copyright>
 	</program>
 	<options>
 		<section title="Input options">
 			<option long="page" short="p">
 				<arg type="string" name="ranges" default="1"/>
-				<description>choose pages to convert</description>
+				<description>choose page(s) to convert</description>
 			</option>
 			<option long="fontmap" short="m">
 				<arg type="string" name="filenames"/>
@@ -148,7 +149,7 @@
 				<description>don't process [selected] specials</description>
 			</option>
 			<option long="trace-all" short="a">
-            <arg name="retrace" type="bool" optional="yes" default="no"/>
+            <arg name="retrace" type="bool" optional="yes" default="false"/>
 				<description>trace all glyphs of bitmap fonts</description>
 			</option>
 		</section>
@@ -172,7 +173,7 @@
 				<description>set verbosity level (0-7)</description>
 			</option>
 			<option long="version" short="V">
-				<arg type="bool" name="extended" optional="yes" default="no"/>
+				<arg type="bool" name="extended" optional="yes" default="false"/>
 				<description>print version and exit</description>
 			</option>
 		</section>
