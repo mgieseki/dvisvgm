@@ -95,7 +95,7 @@ static string get_libgs (const string &fname) {
 	const char *gsdll = "mgsdll32.dll";
 #endif
 	// try to look up the Ghostscript DLL coming with MiKTeX
-	if (const char *gsdll_path = FileFinder::lookup(gsdll))
+	if (const char *gsdll_path = FileFinder::instance().lookup(gsdll))
 		return gsdll_path;
 #endif // MIKTEX
 #if defined(_WIN32)

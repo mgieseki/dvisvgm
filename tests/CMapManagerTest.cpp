@@ -35,11 +35,7 @@ class CMapManagerTest : public ::testing::Test
 	protected:
 		void SetUp () {
 			FileFinder::init("CMapManagerTest", "CMapManagerTest", false);
-			FileFinder::addLookupDir(SRCDIR"/data");
-		}
-
-		void TearDown () {
-			FileFinder::finish();
+			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}
 };
 

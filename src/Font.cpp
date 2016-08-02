@@ -184,8 +184,8 @@ const char* PhysicalFont::path () const {
 		default : ext = 0;
 	}
 	if (ext)
-		return FileFinder::lookup(name()+"."+ext);
-	return FileFinder::lookup(name());
+		return FileFinder::instance().lookup(name()+"."+ext);
+	return FileFinder::instance().lookup(name());
 }
 
 
@@ -642,7 +642,7 @@ VirtualFontImpl::VirtualFontImpl (string name, uint32_t cs, double ds, double ss
 
 
 const char* VirtualFontImpl::path () const {
-	return FileFinder::lookup(name()+".vf");
+	return FileFinder::instance().lookup(name()+".vf");
 }
 
 

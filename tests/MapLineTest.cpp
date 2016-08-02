@@ -33,10 +33,6 @@ class MapLineTest : public ::testing::Test
 		void SetUp () {
 			FileFinder::init("MapLineTest", "MapLineTest", false);
 		}
-
-		void TearDown () {
-			FileFinder::finish();
-		}
 };
 
 

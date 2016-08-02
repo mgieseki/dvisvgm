@@ -164,9 +164,9 @@ static void print_version (bool extended) {
 		const unsigned xxh_ver = XXH_versionNumber();
 		oss <<
 #ifdef MIKTEX
-			"MiKTeX:      " << FileFinder::version() << "\n"
+			"MiKTeX:      " << FileFinder::instance().version() << "\n"
 #else
-			"kpathsea:    " << FileFinder::version() << "\n"
+			"kpathsea:    " << FileFinder::instance().version() << "\n"
 #endif
 			"potrace:     " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
 			"xxhash:      " << xxh_ver/10000 << '.' << (xxh_ver/100)%100 << '.' << xxh_ver%100 << "\n"
@@ -322,7 +322,5 @@ int main (int argc, char *argv[]) {
 	catch (MessageException &e) {
 		Message::estream(true) << e.what() << '\n';
 	}
-	FileFinder::finish();
 	return 0;
 }
-

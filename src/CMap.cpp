@@ -29,7 +29,7 @@ using namespace std;
 
 
 const char* CMap::path () const {
-	return FileFinder::lookup(name(), "cmap", false);
+	return FileFinder::instance().lookup(name(), "cmap", false);
 }
 
 

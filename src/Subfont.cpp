@@ -79,7 +79,7 @@ SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
 	if (it != sfdMap.end())
 		return it->second;
 	SubfontDefinition *sfd=0;
-	if (const char *path = FileFinder::lookup(name+".sfd", false)) {
+	if (const char *path = FileFinder::instance().lookup(name+".sfd", false)) {
 		sfd = new SubfontDefinition(name, path);
 		sfdMap[name] = sfd;
 	}
@@ -89,7 +89,7 @@ SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
 
 /** Returns the full path to the corresponding .sfd file or 0 if it can't be found. */
 const char* SubfontDefinition::path () const {
-	return FileFinder::lookup(filename(), false);
+	return FileFinder::instance().lookup(filename(), false);
 }
 
 

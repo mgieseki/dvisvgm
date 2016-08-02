@@ -101,7 +101,7 @@ void PsSpecialHandler::initgraphics () {
 
 
 void PsSpecialHandler::processHeaderFile (const char *name) {
-	if (const char *path = FileFinder::lookup(name, false)) {
+	if (const char *path = FileFinder::instance().lookup(name, false)) {
 		ifstream ifs(path);
 		_psi.execute(string("%%BeginProcSet: ")+name+" 0 0\n", false);
 		_psi.execute(ifs, false);

@@ -141,7 +141,7 @@ static Font* create_font (const string &filename, const string &fontname, int fo
 	string ext;
 	if (const char *dot = strrchr(filename.c_str(), '.'))
 		ext = dot+1;
-	if (!ext.empty() && FileFinder::lookup(filename)) {
+	if (!ext.empty() && FileFinder::instance().lookup(filename)) {
 		if (ext == "pfb")
 			return PhysicalFont::create(fontname, checksum, dsize, ssize, PhysicalFont::Type::PFB);
 		if (ext == "otf")
@@ -269,7 +269,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 	}
 	else {
 		if (!FileSystem::exists(path))
-			path = FileFinder::lookup(filename, false);
+			path = FileFinder::instance().lookup(filename, false);
 		if (path) {
 			newfont.reset(new NativeFontImpl(path, fontIndex, ptsize, style, color));
 			newfont->findAndAssignBaseFontMap();

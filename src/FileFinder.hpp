@@ -18,19 +18,40 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef KPSFILEFINDER_HPP
-#define KPSFILEFINDER_HPP
+#ifndef FILEFINDER_HPP
+#define FILEFINDER_HPP
 
+#include <memory>
+#include <set>
 #include <string>
 
-struct FileFinder
+class MiKTeXCom;
+
+class FileFinder
 {
-	static void init (const char *argv0, const char *progname, bool enable_mktexmf);
-	static void finish ();
-	static std::string version ();
-	static void addLookupDir (const std::string &path);
-	static const char* lookup (const std::string &fname, const char *ftype, bool extended=true);
-	static const char* lookup (const std::string &fname, bool extended=true) {return lookup(fname, 0, extended);}
+	public:
+		static void init (const char *argv0, const char *progname, bool enable_mktexmf);
+		static FileFinder& instance ();
+		std::string version () const;
+		void addLookupDir (const std::string &path);
+		const char* lookup (const std::string &fname, const char *ftype, bool extended=true) const;
+		const char* lookup (const std::string &fname, bool extended=true) const {return lookup(fname, 0, extended);}
+
+	protected:
+		FileFinder ();
+		const char* findFile (const std::string &fname, const char *ftype) const;
+		const char* findMappedFile (std::string fname) const;
+		const char* mktex (const std::string &fname) const;
+
+	private:
+		static const char *_argv0;
+		static std::string _progname;
+		static bool _enableMktex;
+		bool _mktexEnabled;
+		std::set<std::string> _additionalDirs;
+#ifdef MIKTEX
+		std::unique_ptr<MiKTeXCom> _miktex;
+#endif
 };
 
 #endif

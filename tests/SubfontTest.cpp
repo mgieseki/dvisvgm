@@ -31,10 +31,6 @@ class SubfontTest : public ::testing::Test
 		void SetUp () {
 			FileFinder::init("SubfontTest", "SubfontTest", false);
 		}
-
-		void TearDown () {
-			FileFinder::finish();
-		}
 };
 
 

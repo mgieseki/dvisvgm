@@ -48,7 +48,7 @@ FontEncoding* FontEncoding::encoding (const string &encname) {
 	EncodingMap::const_iterator it = encmap.find(encname);
 	if (it != encmap.end())
 		return it->second;
-	if (FileFinder::lookup(encname + ".enc", false)) {
+	if (FileFinder::instance().lookup(encname + ".enc", false)) {
 		EncFile *enc = new EncFile(encname);
 		encmap[encname] = enc;
 		return enc;

@@ -140,7 +140,7 @@ bool FontMap::read (const string &fname_seq) {
 		}
 		if (!fname.empty()) {
 			if (!read(fname, modechar)) {
-				if (const char *path = FileFinder::lookup(fname, false))
+				if (const char *path = FileFinder::instance().lookup(fname, false))
 					found = found || read(path, modechar);
 				else
 					Message::wstream(true) << "map file " << fname << " not found\n";

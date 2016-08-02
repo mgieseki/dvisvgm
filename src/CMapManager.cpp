@@ -124,7 +124,7 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 		for (size_t i=0; i < charmapIDs.size(); i++) {
 			if (enc->id == charmapIDs[i]) {
 				string cmapname = ro+"-"+enc->encname;
-				if (is_unicode_map || FileFinder::lookup(cmapname, "cmap", false)) {
+				if (is_unicode_map || FileFinder::instance().lookup(cmapname, "cmap", false)) {
 					charmapID = enc->id;
 					return is_unicode_map ? cmap : lookup(cmapname);
 				}

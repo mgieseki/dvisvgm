@@ -40,7 +40,7 @@ EncFile::EncFile (const string &encname) : _encname(encname)
 
 
 const char* EncFile::path () const {
-	return FileFinder::lookup(_encname+".enc", false);
+	return FileFinder::instance().lookup(_encname+".enc", false);
 }
 
 

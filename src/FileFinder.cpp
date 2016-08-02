@@ -21,15 +21,12 @@
 #include <config.h>
 
 #ifdef MIKTEX
-	#include <memory>
-	#include "MessageException.hpp"
 	#include "MiKTeXCom.hpp"
-	static std::unique_ptr<MiKTeXCom> miktex;
 #else
 	#ifdef KPSE_CXX_UNSAFE
 	extern "C" {
 	#endif
-	#include <kpathsea/kpathsea.h>
+		#include <kpathsea/kpathsea.h>
 	#ifdef KPSE_CXX_UNSAFE
 	}
 	#endif
@@ -43,36 +40,27 @@
 #include "FileSystem.hpp"
 #include "FontMap.hpp"
 #include "Message.hpp"
+#include "MessageException.hpp"
 #include "Process.hpp"
 
-// ---------------------------------------------------
 
-static bool _initialized = false;
-static bool _mktex_enabled = false;
-static std::set<std::string> _additional_dirs;
-
-// ---------------------------------------------------
-
-static const char* find_file (const std::string &fname, const char *ftype);
-static const char* find_mapped_file (std::string fname);
-static const char* mktex (const std::string &fname);
+const char *FileFinder::_argv0 = nullptr;
+std::string FileFinder::_progname;
+bool FileFinder::_enableMktex = false;
 
 
-/** Initializes the file finder. This function must be called before any other
- *  FileFinder function.
+/** Constructs a new file finder.
  *  @param[in] argv0 argv[0] of main() function
  *  @param[in] progname name of application using the FileFinder
  *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated */
-void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf) {
-	if (_initialized)
-		return;
-
-	_mktex_enabled = enable_mktexmf;
+FileFinder::FileFinder () {
 	addLookupDir(".");  // always lookup files in the current working directory
 #ifdef MIKTEX
-	miktex.reset(new MiKTeXCom);
+	_miktex.reset(new MiKTeXCom);
 #else
-	kpse_set_program_name(argv0, progname);
+	if (_argv0 == nullptr)
+		_argv0 = "";
+	kpse_set_program_name(_argv0, _progname.c_str());
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
@@ -81,35 +69,26 @@ void FileFinder::init (const char *argv0, const char *progname, bool enable_mkte
 	texlive_gs_init();
 #endif
 #endif
-	_initialized = true;
 }
 
 
-/** Cleans up the FileFinder. This function must be called before leaving the
- *  application's main() function. */
-void FileFinder::finish () {
-	_initialized = false;
+void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf) {
+	_argv0 = argv0;
+	_progname = progname;
+	_enableMktex = enable_mktexmf;
+}
+
+
+FileFinder& FileFinder::instance () {
+	static FileFinder instance;
+	return instance;
 }
 
 
 /** Returns the version string of the underlying file searching library (kpathsea, MiKTeX) */
-std::string FileFinder::version () {
+std::string FileFinder::version () const {
 #ifdef MIKTEX
-	bool autoinit=false;
-	try {
-		if (!_initialized) {
-			init("", "", false);
-			autoinit = true;
-		}
-		std::string ret = miktex->getVersion();
-		if (autoinit)
-			finish();
-		return ret;
-	}
-	catch (MessageException &e) {
-		if (autoinit)
-			finish();
-	}
+	return _miktex->getVersion();
 #else
 	if (const char *v = strrchr(KPSEVERSION, ' '))
 		return (std::string(KPSEVERSION).substr(0, 9) == "kpathsea ") ? v+1 : KPSEVERSION;
@@ -121,7 +100,7 @@ std::string FileFinder::version () {
 
 
 void FileFinder::addLookupDir (const std::string &path) {
-	_additional_dirs.insert(path);
+	_additionalDirs.insert(path);
 }
 
 
@@ -130,13 +109,13 @@ void FileFinder::addLookupDir (const std::string &path) {
  *  @param[in] fname name of file to look up
  *  @param[in] ftype expected file format of file fname; if 0, it's derived from the filename suffix
  *  @return file path on success, 0 otherwise */
-static const char* find_file (const std::string &fname, const char *ftype) {
-	if (!_initialized || fname.empty())
+const char* FileFinder::findFile (const std::string &fname, const char *ftype) const {
+	if (fname.empty())
 		return 0;
 
 	static std::string buf;
 	// try to lookup the file in the additionally specified directories
-	for (const std::string &dir : _additional_dirs) {
+	for (const std::string &dir : _additionalDirs) {
 		if (dir[0] == '/')
 			buf.clear();
 		else
@@ -159,7 +138,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 #ifdef MIKTEX
 	if (ext == "dll" || ext == "exe") {
 		// lookup dll and exe files in the MiKTeX bin directory first
-		buf = miktex->getBinDir() + "/" + fname;
+		buf = _miktex->getBinDir() + "/" + fname;
 		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}
@@ -172,7 +151,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
 		return buf.empty() ? 0 : buf.c_str();
 	}
 	try {
-		return miktex->findFile(fname.c_str());
+		return _miktex->findFile(fname.c_str());
 	}
 	catch (const MessageException &e) {
 		return 0;
@@ -224,7 +203,7 @@ static const char* find_file (const std::string &fname, const char *ftype) {
  *  file can be found under this name.
  *  @param[in] fname name of file to look up
  *  @return file path on success, 0 otherwise */
-static const char* find_mapped_file (std::string fname) {
+const char* FileFinder::findMappedFile (std::string fname) const {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
 		return 0;
@@ -233,10 +212,10 @@ static const char* find_mapped_file (std::string fname) {
 	if (const FontMap::Entry *entry = FontMap::instance().lookup(base)) {
 		const char *path=0;
 		if (entry->fontname.find('.') != std::string::npos)  // does the mapped filename has an extension?
-			path = find_file(entry->fontname, 0);             // look for that file
+			path = findFile(entry->fontname, 0);             // look for that file
 		else {                             // otherwise, use extension of unmapped file
 			fname = entry->fontname + "." + ext;
-			(path = find_file(fname, 0)) || (path = mktex(fname));
+			(path = findFile(fname, 0)) || (path = mktex(fname));
 		}
 		return path;
 	}
@@ -247,12 +226,9 @@ static const char* find_mapped_file (std::string fname) {
 /** Runs external mktexFOO tool to create missing tfm or mf file.
  *  @param[in] fname name of file to build
  *  @return file path on success, 0 otherwise */
-static const char* mktex (const std::string &fname) {
-	if (!_initialized)
-		return 0;
-
+const char* FileFinder::mktex (const std::string &fname) const {
 	size_t pos = fname.rfind('.');
-	if (!_mktex_enabled || pos == std::string::npos)
+	if (!_mktexEnabled || pos == std::string::npos)
 		return 0;
 
 	std::string ext  = fname.substr(pos+1);  // file extension
@@ -264,7 +240,7 @@ static const char* mktex (const std::string &fname) {
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
 	std::string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
 	system((toolname+".exe "+fname).c_str());
-	path = find_file(fname, 0);
+	path = findFile(fname, 0);
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());
@@ -284,9 +260,9 @@ static const char* mktex (const std::string &fname) {
  *  @param[in] ftype type/format of file to look up
  *  @param[in] extended if true, use fontmap lookup and mktexFOO calls
  *  @return path to file on success, 0 otherwise */
-const char* FileFinder::lookup (const std::string &fname, const char *ftype, bool extended) {
+const char* FileFinder::lookup (const std::string &fname, const char *ftype, bool extended) const {
 	const char *path;
-	if ((path = find_file(fname, ftype)) || (extended  && ((path = find_mapped_file(fname)) || (path = mktex(fname)))))
+	if ((path = findFile(fname, ftype)) || (extended  && ((path = findMappedFile(fname)) || (path = mktex(fname)))))
 		return path;
 	return 0;
 }

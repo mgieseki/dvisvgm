@@ -34,23 +34,19 @@ class FileFinderTest : public ::testing::Test
 	protected:
 		void SetUp () {
 			FileFinder::init("FileFinderTest", "FileFinderTest", false);
-			FileFinder::addLookupDir(SRCDIR"/data");
-		}
-
-		void TearDown () {
-			FileFinder::finish();
+			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}
 };
 
 
 TEST_F(FileFinderTest, find_base_file) {
-	const char *path = FileFinder::lookup(SRCDIR"/FileFinderTest.cpp");
+	const char *path = FileFinder::instance().lookup(SRCDIR"/FileFinderTest.cpp");
 	EXPECT_TRUE(path);
-	path = FileFinder::lookup("Does-not-exist");
+	path = FileFinder::instance().lookup("Does-not-exist");
 	EXPECT_FALSE(path);
-	path = FileFinder::lookup("frktest.dvi");
+	path = FileFinder::instance().lookup("frktest.dvi");
 	EXPECT_TRUE(path);
-	path = FileFinder::lookup("cmr10.tfm");
+	path = FileFinder::instance().lookup("cmr10.tfm");
 	EXPECT_TRUE(path);
 	ifstream ifs(path);
 	EXPECT_TRUE(bool(ifs));
@@ -60,7 +56,7 @@ TEST_F(FileFinderTest, find_base_file) {
 TEST_F(FileFinderTest, find_mapped_file) {
 	// mapped base tfm file => should be resolved by kpathsea
 	// circle10.tfm is usually mapped to lcircle.tfm
-	if (const char *path = FileFinder::lookup("circle10.tfm")) {
+	if (const char *path = FileFinder::instance().lookup("circle10.tfm")) {
 		EXPECT_TRUE(path);
 		ifstream ifs(path);
 		EXPECT_TRUE(bool(ifs));
@@ -68,9 +64,9 @@ TEST_F(FileFinderTest, find_mapped_file) {
 
 	// mapped lm font => should be resolved using dvisvgm's FontMap
 	// cork-lmr10 is usually mapped to lmr10
-	bool have_lmodern = FileFinder::lookup("lmodern.sty");
+	bool have_lmodern = FileFinder::instance().lookup("lmodern.sty");
 	if (have_lmodern) {  // package lmodern installed?
-		if (const char *path = FileFinder::lookup("cork-lmr10.pfb")) {
+		if (const char *path = FileFinder::instance().lookup("cork-lmr10.pfb")) {
 			ifstream ifs(path);
 			EXPECT_TRUE(bool(ifs));
 		}
@@ -80,7 +76,7 @@ TEST_F(FileFinderTest, find_mapped_file) {
 
 TEST_F(FileFinderTest, mktexmf) {
 	// ensure availability of ec font => call mktexmf if necessary
-	if (const char *path = FileFinder::lookup("ecrm2000.mf")) {
+	if (const char *path = FileFinder::instance().lookup("ecrm2000.mf")) {
 		ifstream ifs(path);
 		EXPECT_TRUE(bool(ifs));
 	}
@@ -88,6 +84,6 @@ TEST_F(FileFinderTest, mktexmf) {
 
 
 TEST_F(FileFinderTest, find_unavailable_file) {
-	const char *path = FileFinder::lookup("not-available.xyz");
+	const char *path = FileFinder::instance().lookup("not-available.xyz");
 	EXPECT_FALSE(path);
 }

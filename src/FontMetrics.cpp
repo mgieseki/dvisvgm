@@ -28,7 +28,7 @@ using namespace std;
 
 
 FontMetrics* FontMetrics::read (const char *fontname) {
-	const char *path = FileFinder::lookup(string(fontname) + ".tfm");
+	const char *path = FileFinder::instance().lookup(string(fontname) + ".tfm");
 	ifstream ifs(path, ios::binary);
 	if (!ifs)
 		return 0;
