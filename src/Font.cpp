@@ -98,7 +98,7 @@ const char* Font::filename () const {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-TFMFont::TFMFont (string name, uint32_t cs, double ds, double ss)
+TFMFont::TFMFont (const string &name, uint32_t cs, double ds, double ss)
 	: _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
 {
 }
@@ -163,12 +163,12 @@ double PhysicalFont::METAFONT_MAG = 4;
 FontCache PhysicalFont::_cache;
 
 
-Font* PhysicalFont::create (string name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type) {
+Font* PhysicalFont::create (const string &name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type) {
 	return new PhysicalFontImpl(name, 0, checksum, dsize, ssize, type);
 }
 
 
-Font* PhysicalFont::create (string name, int fontindex, uint32_t checksum, double dsize, double ssize) {
+Font* PhysicalFont::create (const string &name, int fontindex, uint32_t checksum, double dsize, double ssize) {
 	return new PhysicalFontImpl(name, fontindex, checksum, dsize, ssize, PhysicalFont::Type::TTC);
 }
 
@@ -455,7 +455,7 @@ bool PhysicalFont::getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical
 }
 
 
-Font* VirtualFont::create (string name, uint32_t checksum, double dsize, double ssize) {
+Font* VirtualFont::create (const string &name, uint32_t checksum, double dsize, double ssize) {
 	return new VirtualFontImpl(name, checksum, dsize, ssize);
 }
 
@@ -463,7 +463,7 @@ Font* VirtualFont::create (string name, uint32_t checksum, double dsize, double 
 //////////////////////////////////////////////////////////////////////////////
 
 
-PhysicalFontImpl::PhysicalFontImpl (string name, int fontindex, uint32_t cs, double ds, double ss, PhysicalFont::Type type)
+PhysicalFontImpl::PhysicalFontImpl (const string &name, int fontindex, uint32_t cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss),
 	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding()), _localCharMap(0)
 {
@@ -635,7 +635,7 @@ uint32_t NativeFontImpl::unicode (uint32_t c) const {
 
 //////////////////////////////////////////////////////////////////////////////
 
-VirtualFontImpl::VirtualFontImpl (string name, uint32_t cs, double ds, double ss)
+VirtualFontImpl::VirtualFontImpl (const string &name, uint32_t cs, double ds, double ss)
 	: TFMFont(name, cs, ds, ss)
 {
 }

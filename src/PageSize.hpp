@@ -32,7 +32,7 @@ class PageSize
 {
 	public:
 		PageSize (double w=0, double h=0) : _width(w), _height(h) {}
-		PageSize (std::string name);
+		PageSize (const std::string &name);
 		void resize (std:: string name);
 		void resize (double w, double h);
 		double widthInBP () const  {return _width;}

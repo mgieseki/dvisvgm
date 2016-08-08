@@ -35,7 +35,7 @@ class Directory
 
 	public:
 		Directory ();
-		Directory (std::string path);
+		Directory (const std::string &path);
 		~Directory ();
 		bool open (std::string path);
 		void close ();
@@ -44,9 +44,9 @@ class Directory
 	private:
 		std::string _dirname;
 #ifdef _WIN32
-		bool firstread;
-		HANDLE handle;
-		WIN32_FIND_DATA fileData;
+		bool _firstread;
+		HANDLE _handle;
+		WIN32_FIND_DATA _fileData;
 #else
 		DIR *_dir;
 		struct dirent *_dirent;

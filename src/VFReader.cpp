@@ -126,14 +126,14 @@ void VFReader::cmdPre () {
 	if (i != 202)
 		throw VFException("invalid identification value in preamble");
 	if (_actions)
-		_actions->preamble(cmt, cs, ds);
+		_actions->vfPreamble(cmt, cs, ds);
 }
 
 
 void VFReader::cmdPost () {
 	while ((readUnsigned(1)) == 248); // skip fill bytes
 	if (_actions)
-		_actions->postamble();
+		_actions->vfPostamble();
 }
 
 

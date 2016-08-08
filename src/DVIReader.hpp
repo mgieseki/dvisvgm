@@ -80,7 +80,7 @@ class DVIReader : public BasicDVIReader, public VFActions
 		bool inPage () const   {return _inPage;}
 
 		// VFAction methods
-		void defineVFFont (uint32_t fontnum, std::string path, std::string name, uint32_t checksum, double dsize, double ssize) override;
+		void defineVFFont (uint32_t fontnum, const std::string &path, const std::string &name, uint32_t checksum, double dsize, double ssize) override;
 		void defineVFChar (uint32_t c, std::vector<uint8_t> &&dvi) override;
 
 		// The following template methods provide higher-level access to the DVI commands.

@@ -167,7 +167,7 @@ static Font* create_font (const string &filename, const string &fontname, int fo
  *  @param[in] dsize design size in PS point units
  *  @param[in] ssize scaled size in PS point units
  *  @return id of registered font */
-int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum, double dsize, double ssize) {
+int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t checksum, double dsize, double ssize) {
 	int id = fontID(fontnum);
 	if (id >= 0)
 		return id;
@@ -237,7 +237,7 @@ int FontManager::registerFont (uint32_t fontnum, string name, uint32_t checksum,
  *  @param[in] style font style parameters
  *  @param[in] color global font color
  *  @return global font id */
-int FontManager::registerFont (uint32_t fontnum, string filename, double ptsize, const FontStyle &style, Color color) {
+int FontManager::registerFont (uint32_t fontnum, const string &filename, double ptsize, const FontStyle &style, Color color) {
 	return registerFont(fontnum, filename, 0, ptsize, style, color);
 }
 

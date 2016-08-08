@@ -528,7 +528,7 @@ void DVIReader::cmdFontDef (int len) {
  *  @param[in] checksum checksum to be compared with TFM checksum
  *  @param[in] dsize design size in PS point units
  *  @param[in] ssize scaled size in PS point units */
-void DVIReader::defineVFFont (uint32_t fontnum, string path, string name, uint32_t checksum, double dsize, double ssize) {
+void DVIReader::defineVFFont (uint32_t fontnum, const string &path, const string &name, uint32_t checksum, double dsize, double ssize) {
 	if (const VirtualFont *vf = FontManager::instance().getVF())
 		defineFont(fontnum, name, checksum, dsize, ssize * vf->scaleFactor());
 }

@@ -29,7 +29,7 @@
 class PageRanges : public NumericRanges<int>
 {
 	public:
-		bool parse (std::string str, int max_page=0);
+		bool parse (const std::string &str, int max_page=0);
 		size_t numberOfPages () const;
 };
 

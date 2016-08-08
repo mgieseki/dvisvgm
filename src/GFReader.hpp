@@ -60,7 +60,7 @@ class GFReader
 		virtual void postamble () {}
 		virtual void beginChar (uint32_t c) {}
 		virtual void endChar (uint32_t c) {}
-		virtual void special (std::string str) {}
+		virtual void special (const std::string &str) {}
 		virtual void numspecial (int32_t y) {}
 		const Bitmap& getBitmap () const   {return _bitmap;}
 		double getDesignSize () const      {return _designSize;}

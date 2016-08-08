@@ -32,8 +32,8 @@
 
 using namespace std;
 
-SVGOutput::SVGOutput (const char *base, string pattern, int zipLevel)
-	: _path(base ? base : ""),	_pattern(pattern), _stdout(base == 0),	_zipLevel(zipLevel),	_page(-1)
+SVGOutput::SVGOutput (const char *base, const string &pattern, int zipLevel)
+	: _path(base ? base : ""), _pattern(pattern), _stdout(base == 0), _zipLevel(zipLevel), _page(-1)
 {
 }
 

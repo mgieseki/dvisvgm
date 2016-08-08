@@ -37,7 +37,10 @@ struct SVGOutputBase {
 class SVGOutput : public SVGOutputBase
 {
 	public:
-		explicit SVGOutput (const char *base=0, std::string pattern="", int zipLevel=0);
+		SVGOutput () : SVGOutput(0, "", 0) {}
+		SVGOutput (const char *base) : SVGOutput(base, "", 0) {}
+		SVGOutput (const char *base, const std::string &pattern) : SVGOutput(base, pattern, 0) {}
+		SVGOutput (const char *base, const std::string &pattern, int zipLevel);
 		std::ostream& getPageStream (int page, int numPages) const override;
 		std::string filename (int page, int numPages) const override;
 

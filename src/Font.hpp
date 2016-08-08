@@ -90,7 +90,7 @@ class Font {
  *  The metric values returned by the member functions are based on cmr10. */
 class EmptyFont : public Font {
 	public:
-		EmptyFont (std::string name) : _fontname(name) {}
+		EmptyFont (const std::string &name) : _fontname(name) {}
 		Font* clone (double ds, double sc) const override  {return new EmptyFont(*this);}
 		const Font* uniqueFont () const override           {return this;}
 		std::string name () const override                 {return _fontname;}
@@ -114,8 +114,8 @@ class PhysicalFont : public virtual Font {
 	public:
 		enum class Type {MF, OTF, PFB, TTC, TTF, UNKNOWN};
 
-		static Font* create (std::string name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
-		static Font* create (std::string name, int fontindex, uint32_t checksum, double dsize, double ssize);
+		static Font* create (const std::string &name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
+		static Font* create (const std::string &name, int fontindex, uint32_t checksum, double dsize, double ssize);
 		virtual Type type () const =0;
 		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override;
 		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=0) const;
@@ -159,7 +159,7 @@ class VirtualFont : public virtual Font {
 		typedef std::vector<uint8_t> DVIVector;
 
 	public:
-		static Font* create (std::string name, uint32_t checksum, double dsize, double ssize);
+		static Font* create (const std::string &name, uint32_t checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
 
@@ -170,7 +170,7 @@ class VirtualFont : public virtual Font {
 
 class TFMFont : public virtual Font {
 	public:
-		TFMFont (std::string name, uint32_t checksum, double dsize, double ssize);
+		TFMFont (const std::string &name, uint32_t checksum, double dsize, double ssize);
 		const FontMetrics* getMetrics () const override;
 		std::string name () const override  {return _fontname;}
 		double designSize () const override {return _dsize;}
@@ -240,7 +240,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 		CharMapID getCharMapID () const override             {return _charmapID;}
 
 	protected:
-		PhysicalFontImpl (std::string name, int fontindex, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
+		PhysicalFontImpl (const std::string &name, int fontindex, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
 
 	private:
 		Type _filetype;
@@ -367,7 +367,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 		const char* path () const override;
 
 	protected:
-		VirtualFontImpl (std::string name, uint32_t checksum, double dsize, double ssize);
+		VirtualFontImpl (const std::string &name, uint32_t checksum, double dsize, double ssize);
 		void assignChar (uint32_t c, DVIVector &&dvi) override;
 
 	private:
@@ -377,7 +377,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 
 struct FontException : public MessageException
 {
-	FontException (std::string msg) : MessageException(msg) {}
+	FontException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

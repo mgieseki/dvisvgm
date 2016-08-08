@@ -85,7 +85,7 @@ FilePath::FilePath (const string &path) {
  *  @param[in] path absolute or relative path to a file or directory
  *  @param[in] isfile true if 'path' references a file, false if a directory is referenced
  *  @param[in] current_dir if 'path' is a relative path expression it will be related to 'current_dir' */
-FilePath::FilePath (const string &path, bool isfile, string current_dir) {
+FilePath::FilePath (const string &path, bool isfile, const string &current_dir) {
 	init(path, isfile, current_dir);
 }
 
