@@ -34,7 +34,7 @@ MiKTeXCom::MiKTeXCom () : _session(0) {
 	// try to initialize the MiKTeX session object
 #ifdef _MSC_VER
 	HRESULT hres = _session.CreateInstance(L"MiKTeX.Session");
-#elif defined(__WIN64__)
+#elif defined(_WIN64)
 	HRESULT hres = CoCreateInstance(CLSID_MiKTeXSession2_9, 0, CLSCTX_LOCAL_SERVER, IID_ISession2, (void**)&_session);
 #else
 	HRESULT hres = CoCreateInstance(CLSID_MiKTeXSession2_9, 0, CLSCTX_INPROC_SERVER, IID_ISession2, (void**)&_session);
