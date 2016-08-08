@@ -176,8 +176,8 @@ static void print_version (bool extended) {
 }
 
 
-static void init_fontmap (const CommandLine &args) {
-	const char *mapseq = args.fontmapOpt.given() ? args.fontmapOpt.value().c_str() : 0;
+static void init_fontmap (const CommandLine &cmdline) {
+	const char *mapseq = cmdline.fontmapOpt.given() ? cmdline.fontmapOpt.value().c_str() : 0;
 	bool additional = mapseq && strchr("+-=", *mapseq);
 	if (!mapseq || additional) {
 		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
@@ -192,116 +192,104 @@ static void init_fontmap (const CommandLine &args) {
 }
 
 
-int main (int argc, char *argv[]) {
-	CommandLine args;
-	try {
-		args.parse(argc, argv);
+static void set_variables (const CommandLine &cmdline) {
+	Message::COLORIZE = cmdline.colorOpt.given();
+	if (cmdline.progressOpt.given()) {
+		DVIToSVG::COMPUTE_PROGRESS = true;
+		SpecialActions::PROGRESSBAR_DELAY = cmdline.progressOpt.value();
 	}
-	catch (CL::CommandLineException &e) {
+	Color::SUPPRESS_COLOR_NAMES = !cmdline.colornamesOpt.given();
+	SVGTree::CREATE_CSS = !cmdline.noStylesOpt.given();
+	SVGTree::USE_FONTS = !cmdline.noFontsOpt.given();
+	SVGTree::CREATE_USE_ELEMENTS = cmdline.noFontsOpt.value() < 1;
+	SVGTree::ZOOM_FACTOR = cmdline.zoomOpt.value();
+	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();
+	SVGTree::MERGE_CHARS = !cmdline.noMergeOpt.given();
+	SVGTree::ADD_COMMENTS = cmdline.commentsOpt.given();
+	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
+	Message::LEVEL = cmdline.verbosityOpt.value();
+	PhysicalFont::EXACT_BBOX = cmdline.exactOpt.given();
+	PhysicalFont::KEEP_TEMP_FILES = cmdline.keepOpt.given();
+	PhysicalFont::METAFONT_MAG = max(1.0, cmdline.magOpt.value());
+	XMLString::DECIMAL_PLACES = max(0, min(6, cmdline.precisionOpt.value()));
+	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = cmdline.clipjoinOpt.given();
+	PsSpecialHandler::SHADING_SEGMENT_OVERLAP = cmdline.gradOverlapOpt.given();
+	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, cmdline.gradSegmentsOpt.value());
+	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = cmdline.gradSimplifyOpt.value();
+}
+
+
+int main (int argc, char *argv[]) {
+	CommandLine cmdline;
+	try {
+		cmdline.parse(argc, argv);
+		if (argc == 1 || cmdline.helpOpt.given()) {
+			cmdline.help(cout, cmdline.helpOpt.value());
+			return 0;
+		}
+		FileFinder::init(argv[0], "dvisvgm", !cmdline.noMktexmfOpt.given());
+		set_libgs(cmdline);
+		if (cmdline.versionOpt.given()) {
+			print_version(cmdline.versionOpt.value());
+			return 0;
+		}
+		if (cmdline.listSpecialsOpt.given()) {
+			DVIToSVG::setProcessSpecials();
+			SpecialManager::instance().writeHandlerInfo(cout);
+			return 0;
+		}
+		if (!set_cache_dir(cmdline))
+			return 0;
+		if (cmdline.stdoutOpt.given() && cmdline.zipOpt.given()) {
+			Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
+			return 1;
+		}
+		if (!check_bbox(cmdline.bboxOpt.value()))
+			return 1;
+		if (!HtmlSpecialHandler::setLinkMarker(cmdline.linkmarkOpt.value()))
+			Message::wstream(true) << "invalid argument '"+cmdline.linkmarkOpt.value()+"' supplied for option --linkmark\n";
+		if (argc > 1 && cmdline.filenames().size() < 1) {
+			Message::estream(true) << "no input file given\n";
+			return 1;
+		}
+	}
+	catch (MessageException &e) {
 		Message::estream() << e.what() << '\n';
 		return 1;
 	}
 
-	if (argc == 1 || args.helpOpt.given()) {
-		args.help(cout, args.helpOpt.value());
-		return 0;
-	}
-
-	Message::COLORIZE = args.colorOpt.given();
-
-	try {
-		FileFinder::init(argv[0], "dvisvgm", !args.noMktexmfOpt.given());
-	}
-	catch (MessageException &e) {
-		Message::estream(true) << e.what() << '\n';
-		return 0;
-	}
-
-	set_libgs(args);
-	if (args.versionOpt.given()) {
-		print_version(args.versionOpt.value());
-		return 0;
-	}
-	if (args.listSpecialsOpt.given()) {
-		DVIToSVG::setProcessSpecials();
-		SpecialManager::instance().writeHandlerInfo(cout);
-		return 0;
-	}
-
-	if (!set_cache_dir(args))
-		return 0;
-
-	if (argc > 1 && args.filenames().size() < 1) {
-		Message::estream(true) << "no input file given\n";
-		return 1;
-	}
-
-	if (args.stdoutOpt.given() && args.zipOpt.given()) {
-		Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
-		return 1;
-	}
-
-	if (!check_bbox(args.bboxOpt.value()))
-		return 1;
-
-	if (args.progressOpt.given()) {
-		DVIToSVG::COMPUTE_PROGRESS = args.progressOpt.given();
-		SpecialActions::PROGRESSBAR_DELAY = args.progressOpt.value();
-	}
-	Color::SUPPRESS_COLOR_NAMES = !args.colornamesOpt.given();
-	SVGTree::CREATE_CSS = !args.noStylesOpt.given();
-	SVGTree::USE_FONTS = !args.noFontsOpt.given();
-	SVGTree::CREATE_USE_ELEMENTS = args.noFontsOpt.value() < 1;
-	SVGTree::ZOOM_FACTOR = args.zoomOpt.value();
-	SVGTree::RELATIVE_PATH_CMDS = args.relativeOpt.given();
-	SVGTree::MERGE_CHARS = !args.noMergeOpt.given();
-	SVGTree::ADD_COMMENTS = args.commentsOpt.given();
-	DVIToSVG::TRACE_MODE = args.traceAllOpt.given() ? (args.traceAllOpt.value() ? 'a' : 'm') : 0;
-	Message::LEVEL = args.verbosityOpt.value();
-	PhysicalFont::EXACT_BBOX = args.exactOpt.given();
-	PhysicalFont::KEEP_TEMP_FILES = args.keepOpt.given();
-	PhysicalFont::METAFONT_MAG = max(1.0, args.magOpt.value());
-	XMLString::DECIMAL_PLACES = max(0, min(6, args.precisionOpt.value()));
-	if (!HtmlSpecialHandler::setLinkMarker(args.linkmarkOpt.value()))
-		Message::wstream(true) << "invalid argument '"+args.linkmarkOpt.value()+"' supplied for option --linkmark\n";
-	double start_time = System::time();
-	bool eps_given=false;
-#ifndef DISABLE_GS
-	eps_given = args.epsOpt.given();
-	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = args.clipjoinOpt.given();
-	PsSpecialHandler::SHADING_SEGMENT_OVERLAP = args.gradOverlapOpt.given();
-	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, args.gradSegmentsOpt.value());
-	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = args.gradSimplifyOpt.value();
-#endif
-	string inputfile = ensure_suffix(args.filenames()[0], eps_given);
+	bool eps_given = cmdline.epsOpt.given();
+	string inputfile = ensure_suffix(cmdline.filenames()[0], eps_given);
 	ifstream ifs(inputfile.c_str(), ios::binary|ios::in);
 	if (!ifs) {
 		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
 		return 0;
 	}
 	try {
-		SVGOutput out(args.stdoutOpt.given() ? 0 : inputfile.c_str(), args.outputOpt.value(), args.zipOpt.given() ? args.zipOpt.value() : 0);
+		double start_time = System::time();
+		set_variables(cmdline);
+		SVGOutput out(cmdline.stdoutOpt.given() ? nullptr : inputfile.c_str(),
+			cmdline.outputOpt.value(),
+			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
 		SignalHandler::instance().start();
-#ifndef DISABLE_GS
-		if (args.epsOpt.given()) {
+		if (cmdline.epsOpt.given()) {
 			EPSToSVG eps2svg(inputfile, out);
 			eps2svg.convert();
 			Message::mstream().indent(0);
-			Message::mstream(false, Message::MC_PAGE_NUMBER)
-				<< "file converted in " << (System::time()-start_time) << " seconds\n";
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
 		}
-		else
-#endif
-		{
-			init_fontmap(args);
+		else {
+			init_fontmap(cmdline);
 			DVIToSVG dvi2svg(ifs, out);
-			const char *ignore_specials = args.noSpecialsOpt.given() ? (args.noSpecialsOpt.value().empty() ? "*" : args.noSpecialsOpt.value().c_str()) : 0;
+			const char *ignore_specials=nullptr;
+			if (cmdline.noSpecialsOpt.given())
+				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value().c_str();
 			dvi2svg.setProcessSpecials(ignore_specials, true);
-			dvi2svg.setPageTransformation(get_transformation_string(args));
-			dvi2svg.setPageSize(args.bboxOpt.value());
+			dvi2svg.setPageTransformation(get_transformation_string(cmdline));
+			dvi2svg.setPageSize(cmdline.bboxOpt.value());
 
 			pair<int,int> pageinfo;
-			dvi2svg.convert(args.pageOpt.value(), &pageinfo);
+			dvi2svg.convert(cmdline.pageOpt.value(), &pageinfo);
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
 			if (pageinfo.second > 1)

@@ -47,4 +47,3 @@ double System::time () {
 	return double(myclock)/CLOCKS_PER_SEC;
 #endif
 }
-
