@@ -44,7 +44,6 @@ class %(class)s : public CL::CommandLine
 {
 \tpublic:
 \t\t%(class)s () : CL::CommandLine(
-\t\t\t"%(progname)s",
 \t\t\t"%(summary)s",
 \t\t\t"%(usage)s",
 \t\t\t"%(copyright)s"
@@ -77,7 +76,6 @@ def create_hpp (optfile):
     vars["guard"] = "%s_HPP" % vars["class"].upper()
 
     prog = root.xpath("/*/program")[0]
-    vars["progname"] = prog.findtext("name")
     vars["summary"] = prog.findtext("description")
     vars["copyright"] = prog.findtext("copyright")
     vars["usage"] = ""

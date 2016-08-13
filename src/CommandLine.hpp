@@ -19,7 +19,6 @@ class CommandLine : public CL::CommandLine
 {
 	public:
 		CommandLine () : CL::CommandLine(
-			"dvisvgm",
 			"This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.",
 			"[options] dvifile\n-E [options] epsfile",
 			"Copyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de>"
@@ -39,7 +38,7 @@ class CommandLine : public CL::CommandLine
 		Option epsOpt {"eps", 'E', "convert an EPS file to SVG"};
 		Option exactOpt {"exact", 'e', "compute exact glyph boxes"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> fontmapOpt {"fontmap", 'm', "filenames", "evaluate (additional) font map files"};
-		Option gradOverlapOpt {"grad-overlap", '\0', "create operlapping color gradient segments"};
+		Option gradOverlapOpt {"grad-overlap", '\0', "create overlapping color gradient segments"};
 		TypedOption<int, Option::ArgMode::REQUIRED> gradSegmentsOpt {"grad-segments", '\0', "number", 20, "number of color gradient segments per row"};
 		TypedOption<double, Option::ArgMode::REQUIRED> gradSimplifyOpt {"grad-simplify", '\0', "delta", 0.05, "reduce level of detail for small segments"};
 		TypedOption<int, Option::ArgMode::OPTIONAL> helpOpt {"help", 'h', "mode", 0, "print this summary of options and exit"};
@@ -56,7 +55,7 @@ class CommandLine : public CL::CommandLine
 		TypedOption<std::string, Option::ArgMode::REQUIRED> outputOpt {"output", 'o', "pattern", "set name pattern of output files"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> pageOpt {"page", 'p', "ranges", "1", "choose page(s) to convert"};
 		TypedOption<int, Option::ArgMode::REQUIRED> precisionOpt {"precision", 'd', "number", 0, "set number of decimal points (0-6)"};
-		TypedOption<double, Option::ArgMode::OPTIONAL> progressOpt {"progress", 'P', "delay", 0.5, "enable progess indicator"};
+		TypedOption<double, Option::ArgMode::OPTIONAL> progressOpt {"progress", 'P', "delay", 0.5, "enable progress indicator"};
 		Option relativeOpt {"relative", 'R', "create relative path commands"};
 		TypedOption<double, Option::ArgMode::REQUIRED> rotateOpt {"rotate", 'r', "angle", "rotate page content clockwise"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> scaleOpt {"scale", 'c', "sx[,sy]", "scale page content"};

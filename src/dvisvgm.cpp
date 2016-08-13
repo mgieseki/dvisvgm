@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
 #include <clipper.hpp>
 #include <fstream>
 #include <iostream>
@@ -43,6 +42,7 @@
 #include "SignalHandler.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
+#include "version.hpp"
 
 using namespace std;
 
@@ -148,7 +148,7 @@ static bool check_bbox (const string &bboxstr) {
 
 static void print_version (bool extended) {
 	ostringstream oss;
-	oss << PACKAGE_STRING;
+	oss << "dvisvgm " << PROGRAM_VERSION;
 	if (extended) {
 		if (strlen(TARGET_SYSTEM) > 0)
 			oss << " (" TARGET_SYSTEM ")";

@@ -18,18 +18,18 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
 #include <algorithm>
 #include <cstring>
 #include <map>
 #include "CLCommandLine.hpp"
+#include "version.hpp"
 
 using namespace CL;
 using namespace std;
 
 
-CommandLine::CommandLine (const char *progname, const char *summary, const char *usage, const char *copyright)
-	: _progname(progname), _summary(summary), _usage(usage), _copyright(copyright)
+CommandLine::CommandLine (const char *summary, const char *usage, const char *copyright)
+	: _summary(summary), _usage(usage), _copyright(copyright)
 {
 }
 
@@ -177,15 +177,13 @@ Option* CommandLine::lookupOption (char optchar) const {
  *  @param[in] os output stream the help text is printed to
  *  @param[in] mode output mode (0=section, 1=sorted by short options, 2=sorted by long options) */
 void CommandLine::help (ostream &os, int mode) const {
-#ifdef PACKAGE_STRING
-	os << PACKAGE_STRING << "\n\n";
-#endif
+	os << PROGRAM_NAME << ' '<< PROGRAM_VERSION << "\n\n";
 	os << _summary << "\n\n";
 	// print usage info
 	size_t start=0, pos=0;
 	string usage = _usage;
 	while ((pos = usage.find('\n', start)) != string::npos || start < usage.length()) {
-		os << (start == 0 ? "Usage: " : "       ") << _progname << ' ' << usage.substr(start, pos) << '\n';
+		os << (start == 0 ? "Usage: " : "       ") << PROGRAM_NAME << ' ' << usage.substr(start, pos) << '\n';
 		start = (pos != string::npos ? pos+1 : string::npos);
 	}
 	if (mode > 0)

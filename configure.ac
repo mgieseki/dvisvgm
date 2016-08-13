@@ -28,9 +28,9 @@ AC_CHECK_FUNCS([ftime gettimeofday])
 AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
 AC_HEADER_TIOCGWINSZ
 
-AC_CHECK_HEADER([kpathsea/kpathsea.h], , 
+AC_CHECK_HEADER([kpathsea/kpathsea.h], ,
 	[AC_MSG_ERROR([please install the kpathsea development package])])
-AC_CHECK_LIB(kpathsea, kpse_find_file, , 
+AC_CHECK_LIB(kpathsea, kpse_find_file, ,
 	[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
 
 AC_MSG_CHECKING([kpathsea version])
@@ -43,7 +43,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
 		fprintf(f, "%s\n", KPSEVERSION);
 		fclose(f);
 		exit(0);
-	}])], 
+	}])],
 	[kpseversion=`cat kpseversion|sed 's/kpathsea version //'`], [kpseversion=], [kpseversion=unknown])
 AC_MSG_RESULT("$kpseversion")
 rm -f kpseversion
@@ -54,7 +54,7 @@ fi
 
 # Check how to link potracelib
 HAVE_LIBPOTRACE=1
-AC_CHECK_HEADER([potracelib.h], 
+AC_CHECK_HEADER([potracelib.h],
 	[AC_CHECK_LIB(m, sqrt) # required to pass potrace check
 	 AC_CHECK_LIB(potrace, potrace_trace, , HAVE_LIBPOTRACE=0)], HAVE_LIBPOTRACE=0)
 
@@ -65,7 +65,7 @@ fi
 
 # Check how to link Ghostscript
 HAVE_LIBGS=1
-AC_CHECK_HEADER([ghostscript/iapi.h], 
+AC_CHECK_HEADER([ghostscript/iapi.h],
 	AC_CHECK_LIB(gs, gsapi_new_instance, , HAVE_LIBGS=0), HAVE_LIBGS=0)
 
 if test "$HAVE_LIBGS" -eq 0; then
@@ -80,7 +80,7 @@ else
 		int main () {
 			gsapi_revision_t r;
 			if (gsapi_revision(&r, sizeof(gsapi_revision_t)) == 0) {
-				FILE *f; 
+				FILE *f;
 				f = fopen("gsversion", "w");
 				if (!f) exit(1);
 				fprintf(f, "%ld\n", r.revision);
@@ -174,9 +174,10 @@ AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([
 	Makefile
-	clipper/Makefile 
+	clipper/Makefile
 	xxHash/Makefile
 	src/Makefile
+	src/version.hpp
 	tests/Makefile
 	tests/data/Makefile
 	doc/dvisvgm.txt

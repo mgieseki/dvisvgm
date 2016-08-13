@@ -201,6 +201,7 @@ libdvisvgm_a_SOURCES = \
 	Unicode.hpp \
 	VectorIterator.hpp \
 	VectorStream.hpp \
+	version.hpp \
 	VFActions.hpp \
 	VFReader.cpp \
 	VFReader.hpp \

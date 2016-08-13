@@ -1,8 +1,7 @@
-<?xml encoding="UTF-8"?>
-<!-- *********************************************************************
-** options.dtd                                                          **
+/*************************************************************************
+** version.hpp                                                          **
 **                                                                      **
-** This file is part of dvisvgm - a fast DVI to SVG converter           **
+** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2016 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
@@ -17,33 +16,13 @@
 **                                                                      **
 ** You should have received a copy of the GNU General Public License    **
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
-***********************************************************************-->
+*************************************************************************/
 
-<!ELEMENT cmdline (program,options)>
-<!ATTLIST cmdline
-  class NMTOKEN #REQUIRED>
+#ifndef VERSION_HPP
+#define VERSION_HPP
 
-<!ELEMENT program (usage+,description,copyright)>
-<!ELEMENT options (section)+>
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT usage (#PCDATA)>
-<!ELEMENT copyright (#PCDATA)>
+constexpr const char *PROGRAM_NAME = "dvisvgm";
+constexpr const char *PROGRAM_VERSION = "@VERSION@";
 
-<!ELEMENT section (option)+>
-<!ATTLIST section
-  title CDATA #REQUIRED>
+#endif
 
-<!ELEMENT option (arg?,description)>
-<!ATTLIST option
-  long ID #REQUIRED
-  short NMTOKEN #IMPLIED
-  if CDATA #IMPLIED>
-
-<!ELEMENT arg EMPTY>
-<!ATTLIST arg
-  default NMTOKEN #IMPLIED
-  name CDATA #REQUIRED
-  optional (yes|no) #IMPLIED
-  type NMTOKEN #REQUIRED>
-
-<!ELEMENT description (#PCDATA)>

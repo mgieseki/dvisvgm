@@ -33,7 +33,7 @@ namespace CL {
 
 class CommandLine {
 	public:
-		CommandLine (const char *progname, const char *summary, const char *usage, const char *copyright);
+		CommandLine (const char *summary, const char *usage, const char *copyright);
 		virtual ~CommandLine () =default;
 		void parse (int argc, char **argv);
 		void help (std::ostream &os, int mode=0) const;
@@ -49,7 +49,6 @@ class CommandLine {
 		std::vector<Option*> lookupOption (const std::string &optname) const;
 
 	private:
-		const char *_progname;
 		const char *_summary;
 		const char *_usage;
 		const char *_copyright;
