@@ -176,8 +176,8 @@ void PathClipper::flatten (const CurvedPath &curvedPath, Polygons &polygons) {
  *  edge belongs to.
  *  @param[in] p1 first of two adjacent vertices
  *  @param[in] p2 second of two adjacent vertices
- *  @param[out] t1 time paramater of p1
- *  @param[out] t2 time paramater of p2
+ *  @param[out] t1 time parameter of p1
+ *  @param[out] t2 time parameter of p2
  *  @return id of edge between p1 and p2, or 0 if it's not possible to identify the segment */
 static int32_t segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, double &t2) {
 	const ZType &z1=p1.Z, &z2=p2.Z;
@@ -250,7 +250,7 @@ static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabe
 
 	const size_t num_points = polygon.size();
 	int i = start%num_points;
-	double t1, t2; // time parameters of start and endpoint of current edge
+	double t1=0, t2=0; // time parameters of start and endpoint of current edge
 	int32_t id1 = segment_id(polygon[i], polygon[(i+1)%num_points], t1, t2);
 	int32_t id2 = id1;
 	double t = t2; // time parameter of resulting endpoint
