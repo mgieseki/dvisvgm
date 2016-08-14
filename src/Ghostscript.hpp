@@ -74,6 +74,7 @@ class Ghostscript
 	public:
 		Ghostscript ();
 		Ghostscript (int argc, const char **argv, void *caller=0);
+		Ghostscript (const Ghostscript &gs) =delete;
 		~Ghostscript ();
 		bool init (int argc, const char **argv, void *caller=0);
 		bool available ();
@@ -89,7 +90,6 @@ class Ghostscript
 		static std::string LIBGS_NAME;
 
 	protected:
-		Ghostscript (const Ghostscript &gs) : _inst(0) {}
 		int init_with_args (int argc, char **argv);
 		int new_instance (void **psinst, void *caller);
 		void delete_instance ();
