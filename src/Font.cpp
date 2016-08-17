@@ -278,17 +278,19 @@ double PhysicalFont::scaledAscent() const {
 }
 
 
+/** Returns the unscaled ascender of the font in design units. */
 int PhysicalFont::ascent () const {
 	if (type() == Type::MF)
-		return 0;
+		return getMetrics() ? getMetrics()->getAscent()*unitsPerEm()/getMetrics()->getQuad() : 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getAscender();
 }
 
 
+/** Returns the unscaled descender of the font in design units. */
 int PhysicalFont::descent () const {
 	if (type() == Type::MF)
-		return 0;
+		return getMetrics() ? getMetrics()->getDescent()*unitsPerEm()/getMetrics()->getQuad() : 0;
 	FontEngine::instance().setFont(*this);
 	return FontEngine::instance().getDescender();
 }

@@ -36,6 +36,8 @@ struct FontMetrics
 	virtual double getSpaceStretch () const =0;
 	virtual double getSpaceShrink () const =0;
 	virtual double getQuad () const =0;
+	virtual double getAscent () const =0;
+	virtual double getDescent () const =0;
 	virtual bool verticalLayout () const =0;
 	virtual uint32_t getChecksum () const =0;
 	virtual uint16_t firstChar () const =0;
@@ -55,6 +57,8 @@ struct NullFontMetric : public FontMetrics
 	double getSpaceStretch () const override    {return 0;}
 	double getSpaceShrink () const override     {return 0;}
 	double getQuad () const override            {return 0;}
+	double getAscent () const override          {return 0;}
+	double getDescent () const override         {return 0;}
 	bool verticalLayout () const override       {return false;}
 	uint32_t getChecksum () const override      {return 0;}
 	uint16_t firstChar () const override        {return 0;}

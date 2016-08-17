@@ -43,6 +43,8 @@ class TFM : public FontMetrics
 		double getSpaceStretch () const override;
 		double getSpaceShrink () const override;
 		double getQuad () const override;
+		double getAscent () const override     {return double(_ascent)*_designSize;}
+		double getDescent () const override    {return double(_descent)*_designSize;}
 		bool verticalLayout () const override  {return false;}
 		uint32_t getChecksum () const override {return _checksum;}
 		uint16_t firstChar () const override   {return _firstChar;}
@@ -66,6 +68,7 @@ class TFM : public FontMetrics
 		std::vector<FixWord> _depthTable;    ///< character depth in design size units
 		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
 		std::vector<FixWord> _params;        ///< values of the TFM's param section
+		FixWord _ascent, _descent;           ///< max. height and depth
 };
 
 #endif

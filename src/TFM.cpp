@@ -43,7 +43,7 @@ static void read_words (StreamReader &reader, vector<T> &v, unsigned n) {
 }
 
 
-TFM::TFM (istream &is) : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0) {
+TFM::TFM (istream &is) : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _ascent(0), _descent(0) {
    if (!is)
       return;
 	is.seekg(0);
@@ -86,6 +86,10 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
 	read_words(reader, _heightTable, nh);
 	read_words(reader, _depthTable, nd);
 	read_words(reader, _italicTable, ni);
+	for (FixWord h : _heightTable)
+		_ascent = max(_ascent, h);
+	for (FixWord d : _depthTable)
+		_descent = max(_descent, d);
 }
 
 
@@ -122,7 +126,9 @@ double TFM::getSpaceShrink () const {
 
 /** Returns the size of one EM unit (in PS point units). */
 double TFM::getQuad () const {
-	return _params.empty() ? 0 : double(_params[5])*_designSize;
+	if (_params.empty() || _params[5] == 0)
+		return _designSize;
+	return double(_params[5])*_designSize;
 }
 
 
