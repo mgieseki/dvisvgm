@@ -20,12 +20,15 @@
 
 #include <config.h>
 #include <algorithm>
+#include <array>
 #include <sstream>
 #include "BoundingBox.hpp"
 #include "DependencyGraph.hpp"
 #include "DVIToSVG.hpp"
+#include "FileSystem.hpp"
 #include "Font.hpp"
 #include "FontManager.hpp"
+#include "FontWriter.hpp"
 #include "SVGCharHandlerFactory.hpp"
 #include "SVGTree.hpp"
 #include "XMLDocument.hpp"
@@ -38,6 +41,7 @@ using namespace std;
 // static class variables
 bool SVGTree::CREATE_CSS=true;
 bool SVGTree::USE_FONTS=true;
+FontWriter::FontFormat SVGTree::FONT_FORMAT = FontWriter::FontFormat::SVG;
 bool SVGTree::CREATE_USE_ELEMENTS=false;
 bool SVGTree::RELATIVE_PATH_CMDS=false;
 bool SVGTree::MERGE_CHARS=true;
@@ -46,13 +50,8 @@ double SVGTree::ZOOM_FACTOR=1.0;
 
 
 SVGTree::SVGTree () {
-	_charHandler = SVGCharHandlerFactory::createHandler();
+	_charHandler.reset(SVGCharHandlerFactory::createHandler());
 	reset();
-}
-
-
-SVGTree::~SVGTree () {
-	delete _charHandler;
 }
 
 
@@ -64,7 +63,8 @@ void SVGTree::reset () {
 	_root->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	_root->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	_doc.setRootNode(_root);
-	_page = _defs = 0;
+	_page = _defs = nullptr;
+	_styleCDataNode = nullptr;
 }
 
 
@@ -91,6 +91,15 @@ void SVGTree::setFont (int num, const Font &font) {
 	// set default color assigned to the font
 	if (font.color() != Color::BLACK && getColor() != font.color())
 		setColor(font.color());
+}
+
+
+bool SVGTree::setFontFormat (const string &formatstr) {
+	FontWriter::FontFormat format = FontWriter::toFontFormat(formatstr);
+	if (format == FontWriter::FontFormat::UNKNOWN)
+		return false;
+	FONT_FORMAT = format;
+	return true;
 }
 
 
@@ -193,10 +202,7 @@ static string font_info (const Font &font) {
 
 
 void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
-	if (CREATE_CSS && USE_FONTS && !fonts.empty() && _defs) {
-		XMLElementNode *styleNode = new XMLElementNode("style");
-		styleNode->addAttribute("type", "text/css");
-		_root->insertAfter(styleNode, _defs);
+	if (CREATE_CSS && USE_FONTS && !fonts.empty() && _page) {
 		map<int, const Font*> sortmap;
 		for (const Font *font : fonts)
 			if (!dynamic_cast<const VirtualFont*>(font))   // skip virtual fonts
@@ -204,21 +210,22 @@ void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
 		ostringstream style;
 		// add font style definitions in ascending order
 		for (auto &idfontpair : sortmap) {
-			style << "text.f"     << idfontpair.first << ' '
-				<< "{font-family:" << idfontpair.second->name()
-				<< ";font-size:"   << XMLString(idfontpair.second->scaledSize()) << "px";
-			if (idfontpair.second->color() != Color::BLACK)
-				style << ";fill:" << idfontpair.second->color().svgColorString();
-			style << '}';
-			if (ADD_COMMENTS) {
-				string info = font_info(*idfontpair.second);
-				if (!info.empty())
-					style << " /* " << info << " */";
+			if (CREATE_CSS) {
+				style << "text.f"     << idfontpair.first << ' '
+					<< "{font-family:" << idfontpair.second->name()
+					<< ";font-size:"   << XMLString(idfontpair.second->scaledSize()) << "px";
+				if (idfontpair.second->color() != Color::BLACK)
+					style << ";fill:" << idfontpair.second->color().svgColorString();
+				style << '}';
+				if (ADD_COMMENTS) {
+					string info = font_info(*idfontpair.second);
+					if (!info.empty())
+						style << " /* " << info << " */";
+				}
+				style << '\n';
 			}
-			style << '\n';
 		}
-		XMLCDataNode *cdata = new XMLCDataNode(style.str());
-		styleNode->append(cdata);
+		styleCDataNode()->append(style.str());
 	}
 }
 
@@ -232,27 +239,35 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		return;
 
 	if (USE_FONTS) {
-		if (ADD_COMMENTS) {
-			string info = font_info(font);
-			if (!info.empty())
-				appendToDefs(new XMLCommentNode(string(" font: ")+info+" "));
+		if (FONT_FORMAT != FontWriter::FontFormat::SVG) {
+			ostringstream style;
+			FontWriter fontWriter(font);
+			if (fontWriter.writeCSSFontFace(FONT_FORMAT, chars, style, callback))
+				styleCDataNode()->append(style.str());
 		}
-		XMLElementNode *fontNode = new XMLElementNode("font");
-		string fontname = font.name();
-		fontNode->addAttribute("id", fontname);
-		fontNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance()));
-		appendToDefs(fontNode);
+		else {
+			if (ADD_COMMENTS) {
+				string info = font_info(font);
+				if (!info.empty())
+					appendToDefs(new XMLCommentNode(string(" font: ")+info+" "));
+			}
+			XMLElementNode *fontNode = new XMLElementNode("font");
+			string fontname = font.name();
+			fontNode->addAttribute("id", fontname);
+			fontNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance()));
+			appendToDefs(fontNode);
 
-		XMLElementNode *faceNode = new XMLElementNode("font-face");
-		faceNode->addAttribute("font-family", fontname);
-		faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
-		if (!font.verticalLayout()) {
-			faceNode->addAttribute("ascent", XMLString(font.ascent()));
-			faceNode->addAttribute("descent", XMLString(font.descent()));
+			XMLElementNode *faceNode = new XMLElementNode("font-face");
+			faceNode->addAttribute("font-family", fontname);
+			faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
+			if (!font.verticalLayout()) {
+				faceNode->addAttribute("ascent", XMLString(font.ascent()));
+				faceNode->addAttribute("descent", XMLString(font.descent()));
+			}
+			fontNode->append(faceNode);
+			for (int c : chars)
+				fontNode->append(createGlyphNode(c, font, callback));
 		}
-		fontNode->append(faceNode);
-		for (int c : chars)
-			fontNode->append(createGlyphNode(c, font, callback));
 	}
 	else if (CREATE_USE_ELEMENTS && &font != font.uniqueFont()) {
 		// If the same character is used in various sizes, we don't want to embed the complete (lengthy) path
@@ -340,4 +355,16 @@ void SVGTree::removeRedundantElements () {
 		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
 		_defs->remove(node);
 	}
+}
+
+
+XMLCDataNode* SVGTree::styleCDataNode () {
+	if (!_styleCDataNode) {
+		XMLElementNode *styleNode = new XMLElementNode("style");
+		styleNode->addAttribute("type", "text/css");
+		_root->insertBefore(styleNode, _page);
+		_styleCDataNode = new XMLCDataNode;
+		styleNode->append(_styleCDataNode);
+	}
+	return _styleCDataNode;
 }

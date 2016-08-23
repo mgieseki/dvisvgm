@@ -148,19 +148,16 @@ If argument 'dir' is omitted, dvisvgm prints the path of the default cache direc
 with further information about the stored fonts. Additionally, outdated and corrupted cache files
 are removed.
 
-
 *-j, --clipjoin*::
 This option tells dvisvgm to compute all intersections of clipping paths itself rather than
 delegating this task to the SVG renderer. The resulting SVG files are more portable because
 some SVG viewers don't support intersecting clipping paths which are defined by 'clipPath'
 elements containing a 'clip-path' attribute.
 
-
 *--color*::
 Enables colorization of messages printed during the conversion process. The colors can be
 customized via the environment variable *DVISVGM_COLORS*. See the <<environment, Environment section>>
 below for further information.
-
 
 *--colornames*::
 By default, dvisvgm exclusively uses RGB values of the form '#RRGGBB' to represent colors in
@@ -173,13 +170,13 @@ SVG color name will still be represented by RGB values.
 Adds comments with further information about selected data to the SVG file. Currently, only
 font elements and font CSS rules related to native fonts are annotated.
 
+
 *-E, --eps*::
 If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
 it to SVG. In order to do so, a single 'psfile' special command is created and forwarded to the
 PostScript special handler.
 This option is only available if dvisvgm was built with PostScript support enabled, and requires
 Ghostscript to be available. See option *--libgs* for further information.
-
 
 *-e, --exact*::
 This option tells dvisvgm to compute the precise bounding box of each character. By default,
@@ -190,6 +187,10 @@ and/or height of some glyphs may be larger (or smaller) than the respective TFM 
 this can lead to clipped characters at the bounds of the SVG graphics. With option *--exact* given,
 dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
 
+*-f, --font-format*='format'::
+Selects the file format used to embed the font data into the SVG files. Following formats are
+supported: SVG (that's the default), TTF (TrueType), and WOFF (Web Open Font Format).
+This option is only available if dvisvgm was built with WOFF support enabled.
 
 *-m, --fontmap*='filenames'::
 Loads and evaluates a single font map file or a sequence of font map files. These files are required
@@ -226,7 +227,6 @@ given in 'myfile2.map' are removed from the font map tree.
 For further information about the map file formats and the mode specifiers, see the manuals of
 dvips and dvipdfm.
 
-
 *--grad-overlap*::
 Tells dvisvgm to create overlapping grid segments when approximating color gradient fills (also see
 option *--grad-segments* below). By default, adjacent segments don't overlap but only touch each other
@@ -240,7 +240,6 @@ disappear as the background is now completely covered by the correct colors.
 Currently, dvisvgm computes the overlapping segments separately for each patch of the mesh (a patch mesh
 may consist of multiple patches of the same type). Therefore, there still might be visible gaps
 at the seam of two adjacent patches.
-
 
 *--grad-segments*='number'::
 Determines the maximal number of segments per column and row used to approximate gradient color fills.
@@ -256,13 +255,11 @@ tensor-product patch meshes. They are approximated by subdividing the area of ea
 __n__&#215;__n__ grid of smaller segments. The maximal number of segments per column and row can be
 changed with option *--grad-segments*.
 
-
 *--grad-simplify*='delta'::
 If the size of the segments created to approximate gradient color fills falls below the given delta
 value, dvisvgm reduces their level of detail. For example, Bézier curves are replaced by straight
 lines, and triangular segments are combined to tetragons. For a small 'delta', these simplifications
 are usually not noticeable but reduce the size of the generated SVG files significantly.
-
 
 *-h, --help*[='mode']::
 Prints a short summary of all available command-line options. The optional 'mode' parameter is
@@ -271,10 +268,8 @@ lists all options divided into categories with section headers. This is also the
 dvisvgm is called without parameters. Mode 1 lists all options ordered by the short option names,
 while mode 2 sorts the lines by the long option names.
 
-
 *--keep*::
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
-
 
 *--libgs*='filename'::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
@@ -285,7 +280,6 @@ to be +libgs.so.X+ (on Unix-like systems, where +X+ is the ABI version of the li
 Alternatively, it's also possible to set the GS library name by the environment variable *LIBGS*.
 The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable *LIBGS*
 if *--libgs* is given.
-
 
 *-L, --linkmark*='style'::
 Selects the method how to mark hyperlinked areas. The 'style' argument can take one of the values
@@ -304,13 +298,11 @@ selects the frame color.
 Examples: +box:red+ or +box:#ff0000+ draws red boxes around the linked areas. +yellow:blue+ creates
 yellow filled rectangles with blue frames.
 
-
 *-l, --list-specials*::
 Prints a list of registered special handlers and exits. Each handler processes a set of special
 statements belonging to the same category. In most cases, the categories are identified by the
 prefix of the special statements. It's usually a leading word separated from the rest of the
 statement by a colon or a blank, e.g. 'color' or 'ps'.
-
 
 *-M, --mag*='factor'::
 Sets the magnification factor applied in conjunction with Metafont calls prior tracing the glyphs.
@@ -318,18 +310,15 @@ The larger this value, the better the tracing results. Nevertheless, large magni
 can cause Metafont arithmetic errors due to number overflows. So, use this option with care.
 The default setting usually produces nice results.
 
-
 *--no-merge*::
 Puts every single character in a separate 'text' element with corresponding 'x' and 'y' attributes.
 By default, new 'text' or 'tspan' elements are only created if a string starts at a location that
 differs from the regular position defined by the characters' advance values.
 
-
 *--no-mktexmf*::
 Suppresses the generation of missing font files. If dvisvgm can't find a font file
 through the kpathsea lookup mechanism, it calls the external tools 'mktextfm' or 'mktexmf'.
 This option disables these calls.
-
 
 *-n, --no-fonts*[='variant']::
 If this option is given, dvisvgm doesn't create SVG 'font' elements but uses 'paths' instead. The
@@ -339,11 +328,9 @@ by paths. Variant 0 creates 'path' and 'use' elements in order to avoid lengthy 
 Variant 1 creates 'path' elements only.
 Option *--no-fonts* implies *--no-styles*.
 
-
 *-c, --scale*='sx'[,'sy']::
 Scales the page content horizontally by 'sx' and vertically by 'sy'. This option is equivalent
 to *-TS*'sx','sy'.
-
 
 *-S, --no-specials*[='names']::
 Disable processing of special commands embedded in the DVI file. If no further
@@ -353,13 +340,11 @@ identifier referencing the intended special handler. Option *--list-specials* li
 currently available together with their names.
 All unsupported special statements are silently ignored.
 
-
 *--no-styles*::
 By default, dvisvgm creates CSS styles and class attributes to reference fonts. This variant is
 more compact than adding the complete font information to each text element over and over again.
 However, if you prefer direct font references, the default behavior can be disabled with
 option *--no-styles*.
-
 
 *-o, --output*='pattern'::
 Sets the pattern specifying the names of the generated SVG files. Parameter 'pattern' is
@@ -385,7 +370,6 @@ is a single-page document. Otherwise, multiple SVG files 'foo-01.svg', 'foo-02.s
 produced. In Windows environments, the percent sign indicates dereferenced environment
 variables, and must therefore be protected by a second percent sign, e.g. +--output=%%f-%%p+.
 
-
 *-p, --page*='ranges'::
 This option selects the pages to be processed. Parameter 'ranges' consists of a comma-separated
 list of single page numbers and/or page ranges. A page range is a pair of numbers separated by
@@ -402,7 +386,6 @@ Please consider that the page values don't refer to the page numbers printed on 
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.
 
-
 *-d, --precision*='digits'::
 Specifies the maximal number of decimal places applied to floating-point attribute values.
 All attribute values written to the generated SVG file(s) are rounded accordingly. The
@@ -410,17 +393,14 @@ parameter 'digits' allows integer values from 0 to 6, where 0 enables the automa
 of significant decimal places. This is also the default value if dvisvgm is called without
 option *--precision*.
 
-
 *-P, --progress*[='delay']::
 Enables a simple progress indicator shown when time-consuming operations like
 PostScript specials are processed. The indicator doesn't appear before the given
 delay (in seconds) has elapsed. The default delay value is 0.5 seconds.
 
-
 *-r, --rotate*='angle'::
 Rotates the page content clockwise by 'angle' degrees around the page center.
 This option is equivalent to *-TR*'angle'.
-
 
 *-R, --relative*::
 SVG allows to define graphics paths by a sequence of absolute and/or relative path commands,
@@ -429,10 +409,8 @@ current drawing position. By default, dvisvgm creates paths made up of absolute 
 If option *--relative* is given, relative commands are created instead. This slightly reduces
 the size of the SVG files in most cases.
 
-
 *-s, --stdout*::
 Don't write the SVG output to a file but redirect it to *stdout*.
-
 
 *-T, --transform*='commands'::
 Applies a sequence of transformations to the SVG content. Each transformation is described
@@ -525,11 +503,9 @@ By adding these values you can combine the categories. The default level is 7, i
 messages are printed.
 +
 
-
 *-V, --version*[='extended']::
 Prints the version of dvisvgm and exits. If the optional argument is set to 'yes', the
 version numbers of the linked libraries are printed as well.
-
 
 *-z, --zip*[='level']::
 Creates a compressed SVG file with suffix .svgz. The optional argument specifies the compression
@@ -538,12 +514,10 @@ compression results but may take slightly more computation time.
 +
 CAUTION: This option cannot be combined with *-s, --stdout*.
 
-
 *-Z, --zoom*[='factor']::
 Multiplies the 'width' and 'height' attributes of the SVG root element by argument 'factor' while
 the coordinate system of the graphic content is retained. As a result, most SVG viewers zoom the
 graphics accordingly. If a negative zoom factor is given, the 'width' and 'height' attributes are omitted.
-
 
 [[specials]]
 SUPPORTED SPECIALS
@@ -725,7 +699,6 @@ dvisvgm --transform="R20,w/3,2h/5 T1cm,1cm S2,3" file
 -----------------------------------------------------
 Converts the first page of 'file.dvi' to 'file.svg' where three transformations are applied.
 
-
 [[environment]]
 ENVIRONMENT
 -----------
@@ -788,22 +761,18 @@ SEE ALSO
 --------
 *tex(1), mf(1), mktexmf(1), grodvi(1), potrace(1)*, and the *kpathsea library* info documentation.
 
-
 RESOURCES
 ---------
 Project home page::: http://dvisvgm.bplaced.net
 Code repository::: https://github.com/mgieseki/dvisvgm
 
-
 BUGS
 ----
 Please report bugs using the bug tracker at https://github.com/mgieseki/dvisvgm/issues[GitHub].
 
-
 AUTHOR
 ------
 Written by {author} <{email}>
-
 
 COPYING
 -------

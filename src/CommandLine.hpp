@@ -37,6 +37,7 @@ class CommandLine : public CL::CommandLine
 		Option commentsOpt {"comments", '\0', "add comments with additional information"};
 		Option epsOpt {"eps", 'E', "convert an EPS file to SVG"};
 		Option exactOpt {"exact", 'e', "compute exact glyph boxes"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> fontFormatOpt {"font-format", 'f', "format", "svg", "select file format of embed fonts"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> fontmapOpt {"fontmap", 'm', "filenames", "evaluate (additional) font map files"};
 		Option gradOverlapOpt {"grad-overlap", '\0', "create overlapping color gradient segments"};
 		TypedOption<int, Option::ArgMode::REQUIRED> gradSegmentsOpt {"grad-segments", '\0', "number", 20, "number of color gradient segments per row"};
@@ -93,6 +94,9 @@ class CommandLine : public CL::CommandLine
 #endif
 			{&colornamesOpt, 1},
 			{&commentsOpt, 1},
+#if !defined(DISABLE_WOFF)
+			{&fontFormatOpt, 1},
+#endif
 #if !defined(DISABLE_GS)
 			{&gradOverlapOpt, 1},
 #endif

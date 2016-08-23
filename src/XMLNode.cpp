@@ -264,3 +264,9 @@ ostream& XMLCDataNode::write (ostream &os) const {
 }
 
 
+void XMLCDataNode::append (string &&str) {
+	if (_data.empty())
+		_data = move(str);
+	else
+		_data += str;
+}

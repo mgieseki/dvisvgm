@@ -106,6 +106,24 @@ PKG_PROG_PKG_CONFIG
 # Check for libraries.
 PKG_CHECK_MODULES([FREETYPE], [freetype2])
 
+AC_ARG_ENABLE([woff],
+	[AS_HELP_STRING([--disable-woff], [Disable WOFF support @<:@no@:>@])],
+	[],
+	[enable_woff=yes])
+AS_IF([test "x$enable_woff" != "xno"],
+	[PKG_CHECK_MODULES([FONTFORGE],
+		[libfontforge],
+		[enable_woff=yes],
+		[AS_IF([test "x$enable_woff" = "xyes"],
+			[AC_MSG_WARN([libfontforge not found; WOFF support disabled])
+				enable_woff=no],
+			[enable_woff=no])])])
+
+AM_CONDITIONAL([ENABLE_WOFF], [test "x$enable_woff" = "xyes"])
+if test "x$enable_woff" != "xyes" ; then
+	AC_DEFINE([DISABLE_WOFF], 1, [Define if WOFF support is disabled])
+fi
+
 AC_CHECK_LIB(z, gzopen)
 
 # Check for header files.

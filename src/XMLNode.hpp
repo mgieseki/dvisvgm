@@ -110,10 +110,12 @@ class XMLCommentNode : public XMLNode
 class XMLCDataNode : public XMLNode
 {
 	public:
+		XMLCDataNode () {}
 		XMLCDataNode (const std::string &d) : _data(d) {}
 		XMLCDataNode (std::string &&d) : _data(std::move(d)) {}
 		XMLCDataNode* clone () const override {return new XMLCDataNode(*this);}
 		void clear () override                {_data.clear();}
+		void append (std::string &&str);
 		std::ostream& write (std::ostream &os) const override;
 
 	private:

@@ -55,6 +55,10 @@
 			<option long="comments">
 				<description>add comments with additional information</description>
 			</option>
+			<option long="font-format" short="f" if="!defined(DISABLE_WOFF)">
+				<arg type="string" name="format" default="svg"/>
+				<description>select file format of embed fonts</description>
+			</option>
 			<option long="grad-overlap" if="!defined(DISABLE_GS)">
 				<description>create overlapping color gradient segments</description>
 			</option>

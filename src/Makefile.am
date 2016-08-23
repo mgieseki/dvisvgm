@@ -13,6 +13,7 @@ dvisvgm_LDADD = \
 	../clipper/libclipper.a \
 	../xxHash/libxxhash.a \
 	$(FREETYPE_LIBS) \
+	$(FONTFORGE_LIBS) \
 	$(ZLIB_LIBS)
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
@@ -94,6 +95,8 @@ libdvisvgm_a_SOURCES = \
 	FontMetrics.cpp \
 	FontMetrics.hpp \
 	FontStyle.hpp \
+	FontWriter.cpp \
+	FontWriter.hpp \
 	GFGlyphTracer.cpp \
 	GFGlyphTracer.hpp \
 	GFReader.cpp \
@@ -213,7 +216,16 @@ libdvisvgm_a_SOURCES = \
 	XMLString.hpp \
 	ZLibOutputStream.hpp
 
+if ENABLE_WOFF
+libdvisvgm_a_SOURCES += ffwrapper.c ffwrapper.h
+endif
+
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.hpp MiKTeXCom.cpp
+
+AM_CFLAGS = -Wall \
+	$(FONTFORGE_CFLAGS) \
+	$(ZLIB_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/clipper \

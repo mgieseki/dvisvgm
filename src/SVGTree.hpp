@@ -22,25 +22,26 @@
 #define SVGTREE_HPP
 
 #include <map>
+#include <memory>
 #include <set>
 #include <stack>
 #include "Color.hpp"
+#include "FontWriter.hpp"
 #include "GFGlyphTracer.hpp"
 #include "Matrix.hpp"
 #include "SVGCharHandler.hpp"
 #include "XMLDocument.hpp"
 #include "XMLNode.hpp"
 
-class  BoundingBox;
-class  Color;
+class BoundingBox;
+class Color;
 class Font;
-class  Matrix;
-class  PhysicalFont;
+class Matrix;
+class PhysicalFont;
 
 class SVGTree {
 	public:
 		SVGTree ();
-		~SVGTree ();
 		void reset ();
 		void write (std::ostream &os) const    {_doc.write(os);}
 		void newPage (int pageno);
@@ -57,6 +58,7 @@ class SVGTree {
 		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
+		static bool setFontFormat (const std::string &formatstr);
 		void setX (double x)              {_charHandler->notifyXAdjusted();}
 		void setY (double y)              {_charHandler->notifyYAdjusted();}
 		void setMatrix (const Matrix &m)  {_charHandler->setMatrix(m);}
@@ -67,10 +69,14 @@ class SVGTree {
 		const Matrix& getMatrix () const  {return _charHandler->getMatrix();}
 		XMLElementNode* rootNode () const {return _root;}
 
+	protected:
+		XMLCDataNode* styleCDataNode ();
+
 	public:
 		static bool USE_FONTS;           ///< if true, create font references and don't draw paths directly
 		static bool CREATE_CSS;          ///< define and use CSS classes to reference fonts?
 		static bool CREATE_USE_ELEMENTS; ///< allow generation of <use/> elements?
+		static FontWriter::FontFormat FONT_FORMAT;   ///< format of fonts to be embedded
 		static bool RELATIVE_PATH_CMDS;  ///< relative path commands rather than absolute ones?
 		static bool MERGE_CHARS;         ///< whether to merge chars with common properties into the same <text> tag
 		static bool ADD_COMMENTS;        ///< add comments with additional information
@@ -79,7 +85,8 @@ class SVGTree {
 	private:
 		XMLDocument _doc;
 		XMLElementNode *_root, *_page, *_defs;
-		SVGCharHandler *_charHandler;
+		XMLCDataNode *_styleCDataNode;
+		std::unique_ptr<SVGCharHandler> _charHandler;
 		std::stack<XMLElementNode*> _contextElementStack;
 };
 

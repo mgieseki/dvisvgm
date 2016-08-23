@@ -78,8 +78,7 @@ class GraphicsPath
 			Point params[3];
 		};
 
-		struct Actions
-		{
+		struct Actions {
 			virtual ~Actions () =default;
 			virtual void moveto (const Point &p) {}
 			virtual void lineto (const Point &p) {}

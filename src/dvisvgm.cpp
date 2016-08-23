@@ -44,6 +44,10 @@
 #include "System.hpp"
 #include "version.hpp"
 
+#ifndef DISABLE_WOFF
+#include "ffwrapper.h"
+#endif
+
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +158,11 @@ static void print_version (bool extended) {
 			oss << " (" TARGET_SYSTEM ")";
 		int len = oss.str().length();
 		oss << "\n" << string(len, '-') << "\n"
-			"clipper:     " << CLIPPER_VERSION "\n"
-			"freetype:    " << FontEngine::version() << "\n";
+			"clipper:     " << CLIPPER_VERSION "\n";
+#ifndef DISABLE_WOFF
+		oss << "fontforge:   " << ff_version() << '\n';
+#endif
+		oss << "freetype:    " << FontEngine::version() << "\n";
 
 		Ghostscript gs;
 		string gsver = gs.revision(true);
@@ -201,6 +208,14 @@ static void set_variables (const CommandLine &cmdline) {
 	Color::SUPPRESS_COLOR_NAMES = !cmdline.colornamesOpt.given();
 	SVGTree::CREATE_CSS = !cmdline.noStylesOpt.given();
 	SVGTree::USE_FONTS = !cmdline.noFontsOpt.given();
+	if (!SVGTree::setFontFormat(cmdline.fontFormatOpt.value())) {
+		string msg = "unknown font format '"+cmdline.fontFormatOpt.value()+"' (supported formats: ";
+		ostringstream oss;
+		for (const string &format : FontWriter::supportedFormats())
+			oss << ", " << format;
+		msg += oss.str().substr(2) + ')';
+		throw CL::CommandLineException(msg);
+	}
 	SVGTree::CREATE_USE_ELEMENTS = cmdline.noFontsOpt.value() < 1;
 	SVGTree::ZOOM_FACTOR = cmdline.zoomOpt.value();
 	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();

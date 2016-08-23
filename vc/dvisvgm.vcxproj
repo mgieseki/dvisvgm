@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -74,8 +74,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -108,8 +108,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -134,8 +134,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Full</Optimization>
@@ -147,6 +147,7 @@
       </DataExecutionPrevention>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,8 +156,8 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\clipper;..\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -171,6 +172,7 @@
       <TargetMachine>MachineX64</TargetMachine>
       <MinimumRequiredVersion />
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -199,6 +201,7 @@
     <ClCompile Include="..\src\EncFile.cpp" />
     <ClCompile Include="..\src\EPSFile.cpp" />
     <ClCompile Include="..\src\EPSToSVG.cpp" />
+    <ClCompile Include="..\src\ffwrapper.c" />
     <ClCompile Include="..\src\FileFinder.cpp" />
     <ClCompile Include="..\src\FilePath.cpp" />
     <ClCompile Include="..\src\FileSystem.cpp" />
@@ -209,6 +212,7 @@
     <ClCompile Include="..\src\FontManager.cpp" />
     <ClCompile Include="..\src\FontMap.cpp" />
     <ClCompile Include="..\src\FontMetrics.cpp" />
+    <ClCompile Include="..\src\FontWriter.cpp" />
     <ClCompile Include="..\src\GFGlyphTracer.cpp" />
     <ClCompile Include="..\src\GFReader.cpp" />
     <ClCompile Include="..\src\GFTracer.cpp" />
@@ -288,6 +292,7 @@
     <ClInclude Include="..\src\FilePath.hpp" />
     <ClInclude Include="..\src\FixWord.hpp" />
     <ClInclude Include="..\src\FontMetrics.hpp" />
+    <ClInclude Include="..\src\FontWriter.hpp" />
     <ClInclude Include="..\src\HtmlSpecialHandler.hpp" />
     <ClInclude Include="..\src\JFM.hpp" />
     <ClInclude Include="..\src\MapLine.hpp" />
@@ -368,8 +373,14 @@
     <ProjectReference Include="clipper\clipper.vcxproj">
       <Project>{98d8e34d-75b4-48b6-b175-c3a7df11e52c}</Project>
     </ProjectReference>
+    <ProjectReference Include="fontforge\ff-woff.vcxproj">
+      <Project>{2ea12a93-b90e-3f75-8d67-6b51f83a4298}</Project>
+    </ProjectReference>
     <ProjectReference Include="freetype\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="iconv\libiconv.vcxproj">
+      <Project>{1704ea01-6b21-4362-9f1f-44d25cf2e0d7}</Project>
     </ProjectReference>
     <ProjectReference Include="potrace\libpotrace.vcxproj">
       <Project>{6f17fbf1-4304-4af2-81a8-c78787e8d0a5}</Project>
