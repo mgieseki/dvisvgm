@@ -179,15 +179,19 @@ int FontEngine::getUnitsPerEM () const {
 }
 
 
-/** Returns the ascender of the current font in font units. */
+/** Returns the ascender of the current font in font units.
+ *  The (usually) positive value denotes the maximum height
+ *  (extent above the baseline) of the font. */
 int FontEngine::getAscender () const {
 	return _currentFace ? _currentFace->ascender : 0;
 }
 
 
-/** Returns the descender of the current font in font units. */
+/** Returns the descender of the current font in font units.
+ *  The (usually) positive value denotes the maximum depth
+ *  (extent below the baseline) of the font. */
 int FontEngine::getDescender () const {
-	return _currentFace ? _currentFace->descender : 0;
+	return _currentFace ? -_currentFace->descender : 0;
 }
 
 
