@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="fontforge\asmfpst.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\autohint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\char.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\cvundoes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\dumppfa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\encoding.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\fvfonts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\lookups.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\macbinary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\macenc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\mathconstants.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\mm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\namelist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\nouiutil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\nowakowskittfinstr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\parsepfa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\parsettf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\parsettfatt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\psread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\pua.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\sfd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\sfd1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splinechar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splinefont.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splineorder2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splineoverlap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splinerefigure.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splinesave.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splinesaveafm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splineutil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\splineutil2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\start.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\stemdb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\tottf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\tottfaat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\tottfgpos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\tottfvar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\ttfinstrs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\ttfspecial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\unialt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\ustring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\utype.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\woff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0AF8A512-C0BD-35F2-BD38-CC800FD8D2E7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{f247ec55-8e8b-464d-873d-acb8363f0b51}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="fontforge\configure-fontforge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\edgelist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\edgelist2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\encoding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\fontforge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\fontforge-config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\fontforgevw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\libffstamp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\namehash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\PfEd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\psfont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\sd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\sfd1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\splinefont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\stemdb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\ttf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\ttfinstrs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fontforge\uiinterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\basics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\chardata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\charset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\dlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\gimage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\gnetwork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\gwwiconv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\intl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\ustring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\utype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -2,6 +2,7 @@ In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2015 you
 need to download the source code archives of the following libraries:
 
 FreeType:   http://freetype.org
+iconv:      https://github.com/holy-shit/iconv-for-windows
 Potrace:    http://potrace.sourceforge.net
 zlib:       http://zlib.net
 
@@ -22,6 +23,6 @@ Now open the Visual Studio IDE, load dvisvgm.sln, and start the build process.
 
 Alternatively, you can trigger the build process on the command-line with
   msbuild /p:Configuration=Release /p:Platform=<platform> dvisvgm.sln
-where <platform> is either "win32" or "x64" for the 32 and 64bit binaries,
+where <platform> is either "win32" or "x64" for the 32- and 64-bit binaries,
 respectively.
 
