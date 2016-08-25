@@ -189,7 +189,7 @@ dvisvgm analyzes the actual shape of each character and derives a usually tight 
 
 *-f, --font-format*='format'::
 Selects the file format used to embed the font data into the SVG files. Following formats are
-supported: SVG (that's the default), TTF (TrueType), and WOFF (Web Open Font Format).
+supported: SVG (that's the default), TTF (TrueType), WOFF, and WOFF2 (Web Open Font Format version 1 and 2).
 This option is only available if dvisvgm was built with WOFF support enabled.
 
 *-m, --fontmap*='filenames'::

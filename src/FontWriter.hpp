@@ -3,13 +3,15 @@
 
 #include <ostream>
 #include <set>
+#include <string>
+#include <vector>
 #include "GFGlyphTracer.hpp"
 
 class PhysicalFont;
 
 class FontWriter {
 	public:
-		enum class FontFormat {UNKNOWN, SVG, TTF, WOFF};
+		enum class FontFormat {UNKNOWN, SVG, TTF, WOFF, WOFF2};
 
 	public:
 		FontWriter (const PhysicalFont &font);

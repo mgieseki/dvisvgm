@@ -194,6 +194,8 @@ AC_CONFIG_FILES([
 	Makefile
 	libs/Makefile
 	libs/clipper/Makefile
+	libs/woff2/brotli/enc/Makefile
+	libs/woff2/src/Makefile
 	libs/xxHash/Makefile
 	src/Makefile
 	src/version.hpp

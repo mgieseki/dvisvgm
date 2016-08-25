@@ -10,6 +10,7 @@ const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos = {{
 	{FontWriter::FontFormat::SVG, "image/svg+xml", "svg", "svg"},
 	{FontWriter::FontFormat::TTF, "application/x-font-ttf", "ttf", "truetype"},
 	{FontWriter::FontFormat::WOFF, "application/x-font-woff", "woff", "woff"},
+	{FontWriter::FontFormat::WOFF2, "application/x-font-woff2", "woff2", "woff2"},
 }};
 
 
@@ -42,13 +43,15 @@ vector<string> FontWriter::supportedFormats () {
 
 #ifdef DISABLE_WOFF
 FontWriter::FontWriter (const PhysicalFont &font) : _font(font) {}
-bool FontWriter::createFontFile (FontFormat format, const set<int> &charcodes, GFGlyphTracer::Callback *cb) const {return false;}
-bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes, ostream &os, GFGlyphTracer::Callback *cb=0) const {return false;}
+std::string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes, GFGlyphTracer::Callback *cb) const {return "";}
+bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes, ostream &os, GFGlyphTracer::Callback *cb) const {return false;}
 #else
 #include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <woff2_enc.h>
+#include <file.h>
 #include "ffwrapper.h"
 #include "Bezier.hpp"
 #include "FileSystem.hpp"
@@ -164,6 +167,25 @@ string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes,
 			case FontFormat::WOFF:
 				ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), 1);
 				break;
+			case FontFormat::WOFF2: {
+				string ttfname = _font.name()+"-tmp.ttf";
+				if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), 1)) {
+					string input = woff2::GetFileContent(ttfname);
+					const uint8_t* input_data = reinterpret_cast<const uint8_t*>(input.data());
+					size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, input.size());
+					string output(output_size, 0);
+					uint8_t* output_data = reinterpret_cast<uint8_t*>(&output[0]);
+					woff2::WOFF2Params params;
+					if (woff2::ConvertTTFToWOFF2(input_data, input.size(), output_data, &output_size, params)) {
+						output.resize(output_size);
+						woff2::SetFileContents(targetname, output.begin(), output.end());
+						ok = true;
+					}
+					if (!PhysicalFont::KEEP_TEMP_FILES)
+						FileSystem::remove(ttfname);
+				}
+				break;
+			}
 			default:;
 		}
 		if (!PhysicalFont::KEEP_TEMP_FILES)

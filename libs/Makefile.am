@@ -3,4 +3,4 @@
 ##
 ## Process this file with automake.
 
-SUBDIRS = clipper xxHash
+SUBDIRS = clipper woff2/brotli/enc woff2/src xxHash

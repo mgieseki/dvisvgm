@@ -74,7 +74,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\libs\woff2\src;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -108,7 +108,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -134,11 +134,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\libs\woff2\src;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Full</Optimization>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -148,6 +149,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,12 +158,12 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_CONFIG_H;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -370,6 +372,9 @@
     <ClInclude Include="..\src\XMLString.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="brotli\brotli.vcxproj">
+      <Project>{c72bb6a5-318e-4d3f-8714-786094e2c6eb}</Project>
+    </ProjectReference>
     <ProjectReference Include="clipper\clipper.vcxproj">
       <Project>{98d8e34d-75b4-48b6-b175-c3a7df11e52c}</Project>
     </ProjectReference>
@@ -384,6 +389,9 @@
     </ProjectReference>
     <ProjectReference Include="potrace\libpotrace.vcxproj">
       <Project>{6f17fbf1-4304-4af2-81a8-c78787e8d0a5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="woff2\woff2.vcxproj">
+      <Project>{52c2c7c6-3bce-4434-9a02-ea920c15fb65}</Project>
     </ProjectReference>
     <ProjectReference Include="xxHash\xxhash.vcxproj">
       <Project>{b3a84395-d889-4419-b313-b410350727fa}</Project>

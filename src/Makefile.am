@@ -12,6 +12,8 @@ dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../libs/clipper/libclipper.a \
 	../libs/xxHash/libxxhash.a \
+	../libs/woff2/src/libwoff2.a \
+	../libs/woff2/brotli/enc/libbrotli.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
 	$(ZLIB_LIBS)
@@ -230,6 +232,8 @@ AM_CFLAGS = -Wall \
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/libs/clipper \
 	-I$(top_srcdir)/libs/xxHash \
+	-I$(top_srcdir)/libs/woff2/brotli/enc \
+	-I$(top_srcdir)/libs/woff2/src \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
