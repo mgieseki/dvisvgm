@@ -10,8 +10,8 @@ dvisvgm_SOURCES      = dvisvgm.cpp
 
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
-	../clipper/libclipper.a \
-	../xxHash/libxxhash.a \
+	../libs/clipper/libclipper.a \
+	../libs/xxHash/libxxhash.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
 	$(ZLIB_LIBS)
@@ -228,8 +228,8 @@ AM_CFLAGS = -Wall \
 	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
-	-I$(top_srcdir)/clipper \
-	-I$(top_srcdir)/xxHash \
+	-I$(top_srcdir)/libs/clipper \
+	-I$(top_srcdir)/libs/xxHash \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)

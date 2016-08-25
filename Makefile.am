@@ -5,7 +5,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING
-SUBDIRS = clipper xxHash src tests doc
+SUBDIRS = libs src tests doc
 
 if CODE_COVERAGE_ENABLED
 lcov_dir=$(top_builddir)/lcov

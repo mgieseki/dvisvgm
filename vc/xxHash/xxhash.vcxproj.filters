@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\xxHash\xxhash.h">
+    <ClInclude Include="..\..\libs\xxHash\xxhash.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\xxHash\xxhash.c">
+    <ClCompile Include="..\..\libs\xxHash\xxhash.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

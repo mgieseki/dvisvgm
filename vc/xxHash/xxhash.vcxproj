@@ -126,10 +126,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\xxHash\xxhash.h" />
+    <ClInclude Include="..\..\libs\xxHash\xxhash.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\xxHash\xxhash.c" />
+    <ClCompile Include="..\..\libs\xxHash\xxhash.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -192,8 +192,9 @@ AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([
 	Makefile
-	clipper/Makefile
-	xxHash/Makefile
+	libs/Makefile
+	libs/clipper/Makefile
+	libs/xxHash/Makefile
 	src/Makefile
 	src/version.hpp
 	tests/Makefile

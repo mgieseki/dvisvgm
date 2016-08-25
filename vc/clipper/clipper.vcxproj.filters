@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\clipper\clipper.hpp">
+    <ClInclude Include="..\..\libs\clipper\clipper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\clipper\clipper.cpp">
+    <ClCompile Include="..\..\libs\clipper\clipper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
