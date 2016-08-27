@@ -34,4 +34,5 @@ script:
    - ./autogen.sh
    - ./configure
    - make
+   - make -C src -t
    - make check
