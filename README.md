@@ -19,6 +19,7 @@ Short overview of the main features:
 
 * Complete font support including [virtual fonts](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=virtualfonts), evaluation of [font encodings](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=whatenc), CMap files, sub-font definitions and font maps.
 * Glyph outlines of all required fonts are embedded into the generated SVG files.
+* The font data can be embedded in SVG, TrueType, WOFF, or WOFF2 format.
 * Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](http://en.wikipedia.org/wiki/Metafont)'s bitmap output.
 * _dvisvgm_ allows to replace font definitions by [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
@@ -48,6 +49,11 @@ _dvisvgm_ relies on the following free libraries:
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
   the curves afterwards. A slightly modified version of Clipper is bundled with the sources.
 
+* [FontForge library](http://www.fontforge.org)  
+  _dvisvgm_ can be built with optional WOFF support that allows to embed the font data
+  in WOFF or TrueType format rather than as SVG. The FontForge library provides the required
+  functions to create font files in these formats.
+
 * [FreeType 2](http://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
@@ -69,6 +75,10 @@ _dvisvgm_ relies on the following free libraries:
 * [potracelib](http://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
   bitmap output.
+
+* [woff2](https://github.com/google/woff2) and [brotli](https://github.com/google/brotli)  
+  These Google libraries are bundled with the dvisvgm sources. They are used
+  to create WOFF2 from TrueType fonts.
 
 * [xxHash](https://github.com/Cyan4973/xxHash)  
   The xxHash library provides a fast hash algorithm. dvisvgm uses it to create

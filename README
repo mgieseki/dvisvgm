@@ -14,6 +14,11 @@ DEPENDENCIES
    to polygons, intersects them using Clipper, and reconstructs the curves
    afterwards.
 
+ * FontForge library (http://www.fontforge.org)
+   dvisvgm can be built with optional WOFF support that allows to embed the font
+	data in WOFF or TrueType format rather than as SVG. The FontForge library
+	provides the required functions to create font files in these formats.
+
  * FreeType 2 (http://www.freetype.org)
    This library is used to extract the glyph outlines from vector fonts
    (PFB, OTF, TTF).
@@ -37,6 +42,10 @@ DEPENDENCIES
  * potracelib (http://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
    bitmap output.
+
+ * woff2 and brotli (https://github.com/google/woff2)
+   These Google libraries are bundled with the dvisvgm sources. They are used
+   to create WOFF2 from TrueType fonts.
 
  * xxHash (https://github.com/Cyan4973/xxHash)
    The xxHash library provides a fast hash algorithm. dvisvgm uses it to
