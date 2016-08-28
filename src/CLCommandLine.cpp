@@ -94,7 +94,7 @@ static void type_error (const Option &option, bool shortname) {
 void CommandLine::parseShortOption (istringstream &iss, int argc, char **argv, int &argn) {
 	bool combined = false;
 	do {
-		char shortname = iss.get();
+		char shortname = static_cast<char>(iss.get());
 		if (!isalnum(shortname))
 			throw CommandLineException(string("syntax error: -")+shortname);
 		if (Option *option = lookupOption(shortname)) {
