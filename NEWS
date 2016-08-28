@@ -1,7 +1,14 @@
+dvisvgm-2.0 (2016-08-29)
+- added option --font-format to select the data format of embedded fonts
+  (currently supported formats: SVG, TTF, WOFF, WOFF2)
+- switched the code base from C++03 to C++11
+- reimplemented the command-line parser and the CommandLine class generator
+- major refactorings of several parts of the code
+
 dvisvgm-1.16 (2016-07-04)
-- added support of XDV version 7 introduced by XeTeX 0.99995
+- added support for XDV version 7 introduced by XeTeX 0.99995
 - added optional processing of papersize specials
-- added support of length units cc, dd, and sp
+- added support for length units cc, dd, and sp
 - fixed unit conversion in computation of bounding boxes
 - fixed propagation of resolution value to the glyph vectorizer
 - fixed transformation of background rectangle
