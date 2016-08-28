@@ -43,7 +43,6 @@
 #include "MessageException.hpp"
 #include "Process.hpp"
 
-
 const char *FileFinder::_argv0 = nullptr;
 std::string FileFinder::_progname;
 bool FileFinder::_enableMktex = false;
@@ -228,7 +227,7 @@ const char* FileFinder::findMappedFile (std::string fname) const {
  *  @return file path on success, 0 otherwise */
 const char* FileFinder::mktex (const std::string &fname) const {
 	size_t pos = fname.rfind('.');
-	if (!_mktexEnabled || pos == std::string::npos)
+	if (!_enableMktex || pos == std::string::npos)
 		return 0;
 
 	std::string ext  = fname.substr(pos+1);  // file extension

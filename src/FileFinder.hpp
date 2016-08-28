@@ -47,7 +47,6 @@ class FileFinder
 		static const char *_argv0;
 		static std::string _progname;
 		static bool _enableMktex;
-		bool _mktexEnabled;
 		std::set<std::string> _additionalDirs;
 #ifdef MIKTEX
 		std::unique_ptr<MiKTeXCom> _miktex;
