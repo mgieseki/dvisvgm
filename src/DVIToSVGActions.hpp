@@ -31,8 +31,8 @@
 #include "SVGTree.hpp"
 
 
-class  DVIToSVG;
-struct FileFinder;
+class DVIToSVG;
+class FileFinder;
 class Font;
 class XMLNode;
 

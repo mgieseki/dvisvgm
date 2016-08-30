@@ -24,7 +24,7 @@
 #include <string>
 
 
-struct FileFinder;
+class FileFinder;
 
 class MetafontWrapper
 {
