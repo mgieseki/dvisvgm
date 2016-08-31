@@ -58,7 +58,7 @@ class SVGTree {
 		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
-		static bool setFontFormat (const std::string &formatstr);
+		static bool setFontFormat (std::string formatstr);
 		void setX (double x)              {_charHandler->notifyXAdjusted();}
 		void setY (double y)              {_charHandler->notifyYAdjusted();}
 		void setMatrix (const Matrix &m)  {_charHandler->setMatrix(m);}

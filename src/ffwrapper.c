@@ -27,6 +27,7 @@ static void no_warning (const char *format, ...) {}
 #endif
 
 
+/** Initializes the FontForge library. */
 void ff_init () {
 	InitSimpleStuff();
 #ifdef _NDEBUG
@@ -41,12 +42,41 @@ int ff_version () {
 }
 
 
+/** Runs the autohinter for all glyphs in a given font.
+ *  @param[in,out] sf the font to be autohinted
+ *  @param[in] order2 if != 0, target font requires quadratic rather than cubic splines */
+static void ff_autohint (SplineFont *sf, int order2) {
+	BlueData bd;
+	GlobalInstrCt gic;
+	if (order2)
+		SFConvertToOrder2(sf);
+	QuickBlues(sf, ly_fore, &bd);
+	if (order2)
+		InitGlobalInstrCt(&gic, sf, ly_fore, &bd);
+	for (int i=0; i < sf->glyphcnt; i++) {
+		SplineChar *sc = sf->glyphs[i];
+		if (sc != NULL) {
+			SplineChar *sc = sf->glyphs[i];
+			SplineCharAutoHint(sc, ly_fore, &bd); // generate hints
+			if (order2)
+				NowakowskiSCAutoInstr(&gic, sc);  // generate TTF instructions
+		}
+	}
+	if (order2)
+		FreeGlobalInstrCt(&gic);
+}
+
+
+/** Creates a TrueType font from a FontForge SFD file.
+ *  @param[in] sfdname name of SFD file
+ *  @param[in] ttfname name of TrueType file
+ *  @param[in] autohint run the autohinter if != 0 */
 int ff_sfd_to_ttf (const char *sfdname, const char *ttfname, int autohint) {
 	int ret=0;
-	extern int autohint_before_generate;
-	autohint_before_generate = autohint;
 	SplineFont *sf = SFDRead((char*)sfdname);
 	if (sf) {
+		if (autohint)
+			ff_autohint(sf, true);
 		ret = WriteTTFFont((char*)ttfname, sf, ff_ttf, 0, 0, 0, sf->map, ly_fore);
 		SplineFontFree(sf);
 	}
@@ -54,12 +84,16 @@ int ff_sfd_to_ttf (const char *sfdname, const char *ttfname, int autohint) {
 }
 
 
+/** Creates a WOFF font from a FontForge SFD file.
+ *  @param[in] sfdname name of SFD file
+ *  @param[in] woffname name of WOFF file
+ *  @param[in] autohint run the autohinter if != 0 */
 int ff_sfd_to_woff (const char *sfdname, const char *woffname, int autohint) {
 	int ret=0;
-	extern int autohint_before_generate;
-	autohint_before_generate = autohint;
 	SplineFont *sf = SFDRead((char*)sfdname);
 	if (sf) {
+		if (autohint)
+			ff_autohint(sf, false);
 		ret = WriteWOFFFont((char*)woffname, sf, ff_woff, 0, 0, 0, sf->map, ly_fore);
 		SplineFontFree(sf);
 	}

@@ -32,6 +32,7 @@ class PhysicalFont;
 class FontWriter {
 	public:
 		enum class FontFormat {UNKNOWN, SVG, TTF, WOFF, WOFF2};
+		static bool AUTOHINT_FONTS;
 
 	public:
 		FontWriter (const PhysicalFont &font);

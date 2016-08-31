@@ -94,11 +94,18 @@ void SVGTree::setFont (int num, const Font &font) {
 }
 
 
-bool SVGTree::setFontFormat (const string &formatstr) {
+bool SVGTree::setFontFormat (string formatstr) {
+	size_t pos = formatstr.find(',');
+	string opt;
+	if (pos != string::npos) {
+		opt = formatstr.substr(pos+1);
+		formatstr = formatstr.substr(0, pos);
+	}
 	FontWriter::FontFormat format = FontWriter::toFontFormat(formatstr);
 	if (format == FontWriter::FontFormat::UNKNOWN)
 		return false;
 	FONT_FORMAT = format;
+	FontWriter::AUTOHINT_FONTS = (opt == "autohint" || opt == "ah");
 	return true;
 }
 

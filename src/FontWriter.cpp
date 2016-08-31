@@ -25,6 +25,7 @@
 
 using namespace std;
 
+bool FontWriter::AUTOHINT_FONTS = false;
 
 const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos = {{
 	{FontWriter::FontFormat::SVG, "image/svg+xml", "svg", "svg"},
@@ -182,14 +183,14 @@ string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes,
 		targetname = _font.name()+"-tmp."+fontFormatInfo(format)->formatstr_short;
 		switch (format) {
 			case FontFormat::TTF:
-				ok = ff_sfd_to_ttf(sfdname.c_str(), targetname.c_str(), 1);
+				ok = ff_sfd_to_ttf(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
 				break;
 			case FontFormat::WOFF:
-				ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), 1);
+				ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
 				break;
 			case FontFormat::WOFF2: {
-				string ttfname = _font.name()+"-tmp.ttf";
-				if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), 1)) {
+				string ttfname = _font.name()+".ttf";
+				if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS)) {
 					string input = woff2::GetFileContent(ttfname);
 					const uint8_t* input_data = reinterpret_cast<const uint8_t*>(input.data());
 					size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, input.size());
