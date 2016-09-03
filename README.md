@@ -74,19 +74,23 @@ _dvisvgm_ relies on the following free libraries:
   files in the large texmf tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
+* [libiconv](https://www.gnu.org/software/libiconv)
+  The FontForge library (see above) depends on libiconv. Thus, if _dvisvgm_ is to be
+  built with the optional WOFF support enabled, this library is required.
+
 * [potracelib](http://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
   bitmap output.
 
 * [woff2](https://github.com/google/woff2) and [brotli](https://github.com/google/brotli)  
-  These Google libraries are bundled with the dvisvgm sources. They are used
+  These Google libraries are bundled with the _dvisvgm_ sources. They are used
   to create WOFF2 from TrueType fonts.
 
 * [xxHash](https://github.com/Cyan4973/xxHash)  
-  The xxHash library provides a fast hash algorithm. dvisvgm uses it to create
+  The xxHash library provides a fast hash algorithm. _dvisvgm_ uses it to create
   unique integer values from PostScript character names in order to store them in
   a compact way together with their Unicode points. A recent version of xxHash is
-  bundled with the dvisvgm sources.
+  bundled with the _dvisvgm_ sources.
 
 * [zlib](http://www.zlib.org)  
   Compressed SVG files are produced by using functions of this library and the
@@ -103,7 +107,7 @@ Compilation
 -----------
 
 Quick installation info:
-* type `./autogen.sh` if `configure` is not present in the dvisvgm root folder
+* type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
 * type `./configure`
 * type `make`
 * type `make install` as root (or `sudo make install`)

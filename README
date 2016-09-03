@@ -15,11 +15,11 @@ DEPENDENCIES
    afterwards.
 
  * FontForge library (http://www.fontforge.org)
-   dvisvgm can be built with optional WOFF support that allows to embed the font
-   data in WOFF or TrueType format rather than as SVG. The FontForge library
-   provides the required functions to create font files in these formats.
-   In order to create native Windows builds of dvisvgm, you can download a
-   reduced verson of the FontForge library from GitHub:
+   dvisvgm can be built with optional WOFF support that allows to embed the
+   font data in WOFF or TrueType format rather than as SVG. The FontForge
+   library provides the required functions to create font files in these
+   formats. In order to create native Windows builds of dvisvgm, you can
+   download a reduced verson of the FontForge library from GitHub:
    https://github.com/mgieseki/ff-woff
 
  * FreeType 2 (http://www.freetype.org)
@@ -32,15 +32,20 @@ DEPENDENCIES
    If the configure script finds the corresponding Ghostscript development
    files on the system, it directly links against libgs.so.N, where N is the
    library's ABI version. Otherwise, the library is looked up at runtime,
-   and PostScript support is enabled only if libgs.so can be found. Due to
-   incompatible changes of the Ghostscript API, dvisvgm requires Ghostscript 8.31
-   or later.
+   and PostScript support is enabled only if libgs.so can be found.
+   Due to incompatible changes of the Ghostscript API, dvisvgm requires
+   Ghostscript 8.31 or later.
 
  * kpathsea (https://tug.org/kpathsea)
    This library is part of the Web2C package and is usually installed in
    conjunction with a TeX distribution. kpathsea provides functions for
    searching files in the large texmf tree. Please ensure that you use the
    kpathsea version coming with or matching your TeX system.
+
+ * libiconv (https://www.gnu.org/software/libiconv)
+   The FontForge library (see above) depends on libiconv. Thus, if dvisvgm
+   is to be built with the optional WOFF support enabled, this library is
+   required.
 
  * potracelib (http://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's

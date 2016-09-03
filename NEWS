@@ -1,3 +1,7 @@
+dvisvgm-2.0.1 (2016-09-03)
+- added optional argument parameter "autohint" to option --font-format in order
+  to create autohinted TTF, WOFF, or WOFF2 fonts
+
 dvisvgm-2.0 (2016-08-29)
 - added option --font-format to select the data format of embedded fonts
   (currently supported formats: SVG, TTF, WOFF, WOFF2)
