@@ -610,7 +610,7 @@ double NativeFont::charHeight (int c) const {
 double NativeFont::charDepth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (-scaledSize()*FontEngine::instance().getDescender()/upem) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getDescender()/upem) : 0;
 }
 
 
