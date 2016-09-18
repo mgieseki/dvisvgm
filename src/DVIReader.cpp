@@ -368,14 +368,14 @@ void DVIReader::moveDown (double dy) {
 
 
 void DVIReader::cmdRight (int len) {
-	int32_t dx = _dvi2bp*readSigned(len);
+	double dx = _dvi2bp*readSigned(len);
 	moveRight(dx);
 	dviRight(dx);
 }
 
 
 void DVIReader::cmdDown (int len) {
-	int32_t dy = _dvi2bp*readSigned(len);
+	double dy = _dvi2bp*readSigned(len);
 	moveDown(dy);
 	dviDown(dy);
 }
@@ -389,7 +389,7 @@ void DVIReader::cmdZ0 (int)  {moveDown(_currDviState.z); dviZ0();}
 
 
 void DVIReader::cmdX (int len) {
-	int32_t dx = _dvi2bp*readSigned(len);
+	double dx = _dvi2bp*readSigned(len);
 	_currDviState.x = dx;
 	moveRight(dx);
 	dviX(dx);
@@ -397,7 +397,7 @@ void DVIReader::cmdX (int len) {
 
 
 void DVIReader::cmdY (int len) {
-	int32_t dy = _dvi2bp*readSigned(len);
+	double dy = _dvi2bp*readSigned(len);
 	_currDviState.y = dy;
 	moveDown(dy);
 	dviY(dy);
@@ -405,7 +405,7 @@ void DVIReader::cmdY (int len) {
 
 
 void DVIReader::cmdW (int len) {
-	int32_t dx = _dvi2bp*readSigned(len);
+	double dx = _dvi2bp*readSigned(len);
 	_currDviState.w = dx;
 	moveRight(dx);
 	dviW(dx);
@@ -413,7 +413,7 @@ void DVIReader::cmdW (int len) {
 
 
 void DVIReader::cmdZ (int len) {
-	int32_t dy = _dvi2bp*readSigned(len);
+	double dy = _dvi2bp*readSigned(len);
 	_currDviState.z = dy;
 	moveDown(dy);
 	dviZ(dy);
