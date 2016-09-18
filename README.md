@@ -74,7 +74,7 @@ _dvisvgm_ relies on the following free libraries:
   files in the large texmf tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
-* [libiconv](https://www.gnu.org/software/libiconv)
+* [libiconv](https://www.gnu.org/software/libiconv)  
   The FontForge library (see above) depends on libiconv. Thus, if _dvisvgm_ is to be
   built with the optional WOFF support enabled, this library is required.
 

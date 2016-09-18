@@ -1,3 +1,7 @@
+dvisvgm-2.0.2 (2016-09-19)
+- fixed computation of the character depths of native fonts
+- fixed a regression in the computation of DVI positions (GH bug #61)
+
 dvisvgm-2.0.1 (2016-09-03)
 - added optional argument parameter "autohint" to option --font-format in order
   to create autohinted TTF, WOFF, or WOFF2 fonts
