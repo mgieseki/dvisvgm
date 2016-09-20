@@ -136,6 +136,15 @@
     <ClCompile Include="fontforge\woff.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fontforge\alphabet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\cjk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fontforge\gwwiconv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

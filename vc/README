@@ -4,8 +4,6 @@ need to download the source code archives of the following libraries:
 FontForge:  http://fontforge.org
             https://github.com/mgieseki/ff-woff
 FreeType:   https://freetype.org
-iconv:      https://www.gnu.org/software/libiconv
-            https://github.com/holy-shit/iconv-for-windows
 Potrace:    http://potrace.sourceforge.net
 zlib:       http://zlib.net
 

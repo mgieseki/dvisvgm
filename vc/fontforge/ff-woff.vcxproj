@@ -92,7 +92,7 @@
       <SuppressStartupBanner>
       </SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_DEBUG;HAVE_ICONV;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <Lib>
@@ -116,7 +116,7 @@
       <SuppressStartupBanner>
       </SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_ICONV;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <Lib>
@@ -137,7 +137,7 @@
       <SuppressStartupBanner>
       </SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NDEBUG;HAVE_ICONV;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
@@ -163,7 +163,7 @@
       <SuppressStartupBanner>
       </SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NDEBUG;HAVE_ICONV;USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
@@ -175,13 +175,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="fontforge\alphabet.c" />
     <ClCompile Include="fontforge\asmfpst.c" />
     <ClCompile Include="fontforge\autohint.c" />
     <ClCompile Include="fontforge\char.c" />
+    <ClCompile Include="fontforge\cjk.c" />
     <ClCompile Include="fontforge\cvundoes.c" />
     <ClCompile Include="fontforge\dumppfa.c" />
     <ClCompile Include="fontforge\encoding.c" />
     <ClCompile Include="fontforge\fvfonts.c" />
+    <ClCompile Include="fontforge\gwwiconv.c" />
     <ClCompile Include="fontforge\lookups.c" />
     <ClCompile Include="fontforge\macbinary.c" />
     <ClCompile Include="fontforge\macenc.c" />
