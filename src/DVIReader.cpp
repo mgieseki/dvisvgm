@@ -249,8 +249,10 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		if (const vector<uint8_t> *dvi = vf->getDVI(c)) { // try to get DVI snippet that represents character c
 			FontManager &fm = FontManager::instance();
-			DVIState pos = _currDviState;    // save current cursor position
+			DVIState currpos = _currDviState;    // save current cursor position
+			DVIState prevpos = _prevDviState;
 			_currDviState.x = _currDviState.y = _currDviState.w = _currDviState.z = 0;
+			_prevDviState.x = _prevDviState.y = _prevDviState.w = _prevDviState.z = 0;
 			int savedFontNum = _currFontNum; // save current font number
 			fm.enterVF(vf);                  // enter VF font number context
 			setFont(fm.vfFirstFontNum(vf), SetFontMode::VF_ENTER);
@@ -269,7 +271,8 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 			_dvi2bp = savedScale;  // restore previous scale factor
 			fm.leaveVF();          // restore previous font number context
 			setFont(savedFontNum, SetFontMode::VF_LEAVE);  // restore previous font number
-			_currDviState = pos;   // restore previous cursor position
+			_prevDviState = prevpos;
+			_currDviState = currpos;   // restore previous cursor position
 		}
 	}
 }
@@ -283,9 +286,9 @@ void DVIReader::cmdSetChar0 (int c) {
 	if (!_inPage)
 		throw DVIException("setchar outside of page");
 	Font *font = FontManager::instance().getFont(_currFontNum);
+	dviSetChar0(c, font); // template method that may trigger further actions
+	putVFChar(font, c);   // further character processing if current font is a virtual font
 	moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0);
-	dviSetChar0(c, font);
-	putVFChar(font, c);
 }
 
 
@@ -300,9 +303,9 @@ void DVIReader::cmdSetChar (int len) {
 	// except len == 4. At the moment all char codes are treated as unsigned...
 	uint32_t c = readUnsigned(len); // if len == 4 c may be signed
 	Font *font = FontManager::instance().getFont(_currFontNum);
+	dviSetChar(c, font); // template method that may trigger further actions
+	putVFChar(font, c);  // further character processing if current font is a virtual font
 	moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0);
-	dviSetChar(c, font);
-	putVFChar(font, c);
 }
 
 
@@ -607,11 +610,12 @@ void DVIReader::cmdXFontDef (int) {
 void DVIReader::cmdXGlyphArray (int) {
 	vector<double> dx, dy;
 	vector<uint16_t> glyphs;
-	putGlyphArray(false, dx, dy, glyphs);
+	double width = putGlyphArray(false, dx, dy, glyphs);
 	if (Font *font = FontManager::instance().getFont(_currFontNum))
 		dviXGlyphArray(dx, dy, glyphs, *font);
 	else
 		throw DVIException("missing setfont prior to xglypharray");
+	moveRight(width);
 }
 
 
@@ -621,11 +625,12 @@ void DVIReader::cmdXGlyphArray (int) {
 void DVIReader::cmdXGlyphString (int) {
 	vector<double> dx, dy;
 	vector<uint16_t> glyphs;
-	putGlyphArray(true, dx, dy, glyphs);
+	double width = putGlyphArray(true, dx, dy, glyphs);
 	if (Font *font = FontManager::instance().getFont(_currFontNum))
 		dviXGlyphString(dx, glyphs, *font);
 	else
 		throw DVIException("missing setfont prior to xglyphstring");
+	moveRight(width);
 }
 
 
@@ -642,11 +647,12 @@ void DVIReader::cmdXTextAndGlyphs (int) {
 		chars[i] = readUnsigned(2);
 	vector<double> x, y;
 	vector<uint16_t> glyphs;
-	putGlyphArray(false, x, y, glyphs);
+	double width = putGlyphArray(false, x, y, glyphs);
 	if (Font *font = FontManager::instance().getFont(_currFontNum))
 		dviXTextAndGlyphs(x, y, chars, glyphs, *font);
 	else
 		throw DVIException("missing setfont prior to xtextandglyphs");
+	moveRight(width);
 }
 
 
@@ -654,8 +660,9 @@ void DVIReader::cmdXTextAndGlyphs (int) {
  *  @param[in] xonly indicates if the characters share a single y coordinate (xonly==true)
  *  @param[out] dx relative horizontal positions of each glyph
  *  @param[out] dy relative vertical positions of each glyph
- *  @param[out] glyphs FreeType indices of the glyphs to typeset */
-void DVIReader::putGlyphArray (bool xonly, vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs) {
+ *  @param[out] glyphs FreeType indices of the glyphs to typeset
+ *  @return total width of the glyph array */
+double DVIReader::putGlyphArray (bool xonly, vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs) {
 	double strwidth = _dvi2bp*readSigned(4);
 	uint16_t num_glyphs = readUnsigned(2);
 	dx.resize(num_glyphs);
@@ -667,5 +674,5 @@ void DVIReader::putGlyphArray (bool xonly, vector<double> &dx, vector<double> &d
 	}
 	for (int i=0; i < num_glyphs; i++)
 		glyphs[i] = readUnsigned(2);
-	moveRight(strwidth);
+	return strwidth;
 }

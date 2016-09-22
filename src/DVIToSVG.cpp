@@ -412,7 +412,7 @@ void DVIToSVG::dviEop () {
 
 void DVIToSVG::dviSetChar0 (uint32_t c, const Font *font) {
 	if (_actions && !dynamic_cast<const VirtualFont*>(font))
-		_actions->setChar(prevState().h+_tx, prevState().v+_ty, c, prevState().d != WritingMode::LR, *font);
+		_actions->setChar(currState().h+_tx, currState().v+_ty, c, currState().d != WritingMode::LR, *font);
 }
 
 
@@ -470,7 +470,7 @@ void DVIToSVG::dviXXX (const std::string &str) {
 void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
-			_actions->setChar(prevState().h+dx[i]+_tx, prevState().v+dy[i]+_ty, glyphs[i], false, font);
+			_actions->setChar(currState().h+dx[i]+_tx, currState().v+dy[i]+_ty, glyphs[i], false, font);
 	}
 }
 
@@ -478,7 +478,7 @@ void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vect
 void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
-			_actions->setChar(prevState().h+dx[i]+_tx, prevState().v+_ty, glyphs[i], false, font);
+			_actions->setChar(currState().h+dx[i]+_tx, currState().v+_ty, glyphs[i], false, font);
 	}
 }
 
@@ -486,5 +486,3 @@ void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<uint16_t> &glyphs, co
 void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector<uint16_t>&, vector<uint16_t> &glyphs, const Font &font) {
 	dviXGlyphArray(dx, dy, glyphs, font);
 }
-
-
