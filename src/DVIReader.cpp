@@ -330,8 +330,8 @@ void DVIReader::cmdSetRule (int) {
 		throw DVIException("set_rule outside of page");
 	double height = _dvi2bp*readSigned(4);
 	double width  = _dvi2bp*readSigned(4);
-	moveRight(width);
 	dviSetRule(height, width);
+	moveRight(width);
 }
 
 
@@ -380,7 +380,7 @@ void DVIReader::cmdDown (int len) {
 }
 
 
-void DVIReader::cmdNop (int) {}
+void DVIReader::cmdNop (int) {dviNop();}
 void DVIReader::cmdX0 (int)  {moveRight(_dviState.x); dviX0();}
 void DVIReader::cmdY0 (int)  {moveDown(_dviState.y); dviY0();}
 void DVIReader::cmdW0 (int)  {moveRight(_dviState.w); dviW0();}
