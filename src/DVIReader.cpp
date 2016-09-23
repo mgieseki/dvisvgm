@@ -47,7 +47,6 @@ DVIReader::DVIReader (istream &is) : BasicDVIReader(is)
 
 
 int DVIReader::executeCommand () {
-	_prevDviState = _currDviState;
 	int opcode = BasicDVIReader::executeCommand();
 	return opcode;
 }
@@ -206,7 +205,7 @@ void DVIReader::cmdBop (int) {
 	for (int i=0; i < 10; i++)
 		c[i] = readSigned(4);
 	int32_t prevBopOffset = readSigned(4);  // pointer to peceeding bop (-1 in case of first page)
-	_currDviState.reset();    // set all DVI registers to 0
+	_dviState.reset();    // set all DVI registers to 0
 	while (!_stateStack.empty())
 		_stateStack.pop();
 	_currFontNum = 0;
@@ -226,7 +225,7 @@ void DVIReader::cmdEop (int) {
 
 /** Reads and executes push command. */
 void DVIReader::cmdPush (int) {
-	_stateStack.push(_currDviState);
+	_stateStack.push(_dviState);
 	dviPush();
 }
 
@@ -235,7 +234,7 @@ void DVIReader::cmdPush (int) {
 void DVIReader::cmdPop (int) {
 	if (_stateStack.empty())
 		throw DVIException("stack empty at pop command");
-	_currDviState = _stateStack.top();
+	_dviState = _stateStack.top();
 	_stateStack.pop();
 	dviPop();
 }
@@ -249,10 +248,8 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		if (const vector<uint8_t> *dvi = vf->getDVI(c)) { // try to get DVI snippet that represents character c
 			FontManager &fm = FontManager::instance();
-			DVIState currpos = _currDviState;    // save current cursor position
-			DVIState prevpos = _prevDviState;
-			_currDviState.x = _currDviState.y = _currDviState.w = _currDviState.z = 0;
-			_prevDviState.x = _prevDviState.y = _prevDviState.w = _prevDviState.z = 0;
+			DVIState savedState = _dviState;  // save current cursor position
+			_dviState.x = _dviState.y = _dviState.w = _dviState.z = 0;
 			int savedFontNum = _currFontNum; // save current font number
 			fm.enterVF(vf);                  // enter VF font number context
 			setFont(fm.vfFirstFontNum(vf), SetFontMode::VF_ENTER);
@@ -271,8 +268,7 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 			_dvi2bp = savedScale;  // restore previous scale factor
 			fm.leaveVF();          // restore previous font number context
 			setFont(savedFontNum, SetFontMode::VF_LEAVE);  // restore previous font number
-			_prevDviState = prevpos;
-			_currDviState = currpos;   // restore previous cursor position
+			_dviState = savedState;  // restore previous cursor position
 		}
 	}
 }
@@ -353,19 +349,19 @@ void DVIReader::cmdPutRule (int) {
 
 
 void DVIReader::moveRight (double dx) {
-	switch (_currDviState.d) {
-		case WritingMode::LR: _currDviState.h += dx; break;
-		case WritingMode::TB: _currDviState.v += dx; break;
-		case WritingMode::BT: _currDviState.v -= dx; break;
+	switch (_dviState.d) {
+		case WritingMode::LR: _dviState.h += dx; break;
+		case WritingMode::TB: _dviState.v += dx; break;
+		case WritingMode::BT: _dviState.v -= dx; break;
 	}
 }
 
 
 void DVIReader::moveDown (double dy) {
-	switch (_currDviState.d) {
-		case WritingMode::LR: _currDviState.v += dy; break;
-		case WritingMode::TB: _currDviState.h -= dy; break;
-		case WritingMode::BT: _currDviState.h += dy; break;
+	switch (_dviState.d) {
+		case WritingMode::LR: _dviState.v += dy; break;
+		case WritingMode::TB: _dviState.h -= dy; break;
+		case WritingMode::BT: _dviState.h += dy; break;
 	}
 }
 
@@ -385,15 +381,15 @@ void DVIReader::cmdDown (int len) {
 
 
 void DVIReader::cmdNop (int) {}
-void DVIReader::cmdX0 (int)  {moveRight(_currDviState.x); dviX0();}
-void DVIReader::cmdY0 (int)  {moveDown(_currDviState.y); dviY0();}
-void DVIReader::cmdW0 (int)  {moveRight(_currDviState.w); dviW0();}
-void DVIReader::cmdZ0 (int)  {moveDown(_currDviState.z); dviZ0();}
+void DVIReader::cmdX0 (int)  {moveRight(_dviState.x); dviX0();}
+void DVIReader::cmdY0 (int)  {moveDown(_dviState.y); dviY0();}
+void DVIReader::cmdW0 (int)  {moveRight(_dviState.w); dviW0();}
+void DVIReader::cmdZ0 (int)  {moveDown(_dviState.z); dviZ0();}
 
 
 void DVIReader::cmdX (int len) {
 	double dx = _dvi2bp*readSigned(len);
-	_currDviState.x = dx;
+	_dviState.x = dx;
 	moveRight(dx);
 	dviX(dx);
 }
@@ -401,7 +397,7 @@ void DVIReader::cmdX (int len) {
 
 void DVIReader::cmdY (int len) {
 	double dy = _dvi2bp*readSigned(len);
-	_currDviState.y = dy;
+	_dviState.y = dy;
 	moveDown(dy);
 	dviY(dy);
 }
@@ -409,7 +405,7 @@ void DVIReader::cmdY (int len) {
 
 void DVIReader::cmdW (int len) {
 	double dx = _dvi2bp*readSigned(len);
-	_currDviState.w = dx;
+	_dviState.w = dx;
 	moveRight(dx);
 	dviW(dx);
 }
@@ -417,7 +413,7 @@ void DVIReader::cmdW (int len) {
 
 void DVIReader::cmdZ (int len) {
 	double dy = _dvi2bp*readSigned(len);
-	_currDviState.z = dy;
+	_dviState.z = dy;
 	moveDown(dy);
 	dviZ(dy);
 }
@@ -434,8 +430,8 @@ void DVIReader::cmdDir (int) {
 		oss << "invalid writing mode value " << wmode << " (0, 1, 3, or 4 expected)";
 		throw DVIException(oss.str());
 	}
-	_currDviState.d = (WritingMode)wmode;
-	dviDir(_currDviState.d);
+	_dviState.d = (WritingMode)wmode;
+	dviDir(_dviState.d);
 }
 
 

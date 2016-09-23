@@ -39,10 +39,10 @@ class DVIToSVG : public DVIReader
 		void setPageSize (const std::string &format)         {_bboxFormatString = format;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		void getPageTransformation (Matrix &matrix) const override;
-		void translateToX (double x) override {_tx = x-currState().h-_tx;}
-		void translateToY (double y) override {_ty = y-currState().v-_ty;}
-		double getXPos() const override       {return currState().h+_tx;}
-		double getYPos() const override       {return currState().v+_ty;}
+		void translateToX (double x) override {_tx = x-dviState().h-_tx;}
+		void translateToY (double y) override {_ty = y-dviState().v-_ty;}
+		double getXPos() const override       {return dviState().h+_tx;}
+		double getYPos() const override       {return dviState().v+_ty;}
 		void finishLine () override           {_prevYPos = std::numeric_limits<double>::min();}
 
 		std::string getSVGFilename (unsigned pageno) const;
@@ -87,7 +87,8 @@ class DVIToSVG : public DVIReader
 		std::string _transCmds;         ///< page transformation commands set by the user
 		double _pageHeight, _pageWidth; ///< global page height and width stored in the postamble
 		double _tx, _ty;                ///< translation of cursor position
-		double _prevYPos;               ///< previous vertical cursor position
+		double _prevXPos, _prevYPos;    ///< previous cursor position
+		WritingMode _prevWritingMode;   ///< previous writing mode
 		std::streampos _pageByte;       ///< position of the stream pointer relative to the preceding bop (in bytes)
 };
 

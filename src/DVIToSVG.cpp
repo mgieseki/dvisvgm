@@ -72,7 +72,8 @@ DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
 	_pageHeight = _pageWidth = 0;
 	_tx = _ty = 0;    // no cursor translation
 	_pageByte = 0;
-	_prevYPos = numeric_limits<double>::min();
+	_prevXPos = _prevYPos = numeric_limits<double>::min();
+	_prevWritingMode = WritingMode::LR;
 	_actions = new DVIToSVGActions(*this, _svg);
 }
 
@@ -145,10 +146,12 @@ int DVIToSVG::executeCommand () {
 	SignalHandler::instance().check();
 	const streampos cmdpos = tell();
 	int opcode = DVIReader::executeCommand();
-	if (currState().v+_ty != _prevYPos) {
+	if (dviState().v+_ty != _prevYPos) {
 		_tx = _ty = 0;
-		_prevYPos = currState().v;
+		_prevYPos = dviState().v;
 	}
+	_prevXPos = dviState().h+_tx;
+	_prevWritingMode = dviState().d;
 	if (COMPUTE_PROGRESS && inPage() && _actions) {
 		size_t pagelen = numberOfPageBytes(currentPageNumber()-1);
 		_pageByte += tell()-cmdpos;
@@ -365,10 +368,10 @@ string DVIToSVG::getSVGFilename (unsigned pageno) const {
 void DVIToSVG::moveRight (double dx) {
 	DVIReader::moveRight(dx);
 	if (_actions) {
-		if (currState().d == WritingMode::LR)
-			_actions->moveToX(currState().h+_tx);
+		if (dviState().d == WritingMode::LR)
+			_actions->moveToX(dviState().h+_tx);
 		else
-			_actions->moveToY(currState().v+_ty);
+			_actions->moveToY(dviState().v+_ty);
 	}
 }
 
@@ -376,10 +379,10 @@ void DVIToSVG::moveRight (double dx) {
 void DVIToSVG::moveDown (double dy) {
 	DVIReader::moveDown(dy);
 	if (_actions) {
-		if (currState().d == WritingMode::LR)
-			_actions->moveToY(currState().v+_ty);
+		if (dviState().d == WritingMode::LR)
+			_actions->moveToY(dviState().v+_ty);
 		else
-			_actions->moveToX(currState().h+_tx);
+			_actions->moveToX(dviState().h+_tx);
 	}
 }
 
@@ -412,7 +415,7 @@ void DVIToSVG::dviEop () {
 
 void DVIToSVG::dviSetChar0 (uint32_t c, const Font *font) {
 	if (_actions && !dynamic_cast<const VirtualFont*>(font))
-		_actions->setChar(currState().h+_tx, currState().v+_ty, c, currState().d != WritingMode::LR, *font);
+		_actions->setChar(dviState().h+_tx, dviState().v+_ty, c, dviState().d != WritingMode::LR, *font);
 }
 
 
@@ -428,7 +431,7 @@ void DVIToSVG::dviPutChar (uint32_t c, const Font *font) {
 
 void DVIToSVG::dviSetRule (double height, double width) {
 	if (_actions && height > 0 && width > 0)
-		_actions->setRule(currState().h+_tx, currState().v+_ty, height, width);
+		_actions->setRule(dviState().h+_tx, dviState().v+_ty, height, width);
 }
 
 
@@ -439,12 +442,12 @@ void DVIToSVG::dviPutRule (double height, double width) {
 
 void DVIToSVG::dviPop () {
 	if (_actions) {
-		if (prevState().h != currState().h)
-			_actions->moveToX(currState().h + _tx);
-		if (prevState().v != currState().v)
-			_actions->moveToY(currState().v + _ty);
-		if (prevState().d != currState().d)
-			_actions->setTextOrientation(currState().d != WritingMode::LR);
+		if (_prevXPos != dviState().h+_tx)
+			_actions->moveToX(dviState().h + _tx);
+		if (_prevYPos != dviState().v+_ty)
+			_actions->moveToY(dviState().v + _ty);
+		if (_prevWritingMode != dviState().d)
+			_actions->setTextOrientation(dviState().d != WritingMode::LR);
 	}
 }
 
@@ -470,7 +473,7 @@ void DVIToSVG::dviXXX (const std::string &str) {
 void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
-			_actions->setChar(currState().h+dx[i]+_tx, currState().v+dy[i]+_ty, glyphs[i], false, font);
+			_actions->setChar(dviState().h+dx[i]+_tx, dviState().v+dy[i]+_ty, glyphs[i], false, font);
 	}
 }
 
@@ -478,7 +481,7 @@ void DVIToSVG::dviXGlyphArray (std::vector<double> &dx, vector<double> &dy, vect
 void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<uint16_t> &glyphs, const Font &font) {
 	if (_actions) {
 		for (size_t i=0; i < glyphs.size(); i++)
-			_actions->setChar(currState().h+dx[i]+_tx, currState().v+_ty, glyphs[i], false, font);
+			_actions->setChar(dviState().h+dx[i]+_tx, dviState().v+_ty, glyphs[i], false, font);
 	}
 }
 

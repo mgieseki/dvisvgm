@@ -57,8 +57,8 @@ class DVIReader : public BasicDVIReader, public VFActions
 		void executePostamble ();
 		bool executePage (unsigned n);
 		bool inPostamble () const                    {return _inPostamble;}
-		double getXPos () const override             {return _currDviState.h;}
-		double getYPos () const override             {return _currDviState.v;}
+		double getXPos () const override             {return _dviState.h;}
+		double getYPos () const override             {return _dviState.v;}
 		int stackDepth () const override             {return _stateStack.size();}
 		int currentFontNumber () const               {return _currFontNum;}
 		unsigned currentPageNumber () const override {return _currPageNum;}
@@ -74,8 +74,7 @@ class DVIReader : public BasicDVIReader, public VFActions
 		double putGlyphArray (bool xonly, std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs);
 		const Font* defineFont (uint32_t fontnum, const std::string &name, uint32_t cs, double ds, double ss);
 		void setFont (int num, SetFontMode mode);
-		const DVIState& currState() const {return _currDviState;}
-		const DVIState& prevState() const {return _prevDviState;}
+		const DVIState& dviState() const {return _dviState;}
 		double dvi2bp () const {return _dvi2bp;}
 		bool inPage () const   {return _inPage;}
 
@@ -165,8 +164,7 @@ class DVIReader : public BasicDVIReader, public VFActions
 		double _dvi2bp;          ///< factor to convert dvi units to PS points
 		uint32_t _mag;           ///< magnification factor * 1000
 		bool _inPostamble;       ///< true if stream pointer is inside the postamble
-		DVIState _currDviState;  ///< current state of the DVI registers
-		DVIState _prevDviState;  ///< previous state of the DVI registers
+		DVIState _dviState;      ///< current state of the DVI registers
 		std::stack<DVIState> _stateStack;
 		std::vector<uint32_t> _bopOffsets;
 };
