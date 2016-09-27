@@ -1,3 +1,7 @@
+dvisvgm-2.0.3 (2016-09-27)
+- fixed a regression in the character positioning of virtual fonts
+- fixed positioning of rules
+
 dvisvgm-2.0.2 (2016-09-19)
 - fixed computation of the character depths of native fonts
 - fixed a regression in the computation of DVI positions (GH bug #61)
