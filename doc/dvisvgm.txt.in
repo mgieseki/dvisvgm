@@ -622,7 +622,7 @@ The following TeX snippet adds two raw SVG elements to the output and updates th
 +
 
 *em*::
-These specials were introduced with the emTeX distribution by Eberhard Mattes. They provide line drawing
+These specials were introduced with the 'emTeX' distribution by Eberhard Mattes. They provide line drawing
 statements, instructions for embedding MSP, PCX, and BMP image files, as well as two PCL commands.
 dvisvgm supports only the line drawing statements and ignores all other em specials silently.
 A description of the command syntax can be found in the DVI driver documentation coming with
@@ -651,14 +651,14 @@ dvipdfm font map format. For further information on the command syntax and seman
 +\pdfmapfile+ in the http://www.ctan.org/pkg/pdftex[pdfTeX user manual].
 
 *ps*::
-The famous DVI driver dvips introduced its own set of specials in order to embed PostScript code into DVI files,
+The famous DVI driver 'dvips' introduced its own set of specials in order to embed PostScript code into DVI files,
 which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
 PostScript snippets and to convert as many of them as possible to SVG. In contrast to dvips, dvisvgm uses
 floating point arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the
 coordinates. Therefore, the relative locations of the graphic elements may slightly differ from those computed
 by dvips.
 +
-Since PostScript is a rather complex language, dvisvgm does not try to implement its own PostScript interpreter
+Since PostScript is a rather complex language, dvisvgm does not implement its own PostScript interpreter
 but relies on http://ghostscript.com[Ghostscript] instead. If the Ghostscript library was not linked to the
 dvisvgm binary, it is looked up and loaded dynamically during runtime. In this case, dvisvgm looks for
 'libgs.so.X' on Unix-like systems (supported ABI versions: 7,8,9), and for 'gsdll32.dll' or 'gsdll64.dll' on
