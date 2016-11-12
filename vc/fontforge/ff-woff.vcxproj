@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>fontforge;inc;..\iconv\include;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
@@ -102,7 +102,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>fontforge;inc;..\iconv\include;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
@@ -125,7 +125,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>fontforge;inc;..\iconv\include;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -151,7 +151,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>fontforge;inc;..\iconv\include;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -175,85 +175,85 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="fontforge\alphabet.c" />
-    <ClCompile Include="fontforge\asmfpst.c" />
-    <ClCompile Include="fontforge\autohint.c" />
-    <ClCompile Include="fontforge\char.c" />
-    <ClCompile Include="fontforge\cjk.c" />
-    <ClCompile Include="fontforge\cvundoes.c" />
-    <ClCompile Include="fontforge\dumppfa.c" />
-    <ClCompile Include="fontforge\encoding.c" />
-    <ClCompile Include="fontforge\fvfonts.c" />
-    <ClCompile Include="fontforge\gwwiconv.c" />
-    <ClCompile Include="fontforge\lookups.c" />
-    <ClCompile Include="fontforge\macbinary.c" />
-    <ClCompile Include="fontforge\macenc.c" />
-    <ClCompile Include="fontforge\mathconstants.c" />
-    <ClCompile Include="fontforge\memory.c" />
-    <ClCompile Include="fontforge\mm.c" />
-    <ClCompile Include="fontforge\namelist.c" />
-    <ClCompile Include="fontforge\nouiutil.c" />
-    <ClCompile Include="fontforge\nowakowskittfinstr.c" />
-    <ClCompile Include="fontforge\parsepfa.c" />
-    <ClCompile Include="fontforge\parsettf.c" />
-    <ClCompile Include="fontforge\parsettfatt.c" />
-    <ClCompile Include="fontforge\psread.c" />
-    <ClCompile Include="fontforge\pua.c" />
-    <ClCompile Include="fontforge\sfd.c" />
-    <ClCompile Include="fontforge\sfd1.c" />
-    <ClCompile Include="fontforge\splinechar.c" />
-    <ClCompile Include="fontforge\splinefont.c" />
-    <ClCompile Include="fontforge\splineorder2.c" />
-    <ClCompile Include="fontforge\splineoverlap.c" />
-    <ClCompile Include="fontforge\splinerefigure.c" />
-    <ClCompile Include="fontforge\splinesave.c" />
-    <ClCompile Include="fontforge\splinesaveafm.c" />
-    <ClCompile Include="fontforge\splineutil.c" />
-    <ClCompile Include="fontforge\splineutil2.c" />
-    <ClCompile Include="fontforge\start.c" />
-    <ClCompile Include="fontforge\stemdb.c" />
-    <ClCompile Include="fontforge\tottf.c" />
-    <ClCompile Include="fontforge\tottfaat.c" />
-    <ClCompile Include="fontforge\tottfgpos.c" />
-    <ClCompile Include="fontforge\tottfvar.c" />
-    <ClCompile Include="fontforge\ttfinstrs.c" />
-    <ClCompile Include="fontforge\ttfspecial.c" />
-    <ClCompile Include="fontforge\unialt.c" />
-    <ClCompile Include="fontforge\ustring.c" />
-    <ClCompile Include="fontforge\utils.c" />
-    <ClCompile Include="fontforge\utype.c" />
-    <ClCompile Include="fontforge\woff.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\alphabet.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\asmfpst.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\autohint.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\char.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\cjk.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\cvundoes.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\dumppfa.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\encoding.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\fvfonts.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\gwwiconv.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\lookups.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\macbinary.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\macenc.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\mathconstants.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\memory.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\mm.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\namelist.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\nouiutil.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\nowakowskittfinstr.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\parsepfa.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\parsettf.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\parsettfatt.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\psread.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\pua.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\sfd.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\sfd1.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splinechar.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splinefont.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splineorder2.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splineoverlap.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splinerefigure.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splinesave.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splinesaveafm.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splineutil.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\splineutil2.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\start.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\stemdb.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tottf.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tottfaat.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tottfgpos.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tottfvar.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\ttfinstrs.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\ttfspecial.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\unialt.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\ustring.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\utils.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\utype.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\woff.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fontforge\configure-fontforge.h" />
-    <ClInclude Include="fontforge\edgelist.h" />
-    <ClInclude Include="fontforge\edgelist2.h" />
-    <ClInclude Include="fontforge\encoding.h" />
-    <ClInclude Include="fontforge\fontforge-config.h" />
-    <ClInclude Include="fontforge\fontforge.h" />
-    <ClInclude Include="fontforge\fontforgevw.h" />
-    <ClInclude Include="fontforge\libffstamp.h" />
-    <ClInclude Include="fontforge\namehash.h" />
-    <ClInclude Include="fontforge\PfEd.h" />
-    <ClInclude Include="fontforge\psfont.h" />
-    <ClInclude Include="fontforge\sd.h" />
-    <ClInclude Include="fontforge\sfd1.h" />
-    <ClInclude Include="fontforge\splinefont.h" />
-    <ClInclude Include="fontforge\stemdb.h" />
-    <ClInclude Include="fontforge\tables.h" />
-    <ClInclude Include="fontforge\ttf.h" />
-    <ClInclude Include="fontforge\ttfinstrs.h" />
-    <ClInclude Include="fontforge\uiinterface.h" />
-    <ClInclude Include="inc\basics.h" />
-    <ClInclude Include="inc\chardata.h" />
-    <ClInclude Include="inc\charset.h" />
-    <ClInclude Include="inc\dlist.h" />
-    <ClInclude Include="inc\gimage.h" />
-    <ClInclude Include="inc\gnetwork.h" />
-    <ClInclude Include="inc\gwwiconv.h" />
-    <ClInclude Include="inc\intl.h" />
-    <ClInclude Include="inc\ustring.h" />
-    <ClInclude Include="inc\utype.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\configure-fontforge.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\edgelist.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\edgelist2.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\encoding.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforge-config.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforge.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforgevw.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\libffstamp.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\namehash.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\PfEd.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\psfont.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\sd.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\sfd1.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\splinefont.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\stemdb.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\tables.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\ttf.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\ttfinstrs.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\uiinterface.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\basics.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\chardata.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\charset.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\dlist.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\gimage.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\gnetwork.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\gwwiconv.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\intl.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\ustring.h" />
+    <ClInclude Include="..\..\libs\ff-woff\inc\utype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -52,9 +52,8 @@ _dvisvgm_ relies on the following free libraries:
 * [FontForge library](http://www.fontforge.org)  
   _dvisvgm_ can be built with optional WOFF support that allows to embed the font data
   in WOFF or TrueType format rather than as SVG. The FontForge library provides the required
-  functions to create font files in these formats.
-  In order to create native Windows builds of _dvisvgm_, you can download a reduced version
-  of the FontForge library [here](https://github.com/mgieseki/ff-woff).
+  functions to create font files in these formats. A reduced version of the library is bundled
+  with the _dvisvgm_ sources. It's also available [here](https://github.com/mgieseki/ff-woff).
 
 * [FreeType 2](http://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).

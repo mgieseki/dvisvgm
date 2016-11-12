@@ -18,9 +18,8 @@ DEPENDENCIES
    dvisvgm can be built with optional WOFF support that allows to embed the
    font data in WOFF or TrueType format rather than as SVG. The FontForge
    library provides the required functions to create font files in these
-   formats. In order to create native Windows builds of dvisvgm, you can
-   download a reduced verson of the FontForge library from GitHub:
-   https://github.com/mgieseki/ff-woff
+   formats. A reduced version of the library is bundled with the dvisvgm
+   sources. It's also available at https://github.com/mgieseki/ff-woff.
 
  * FreeType 2 (http://www.freetype.org)
    This library is used to extract the glyph outlines from vector fonts

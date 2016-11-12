@@ -12,11 +12,16 @@ dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../libs/clipper/libclipper.a \
 	../libs/xxHash/libxxhash.a \
-	../libs/woff2/src/libwoff2.a \
-	../libs/woff2/brotli/enc/libbrotli.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
 	$(ZLIB_LIBS)
+
+if ENABLE_WOFF
+dvisvgm_LDADD += \
+	../libs/ff-woff/libfontforge.a \
+	../libs/woff2/src/libwoff2.a \
+	../libs/woff2/brotli/enc/libbrotli.a
+endif
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
 
@@ -225,18 +230,25 @@ endif
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.hpp MiKTeXCom.cpp
 
 AM_CFLAGS = -Wall \
-	$(FONTFORGE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/libs/clipper \
 	-I$(top_srcdir)/libs/xxHash \
-	-I$(top_srcdir)/libs/woff2/brotli/enc \
-	-I$(top_srcdir)/libs/woff2/src \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
+
+if ENABLE_WOFF
+AM_CFLAGS +=  \
+	-I$(top_srcdir)/libs/ff-woff/fontforge \
+	-I$(top_srcdir)/libs/ff-woff/inc
+
+AM_CXXFLAGS +=  \
+	-I$(top_srcdir)/libs/woff2/brotli/enc \
+	-I$(top_srcdir)/libs/woff2/src
+endif
 
 AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 

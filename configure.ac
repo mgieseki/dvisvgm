@@ -11,7 +11,7 @@ AC_CONFIG_HEADER(config.h)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 AH_TEMPLATE([TARGET_SYSTEM], [The machine triplet of the target system])
 AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
@@ -110,14 +110,6 @@ AC_ARG_ENABLE([woff],
 	[AS_HELP_STRING([--disable-woff], [Disable WOFF support @<:@no@:>@])],
 	[],
 	[enable_woff=yes])
-AS_IF([test "x$enable_woff" != "xno"],
-	[PKG_CHECK_MODULES([FONTFORGE],
-		[libfontforge],
-		[enable_woff=yes],
-		[AS_IF([test "x$enable_woff" = "xyes"],
-			[AC_MSG_WARN([libfontforge not found; WOFF support disabled])
-				enable_woff=no],
-			[enable_woff=no])])])
 
 AM_CONDITIONAL([ENABLE_WOFF], [test "x$enable_woff" = "xyes"])
 if test "x$enable_woff" != "xyes" ; then
@@ -194,6 +186,7 @@ AC_CONFIG_FILES([
 	Makefile
 	libs/Makefile
 	libs/clipper/Makefile
+	libs/ff-woff/Makefile
 	libs/woff2/brotli/enc/Makefile
 	libs/woff2/src/Makefile
 	libs/xxHash/Makefile

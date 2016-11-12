@@ -74,7 +74,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\libs\woff2\src;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -108,7 +108,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -134,7 +134,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\xxhash;..\libs\woff2\src;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -158,7 +158,7 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;..\vc\fontforge\fontforge;..\vc\fontforge\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\woff2\src;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
