@@ -19,8 +19,8 @@ dvisvgm_LDADD = \
 if ENABLE_WOFF
 dvisvgm_LDADD += \
 	../libs/ff-woff/libfontforge.a \
-	../libs/woff2/src/libwoff2.a \
-	../libs/woff2/brotli/enc/libbrotli.a
+	../libs/woff2/libwoff2.a \
+	../libs/woff2/brotli/libbrotli.a
 endif
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)

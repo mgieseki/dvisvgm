@@ -79,6 +79,8 @@ libfontforge_a_SOURCES = \
 	inc/ustring.h \
 	inc/utype.h
 
+EXTRA_DIST = LICENSE
+
 AM_CFLAGS = -I$(srcdir)/inc -I$(srcdir)/fontforge
 
 @CODE_COVERAGE_RULES@
