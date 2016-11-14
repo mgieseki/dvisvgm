@@ -1,3 +1,8 @@
+dvisvgm-2.0.4 (2016-11-16)
+- bundled reduced FontForge library (ff-woff) with the sources
+- minor fixes in manpage and --help texts
+- few code improvements
+
 dvisvgm-2.0.3 (2016-09-27)
 - fixed a regression in the character positioning of virtual fonts
 - fixed positioning of rules
