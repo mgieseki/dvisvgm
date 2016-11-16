@@ -17,8 +17,9 @@ AH_TEMPLATE([TARGET_SYSTEM], [The machine triplet of the target system])
 AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
 
 # Checks for programs.
-AC_PROG_CXX
 AC_PROG_CC
+AC_PROG_CC_C99
+AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX([11], [noext])
 
 AC_PROG_RANLIB
