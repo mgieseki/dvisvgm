@@ -10,6 +10,7 @@
 
 	<xsl:output method="html"/>
 	<xsl:strip-space elements="*"/>
+	<xsl:preserve-space elements="term"/>
 
 	<xsl:template match="/">
 		<html>
@@ -105,7 +106,7 @@
 	</xsl:template>
 
 	<xsl:template match="varlistentry/listitem">
-		<dd><xsl:apply-templates></xsl:apply-templates></dd>
+		<dd><xsl:apply-templates/></dd>
 	</xsl:template>
 
 	<xsl:template match="programlisting|screen">

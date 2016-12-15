@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="16.1">
+<project version="18.1">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
-        <options/>
+        <options>
+            <serialized version="18.1" xml:space="preserve">
+                <map>
+                    <entry>
+                        <String>enable.project.master.files.support</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                </map>
+            </serialized>
+        </options>
     </meta>
     <projectTree name="dvisvgm.xpr">
         <file name="conf-dblatex-man.xsl"/>
