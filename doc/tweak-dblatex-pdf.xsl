@@ -15,7 +15,7 @@
 	<xsl:template match="refsynopsisdiv[not(title)]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
-			<title>SYNOPSIS</title>
+			<title>Synopsis</title>
 			<xsl:apply-templates/>
 		</xsl:copy>
 	</xsl:template>

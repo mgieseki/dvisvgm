@@ -1,7 +1,13 @@
 <?xml version='1.0' encoding="iso-8859-1"?>
 <!-- This file is part of dvisvgm -->
 <!-- Copyright (C) 2015-2016 Martin Gieseking <martin.gieseking@uos.de> -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:exsl="http://exslt.org/common"
+	xmlns:func="http://exslt.org/functions"
+	xmlns:my="my-namespace"
+	extension-element-prefixes="exsl func">
+	
 	<xsl:param name="xetex.font">
 		<xsl:text>\setmainfont{Source Sans Pro}&#10;</xsl:text>
 		<xsl:text>\setsansfont{Source Sans Pro}&#10;</xsl:text>
@@ -49,4 +55,35 @@
 		</xsl:call-template>
 		<xsl:apply-templates/>
 	</xsl:template>
+	
+	<xsl:template match="refsect1/title/text()">
+		<xsl:param name="name"/>
+		<xsl:variable name="sections">
+			<section>Description</section>
+			<section>Options</section>
+			<section>Supported Specials</section>
+			<section>Examples</section>
+			<section>Environment</section>
+			<section>Files</section>
+			<section>See also</section>
+			<section>Resources</section>
+			<section>Bugs</section>
+			<section>Author</section>
+			<section>Copying</section>
+		</xsl:variable>
+		<xsl:variable name="mixed-name" select="exsl:node-set($sections)/section[my:toupper(.)=current()]"/>
+		<xsl:choose>
+			<xsl:when test="$mixed-name">
+				<xsl:value-of select="$mixed-name"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<func:function name="my:toupper">
+		<xsl:param name="str"/>
+		<func:result select="translate($str, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+	</func:function>
 </xsl:stylesheet>
