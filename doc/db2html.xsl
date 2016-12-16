@@ -18,7 +18,7 @@
 				<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8"/>
 				<link rel="stylesheet" href="dvisvgm.css"/>
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-				<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+				<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 			</head>
 			<body>
 				<xsl:apply-templates/>
@@ -190,7 +190,7 @@
 			<section icon="mail-forward">See also</section>
 			<section icon="link">Resources</section>
 			<section icon="bug">Bugs</section>
-			<section icon="laptop">Author</section>
+			<section icon="user">Author</section>
 			<section icon="gavel">Copying</section>
 		</xsl:variable>
 		<xsl:variable name="mixed-name" select="exsl:node-set($sections)/section[my:toupper(.)=$name]"/>
