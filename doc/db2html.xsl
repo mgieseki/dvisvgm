@@ -43,6 +43,9 @@
 		<section id="_name">
 			<h2 style="display:inline"><i class="fa fa-tag fa-fw"/> Name</h2>
 			<div class="rfloat frame">
+				<a href="{refname}.epub"><i class="fa fa-book"/> EPUB version</a>
+			</div>
+			<div class="rfloat frame">
 				<a href="{refname}.pdf"><i class="fa fa-file-pdf-o"/> PDF version</a>
 			</div>
 			<div class="sectionbody">
@@ -69,7 +72,7 @@
 		</xsl:if>
 		<section>
 			<h2>
-				<xsl:copy-of select="my:fix-section-title(title)"/>
+				<xsl:copy-of select="my:add-section-icon(title)"/>
 			</h2>
 			<div class="sectionbody">
 				<xsl:apply-templates/>
@@ -178,8 +181,8 @@
 
 	<xsl:template match="title|refentryinfo|refmeta"/>
 
-	<func:function name="my:fix-section-title">
-		<xsl:param name="name"/>
+	<func:function name="my:add-section-icon">
+		<xsl:param name="title"/>
 		<xsl:variable name="sections">
 			<section icon="info-circle">Description</section>
 			<section icon="sliders">Options</section>
@@ -193,24 +196,13 @@
 			<section icon="user">Author</section>
 			<section icon="gavel">Copying</section>
 		</xsl:variable>
-		<xsl:variable name="mixed-name" select="exsl:node-set($sections)/section[my:toupper(.)=$name]"/>
+		<xsl:variable name="section" select="exsl:node-set($sections)/section[.=$title]"/>
 		<func:result>
-			<xsl:choose>
-				<xsl:when test="$mixed-name">
-					<xsl:if test="$mixed-name/@icon">
-						<i class="fa fa-{$mixed-name/@icon} fa-fw"/>
-					</xsl:if>
-					<xsl:value-of select="concat(' ', $mixed-name)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<value-of select="$name"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:if test="$section/@icon">
+				<i class="fa fa-{$section/@icon} fa-fw"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:value-of select="$title"/>
 		</func:result>
-	</func:function>
-
-	<func:function name="my:toupper">
-		<xsl:param name="str"/>
-		<func:result select="translate($str, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
 	</func:function>
 </xsl:stylesheet>

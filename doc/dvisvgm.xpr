@@ -4,12 +4,12 @@
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
             <serialized version="18.1" xml:space="preserve">
-                <map>
+                <serializableOrderedMap>
                     <entry>
                         <String>enable.project.master.files.support</String>
                         <Boolean>true</Boolean>
                     </entry>
-                </map>
+                </serializableOrderedMap>
             </serialized>
         </options>
     </meta>
@@ -20,6 +20,7 @@
         <file name="dvisvgm.css"/>
         <file name="dvisvgm.sty"/>
         <file name="dvisvgm.xml"/>
+        <file name="tweak-db-article.xsl"/>
         <file name="tweak-dblatex-pdf.xsl"/>
     </projectTree>
 </project>
