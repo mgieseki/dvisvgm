@@ -114,7 +114,7 @@ static bool set_cache_dir (const CommandLine &args) {
 			FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
 		}
 		catch (StreamReaderException &e) {
-			Message::wstream(true) << "failed reading cache data";
+			Message::wstream(true) << "failed reading cache data\n";
 		}
 		return false;
 	}
@@ -192,7 +192,7 @@ static void init_fontmap (const CommandLine &cmdline) {
 		for (const char **p=mapfiles; *p && !found; p++)
 			found = FontMap::instance().read(*p);
 		if (!found)
-			Message::wstream(true) << "none of the default map files could be found";
+			Message::wstream(true) << "none of the default map files could be found\n";
 	}
 	if (mapseq)
 		FontMap::instance().read(mapseq);

@@ -76,7 +76,7 @@ void PsSpecialHandler::initialize () {
 		for (const char **p=headers; *p; ++p)
 			processHeaderFile(*p);
 		// disable bop/eop operators to prevent side-effects by
-		// unexpected bobs/eops present in PS specials
+		// unexpected bops/eops present in PS specials
 		_psi.execute("\nTeXDict begin /bop{pop pop}def /eop{}def end ");
 		_psSection = PS_HEADERS;  // allow to process header specials now
 	}
