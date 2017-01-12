@@ -98,14 +98,18 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		throw DVIException(oss.str());
 	}
 	last = min(last, numberOfPages());
-
 	for (unsigned i=first; i <= last; ++i) {
 		executePage(i);
 		_svg.removeRedundantElements();
 		embedFonts(_svg.rootNode());
-		_svg.write(_out.getPageStream(currentPageNumber(), numberOfPages()));
+		bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages()));
 		string fname = _out.filename(i, numberOfPages());
-		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << (fname.empty() ? "<stdout>" : fname) << '\n';
+		if (fname.empty())
+			fname = "<stdout>";
+		if (success)
+			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
+		else
+			Message::wstream(true) << "failed to write output to " << fname << '\n';
 		_svg.reset();
 		static_cast<DVIToSVGActions*>(_actions)->reset();
 	}
