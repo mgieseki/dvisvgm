@@ -22,11 +22,24 @@
 #define FILEPATH_HPP
 
 #include <string>
+#include <utility>
 #include <vector>
 
 class FilePath
 {
-	typedef std::vector<std::string> Directories;
+	class Directory {
+		public:
+			Directory (const std::string &dir) : _dirstr(dir) {}
+			Directory (std::string &&dir) : _dirstr(std::move(dir)) {}
+			bool operator == (const Directory &dir) const;
+			bool operator != (const Directory &dir) const {return !(*this == dir);}
+			explicit operator std::string () const {return _dirstr;}
+
+		private:
+			std::string _dirstr;
+	};
+
+	typedef std::vector<Directory> Directories;
 	public:
 		FilePath (const std::string &path);
 		FilePath (const std::string &path, bool isfile) : FilePath(path, isfile, "") {}
@@ -53,6 +66,5 @@ class FilePath
 		char _drive;
 #endif
 };
-
 
 #endif

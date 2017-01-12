@@ -74,34 +74,16 @@ TEST(FilePathTest, file2) {
 }
 
 
-#ifdef __WIN32__
-static string tolower (const string &str) {
-	string ret;
-	for (string::const_iterator it=str.begin(); it != str.end(); ++it)
-		ret += tolower(*it);
-	return ret;
-}
-#endif
-
-
 TEST(FilePathTest, autodetect) {
 	FilePath fp1("FilePathTest.cpp");
 	ASSERT_TRUE(fp1.isFile());
 	ASSERT_FALSE(fp1.empty());
 	string cwd = FileSystem::getcwd();
-#ifdef __WIN32__
-	ASSERT_EQ(fp1.absolute(), tolower(cwd + "/FilePathTest.cpp"));
-#else
 	ASSERT_EQ(fp1.absolute(), cwd + "/FilePathTest.cpp");
-#endif
 
 	FilePath fp2("");
 	ASSERT_FALSE(fp2.isFile());
 	ASSERT_FALSE(fp2.empty());
-#ifdef __WIN32__
-	ASSERT_EQ(fp2.absolute(), tolower(FileSystem::getcwd()));
-#else
 	ASSERT_EQ(fp2.absolute(), FileSystem::getcwd());
-#endif
 }
 

@@ -27,48 +27,37 @@
 
 using namespace std;
 
-static string adapt (const char *str) {
-#if __WIN32__
-	string ret;
-	for (const char *p=str; *p; p++)
-		ret += tolower(*p);
-	return ret;
-#else
-	return str;
-#endif
-}
-
 
 TEST(SVGOutputTest, defaults) {
 	SVGOutput out("SVGOutputTest.cpp", "");
-	EXPECT_EQ(out.filename(1, 1), adapt("SVGOutputTest.svg"));
-	EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest-5.svg"));
-	EXPECT_EQ(out.filename(5, 10), adapt("SVGOutputTest-05.svg"));
-	EXPECT_EQ(out.filename(5, 256), adapt("SVGOutputTest-005.svg"));
+	EXPECT_EQ(out.filename(1, 1), "SVGOutputTest.svg");
+	EXPECT_EQ(out.filename(5, 9), "SVGOutputTest-5.svg");
+	EXPECT_EQ(out.filename(5, 10), "SVGOutputTest-05.svg");
+	EXPECT_EQ(out.filename(5, 256), "SVGOutputTest-005.svg");
 }
 
 
 TEST(SVGOutputTest, widthSpecifier) {
 	{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3p");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--005.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--054.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--543.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--005.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--054.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--543.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3p--%P");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--005--9.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--054--65.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--543--654.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--005--9.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--054--65.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--543--654.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3p--%3P");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--005--009.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--054--065.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--543--654.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--005--009.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--054--065.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--543--654.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%5f--%3p--%3P");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--005--009.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--054--065.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--543--654.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--005--009.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--054--065.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--543--654.svg");
 	}
 }
 
@@ -76,24 +65,24 @@ TEST(SVGOutputTest, widthSpecifier) {
 TEST(SVGOutputTest, expressions) {
 	{
 		SVGOutput out("SVGOutputTest.cpp", "no-macro");
-		EXPECT_EQ(out.filename(5, 9), adapt("no-macro.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("no-macro.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("no-macro.svg"));
+		EXPECT_EQ(out.filename(5, 9), "no-macro.svg");
+		EXPECT_EQ(out.filename(54, 65), "no-macro.svg");
+		EXPECT_EQ(out.filename(543, 654), "no-macro.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%(p-1)");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--4.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--53.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--542.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--4.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--53.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--542.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3(p-1)");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--004.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--053.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--542.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--004.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--053.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--542.svg");
 	}{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3(P+2p)");
-		EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest--019.svg"));
-		EXPECT_EQ(out.filename(54, 65), adapt("SVGOutputTest--173.svg"));
-		EXPECT_EQ(out.filename(543, 654), adapt("SVGOutputTest--1740.svg"));
+		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--019.svg");
+		EXPECT_EQ(out.filename(54, 65), "SVGOutputTest--173.svg");
+		EXPECT_EQ(out.filename(543, 654), "SVGOutputTest--1740.svg");
 	}
 }
 
@@ -121,7 +110,7 @@ TEST(SVGOutputTest, getPageStream) {
 
 TEST(SVGOutputTest, ignore) {
 	SVGOutput out("SVGOutputTest.cpp", "%x %y");
-	EXPECT_EQ(out.filename(5, 9), adapt("SVGOutputTest-5.svg"));
+	EXPECT_EQ(out.filename(5, 9), "SVGOutputTest-5.svg");
 }
 
 
