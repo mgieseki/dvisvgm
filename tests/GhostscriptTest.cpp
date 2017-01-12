@@ -3,8 +3,8 @@
 
 
 TEST(GhostscriptTest, available1) {
-	const char *args[] = {"test", "-dNODISPLAY"};
-	Ghostscript gs(2, args);
+	const char *args[] = {"test", "-q", "-dNODISPLAY"};
+	Ghostscript gs(3, args);
 	ASSERT_TRUE(gs.available());
 }
 
