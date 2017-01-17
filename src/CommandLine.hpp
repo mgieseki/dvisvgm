@@ -61,6 +61,7 @@ class CommandLine : public CL::CommandLine
 		TypedOption<double, Option::ArgMode::REQUIRED> rotateOpt {"rotate", 'r', "angle", "rotate page content clockwise"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> scaleOpt {"scale", 'c', "sx[,sy]", "scale page content"};
 		Option stdoutOpt {"stdout", 's', "write SVG output to stdout"};
+		TypedOption<std::string, Option::ArgMode::OPTIONAL> tmpdirOpt {"tmpdir", '\0', "path", "set/print the directory for temporary files"};
 		TypedOption<bool, Option::ArgMode::OPTIONAL> traceAllOpt {"trace-all", 'a', "retrace", false, "trace all glyphs of bitmap fonts"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> transformOpt {"transform", 'T', "commands", "transform page content"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> translateOpt {"translate", 't', "tx[,ty]", "shift page content"};
@@ -111,6 +112,7 @@ class CommandLine : public CL::CommandLine
 			{&precisionOpt, 1},
 			{&relativeOpt, 1},
 			{&stdoutOpt, 1},
+			{&tmpdirOpt, 1},
 			{&noFontsOpt, 1},
 			{&noMergeOpt, 1},
 			{&noStylesOpt, 1},

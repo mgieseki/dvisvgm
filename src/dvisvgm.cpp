@@ -122,6 +122,19 @@ static bool set_cache_dir (const CommandLine &args) {
 }
 
 
+static bool set_temp_dir (const CommandLine &args) {
+	if (args.tmpdirOpt.given()) {
+		if (!args.tmpdirOpt.value().empty())
+			FileSystem::TMPDIR = args.tmpdirOpt.value().c_str();
+		else {
+			cout << "temporary folder: " << FileSystem::tmpdir() << '\n';
+			return false;
+		}
+	}
+	return true;
+}
+
+
 static bool check_bbox (const string &bboxstr) {
 	const char *formats[] = {"none", "min", "preview", "papersize", "dvi", 0};
 	for (const char **p=formats; *p; ++p)
@@ -253,7 +266,7 @@ int main (int argc, char *argv[]) {
 			SpecialManager::instance().writeHandlerInfo(cout);
 			return 0;
 		}
-		if (!set_cache_dir(cmdline))
+		if (!set_cache_dir(cmdline) || !set_temp_dir(cmdline))
 			return 0;
 		if (cmdline.stdoutOpt.given() && cmdline.zipOpt.given()) {
 			Message::estream(true) << "writing SVGZ files to stdout is not supported\n";

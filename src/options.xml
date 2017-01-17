@@ -88,6 +88,10 @@
 			<option long="stdout" short="s">
 				<description>write SVG output to stdout</description>
 			</option>
+			<option long="tmpdir">
+				<arg type="string" name="path" optional="yes"/>
+				<description>set/print the directory for temporary files</description>
+			</option>
 			<option long="no-fonts" short="n">
 				<arg type="int" name="variant" default="0" optional="yes"/>
 				<description>draw glyphs by using path elements</description>

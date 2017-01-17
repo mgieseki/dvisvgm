@@ -275,7 +275,8 @@ dvisvgm is called without parameters. Mode 1 lists all options ordered by the sh
 while mode 2 sorts the lines by the long option names.
 
 *--keep*::
-Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files).
+Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files) or
+the TrueType/WOFF module.
 
 *--libgs*='filename'::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
@@ -417,6 +418,15 @@ the size of the SVG files in most cases.
 
 *-s, --stdout*::
 Don't write the SVG output to a file but redirect it to *stdout*.
+
+*--tmpdir*[='path']::
+In some cases, dvisvgm needs to create temporary files to work properly. These files go to
+the system's temporary folder by default, e.g. +/tmp+ on Linux systems. Option *--tmpdir*
+allows to specify a different location if necessary for some reason. Please note that dvisvgm
+does not create this folder, so you must ensure that it actually exists before running dvisvgm.
++
+If the optional parameter 'path' is omitted, dvisvgm prints the location of the system's 
+temp folder and exits.
 
 *-T, --transform*='commands'::
 Applies a sequence of transformations to the SVG content. Each transformation is described
