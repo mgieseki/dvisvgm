@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 #include "GFGlyphTracer.hpp"
+#include "MessageException.hpp"
 
 class PhysicalFont;
 
@@ -54,6 +55,11 @@ class FontWriter {
 	private:
 		const PhysicalFont &_font;
 		static const std::array<FontFormatInfo, 4> _formatInfos;
+};
+
+
+struct FontWriterException : MessageException {
+	FontWriterException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

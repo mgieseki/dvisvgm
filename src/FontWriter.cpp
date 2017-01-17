@@ -127,10 +127,11 @@ struct SFDActions : Glyph::Actions {
 
 /** Creates a Spline Font Database (SFD) file describing the font and its glyphs.
  *  https://fontforge.github.io/sfdformat.html */
-static bool writeSFD (const string &sfdname, const PhysicalFont &font, const set<int> &charcodes, GFGlyphTracer::Callback *cb) {
+static void writeSFD (const string &sfdname, const PhysicalFont &font, const set<int> &charcodes, GFGlyphTracer::Callback *cb) {
 	ofstream sfd(sfdname);
 	if (!sfd)
-		return false;
+		throw FontWriterException("failed writing SFD file "+sfdname);
+
 	sfd <<
 		"SplineFontDB: 3.0\n"
 		"FontName: " << font.name() << '\n';
@@ -175,7 +176,8 @@ static bool writeSFD (const string &sfdname, const PhysicalFont &font, const set
 	}
 	sfd.flush();
 	sfd.close();
-	return !sfd.fail();
+	if (sfd.fail())
+		throw FontWriterException("failed writing SFD file "+sfdname);
 }
 
 
@@ -187,43 +189,41 @@ static bool writeSFD (const string &sfdname, const PhysicalFont &font, const set
 string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes, GFGlyphTracer::Callback *cb) const {
 	string tmpdir = FileSystem::tmpdir();
 	string sfdname = tmpdir+_font.name()+"-tmp.sfd";
-	string targetname;
-	if (writeSFD(sfdname, _font, charcodes, cb)) {
-		bool ok = false;
-		targetname = tmpdir+_font.name()+"-tmp."+fontFormatInfo(format)->formatstr_short;
-		switch (format) {
-			case FontFormat::TTF:
-				ok = ff_sfd_to_ttf(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
-				break;
-			case FontFormat::WOFF:
-				ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
-				break;
-			case FontFormat::WOFF2: {
-				string ttfname = tmpdir+_font.name()+".ttf";
-				if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS)) {
-					string input = woff2::GetFileContent(ttfname);
-					const uint8_t* input_data = reinterpret_cast<const uint8_t*>(input.data());
-					size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, input.size());
-					string output(output_size, 0);
-					uint8_t* output_data = reinterpret_cast<uint8_t*>(&output[0]);
-					woff2::WOFF2Params params;
-					if (woff2::ConvertTTFToWOFF2(input_data, input.size(), output_data, &output_size, params)) {
-						output.resize(output_size);
-						woff2::SetFileContents(targetname, output.begin(), output.end());
-						ok = true;
-					}
-					if (!PhysicalFont::KEEP_TEMP_FILES)
-						FileSystem::remove(ttfname);
+	writeSFD(sfdname, _font, charcodes, cb);
+	bool ok = false;
+	string targetname = tmpdir+_font.name()+"-tmp."+fontFormatInfo(format)->formatstr_short;
+	switch (format) {
+		case FontFormat::TTF:
+			ok = ff_sfd_to_ttf(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
+			break;
+		case FontFormat::WOFF:
+			ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
+			break;
+		case FontFormat::WOFF2: {
+			string ttfname = tmpdir+_font.name()+".ttf";
+			if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS)) {
+				string input = woff2::GetFileContent(ttfname);
+				const uint8_t* input_data = reinterpret_cast<const uint8_t*>(input.data());
+				size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, input.size());
+				string output(output_size, 0);
+				uint8_t* output_data = reinterpret_cast<uint8_t*>(&output[0]);
+				woff2::WOFF2Params params;
+				if (woff2::ConvertTTFToWOFF2(input_data, input.size(), output_data, &output_size, params)) {
+					output.resize(output_size);
+					woff2::SetFileContents(targetname, output.begin(), output.end());
+					ok = true;
 				}
-				break;
+				if (!PhysicalFont::KEEP_TEMP_FILES)
+					FileSystem::remove(ttfname);
 			}
-			default:;
+			break;
 		}
-		if (!PhysicalFont::KEEP_TEMP_FILES)
-			FileSystem::remove(sfdname);
-		if (!ok)
-			targetname.clear();
+		default:;
 	}
+	if (!PhysicalFont::KEEP_TEMP_FILES)
+		FileSystem::remove(sfdname);
+	if (!ok)
+		throw FontWriterException("failed writing "+string(fontFormatInfo(format)->formatstr_short)+ " file " + targetname);
 	return targetname;
 }
 
