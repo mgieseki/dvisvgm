@@ -185,11 +185,12 @@ static bool writeSFD (const string &sfdname, const PhysicalFont &font, const set
  * @param[in] cb callback object that allows to react to events triggered by the glyph tracer
  * @return name of the created font file */
 string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes, GFGlyphTracer::Callback *cb) const {
-	string sfdname = _font.name()+"-tmp.sfd";
+	string tmpdir = FileSystem::tmpdir();
+	string sfdname = tmpdir+_font.name()+"-tmp.sfd";
 	string targetname;
 	if (writeSFD(sfdname, _font, charcodes, cb)) {
 		bool ok = false;
-		targetname = _font.name()+"-tmp."+fontFormatInfo(format)->formatstr_short;
+		targetname = tmpdir+_font.name()+"-tmp."+fontFormatInfo(format)->formatstr_short;
 		switch (format) {
 			case FontFormat::TTF:
 				ok = ff_sfd_to_ttf(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
@@ -198,7 +199,7 @@ string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes,
 				ok = ff_sfd_to_woff(sfdname.c_str(), targetname.c_str(), AUTOHINT_FONTS);
 				break;
 			case FontFormat::WOFF2: {
-				string ttfname = _font.name()+".ttf";
+				string ttfname = tmpdir+_font.name()+".ttf";
 				if (ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS)) {
 					string input = woff2::GetFileContent(ttfname);
 					const uint8_t* input_data = reinterpret_cast<const uint8_t*>(input.data());

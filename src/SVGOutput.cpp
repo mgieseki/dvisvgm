@@ -68,18 +68,15 @@ ostream& SVGOutput::getPageStream (int page, int numPages) const {
 string SVGOutput::filename (int page, int numPages) const {
 	if (_stdout)
 		return "";
-	string pattern = _pattern;
-	expandFormatString(pattern, page, numPages);
+	string pattern = expandFormatString(_pattern, page, numPages);
 	// remove leading and trailing whitespace
 	stringstream trim;
 	trim << pattern;
 	pattern.clear();
 	trim >> pattern;
 	// set and expand default pattern if necessary
-	if (pattern.empty()) {
-		pattern = numPages > 1 ? "%f-%p" : "%f";
-		expandFormatString(pattern, page, numPages);
-	}
+	if (pattern.empty())
+		pattern = expandFormatString(numPages > 1 ? "%f-%p" : "%f", page, numPages);
 	// append suffix if necessary
 	FilePath outpath(pattern, true);
 	if (outpath.suffix().empty())
@@ -88,6 +85,21 @@ string SVGOutput::filename (int page, int numPages) const {
 	string relpath = outpath.relative();
 	return abspath.length() < relpath.length() ? abspath : relpath;
 }
+
+
+#if 0
+string SVGOutput::outpath (int page, int numPages) const {
+	string path = filename(page, numPages);
+	if (path.empty())
+		return "";
+	size_t pos = path.rfind('/');
+	if (pos == string::npos)
+		return ".";
+	if (pos == 0)
+		return "/";
+	return path.substr(0, pos);
+}
+#endif
 
 
 static int ilog10 (int n) {
@@ -100,13 +112,13 @@ static int ilog10 (int n) {
 }
 
 
-/** Replace expressions in a given string by the corresponing values.
+/** Replaces expressions in a given string by the corresponding values and returns the result.
  *  Supported constructs:
  *  %f: basename of the current file (filename without suffix)
  *  %[0-9]?p: current page number
  *  %[0-9]?P: number of pages in DVI file
  *  %[0-9]?(expr): arithmetic expression */
-void SVGOutput::expandFormatString (string &str, int page, int numPages) const {
+string SVGOutput::expandFormatString (string str, int page, int numPages) const {
 	string result;
 	while (!str.empty()) {
 		size_t pos = str.find('%');
@@ -160,5 +172,5 @@ void SVGOutput::expandFormatString (string &str, int page, int numPages) const {
 			str = str.substr(pos+1);
 		}
 	}
-	str = result;
+	return result;
 }

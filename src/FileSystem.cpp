@@ -19,10 +19,12 @@
 *************************************************************************/
 
 #include <config.h>
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include "FileSystem.hpp"
+#include "version.hpp"
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -45,6 +47,43 @@ using namespace std;
 	const char *FileSystem::DEVNULL = "/dev/null";
 	const char FileSystem::PATHSEP = '/';
 #endif
+
+
+FileSystem FileSystem::_fs;
+string FileSystem::TMPDIR;
+const char *FileSystem::TMPSUBDIR = nullptr;
+
+
+/** Private wrapper function for mkdir: creates a single folder.
+ *  @param[in] dir folder name
+ *  @return true on success */
+static bool s_mkdir (const string &dirname) {
+	bool success = true;
+	if (!FileSystem::exists(dirname)) {
+#ifdef _WIN32
+		success = (_mkdir(dirname.c_str()) == 0);
+#else
+		success = (::mkdir(dirname.c_str(), 0775) == 0);
+#endif
+	}
+	return success;
+}
+
+
+static bool inline s_rmdir (const string &dirname) {
+#ifdef _WIN32
+	return (_rmdir(dirname.c_str()) == 0);
+#else
+	return (::rmdir(dirname.c_str()) == 0);
+#endif
+}
+
+
+FileSystem::~FileSystem () {
+	// remove the subdirectory from the system's temp folder (if empty)
+	if (TMPSUBDIR)
+		s_rmdir(tmpdir());
+}
 
 
 bool FileSystem::remove (const string &fname) {
@@ -94,9 +133,7 @@ uint64_t FileSystem::filesize (const string &fname) {
 
 
 string FileSystem::adaptPathSeperators (string path) {
-	for (size_t i=0; i < path.length(); i++)
-		if (path[i] == PATHSEP)
-			path[i] = '/';
+	std::replace(path.begin(), path.end(), PATHSEP, '/');
 	return path;
 }
 
@@ -120,7 +157,7 @@ bool FileSystem::chdir (const std::string &dirname) {
 #ifdef _WIN32
 		success = (_chdir(cdirname) == 0);
 #else
-		success = (chdir(cdirname) == 0);
+		success = (::chdir(cdirname) == 0);
 #endif
 	}
 	return success;
@@ -151,28 +188,38 @@ const char* FileSystem::userdir () {
 }
 
 
-/** Private wrapper function for mkdir: creates a single folder.
- *  @param[in] dir folder name
- *  @return true on success */
-static bool s_mkdir (const string &dirname) {
-	bool success = true;
-	if (!FileSystem::exists(dirname)) {
+/** Returns the path of the temporary folder. */
+string FileSystem::tmpdir () {
+	string ret;
+	if (!TMPDIR.empty())
+		ret = TMPDIR;
+	else {
 #ifdef _WIN32
-		success = (_mkdir(dirname.c_str()) == 0);
+		char buf[MAX_PATH];
+		if (GetTempPath(MAX_PATH, buf))
+			ret = adaptPathSeperators(buf);
+		else
+			ret = ".";
 #else
-		success = (mkdir(dirname.c_str(), 0775) == 0);
+		if (const char *path = getenv("TMPDIR"))
+			ret = path;
+		else
+			ret = "/tmp";
 #endif
+		if (ret.back() == '/')
+			ret.pop_back();
+		static bool initialized=false;
+		if (!initialized && ret != ".") {
+			TMPSUBDIR = PROGRAM_NAME;
+			s_mkdir(ret + "/" + TMPSUBDIR);
+			initialized = true;
+		}
+		if (TMPSUBDIR)
+			ret += string("/") + TMPSUBDIR;
 	}
-	return success;
-}
-
-
-static bool inline s_rmdir (const string &dirname) {
-#ifdef _WIN32
-	return (_rmdir(dirname.c_str()) == 0);
-#else
-	return (rmdir(dirname.c_str()) == 0);
-#endif
+	if (!ret.empty() && ret.back() != '/')
+		ret += '/';
+	return ret;
 }
 
 
@@ -329,5 +376,3 @@ int FileSystem::collect (const char *dirname, vector<string> &entries) {
 #endif
 	return entries.size();
 }
-
-
