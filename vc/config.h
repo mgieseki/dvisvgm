@@ -1,22 +1,23 @@
 /* Basic header file used to compile dvisvgm on Windows. */
+#include "../src/version.hpp"
 
 /* Name of package */
-#define PACKAGE "dvisvgm"
+#define PACKAGE PROGRAM_NAME
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "martin.gieseking@uos.de"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "dvisvgm"
+#define PACKAGE_NAME PROGRAM_NAME
 
 /* Version number of package */
-#define VERSION "2.0.4"
+#define VERSION PROGRAM_VERSION
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "dvisvgm " VERSION
+#define PACKAGE_STRING PROGRAM_NAME+std::string(" ")+PROGRAM_VERSION
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "dvisvgm"
+#define PACKAGE_TARNAME PROGRAM_NAME
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION VERSION
