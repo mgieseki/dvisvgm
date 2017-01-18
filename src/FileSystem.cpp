@@ -24,6 +24,7 @@
 #include <cstring>
 #include <fstream>
 #include "FileSystem.hpp"
+#include "utility.hpp"
 #include "version.hpp"
 
 #ifdef HAVE_UNISTD_H
@@ -223,17 +224,6 @@ string FileSystem::tmpdir () {
 }
 
 
-/** Removes leading and trailing whitespace from a string. */
-static string trim (const string &str) {
-	int first=0, last=str.length()-1;
-	while (isspace(str[first]))
-		first++;
-	while (isspace(str[last]))
-		last--;
-	return str.substr(first, last-first+1);
-}
-
-
 /** Creates a new folder relative to the current work directory. If necessary,
  *  the parent folders are also created.
  *  @param[in] dir single folder name or path to folder
@@ -242,7 +232,7 @@ bool FileSystem::mkdir (const string &dirname) {
 	bool success = false;
 	if (const char *cdirname = dirname.c_str()) {
 		success = true;
-		const string dirstr = adaptPathSeperators(trim(cdirname));
+		const string dirstr = adaptPathSeperators(util::trim(cdirname));
 		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++)
 			success &= s_mkdir(dirstr.substr(0, pos));
 		success &= s_mkdir(dirstr);

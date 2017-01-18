@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <array>
 #include "FontWriter.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos = {{
 
 /** Returns the corresponding FontFormat for a given format name (e.g. "svg", "woff" etc.). */
 FontWriter::FontFormat FontWriter::toFontFormat (string formatstr) {
-	transform(formatstr.begin(), formatstr.end(), formatstr.begin(), ::tolower);
+	util::tolower(formatstr);
 	for (const FontFormatInfo &info : _formatInfos) {
 		if (formatstr == info.formatstr_short)
 			return info.format;
@@ -82,6 +83,7 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 #include "FileSystem.hpp"
 #include "Font.hpp"
 #include "Glyph.hpp"
+#include "utility.hpp"
 
 
 FontWriter::FontWriter (const PhysicalFont &font) : _font(font) {
@@ -228,37 +230,6 @@ string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes,
 }
 
 
-/** Encodes the bytes in the half-open range [first,last) to Base64 and writes
- *  the result to the range starting at 'dest'.
- *  @param[in] first initial position of the range to be encoded
- *  @param[in] last final position of the range to be encoded
- *  @param[in] dest first position of the destination range */
-template <typename InputIterator, typename OutputIterator>
-static void base64_copy (InputIterator first, InputIterator last, OutputIterator dest) {
-	static const char *base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	while (first != last) {
-		int padding = 0;
-		unsigned char c0 = *first++, c1=0, c2=0;
-		if (first == last)
-			padding = 2;
-		else {
-			c1 = *first++;
-			if (first == last)
-				padding = 1;
-			else
-				c2 = *first++;
-		}
-		uint32_t n = (c0 << 16) | (c1 << 8) | c2;
-		for (int i=0; i <= 3-padding; i++) {
-			*dest++ = base64_chars[(n >> 18) & 0x3f];
-			n <<= 6;
-		}
-		while (padding--)
-			*dest++ = '=';
-	}
-}
-
-
 /** Writes a CSS font-face rule to an output stream that references or contains the WOFF/TTF font data.
  * @param[in] format target font format
  * @param[in] charcodes character codes of the glyphs to be considered
@@ -273,7 +244,7 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 			os << "@font-face{"
 				<< "font-family:" << _font.name() << ';'
 				<< "src:url(data:" << info->mimetype << ";base64,";
-			base64_copy(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>(), ostreambuf_iterator<char>(os));
+			util::base64_copy(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>(), ostreambuf_iterator<char>(os));
 			os << ") format('" << info->formatstr_long << "');}\n";
 			ifs.close();
 			if (!PhysicalFont::KEEP_TEMP_FILES)

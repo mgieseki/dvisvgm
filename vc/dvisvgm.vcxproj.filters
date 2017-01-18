@@ -281,6 +281,9 @@
     <ClCompile Include="..\src\FontWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -305,9 +308,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\DVIActions.hpp">
@@ -361,9 +361,6 @@
     <ClInclude Include="..\src\Ghostscript.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Glyph.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -371,9 +368,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Length.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Message.hpp">
@@ -410,9 +404,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TpicSpecialHandler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\XMLDocument.hpp">
@@ -581,6 +572,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\FontWriter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\macros.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ffwrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

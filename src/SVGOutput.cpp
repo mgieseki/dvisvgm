@@ -28,6 +28,7 @@
 #include "FileSystem.hpp"
 #include "Message.hpp"
 #include "SVGOutput.hpp"
+#include "utility.hpp"
 #include "ZLibOutputStream.hpp"
 
 using namespace std;
@@ -68,17 +69,12 @@ ostream& SVGOutput::getPageStream (int page, int numPages) const {
 string SVGOutput::filename (int page, int numPages) const {
 	if (_stdout)
 		return "";
-	string pattern = expandFormatString(_pattern, page, numPages);
-	// remove leading and trailing whitespace
-	stringstream trim;
-	trim << pattern;
-	pattern.clear();
-	trim >> pattern;
+	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages));
 	// set and expand default pattern if necessary
-	if (pattern.empty())
-		pattern = expandFormatString(numPages > 1 ? "%f-%p" : "%f", page, numPages);
+	if (expanded_pattern.empty())
+		expanded_pattern = expandFormatString(numPages > 1 ? "%f-%p" : "%f", page, numPages);
 	// append suffix if necessary
-	FilePath outpath(pattern, true);
+	FilePath outpath(expanded_pattern, true);
 	if (outpath.suffix().empty())
 		outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
 	string abspath = outpath.absolute();
@@ -100,16 +96,6 @@ string SVGOutput::outpath (int page, int numPages) const {
 	return path.substr(0, pos);
 }
 #endif
-
-
-static int ilog10 (int n) {
-	int result = 0;
-	while (n >= 10) {
-		result++;
-		n /= 10;
-	}
-	return result;
-}
 
 
 /** Replaces expressions in a given string by the corresponding values and returns the result.
@@ -136,7 +122,7 @@ string SVGOutput::expandFormatString (string str, int page, int numPages) const 
 				pos++;
 			}
 			else {
-				oss << setw(ilog10(numPages)+1) << setfill('0');
+				oss << setw(util::ilog10(numPages)+1) << setfill('0');
 			}
 			switch (str[pos]) {
 				case 'f':

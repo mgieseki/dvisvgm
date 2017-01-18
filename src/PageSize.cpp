@@ -24,14 +24,9 @@
 #include <cmath>
 #include <sstream>
 #include "PageSize.hpp"
+#include "utility.hpp"
 
 using namespace std;
-
-// make sure tolower is a function (and not a macro)
-// so that 'transform' can be applied
-static int my_tolower (int c) {
-	return tolower(c);
-}
 
 
 /** Computes width and height of ISO/DIN An in millimeters.
@@ -100,7 +95,7 @@ void PageSize::resize (string name) {
 	if (name.length() < 2)
 		throw PageSizeException("unknown page format: "+name);
 
-	transform(name.begin(), name.end(), name.begin(), my_tolower);
+	util::tolower(name);
 	// extract optional suffix
 	size_t pos = name.rfind("-");
 	bool landscape = false;

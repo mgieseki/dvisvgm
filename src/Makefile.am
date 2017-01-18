@@ -209,6 +209,8 @@ libdvisvgm_a_SOURCES = \
 	TriangularPatch.hpp \
 	Unicode.cpp \
 	Unicode.hpp \
+	utility.hpp \
+	utility.cpp \
 	VectorIterator.hpp \
 	VectorStream.hpp \
 	version.hpp \

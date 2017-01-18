@@ -28,7 +28,7 @@
 #include "FontManager.hpp"
 #include "GlyphTracerMessages.hpp"
 #include "System.hpp"
-
+#include "utility.hpp"
 
 using namespace std;
 
@@ -288,8 +288,8 @@ static int digits (int n) {
 	if (n == 0)
 		return 1;
 	if (n > 0)
-		return int(log10(double(n))+1);
-	return int(log10(double(-n))+2);
+		return util::ilog10(n)+1;
+	return util::ilog10(-n)+2;
 }
 
 

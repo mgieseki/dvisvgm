@@ -264,6 +264,7 @@
     <ClCompile Include="..\src\TpicSpecialHandler.cpp" />
     <ClCompile Include="..\src\TriangularPatch.cpp" />
     <ClCompile Include="..\src\Unicode.cpp" />
+    <ClCompile Include="..\src\utility.cpp" />
     <ClCompile Include="..\src\VFReader.cpp" />
     <ClCompile Include="..\src\XMLDocument.cpp" />
     <ClCompile Include="..\src\XMLNode.cpp" />
@@ -291,12 +292,14 @@
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
     <ClInclude Include="..\src\EPSToSVG.hpp" />
+    <ClInclude Include="..\src\ffwrapper.h" />
     <ClInclude Include="..\src\FilePath.hpp" />
     <ClInclude Include="..\src\FixWord.hpp" />
     <ClInclude Include="..\src\FontMetrics.hpp" />
     <ClInclude Include="..\src\FontWriter.hpp" />
     <ClInclude Include="..\src\HtmlSpecialHandler.hpp" />
     <ClInclude Include="..\src\JFM.hpp" />
+    <ClInclude Include="..\src\macros.hpp" />
     <ClInclude Include="..\src\MapLine.hpp" />
     <ClInclude Include="..\src\MiKTeXCom.hpp" />
     <ClInclude Include="..\src\NoPsSpecialHandler.hpp" />
@@ -328,10 +331,10 @@
     <ClInclude Include="..\src\ToUnicodeMap.hpp" />
     <ClInclude Include="..\src\TriangularPatch.hpp" />
     <ClInclude Include="..\src\Unicode.hpp" />
+    <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />
     <ClInclude Include="..\src\ZLibOutputStream.hpp" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="..\src\debug.h" />
     <ClInclude Include="..\src\DVIActions.hpp" />
     <ClInclude Include="..\src\DVIReader.hpp" />
     <ClInclude Include="..\src\DvisvgmSpecialHandler.hpp" />
@@ -349,11 +352,9 @@
     <ClInclude Include="..\src\GFReader.hpp" />
     <ClInclude Include="..\src\GFTracer.hpp" />
     <ClInclude Include="..\src\Ghostscript.hpp" />
-    <ClInclude Include="..\src\global.h" />
     <ClInclude Include="..\src\Glyph.hpp" />
     <ClInclude Include="..\src\InputBuffer.hpp" />
     <ClInclude Include="..\src\Length.hpp" />
-    <ClInclude Include="..\src\macros.h" />
     <ClInclude Include="..\src\Message.hpp" />
     <ClInclude Include="..\src\MessageException.hpp" />
     <ClInclude Include="..\src\MetafontWrapper.hpp" />
@@ -366,7 +367,6 @@
     <ClInclude Include="..\src\StreamWriter.hpp" />
     <ClInclude Include="..\src\TFM.hpp" />
     <ClInclude Include="..\src\TpicSpecialHandler.hpp" />
-    <ClInclude Include="..\src\types.h" />
     <ClInclude Include="..\src\XMLDocument.hpp" />
     <ClInclude Include="..\src\XMLNode.hpp" />
     <ClInclude Include="..\src\XMLString.hpp" />

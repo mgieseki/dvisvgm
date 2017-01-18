@@ -23,6 +23,7 @@
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
 #include "MessageException.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -65,11 +66,6 @@ static char adapt_current_path (string &path, char target_drive) {
 	return target_drive;
 }
 
-
-static void tolower (string &str) {
-	for (char &c : str)
-		c = tolower(c);
-}
 #endif
 
 
@@ -78,8 +74,8 @@ bool FilePath::Directory::operator == (const Directory &dir) const {
 	string dirstr2 = dir._dirstr;
 #ifdef _WIN32
 	// letter case is not significant on Windows systems
-	tolower(dirstr1);
-	tolower(dirstr2);
+	util::tolower(dirstr1);
+	util::tolower(dirstr2);
 #endif
 	return dirstr1 == dirstr2;
 }

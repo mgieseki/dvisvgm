@@ -245,6 +245,11 @@ check_PROGRAMS += UnicodeTest
 UnicodeTest_SOURCES = UnicodeTest.cpp
 UnicodeTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += UtilityTest
+check_PROGRAMS += UtilityTest
+UtilityTest_SOURCES = UtilityTest.cpp
+UtilityTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += VectorIteratorTest
 check_PROGRAMS += VectorIteratorTest
 VectorIteratorTest_SOURCES = VectorIteratorTest.cpp

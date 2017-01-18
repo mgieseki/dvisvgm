@@ -29,6 +29,7 @@
 #include <iomanip>
 #include <sstream>
 #include "Color.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -163,10 +164,10 @@ bool Color::setPSName (string name, bool case_sensitive) {
 		}
 	}
 	else {
-		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		util::tolower(name);
 		auto it = find_if(constants.begin(), constants.end(), [&](const ColorConstant &cc) {
 			string cmpname = cc.name;
-			transform(cmpname.begin(), cmpname.end(), cmpname.begin(), ::tolower);
+			util::tolower(cmpname);
 			return name == cmpname;
 		});
 		if (it != constants.end()) {
