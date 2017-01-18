@@ -1,3 +1,12 @@
+dvisvgm-2.1 (2017-01-19)
+- added option --tmpdir to explicitly set temp folder
+- temporary files are no longer created in the current working directory by
+  default but in the system's temp folder (GH bug #63)
+- added warning/error messages if temporary files could not be written
+- fixed collision of Unicode points in AGL table (GH bug #64)
+- retain letter case of filenames even if not significant (Windows only)
+- code refactorings and cleanup
+
 dvisvgm-2.0.4 (2016-11-16)
 - bundled reduced FontForge library (ff-woff) with the sources
 - minor fixes in manpage and --help texts
