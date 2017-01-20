@@ -83,8 +83,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -107,8 +106,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -128,8 +126,7 @@
       <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -154,8 +151,7 @@
       <AdditionalIncludeDirectories>..\..\libs\ff-woff\fontforge;..\..\libs\ff-woff\inc;..\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -212,6 +208,16 @@
     <ClCompile Include="..\..\libs\ff-woff\fontforge\splineutil2.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\start.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\stemdb.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tmpfile2.cpp">
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SyncCThrow</ExceptionHandling>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SyncCThrow</ExceptionHandling>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SyncCThrow</ExceptionHandling>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SyncCThrow</ExceptionHandling>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\libs\ff-woff\fontforge\tottf.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\tottfaat.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\tottfgpos.c" />
@@ -220,7 +226,6 @@
     <ClCompile Include="..\..\libs\ff-woff\fontforge\ttfspecial.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\unialt.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\ustring.c" />
-    <ClCompile Include="..\..\libs\ff-woff\fontforge\utils.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\utype.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\woff.c" />
   </ItemGroup>

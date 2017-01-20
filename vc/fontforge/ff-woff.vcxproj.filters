@@ -144,13 +144,13 @@
     <ClCompile Include="..\..\libs\ff-woff\fontforge\ustring.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\ff-woff\fontforge\utils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libs\ff-woff\fontforge\utype.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libs\ff-woff\fontforge\woff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\tmpfile2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -40,11 +40,7 @@
 static const unsigned unicode4_size = 17*65536;
     /* Unicode goes up to 0x10ffff */
 
-#ifdef _WIN32
 extern FILE* tmpfile2 ();
-#else
-#define tmpfile2 tmpfile
-#endif
 
 extern int32 unicode_from_adobestd[256];
 
