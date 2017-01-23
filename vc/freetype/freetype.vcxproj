@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="src\autofit\autofit.c" />
     <ClCompile Include="src\base\ftcid.c" />
+    <ClCompile Include="src\base\ftfntfmt.c" />
     <ClCompile Include="src\bdf\bdf.c" />
     <ClCompile Include="src\cff\cff.c" />
     <ClCompile Include="src\base\ftbase.c" />
@@ -166,7 +167,6 @@
     <ClCompile Include="src\base\ftsynth.c" />
     <ClCompile Include="src\base\fttype1.c" />
     <ClCompile Include="src\base\ftwinfnt.c" />
-    <ClCompile Include="src\base\ftxf86.c" />
     <ClCompile Include="src\base\ftlcdfil.c" />
     <ClCompile Include="src\base\ftgxval.c" />
     <ClCompile Include="src\base\ftotval.c" />

@@ -1,8 +1,6 @@
 In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2015 you
 need to download the source code archives of the following libraries:
 
-FontForge:  http://fontforge.org
-            https://github.com/mgieseki/ff-woff
 FreeType:   https://freetype.org
 Potrace:    http://potrace.sourceforge.net
 zlib:       http://zlib.net
