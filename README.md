@@ -1,6 +1,7 @@
 _dvisvgm_ &ndash; A fast DVI to SVG converter
 =============================================
 [<img src="https://travis-ci.org/mgieseki/dvisvgm.svg?branch=master" height="20px">](https://travis-ci.org/mgieseki/dvisvgm)
+[<img src="https://ci.appveyor.com/api/projects/status/0rbkw88js1on4g2u/branch/master?svg=true">](https://ci.appveyor.com/project/mgieseki/dvisvgm/branch/master)
 [<img src="https://scan.coverity.com/projects/1099/badge.svg" height="20px">](https://scan.coverity.com/projects/1099)
 [<img src="http://img.shields.io/:license-GPL%20v3+-blue.svg" height="20px">](http://www.gnu.org/licenses/gpl-3.0.en.html)
 

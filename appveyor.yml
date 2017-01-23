@@ -1,0 +1,34 @@
+version: 2.1-{build}
+configuration: Release
+
+platform:
+  - x64
+  - Win32
+
+install:
+  - set POTRACE_VER=1.13
+  - set FREETYPE_VER=2.7.1
+  - set ZLIB_VER=1.2.11
+  - set MIKTEX_SDK_VER=2.9.4106
+  - cd vc
+  - appveyor DownloadFile https://miktex.org/download/ctan/systems/win32/miktex/sdk/miktex-%MIKTEX_SDK_VER%-sdk.zip
+  - unzip -o miktex-%MIKTEX_SDK_VER%-sdk.zip
+  - del miktex-%MIKTEX_SDK_VER%-sdk.zip
+  - cd freetype
+  - appveyor DownloadFile http://download.savannah.gnu.org/releases/freetype/freetype-%FREETYPE_VER%.tar.gz
+  - tar xzf freetype-%FREETYPE_VER%.tar.gz --strip-components=1
+  - del freetype-%FREETYPE_VER%.tar.gz
+  - cd ..\potrace
+  - appveyor DownloadFile http://potrace.sourceforge.net/download/%POTRACE_VER%/potrace-%POTRACE_VER%.tar.gz
+  - tar xzf potrace-%POTRACE_VER%.tar.gz --strip-components=1
+  - sed -i "s/\(\"potracelib \"\)VERSION\(\"\"\)/\1 VERSION \2/" src\potracelib.c
+  - del potrace-%POTRACE_VER%.tar.gz
+  - cd ..\zlib
+  - appveyor DownloadFile http://zlib.net/zlib-%ZLIB_VER%.tar.gz
+  - tar xzf zlib-%ZLIB_VER%.tar.gz --strip-components=1
+  - del zlib-%ZLIB_VER%.tar.gz
+  - cd ..
+
+build:
+  project: vc\dvisvgm.sln
+  verbosity: minimal
