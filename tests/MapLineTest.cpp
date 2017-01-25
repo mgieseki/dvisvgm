@@ -30,7 +30,7 @@ using namespace std;
 class MapLineTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			FileFinder::init("MapLineTest", "MapLineTest", false);
 		}
 };

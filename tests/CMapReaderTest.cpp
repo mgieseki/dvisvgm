@@ -28,7 +28,7 @@ using namespace std;
 class CMapReaderTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			istringstream iss(cmapsrc);
 			CMapReader reader;
 			cmap = reader.read(iss, "Test-Map");

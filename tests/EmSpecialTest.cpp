@@ -74,7 +74,7 @@ class EmSpecialTest : public ::testing::Test
 	public:
 		EmSpecialTest () : handler(recorder) {}
 
-		void SetUp () {
+		void SetUp () override {
 			recorder.clear();
 		}
 

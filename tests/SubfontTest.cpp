@@ -28,7 +28,7 @@ using namespace std;
 class SubfontTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			FileFinder::init("SubfontTest", "SubfontTest", false);
 		}
 };

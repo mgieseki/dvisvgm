@@ -33,7 +33,7 @@
 class CMapManagerTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			FileFinder::init("CMapManagerTest", "CMapManagerTest", false);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}

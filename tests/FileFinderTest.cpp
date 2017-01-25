@@ -32,7 +32,7 @@ using std::ifstream;
 class FileFinderTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			FileFinder::init("FileFinderTest", "FileFinderTest", false);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}

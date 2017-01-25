@@ -29,7 +29,7 @@ using namespace std;
 class TensorProductPatchTest : public ::testing::Test
 {
 	protected:
-		void SetUp () {
+		void SetUp () override {
 			_points.resize(16);
 			_points[0]  = DPair(10, 10);
 			_points[1]  = DPair(0, 30);

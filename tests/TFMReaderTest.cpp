@@ -37,14 +37,14 @@ class TFMReaderTest : public ::testing::Test
 	public:
 		TFMReaderTest () : tfm(0) {}
 
-		void SetUp () {
+		void SetUp () override {
 			string fname = string(SRCDIR)+"/data/cmr10.tfm";
 			ifstream ifs(fname.c_str(), ios::binary);
 			ASSERT_TRUE(ifs.is_open()) << "failed opening " << fname;
 			tfm = new TFM(ifs);
 		}
 
-		void TearDown () {
+		void TearDown () override {
 			delete tfm;
 		}
 

@@ -66,7 +66,7 @@ class DvisvgmSpecialTest : public ::testing::Test
 				BoundingBox bbox;
 		};
 
-		void SetUp () {
+		void SetUp () override {
 			recorder.clear();
 		}
 
