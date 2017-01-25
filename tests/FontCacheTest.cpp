@@ -1,0 +1,155 @@
+/*************************************************************************
+** FontCacheTest.cpp                                                    **
+**                                                                      **
+** This file is part of dvisvgm -- a fast DVI to SVG converter          **
+** Copyright (C) 2005-2017 Martin Gieseking <martin.gieseking@uos.de>   **
+**                                                                      **
+** This program is free software; you can redistribute it and/or        **
+** modify it under the terms of the GNU General Public License as       **
+** published by the Free Software Foundation; either version 3 of       **
+** the License, or (at your option) any later version.                  **
+**                                                                      **
+** This program is distributed in the hope that it will be useful, but  **
+** WITHOUT ANY WARRANTY; without even the implied warranty of           **
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the         **
+** GNU General Public License for more details.                         **
+**                                                                      **
+** You should have received a copy of the GNU General Public License    **
+** along with this program; if not, see <http://www.gnu.org/licenses/>. **
+*************************************************************************/
+
+#include <gtest/gtest.h>
+#include <fstream>
+#include <sstream>
+#include "FileSystem.hpp"
+#include "FontCache.hpp"
+
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
+using namespace std;
+
+class FontCacheTest : public testing::Test
+{
+	protected:
+		FontCacheTest () : testing::Test(), cachedir(string(SRCDIR)+"/data") {
+			glyph1.moveto(0, 0);
+			glyph1.lineto(10, 0);
+			glyph1.lineto(10, 10);
+			glyph1.lineto(0, 10);
+			glyph1.closepath();
+
+			glyph2.moveto(0, 0);
+			glyph2.cubicto(10, 10, 20, 0, 50, 50);
+			glyph2.lineto(30, 20);
+			glyph2.conicto(20, 40, 20, 20);
+			glyph2.closepath();
+		}
+
+		~FontCacheTest () {
+			FileSystem::remove(cachedir+"/testdata.fgd");
+		}
+
+		Glyph glyph1, glyph2;
+		FontCache cache;
+		string cachedir;
+};
+
+
+static string toSVG (const Glyph &glyph) {
+	ostringstream oss;
+	glyph.writeSVG(oss, false);
+	return oss.str();
+}
+
+
+static bool operator == (const Glyph &glyph1, const Glyph &glyph2) {
+	return toSVG(glyph1) == toSVG(glyph2);
+}
+
+
+TEST_F(FontCacheTest, glyph) {
+	EXPECT_EQ(toSVG(glyph1), "M0 0H10V10H0Z");
+	EXPECT_EQ(toSVG(glyph2), "M0 0C10 10 20 0 50 50L30 20Q20 40 20 20Z");
+	cache.setGlyph(1, glyph1);
+	cache.setGlyph(10, glyph2);
+	ASSERT_NE(cache.getGlyph(1), nullptr);
+	ASSERT_EQ(cache.getGlyph(2), nullptr);
+	ASSERT_NE(cache.getGlyph(10), nullptr);
+	ASSERT_EQ(*cache.getGlyph(1), glyph1);
+	ASSERT_EQ(*cache.getGlyph(10), glyph2);
+}
+
+
+TEST_F(FontCacheTest, write1) {
+	cache.setGlyph(1, glyph1);
+	ASSERT_TRUE(cache.fontname().empty());
+	ASSERT_FALSE(cache.write(cachedir.c_str()));
+}
+
+
+TEST_F(FontCacheTest, write2) {
+	cache.setGlyph(1, glyph1);
+	ASSERT_TRUE(FileSystem::exists(cachedir));
+	ASSERT_TRUE(cache.write("testfont", cachedir.c_str()));
+	cache.setGlyph(10, glyph2);
+	ASSERT_TRUE(cache.write("testfont", cachedir.c_str()));
+	ASSERT_TRUE(cache.fontname().empty());
+}
+
+
+TEST_F(FontCacheTest, read) {
+	cache.setGlyph(1, glyph1);
+	cache.setGlyph(10, glyph2);
+	ASSERT_TRUE(cache.write("testfont", cachedir.c_str()));
+	// clear cache object
+	cache.clear();
+	ASSERT_EQ(cache.getGlyph(1), nullptr);
+	ASSERT_EQ(cache.getGlyph(2), nullptr);
+	ASSERT_EQ(cache.getGlyph(10), nullptr);
+	// read glyph data from cache file
+	ASSERT_TRUE(cache.read("testfont", cachedir.c_str()));
+	ASSERT_EQ(cache.fontname(), "testfont");
+	ASSERT_NE(cache.getGlyph(1), nullptr);
+	ASSERT_EQ(cache.getGlyph(2), nullptr);
+	ASSERT_NE(cache.getGlyph(10), nullptr);
+	ASSERT_EQ(*cache.getGlyph(1), glyph1);
+	ASSERT_EQ(*cache.getGlyph(10), glyph2);
+}
+
+
+TEST_F(FontCacheTest, fontinfo1) {
+	ostringstream oss;
+	cache.clear();
+	FileSystem::remove(cachedir+"/testfont.fgd");
+	cache.fontinfo(cachedir.c_str(), oss);
+	ASSERT_EQ(oss.str(), "cache is empty\n");
+
+	// check removal of invalid cache files
+	ofstream cachefile(cachedir+"/invalid.fgd");
+	cachefile << "invalid cache file";
+	cachefile.close();
+	ASSERT_TRUE(FileSystem::exists(cachedir+"/invalid.fgd"));
+	oss.str("");
+	cache.fontinfo(cachedir.c_str(), oss, true);
+	ASSERT_EQ(oss.str(),
+		"cache is empty\n"
+		"invalid cache file invalid.fgd removed\n"
+	);
+	ASSERT_FALSE(FileSystem::exists(cachedir+"/invalid.fgd"));
+}
+
+
+TEST_F(FontCacheTest, fontinfo2) {
+	cache.setGlyph(1, glyph1);
+	cache.setGlyph(10, glyph2);
+	ASSERT_TRUE(cache.write("testfont", cachedir.c_str()));
+
+	ostringstream oss;
+	cache.fontinfo(cachedir.c_str(), oss);
+	ASSERT_EQ(oss.str(),
+		"cache format version 5\n"
+		"testfont      2 glyphs        10 cmds          58 bytes  crc:38cb5c67\n"
+	);
+}

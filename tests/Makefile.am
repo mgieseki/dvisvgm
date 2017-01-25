@@ -106,6 +106,11 @@ check_PROGRAMS += FileSystemTest
 FileSystemTest_SOURCES = FileSystemTest.cpp
 FileSystemTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
+TESTS += FontCacheTest
+check_PROGRAMS += FontCacheTest
+FontCacheTest_SOURCES = FontCacheTest.cpp
+FontCacheTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
 TESTS += FontManagerTest
 check_PROGRAMS += FontManagerTest
 FontManagerTest_SOURCES = FontManagerTest.cpp
