@@ -32,7 +32,7 @@ for f in *Test.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
+${base}_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
 
 EOT
 done
