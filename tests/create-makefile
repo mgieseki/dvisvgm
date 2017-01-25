@@ -20,6 +20,7 @@ check_PROGRAMS = hashcheck
 nodist_hashcheck_SOURCES = hashcheck.cpp
 hashcheck_LDADD = ../libs/xxHash/libxxhash.a
 hashcheck_CPPFLAGS = -I\$(top_srcdir)/libs/xxHash
+
 hashcheck.cpp: genhashcheck.py \$(top_srcdir)/src/AGLTable.hpp \$(top_srcdir)/libs/xxHash/xxhash.h
 	python \$^ >\$@
 

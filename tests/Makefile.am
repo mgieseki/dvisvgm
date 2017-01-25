@@ -12,6 +12,7 @@ check_PROGRAMS = hashcheck
 nodist_hashcheck_SOURCES = hashcheck.cpp
 hashcheck_LDADD = ../libs/xxHash/libxxhash.a
 hashcheck_CPPFLAGS = -I$(top_srcdir)/libs/xxHash
+
 hashcheck.cpp: genhashcheck.py $(top_srcdir)/src/AGLTable.hpp $(top_srcdir)/libs/xxHash/xxhash.h
 	python $^ >$@
 
@@ -174,6 +175,11 @@ TESTS += PairTest
 check_PROGRAMS += PairTest
 PairTest_SOURCES = PairTest.cpp
 PairTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
+
+TESTS += PapersizeSpecialTest
+check_PROGRAMS += PapersizeSpecialTest
+PapersizeSpecialTest_SOURCES = PapersizeSpecialTest.cpp
+PapersizeSpecialTest_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -L../potracelib -lpotrace -lfreetype -lgtest -lgtest_main -lpthread $(CODE_COVERAGE_LDFLAGS)
 
 TESTS += PSInterpreterTest
 check_PROGRAMS += PSInterpreterTest
