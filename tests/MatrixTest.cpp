@@ -21,9 +21,29 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <vector>
+#include "Calculator.hpp"
 #include "Matrix.hpp"
 
 using namespace std;
+
+
+TEST(MatrixTest, construct) {
+	const vector<double> vec{1, 2, 3, 4, 5, 6, 7, 8, 9};
+	Matrix m1(vec);
+	for (int row=0; row < 3; row++)
+		for (int col=0; col < 3; col++)
+			ASSERT_EQ(m1.get(row, col), vec[row*3+col]) << "row=" << row << ", col=" << col;
+
+	int startIndex=4;
+	Matrix m2(vec, startIndex);
+	for (int row=0; row < 3; row++) {
+		for (int col=0; col < 3; col++) {
+			int index = row*3+col+startIndex;
+			ASSERT_EQ(m2.get(row, col), index < 9 ? vec[index] : (row == col ? 1 : 0)) << "row=" << row << ", col=" << col;
+		}
+	}
+	EXPECT_TRUE(Matrix(1).isIdentity());
+}
 
 
 TEST(MatrixTest, svg) {
@@ -79,7 +99,7 @@ TEST(MatrixTest, rotate) {
 }
 
 
-TEST(MatrixTest, checks) {
+TEST(MatrixTest, isTranslation) {
 	Matrix m(1);
 	EXPECT_TRUE(m.isIdentity());
 	double tx, ty;
@@ -92,6 +112,28 @@ TEST(MatrixTest, checks) {
 	EXPECT_EQ(ty, 2);
 	m.scale(2, 2);
 	EXPECT_FALSE(m.isTranslation(tx, ty));
+}
+
+
+TEST(MatrixTest, lmultiply) {
+	const Matrix m1({1, 2, 3, 4, 5, 6, 7, 8, 9});
+	const Matrix m2({9, 8, 7, 6, 5, 4, 3, 2, 1});
+	EXPECT_TRUE(m1 != m2);
+	Matrix m3;
+	EXPECT_EQ((m3=m1).lmultiply(m2), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
+	EXPECT_EQ((m3=m2).lmultiply(m1), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
+	EXPECT_EQ((m3=m1).lmultiply(Matrix(1)), m1);
+}
+
+
+TEST(MatrixTest, rmultiply) {
+	const Matrix m1({1, 2, 3, 4, 5, 6, 7, 8, 9});
+	const Matrix m2({9, 8, 7, 6, 5, 4, 3, 2, 1});
+	EXPECT_TRUE(m1 != m2);
+	Matrix m3;
+	EXPECT_EQ((m3=m1).rmultiply(m2), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
+	EXPECT_EQ((m3=m2).rmultiply(m1), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
+	EXPECT_EQ((m3=m1).rmultiply(Matrix(1)), m1);
 }
 
 
@@ -148,4 +190,51 @@ TEST(MatrixTest, invert) {
 	for (int i=0; i < 3; ++i)
 		for (int j=0; j < 3; ++j)
 			EXPECT_DOUBLE_EQ(m2.get(i,j), m3.get(i,j));
+}
+
+
+TEST(MatrixTest, parse) {
+	Calculator calc;
+	calc.setVariable("ux", 0);
+	calc.setVariable("uy", 0);
+	calc.setVariable("w", 0);
+	calc.setVariable("h", 0);
+	EXPECT_EQ(Matrix("T1,-2", calc), TranslationMatrix(1, -2));
+	EXPECT_EQ(Matrix("R45", calc), RotationMatrix(45));
+	EXPECT_EQ(Matrix("S2,3", calc), ScalingMatrix(2, 3));
+	EXPECT_EQ(Matrix("FH1", calc), Matrix({1, 0, 0, 0, -1, 2, 0, 0, 1}));
+	EXPECT_EQ(Matrix("FV1", calc), Matrix({-1, 0, 2, 0, 1, 0, 0, 0, 1}));
+	EXPECT_EQ(Matrix("KX45", calc), Matrix({1, 1, 0, 0, 1, 0, 0, 0, 1}));
+	EXPECT_EQ(Matrix("KY45", calc), Matrix({1, 0, 0, 1, 1, 0, 0, 0, 1}));
+	EXPECT_EQ(Matrix("M1,2,3,4,5,6", calc), Matrix({1, 2, 3, 4, 5, 6, 0, 0, 1}));
+
+	Matrix m;
+	m.set("R90 T1,1 S2", calc);
+	EXPECT_EQ(m, Matrix({0, -2, 2, 2, 0, 2, 0, 0, 1}));
+}
+
+
+TEST(MatrixTest, write) {
+	ostringstream oss;
+	Matrix m(3);
+	oss << m;
+	EXPECT_EQ(oss.str(), "((3,0,0),(0,3,0),(0,0,3))");
+}
+
+
+TEST(MatrixTest, fail) {
+	Calculator calc;
+	EXPECT_THROW(Matrix("R45", calc), CalculatorException);
+
+	calc.setVariable("ux", 0);
+	calc.setVariable("uy", 0);
+	calc.setVariable("w", 0);
+	calc.setVariable("h", 0);
+	EXPECT_THROW(Matrix("ABC", calc), ParserException);   // invalid command
+	EXPECT_THROW(Matrix("F1", calc), ParserException);    // missing H or V
+	EXPECT_THROW(Matrix("K45", calc), ParserException);   // missing X or Y
+	EXPECT_THROW(Matrix("KX", calc), ParserException);    // missing argument
+	EXPECT_THROW(Matrix("KX90", calc), ParserException);  // invalid argument (pole at 90+180k degrees)
+	EXPECT_THROW(Matrix("KY270", calc), ParserException); // invalid argument (pole at 90+180k degrees)
+	EXPECT_THROW(Matrix("S2,", calc), ParserException);   // missing argument
 }

@@ -276,7 +276,7 @@ DPair Matrix::operator * (const DPair &p) const {
 bool Matrix::operator == (const Matrix &m) const {
 	for (int i=0; i < 2; i++)
 		for (int j=0; j < 3; j++)
-			if (_values[i][j] != m._values[i][j])
+			if (std::abs(_values[i][j]-m._values[i][j]) >= numeric_limits<double>::epsilon())
 				return false;
 	return true;
 }
@@ -286,7 +286,7 @@ bool Matrix::operator == (const Matrix &m) const {
 bool Matrix::operator != (const Matrix &m) const {
 	for (int i=0; i < 2; i++)
 		for (int j=0; j < 3; j++)
-			if (_values[i][j] != m._values[i][j])
+			if (std::abs(_values[i][j]-m._values[i][j]) >= numeric_limits<double>::epsilon())
 				return true;
 	return false;
 }
@@ -390,7 +390,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				if (c != 'X' && c != 'Y')
 					throw ParserException("transformation command 'K' must be followed by 'X' or 'Y'");
 				double a = getArgument(is, calc, 0, false, false);
-				if (fabs(cos(deg2rad(a))) <= numeric_limits<double>::epsilon()) {
+				if (std::abs(cos(deg2rad(a))) < numeric_limits<double>::epsilon()) {
 					ostringstream oss;
 					oss << "illegal skewing angle: " << a << " degrees";
 					throw ParserException(oss.str());
