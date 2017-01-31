@@ -14,7 +14,7 @@ DEPENDENCIES
    to polygons, intersects them using Clipper, and reconstructs the curves
    afterwards.
 
- * FontForge library (http://www.fontforge.org)
+ * FontForge library (https://www.fontforge.org)
    dvisvgm can be built with optional WOFF support that allows to embed the
    font data in WOFF or TrueType format rather than as SVG. The FontForge
    library provides the required functions to create font files in these
@@ -25,7 +25,7 @@ DEPENDENCIES
    This library is used to extract the glyph outlines from vector fonts
    (PFB, OTF, TTF).
 
- * Ghostscript (http://www.ghostscript.com)
+ * Ghostscript (https://www.ghostscript.com)
    The PostScript special handler requires the Ghostscript library
    libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows) to be installed.
    If the configure script finds the corresponding Ghostscript development

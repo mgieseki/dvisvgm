@@ -1,17 +1,18 @@
 _dvisvgm_ &ndash; A fast DVI to SVG converter
 =============================================
-[<img src="https://travis-ci.org/mgieseki/dvisvgm.svg?branch=master" height="20px">](https://travis-ci.org/mgieseki/dvisvgm)
-[<img src="https://ci.appveyor.com/api/projects/status/0rbkw88js1on4g2u/branch/master?svg=true">](https://ci.appveyor.com/project/mgieseki/dvisvgm/branch/master)
-[<img src="https://scan.coverity.com/projects/1099/badge.svg" height="20px">](https://scan.coverity.com/projects/1099)
-[<img src="http://img.shields.io/:license-GPL%20v3+-blue.svg" height="20px">](http://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Build Status](https://travis-ci.org/mgieseki/dvisvgm.svg?branch=master)](https://travis-ci.org/mgieseki/dvisvgm)
+[![Build Status](https://ci.appveyor.com/api/projects/status/0rbkw88js1on4g2u/branch/master?svg=true)](https://ci.appveyor.com/project/mgieseki/dvisvgm/branch/master)
+[![Code Status](https://scan.coverity.com/projects/1099/badge.svg)](https://scan.coverity.com/projects/1099)
+[![License](https://img.shields.io/:license-GPL%20v3+-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Releases](https://img.shields.io/github/release/mgieseki/dvisvgm.svg)](https://github.com/mgieseki/dvisvgm/releases)
 
 Description
 -----------
 
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
-[DVI](http://en.wikipedia.org/wiki/Device_independent_file_format) and
-[EPS](http://en.wikipedia.org/wiki/Encapsulated_PostScript) files to the
-XML-based scalable vector graphics format [SVG](http://www.w3.org/TR/SVG).
+[DVI](https://en.wikipedia.org/wiki/Device_independent_file_format) and
+[EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to the
+XML-based scalable vector graphics format [SVG](https://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
 and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
@@ -21,8 +22,8 @@ Short overview of the main features:
 * Complete font support including [virtual fonts](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=virtualfonts), evaluation of [font encodings](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=whatenc), CMap files, sub-font definitions and font maps.
 * Glyph outlines of all required fonts are embedded into the generated SVG files.
 * The font data can be embedded in SVG, TrueType, WOFF, or WOFF2 format.
-* Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](http://en.wikipedia.org/wiki/Metafont)'s bitmap output.
-* _dvisvgm_ allows to replace font definitions by [paths](http://www.w3.org/TR/SVG/fonts.html|font elements]] by [[http://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
+* Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](https://en.wikipedia.org/wiki/Metafont)'s bitmap output.
+* _dvisvgm_ allows to replace [font elements](https://www.w3.org/TR/SVG/fonts.html) by [paths](https://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
 * [Intersections of clipping paths](http://dvisvgm.bplaced.net/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
@@ -30,8 +31,8 @@ Short overview of the main features:
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
-* The converter was successfully tested on various Linux ([TeX Live](http://www.tug.org/texlive)) and Windows ([MiKTeX](http://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
-* _dvisvgm_ has been added to [TeX Live](http://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](http://www.miktex.org). It is therefore available for a wide range of operating systems.
+* The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
+* _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](https://www.miktex.org). It is therefore available for a wide range of operating systems.
 
 
 Usage
@@ -50,7 +51,7 @@ _dvisvgm_ relies on the following free libraries:
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
   the curves afterwards. A slightly modified version of Clipper is bundled with the sources.
 
-* [FontForge library](http://www.fontforge.org)  
+* [FontForge library](https://www.fontforge.org)  
   _dvisvgm_ can be built with optional WOFF support that allows to embed the font data
   in WOFF or TrueType format rather than as SVG. The FontForge library provides the required
   functions to create font files in these formats. A reduced version of the library is bundled
@@ -59,7 +60,7 @@ _dvisvgm_ relies on the following free libraries:
 * [FreeType 2](http://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
-* [Ghostscript](http://www.ghostscript.com)  
+* [Ghostscript](https://www.ghostscript.com)  
   The PostScript special handler requires the Ghostscript library libgs.so (Linux)
   or gsdll32.dll/gsdll64.dll (Windows) to be installed. If the configure script
   finds the corresponding Ghostscript development files on the system, it
@@ -128,7 +129,7 @@ pre-compiled binaries for Windows and MiKTeX from the
 Additional Information
 ----------------------
 
-This package is available from [CTAN](http://ctan.org/pkg/dvisvgm), and can be
+This package is available from [CTAN](https://ctan.org/pkg/dvisvgm), and can be
 downloaded from the [project website](http://dvisvgm.bplaced.net) as well.
 There you find the sources, pre-compiled binaries, the manual page, FAQs
 and further information about the converter and related topics.
