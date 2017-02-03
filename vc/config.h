@@ -1,4 +1,6 @@
 /* Basic header file used to compile dvisvgm on Windows. */
+#if !defined(DVISVGM_CONFIG_H) && defined(__cplusplus)
+#define DVISVGM_CONFIG_H
 #include "../src/version.hpp"
 
 /* Name of package */
@@ -33,4 +35,5 @@
   #define TARGET_SYSTEM "x86_64-pc-win64"
 #else
   #define TARGET_SYSTEM "i686-pc-win32"
+#endif
 #endif

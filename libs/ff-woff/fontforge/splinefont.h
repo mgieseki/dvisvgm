@@ -27,6 +27,9 @@
 #ifndef _SPLINEFONT_H
 #define _SPLINEFONT_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <basics.h>
 #include <dlist.h>
 #include "configure-fontforge.h"
@@ -35,7 +38,10 @@
 #else
 # include <gwwiconv.h>
 #endif
-#include "locale.h"
+#include <locale.h>
+#ifdef HAVE_XLOCALE_H
+#include <xlocale.h>
+#endif
 #include <gnetwork.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE

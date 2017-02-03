@@ -26,7 +26,7 @@ AC_PROG_RANLIB
 AC_LANG(C)
 
 AC_CHECK_FUNCS([ftime gettimeofday])
-AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
+AC_CHECK_HEADERS([sys/time.h sys/timeb.h xlocale.h])
 AC_HEADER_TIOCGWINSZ
 
 AC_CHECK_HEADER([kpathsea/kpathsea.h], ,
