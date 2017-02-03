@@ -25,9 +25,7 @@ using namespace std;
 
 
 TEST(VectorIteratorTest, inc) {
-	int array[] = {4,3,2,9,8,7,10};
-	const int size = sizeof(array)/sizeof(int);
-	vector<int> vec(array, array+size);
+	vector<int> vec{4,3,2,9,8,7,10};
 	VectorIterator<int> it(vec);
 	EXPECT_TRUE(it.valid());
 	EXPECT_EQ(*it++, 4);
@@ -35,17 +33,15 @@ TEST(VectorIteratorTest, inc) {
 	EXPECT_EQ(*++it, 2);
 	EXPECT_TRUE(it.valid());
 	for (int i=2; it.valid(); i++) {
-		EXPECT_LT(i, size);
-		EXPECT_EQ(*it, array[i]);
+		EXPECT_LT(i, vec.size());
+		EXPECT_EQ(*it, vec[i]);
 		++it;
 	}
 }
 
 
 TEST(VectorIteratorTest, addsub) {
-	int array[] = {4,3,2,9,8,7,10};
-	const int size = sizeof(array)/sizeof(int);
-	vector<int> vec(array, array+size);
+	vector<int> vec{4,3,2,9,8,7,10};
 	VectorIterator<int> it(vec);
 	EXPECT_EQ(*(it += 4), 8);
 	EXPECT_EQ(*(it -= 3), 3);
@@ -55,9 +51,7 @@ TEST(VectorIteratorTest, addsub) {
 
 
 TEST(VectorIteratorTest, dec) {
-	int array[] = {4,3,2,9,8,7,10};
-	const int size = sizeof(array)/sizeof(int);
-	vector<int> vec(array, array+size);
+	vector<int> vec{4,3,2,9,8,7,10};
 	VectorIterator<int> it(vec);
 	it += 6;
 	EXPECT_EQ(*it, 10);
@@ -66,17 +60,15 @@ TEST(VectorIteratorTest, dec) {
 	EXPECT_EQ(*--it, 8);
 	EXPECT_TRUE(it.valid());
 	for (int i=4; it.valid(); i--) {
-		EXPECT_LT(i, size);
-		EXPECT_EQ(*it, array[i]);
+		EXPECT_LT(i, vec.size());
+		EXPECT_EQ(*it, vec[i]);
 		--it;
 	}
 }
 
 
 TEST(VectorIteratorTest, invalidate) {
-	int array[] = {4,3,2,9,8,7,10};
-	const int size = sizeof(array)/sizeof(int);
-	vector<int> vec(array, array+size);
+	vector<int> vec{4,3,2,9,8,7,10};
 	VectorIterator<int> it(vec);
 	--it;
 	EXPECT_FALSE(it.valid());
@@ -88,13 +80,14 @@ TEST(VectorIteratorTest, invalidate) {
 	EXPECT_TRUE(it.valid());
 	it.invalidate();
 	EXPECT_FALSE(it.valid());
+	it.reset();
+	ASSERT_TRUE(it.valid());
+	EXPECT_EQ(*it, 4);
 }
 
 
 TEST(VectorIteratorTest, compare) {
-	int array[] = {4,3,2,9,8,7,10};
-	const int size = sizeof(array)/sizeof(int);
-	vector<int> vec(array, array+size);
+	vector<int> vec{4,3,2,9,8,7,10};
 	VectorIterator<int> it1(vec);
 	VectorIterator<int> it2 = it1 + 1;
 	EXPECT_NE(it1, it2);

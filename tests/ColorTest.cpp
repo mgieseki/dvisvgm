@@ -24,14 +24,11 @@
 using namespace std;
 
 TEST(ColorTest, construct) {
-	Color c1(uint8_t(1), uint8_t(2), uint8_t(3));
-	EXPECT_EQ(c1.rgbString(), "#010203");
-	Color c2(1.0/255, 2.0/255, 3.0/255);
-	EXPECT_EQ(c2.rgbString(), "#010203");
-	Color c3 = "Blue";
-	EXPECT_EQ(c3.rgbString(), "#0000ff");
-	Color c4 = "blue";
-	EXPECT_EQ(c4.rgbString(), "#0000ff");
+	EXPECT_EQ(Color(uint8_t(1), uint8_t(2), uint8_t(3)).rgbString(), "#010203");
+	EXPECT_EQ(Color(1.0/255, 2.0/255, 3.0/255).rgbString(), "#010203");
+	EXPECT_EQ(Color("Blue").rgbString(), "#0000ff");
+	EXPECT_EQ(Color("blue").rgbString(), "#0000ff");
+	EXPECT_EQ(Color("invalid").rgbString(), "#000000");
 }
 
 
@@ -46,19 +43,42 @@ TEST(ColorTest, gray) {
 
 TEST(ColorTest, hsb) {
 	Color c;
+	c.setHSB(20.0/360, 0.75, 0.8);        // i==0
+	EXPECT_EQ(c.rgbString(), "#cc6633");
+	c.setHSB(60.0/360, 0.75, 0.8);        // i==1
+	EXPECT_EQ(c.rgbString(), "#cccc33");
+	c.setHSB(120.0/360, 1.0, 1.0);        // i==2
+	EXPECT_EQ(c.rgbString(), "#00ff00");
+	c.setHSB(180.0/360, 1.0, 1.0);        // i==3
+	EXPECT_EQ(c.rgbString(), "#00ffff");
+	c.setHSB(240.0/360, 0.75, 0.8);       // i==4
+	EXPECT_EQ(c.rgbString(), "#3333cc");
+	c.setHSB(300.0/360, 0.75, 0.8);       // i==5
+	EXPECT_EQ(c.rgbString(), "#cc33cc");
 	c.setHSB(0.0, 1.0, 1.0);
 	EXPECT_EQ(c.rgbString(), "#ff0000");
-	c.setHSB(120.0/360, 1.0, 1.0);
-	EXPECT_EQ(c.rgbString(), "#00ff00");
-	c.setHSB(20.0/360, 0.75, 0.8);
-	EXPECT_EQ(c.rgbString(), "#cc6633");
+	c.setHSB(20.0/360, 0, 0.2);           // s==0
+	EXPECT_EQ(c.rgbString(), "#333333");
 }
 
 
 TEST(ColorTest, cmyk) {
-	Color c;
-	c.setCMYK(0.5, 0.4, 0.6, 0.2);
-	EXPECT_EQ(c.rgbString(), "#667a52");
+	Color color;
+	color.setCMYK(0.5, 0.4, 0.6, 0.2);
+	EXPECT_EQ(color.rgbString(), "#667a52");
+	double c, m, y, k;
+	color.setRGB(0.0, 0.0, 0.0);
+	color.getCMYK(c, m, y, k);
+	EXPECT_DOUBLE_EQ(c, 0.0);
+	EXPECT_DOUBLE_EQ(m, 0.0);
+	EXPECT_DOUBLE_EQ(y, 0.0);
+	EXPECT_DOUBLE_EQ(k, 1.0);
+	color.setRGB(1.0, 0.0, 0.0);
+	color.getCMYK(c, m, y, k);
+	EXPECT_DOUBLE_EQ(c, 0.0);
+	EXPECT_DOUBLE_EQ(m, 1.0);
+	EXPECT_DOUBLE_EQ(y, 1.0);
+	EXPECT_DOUBLE_EQ(k, 0.0);
 }
 
 
@@ -76,6 +96,8 @@ TEST(ColorTest, name) {
 	EXPECT_EQ(c.rgbString(), "#abcdef");
 	EXPECT_TRUE(c.setPSName("#89A"));
 	EXPECT_EQ(c.rgbString(), "#00089a");
+	EXPECT_TRUE(c.setPSName("#A98 \n "));
+	EXPECT_EQ(c.rgbString(), "#000a98");
 }
 
 
@@ -155,4 +177,38 @@ TEST(ColorTest, svgColorString) {
 	EXPECT_EQ(Color(uint32_t(0xff0000)).svgColorString(true), "#ff0000");
 	EXPECT_EQ(Color(uint32_t(0x9400d3)).svgColorString(true), "#9400d3");
 	EXPECT_EQ(Color(uint32_t(0x000001)).svgColorString(true), "#000001");
+}
+
+
+TEST(ColorTest, components) {
+	EXPECT_EQ(Color::numComponents(Color::ColorSpace::GRAY), 1);
+	EXPECT_EQ(Color::numComponents(Color::ColorSpace::RGB), 3);
+	EXPECT_EQ(Color::numComponents(Color::ColorSpace::LAB), 3);
+	EXPECT_EQ(Color::numComponents(Color::ColorSpace::CMYK), 4);
+}
+
+
+TEST(ColorTest, scale) {
+	EXPECT_EQ((Color(uint32_t(0x123456)) *= 0.0).rgbString(), "#000000");
+	EXPECT_EQ((Color(uint32_t(0x123456)) *= 1.0).rgbString(), "#123456");
+	EXPECT_EQ((Color(uint32_t(0x123456)) *= 3.0).rgbString(), "#369d02");
+	EXPECT_EQ((Color(uint32_t(0x123456)) *= 0.5).rgbString(), "#091a2b");
+}
+
+
+TEST(ColorTest, set) {
+	Color color;
+	vector<double> vec{0.1, 0.2, 0.3, 0.4};
+	VectorIterator<double> it(vec);
+	color.set(Color::ColorSpace::GRAY, it);
+	EXPECT_EQ(uint32_t(color), 0x1a1a1a);
+	it.reset();
+	color.set(Color::ColorSpace::RGB, it);
+	EXPECT_EQ(uint32_t(color), 0x1a334d);
+	it.reset();
+	color.set(Color::ColorSpace::CMYK, it);
+	EXPECT_EQ(uint32_t(color), 0x8a7a6b);
+	it.reset();
+	color.set(Color::ColorSpace::LAB, it);
+	EXPECT_EQ(uint32_t(color), 0x010000);
 }
