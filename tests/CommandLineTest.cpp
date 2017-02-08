@@ -233,8 +233,6 @@ TEST(CommandLineTest, files_only) {
 }
 
 
-static void out (const char *) {}
-
 TEST(CommandLineTest, help) {
 	// only check whether help() succeeds
 	CommandLine cmd;
