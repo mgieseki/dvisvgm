@@ -46,7 +46,7 @@ TEST(SplittedCharInputBufferTest, peek) {
 	SplittedCharInputBuffer buffer(buf1, strlen(buf1), buf2, strlen(buf2));
 	BufferInputReader in(buffer);
 	EXPECT_EQ(in.peek(), 'a');
-	for (int i=0; i < 26; i++) 
+	for (int i=0; i < 26; i++)
 		EXPECT_EQ(in.peek(i), 'a'+i);
 	EXPECT_EQ(in.peek(26), -1);
 }
@@ -86,8 +86,8 @@ TEST(SplittedCharInputBufferTest, skip) {
 
 
 TEST(SplittedCharInputBufferTest, parseInt) {
-	const char *buf1 = "1234,-"; 
-	const char *buf2 = "5,+6,10.-"; 
+	const char *buf1 = "1234,-";
+	const char *buf2 = "5,+6,10.-";
 	SplittedCharInputBuffer buffer(buf1, strlen(buf1), buf2, strlen(buf2));
 	BufferInputReader in(buffer);
 	int n;
@@ -112,39 +112,39 @@ TEST(SplittedCharInputBufferTest, parseInt) {
 }
 
 
-TEST(SplittedCharInputBufferTest, parseInt_base) {
-	const char *buf1 = "1234,-5,10,1a"; 
-	const char *buf2 = "bc,1234a"; 
+TEST(SplittedCharInputBufferTest, parseUInt_base) {
+	const char *buf1 = "1234,-5,10,1a";
+	const char *buf2 = "bc,1234a";
 	SplittedCharInputBuffer buffer(buf1, strlen(buf1), buf2, strlen(buf2));
 	BufferInputReader in(buffer);
-	int n;
-	EXPECT_TRUE(in.parseInt(10, n));
+	unsigned n;
+	EXPECT_TRUE(in.parseUInt(10, n));
 	EXPECT_EQ(n, 1234);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_FALSE(in.parseInt(10, n));
+	EXPECT_FALSE(in.parseUInt(10, n));
 	in.get();
-	EXPECT_TRUE(in.parseInt(10, n));
+	EXPECT_TRUE(in.parseUInt(10, n));
 	EXPECT_EQ(n, 5);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(16, n));
+	EXPECT_TRUE(in.parseUInt(16, n));
 	EXPECT_EQ(n, 16);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(16, n));
+	EXPECT_TRUE(in.parseUInt(16, n));
 	EXPECT_EQ(n, 0x1abc);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(8, n));
+	EXPECT_TRUE(in.parseUInt(8, n));
 	EXPECT_EQ(n, 01234);
 	EXPECT_EQ(in.get(), 'a');
 }
 
 
 TEST(SplittedCharInputBufferTest, parseDouble) {
-	const char *buf1 = "1234,-5,6.12,-3"; 
-	const char *buf2 = ".1415,-.1,12e2,10.-"; 
+	const char *buf1 = "1234,-5,6.12,-3";
+	const char *buf2 = ".1415,-.1,12e2,10.-";
 	SplittedCharInputBuffer buffer(buf1, strlen(buf1), buf2, strlen(buf2));
 	BufferInputReader in(buffer);
 	double d;

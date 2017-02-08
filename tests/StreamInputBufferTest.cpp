@@ -111,30 +111,30 @@ TEST(StreamInputBufferTest, parseInt) {
 }
 
 
-TEST(StreamInputBufferTest, parseInt_base) {
+TEST(StreamInputBufferTest, parseUInt_base) {
 	istringstream iss("1234,-5,10,1abc,1234a");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
-	int n;
-	EXPECT_TRUE(in.parseInt(10, n));
+	unsigned n;
+	EXPECT_TRUE(in.parseUInt(10, n));
 	EXPECT_EQ(n, 1234);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_FALSE(in.parseInt(10, n));
+	EXPECT_FALSE(in.parseUInt(10, n));
 	in.get();
-	EXPECT_TRUE(in.parseInt(10, n));
+	EXPECT_TRUE(in.parseUInt(10, n));
 	EXPECT_EQ(n, 5);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(16, n));
+	EXPECT_TRUE(in.parseUInt(16, n));
 	EXPECT_EQ(n, 16);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(16, n));
+	EXPECT_TRUE(in.parseUInt(16, n));
 	EXPECT_EQ(n, 0x1abc);
 	EXPECT_EQ(in.get(), ',');
 
-	EXPECT_TRUE(in.parseInt(8, n));
+	EXPECT_TRUE(in.parseUInt(8, n));
 	EXPECT_EQ(n, 01234);
 	EXPECT_EQ(in.get(), 'a');
 }
