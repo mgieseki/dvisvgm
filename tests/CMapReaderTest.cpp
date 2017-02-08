@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <memory>
 #include "CMap.hpp"
 #include "CMapReader.hpp"
 
@@ -28,14 +29,14 @@ using namespace std;
 class CMapReaderTest : public ::testing::Test
 {
 	protected:
-		void SetUp () override {
+		CMapReaderTest () {
 			istringstream iss(cmapsrc);
 			CMapReader reader;
-			cmap = reader.read(iss, "Test-Map");
+			cmap.reset(reader.read(iss, "Test-Map"));
 		}
 
 		static const char *cmapsrc;
-		CMap *cmap;
+		unique_ptr<CMap> cmap;
 };
 
 
@@ -105,7 +106,7 @@ TEST_F(CMapReaderTest, bfcode) {
 }
 
 TEST_F(CMapReaderTest, cid) {
-	SegmentedCMap *seg_cmap = dynamic_cast<SegmentedCMap*>(cmap);
+	const SegmentedCMap *seg_cmap = dynamic_cast<const SegmentedCMap*>(cmap.get());
 	ASSERT_TRUE(seg_cmap != 0);
 	ASSERT_EQ(seg_cmap->numBFRanges(), 9);
 	ASSERT_EQ(seg_cmap->numCIDRanges(), 2);
