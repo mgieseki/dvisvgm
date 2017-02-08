@@ -75,6 +75,7 @@ class EmSpecialTest : public ::testing::Test
 		EmSpecialTest () : handler(recorder) {}
 
 		void SetUp () override {
+			XMLString::DECIMAL_PLACES=2;
 			recorder.clear();
 		}
 
@@ -147,7 +148,6 @@ TEST_F(EmSpecialTest, pline) {
 
 
 TEST_F(EmSpecialTest, vline) {
-	XMLString::DECIMAL_PLACES=2;
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2v, 10bp");  // cut line ends vertically
@@ -156,7 +156,6 @@ TEST_F(EmSpecialTest, vline) {
 
 
 TEST_F(EmSpecialTest, hline) {
-	XMLString::DECIMAL_PLACES=2;
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2h, 10bp");  // cut line ends horizontally
@@ -165,7 +164,6 @@ TEST_F(EmSpecialTest, hline) {
 
 
 TEST_F(EmSpecialTest, hvline) {
-	XMLString::DECIMAL_PLACES=2;
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2v, 10bp");  // cut line ends horizontally
