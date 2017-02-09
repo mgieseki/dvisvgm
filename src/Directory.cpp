@@ -37,8 +37,8 @@ Directory::Directory () {
 	_firstread = true;
 	memset(&_fileData, 0, sizeof(WIN32_FIND_DATA));
 #else
-	_dir = 0;
-	_dirent = 0;
+	_dir = nullptr;
+	_dirent = nullptr;
 #endif
 }
 
@@ -49,8 +49,8 @@ Directory::Directory (const string &dirname) {
 	_firstread = true;
 	memset(&_fileData, 0, sizeof(WIN32_FIND_DATA));
 #else
-	_dir = 0;
-	_dirent = 0;
+	_dir = nullptr;
+	_dirent = nullptr;
 #endif
 	open(dirname);
 }
@@ -81,7 +81,10 @@ void Directory::close () {
 #ifdef _WIN32
 	FindClose(_handle);
 #else
-	closedir(_dir);
+	if (_dir) {
+		closedir(_dir);
+		_dir = nullptr;
+	}
 #endif
 }
 
@@ -92,7 +95,7 @@ void Directory::close () {
 const char* Directory::read (EntryType type) {
 #ifdef _WIN32
 	if (_handle == INVALID_HANDLE_VALUE)
-		return 0;
+		return nullptr;
 	while (_firstread || FindNextFile(_handle, &_fileData)) {
 		_firstread = false;
 		if (_fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -104,25 +107,25 @@ const char* Directory::read (EntryType type) {
 	}
 	FindClose(_handle);
 	_handle = INVALID_HANDLE_VALUE;
-	return 0;
+	return nullptr;
 #else
-	if (!_dir)
-		return 0;
-	while ((_dirent = readdir(_dir))) {
-		string path = string(_dirname) + "/" + _dirent->d_name;
-		struct stat stats;
-		if (stat(path.c_str(), &stats) == 0) {
-			if (S_ISDIR(stats.st_mode)) {
-				if (type == ET_FILE_OR_DIR || type == ET_DIR)
+	if (_dir) {
+		while ((_dirent = readdir(_dir))) {
+			string path = string(_dirname) + "/" + _dirent->d_name;
+			struct stat stats;
+			if (stat(path.c_str(), &stats) == 0) {
+				if (S_ISDIR(stats.st_mode)) {
+					if (type == ET_FILE_OR_DIR || type == ET_DIR)
+						return _dirent->d_name;
+				}
+				else if (type == ET_FILE_OR_DIR || type == ET_FILE)
 					return _dirent->d_name;
 			}
-			else if (type == ET_FILE_OR_DIR || type == ET_FILE)
-				return _dirent->d_name;
 		}
+		closedir(_dir);
+		_dir = nullptr;
 	}
-	closedir(_dir);
-	_dir = 0;
-	return 0;
+	return nullptr;
 #endif
 }
 
