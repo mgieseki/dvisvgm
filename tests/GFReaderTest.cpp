@@ -224,7 +224,7 @@ static void check_letter (const char **lettermap, const vector<string> &charmap)
 class LoggingGFReader : public GFReader {
 	public:
 		LoggingGFReader (istream &is) : GFReader(is) {}
-		void preamble (const string &str) {_info = str;}
+		void preamble (const string &str) override {_info = str;}
 		string getInfo () const {return _info;}
 
 	private:

@@ -30,6 +30,7 @@ using namespace std;
 TEST(StreamReaderTest, readString) {
 	string str1 = "dvisvgm converts DVI files to SVG.";
 	istringstream iss(str1);
+	ASSERT_TRUE(bool(iss));
 	StreamReader reader(iss);
 	string str2 = reader.readString(iss.str().length());
 	EXPECT_EQ(str1, str2);
@@ -42,6 +43,7 @@ TEST(StreamReaderTest, readString) {
 TEST(StreamReaderTest, readStringCRC) {
 	string str1 = "dvisvgm converts DVI files to SVG.";
 	istringstream iss(str1);
+	ASSERT_TRUE(bool(iss));
 	StreamReader reader(iss);
 	CRC32 crc;
 	string str2 = reader.readString(iss.str().length(), crc);
