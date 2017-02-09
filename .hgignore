@@ -1,6 +1,8 @@
 syntax: glob
 *.a
+*.la
 *.o
+*.lo
 *.Po
 *.obj
 *.dvi
@@ -34,10 +36,12 @@ missing
 ./config.*
 doc/buildman
 doc/dvisvgm.txt
-doc/dvisvgm.xml
+doc/dvisvgm*.xml
 doc/dvisvgm.html
 doc/dvisvgm.1
 doc/*.pdf
+m4/libtool.m4
+m4/lt*.m4
 doxy
 Debug
 Release
@@ -49,10 +53,16 @@ vc/zlib*
 vc/*.s*
 vc/_*
 vc/Upgrade*
+ar-lib
+compile
 configure
 depcomp
 install-sh
+libtool
+ltmain.sh
 src/CommandLine.*
+test-driver
+tests/hashcheck*
 tests/*Test
 nbproject
 stamp-h1

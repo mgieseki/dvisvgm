@@ -13,6 +13,21 @@ cat >$out <<EOT
 
 SUBDIRS = data
 
+check_LTLIBRARIES = libgtest.la
+libgtest_la_SOURCES = gtest/src/gtest-all.cc gtest/src/gtest_main.cc
+libgtest_la_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include -I\$(top_srcdir)/tests/gtest
+libgtest_la_LDFLAGS = -pthread
+EXTRA_DIST = gtest/LICENSE \\
+	gtest/include \\
+	gtest/src/gtest.cc \\
+	gtest/src/gtest-death-test.cc \\
+	gtest/src/gtest-filepath.cc \\
+	gtest/src/gtest-internal-inl.h \\
+	gtest/src/gtest-port.cc \\
+	gtest/src/gtest-printers.cc \\
+	gtest/src/gtest-test-part.cc \\
+	gtest/src/gtest-typed-test.cc
+
 AM_CXXFLAGS = -I\$(top_srcdir)/src -Wall -DSRCDIR='"\$(srcdir)"' \$(CODE_COVERAGE_CFLAGS)
 
 TESTS = hashcheck
@@ -32,7 +47,8 @@ for f in *Test.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f
-${base}_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -lpotrace -lfreetype -lgtest -lgtest_main -lpthread \$(CODE_COVERAGE_LDFLAGS)
+${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include
+${base}_LDADD = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a libgtest.la -lpotrace -lfreetype \$(CODE_COVERAGE_LDFLAGS)
 
 EOT
 done
@@ -45,7 +61,7 @@ done
 #done
 
 cat >>$out <<EOT
-EXTRA_DIST = check-conv genhashcheck.py normalize.xsl
+EXTRA_DIST += check-conv genhashcheck.py normalize.xsl
 TESTS += check-conv
 
 @CODE_COVERAGE_RULES@
