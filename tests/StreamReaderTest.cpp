@@ -34,6 +34,7 @@ TEST(StreamReaderTest, readString) {
 	StreamReader reader(iss);
 	string str2 = reader.readString(iss.str().length());
 	EXPECT_EQ(str1, str2);
+	iss.clear();
 	iss.str(str1);
 	str2 = reader.readString();
 	EXPECT_EQ(str1, str2);
@@ -49,6 +50,7 @@ TEST(StreamReaderTest, readStringCRC) {
 	string str2 = reader.readString(iss.str().length(), crc);
 	EXPECT_EQ(str1, str2);
 	EXPECT_EQ(crc.get(), 0x7c4ef359);
+	iss.clear();
 	iss.str(str1);
 	crc.reset();
 	str2 = reader.readString(crc, false);
