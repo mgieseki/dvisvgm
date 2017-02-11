@@ -1,3 +1,11 @@
+dvisvgm-2.1.2 (2017-02-12)
+- bundled the googletest sources to simplify building and executing the tests
+- fixed a couple of issues related to LLVM's libc++
+  (thanks to Mojca Miklavec and Rasmus Larsen for their help to isolate the problems)
+- fixed some potential memory leaks
+- removed 'restrict' keyword from xxHash sources to avoid C++ compilation errors
+  (https://github.com/Cyan4973/xxHash/issues/88)
+
 dvisvgm-2.1.1 (2017-02-07)
 - don't rerun Metafont for missing fonts
 - fixed build failure on OS X (GH bug #65)
