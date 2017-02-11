@@ -72,10 +72,10 @@ libfontforge_a_SOURCES = \
 	inc/chardata.h \
 	inc/charset.h \
 	inc/dlist.h \
+	inc/ffintl.h \
 	inc/gimage.h \
 	inc/gnetwork.h \
 	inc/gwwiconv.h \
-	inc/intl.h \
 	inc/ustring.h \
 	inc/utype.h
 

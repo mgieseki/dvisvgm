@@ -28,7 +28,7 @@
 #ifndef _INTL_H
 #define _INTL_H
 
-#if !defined( HAVE_LIBINTL_H )
+#if 1  /* don't include libintl.h, it's not required by dvisvgm */
 
 # define _(str)			(str)
 # define P_(str1,str_non1,n)	((n)==1?str1:str_non1)

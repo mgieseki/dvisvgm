@@ -33,7 +33,7 @@
 #include "libffstamp.h"
 #include <stdio.h>
 #include <string.h>
-#include <intl.h>
+#include <ffintl.h>
 #include "splinefont.h"
 #include "uiinterface.h"
 
