@@ -8,6 +8,10 @@ compiler:
    - gcc
    - clang
 
+branches:
+   except:
+      - tmp
+
 before_install:
    - sudo apt-get update -qq
    - sudo apt-get install -qq autotools-dev libkpathsea-dev libpotrace-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml

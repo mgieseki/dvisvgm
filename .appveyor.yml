@@ -5,6 +5,10 @@ platform:
   - x64
   - Win32
 
+branches:
+   except:
+      - tmp
+
 install:
   - set POTRACE_VER=1.13
   - set FREETYPE_VER=2.7.1
