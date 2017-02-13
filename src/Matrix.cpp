@@ -18,14 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#define _USE_MATH_DEFINES
-#include <config.h>
 #include <algorithm>
-#include <cmath>
 #include <limits>
 #include <sstream>
 #include "Calculator.hpp"
 #include "Matrix.hpp"
+#include "utility.hpp"
 #include "XMLString.hpp"
 
 using namespace std;
@@ -59,7 +57,7 @@ double det (const Matrix &m, int row, int col) {
 
 
 static inline double deg2rad (double deg) {
-	return M_PI*deg/180.0;
+	return math::PI*deg/180.0;
 }
 
 

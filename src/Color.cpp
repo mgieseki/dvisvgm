@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#define _USE_MATH_DEFINES
 #include <array>
 #include <algorithm>
 #include <cctype>
@@ -612,7 +611,7 @@ void Color::RGB2Lab (const valarray<double> &rgb, valarray<double> &lab) {
 
 
 #if 0
-static constexpr double deg2rad (double x) {return x*M_PI/180.0;}
+static constexpr double deg2rad (double x) {return x*math::PI/180.0;}
 
 /** Returns the Delta E difference (CIE 2000) between this and another color. */
 double Color::deltaE (const Color &c) const {
