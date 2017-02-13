@@ -611,8 +611,6 @@ void Color::RGB2Lab (const valarray<double> &rgb, valarray<double> &lab) {
 
 
 #if 0
-static constexpr double deg2rad (double x) {return x*math::PI/180.0;}
-
 /** Returns the Delta E difference (CIE 2000) between this and another color. */
 double Color::deltaE (const Color &c) const {
 	double l1, a1, b1;

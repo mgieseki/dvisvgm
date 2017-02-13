@@ -27,6 +27,8 @@
 #include "XMLString.hpp"
 
 using namespace std;
+using math::deg2rad;
+
 
 /** Computes the determinant of a given matrix */
 double det (const Matrix &m) {
@@ -53,11 +55,6 @@ double det (const Matrix &m, int row, int col) {
 		swap(r1, r2);
 	return m._values[r1][c1] * m._values[r2][c2]
 		  - m._values[r1][c2] * m._values[r2][c1];
-}
-
-
-static inline double deg2rad (double deg) {
-	return math::PI*deg/180.0;
 }
 
 
