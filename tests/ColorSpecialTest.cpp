@@ -23,6 +23,8 @@
 #include "ColorSpecialHandler.hpp"
 #include "SpecialActions.hpp"
 
+using namespace std;
+
 class ColorSpecialTest : public ::testing::Test
 {
 	protected:
@@ -38,6 +40,15 @@ class ColorSpecialTest : public ::testing::Test
 };
 
 
+TEST_F(ColorSpecialTest, info) {
+	EXPECT_EQ(handler.name(), "color");
+	EXPECT_STREQ(handler.prefixes()[0], "color");
+	EXPECT_EQ(handler.prefixes()[1], nullptr);
+	ASSERT_NE(handler.info(), nullptr);
+	EXPECT_FALSE(string(handler.info()).empty());
+}
+
+
 TEST_F(ColorSpecialTest, readColor) {
 	std::istringstream iss("rgb 1 0 1");
 	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#ff00ff");
@@ -50,6 +61,13 @@ TEST_F(ColorSpecialTest, readColor) {
 	iss.clear();
 	iss.str("1 0.5 1");
 	EXPECT_EQ(ColorSpecialHandler::readColor("hsb", iss).rgbString(), "#ff8080");
+}
+
+
+TEST_F(ColorSpecialTest, gray) {
+	std::istringstream iss("gray 0.2");
+	handler.process(0, iss, actions);
+	EXPECT_TRUE(actions.equals(0x333333));
 }
 
 
@@ -74,7 +92,7 @@ TEST_F(ColorSpecialTest, cmyk) {
 }
 
 
-TEST_F(ColorSpecialTest, stack) {
+TEST_F(ColorSpecialTest, stack1) {
 	std::istringstream iss("push rgb 1 0 0");
 	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
@@ -86,6 +104,28 @@ TEST_F(ColorSpecialTest, stack) {
 	iss.str("pop");
 	handler.process(0, iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
+	iss.clear();
+	iss.str("pop");
+	handler.process(0, iss, actions);
+	EXPECT_TRUE(actions.equals(0x000000));
+}
+
+
+TEST_F(ColorSpecialTest, stack2) {
+	std::istringstream iss("push rgb 1 0 0");
+	handler.process(0, iss, actions);
+	EXPECT_TRUE(actions.equals(0xff0000));
+	iss.clear();
+	iss.str("push rgb 0 1 0");
+	handler.process(0, iss, actions);
+	iss.clear();
+	iss.str("gray 0.2");  // clear color stack implicitly
+	handler.process(0, iss, actions);
+	EXPECT_TRUE(actions.equals(0x333333));
+	iss.clear();
+	iss.str("pop");
+	handler.process(0, iss, actions);
+	EXPECT_TRUE(actions.equals(0x000000));
 }
 
 
@@ -101,6 +141,9 @@ TEST_F(ColorSpecialTest, errors) {
 	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
 	iss.clear();
 	iss.str("blue");
+	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
+	iss.clear();
+	iss.str("rgb black");
 	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
 }
 

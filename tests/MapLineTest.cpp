@@ -102,13 +102,12 @@ TEST_F(MapLineTest, pdfline3) {
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "unicode");
    EXPECT_EQ(mapline.fontfname(), "simsun.ttc");
-	if (mapline.sfd() != 0) {  // if UGBK.sfd is installed do some more checks
+	EXPECT_EQ(mapline.fontindex(), 0);
+	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
+	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 1);
+	if (mapline.sfd() != 0)  // if UGBK.sfd is installed, check SFD name
 		EXPECT_EQ(mapline.sfd()->name(), "UGBK");
-		EXPECT_EQ(mapline.fontindex(), 0);
-		EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
-		EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
-		EXPECT_DOUBLE_EQ(mapline.bold(), 1);
-	}
 }
 
 TEST_F(MapLineTest, pdfline4) {
@@ -118,10 +117,22 @@ TEST_F(MapLineTest, pdfline4) {
    EXPECT_EQ(mapline.psname(), "");
    EXPECT_EQ(mapline.encname(), "");  // encodings "default" and "none" are replaced with ""
 	EXPECT_EQ(mapline.fontfname(), "simsun.ttc");
-	if (mapline.sfd() != 0) {  // if UGBK.sfd is installed do some more checks
+	EXPECT_EQ(mapline.fontindex(), 1);
+	EXPECT_DOUBLE_EQ(mapline.slant(), 0);
+	EXPECT_DOUBLE_EQ(mapline.extend(), 0.345);
+	if (mapline.sfd() != 0)  // if UGBK.sfd is installed, check SFD name
 		EXPECT_EQ(mapline.sfd()->name(), "UGBK");
-		EXPECT_EQ(mapline.fontindex(), 1);
-		EXPECT_DOUBLE_EQ(mapline.slant(), 0);
-		EXPECT_DOUBLE_EQ(mapline.extend(), 0.345);
-	}
+}
+
+
+TEST_F(MapLineTest, fail) {
+	EXPECT_THROW(MapLine("texname -"), MapLineException);
+	EXPECT_THROW(MapLine("texname -s"), MapLineException);
+	EXPECT_THROW(MapLine("texname -e"), MapLineException);
+	EXPECT_THROW(MapLine("texname -b"), MapLineException);
+	EXPECT_THROW(MapLine("texname -i"), MapLineException);
+	EXPECT_THROW(MapLine("texname -p"), MapLineException);
+	EXPECT_THROW(MapLine("texname -v"), MapLineException);
+	EXPECT_THROW(MapLine("texname -w"), MapLineException);
+	EXPECT_THROW(MapLine("texname -Z"), MapLineException);
 }

@@ -22,49 +22,48 @@
 #include <fstream>
 #include "FontMap.hpp"
 
-using std::ifstream;
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
+using namespace std;
+
 
 TEST(FontMapTest, pdf_map) {
-	const char *fname = "tests/dvipdfm_test.map";
-	ifstream ifs(fname);
-	if (ifs) {
-		FontMap &fm = FontMap::instance();
-		fm.read(fname);
-		const FontMap::Entry *entry;
-		ASSERT_TRUE((entry = fm.lookup("MyriadPro-Bold-8t")) != 0);
-		EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
-		EXPECT_EQ(entry->encname, "my-lf-t1");
-		ASSERT_TRUE((entry = fm.lookup("cmbsy8")) != 0);
-		EXPECT_EQ(entry->fontname, "cmbsy7");
-		EXPECT_EQ(entry->encname, "");
+	string fname = string(SRCDIR)+"/data/dvipdfm_test.map";
+	FontMap &fm = FontMap::instance();
+	fm.read(fname);
+	const FontMap::Entry *entry;
+	ASSERT_NE(entry = fm.lookup("MyriadPro-Bold-8t"), nullptr);
+	EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
+	EXPECT_EQ(entry->encname, "my-lf-t1");
+	ASSERT_NE(entry = fm.lookup("cmbsy8"), nullptr);
+	EXPECT_EQ(entry->fontname, "cmbsy7");
+	EXPECT_EQ(entry->encname, "");
 
-		// entry without mapped name
-		EXPECT_TRUE(fm.lookup("msam10") == 0);
-		EXPECT_TRUE(fm.lookup("msbm10") == 0);
-		EXPECT_TRUE(fm.lookup("msbm10") == 0);
-		EXPECT_TRUE(fm.lookup("i don't exist") ==  0);
-	}
+	// entry without mapped name
+	EXPECT_EQ(fm.lookup("msam10"), nullptr);
+	EXPECT_EQ(fm.lookup("msbm10"), nullptr);
+	EXPECT_EQ(fm.lookup("msbm10"), nullptr);
+	EXPECT_EQ(fm.lookup("i don't exist"), nullptr);
 }
 
 
 TEST(FontMapTest, ps_map) {
-	const char *fname = "tests/dvips_test.map";
-	ifstream ifs(fname);
-	if (ifs) {
-		FontMap &fm = FontMap::instance();
-		fm.read(fname);
-		const FontMap::Entry *entry;
-		ASSERT_TRUE((entry = fm.lookup("MyriadPro-Bold-8t")) != 0);
-		EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
-		EXPECT_EQ(entry->encname, "my-lf-t1");
-		ASSERT_TRUE((entry = fm.lookup("cmbsy8")) != 0);
-		EXPECT_EQ(entry->fontname, "cmbsy7");
-		EXPECT_EQ(entry->encname, "");
+	string fname = string(SRCDIR)+"/data/dvips_test.map";
+	FontMap &fm = FontMap::instance();
+	fm.read(fname);
+	const FontMap::Entry *entry;
+	ASSERT_NE(entry = fm.lookup("MyriadPro-Bold-8t"), nullptr);
+	EXPECT_EQ(entry->fontname, "MyriadPro-Bold");
+	EXPECT_EQ(entry->encname, "my-lf-t1");
+	ASSERT_NE(entry = fm.lookup("cmbsy8"), nullptr);
+	EXPECT_EQ(entry->fontname, "cmbsy7");
+	EXPECT_EQ(entry->encname, "");
 
-		// entry without mapped name
-		EXPECT_TRUE(fm.lookup("msam10") == 0);
-		EXPECT_TRUE(fm.lookup("msbm10") == 0);
-		EXPECT_TRUE(fm.lookup("msbm10") == 0);
-		EXPECT_TRUE(fm.lookup("i don't exist") ==  0);
-	}
+	// entry without mapped name
+	EXPECT_EQ(fm.lookup("msam10"), nullptr);
+	EXPECT_EQ(fm.lookup("msbm10"), nullptr);
+	EXPECT_EQ(fm.lookup("msbm10"), nullptr);
+	EXPECT_EQ(fm.lookup("i don't exist"), nullptr);
 }
