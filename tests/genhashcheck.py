@@ -15,16 +15,18 @@ def extract_hashes (fname):
 			if ' hash2unicode = {{\n' in line:
 				found = True
 			elif found:
-				match = re.search(r'^\s*{(0x[0-9a-f]{8}),\s*0x[0-9a-f]{4}}, //\s*(.+)\s*$', line)
+				match = re.match(r'\s*{(0x[0-9a-f]{8}),\s*0x[0-9a-f]{4}}, //\s*(.+)\s*$', line)
 				if match:
-					print '\t{%s, "%s"},' % (match.group(1), match.group(2))
+					hashval = match.group(1)
+					name = match.group(2)
+					print('\t{}{}, "{}"{},'.format('{', hashval, name, '}'))
 				else:
 					found = False
 
 if (len(sys.argv) < 2):
 	sys.exit(1)
 
-print """\
+print("""\
 #include <xxhash.h>
 #include <iomanip>
 #include <iostream>
@@ -35,37 +37,37 @@ using namespace std;
 struct NameHash {
 	unsigned hash;
 	string name;
-} nameHashes[] = {
-"""
+} nameHashes[] = {\
+""")
 extract_hashes(sys.argv[1])
-print """\
+print(r"""\
 };
 
 int main () {
 	unsigned prev_hash=0;
 	size_t size = sizeof(nameHashes)/sizeof(NameHash);
 	if (size == 0) {
-		cout << "hash table is empty\\n";
+		cout << "hash table is empty\n";
 		return 1;
 	}
-	for (unsigned i=0; i < size; i++) {
+	for (size_t i=0; i < size; i++) {
 		const string &name = nameHashes[i].name;
 		const unsigned hash = nameHashes[i].hash;
 		if (XXH32(&name[0], name.length(), 0) != hash) {
-			cout << "hash of '" << name << "' doesn't match\\n";
+			cout << "hash of '" << name << "' doesn't match\n";
 			return 1;
 		}
 		if (hash < prev_hash) {
-			cout << "misplaced hash value " << hex << setw(8) << setfill('0') << hash << "\\n";
+			cout << "misplaced hash value " << hex << setw(8) << setfill('0') << hash << "\n";
 			return 1;
 		}
 		if (hash == prev_hash) {
-			cout << "colliding hash values " << hex << setw(8) << setfill('0') << hash << "\\n";
+			cout << "colliding hash values " << hex << setw(8) << setfill('0') << hash << "\n";
 			return 1;
 		}
 		prev_hash = hash;
 	}
-	cout << "hash check passed\\n";
+	cout << "hash check passed\n";
 	return 0;
 }
-"""
+""")
