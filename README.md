@@ -100,8 +100,13 @@ subdirectory, you also need the [Google Test](https://github.com/google/googlete
 libraries.
 
 
-Compilation
------------
+Building dvisvgm from source
+----------------------------
+
+_dvisvgm_ is written in C++11 ([ISO C++ standard 2011](http://www.iso.org/iso/catalogue_detail.htm?csnumber=50372))
+and requires an appropriate compiler, like [GCC](https://gcc.gnu.org) 4.8.1, [Clang](https://clang.llvm.org) 3.3,
+or any later version. The configure script checks for the availability of C++11 support and
+adds the proper compiler options if necessary.
 
 Quick installation info:
 * type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
@@ -119,7 +124,7 @@ as command-line parameter of configure, e.g.
 
 The tracer module calls Metafont in case of lacking TFM or PFB files
 via a system call. Please ensure that Metafont is installed and
-reachable through the search path.
+reachable through the system's search path.
 
 If you don't like compiling the sources yourself, you can download
 pre-compiled binaries for Windows and MiKTeX from the
