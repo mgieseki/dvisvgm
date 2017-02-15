@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\libs\ff-woff\fontforge\tmpfile2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\fflocale.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libs\ff-woff\fontforge\configure-fontforge.h">
@@ -240,6 +243,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\ff-woff\inc\utype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\fflocale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

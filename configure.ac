@@ -27,7 +27,6 @@ LT_INIT
 AC_PROG_RANLIB
 AC_LANG(C)
 
-AC_CHECK_FUNCS([ftime gettimeofday])
 AC_CHECK_HEADERS([sys/time.h sys/timeb.h xlocale.h])
 AC_HEADER_TIOCGWINSZ
 
@@ -139,7 +138,7 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([memset strcasecmp strtol])
+AC_CHECK_FUNCS([ftime gettimeofday memset strcasecmp strtol uselocale])
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options

@@ -179,6 +179,7 @@
     <ClCompile Include="..\..\libs\ff-woff\fontforge\cvundoes.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\dumppfa.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\encoding.c" />
+    <ClCompile Include="..\..\libs\ff-woff\fontforge\fflocale.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\fvfonts.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\gwwiconv.c" />
     <ClCompile Include="..\..\libs\ff-woff\fontforge\lookups.c" />
@@ -234,6 +235,7 @@
     <ClInclude Include="..\..\libs\ff-woff\fontforge\edgelist.h" />
     <ClInclude Include="..\..\libs\ff-woff\fontforge\edgelist2.h" />
     <ClInclude Include="..\..\libs\ff-woff\fontforge\encoding.h" />
+    <ClInclude Include="..\..\libs\ff-woff\fontforge\fflocale.h" />
     <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforge-config.h" />
     <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforge.h" />
     <ClInclude Include="..\..\libs\ff-woff\fontforge\fontforgevw.h" />

@@ -14,6 +14,8 @@ libfontforge_a_SOURCES = \
 	fontforge/edgelist2.h \
 	fontforge/encoding.c \
 	fontforge/encoding.h \
+	fontforge/fflocale.c \
+	fontforge/fflocale.h \
 	fontforge/fontforge-config.h \
 	fontforge/fontforge.h \
 	fontforge/fontforgevw.h \
