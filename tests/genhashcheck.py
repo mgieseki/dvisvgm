@@ -8,26 +8,27 @@ import re
 import sys
 
 def extract_hashes (fname):
-	with open(fname) as f:
-		lines = f.readlines()
-		found = False
-		for line in lines:
-			if ' hash2unicode = {{\n' in line:
-				found = True
-			elif found:
-				match = re.match(r'\s*{(0x[0-9a-f]{8}),\s*0x[0-9a-f]{4}}, //\s*(.+)\s*$', line)
-				if match:
-					hashval = match.group(1)
-					name = match.group(2)
-					print('\t{}{}, "{}"{},'.format('{', hashval, name, '}'))
-				else:
-					found = False
+    with open(fname) as f:
+        lines = f.readlines()
+        found = False
+        for line in lines:
+            if ' hash2unicode = {{\n' in line:
+                found = True
+            elif found:
+                match = re.match(r'\s*{(0x[0-9a-f]{8}),\s*0x[0-9a-f]{4}}, //\s*(.+)\s*$', line)
+                if match:
+                    hashval = match.group(1)
+                    name = match.group(2)
+                    print('\t{}{}, "{}"{},'.format('{', hashval, name, '}'))
+                else:
+                    found = False
 
 if (len(sys.argv) < 2):
-	sys.exit(1)
+    sys.exit(1)
 
 print("""\
 #include <xxhash.h>
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -35,39 +36,38 @@ print("""\
 using namespace std;
 
 struct NameHash {
-	unsigned hash;
-	string name;
+    uint32_t hash;
+    string name;
 } nameHashes[] = {\
 """)
 extract_hashes(sys.argv[1])
-print(r"""\
-};
+print(r"""};
 
 int main () {
-	unsigned prev_hash=0;
-	size_t size = sizeof(nameHashes)/sizeof(NameHash);
-	if (size == 0) {
-		cout << "hash table is empty\n";
-		return 1;
-	}
-	for (size_t i=0; i < size; i++) {
-		const string &name = nameHashes[i].name;
-		const unsigned hash = nameHashes[i].hash;
-		if (XXH32(&name[0], name.length(), 0) != hash) {
-			cout << "hash of '" << name << "' doesn't match\n";
-			return 1;
-		}
-		if (hash < prev_hash) {
-			cout << "misplaced hash value " << hex << setw(8) << setfill('0') << hash << "\n";
-			return 1;
-		}
-		if (hash == prev_hash) {
-			cout << "colliding hash values " << hex << setw(8) << setfill('0') << hash << "\n";
-			return 1;
-		}
-		prev_hash = hash;
-	}
-	cout << "hash check passed\n";
-	return 0;
+    uint32_t prev_hash=0;
+    size_t size = sizeof(nameHashes)/sizeof(NameHash);
+    if (size == 0) {
+        cout << "hash table is empty\n";
+        return 1;
+    }
+    for (size_t i=0; i < size; i++) {
+        const string &name = nameHashes[i].name;
+        const uint32_t hash = nameHashes[i].hash;
+        if (XXH32(&name[0], name.length(), 0) != hash) {
+            cout << "hash of '" << name << "' doesn't match\n";
+            return 1;
+        }
+        if (hash < prev_hash) {
+            cout << "misplaced hash value " << hex << setw(8) << setfill('0') << hash << "\n";
+            return 1;
+        }
+        if (hash == prev_hash) {
+            cout << "colliding hash values " << hex << setw(8) << setfill('0') << hash << "\n";
+            return 1;
+        }
+        prev_hash = hash;
+    }
+    cout << "hash check passed\n";
+    return 0;
 }
 """)
