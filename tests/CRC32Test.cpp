@@ -37,7 +37,7 @@ TEST(CRC32Test, update_numbers) {
 	const uint32_t comp[]={0xf8923be6, 0x4dcd2866, 0x4fdbb57a, 0xcb40f3bf, 0xf1a33887, 0x3422c816, 0x3a8b92a4, 0xedafc4ce, 0x4f5d17ec, 0x4a9f2f68};
 	for (int i=-5; i < 5; ++i) {
 		crc.update(i);
-		EXPECT_EQ(crc.get(), comp[i+5]);
+		EXPECT_EQ(crc.get(), comp[i+5]) << "i=" << i;
 	}
 	crc.reset();
 	EXPECT_EQ(crc.get(), 0);
@@ -73,7 +73,6 @@ TEST(CRC32Test, update_string) {
 
 TEST(CRC32Test, compute) {
 	EXPECT_EQ(CRC32::compute("dvisvgm converts DVI files to SVG."), 0x7c4ef359);
-	istringstream iss;
-	iss.str("It is published under the GNU General Public License.");
+	istringstream iss("It is published under the GNU General Public License.");
 	EXPECT_EQ(CRC32::compute(iss), 0xbc02ba40);
 }

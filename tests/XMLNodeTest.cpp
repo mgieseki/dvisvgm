@@ -165,8 +165,11 @@ TEST(XMLNodeTest, insertBefore) {
 	EXPECT_TRUE(root.insertBefore(new XMLElementNode("child4"), child2));
 	const char *names[] = {"child3", "child1", "child4", "child2"};
 	const char **p = names;
-	for (const auto &node : root.children())
-		EXPECT_EQ(dynamic_cast<XMLElementNode*>(node.get())->getName(), *p++);
+	for (const auto &node : root.children()) {
+		XMLElementNode *elem = dynamic_cast<XMLElementNode*>(node.get());
+		ASSERT_NE(elem, nullptr);
+		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
+	}
 }
 
 
@@ -185,8 +188,11 @@ TEST(XMLNodeTest, insertAfter) {
 	EXPECT_EQ(root.children().size(), 4);
 	const char *names[] = {"child1", "child3", "child2", "child4"};
 	const char **p = names;
-	for (const auto &node : root.children())
-		EXPECT_EQ(dynamic_cast<XMLElementNode*>(node.get())->getName(), *p++);
+	for (const auto &node : root.children()) {
+		XMLElementNode *elem = dynamic_cast<XMLElementNode*>(node.get());
+		ASSERT_NE(elem, nullptr);
+		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
+	}
 }
 
 

@@ -19,23 +19,25 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <sstream>
+#include <string>
 #include "ToUnicodeMap.hpp"
 
 using namespace std;
 
+#define CHECK_RANGE(ucmap, min, max, minval) check_range(ucmap, min, max, minval, __LINE__)
 
-static void check_range (const ToUnicodeMap &ucmap, int min, int max, int minval) {
-	for (int i=min; i <= max; i++)
-		ASSERT_EQ(ucmap.valueAt(i), minval+(i-min));
+static void check_range (const ToUnicodeMap &ucmap, uint32_t min, uint32_t max, uint32_t minval, int line) {
+	for (uint32_t i=min; i <= max; i++)
+		ASSERT_EQ(ucmap.valueAt(i), minval+(i-min)) << __FILE__ << ":" << line << ": i=" << i;
 }
 
 
 TEST(ToUnicodeMapTest, addMissingMappings1) {
 	ToUnicodeMap ucmap;
-	bool success = ucmap.addMissingMappings(20);
-	ASSERT_TRUE(success);
+	ASSERT_TRUE(ucmap.addMissingMappings(20));
 	ASSERT_EQ(ucmap.size(), 1);
-	check_range(ucmap, 1, 20, 1);
+	CHECK_RANGE(ucmap, 1, 20, 1);
 }
 
 
@@ -43,18 +45,15 @@ TEST(ToUnicodeMapTest, addMissingMappings2) {
 	ToUnicodeMap ucmap;
 	ucmap.addRange(5, 8, 40);
 	ASSERT_EQ(ucmap.size(), 1);
-	check_range(ucmap, 5, 8, 40);
+	CHECK_RANGE(ucmap, 5, 8, 40);
 
 	ucmap.addRange(10, 15, 50);
 	ASSERT_EQ(ucmap.size(), 2);
-	check_range(ucmap, 5, 8, 40);
-	check_range(ucmap, 10, 15, 50);
+	CHECK_RANGE(ucmap, 5, 8, 40);
+	CHECK_RANGE(ucmap, 10, 15, 50);
 
-	bool success = ucmap.addMissingMappings(20);
-	ASSERT_TRUE(success);
+	ASSERT_TRUE(ucmap.addMissingMappings(20));
 	ASSERT_EQ(ucmap.size(), 2);
-	check_range(ucmap, 1, 9, 36);
-	check_range(ucmap, 10, 20, 50);
+	CHECK_RANGE(ucmap, 1, 9, 36);
+	CHECK_RANGE(ucmap, 10, 20, 50);
 }
-
-

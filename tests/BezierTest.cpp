@@ -128,7 +128,7 @@ TEST(BezierTest, approximate) {
 	EXPECT_EQ(points.size(), size);
 	EXPECT_EQ(times.size(), size);
 	for (int i=0; i < size; i++) {
-		EXPECT_EQ(times[i], t[i]);
+		EXPECT_EQ(times[i], t[i]) << "i=" << i;
 		EXPECT_PAIR_NEAR(points[i], p[i]);
 	}
 }
