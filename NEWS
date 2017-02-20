@@ -1,3 +1,7 @@
+dvisvgm-2.1.3 (2017-02-20)
+- fixed build failures of libfontforge on Solaris 10
+- increased code portablity
+
 dvisvgm-2.1.2 (2017-02-12)
 - bundled the googletest sources to simplify building and executing the tests
 - fixed a couple of issues related to LLVM's libc++
