@@ -118,16 +118,16 @@ TEST(BezierTest, approximate) {
 	vector<DPair> points;
 	vector<double> times;
 	Bezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
-	int size = bezier.approximate(0.1, points, &times);
+	size_t size = bezier.approximate(0.1, points, &times);
 	double t[] = {0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 1};
 	DPair p[] = {
 		DPair(0,0), DPair(4.488,3.681), DPair(8.906,5.828), DPair(13.183,6.591),
 		DPair(17.25,6.125), DPair(21.035,4.580), DPair(24.468,2.109), DPair(30,-5)
 	};
-	EXPECT_EQ(size, sizeof(t)/sizeof(double));
+	EXPECT_EQ(size, (size_t)sizeof(t)/sizeof(double));
 	EXPECT_EQ(points.size(), size);
 	EXPECT_EQ(times.size(), size);
-	for (int i=0; i < size; i++) {
+	for (size_t i=0; i < size; i++) {
 		EXPECT_EQ(times[i], t[i]) << "i=" << i;
 		EXPECT_PAIR_NEAR(points[i], p[i]);
 	}

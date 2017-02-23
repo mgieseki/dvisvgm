@@ -54,7 +54,7 @@ class JFMReaderTest : public ::testing::Test
 
 
 TEST_F(JFMReaderTest, properties) {
-	ASSERT_EQ(jfm->getChecksum(), 0);
+	ASSERT_EQ(jfm->getChecksum(), 0u);
 	ASSERT_FALSE(jfm->verticalLayout());
 	ASSERT_EQ(jfm->firstChar(), 0);
 	ASSERT_EQ(jfm->lastChar(), 1);

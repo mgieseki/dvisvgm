@@ -42,9 +42,9 @@ TEST(UnicodeTest, charToCodepoint) {
 		EXPECT_EQ(Unicode::charToCodepoint(i), i) << "i=" << i;
 	for (uint32_t i=0x7f; i <= 0x9f; i++)
 		EXPECT_EQ(Unicode::charToCodepoint(i), 0xe021+i-0x7f) << "i=" << i;
-	EXPECT_EQ(Unicode::charToCodepoint(0x10fffd), 0x10fffd);
-	EXPECT_EQ(Unicode::charToCodepoint(0x10fffe), 0xe887);
-	EXPECT_EQ(Unicode::charToCodepoint(0x10ffff), 0xe888);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10fffd), 0x10fffdu);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10fffe), 0xe887u);
+	EXPECT_EQ(Unicode::charToCodepoint(0x10ffff), 0xe888u);
 }
 
 

@@ -47,7 +47,7 @@ TEST(StreamWriterTest, writeStringCRC) {
 	string str = "dvisvgm converts DVI files to SVG.";
 	writer.writeString(str, crc);
 	EXPECT_EQ(oss.str(), str);
-	EXPECT_EQ(crc.get(), 0x7C4EF359);
+	EXPECT_EQ(crc.get(), 0x7C4EF359u);
 
 	oss.str("");
 	crc.reset();

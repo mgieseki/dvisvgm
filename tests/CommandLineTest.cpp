@@ -35,8 +35,8 @@ TEST(CommandLineTest, noarg_short) {
 	EXPECT_TRUE(cmd.helpOpt.given());
 	EXPECT_FALSE(cmd.listSpecialsOpt.given());
 	EXPECT_FALSE(cmd.verbosityOpt.given());
-	EXPECT_EQ(cmd.verbosityOpt.value(), 7);
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.verbosityOpt.value(), 7u);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 }
 
 
@@ -52,9 +52,9 @@ TEST(CommandLineTest, noarg_long) {
 	EXPECT_TRUE(cmd.noFontsOpt.given());
 	EXPECT_TRUE(cmd.helpOpt.given());
 	EXPECT_FALSE(cmd.listSpecialsOpt.given());
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.verbosityOpt.given());
-	EXPECT_EQ(cmd.verbosityOpt.value(), 5);
+	EXPECT_EQ(cmd.verbosityOpt.value(), 5u);
 }
 
 
@@ -74,11 +74,11 @@ TEST(CommandLineTest, arg_short) {
 	EXPECT_EQ(cmd.outputOpt.value(), "myfile.xyz");
 	EXPECT_FALSE(cmd.bboxOpt.given());
 	EXPECT_EQ(cmd.bboxOpt.value(), "min");
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.traceAllOpt.given());
 	EXPECT_TRUE(cmd.traceAllOpt.value());
 	EXPECT_TRUE(cmd.verbosityOpt.given());
-	EXPECT_EQ(cmd.verbosityOpt.value(), 3);
+	EXPECT_EQ(cmd.verbosityOpt.value(), 3u);
 }
 
 
@@ -110,7 +110,7 @@ TEST(CommandLineTest, arg_separated) {
 	EXPECT_EQ(cmd.pageOpt.value(), "5");
 	EXPECT_TRUE(cmd.rotateOpt.given());
 	EXPECT_EQ(cmd.rotateOpt.value(), 45);
-	EXPECT_EQ(cmd.filenames().size(), 1);
+	EXPECT_EQ(cmd.filenames().size(), 1u);
 	EXPECT_TRUE(cmd.traceAllOpt.given());
 	EXPECT_FALSE(cmd.traceAllOpt.value());
 }
@@ -130,7 +130,7 @@ TEST(CommandLineTest, arg_long) {
 	EXPECT_EQ(cmd.outputOpt.value(), "myfile.zyx");
 	EXPECT_FALSE(cmd.bboxOpt.given());
 	EXPECT_EQ(cmd.bboxOpt.value(), "min");
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.traceAllOpt.given());
 	EXPECT_FALSE(cmd.traceAllOpt.value());
 }
@@ -163,7 +163,7 @@ TEST(CommandLineTest, abbrev_long) {
 	EXPECT_EQ(cmd.outputOpt.value(), "myfile.zyx");
 	EXPECT_FALSE(cmd.bboxOpt.given());
 	EXPECT_EQ(cmd.bboxOpt.value(), "min");
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.colorOpt.given());
 }
 
@@ -185,7 +185,7 @@ TEST(CommandLineTest, error) {
 	EXPECT_FALSE(cmd.pageOpt.given());
 	EXPECT_EQ(cmd.pageOpt.value(), "1");
 	EXPECT_FALSE(cmd.rotateOpt.given());
-	EXPECT_EQ(cmd.filenames().size(), 0);
+	EXPECT_EQ(cmd.filenames().size(), 0u);
 
 	// error on ambiguous abbreviation of long option
 	const char *args3[] = {"progname", "--no"};
@@ -211,7 +211,7 @@ TEST(CommandLineTest, file) {
 	EXPECT_TRUE(cmd.zipOpt.given());
 	EXPECT_EQ(cmd.zipOpt.value(), 5);
 	EXPECT_TRUE(cmd.listSpecialsOpt.given());
-	EXPECT_EQ(cmd.filenames().size(), 2);
+	EXPECT_EQ(cmd.filenames().size(), 2u);
 	EXPECT_EQ(cmd.filenames()[0], "myfile1");
 	EXPECT_EQ(cmd.filenames()[1], "myfile2");
 }
@@ -227,7 +227,7 @@ TEST(CommandLineTest, files_only) {
 	EXPECT_EQ(cmd.pageOpt.value(), "3");
 	EXPECT_TRUE(cmd.zipOpt.given());
 	EXPECT_EQ(cmd.zipOpt.value(), 5);
-	EXPECT_EQ(cmd.filenames().size(), 2);
+	EXPECT_EQ(cmd.filenames().size(), 2u);
 	EXPECT_EQ(cmd.filenames()[0], "-l");
 	EXPECT_EQ(cmd.filenames()[1], "myfile");
 }

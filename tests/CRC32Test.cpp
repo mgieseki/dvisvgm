@@ -26,9 +26,9 @@ using namespace std;
 
 TEST(CRC32Test, init) {
 	CRC32 crc;
-	EXPECT_EQ(crc.get(), 0);
+	EXPECT_EQ(crc.get(), 0u);
 	crc.reset();
-	EXPECT_EQ(crc.get(), 0);
+	EXPECT_EQ(crc.get(), 0u);
 }
 
 
@@ -40,14 +40,14 @@ TEST(CRC32Test, update_numbers) {
 		EXPECT_EQ(crc.get(), comp[i+5]) << "i=" << i;
 	}
 	crc.reset();
-	EXPECT_EQ(crc.get(), 0);
+	EXPECT_EQ(crc.get(), 0u);
 	// add 32 bit values
 	for (int i=0; i < 256; ++i)
 		crc.update(i);
 	EXPECT_EQ(crc.get(), 0xd4c2968b);
 	for (int i=256; i < 10000; ++i)
 		crc.update(i);
-	EXPECT_EQ(crc.get(), 0x6de9e841);
+	EXPECT_EQ(crc.get(), 0x6de9e841u);
 }
 
 
@@ -58,21 +58,21 @@ TEST(CRC32Test, update_array) {
 	for (int i=0; i < 256; ++i)
 		vals[i] = i;
 	crc.update(vals, 256);
-	EXPECT_EQ(crc.get(), 0x29058c73);
+	EXPECT_EQ(crc.get(), 0x29058c73u);
 }
 
 
 TEST(CRC32Test, update_string) {
 	CRC32 crc;
 	crc.update("dvisvgm converts DVI files to SVG.");
-	EXPECT_EQ(crc.get(), 0x7c4ef359);
+	EXPECT_EQ(crc.get(), 0x7c4ef359u);
 	crc.update("It is published under the GNU General Public License.");
-	EXPECT_EQ(crc.get(), 0xa732081b);
+	EXPECT_EQ(crc.get(), 0xa732081bu);
 }
 
 
 TEST(CRC32Test, compute) {
-	EXPECT_EQ(CRC32::compute("dvisvgm converts DVI files to SVG."), 0x7c4ef359);
+	EXPECT_EQ(CRC32::compute("dvisvgm converts DVI files to SVG."), 0x7c4ef359u);
 	istringstream iss("It is published under the GNU General Public License.");
-	EXPECT_EQ(CRC32::compute(iss), 0xbc02ba40);
+	EXPECT_EQ(CRC32::compute(iss), 0xbc02ba40u);
 }

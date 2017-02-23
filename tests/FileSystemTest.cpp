@@ -77,7 +77,7 @@ TEST(FileSystemTest, filesize) {
 	for (int i=0; i < 123; ++i)
 		ofs.put(i);
 	ofs.close();
-	EXPECT_EQ(FileSystem::filesize(tmpfile), 123);
+	EXPECT_EQ(FileSystem::filesize(tmpfile), 123u);
 	FileSystem::remove(tmpfile);
 }
 

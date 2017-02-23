@@ -49,12 +49,12 @@ TEST(StreamReaderTest, readStringCRC) {
 	CRC32 crc;
 	string str2 = reader.readString(iss.str().length(), crc);
 	EXPECT_EQ(str1, str2);
-	EXPECT_EQ(crc.get(), 0x7c4ef359);
+	EXPECT_EQ(crc.get(), 0x7c4ef359u);
 	iss.clear();
 	iss.str(str1);
 	crc.reset();
 	str2 = reader.readString(crc, false);
-	EXPECT_EQ(crc.get(), 0x7c4ef359);
+	EXPECT_EQ(crc.get(), 0x7c4ef359u);
 }
 
 
@@ -63,7 +63,7 @@ TEST(StreamReaderTest, readUnsigned) {
 	istringstream iss(str);
 	StreamReader reader(iss);
 	uint32_t val = reader.readUnsigned(4);
-	EXPECT_EQ(val, 0x01020304);
+	EXPECT_EQ(val, 0x01020304u);
 }
 
 
@@ -73,8 +73,8 @@ TEST(StreamReaderTest, readUnsignedCRC) {
 	StreamReader reader(iss);
 	CRC32 crc;
 	uint32_t val = reader.readUnsigned(4, crc);
-	EXPECT_EQ(val, 0x01020304);
-	EXPECT_EQ(crc.get(), 0xb63cfbcd);
+	EXPECT_EQ(val, 0x01020304u);
+	EXPECT_EQ(crc.get(), 0xb63cfbcdu);
 }
 
 
@@ -83,7 +83,7 @@ TEST(StreamReaderTest, readSigned) {
 	istringstream iss(str);
 	StreamReader reader(iss);
 	int32_t val = reader.readSigned(4);
-	EXPECT_EQ(val, 0xffeeddcc);
+	EXPECT_EQ(val, int32_t(0xffeeddcc));
 }
 
 
@@ -93,8 +93,8 @@ TEST(StreamReaderTest, readSignedCRC) {
 	StreamReader reader(iss);
 	CRC32 crc;
 	int32_t val = reader.readSigned(4, crc);
-	EXPECT_EQ(val, 0xffeeddcc);
-	EXPECT_EQ(crc.get(), 0xfa79118e);
+	EXPECT_EQ(val, int32_t(0xffeeddcc));
+	EXPECT_EQ(crc.get(), 0xfa79118eu);
 }
 
 
@@ -124,9 +124,9 @@ TEST(StreamReaderTest, readBytesCRC) {
 	EXPECT_EQ(bytes[1], 0xee);
 	EXPECT_EQ(bytes[2], 0xdd);
 	EXPECT_EQ(bytes[3], 0);
-	EXPECT_EQ(crc.get(), 0x68ab9f15);
+	EXPECT_EQ(crc.get(), 0x68ab9f15u);
 	int byte = reader.readByte(crc);
 	EXPECT_EQ(byte, 0xcc);
-	EXPECT_EQ(crc.get(), 0x2d652e62);
+	EXPECT_EQ(crc.get(), 0x2d652e62u);
 }
 

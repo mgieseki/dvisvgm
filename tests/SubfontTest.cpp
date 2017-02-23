@@ -57,7 +57,7 @@ TEST_F(SubfontTest, read_table) {
 		if (SubfontDefinition *sfd = SubfontDefinition::lookup("sample")) {
 			// check scanning of single value entries
 			Subfont *subfont = sfd->subfont("02");
-			ASSERT_TRUE(subfont != 0);
+			ASSERT_NE(subfont, nullptr);
 			EXPECT_EQ(subfont->id(), "02");
 			EXPECT_EQ(subfont->decode(0), 0xff45);
 			EXPECT_EQ(subfont->decode(1), 0xff46);
@@ -68,7 +68,7 @@ TEST_F(SubfontTest, read_table) {
 
 			// check scanning of ranges
 			subfont = sfd->subfont("x1");
-			ASSERT_TRUE(subfont != 0);
+			ASSERT_NE(subfont, nullptr);
 			EXPECT_EQ(subfont->id(), "x1");
 			EXPECT_EQ(subfont->decode(0), 0x0010);
 			EXPECT_EQ(subfont->decode(1), 0x0011);

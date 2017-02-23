@@ -98,13 +98,14 @@ TEST(SVGOutputTest, getPageStream) {
 		EXPECT_TRUE(dynamic_cast<ofstream*>(os1));
 		ostream *os2 = &out.getPageStream(1, 10);
 		EXPECT_EQ(os1, os2);
-		FileSystem::remove("SVGOutputTest-01.svg");
-	}{
+	}
+	FileSystem::remove("SVGOutputTest-01.svg");
+	{
 		SVGOutput out("SVGOutputTest.cpp", "%f-%p", 9);
 		ostream *os = &out.getPageStream(1, 10);
 		EXPECT_TRUE(dynamic_cast<ZLibOutputStream*>(os));
-		FileSystem::remove("SVGOutputTest-01.svgz");
 	}
+	FileSystem::remove("SVGOutputTest-01.svgz");
 }
 
 

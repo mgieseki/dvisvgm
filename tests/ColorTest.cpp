@@ -201,14 +201,14 @@ TEST(ColorTest, set) {
 	vector<double> vec{0.1, 0.2, 0.3, 0.4};
 	VectorIterator<double> it(vec);
 	color.set(Color::ColorSpace::GRAY, it);
-	EXPECT_EQ(uint32_t(color), 0x1a1a1a);
+	EXPECT_EQ(uint32_t(color), 0x1a1a1au);
 	it.reset();
 	color.set(Color::ColorSpace::RGB, it);
-	EXPECT_EQ(uint32_t(color), 0x1a334d);
+	EXPECT_EQ(uint32_t(color), 0x1a334du);
 	it.reset();
 	color.set(Color::ColorSpace::CMYK, it);
-	EXPECT_EQ(uint32_t(color), 0x8a7a6b);
+	EXPECT_EQ(uint32_t(color), 0x8a7a6bu);
 	it.reset();
 	color.set(Color::ColorSpace::LAB, it);
-	EXPECT_EQ(uint32_t(color), 0x010000);
+	EXPECT_EQ(uint32_t(color), 0x010000u);
 }

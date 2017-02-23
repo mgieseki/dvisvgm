@@ -119,25 +119,25 @@ TEST(SplittedCharInputBufferTest, parseUInt_base) {
 	BufferInputReader in(buffer);
 	unsigned n;
 	EXPECT_TRUE(in.parseUInt(10, n));
-	EXPECT_EQ(n, 1234);
+	EXPECT_EQ(n, 1234u);
 	EXPECT_EQ(in.get(), ',');
 
 	EXPECT_FALSE(in.parseUInt(10, n));
 	in.get();
 	EXPECT_TRUE(in.parseUInt(10, n));
-	EXPECT_EQ(n, 5);
+	EXPECT_EQ(n, 5u);
 	EXPECT_EQ(in.get(), ',');
 
 	EXPECT_TRUE(in.parseUInt(16, n));
-	EXPECT_EQ(n, 16);
+	EXPECT_EQ(n, 16u);
 	EXPECT_EQ(in.get(), ',');
 
 	EXPECT_TRUE(in.parseUInt(16, n));
-	EXPECT_EQ(n, 0x1abc);
+	EXPECT_EQ(n, 0x1ABCu);
 	EXPECT_EQ(in.get(), ',');
 
 	EXPECT_TRUE(in.parseUInt(8, n));
-	EXPECT_EQ(n, 01234);
+	EXPECT_EQ(n, 01234u);
 	EXPECT_EQ(in.get(), 'a');
 }
 

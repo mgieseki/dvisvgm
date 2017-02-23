@@ -47,7 +47,7 @@ TEST(PageRangesTest, single) {
 	ASSERT_TRUE(pr.parse("123"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(123,123));
-	ASSERT_EQ(pr.numberOfPages(), 1);
+	ASSERT_EQ(pr.numberOfPages(), 1u);
 }
 
 
@@ -56,7 +56,7 @@ TEST(PageRangesTest, single_range) {
 	ASSERT_TRUE(pr.parse("3-19"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(3,19));
-	ASSERT_EQ(pr.numberOfPages(), 17);
+	ASSERT_EQ(pr.numberOfPages(), 17u);
 }
 
 
@@ -65,7 +65,7 @@ TEST(PageRangesTest, single_range_inv) {
 	ASSERT_TRUE(pr.parse("19-3"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(3,19));
-	ASSERT_EQ(pr.numberOfPages(), 17);
+	ASSERT_EQ(pr.numberOfPages(), 17u);
 }
 
 
@@ -74,7 +74,7 @@ TEST(PageRangesTest, single_range_lopen) {
 	ASSERT_TRUE(pr.parse("-19"));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(1,19));
-	ASSERT_EQ(pr.numberOfPages(), 19);
+	ASSERT_EQ(pr.numberOfPages(), 19u);
 }
 
 
@@ -83,24 +83,24 @@ TEST(PageRangesTest, single_range_ropen) {
 	ASSERT_TRUE(pr.parse("4-", 100));
 	ASSERT_FALSE(pr.ranges().empty());
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(4,100));
-	ASSERT_EQ(pr.numberOfPages(), 97);
+	ASSERT_EQ(pr.numberOfPages(), 97u);
 }
 
 
 TEST(PageRangesTest, multiple1) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("11,6,9,1,75,6,3"));
-	ASSERT_EQ(pr.size(), 6);
+	ASSERT_EQ(pr.size(), 6u);
 	Range cmp[] = {{1,1},{3,3},{6,6},{9,9},{11,11},{75,75}};
 	ASSERT_TRUE(is_equal(pr, cmp));
-	ASSERT_EQ(pr.numberOfPages(), 6);
+	ASSERT_EQ(pr.numberOfPages(), 6u);
 }
 
 
 TEST(PageRangesTest, multiple2) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("2,6,9,1,75,6,3"));
-	ASSERT_EQ(pr.size(), 4);
+	ASSERT_EQ(pr.size(), 4u);
 	Range cmp[] = {{1,3},{6,6},{9,9},{75,75}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 }
@@ -109,7 +109,7 @@ TEST(PageRangesTest, multiple2) {
 TEST(PageRangesTest, multiple3) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("2,6,9-11,1,25-,19-13,6,3", 100));
-	ASSERT_EQ(pr.size(), 5);
+	ASSERT_EQ(pr.size(), 5u);
 	Range cmp[] = {{1,3},{6,6},{9,11},{13,19},{25,100}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 }
@@ -118,7 +118,7 @@ TEST(PageRangesTest, multiple3) {
 TEST(PageRangesTest, overlap1) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("5-11, 8-15"));
-	ASSERT_EQ(pr.size(), 1);
+	ASSERT_EQ(pr.size(), 1u);
 	Range cmp[] = {{5,15}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 }
@@ -127,7 +127,7 @@ TEST(PageRangesTest, overlap1) {
 TEST(PageRangesTest, overlap2) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("23-30, 5-11, 17-23, 12-19"));
-	ASSERT_EQ(pr.size(), 1);
+	ASSERT_EQ(pr.size(), 1u);
 	Range cmp[] = {{5,30}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 }
@@ -136,7 +136,7 @@ TEST(PageRangesTest, overlap2) {
 TEST(PageRangesTest, overlap3) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("22-30, 5-11, 21-23, 12-19"));
-	ASSERT_EQ(pr.size(), 2);
+	ASSERT_EQ(pr.size(), 2u);
 	Range cmp[] = {{5,19},{21,30}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 }
@@ -145,11 +145,11 @@ TEST(PageRangesTest, overlap3) {
 TEST(PageRangesTest, overlap4) {
 	PageRanges pr;
 	ASSERT_TRUE(pr.parse("-15, 20-, 8, 12-16, 18-19", 100));
-	ASSERT_EQ(pr.size(), 2);
+	ASSERT_EQ(pr.size(), 2u);
 	Range cmp[] = {{1,16},{18,100}};
 	ASSERT_TRUE(is_equal(pr, cmp));
 	ASSERT_TRUE(pr.parse("17"));
-	ASSERT_EQ(pr.size(), 1);
+	ASSERT_EQ(pr.size(), 1u);
 	ASSERT_EQ(pr.ranges().front(), PageRanges::Range(1,100));
 }
 

@@ -82,41 +82,41 @@ const char *CMapReaderTest::cmapsrc =
 
 
 TEST_F(CMapReaderTest, rostring) {
-	ASSERT_TRUE(cmap != 0);
+	ASSERT_NE(cmap, nullptr);
 	ASSERT_EQ(cmap->getROString(), "Adobe-Adobe_Japan1_UCS2");
 	ASSERT_FALSE(cmap->vertical());
 }
 
 
 TEST_F(CMapReaderTest, bfcode) {
-	ASSERT_TRUE(cmap != 0);
+	ASSERT_NE(cmap, nullptr);
 	ASSERT_EQ(cmap->getROString(), "Adobe-Adobe_Japan1_UCS2");
 	ASSERT_FALSE(cmap->vertical());
-	ASSERT_EQ(cmap->bfcode(0), 0xfffd);
-	ASSERT_EQ(cmap->bfcode(0x3d), 0xa5);
-	ASSERT_EQ(cmap->bfcode(0x5d), 0xa6);
-	ASSERT_EQ(cmap->bfcode(0x5e), 0x7d);
-	ASSERT_EQ(cmap->bfcode(0x5f), 0x303);
-	ASSERT_EQ(cmap->bfcode(0x60), 0x2019);
-	ASSERT_EQ(cmap->bfcode(0x5830), 0x8c75);
-	ASSERT_EQ(cmap->bfcode(0x5831), 0x8c76);
-	ASSERT_EQ(cmap->bfcode(0x5833), 0x8c86);
-	ASSERT_EQ(cmap->bfcode(0x5838), 0x8c9c);
-	ASSERT_EQ(cmap->bfcode(0x5839), 0);
+	ASSERT_EQ(cmap->bfcode(0), 0xfffdu);
+	ASSERT_EQ(cmap->bfcode(0x3d), 0xa5u);
+	ASSERT_EQ(cmap->bfcode(0x5d), 0xa6u);
+	ASSERT_EQ(cmap->bfcode(0x5e), 0x7du);
+	ASSERT_EQ(cmap->bfcode(0x5f), 0x303u);
+	ASSERT_EQ(cmap->bfcode(0x60), 0x2019u);
+	ASSERT_EQ(cmap->bfcode(0x5830), 0x8c75u);
+	ASSERT_EQ(cmap->bfcode(0x5831), 0x8c76u);
+	ASSERT_EQ(cmap->bfcode(0x5833), 0x8c86u);
+	ASSERT_EQ(cmap->bfcode(0x5838), 0x8c9cu);
+	ASSERT_EQ(cmap->bfcode(0x5839), 0u);
 }
 
 TEST_F(CMapReaderTest, cid) {
 	const SegmentedCMap *seg_cmap = dynamic_cast<const SegmentedCMap*>(cmap.get());
-	ASSERT_TRUE(seg_cmap != 0);
-	ASSERT_EQ(seg_cmap->numBFRanges(), 9);
-	ASSERT_EQ(seg_cmap->numCIDRanges(), 2);
-	ASSERT_EQ(seg_cmap->cid(0x1233), 0);
-	ASSERT_EQ(seg_cmap->cid(0x1234), 100);
-	ASSERT_EQ(seg_cmap->cid(0x1240), 112);
-	ASSERT_EQ(seg_cmap->cid(0x1241), 0);
-	ASSERT_EQ(seg_cmap->cid(0x12FF), 0);
-	ASSERT_EQ(seg_cmap->cid(0x1300), 200);
-	ASSERT_EQ(seg_cmap->cid(0x1301), 201);
-	ASSERT_EQ(seg_cmap->cid(0x1302), 202);
-	ASSERT_EQ(seg_cmap->cid(0x1303), 0);
+	ASSERT_NE(seg_cmap, nullptr);
+	ASSERT_EQ(seg_cmap->numBFRanges(), 9u);
+	ASSERT_EQ(seg_cmap->numCIDRanges(), 2u);
+	ASSERT_EQ(seg_cmap->cid(0x1233), 0u);
+	ASSERT_EQ(seg_cmap->cid(0x1234), 100u);
+	ASSERT_EQ(seg_cmap->cid(0x1240), 112u);
+	ASSERT_EQ(seg_cmap->cid(0x1241), 0u);
+	ASSERT_EQ(seg_cmap->cid(0x12FF), 0u);
+	ASSERT_EQ(seg_cmap->cid(0x1300), 200u);
+	ASSERT_EQ(seg_cmap->cid(0x1301), 201u);
+	ASSERT_EQ(seg_cmap->cid(0x1302), 202u);
+	ASSERT_EQ(seg_cmap->cid(0x1303), 0u);
 }
