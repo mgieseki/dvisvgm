@@ -15,66 +15,105 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\backward_references.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\backward_references.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\block_splitter.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\bit_cost.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\brotli_bit_stream.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\block_splitter.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\brotli_bit_stream.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment_two_pass.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\cluster.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\dictionary.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\encode.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment_two_pass.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\encode_parallel.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\encode.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\entropy_encode.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\entropy_encode.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\histogram.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\histogram.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\literal_cost.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\literal_cost.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\metablock.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\memory.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\static_dict.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\metablock.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\streams.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\static_dict.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\woff2\brotli\enc\utf8_util.cc">
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\utf8_util.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\woff2\brotli\common\dictionary.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\libs\woff2\brotli\common\constants.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\common\dictionary.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\common\version.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\include\brotli\decode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\include\brotli\encode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\include\brotli\port.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\include\brotli\types.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\backward_references.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\backward_references_inc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\bit_cost.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\bit_cost_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\block_encoder_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\block_splitter.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\block_splitter_inc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\brotli_bit_stream.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\cluster.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\cluster_inc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\command.h">
@@ -86,22 +125,10 @@
     <ClInclude Include="..\..\libs\woff2\brotli\enc\compress_fragment_two_pass.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\compressor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\context.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\dictionary.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\dictionary_hash.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\encode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\encode_parallel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\entropy_encode.h">
@@ -119,19 +146,40 @@
     <ClInclude Include="..\..\libs\woff2\brotli\enc\hash.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_forgetful_chain_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_longest_match_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_longest_match_quickly_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\histogram.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\histogram_inc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\literal_cost.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\memory.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\metablock.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\metablock_inc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\port.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\prefix.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\quality.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\ringbuffer.h">
@@ -141,15 +189,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\static_dict_lut.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\streams.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\transform.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\brotli\enc\types.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\woff2\brotli\enc\utf8_util.h">

@@ -248,7 +248,6 @@ AM_CFLAGS +=  \
 	-I$(top_srcdir)/libs/ff-woff/inc
 
 AM_CXXFLAGS +=  \
-	-I$(top_srcdir)/libs/woff2/brotli/enc \
 	-I$(top_srcdir)/libs/woff2/src
 endif
 
