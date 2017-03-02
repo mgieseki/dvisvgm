@@ -3,10 +3,12 @@
 ##
 ## Process this file with automake.
 
-bin_PROGRAMS         = dvisvgm
-noinst_LIBRARIES     = libdvisvgm.a
+bin_PROGRAMS     = dvisvgm
+noinst_LIBRARIES = libdvisvgm.a
 
-dvisvgm_SOURCES      = dvisvgm.cpp
+dvisvgm_SOURCES = \
+	CommandLine.hpp \
+	dvisvgm.cpp 
 
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
@@ -55,7 +57,6 @@ libdvisvgm_a_SOURCES = \
 	Color.hpp \
 	ColorSpecialHandler.cpp \
 	ColorSpecialHandler.hpp \
-	CommandLine.hpp \
 	CRC32.cpp \
 	CRC32.hpp \
 	DependencyGraph.hpp \
@@ -248,14 +249,15 @@ AM_CFLAGS +=  \
 	-I$(top_srcdir)/libs/ff-woff/inc
 
 AM_CXXFLAGS +=  \
-	-I$(top_srcdir)/libs/woff2/src
+	-I$(top_srcdir)/libs/woff2/src \
+	-I$(top_srcdir)/libs/woff2/brotli/include
 endif
 
 AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 
 # the command-line parser class is generated from options.xml by opt2cpp
 $(srcdir)/CommandLine.hpp: options.xml
-	rm -f $@ $*.hpp
+	rm -f $@
 	python $(srcdir)/opt2cpp.py $< >$@
 
 # Create a C string definition containing the PostScript routines psdefs.ps needed by class PSInterpreter

@@ -21,6 +21,7 @@
 #include <clipper.hpp>
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <potracelib.h>
 #include <sstream>
 #include <xxhash.h>
@@ -42,9 +43,11 @@
 #include "SignalHandler.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
+#include "utility.hpp"
 #include "version.hpp"
 
 #ifndef DISABLE_WOFF
+#include <brotli/encode.h>
 #include "ffwrapper.h"
 #endif
 
@@ -163,36 +166,94 @@ static bool check_bbox (const string &bboxstr) {
 }
 
 
+// Helper class to generate a list of version information of the used libraries.
+class VersionInfo {
+	public:
+		void add (const string &name, const string &version, bool ignoreEmpty=false) {
+			if (!version.empty() || !ignoreEmpty)
+				append(name, util::trim(version));
+		}
+
+		void add (const string &name, const char *version, bool ignoreEmpty=false) {
+			if (version && *version)
+				append(name, util::trim(version));
+			else if (!ignoreEmpty)
+				append(name, "");
+		}
+
+		/** Adds a version number given as a single unsigned integer, and optionally
+		 *  extracts its components, e.g. 0x00010203 => "1.2.3" (3 components separated
+		 *  by multiples of 256).
+		 *  @param[in] name library name
+		 *  @param[in] version version number
+		 *  @param[in] compcount number of components the version consists of
+		 *  @param[in] factor factor used to separate the components */
+		void add (const string &name, uint32_t version, int compcount=1, uint32_t factor=0xffffffff) {
+			string str;
+			while (compcount-- > 0) {
+				if (!str.empty())
+					str.insert(0, ".");
+				str.insert(0, to_string(version % factor));
+				version /= factor;
+			}
+			append(name, str);
+		}
+
+		/** Writes the version information to the given output stream. */
+		void write (ostream &os) {
+			typedef pair<string,string> Entry;
+			_versionPairs.sort([](const Entry &e1, const Entry &e2) {
+				string name1 = e1.first, name2 = e2.first;
+				return util::tolower(name1) < util::tolower(name2);
+			});
+			size_t maxNameLength=0;
+			for (const Entry &versionPair : _versionPairs)
+				maxNameLength = max(maxNameLength, versionPair.first.length());
+			for (const Entry &versionPair : _versionPairs) {
+				string name = versionPair.first+":";
+				os << left << setw(maxNameLength+2) << name;
+				os << (versionPair.second.empty() ? "unknown" : versionPair.second) << '\n';
+			}
+		}
+
+	protected:
+		void append (const string &name, const string &version) {
+			_versionPairs.emplace_back(pair<string,string>(name, version));
+		}
+
+	private:
+		list<pair<string,string>> _versionPairs;
+};
+
+
 static void print_version (bool extended) {
 	ostringstream oss;
 	oss << "dvisvgm " << PROGRAM_VERSION;
 	if (extended) {
+#ifdef TARGET_SYSTEM
 		if (strlen(TARGET_SYSTEM) > 0)
 			oss << " (" TARGET_SYSTEM ")";
-		int len = oss.str().length();
-		oss << "\n" << string(len, '-') << "\n"
-			"clipper:     " << CLIPPER_VERSION "\n";
+#endif
+		oss << "\n" << string(oss.str().length(), '-') << '\n';
+		cout << oss.str();
+		VersionInfo versionInfo;
+		versionInfo.add("clipper", CLIPPER_VERSION);
+		versionInfo.add("freetype", FontEngine::version());
+		versionInfo.add("potrace", strchr(potrace_version(), ' '));
+		versionInfo.add("xxhash", XXH_versionNumber(), 3, 100);
+		versionInfo.add("zlib", zlibVersion());
+		versionInfo.add("Ghostscript", Ghostscript().revision(true), true);
 #ifndef DISABLE_WOFF
-		oss << "fontforge:   " << ff_version() << '\n';
+		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
+		versionInfo.add("fontforge", ff_version());
 #endif
-		oss << "freetype:    " << FontEngine::version() << "\n";
-
-		Ghostscript gs;
-		string gsver = gs.revision(true);
-		if (!gsver.empty())
-			oss << "Ghostscript: " << gsver + "\n";
-		const unsigned xxh_ver = XXH_versionNumber();
-		oss <<
 #ifdef MIKTEX
-			"MiKTeX:      " << FileFinder::instance().version() << "\n"
+		versionInfo.add("MiKTeX", FileFinder::instance().version());
 #else
-			"kpathsea:    " << FileFinder::instance().version() << "\n"
+		versionInfo.add("kpathsea", FileFinder::instance().version());
 #endif
-			"potrace:     " << (strchr(potrace_version(), ' ') ? strchr(potrace_version(), ' ')+1 : "unknown") << "\n"
-			"xxhash:      " << xxh_ver/10000 << '.' << (xxh_ver/100)%100 << '.' << xxh_ver%100 << "\n"
-			"zlib:        " << zlibVersion();
+		versionInfo.write(cout);
 	}
-	cout << oss.str() << endl;
 }
 
 
