@@ -38,7 +38,7 @@ const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos = {{
 
 /** Returns the corresponding FontFormat for a given format name (e.g. "svg", "woff" etc.). */
 FontWriter::FontFormat FontWriter::toFontFormat (string formatstr) {
-	util::tolower(formatstr);
+	formatstr = util::tolower(formatstr);
 	for (const FontFormatInfo &info : _formatInfos) {
 		if (formatstr == info.formatstr_short)
 			return info.format;

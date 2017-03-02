@@ -56,9 +56,10 @@ string util::normalize_space (string str, const char *ws) {
 }
 
 
-string& util::tolower (string &str) {
-	transform(str.begin(), str.end(), str.begin(), ::tolower);
-	return str;
+string util::tolower (const string &str) {
+	string ret=str;
+	transform(str.begin(), str.end(), ret.begin(), ::tolower);
+	return ret;
 }
 
 

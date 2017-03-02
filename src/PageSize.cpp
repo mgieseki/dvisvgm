@@ -95,7 +95,7 @@ void PageSize::resize (string name) {
 	if (name.length() < 2)
 		throw PageSizeException("unknown page format: "+name);
 
-	util::tolower(name);
+	name = util::tolower(name);
 	// extract optional suffix
 	size_t pos = name.rfind("-");
 	bool landscape = false;

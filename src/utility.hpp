@@ -38,7 +38,7 @@ namespace util {
 
 std::string trim (const std::string &str, const char *ws=" \t\n\r\f");
 std::string normalize_space (std::string str, const char *ws=" \t\n\r\f");
-std::string& tolower (std::string &str);
+std::string tolower (const std::string &str);
 int ilog10 (int n);
 
 

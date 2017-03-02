@@ -156,11 +156,9 @@ bool Color::setPSName (string name, bool case_sensitive) {
 		}
 	}
 	else {
-		util::tolower(name);
+		name = util::tolower(name);
 		auto it = find_if(constants.begin(), constants.end(), [&](const ColorConstant &cc) {
-			string cmpname = cc.name;
-			util::tolower(cmpname);
-			return name == cmpname;
+			return name == util::tolower(cc.name);
 		});
 		if (it != constants.end()) {
 			_rgb = it->rgb;

@@ -203,8 +203,7 @@ class VersionInfo {
 		void write (ostream &os) {
 			typedef pair<string,string> Entry;
 			_versionPairs.sort([](const Entry &e1, const Entry &e2) {
-				string name1 = e1.first, name2 = e2.first;
-				return util::tolower(name1) < util::tolower(name2);
+				return util::tolower(e1.first) < util::tolower(e2.first);
 			});
 			size_t maxNameLength=0;
 			for (const Entry &versionPair : _versionPairs)

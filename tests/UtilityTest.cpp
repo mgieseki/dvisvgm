@@ -36,14 +36,11 @@ TEST(UtilityTest, normalize_space) {
 
 
 TEST(UtilityTest, tolower) {
-	string str;
-	ASSERT_EQ(str, "");
-	ASSERT_EQ(tolower(str), "");
-	ASSERT_EQ(tolower(str="abcdefg"), "abcdefg");
-	ASSERT_EQ(tolower(str="ABCDEFG"), "abcdefg");
-	ASSERT_EQ(tolower(str="123XyZ456"), "123xyz456");
-	ASSERT_EQ(tolower(str="123\nXyZ 456"), "123\nxyz 456");
-	ASSERT_EQ(str, "123\nxyz 456");
+	ASSERT_EQ(tolower(""), "");
+	ASSERT_EQ(tolower("abcdefg"), "abcdefg");
+	ASSERT_EQ(tolower("ABCDEFG"), "abcdefg");
+	ASSERT_EQ(tolower("123XyZ456"), "123xyz456");
+	ASSERT_EQ(tolower("123\nXyZ 456"), "123\nxyz 456");
 }
 
 
