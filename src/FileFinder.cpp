@@ -37,6 +37,7 @@
 #include <map>
 #include <set>
 #include "FileFinder.hpp"
+#include "FilePath.hpp"
 #include "FileSystem.hpp"
 #include "FontMap.hpp"
 #include "Message.hpp"
@@ -99,7 +100,8 @@ std::string FileFinder::version () const {
 
 
 void FileFinder::addLookupDir (const std::string &path) {
-	_additionalDirs.insert(path);
+	FilePath filepath(path);
+	_additionalDirs.insert(filepath.absolute());
 }
 
 
@@ -115,11 +117,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 	static std::string buf;
 	// try to lookup the file in the additionally specified directories
 	for (const std::string &dir : _additionalDirs) {
-		if (dir[0] == '/')
-			buf.clear();
-		else
-			buf = FileSystem::getcwd()+"/";
-		buf += dir + "/" + fname;
+		buf = dir + "/" + fname;
 		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}

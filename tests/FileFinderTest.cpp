@@ -34,13 +34,14 @@ class FileFinderTest : public ::testing::Test
 	protected:
 		void SetUp () override {
 			FileFinder::init("FileFinderTest", "FileFinderTest", false);
+			FileFinder::instance().addLookupDir(SRCDIR);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}
 };
 
 
 TEST_F(FileFinderTest, find_base_file) {
-	const char *path = FileFinder::instance().lookup(SRCDIR"/FileFinderTest.cpp");
+	const char *path = FileFinder::instance().lookup("FileFinderTest.cpp");
 	EXPECT_TRUE(path);
 	path = FileFinder::instance().lookup("Does-not-exist");
 	EXPECT_FALSE(path);
@@ -49,7 +50,7 @@ TEST_F(FileFinderTest, find_base_file) {
 	path = FileFinder::instance().lookup("cmr10.tfm");
 	EXPECT_TRUE(path);
 	ifstream ifs(path);
-	EXPECT_TRUE(bool(ifs));
+	EXPECT_TRUE(bool(ifs)) << "path=" << path;
 }
 
 
