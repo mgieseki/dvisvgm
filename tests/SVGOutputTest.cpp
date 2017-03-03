@@ -25,10 +25,18 @@
 #include "SVGOutput.hpp"
 #include "ZLibOutputStream.hpp"
 
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
 using namespace std;
 
+struct SVGOutputTest : public ::testing::Test {
+	void SetUp () override {FileSystem::chdir(SRCDIR);}
+};
 
-TEST(SVGOutputTest, defaults) {
+
+TEST_F(SVGOutputTest, defaults) {
 	SVGOutput out("SVGOutputTest.cpp", "");
 	EXPECT_EQ(out.filename(1, 1), "SVGOutputTest.svg");
 	EXPECT_EQ(out.filename(5, 9), "SVGOutputTest-5.svg");
@@ -37,7 +45,7 @@ TEST(SVGOutputTest, defaults) {
 }
 
 
-TEST(SVGOutputTest, widthSpecifier) {
+TEST_F(SVGOutputTest, widthSpecifier) {
 	{
 		SVGOutput out("SVGOutputTest.cpp", "%f--%3p");
 		EXPECT_EQ(out.filename(5, 9), "SVGOutputTest--005.svg");
@@ -62,7 +70,7 @@ TEST(SVGOutputTest, widthSpecifier) {
 }
 
 
-TEST(SVGOutputTest, expressions) {
+TEST_F(SVGOutputTest, expressions) {
 	{
 		SVGOutput out("SVGOutputTest.cpp", "no-macro");
 		EXPECT_EQ(out.filename(5, 9), "no-macro.svg");
@@ -87,7 +95,7 @@ TEST(SVGOutputTest, expressions) {
 }
 
 
-TEST(SVGOutputTest, getPageStream) {
+TEST_F(SVGOutputTest, getPageStream) {
 	{
 		SVGOutput out(0, "");
 		ostream &os = out.getPageStream(1, 10);
@@ -109,13 +117,13 @@ TEST(SVGOutputTest, getPageStream) {
 }
 
 
-TEST(SVGOutputTest, ignore) {
+TEST_F(SVGOutputTest, ignore) {
 	SVGOutput out("SVGOutputTest.cpp", "%x %y");
 	EXPECT_EQ(out.filename(5, 9), "SVGOutputTest-5.svg");
 }
 
 
-TEST(SVGOutputTest, error) {
+TEST_F(SVGOutputTest, error) {
 	SVGOutput out("SVGOutputTest.cpp", "%(p/0)");
 	EXPECT_THROW(out.filename(5, 9), MessageException);
 }

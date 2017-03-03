@@ -23,6 +23,10 @@
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
 
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
 using namespace std;
 
 
@@ -75,11 +79,12 @@ TEST(FilePathTest, file2) {
 
 
 TEST(FilePathTest, autodetect) {
+	FileSystem::chdir(SRCDIR);
 	FilePath fp1("FilePathTest.cpp");
 	ASSERT_TRUE(fp1.isFile());
 	ASSERT_FALSE(fp1.empty());
 	string cwd = FileSystem::getcwd();
-	ASSERT_EQ(fp1.absolute(), cwd + "/FilePathTest.cpp");
+	ASSERT_EQ(fp1.absolute(), cwd + "/FilePathTest.cpp") << "fp1=" << fp1.absolute();
 
 	FilePath fp2("");
 	ASSERT_FALSE(fp2.isFile());

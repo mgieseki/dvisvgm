@@ -33,7 +33,7 @@ using namespace std;
 class FontCacheTest : public testing::Test
 {
 	protected:
-		FontCacheTest () : testing::Test(), cachedir("data") {
+		FontCacheTest () : testing::Test(), cachedir(SRCDIR"/data") {
 			glyph1.moveto(0, 0);
 			glyph1.lineto(10, 0);
 			glyph1.lineto(10, 10);
