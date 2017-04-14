@@ -119,7 +119,7 @@ static string get_libgs (const string &fname) {
 #else
 			oss << "libgs.so." << i;
 #endif
-			DLLoader loader(oss.str().c_str());
+			DLLoader loader(oss.str());
 			if (loader.loaded())
 				return oss.str();
 		}
@@ -127,7 +127,7 @@ static string get_libgs (const string &fname) {
 		{
 			ostringstream oss;
 			oss << "libgs." << i << ".dylib";
-			DLLoader loader(oss.str().c_str());
+			DLLoader loader(oss.str());
 			if (loader.loaded())
 				return oss.str();
 		}
@@ -144,7 +144,7 @@ static string get_libgs (const string &fname) {
  *  constructor should only be used to call available() and revision(). */
 Ghostscript::Ghostscript ()
 #if !defined(HAVE_LIBGS)
-	: DLLoader(get_libgs(LIBGS_NAME).c_str())
+	: DLLoader(get_libgs(LIBGS_NAME))
 #endif
 {
 	_inst = 0;
@@ -157,7 +157,7 @@ Ghostscript::Ghostscript ()
  * @param[in] caller this parameter is passed to all callback functions */
 Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 #if !defined(HAVE_LIBGS)
-	: DLLoader(get_libgs(LIBGS_NAME).c_str())
+	: DLLoader(get_libgs(LIBGS_NAME))
 #endif
 {
 	_inst = 0;

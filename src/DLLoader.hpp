@@ -21,6 +21,8 @@
 #ifndef DLLOADER_HPP
 #define DLLOADER_HPP
 
+#include <string>
+
 #ifdef _WIN32
 	#include <windows.h>
 #else
@@ -32,10 +34,10 @@ class DLLoader
 {
 	public:
 		DLLoader () =delete;
-		DLLoader (const char *dlname);
+		DLLoader (const std::string &dlname);
 		virtual ~DLLoader () {closeLibrary();}
 		bool loaded () const {return _handle != nullptr;}
-		bool loadLibrary (const char *dlname);
+		bool loadLibrary (const std::string &dlname);
 
 	protected:
 		void* loadSymbol (const char *name);

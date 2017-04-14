@@ -21,23 +21,25 @@
 #include <config.h>
 #include "DLLoader.hpp"
 
+using namespace std;
+
 
 /** Creates a new DLLoader object and tries to load the given dynamic/shared library.
  *  @param[in] dlname name of library to load */
-DLLoader::DLLoader (const char *dlname) : _handle(nullptr) {
+DLLoader::DLLoader (const string &dlname) : _handle(nullptr) {
 	loadLibrary(dlname);
 }
 
 
 /** Releases the currently assigned dynamic/shared library and loads another one.
  *  @param[in] dlname name of library to load */
-bool DLLoader::loadLibrary (const char *dlname) {
+bool DLLoader::loadLibrary (const string &dlname) {
 	closeLibrary();
-	if (dlname && *dlname) {
+	if (!dlname.empty()) {
 #ifdef _WIN32
-		_handle = LoadLibrary(dlname);
+		_handle = LoadLibrary(dlname.c_str());
 #else
-		_handle = dlopen(dlname, RTLD_LAZY);
+		_handle = dlopen(dlname.c_str(), RTLD_LAZY);
 #endif
 	}
 	return _handle != nullptr;
