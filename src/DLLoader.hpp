@@ -31,13 +31,15 @@
 class DLLoader
 {
 	public:
+		DLLoader () =delete;
 		DLLoader (const char *dlname);
-		virtual ~DLLoader ();
-		bool loaded () const {return _handle != 0;}
+		virtual ~DLLoader () {closeLibrary();}
+		bool loaded () const {return _handle != nullptr;}
+		bool loadLibrary (const char *dlname);
 
 	protected:
-		DLLoader () : _handle(0) {}
 		void* loadSymbol (const char *name);
+		void closeLibrary ();
 
 	private:
 #ifdef _WIN32

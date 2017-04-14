@@ -22,8 +22,17 @@
 #include "DLLoader.hpp"
 
 
-DLLoader::DLLoader (const char *dlname) : _handle(0)
-{
+/** Creates a new DLLoader object and tries to load the given dynamic/shared library.
+ *  @param[in] dlname name of library to load */
+DLLoader::DLLoader (const char *dlname) : _handle(nullptr) {
+	loadLibrary(dlname);
+}
+
+
+/** Releases the currently assigned dynamic/shared library and loads another one.
+ *  @param[in] dlname name of library to load */
+bool DLLoader::loadLibrary (const char *dlname) {
+	closeLibrary();
 	if (dlname && *dlname) {
 #ifdef _WIN32
 		_handle = LoadLibrary(dlname);
@@ -31,16 +40,19 @@ DLLoader::DLLoader (const char *dlname) : _handle(0)
 		_handle = dlopen(dlname, RTLD_LAZY);
 #endif
 	}
+	return _handle != nullptr;
 }
 
 
-DLLoader::~DLLoader () {
+/** Releases the library currently assigned to the DLLoader object. */
+void DLLoader::closeLibrary () {
 	if (_handle) {
 #ifdef _WIN32
 		FreeLibrary(_handle);
 #else
 		dlclose(_handle);
 #endif
+		_handle = nullptr;
 	}
 }
 
@@ -56,5 +68,5 @@ void* DLLoader::loadSymbol (const char *name) {
 		return dlsym(_handle, name);
 #endif
 	}
-	return 0;
+	return nullptr;
 }
