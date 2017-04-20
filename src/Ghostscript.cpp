@@ -112,25 +112,18 @@ static string get_libgs (const string &fname) {
 	// try to find libgs.so.X on the user's system
 	const int abi_min=7, abi_max=9; // supported libgs ABI versions
 	for (int i=abi_max; i >= abi_min; i--) {
-		{
-			ostringstream oss;
 #if defined(__CYGWIN__)
-			oss << "cyggs-" << i << ".dll";
+		string dlname = "cyggs-" + to_string(i) + ".dll";
 #else
-			oss << "libgs.so." << i;
+		string dlname = "libgs.so." + to_string(i);
 #endif
-			DLLoader loader(oss.str());
-			if (loader.loaded())
-				return oss.str();
-		}
+		DLLoader loader(dlname);
+		if (loader.loaded())
+			return dlname;
 #if defined(__APPLE__)
-		{
-			ostringstream oss;
-			oss << "libgs." << i << ".dylib";
-			DLLoader loader(oss.str());
-			if (loader.loaded())
-				return oss.str();
-		}
+		dlname = "libgs." + to_string(i) + ".dylib";
+		if (loader.loadLibrary(dlname))
+			return dlname;
 #endif
 	}
 #endif
