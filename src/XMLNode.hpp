@@ -42,8 +42,8 @@ class XMLNode
 class XMLElementNode : public XMLNode
 {
 	public:
-		typedef std::map<std::string,std::string> AttribMap;
-		typedef std::list<std::unique_ptr<XMLNode>> ChildList;
+		using AttribMap = std::map<std::string,std::string>;
+		using ChildList = std::list<std::unique_ptr<XMLNode>>;
 
 	public:
 		XMLElementNode (const std::string &name);

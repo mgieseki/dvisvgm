@@ -31,8 +31,8 @@ class SpecialActions;
 
 class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingListener, public DVIEndPageListener
 {
-	typedef std::vector<std::string> StringVector;
-	typedef std::map<std::string, StringVector> MacroMap;
+	using StringVector = std::vector<std::string>;
+	using MacroMap = std::map<std::string, StringVector>;
 
 	public:
 		DvisvgmSpecialHandler ();

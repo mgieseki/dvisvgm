@@ -101,7 +101,7 @@ void XMLElementNode::prepend (XMLNode *child) {
  *  @param[in] sibling following sibling of 'child'
  *  @return true on success */
 bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
-	ChildList::iterator it = _children.begin();
+	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
 	if (it == _children.end())
@@ -118,7 +118,7 @@ bool XMLElementNode::insertBefore (XMLNode *child, XMLNode *sibling) {
  *  @param[in] sibling preceding sibling of 'child'
  *  @return true on success */
 bool XMLElementNode::insertAfter (XMLNode *child, XMLNode *sibling) {
-	ChildList::iterator it = _children.begin();
+	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
 	if (it == _children.end())
@@ -210,7 +210,7 @@ bool XMLElementNode::hasAttribute (const string &name) const {
  *  @param[in] name name of attribute
  *  @return attribute value or 0 if attribute doesn't exist */
 const char* XMLElementNode::getAttributeValue(const std::string& name) const {
-	AttribMap::const_iterator it = _attributes.find(name);
+	auto it = _attributes.find(name);
 	if (it != _attributes.end())
 		return it->second.c_str();
 	return 0;

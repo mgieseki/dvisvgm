@@ -34,7 +34,7 @@ class PhysicalFont;
 
 class CMapManager
 {
-	typedef std::map<std::string, std::unique_ptr<CMap>> CMaps;
+	using CMaps = std::map<std::string, std::unique_ptr<CMap>>;
 	public:
 		CMap* lookup (const std::string &name);
 		const CMap* findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID);

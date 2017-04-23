@@ -37,9 +37,8 @@ class XMLElementNode;
 
 class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions
 {
-	typedef GraphicsPath<double> Path;
-	typedef std::vector<double>::const_iterator DoubleVecIt;
-	typedef Color::ColorSpace ColorSpace;
+	using Path = GraphicsPath<double>;
+	using ColorSpace = Color::ColorSpace;
 
 	class ClippingStack
 	{

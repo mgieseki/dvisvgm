@@ -59,13 +59,12 @@ void PapersizeSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actio
 		return;
 
 	// find page n >= pageno that contains a papersize special
-	typedef vector<PageSize>::iterator Iterator;
-	Iterator lb_it = lower_bound(_pageSizes.begin(), _pageSizes.end(), PageSize(pageno, DoublePair()),
+	auto lb_it = lower_bound(_pageSizes.begin(), _pageSizes.end(), PageSize(pageno, DoublePair()),
 		[](const PageSize &ps1, const PageSize &ps2) {
 			// order PageSize objects by page number
 			return ps1.first < ps2.first;
 		});
-	Iterator it = _pageSizes.end();
+	auto it = _pageSizes.end();
 	if (lb_it != _pageSizes.end() && lb_it->first == pageno)
 		it = lb_it;                        // if current page contains a papersize special, use it
 	else if (lb_it != _pageSizes.begin()) // no papersize special on current page?

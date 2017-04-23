@@ -25,9 +25,9 @@
 using namespace std;
 using namespace ClipperLib;
 
-typedef ClipperLib::Path Polygon;
-typedef ClipperLib::Paths Polygons;
-typedef PathClipper::CurvedPath CurvedPath;
+using Polygon = ClipperLib::Path;
+using Polygons = ClipperLib::Paths;
+using CurvedPath = PathClipper::CurvedPath;
 
 const int SCALE_FACTOR = 1000;
 

@@ -36,7 +36,7 @@ class GraphicsPath
 	friend class PathClipper;
 	public:
 		enum class WindingRule {EVEN_ODD, NON_ZERO};
-		typedef Pair<T> Point;
+		using Point = Pair<T>;
 
 		struct Command {
 			enum class Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};

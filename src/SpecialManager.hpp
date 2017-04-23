@@ -32,8 +32,8 @@ class SpecialActions;
 class SpecialManager
 {
 	private:
-		typedef std::vector<SpecialHandler*> HandlerPool;
-		typedef std::map<std::string,SpecialHandler*> HandlerMap;
+		using HandlerPool = std::vector<SpecialHandler*>;
+		using HandlerMap = std::map<std::string,SpecialHandler*>;
 
 	public:
 		~SpecialManager ();

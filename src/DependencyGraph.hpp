@@ -28,7 +28,7 @@ template <typename T>
 class DependencyGraph
 {
 	struct GraphNode {
-		typedef typename std::vector<GraphNode*> Dependees;
+		using Dependees = typename std::vector<GraphNode*>;
 
 		GraphNode (const T &k) : key(k), dependent(0) {}
 
@@ -52,12 +52,12 @@ class DependencyGraph
 		Dependees dependees;
 	};
 
-	typedef std::map<T, GraphNode*> NodeMap;
+	using NodeMap = std::map<T, GraphNode*>;
 
 	public:
 		~DependencyGraph() {
-			for (typename NodeMap::iterator it=_nodeMap.begin(); it != _nodeMap.end(); ++it)
-				delete it->second;
+			for (auto &nmpair : _nodeMap)
+				delete nmpair.second;
 		}
 
 		void insert (const T &key) {

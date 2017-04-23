@@ -39,7 +39,7 @@ class BgColorSpecialHandler : public SpecialHandler, public DVIBeginPageListener
 		void dviBeginPage (unsigned pageno, SpecialActions &actions) override;
 
 	private:
-		typedef std::pair<unsigned,Color> PageColor;  // page number and color
+		using PageColor = std::pair<unsigned,Color>;  // page number and color
 		std::vector<PageColor> _pageColors;
 };
 

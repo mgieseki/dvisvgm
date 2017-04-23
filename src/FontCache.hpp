@@ -28,8 +28,6 @@
 
 class FontCache
 {
-	typedef std::map<int, Glyph> GlyphMap;
-
 	public:
 		struct FontInfo
 		{
@@ -61,7 +59,7 @@ class FontCache
 	private:
 		static const uint8_t FORMAT_VERSION;
 		std::string _fontname;
-		GlyphMap _glyphs;
+		std::map<int, Glyph> _glyphs;
 		bool _changed;
 };
 

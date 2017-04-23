@@ -65,7 +65,7 @@ void FontCache::setGlyph (int c, const Glyph &glyph) {
  *  @param[in] c character code
  *  @return font glyph data (0 if no matching data was found) */
 const Glyph* FontCache::getGlyph (int c) const {
-	GlyphMap::const_iterator it = _glyphs.find(c);
+	auto it = _glyphs.find(c);
 	return (it != _glyphs.end()) ? &it->second : 0;
 }
 

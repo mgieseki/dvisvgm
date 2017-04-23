@@ -28,7 +28,6 @@
 #include <vector>
 #include "MessageException.hpp"
 
-
 class Subfont;
 
 
@@ -36,7 +35,7 @@ class Subfont;
  *  encapsulates the evaluation of these files. */
 class SubfontDefinition
 {
-	typedef std::map<std::string, Subfont*> Subfonts;
+	using Subfonts = std::map<std::string, Subfont*>;
 	public:
 		~SubfontDefinition ();
 		static SubfontDefinition* lookup (const std::string &name);

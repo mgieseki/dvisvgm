@@ -201,7 +201,7 @@ class VersionInfo {
 
 		/** Writes the version information to the given output stream. */
 		void write (ostream &os) {
-			typedef pair<string,string> Entry;
+			using Entry = pair<string,string>;
 			_versionPairs.sort([](const Entry &e1, const Entry &e2) {
 				return util::tolower(e1.first) < util::tolower(e2.first);
 			});

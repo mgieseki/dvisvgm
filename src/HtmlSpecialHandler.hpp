@@ -40,7 +40,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 	};
 
 	enum class AnchorType {NONE, HREF, NAME};
-	typedef std::map<std::string, NamedAnchor> NamedAnchors;
+	using NamedAnchors = std::map<std::string, NamedAnchor>;
 
 	public:
 		HtmlSpecialHandler () : _active(false), _anchorType(AnchorType::NONE), _depthThreshold(0) {}

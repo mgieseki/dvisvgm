@@ -326,9 +326,9 @@ CharMapID FontEngine::setCustomCharMap () {
 
 // handle API change in freetype version 2.2.1
 #if FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 2 || (FREETYPE_MINOR == 2 && FREETYPE_PATCH >= 1)))
-	typedef const FT_Vector *FTVectorPtr;
+	using FTVectorPtr = const FT_Vector*;
 #else
-	typedef FT_Vector *FTVectorPtr;
+	using FTVectorPtr = FT_Vector*;
 #endif
 
 

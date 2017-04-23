@@ -156,7 +156,7 @@ class PhysicalFont : public virtual Font {
 class VirtualFont : public virtual Font {
 	friend class FontManager;
 	public:
-		typedef std::vector<uint8_t> DVIVector;
+		using DVIVector = std::vector<uint8_t>;
 
 	public:
 		static Font* create (const std::string &name, uint32_t checksum, double dsize, double ssize);

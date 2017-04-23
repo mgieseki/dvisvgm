@@ -26,8 +26,8 @@
 #include "SpecialHandler.hpp"
 
 class PapersizeSpecialHandler : public SpecialHandler, public DVIEndPageListener {
-	typedef std::pair<double,double> DoublePair;
-	typedef std::pair<unsigned,DoublePair> PageSize;
+	using DoublePair = std::pair<double,double>;
+	using PageSize = std::pair<unsigned,DoublePair>;
 
 	public:
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
