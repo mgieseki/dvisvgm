@@ -368,3 +368,31 @@ TEST_F(TpicSpecialTest, stroke_arc) {
 		"<path d='M72 0A72 36 0 0 1 0 36' fill='none' stroke='#000000' stroke-linecap='round' stroke-width='1'/>"
 	);
 }
+
+
+TEST_F(TpicSpecialTest, bit_pattern) {
+	handler.processSpecial("tx", "");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1);
+	handler.processSpecial("tx", " \t   \n  ");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1);
+	handler.processSpecial("tx", "INVALID");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1);
+	handler.processSpecial("tx", "0");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1);
+	handler.processSpecial("tx", "f");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 0);
+	handler.processSpecial("tx", "1248");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-4.0/16.0);
+	handler.processSpecial("tx", "12480");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-4.0/20.0);
+	handler.processSpecial("tx", "DEAD BEEF");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-24.0/32.0);
+	handler.processSpecial("tx", "123456789abcdef");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-32.0/60.0);
+	handler.processSpecial("tx", "123456789ABCDEF0");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-32.0/64.0);
+	handler.processSpecial("tx", "1234 5678 9abc def ");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-32.0/60.0);
+	handler.processSpecial("tx", "1234 5678 X 9abc def");
+	EXPECT_DOUBLE_EQ(handler.grayLevel(), 1.0-13.0/32.0);
+}

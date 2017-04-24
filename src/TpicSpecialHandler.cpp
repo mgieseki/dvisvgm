@@ -18,9 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
+#include <bitset>
 #include <cstring>
 #include <sstream>
+#include <string>
 #include "Color.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
@@ -245,6 +246,26 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 }
 
 
+/** Computes the gray level based on the ratio of set bits to the total
+ *  number of bits of a given hex value.
+ *  @param[in] hexstr a sequence of hexadecimal digits
+ *  @return the computed gray level [0-1] */
+static double bit_sequence_to_gray (const string &hexstr) {
+	if (hexstr.empty())
+		return 1.0;
+	int setbits=0;   // number of bits set
+	int totalbits=0; // number of bits processed
+	constexpr int CHUNKBITS = 8*sizeof(unsigned long long);
+	for (size_t pos=0; pos < hexstr.length(); pos+=CHUNKBITS/4) {
+		size_t digitcount;  // number of hex digits processed
+		unsigned long long val = stoull(hexstr.substr(pos, CHUNKBITS/4), &digitcount, 16);
+		setbits += bitset<CHUNKBITS>(val).count();
+		totalbits += 4*digitcount;
+	}
+	return 1.0-double(setbits)/double(totalbits);
+}
+
+
 /** Returns a unique integer for a TPIC command (consisting of two letters). */
 constexpr int cmd_id (const char *cmd) {
 	return (cmd[0] << 8) | cmd[1];
@@ -272,8 +293,19 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			ir.skipSpace();
 			_grayLevel = ir.eof() ? 0.5 : max(0.0, min(1.0, ir.getDouble()));
 			break;
-		case cmd_id("tx"): // set fill pattern
+		case cmd_id("tx"): { // set fill color depending on a sequence of bits (given as hex value)
+			string hexstr;
+			while (!ir.eof()) {
+				ir.skipSpace();
+				char c = tolower(ir.get());
+				if (isdigit(c) || (c >= 'a' && c <= 'f'))
+					hexstr += c;
+				else
+					break;
+			}
+			_grayLevel = bit_sequence_to_gray(hexstr);
 			break;
+		}
 		case cmd_id("pa"): { // add point to path
 			double x = ir.getDouble()*mi2bp;
 			double y = ir.getDouble()*mi2bp;
