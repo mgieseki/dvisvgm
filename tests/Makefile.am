@@ -316,6 +316,12 @@ ToUnicodeMapTest_SOURCES = ToUnicodeMapTest.cpp
 ToUnicodeMapTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
 ToUnicodeMapTest_LDADD = $(TESTLIBS)
 
+TESTS += TpicSpecialTest
+check_PROGRAMS += TpicSpecialTest
+TpicSpecialTest_SOURCES = TpicSpecialTest.cpp
+TpicSpecialTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
+TpicSpecialTest_LDADD = $(TESTLIBS)
+
 TESTS += TriangularPatchTest
 check_PROGRAMS += TriangularPatchTest
 TriangularPatchTest_SOURCES = TriangularPatchTest.cpp
