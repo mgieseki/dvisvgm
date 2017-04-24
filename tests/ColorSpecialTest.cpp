@@ -31,7 +31,7 @@ class ColorSpecialTest : public ::testing::Test
 		struct SetColor : EmptySpecialActions
 		{
 			SetColor () : color(0) {}
-			void setColor (const Color &c) {color = c;}
+			void setColor (const Color &c) {color = uint32_t(c);}
 			bool equals (uint32_t c) {return color == c;}
 			uint32_t color;
 		};

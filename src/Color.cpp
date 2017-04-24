@@ -208,12 +208,16 @@ void Color::set (ColorSpace colorSpace, VectorIterator<double> &it) {
 
 
 Color Color::operator *= (double c) {
-	uint32_t rgb=0;
-	for (int i=0; i < 3; i++) {
-		rgb |= uint32_t(floor((_rgb & 0xff)*c+0.5)) << (8*i);
-		_rgb >>= 8;
+	if (abs(c) < 0.001)
+		_rgb &= 0xff000000;
+	else if (abs(c-trunc(c)) < 0.999) {
+		uint32_t rgb=0;
+		for (int i=0; i < 3; i++) {
+			rgb |= uint32_t((_rgb & 0xff)*c+0.5) << (8*i);
+			_rgb >>= 8;
+		}
+		_rgb = rgb;
 	}
-	_rgb = rgb;
 	return *this;
 }
 

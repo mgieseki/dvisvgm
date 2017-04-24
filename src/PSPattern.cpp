@@ -138,7 +138,7 @@ PSUncoloredTilingPattern::~PSUncoloredTilingPattern () {
 /** Returns an SVG id value that identifies this pattern with the current color applied. */
 string PSUncoloredTilingPattern::svgID () const {
 	ostringstream oss;
-	oss << PSPattern::svgID() << '-' << hex << _currentColor;
+	oss << PSPattern::svgID() << '-' << hex << uint32_t(_currentColor);
 	return oss.str();
 }
 
