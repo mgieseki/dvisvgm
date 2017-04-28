@@ -18,8 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
-
 #ifdef _WIN32
 	#include <windows.h>
 #else
@@ -153,6 +151,8 @@ bool Process::run (string *out) {
 	int pipefd[2];
 	pipe(pipefd);
 	pid_t pid = fork();
+	if (pid < 0)
+		return false;
 	if (pid == 0) {   // child process
 		dup2(pipefd[1], STDOUT_FILENO);  // redirect stdout to the pipe
 		dup2(pipefd[1], STDERR_FILENO);  // redirect stderr to the pipe
@@ -164,6 +164,7 @@ bool Process::run (string *out) {
 		string paramstr = _paramstr;  // private copy to be changed by split_paramstr()
 		split_paramstr(paramstr, params);
 		params.push_back(0);     // trailing NULL marks end of parameter list
+		signal(SIGINT, SIG_IGN); // child process is supposed to ignore ctrl-c events
 		execvp(_cmd.c_str(), const_cast<char* const*>(&params[0]));
 		exit(1);
 	}
@@ -172,6 +173,7 @@ bool Process::run (string *out) {
 	if (pid > 0) {		// parent process
 		for (;;) {
 			if (out) {
+				// collect output of child process written to stdout/stderr
 				char buf[512];
 				ssize_t len;
 				while ((len = read(pipefd[0], buf, sizeof(buf)-1)) > 0) {
@@ -180,11 +182,14 @@ bool Process::run (string *out) {
 				}
 			}
 			int status;
-			waitpid(pid, &status, WNOHANG);
-			if (WIFEXITED(status)) { // child process exited normally
-				ok = (WEXITSTATUS(status) == 0);
+			pid_t wpid = waitpid(pid, &status, WNOHANG);
+			if (wpid == -1)  // child process terminated unexpectedly
+				break;
+			if (wpid > 0) {  // state of child process changed
+				ok = WIFEXITED(status) && (WEXITSTATUS(status) == 0);
 				break;
 			}
+			// check signal status if child process is still running
 			try {
 				SignalHandler::instance().check();
 			}
