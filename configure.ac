@@ -138,7 +138,7 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([ftime gettimeofday memset strcasecmp strtol uselocale])
+AC_CHECK_FUNCS([ftime gettimeofday memset strcasecmp sigaction strtol uselocale])
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options
