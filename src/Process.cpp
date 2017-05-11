@@ -273,9 +273,11 @@ bool Subprocess::run (const string &cmd, string paramstr) {
 		return false;
 
 	_pid = fork();
-	if (_pid < 0)
+	if (_pid < 0) {
+		close(pipefd[0]);
+		close(pipefd[1]);
 		return false;
-
+	}
 	if (_pid == 0) {   // child process
 		dup2(pipefd[1], STDOUT_FILENO);  // redirect stdout to the pipe
 		dup2(pipefd[1], STDERR_FILENO);  // redirect stderr to the pipe
