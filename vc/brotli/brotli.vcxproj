@@ -143,12 +143,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\libs\woff2\brotli\common\dictionary.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\backward_references.c" />
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\backward_references_hq.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\bit_cost.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\block_splitter.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\brotli_bit_stream.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\cluster.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\compress_fragment_two_pass.c" />
+    <ClCompile Include="..\..\libs\woff2\brotli\enc\dictionary_hash.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\encode.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\entropy_encode.c" />
     <ClCompile Include="..\..\libs\woff2\brotli\enc\histogram.c" />
@@ -163,6 +165,7 @@
     <ClInclude Include="..\..\libs\woff2\brotli\common\dictionary.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\common\version.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\backward_references.h" />
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\backward_references_hq.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\backward_references_inc.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\bit_cost.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\bit_cost_inc.h" />
@@ -183,8 +186,10 @@
     <ClInclude Include="..\..\libs\woff2\brotli\enc\find_match_length.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\hash.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_forgetful_chain_inc.h" />
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_longest_match64_inc.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_longest_match_inc.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_longest_match_quickly_inc.h" />
+    <ClInclude Include="..\..\libs\woff2\brotli\enc\hash_to_binary_tree_inc.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\histogram.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\histogram_inc.h" />
     <ClInclude Include="..\..\libs\woff2\brotli\enc\literal_cost.h" />

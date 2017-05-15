@@ -50,7 +50,7 @@ typedef enum BrotliEncoderMode {
    * properties of the input.
    */
   BROTLI_MODE_GENERIC = 0,
-  /** Compression mode for UTF-8 formated text input. */
+  /** Compression mode for UTF-8 formatted text input. */
   BROTLI_MODE_TEXT = 1,
   /** Compression mode used in WOFF 2.0. */
   BROTLI_MODE_FONT = 2
@@ -165,7 +165,19 @@ typedef enum BrotliEncoderParameter {
    *       memory. \n The rough formula of memory used for temporary input
    *       storage is `3 << lgBlock`.
    */
-  BROTLI_PARAM_LGBLOCK = 3
+  BROTLI_PARAM_LGBLOCK = 3,
+  /**
+   * Flag that affects usage of "literal context modeling" format feature.
+   *
+   * This flag is a "decoding-speed vs compression ratio" trade-off.
+   */
+  BROTLI_PARAM_DISABLE_LITERAL_CONTEXT_MODELING = 4,
+  /**
+   * Estimated total input size for all ::BrotliEncoderCompressStream calls.
+   *
+   * The default value is 0, which means that the total input size is unknown.
+   */
+  BROTLI_PARAM_SIZE_HINT = 5
 } BrotliEncoderParameter;
 
 /**

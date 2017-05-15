@@ -6,6 +6,8 @@ libbrotli_a_SOURCES = \
 	common/version.h \
 	enc/backward_references.c \
 	enc/backward_references.h \
+	enc/backward_references_hq.c \
+	enc/backward_references_hq.h \
 	enc/backward_references_inc.h \
 	enc/bit_cost.c \
 	enc/bit_cost.h \
@@ -25,6 +27,7 @@ libbrotli_a_SOURCES = \
 	enc/compress_fragment_two_pass.c \
 	enc/compress_fragment_two_pass.h \
 	enc/context.h \
+	enc/dictionary_hash.c \
 	enc/dictionary_hash.h \
 	enc/encode.c \
 	enc/entropy_encode.c \
@@ -34,8 +37,10 @@ libbrotli_a_SOURCES = \
 	enc/find_match_length.h \
 	enc/hash_forgetful_chain_inc.h \
 	enc/hash.h \
+	enc/hash_longest_match64_inc.h \
 	enc/hash_longest_match_inc.h \
 	enc/hash_longest_match_quickly_inc.h \
+	enc/hash_to_binary_tree_inc.h \
 	enc/histogram.c \
 	enc/histogram.h \
 	enc/histogram_inc.h \
