@@ -24,8 +24,8 @@
 #include "FileSystem.hpp"
 #include "FontCache.hpp"
 
-#ifndef SRCDIR
-#define SRCDIR "."
+#ifndef BUILDDIR
+#define BUILDDIR "."
 #endif
 
 using namespace std;
@@ -33,7 +33,7 @@ using namespace std;
 class FontCacheTest : public testing::Test
 {
 	protected:
-		FontCacheTest () : testing::Test(), cachedir(SRCDIR"/data") {
+		FontCacheTest () : testing::Test(), cachedir(BUILDDIR"/data") {
 			glyph1.moveto(0, 0);
 			glyph1.lineto(10, 0);
 			glyph1.lineto(10, 10);
