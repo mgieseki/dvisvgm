@@ -96,6 +96,24 @@ TEST(PairTest, div) {
 }
 
 
+TEST(PairTest, neg) {
+	EXPECT_EQ(-DPair(0, 0), DPair(0, 0));
+	EXPECT_EQ(-DPair(1, 2), DPair(-1, -2));
+	EXPECT_EQ(-DPair(-1, -2), DPair(1, 2));
+	EXPECT_EQ(-DPair(-1, 2), DPair(1, -2));
+	EXPECT_EQ(-DPair(1, -2), DPair(-1, 2));
+}
+
+
+TEST(PairTest, abs) {
+	EXPECT_EQ(abs(DPair(0, 0)), DPair(0, 0));
+	EXPECT_EQ(abs(DPair(1, 2)), DPair(1, 2));
+	EXPECT_EQ(abs(DPair(-1, -2)), DPair(1, 2));
+	EXPECT_EQ(abs(DPair(-1, 2)), DPair(1, 2));
+	EXPECT_EQ(abs(DPair(1, -2)), DPair(1, 2));
+}
+
+
 TEST(PairTest, equality) {
 	ASSERT_TRUE(DPair(2,3) == DPair(2,3));
 	ASSERT_FALSE(DPair(2,3) == DPair(-2,-3));
