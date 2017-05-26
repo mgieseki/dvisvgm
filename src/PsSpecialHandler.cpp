@@ -281,7 +281,7 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 	else {
 		map<string,string>::const_iterator it;
 
-		// bounding box of EPS figure
+		// bounding box of EPS figure (lower left and upper right corner)
 		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second) : 0;
 		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second) : 0;
 		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second) : 0;
@@ -307,13 +307,17 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		BoundingBox bbox(llx, lly, urx, ury);
 		bbox.transform(m);
 
+		// compute factors to scale the bounding box to width rwi and height rhi
 		double sx = rwi/bbox.width();
 		double sy = rhi/bbox.height();
-		if (sx < 0)	sx = sy;
-		if (sy < 0)	sy = sx;
-		if (sx < 0) sx = sy = 1.0;
+		if (sx == 0 || sy == 0)
+			return;
 
-		// save current DVI position (in pt units)
+		if (sx < 0)	sx = sy;         // rwi attribute not set
+		if (sy < 0)	sy = sx;         // rhi attribute not set
+		if (sx < 0) sx = sy = 1.0;   // neither rwi nor rhi set
+
+		// save current DVI position
 		const double x = _actions->getX();
 		const double y = _actions->getY();
 
@@ -322,9 +326,15 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		_actions->setY(0);
 		moveToDVIPos();
 
+		// transform current DVI position and bounding box location
+		// according to current transformation matrix
+		DPair llTrans = _actions->getMatrix()*DPair(llx, lly);
+		DPair urTrans = _actions->getMatrix()*DPair(urx, ury);
+		DPair dviposTrans = _actions->getMatrix()*DPair(x, y);
+
 		_xmlnode = new XMLElementNode("g");  // append following elements to this group
 		_psi.execute("\n@beginspecial @setspecial "); // enter \special environment
-		_psi.limit(epsfile.pslength()); // limit the number of bytes to be processed
+		_psi.limit(epsfile.pslength()); // limit the number of bytes going to be processed
 		_psi.execute(is);               // process EPS file
 		_psi.limit(0);                  // disable limitation
 		_psi.execute("\n@endspecial "); // leave special environment
@@ -333,9 +343,9 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 		else {                          // has anything been drawn?
 			Matrix matrix(1);
 			matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
-			matrix.translate(-llx, lly);
-			matrix.scale(sx, sy);      // resize image to width "rwi" and height "rhi"
-			matrix.translate(x, y);    // move image to current DVI position
+			matrix.translate(-llTrans);
+			matrix.scale(sx, sy);          // resize image to width "rwi" and height "rhi"
+			matrix.translate(dviposTrans); // move image to current DVI position
 			if (!matrix.isIdentity())
 				_xmlnode->addAttribute("transform", matrix.getSVG());
 			_actions->appendToPage(_xmlnode);
@@ -349,8 +359,8 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 
 		// update bounding box
 		m.scale(sx, -sy);
-		m.translate(x, y);
-		bbox = BoundingBox(0, 0, fabs(urx-llx), fabs(ury-lly));
+		m.translate(dviposTrans);
+		bbox = BoundingBox(DPair(0, 0), abs(urTrans-llTrans));
 		bbox.transform(m);
 		_actions->embed(bbox);
 	}
