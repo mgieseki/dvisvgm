@@ -274,96 +274,96 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
  *  @param[in] fname EPS file to be included
  *  @param[in] attr attributes given with \\special psfile */
 void PsSpecialHandler::psfile (const string &fname, const map<string,string> &attr) {
-	EPSFile epsfile(fname);
-	istream &is = epsfile.istream();
-	if (!is)
+	const char *filepath = FileFinder::instance().lookup(fname, false);
+	if (!filepath) {
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
-	else {
-		map<string,string>::const_iterator it;
-
-		// bounding box of EPS figure (lower left and upper right corner)
-		double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second) : 0;
-		double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second) : 0;
-		double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second) : 0;
-		double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second) : 0;
-
-		// desired width/height of resulting figure
-		double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0 : -1;
-		double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0 : -1;
-		if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
-			return;
-
-		// user transformations (default values chosen according to dvips manual)
-		double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second) : 0;
-		double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second) : 0;
-//		double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second) : 612;
-//		double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second) : 792;
-		double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
-		double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
-		double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
-
-		Matrix m(1);
-		m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
-		BoundingBox bbox(llx, lly, urx, ury);
-		bbox.transform(m);
-
-		// compute factors to scale the bounding box to width rwi and height rhi
-		double sx = rwi/bbox.width();
-		double sy = rhi/bbox.height();
-		if (sx == 0 || sy == 0)
-			return;
-
-		if (sx < 0)	sx = sy;         // rwi attribute not set
-		if (sy < 0)	sy = sx;         // rhi attribute not set
-		if (sx < 0) sx = sy = 1.0;   // neither rwi nor rhi set
-
-		// save current DVI position
-		const double x = _actions->getX();
-		const double y = _actions->getY();
-
-		// all following drawings are relative to (0,0)
-		_actions->setX(0);
-		_actions->setY(0);
-		moveToDVIPos();
-
-		// transform current DVI position and bounding box location
-		// according to current transformation matrix
-		DPair llTrans = _actions->getMatrix()*DPair(llx, lly);
-		DPair urTrans = _actions->getMatrix()*DPair(urx, ury);
-		DPair dviposTrans = _actions->getMatrix()*DPair(x, y);
-
-		_xmlnode = new XMLElementNode("g");  // append following elements to this group
-		_psi.execute("\n@beginspecial @setspecial "); // enter \special environment
-		_psi.limit(epsfile.pslength()); // limit the number of bytes going to be processed
-		_psi.execute(is);               // process EPS file
-		_psi.limit(0);                  // disable limitation
-		_psi.execute("\n@endspecial "); // leave special environment
-		if (_xmlnode->empty())          // nothing been drawn?
-			delete _xmlnode;             // => don't need to add empty group node
-		else {                          // has anything been drawn?
-			Matrix matrix(1);
-			matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
-			matrix.translate(-llTrans);
-			matrix.scale(sx, sy);          // resize image to width "rwi" and height "rhi"
-			matrix.translate(dviposTrans); // move image to current DVI position
-			if (!matrix.isIdentity())
-				_xmlnode->addAttribute("transform", matrix.getSVG());
-			_actions->appendToPage(_xmlnode);
-		}
-		_xmlnode = 0;   // append following elements to page group again
-
-		// restore DVI position
-		_actions->setX(x);
-		_actions->setY(y);
-		moveToDVIPos();
-
-		// update bounding box
-		m.scale(sx, -sy);
-		m.translate(dviposTrans);
-		bbox = BoundingBox(DPair(0, 0), abs(urTrans-llTrans));
-		bbox.transform(m);
-		_actions->embed(bbox);
+		return;
 	}
+	map<string,string>::const_iterator it;
+
+	// bounding box of EPS figure (lower left and upper right corner)
+	double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second) : 0;
+	double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second) : 0;
+	double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second) : 0;
+	double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second) : 0;
+
+	// desired width/height of resulting figure
+	double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0 : -1;
+	double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0 : -1;
+	if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
+		return;
+
+	// user transformations (default values chosen according to dvips manual)
+	double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second) : 0;
+	double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second) : 0;
+//	double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second) : 612;
+//	double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second) : 792;
+	double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
+	double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
+	double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
+
+	Matrix m(1);
+	m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
+	BoundingBox bbox(llx, lly, urx, ury);
+	bbox.transform(m);
+
+	// compute factors to scale the bounding box to width rwi and height rhi
+	double sx = rwi/bbox.width();
+	double sy = rhi/bbox.height();
+	if (sx == 0 || sy == 0)
+		return;
+
+	if (sx < 0)	sx = sy;         // rwi attribute not set
+	if (sy < 0)	sy = sx;         // rhi attribute not set
+	if (sx < 0) sx = sy = 1.0;   // neither rwi nor rhi set
+
+	// save current DVI position
+	const double x = _actions->getX();
+	const double y = _actions->getY();
+
+	// all following drawings are relative to (0,0)
+	_actions->setX(0);
+	_actions->setY(0);
+	moveToDVIPos();
+
+	// transform current DVI position and bounding box location
+	// according to current transformation matrix
+	DPair llTrans = _actions->getMatrix()*DPair(llx, lly);
+	DPair urTrans = _actions->getMatrix()*DPair(urx, ury);
+	DPair dviposTrans = _actions->getMatrix()*DPair(x, y);
+
+	_xmlnode = new XMLElementNode("g");  // append following elements to this group
+	_psi.execute("\n@beginspecial @setspecial "); // enter \special environment
+	EPSFile epsfile(filepath);
+	_psi.limit(epsfile.pslength());  // limit the number of bytes going to be processed
+	_psi.execute(epsfile.istream()); // process EPS file
+	_psi.limit(0);                   // disable limitation
+	_psi.execute("\n@endspecial ");  // leave special environment
+	if (_xmlnode->empty())           // nothing been drawn?
+		delete _xmlnode;              // => don't need to add empty group node
+	else {                           // has anything been drawn?
+		Matrix matrix(1);
+		matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
+		matrix.translate(-llTrans);
+		matrix.scale(sx, sy);          // resize image to width "rwi" and height "rhi"
+		matrix.translate(dviposTrans); // move image to current DVI position
+		if (!matrix.isIdentity())
+			_xmlnode->addAttribute("transform", matrix.getSVG());
+		_actions->appendToPage(_xmlnode);
+	}
+	_xmlnode = 0;   // append following elements to page group again
+
+	// restore DVI position
+	_actions->setX(x);
+	_actions->setY(y);
+	moveToDVIPos();
+
+	// update bounding box
+	m.scale(sx, -sy);
+	m.translate(dviposTrans);
+	bbox = BoundingBox(DPair(0, 0), abs(urTrans-llTrans));
+	bbox.transform(m);
+	_actions->embed(bbox);
 }
 
 
