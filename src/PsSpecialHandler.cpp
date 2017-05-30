@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
 #include <cmath>
 #include <fstream>
 #include <memory>
@@ -313,8 +312,8 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 	if (sx == 0 || sy == 0)
 		return;
 
-	if (sx < 0)	sx = sy;         // rwi attribute not set
-	if (sy < 0)	sy = sx;         // rhi attribute not set
+	if (sx < 0) sx = sy;         // rwi attribute not set
+	if (sy < 0) sy = sx;         // rhi attribute not set
 	if (sx < 0) sx = sy = 1.0;   // neither rwi nor rhi set
 
 	// save current DVI position
@@ -797,7 +796,7 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 	}
 	else {
 		// compute the intersection of the current clipping path with the current graphics path
-		Path *oldPath = _clipStack.getPath(oldID);
+		const Path *oldPath = _clipStack.top();
 		Path intersectedPath(windingRule);
 		PathClipper clipper;
 		clipper.intersect(*oldPath, path, intersectedPath);
@@ -1149,22 +1148,20 @@ void PsSpecialHandler::executed () {
 
 void PsSpecialHandler::ClippingStack::pushEmptyPath () {
 	if (!_stack.empty())
-		_stack.push(Entry(0, -1));
+		_stack.emplace(Entry());
 }
 
 
 void PsSpecialHandler::ClippingStack::push (const Path &path, int saveID) {
 	if (path.empty())
-		_stack.push(Entry(0, saveID));
-	else {
-		_paths.push_back(path);
-		_stack.push(Entry(_paths.size(), saveID));
-	}
+		_stack.emplace(Entry(saveID));
+	else
+		_stack.emplace(Entry(path, ++_maxID, saveID));
 }
 
 
 /** Pops a single or several elements from the clipping stack.
- *  The method distingushes between the following cases:
+ *  The method distinguishes between the following cases:
  *  1) saveID < 0 and grestoreall == false:
  *     pop top element if it was pushed by gsave (its saveID is < 0 as well)
  *  2) saveID < 0 and grestoreall == true
@@ -1173,36 +1170,30 @@ void PsSpecialHandler::ClippingStack::push (const Path &path, int saveID) {
  *  3) saveID >= 0:
  *     pop all elements until the saveID of the top element equals parameter saveID */
 void PsSpecialHandler::ClippingStack::pop (int saveID, bool grestoreall) {
-	if (!_stack.empty()) {
-		if (saveID < 0) {                // grestore?
-			if (_stack.top().saveID < 0)  // pushed by 'gsave'?
-				_stack.pop();
-			// pop all further elements pushed by 'gsave' if grestoreall == true
-			while (grestoreall && !_stack.empty() && _stack.top().saveID < 0)
-				_stack.pop();
-		}
-		else {
-			// pop elements pushed by 'gsave'
-			while (!_stack.empty() && _stack.top().saveID != saveID)
-				_stack.pop();
-			// pop element pushed by 'save'
-			if (!_stack.empty())
-				_stack.pop();
-		}
+	if (_stack.empty())
+		return;
+
+	if (saveID < 0) {                // grestore?
+		if (_stack.top().saveID < 0)  // pushed by 'gsave'?
+			_stack.pop();
+		// pop all further elements pushed by 'gsave' if grestoreall == true
+		while (grestoreall && !_stack.empty() && _stack.top().saveID < 0)
+			_stack.pop();
+	}
+	else {
+		// pop elements pushed by 'gsave'
+		while (!_stack.empty() && _stack.top().saveID != saveID)
+			_stack.pop();
+		// pop element pushed by 'save'
+		if (!_stack.empty())
+			_stack.pop();
 	}
 }
 
 
 /** Returns a pointer to the path on top of the stack, or 0 if the stack is empty. */
 const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () const {
-	return (!_stack.empty() && _stack.top().pathID)
-		? &_paths[_stack.top().pathID-1]
-		: 0;
-}
-
-
-PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::getPath (size_t id) {
-	return (id > 0 && id <= _paths.size()) ? &_paths[id-1] : 0;
+	return _stack.empty() ? nullptr : _stack.top().path.get();
 }
 
 
@@ -1221,7 +1212,6 @@ void PsSpecialHandler::ClippingStack::setClippathLoaded (bool loaded) {
 
 /** Pops all elements from the stack. */
 void PsSpecialHandler::ClippingStack::clear() {
-	_paths.clear();
 	while (!_stack.empty())
 		_stack.pop();
 }
@@ -1233,15 +1223,15 @@ void PsSpecialHandler::ClippingStack::replace (const Path &path) {
 	if (_stack.empty())
 		push(path, -1);
 	else {
-		_paths.push_back(path);
-		_stack.top().pathID = _paths.size();
+		_stack.top().path = make_shared<Path>(path);
+		_stack.top().pathID = ++_maxID;
 	}
 }
 
 
 /** Duplicates the top element, i.e. the top element is pushed again. */
 void PsSpecialHandler::ClippingStack::dup (int saveID) {
-	_stack.push(_stack.empty() ? Entry(0, -1) : _stack.top());
+	_stack.emplace(_stack.empty() ? Entry() : _stack.top());
 	_stack.top().saveID = saveID;
 }
 

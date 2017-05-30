@@ -21,6 +21,7 @@
 #ifndef PSSPECIALHANDLER_HPP
 #define PSSPECIALHANDLER_HPP
 
+#include <memory>
 #include <set>
 #include <stack>
 #include <string>
@@ -40,9 +41,13 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 	using Path = GraphicsPath<double>;
 	using ColorSpace = Color::ColorSpace;
 
-	class ClippingStack
-	{
+	/** Helper class storing the clipping paths currently present on the graphics context stack.
+	 *  Since PS operator 'clippath' only delivers a linearly approximated version of the paths
+	 *  that are sometimes too imprecise for direct usage in SVG, we keep the possibly curved
+	 *  clipping paths and compute their intersections locally if necessary. */
+	class ClippingStack {
 		public:
+			ClippingStack () : _maxID(0) {}
 			void pushEmptyPath ();
 			void push (const Path &path, int saveID=-1);
 			void replace (const Path &path);
@@ -53,18 +58,22 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 			bool clippathLoaded () const;
 			void setClippathLoaded (bool loaded);
 			const Path* top () const;
-			Path* getPath (size_t id);
 			int topID () const {return _stack.empty() ? 0 : _stack.top().pathID;}
 
 		private:
 			struct Entry {
-				int pathID;        ///< index referencing a path of the pool
-				int saveID;        ///< if >=0, path was pushed by 'save', and saveID holds the ID of the
+				std::shared_ptr<Path> path;  // pointer to current clipping path
+				int pathID;        ///< ID of current clipping path
+				int saveID;        ///< if >=0, path was pushed by 'save', and saveID holds the ID of the PS memory object
 				bool cpathLoaded;  ///< true if clipping path was loaded into current path
-				Entry (int pid, int sid) : pathID(pid), saveID(sid), cpathLoaded(false) {}
+				Entry () : Entry(-1) {}
+				Entry (const Path &p, int pid, int sid) : path(std::make_shared<Path>(p)), pathID(pid), saveID(sid), cpathLoaded(false) {}
+				Entry (int sid) : path(nullptr), pathID(0), saveID(sid), cpathLoaded(false) {}
+				Entry (const Entry &entry) =default;
+				Entry (Entry &&entry) =default;
 			};
-			std::vector<Path> _paths;  ///< pool of all clipping paths
-			std::stack<Entry> _stack;
+			size_t _maxID;
+			std::stack<Entry> _stack;  ///< stack holding the clipping information of the current graphics context
 	};
 
 	enum PsSection {PS_NONE, PS_HEADERS, PS_BODY};
@@ -154,7 +163,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		Color _currentcolor;        ///< current stroke/fill color
 		double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
 		double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
-		double _linewidth;          ///< current linewidth
+		double _linewidth;          ///< current line width
 		double _miterlimit;         ///< current miter limit
 		double _opacityalpha;       ///< opacity level (0=fully transparent, ..., 1=opaque)
 		uint8_t _linecap  : 2;      ///< current line cap (0=butt, 1=round, 2=projecting square)
