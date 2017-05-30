@@ -22,8 +22,8 @@
 #define GRAPHICSPATH_HPP
 
 #include <cctype>
+#include <deque>
 #include <ostream>
-#include <vector>
 #include "BoundingBox.hpp"
 #include "Matrix.hpp"
 #include "Pair.hpp"
@@ -320,7 +320,7 @@ class GraphicsPath
 		void iterate (Actions &actions, bool optimize) const;
 
 	private:
-		std::vector<Command> _commands;
+		std::deque<Command> _commands;
 		WindingRule _windingRule;
 };
 
