@@ -139,9 +139,9 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void sethsbcolor (std::vector<double> &hsb) override;
 		void setlinecap (std::vector<double> &p) override      {_linecap = uint8_t(p[0]);}
 		void setlinejoin (std::vector<double> &p) override     {_linejoin = uint8_t(p[0]);}
-		void setlinewidth (std::vector<double> &p) override    {_linewidth = p[0] ? scale(p[0])*1.00375 : 0.5;}
+		void setlinewidth (std::vector<double> &p) override    {_linewidth = p[0] ? scale(p[0]) : 0.5;}
 		void setmatrix (std::vector<double> &p) override;
-		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0]*1.00375;}
+		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0];}
 		void setopacityalpha (std::vector<double> &p) override {_opacityalpha = p[0];}
 		void setpattern (std::vector<double> &p) override;
 		void setrgbcolor (std::vector<double> &rgb) override;
@@ -163,8 +163,8 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		Color _currentcolor;        ///< current stroke/fill color
 		double _sx, _sy;            ///< horizontal and vertical scale factors retrieved by operator "applyscalevals"
 		double _cos;                ///< cosine of angle between (1,0) and transform(1,0)
-		double _linewidth;          ///< current line width
-		double _miterlimit;         ///< current miter limit
+		double _linewidth;          ///< current line width in bp units
+		double _miterlimit;         ///< current miter limit in bp units
 		double _opacityalpha;       ///< opacity level (0=fully transparent, ..., 1=opaque)
 		uint8_t _linecap  : 2;      ///< current line cap (0=butt, 1=round, 2=projecting square)
 		uint8_t _linejoin : 2;      ///< current line join (0=miter, 1=round, 2=bevel)
