@@ -327,8 +327,8 @@ void PsSpecialHandler::psfile (const string &fname, const map<string,string> &at
 
 	// transform current DVI position and bounding box location
 	// according to current transformation matrix
-	DPair llTrans = _actions->getMatrix()*DPair(llx, lly);
-	DPair urTrans = _actions->getMatrix()*DPair(urx, ury);
+	DPair llTrans = _actions->getMatrix()*DPair(llx, -lly);
+	DPair urTrans = _actions->getMatrix()*DPair(urx, -ury);
 	DPair dviposTrans = _actions->getMatrix()*DPair(x, y);
 
 	_xmlnode = new XMLElementNode("g");  // append following elements to this group
