@@ -1,6 +1,8 @@
 version: 2.1.3-{build}
 configuration: Release
 
+image: Visual Studio 2017
+
 platform:
   - x64
   - Win32
@@ -11,7 +13,7 @@ branches:
 
 install:
   - set POTRACE_VER=1.14
-  - set FREETYPE_VER=2.7.1
+  - set FREETYPE_VER=2.8
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
   - cd vc
