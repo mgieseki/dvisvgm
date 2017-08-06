@@ -12,7 +12,7 @@ branches:
       - tmp
 
 install:
-  - set POTRACE_VER=1.14
+  - set POTRACE_VER=1.15
   - set FREETYPE_VER=2.8
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
@@ -27,7 +27,6 @@ install:
   - cd ..\potrace
   - appveyor DownloadFile http://potrace.sourceforge.net/download/%POTRACE_VER%/potrace-%POTRACE_VER%.tar.gz
   - tar xzf potrace-%POTRACE_VER%.tar.gz --strip-components=1
-  - sed -i "s/\(\"potracelib \"\)VERSION\(\"\"\)/\1 VERSION \2/" src\potracelib.c
   - del potrace-%POTRACE_VER%.tar.gz
   - cd ..\zlib
   - appveyor DownloadFile http://zlib.net/zlib-%ZLIB_VER%.tar.gz
