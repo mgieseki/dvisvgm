@@ -71,9 +71,8 @@ void PsSpecialHandler::initialize () {
 	if (_psSection == PS_NONE) {
 		initgraphics();
 		// execute dvips prologue/header files
-		const char *headers[] = {"tex.pro", "texps.pro", "special.pro", /*"color.pro",*/ 0};
-		for (const char **p=headers; *p; ++p)
-			processHeaderFile(*p);
+		for (const char *fname : {"tex.pro", "texps.pro", "special.pro"})
+			processHeaderFile(fname);
 		// disable bop/eop operators to prevent side-effects by
 		// unexpected bops/eops present in PS specials
 		_psi.execute("\nTeXDict begin /bop{pop pop}def /eop{}def end ");

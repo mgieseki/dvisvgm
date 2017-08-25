@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <array>
 #include <sstream>
 #include "DvisvgmSpecialHandler.hpp"
 #include "SpecialActions.hpp"
@@ -108,7 +109,7 @@ TEST_F(DvisvgmSpecialTest, rawdef) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern1) {
-	const char *cmds[] = {
+	constexpr auto cmds = {
 		"rawset pat1",
 		"raw text1",
 		"raw text2",
@@ -117,13 +118,13 @@ TEST_F(DvisvgmSpecialTest, pattern1) {
 		"rawput pat1",
 		"rawput pat1",
 	};
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.preprocess(0, iss, recorder);
 	}
 	handler.finishPreprocessing();
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.process(0, iss, recorder);
 	}
 	handler.finishPage();
@@ -133,7 +134,7 @@ TEST_F(DvisvgmSpecialTest, pattern1) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern2) {
-	const char *cmds[] = {
+	constexpr auto cmds = {
 		"rawset pat2",
 		"rawdef text1",
 		"rawdef text2",
@@ -142,13 +143,13 @@ TEST_F(DvisvgmSpecialTest, pattern2) {
 		"rawput pat2",
 		"rawput pat2",
 	};
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.preprocess(0, iss, recorder);
 	}
 	handler.finishPreprocessing();
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.process(0, iss, recorder);
 	}
 	handler.finishPage();
@@ -158,7 +159,7 @@ TEST_F(DvisvgmSpecialTest, pattern2) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern3) {
-	const char *cmds[] = {
+	constexpr auto cmds = {
 		"rawset pat3",
 		"raw text1",
 		"rawdef text2",
@@ -168,13 +169,13 @@ TEST_F(DvisvgmSpecialTest, pattern3) {
 		"rawput pat3",
 		"rawput pat3",
 	};
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.preprocess(0, iss, recorder);
 	}
 	handler.finishPreprocessing();
-	for (size_t i=0; i < sizeof(cmds)/sizeof(char*); i++) {
-		std::istringstream iss(cmds[i]);
+	for (const char *cmd : cmds) {
+		std::istringstream iss(cmd);
 		handler.process(0, iss, recorder);
 	}
 	EXPECT_TRUE(recorder.defsEquals("firsttext2"));

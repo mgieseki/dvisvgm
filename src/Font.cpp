@@ -550,11 +550,10 @@ uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 /** Delete all temporary font files created by Metafont. */
 void PhysicalFontImpl::tidy () const {
 	if (type() == Type::MF) {
-		const char *ext[] = {"gf", "tfm", "log", 0};
 		string fname = FileSystem::tmpdir()+name();
-		for (const char **p=ext; *p; ++p) {
-			if (FileSystem::exists(fname+"."+(*p)))
-				FileSystem::remove(fname+"."+(*p));
+		for (const char *ext : {"gf", "tfm", "log"}) {
+			if (FileSystem::exists(fname+"."+ext))
+				FileSystem::remove(fname+"."+ext);
 		}
 	}
 }

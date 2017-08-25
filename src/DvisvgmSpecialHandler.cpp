@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
+#include <array>
 #include <cstring>
 #include <utility>
 #include "DvisvgmSpecialHandler.hpp"
@@ -42,20 +42,21 @@ void DvisvgmSpecialHandler::preprocess (const char*, istream &is, SpecialActions
 	struct Command {
 		const char *name;
 		void (DvisvgmSpecialHandler::*handler)(InputReader&);
-	} commands[] = {
+	};
+	constexpr array<Command, 5> commands {{
 		{"raw",       &DvisvgmSpecialHandler::preprocessRaw},
 		{"rawdef",    &DvisvgmSpecialHandler::preprocessRawDef},
 		{"rawset",    &DvisvgmSpecialHandler::preprocessRawSet},
 		{"endrawset", &DvisvgmSpecialHandler::preprocessEndRawSet},
-		{"rawput",    &DvisvgmSpecialHandler::preprocessRawPut},
-	};
+		{"rawput",    &DvisvgmSpecialHandler::preprocessRawPut}
+	}};
 
 	StreamInputReader ir(is);
-	string cmd = ir.getWord();
-	for (size_t i=0; i < sizeof(commands)/sizeof(Command); i++) {
-		if (commands[i].name == cmd) {
+	string cmdstr = ir.getWord();
+	for (const Command &command : commands) {
+		if (command.name == cmdstr) {
 			ir.skipSpace();
-			(this->*commands[i].handler)(ir);
+			(this->*command.handler)(ir);
 			return;
 		}
 	}
@@ -119,21 +120,22 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
 	struct Command {
 		const char *name;
 		void (DvisvgmSpecialHandler::*handler)(InputReader&, SpecialActions&);
-	} commands[] = {
+	};
+	constexpr array<Command, 7> commands {{
 		{"raw",       &DvisvgmSpecialHandler::processRaw},
 		{"rawdef",    &DvisvgmSpecialHandler::processRawDef},
 		{"rawset",    &DvisvgmSpecialHandler::processRawSet},
 		{"endrawset", &DvisvgmSpecialHandler::processEndRawSet},
 		{"rawput",    &DvisvgmSpecialHandler::processRawPut},
 		{"bbox",      &DvisvgmSpecialHandler::processBBox},
-		{"img",       &DvisvgmSpecialHandler::processImg},
-	};
+		{"img",       &DvisvgmSpecialHandler::processImg}
+	}};
 	StreamInputReader ir(is);
-	string cmd = ir.getWord();
-	for (size_t i=0; i < sizeof(commands)/sizeof(Command); i++) {
-		if (commands[i].name == cmd) {
+	string cmdstr = ir.getWord();
+	for (const Command &command : commands) {
+		if (command.name == cmdstr) {
 			ir.skipSpace();
-			(this->*commands[i].handler)(ir, actions);
+			(this->*command.handler)(ir, actions);
 			return true;
 		}
 	}
@@ -145,20 +147,9 @@ bool DvisvgmSpecialHandler::process (const char *prefix, istream &is, SpecialAct
  *  @param[in,out] str text to expand
  *  @param[in] actions interfcae to the world outside the special handler */
 static void expand_constants (string &str, SpecialActions &actions) {
-	struct Constant {
-		const char *name;
-		string val;
-	}
-	constants[] = {
-		{"x", XMLString(actions.getX())},
-		{"y", XMLString(actions.getY())},
-		{"color", actions.getColor().svgColorString()},
-		{"nl", "\n"},
-		{0, ""}
-	};
 	bool repl_bbox = true;
 	while (repl_bbox) {
-		size_t pos = str.find(string("{?bbox "));
+		size_t pos = str.find("{?bbox ");
 		if (pos == string::npos)
 			repl_bbox = false;
 		else {
@@ -173,12 +164,22 @@ static void expand_constants (string &str, SpecialActions &actions) {
 				repl_bbox = false;
 		}
 	}
-	for (const Constant *p=constants; p->name; p++) {
-		const string pattern = string("{?")+p->name+"}";
+	struct Constant {
+		const char *name;
+		string val;
+	};
+	const array<Constant, 4> constants {{
+		{"x",     XMLString(actions.getX())},
+		{"y",     XMLString(actions.getY())},
+		{"color", actions.getColor().svgColorString()},
+		{"nl",    "\n"},
+	}};
+	for (const Constant &constant : constants) {
+		const string pattern = string("{?")+constant.name+"}";
 		size_t pos = str.find(pattern);
 		while (pos != string::npos) {
-			str.replace(pos, strlen(p->name)+3, p->val);
-			pos = str.find(pattern, pos+p->val.length());  // look for further matches
+			str.replace(pos, strlen(constant.name)+3, constant.val);
+			pos = str.find(pattern, pos+constant.val.length());  // look for further matches
 		}
 	}
 }

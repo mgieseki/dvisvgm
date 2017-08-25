@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <config.h>
+#include <array>
 #include <sstream>
 #include "CMap.hpp"
 #include "CMapManager.hpp"
@@ -95,10 +95,11 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 	if (!font || !cmap)
 		return 0;
 
-	static const struct CharMapIDToEncName {
+	struct CharMapIDToEncName {
 		CharMapID id;
 		const char *encname;
-	} encodings[] = {
+	};
+	const array<CharMapIDToEncName, 10> encodings {{
 		{CharMapID::WIN_UCS4,         "UCS4"},
 		{CharMapID::WIN_UCS2,         "UCS2"},
 		{CharMapID::WIN_SHIFTJIS,     "90ms-RKSJ"},
@@ -109,23 +110,22 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 		{CharMapID::MAC_TRADCHINESE,  "B5pc"},
 		{CharMapID::MAC_SIMPLCHINESE, "GBpc-EUC"},
 		{CharMapID::MAC_KOREAN,       "KSCpc-EUC"}
-	};
+	}};
 
 	// get IDs of all available charmaps in font
 	vector<CharMapID> charmapIDs;
 	font->collectCharMapIDs(charmapIDs);
 
-	const bool is_unicode_map = bool(dynamic_cast<const UnicodeCMap*>(cmap));
-	const size_t num_encodings = is_unicode_map ? 2 : sizeof(encodings)/sizeof(CharMapIDToEncName);
 
 	// try to find a compatible encoding CMap
+	const bool is_unicode_map = bool(dynamic_cast<const UnicodeCMap*>(cmap));
 	const string ro = cmap->getROString();
-	for (const CharMapIDToEncName *enc=encodings; enc < enc+num_encodings; enc++) {
+	for (const CharMapIDToEncName &enc : encodings) {
 		for (size_t i=0; i < charmapIDs.size(); i++) {
-			if (enc->id == charmapIDs[i]) {
-				string cmapname = ro+"-"+enc->encname;
+			if (enc.id == charmapIDs[i]) {
+				string cmapname = ro+"-"+enc.encname;
 				if (is_unicode_map || FileFinder::instance().lookup(cmapname, "cmap", false)) {
-					charmapID = enc->id;
+					charmapID = enc.id;
 					return is_unicode_map ? cmap : lookup(cmapname);
 				}
 			}

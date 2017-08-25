@@ -139,9 +139,8 @@ static bool set_temp_dir (const CommandLine &args) {
 
 
 static bool check_bbox (const string &bboxstr) {
-	const char *formats[] = {"none", "min", "preview", "papersize", "dvi", 0};
-	for (const char **p=formats; *p; ++p)
-		if (bboxstr == *p)
+	for (const char *fmt : {"none", "min", "preview", "papersize", "dvi"})
+		if (bboxstr == fmt)
 			return true;
 	if (isalpha(bboxstr[0])) {
 		try {
@@ -260,10 +259,9 @@ static void init_fontmap (const CommandLine &cmdline) {
 	const char *mapseq = cmdline.fontmapOpt.given() ? cmdline.fontmapOpt.value().c_str() : 0;
 	bool additional = mapseq && strchr("+-=", *mapseq);
 	if (!mapseq || additional) {
-		const char *mapfiles[] = {"ps2pk.map", "dvipdfm.map", "psfonts.map", 0};
 		bool found = false;
-		for (const char **p=mapfiles; *p && !found; p++)
-			found = FontMap::instance().read(*p);
+		for (const char *mapfile : {"ps2pk.map", "dvipdfm.map", "psfonts.map"})
+			found = FontMap::instance().read(mapfile);
 		if (!found)
 			Message::wstream(true) << "none of the default map files could be found\n";
 	}

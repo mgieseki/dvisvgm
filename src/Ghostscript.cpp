@@ -51,13 +51,11 @@ static string get_path_from_registry () {
 	mode |= KEY_WOW64_32KEY;
 #endif
 #endif
-	static const char *gs_companies[] = {"GPL", "GNU", "AFPL", "Aladdin"};
-	for (size_t i=0; i < sizeof(gs_companies)/sizeof(char*); i++) {
-		const string reg_path = string("SOFTWARE\\") + gs_companies[i] + " Ghostscript";
-		static HKEY reg_roots[] = {HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
-		for (size_t j=0; j < sizeof(reg_roots)/sizeof(HKEY); j++) {
+	for (const char *gs_company : {"GPL", "GNU", "AFPL", "Aladdin"}) {
+		const string reg_path = string("SOFTWARE\\") + gs_company + " Ghostscript";
+		for (HKEY reg_root : {HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE}) {
 			HKEY hkey;
-			if (RegOpenKeyExA(reg_roots[j], reg_path.c_str(), 0, mode, &hkey) == ERROR_SUCCESS) {
+			if (RegOpenKeyExA(reg_root, reg_path.c_str(), 0, mode, &hkey) == ERROR_SUCCESS) {
 				char subkey[16];
 				for (int k=0; RegEnumKeyA(hkey, k, subkey, 16) == ERROR_SUCCESS; k++) {
 					istringstream iss(subkey);
