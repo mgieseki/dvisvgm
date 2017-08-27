@@ -106,8 +106,9 @@ TEST_F(MapLineTest, pdfline3) {
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0.123);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.456);
 	EXPECT_DOUBLE_EQ(mapline.bold(), 1);
-	if (mapline.sfd() != 0)  // if UGBK.sfd is installed, check SFD name
+	if (mapline.sfd() != 0) { // if UGBK.sfd is installed, check SFD name
 		EXPECT_EQ(mapline.sfd()->name(), "UGBK");
+	}
 }
 
 TEST_F(MapLineTest, pdfline4) {
@@ -120,8 +121,9 @@ TEST_F(MapLineTest, pdfline4) {
 	EXPECT_EQ(mapline.fontindex(), 1);
 	EXPECT_DOUBLE_EQ(mapline.slant(), 0);
 	EXPECT_DOUBLE_EQ(mapline.extend(), 0.345);
-	if (mapline.sfd() != 0)  // if UGBK.sfd is installed, check SFD name
+	if (mapline.sfd() != 0) {  // if UGBK.sfd is installed, check SFD name
 		EXPECT_EQ(mapline.sfd()->name(), "UGBK");
+	}
 }
 
 
