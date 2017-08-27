@@ -73,7 +73,7 @@ bool Color::setPSName (string name, bool case_sensitive) {
 		const uint32_t rgb;
 	};
 	// converted color constants from color.pro
-	static const array<ColorConstant, 68> constants = {{
+	static const array<ColorConstant, 68> constants {{
 		{"Apricot",        0xFFAD7A},
 		{"Aquamarine",     0x2DFFB2},
 		{"Bittersweet",    0xC10200},
@@ -243,7 +243,7 @@ string Color::svgColorString (bool rgbonly) const {
 			uint32_t rgb;
 			const char *name;
 		};
-		static const array<ColorName, 138> colornames = {{
+		static const array<ColorName, 138> colornames {{
 			{0x000000, "black"},
 			{0x000080, "navy"},
 			{0x00008b, "darkblue"},

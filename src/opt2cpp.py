@@ -84,7 +84,7 @@ def create_hpp (optfile):
     vars["usage"] = vars["usage"][:-2]
 
     sections = root.xpath("//section")
-    vars["sectarray"] = "std::array<const char*, %d> _sections = {{\n" % len(sections)
+    vars["sectarray"] = "std::array<const char*, %d> _sections {{\n" % len(sections)
     for sect in sections:
         vars["sectarray"] += '\t\t\t"%s",\n' % sect.get("title")
     vars["sectarray"] += "\t\t}};\n"

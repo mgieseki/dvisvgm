@@ -91,7 +91,7 @@ void CMapReader::executeOperator (const string &opname, InputReader &ir) {
 		const char *name;
 		void (CMapReader::*handler)(InputReader&);
 	};
-	array<Operator, 6> operators = {{
+	constexpr array<Operator, 6> operators {{
 		{"beginbfchar",   &CMapReader::op_beginbfchar},
 		{"beginbfrange",  &CMapReader::op_beginbfrange},
 		{"begincidrange", &CMapReader::op_begincidrange},

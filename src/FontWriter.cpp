@@ -28,7 +28,7 @@ using namespace std;
 
 bool FontWriter::AUTOHINT_FONTS = false;
 
-const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos = {{
+const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos {{
 	{FontWriter::FontFormat::SVG, "image/svg+xml", "svg", "svg"},
 	{FontWriter::FontFormat::TTF, "application/x-font-ttf", "ttf", "truetype"},
 	{FontWriter::FontFormat::WOFF, "application/x-font-woff", "woff", "woff"},
