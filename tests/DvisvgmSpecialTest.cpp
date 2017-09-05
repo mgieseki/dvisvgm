@@ -109,7 +109,7 @@ TEST_F(DvisvgmSpecialTest, rawdef) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern1) {
-	constexpr auto cmds = {
+	const auto cmds = {
 		"rawset pat1",
 		"raw text1",
 		"raw text2",
@@ -134,7 +134,7 @@ TEST_F(DvisvgmSpecialTest, pattern1) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern2) {
-	constexpr auto cmds = {
+	const auto cmds = {
 		"rawset pat2",
 		"rawdef text1",
 		"rawdef text2",
@@ -159,7 +159,7 @@ TEST_F(DvisvgmSpecialTest, pattern2) {
 
 
 TEST_F(DvisvgmSpecialTest, pattern3) {
-	constexpr auto cmds = {
+	const auto cmds = {
 		"rawset pat3",
 		"raw text1",
 		"rawdef text2",
