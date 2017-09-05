@@ -55,6 +55,8 @@ class DvisvgmSpecialTest : public ::testing::Test
 				bool pageEquals (const string &str) const {return page.getText() == str;}
 				bool bboxEquals (const string &str) const {return bbox.toSVGViewBox() == str;}
 				const Matrix& getMatrix () const          {static Matrix m(1); return m;}
+				string bboxString () const                {return bbox.toSVGViewBox();}
+				string pageString () const                {return page.getText();}
 
 				void write (ostream &os) const {
 					os << "defs: " << defs.getText() << '\n'
@@ -203,6 +205,18 @@ TEST_F(DvisvgmSpecialTest, processImg) {
 	handler.process(0, iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;72&apos; width=&apos;72&apos; x=&apos;0&apos; xlink:href=&apos;test.png&apos; y=&apos;0&apos;/>"));
+
+	recorder.clear();
+	iss.clear();
+	iss.str("img 10bp 20bp test2.png");
+	handler.process(0, iss, recorder);
+	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;20&apos; width=&apos;10&apos; x=&apos;0&apos; xlink:href=&apos;test2.png&apos; y=&apos;0&apos;/>"));
+}
+
+
+TEST_F(DvisvgmSpecialTest, fail3) {
+	std::istringstream iss("img 10 20xy test.png");  // unknown unit
+	EXPECT_THROW(handler.process(0, iss, recorder), SpecialException);
 }
 
 
@@ -221,7 +235,25 @@ TEST_F(DvisvgmSpecialTest, processBBox) {
 
 	recorder.clear();
 	iss.clear();
+	iss.str("bbox 72bp 72bp");
+	handler.process(0, iss, recorder);
+	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+
+	recorder.clear();
+	iss.clear();
+	iss.str("bbox rel 72.27 72.27");
+	handler.process(0, iss, recorder);
+	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+
+	recorder.clear();
+	iss.clear();
 	iss.str("bbox new name");
 	handler.process(0, iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 0 0 0"));
+}
+
+
+TEST_F(DvisvgmSpecialTest, fail4) {
+	std::istringstream iss("bbox abs 0 0 72.27xx 72.27");  // unknown unit
+	EXPECT_THROW(handler.process(0, iss, recorder), SpecialException);
 }

@@ -249,11 +249,20 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
  *  @param[in] h height of the rectangle in PS point units
  *  @param[in] d depth of the rectangle in PS point units
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
-static void update_bbox (double w, double h, double d, SpecialActions &actions) {
+static void update_bbox (Length w, Length h, Length d, SpecialActions &actions) {
 	double x = actions.getX();
 	double y = actions.getY();
-	actions.embed(BoundingBox(x, y, x+w, y-h));
-	actions.embed(BoundingBox(x, y, x+w, y+d));
+	actions.embed(BoundingBox(x, y, x+w.bp(), y-h.bp()));
+	actions.embed(BoundingBox(x, y, x+w.bp(), y+d.bp()));
+}
+
+
+/** Reads a length value including a trailing unit specifier and returns it. */
+static Length read_length (InputReader &ir) {
+	ir.skipSpace();
+	double val = ir.getDouble();
+	string unit = isalpha(ir.peek()) ? ir.getString(2) : "pt";
+	return Length(val, unit);
 }
 
 
@@ -265,57 +274,66 @@ static void update_bbox (double w, double h, double d, SpecialActions &actions) 
 void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &actions) {
 	ir.skipSpace();
 	int c = ir.peek();
-	if (isalpha(c)) {
-		while (!isspace(ir.peek()))  // skip trailing characters
-			ir.get();
-		if (c == 'n') {
-			ir.skipSpace();
-			string name;
-			while (isalnum(ir.peek()))
-				name += char(ir.get());
-			ir.skipSpace();
-			if (!name.empty() && ir.eof())
-				actions.bbox(name, true); // create new user box
-		}
-		else if (c == 'a' || c == 'f') {
-			double p[4];
-			for (int i=0; i < 4; i++)
-				p[i] = ir.getDouble()*Length::pt2bp;
-			BoundingBox b(p[0], p[1], p[2], p[3]);
-			if (c == 'a')
-				actions.embed(b);
-			else {
-				actions.bbox() = b;
-				actions.bbox().lock();
+	try {
+		if (!isalpha(c))
+			c = 'r';   // no mode specifier => relative box parameters
+		else {
+			while (!isspace(ir.peek()))  // skip trailing characters
+				ir.get();
+			if (c == 'n') {   // "new": create new local bounding box
+				ir.skipSpace();
+				string name;
+				while (isalnum(ir.peek()))
+					name += char(ir.get());
+				ir.skipSpace();
+				if (!name.empty() && ir.eof())
+					actions.bbox(name, true); // create new user box
+			}
+			else if (c == 'a' || c == 'f') {  // "abs" or "fix"
+				Length lengths[4];
+				for (int i=0; i < 4; i++)
+					lengths[i] = read_length(ir);
+				BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);
+				if (c == 'a')
+					actions.embed(b);
+				else {
+					actions.bbox() = b;
+					actions.bbox().lock();
+				}
 			}
 		}
+		if (c == 'r') {
+			Length w = read_length(ir);
+			Length h = read_length(ir);
+			Length d = read_length(ir);
+			update_bbox(w, h, d, actions);
+		}
 	}
-	else
-		c = 'r';   // no mode specifier => relative box parameters
-
-	if (c == 'r') {
-		double w = ir.getDouble()*Length::pt2bp;
-		double h = ir.getDouble()*Length::pt2bp;
-		double d = ir.getDouble()*Length::pt2bp;
-		update_bbox(w, h, d, actions);
+	catch (const UnitException &e) {
+		throw SpecialException(string("dvisvgm:bbox: ") + e.what());
 	}
 }
 
 
 void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions) {
-	double w = ir.getDouble()*Length::pt2bp;
-	double h = ir.getDouble()*Length::pt2bp;
-	string f = ir.getString();
-	update_bbox(w, h, 0, actions);
-	XMLElementNode *img = new XMLElementNode("image");
-	img->addAttribute("x", actions.getX());
-	img->addAttribute("y", actions.getY());
-	img->addAttribute("width", w);
-	img->addAttribute("height", h);
-	img->addAttribute("xlink:href", f);
-	if (!actions.getMatrix().isIdentity())
-		img->addAttribute("transform", actions.getMatrix().getSVG());
-	actions.appendToPage(img);
+	try {
+		Length w = read_length(ir);
+		Length h = read_length(ir);
+		string f = ir.getString();
+		update_bbox(w, h, 0, actions);
+		XMLElementNode *img = new XMLElementNode("image");
+		img->addAttribute("x", actions.getX());
+		img->addAttribute("y", actions.getY());
+		img->addAttribute("width", w.bp());
+		img->addAttribute("height", h.bp());
+		img->addAttribute("xlink:href", f);
+		if (!actions.getMatrix().isIdentity())
+			img->addAttribute("transform", actions.getMatrix().getSVG());
+		actions.appendToPage(img);
+	}
+	catch (const UnitException &e) {
+		throw SpecialException(string("dvisvgm:img: ") + e.what());
+	}
 }
 
 
