@@ -21,8 +21,8 @@
 #ifndef HTMLSPECIALHANDLER_HPP
 #define HTMLSPECIALHANDLER_HPP
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include "Color.hpp"
 #include "SpecialHandler.hpp"
 
@@ -40,7 +40,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 	};
 
 	enum class AnchorType {NONE, HREF, NAME};
-	using NamedAnchors = std::map<std::string, NamedAnchor>;
+	using NamedAnchors = std::unordered_map<std::string, NamedAnchor>;
 
 	public:
 		HtmlSpecialHandler () : _active(false), _anchorType(AnchorType::NONE), _depthThreshold(0) {}

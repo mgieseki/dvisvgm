@@ -21,8 +21,8 @@
 #ifndef FONTCACHE_HPP
 #define FONTCACHE_HPP
 
-#include <string>
 #include <map>
+#include <string>
 #include "Glyph.hpp"
 
 

@@ -21,9 +21,9 @@
 #ifndef SPECIALMANAGER_HPP
 #define SPECIALMANAGER_HPP
 
-#include <map>
 #include <ostream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "SpecialHandler.hpp"
 
@@ -33,7 +33,7 @@ class SpecialManager
 {
 	private:
 		using HandlerPool = std::vector<SpecialHandler*>;
-		using HandlerMap = std::map<std::string,SpecialHandler*>;
+		using HandlerMap = std::unordered_map<std::string,SpecialHandler*>;
 
 	public:
 		~SpecialManager ();

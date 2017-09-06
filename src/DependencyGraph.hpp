@@ -68,7 +68,7 @@ class DependencyGraph
 		void insert (const T &depKey, const T &key) {
 			if (contains(key))
 				return;
-			typename NodeMap::iterator it = _nodeMap.find(depKey);
+			auto it = _nodeMap.find(depKey);
 			if (it != _nodeMap.end()) {
 				GraphNode *node = new GraphNode(key);
 				it->second->addDependee(node);
@@ -77,7 +77,7 @@ class DependencyGraph
 		}
 
 		void removeDependencyPath (const T &key) {
-			typename NodeMap::iterator it = _nodeMap.find(key);
+			auto it = _nodeMap.find(key);
 			if (it != _nodeMap.end()) {
 				GraphNode *startNode = it->second;
 				for (GraphNode *node=startNode; node; node=node->dependent)
@@ -87,7 +87,7 @@ class DependencyGraph
 		}
 
 		void getKeys (std::vector<T> &keys) const {
-			for (typename NodeMap::const_iterator it=_nodeMap.begin(); it != _nodeMap.end(); ++it)
+			for (auto it=_nodeMap.begin(); it != _nodeMap.end(); ++it)
 				keys.push_back(it->first);
 		}
 
@@ -102,7 +102,7 @@ class DependencyGraph
 #if 0
 		void writeDOT (std::ostream &os) const {
 			os << "digraph {\n";
-			for (typename NodeMap::const_iterator it=_nodeMap.begin(); it != _nodeMap.end(); ++it) {
+			for (auto it=_nodeMap.begin(); it != _nodeMap.end(); ++it) {
 				GraphNode *node = it->second;
 				if (node->dependent)
 					os << (node->key) << " -> " << (node->dependent->key) << ";\n";

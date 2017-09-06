@@ -312,7 +312,7 @@ string InputReader::getLine () {
  *  @param[out] attr the scanned atributes
  *  @param[in] quotechar quote character used to enclose the attribute values
  *  @return number of attributes scanned */
-int InputReader::parseAttributes (map<string,string> &attr, char quotechar) {
+int InputReader::parseAttributes (unordered_map<string,string> &attr, char quotechar) {
 	bool ready=false;
 	while (!eof() && !ready) {
 		string key;

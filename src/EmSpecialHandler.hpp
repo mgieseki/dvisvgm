@@ -22,7 +22,7 @@
 #define EMSPECIALHANDLER_HPP
 
 #include <list>
-#include <map>
+#include <unordered_map>
 #include "Pair.hpp"
 #include "SpecialHandler.hpp"
 
@@ -54,10 +54,10 @@ class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		void point (InputReader &ir, SpecialActions &actions);
 
 	private:
-		std::map<int, DPair> _points; ///< points defined by special em:point
-		std::list<Line> _lines;       ///< list of lines with undefined end points
-		double _linewidth;            ///< global line width
-		DPair _pos;                   ///< current position of "graphic cursor"
+		std::unordered_map<int, DPair> _points; ///< points defined by special em:point
+		std::list<Line> _lines;  ///< list of lines with undefined end points
+		double _linewidth;       ///< global line width
+		DPair _pos;              ///< current position of "graphic cursor"
 };
 
 #endif

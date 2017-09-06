@@ -207,7 +207,7 @@ static string font_info (const Font &font) {
 }
 
 
-void SVGTree::appendFontStyles (const set<const Font*> &fonts) {
+void SVGTree::appendFontStyles (const unordered_set<const Font*> &fonts) {
 	if (CREATE_CSS && USE_FONTS && !fonts.empty() && _page) {
 		map<int, const Font*> sortmap;
 		for (const Font *font : fonts)

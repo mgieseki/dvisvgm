@@ -212,7 +212,7 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 		if (_actions) {
 			StreamInputReader in(is);
 			string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
-			map<string,string> attr;
+			unordered_map<string,string> attr;
 			in.parseAttributes(attr);
 			psfile(fname, attr);
 		}
@@ -271,13 +271,13 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 /** Handles psfile special.
  *  @param[in] fname EPS file to be included
  *  @param[in] attr attributes given with \\special psfile */
-void PsSpecialHandler::psfile (const string &fname, const map<string,string> &attr) {
+void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,string> &attr) {
 	const char *filepath = FileFinder::instance().lookup(fname, false);
 	if (!filepath) {
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 		return;
 	}
-	map<string,string>::const_iterator it;
+	unordered_map<string,string>::const_iterator it;
 
 	// bounding box of EPS figure (lower left and upper right corner)
 	double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second) : 0;
@@ -728,7 +728,7 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	Color color;
 	if (p.size() == 4)
 		color.setRGB(p[1], p[2], p[3]);
-	map<int,PSPattern*>::iterator it = _patterns.find(pattern_id);
+	auto it = _patterns.find(pattern_id);
 	if (it == _patterns.end())
 		_pattern = 0;
 	else {

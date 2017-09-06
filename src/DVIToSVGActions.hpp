@@ -21,8 +21,8 @@
 #ifndef DVITOSVGACTIONS_HPP
 #define DVITOSVGACTIONS_HPP
 
-#include <map>
-#include <set>
+#include <unordered_map>
+#include <unordered_set>
 #include "BoundingBox.hpp"
 #include "DVIActions.hpp"
 #include "Matrix.hpp"
@@ -38,9 +38,9 @@ class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions
 {
-	using CharMap = std::map<const Font*, std::set<int>>;
-	using FontSet = std::set<const Font*>;
-	using BoxMap = std::map<std::string,BoundingBox>;
+	using CharMap = std::unordered_map<const Font*, std::set<int>>;
+	using FontSet = std::unordered_set<const Font*>;
+	using BoxMap = std::unordered_map<std::string,BoundingBox>;
 
 	public:
 		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);

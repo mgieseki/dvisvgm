@@ -101,7 +101,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void moveToDVIPos ();
 		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
-		void psfile (const std::string &fname, const std::map<std::string,std::string> &attr);
+		void psfile (const std::string &fname, const std::unordered_map<std::string,std::string> &attr);
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path &path, bool evenodd);
 		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);
@@ -171,7 +171,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		double _dashoffset;         ///< current dash offset
 		std::vector<double> _dashpattern;
 		ClippingStack _clipStack;
-		std::map<int, PSPattern*> _patterns;
+		std::unordered_map<int, PSPattern*> _patterns;
 		PSTilingPattern *_pattern;  ///< current pattern
 };
 

@@ -222,7 +222,7 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 	if (_nestingLevel > 0)
 		return;
 	string id = ir.getString();
-	MacroMap::iterator it = _macros.find(id);
+	auto it = _macros.find(id);
 	if (it == _macros.end())
 		throw SpecialException("undefined SVG fragment '" + id + "' referenced");
 

@@ -269,7 +269,7 @@ void DVIToSVG::getPageTransformation(Matrix &matrix) const {
 }
 
 
-static void collect_chars (map<const Font*, set<int>> &fontmap) {
+static void collect_chars (unordered_map<const Font*, set<int>> &fontmap) {
 	for (const auto &entry : fontmap) {
 		if (entry.first->uniqueFont() != entry.first) {
 			for (int c : entry.second)
@@ -288,12 +288,12 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
 		return;
 
 	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(_actions);
-	map<const Font*,set<int>> &usedCharsMap = svgActions->getUsedChars();
+	auto &usedCharsMap = svgActions->getUsedChars();
 
 	collect_chars(usedCharsMap);
 
 	GlyphTracerMessages messages;
-	set<const Font*> tracedFonts;  // collect unique fonts already traced
+	unordered_set<const Font*> tracedFonts;  // collect unique fonts already traced
 	for (const auto &fontchar : usedCharsMap) {
 		const Font *font = fontchar.first;
 		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {

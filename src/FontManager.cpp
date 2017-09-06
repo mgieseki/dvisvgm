@@ -47,7 +47,7 @@ int FontManager::fontID (int n) const {
 		auto it = _num2id.find(n);
 		return (it == _num2id.end()) ? -1 : it->second;
 	}
-	VfNum2IdMap::const_iterator vit = _vfnum2id.find(_vfStack.top());
+	auto vit = _vfnum2id.find(_vfStack.top());
 	if (vit == _vfnum2id.end())
 		return -1;
 	const Num2IdMap &num2id = vit->second;
@@ -101,7 +101,7 @@ int FontManager::fontnum (int id) const {
 
 
 int FontManager::vfFirstFontNum (const VirtualFont *vf) const {
-	VfFirstFontMap::const_iterator it = _vfFirstFontMap.find(vf);
+	auto it = _vfFirstFontMap.find(vf);
 	return (it == _vfFirstFontMap.end()) ? -1 : (int) it->second;
 }
 
@@ -173,7 +173,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 
 	unique_ptr<Font> newfont;
 	const int newid = _fonts.size();   // the new font gets this ID
-	Name2IdMap::iterator it = _name2id.find(name);
+	auto it = _name2id.find(name);
 	if (it != _name2id.end()) {  // font with same name already registered?
 		const auto &font = _fonts[it->second];
 		newfont.reset(font->clone(dsize, ssize));
@@ -261,7 +261,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 	const char *path = filename.c_str();
 	unique_ptr<Font> newfont;
 	const int newid = _fonts.size();   // the new font gets this ID
-	Name2IdMap::iterator it = _name2id.find(fontname);
+	auto it = _name2id.find(fontname);
 	if (it != _name2id.end()) {  // font with same name already registered?
 		if (NativeFont *font = dynamic_cast<NativeFont*>(_fonts[it->second].get()))
 			newfont.reset(font->clone(ptsize, style, color));

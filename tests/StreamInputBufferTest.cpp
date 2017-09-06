@@ -19,15 +19,15 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 
 using std::istringstream;
-using std::map;
 using std::string;
+using std::unordered_map;
 
 TEST(StreamInputBufferTest, get) {
 	istringstream iss("abcdefghijklmnopqrstuvwxyz");
@@ -186,7 +186,7 @@ TEST(StreamInputBufferTest, attribs) {
 	istringstream iss("aaa=1 bbb=2 ccc=3 d e");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
-	map<string,string> attr;
+	unordered_map<string,string> attr;
 	int s = in.parseAttributes(attr);
 	EXPECT_EQ(s, 3);
 	EXPECT_EQ(attr["aaa"], "1");

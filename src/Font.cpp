@@ -560,10 +560,10 @@ void PhysicalFontImpl::tidy () const {
 //////////////////////////////////////////////////////////////////////////////
 
 string NativeFont::uniqueName (const string &path, const FontStyle &style) {
-	static map<string, int> ids;
+	static unordered_map<string, int> ids;
 	ostringstream oss;
 	oss << path << "b" << style.bold << "e" << style.extend << "s" << style.slant;
-	map<string, int>::iterator it = ids.find(oss.str());
+	auto it = ids.find(oss.str());
 	int id = ids.size();
 	if (it == ids.end())
 		ids[oss.str()] = id;

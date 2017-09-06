@@ -22,7 +22,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include "Message.hpp"
 #include "Terminal.hpp"
 
@@ -233,7 +233,7 @@ void Message::init () {
 	_classColors[MC_PROGRESS]     = Color(Terminal::MAGENTA);
 
 	if (const char *color_str = getenv("DVISVGM_COLORS")) {
-		map<string, MessageClass> classes = {
+		unordered_map<string, MessageClass> classes = {
 			{"er", MC_ERROR},
 			{"wn", MC_WARNING},
 			{"pn", MC_PAGE_NUMBER},

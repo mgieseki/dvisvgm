@@ -21,9 +21,9 @@
 #ifndef FONT_HPP
 #define FONT_HPP
 
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "Character.hpp"
 #include "CharMapID.hpp"
@@ -41,12 +41,9 @@
 #include "VFActions.hpp"
 #include "VFReader.hpp"
 
-
 struct FontStyle;
 
-
-struct GlyphMetrics
-{
+struct GlyphMetrics {
 	GlyphMetrics () : wl(0), wr(0), h(0), d(0) {}
 	GlyphMetrics (double wwl, double wwr, double hh, double dd) : wl(wwl), wr(wwr), h(hh), d(dd) {}
 	double wl, wr, h, d;
@@ -371,7 +368,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 		void assignChar (uint32_t c, DVIVector &&dvi) override;
 
 	private:
-		std::map<uint32_t, DVIVector> _charDefs; ///< dvi subroutines defining the characters
+		std::unordered_map<uint32_t, DVIVector> _charDefs; ///< dvi subroutines defining the characters
 };
 
 

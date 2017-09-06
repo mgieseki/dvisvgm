@@ -38,7 +38,7 @@ CMapManager& CMapManager::instance () {
 
 /** Loads a cmap and returns the corresponding object. */
 CMap* CMapManager::lookup (const string &name) {
-	CMaps::iterator it = _cmaps.find(name);
+	auto it = _cmaps.find(name);
 	if (it != _cmaps.end())
 		return it->second.get();
 

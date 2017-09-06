@@ -21,8 +21,8 @@
 #ifndef DVISVGMSPECIALHANDLER_HPP
 #define DVISVGMSPECIALHANDLER_HPP
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "SpecialHandler.hpp"
 
@@ -32,7 +32,7 @@ class SpecialActions;
 class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingListener, public DVIEndPageListener
 {
 	using StringVector = std::vector<std::string>;
-	using MacroMap = std::map<std::string, StringVector>;
+	using MacroMap = std::unordered_map<std::string, StringVector>;
 
 	public:
 		DvisvgmSpecialHandler ();

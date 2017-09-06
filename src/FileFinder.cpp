@@ -32,8 +32,8 @@
 
 #include <cstdlib>
 #include <fstream>
-#include <map>
 #include <set>
+#include <unordered_map>
 #include "FileFinder.hpp"
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
@@ -162,7 +162,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		return 0;
 	}
 #endif
-	static std::map<std::string, kpse_file_format_type> types = {
+	static std::unordered_map<std::string, kpse_file_format_type> types = {
 		{"tfm",  kpse_tfm_format},
 		{"pfb",  kpse_type1_format},
 		{"vf",   kpse_vf_format},

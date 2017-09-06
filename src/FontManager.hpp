@@ -21,12 +21,12 @@
 #ifndef FONTMANAGER_HPP
 #define FONTMANAGER_HPP
 
-#include <map>
 #include <memory>
 #include <ostream>
 #include <set>
 #include <string>
 #include <stack>
+#include <unordered_map>
 #include <vector>
 #include "Color.hpp"
 #include "FontStyle.hpp"
@@ -43,10 +43,10 @@ class VirtualFont;
  *  appear anywhere in the output. */
 class FontManager
 {
-	using Num2IdMap = std::map<uint32_t,int>;
-	using Name2IdMap = std::map<std::string,int>;
-	using VfNum2IdMap = std::map<const VirtualFont*,Num2IdMap>;
-	using VfFirstFontMap = std::map<const VirtualFont*,uint32_t>;
+	using Num2IdMap = std::unordered_map<uint32_t,int>;
+	using Name2IdMap = std::unordered_map<std::string,int>;
+	using VfNum2IdMap = std::unordered_map<const VirtualFont*,Num2IdMap>;
+	using VfFirstFontMap = std::unordered_map<const VirtualFont*,uint32_t>;
 	using VfStack = std::stack<VirtualFont*>;
 
 	public:

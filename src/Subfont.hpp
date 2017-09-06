@@ -22,9 +22,9 @@
 #define SUBFONT_HPP
 
 #include <istream>
-#include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "MessageException.hpp"
 
@@ -35,7 +35,7 @@ class Subfont;
  *  encapsulates the evaluation of these files. */
 class SubfontDefinition
 {
-	using Subfonts = std::map<std::string, Subfont*>;
+	using Subfonts = std::unordered_map<std::string, Subfont*>;
 	public:
 		~SubfontDefinition ();
 		static SubfontDefinition* lookup (const std::string &name);

@@ -39,9 +39,9 @@ void HtmlSpecialHandler::preprocess (const char *, istream &is, SpecialActions &
 	StreamInputReader ir(is);
 	ir.skipSpace();
 	// collect page number and ID of named anchors
-	map<string,string> attribs;
+	unordered_map<string,string> attribs;
 	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
-		map<string,string>::iterator it;
+		unordered_map<string,string>::iterator it;
 		if ((it = attribs.find("name")) != attribs.end())
 			preprocessNameAnchor(it->second, actions);
 		else if ((it = attribs.find("href")) != attribs.end())
@@ -51,7 +51,7 @@ void HtmlSpecialHandler::preprocess (const char *, istream &is, SpecialActions &
 
 
 void HtmlSpecialHandler::preprocessNameAnchor (const string &name, SpecialActions &actions) {
-	NamedAnchors::iterator it = _namedAnchors.find(name);
+	auto it = _namedAnchors.find(name);
 	if (it == _namedAnchors.end()) {  // anchor completely undefined?
 		int id = static_cast<int>(_namedAnchors.size())+1;
 		_namedAnchors[name] = NamedAnchor(actions.getCurrentPageNumber(), id, 0);
@@ -83,8 +83,8 @@ bool HtmlSpecialHandler::process (const char *, istream &is, SpecialActions &act
 	_active = true;
 	StreamInputReader ir(is);
 	ir.skipSpace();
-	map<string,string> attribs;
-	map<string,string>::iterator it;
+	unordered_map<string,string> attribs;
+	unordered_map<string,string>::iterator it;
 	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
 		if ((it = attribs.find("href")) != attribs.end())   // <a href="URI">
 			processHrefAnchor(it->second, actions);

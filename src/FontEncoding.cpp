@@ -27,7 +27,7 @@
 using namespace std;
 
 
-struct EncodingMap : public map<string, EncFile*>
+struct EncodingMap : public unordered_map<string, EncFile*>
 {
 	~EncodingMap () {
 		for (auto &entry : *this)
@@ -44,7 +44,7 @@ FontEncoding* FontEncoding::encoding (const string &encname) {
 		return 0;
 	// initially, try to find an .enc file with the given name
 	static EncodingMap encmap;
-	EncodingMap::const_iterator it = encmap.find(encname);
+	auto it = encmap.find(encname);
 	if (it != encmap.end())
 		return it->second;
 	if (FileFinder::instance().lookup(encname + ".enc", false)) {
