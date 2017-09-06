@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #ifdef _WIN32
-	#include <windows.h>
+	#include "windows.hpp"
 #else
 	#include <fcntl.h>
 	#include <sys/wait.h>

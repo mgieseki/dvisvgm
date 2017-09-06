@@ -1,5 +1,5 @@
 /*************************************************************************
-** Directory.hpp                                                        **
+** windows.hpp                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2017 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,39 +18,15 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DIRECTORY_HPP
-#define DIRECTORY_HPP
+#ifndef WINDOWS_HPP
+#define WINDOWS_HPP
 
-#include <string>
-#ifdef _WIN32
-	#include "windows.hpp"
-#else
-	#include <dirent.h>
+// Prevent defining the macros min and max present in windows.h
+#ifndef NOMINMAX
+	#define NOMINMAX
 #endif
 
-class Directory
-{
-	public:
-		enum EntryType {ET_FILE, ET_DIR, ET_FILE_OR_DIR};
-
-	public:
-		Directory ();
-		Directory (const std::string &path);
-		~Directory ();
-		bool open (std::string path);
-		void close ();
-		const char* read (EntryType type=ET_FILE_OR_DIR);
-
-	private:
-		std::string _dirname;
-#ifdef _WIN32
-		bool _firstread;
-		HANDLE _handle;
-		WIN32_FIND_DATA _fileData;
-#else
-		DIR *_dir;
-		struct dirent *_dirent;
-#endif
-};
+#include <windows.h>
 
 #endif
+

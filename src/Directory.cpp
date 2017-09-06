@@ -23,7 +23,7 @@
 using namespace std;
 
 #ifdef _WIN32
-	#include <windows.h>
+	#include "windows.hpp"
 #else
 	#include <errno.h>
 	#include <sys/stat.h>

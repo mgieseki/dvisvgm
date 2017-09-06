@@ -24,7 +24,7 @@
 #include <string>
 
 #ifdef _WIN32
-	#include <windows.h>
+	#include "windows.hpp"
 #else
 	#include <dlfcn.h>
 #endif

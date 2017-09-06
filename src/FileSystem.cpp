@@ -36,7 +36,7 @@ using namespace std;
 
 #ifdef _WIN32
 	#include <direct.h>
-	#include <windows.h>
+	#include "windows.hpp"
 	const char *FileSystem::DEVNULL = "nul";
 	const char FileSystem::PATHSEP = '\\';
 	#define unlink _unlink
