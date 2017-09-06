@@ -27,7 +27,6 @@
 #include <string>
 #include "FontStyle.hpp"
 
-
 struct FontEncoding;
 class MapLine;
 class Subfont;
