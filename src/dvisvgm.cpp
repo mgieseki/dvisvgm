@@ -261,8 +261,10 @@ static void init_fontmap (const CommandLine &cmdline) {
 	bool additional = mapseq && strchr("+-=", *mapseq);
 	if (!mapseq || additional) {
 		bool found = false;
-		for (const char *mapfile : {"ps2pk.map", "dvipdfm.map", "psfonts.map"})
-			found = FontMap::instance().read(mapfile);
+		for (string mapfile : {"ps2pk", "pdftex", "dvipdfm", "psfonts"}) {
+			if ((found = FontMap::instance().read(mapfile+".map")))
+				break;
+		}
 		if (!found)
 			Message::wstream(true) << "none of the default map files could be found\n";
 	}
