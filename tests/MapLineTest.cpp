@@ -49,6 +49,18 @@ TEST_F(MapLineTest, psline1) {
 }
 
 TEST_F(MapLineTest, psline2) {
+	istringstream iss("texname0 TEXNAME0 <<texname.pfb <encname.enc");
+	MapLine mapline(iss);
+	EXPECT_EQ(mapline.texname(), "texname0");
+	EXPECT_EQ(mapline.psname(), "TEXNAME0");
+	EXPECT_EQ(mapline.fontfname(), "texname.pfb");
+	EXPECT_EQ(mapline.encname(), "encname");
+	EXPECT_DOUBLE_EQ(mapline.slant(), 0);
+	EXPECT_DOUBLE_EQ(mapline.extend(), 1);
+	EXPECT_DOUBLE_EQ(mapline.bold(), 0);
+}
+
+TEST_F(MapLineTest, psline3) {
 	istringstream iss("texname0 TEXNAME0 \".123 SlantFont .456 ExtendFont\" <encname.enc <[texname.ttf");
 	MapLine mapline(iss);
 	EXPECT_EQ(mapline.texname(), "texname0");
@@ -60,7 +72,7 @@ TEST_F(MapLineTest, psline2) {
 	EXPECT_DOUBLE_EQ(mapline.bold(), 0);
 }
 
-TEST_F(MapLineTest, psline3) {
+TEST_F(MapLineTest, psline4) {
 	istringstream iss("texname0 TEXNAME0 <encname.enc \".123 SlantFont IgnoreMe .456 ExtendFont\" <texname.ttf");
 	MapLine mapline(iss);
 	EXPECT_EQ(mapline.texname(), "texname0");
