@@ -30,10 +30,33 @@
 
 using namespace std;
 
-class FontCacheTest : public testing::Test
-{
+class LocalCache {
+	public:
+		LocalCache (const string &cachedir)
+			: _cachedir(cachedir),
+			  _created(!FileSystem::exists(cachedir) && FileSystem::mkdir(cachedir))
+		{
+		}
+
+		~LocalCache () {
+			if (_created)
+				FileSystem::rmdir(_cachedir);
+		}
+
+		string cachedir () const {return _cachedir;}
+
+	private:
+		string _cachedir;
+		bool _created;
+};
+
+
+static LocalCache localCache(BUILDDIR"/data");
+
+
+class FontCacheTest : public testing::Test {
 	protected:
-		FontCacheTest () : testing::Test(), cachedir(BUILDDIR"/data") {
+		FontCacheTest () : testing::Test(), cachedir(localCache.cachedir()) {
 			glyph1.moveto(0, 0);
 			glyph1.lineto(10, 0);
 			glyph1.lineto(10, 10);
