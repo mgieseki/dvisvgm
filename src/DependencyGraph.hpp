@@ -86,9 +86,11 @@ class DependencyGraph
 			}
 		}
 
-		void getKeys (std::vector<T> &keys) const {
-			for (auto it=_nodeMap.begin(); it != _nodeMap.end(); ++it)
-				keys.push_back(it->first);
+		std::vector<T> getKeys () const {
+			std::vector<T> keys;
+			for (auto &entry : _nodeMap)
+				keys.push_back(entry.first);
+			return keys;
 		}
 
 		bool contains (const T &value) const {

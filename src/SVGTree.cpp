@@ -355,9 +355,7 @@ void SVGTree::removeRedundantElements () {
 		idTree.removeDependencyPath(idref);
 	}
 	descendants.clear();
-	vector<string> ids;
-	idTree.getKeys(ids);
-	for (const string &str : ids) {
+	for (const string &str : idTree.getKeys()) {
 		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
 		_defs->remove(node);
 	}

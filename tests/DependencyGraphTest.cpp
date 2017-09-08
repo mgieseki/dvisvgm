@@ -21,6 +21,8 @@
 #include <gtest/gtest.h>
 #include "DependencyGraph.hpp"
 
+using namespace std;
+
 static void populate (DependencyGraph<int> &tree) {
 	tree.insert(1);
 	tree.insert(2);
@@ -29,6 +31,18 @@ static void populate (DependencyGraph<int> &tree) {
 	tree.insert(1, 5);
 	tree.insert(4, 6);
 	tree.insert(4, 7);
+}
+
+
+TEST(DependencyGraphTest, getKeys) {
+	DependencyGraph<int> graph;
+	populate(graph);
+	auto keys = graph.getKeys();
+	ASSERT_EQ(keys.size(), 7u);
+	int count=0;
+	for (int key : keys) {
+		ASSERT_EQ(keys[count++], key);
+	}
 }
 
 
