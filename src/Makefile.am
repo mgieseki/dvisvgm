@@ -218,6 +218,7 @@ libdvisvgm_a_SOURCES = \
 	VFActions.hpp \
 	VFReader.cpp \
 	VFReader.hpp \
+	windows.hpp \
 	XMLDocument.cpp \
 	XMLDocument.hpp \
 	XMLNode.cpp \
