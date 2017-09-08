@@ -33,7 +33,8 @@ class FileFinderTest : public ::testing::Test
 {
 	protected:
 		void SetUp () override {
-			FileFinder::init("FileFinderTest", "FileFinderTest", false);
+			extern std::string TEST_ARGV0;
+			FileFinder::init(TEST_ARGV0, "FileFinderTest", false);
 			FileFinder::instance().addLookupDir(SRCDIR);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}

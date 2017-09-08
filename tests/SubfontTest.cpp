@@ -29,7 +29,8 @@ class SubfontTest : public ::testing::Test
 {
 	protected:
 		void SetUp () override {
-			FileFinder::init("SubfontTest", "SubfontTest", false);
+			extern string TEST_ARGV0;
+			FileFinder::init(TEST_ARGV0, "SubfontTest", false);
 		}
 };
 

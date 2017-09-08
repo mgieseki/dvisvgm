@@ -31,7 +31,8 @@ class MapLineTest : public ::testing::Test
 {
 	protected:
 		void SetUp () override {
-			FileFinder::init("MapLineTest", "MapLineTest", false);
+			extern std::string TEST_ARGV0;
+			FileFinder::init(TEST_ARGV0, "MapLineTest", false);
 		}
 };
 

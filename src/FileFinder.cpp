@@ -43,7 +43,7 @@
 #include "MessageException.hpp"
 #include "Process.hpp"
 
-const char *FileFinder::_argv0 = nullptr;
+std::string FileFinder::_argv0;
 std::string FileFinder::_progname;
 bool FileFinder::_enableMktex = false;
 
@@ -57,9 +57,7 @@ FileFinder::FileFinder () {
 #ifdef MIKTEX
 	_miktex.reset(new MiKTeXCom);
 #else
-	if (_argv0 == nullptr)
-		_argv0 = "";
-	kpse_set_program_name(_argv0, _progname.c_str());
+	kpse_set_program_name(_argv0.c_str(), _progname.c_str());
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_env);
 	kpse_set_program_enabled(kpse_mf_format, 1, kpse_src_env);
@@ -71,9 +69,9 @@ FileFinder::FileFinder () {
 }
 
 
-void FileFinder::init (const char *argv0, const char *progname, bool enable_mktexmf) {
+void FileFinder::init (const std::string &argv0, const std::string &progname, bool enable_mktexmf) {
 	_argv0 = argv0;
-	_progname = progname;
+	_progname = progname.c_str();
 	_enableMktex = enable_mktexmf;
 }
 

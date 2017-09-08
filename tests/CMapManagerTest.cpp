@@ -34,7 +34,8 @@ class CMapManagerTest : public ::testing::Test
 {
 	protected:
 		void SetUp () override {
-			FileFinder::init("CMapManagerTest", "CMapManagerTest", false);
+			extern std::string TEST_ARGV0;
+			FileFinder::init(TEST_ARGV0, "CMapManagerTest", false);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 		}
 };

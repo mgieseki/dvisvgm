@@ -33,7 +33,8 @@ class FontManagerTest : public ::testing::Test
 {
 	public:
 		FontManagerTest () : fm(FontManager::instance()) {
-			FileFinder::init("FontManagerTest", "FontManagerTest", false);
+			extern std::string TEST_ARGV0;
+			FileFinder::init(TEST_ARGV0, "FontManagerTest", false);
 			FileFinder::instance().addLookupDir(SRCDIR"/data");
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
