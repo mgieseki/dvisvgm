@@ -14,7 +14,7 @@ cat >$out <<EOT
 SUBDIRS = data
 
 check_LTLIBRARIES = libgtest.la
-libgtest_la_SOURCES = gtest/src/gtest-all.cc gtest/src/gtest_main.cc
+libgtest_la_SOURCES = gtest/src/gtest-all.cc
 libgtest_la_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include -I\$(top_srcdir)/tests/gtest
 libgtest_la_LDFLAGS = -pthread
 EXTRA_DIST = gtest/LICENSE \\
@@ -23,6 +23,7 @@ EXTRA_DIST = gtest/LICENSE \\
 	gtest/src/gtest-death-test.cc \\
 	gtest/src/gtest-filepath.cc \\
 	gtest/src/gtest-internal-inl.h \\
+	gtest/src/gtest_main.cc \\
 	gtest/src/gtest-port.cc \\
 	gtest/src/gtest-printers.cc \\
 	gtest/src/gtest-test-part.cc \\
@@ -55,7 +56,7 @@ for f in *Test.cpp; do
 	cat >>$out <<EOT
 TESTS += $base
 check_PROGRAMS += $base
-${base}_SOURCES = $f
+${base}_SOURCES = $f testmain.cpp
 ${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include
 ${base}_LDADD = \$(TESTLIBS)
 
