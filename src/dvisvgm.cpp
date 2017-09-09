@@ -226,15 +226,13 @@ class VersionInfo {
 
 
 static void print_version (bool extended) {
-	ostringstream oss;
-	oss << "dvisvgm " << PROGRAM_VERSION;
+	string versionstr = string(PROGRAM_NAME)+" "+PROGRAM_VERSION;
 	if (extended) {
 #ifdef TARGET_SYSTEM
 		if (strlen(TARGET_SYSTEM) > 0)
-			oss << " (" TARGET_SYSTEM ")";
+			versionstr += " (" TARGET_SYSTEM ")";
 #endif
-		oss << "\n" << string(oss.str().length(), '-') << '\n';
-		cout << oss.str();
+		cout << versionstr << '\n' << string(versionstr.length(), '-') << '\n';
 		VersionInfo versionInfo;
 		versionInfo.add("clipper", CLIPPER_VERSION);
 		versionInfo.add("freetype", FontEngine::version());
