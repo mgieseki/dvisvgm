@@ -96,6 +96,8 @@ TEST(FileSystemTest, copy) {
 		EXPECT_EQ(ifs1.get(), ifs2.get());
 	}
 	EXPECT_TRUE(ifs2.eof());
+	ifs1.close();
+	ifs2.close();
 	FileSystem::remove(tmpfile1);
 	FileSystem::remove(tmpfile2);
 }
@@ -117,5 +119,6 @@ TEST(FileSystemTest, move) {
 	}
 	ifs2.get();
 	EXPECT_TRUE(ifs2.eof());
+	ifs2.close();
 	FileSystem::remove(tmpfile2);
 }
