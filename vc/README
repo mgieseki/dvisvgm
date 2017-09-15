@@ -1,4 +1,4 @@
-In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2015 you
+In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2017 you
 need to download the source code archives of the following libraries:
 
 FreeType:   https://freetype.org
@@ -13,7 +13,7 @@ miktex-2.9.4106-sdk is created there.
 
 The contents of the library archives go into the corresponding subfolders
 already present in the "vc" directory. Extract the archives and move the
-contents of the versioned root folders, e.g. zlib-1.2.8, to the dedicated
+contents of the versioned root folders, e.g. zlib-1.2.11, to the dedicated
 subfolders of the "vc" directory.
 For example, the contents of zlib-1.2.8 should be moved to dvisvgm\vc\zlib.
 The versioned library folders are not required and can be deleted.
