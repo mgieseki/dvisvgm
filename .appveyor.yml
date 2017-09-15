@@ -13,7 +13,7 @@ branches:
 
 install:
   - set POTRACE_VER=1.15
-  - set FREETYPE_VER=2.8
+  - set FREETYPE_VER=2.8.1
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
   - cd vc
