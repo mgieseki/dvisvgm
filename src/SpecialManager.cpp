@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <iomanip>
+#include <map>
 #include <sstream>
 #include "SpecialActions.hpp"
 #include "SpecialHandler.hpp"
@@ -30,11 +31,6 @@ using namespace std;
 double SpecialActions::PROGRESSBAR_DELAY=1000;  // initial delay in seconds (values >= 1000 disable the progressbar)
 
 
-SpecialManager::~SpecialManager () {
-	unregisterHandlers();
-}
-
-
 SpecialManager& SpecialManager::instance() {
 	static SpecialManager sm;
 	return sm;
@@ -43,11 +39,11 @@ SpecialManager& SpecialManager::instance() {
 
 /** Remove all registered handlers. */
 void SpecialManager::unregisterHandlers () {
-	for (SpecialHandler *handler : _pool)
-		delete handler;
 	_pool.clear();
 	_handlers.clear();
+	_beginPageListeners.clear();
 	_endPageListeners.clear();
+	_preprocListeners.clear();
 	_positionListeners.clear();
 }
 
@@ -55,20 +51,21 @@ void SpecialManager::unregisterHandlers () {
 /** Registers a single special handler. This method doesn't check if a
  *  handler of the same class is already registered.
  *  @param[in] handler pointer to handler to be registered */
-void SpecialManager::registerHandler (SpecialHandler *handler) {
+void SpecialManager::registerHandler (unique_ptr<SpecialHandler> &&handler) {
 	if (handler) {
 		// get array of prefixes this handler is responsible for
-		_pool.push_back(handler);
 		for (const char **p=handler->prefixes(); *p; ++p)
-			_handlers[*p] = handler;
-		if (DVIPreprocessingListener *listener = dynamic_cast<DVIPreprocessingListener*>(handler))
+			_handlers[*p] = handler.get();
+		// initialize listener vectors
+		if (auto listener = dynamic_cast<DVIPreprocessingListener*>(handler.get()))
 			_preprocListeners.push_back(listener);
-		if (DVIBeginPageListener *listener = dynamic_cast<DVIBeginPageListener*>(handler))
+		if (auto listener = dynamic_cast<DVIBeginPageListener*>(handler.get()))
 			_beginPageListeners.push_back(listener);
-		if (DVIEndPageListener *listener = dynamic_cast<DVIEndPageListener*>(handler))
+		if (auto listener = dynamic_cast<DVIEndPageListener*>(handler.get()))
 			_endPageListeners.push_back(listener);
-		if (DVIPositionListener *listener = dynamic_cast<DVIPositionListener*>(handler))
+		if (auto listener = dynamic_cast<DVIPositionListener*>(handler.get()))
 			_positionListeners.push_back(listener);
+		_pool.emplace_back(std::move(handler));
 	}
 }
 
@@ -79,21 +76,18 @@ void SpecialManager::registerHandler (SpecialHandler *handler) {
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  @param[in] handlers pointer to zero-terminated array of handlers to be registered
  *  @param[in] ignorelist list of special names to be ignored */
-void SpecialManager::registerHandlers (SpecialHandler **handlers, const char *ignorelist) {
-	if (handlers) {
-		string ignorestr = ignorelist ? ignorelist : "";
-		for (char &c : ignorestr)
-			if (!isalnum(c))
-				c = '%';
-		ignorestr = "%"+ignorestr+"%";
+void SpecialManager::registerHandlers (vector<unique_ptr<SpecialHandler>> &handlers, const char *ignorelist) {
+	if (handlers.empty())
+		return;
+	string ignorestr = ignorelist ? ignorelist : "";
+	for (char &c : ignorestr)
+		if (!isalnum(c))
+			c = '%';
+	ignorestr = "%"+ignorestr+"%";
 
-		for (; *handlers; handlers++) {
-			if (!(*handlers)->name() || ignorestr.find("%"+string((*handlers)->name())+"%") == string::npos)
-				registerHandler(*handlers);
-			else
-				delete *handlers;
-		}
-	}
+	for (auto &handler : handlers)
+		if (!handler->name() || ignorestr.find("%"+string(handler->name())+"%") == string::npos)
+			registerHandler(std::move(handler));
 }
 
 
@@ -113,7 +107,7 @@ static string extract_prefix (istream &is) {
 	string prefix;
 	while (isalnum(c=is.get()))
 		prefix += c;
-	if (ispunct(c)) // also add seperation character to identifying prefix
+	if (ispunct(c)) // also add separation character to identifying prefix
 		prefix += c;
 	if (prefix == "ps:" && is.peek() == ':')
 		prefix += is.get();
@@ -173,11 +167,11 @@ void SpecialManager::notifyPositionChange (double x, double y, SpecialActions &a
 
 void SpecialManager::writeHandlerInfo (ostream &os) const {
 	ios::fmtflags osflags(os.flags());
-	HandlerMap sortmap;
-	for (const auto &strhandlerpair : _handlers)
-		if (strhandlerpair.second->name())
-			sortmap[strhandlerpair.second->name()] = strhandlerpair.second;
-	for (auto &strhandlerpair : sortmap) {
+	map<string,SpecialHandler*> sortmap;
+	for (const auto &handler : _pool)
+		if (handler->name())
+			sortmap[handler->name()] = handler.get();
+	for (const auto &strhandlerpair : sortmap) {
 		os << setw(10) << left << strhandlerpair.second->name() << ' ';
 		if (strhandlerpair.second->info())
 			os << strhandlerpair.second->info();
@@ -185,4 +179,3 @@ void SpecialManager::writeHandlerInfo (ostream &os) const {
 	}
 	os.flags(osflags);  // restore format flags
 }
-

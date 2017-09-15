@@ -263,6 +263,12 @@ ShadingPatchTest_SOURCES = ShadingPatchTest.cpp testmain.cpp
 ShadingPatchTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
 ShadingPatchTest_LDADD = $(TESTLIBS)
 
+TESTS += SpecialManagerTest
+check_PROGRAMS += SpecialManagerTest
+SpecialManagerTest_SOURCES = SpecialManagerTest.cpp testmain.cpp
+SpecialManagerTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
+SpecialManagerTest_LDADD = $(TESTLIBS)
+
 TESTS += SplittedCharInputBufferTest
 check_PROGRAMS += SplittedCharInputBufferTest
 SplittedCharInputBufferTest_SOURCES = SplittedCharInputBufferTest.cpp testmain.cpp

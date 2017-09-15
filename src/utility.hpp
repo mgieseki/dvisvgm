@@ -21,6 +21,7 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
+#include <memory>
 #include <string>
 
 namespace math {
@@ -70,6 +71,15 @@ void base64_copy (InputIterator first, InputIterator last, OutputIterator dest) 
 		while (padding--)
 			*dest++ = '=';
 	}
+}
+
+
+/** Simple implementation mimicking std::make_unique introduced in C++14.
+ *  Constructs an object of class T on the heap and returns a unique_ptr<T> to it.
+ *  @param[in] args arguments forwarded to an constructor of T */
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique (Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 } // namespace util

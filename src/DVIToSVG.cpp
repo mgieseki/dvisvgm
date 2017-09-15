@@ -37,6 +37,7 @@
 #include "PreScanDVIReader.hpp"
 #include "SignalHandler.hpp"
 #include "SVGOutput.hpp"
+#include "utility.hpp"
 #include "version.hpp"
 
 ///////////////////////////////////
@@ -49,13 +50,13 @@
 #include "HtmlSpecialHandler.hpp"
 #include "PapersizeSpecialHandler.hpp"
 #include "PdfSpecialHandler.hpp"
+#include "TpicSpecialHandler.hpp"
 #ifndef HAVE_LIBGS
 	#include "NoPsSpecialHandler.hpp"
 #endif
 #ifndef DISABLE_GS
 	#include "PsSpecialHandler.hpp"
 #endif
-#include "TpicSpecialHandler.hpp"
 
 ///////////////////////////////////
 
@@ -324,32 +325,28 @@ void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
  *  @param[in] pswarning if true, shows warning about disabled PS support
  *  @return the SpecialManager that handles special statements */
 void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
-	if (ignorelist && strcmp(ignorelist, "*") == 0) { // ignore all specials?
+	if (ignorelist && strcmp(ignorelist, "*") == 0)  // ignore all specials?
 		SpecialManager::instance().unregisterHandlers();
-	}
 	else {
 		// add special handlers
-		SpecialHandler *handlers[] = {
-			0,                           // placeholder for PsSpecialHandler
-			new BgColorSpecialHandler,   // handles background color special
-			new ColorSpecialHandler,     // handles color specials
-			new DvisvgmSpecialHandler,   // handles raw SVG embeddings
-			new EmSpecialHandler,        // handles emTeX specials
-			new HtmlSpecialHandler,      // handles hyperref specials
-			new PapersizeSpecialHandler, // handles papersize special
-			new PdfSpecialHandler,       // handles pdf specials
-			new TpicSpecialHandler,      // handles tpic specials
-			0
-		};
-		SpecialHandler **p = handlers;
+		vector<unique_ptr<SpecialHandler>> handlers;
+		handlers.emplace_back(util::make_unique<BgColorSpecialHandler>());   // handles background color special
+		handlers.emplace_back(util::make_unique<ColorSpecialHandler>());     // handles color specials
+		handlers.emplace_back(util::make_unique<DvisvgmSpecialHandler>());   // handles raw SVG embeddings
+		handlers.emplace_back(util::make_unique<EmSpecialHandler>());        // handles emTeX specials
+		handlers.emplace_back(util::make_unique<HtmlSpecialHandler>());      // handles hyperref specials
+		handlers.emplace_back(util::make_unique<PapersizeSpecialHandler>()); // handles papersize special
+		handlers.emplace_back(util::make_unique<PdfSpecialHandler>());       // handles pdf specials
+		handlers.emplace_back(util::make_unique<TpicSpecialHandler>());      // handles tpic specials
 #ifndef DISABLE_GS
 		if (Ghostscript().available())
-			*p = new PsSpecialHandler;
+			handlers.emplace_back(util::make_unique<PsSpecialHandler>());     // handles PostScript specials
 		else
 #endif
 		{
 #ifndef HAVE_LIBGS
-			*p = new NoPsSpecialHandler; // dummy PS special handler that only prints warning messages
+			// dummy PS special handler that only prints warning messages
+			handlers.emplace_back(util::make_unique<NoPsSpecialHandler>());
 			if (pswarning) {
 #ifdef DISABLE_GS
 				Message::wstream() << "processing of PostScript specials has been disabled permanently\n";
@@ -360,7 +357,7 @@ void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 #endif
 		}
 		SpecialManager::instance().unregisterHandlers();
-		SpecialManager::instance().registerHandlers(p, ignorelist);
+		SpecialManager::instance().registerHandlers(handlers, ignorelist);
 	}
 }
 

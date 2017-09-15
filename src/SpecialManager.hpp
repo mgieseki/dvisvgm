@@ -21,6 +21,7 @@
 #ifndef SPECIALMANAGER_HPP
 #define SPECIALMANAGER_HPP
 
+#include <memory>
 #include <ostream>
 #include <string>
 #include <unordered_map>
@@ -29,17 +30,15 @@
 
 class SpecialActions;
 
-class SpecialManager
-{
+class SpecialManager {
 	private:
-		using HandlerPool = std::vector<SpecialHandler*>;
+		using HandlerPool = std::vector<std::unique_ptr<SpecialHandler>>;
 		using HandlerMap = std::unordered_map<std::string,SpecialHandler*>;
 
 	public:
-		~SpecialManager ();
 		static SpecialManager& instance ();
-		void registerHandler (SpecialHandler *handler);
-		void registerHandlers (SpecialHandler **handlers, const char *ignorelist);
+		void registerHandler (std::unique_ptr<SpecialHandler> &&handler);
+		void registerHandlers (std::vector<std::unique_ptr<SpecialHandler>> &handlers, const char *ignorelist);
 		void unregisterHandlers ();
 		void preprocess (const std::string &special, SpecialActions &actions) const;
 		bool process (const std::string &special, double dvi2bp, SpecialActions &actions) const;
