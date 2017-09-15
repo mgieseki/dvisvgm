@@ -48,7 +48,7 @@ class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, pub
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		const char* name () const override {return "html";}
 		const char* info () const override {return "hyperref specials";}
-		const char** prefixes () const override;
+		const std::vector<const char*> prefixes () const override;
 
 		static bool setLinkMarker (const std::string &marker);
 

@@ -68,7 +68,7 @@ bool PdfSpecialHandler::process (const char *prefix, istream &is, SpecialActions
 }
 
 
-const char** PdfSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"pdf:", 0};
+const vector<const char*> PdfSpecialHandler::prefixes () const {
+	const vector<const char*> pfx {"pdf:"};
 	return pfx;
 }

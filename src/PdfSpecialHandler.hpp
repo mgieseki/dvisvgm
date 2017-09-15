@@ -29,7 +29,7 @@ class PdfSpecialHandler : public SpecialHandler
 		PdfSpecialHandler ();
 		const char* info () const override {return "pdfTeX font map specials";}
 		const char* name () const override {return "pdf";}
-		const char** prefixes () const override;
+		const std::vector<const char*> prefixes () const override;
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 
 	private:

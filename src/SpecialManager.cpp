@@ -54,8 +54,8 @@ void SpecialManager::unregisterHandlers () {
 void SpecialManager::registerHandler (unique_ptr<SpecialHandler> &&handler) {
 	if (handler) {
 		// get array of prefixes this handler is responsible for
-		for (const char **p=handler->prefixes(); *p; ++p)
-			_handlers[*p] = handler.get();
+		for (const char *prefix : handler->prefixes())
+			_handlers[prefix] = handler.get();
 		// initialize listener vectors
 		if (auto listener = dynamic_cast<DVIPreprocessingListener*>(handler.get()))
 			_preprocListeners.push_back(listener);

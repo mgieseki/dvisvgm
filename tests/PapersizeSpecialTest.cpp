@@ -80,8 +80,8 @@ class PapersizeSpecialTest : public ::testing::Test
 
 TEST_F(PapersizeSpecialTest, name) {
 	EXPECT_EQ(handler.name(), "papersize");
+	ASSERT_EQ(handler.prefixes().size(), 1u);
 	ASSERT_STREQ(handler.prefixes()[0], "papersize=");
-	ASSERT_EQ(handler.prefixes()[1], nullptr);
 }
 
 

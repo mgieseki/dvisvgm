@@ -39,7 +39,7 @@ void NoPsSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
 }
 
 
-const char** NoPsSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", 0};
+const vector<const char*> NoPsSpecialHandler::prefixes () const {
+	const vector<const char*> pfx {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\""};
 	return pfx;
 }

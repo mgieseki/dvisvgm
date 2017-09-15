@@ -42,8 +42,8 @@ class ColorSpecialTest : public ::testing::Test
 
 TEST_F(ColorSpecialTest, info) {
 	EXPECT_EQ(handler.name(), "color");
+	EXPECT_EQ(handler.prefixes().size(), 1u);
 	EXPECT_STREQ(handler.prefixes()[0], "color");
-	EXPECT_EQ(handler.prefixes()[1], nullptr);
 	ASSERT_NE(handler.info(), nullptr);
 	EXPECT_FALSE(string(handler.info()).empty());
 }

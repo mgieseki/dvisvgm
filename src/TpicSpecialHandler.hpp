@@ -31,7 +31,7 @@ class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		TpicSpecialHandler ();
 		const char* info () const override {return "TPIC specials";}
 		const char* name () const override {return "tpic";}
-		const char** prefixes () const override;
+		const std::vector<const char*> prefixes () const override;
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		double penwidth () const  {return _penwidth;}
 		double grayLevel () const {return _grayLevel;}

@@ -34,7 +34,7 @@ class PapersizeSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		const char* info () const override {return "special to set the page size";}
 		const char* name () const override {return "papersize";}
-		const char**  prefixes () const override;
+		const std::vector<const char*> prefixes () const override;
 		void reset () {_pageSizes.clear();}
 
 	protected:

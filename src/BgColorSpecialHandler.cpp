@@ -68,7 +68,7 @@ void BgColorSpecialHandler::dviBeginPage (unsigned pageno, SpecialActions &actio
 }
 
 
-const char** BgColorSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"background", 0};
+const vector<const char*> BgColorSpecialHandler::prefixes () const {
+	const vector<const char*> pfx {"background"};
 	return pfx;
 }

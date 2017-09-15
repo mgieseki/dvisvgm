@@ -83,7 +83,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		~PsSpecialHandler ();
 		const char* name () const override {return "ps";}
 		const char* info () const override {return "dvips PostScript specials";}
-		const char** prefixes () const override;
+		const std::vector<const char*> prefixes () const override;
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		void setDviScaleFactor (double dvi2bp) override {_previewFilter.setDviScaleFactor(dvi2bp);}

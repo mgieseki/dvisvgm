@@ -294,7 +294,7 @@ bool HtmlSpecialHandler::setLinkMarker (const string &marker) {
 }
 
 
-const char** HtmlSpecialHandler::prefixes () const {
-	static const char *pfx[] = {"html:", 0};
+const vector<const char*> HtmlSpecialHandler::prefixes () const {
+	const vector<const char*> pfx {"html:"};
 	return pfx;
 }
