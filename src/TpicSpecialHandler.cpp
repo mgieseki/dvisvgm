@@ -297,9 +297,9 @@ bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialAction
 			string hexstr;
 			while (!ir.eof()) {
 				ir.skipSpace();
-				char c = tolower(ir.get());
-				if (isdigit(c) || (c >= 'a' && c <= 'f'))
-					hexstr += c;
+				int c = ir.get();
+				if (isxdigit(c))
+					hexstr += static_cast<char>(tolower(c));
 				else
 					break;
 			}
