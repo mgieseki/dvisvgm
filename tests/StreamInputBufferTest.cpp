@@ -76,11 +76,9 @@ TEST(StreamInputBufferTest, skip) {
 	BufferInputReader in(buffer);
 	in.skip(3);
 	EXPECT_EQ(in.peek(), 'd');
-	in.skipUntil("ijk", false);
-	EXPECT_EQ(in.peek(), 'i');
-	in.skipUntil("ijk", true);
+	in.skipUntil("ijk");
 	EXPECT_EQ(in.peek(), 'l');
-	in.skipUntil("z", true);
+	in.skipUntil("z");
 	EXPECT_TRUE(in.eof());
 }
 

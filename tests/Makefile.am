@@ -293,6 +293,12 @@ StreamWriterTest_SOURCES = StreamWriterTest.cpp testmain.cpp
 StreamWriterTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
 StreamWriterTest_LDADD = $(TESTLIBS)
 
+TESTS += StringMatcherTest
+check_PROGRAMS += StringMatcherTest
+StringMatcherTest_SOURCES = StringMatcherTest.cpp testmain.cpp
+StringMatcherTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
+StringMatcherTest_LDADD = $(TESTLIBS)
+
 TESTS += SubfontTest
 check_PROGRAMS += SubfontTest
 SubfontTest_SOURCES = SubfontTest.cpp testmain.cpp
