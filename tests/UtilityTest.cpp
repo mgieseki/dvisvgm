@@ -44,6 +44,46 @@ TEST(UtilityTest, tolower) {
 }
 
 
+TEST(UtilityTest, replace) {
+	ASSERT_EQ(replace("abcdebcxyb", "bc", ","), "a,de,xyb");
+	ASSERT_EQ(replace("abcdebcxyb", "bc", " : "), "a : de : xyb");
+	ASSERT_EQ(replace("abcdebcxyb", "", ","), "abcdebcxyb");
+	ASSERT_EQ(replace("abcdebcxyb", "bc", ""), "abcdebcxyb");
+	ASSERT_EQ(replace("abcdebcxyb", "b", " B "), "a B cde B cxy B ");
+	ASSERT_EQ(replace("", "b", " B "), "");
+	ASSERT_EQ(replace("a,b, c ,d , e", " ,", ","), "a,b, c,d, e");
+}
+
+
+TEST(UtilityTest, split) {
+	vector<string> parts = split("", ",");
+	ASSERT_EQ(parts.size(), 1u);
+	EXPECT_EQ(parts[0], "");
+
+	parts = split("abcde", "");
+	ASSERT_EQ(parts.size(), 1u);
+	EXPECT_EQ(parts[0], "abcde");
+
+	parts = split("abcde", ",");
+	ASSERT_EQ(parts.size(), 1u);
+	EXPECT_EQ(parts[0], "abcde");
+
+	parts = split("1,2 , 3, 4 ,,5", ",");
+	ASSERT_EQ(parts.size(), 6u);
+	size_t count=0;
+	for (const string &part : {"1", "2 ", " 3", " 4 ", "", "5"}) {
+		EXPECT_EQ(parts[count++], part);
+	}
+
+	parts = split("1 sep2sep3, sep", "sep");
+	ASSERT_EQ(parts.size(), 4u);
+	count=0;
+	for (const string &part : {"1 ", "2", "3, ", ""}) {
+		EXPECT_EQ(parts[count++], part);
+	}
+}
+
+
 TEST(UtilityTest, ilog10) {
 	ASSERT_EQ(ilog10(-10), 0);
 	ASSERT_EQ(ilog10(-1), 0);

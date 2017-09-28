@@ -218,8 +218,7 @@ void DVIToSVG::leaveEndPage (unsigned) {
 		}
 		else { // set/modify bounding box by explicitly given values
 			try {
-				vector<Length> lengths;
-				BoundingBox::extractLengths(_bboxFormatString, lengths);
+				vector<Length> lengths = BoundingBox::extractLengths(_bboxFormatString);
 				if (lengths.size() == 1 || lengths.size() == 2) {  // relative box size?
 					// apply the page transformation and adjust the bbox afterwards
 					Matrix matrix;

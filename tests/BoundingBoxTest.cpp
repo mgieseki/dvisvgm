@@ -198,3 +198,13 @@ TEST(BoundingBoxTest, svgRectElement) {
 	EXPECT_EQ(string(rect->getAttributeValue("height")), "2");
 	delete rect;
 }
+
+
+TEST(BoundingBoxTest, extractLengths) {
+	vector<Length> lengths = BoundingBox::extractLengths(" 1cm,2mm  , 3pt   5in");
+	ASSERT_EQ(lengths.size(), 4u);
+	EXPECT_DOUBLE_EQ(lengths[0].cm(), 1);
+	EXPECT_DOUBLE_EQ(lengths[1].mm(), 2);
+	EXPECT_DOUBLE_EQ(lengths[2].pt(), 3);
+	EXPECT_DOUBLE_EQ(lengths[3].in(), 5);
+}
