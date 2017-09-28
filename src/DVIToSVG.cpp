@@ -213,7 +213,7 @@ void DVIToSVG::leaveEndPage (unsigned) {
 				// convention: DVI position (0,0) equals (1in, 1in) relative
 				// to the upper left vertex of the page (see DVI specification)
 				const double border = -72;
-				bbox = BoundingBox(border, border, size.widthInBP()+border, size.heightInBP()+border);
+				bbox = BoundingBox(border, border, size.width().bp()+border, size.height().bp()+border);
 			}
 		}
 		else { // set/modify bounding box by explicitly given values

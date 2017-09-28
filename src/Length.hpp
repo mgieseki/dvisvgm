@@ -28,14 +28,12 @@
 #undef IN
 #endif
 
-struct UnitException : MessageException
-{
+struct UnitException : MessageException {
 	UnitException (const std::string &msg) : MessageException(msg) {}
 };
 
 
-class Length
-{
+class Length {
 	public:
 		enum class Unit {PT, BP, CM, MM, IN, PC, DD, CC, SP};
 

@@ -19,55 +19,47 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include <limits>
+#include <vector>
 #include "PageSize.hpp"
 
+using namespace std;
 
-class PageSizeTest : public ::testing::Test
-{
-	protected:
-		struct PageData 
-		{
-			const char *id;
-			double width, height;
-		};
 
-		static const PageData pageData[];
-		
-		PageSize ps;
+struct PageData {
+	const char *name;
+	double width, height;  // in mm
 };
 
 
-const PageSizeTest::PageData PageSizeTest::pageData[] = {
+const vector<PageData> pageData = {
 	{"A4", 210, 297},
-	{"a4", 210, 297}, 
-	{"a4-p", 210, 297}, 
-	{"a4-portrait", 210, 297}, 
-	{"a4-l", 297, 210}, 
-	{"a4-landscape", 297, 210}, 
-	{"a5", 148, 210}, 
+	{"a4", 210, 297},
+	{"a4-p", 210, 297},
+	{"a4-portrait", 210, 297},
+	{"a4-l", 297, 210},
+	{"a4-landscape", 297, 210},
+	{"a5", 148, 210},
+	{"b2", 500, 707},
 	{"c10", 28, 40},
-	{"letter", 216, 279},
-	{0, 0, 0}
+	{"D3", 272, 385},
+	{"letter", 216, 279}
 };
 
 
-TEST_F(PageSizeTest, resize) {
-	EXPECT_FALSE(ps.valid());
-	
-	for (const PageData *p = pageData; p && p->id; p++) {
-		ps.resize(p->id);
-		EXPECT_DOUBLE_EQ(ps.widthInMM(), p->width);
-		EXPECT_DOUBLE_EQ(ps.heightInMM(), p->height);
+TEST(PageSizeTest, resize) {
+	PageSize pageSize;
+	EXPECT_FALSE(pageSize.valid());
+	for (const PageData &data : pageData) {
+		pageSize.resize(data.name);
+		EXPECT_DOUBLE_EQ(pageSize.width().mm(), data.width) << data.name;
+		EXPECT_DOUBLE_EQ(pageSize.height().mm(), data.height) << data.name;
 	}
 }
 
 
-TEST_F(PageSizeTest, exceptions) {
-	EXPECT_THROW(ps.resize("a"), PageSizeException);
-	EXPECT_THROW(ps.resize("e4"), PageSizeException);
-	EXPECT_THROW(ps.resize("a4-unknown"), PageSizeException);
+TEST(PageSizeTest, exceptions) {
+	PageSize pageSize;
+	EXPECT_THROW(pageSize.resize("a"), PageSizeException);
+	EXPECT_THROW(pageSize.resize("e4"), PageSizeException);
+	EXPECT_THROW(pageSize.resize("a4-unknown"), PageSizeException);
 }
-
-
-
