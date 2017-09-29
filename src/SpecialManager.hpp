@@ -47,15 +47,16 @@ class SpecialManager {
 		void notifyEndPage (unsigned pageno, SpecialActions &actions) const;
 		void notifyPositionChange (double x, double y, SpecialActions &actions) const;
 		void writeHandlerInfo (std::ostream &os) const;
+		SpecialHandler* findHandlerByName (const std::string &name) const;
 
 	protected:
 		SpecialManager () {}
 		SpecialManager (const SpecialManager &) {}
-		SpecialHandler* findHandler (const std::string &prefix) const;
+		SpecialHandler* findHandlerByPrefix (const std::string &prefix) const;
 
 	private:
-		HandlerPool _pool;     ///< stores pointers to all handlers
-		HandlerMap _handlers;  ///< pointers to handlers for corresponding prefixes
+		HandlerPool _handlerPool;      ///< stores pointers to all handlers
+		HandlerMap _handlersByPrefix;  ///< pointers to handlers for corresponding prefixes
 		std::vector<DVIPreprocessingListener*> _preprocListeners;
 		std::vector<DVIBeginPageListener*> _beginPageListeners;
 		std::vector<DVIEndPageListener*> _endPageListeners;

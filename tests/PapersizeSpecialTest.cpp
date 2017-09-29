@@ -25,9 +25,7 @@
 
 using namespace std;
 
-
-class PapersizeSpecialTest : public ::testing::Test
-{
+class PapersizeSpecialTest : public ::testing::Test {
 	protected:
 		class PapersizeSpecialActions : public EmptySpecialActions {
 			public:
@@ -151,10 +149,4 @@ TEST_F(PapersizeSpecialTest, multiPage2) {
 	preprocess("321bp,456bp");
 	endPage();
 	ASSERT_EQ(bboxString(), "-72 -72 321 456");
-}
-
-
-TEST_F(PapersizeSpecialTest, error) {
-	ASSERT_THROW(preprocess("abc"), UnitException);
-	ASSERT_THROW(preprocess("123bp,456x"), UnitException);
 }

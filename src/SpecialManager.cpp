@@ -24,7 +24,6 @@
 #include "SpecialActions.hpp"
 #include "SpecialHandler.hpp"
 #include "SpecialManager.hpp"
-#include "PsSpecialHandler.hpp"
 
 using namespace std;
 
@@ -39,8 +38,8 @@ SpecialManager& SpecialManager::instance() {
 
 /** Remove all registered handlers. */
 void SpecialManager::unregisterHandlers () {
-	_pool.clear();
-	_handlers.clear();
+	_handlerPool.clear();
+	_handlersByPrefix.clear();
 	_beginPageListeners.clear();
 	_endPageListeners.clear();
 	_preprocListeners.clear();
@@ -55,7 +54,7 @@ void SpecialManager::registerHandler (unique_ptr<SpecialHandler> &&handler) {
 	if (handler) {
 		// get array of prefixes this handler is responsible for
 		for (const char *prefix : handler->prefixes())
-			_handlers[prefix] = handler.get();
+			_handlersByPrefix[prefix] = handler.get();
 		// initialize listener vectors
 		if (auto listener = dynamic_cast<DVIPreprocessingListener*>(handler.get()))
 			_preprocListeners.push_back(listener);
@@ -65,7 +64,7 @@ void SpecialManager::registerHandler (unique_ptr<SpecialHandler> &&handler) {
 			_endPageListeners.push_back(listener);
 		if (auto listener = dynamic_cast<DVIPositionListener*>(handler.get()))
 			_positionListeners.push_back(listener);
-		_pool.emplace_back(std::move(handler));
+		_handlerPool.emplace_back(std::move(handler));
 	}
 }
 
@@ -91,14 +90,26 @@ void SpecialManager::registerHandlers (vector<unique_ptr<SpecialHandler>> &handl
 }
 
 
-/** Looks for an appropriate handler for a given special prefix.
+/** Looks for a handler responsible for a given special prefix.
  *  @param[in] prefix the special prefix, e.g. "color" or "em"
  *  @return in case of success: pointer to handler, 0 otherwise */
-SpecialHandler* SpecialManager::findHandler (const string &prefix) const {
-	auto it = _handlers.find(prefix);
-	if (it != _handlers.end())
+SpecialHandler* SpecialManager::findHandlerByPrefix (const string &prefix) const {
+	auto it = _handlersByPrefix.find(prefix);
+	if (it != _handlersByPrefix.end())
 		return it->second;
-	return 0;
+	return nullptr;
+}
+
+
+/** Looks for a handler with a given name.
+ *  @param[in] name name of handler to look for, e.g. "papersize"
+ *  @return in case of success: pointer to handler, 0 otherwise */
+SpecialHandler* SpecialManager::findHandlerByName (const string &name) const {
+	for (auto &handler : _handlerPool) {
+		if (handler->name() == name)
+			return handler.get();
+	}
+	return nullptr;
 }
 
 
@@ -118,7 +129,7 @@ static string extract_prefix (istream &is) {
 void SpecialManager::preprocess (const string &special, SpecialActions &actions) const {
 	istringstream iss(special);
 	string prefix = extract_prefix(iss);
-	if (SpecialHandler *handler = findHandler(prefix))
+	if (SpecialHandler *handler = findHandlerByPrefix(prefix))
 		handler->preprocess(prefix.c_str(), iss, actions);
 }
 
@@ -133,7 +144,7 @@ bool SpecialManager::process (const string &special, double dvi2bp, SpecialActio
 	istringstream iss(special);
 	string prefix = extract_prefix(iss);
 	bool success=false;
-	if (SpecialHandler *handler = findHandler(prefix)) {
+	if (SpecialHandler *handler = findHandlerByPrefix(prefix)) {
 		handler->setDviScaleFactor(dvi2bp);
 		success = handler->process(prefix.c_str(), iss, actions);
 	}
@@ -142,25 +153,25 @@ bool SpecialManager::process (const string &special, double dvi2bp, SpecialActio
 
 
 void SpecialManager::notifyPreprocessingFinished () const {
-	for (DVIPreprocessingListener *listener : _preprocListeners)
+	for (auto *listener : _preprocListeners)
 		listener->dviPreprocessingFinished();
 }
 
 
 void SpecialManager::notifyBeginPage (unsigned pageno, SpecialActions &actions) const {
-	for (DVIBeginPageListener *listener : _beginPageListeners)
+	for (auto *listener : _beginPageListeners)
 		listener->dviBeginPage(pageno, actions);
 }
 
 
 void SpecialManager::notifyEndPage (unsigned pageno, SpecialActions &actions) const {
-	for (DVIEndPageListener *listener : _endPageListeners)
+	for (auto *listener : _endPageListeners)
 		listener->dviEndPage(pageno, actions);
 }
 
 
 void SpecialManager::notifyPositionChange (double x, double y, SpecialActions &actions) const {
-	for (DVIPositionListener *listener : _positionListeners)
+	for (auto *listener : _positionListeners)
 		listener->dviMovedTo(x, y, actions);
 }
 
@@ -168,7 +179,7 @@ void SpecialManager::notifyPositionChange (double x, double y, SpecialActions &a
 void SpecialManager::writeHandlerInfo (ostream &os) const {
 	ios::fmtflags osflags(os.flags());
 	map<string,SpecialHandler*> sortmap;
-	for (const auto &handler : _pool)
+	for (const auto &handler : _handlerPool)
 		if (handler->name())
 			sortmap[handler->name()] = handler.get();
 	for (const auto &strhandlerpair : sortmap) {

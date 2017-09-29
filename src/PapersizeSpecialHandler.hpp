@@ -23,11 +23,12 @@
 
 #include <utility>
 #include <vector>
+#include "Length.hpp"
 #include "SpecialHandler.hpp"
 
 class PapersizeSpecialHandler : public SpecialHandler, public DVIEndPageListener {
-	using DoublePair = std::pair<double,double>;
-	using PageSize = std::pair<unsigned,DoublePair>;
+	using DoublePair = std::pair<double,double>;       // (width, height)
+	using PageSize = std::pair<unsigned,DoublePair>;   // page number -> (width, height)
 
 	public:
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
@@ -35,14 +36,15 @@ class PapersizeSpecialHandler : public SpecialHandler, public DVIEndPageListener
 		const char* info () const override {return "special to set the page size";}
 		const char* name () const override {return "papersize";}
 		const std::vector<const char*> prefixes () const override;
+		void storePaperSize (unsigned pageno, Length width, Length height);
 		void reset () {_pageSizes.clear();}
 
 	protected:
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
+		void applyPaperSize (unsigned pageno, SpecialActions &actions);
 
 	private:
 		std::vector<PageSize> _pageSizes;
 };
 
 #endif
-

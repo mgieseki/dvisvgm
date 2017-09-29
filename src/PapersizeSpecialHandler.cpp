@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "Length.hpp"
 #include "Message.hpp"
 #include "PapersizeSpecialHandler.hpp"
 #include "SpecialActions.hpp"
@@ -30,21 +29,18 @@ void PapersizeSpecialHandler::preprocess (const char*, std::istream &is, Special
 	is >> params;
 	Length w, h;
 	size_t splitpos = params.find(',');
-	if (splitpos == string::npos) {
-		w.set(params);
-		h.set(params);
+	try {
+		if (splitpos == string::npos) {
+			w.set(params);
+			h.set(params);
+		}
+		else {
+			w.set(params.substr(0, splitpos));
+			h.set(params.substr(splitpos+1));
+		}
+		storePaperSize(actions.getCurrentPageNumber(), w, h);
 	}
-	else {
-		w.set(params.substr(0, splitpos));
-		h.set(params.substr(splitpos+1));
-	}
-	DoublePair whpair(w.bp(), h.bp());
-	if (_pageSizes.empty() || _pageSizes.back().second != whpair) {
-		unsigned pageno = actions.getCurrentPageNumber();
-		if (!_pageSizes.empty() && _pageSizes.back().first == pageno)
-			_pageSizes.back().second = whpair;
-		else
-			_pageSizes.emplace_back(PageSize(pageno, whpair));
+	catch (UnitException &e) { // ignore invalid length units for now
 	}
 }
 
@@ -54,10 +50,21 @@ bool PapersizeSpecialHandler::process (const char*, std::istream&, SpecialAction
 }
 
 
-void PapersizeSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
-	if (actions.getBBoxFormatString() != "papersize")
-		return;
+/** Records a paper size for a given page number for later processing. This function doesn't
+ *  assign them to the page. */
+void PapersizeSpecialHandler::storePaperSize (unsigned pageno, Length width, Length height) {
+	DoublePair whpair(width.bp(), height.bp());
+	if (_pageSizes.empty() || _pageSizes.back().second != whpair) {
+		if (!_pageSizes.empty() && _pageSizes.back().first == pageno)
+			_pageSizes.back().second = whpair;
+		else
+			_pageSizes.emplace_back(PageSize(pageno, whpair));
+	}
+}
 
+
+/** Applies the previously recorded size to a given page. */
+void PapersizeSpecialHandler::applyPaperSize (unsigned pageno, SpecialActions &actions) {
 	// find page n >= pageno that contains a papersize special
 	auto lb_it = lower_bound(_pageSizes.begin(), _pageSizes.end(), PageSize(pageno, DoublePair()),
 		[](const PageSize &ps1, const PageSize &ps2) {
@@ -76,6 +83,12 @@ void PapersizeSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actio
 		const double border = -72;  // DVI standard: coordinates of upper left paper corner are (-72bp, -72bp)
 		actions.bbox() = BoundingBox(border, border, size.first+border, size.second+border);
 	}
+}
+
+
+void PapersizeSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
+	if (actions.getBBoxFormatString() == "papersize")
+		applyPaperSize(pageno, actions);
 }
 
 

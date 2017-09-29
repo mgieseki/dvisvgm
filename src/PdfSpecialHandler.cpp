@@ -19,11 +19,15 @@
 *************************************************************************/
 
 #include <cstring>
+#include <utility>
 #include "InputReader.hpp"
 #include "MapLine.hpp"
 #include "PdfSpecialHandler.hpp"
 #include "FontMap.hpp"
 #include "Message.hpp"
+#include "PapersizeSpecialHandler.hpp"
+#include "SpecialActions.hpp"
+#include "SpecialManager.hpp"
 
 using namespace std;
 
@@ -33,7 +37,36 @@ PdfSpecialHandler::PdfSpecialHandler () : _maplineProcessed(false)
 }
 
 
-bool PdfSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
+void PdfSpecialHandler::preprocess (const char*, istream &is, SpecialActions &actions) {
+	StreamInputReader ir(is);
+	ir.skipSpace();
+	string cmd = ir.getWord();
+	if (cmd != "pagesize")
+		return;
+	// add page sizes to collection of paper sizes in order to handle them equally
+	SpecialHandler *handler = SpecialManager::instance().findHandlerByName("papersize");
+	if (PapersizeSpecialHandler *papersizeHandler = dynamic_cast<PapersizeSpecialHandler*>(handler)) {
+		try {
+			Length width, height;
+			// parse parameter sequence of the form (name length)+
+			while (!ir.eof()) {
+				string dimname = ir.getWord();
+				string lenstr = ir.getString(" \t");
+				// only consider width and height settings
+				if (dimname == "width" && !lenstr.empty())
+					width.set(lenstr);
+				else if (dimname == "height" && !lenstr.empty())
+					height.set(lenstr);
+			}
+			papersizeHandler->storePaperSize(actions.getCurrentPageNumber(), width, height);
+		}
+		catch (UnitException &e) { // ignore invalid length units for now
+		}
+	}
+}
+
+
+bool PdfSpecialHandler::process (const char*, istream &is, SpecialActions&) {
 	StreamInputReader ir(is);
 	ir.skipSpace();
 	string cmd = ir.getWord();

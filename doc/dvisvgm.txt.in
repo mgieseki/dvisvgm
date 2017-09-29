@@ -656,11 +656,14 @@ evaluate these specials, their processing must be explicitly enabled by adding o
 the command-line. Otherwise, dvisvgm ignores them and computes tight bounding boxes.
 
 *pdf*::
-pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently, only
-two of them, 'pdf:mapfile' and 'pdf:mapline' are supported by dvisvgm. These specials allow modifying the font map
-tree during the processing of DVI files. They are used by CTeX, for example. dvisvgm supports both, the dvips and
-dvipdfm font map format. For further information on the command syntax and semantics, see the documentation of
-+\pdfmapfile+ in the http://www.ctan.org/pkg/pdftex[pdfTeX user manual].
+pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently,
+only 'pdf:mapfile', 'pdf:mapline', and 'pdf:pagesize' are supported by dvisvgm. The latter is similar to the
+'papersize' special (see above) which specifies the size of the current and all folowing pages. In order to
+actually apply the extents to the generated SVG files, option *--bbox=papersize* must be given.
+The other two PDF specials allow modifying the font map tree during while processing the DVI file. They are
+used by CTeX, for example. dvisvgm supports both, the dvips and dvipdfm font map format. For further information
+on the command syntax and semantics, see the documentation of +\pdfmapfile+ in the
+http://www.ctan.org/pkg/pdftex[pdfTeX user manual].
 
 *ps*::
 The famous DVI driver 'dvips' introduced its own set of specials in order to embed PostScript code into DVI files,
