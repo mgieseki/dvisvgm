@@ -26,6 +26,7 @@
 #include "FileFinder.hpp"
 #include "Message.hpp"
 #include "Subfont.hpp"
+#include "utility.hpp"
 
 
 using namespace std;
@@ -227,7 +228,7 @@ static bool scan_line (const char *line, int lineno, uint16_t *mapping, const st
 			switch (*q) {
 				case ':':
 					if (val1 < 0 || val1 > 255)
-						throw SubfontException(oss << "offset value " << val1 << " out of range (0-255)", fname, lineno);
+						throw SubfontException("offset value "+to_string(val1)+" out of range (0-255)", fname, lineno);
 					offset = val1;
 					val1 = -1;
 					q++;
@@ -236,25 +237,25 @@ static bool scan_line (const char *line, int lineno, uint16_t *mapping, const st
 					p = q+1;
 					val2 = strtol(p, &q, 0);
 					if (val1 < 0 || val1 > 0xffffL)
-						throw SubfontException(oss << "table value " << val1 << " out of range", fname, lineno);
+						throw SubfontException("table value "+to_string(val1)+" out of range", fname, lineno);
 					if (val2 < 0 || val2 > 0xffffL)
-						throw SubfontException(oss << "table value " << val2 << " out of range", fname, lineno);
+						throw SubfontException("table value "+to_string(val2)+" out of range", fname, lineno);
 					if (p == q || (!isspace(*q) && *q != '\\' && *q))
-						throw SubfontException(oss << "unexpected character '" << *q << "'", fname, lineno);
+						throw SubfontException("unexpected character '"+to_string(*q)+"'", fname, lineno);
 					break;
 				default:
 					if (p == q || (!isspace(*q) && *q != '\\' && *q))
-						throw SubfontException(oss << "unexpected character '" << *q << "'", fname, lineno);
+						throw SubfontException("unexpected character '"+to_string(*q)+"'", fname, lineno);
 					if (val1 < 0 || val1 > 0xffffL)
 						throw SubfontException("invalid character code", fname, lineno);
 					val2 = val1;
 			}
 			if (val1 >= 0) {
 				if (val1 > val2 || offset+val2-val1 > 255)
-					throw SubfontException(oss << "invalid range in mapping table: " << hex << val1 << '_' << val2, fname, lineno);
+					throw SubfontException("invalid range in mapping table: "+util::tohex(val1)+"_"+util::tohex(val2), fname, lineno);
 				for (long v=val1; v <= val2; v++) {
 					if (mapping[offset])
-						throw SubfontException(oss << "mapping of character " << offset << " already defined", fname, lineno);
+						throw SubfontException("mapping of character "+to_string(offset)+" already defined", fname, lineno);
 					mapping[offset++] = static_cast<uint16_t>(v);
 				}
 			}

@@ -21,7 +21,9 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
+#include <iomanip>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -37,6 +39,13 @@ inline double deg2rad (double deg) {return PI*deg/180.0;}
 } // namespace math
 
 namespace util {
+
+template <typename T>
+std::string tohex (T val) {
+	std::ostringstream oss;
+	oss << std::hex << val;
+	return oss.str();
+}
 
 std::string trim (const std::string &str, const char *ws=" \t\n\r\f");
 std::string normalize_space (std::string str, const char *ws=" \t\n\r\f");

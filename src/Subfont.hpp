@@ -33,8 +33,7 @@ class Subfont;
 
 /** Represents a collection of subfont mappings as defined in a .sfd file, and
  *  encapsulates the evaluation of these files. */
-class SubfontDefinition
-{
+class SubfontDefinition {
 	using Subfonts = std::unordered_map<std::string, Subfont*>;
 	public:
 		~SubfontDefinition ();
@@ -57,8 +56,7 @@ class SubfontDefinition
 
 
 /** Represents a single subfont mapping defined in a SubfontDefinition (.sfd file). */
-class Subfont
-{
+class Subfont {
 	friend class SubfontDefinition;
 	public:
 		~Subfont();
@@ -76,19 +74,13 @@ class Subfont
 };
 
 
-class SubfontException : public MessageException
-{
+class SubfontException : public MessageException {
 	public:
 		SubfontException (const std::string &msg, const std::string &fname, int lineno=0)
 			: MessageException(msg), _fname(fname), _lineno(lineno) {}
 
-		SubfontException (const std::ostream &oss, const std::string &fname, int lineno=0)
-			: MessageException(dynamic_cast<const std::ostringstream&>(oss).str()), _fname(fname), _lineno(lineno) {}
-
-		virtual ~SubfontException () throw() =default;
-
 		const char* filename () const {return _fname.c_str();}
-		int lineno () const {return _lineno;}
+		int lineno () const           {return _lineno;}
 
 	private:
 		std::string _fname;
