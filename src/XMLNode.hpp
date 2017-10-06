@@ -110,7 +110,7 @@ class XMLCommentNode : public XMLNode
 class XMLCDataNode : public XMLNode
 {
 	public:
-		XMLCDataNode () {}
+		XMLCDataNode () =default;
 		XMLCDataNode (const std::string &d) : _data(d) {}
 		XMLCDataNode (std::string &&d) : _data(std::move(d)) {}
 		XMLCDataNode* clone () const override {return new XMLCDataNode(*this);}

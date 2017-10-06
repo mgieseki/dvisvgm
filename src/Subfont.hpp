@@ -48,7 +48,7 @@ class SubfontDefinition
 
 	protected:
 		SubfontDefinition (const std::string &name, const char *fpath);
-		SubfontDefinition (const SubfontDefinition &sfd) {}
+		SubfontDefinition (const SubfontDefinition &sfd) =delete;
 
 	private:
 		std::string _sfname; ///< name of subfont

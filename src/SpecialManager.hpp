@@ -50,8 +50,8 @@ class SpecialManager {
 		SpecialHandler* findHandlerByName (const std::string &name) const;
 
 	protected:
-		SpecialManager () {}
-		SpecialManager (const SpecialManager &) {}
+		SpecialManager () =default;
+		SpecialManager (const SpecialManager &) =delete;
 		SpecialHandler* findHandlerByPrefix (const std::string &prefix) const;
 
 	private:
