@@ -29,8 +29,7 @@
 #include <vector>
 
 
-class XMLNode
-{
+class XMLNode {
 	public:
 		virtual ~XMLNode () =default;
 		virtual XMLNode* clone () const =0;
@@ -39,8 +38,7 @@ class XMLNode
 };
 
 
-class XMLElementNode : public XMLNode
-{
+class XMLElementNode : public XMLNode {
 	public:
 		using AttribMap = std::map<std::string,std::string>;
 		using ChildList = std::list<std::unique_ptr<XMLNode>>;
@@ -48,6 +46,7 @@ class XMLElementNode : public XMLNode
 	public:
 		XMLElementNode (const std::string &name);
 		XMLElementNode (const XMLElementNode &node);
+		XMLElementNode (XMLElementNode &&node);
 		XMLElementNode* clone () const override {return new XMLElementNode(*this);}
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
@@ -74,8 +73,7 @@ class XMLElementNode : public XMLNode
 };
 
 
-class XMLTextNode : public XMLNode
-{
+class XMLTextNode : public XMLNode {
 	public:
 		XMLTextNode (const std::string &str) : _text(str) {}
 		XMLTextNode (std::string &&str) : _text(std::move(str)) {}
@@ -93,8 +91,7 @@ class XMLTextNode : public XMLNode
 };
 
 
-class XMLCommentNode : public XMLNode
-{
+class XMLCommentNode : public XMLNode {
 	public:
 		XMLCommentNode (const std::string &str) : _text(str) {}
 		XMLCommentNode (std::string &&str) : _text(std::move(str)) {}
@@ -107,8 +104,7 @@ class XMLCommentNode : public XMLNode
 };
 
 
-class XMLCDataNode : public XMLNode
-{
+class XMLCDataNode : public XMLNode {
 	public:
 		XMLCDataNode () =default;
 		XMLCDataNode (const std::string &d) : _data(d) {}

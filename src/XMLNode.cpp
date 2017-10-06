@@ -39,6 +39,12 @@ XMLElementNode::XMLElementNode (const XMLElementNode &node)
 }
 
 
+XMLElementNode::XMLElementNode (XMLElementNode &&node)
+	: _name(std::move(node._name)), _attributes(std::move(node._attributes)), _children(std::move(node._children))
+{
+}
+
+
 void XMLElementNode::clear () {
 	_attributes.clear();
 	_children.clear();
