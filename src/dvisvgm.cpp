@@ -49,6 +49,7 @@
 
 #ifndef DISABLE_WOFF
 #include <brotli/encode.h>
+#include <woff2/version.h>
 #include "ffwrapper.h"
 #endif
 
@@ -242,6 +243,7 @@ static void print_version (bool extended) {
 		versionInfo.add("Ghostscript", Ghostscript().revision(true), true);
 #ifndef DISABLE_WOFF
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
+		versionInfo.add("woff2", woff2::version, 3, 0x100);
 		versionInfo.add("fontforge", ff_version());
 #endif
 #ifdef MIKTEX

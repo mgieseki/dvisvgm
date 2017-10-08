@@ -1,7 +1,11 @@
 noinst_LIBRARIES = libwoff2.a
 libwoff2_a_SOURCES = \
+	include/woff2/decode.h \
+	include/woff2/encode.h \
+	include/woff2/file.h \
+	include/woff2/output.h \
+	include/woff2/version.h \
 	src/buffer.h \
-	src/file.h \
 	src/font.cc \
 	src/font.h \
 	src/glyph.cc \
@@ -19,15 +23,12 @@ libwoff2_a_SOURCES = \
 	src/variable_length.h \
 	src/woff2_common.cc \
 	src/woff2_common.h \
-	src/woff2_dec.h \
 	src/woff2_enc.cc \
-	src/woff2_enc.h \
-	src/woff2_out.cc \
-	src/woff2_out.h
+	src/woff2_out.cc
 
 EXTRA_DIST = LICENSE
 
-AM_CXXFLAGS = -Wall -I$(srcdir)/brotli/include
+AM_CXXFLAGS = -Wall -I$(srcdir)/include -I$(srcdir)/brotli/include
 
 SUBDIRS = brotli
 

@@ -75,8 +75,8 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <woff2_enc.h>
-#include <file.h>
+#include <woff2/encode.h>
+#include <woff2/file.h>
 #include "ffwrapper.h"
 #include "Bezier.hpp"
 #include "FileSystem.hpp"

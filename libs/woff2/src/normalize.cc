@@ -1,18 +1,10 @@
-// Copyright 2013 Google Inc. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Glyph normalization
+/* Copyright 2013 Google Inc. All Rights Reserved.
+
+   Distributed under MIT license.
+   See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+*/
+
+/* Glyph normalization */
 
 #include "./normalize.h"
 
@@ -218,6 +210,7 @@ bool FixChecksums(Font* font) {
   size_t offset = 8;
   StoreU32(0, &offset, head_buf);
   uint32_t file_checksum = 0;
+  uint32_t head_checksum = 0;
   for (auto& i : font->tables) {
     Font::Table* table = &i.second;
     if (table->IsReused()) {
@@ -225,6 +218,10 @@ bool FixChecksums(Font* font) {
     }
     table->checksum = ComputeULongSum(table->data, table->length);
     file_checksum += table->checksum;
+
+    if (table->tag == kHeadTableTag) {
+      head_checksum = table->checksum;
+    }
   }
 
   file_checksum += ComputeHeaderChecksum(*font);
