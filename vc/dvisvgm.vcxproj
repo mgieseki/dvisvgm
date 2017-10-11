@@ -227,6 +227,7 @@
     <ClCompile Include="..\src\GFTracer.cpp" />
     <ClCompile Include="..\src\Ghostscript.cpp" />
     <ClCompile Include="..\src\HtmlSpecialHandler.cpp" />
+    <ClCompile Include="..\src\HyperlinkManager.cpp" />
     <ClCompile Include="..\src\InputBuffer.cpp" />
     <ClCompile Include="..\src\InputReader.cpp" />
     <ClCompile Include="..\src\JFM.cpp" />

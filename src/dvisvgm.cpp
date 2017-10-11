@@ -36,7 +36,7 @@
 #include "Font.hpp"
 #include "FontEngine.hpp"
 #include "Ghostscript.hpp"
-#include "HtmlSpecialHandler.hpp"
+#include "HyperlinkManager.hpp"
 #include "Message.hpp"
 #include "PageSize.hpp"
 #include "PSInterpreter.hpp"
@@ -335,7 +335,7 @@ int main (int argc, char *argv[]) {
 		}
 		if (!check_bbox(cmdline.bboxOpt.value()))
 			return 1;
-		if (!HtmlSpecialHandler::setLinkMarker(cmdline.linkmarkOpt.value()))
+		if (!HyperlinkManager::setLinkMarker(cmdline.linkmarkOpt.value()))
 			Message::wstream(true) << "invalid argument '"+cmdline.linkmarkOpt.value()+"' supplied for option --linkmark\n";
 		if (argc > 1 && cmdline.filenames().size() < 1) {
 			Message::estream(true) << "no input file given\n";

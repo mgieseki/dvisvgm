@@ -118,6 +118,8 @@ libdvisvgm_a_SOURCES = \
 	GraphicsPath.hpp \
 	HtmlSpecialHandler.cpp \
 	HtmlSpecialHandler.hpp \
+	HyperlinkManager.cpp \
+	HyperlinkManager.hpp \
 	InputBuffer.cpp \
 	InputBuffer.hpp \
 	InputReader.cpp \
