@@ -14,7 +14,7 @@ cat >$out <<EOT
 SUBDIRS = data
 
 check_LTLIBRARIES = libgtest.la
-libgtest_la_SOURCES = gtest/src/gtest-all.cc
+libgtest_la_SOURCES = gtest/src/gtest-all.cc testmain.cpp
 libgtest_la_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include -I\$(top_srcdir)/tests/gtest
 libgtest_la_LDFLAGS = -pthread
 EXTRA_DIST = gtest/LICENSE \\
@@ -40,7 +40,7 @@ hashcheck_CPPFLAGS = -I\$(top_srcdir)/libs/xxHash
 hashcheck.cpp: genhashcheck.py \$(top_srcdir)/src/AGLTable.hpp \$(top_srcdir)/libs/xxHash/xxhash.h
 	python \$^ >\$@
 
-TESTLIBS = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a libgtest.la -lpotrace -lfreetype 
+TESTLIBS = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a libgtest.la -lpotrace -lfreetype
 if ENABLE_WOFF
 TESTLIBS += \\
 	../libs/ff-woff/libfontforge.a \\
@@ -56,7 +56,7 @@ for f in *Test.cpp; do
 	cat >>$out <<EOT
 TESTS += $base
 check_PROGRAMS += $base
-${base}_SOURCES = $f testmain.cpp
+${base}_SOURCES = $f
 ${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include
 ${base}_LDADD = \$(TESTLIBS)
 

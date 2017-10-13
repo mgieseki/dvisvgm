@@ -19,7 +19,7 @@
 *************************************************************************/
 
 #include <string>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 std::string TEST_ARGV0;
 
