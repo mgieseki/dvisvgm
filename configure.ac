@@ -189,6 +189,7 @@ AC_CONFIG_FILES([
 	libs/Makefile
 	libs/clipper/Makefile
 	libs/ff-woff/Makefile
+	libs/variant/Makefile
 	libs/woff2/Makefile
 	libs/woff2/brotli/Makefile
 	libs/xxHash/Makefile

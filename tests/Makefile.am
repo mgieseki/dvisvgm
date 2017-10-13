@@ -21,7 +21,7 @@ EXTRA_DIST = gtest/LICENSE \
 	gtest/src/gtest-test-part.cc \
 	gtest/src/gtest-typed-test.cc
 
-AM_CXXFLAGS = -I$(top_srcdir)/src -Wall -DBUILDDIR='"$(abs_builddir)"' -DSRCDIR='"$(abs_srcdir)"' $(CODE_COVERAGE_CFLAGS)
+AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/libs/variant/include -Wall -DBUILDDIR='"$(abs_builddir)"' -DSRCDIR='"$(abs_srcdir)"' $(CODE_COVERAGE_CFLAGS)
 
 TESTS = hashcheck
 check_PROGRAMS = hashcheck
@@ -244,6 +244,12 @@ check_PROGRAMS += PapersizeSpecialTest
 PapersizeSpecialTest_SOURCES = PapersizeSpecialTest.cpp testmain.cpp
 PapersizeSpecialTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
 PapersizeSpecialTest_LDADD = $(TESTLIBS)
+
+TESTS += PDFParserTest
+check_PROGRAMS += PDFParserTest
+PDFParserTest_SOURCES = PDFParserTest.cpp testmain.cpp
+PDFParserTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
+PDFParserTest_LDADD = $(TESTLIBS)
 
 TESTS += PSInterpreterTest
 check_PROGRAMS += PSInterpreterTest

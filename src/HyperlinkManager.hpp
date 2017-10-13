@@ -24,6 +24,7 @@
 #include <string>
 #include <unordered_map>
 #include "Color.hpp"
+#include "SpecialActions.hpp"
 
 class SpecialActions;
 
@@ -38,6 +39,7 @@ class HyperlinkManager {
 	};
 
 	enum class AnchorType {NONE, HREF, NAME};
+	enum class ColorSource {DEFAULT, LINKMARKER, STATIC};
 	using NamedAnchors = std::unordered_map<std::string, NamedAnchor>;
 
    public:
@@ -51,22 +53,25 @@ class HyperlinkManager {
 		void createLink (std::string uri, SpecialActions &actions);
 		void createViews (unsigned pageno, SpecialActions &actions);
 		void setBaseUrl (std::string &base) {_base = base;}
+		void setLineWidth (double w) {_linewidth = w;}
 		static HyperlinkManager& instance ();
 		static bool setLinkMarker (const std::string &marker);
+		static void setDefaultLinkColor (Color color);
 
 	protected:
-		HyperlinkManager () : _anchorType(AnchorType::NONE), _depthThreshold(0) {}
+		HyperlinkManager () : _anchorType(AnchorType::NONE), _depthThreshold(0), _linewidth(-1) {}
 		void markLinkedBox (SpecialActions &actions);
 
 		enum class MarkerType {NONE, LINE, BOX, BGCOLOR};
 		static MarkerType MARKER_TYPE;  ///< selects how to mark linked areas
 		static Color LINK_BGCOLOR;      ///< background color if linkmark type == LT_BGCOLOR
 		static Color LINK_LINECOLOR;    ///< line color if linkmark type is LM_LINE or LM_BOX
-		static bool USE_LINECOLOR;      ///< if true, LINK_LINECOLOR is applied
+		static ColorSource COLORSOURCE; ///< if true, LINK_LINECOLOR is applied
 
    private:
 		AnchorType _anchorType;     ///< type of active anchor
 		int _depthThreshold;        ///< break anchor box if the DVI stack depth underruns this threshold
+		double _linewidth;          ///< line width of link marker (-1 => compute individual value per link)
 		std::string _base;          ///< base URL that is prepended to all relative targets
 		NamedAnchors _namedAnchors; ///< information about all named anchors processed
 };

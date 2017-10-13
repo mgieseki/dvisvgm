@@ -65,7 +65,7 @@ TEST_F(SpecialManagerTest, info1) {
 		"em         line drawing statements of the emTeX special set\n"
 		"html       hyperref specials\n"
 		"papersize  special to set the page size\n"
-		"pdf        pdfTeX font map specials\n"
+		"pdf        PDF hyperlink, font map, and pagesize specials\n"
 		"tpic       TPIC specials\n";
 	EXPECT_EQ(oss.str(), expected);
 }
@@ -82,7 +82,7 @@ TEST_F(SpecialManagerTest, info2) {
 		"dvisvgm    special set for embedding raw SVG snippets\n"
 		"html       hyperref specials\n"
 		"papersize  special to set the page size\n"
-		"pdf        pdfTeX font map specials\n"
+		"pdf        PDF hyperlink, font map, and pagesize specials\n"
 		"tpic       TPIC specials\n";
 	EXPECT_EQ(oss.str(), expected);
 }

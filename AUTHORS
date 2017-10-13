@@ -1,3 +1,26 @@
 Martin Gieseking <martin.gieseking@uos.de>
 	author of dvisvgm
 
+Yann Collet
+	libs/xxHash/xxhash.*
+	https://github.com/Cyan4973/xxHash
+
+Google Inc.
+	libs/woff2/brotli/*
+	libs/woff2/include/*
+	libs/woff2/src/*
+	https://github.com/google/brotli
+	https://github.com/google/woff2
+
+Angus Johnson
+	libs/clipper/clipper.*
+	https://sourceforge.net/projects/polyclipping/
+
+Michael Park
+	libs/variant/include/mpark/*
+	https://github.com/mpark/variant
+
+George Williams
+	libs/ff-woff/*
+	https://github.com/fontforge/fontforge
+

@@ -8,7 +8,7 @@ noinst_LIBRARIES = libdvisvgm.a
 
 dvisvgm_SOURCES = \
 	CommandLine.hpp \
-	dvisvgm.cpp 
+	dvisvgm.cpp
 
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
@@ -150,6 +150,8 @@ libdvisvgm_a_SOURCES = \
 	PapersizeSpecialHandler.hpp \
 	PathClipper.cpp \
 	PathClipper.hpp \
+	PDFParser.cpp \
+	PDFParser.hpp \
 	PdfSpecialHandler.cpp \
 	PdfSpecialHandler.hpp \
 	PreScanDVIReader.cpp \
@@ -241,6 +243,7 @@ AM_CFLAGS = -Wall \
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(top_srcdir)/libs/clipper \
+	-I$(top_srcdir)/libs/variant/include \
 	-I$(top_srcdir)/libs/xxHash \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \

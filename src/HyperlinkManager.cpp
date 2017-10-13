@@ -28,10 +28,10 @@
 using namespace std;
 
 // variable to select the link marker variant (none, underlined, boxed, or colored background)
-HyperlinkManager::MarkerType HyperlinkManager::MARKER_TYPE = HyperlinkManager::MarkerType::LINE;
+HyperlinkManager::MarkerType HyperlinkManager::MARKER_TYPE = MarkerType::LINE;
 Color HyperlinkManager::LINK_BGCOLOR;
 Color HyperlinkManager::LINK_LINECOLOR;
-bool HyperlinkManager::USE_LINECOLOR = false;
+HyperlinkManager::ColorSource HyperlinkManager::COLORSOURCE = ColorSource::DEFAULT;
 
 
 HyperlinkManager& HyperlinkManager::instance () {
@@ -146,23 +146,24 @@ void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
 	const BoundingBox &bbox = actions.bbox("{anchor}");
 	if (bbox.width() > 0 && bbox.height() > 0) {  // does the bounding box extend in both dimensions?
 		if (MARKER_TYPE != MarkerType::NONE) {
-			const double linewidth = min(0.5, bbox.height()/15);
+			const double linewidth = _linewidth >= 0 ? _linewidth : min(0.5, bbox.height()/15);
 			XMLElementNode *rect = new XMLElementNode("rect");
 			double x = bbox.minX();
 			double y = bbox.maxY()+linewidth;
 			double w = bbox.width();
 			double h = linewidth;
-			const Color &linecolor = USE_LINECOLOR ? LINK_LINECOLOR : actions.getColor();
+			const Color linecolor = COLORSOURCE == ColorSource::DEFAULT ? actions.getColor() : LINK_LINECOLOR;
 			if (MARKER_TYPE == MarkerType::LINE)
 				rect->addAttribute("fill", linecolor.svgColorString());
 			else {
-				x -= linewidth;
-				y = bbox.minY()-linewidth;
-				w += 2*linewidth;
-				h += bbox.height()+linewidth;
+				const double offset = _linewidth < 0 ? linewidth : 0 ;
+				x -= offset;
+				y = bbox.minY()-offset;
+				w += 2*offset;
+				h += bbox.height()+offset;
 				if (MARKER_TYPE == MarkerType::BGCOLOR) {
 					rect->addAttribute("fill", LINK_BGCOLOR.svgColorString());
-					if (USE_LINECOLOR) {
+					if (COLORSOURCE != ColorSource::DEFAULT) {
 						rect->addAttribute("stroke", linecolor.svgColorString());
 						rect->addAttribute("stroke-width", linewidth);
 					}
@@ -245,11 +246,19 @@ bool HyperlinkManager::setLinkMarker (const string &marker) {
 			return false;
 		MARKER_TYPE = MarkerType::BGCOLOR;
 	}
-	USE_LINECOLOR = false;
+	COLORSOURCE = ColorSource::DEFAULT;
 	if (MARKER_TYPE != MarkerType::NONE && !color.empty()) {
 		if (!LINK_LINECOLOR.setPSName(color, false))
 			return false;
-		USE_LINECOLOR = true;
+		COLORSOURCE = ColorSource::LINKMARKER;
 	}
 	return true;
+}
+
+
+void HyperlinkManager::setDefaultLinkColor (Color color) {
+	if (COLORSOURCE != ColorSource::LINKMARKER) {
+		COLORSOURCE = ColorSource::STATIC;
+		LINK_LINECOLOR = color;
+	}
 }

@@ -3,7 +3,7 @@
 ##
 ## Process this file with automake.
 
-SUBDIRS = clipper xxHash
+SUBDIRS = clipper variant xxHash
 
 if ENABLE_WOFF
 SUBDIRS += ff-woff woff2

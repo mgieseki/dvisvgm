@@ -66,6 +66,7 @@ class StreamInputReader : public InputReader {
 		int peek () const override {return _is.peek();}
 		int peek (size_t n) const override;
 		bool eof () const override {return !_is || _is.eof();}
+		std::istream& getStream () {return _is;}
 
 	private:
 		std::istream &_is;
