@@ -25,6 +25,7 @@
 #include <stdexcept>
 #include "InputReader.hpp"
 #include "PDFParser.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -341,13 +342,13 @@ void PDFParser::parse (InputReader &ir, vector<PDFObject> &objects, const PDFOpe
 		case '(':
 			objects.emplace_back(parse_literal_string(ir));	break;
 		case '[':
-			objects.emplace_back(make_shared<PDFArray>(parseArray(ir, opHandler))); break;
+			objects.emplace_back(util::make_unique<PDFArray>(parseArray(ir, opHandler))); break;
 		case '<':
 			ir.get();
 			if (ir.peek() != '<')
 				objects.emplace_back(parse_hex_string(ir));
 			else
-				objects.emplace_back(make_shared<PDFDict>(parseDict(ir, opHandler)));
+				objects.emplace_back(util::make_unique<PDFDict>(parseDict(ir, opHandler)));
 			break;
 		case '/': {
 			ir.get();
@@ -432,7 +433,7 @@ static ostream& operator << (ostream &os, const PDFObjectRef &ref) {
 }
 
 
-static ostream& operator << (ostream &os, const shared_ptr<vector<PDFObject>> &val) {
+static ostream& operator << (ostream &os, const unique_ptr<vector<PDFObject>> &val) {
 	os << '[';
 	for (auto it=val->begin(); it != val->end(); ++it) {
 		if (it != val->begin())
@@ -444,7 +445,7 @@ static ostream& operator << (ostream &os, const shared_ptr<vector<PDFObject>> &v
 }
 
 
-static ostream& operator << (ostream &os, const shared_ptr<Dictionary<string,PDFObject>> &val) {
+static ostream& operator << (ostream &os, const unique_ptr<Dictionary<string,PDFObject>> &val) {
 	os << "<<";
 	for (auto it=val->begin(); it != val->end(); ++it) {
 		if (it != val->begin())

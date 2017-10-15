@@ -33,8 +33,6 @@
 #include <mpark/variant.hpp>
 #include "MessageException.hpp"
 
-class PDFObject;
-
 template <typename K, typename V>
 class Dictionary {
 	using Map = std::map<K, V>;
@@ -91,12 +89,12 @@ struct PDFName {
 	std::string str;
 };
 
+class PDFObject;
+
 using PDFArray = std::vector<PDFObject>;
 using PDFDict = Dictionary<std::string, PDFObject>;
 
 //////////////////////////////////////////////////////////////////////////
-
-class InputReader;
 
 /** This class represents a single variadic PDF object. */
 class PDFObject {
@@ -111,15 +109,15 @@ class PDFObject {
 		PDFObjectRef,
 		PDFOperator,
 		std::string,
-		std::shared_ptr<PDFArray>,
-		std::shared_ptr<PDFDict>
+		std::unique_ptr<PDFArray>,
+		std::unique_ptr<PDFDict>
 	>;
 
 	public:
 		PDFObject () : _value(0) {}
 
 		template <typename T>
-		explicit PDFObject (const T &value) : _value(value) {}
+		explicit PDFObject (T &&value) : _value(std::forward<T>(value)) {}
 
 		explicit PDFObject (const char *value) : _value(std::string(value)) {}
 		explicit operator std::string () const;
@@ -136,14 +134,14 @@ class PDFObject {
 
 
 template<> inline const PDFArray* PDFObject::get() const {
-	if (auto *p = mpark::get_if<std::shared_ptr<PDFArray>>(&_value))
+	if (auto *p = mpark::get_if<std::unique_ptr<PDFArray>>(&_value))
 		return &(**p);
 	return nullptr;
 }
 
 
 template<> inline const PDFDict* PDFObject::get() const {
-	if (auto *p = mpark::get_if<std::shared_ptr<PDFDict>>(&_value))
+	if (auto *p = mpark::get_if<std::unique_ptr<PDFDict>>(&_value))
 		return &(**p);
 	return nullptr;
 }
@@ -156,6 +154,7 @@ inline std::ostream& operator << (std::ostream &os, const PDFObject &obj) {
 
 //////////////////////////////////////////////////////////////////////////
 
+class InputReader;
 
 class PDFParser {
 	public:
