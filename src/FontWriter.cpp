@@ -65,6 +65,8 @@ vector<string> FontWriter::supportedFormats () {
 }
 
 
+#include <config.h>
+
 #ifdef DISABLE_WOFF
 // dummy functions used if WOFF support is disabled
 FontWriter::FontWriter (const PhysicalFont &font) : _font(font) {}
