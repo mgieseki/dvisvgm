@@ -78,12 +78,12 @@ SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
 	auto it = sfdMap.find(name);
 	if (it != sfdMap.end())
 		return it->second.get();
-	unique_ptr<SubfontDefinition> sfd;
+	SubfontDefinition *sfd=nullptr;
 	if (const char *path = FileFinder::instance().lookup(name+".sfd", false)) {
-		sfd.reset(new SubfontDefinition(name, path));
-		sfdMap[name] = std::move(sfd);
+		sfd = new SubfontDefinition(name, path);
+		sfdMap[name] = unique_ptr<SubfontDefinition>(sfd);
 	}
-	return sfd.get();
+	return sfd;
 }
 
 
