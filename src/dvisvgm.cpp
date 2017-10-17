@@ -228,12 +228,13 @@ class VersionInfo {
 
 static void print_version (bool extended) {
 	string versionstr = string(PROGRAM_NAME)+" "+PROGRAM_VERSION;
-	if (extended) {
 #ifdef TARGET_SYSTEM
-		if (strlen(TARGET_SYSTEM) > 0)
-			versionstr += " (" TARGET_SYSTEM ")";
+	if (extended && strlen(TARGET_SYSTEM) > 0)
+		versionstr += " (" TARGET_SYSTEM ")";
 #endif
-		cout << versionstr << '\n' << string(versionstr.length(), '-') << '\n';
+	cout << versionstr << '\n';
+	if (extended) {
+		cout << string(versionstr.length(), '-') << '\n';
 		VersionInfo versionInfo;
 		versionInfo.add("clipper", CLIPPER_VERSION);
 		versionInfo.add("freetype", FontEngine::version());
