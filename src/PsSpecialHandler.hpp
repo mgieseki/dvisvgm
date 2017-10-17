@@ -171,7 +171,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		double _dashoffset;         ///< current dash offset
 		std::vector<double> _dashpattern;
 		ClippingStack _clipStack;
-		std::unordered_map<int, PSPattern*> _patterns;
+		std::unordered_map<int, std::unique_ptr<PSPattern>> _patterns;
 		PSTilingPattern *_pattern;  ///< current pattern
 };
 

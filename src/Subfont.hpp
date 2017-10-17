@@ -22,6 +22,7 @@
 #define SUBFONT_HPP
 
 #include <istream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -34,9 +35,8 @@ class Subfont;
 /** Represents a collection of subfont mappings as defined in a .sfd file, and
  *  encapsulates the evaluation of these files. */
 class SubfontDefinition {
-	using Subfonts = std::unordered_map<std::string, Subfont*>;
+	using Subfonts = std::unordered_map<std::string, std::unique_ptr<Subfont>>;
 	public:
-		~SubfontDefinition ();
 		static SubfontDefinition* lookup (const std::string &name);
 //		int getIDs (std::vector<std::string> &ids) const;
 		const std::string& name() const {return _sfname;}
@@ -59,18 +59,18 @@ class SubfontDefinition {
 class Subfont {
 	friend class SubfontDefinition;
 	public:
-		~Subfont();
 		const std::string& id () const {return _id;}
 		uint16_t decode (unsigned char c);
 
 	protected:
 		Subfont (SubfontDefinition &sfd, const std::string &id) : _sfd(sfd), _id(id), _mapping(0) {}
+		Subfont (const Subfont &sf) =delete;
 		bool read ();
 
 	private:
-		SubfontDefinition &_sfd;  ///< SubfontDefinition where this Subfont belongs to
-		const std::string &_id;   ///< id of this subfont as specified in the .sfd file
-		uint16_t *_mapping;       ///< the character mapping table with 256 entries
+		SubfontDefinition &_sfd;        ///< SubfontDefinition where this Subfont belongs to
+		const std::string &_id;         ///< id of this subfont as specified in the .sfd file
+		std::vector<uint16_t> _mapping; ///< the character mapping table with 256 entries
 };
 
 

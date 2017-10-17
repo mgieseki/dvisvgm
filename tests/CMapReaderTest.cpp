@@ -32,7 +32,7 @@ class CMapReaderTest : public ::testing::Test
 		CMapReaderTest () {
 			istringstream iss(cmapsrc);
 			CMapReader reader;
-			cmap.reset(reader.read(iss, "Test-Map"));
+			cmap = reader.read(iss, "Test-Map");
 		}
 
 		static const char *cmapsrc;

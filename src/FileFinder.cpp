@@ -21,6 +21,7 @@
 #include <config.h>
 #ifdef MIKTEX
 	#include "MiKTeXCom.hpp"
+	#include "utility.hpp"
 #else
 	#ifdef KPSE_CXX_UNSAFE
 	extern "C" {
@@ -55,7 +56,7 @@ bool FileFinder::_enableMktex = false;
 FileFinder::FileFinder () {
 	addLookupDir(".");  // always lookup files in the current working directory
 #ifdef MIKTEX
-	_miktex.reset(new MiKTeXCom);
+	_miktex = util::make_unique<MiKTeXCom>();
 #else
 	kpse_set_program_name(_argv0.c_str(), _progname.c_str());
 	// enable tfm and mf generation (actually invoked by calls of kpse_make_tex)

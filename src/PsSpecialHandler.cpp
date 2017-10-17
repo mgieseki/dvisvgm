@@ -59,8 +59,6 @@ PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(0), _previewFilter(
 
 PsSpecialHandler::~PsSpecialHandler () {
 	_psi.setActions(0);     // ensure no further PS actions are performed
-	for (auto &entry : _patterns)
-		delete entry.second;
 }
 
 
@@ -702,12 +700,12 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 			create_matrix(p, 9, matrix);
 			matrix.rmultiply(_actions->getMatrix());
 
-			PSTilingPattern *pattern=0;
+			unique_ptr<PSTilingPattern> pattern;
 			if (paint_type == 1)
-				pattern = new PSColoredTilingPattern(id, bbox, matrix, xstep, ystep);
+				pattern = util::make_unique<PSColoredTilingPattern>(id, bbox, matrix, xstep, ystep);
 			else
-				pattern = new PSUncoloredTilingPattern(id, bbox, matrix, xstep, ystep);
-			_patterns[id] = pattern;
+				pattern = util::make_unique<PSUncoloredTilingPattern>(id, bbox, matrix, xstep, ystep);
+			_patterns[id] = std::move(pattern);
 			_savenode = _xmlnode;
 			_xmlnode = pattern->getContainerNode();  // insert the following SVG elements into this node
 			break;
@@ -732,13 +730,13 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	if (it == _patterns.end())
 		_pattern = 0;
 	else {
-		if (PSUncoloredTilingPattern *pattern = dynamic_cast<PSUncoloredTilingPattern*>(it->second))
+		if (PSUncoloredTilingPattern *pattern = dynamic_cast<PSUncoloredTilingPattern*>(it->second.get()))
 			pattern->setColor(color);
 		it->second->apply(*_actions);
-		if (PSTilingPattern *pattern = dynamic_cast<PSTilingPattern*>(it->second))
+		if (PSTilingPattern *pattern = dynamic_cast<PSTilingPattern*>(it->second.get()))
 			_pattern = pattern;
 		else
-			_pattern = 0;
+			_pattern = nullptr;
 	}
 }
 

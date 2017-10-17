@@ -21,6 +21,7 @@
 #ifndef SHADINGPATCH_HPP
 #define SHADINGPATCH_HPP
 
+#include <memory>
 #include "Color.hpp"
 #include "GraphicsPath.hpp"
 #include "MessageException.hpp"
@@ -50,7 +51,7 @@ class ShadingPatch
 		virtual int numColors (int edgeflag) const =0;
 		virtual Color averageColor() const =0;
 		Color::ColorSpace colorSpace () const {return _colorspace;}
-		static ShadingPatch* create (int psShadingType, Color::ColorSpace cspace);
+		static std::unique_ptr<ShadingPatch> create (int psShadingType, Color::ColorSpace cspace);
 
 	protected:
 		using ColorGetter = void (Color::*)(std::valarray<double> &va) const;

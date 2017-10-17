@@ -19,21 +19,23 @@
 *************************************************************************/
 
 #include <fstream>
+#include <memory>
 #include "FileFinder.hpp"
 #include "FontMetrics.hpp"
 #include "JFM.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
 
-FontMetrics* FontMetrics::read (const char *fontname) {
+unique_ptr<FontMetrics> FontMetrics::read (const char *fontname) {
 	const char *path = FileFinder::instance().lookup(string(fontname) + ".tfm");
 	ifstream ifs(path, ios::binary);
 	if (!ifs)
-		return 0;
+		return unique_ptr<FontMetrics>();
 	uint16_t id = 256*ifs.get();
 	id += ifs.get();
 	if (id == 9 || id == 11)  // Japanese font metric file?
-		return new JFM(ifs);
-	return new TFM(ifs);
+		return util::make_unique<JFM>(ifs);
+	return util::make_unique<TFM>(ifs);
 }

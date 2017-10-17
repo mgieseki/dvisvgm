@@ -23,6 +23,7 @@
 #include <csignal>
 #include <cstdlib>
 #include "SignalHandler.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -48,7 +49,7 @@ class SignalHandler::Impl {
 
 
 SignalHandler::SignalHandler ()
-	: _active(false), _impl(new SignalHandler::Impl)
+	: _active(false), _impl(util::make_unique<SignalHandler::Impl>())
 {
 }
 

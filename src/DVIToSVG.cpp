@@ -76,12 +76,7 @@ DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
 	_pageByte = 0;
 	_prevXPos = _prevYPos = numeric_limits<double>::min();
 	_prevWritingMode = WritingMode::LR;
-	_actions = new DVIToSVGActions(*this, _svg);
-}
-
-
-DVIToSVG::~DVIToSVG () {
-	delete _actions;
+	_actions = util::make_unique<DVIToSVGActions>(*this, _svg);
 }
 
 
@@ -113,7 +108,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		else
 			Message::wstream(true) << "failed to write output to " << fname << '\n';
 		_svg.reset();
-		static_cast<DVIToSVGActions*>(_actions)->reset();
+		_actions->reset();
 	}
 	if (pageinfo) {
 		pageinfo->first = last-first+1;
@@ -131,7 +126,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 		throw MessageException("invalid page range format");
 
 	Message::mstream(false, Message::MC_PAGE_NUMBER) << "pre-processing DVI file (format version "  << getDVIVersion() << ")\n";
-	if (DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(_actions)) {
+	if (DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(_actions.get())) {
 		PreScanDVIReader prescan(getInputStream(), actions);
 		actions->setDVIReader(prescan);
 		prescan.executeAllPages();
@@ -172,7 +167,7 @@ int DVIToSVG::executeCommand () {
  *  @param[in] pageno physical page number (1 = first page)
  *  @param[in] c contains information about the page (page number etc.) */
 void DVIToSVG::enterBeginPage (unsigned pageno, const vector<int32_t> &c) {
-	if (dynamic_cast<DVIToSVGActions*>(_actions)) {
+	if (dynamic_cast<DVIToSVGActions*>(_actions.get())) {
 		Message::mstream().indent(0);
 		Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing page " << pageno;
 		if (pageno != (unsigned)c[0])  // Does page number shown on page differ from physical page number?
@@ -186,7 +181,7 @@ void DVIToSVG::enterBeginPage (unsigned pageno, const vector<int32_t> &c) {
 /** This template method is called by DVIReader::cmdEop() after
  *  executing the EOP actions. */
 void DVIToSVG::leaveEndPage (unsigned) {
-	if (!dynamic_cast<DVIToSVGActions*>(_actions))
+	if (!dynamic_cast<DVIToSVGActions*>(_actions.get()))
 		return;
 
 	// set bounding box and apply page transformations
@@ -282,12 +277,10 @@ static void collect_chars (unordered_map<const Font*, set<int>> &fontmap) {
 /** Adds the font information to the SVG tree.
  *  @param[in] svgElement the font nodes are added to this node */
 void DVIToSVG::embedFonts (XMLElementNode *svgElement) {
-	if (!svgElement)
-		return;
-	if (!_actions)  // no dvi actions => no chars written => no fonts to embed
+	if (!svgElement || !_actions) // no dvi actions => no chars written => no fonts to embed
 		return;
 
-	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(_actions);
+	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(_actions.get());
 	auto &usedCharsMap = svgActions->getUsedChars();
 
 	collect_chars(usedCharsMap);

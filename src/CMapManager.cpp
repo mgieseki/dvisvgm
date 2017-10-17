@@ -49,16 +49,17 @@ CMap* CMapManager::lookup (const string &name) {
 		throw CMapReaderException(oss.str());
 	}
 
-	CMap *cmap=0;
+	unique_ptr<CMap> cmap_ptr;
 	if (name == "Identity-H")
-		cmap = new IdentityHCMap;
+		cmap_ptr = util::make_unique<IdentityHCMap>();
 	else if (name == "Identity-V")
-		cmap = new IdentityVCMap;
+		cmap_ptr = util::make_unique<IdentityVCMap>();
 	else if (name == "unicode")
-		cmap = new UnicodeCMap;
-	if (cmap) {
-		_cmaps[name].reset(cmap);
-		return cmap;
+		cmap_ptr = util::make_unique<UnicodeCMap>();
+	if (cmap_ptr) {
+		CMap *ret = cmap_ptr.get();
+		_cmaps[name] = std::move(cmap_ptr);
+		return ret;
 	}
 	// Load cmap data of file <name> and also process all cmaps referenced by operator "usecmap".
 	// This can lead to a sequence of further calls of lookup(). In order to prevent infinite loops
@@ -66,20 +67,22 @@ CMap* CMapManager::lookup (const string &name) {
 	// a sequence of inclusions.
 	_includedCMaps.insert(name);  // save name of current cmap being processed
 	_level++;                     // increase nesting level
+	CMap *ret=nullptr;
 	try {
 		CMapReader reader;
-		if (!(cmap = reader.read(name))) {
+		if (!(cmap_ptr = reader.read(name))) {
 			_level = 1;
 			Message::wstream(true) << "CMap file '" << name << "' not found\n";
 		}
-		_cmaps[name].reset(cmap);
+		ret = cmap_ptr.get();
+		_cmaps[name] = std::move(cmap_ptr);
 	}
 	catch (const CMapReaderException &e) {
 		Message::estream(true) << "CMap file " << name << ": " << e.what() << "\n";
 	}
 	if (--_level == 0)            // back again at initial nesting level?
 		_includedCMaps.clear();    // => names of included cmaps are no longer needed
-	return cmap;
+	return ret;
 }
 
 

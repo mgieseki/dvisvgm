@@ -34,7 +34,7 @@ using namespace std;
 // helper functions
 
 static int skip_mapping_data (istream &is);
-static bool scan_line (const char *line, int lineno, uint16_t *mapping, const string &fname, long &pos);
+static bool scan_line (const char *line, int lineno, vector<uint16_t> &mapping, const string &fname, long &pos);
 
 
 /** Constructs a new SubfontDefinition object.
@@ -53,19 +53,13 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
 			while (is && !isspace(is.peek()))
 				id += is.get();
 			if (!id.empty()) {
-				auto state = _subfonts.emplace(pair<string,Subfont*>(id, (Subfont*)0));
+				auto state = _subfonts.emplace(pair<string,unique_ptr<Subfont>>(id, unique_ptr<Subfont>()));
 				if (state.second) // id was not present in map already
-					state.first->second = new Subfont(*this, state.first->first);
+					state.first->second = unique_ptr<Subfont>(new Subfont(*this, state.first->first));
 				skip_mapping_data(is);
 			}
 		}
 	}
-}
-
-
-SubfontDefinition::~SubfontDefinition () {
-	for (auto &entry : _subfonts)
-		delete entry.second;
 }
 
 
@@ -97,23 +91,19 @@ const char* SubfontDefinition::path () const {
 Subfont* SubfontDefinition::subfont (const string &id) const {
 	auto it = _subfonts.find(id);
 	if (it != _subfonts.end())
-		return it->second;
-	return 0;
+		return it->second.get();
+	return nullptr;
 }
 
 
 /** Returns all subfonts defined in this SFD. */
 int SubfontDefinition::subfonts (vector<Subfont*> &sfs) const {
 	for (const auto &strsfpair : _subfonts)
-		sfs.push_back(strsfpair.second);
+		sfs.push_back(strsfpair.second.get());
 	return int(sfs.size());
 }
 
 //////////////////////////////////////////////////////////////////////
-
-Subfont::~Subfont () {
-	delete [] _mapping;
-}
 
 
 /** Reads the character mappings for a given subfont ID.
@@ -129,13 +119,12 @@ Subfont::~Subfont () {
  *  to c=10, 11 and 12, respectively.
  *  @return true if the data has been read successfully */
 bool Subfont::read () {
-	if (_mapping)  // if there's already a mapping assigned, we're finished here
+	if (!_mapping.empty())  // if there's already a mapping assigned, we're finished here
 		return true;
 	if (const char *p = _sfd.path()) {
 		ifstream is(p);
 		if (!is)
 			return false;
-
 		int lineno=1;
 		while (is) {
 			if (is.peek() == '#' || is.peek() == '\n') {
@@ -152,14 +141,13 @@ bool Subfont::read () {
 					lineno += skip_mapping_data(is);
 				else {
 					// build mapping array
-					_mapping = new uint16_t[256];
-					memset(_mapping, 0, 256*sizeof(uint16_t));
+					_mapping.resize(256, 0);
 					long pos=0;
 					char buf[1024];
 					bool complete=false;
 					while (!complete) {
 						is.getline(buf, 1024);
-						complete = scan_line(buf, lineno, _mapping, _sfd.filename() ,pos);
+						complete = scan_line(buf, lineno, _mapping, _sfd.filename(), pos);
 					}
 					return true;
 				}
@@ -175,7 +163,7 @@ bool Subfont::read () {
  *  @param[in] c local character code relative to the subfont
  *  @return character code of the target font */
 uint16_t Subfont::decode (unsigned char c) {
-	if (!_mapping && !read())
+	if (_mapping.empty() && !read())
 		return 0;
 	return _mapping[c];
 }
@@ -211,7 +199,7 @@ static int skip_mapping_data (istream &is) {
  *  @param[in] fname name of the mapfile being scanned
  *  @param[in,out] offset position/index of next mapping value
  *  @return true if the line is the last one the current mapping sequence, i.e. the line doesn't end with a backslash */
-static bool scan_line (const char *line, int lineno, uint16_t *mapping, const string &fname, long &offset) {
+static bool scan_line (const char *line, int lineno, vector<uint16_t> &mapping, const string &fname, long &offset) {
 	const char *p=line;
 	char *q;
 	for (; *p && isspace(*p); p++);
@@ -224,7 +212,6 @@ static bool scan_line (const char *line, int lineno, uint16_t *mapping, const st
 		else {
 			long val1 = strtol(p, &q, 0); // first value of range
 			long val2 = -1;               // last value of range
-			ostringstream oss; // output stream for exception messages
 			switch (*q) {
 				case ':':
 					if (val1 < 0 || val1 > 255)

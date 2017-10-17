@@ -49,7 +49,7 @@ double SVGTree::ZOOM_FACTOR=1.0;
 
 
 SVGTree::SVGTree () {
-	_charHandler.reset(SVGCharHandlerFactory::createHandler());
+	_charHandler = SVGCharHandlerFactory::createHandler();
 	reset();
 }
 

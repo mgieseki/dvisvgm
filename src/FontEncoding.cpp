@@ -23,18 +23,9 @@
 #include "EncFile.hpp"
 #include "FileFinder.hpp"
 #include "FontEncoding.hpp"
+#include "utility.hpp"
 
 using namespace std;
-
-
-struct EncodingMap : public unordered_map<string, EncFile*>
-{
-	~EncodingMap () {
-		for (auto &entry : *this)
-			delete entry.second;
-	}
-};
-
 
 /** Returns the encoding object for a given encoding name.
  * @param[in] encname name of the encoding to lookup
@@ -42,20 +33,21 @@ struct EncodingMap : public unordered_map<string, EncFile*>
 FontEncoding* FontEncoding::encoding (const string &encname) {
 	if (encname.empty())
 		return 0;
-	// initially, try to find an .enc file with the given name
+
+	using EncodingMap = unordered_map<string, unique_ptr<EncFile>>;
 	static EncodingMap encmap;
+	// initially, try to find an .enc file with the given name
 	auto it = encmap.find(encname);
 	if (it != encmap.end())
-		return it->second;
+		return it->second.get();
 	if (FileFinder::instance().lookup(encname + ".enc", false)) {
-		EncFile *enc = new EncFile(encname);
-		encmap[encname] = enc;
-		return enc;
+		auto state = encmap.emplace(encname, util::make_unique<EncFile>(encname));
+		return state.first->second.get();
 	}
 	// no .enc file found => try to find a CMap
 	if (CMap *cmap = CMapManager::instance().lookup(encname))
 		return cmap;
-	return 0;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////

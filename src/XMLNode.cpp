@@ -21,6 +21,7 @@
 #include <map>
 #include <list>
 #include <sstream>
+#include "utility.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
 
@@ -78,7 +79,7 @@ void XMLElementNode::append (XMLNode *child) {
 
 void XMLElementNode::append (const string &str) {
 	if (_children.empty() || !dynamic_cast<XMLTextNode*>(_children.back().get()))
-		_children.emplace_back(unique_ptr<XMLNode>(new XMLTextNode(str)));
+		_children.emplace_back(util::make_unique<XMLTextNode>(str));
 	else
 		static_cast<XMLTextNode*>(_children.back().get())->append(str);
 }

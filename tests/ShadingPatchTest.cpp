@@ -27,19 +27,14 @@ using namespace std;
 
 
 TEST(ShadingPatchTest, create) {
-	ShadingPatch *patch=0;
-	patch = ShadingPatch::create(4, Color::ColorSpace::RGB);
-	EXPECT_TRUE(dynamic_cast<TriangularPatch*>(patch));
-	delete patch;
+	auto patch = ShadingPatch::create(4, Color::ColorSpace::RGB);
+	EXPECT_TRUE(dynamic_cast<TriangularPatch*>(patch.get()));
 	patch = ShadingPatch::create(5, Color::ColorSpace::RGB);
-	EXPECT_TRUE(dynamic_cast<LatticeTriangularPatch*>(patch));
-	delete patch;
+	EXPECT_TRUE(dynamic_cast<LatticeTriangularPatch*>(patch.get()));
 	patch = ShadingPatch::create(6, Color::ColorSpace::RGB);
-	EXPECT_TRUE(dynamic_cast<CoonsPatch*>(patch));
-	delete patch;
+	EXPECT_TRUE(dynamic_cast<CoonsPatch*>(patch.get()));
 	patch = ShadingPatch::create(7, Color::ColorSpace::RGB);
-	EXPECT_TRUE(dynamic_cast<TensorProductPatch*>(patch));
-	delete patch;
+	EXPECT_TRUE(dynamic_cast<TensorProductPatch*>(patch.get()));
 }
 
 
