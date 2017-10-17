@@ -108,24 +108,24 @@ void PageSize::resize (string name) {
 	}
 
 	if (name == "invoice") {
-		_width.set(140, Length::Unit::MM);
-		_height.set(216, Length::Unit::MM);
+		_width = 140_mm;
+		_height = 216_mm;
 	}
 	else if (name == "executive") {
-		_width.set(184, Length::Unit::MM);
-		_height.set(267, Length::Unit::MM);
+		_width = 184_mm;
+		_height = 267_mm;
 	}
 	else if (name == "legal") {
-		_width.set(216, Length::Unit::MM);
-		_height.set(356, Length::Unit::MM);
+		_width = 216_mm;
+		_height = 356_mm;;
 	}
 	else if (name == "letter") {
-		_width.set(216, Length::Unit::MM);
-		_height.set(279, Length::Unit::MM);
+		_width = 216_mm;
+		_height = 279_mm;
 	}
 	else if (name == "ledger") {
-		_width.set(279, Length::Unit::MM);
-		_height.set(432, Length::Unit::MM);
+		_width = 279_mm;;
+		_height = 432_mm;
 	}
 	else if (isdigit(name[1]) && name.length() < 5) {  // limit length of number to prevent arithmetic errors
 		istringstream iss(name.substr(1));
