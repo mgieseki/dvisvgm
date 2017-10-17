@@ -104,7 +104,7 @@ Building dvisvgm from source
 ----------------------------
 
 _dvisvgm_ is written in C++11 ([ISO C++ standard 2011](http://www.iso.org/iso/catalogue_detail.htm?csnumber=50372))
-and requires an appropriate compiler, like [GCC](https://gcc.gnu.org) 4.8.1, [Clang](https://clang.llvm.org) 3.3,
+and requires an appropriate compiler, like [GCC](https://gcc.gnu.org) 4.9, [Clang](https://clang.llvm.org) 3.3,
 or any later version. The configure script checks for the availability of C++11 support and
 adds the proper compiler options if necessary.
 

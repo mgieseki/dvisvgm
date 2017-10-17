@@ -1,3 +1,17 @@
+dvisvgm-2.2 (2017-10-19)
+- added evaluation of pdf:pagesize specials
+- added evaluation of PDF hyperlink specials
+- try to load Ghostscript dylib on Mac systems (patch by Toby Fleming, GH bug #66)
+- improved TPIC special handler, added evaluation of 'tx' special
+- length values in dvisvgm specials now accept unit specifiers
+- added pdftex.map to default mapfiles
+- fixed potential infinite loop after starting subprocesses (GH bug #68)
+- files included with psfile are now also searched in the texmf tree if not
+  present in the current working directory (GH bug #69)
+- fixed transformation issue in computation of psfile position (GH bug #70)
+- updated bundled brotli, woff2, and xxhash libraries
+- several code refactorings and improvements
+
 dvisvgm-2.1.3 (2017-02-20)
 - fixed build failures of libfontforge on Solaris 10
 - increased code portablity
