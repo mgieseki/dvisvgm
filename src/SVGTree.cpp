@@ -324,16 +324,16 @@ static inline string extract_id_from_url (const string &url) {
 }
 
 
-/** Removes elements present in the SVH tree that are not required.
+/** Removes elements present in the SVG tree that are not required.
  *  For now, only clipPath elements are removed. */
 void SVGTree::removeRedundantElements () {
-	vector<XMLElementNode*> clipElements;
-	if (!_defs || !_defs->getDescendants("clipPath", 0, clipElements))
+	vector<XMLElementNode*> clipPathElements;
+	if (!_defs || !_defs->getDescendants("clipPath", nullptr, clipPathElements))
 		return;
 
 	// collect dependencies between clipPath elements in the defs section of the SVG tree
 	DependencyGraph<string> idTree;
-	for (const XMLElementNode *clip : clipElements) {
+	for (const XMLElementNode *clip : clipPathElements) {
 		if (const char *id = clip->getAttributeValue("id")) {
 			if (const char *url = clip->getAttributeValue("clip-path"))
 				idTree.insert(extract_id_from_url(url), id);
@@ -341,9 +341,9 @@ void SVGTree::removeRedundantElements () {
 				idTree.insert(id);
 		}
 	}
-	// collect elements that reference a clipPath (have a clip-path attribute)
+	// collect elements that reference a clipPath, i.e. have a clip-path attribute
 	vector<XMLElementNode*> descendants;
-	_page->getDescendants(0, "clip-path", descendants);
+	_page->getDescendants(nullptr, "clip-path", descendants);
 	// remove referenced IDs and their dependencies from the dependency graph
 	for (const XMLElementNode *elem : descendants) {
 		string idref = extract_id_from_url(elem->getAttributeValue("clip-path"));

@@ -49,8 +49,9 @@ TEST(DependencyGraphTest, getKeys) {
 TEST(DependencyGraphTest, insert) {
 	DependencyGraph<int> graph;
 	populate(graph);
-	for (int i=1; i <= 7; i++)
+	for (int i=1; i <= 7; i++) {
 		ASSERT_TRUE(graph.contains(i));
+	}
 	ASSERT_FALSE(graph.contains(0));
 	ASSERT_FALSE(graph.contains(8));
 }
