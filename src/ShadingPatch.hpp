@@ -27,8 +27,7 @@
 #include "MessageException.hpp"
 
 
-class ShadingPatch
-{
+class ShadingPatch {
 	public:
 		struct Callback {
 			virtual ~Callback () =default;
@@ -63,8 +62,7 @@ class ShadingPatch
 };
 
 
-struct ShadingException : public MessageException
-{
+struct ShadingException : public MessageException {
 	ShadingException (const std::string &msg) : MessageException(msg) {}
 };
 

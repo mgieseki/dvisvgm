@@ -24,13 +24,14 @@
 #include <memory>
 #include "XMLNode.hpp"
 
-class XMLDocument
-{
+class XMLDocument {
 	public:
-		XMLDocument (XMLElementNode *root=0);
+		XMLDocument () =default;
+		XMLDocument (std::unique_ptr<XMLElementNode> &&root);
 		void clear ();
-		void append (XMLNode *node);
-		void setRootNode (XMLElementNode *root);
+		void append (std::unique_ptr<XMLElementNode> &&node);
+		void append (std::unique_ptr<XMLNode> &&node);
+		void setRootNode (std::unique_ptr<XMLElementNode> &&root);
 		const XMLElementNode* getRootElement () const {return _rootElement.get();}
 		std::ostream& write (std::ostream &os) const;
 

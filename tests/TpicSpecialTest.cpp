@@ -34,16 +34,16 @@ class TpicSpecialTest : public ::testing::Test {
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : page("page") {}
-				void appendToPage (XMLNode *node)         {page.append(node);}
-				void embed (const BoundingBox &bb)        {bbox.embed(bb);}
-				void setX (double xx)                     {x = xx;}
-				void setY (double yy)                     {x = yy;}
-				double getX () const                      {return x;}
-				double getY () const                      {return y;}
-				Color getColor () const                   {return color;}
-				void setColor (const Color &c)            {color = c;}
-				void clear ()                             {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
-				const Matrix& getMatrix () const          {static Matrix m(1); return m;}
+				void appendToPage(unique_ptr<XMLNode> &&node) {page.append(std::move(node));}
+				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
+				void setX (double xx)                         {x = xx;}
+				void setY (double yy)                         {x = yy;}
+				double getX () const                          {return x;}
+				double getY () const                          {return y;}
+				Color getColor () const                       {return color;}
+				void setColor (const Color &c)                {color = c;}
+				void clear ()                                 {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
+				const Matrix& getMatrix () const              {static Matrix m(1); return m;}
 				string getXMLSnippet () const {
 					ostringstream oss;
 					for (const auto &child : page.children())

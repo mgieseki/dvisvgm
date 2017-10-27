@@ -28,24 +28,22 @@
 using namespace std;
 
 
-class EmSpecialTest : public ::testing::Test
-{
+class EmSpecialTest : public ::testing::Test {
 	protected:
-		class ActionsRecorder : public EmptySpecialActions
-		{
+		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : page("page") {}
-				void appendToPage (XMLNode *node)         {page.append(node);}
-				void embed (const BoundingBox &bb)        {bbox.embed(bb);}
-				void setX (double xx)                     {x = xx;}
-				void setY (double yy)                     {x = yy;}
-				double getX () const                      {return x;}
-				double getY () const                      {return y;}
-				Color getColor () const                   {return color;}
-				void setColor (const Color &c)            {color = c;}
-				void clear ()                             {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
-				string getPageXML () const                {ostringstream oss; oss << page; return oss.str();}
-				const Matrix& getMatrix () const          {static Matrix m(1); return m;}
+				void appendToPage(unique_ptr<XMLNode> &&node) {page.append(std::move(node));}
+				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
+				void setX (double xx)                         {x = xx;}
+				void setY (double yy)                         {x = yy;}
+				double getX () const                          {return x;}
+				double getY () const                          {return y;}
+				Color getColor () const                       {return color;}
+				void setColor (const Color &c)                {color = c;}
+				void clear ()                                 {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
+				string getPageXML () const                    {ostringstream oss; oss << page; return oss.str();}
+				const Matrix& getMatrix () const              {static Matrix m(1); return m;}
 
 				void write (ostream &os) const {
 					os << "page: " << page << '\n'
@@ -60,8 +58,7 @@ class EmSpecialTest : public ::testing::Test
 		};
 
 
-		class MyEmSpecialHandler : public EmSpecialHandler
-		{
+		class MyEmSpecialHandler : public EmSpecialHandler {
 			public:
 				MyEmSpecialHandler (SpecialActions &a) : actions(a) {}
 				void finishPage () {dviEndPage(0, actions);}

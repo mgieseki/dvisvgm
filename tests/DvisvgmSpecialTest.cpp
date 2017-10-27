@@ -27,8 +27,7 @@
 
 using namespace std;
 
-class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler
-{
+class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler {
 	public:
 		void finishPreprocessing () {dviPreprocessingFinished();}
 		void finishPage ()          {dviEndPage(0, emptyActions);}
@@ -38,25 +37,23 @@ class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler
 };
 
 
-class DvisvgmSpecialTest : public ::testing::Test
-{
+class DvisvgmSpecialTest : public ::testing::Test {
 	protected:
-		class ActionsRecorder : public EmptySpecialActions
-		{
+		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : defs(""), page("") {}
-				void appendToDefs (XMLNode *node)         {defs.append(node);}
-				void appendToPage (XMLNode *node)         {page.append(node);}
-				void embed (const BoundingBox &bb)        {bbox.embed(bb);}
-				double getX () const                      {return 0;}
-				double getY () const                      {return 0;}
-				void clear ()                             {defs.clear(); page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
-				bool defsEquals (const string &str) const {return defs.getText() == str;}
-				bool pageEquals (const string &str) const {return page.getText() == str;}
-				bool bboxEquals (const string &str) const {return bbox.toSVGViewBox() == str;}
-				const Matrix& getMatrix () const          {static Matrix m(1); return m;}
-				string bboxString () const                {return bbox.toSVGViewBox();}
-				string pageString () const                {return page.getText();}
+				void appendToDefs(unique_ptr<XMLNode> &&node) override {defs.append(std::move(node));}
+				void appendToPage(unique_ptr<XMLNode> &&node) override {page.append(std::move(node));}
+				void embed (const BoundingBox &bb) override            {bbox.embed(bb);}
+				double getX () const override                          {return 0;}
+				double getY () const override                          {return 0;}
+				void clear ()                                          {defs.clear(); page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
+				bool defsEquals (const string &str) const              {return defs.getText() == str;}
+				bool pageEquals (const string &str) const              {return page.getText() == str;}
+				bool bboxEquals (const string &str) const              {return bbox.toSVGViewBox() == str;}
+				const Matrix& getMatrix () const override              {static Matrix m(1); return m;}
+				string bboxString () const                             {return bbox.toSVGViewBox();}
+				string pageString () const                             {return page.getText();}
 
 				void write (ostream &os) const {
 					os << "defs: " << defs.getText() << '\n'

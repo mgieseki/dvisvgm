@@ -94,6 +94,12 @@ std::unique_ptr<T> make_unique (Args&&... args) {
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
+
+template<typename T, typename U>
+std::unique_ptr<T> static_unique_ptr_cast (std::unique_ptr<U> &&old){
+    return std::unique_ptr<T>{static_cast<T*>(old.release())};
+}
+
 } // namespace util
 
 #endif

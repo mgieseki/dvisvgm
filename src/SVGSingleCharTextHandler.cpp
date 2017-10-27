@@ -25,7 +25,7 @@ using namespace std;
 
 void SVGSingleCharTextHandler::appendChar (uint32_t c, double x, double y) {
 	const Font *font = _font.get();
-	XMLElementNode *textNode = createTextNode(x, y);
+	auto textNode = createTextNode(x, y);
 	textNode->append(XMLString(font->unicode(c), false));
 	// Apply color changes only if the color differs from black and if the font color itself is black.
 	// Glyphs from non-black fonts (e.g. defined in a XeTeX document) can't change their color.
@@ -33,5 +33,5 @@ void SVGSingleCharTextHandler::appendChar (uint32_t c, double x, double y) {
 		textNode->addAttribute("fill", _color.get().svgColorString());
 		_color.changed(false);
 	}
-	contextNode()->append(textNode);
+	contextNode()->append(std::move(textNode));
 }
