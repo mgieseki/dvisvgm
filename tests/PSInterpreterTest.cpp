@@ -26,8 +26,7 @@
 
 using namespace std;
 
-class PSTestActions : public PSActions
-{
+class PSTestActions : public PSActions {
 	public:
 		void applyscalevals (vector<double> &p)  {print("applyscalevals", p);}
 		void clip (vector<double> &p)            {print("clip", p);}
@@ -99,7 +98,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;setdash 0;grestore;");
+	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
 	actions.clear();
 
 	psi.execute("1 setlinecap 5 setmiterlimit 0 1 0 setrgbcolor gsave 0 setlinecap 10 setmiterlimit ");
@@ -107,7 +106,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setmatrix 1 0 0 1 0 0;setdash 0;grestore;");
+	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
 }
 
 
@@ -175,8 +174,8 @@ TEST(PSInterpreterTest, matrix) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("matrix setmatrix ");
-	ASSERT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;");
+	ASSERT_EQ(actions.result(), "applyscalevals 1 1 1;setmatrix 1 0 0 1 0 0;");
 	actions.clear();
 	psi.execute("10 100 translate 30 rotate matrix currentmatrix setmatrix ");
-	ASSERT_EQ(actions.result(), "translate 10 100;rotate 30;setmatrix 0.866025 0.5 -0.5 0.866025 10 100;");
+	ASSERT_EQ(actions.result(), "translate 10 100;rotate 30;applyscalevals 1 1 0.107493;setmatrix 0.866025 0.5 -0.5 0.866025 10 100;");
 }

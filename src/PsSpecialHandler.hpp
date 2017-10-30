@@ -36,8 +36,7 @@
 class PSPattern;
 class XMLElementNode;
 
-class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions
-{
+class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions {
 	using Path = GraphicsPath<double>;
 	using ColorSpace = Color::ColorSpace;
 
@@ -139,7 +138,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void sethsbcolor (std::vector<double> &hsb) override;
 		void setlinecap (std::vector<double> &p) override      {_linecap = uint8_t(p[0]);}
 		void setlinejoin (std::vector<double> &p) override     {_linejoin = uint8_t(p[0]);}
-		void setlinewidth (std::vector<double> &p) override    {_linewidth = p[0] ? scale(p[0]) : 0.5;}
+		void setlinewidth (std::vector<double> &p) override    {_linewidth = scale(p[0] ? p[0] : 0.5);}
 		void setmatrix (std::vector<double> &p) override;
 		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0];}
 		void setopacityalpha (std::vector<double> &p) override {_opacityalpha = p[0];}
