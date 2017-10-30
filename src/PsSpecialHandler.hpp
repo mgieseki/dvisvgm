@@ -107,7 +107,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it);
 
 		/// scale given value by current PS scale factors
-		double scale (double v) const {return v*(_sx*_cos*_cos + _sy*(1-_cos*_cos));}
+		double scale (double v) const {return v*(_sx*(1-_cos*_cos) + _sy*_cos*_cos);}
 
 		void applyscalevals (std::vector<double> &p) override  {_sx = p[0]; _sy = p[1]; _cos = p[2];}
 		void clip (std::vector<double> &p) override            {clip(p, false);}

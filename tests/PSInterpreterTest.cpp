@@ -86,7 +86,7 @@ TEST(PSInterpreterTest, init) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	ASSERT_TRUE(psi.active());
-	ASSERT_EQ(actions.result(), "");
+	EXPECT_EQ(actions.result(), "");
 }
 
 
@@ -94,19 +94,19 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("gsave ");
-	ASSERT_EQ(actions.result(), "gsave;");
+	EXPECT_EQ(actions.result(), "gsave;");
 	actions.clear();
 
 	psi.execute("grestore ");
-	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
 	actions.clear();
 
 	psi.execute("1 setlinecap 5 setmiterlimit 0 1 0 setrgbcolor gsave 0 setlinecap 10 setmiterlimit ");
-	ASSERT_EQ(actions.result(), "setlinecap 1;setmiterlimit 5;setrgbcolor 0 1 0;gsave;setlinecap 0;setmiterlimit 10;");
+	EXPECT_EQ(actions.result(), "setlinecap 1;setmiterlimit 5;setrgbcolor 0 1 0;gsave;setlinecap 0;setmiterlimit 10;");
 	actions.clear();
 
 	psi.execute("grestore ");
-	ASSERT_EQ(actions.result(), "setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
 }
 
 
@@ -114,11 +114,11 @@ TEST(PSInterpreterTest, stroke_fill) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath stroke ");
-	ASSERT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
+	EXPECT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath fill ");
-	ASSERT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
+	EXPECT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
 }
 
 
@@ -126,11 +126,11 @@ TEST(PSInterpreterTest, clip) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("initclip ");
-	ASSERT_EQ(actions.result(), "initclip;");
+	EXPECT_EQ(actions.result(), "initclip;");
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath clip ");
-	ASSERT_EQ(actions.result(), "newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;clip;");
+	EXPECT_EQ(actions.result(), "newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;clip;");
 }
 
 
@@ -138,7 +138,7 @@ TEST(PSInterpreterTest, transform) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("10 10 scale 90 rotate 100 -100 translate ");
-	ASSERT_EQ(actions.result(), "scale 10 10;rotate 90;translate 100 -100;");
+	EXPECT_EQ(actions.result(), "scale 10 10;applyscalevals 10 10 1;rotate 90;applyscalevals 10 10 0;translate 100 -100;");
 }
 
 
@@ -146,7 +146,7 @@ TEST(PSInterpreterTest, calculate) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("2 3 add 4 mul 5 div rotate ");
-	ASSERT_EQ(actions.result(), "rotate 4;");
+	ASSERT_EQ(actions.result(), "rotate 4;applyscalevals 1 1 0.997564;");
 }
 
 
@@ -154,19 +154,19 @@ TEST(PSInterpreterTest, setlinewidth) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("10 setlinewidth ");
-	ASSERT_EQ(actions.result(), "applyscalevals 1 1 1;setlinewidth 10;");
+	EXPECT_EQ(actions.result(), "setlinewidth 10;");
 	actions.clear();
 
 	psi.execute("5 5 scale 10 setlinewidth ");
-	ASSERT_EQ(actions.result(), "scale 5 5;applyscalevals 5 5 1;setlinewidth 10;");
+	EXPECT_EQ(actions.result(), "scale 5 5;applyscalevals 5 5 1;setlinewidth 10;");
 	actions.clear();
 
 	psi.execute("90 rotate 10 setlinewidth ");
-	ASSERT_EQ(actions.result(), "rotate 90;applyscalevals 5 5 0;setlinewidth 10;");
+	EXPECT_EQ(actions.result(), "rotate 90;applyscalevals 5 5 0;setlinewidth 10;");
 	actions.clear();
 
 	psi.execute("-30 rotate 10 setlinewidth ");
-	ASSERT_EQ(actions.result(), "rotate -30;applyscalevals 5 5 0.5;setlinewidth 10;");
+	EXPECT_EQ(actions.result(), "rotate -30;applyscalevals 5 5 0.5;setlinewidth 10;");
 }
 
 
@@ -174,8 +174,8 @@ TEST(PSInterpreterTest, matrix) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("matrix setmatrix ");
-	ASSERT_EQ(actions.result(), "applyscalevals 1 1 1;setmatrix 1 0 0 1 0 0;");
+	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;");
 	actions.clear();
 	psi.execute("10 100 translate 30 rotate matrix currentmatrix setmatrix ");
-	ASSERT_EQ(actions.result(), "translate 10 100;rotate 30;applyscalevals 1 1 0.107493;setmatrix 0.866025 0.5 -0.5 0.866025 10 100;");
+	EXPECT_EQ(actions.result(), "translate 10 100;rotate 30;applyscalevals 1 1 0.866025;setmatrix 0.866025 0.5 -0.5 0.866025 10 100;applyscalevals 1 1 0.866025;");
 }
