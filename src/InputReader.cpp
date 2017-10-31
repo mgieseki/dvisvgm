@@ -110,22 +110,6 @@ bool InputReader::check (const char *s, bool consume) {
 }
 
 
-int InputReader::compare (const char *s, bool consume) {
-	size_t count = 0;
-	for (const char *p=s; *p; p++) {
-		int c = peek(count++);
-		if (c != *p)
-			return c < *p ? -1 : 1;
-	}
-	int c = peek(count);
-	if (c < 0 || !isspace(c))
-		return 1;
-	if (consume)
-		skip(count);
-	return 0;
-}
-
-
 /** Reads an integer from the buffer. All characters that are part of
  *  the read integer constant are skipped. If this function returns false,
  *  the buffer pointer points to the same position as before the function call.
