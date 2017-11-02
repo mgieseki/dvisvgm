@@ -31,7 +31,7 @@
 					<div class="col-md-6">
 						<span class="pull-right" style="padding-bottom:1em">
 							<xsl:text>Last updated: </xsl:text>
-							<xsl:value-of select="substring-before(*/refmeta/refmiscinfo[@class='date'], ' ')"/>
+							<xsl:value-of select="*/refmeta/refmiscinfo[@class='date']"/>
 						</span>
 					</div>
 				</div>

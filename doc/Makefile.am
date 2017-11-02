@@ -10,6 +10,7 @@ CONF_DBLATEX_MAN  = $(top_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(top_srcdir)/doc/conf-dblatex-pdf.xsl
 TWEAK_DBLATEX_PDF = $(top_srcdir)/doc/tweak-dblatex-pdf.xsl
 TWEAK_DB_ARTICLE  = $(top_srcdir)/doc/tweak-db-article.xsl
+TWEAK_DB_REFENTRY = $(top_srcdir)/doc/tweak-db-refentry.xsl
 
 DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.section.enabled=0
 
@@ -32,17 +33,18 @@ dvi-pdf: dvisvgm.dvi
 dvisvgm.dvi: dvisvgm.1
 	groff -Tdvi -mandoc ./$< >$@
 
-dvisvgm.html: dvisvgm-man.xml
+dvisvgm.html: dvisvgm-man.xml db2html.xsl
 	xsltproc -o $@ db2html.xsl $<
 
 dvisvgm.epub: dvisvgm-article.xml
 	a2x -darticle -fepub -L --icons --icons-dir=. $<
 	mv $(basename $<).epub $@
 
-dvisvgm-man.xml: dvisvgm.txt
+dvisvgm-man.xml: dvisvgm.txt $(TWEAK_DB_REFENTRY)
 	if [ `type -p asciidoc` ]; then \
-		asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage -o $@ $<; \
-		sed -i "s#\(</refmeta>\)#<refmiscinfo class='date'>$(shell stat -c %y $<)</refmiscinfo>\n\1#" $@; \
+		asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage -o $@.tmp $<; \
+		xsltproc -o $@ $(TWEAK_DB_REFENTRY) $@.tmp; \
+		rm $@.tmp; \
 	fi
 
 dvisvgm-article.xml: dvisvgm.txt
