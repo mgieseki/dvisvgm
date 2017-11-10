@@ -56,10 +56,7 @@ DEPENDENCIES
    version of xxHash is bundled with the dvisvgm sources.
 
  * zlib (http://www.zlib.org)
-   Compressed SVG files are produced by using functions of this library and the
-   Gzstream wrapper classes (http://www.cs.unc.edu/Research/compgeom/gzstream)
-   which are licensed under LGPL version 2.1 (or optionally any later version)
-   and should be included with this package.
+   This library is required to create compressed SVGZ files.
 
  If you want to build and run the test suite located in the tests subdirectory,
  you also need the Google Test libraries (https://github.com/google/googletest).

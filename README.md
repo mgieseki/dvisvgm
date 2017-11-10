@@ -30,7 +30,7 @@ Short overview of the main features:
 * Approximates PostScript [color gradient fills](http://dvisvgm.bplaced.net/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
-* Evaluates color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF mapfile, and PostScript [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials).
+* Evaluates several [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials) including color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF hyperlink and mapfile, as well as PostScript specials.
 * The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
 * _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](https://www.miktex.org). It is therefore available for a wide range of operating systems.
 
@@ -90,10 +90,7 @@ _dvisvgm_ relies on the following free libraries:
   bundled with the _dvisvgm_ sources.
 
 * [zlib](http://www.zlib.org)  
-  Compressed SVG files are produced by using functions of this library and the
-  [Gzstream wrapper classes](http://www.cs.unc.edu/Research/compgeom/gzstream)
-  which are licensed under LGPL version 2.1 (or optionally any later version)
-  and should be included with this package.
+  This library is required to create compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 
 If you want to build and run the test suite located in the _tests_
 subdirectory, you also need the [Google Test](https://github.com/google/googletest)
