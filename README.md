@@ -32,7 +32,7 @@ Short overview of the main features:
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates several [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials) including color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF hyperlink and mapfile, as well as PostScript specials.
 * The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
-* _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [W32TeX](http://w32tex.org), and [MiKTeX](https://www.miktex.org). It is therefore available for a wide range of operating systems.
+* _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [W32TeX](http://w32tex.org), [MiKTeX](https://www.miktex.org), and [MacPorts](https://www.macports.org). It is therefore available for a wide range of operating systems.
 
 
 Usage
@@ -106,6 +106,7 @@ or any later version. The configure script checks for the availability of C++11 
 adds the proper compiler options if necessary.
 
 Quick installation info:
+
 * type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
 * type `./configure`
 * type `make`

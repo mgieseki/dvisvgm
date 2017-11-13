@@ -1,3 +1,8 @@
+dvisvgm-2.2.1 (2017-11-13)
+- fixed portability issue when building the manpage (GH bug #72)
+- fixed incomplete computation of PS line width (GH bug #77)
+- further code refactorings
+
 dvisvgm-2.2 (2017-10-19)
 - added evaluation of pdf:pagesize specials
 - added evaluation of PDF hyperlink specials
