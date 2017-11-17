@@ -62,4 +62,7 @@ TEST(XMLStringTest, doublecast) {
 	EXPECT_EQ(XMLString(-1.2345), string("-1.2"));
 	XMLString::DECIMAL_PLACES = 0;
 	EXPECT_EQ(XMLString(-1.2345), string("-1.2345"));
+
+	EXPECT_EQ(XMLString(10.0), string("10"));
+	EXPECT_EQ(XMLString(-10.0), string("-10"));
 }
