@@ -96,7 +96,7 @@ CMap* CMapManager::lookup (const string &name) {
  *  @return base font CMap that maps from CIDs to character codes */
 const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, const CMap *cmap, CharMapID &charmapID) {
 	if (!font || !cmap)
-		return 0;
+		return nullptr;
 
 	struct CharMapIDToEncName {
 		CharMapID id;
@@ -134,6 +134,6 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 			}
 		}
 	}
-	return 0;
+	return nullptr;
 }
 

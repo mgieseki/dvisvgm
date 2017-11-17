@@ -188,7 +188,7 @@ XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char
 				return descendant;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 
@@ -227,11 +227,11 @@ bool XMLElementNode::hasAttribute (const string &name) const {
 /** Returns the value of an attribute.
  *  @param[in] name name of attribute
  *  @return attribute value or 0 if attribute doesn't exist */
-const char* XMLElementNode::getAttributeValue(const std::string& name) const {
+const char* XMLElementNode::getAttributeValue (const std::string& name) const {
 	auto it = _attributes.find(name);
 	if (it != _attributes.end())
 		return it->second.c_str();
-	return 0;
+	return nullptr;
 }
 
 

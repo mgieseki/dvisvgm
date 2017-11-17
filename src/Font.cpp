@@ -48,7 +48,7 @@ uint32_t Font::unicode (uint32_t c) const {
 const FontEncoding* Font::encoding () const {
 	if (const FontMap::Entry *entry = fontMapEntry())
 		return FontEncoding::encoding(entry->encname);
-	return 0;
+	return nullptr;
 }
 
 
@@ -488,7 +488,7 @@ PhysicalFontImpl::~PhysicalFontImpl () {
 
 const FontEncoding* PhysicalFontImpl::encoding () const {
 	if (!_encodingPair.enc1())
-		return 0;
+		return nullptr;
 	return &_encodingPair;
 }
 

@@ -31,12 +31,10 @@ struct FontEncoding;
 class MapLine;
 class Subfont;
 
-class FontMap
-{
+class FontMap {
 	public:
-		struct Entry
-		{
-			Entry (const MapLine &mapline, Subfont *subfont=0);
+		struct Entry {
+			Entry (const MapLine &mapline, Subfont *subfont=nullptr);
 			Entry (const Entry &entry) =delete;
 			Entry (Entry &&entry) =default;
 			Entry& operator = (Entry &&entry) =default;

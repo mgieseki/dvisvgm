@@ -146,11 +146,11 @@ void FontEngine::buildCharMap (RangeMap &charmap) {
 unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () {
 	FT_CharMap ftcharmap = _currentFace->charmap;
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) != 0)
-		return 0;
+		return nullptr;
 	RangeMap index_to_source_chrcode;
 	buildCharMap(index_to_source_chrcode);
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
-		return 0;
+		return nullptr;
 	auto charmap = util::make_unique<RangeMap>();
 	FT_UInt glyph_index;
 	uint32_t unicode_point = FT_Get_First_Char(_currentFace, &glyph_index);
@@ -165,12 +165,12 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () {
 
 
 const char* FontEngine::getFamilyName () const {
-	return _currentFace ? _currentFace->family_name : 0;
+	return _currentFace ? _currentFace->family_name : nullptr;
 }
 
 
 const char* FontEngine::getStyleName () const {
-	return _currentFace ? _currentFace->style_name : 0;
+	return _currentFace ? _currentFace->style_name : nullptr;
 }
 
 

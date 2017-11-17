@@ -31,6 +31,7 @@
 #include "MapLine.hpp"
 #include "Message.hpp"
 #include "Subfont.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -163,12 +164,12 @@ bool FontMap::append (const MapLine &mapline) {
 			if (mapline.sfd())
 				mapline.sfd()->subfonts(subfonts);
 			else
-				subfonts.push_back(0);
+				subfonts.push_back(nullptr);
 			for (Subfont *subfont : subfonts) {
 				string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 				auto it = _entries.find(fontname);
 				if (it == _entries.end()) {
-					_entries[fontname].reset(new Entry(mapline, subfont));
+					_entries.emplace(fontname, util::make_unique<Entry>(mapline, subfont));
 					appended = true;
 				}
 			}
@@ -192,12 +193,12 @@ bool FontMap::replace (const MapLine &mapline) {
 	if (mapline.sfd())
 		mapline.sfd()->subfonts(subfonts);
 	else
-		subfonts.push_back(0);
+		subfonts.push_back(nullptr);
 	for (Subfont *subfont : subfonts) {
 		string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 		auto it = _entries.find(fontname);
 		if (it == _entries.end())
-			_entries[fontname].reset(new Entry(mapline, subfont));
+			_entries.emplace(fontname, util::make_unique<Entry>(mapline, subfont));
 		else if (!it->second->locked)
 			*it->second = Entry(mapline, subfont);
 	}
@@ -216,7 +217,7 @@ bool FontMap::remove (const MapLine &mapline) {
 		if (mapline.sfd())
 			mapline.sfd()->subfonts(subfonts);
 		else
-			subfonts.push_back(0);
+			subfonts.push_back(nullptr);
 		for (const Subfont *subfont : subfonts) {
 			string fontname = mapline.texname()+(subfont ? subfont->id() : "");
 			auto it = _entries.find(fontname);
@@ -256,7 +257,7 @@ void FontMap::readdir (const string &dirname) {
 const FontMap::Entry* FontMap::lookup (const string &fontname) const {
 	auto it = _entries.find(fontname);
 	if (it == _entries.end())
-		return 0;
+		return nullptr;
 	return it->second.get();
 }
 

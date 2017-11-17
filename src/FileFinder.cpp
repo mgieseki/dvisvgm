@@ -110,7 +110,7 @@ void FileFinder::addLookupDir (const std::string &path) {
  *  @return file path on success, 0 otherwise */
 const char* FileFinder::findFile (const std::string &fname, const char *ftype) const {
 	if (fname.empty())
-		return 0;
+		return nullptr;
 
 	static std::string buf;
 	// try to lookup the file in the additionally specified directories
@@ -119,14 +119,13 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		if (FileSystem::exists(buf))
 			return buf.c_str();
 	}
-
 	std::string ext;
 	if (ftype)
 		ext = ftype;
 	else {
 		size_t pos = fname.rfind('.');
 		if (pos == std::string::npos)
-			return 0;  // no extension and no file type => no search
+			return nullptr;  // no extension and no file type => no search
 		ext = fname.substr(pos+1);
 	}
 
@@ -143,13 +142,13 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		// to work around this, we try to lookup the files by calling kpsewhich.
 		Process process("kpsewhich", std::string("-format=cmap ")+fname);
 		process.run(&buf);
-		return buf.empty() ? 0 : buf.c_str();
+		return buf.empty() ? nullptr : buf.c_str();
 	}
 	try {
 		return _miktex->findFile(fname.c_str());
 	}
 	catch (const MessageException &e) {
-		return 0;
+		return nullptr;
 	}
 #else
 #ifdef TEXLIVEWIN32
@@ -157,9 +156,9 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		// lookup exe files in directory where dvisvgm is located
 		if (const char *path = kpse_var_value("SELFAUTOLOC")) {
 			buf = std::string(path) + "/" + fname;
-			return FileSystem::exists(buf) ? buf.c_str() : 0;
+			return FileSystem::exists(buf) ? buf.c_str() : nullptr;
 		}
-		return 0;
+		return nullptr;
 	}
 #endif
 	static std::unordered_map<std::string, kpse_file_format_type> types = {
@@ -180,7 +179,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 	};
 	auto it = types.find(ext.c_str());
 	if (it == types.end())
-		return 0;
+		return nullptr;
 
 	if (char *path = kpse_find_file(fname.c_str(), it->second, 0)) {
 		// In the current version of libkpathsea, each call of kpse_find_file produces
@@ -190,7 +189,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		std::free(path);
 		return buf.c_str();
 	}
-	return 0;
+	return nullptr;
 #endif
 }
 
@@ -202,11 +201,11 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 const char* FileFinder::findMappedFile (std::string fname) const {
 	size_t pos = fname.rfind('.');
 	if (pos == std::string::npos)
-		return 0;
+		return nullptr;
 	const std::string ext  = fname.substr(pos+1);  // file extension
 	const std::string base = fname.substr(0, pos);
 	if (const FontMap::Entry *entry = FontMap::instance().lookup(base)) {
-		const char *path=0;
+		const char *path=nullptr;
 		if (entry->fontname.find('.') != std::string::npos)  // does the mapped filename has an extension?
 			path = findFile(entry->fontname, 0);             // look for that file
 		else {                             // otherwise, use extension of unmapped file
@@ -215,7 +214,7 @@ const char* FileFinder::findMappedFile (std::string fname) const {
 		}
 		return path;
 	}
-	return 0;
+	return nullptr;
 }
 
 
@@ -225,13 +224,13 @@ const char* FileFinder::findMappedFile (std::string fname) const {
 const char* FileFinder::mktex (const std::string &fname) const {
 	size_t pos = fname.rfind('.');
 	if (!_enableMktex || pos == std::string::npos)
-		return 0;
+		return nullptr;
 
 	std::string ext  = fname.substr(pos+1);  // file extension
 	if (ext != "tfm" && ext != "mf")
-		return 0;
+		return nullptr;
 
-	const char *path = 0;
+	const char *path = nullptr;
 #ifdef MIKTEX
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
 	std::string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
@@ -260,5 +259,5 @@ const char* FileFinder::lookup (const std::string &fname, const char *ftype, boo
 	const char *path;
 	if ((path = findFile(fname, ftype)) || (extended  && ((path = findMappedFile(fname)) || (path = mktex(fname)))))
 		return path;
-	return 0;
+	return nullptr;
 }
