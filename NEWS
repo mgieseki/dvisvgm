@@ -1,3 +1,8 @@
+dvisvgm-2.2.2 (2017-11-17)
+- fixed memory issue regarding font maps (GH bug #79)
+- avoid scientific notation of floating point numbers
+- minor code improvements
+
 dvisvgm-2.2.1 (2017-11-13)
 - fixed portability issue when building the manpage (GH bug #72)
 - fixed incomplete computation of PS line width (GH bug #77)
