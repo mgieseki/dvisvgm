@@ -473,7 +473,7 @@ unique_ptr<Font> VirtualFont::create (const string &name, uint32_t checksum, dou
 
 PhysicalFontImpl::PhysicalFontImpl (const string &name, int fontindex, uint32_t cs, double ds, double ss, PhysicalFont::Type type)
 	: TFMFont(name, cs, ds, ss),
-	_filetype(type), _fontIndex(fontindex), _fontMapEntry(Font::fontMapEntry()), _encodingPair(Font::encoding())
+	_filetype(type), _fontIndex(fontindex), _encodingPair(Font::encoding())
 {
 }
 
@@ -544,6 +544,13 @@ uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 	// Now we should look for a smart alternative but at the moment
 	// it's sufficient to simply choose a valid unused codepoint.
 	return Unicode::charToCodepoint(chr.number());
+}
+
+
+const FontStyle* PhysicalFontImpl::style () const {
+	if (auto *entry = fontMapEntry())
+		return &entry->style;
+	return nullptr;
 }
 
 

@@ -236,8 +236,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 		const Font* uniqueFont () const override             {return this;}
 		Type type () const override                          {return _filetype;}
 		int fontIndex() const override                       {return _fontIndex;}
-		const FontStyle* style () const override             {return _fontMapEntry ? &_fontMapEntry->style : 0;}
-		const FontMap::Entry* fontMapEntry () const override {return _fontMapEntry;}
+		const FontStyle* style () const override;
 		const FontEncoding* encoding () const override;
 		uint32_t unicode (uint32_t c) const override;
 		bool findAndAssignBaseFontMap () override;
@@ -250,7 +249,6 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 	private:
 		Type _filetype;
 		int _fontIndex;
-		const FontMap::Entry *_fontMapEntry;
 		FontEncodingPair _encodingPair;
 		CharMapID _charmapID;  ///< ID of the font's charmap to use
 		std::unique_ptr<const RangeMap> _localCharMap;
