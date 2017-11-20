@@ -32,7 +32,7 @@ TEST(VectorStreamTest, read1) {
 	for (unsigned count = 0; vs; count++) {
 		int c = vs.get();
 		if (count < vec.size()) {
-			EXPECT_EQ(c, str[count]);
+			EXPECT_EQ(c, str[count]) << "count=" << count;
 		}
 		else {
 			EXPECT_EQ(c, -1);
