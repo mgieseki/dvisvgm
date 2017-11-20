@@ -5,6 +5,7 @@ _dvisvgm_ &ndash; A fast DVI to SVG converter
 [![Code Status](https://scan.coverity.com/projects/1099/badge.svg)](https://scan.coverity.com/projects/1099)
 [![License](https://img.shields.io/:license-GPL%20v3+-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Releases](https://img.shields.io/github/release/mgieseki/dvisvgm.svg)](https://github.com/mgieseki/dvisvgm/releases)
+[![Donate](https://img.shields.io/badge/donate-PayPal-orange.svg)](https://www.paypal.me/mgieseking)
 
 Description
 -----------
