@@ -187,7 +187,7 @@ static unique_ptr<XMLElementNode> createGlyphNode (int c, const PhysicalFont &fo
 	ostringstream oss;
 	glyph.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS, sx, sy);
 	glyphNode->addAttribute("d", oss.str());
-	return std::move(glyphNode);
+	return glyphNode;
 }
 
 

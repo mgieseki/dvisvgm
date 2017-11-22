@@ -83,7 +83,7 @@ unique_ptr<XMLElementNode> PSTilingPattern::createPatternNode () const {
 		pattern->append(std::move(clip));
 	pattern->append(std::move(_groupNode));
 	_groupNode.reset();
-	return std::move(pattern);
+	return pattern;
 }
 
 
@@ -98,7 +98,7 @@ unique_ptr<XMLElementNode> PSTilingPattern::createClipNode() const {
 	rect->addAttribute("width", _bbox.width());
 	rect->addAttribute("height", _bbox.height());
 	clip->append(std::move(rect));
-	return std::move(clip);
+	return clip;
 }
 
 
@@ -108,7 +108,7 @@ unique_ptr<XMLElementNode> PSTilingPattern::createGroupNode () const {
 	// add all succeeding path elements to this group
 	auto group = util::make_unique<XMLElementNode>("g");
 	group->addAttribute("clip-path", XMLString("url(#pc")+XMLString(psID())+")");
-	return std::move(group);
+	return group;
 }
 
 

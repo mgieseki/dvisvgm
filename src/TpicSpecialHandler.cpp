@@ -92,7 +92,7 @@ static unique_ptr<XMLElementNode> create_ellipse_element (double cx, double cy, 
 		elem->addAttribute("rx", XMLString(rx));
 		elem->addAttribute("ry", XMLString(ry));
 	}
-	return std::move(elem);
+	return elem;
 }
 
 
