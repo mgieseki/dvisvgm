@@ -33,7 +33,7 @@ class TpicSpecialTest : public ::testing::Test {
 	protected:
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
-				ActionsRecorder () : page("page") {}
+				ActionsRecorder () : x(), y(), page("page") {}
 				void appendToPage(unique_ptr<XMLNode> &&node) {page.append(std::move(node));}
 				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
 				void setX (double xx)                         {x = xx;}
