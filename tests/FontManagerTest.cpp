@@ -22,20 +22,10 @@
 #include <sstream>
 #include "Font.hpp"
 #include "FontManager.hpp"
-#include "FileFinder.hpp"
 
-#ifndef SRCDIR
-#define SRCDIR "."
-#endif
-
-
-class FontManagerTest : public ::testing::Test
-{
+class FontManagerTest : public ::testing::Test {
 	public:
 		FontManagerTest () : fm(FontManager::instance()) {
-			extern std::string TEST_ARGV0;
-			FileFinder::init(TEST_ARGV0, "FontManagerTest", false);
-			FileFinder::instance().addLookupDir(SRCDIR"/data");
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);

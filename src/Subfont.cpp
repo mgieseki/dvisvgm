@@ -68,7 +68,7 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
  *  @param[in] name name of subfont definition to lookup
  *  @return pointer to subfont definition object or 0 if it doesn't exist */
 SubfontDefinition* SubfontDefinition::lookup (const std::string &name) {
-	static unordered_map<string,unique_ptr<SubfontDefinition>> sfdMap;
+	static map<string,unique_ptr<SubfontDefinition>> sfdMap;
 	auto it = sfdMap.find(name);
 	if (it != sfdMap.end())
 		return it->second.get();

@@ -19,23 +19,12 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
-#include "FileFinder.hpp"
 #include "Subfont.hpp"
+#include "testutil.hpp"
 
 using namespace std;
 
-
-class SubfontTest : public ::testing::Test
-{
-	protected:
-		void SetUp () override {
-			extern string TEST_ARGV0;
-			FileFinder::init(TEST_ARGV0, "SubfontTest", false);
-		}
-};
-
-
-TEST_F(SubfontTest, collect_subfonts) {
+TEST(SubfontTest, collect_subfonts) {
 	try {
 		if (SubfontDefinition *sfd = SubfontDefinition::lookup("sample")) {
 			vector<Subfont*> subfonts;
@@ -53,9 +42,9 @@ TEST_F(SubfontTest, collect_subfonts) {
 }
 
 
-TEST_F(SubfontTest, read_table) {
+TEST(SubfontTest, read_table) {
 	try {
-		if (SubfontDefinition *sfd = SubfontDefinition::lookup("sample")) {
+		if (SubfontDefinition *sfd = SubfontDefinition::lookup("sampl")) {
 			// check scanning of single value entries
 			Subfont *subfont = sfd->subfont("02");
 			ASSERT_NE(subfont, nullptr);
@@ -86,6 +75,8 @@ TEST_F(SubfontTest, read_table) {
 			EXPECT_EQ(subfont->decode(0xa1), 0x2000);
 			EXPECT_EQ(subfont->decode(0xa2), 0);
 		}
+		else
+			WARNING("sample.sfd not found");
 	}
 	catch (SubfontException &e) {
 		FAIL() << e.what() << " in line " << e.lineno();

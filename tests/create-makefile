@@ -40,7 +40,7 @@ hashcheck_CPPFLAGS = -I\$(top_srcdir)/libs/xxHash
 hashcheck.cpp: genhashcheck.py \$(top_srcdir)/src/AGLTable.hpp \$(top_srcdir)/libs/xxHash/xxhash.h
 	python \$^ >\$@
 
-TESTLIBS = ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a libgtest.la -lpotrace -lfreetype
+TESTLIBS = libgtest.la ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -lpotrace -lfreetype
 if ENABLE_WOFF
 TESTLIBS += \\
 	../libs/ff-woff/libfontforge.a \\
@@ -56,7 +56,7 @@ for f in *Test.cpp; do
 	cat >>$out <<EOT
 TESTS += $base
 check_PROGRAMS += $base
-${base}_SOURCES = $f
+${base}_SOURCES = $f testutil.hpp
 ${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include
 ${base}_LDADD = \$(TESTLIBS)
 

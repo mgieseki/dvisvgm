@@ -22,26 +22,10 @@
 #include <fstream>
 #include "CMap.hpp"
 #include "CMapManager.hpp"
-#include "FileFinder.hpp"
 #include "Message.hpp"
 
-#ifndef SRCDIR
-#define SRCDIR "."
-#endif
 
-
-class CMapManagerTest : public ::testing::Test
-{
-	protected:
-		void SetUp () override {
-			extern std::string TEST_ARGV0;
-			FileFinder::init(TEST_ARGV0, "CMapManagerTest", false);
-			FileFinder::instance().addLookupDir(SRCDIR"/data");
-		}
-};
-
-
-TEST_F(CMapManagerTest, lookup_buildin) {
+TEST(CMapManagerTest, lookup_buildin) {
 	CMapManager &manager = CMapManager::instance();
 	CMap *cmap=0;
 	ASSERT_NE((cmap = manager.lookup("Identity-H")), nullptr);
@@ -62,7 +46,7 @@ TEST_F(CMapManagerTest, lookup_buildin) {
 }
 
 
-TEST_F(CMapManagerTest, lookup_file) {
+TEST(CMapManagerTest, lookup_file) {
 	CMapManager &manager = CMapManager::instance();
 	CMap *cmap = manager.lookup("ot1.cmap");
 	ASSERT_NE(cmap, nullptr);
@@ -79,7 +63,7 @@ TEST_F(CMapManagerTest, lookup_file) {
 }
 
 
-TEST_F(CMapManagerTest, lookup_fail) {
+TEST(CMapManagerTest, lookup_fail) {
 	Message::LEVEL = 0;  // avoid warning messages
 	CMapManager &manager = CMapManager::instance();
 	EXPECT_EQ(manager.lookup("does-not-exists"), nullptr);

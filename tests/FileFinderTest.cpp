@@ -21,27 +21,12 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include "FileFinder.hpp"
-
-#ifndef SRCDIR
-#define SRCDIR "."
-#endif
+#include "testutil.hpp"
 
 using std::ifstream;
 
 
-class FileFinderTest : public ::testing::Test
-{
-	protected:
-		void SetUp () override {
-			extern std::string TEST_ARGV0;
-			FileFinder::init(TEST_ARGV0, "FileFinderTest", false);
-			FileFinder::instance().addLookupDir(SRCDIR);
-			FileFinder::instance().addLookupDir(SRCDIR"/data");
-		}
-};
-
-
-TEST_F(FileFinderTest, find_base_file) {
+TEST(FileFinderTest, find_base_file) {
 	const char *path = FileFinder::instance().lookup("FileFinderTest.cpp");
 	EXPECT_TRUE(path);
 	path = FileFinder::instance().lookup("Does-not-exist");
@@ -55,7 +40,7 @@ TEST_F(FileFinderTest, find_base_file) {
 }
 
 
-TEST_F(FileFinderTest, find_mapped_file) {
+TEST(FileFinderTest, find_mapped_file) {
 	// mapped base tfm file => should be resolved by kpathsea
 	// circle10.tfm is usually mapped to lcircle.tfm
 	if (const char *path = FileFinder::instance().lookup("circle10.tfm")) {
@@ -63,6 +48,8 @@ TEST_F(FileFinderTest, find_mapped_file) {
 		ifstream ifs(path);
 		EXPECT_TRUE(bool(ifs));
 	}
+	else
+		WARNING("circle10.tfm not found");
 
 	// mapped lm font => should be resolved using dvisvgm's FontMap
 	// cork-lmr10 is usually mapped to lmr10
@@ -72,11 +59,15 @@ TEST_F(FileFinderTest, find_mapped_file) {
 			ifstream ifs(path);
 			EXPECT_TRUE(bool(ifs));
 		}
+		else
+			WARNING("cork-lmr10.pfb not found");
 	}
+	else
+		WARNING("lmodern.sty not found");
 }
 
 
-TEST_F(FileFinderTest, mktexmf) {
+TEST(FileFinderTest, mktexmf) {
 	// ensure availability of ec font => call mktexmf if necessary
 	if (const char *path = FileFinder::instance().lookup("ecrm2000.mf")) {
 		ifstream ifs(path);
@@ -85,7 +76,7 @@ TEST_F(FileFinderTest, mktexmf) {
 }
 
 
-TEST_F(FileFinderTest, find_unavailable_file) {
+TEST(FileFinderTest, find_unavailable_file) {
 	const char *path = FileFinder::instance().lookup("not-available.xyz");
 	EXPECT_FALSE(path);
 }

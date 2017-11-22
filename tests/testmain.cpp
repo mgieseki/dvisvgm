@@ -20,11 +20,25 @@
 
 #include <string>
 #include <gtest/gtest.h>
+#include "FileFinder.hpp"
+
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
 
 std::string TEST_ARGV0;
+
+struct TestEnvironment : public testing::Environment {
+	void SetUp () override {
+		FileFinder::init(TEST_ARGV0, "dvisvgm-test", false);
+		FileFinder::instance().addLookupDir(SRCDIR);
+		FileFinder::instance().addLookupDir(SRCDIR"/data");
+	}
+};
 
 GTEST_API_ int main (int argc, char **argv) {
 	TEST_ARGV0 = argv[0];
 	testing::InitGoogleTest(&argc, argv);
+	testing::AddGlobalTestEnvironment(new TestEnvironment);
 	return RUN_ALL_TESTS();
 }
