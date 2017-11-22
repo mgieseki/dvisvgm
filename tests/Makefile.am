@@ -119,6 +119,12 @@ DirectoryTest_SOURCES = DirectoryTest.cpp testutil.hpp
 DirectoryTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
 DirectoryTest_LDADD = $(TESTLIBS)
 
+TESTS += DVIReaderTest
+check_PROGRAMS += DVIReaderTest
+DVIReaderTest_SOURCES = DVIReaderTest.cpp testutil.hpp
+DVIReaderTest_CPPFLAGS = -I$(top_srcdir)/tests/gtest/include
+DVIReaderTest_LDADD = $(TESTLIBS)
+
 TESTS += DvisvgmSpecialTest
 check_PROGRAMS += DvisvgmSpecialTest
 DvisvgmSpecialTest_SOURCES = DvisvgmSpecialTest.cpp testutil.hpp
