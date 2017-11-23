@@ -21,7 +21,10 @@ EXTRA_DIST = gtest/LICENSE \
 	gtest/src/gtest-test-part.cc \
 	gtest/src/gtest-typed-test.cc
 
-AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/libs/variant/include -Wall -DBUILDDIR='"$(abs_builddir)"' -DSRCDIR='"$(abs_srcdir)"' $(CODE_COVERAGE_CFLAGS)
+AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/libs/variant/include \
+	-Wall -Wno-mismatched-tags \
+	-DBUILDDIR='"$(abs_builddir)"' -DSRCDIR='"$(abs_srcdir)"' \
+	$(CODE_COVERAGE_CFLAGS)
 
 TESTS = hashcheck
 check_PROGRAMS = hashcheck

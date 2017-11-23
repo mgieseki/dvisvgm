@@ -241,7 +241,7 @@ AM_CFLAGS = -Wall \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
-AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
+AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	-I$(top_srcdir)/libs/clipper \
 	-I$(top_srcdir)/libs/variant/include \
 	-I$(top_srcdir)/libs/xxHash \
