@@ -21,6 +21,7 @@
 #ifndef DEPENDENCYGRAPH_HPP
 #define DEPENDENCYGRAPH_HPP
 
+#include <list>
 #include <map>
 #include <memory>
 #include <vector>
@@ -29,7 +30,7 @@
 template <typename T>
 class DependencyGraph {
 	struct GraphNode {
-		using Dependees = typename std::vector<GraphNode*>;
+		using Dependees = typename std::list<GraphNode*>;
 
 		GraphNode (const T &k) : key(k), dependent() {}
 
@@ -43,6 +44,18 @@ class DependencyGraph {
 		void unlinkDependees () {
 			for (GraphNode *dependee : dependees)
 				dependee->dependent = nullptr;
+			dependees.clear();
+		}
+
+		void unlinkDependee (GraphNode *dependee) {
+			for (auto it=dependees.begin(); it != dependees.end();) {
+				if (*it != dependee)
+					++it;
+				else {
+					(*it)->dependent = nullptr;
+					it = dependees.erase(it);
+				}
+			}
 		}
 
 		T key;
@@ -77,10 +90,13 @@ class DependencyGraph {
 		void removeDependencyPath (const T &key) {
 			auto it = _nodeMap.find(key);
 			if (it != _nodeMap.end()) {
-				GraphNode *startNode = it->second.get();
-				for (GraphNode *node=startNode; node; node=node->dependent) {
+				for (GraphNode *node = it->second.get(); node;) {
+					GraphNode *dependent = node->dependent;
 					node->unlinkDependees();
+					if (dependent)
+						dependent->unlinkDependee(node);
 					_nodeMap.erase(node->key);
+					node = dependent;
 				}
 			}
 		}
