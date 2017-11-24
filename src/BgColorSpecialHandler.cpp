@@ -46,12 +46,6 @@ bool BgColorSpecialHandler::process (const char*, istream &, SpecialActions&) {
 }
 
 
-static bool operator < (const pair<unsigned,Color> &pc1, const pair<unsigned,Color> &pc2) {
-	// order PageColor objects by page number
-	return pc1.first < pc2.first;
-}
-
-
 void BgColorSpecialHandler::dviBeginPage (unsigned pageno, SpecialActions &actions) {
 	// Ensure that the background color of the preceeding page is set as the
 	// default background color of the current page because this special affects

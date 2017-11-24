@@ -261,8 +261,8 @@ ostream& BoundingBox::write (ostream &os) const {
 }
 
 
-XMLElementNode* BoundingBox::createSVGRect () const {
-	XMLElementNode *rect = new XMLElementNode("rect");
+unique_ptr<XMLElementNode> BoundingBox::createSVGRect () const {
+	auto rect = util::make_unique<XMLElementNode>("rect");
 	rect->addAttribute("x", minX());
 	rect->addAttribute("y", minY());
 	rect->addAttribute("width", width());

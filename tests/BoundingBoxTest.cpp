@@ -189,14 +189,13 @@ TEST(BoundingBoxTest, svgViewBox) {
 
 TEST(BoundingBoxTest, svgRectElement) {
 	BoundingBox bbox(4, 5, 6, 7);
-	XMLElementNode *rect = bbox.createSVGRect();
+	auto rect = bbox.createSVGRect();
 	ASSERT_NE(rect, nullptr);
 	EXPECT_EQ(rect->getName(), "rect");
 	EXPECT_EQ(string(rect->getAttributeValue("x")), "4");
 	EXPECT_EQ(string(rect->getAttributeValue("y")), "5");
 	EXPECT_EQ(string(rect->getAttributeValue("width")), "2");
 	EXPECT_EQ(string(rect->getAttributeValue("height")), "2");
-	delete rect;
 }
 
 

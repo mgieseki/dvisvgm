@@ -48,8 +48,7 @@ bool SVGTree::ADD_COMMENTS=false;
 double SVGTree::ZOOM_FACTOR=1.0;
 
 
-SVGTree::SVGTree () {
-	_charHandler = SVGCharHandlerFactory::createHandler();
+SVGTree::SVGTree () : _charHandler(SVGCharHandlerFactory::createHandler()) {
 	reset();
 }
 

@@ -191,12 +191,6 @@ static int32_t segment_id (const IntPoint &p1, const IntPoint &p2, double &t1, d
 }
 
 
-inline int32_t edge_id (const IntPoint &p1, const IntPoint &p2) {
-	double t=0;
-	return segment_id(p1, p2, t, t);
-}
-
-
 /** This function expects 3 colinear points p1, p2, and q, where q lies between p1 and p2,
  *  i.e. q divides the line \f$ \overline{p_1 p_2} \f$ somewhere. The function returns
  *  the corresponding division ratio. */

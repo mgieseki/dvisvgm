@@ -554,7 +554,7 @@ void Color::getLab (std::valarray<double> &lab) const {
 }
 
 
-static inline double sqr (double x)  {return x*x;}
+// static inline double sqr (double x)  {return x*x;}
 static inline double cube (double x) {return x*x*x;}
 
 void Color::Lab2XYZ (const valarray<double> &lab, valarray<double> &xyz) {
