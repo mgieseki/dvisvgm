@@ -21,23 +21,21 @@
 #ifndef DEPENDENCYGRAPH_HPP
 #define DEPENDENCYGRAPH_HPP
 
-#include <list>
 #include <map>
 #include <memory>
+#include <set>
 #include <vector>
 #include "utility.hpp"
 
 template <typename T>
 class DependencyGraph {
 	struct GraphNode {
-		using Dependees = typename std::list<GraphNode*>;
-
 		GraphNode (const T &k) : key(k), dependent() {}
 
 		void addDependee (GraphNode *node) {
 			if (node) {
 				node->dependent = this;
-				dependees.push_back(node);
+				dependees.insert(node);
 			}
 		}
 
@@ -48,19 +46,16 @@ class DependencyGraph {
 		}
 
 		void unlinkDependee (GraphNode *dependee) {
-			for (auto it=dependees.begin(); it != dependees.end();) {
-				if (*it != dependee)
-					++it;
-				else {
-					(*it)->dependent = nullptr;
-					it = dependees.erase(it);
-				}
+			auto it = dependees.find(dependee);
+			if (it != dependees.end()) {
+				(*it)->dependent = nullptr;
+				dependees.erase(it);
 			}
 		}
 
 		T key;
 		GraphNode *dependent;
-		Dependees dependees;
+		std::set<GraphNode*> dependees;
 	};
 
 	using NodeMap = std::map<T, std::unique_ptr<GraphNode>>;
