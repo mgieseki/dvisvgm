@@ -1,3 +1,8 @@
+dvisvgm-2.2.3 (2017-11-17)
+- updated brotli library
+- fixed potential memory issue
+- some code and test improvements
+
 dvisvgm-2.2.2 (2017-11-17)
 - fixed memory issue regarding font maps (GH bug #79)
 - avoid scientific notation of floating point numbers
