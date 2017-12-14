@@ -6,5 +6,5 @@
 SUBDIRS = clipper variant xxHash
 
 if ENABLE_WOFF
-SUBDIRS += ff-woff woff2
+SUBDIRS += brotli ff-woff woff2
 endif

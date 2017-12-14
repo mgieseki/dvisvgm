@@ -28,9 +28,7 @@ libwoff2_a_SOURCES = \
 
 EXTRA_DIST = LICENSE
 
-AM_CXXFLAGS = -Wall -I$(srcdir)/include -I$(srcdir)/brotli/include
-
-SUBDIRS = brotli
+AM_CXXFLAGS = -Wall -I$(srcdir)/include -I$(srcdir)/../brotli/include
 
 @CODE_COVERAGE_RULES@
 

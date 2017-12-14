@@ -40,7 +40,7 @@ if ENABLE_WOFF
 TESTLIBS += \
 	../libs/ff-woff/libfontforge.a \
 	../libs/woff2/libwoff2.a \
-	../libs/woff2/brotli/libbrotli.a
+	../libs/brotli/libbrotli.a
 endif
 TESTLIBS += $(CODE_COVERAGE_LDFLAGS)
 

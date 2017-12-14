@@ -22,7 +22,7 @@ if ENABLE_WOFF
 dvisvgm_LDADD += \
 	../libs/ff-woff/libfontforge.a \
 	../libs/woff2/libwoff2.a \
-	../libs/woff2/brotli/libbrotli.a
+	../libs/brotli/libbrotli.a
 endif
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
@@ -255,8 +255,8 @@ AM_CFLAGS +=  \
 	-I$(top_srcdir)/libs/ff-woff/inc
 
 AM_CXXFLAGS +=  \
-	-I$(top_srcdir)/libs/woff2/include \
-	-I$(top_srcdir)/libs/woff2/brotli/include
+	-I$(top_srcdir)/libs/brotli/include \
+	-I$(top_srcdir)/libs/woff2/include
 endif
 
 AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)

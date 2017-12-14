@@ -187,11 +187,11 @@ AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([
 	Makefile
 	libs/Makefile
+	libs/brotli/Makefile
 	libs/clipper/Makefile
 	libs/ff-woff/Makefile
 	libs/variant/Makefile
 	libs/woff2/Makefile
-	libs/woff2/brotli/Makefile
 	libs/xxHash/Makefile
 	src/Makefile
 	src/version.hpp
