@@ -82,20 +82,3 @@ int ff_sfd_to_ttf (const char *sfdname, const char *ttfname, int autohint) {
 	}
 	return ret;
 }
-
-
-/** Creates a WOFF font from a FontForge SFD file.
- *  @param[in] sfdname name of SFD file
- *  @param[in] woffname name of WOFF file
- *  @param[in] autohint run the autohinter if != 0 */
-int ff_sfd_to_woff (const char *sfdname, const char *woffname, int autohint) {
-	int ret=0;
-	SplineFont *sf = SFDRead((char*)sfdname);
-	if (sf) {
-		if (autohint)
-			ff_autohint(sf, false);
-		ret = WriteWOFFFont((char*)woffname, sf, ff_woff, 0, 0, 0, sf->map, ly_fore);
-		SplineFontFree(sf);
-	}
-	return ret;
-}

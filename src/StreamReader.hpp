@@ -28,8 +28,7 @@
 
 class CRC32;
 
-class StreamReader
-{
+class StreamReader {
 	public:
 		StreamReader (std::istream &is) : _is(&is) {}
 		virtual ~StreamReader () =default;
@@ -62,8 +61,7 @@ class StreamReader
 };
 
 
-struct StreamReaderException : public MessageException
-{
+struct StreamReaderException : public MessageException {
 	StreamReaderException (const std::string &msg) : MessageException(msg) {}
 };
 

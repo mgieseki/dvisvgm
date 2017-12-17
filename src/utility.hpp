@@ -54,6 +54,8 @@ std::string replace (std::string str, const std::string &find, const std::string
 std::vector<std::string> split (const std::string &str, const std::string &sep);
 int ilog10 (int n);
 
+std::string read_file_contents (const std::string &fname);
+void write_file_contents (const std::string &fname, std::string::iterator start, std::string::iterator end);
 
 /** Encodes the bytes in the half-open range [first,last) to Base64 and writes
  *  the result to the range starting at 'dest'.

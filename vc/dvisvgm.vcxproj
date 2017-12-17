@@ -286,6 +286,7 @@
     <ClCompile Include="..\src\ToUnicodeMap.cpp" />
     <ClCompile Include="..\src\TpicSpecialHandler.cpp" />
     <ClCompile Include="..\src\TriangularPatch.cpp" />
+    <ClCompile Include="..\src\TrueTypeFont.cpp" />
     <ClCompile Include="..\src\Unicode.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
     <ClCompile Include="..\src\VFReader.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="..\src\Terminal.hpp" />
     <ClInclude Include="..\src\ToUnicodeMap.hpp" />
     <ClInclude Include="..\src\TriangularPatch.hpp" />
+    <ClInclude Include="..\src\TrueTypeFont.hpp" />
     <ClInclude Include="..\src\Unicode.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />

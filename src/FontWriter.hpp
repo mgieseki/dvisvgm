@@ -49,8 +49,8 @@ class FontWriter {
 			const char *formatstr_short;
 			const char *formatstr_long;
 		};
-
 		static const FontFormatInfo* fontFormatInfo (FontFormat format);
+		bool createTTFFile (const std::string &sfdname, const std::string &ttfname) const;
 
 	private:
 		const PhysicalFont &_font;

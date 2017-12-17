@@ -212,6 +212,8 @@ libdvisvgm_a_SOURCES = \
 	TpicSpecialHandler.hpp \
 	TriangularPatch.cpp \
 	TriangularPatch.hpp \
+	TrueTypeFont.cpp \
+	TrueTypeFont.hpp \
 	Unicode.cpp \
 	Unicode.hpp \
 	utility.hpp \

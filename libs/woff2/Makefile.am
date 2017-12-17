@@ -2,7 +2,6 @@ noinst_LIBRARIES = libwoff2.a
 libwoff2_a_SOURCES = \
 	include/woff2/decode.h \
 	include/woff2/encode.h \
-	include/woff2/file.h \
 	include/woff2/output.h \
 	include/woff2/version.h \
 	src/buffer.h \

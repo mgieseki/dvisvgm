@@ -43,9 +43,6 @@
     <ClInclude Include="..\..\libs\woff2\src\buffer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libs\woff2\src\file.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libs\woff2\src\font.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

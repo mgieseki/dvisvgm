@@ -169,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libs\woff2\src\buffer.h" />
-    <ClInclude Include="..\..\libs\woff2\src\file.h" />
     <ClInclude Include="..\..\libs\woff2\src\font.h" />
     <ClInclude Include="..\..\libs\woff2\src\glyph.h" />
     <ClInclude Include="..\..\libs\woff2\src\normalize.h" />
