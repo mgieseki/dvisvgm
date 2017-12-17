@@ -51,6 +51,9 @@
 #include <brotli/encode.h>
 #include <woff2/version.h>
 #include "ffwrapper.h"
+#ifdef HAVE_LIBTTFAUTOHINT
+#include <ttfautohint.h>
+#endif
 #endif
 
 using namespace std;
@@ -182,6 +185,16 @@ class VersionInfo {
 				append(name, "");
 		}
 
+		void add (const string &name, const vector<int> &versionComponents) {
+			string version;
+			for (auto it=versionComponents.begin(); it != versionComponents.end(); ++it) {
+				if (it != versionComponents.begin())
+					version += '.';
+				version += to_string(*it);
+			}
+			append(name, version);
+		}
+
 		/** Adds a version number given as a single unsigned integer, and optionally
 		 *  extracts its components, e.g. 0x00010203 => "1.2.3" (3 components separated
 		 *  by multiples of 256).
@@ -246,6 +259,11 @@ static void print_version (bool extended) {
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
 		versionInfo.add("woff2", woff2::version, 3, 0x100);
 		versionInfo.add("fontforge", ff_version());
+#ifdef HAVE_LIBTTFAUTOHINT
+		vector<int> ta_version(3);
+		TTF_autohint_version(&ta_version[0], &ta_version[1], &ta_version[2]);
+		versionInfo.add("ttfautohint", ta_version);
+#endif
 #endif
 #ifdef MIKTEX
 		versionInfo.add("MiKTeX", FileFinder::instance().version());

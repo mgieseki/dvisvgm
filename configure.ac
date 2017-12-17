@@ -30,6 +30,10 @@ AC_LANG(C)
 AC_CHECK_HEADERS([sys/time.h sys/timeb.h xlocale.h])
 AC_HEADER_TIOCGWINSZ
 
+CPPFLAGS_SAVE="$CPPFLAGS"
+CFLAGS_SAVE="$CFLAGS"
+LDFLAGS_SAVE="$LDFLAGS"
+
 AC_CHECK_HEADER([kpathsea/kpathsea.h], ,
 	[AC_MSG_ERROR([please install the kpathsea development package])])
 AC_CHECK_LIB(kpathsea, kpse_find_file, ,
@@ -49,21 +53,15 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
 	[kpseversion=`cat kpseversion|sed 's/kpathsea version //'`], [kpseversion=], [kpseversion=unknown])
 AC_MSG_RESULT("$kpseversion")
 rm -f kpseversion
-if test -z "$kpseversion"; then
-	AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])
-fi
+AS_IF([test -z "$kpseversion"],
+	[AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])])
 
 
-# Check how to link potracelib
-HAVE_LIBPOTRACE=1
+# Check how to link potrace library
 AC_CHECK_HEADER([potracelib.h],
-	[AC_CHECK_LIB(m, sqrt) # required to pass potrace check
-	 AC_CHECK_LIB(potrace, potrace_trace, , HAVE_LIBPOTRACE=0)], HAVE_LIBPOTRACE=0)
-
-if test "$HAVE_LIBPOTRACE" -eq 0; then
-	AC_MSG_ERROR([potrace library not found])
-fi
-
+	[AC_CHECK_LIB(m, sqrt)] # required to pass potrace check
+	[AC_CHECK_LIB(potrace, potrace_trace,,
+		[AC_MSG_ERROR([potrace library not found])])])
 
 # Check how to link Ghostscript
 HAVE_LIBGS=1
@@ -109,14 +107,29 @@ PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES([FREETYPE], [freetype2])
 
 AC_ARG_ENABLE([woff],
-	[AS_HELP_STRING([--disable-woff], [Disable WOFF support @<:@no@:>@])],
+	[AS_HELP_STRING([--disable-woff], [Disable WOFF support @<:@default=no@:>@])],
 	[],
 	[enable_woff=yes])
 
+AC_ARG_WITH([ttfautohint],
+	[AS_HELP_STRING([--with-ttfautohint@<:@=prefix@:>@], [Enable ttfautohint support (disabled by default)])],
+	[with_ttfautohint="$withval"],
+	[with_ttfautohint=no])
+
 AM_CONDITIONAL([ENABLE_WOFF], [test "x$enable_woff" = "xyes"])
-if test "x$enable_woff" != "xyes" ; then
-	AC_DEFINE([DISABLE_WOFF], 1, [Define if WOFF support is disabled])
-fi
+AS_IF([test "x$enable_woff" != "xyes"],
+	[AC_DEFINE([DISABLE_WOFF], 1, [Define if WOFF support is disabled])],
+	[AS_IF([test "x$with_ttfautohint" != "xno"],
+		[AS_IF([test "x$with_ttfautohint" = "xyes"],
+			# --with-ttfautohint without path => check via pkg-config
+			[PKG_CHECK_MODULES([TTFAUTOHINT], [ttfautohint])],
+			# --with-ttfautohint=/path/ttfautohint given
+			[TTFAUTOHINT_CFLAGS="-I$with_ttfautohint/include"]
+			[TTFAUTOHINT_LIBS="-L$with_ttfautohint/lib"])]
+		[CPPFLAGS="$CPPFLAGS $TTFAUTOHINT_CFLAGS" CFLAGS="$CFLAGS $TTFAUTOHINT_CFLAGS" LDFLAGS="$LDFLAGS $TTFAUTOHINT_LIBS"]
+		[AC_CHECK_HEADERS([ttfautohint.h],, [AC_MSG_ERROR([ttfautohint.h not found])])]
+		[AC_CHECK_LIB([ttfautohint], [TTF_autohint],, [AC_MSG_ERROR([no working ttfautohint library found])])]
+		[AC_SUBST(TTFAUTOHINT_CFLAGS) AC_SUBST(TTFAUTOHINT_LIBS)])])
 
 AC_CHECK_LIB(z, gzopen)
 
@@ -127,36 +140,24 @@ AC_CHECK_HEADERS([libintl.h stdlib.h string.h strings.h unistd.h])
 
 # Check for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
-AC_C_CONST
-AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
 # Check for library functions.
-AC_FUNC_CLOSEDIR_VOID
-AC_FUNC_ERROR_AT_LINE
-AC_FUNC_MALLOC
 AC_FUNC_STAT
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([ftime gettimeofday memset strcasecmp sigaction strtol uselocale])
+AC_CHECK_FUNCS([ftime gettimeofday sigaction uselocale])
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options
 # are used to specify the locations explicitely
 
-AC_ARG_WITH(zlib,[  --with-zlib=DIR         location of the zlib library],
-	[if test "$withval" != no; then
-		if test "$withval" != yes; then
-			ZLIB_DIR=$withval
-		fi
-	fi])
-
-if test "$withval" != no; then
-	if test -n "$ZLIB_DIR"; then
-		ZLIB_CFLAGS="-I$ZLIB_DIR -I$ZLIB_DIR/include"
-		ZLIB_LIBS="-L$ZLIB_DIR/lib"
-	fi
-fi
+AC_ARG_WITH(zlib,
+	[AS_HELP_STRING([--with-zlib=DIR], [location of the zlib library])],
+	[AS_IF([test "x$withval" != "xno"],
+		[AS_IF([test "x$withval" != "xyes"], [ZLIB_DIR=$withval])]
+		[AS_IF([test -n "$ZLIB_DIR"],
+			[ZLIB_CFLAGS="-I$ZLIB_DIR -I$ZLIB_DIR/include"]
+			[ZLIB_LIBS="-L$ZLIB_DIR/lib" -lz])])])
 
 AC_SUBST([ZLIB_CFLAGS])
 AC_SUBST([ZLIB_LIBS])
@@ -171,6 +172,10 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <kpathsea/kpathsea.h>]],
                 AC_DEFINE([KPSE_CXX_UNSAFE], 1,
                           [Define to 1 if the kpathsea headers are not C++ safe.])])
 AC_LANG_POP([C++])
+
+CPPFLAGS="$CPPFLAGS_SAVE"
+CFLAGS="$CFLAGS_SAVE"
+LDFLAGS="$LDFLAGS_SAVE"
 
 AX_CODE_COVERAGE
 AS_IF([ test "$enable_code_coverage" = "yes" ], [

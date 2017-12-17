@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <array>
 #include "FontWriter.hpp"
+#include "Message.hpp"
 #include "utility.hpp"
 
 using namespace std;
@@ -78,6 +79,9 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 #include <iomanip>
 #include <sstream>
 #include <woff2/encode.h>
+#ifdef HAVE_LIBTTFAUTOHINT
+#include <ttfautohint.h>
+#endif
 #include "ffwrapper.h"
 #include "Bezier.hpp"
 #include "FileSystem.hpp"
@@ -183,6 +187,35 @@ static void writeSFD (const string &sfdname, const PhysicalFont &font, const set
 }
 
 
+bool FontWriter::createTTFFile (const string &sfdname, const string &ttfname) const {
+#ifndef HAVE_LIBTTFAUTOHINT
+	return ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS);
+#else
+	bool ok = ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), false);
+	if (ok && AUTOHINT_FONTS) {
+		FILE *ttf_in = fopen(ttfname.c_str(), "rb");
+		FILE *ttf_out = fopen((ttfname+"-ah").c_str(), "wb");
+		const unsigned char *errstr=nullptr;
+		TA_Error errnum = TTF_autohint("in-file, out-file, default-script, error-string", ttf_in, ttf_out, "latn", &errstr);
+		if (errnum == TA_Err_Missing_Glyph) {
+			fseek(ttf_in, 0, SEEK_SET);
+			errnum = TTF_autohint("in-file, out-file, symbol, error-string", ttf_in, ttf_out, true, &errstr);
+		}
+		if (errnum) {
+			Message::wstream(true) << "failed to autohint font '" << _font.name() << "'";
+			if (errstr && *errstr)
+				Message::wstream() << " (" << errstr << ")";
+		}
+		fclose(ttf_out);
+		fclose(ttf_in);
+		FileSystem::remove(ttfname);
+		FileSystem::rename(ttfname+"-ah", ttfname);
+	}
+	return ok;
+#endif
+}
+
+
 /** Creates a font file containing a given set of glyphs mapped to their Unicode points.
  * @param[in] format target font format
  * @param[in] charcodes character codes of the glyphs to be considered
@@ -195,7 +228,7 @@ string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes,
 	writeSFD(sfdname, _font, charcodes, cb);
 	string ttfname = basename+".ttf";
 	string targetname = basename+"."+fontFormatInfo(format)->formatstr_short;
-	bool ok = ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS);
+	bool ok = createTTFFile(sfdname, ttfname);
 	if (ok) {
 		if (format == FontFormat::WOFF || format == FontFormat::WOFF2) {
 			TrueTypeFont ttf(ttfname);

@@ -251,17 +251,21 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
+AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
+
 if ENABLE_WOFF
 AM_CFLAGS +=  \
 	-I$(top_srcdir)/libs/ff-woff/fontforge \
 	-I$(top_srcdir)/libs/ff-woff/inc
 
 AM_CXXFLAGS +=  \
+	$(TTFAUTOHINT_CFLAGS) \
 	-I$(top_srcdir)/libs/brotli/include \
 	-I$(top_srcdir)/libs/woff2/include
+
+AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
 endif
 
-AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 
 # the command-line parser class is generated from options.xml by opt2cpp
 $(srcdir)/CommandLine.hpp: options.xml
