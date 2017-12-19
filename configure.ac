@@ -34,9 +34,22 @@ CPPFLAGS_SAVE="$CPPFLAGS"
 CFLAGS_SAVE="$CFLAGS"
 LDFLAGS_SAVE="$LDFLAGS"
 
-AC_CHECK_HEADER([kpathsea/kpathsea.h], ,
+# Check availability and usability of the kpathsea library
+AC_ARG_VAR(KPSE_CFLAGS, [C/C++ compiler flags for the kpathsea library])
+AC_ARG_VAR(KPSE_LIBS, [linker flags for the kpathsea library])
+AC_ARG_VAR(KPSE_LIBS, [])
+AC_ARG_WITH([kpathsea],
+	[AS_HELP_STRING([--with-kpathsea=prefix], [set location of kpathsea library])],
+	[with_kpathsea="$withval"],
+	[with_kpathsea=yes])
+
+AS_IF([test "x$with_kpathsea" != "xyes"],
+	[KPSE_CFLAGS="-I$with_kpathsea/include" KPSE_LIBS="-L$with_kpathsea/lib"]
+	[CPPFLAGS="$CPPFLAGS $KPSE_CFLAGS" CFLAGS="$CFLAGS $KPSE_CFLAGS" LDFLAGS="$LDFLAGS $KPSE_LIBS"])
+
+AC_CHECK_HEADER([kpathsea/kpathsea.h],,
 	[AC_MSG_ERROR([please install the kpathsea development package])])
-AC_CHECK_LIB(kpathsea, kpse_find_file, ,
+AC_CHECK_LIB([kpathsea], [kpse_find_file],,
 	[AC_MSG_ERROR([libkpathsea not found, please install the corresponding package first])])
 
 AC_MSG_CHECKING([kpathsea version])
@@ -55,7 +68,8 @@ AC_MSG_RESULT("$kpseversion")
 rm -f kpseversion
 AS_IF([test -z "$kpseversion"],
 	[AC_MSG_ERROR([Could not compile a simple kpathsea program -- check your installation])])
-
+AC_SUBST(KPSE_CFLAGS)
+AC_SUBST(KPSE_LIBS)
 
 # Check how to link potrace library
 AC_CHECK_HEADER([potracelib.h],
@@ -83,7 +97,7 @@ AC_ARG_ENABLE([woff],
 	[enable_woff=yes])
 
 AC_ARG_WITH([ttfautohint],
-	[AS_HELP_STRING([--with-ttfautohint@<:@=prefix@:>@], [Enable ttfautohint support (disabled by default)])],
+	[AS_HELP_STRING([--with-ttfautohint@<:@=prefix@:>@], [enable ttfautohint support (disabled by default)])],
 	[with_ttfautohint="$withval"],
 	[with_ttfautohint=no])
 
@@ -123,7 +137,7 @@ AC_CHECK_FUNCS([ftime gettimeofday sigaction uselocale])
 # are used to specify the locations explicitely
 
 AC_ARG_WITH(zlib,
-	[AS_HELP_STRING([--with-zlib=DIR], [location of the zlib library])],
+	[AS_HELP_STRING([--with-zlib=DIR], [set location of the zlib library])],
 	[AS_IF([test "x$withval" != "xno"],
 		[AS_IF([test "x$withval" != "xyes"], [ZLIB_DIR=$withval])]
 		[AS_IF([test -n "$ZLIB_DIR"],

@@ -247,11 +247,14 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	-I$(top_srcdir)/libs/clipper \
 	-I$(top_srcdir)/libs/variant/include \
 	-I$(top_srcdir)/libs/xxHash \
+	$(KPSE_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
-AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
+AM_LDFLAGS = \
+	$(KPSE_LIBS) \
+	$(CODE_COVERAGE_LDFLAGS)
 
 if ENABLE_WOFF
 AM_CFLAGS +=  \
