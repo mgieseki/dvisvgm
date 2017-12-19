@@ -64,41 +64,12 @@ AC_CHECK_HEADER([potracelib.h],
 		[AC_MSG_ERROR([potrace library not found])])])
 
 # Check how to link Ghostscript
-HAVE_LIBGS=1
 AC_CHECK_HEADER([ghostscript/iapi.h],
-	AC_CHECK_LIB(gs, gsapi_new_instance, , HAVE_LIBGS=0), HAVE_LIBGS=0)
-
-if test "$HAVE_LIBGS" -eq 0; then
-	AC_CHECK_LIB(dl, dlopen, ,
-		[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support is to be disabled])
-		 AC_MSG_WARN(PostScript support disabled)])
-else
-	# query Ghostscript version
-	AC_MSG_CHECKING([Ghostscript version])
-	AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
-		#include <ghostscript/iapi.h>
-		int main () {
-			gsapi_revision_t r;
-			if (gsapi_revision(&r, sizeof(gsapi_revision_t)) == 0) {
-				FILE *f;
-				f = fopen("gsversion", "w");
-				if (!f) exit(1);
-				fprintf(f, "%ld\n", r.revision);
-				fclose(f);
-				exit(0);
-			}
-		}])],
-		[gsversion=`cat gsversion`], [gsversion=], [gsversion=unknown])
-	AC_MSG_RESULT("$gsversion")
-	rm -f gsversion
-	if test "$gsversion" -lt 831; then
-		# current Ghostscript API was introduced in version 8.31
-		# older versions are not supported
-		LIBS=`echo $LIBS | sed "s/-lgs //" $LIBS`
-		AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])
-		AC_MSG_WARN([Ghostscript version < 8.31 found; PostScript support disabled])
-	fi
-fi
+	[AC_CHECK_LIB(gs, gsapi_revision,,
+		# Ghostscript not found, check for dlopen
+		[AC_CHECK_LIB(dl, dlopen,,
+			[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])]
+			[AC_MSG_WARN(PostScript support disabled)])])])
 
 # Check for pkg-config
 PKG_PROG_PKG_CONFIG
