@@ -76,7 +76,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_LIBTTFAUTOHINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -103,7 +103,7 @@
       <AssemblyDebug>true</AssemblyDebug>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>%(AdditionalDependencies);..\vc\ttfautohint\dll32\ttfautohint.dll.a</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers />
     </Link>
   </ItemDefinitionGroup>
@@ -114,7 +114,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_LIBTTFAUTOHINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -137,13 +137,13 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
       <MinimumRequiredVersion />
-      <AdditionalDependencies>%(AdditionalDependencies);..\vc\ttfautohint\dll64\ttfautohint.dll.a</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_LIBTTFAUTOHINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Full</Optimization>
@@ -158,7 +158,7 @@
       </DataExecutionPrevention>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>%(AdditionalDependencies);..\vc\ttfautohint\dll32\ttfautohint.dll.a</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImageHasSafeExceptionHandlers />
     </Link>
@@ -170,7 +170,7 @@
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\potrace\src;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>MIKTEX;HAVE_LIBTTFAUTOHINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -187,7 +187,7 @@
       <TargetMachine>MachineX64</TargetMachine>
       <MinimumRequiredVersion />
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>%(AdditionalDependencies);..\vc\ttfautohint\dll64\ttfautohint.dll.a</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -291,6 +291,7 @@
     <ClCompile Include="..\src\TpicSpecialHandler.cpp" />
     <ClCompile Include="..\src\TriangularPatch.cpp" />
     <ClCompile Include="..\src\TrueTypeFont.cpp" />
+    <ClCompile Include="..\src\TTFAutohint.cpp" />
     <ClCompile Include="..\src\Unicode.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
     <ClCompile Include="..\src\VFReader.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="..\src\ToUnicodeMap.hpp" />
     <ClInclude Include="..\src\TriangularPatch.hpp" />
     <ClInclude Include="..\src\TrueTypeFont.hpp" />
+    <ClInclude Include="..\src\TTFAutohint.hpp" />
     <ClInclude Include="..\src\Unicode.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />

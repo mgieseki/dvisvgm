@@ -1,5 +1,5 @@
 /*************************************************************************
-** DLLoader.hpp                                                         **
+** TTFAutohint.hpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2017 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,37 +18,32 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef DLLOADER_HPP
-#define DLLOADER_HPP
+#ifndef TTFAUTOHINT_HPP
+#define TTFAUTOHINT_HPP
 
+#include <config.h>
 #include <string>
 
-#ifdef _WIN32
-	#include "windows.hpp"
-#else
-	#include <dlfcn.h>
+#if defined(HAVE_TTFAUTOHINT_H) && !defined(HAVE_LIBTTFAUTOHINT)
+#include "DLLoader.hpp"
 #endif
 
-
-class DLLoader {
+class TTFAutohint
+#if defined(HAVE_TTFAUTOHINT_H) && !defined(HAVE_LIBTTFAUTOHINT)
+	: public DLLoader
+#endif
+{
 	public:
-		DLLoader () =delete;
-		DLLoader (const std::string &dlname);
-		DLLoader (DLLoader &&loader) =default;
-		virtual ~DLLoader () {closeLibrary();}
-		bool loaded () const {return _handle != nullptr;}
-		bool loadLibrary (const std::string &dlname);
-
-	protected:
-		void* loadSymbol (const char *name) const;
-		void closeLibrary ();
+		TTFAutohint ();
+		TTFAutohint (const TTFAutohint &ta) =delete;
+		bool available () const;
+		int autohint (const std::string &source, const std::string &target, bool rehintIfSymbolFont);
+		std::string lastErrorMessage () const;
+		std::string version () const;
 
 	private:
-#ifdef _WIN32
-		HINSTANCE _handle;
-#else
-		void *_handle;
-#endif
+		const unsigned char *_lastErrorMessage;
 };
 
 #endif
+

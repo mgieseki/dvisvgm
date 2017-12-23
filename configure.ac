@@ -107,13 +107,18 @@ AS_IF([test "x$enable_woff" != "xyes"],
 	[AS_IF([test "x$with_ttfautohint" != "xno"],
 		[AS_IF([test "x$with_ttfautohint" = "xyes"],
 			# --with-ttfautohint without path => check via pkg-config
-			[PKG_CHECK_MODULES([TTFAUTOHINT], [ttfautohint])],
+			[PKG_CHECK_MODULES([TTFAUTOHINT], [ttfautohint],,
+				[AC_MSG_ERROR([can't locate ttfautohint, use "--with-ttfautohint=path" to specify its location])])],
 			# --with-ttfautohint=/path/ttfautohint given
 			[TTFAUTOHINT_CFLAGS="-I$with_ttfautohint/include"]
 			[TTFAUTOHINT_LIBS="-L$with_ttfautohint/lib"])]
 		[CPPFLAGS="$CPPFLAGS $TTFAUTOHINT_CFLAGS" CFLAGS="$CFLAGS $TTFAUTOHINT_CFLAGS" LDFLAGS="$LDFLAGS $TTFAUTOHINT_LIBS"]
-		[AC_CHECK_HEADERS([ttfautohint.h],, [AC_MSG_ERROR([ttfautohint.h not found])])]
-		[AC_CHECK_LIB([ttfautohint], [TTF_autohint],, [AC_MSG_ERROR([no working ttfautohint library found])])]
+		[AC_CHECK_HEADERS([ttfautohint.h],, [AC_MSG_WARN([ttfautohint.h not found])])]
+		[AC_CHECK_LIB([ttfautohint], [TTF_autohint],,
+			[AC_MSG_WARN([no working ttfautohint library found])]
+			[AC_CHECK_LIB(dl, dlopen,
+				[AC_MSG_NOTICE([enabled dynamic loading of ttfautohint])],
+				[AC_MSG_WARN([disabled ttfautohint support])])])]
 		[AC_SUBST(TTFAUTOHINT_CFLAGS) AC_SUBST(TTFAUTOHINT_LIBS)])])
 
 AC_CHECK_LIB(z, gzopen)

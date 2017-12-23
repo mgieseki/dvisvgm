@@ -214,6 +214,8 @@ libdvisvgm_a_SOURCES = \
 	TriangularPatch.hpp \
 	TrueTypeFont.cpp \
 	TrueTypeFont.hpp \
+	TTFAutohint.cpp \
+	TTFAutohint.hpp \
 	Unicode.cpp \
 	Unicode.hpp \
 	utility.hpp \

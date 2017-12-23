@@ -51,9 +51,7 @@
 #include <brotli/encode.h>
 #include <woff2/version.h>
 #include "ffwrapper.h"
-#ifdef HAVE_LIBTTFAUTOHINT
-#include <ttfautohint.h>
-#endif
+#include "TTFAutohint.hpp"
 #endif
 
 using namespace std;
@@ -259,11 +257,7 @@ static void print_version (bool extended) {
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
 		versionInfo.add("woff2", woff2::version, 3, 0x100);
 		versionInfo.add("fontforge", ff_version());
-#ifdef HAVE_LIBTTFAUTOHINT
-		vector<int> ta_version(3);
-		TTF_autohint_version(&ta_version[0], &ta_version[1], &ta_version[2]);
-		versionInfo.add("ttfautohint", ta_version);
-#endif
+		versionInfo.add("ttfautohint", TTFAutohint().version(), true);
 #endif
 #ifdef MIKTEX
 		versionInfo.add("MiKTeX", FileFinder::instance().version());

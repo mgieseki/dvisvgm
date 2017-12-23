@@ -79,14 +79,12 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 #include <iomanip>
 #include <sstream>
 #include <woff2/encode.h>
-#ifdef HAVE_LIBTTFAUTOHINT
-#include <ttfautohint.h>
-#endif
 #include "ffwrapper.h"
 #include "Bezier.hpp"
 #include "FileSystem.hpp"
 #include "Font.hpp"
 #include "Glyph.hpp"
+#include "TTFAutohint.hpp"
 #include "TrueTypeFont.hpp"
 
 
@@ -188,31 +186,23 @@ static void writeSFD (const string &sfdname, const PhysicalFont &font, const set
 
 
 bool FontWriter::createTTFFile (const string &sfdname, const string &ttfname) const {
-#ifndef HAVE_LIBTTFAUTOHINT
-	return ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS);
-#else
+	TTFAutohint autohinter;
+	if (!autohinter.available())
+		return ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), AUTOHINT_FONTS);
+
 	bool ok = ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), false);
 	if (ok && AUTOHINT_FONTS) {
-		FILE *ttf_in = fopen(ttfname.c_str(), "rb");
-		FILE *ttf_out = fopen((ttfname+"-ah").c_str(), "wb");
-		const unsigned char *errstr=nullptr;
-		TA_Error errnum = TTF_autohint("in-file, out-file, default-script, error-string", ttf_in, ttf_out, "latn", &errstr);
-		if (errnum == TA_Err_Missing_Glyph) {
-			fseek(ttf_in, 0, SEEK_SET);
-			errnum = TTF_autohint("in-file, out-file, symbol, error-string", ttf_in, ttf_out, true, &errstr);
-		}
+		int errnum = autohinter.autohint(ttfname, ttfname+"-ah", true);
 		if (errnum) {
 			Message::wstream(true) << "failed to autohint font '" << _font.name() << "'";
-			if (errstr && *errstr)
-				Message::wstream() << " (" << errstr << ")";
+			string msg = autohinter.lastErrorMessage();
+			if (!msg.empty())
+				Message::wstream() << " (" << msg << ")";
 		}
-		fclose(ttf_out);
-		fclose(ttf_in);
 		FileSystem::remove(ttfname);
 		FileSystem::rename(ttfname+"-ah", ttfname);
 	}
 	return ok;
-#endif
 }
 
 
