@@ -40,7 +40,7 @@ class DLLoader {
 		bool loadLibrary (const std::string &dlname);
 
 	protected:
-		void* loadSymbol (const char *name) const;
+		template <typename T> T loadSymbol (const char *name) const;
 		void closeLibrary ();
 
 	private:
@@ -50,5 +50,23 @@ class DLLoader {
 		void *_handle;
 #endif
 };
+
+
+/** Loads a function or variable from the dynamic/shared library.
+ *  @param[in] name name of function/variable to load
+ *  @return pointer to loaded symbol, or 0 if the symbol could not be loaded */
+template <typename T>
+T DLLoader::loadSymbol (const char *name) const {
+	if (_handle) {
+#ifdef _WIN32
+		return reinterpret_cast<T>(GetProcAddress(_handle, name));
+#else
+		return reinterpret_cast<T>(dlsym(_handle, name));
+#endif
+	}
+	return nullptr;
+}
+
+#define LOAD_SYMBOL(sym) loadSymbol<decltype(&sym)>(#sym)
 
 #endif

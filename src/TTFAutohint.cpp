@@ -90,7 +90,7 @@ int TTFAutohint::autohint (const string &source, const string &target, bool rehi
 #ifdef HAVE_LIBTTFAUTOHINT
 	auto fn = &TTF_autohint;
 #else
-	auto fn = reinterpret_cast<decltype(&TTF_autohint)>(loadSymbol("TTF_autohint"));
+	auto fn = LOAD_SYMBOL(TTF_autohint);
 #endif
 	int ret=0;
 	if (fn) {
@@ -123,7 +123,7 @@ string TTFAutohint::version () const {
 #ifdef HAVE_LIBTTFAUTOHINT
 	auto fn = &TTF_autohint_version;
 #else
-	auto fn = reinterpret_cast<decltype(&TTF_autohint_version)>(loadSymbol("TTF_autohint_version"));
+	auto fn = LOAD_SYMBOL(TTF_autohint_version);
 #endif
 	string ret;
 	if (fn) {
