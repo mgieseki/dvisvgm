@@ -8,6 +8,10 @@ zlib:       http://zlib.net
 Additionally, the MiKTeX SDK is required:
 http://www.miktex.org/sdk
 
+If you want to build dvisvgm with ttfautohint support, the related
+development files as well as the ttfautohint DLL are needed. They are
+available from https://github.com/mgieseki/ttfautohint-dll.
+
 Unpack the MiKTeX SDK into the "vc" directory so that the new subfolder
 miktex-2.9.4106-sdk is created there.
 

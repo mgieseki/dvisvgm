@@ -1,6 +1,12 @@
-dvisvgm-2.2.3 (2017-11-17)
-- updated brotli library
-- fixed potential memory issue
+dvisvgm-2.3 (2017-12-28)
+- added experimental support for ttfautohint
+- updated xxHash to version 0.6.4
+- added configuration option to set location of libkpathsea (GH bug #71)
+- some improvements of the build system
+
+dvisvgm-2.2.3 (2017-12-12)
+- updated the bundled brotli library to version 1.0.2
+- fixed a potential memory issue
 - some code and test improvements
 
 dvisvgm-2.2.2 (2017-11-17)
