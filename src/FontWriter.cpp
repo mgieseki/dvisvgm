@@ -192,15 +192,20 @@ bool FontWriter::createTTFFile (const string &sfdname, const string &ttfname) co
 
 	bool ok = ff_sfd_to_ttf(sfdname.c_str(), ttfname.c_str(), false);
 	if (ok && AUTOHINT_FONTS) {
-		int errnum = autohinter.autohint(ttfname, ttfname+"-ah", true);
+		string tmpname = ttfname+"-ah";
+		int errnum = autohinter.autohint(ttfname, tmpname, true);
 		if (errnum) {
 			Message::wstream(true) << "failed to autohint font '" << _font.name() << "'";
 			string msg = autohinter.lastErrorMessage();
 			if (!msg.empty())
 				Message::wstream() << " (" << msg << ")";
+			// keep the unhinted TTF
+			FileSystem::remove(tmpname);
 		}
-		FileSystem::remove(ttfname);
-		FileSystem::rename(ttfname+"-ah", ttfname);
+		else {
+			FileSystem::remove(ttfname);
+			FileSystem::rename(tmpname, ttfname);
+		}
 	}
 	return ok;
 }
