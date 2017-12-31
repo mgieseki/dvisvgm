@@ -41,8 +41,10 @@ class TTFAutohint
 		std::string lastErrorMessage () const;
 		std::string version () const;
 
+#ifdef HAVE_TTFAUTOHINT_H
 	private:
 		const unsigned char *_lastErrorMessage;
+#endif
 };
 
 #endif
