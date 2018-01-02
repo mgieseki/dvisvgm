@@ -270,9 +270,11 @@ static void print_version (bool extended) {
 
 
 static void init_fontmap (const CommandLine &cmdline) {
-	const char *mapseq = cmdline.fontmapOpt.given() ? cmdline.fontmapOpt.value().c_str() : 0;
-	bool additional = mapseq && strchr("+-=", *mapseq);
-	if (!mapseq || additional) {
+	string mapseq;
+	if (cmdline.fontmapOpt.given())
+		mapseq = cmdline.fontmapOpt.value();
+	bool additional = !mapseq.empty() && strchr("+-=", mapseq[0]);
+	if (mapseq.empty() || additional) {
 		bool found = false;
 		for (string mapfile : {"ps2pk", "pdftex", "dvipdfm", "psfonts"}) {
 			if ((found = FontMap::instance().read(mapfile+".map")))
@@ -281,7 +283,7 @@ static void init_fontmap (const CommandLine &cmdline) {
 		if (!found)
 			Message::wstream(true) << "none of the default map files could be found\n";
 	}
-	if (mapseq)
+	if (!mapseq.empty())
 		FontMap::instance().read(mapseq);
 }
 
