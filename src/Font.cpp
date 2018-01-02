@@ -127,18 +127,18 @@ const FontMetrics* TFMFont::getMetrics () const {
 
 double TFMFont::charWidth (int c) const {
 	double w = getMetrics() ? getMetrics()->getCharWidth(c) : 0;
-	if (style()) {
+	if (style())
 		w *= style()->extend;
-		w += fabs(style()->slant*charHeight(c));  // slant := tan(phi) = dx/height
-	}
 	return w;
 }
 
 
 double TFMFont::italicCorr (int c) const {
 	double w = getMetrics() ? getMetrics()->getItalicCorr(c) : 0;
-	if (style())
+	if (style()) {
+		w += abs(style()->slant*charHeight(c));  // slant := tan(phi) = dx/height
 		w *= style()->extend;
+	}
 	return w;
 }
 
