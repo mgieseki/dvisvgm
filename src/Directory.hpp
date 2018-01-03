@@ -28,8 +28,7 @@
 	#include <dirent.h>
 #endif
 
-class Directory
-{
+class Directory {
 	public:
 		enum EntryType {ET_FILE, ET_DIR, ET_FILE_OR_DIR};
 

@@ -82,7 +82,7 @@ bool FilePath::Directory::operator == (const Directory &dir) const {
  *  relative to the current working directory.
  *  @param[in] path absolute or relative path to a file or directory */
 FilePath::FilePath (const string &path) {
-	init(path, !FileSystem::isDirectory(path.c_str()), FileSystem::getcwd());
+	init(path, !FileSystem::isDirectory(path), FileSystem::getcwd());
 }
 
 

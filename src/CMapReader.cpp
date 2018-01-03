@@ -40,7 +40,7 @@ CMapReader::CMapReader () : _inCMap(false) {
  *  @param fname[in] name/path of cmap file
  *  @return CMap object representing the read data, or 0 if file could not be read */
 unique_ptr<CMap> CMapReader::read (const string &fname) {
-	if (const char *path = FileFinder::instance().lookup(fname.c_str(), "cmap", false)) {
+	if (const char *path = FileFinder::instance().lookup(fname, "cmap", false)) {
 		ifstream ifs(path);
 		if (ifs)
 			return read(ifs, fname);

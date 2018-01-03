@@ -75,7 +75,7 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		"batchmode;"                     // don't halt on errors and don't print informational messages
 		"input " << _fontname << "\"";   // load font description
 	Message::mstream(false, Message::MC_STATE) << "\nrunning Metafont for " << _fontname << '\n';
-	Process mf_process(cmd, oss.str().c_str());
+	Process mf_process(cmd, oss.str());
 	string mf_messages;
 	mf_process.run(_dir, &mf_messages);
 

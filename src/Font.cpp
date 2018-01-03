@@ -110,7 +110,7 @@ TFMFont::TFMFont (const string &name, uint32_t cs, double ds, double ss)
 const FontMetrics* TFMFont::getMetrics () const {
 	if (!_metrics) {
 		try {
-			_metrics = FontMetrics::read(_fontname.c_str());
+			_metrics = FontMetrics::read(_fontname);
 			if (!_metrics) {
 				_metrics = util::make_unique<NullFontMetric>();
 				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
@@ -326,7 +326,7 @@ bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer:
 		const Glyph *cached_glyph=0;
 		if (CACHE_PATH) {
 			_cache.write(CACHE_PATH);
-			_cache.read(name().c_str(), CACHE_PATH);
+			_cache.read(name(), CACHE_PATH);
 			cached_glyph = _cache.getGlyph(c);
 		}
 		if (cached_glyph) {
@@ -399,7 +399,7 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 			string gfname;
 			Glyph glyph;
 			if (createGF(gfname)) {
-				_cache.read(name().c_str(), CACHE_PATH);
+				_cache.read(name(), CACHE_PATH);
 				double ds = getMetrics() ? getMetrics()->getDesignSize() : 1;
 				GFGlyphTracer tracer(gfname, unitsPerEm()/ds, cb);
 				tracer.setGlyph(glyph);

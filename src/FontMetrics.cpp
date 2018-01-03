@@ -28,8 +28,8 @@
 using namespace std;
 
 
-unique_ptr<FontMetrics> FontMetrics::read (const char *fontname) {
-	const char *path = FileFinder::instance().lookup(string(fontname) + ".tfm");
+unique_ptr<FontMetrics> FontMetrics::read (const string &fontname) {
+	const char *path = FileFinder::instance().lookup(fontname + ".tfm");
 	ifstream ifs(path, ios::binary);
 	if (!ifs)
 		return unique_ptr<FontMetrics>();

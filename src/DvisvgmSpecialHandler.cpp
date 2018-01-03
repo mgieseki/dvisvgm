@@ -94,7 +94,7 @@ void DvisvgmSpecialHandler::preprocessRaw (InputReader &ir) {
 		return;
 	string str = ir.getLine();
 	if (!str.empty())
-		_currentMacro->second.emplace_back(string("P")+str);
+		_currentMacro->second.emplace_back("P"+str);
 }
 
 
@@ -103,7 +103,7 @@ void DvisvgmSpecialHandler::preprocessRawDef (InputReader &ir) {
 		return;
 	string str = ir.getLine();
 	if (!str.empty())
-		_currentMacro->second.emplace_back(string("D")+str);
+		_currentMacro->second.emplace_back("D"+str);
 }
 
 

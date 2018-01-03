@@ -245,7 +245,7 @@ void FontMap::readdir (const string &dirname) {
 	while (const char *fname = dir.read(Directory::ET_FILE)) {
 		if (strlen(fname) >= 4 && strcmp(fname+strlen(fname)-4, ".map") == 0) {
 			string path = dirname + "/" + fname;
-			read(path.c_str());
+			read(path);
 		}
 	}
 }

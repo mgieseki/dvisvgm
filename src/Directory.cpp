@@ -110,7 +110,7 @@ const char* Directory::read (EntryType type) {
 #else
 	if (_dir) {
 		while ((_dirent = readdir(_dir))) {
-			string path = string(_dirname) + "/" + _dirent->d_name;
+			string path = _dirname + "/" + _dirent->d_name;
 			struct stat stats;
 			if (stat(path.c_str(), &stats) == 0) {
 				if (S_ISDIR(stats.st_mode)) {

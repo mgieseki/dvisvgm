@@ -34,8 +34,8 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <map>
 #include <set>
-#include <unordered_map>
 #include "FileFinder.hpp"
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
@@ -140,7 +140,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		// The MiKTeX SDK doesn't support the lookup of files without suffix (yet), thus
 		// it's not possible to find cmap files which usually don't have a suffix. In order
 		// to work around this, we try to lookup the files by calling kpsewhich.
-		Process process("kpsewhich", std::string("-format=cmap ")+fname);
+		Process process("kpsewhich", "-format=cmap "+fname);
 		process.run(&buf);
 		return buf.empty() ? nullptr : buf.c_str();
 	}
@@ -161,7 +161,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		return nullptr;
 	}
 #endif
-	static std::unordered_map<std::string, kpse_file_format_type> types = {
+	static std::map<std::string, kpse_file_format_type> types = {
 		{"tfm",  kpse_tfm_format},
 		{"pfb",  kpse_type1_format},
 		{"vf",   kpse_vf_format},
@@ -177,7 +177,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		{"sfd",  kpse_sfd_format},
 		{"eps",  kpse_pict_format},
 	};
-	auto it = types.find(ext.c_str());
+	auto it = types.find(ext);
 	if (it == types.end())
 		return nullptr;
 

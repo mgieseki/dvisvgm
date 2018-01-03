@@ -25,8 +25,7 @@
 #include <utility>
 #include <vector>
 
-class FilePath
-{
+class FilePath {
 	class Directory {
 		public:
 			Directory (const std::string &dir) : _dirstr(dir) {}
