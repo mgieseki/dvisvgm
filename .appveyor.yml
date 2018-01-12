@@ -16,7 +16,8 @@ install:
   - set FREETYPE_VER=2.9
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
-  - set TTFAUTOHINT_VER=1.8.1
+  - set TTFA_VER=1.8.1
+  - set TTFA_REV=2
   - cd vc
   - appveyor DownloadFile https://miktex.org/download/ctan/systems/win32/miktex/sdk/miktex-%MIKTEX_SDK_VER%-sdk.zip
   - unzip -o miktex-%MIKTEX_SDK_VER%-sdk.zip
@@ -35,9 +36,9 @@ install:
   - tar xzf zlib-%ZLIB_VER%.tar.gz --strip-components=1
   - del zlib-%ZLIB_VER%.tar.gz
   - cd ..
-  - appveyor DownloadFile https://github.com/mgieseki/ttfautohint-dll/releases/download/r1.7-1/ttfautohint-%TTFAUTOHINT_VER%-dll64.zip
-  - unzip -o -d ttfautohint ttfautohint-%TTFAUTOHINT_VER%-dll64.zip
-  - del ttfautohint-%TTFAUTOHINT_VER%-dll64.zip
+  - appveyor DownloadFile https://github.com/mgieseki/ttfautohint-dll/releases/download/r%TTFA_VER%-%TTFA_REV%/ttfautohint-%TTFA_VER%-dll64.zip
+  - unzip -o -d ttfautohint ttfautohint-%TTFA_VER%-dll64.zip
+  - del ttfautohint-%TTF_VER%-dll64.zip
 
 build:
   project: vc\dvisvgm.sln
