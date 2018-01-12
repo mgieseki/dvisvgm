@@ -1,3 +1,9 @@
+dvisvgm-2.3.1 (2018-01-12)
+- fixed the width of characters slanted by a mapfile entry (GH bug #82)
+- if ttfautohint fails for a font, dvisvgm now uses the unhinted font and
+  prints a corresponding warning message
+- some code cleanup
+
 dvisvgm-2.3 (2017-12-28)
 - added experimental support for ttfautohint
 - updated xxHash to version 0.6.4
