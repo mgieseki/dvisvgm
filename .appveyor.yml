@@ -13,10 +13,10 @@ branches:
 
 install:
   - set POTRACE_VER=1.15
-  - set FREETYPE_VER=2.8.1
+  - set FREETYPE_VER=2.9
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
-  - set TTFAUTOHINT_VER=1.7.38-592d
+  - set TTFAUTOHINT_VER=1.8.1
   - cd vc
   - appveyor DownloadFile https://miktex.org/download/ctan/systems/win32/miktex/sdk/miktex-%MIKTEX_SDK_VER%-sdk.zip
   - unzip -o miktex-%MIKTEX_SDK_VER%-sdk.zip
@@ -25,6 +25,7 @@ install:
   - appveyor DownloadFile http://download.savannah.gnu.org/releases/freetype/freetype-%FREETYPE_VER%.tar.gz
   - tar xzf freetype-%FREETYPE_VER%.tar.gz --strip-components=1
   - del freetype-%FREETYPE_VER%.tar.gz
+  - patch -p1 <ft29-dll.patch
   - cd ..\potrace
   - appveyor DownloadFile http://potrace.sourceforge.net/download/%POTRACE_VER%/potrace-%POTRACE_VER%.tar.gz
   - tar xzf potrace-%POTRACE_VER%.tar.gz --strip-components=1
