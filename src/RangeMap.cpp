@@ -176,6 +176,15 @@ uint32_t RangeMap::valueAt (uint32_t c) const {
 }
 
 
+/** Returns the number of values mapped. */
+size_t RangeMap::numValues () const {
+	size_t count=0;
+	for (const Range &range : _ranges)
+		count += range.max()-range.min()+1;
+	return count;
+}
+
+
 ostream& RangeMap::Range::write (ostream& os) const {
 	return os << '[' << _min << ',' << _max << "] => " << _minval;
 }
