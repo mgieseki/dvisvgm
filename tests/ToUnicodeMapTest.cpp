@@ -38,7 +38,7 @@ static void check_range (const ToUnicodeMap &ucmap, uint32_t min, uint32_t max, 
 TEST(ToUnicodeMapTest, addMissingMappings1) {
 	ToUnicodeMap ucmap;
 	ASSERT_TRUE(ucmap.addMissingMappings(20));
-	ASSERT_EQ(ucmap.size(), 1u);
+	ASSERT_EQ(ucmap.numRanges(), 1u);
 	CHECK_RANGE("A", ucmap, 1, 20, 1);
 }
 
@@ -46,16 +46,16 @@ TEST(ToUnicodeMapTest, addMissingMappings1) {
 TEST(ToUnicodeMapTest, addMissingMappings2) {
 	ToUnicodeMap ucmap;
 	ucmap.addRange(5, 8, 40);
-	ASSERT_EQ(ucmap.size(), 1u);
+	ASSERT_EQ(ucmap.numRanges(), 1u);
 	CHECK_RANGE("A", ucmap, 5, 8, 40);
 
 	ucmap.addRange(10, 15, 50);
-	ASSERT_EQ(ucmap.size(), 2u);
+	ASSERT_EQ(ucmap.numRanges(), 2u);
 	CHECK_RANGE("B", ucmap, 5, 8, 40);
 	CHECK_RANGE("C", ucmap, 10, 15, 50);
 
 	ASSERT_TRUE(ucmap.addMissingMappings(20));
-	ASSERT_EQ(ucmap.size(), 2u);
+	ASSERT_EQ(ucmap.numRanges(), 2u);
 	CHECK_RANGE("D", ucmap, 1, 9, 36);
 	CHECK_RANGE("E", ucmap, 10, 20, 50);
 }

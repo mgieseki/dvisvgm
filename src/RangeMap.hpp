@@ -64,7 +64,7 @@ class RangeMap {
 		void addRange (uint32_t first, uint32_t last, uint32_t cid);
 		bool valueExists (uint32_t c) const  {return lookup(c) >= 0;}
 		uint32_t valueAt (uint32_t c) const;
-		size_t size () const                 {return _ranges.size();}
+		size_t numRanges () const            {return _ranges.size();}
 		bool empty () const                  {return _ranges.empty();}
 		void clear ()                        {_ranges.clear();}
 		std::ostream& write (std::ostream &os) const;
