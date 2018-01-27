@@ -78,12 +78,15 @@ AC_CHECK_HEADER([potracelib.h],
 		[AC_MSG_ERROR([potrace library not found])])])
 
 # Check how to link Ghostscript
+have_libgs=yes
 AC_CHECK_HEADER([ghostscript/iapi.h],
-	[AC_CHECK_LIB(gs, gsapi_revision,,
-		# Ghostscript not found, check for dlopen
-		[AC_CHECK_LIB(dl, dlopen,,
-			[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])]
-			[AC_MSG_WARN(PostScript support disabled)])])])
+	[AC_CHECK_LIB(gs, gsapi_revision,, [have_libgs=no])],
+	[have_libgs=no])
+AS_IF([test "x$have_libgs" = "xno"],
+	# Ghostscript not found, check for dlopen
+	[AC_CHECK_LIB(dl, dlopen,,
+		[AC_DEFINE(DISABLE_GS, 1, [Set to 1 if PostScript support should be disabled])]
+		[AC_MSG_WARN(PostScript support disabled)])])
 
 # Check for pkg-config
 PKG_PROG_PKG_CONFIG
