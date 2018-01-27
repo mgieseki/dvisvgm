@@ -53,15 +53,15 @@ TEST_F(JFMReaderTest, properties) {
 	EXPECT_FALSE(jfm->verticalLayout());
 	EXPECT_EQ(jfm->firstChar(), 0);
 	EXPECT_EQ(jfm->lastChar(), 1);
-	EXPECT_EQ(jfm->minChar(), 13143);
-	EXPECT_EQ(jfm->maxChar(), 14696);
+	EXPECT_EQ(jfm->minChar(), 13143u);
+	EXPECT_EQ(jfm->maxChar(), 14696u);
 	EXPECT_DOUBLE_EQ(jfm->getDesignSize(), 10.0*72.0/72.27);
 }
 
 
 TEST_F(JFMReaderTest, charWidth) {
-	uint16_t minchar = jfm->minChar();
-	uint16_t maxchar = jfm->maxChar();
+	uint32_t minchar = jfm->minChar();
+	uint32_t maxchar = jfm->maxChar();
 	EXPECT_NEAR(jfm->getCharWidth(0), 9.963, 0.001);
 	EXPECT_NEAR(jfm->getCharWidth(minchar), 4.981, 0.001);
 	EXPECT_NEAR(jfm->getCharWidth(minchar+1), 4.981, 0.001);
@@ -71,8 +71,8 @@ TEST_F(JFMReaderTest, charWidth) {
 
 
 TEST_F(JFMReaderTest, charHeight) {
-	uint16_t minchar = jfm->minChar();
-	uint16_t maxchar = jfm->maxChar();
+	uint32_t minchar = jfm->minChar();
+	uint32_t maxchar = jfm->maxChar();
 	EXPECT_NEAR(jfm->getCharHeight(0), 8.767, 0.001);
 	EXPECT_NEAR(jfm->getCharHeight(minchar), 8.767, 0.001);
 	EXPECT_NEAR(jfm->getCharHeight(minchar+1), 8.767, 0.001);
@@ -82,8 +82,8 @@ TEST_F(JFMReaderTest, charHeight) {
 
 
 TEST_F(JFMReaderTest, charDepth) {
-	uint16_t minchar = jfm->minChar();
-	uint16_t maxchar = jfm->maxChar();
+	uint32_t minchar = jfm->minChar();
+	uint32_t maxchar = jfm->maxChar();
 	EXPECT_NEAR(jfm->getCharDepth(0), 1.195, 0.001);
 	EXPECT_NEAR(jfm->getCharDepth(minchar), 1.195, 0.001);
 	EXPECT_NEAR(jfm->getCharDepth(minchar+1), 1.195, 0.001);
@@ -93,8 +93,8 @@ TEST_F(JFMReaderTest, charDepth) {
 
 
 TEST_F(JFMReaderTest, italicCorr) {
-	uint16_t minchar = jfm->minChar();
-	uint16_t maxchar = jfm->maxChar();
+	uint32_t minchar = jfm->minChar();
+	uint32_t maxchar = jfm->maxChar();
 	EXPECT_DOUBLE_EQ(jfm->getItalicCorr(0), 0);
 	EXPECT_DOUBLE_EQ(jfm->getItalicCorr(minchar), 0);
 	EXPECT_DOUBLE_EQ(jfm->getItalicCorr(minchar+1), 0);
