@@ -1,3 +1,9 @@
+dvisvgm-2.3.2 (2018-02-08)
+- prevent the creation of redundant tspan elements
+- added support for new JFM format (patch by Hironobu Yamashita)
+- fixed build error occurred if GS development files were missing
+- fixed a potential memory issue regarding option --cache
+
 dvisvgm-2.3.1 (2018-01-12)
 - fixed the width of characters slanted by a mapfile entry (GH bug #82)
 - if ttfautohint fails for a font, dvisvgm now uses the unhinted font and
