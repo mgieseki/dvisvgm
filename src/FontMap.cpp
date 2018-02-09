@@ -47,7 +47,7 @@ FontMap& FontMap::instance() {
  *  @param[in] mode selects how to integrate the map file entries into the global map tree
  *  @return true if file could be opened */
 bool FontMap::read (const string &fname, FontMap::Mode mode) {
-	ifstream ifs(fname.c_str());
+	ifstream ifs(fname);
 	if (!ifs)
 		return false;
 

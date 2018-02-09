@@ -38,7 +38,7 @@ class TFMReaderTest : public ::testing::Test {
 	public:
 		void SetUp () override {
 			string fname = string(SRCDIR)+"/data/cmr10.tfm";
-			ifstream ifs(fname.c_str(), ios::binary);
+			ifstream ifs(fname, ios::binary);
 			ASSERT_TRUE(ifs.is_open()) << "failed opening " << fname;
 			tfm = util::make_unique<TFM>(ifs);
 		}

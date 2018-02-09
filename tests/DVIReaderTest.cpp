@@ -163,7 +163,7 @@ class LoggingDVIReader : public DVIReader {
 static void test_dvi_file (const char *fname, const vector<const char*> &expected_lines) {
 	XMLString::DECIMAL_PLACES = 3;
 	string dviname = string(SRCDIR)+"/data/"+fname;
-	ifstream ifs(dviname.c_str(), ios::binary);
+	ifstream ifs(dviname, ios::binary);
 	ASSERT_TRUE(bool(ifs));
 	stringstream ss;
 	LoggingDVIReader dviReader(ifs, ss);

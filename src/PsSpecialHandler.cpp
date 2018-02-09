@@ -243,7 +243,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		StreamInputReader in(is);
 		if (in.check(" plotfile ")) { // ps: plotfile fname
 			string fname = in.getString();
-			ifstream ifs(fname.c_str());
+			ifstream ifs(fname);
 			if (ifs)
 				_psi.execute(ifs);
 			else

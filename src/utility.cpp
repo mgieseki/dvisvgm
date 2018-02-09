@@ -124,7 +124,7 @@ int util::ilog10 (int n) {
 /** Returns the contents of a file.
  *  @param[in] fname name/path of the file */
 string util::read_file_contents (const string &fname) {
-	ifstream ifs(fname.c_str(), ios::binary);
+	ifstream ifs(fname, ios::binary);
 	return string(istreambuf_iterator<char>(ifs.rdbuf()), istreambuf_iterator<char>());
 }
 
@@ -134,6 +134,6 @@ string util::read_file_contents (const string &fname) {
  *  @param[in] start iterator pointing to the begin of the byte sequence
  *  @param[in] end iterator pointing to the first byte after the byte sequence to write */
 void util::write_file_contents (const string &fname, string::iterator start, string::iterator end) {
-	ofstream ofs(fname.c_str(), ios::binary);
+	ofstream ofs(fname, ios::binary);
 	copy(start, end, ostream_iterator<char>(ofs));
 }

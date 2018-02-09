@@ -81,7 +81,7 @@ bool FontCache::write (const string &fontname, const string &dir) const {
 		string dirstr = dir.empty() ? FileSystem::getcwd() : dir;
 		ostringstream oss;
 		oss << dirstr << '/' << fontname << ".fgd";
-		ofstream ofs(oss.str().c_str(), ios::binary);
+		ofstream ofs(oss.str(), ios::binary);
 		return write(fontname, ofs);
 	}
 	return false;
@@ -177,7 +177,7 @@ bool FontCache::read (const string &fontname, const string &dir) {
 	string dirstr = dir.empty() ? FileSystem::getcwd() : dir;
 	ostringstream oss;
 	oss << dirstr << '/' << fontname << ".fgd";
-	ifstream ifs(oss.str().c_str(), ios::binary);
+	ifstream ifs(oss.str(), ios::binary);
 	return read(fontname, ifs);
 }
 
@@ -265,7 +265,7 @@ bool FontCache::fontinfo (const string &dirname, vector<FontInfo> &infos, vector
 			if (fname[0] == 'f' && fname.length() > 5 && fname.substr(fname.length()-4) == ".fgd") {
 				FontInfo info;
 				string path = dirname+"/"+(fname.substr(1));
-				ifstream ifs(path.c_str(), ios::binary);
+				ifstream ifs(path, ios::binary);
 				if (fontinfo(ifs, info))
 					infos.emplace_back(move(info));
 				else

@@ -38,7 +38,7 @@ class JFMReaderTest : public ::testing::Test {
 	public:
 		void SetUp () override {
 			string fname = string(SRCDIR)+"/data/cidjmgr0-h.tfm";
-			ifstream ifs(fname.c_str(), ios::binary);
+			ifstream ifs(fname, ios::binary);
 			ASSERT_TRUE(ifs.is_open()) << "failed opening " << fname;
 			jfm = util::make_unique<JFM>(ifs);
 		}

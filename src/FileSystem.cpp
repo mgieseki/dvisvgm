@@ -98,8 +98,8 @@ bool FileSystem::remove (const string &fname) {
  *  @param[in] remove_src remove file 'src' if true
  *  @return true on success */
 bool FileSystem::copy (const string &src, const string &dest, bool remove_src) {
-	ifstream ifs(src.c_str(), ios::in|ios::binary);
-	ofstream ofs(dest.c_str(), ios::out|ios::binary);
+	ifstream ifs(src, ios::in|ios::binary);
+	ofstream ofs(dest, ios::out|ios::binary);
 	if (ifs && ofs) {
 		ofs << ifs.rdbuf();
 		if (!ifs.fail() && !ofs.fail() && remove_src) {

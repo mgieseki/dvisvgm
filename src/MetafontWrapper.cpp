@@ -106,8 +106,8 @@ bool MetafontWrapper::call (const string &mode, double mag) {
  *  @param[in] mag magnification factor
  *  @return true on success */
 bool MetafontWrapper::make (const string &mode, double mag) {
-	ifstream tfm((_dir+_fontname+".tfm").c_str());
-	ifstream gf((_dir+_fontname+".gf").c_str());
+	ifstream tfm(_dir+_fontname+".tfm");
+	ifstream gf(_dir+_fontname+".gf");
 	if (gf && tfm) // @@ distinguish between gf and tfm
 		return true;
 	return call(mode, mag);
@@ -115,7 +115,7 @@ bool MetafontWrapper::make (const string &mode, double mag) {
 
 
 bool MetafontWrapper::success () const {
-	ifstream tfm((_dir+_fontname+".tfm").c_str());
-	ifstream gf((_dir+_fontname+".gf").c_str());
+	ifstream tfm(_dir+_fontname+".tfm");
+	ifstream gf(_dir+_fontname+".gf");
 	return tfm && gf;
 }
