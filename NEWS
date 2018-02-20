@@ -1,3 +1,8 @@
+dvisvgm-2.3.3 (2018-02-20)
+- fixed wrong behavior when requiring both default mapfiles and
+  pdf:mapline or pdf:mapfile specials
+- fixed an exception thrown in case of unavailable fonts
+
 dvisvgm-2.3.2 (2018-02-08)
 - prevent the creation of redundant tspan elements
 - added support for new JFM format (patch by Hironobu Yamashita)
