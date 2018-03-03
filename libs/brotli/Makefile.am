@@ -1,8 +1,11 @@
 noinst_LIBRARIES = libbrotli.a
 libbrotli_a_SOURCES = \
 	common/constants.h \
+	common/context.h \
 	common/dictionary.c \
 	common/dictionary.h \
+	common/platform.h \
+	common/transform.h \
 	common/version.h \
 	enc/backward_references.c \
 	enc/backward_references.h \
@@ -30,6 +33,8 @@ libbrotli_a_SOURCES = \
 	enc/dictionary_hash.c \
 	enc/dictionary_hash.h \
 	enc/encode.c \
+	enc/encoder_dict.c \
+	enc/encoder_dict.h \
 	enc/entropy_encode.c \
 	enc/entropy_encode.h \
 	enc/entropy_encode_static.h \
@@ -51,6 +56,7 @@ libbrotli_a_SOURCES = \
 	enc/metablock.c \
 	enc/metablock.h \
 	enc/metablock_inc.h \
+	enc/params.h \
 	enc/port.h \
 	enc/prefix.h \
 	enc/quality.h \

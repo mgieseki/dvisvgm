@@ -69,6 +69,9 @@
     <ClCompile Include="..\..\libs\brotli\enc\dictionary_hash.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libs\brotli\enc\encoder_dict.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libs\brotli\common\constants.h">
@@ -210,6 +213,21 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\brotli\enc\hash_to_binary_tree_inc.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\enc\encoder_dict.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\enc\params.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\common\context.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\common\platform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\common\transform.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
