@@ -6,6 +6,7 @@
 EXTRA_DIST = \
 	cidjmgr0-h.tfm \
 	cmr10.600gf \
+	cmr10.pfb \
 	cmr10.tfm \
 	dvipdfm_test.map \
 	dvips_test.map \
