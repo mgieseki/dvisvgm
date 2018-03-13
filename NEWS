@@ -1,3 +1,9 @@
+dvisvgm-2.3.4 (2018-03-14)
+- fixed error message printed when addding a single '-' on the command-line
+- added missing data file that lead to failing tests (GH bug #87)
+- updated brotli library to version 1.0.3
+- some code refactorings
+
 dvisvgm-2.3.3 (2018-02-20)
 - fixed wrong behavior when requiring both default mapfiles and
   pdf:mapline or pdf:mapfile specials
