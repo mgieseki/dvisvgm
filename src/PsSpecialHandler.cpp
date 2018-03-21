@@ -69,7 +69,7 @@ void PsSpecialHandler::initialize () {
 	if (_psSection == PS_NONE) {
 		initgraphics();
 		// execute dvips prologue/header files
-		for (const char *fname : {"tex.pro", "texps.pro", "special.pro"})
+		for (const char *fname : {"tex.pro", "texps.pro", "special.pro", "color.pro"})
 			processHeaderFile(fname);
 		// disable bop/eop operators to prevent side-effects by
 		// unexpected bops/eops present in PS specials
