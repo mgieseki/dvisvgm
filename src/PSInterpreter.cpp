@@ -36,7 +36,7 @@ using namespace std;
 const char *PSInterpreter::GSARGS[] = {
 	"gs",                // dummy name
 	"-q",                // be quiet, suppress gs banner
-	"-dSAFER",           // disallow writing of files
+//	"-dSAFER",           // disallow writing of files
 	"-dNODISPLAY",       // we don't need a display device
 	"-dNOPAUSE",         // keep going
 	"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced

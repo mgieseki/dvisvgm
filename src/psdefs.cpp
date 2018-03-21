@@ -96,4 +96,4 @@ const char *PSInterpreter::PSDEFS =
 "setcolor{dup type/dicttype eq{setpattern}{/setcolor sysexec/currentrgbcolor sy"
 "sexec setrgbcolor}ifelse}def/setgray 1 defpr/setcmykcolor 4 defpr/sethsbcolor "
 "3 defpr/setrgbcolor 3 defpr/.setopacityalpha{dup/.setopacityalpha sysexec 1(se"
-"topacityalpha)prcmd}def ";
+"topacityalpha)prcmd}def systemdict readonly pop ";
