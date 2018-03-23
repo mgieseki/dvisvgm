@@ -1,3 +1,8 @@
+dvisvgm-2.3.5 (2018-03-23)
+- added evaluation of PS operator 'setpagedevice' in psfile specials
+- fixed evaluation of dvips color names
+- fixed warning printed when using Ghostscript 9.23
+
 dvisvgm-2.3.4 (2018-03-14)
 - fixed error message printed when addding a single '-' on the command-line
 - added missing data file that lead to failing tests (GH bug #87)
