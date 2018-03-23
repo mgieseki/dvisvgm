@@ -27,7 +27,7 @@
 using namespace std;
 
 
-TEST(MatrixTest, construct) {
+TEST(MatrixTest, construct1) {
 	const vector<double> vec{1, 2, 3, 4, 5, 6, 7, 8, 9};
 	Matrix m1(vec);
 	for (int row=0; row < 3; row++)
@@ -43,6 +43,22 @@ TEST(MatrixTest, construct) {
 		}
 	}
 	EXPECT_TRUE(Matrix(1).isIdentity());
+}
+
+
+TEST(MatrixTest, construct2) {
+	Matrix m1 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	for (int row=0; row < 3; row++)
+		for (int col=0; col < 3; col++)
+			ASSERT_EQ(m1.get(row, col), 3*row+col+1) << "row=" << row << ", col=" << col;
+
+	Matrix m2 = {1, 2, 3, 4, 5, 6};
+	for (int row=0; row < 2; row++)
+		for (int col=0; col < 3; col++)
+			ASSERT_EQ(m2.get(row, col), 3*row+col+1) << "row=" << row << ", col=" << col;
+	ASSERT_EQ(m2.get(2, 0), 0);
+	ASSERT_EQ(m2.get(2, 1), 0);
+	ASSERT_EQ(m2.get(2, 2), 1);
 }
 
 
