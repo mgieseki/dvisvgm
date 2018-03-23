@@ -28,42 +28,43 @@ using namespace std;
 
 class PSTestActions : public PSActions {
 	public:
-		void applyscalevals (vector<double> &p)  {print("applyscalevals", p);}
-		void clip (vector<double> &p)            {print("clip", p);}
-		void clippath (vector<double> &p)        {print("clippath", p);}
-		void closepath (vector<double> &p)       {print("closepath", p);}
-		void curveto (vector<double> &p)         {print("curveto", p);}
-		void eoclip (vector<double> &p)          {print("eoclip", p);}
-		void eofill (vector<double> &p)          {print("eofill", p);}
-		void fill (vector<double> &p)            {print("fill", p);}
-		void gsave (vector<double> &p)           {print("gsave", p);}
-		void grestore (vector<double> &p)        {print("grestore", p);}
-		void grestoreall(std::vector<double> &p) {print("grestoreall", p);}
-		void initclip (vector<double> &p)        {print("initclip", p);}
-		void lineto (vector<double> &p)          {print("lineto", p);}
-		void moveto (vector<double> &p)          {print("moveto", p);}
-		void makepattern (vector<double> &p)     {print("makepattern", p);}
-		void setpattern (vector<double> &p)      {print("setpattern", p);}
-		void newpath (vector<double> &p)         {print("newpath", p);}
-		void querypos (vector<double> &p)        {print("querypos", p);}
-		void restore(std::vector<double> &p)     {print("restore", p);}
-		void rotate (vector<double> &p)          {print("rotate", p);}
-		void save(std::vector<double> &p)        {print("save", p);}
-		void scale (vector<double> &p)           {print("scale", p);}
-		void setcmykcolor (vector<double> &p)    {print("setcmykcolor", p);}
-		void setdash (vector<double> &p)         {print("setdash", p);}
-		void setgray (vector<double> &p)         {print("setgray", p);}
-		void sethsbcolor (vector<double> &p)     {print("sethsbcolor", p);}
-		void setlinecap (vector<double> &p)      {print("setlinecap", p);}
-		void setlinejoin (vector<double> &p)     {print("setlinejoin", p);}
-		void setlinewidth (vector<double> &p)    {print("setlinewidth", p);}
-		void setmatrix (vector<double> &p)       {print("setmatrix", p);}
-		void setmiterlimit (vector<double> &p)   {print("setmiterlimit", p);}
-		void setopacityalpha (vector<double> &p) {print("setopacityalpha", p);}
-		void setrgbcolor (vector<double> &p)     {print("setrgbcolor", p);}
-		void shfill (vector<double> &p)          {print("shfill", p);}
-		void stroke (vector<double> &p)          {print("stroke", p);}
-		void translate (vector<double> &p)       {print("translate", p);}
+		void applyscalevals (vector<double> &p) override  {print("applyscalevals", p);}
+		void clip (vector<double> &p) override            {print("clip", p);}
+		void clippath (vector<double> &p) override        {print("clippath", p);}
+		void closepath (vector<double> &p) override       {print("closepath", p);}
+		void curveto (vector<double> &p) override         {print("curveto", p);}
+		void eoclip (vector<double> &p) override          {print("eoclip", p);}
+		void eofill (vector<double> &p) override          {print("eofill", p);}
+		void fill (vector<double> &p) override            {print("fill", p);}
+		void gsave (vector<double> &p) override           {print("gsave", p);}
+		void grestore (vector<double> &p) override        {print("grestore", p);}
+		void grestoreall(std::vector<double> &p) override {print("grestoreall", p);}
+		void initclip (vector<double> &p) override        {print("initclip", p);}
+		void lineto (vector<double> &p) override          {print("lineto", p);}
+		void moveto (vector<double> &p) override          {print("moveto", p);}
+		void makepattern (vector<double> &p) override     {print("makepattern", p);}
+		void setpattern (vector<double> &p) override      {print("setpattern", p);}
+		void setpagedevice (vector<double> &p) override   {print("setpagedevice", p);}
+		void newpath (vector<double> &p) override         {print("newpath", p);}
+		void querypos (vector<double> &p) override        {print("querypos", p);}
+		void restore(std::vector<double> &p) override     {print("restore", p);}
+		void rotate (vector<double> &p) override          {print("rotate", p);}
+		void save(std::vector<double> &p) override        {print("save", p);}
+		void scale (vector<double> &p) override           {print("scale", p);}
+		void setcmykcolor (vector<double> &p) override    {print("setcmykcolor", p);}
+		void setdash (vector<double> &p) override         {print("setdash", p);}
+		void setgray (vector<double> &p) override         {print("setgray", p);}
+		void sethsbcolor (vector<double> &p) override     {print("sethsbcolor", p);}
+		void setlinecap (vector<double> &p) override      {print("setlinecap", p);}
+		void setlinejoin (vector<double> &p) override     {print("setlinejoin", p);}
+		void setlinewidth (vector<double> &p) override    {print("setlinewidth", p);}
+		void setmatrix (vector<double> &p) override       {print("setmatrix", p);}
+		void setmiterlimit (vector<double> &p) override   {print("setmiterlimit", p);}
+		void setopacityalpha (vector<double> &p) override {print("setopacityalpha", p);}
+		void setrgbcolor (vector<double> &p) override     {print("setrgbcolor", p);}
+		void shfill (vector<double> &p) override          {print("shfill", p);}
+		void stroke (vector<double> &p) override          {print("stroke", p);}
+		void translate (vector<double> &p) override       {print("translate", p);}
 
 
 		string result () const {return _oss.str();}

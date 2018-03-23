@@ -281,6 +281,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"setmatrix",      { 6, &PSActions::setmatrix}},
 		{"setmiterlimit",  { 1, &PSActions::setmiterlimit}},
 		{"setopacityalpha",{ 1, &PSActions::setopacityalpha}},
+		{"setpagedevice",  { 0, &PSActions::setpagedevice}},
 		{"setpattern",     {-1, &PSActions::setpattern}},
 		{"setrgbcolor",    { 3, &PSActions::setrgbcolor}},
 		{"shfill",         {-1, &PSActions::shfill}},
