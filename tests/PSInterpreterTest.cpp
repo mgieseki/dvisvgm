@@ -51,6 +51,7 @@ class PSTestActions : public PSActions {
 		void rotate (vector<double> &p) override          {print("rotate", p);}
 		void save(std::vector<double> &p) override        {print("save", p);}
 		void scale (vector<double> &p) override           {print("scale", p);}
+		void setblendmode (vector<double> &p) override    {print("setblendmode", p);}
 		void setcmykcolor (vector<double> &p) override    {print("setcmykcolor", p);}
 		void setdash (vector<double> &p) override         {print("setdash", p);}
 		void setgray (vector<double> &p) override         {print("setgray", p);}
@@ -61,6 +62,7 @@ class PSTestActions : public PSActions {
 		void setmatrix (vector<double> &p) override       {print("setmatrix", p);}
 		void setmiterlimit (vector<double> &p) override   {print("setmiterlimit", p);}
 		void setopacityalpha (vector<double> &p) override {print("setopacityalpha", p);}
+		void setshapealpha (vector<double> &p) override   {print("setshapealpha", p);}
 		void setrgbcolor (vector<double> &p) override     {print("setrgbcolor", p);}
 		void shfill (vector<double> &p) override          {print("shfill", p);}
 		void stroke (vector<double> &p) override          {print("stroke", p);}

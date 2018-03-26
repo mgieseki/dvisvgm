@@ -132,6 +132,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void rotate (std::vector<double> &p) override;
 		void save (std::vector<double> &p) override;
 		void scale (std::vector<double> &p) override;
+		void setblendmode (std::vector<double> &p) override    {_blendmode = int(p[0]);}
 		void setcmykcolor (std::vector<double> &cmyk) override;
 		void setdash (std::vector<double> &p) override;
 		void setgray (std::vector<double> &p) override;
@@ -142,6 +143,7 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		void setmatrix (std::vector<double> &p) override;
 		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0];}
 		void setopacityalpha (std::vector<double> &p) override {_opacityalpha = p[0];}
+		void setshapealpha (std::vector<double> &p) override   {_shapealpha = p[0];}
 		void setpagedevice (std::vector<double> &p) override;
 		void setpattern (std::vector<double> &p) override;
 		void setrgbcolor (std::vector<double> &rgb) override;
@@ -166,6 +168,8 @@ class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, prote
 		double _linewidth;          ///< current line width in bp units
 		double _miterlimit;         ///< current miter limit in bp units
 		double _opacityalpha;       ///< opacity level (0=fully transparent, ..., 1=opaque)
+		double _shapealpha;         ///< shape opacity level (0=fully transparent, ..., 1=opaque)
+		int _blendmode;             ///< blend mode used when overlaying colored areas
 		uint8_t _linecap  : 2;      ///< current line cap (0=butt, 1=round, 2=projecting square)
 		uint8_t _linejoin : 2;      ///< current line join (0=miter, 1=round, 2=bevel)
 		double _dashoffset;         ///< current dash offset

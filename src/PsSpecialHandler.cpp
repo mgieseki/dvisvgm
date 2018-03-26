@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <array>
 #include <cmath>
 #include <fstream>
 #include <memory>
@@ -85,7 +86,8 @@ void PsSpecialHandler::initgraphics () {
 	_linecap = _linejoin = 0;  // butt end caps and miter joins
 	_miterlimit = 4;
 	_xmlnode = _savenode = nullptr;
-	_opacityalpha = 1;  // fully opaque
+	_opacityalpha = _shapealpha = 1;  // fully opaque
+	_blendmode = 0; // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
 	_currentcolor = Color::BLACK;
@@ -474,7 +476,8 @@ void PsSpecialHandler::setpagedevice (std::vector<double> &p) {
 	_linewidth = 1;
 	_linecap = _linejoin = 0;  // butt end caps and miter joins
 	_miterlimit = 4;
-	_opacityalpha = 1;  // fully opaque
+	_opacityalpha = _shapealpha = 1;  // fully opaque
+	_blendmode = 0; // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
 	_currentcolor = Color::BLACK;
@@ -529,6 +532,17 @@ void PsSpecialHandler::closepath (vector<double>&) {
 }
 
 
+static string css_blendmode_name (int mode) {
+	static const array<const char*,16> modenames = {{
+	  "normal",  "multiply",  "screen", "overlay", "soft-light", "hard-light", "color-dodge", "color-burn",
+	  "darken", "lighten", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
+	}};
+	if (mode < 0 || mode > 15)
+		return "";
+	return modenames[mode];
+}
+
+
 /** Draws the current path recorded by previously executed path commands (moveto, lineto,...).
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
@@ -578,8 +592,10 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
 		if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
 			path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
-		if (_opacityalpha < 1)
-			path->addAttribute("stroke-opacity", _opacityalpha);
+		if (_opacityalpha < 1 || _shapealpha < 1)
+			path->addAttribute("stroke-opacity", _opacityalpha*_shapealpha);
+		if (_blendmode > 0 && _blendmode < 16)
+			path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
 		if (!_dashpattern.empty()) {
 			ostringstream oss;
 			for (size_t i=0; i < _dashpattern.size(); i++) {
@@ -647,8 +663,10 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	}
 	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 		path->addAttribute("fill-rule", "evenodd");
-	if (_opacityalpha < 1)
-		path->addAttribute("fill-opacity", _opacityalpha);
+	if (_opacityalpha < 1 || _shapealpha < 1)
+		path->addAttribute("fill-opacity", _opacityalpha*_shapealpha);
+	if (_blendmode > 0 && _blendmode < 16)
+		path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
 	else {

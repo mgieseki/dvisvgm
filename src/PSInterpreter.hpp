@@ -60,6 +60,7 @@ struct PSActions {
 	virtual void rotate (std::vector<double> &p) =0;
 	virtual void save (std::vector<double> &p) =0;
 	virtual void scale (std::vector<double> &p) =0;
+	virtual void setblendmode (std::vector<double> &p) =0;
 	virtual void setcmykcolor (std::vector<double> &cmyk) =0;
 	virtual void setdash (std::vector<double> &p) =0;
 	virtual void setgray (std::vector<double> &p) =0;
@@ -70,10 +71,11 @@ struct PSActions {
 	virtual void setmatrix (std::vector<double> &p) =0;
 	virtual void setmiterlimit (std::vector<double> &p) =0;
 	virtual void setopacityalpha (std::vector<double> &p) =0;
+	virtual void setshapealpha (std::vector<double> &p) =0;
 	virtual void setpagedevice (std::vector<double> &p) =0;
 	virtual void setpattern (std::vector<double> &p) =0;
 	virtual void setrgbcolor (std::vector<double> &rgb) =0;
-	virtual void shfill (std::vector<double> &rgb) =0;
+	virtual void shfill (std::vector<double> &p) =0;
 	virtual void stroke (std::vector<double> &p) =0;
 	virtual void translate (std::vector<double> &p) =0;
 	virtual void executed () {}  // triggered if one of the above PS operators has been executed
