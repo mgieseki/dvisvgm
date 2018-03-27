@@ -310,7 +310,8 @@ bool FileSystem::exists (const string &fname) {
 bool FileSystem::isDirectory (const string &fname) {
 	if (const char *cfname = fname.c_str()) {
 #ifdef _WIN32
-		return GetFileAttributes(cfname) & FILE_ATTRIBUTE_DIRECTORY;
+		auto attr = GetFileAttributes(cfname);
+		return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY);
 #else
 		struct stat attr;
 		return stat(cfname, &attr) == 0 && S_ISDIR(attr.st_mode);

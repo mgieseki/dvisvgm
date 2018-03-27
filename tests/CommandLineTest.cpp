@@ -52,6 +52,8 @@ TEST(CommandLineTest, noarg_long) {
 	EXPECT_TRUE(cmd.noFontsOpt.given());
 	EXPECT_TRUE(cmd.helpOpt.given());
 	EXPECT_FALSE(cmd.listSpecialsOpt.given());
+	EXPECT_FALSE(cmd.stdinOpt.given());
+	EXPECT_FALSE(cmd.singleDashGiven());
 	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.verbosityOpt.given());
 	EXPECT_EQ(cmd.verbosityOpt.value(), 5u);
@@ -60,9 +62,9 @@ TEST(CommandLineTest, noarg_long) {
 
 TEST(CommandLineTest, arg_short) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "-P", "-p5", "-r45", "-omyfile.xyz", "-ayes", "-v3"};
+	const char *args[] = {"progname", "-P", "-p5", "-r45", "-omyfile.xyz", "-ayes", "-v3", "-"};
 	char **argv = const_cast<char**>(args);
-	cmd.parse(7, argv);
+	cmd.parse(8, argv);
 
 	EXPECT_TRUE(cmd.progressOpt.given());
 	EXPECT_DOUBLE_EQ(cmd.progressOpt.value(), 0.5);
@@ -73,11 +75,13 @@ TEST(CommandLineTest, arg_short) {
 	EXPECT_TRUE(cmd.outputOpt.given());
 	EXPECT_EQ(cmd.outputOpt.value(), "myfile.xyz");
 	EXPECT_FALSE(cmd.bboxOpt.given());
+	EXPECT_FALSE(cmd.stdinOpt.given());
 	EXPECT_EQ(cmd.bboxOpt.value(), "min");
 	EXPECT_EQ(cmd.filenames().size(), 0u);
 	EXPECT_TRUE(cmd.traceAllOpt.given());
 	EXPECT_TRUE(cmd.traceAllOpt.value());
 	EXPECT_TRUE(cmd.verbosityOpt.given());
+	EXPECT_TRUE(cmd.singleDashGiven());
 	EXPECT_EQ(cmd.verbosityOpt.value(), 3u);
 }
 

@@ -56,8 +56,7 @@ static size_t getline (istream &is, char *line, size_t n) {
 }
 
 
-EPSFile::EPSFile (const std::string& fname) : _ifs(fname.c_str(), ios::binary), _headerValid(false), _offset(0), _pslength(0)
-{
+EPSFile::EPSFile (const string &fname) : _ifs(fname, ios::binary) {
 	if (_ifs) {
 		if (getUInt32(_ifs) != 0xC6D3D0C5)  // no binary header present?
 			_ifs.seekg(0);                   // go back to the first byte

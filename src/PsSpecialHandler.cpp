@@ -25,6 +25,7 @@
 #include <sstream>
 #include "EPSFile.hpp"
 #include "FileFinder.hpp"
+#include "FileSystem.hpp"
 #include "Message.hpp"
 #include "PathClipper.hpp"
 #include "PSPattern.hpp"
@@ -273,6 +274,8 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
  *  @param[in] attr attributes given with \\special psfile */
 void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,string> &attr) {
 	const char *filepath = FileFinder::instance().lookup(fname, false);
+	if (!filepath && FileSystem::exists(fname))
+		filepath = fname.c_str();
 	if (!filepath) {
 		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
 		return;

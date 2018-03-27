@@ -22,11 +22,11 @@
 #define EPSFILE_HPP
 
 #include <fstream>
+#include <istream>
 #include <string>
 #include "BoundingBox.hpp"
 
-class EPSFile
-{
+class EPSFile {
 	public:
 		EPSFile (const std::string &fname);
 		std::istream& istream () const;
@@ -36,9 +36,9 @@ class EPSFile
 
 	private:
 		mutable std::ifstream _ifs;
-		bool _headerValid;   ///< true if file has a valid header
-		uint32_t _offset;    ///< stream offset where ASCII part of the file begins
-		uint32_t _pslength;  ///< length of PS section (in bytes)
+		bool _headerValid=false; ///< true if file has a valid header
+		uint32_t _offset=0;      ///< stream offset where ASCII part of the file begins
+		uint32_t _pslength=0;    ///< length of PS section (in bytes)
 };
 
 #endif

@@ -21,6 +21,7 @@
 #ifndef EPSTOSVG_HPP
 #define EPSTOSVG_HPP
 
+#include <istream>
 #include <memory>
 #include <string>
 #include "SpecialActions.hpp"
@@ -30,7 +31,7 @@ struct SVGOutputBase;
 
 class EPSToSVG : protected SpecialActions {
 	public:
-		EPSToSVG (const std::string &fname, SVGOutputBase &out) : _fname(fname), _out(out), _x(0), _y(0) {}
+		EPSToSVG (const std::string &fname, SVGOutputBase &out) : _fname(fname), _out(out) {}
 		void convert ();
 		void setTransformation (const Matrix &m);
 		void setPageSize (const std::string &name);
@@ -66,7 +67,7 @@ class EPSToSVG : protected SpecialActions {
 		std::string _fname;   ///< name of EPS file
 		SVGTree _svg;
 		SVGOutputBase &_out;
-		double _x, _y;
+		double _x=0, _y=0;
 		BoundingBox _bbox;
 };
 

@@ -37,7 +37,7 @@ using namespace std;
 void EPSToSVG::convert () {
 #ifndef HAVE_LIBGS
 	if (!Ghostscript().available())
-		throw MessageException("Ghostscript is required to process the EPS file");
+		throw MessageException("Ghostscript is required to process EPS files");
 #endif
 	EPSFile epsfile(_fname);
 	if (!epsfile.hasValidHeader())
@@ -46,8 +46,8 @@ void EPSToSVG::convert () {
 	BoundingBox bbox;
 	epsfile.bbox(bbox);
 	if (bbox.width() == 0 || bbox.height() == 0)
-		Message::wstream(true) << "bounding box of file " << _fname << " is empty\n";
-	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing file " << _fname << '\n';
+		Message::wstream(true) << "bounding box of EPS file is empty\n";
+	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing EPS file\n";
 	Message::mstream().indent(1);
 	_svg.newPage(1);
 	// create a psfile special and forward it to the PsSpecialHandler

@@ -296,6 +296,9 @@
     <ClCompile Include="..\src\TTFAutohint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\SourceInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -358,9 +361,6 @@
     <ClInclude Include="..\src\FontMap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\FontTracer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\GFGlyphTracer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -404,9 +404,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SpecialManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\StreamCounter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\StreamWriter.hpp">
@@ -602,6 +599,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TTFAutohint.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SourceInput.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -60,6 +60,7 @@ class CommandLine : public CL::CommandLine
 		Option relativeOpt {"relative", 'R', "create relative path commands"};
 		TypedOption<double, Option::ArgMode::REQUIRED> rotateOpt {"rotate", 'r', "angle", "rotate page content clockwise"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> scaleOpt {"scale", 'c', "sx[,sy]", "scale page content"};
+		Option stdinOpt {"stdin", '\0', "read DVI/EPS input from stdin"};
 		Option stdoutOpt {"stdout", 's', "write SVG output to stdout"};
 		TypedOption<std::string, Option::ArgMode::OPTIONAL> tmpdirOpt {"tmpdir", '\0', "path", "set/print the directory for temporary files"};
 		TypedOption<bool, Option::ArgMode::OPTIONAL> traceAllOpt {"trace-all", 'a', "retrace", false, "trace all glyphs of bitmap fonts"};
@@ -89,6 +90,7 @@ class CommandLine : public CL::CommandLine
 #if !defined(DISABLE_GS)
 			{&epsOpt, 0},
 #endif
+			{&stdinOpt, 0},
 			{&bboxOpt, 1},
 #if !defined(DISABLE_GS)
 			{&clipjoinOpt, 1},

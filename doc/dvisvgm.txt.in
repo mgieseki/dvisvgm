@@ -418,6 +418,11 @@ current drawing position. By default, dvisvgm creates paths made up of absolute 
 If option *--relative* is given, relative commands are created instead. This slightly reduces
 the size of the SVG files in most cases.
 
+*--stdin*::
+Tells dvisvgm to read the DVI or EPS input data from *stdin* instead from a file. Alternatively
+to option *--stdin*, a single dash (-) can be given. The default name of the generated SVG file
+is 'stdin.svg' which can be changed with option *--output*.
+
 *-s, --stdout*::
 Don't write the SVG output to a file but redirect it to *stdout*.
 
@@ -710,10 +715,16 @@ eepic and tplot, use these specials to describe graphics.
 
 Examples
 --------
---------------
+------------
 dvisvgm file
---------------
+------------
 Converts the first page of 'file.dvi' to 'file.svg'.
+
+--------------------
+dvisvgm - < file.dvi
+--------------------
+Converts the first page of 'file.dvi' to 'stdin.svg' where the contents of 'file.dvi'
+is read from *stdin*.
 
 ---------------
 dvisvgm -z file

@@ -97,7 +97,7 @@ TEST_F(SVGOutputTest, expressions) {
 
 TEST_F(SVGOutputTest, getPageStream) {
 	{
-		SVGOutput out(0, "");
+		SVGOutput out("", "");
 		ostream &os = out.getPageStream(1, 10);
 		EXPECT_EQ(&os, &cout);
 	}{

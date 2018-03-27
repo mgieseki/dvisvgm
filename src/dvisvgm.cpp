@@ -43,6 +43,7 @@
 #include "PSInterpreter.hpp"
 #include "PsSpecialHandler.hpp"
 #include "SignalHandler.hpp"
+#include "SourceInput.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
 #include "utility.hpp"
@@ -69,9 +70,11 @@ static string remove_path (string fname) {
 
 
 static string ensure_suffix (string fname, bool eps) {
-	size_t dotpos = remove_path(fname).rfind('.');
-	if (dotpos == string::npos)
-		fname += (eps ? ".eps" : ".dvi");
+	if (!fname.empty()) {
+		size_t dotpos = remove_path(fname).rfind('.');
+		if (dotpos == string::npos)
+			fname += (eps ? ".eps" : ".dvi");
+	}
 	return fname;
 }
 
@@ -354,7 +357,14 @@ int main (int argc, char *argv[]) {
 			return 1;
 		if (!HyperlinkManager::setLinkMarker(cmdline.linkmarkOpt.value()))
 			Message::wstream(true) << "invalid argument '"+cmdline.linkmarkOpt.value()+"' supplied for option --linkmark\n";
-		if (argc > 1 && cmdline.filenames().size() < 1) {
+		if (cmdline.stdinOpt.given() || cmdline.singleDashGiven()) {
+			if (!cmdline.filenames().empty()) {
+				Message::estream(true) << "option - or --stdin can't be used together with a filename\n";
+				return 1;
+			}
+			cmdline.addFilename("");  // empty filename => read from stdin
+		}
+		if (argc > 1 && cmdline.filenames().empty()) {
 			Message::estream(true) << "no input file given\n";
 			return 1;
 		}
@@ -364,29 +374,28 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	bool eps_given = cmdline.epsOpt.given();
-	string inputfile = ensure_suffix(cmdline.filenames()[0], eps_given);
-	ifstream ifs(inputfile.c_str(), ios::binary|ios::in);
-	if (!ifs) {
-		Message::estream(true) << "can't open file '" << inputfile << "' for reading\n";
+	string inputfile = ensure_suffix(cmdline.filenames()[0], cmdline.epsOpt.given());
+	SourceInput dviinput(inputfile);
+	if (!dviinput.getInputStream(true)) {
+		Message::estream(true) << "can't open file '" << dviinput.getMessageFileName() << "' for reading\n";
 		return 0;
 	}
 	try {
 		double start_time = System::time();
 		set_variables(cmdline);
-		SVGOutput out(cmdline.stdoutOpt.given() ? nullptr : inputfile.c_str(),
+		SVGOutput out(cmdline.stdoutOpt.given() ? "" : dviinput.getFileName(),
 			cmdline.outputOpt.value(),
 			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
 		SignalHandler::instance().start();
 		if (cmdline.epsOpt.given()) {
-			EPSToSVG eps2svg(inputfile, out);
+			EPSToSVG eps2svg(dviinput.getFilePath(), out);
 			eps2svg.convert();
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
 		}
 		else {
 			init_fontmap(cmdline);
-			DVIToSVG dvi2svg(ifs, out);
+			DVIToSVG dvi2svg(dviinput.getInputStream(), out);
 			const char *ignore_specials=nullptr;
 			if (cmdline.noSpecialsOpt.given())
 				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value().c_str();

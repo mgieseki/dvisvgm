@@ -207,6 +207,7 @@
     <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
+    <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
     <ClCompile Include="..\src\DvisvgmSpecialHandler.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\CRC32.hpp" />
     <ClInclude Include="..\src\DependencyGraph.hpp" />
+    <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
     <ClInclude Include="..\src\EPSToSVG.hpp" />
@@ -379,7 +381,6 @@
     <ClInclude Include="..\src\FontEngine.hpp" />
     <ClInclude Include="..\src\FontManager.hpp" />
     <ClInclude Include="..\src\FontMap.hpp" />
-    <ClInclude Include="..\src\FontTracer.hpp" />
     <ClInclude Include="..\src\GFGlyphTracer.hpp" />
     <ClInclude Include="..\src\GFReader.hpp" />
     <ClInclude Include="..\src\GFTracer.hpp" />
@@ -395,7 +396,6 @@
     <ClInclude Include="..\src\SpecialActions.hpp" />
     <ClInclude Include="..\src\SpecialHandler.hpp" />
     <ClInclude Include="..\src\SpecialManager.hpp" />
-    <ClInclude Include="..\src\StreamCounter.hpp" />
     <ClInclude Include="..\src\StreamWriter.hpp" />
     <ClInclude Include="..\src\TFM.hpp" />
     <ClInclude Include="..\src\TpicSpecialHandler.hpp" />

@@ -1,5 +1,5 @@
 /*************************************************************************
-** SVGOutput.hpp                                                        **
+** SourceInput.hpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2018 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,41 +18,25 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SVGOUTPUT_HPP
-#define SVGOUTPUT_HPP
+#ifndef DVIINPUT_HPP
+#define DVIINPUT_HPP
 
-#include <memory>
-#include <ostream>
+#include <fstream>
 #include <string>
-#include "FilePath.hpp"
 
-
-struct SVGOutputBase {
-	virtual ~SVGOutputBase () =default;
-	virtual std::ostream& getPageStream (int page, int numPages) const =0;
-	virtual std::string filename (int page, int numPages) const =0;
-};
-
-
-class SVGOutput : public SVGOutputBase {
+class SourceInput {
 	public:
-		SVGOutput () : SVGOutput("", "", 0) {}
-		SVGOutput (const std::string &base) : SVGOutput(base, "", 0) {}
-		SVGOutput (const std::string &base, const std::string &pattern) : SVGOutput(base, pattern, 0) {}
-		SVGOutput (const std::string &base, const std::string &pattern, int zipLevel);
-		std::ostream& getPageStream (int page, int numPages) const override;
-		std::string filename (int page, int numPages) const override;
-
-	protected:
-		std::string expandFormatString (std::string str, int page, int numPages) const;
+		SourceInput (const std::string &fname) : _fname(fname) {}
+		~SourceInput ();
+		std::istream& getInputStream (bool showMessages=false);
+		std::string getFileName () const;
+		std::string getMessageFileName () const;
+		std::string getFilePath () const;
 
 	private:
-		FilePath _path;
-		std::string _pattern;
-		bool _stdout;      ///< write to STDOUT?
-		int _zipLevel;     ///< compression level
-		mutable int _page; ///< number of current page being written
-		mutable std::unique_ptr<std::ostream> _osptr;
+		const std::string &_fname; ///< name of file to read from
+		std::string _tmpfilepath;  ///< path of temporary file used when reading from stdin
+		std::ifstream _ifs;
 };
 
 #endif
