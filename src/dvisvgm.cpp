@@ -146,30 +146,21 @@ static bool set_temp_dir (const CommandLine &args) {
 }
 
 
-static bool check_bbox (const string &bboxstr) {
+static void check_bbox (const string &bboxstr) {
 	for (const char *fmt : {"none", "min", "preview", "papersize", "dvi"})
 		if (bboxstr == fmt)
-			return true;
+			return;
 	if (isalpha(bboxstr[0])) {
 		try {
 			PageSize size(bboxstr);
-			return true;
 		}
 		catch (const PageSizeException &e) {
-			Message::estream(true) << "invalid bounding box format '" << bboxstr << "'\n";
-			return false;
+			throw MessageException("invalid bounding box format '" + bboxstr + "'");
 		}
 	}
-	try {
-		// check if given bbox argument is valid, i.e. doesn't throw an exception
-		BoundingBox bbox;
-		bbox.set(bboxstr);
-		return true;
-	}
-	catch (const MessageException &e) {
-		Message::estream(true) << e.what() << '\n';
-		return false;
-	}
+	// check if given bbox argument is valid, i.e. doesn't throw an exception
+	BoundingBox bbox;
+	bbox.set(bboxstr);
 }
 
 
@@ -329,8 +320,8 @@ static void set_variables (const CommandLine &cmdline) {
 
 
 int main (int argc, char *argv[]) {
-	CommandLine cmdline;
 	try {
+		CommandLine cmdline;
 		cmdline.parse(argc, argv);
 		if (argc == 1 || cmdline.helpOpt.given()) {
 			cmdline.help(cout, cmdline.helpOpt.value());
@@ -349,44 +340,30 @@ int main (int argc, char *argv[]) {
 		}
 		if (!set_cache_dir(cmdline) || !set_temp_dir(cmdline))
 			return 0;
-		if (cmdline.stdoutOpt.given() && cmdline.zipOpt.given()) {
-			Message::estream(true) << "writing SVGZ files to stdout is not supported\n";
-			return 1;
-		}
-		if (!check_bbox(cmdline.bboxOpt.value()))
-			return 1;
+		if (cmdline.stdoutOpt.given() && cmdline.zipOpt.given())
+			throw MessageException("writing SVGZ files to stdout is not supported");
+		check_bbox(cmdline.bboxOpt.value());
 		if (!HyperlinkManager::setLinkMarker(cmdline.linkmarkOpt.value()))
 			Message::wstream(true) << "invalid argument '"+cmdline.linkmarkOpt.value()+"' supplied for option --linkmark\n";
 		if (cmdline.stdinOpt.given() || cmdline.singleDashGiven()) {
-			if (!cmdline.filenames().empty()) {
-				Message::estream(true) << "option - or --stdin can't be used together with a filename\n";
-				return 1;
-			}
+			if (!cmdline.filenames().empty())
+				throw MessageException("option - or --stdin can't be used together with a filename");
 			cmdline.addFilename("");  // empty filename => read from stdin
 		}
-		if (argc > 1 && cmdline.filenames().empty()) {
-			Message::estream(true) << "no input file given\n";
-			return 1;
-		}
-	}
-	catch (MessageException &e) {
-		Message::estream() << e.what() << '\n';
-		return 1;
-	}
+		if (argc > 1 && cmdline.filenames().empty())
+			throw MessageException("no input file given");
 
-	string inputfile = ensure_suffix(cmdline.filenames()[0], cmdline.epsOpt.given());
-	SourceInput dviinput(inputfile);
-	if (!dviinput.getInputStream(true)) {
-		Message::estream(true) << "can't open file '" << dviinput.getMessageFileName() << "' for reading\n";
-		return 0;
-	}
-	try {
+		SignalHandler::instance().start();
+		string inputfile = ensure_suffix(cmdline.filenames()[0], cmdline.epsOpt.given());
+		SourceInput dviinput(inputfile);
+		if (!dviinput.getInputStream(true))
+			throw MessageException("can't open file '" + dviinput.getMessageFileName() + "' for reading");
+
 		double start_time = System::time();
 		set_variables(cmdline);
 		SVGOutput out(cmdline.stdoutOpt.given() ? "" : dviinput.getFileName(),
 			cmdline.outputOpt.value(),
 			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
-		SignalHandler::instance().start();
 		if (cmdline.epsOpt.given()) {
 			EPSToSVG eps2svg(dviinput.getFilePath(), out);
 			eps2svg.convert();
