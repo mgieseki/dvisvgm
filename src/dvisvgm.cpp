@@ -353,24 +353,24 @@ int main (int argc, char *argv[]) {
 
 		SignalHandler::instance().start();
 		string inputfile = ensure_suffix(cmdline.filenames()[0], cmdline.epsOpt.given());
-		SourceInput dviinput(inputfile);
-		if (!dviinput.getInputStream(true))
-			throw MessageException("can't open file '" + dviinput.getMessageFileName() + "' for reading");
+		SourceInput srcin(inputfile);
+		if (!srcin.getInputStream(true))
+			throw MessageException("can't open file '" + srcin.getMessageFileName() + "' for reading");
 
 		double start_time = System::time();
 		set_variables(cmdline);
-		SVGOutput out(cmdline.stdoutOpt.given() ? "" : dviinput.getFileName(),
+		SVGOutput out(cmdline.stdoutOpt.given() ? "" : srcin.getFileName(),
 			cmdline.outputOpt.value(),
 			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
 		if (cmdline.epsOpt.given()) {
-			EPSToSVG eps2svg(dviinput.getFilePath(), out);
+			EPSToSVG eps2svg(srcin.getFilePath(), out);
 			eps2svg.convert();
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
 		}
 		else {
 			init_fontmap(cmdline);
-			DVIToSVG dvi2svg(dviinput.getInputStream(), out);
+			DVIToSVG dvi2svg(srcin.getInputStream(), out);
 			const char *ignore_specials=nullptr;
 			if (cmdline.noSpecialsOpt.given())
 				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value().c_str();
