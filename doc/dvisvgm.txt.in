@@ -534,8 +534,6 @@ version numbers of the linked libraries are printed as well.
 Creates a compressed SVG file with suffix .svgz. The optional argument specifies the compression
 level. Valid values are in the range of 1 to 9 (default value is 9). Larger values cause better
 compression results but may take slightly more computation time.
-+
-CAUTION: This option cannot be combined with *-s, --stdout*.
 
 *-Z, --zoom*[='factor']::
 Multiplies the 'width' and 'height' attributes of the SVG root element by argument 'factor' while

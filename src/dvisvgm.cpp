@@ -340,8 +340,6 @@ int main (int argc, char *argv[]) {
 		}
 		if (!set_cache_dir(cmdline) || !set_temp_dir(cmdline))
 			return 0;
-		if (cmdline.stdoutOpt.given() && cmdline.zipOpt.given())
-			throw MessageException("writing SVGZ files to stdout is not supported");
 		check_bbox(cmdline.bboxOpt.value());
 		if (!HyperlinkManager::setLinkMarker(cmdline.linkmarkOpt.value()))
 			Message::wstream(true) << "invalid argument '"+cmdline.linkmarkOpt.value()+"' supplied for option --linkmark\n";
