@@ -134,9 +134,6 @@
     <ClInclude Include="..\..\libs\brotli\enc\compress_fragment_two_pass.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libs\brotli\enc\context.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libs\brotli\enc\dictionary_hash.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -180,9 +177,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\brotli\enc\metablock_inc.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libs\brotli\enc\port.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\brotli\enc\prefix.h">

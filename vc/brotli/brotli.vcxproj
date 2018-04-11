@@ -190,7 +190,6 @@
     <ClInclude Include="..\..\libs\brotli\enc\command.h" />
     <ClInclude Include="..\..\libs\brotli\enc\compress_fragment.h" />
     <ClInclude Include="..\..\libs\brotli\enc\compress_fragment_two_pass.h" />
-    <ClInclude Include="..\..\libs\brotli\enc\context.h" />
     <ClInclude Include="..\..\libs\brotli\enc\dictionary_hash.h" />
     <ClInclude Include="..\..\libs\brotli\enc\encoder_dict.h" />
     <ClInclude Include="..\..\libs\brotli\enc\entropy_encode.h" />
@@ -210,7 +209,6 @@
     <ClInclude Include="..\..\libs\brotli\enc\metablock.h" />
     <ClInclude Include="..\..\libs\brotli\enc\metablock_inc.h" />
     <ClInclude Include="..\..\libs\brotli\enc\params.h" />
-    <ClInclude Include="..\..\libs\brotli\enc\port.h" />
     <ClInclude Include="..\..\libs\brotli\enc\prefix.h" />
     <ClInclude Include="..\..\libs\brotli\enc\quality.h" />
     <ClInclude Include="..\..\libs\brotli\enc\ringbuffer.h" />

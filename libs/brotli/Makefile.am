@@ -29,7 +29,6 @@ libbrotli_a_SOURCES = \
 	enc/compress_fragment.h \
 	enc/compress_fragment_two_pass.c \
 	enc/compress_fragment_two_pass.h \
-	enc/context.h \
 	enc/dictionary_hash.c \
 	enc/dictionary_hash.h \
 	enc/encode.c \
@@ -57,7 +56,6 @@ libbrotli_a_SOURCES = \
 	enc/metablock.h \
 	enc/metablock_inc.h \
 	enc/params.h \
-	enc/port.h \
 	enc/prefix.h \
 	enc/quality.h \
 	enc/ringbuffer.h \
