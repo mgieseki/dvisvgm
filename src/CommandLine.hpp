@@ -15,8 +15,7 @@
 using CL::Option;
 using CL::TypedOption;
 
-class CommandLine : public CL::CommandLine
-{
+class CommandLine : public CL::CommandLine {
 	public:
 		CommandLine () : CL::CommandLine(
 			"This program converts DVI files, as created by TeX/LaTeX, to\nthe XML-based scalable vector graphics format SVG.",
