@@ -25,7 +25,7 @@
 
 class StreamInputReader;
 
-class PdfSpecialHandler : public SpecialHandler, public DVIPositionListener, public DVIEndPageListener {
+class PdfSpecialHandler : public SpecialHandler {
 	public:
 		const char* info () const override {return "PDF hyperlink, font map, and pagesize specials";}
 		const char* name () const override {return "pdf";}

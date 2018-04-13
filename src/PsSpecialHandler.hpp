@@ -36,7 +36,7 @@
 class PSPattern;
 class XMLElementNode;
 
-class PsSpecialHandler : public SpecialHandler, public DVIEndPageListener, protected PSActions {
+class PsSpecialHandler : public SpecialHandler, protected PSActions {
 	using Path = GraphicsPath<double>;
 	using ColorSpace = Color::ColorSpace;
 

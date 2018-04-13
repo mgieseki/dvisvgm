@@ -26,7 +26,7 @@
 #include "Length.hpp"
 #include "SpecialHandler.hpp"
 
-class PapersizeSpecialHandler : public SpecialHandler, public DVIEndPageListener {
+class PapersizeSpecialHandler : public SpecialHandler {
 	using DoublePair = std::pair<double,double>;       // (width, height)
 	using PageSize = std::pair<unsigned,DoublePair>;   // page number -> (width, height)
 

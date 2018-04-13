@@ -25,8 +25,7 @@
 #include "Pair.hpp"
 #include "SpecialHandler.hpp"
 
-class TpicSpecialHandler : public SpecialHandler, public DVIEndPageListener
-{
+class TpicSpecialHandler : public SpecialHandler {
 	public:
 		TpicSpecialHandler ();
 		const char* info () const override {return "TPIC specials";}

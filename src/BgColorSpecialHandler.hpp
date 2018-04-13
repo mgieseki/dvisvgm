@@ -26,8 +26,7 @@
 #include "SpecialHandler.hpp"
 
 
-class BgColorSpecialHandler : public SpecialHandler, public DVIBeginPageListener
-{
+class BgColorSpecialHandler : public SpecialHandler {
 	public:
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;

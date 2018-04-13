@@ -28,7 +28,7 @@
 
 class SpecialActions;
 
-class HtmlSpecialHandler : public SpecialHandler, public DVIEndPageListener, public DVIPositionListener {
+class HtmlSpecialHandler : public SpecialHandler {
 	public:
 		HtmlSpecialHandler () : _active(false) {}
 		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;

@@ -29,7 +29,7 @@
 class InputReader;
 class SpecialActions;
 
-class EmSpecialHandler : public SpecialHandler, public DVIEndPageListener {
+class EmSpecialHandler : public SpecialHandler {
 	struct Line {
 		Line (int pp1, int pp2, char cc1, char cc2, double w) : p1(pp1), p2(pp2), c1(cc1), c2(cc2), width(w) {}
 		int p1, p2;   ///< point numbers of line ends

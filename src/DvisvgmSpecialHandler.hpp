@@ -29,8 +29,7 @@
 class InputReader;
 class SpecialActions;
 
-class DvisvgmSpecialHandler : public SpecialHandler, public DVIPreprocessingListener, public DVIEndPageListener
-{
+class DvisvgmSpecialHandler : public SpecialHandler {
 	using StringVector = std::vector<std::string>;
 	using MacroMap = std::unordered_map<std::string, StringVector>;
 

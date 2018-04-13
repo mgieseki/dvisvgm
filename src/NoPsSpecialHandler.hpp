@@ -23,8 +23,7 @@
 
 #include "SpecialHandler.hpp"
 
-class NoPsSpecialHandler : public SpecialHandler, public DVIEndPageListener
-{
+class NoPsSpecialHandler : public SpecialHandler {
 	public:
 		NoPsSpecialHandler () : _count(0) {}
 		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
