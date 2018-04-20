@@ -36,16 +36,7 @@
 #include "TensorProductPatch.hpp"
 #include "TriangularPatch.hpp"
 
-
 using namespace std;
-
-
-static inline double str2double (const string &str) {
-	double ret;
-	istringstream iss(str);
-	iss >> ret;
-	return ret;
-}
 
 
 bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
@@ -283,30 +274,32 @@ void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,s
 	unordered_map<string,string>::const_iterator it;
 
 	// bounding box of EPS figure (lower left and upper right corner)
-	double llx = (it = attr.find("llx")) != attr.end() ? str2double(it->second) : 0;
-	double lly = (it = attr.find("lly")) != attr.end() ? str2double(it->second) : 0;
-	double urx = (it = attr.find("urx")) != attr.end() ? str2double(it->second) : 0;
-	double ury = (it = attr.find("ury")) != attr.end() ? str2double(it->second) : 0;
+	double llx = (it = attr.find("llx")) != attr.end() ? stod(it->second) : 0;
+	double lly = (it = attr.find("lly")) != attr.end() ? stod(it->second) : 0;
+	double urx = (it = attr.find("urx")) != attr.end() ? stod(it->second) : 0;
+	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
 
 	// desired width/height of resulting figure
-	double rwi = (it = attr.find("rwi")) != attr.end() ? str2double(it->second)/10.0 : -1;
-	double rhi = (it = attr.find("rhi")) != attr.end() ? str2double(it->second)/10.0 : -1;
+	double rwi = (it = attr.find("rwi")) != attr.end() ? stod(it->second)/10.0 : -1;
+	double rhi = (it = attr.find("rhi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
 		return;
 
 	// user transformations (default values chosen according to dvips manual)
-	double hoffset = (it = attr.find("hoffset")) != attr.end() ? str2double(it->second) : 0;
-	double voffset = (it = attr.find("voffset")) != attr.end() ? str2double(it->second) : 0;
-//	double hsize   = (it = attr.find("hsize")) != attr.end() ? str2double(it->second) : 612;
-//	double vsize   = (it = attr.find("vsize")) != attr.end() ? str2double(it->second) : 792;
-	double hscale  = (it = attr.find("hscale")) != attr.end() ? str2double(it->second) : 100;
-	double vscale  = (it = attr.find("vscale")) != attr.end() ? str2double(it->second) : 100;
-	double angle   = (it = attr.find("angle")) != attr.end() ? str2double(it->second) : 0;
+	double hoffset = (it = attr.find("hoffset")) != attr.end() ? stod(it->second) : 0;
+	double voffset = (it = attr.find("voffset")) != attr.end() ? stod(it->second) : 0;
+//	double hsize   = (it = attr.find("hsize")) != attr.end() ? stod(it->second) : 612;
+//	double vsize   = (it = attr.find("vsize")) != attr.end() ? stod(it->second) : 792;
+	double hscale  = (it = attr.find("hscale")) != attr.end() ? stod(it->second) : 100;
+	double vscale  = (it = attr.find("vscale")) != attr.end() ? stod(it->second) : 100;
+	double angle   = (it = attr.find("angle")) != attr.end() ? stod(it->second) : 0;
 
 	Matrix m(1);
 	m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
 	BoundingBox bbox(llx, lly, urx, ury);
 	bbox.transform(m);
+	if (bbox.width() == 0 || bbox.height() == 0)
+		return;
 
 	// compute factors to scale the bounding box to width rwi and height rhi
 	double sx = rwi/bbox.width();
