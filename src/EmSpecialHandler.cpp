@@ -258,7 +258,7 @@ void EmSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
 }
 
 
-const vector<const char*> EmSpecialHandler::prefixes () const {
-	const vector<const char*> pfx {"em:"};
+vector<const char*> EmSpecialHandler::prefixes() const {
+	vector<const char*> pfx {"em:"};
 	return pfx;
 }

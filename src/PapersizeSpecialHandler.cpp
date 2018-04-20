@@ -92,7 +92,7 @@ void PapersizeSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actio
 }
 
 
-const vector<const char*> PapersizeSpecialHandler::prefixes () const {
-	const vector<const char*> pfx {"papersize="};
+vector<const char*> PapersizeSpecialHandler::prefixes() const {
+	vector<const char*> pfx {"papersize="};
 	return pfx;
 }

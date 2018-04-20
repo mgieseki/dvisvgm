@@ -1260,8 +1260,8 @@ void PsSpecialHandler::ClippingStack::dup (int saveID) {
 }
 
 
-const vector<const char*> PsSpecialHandler::prefixes () const {
-	const vector<const char*> pfx {
+vector<const char*> PsSpecialHandler::prefixes() const {
+	vector<const char*> pfx {
 		"header=",    // read and execute PS header file prior to the following PS statements
 		"psfile=",    // read and execute PS file
 		"PSfile=",    // dito

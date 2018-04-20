@@ -29,7 +29,7 @@ class PdfSpecialHandler : public SpecialHandler {
 	public:
 		const char* info () const override {return "PDF hyperlink, font map, and pagesize specials";}
 		const char* name () const override {return "pdf";}
-		const std::vector<const char*> prefixes () const override;
+		std::vector<const char*> prefixes() const override;
 		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 

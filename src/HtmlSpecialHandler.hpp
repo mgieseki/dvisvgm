@@ -35,7 +35,7 @@ class HtmlSpecialHandler : public SpecialHandler {
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		const char* name () const override {return "html";}
 		const char* info () const override {return "hyperref specials";}
-		const std::vector<const char*> prefixes () const override;
+		std::vector<const char*> prefixes() const override;
 
 	protected:
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;

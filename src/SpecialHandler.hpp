@@ -42,7 +42,7 @@ class SpecialHandler {
 		virtual ~SpecialHandler () =default;
 		virtual const char* info () const=0;
 		virtual const char* name () const=0;
-		virtual const std::vector<const char*> prefixes () const=0;
+		virtual std::vector<const char*> prefixes() const =0;
 		virtual void setDviScaleFactor (double dvi2bp) {}
 		virtual void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) {}
 		virtual bool process (const std::string &prefix, std::istream &is, SpecialActions &actions)=0;
@@ -51,6 +51,5 @@ class SpecialHandler {
 		virtual void dviEndPage (unsigned pageno, SpecialActions &actions) {}
 		virtual void dviMovedTo (double x, double y, SpecialActions &actions) {}
 };
-
 
 #endif
