@@ -115,9 +115,9 @@ static string extract_prefix (istream &is) {
 
 void SpecialManager::preprocess (const string &special, SpecialActions &actions) const {
 	istringstream iss(special);
-	string prefix = extract_prefix(iss);
+	const string prefix = extract_prefix(iss);
 	if (SpecialHandler *handler = findHandlerByPrefix(prefix))
-		handler->preprocess(prefix.c_str(), iss, actions);
+		handler->preprocess(prefix, iss, actions);
 }
 
 
@@ -129,11 +129,11 @@ void SpecialManager::preprocess (const string &special, SpecialActions &actions)
  *  @throw SpecialException in case of errors during special processing */
 bool SpecialManager::process (const string &special, double dvi2bp, SpecialActions &actions) const {
 	istringstream iss(special);
-	string prefix = extract_prefix(iss);
+	const string prefix = extract_prefix(iss);
 	bool success=false;
 	if (SpecialHandler *handler = findHandlerByPrefix(prefix)) {
 		handler->setDviScaleFactor(dvi2bp);
-		success = handler->process(prefix.c_str(), iss, actions);
+		success = handler->process(prefix, iss, actions);
 	}
 	return success;
 }

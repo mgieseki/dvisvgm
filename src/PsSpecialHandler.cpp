@@ -164,17 +164,17 @@ void PsSpecialHandler::executeAndSync (istream &is, bool updatePos) {
 }
 
 
-void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActions &actions) {
+void PsSpecialHandler::preprocess (const string &prefix, istream &is, SpecialActions &actions) {
 	initialize();
 	if (_psSection != PS_HEADERS)
 		return;
 
 	_actions = &actions;
-	if (*prefix == '!') {
+	if (prefix == "!") {
 		_headerCode += "\n";
 		_headerCode += string(istreambuf_iterator<char>(is), istreambuf_iterator<char>());
 	}
-	else if (strcmp(prefix, "header=") == 0) {
+	else if (prefix == "header=") {
 		// read and execute PS header file
 		string fname;
 		is >> fname;
@@ -183,9 +183,9 @@ void PsSpecialHandler::preprocess (const char *prefix, istream &is, SpecialActio
 }
 
 
-bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
+bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialActions &actions) {
 	// process PS headers only once (in prescan)
-	if (*prefix == '!' || strcmp(prefix, "header=") == 0)
+	if (prefix == "!" || prefix == "header=")
 		return true;
 
 	_actions = &actions;
@@ -193,23 +193,23 @@ bool PsSpecialHandler::process (const char *prefix, istream &is, SpecialActions 
 	if (_psSection != PS_BODY)
 		enterBodySection();
 
-	if (*prefix == '"' || strcmp(prefix, "pst:") == 0) {
+	if (prefix == "\"" || prefix == "pst:") {
 		// read and execute literal PostScript code (isolated by a wrapping save/restore pair)
 		moveToDVIPos();
 		_psi.execute("\n@beginspecial @setspecial ");
 		executeAndSync(is, false);
 		_psi.execute("\n@endspecial ");
 	}
-	else if (strcmp(prefix, "psfile=") == 0 || strcmp(prefix, "PSfile=") == 0) {
+	else if (prefix == "psfile=" || prefix == "PSfile=") {
 		if (_actions) {
 			StreamInputReader in(is);
-			string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
+			const string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
 			unordered_map<string,string> attr;
 			in.parseAttributes(attr);
 			psfile(fname, attr);
 		}
 	}
-	else if (strcmp(prefix, "ps::") == 0) {
+	else if (prefix == "ps::") {
 		if (_actions)
 			_actions->finishLine();  // reset DVI position on next DVI command
 		if (is.peek() == '[') {

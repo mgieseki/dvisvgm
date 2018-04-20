@@ -24,7 +24,7 @@
 using namespace std;
 
 
-bool NoPsSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
+bool NoPsSpecialHandler::process (const string&, istream&, SpecialActions&) {
 	_count++;
 	return true;
 }

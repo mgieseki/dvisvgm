@@ -31,8 +31,8 @@ class SpecialActions;
 class HtmlSpecialHandler : public SpecialHandler {
 	public:
 		HtmlSpecialHandler () : _active(false) {}
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		const char* name () const override {return "html";}
 		const char* info () const override {return "hyperref specials";}
 		const std::vector<const char*> prefixes () const override;

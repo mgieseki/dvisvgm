@@ -58,12 +58,12 @@ class PapersizeSpecialTest : public ::testing::Test {
 
 		void preprocess (const string &str) {
 			istringstream iss(str);
-			handler.preprocess(0, iss, actions);
+			handler.preprocess("", iss, actions);
 		}
 
 		bool process (const string &str) {
 			istringstream iss(str);
-			return handler.process(0, iss, actions);
+			return handler.process("", iss, actions);
 		}
 
 		void endPage () {

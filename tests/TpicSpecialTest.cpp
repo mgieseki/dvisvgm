@@ -68,7 +68,7 @@ class TpicSpecialTest : public ::testing::Test {
 			public:
 				MyTpicSpecialHandler (SpecialActions &a) : actions(a) {}
 				void finishPage () {dviEndPage(0, actions);}
-				bool processSpecial (const char *cmd, string params="") {
+				bool processSpecial (const string &cmd, string params="") {
 					stringstream ss;
 					ss << params;
 					return process(cmd, ss, actions);
@@ -99,7 +99,6 @@ TEST_F(TpicSpecialTest, name) {
 
 
 TEST_F(TpicSpecialTest, fail) {
-	EXPECT_FALSE(handler.processSpecial(nullptr));
 	EXPECT_FALSE(handler.processSpecial(""));
 	EXPECT_FALSE(handler.processSpecial("x"));
 	EXPECT_FALSE(handler.processSpecial("xy"));

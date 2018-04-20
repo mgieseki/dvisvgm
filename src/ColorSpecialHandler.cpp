@@ -91,7 +91,7 @@ Color ColorSpecialHandler::readColor (istream &is) {
 }
 
 
-bool ColorSpecialHandler::process (const char *, istream &is, SpecialActions &actions) {
+bool ColorSpecialHandler::process (const string&, istream &is, SpecialActions &actions) {
 	string cmd;
 	is >> cmd;
 	if (cmd == "push")               // color push <model> <params>

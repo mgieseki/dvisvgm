@@ -25,11 +25,9 @@
 
 using namespace std;
 
-class ColorSpecialTest : public ::testing::Test
-{
+class ColorSpecialTest : public ::testing::Test {
 	protected:
-		struct SetColor : EmptySpecialActions
-		{
+		struct SetColor : EmptySpecialActions {
 			SetColor () : color(0) {}
 			void setColor (const Color &c) {color = uint32_t(c);}
 			bool equals (uint32_t c) {return color == c;}
@@ -66,84 +64,84 @@ TEST_F(ColorSpecialTest, readColor) {
 
 TEST_F(ColorSpecialTest, gray) {
 	std::istringstream iss("gray 0.2");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x333333));
 }
 
 
 TEST_F(ColorSpecialTest, rgb) {
 	std::istringstream iss("rgb 1 0 1");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0xff00ff));
 }
 
 
 TEST_F(ColorSpecialTest, hsb) {
 	std::istringstream iss("hsb 1 0.5 1");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0xff8080));
 }
 
 
 TEST_F(ColorSpecialTest, cmyk) {
 	std::istringstream iss("cmyk 0.1 0.2 0.4 0.6");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x5c523d));
 }
 
 
 TEST_F(ColorSpecialTest, stack1) {
 	std::istringstream iss("push rgb 1 0 0");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
 	iss.clear();
 	iss.str("push Blue");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x0000ff));
 	iss.clear();
 	iss.str("pop");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
 	iss.clear();
 	iss.str("pop");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x000000));
 }
 
 
 TEST_F(ColorSpecialTest, stack2) {
 	std::istringstream iss("push rgb 1 0 0");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0xff0000));
 	iss.clear();
 	iss.str("push rgb 0 1 0");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	iss.clear();
 	iss.str("gray 0.2");  // clear color stack implicitly
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x333333));
 	iss.clear();
 	iss.str("pop");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x000000));
 }
 
 
 TEST_F(ColorSpecialTest, constant) {
 	std::istringstream iss("RedViolet");
-	handler.process(0, iss, actions);
+	handler.process("", iss, actions);
 	EXPECT_TRUE(actions.equals(0x9600a8));
 }
 
 
 TEST_F(ColorSpecialTest, errors) {
 	std::istringstream iss("UnknownColor");
-	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
+	EXPECT_THROW(handler.process("", iss, actions), SpecialException);
 	iss.clear();
 	iss.str("blue");
-	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
+	EXPECT_THROW(handler.process("", iss, actions), SpecialException);
 	iss.clear();
 	iss.str("rgb black");
-	EXPECT_THROW(handler.process(0, iss, actions), SpecialException);
+	EXPECT_THROW(handler.process("", iss, actions), SpecialException);
 }
 

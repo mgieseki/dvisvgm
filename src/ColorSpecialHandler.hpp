@@ -31,7 +31,7 @@
 class ColorSpecialHandler : public SpecialHandler
 {
 	public:
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		static Color readColor (std::istream &is);
 		static Color readColor (const std::string &model, std::istream &is);
 		const char* name () const override {return "color";}

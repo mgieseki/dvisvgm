@@ -272,14 +272,14 @@ constexpr int cmd_id (const char *cmd) {
 };
 
 
-bool TpicSpecialHandler::process (const char *prefix, istream &is, SpecialActions &actions) {
-	if (!prefix || strlen(prefix) != 2)
+bool TpicSpecialHandler::process (const string &prefix, istream &is, SpecialActions &actions) {
+	if (prefix.length() != 2)
 		return false;
 	_dviColor = actions.getColor();
 	const double mi2bp=0.072; // factor for milli-inch to PS points
 	StreamInputBuffer ib(is);
 	BufferInputReader ir(ib);
-	switch (cmd_id(prefix)) {
+	switch (cmd_id(prefix.c_str())) {
 		case cmd_id("pn"): // set pen width in milli-inches
 			_penwidth = max(0.0, ir.getDouble()*mi2bp);
 			break;

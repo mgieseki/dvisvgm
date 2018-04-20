@@ -31,8 +31,8 @@ class PapersizeSpecialHandler : public SpecialHandler {
 	using PageSize = std::pair<unsigned,DoublePair>;   // page number -> (width, height)
 
 	public:
-		void preprocess (const char *prefix, std::istream &is, SpecialActions &actions) override;
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		const char* info () const override {return "special to set the page size";}
 		const char* name () const override {return "papersize";}
 		const std::vector<const char*> prefixes () const override;

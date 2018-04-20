@@ -26,7 +26,7 @@
 class NoPsSpecialHandler : public SpecialHandler {
 	public:
 		NoPsSpecialHandler () : _count(0) {}
-		bool process (const char *prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		const char* name () const override {return 0;}
 		const char* info () const override {return 0;}
 		const std::vector<const char*> prefixes () const override;

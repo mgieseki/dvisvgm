@@ -42,7 +42,7 @@ class EmSpecialHandler : public SpecialHandler {
 		const char* name () const override {return "em";}
 		const char* info () const override {return "line drawing statements of the emTeX special set";}
 		const std::vector<const char*> prefixes () const override;
-		bool process (const char *prefix, std::istream &in, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &in, SpecialActions &actions) override;
 
 	protected:
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;

@@ -26,7 +26,7 @@
 using namespace std;
 
 
-void HtmlSpecialHandler::preprocess (const char *, istream &is, SpecialActions &actions) {
+void HtmlSpecialHandler::preprocess (const string&, istream &is, SpecialActions &actions) {
 	StreamInputReader ir(is);
 	ir.skipSpace();
 	// collect page number and ID of named anchors
@@ -41,7 +41,7 @@ void HtmlSpecialHandler::preprocess (const char *, istream &is, SpecialActions &
 }
 
 
-bool HtmlSpecialHandler::process (const char *, istream &is, SpecialActions &actions) {
+bool HtmlSpecialHandler::process (const string&, istream &is, SpecialActions &actions) {
 	_active = true;
 	StreamInputReader ir(is);
 	ir.skipSpace();

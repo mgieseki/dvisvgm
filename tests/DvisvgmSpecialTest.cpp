@@ -83,12 +83,12 @@ TEST_F(DvisvgmSpecialTest, basic) {
 
 TEST_F(DvisvgmSpecialTest, raw) {
 	istringstream iss("raw first{?nl}");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals("first\n"));
 
 	iss.clear(); iss.str("raw \t second {?bbox dummy} \t");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals("first\nsecond 0 0 0 0"));
 }
@@ -96,12 +96,12 @@ TEST_F(DvisvgmSpecialTest, raw) {
 
 TEST_F(DvisvgmSpecialTest, rawdef) {
 	std::istringstream iss("rawdef first");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("first"));
 	EXPECT_TRUE(recorder.pageEquals(""));
 
 	iss.clear(); iss.str("rawdef \t second \t");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("firstsecond"));
 	EXPECT_TRUE(recorder.pageEquals(""));
 }
@@ -119,12 +119,12 @@ TEST_F(DvisvgmSpecialTest, pattern1) {
 	};
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.preprocess(0, iss, recorder);
+		handler.preprocess("", iss, recorder);
 	}
 	handler.finishPreprocessing();
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.process(0, iss, recorder);
+		handler.process("", iss, recorder);
 	}
 	handler.finishPage();
 	EXPECT_TRUE(recorder.defsEquals(""));
@@ -144,12 +144,12 @@ TEST_F(DvisvgmSpecialTest, pattern2) {
 	};
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.preprocess(0, iss, recorder);
+		handler.preprocess("", iss, recorder);
 	}
 	handler.finishPreprocessing();
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.process(0, iss, recorder);
+		handler.process("", iss, recorder);
 	}
 	handler.finishPage();
 	EXPECT_TRUE(recorder.defsEquals("firsttext1text2"));
@@ -170,12 +170,12 @@ TEST_F(DvisvgmSpecialTest, pattern3) {
 	};
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.preprocess(0, iss, recorder);
+		handler.preprocess("", iss, recorder);
 	}
 	handler.finishPreprocessing();
 	for (const char *cmd : cmds) {
 		std::istringstream iss(cmd);
-		handler.process(0, iss, recorder);
+		handler.process("", iss, recorder);
 	}
 	EXPECT_TRUE(recorder.defsEquals("firsttext2"));
 	EXPECT_TRUE(recorder.pageEquals("secondtext1text1"));
@@ -185,41 +185,41 @@ TEST_F(DvisvgmSpecialTest, pattern3) {
 
 TEST_F(DvisvgmSpecialTest, fail1) {
 	std::istringstream iss("rawset");  // pattern name missing
-	EXPECT_THROW(handler.preprocess(0, iss, recorder), SpecialException);
+	EXPECT_THROW(handler.preprocess("", iss, recorder), SpecialException);
 	handler.finishPreprocessing();
 }
 
 
 TEST_F(DvisvgmSpecialTest, fail2) {
 	std::istringstream iss("rawset pat");  // endrawset missing
-	handler.preprocess(0, iss, recorder);
+	handler.preprocess("", iss, recorder);
 	EXPECT_THROW(handler.finishPreprocessing(), SpecialException);
 }
 
 
 TEST_F(DvisvgmSpecialTest, processImg) {
 	std::istringstream iss("img 72.27 72.27 test.png");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;72&apos; width=&apos;72&apos; x=&apos;0&apos; xlink:href=&apos;test.png&apos; y=&apos;0&apos;/>"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("img 10bp 20bp test2.png");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;20&apos; width=&apos;10&apos; x=&apos;0&apos; xlink:href=&apos;test2.png&apos; y=&apos;0&apos;/>"));
 }
 
 
 TEST_F(DvisvgmSpecialTest, fail3) {
 	std::istringstream iss("img 10 20xy test.png");  // unknown unit
-	EXPECT_THROW(handler.process(0, iss, recorder), SpecialException);
+	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);
 }
 
 
 TEST_F(DvisvgmSpecialTest, processBBox) {
 	std::istringstream iss("bbox abs 0 0 72.27 72.27");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
 	EXPECT_TRUE(recorder.pageEquals(""));
 	EXPECT_TRUE(recorder.bboxEquals("0 0 72 72"));
@@ -227,30 +227,30 @@ TEST_F(DvisvgmSpecialTest, processBBox) {
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox 72.27 72.27");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox 72bp 72bp");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox rel 72.27 72.27");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox new name");
-	handler.process(0, iss, recorder);
+	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 0 0 0"));
 }
 
 
 TEST_F(DvisvgmSpecialTest, fail4) {
 	std::istringstream iss("bbox abs 0 0 72.27xx 72.27");  // unknown unit
-	EXPECT_THROW(handler.process(0, iss, recorder), SpecialException);
+	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);
 }
