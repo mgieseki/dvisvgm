@@ -248,7 +248,7 @@ static void print_version (bool extended) {
 		versionInfo.add("potrace", strchr(potrace_version(), ' '));
 		versionInfo.add("xxhash", XXH_versionNumber(), 3, 100);
 		versionInfo.add("zlib", zlibVersion());
-		versionInfo.add("Ghostscript", Ghostscript().revision(true), true);
+		versionInfo.add("Ghostscript", Ghostscript().revisionstr(), true);
 #ifndef DISABLE_WOFF
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
 		versionInfo.add("woff2", woff2::version, 3, 0x100);

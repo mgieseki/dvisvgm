@@ -37,8 +37,8 @@ TEST(GhostscriptTest, available2) {
 
 TEST(GhostscriptTest, revision) {
 	Ghostscript gs;
-	ASSERT_FALSE(gs.revision(true).empty());
-	ASSERT_FALSE(gs.revision(false).empty());
+	ASSERT_GT(gs.revision(), 0);
+	ASSERT_FALSE(gs.revisionstr().empty());
 }
 
 
