@@ -115,15 +115,14 @@ class PSInterpreter {
 	private:
 		Ghostscript _gs;
 		Mode _mode;                        ///< current execution mode
-		PSActions *_actions;               ///< actions to be performed
-		PSFilter *_filter;                 ///< active filter used to process PS code
-		size_t _bytesToRead;               ///< if > 0, maximal number of bytes to be processed by following calls of execute()
+		PSActions *_actions=nullptr;       ///< actions to be performed
+		PSFilter *_filter=nullptr;         ///< active filter used to process PS code
+		size_t _bytesToRead=0;             ///< if > 0, maximal number of bytes to be processed by following calls of execute()
 		std::vector<char> _linebuf;
 		std::string _errorMessage;         ///< text of error message
-		bool _inError;                     ///< true if scanning error message
-		bool _initialized;                 ///< true if PSInterpreter has been completely initialized
+		bool _inError=false;               ///< true if scanning error message
+		bool _initialized=false;           ///< true if PSInterpreter has been completely initialized
 		std::vector<std::string> _rawData; ///< raw data received
-		static const char *GSARGS[];       ///< parameters passed to Ghostscript
 		static const char *PSDEFS;         ///< initial PostScript definitions
 };
 

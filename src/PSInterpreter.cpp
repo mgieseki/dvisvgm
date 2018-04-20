@@ -33,29 +33,25 @@
 using namespace std;
 
 
-const char *PSInterpreter::GSARGS[] = {
-	"gs",                // dummy name
-	"-q",                // be quiet, suppress gs banner
-//	"-dSAFER",           // disallow writing of files
-	"-dNODISPLAY",       // we don't need a display device
-	"-dNOPAUSE",         // keep going
-	"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced
-	"-dNOPROMPT",
-//	"-dNOBIND",
-};
-
-
 /** Constructs a new PSInterpreter object.
  *  @param[in] actions template methods to be executed after recognizing the corresponding PS operator. */
 PSInterpreter::PSInterpreter (PSActions *actions)
-	: _mode(PS_NONE), _actions(actions), _filter(0), _bytesToRead(0), _inError(false), _initialized(false)
+	: _mode(PS_NONE), _actions(actions)
 {
 }
 
 
 void PSInterpreter::init () {
 	if (!_initialized) {
-		_gs.init(sizeof(GSARGS)/sizeof(char*), GSARGS, this);
+		vector<const char*> gsargs {
+			"gs",                // dummy name
+			"-q",                // be quiet, suppress gs banner
+			"-dNODISPLAY",       // we don't need a display device
+			"-dNOPAUSE",         // keep going
+			"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced
+			"-dNOPROMPT"
+		};
+		_gs.init(gsargs.size(), gsargs.data(), this);
 		_gs.set_stdio(input, output, error);
 		_initialized = true;
 		// Before executing any random PS code redefine some operators and run
