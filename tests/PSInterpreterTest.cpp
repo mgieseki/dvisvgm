@@ -117,11 +117,11 @@ TEST(PSInterpreterTest, stroke_fill) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath stroke ");
-	EXPECT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
+	EXPECT_EQ(actions.result(), "setrgbcolor 0 0 0;newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath fill ");
-	EXPECT_EQ(actions.result(), "newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
+	EXPECT_EQ(actions.result(), "setrgbcolor 0 0 0;newpath 1;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
 }
 
 

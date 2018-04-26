@@ -76,6 +76,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 	};
 
 	enum PsSection {PS_NONE, PS_HEADERS, PS_BODY};
+	enum class FileType {EPS, PDF};
 
 	public:
 		PsSpecialHandler ();
@@ -100,7 +101,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void moveToDVIPos ();
 		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
-		void psfile (const std::string &fname, const std::unordered_map<std::string,std::string> &attr);
+		void imgfile (FileType type, const std::string &fname, const std::unordered_map<std::string,std::string> &attr);
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path &path, bool evenodd);
 		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);

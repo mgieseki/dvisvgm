@@ -200,13 +200,13 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		executeAndSync(is, false);
 		_psi.execute("\n@endspecial ");
 	}
-	else if (prefix == "psfile=" || prefix == "PSfile=") {
+	else if (prefix == "psfile=" || prefix == "PSfile=" || prefix == "pdffile=") {
 		if (_actions) {
 			StreamInputReader in(is);
 			const string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
 			unordered_map<string,string> attr;
 			in.parseAttributes(attr);
-			psfile(fname, attr);
+			imgfile(prefix == "pdffile=" ? FileType::PDF : FileType::EPS, fname, attr);
 		}
 	}
 	else if (prefix == "ps::") {
@@ -260,32 +260,34 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 }
 
 
-/** Handles psfile special.
- *  @param[in] fname EPS file to be included
- *  @param[in] attr attributes given with \\special psfile */
-void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,string> &attr) {
+/** Handles psfile/pdffile specials.
+ *  @param[in] filetype type of file to process (EPS or PDF)
+ *  @param[in] fname EPS/PDF file to be included
+ *  @param[in] attr attributes given with psfile/pdffile special */
+void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const unordered_map<string,string> &attr) {
 	const char *filepath = FileFinder::instance().lookup(fname, false);
 	if (!filepath && FileSystem::exists(fname))
 		filepath = fname.c_str();
 	if (!filepath) {
-		Message::wstream(true) << "file '" << fname << "' not found in special 'psfile'\n";
+		Message::wstream(true) << "file '" << fname << "' not found\n";
 		return;
 	}
 	unordered_map<string,string>::const_iterator it;
 
-	// bounding box of EPS figure (lower left and upper right corner)
+	// bounding box of EPS figure in PS point units (lower left and upper right corner)
 	double llx = (it = attr.find("llx")) != attr.end() ? stod(it->second) : 0;
 	double lly = (it = attr.find("lly")) != attr.end() ? stod(it->second) : 0;
 	double urx = (it = attr.find("urx")) != attr.end() ? stod(it->second) : 0;
 	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
 
-	// desired width/height of resulting figure
+	// desired width/height of resulting figure in PS point units
 	double rwi = (it = attr.find("rwi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	double rhi = (it = attr.find("rhi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
 		return;
 
 	// user transformations (default values chosen according to dvips manual)
+	// order of transformations: rotate, scale, translate/offset
 	double hoffset = (it = attr.find("hoffset")) != attr.end() ? stod(it->second) : 0;
 	double voffset = (it = attr.find("voffset")) != attr.end() ? stod(it->second) : 0;
 //	double hsize   = (it = attr.find("hsize")) != attr.end() ? stod(it->second) : 612;
@@ -336,6 +338,8 @@ void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,s
 	);
 	if (!groupNode->empty()) {       // has anything been drawn?
 		Matrix matrix(1);
+		if (filetype == FileType::PDF)
+			matrix.translate(0, -lly).scale(1, -1).translate(0, lly);  // flip vertically
 		matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
 		matrix.translate(-llTrans);
 		matrix.scale(sx, sy);          // resize image to width "rwi" and height "rhi"
@@ -1263,6 +1267,7 @@ void PsSpecialHandler::ClippingStack::dup (int saveID) {
 vector<const char*> PsSpecialHandler::prefixes() const {
 	vector<const char*> pfx {
 		"header=",    // read and execute PS header file prior to the following PS statements
+		"pdffile=",   // process PDF file
 		"psfile=",    // read and execute PS file
 		"PSfile=",    // dito
 		"ps:",        // execute literal PS code wrapped by @beginspecial and @endspecial

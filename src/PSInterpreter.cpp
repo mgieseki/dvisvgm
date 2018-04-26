@@ -51,6 +51,8 @@ void PSInterpreter::init () {
 			"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced
 			"-dNOPROMPT"
 		};
+		if (int gsrev = _gs.revision())
+			gsargs.emplace_back(gsrev == 922 ? "-dREALLYDELAYBIND" : "-dDELAYBIND");
 		_gs.init(gsargs.size(), gsargs.data(), this);
 		_gs.set_stdio(input, output, error);
 		_initialized = true;
