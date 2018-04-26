@@ -260,7 +260,9 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 }
 
 
-/** Handles psfile/pdffile specials.
+/** Handles a psfile/pdffile special which places an external EPS/PDF graphic
+ *  at the current DVI position. The lower left corner (llx,lly) of the
+ *  given bounding box is placed at the DVI position.
  *  @param[in] filetype type of file to process (EPS or PDF)
  *  @param[in] fname EPS/PDF file to be included
  *  @param[in] attr attributes given with psfile/pdffile special */
@@ -280,7 +282,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	double urx = (it = attr.find("urx")) != attr.end() ? stod(it->second) : 0;
 	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
 
-	// desired width/height of resulting figure in PS point units
+	// desired width and height of the untransformed figure in PS point units
 	double rwi = (it = attr.find("rwi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	double rhi = (it = attr.find("rhi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	if (rwi == 0 || rhi == 0 || urx-llx == 0 || ury-lly == 0)
@@ -296,16 +298,9 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	double vscale  = (it = attr.find("vscale")) != attr.end() ? stod(it->second) : 100;
 	double angle   = (it = attr.find("angle")) != attr.end() ? stod(it->second) : 0;
 
-	Matrix m(1);
-	m.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
-	BoundingBox bbox(llx, lly, urx, ury);
-	bbox.transform(m);
-	if (bbox.width() == 0 || bbox.height() == 0)
-		return;
-
 	// compute factors to scale the bounding box to width rwi and height rhi
-	double sx = rwi/bbox.width();
-	double sy = rhi/bbox.height();
+	double sx = rwi/abs(llx-urx);
+	double sy = rhi/abs(lly-ury);
 	if (sx == 0 || sy == 0)
 		return;
 
@@ -314,36 +309,32 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	if (sx < 0) sx = sy = 1.0;   // neither rwi nor rhi set
 
 	// save current DVI position
-	const double x = _actions->getX();
-	const double y = _actions->getY();
+	double x = _actions->getX();
+	double y = _actions->getY();
 
 	// all following drawings are relative to (0,0)
 	_actions->setX(0);
 	_actions->setY(0);
 	moveToDVIPos();
 
-	// transform current DVI position and bounding box location
-	// according to current transformation matrix
-	DPair llTrans = _actions->getMatrix()*DPair(llx, -lly);
-	DPair urTrans = _actions->getMatrix()*DPair(urx, -ury);
-	DPair dviposTrans = _actions->getMatrix()*DPair(x, y);
-
 	auto groupNode = util::make_unique<XMLElementNode>("g");  // append following elements to this group
 	_xmlnode = groupNode.get();
 	_psi.execute(
 		"\n@beginspecial @setspecial"        // enter special environment
 		"/setpagedevice{@setpagedevice}def"  // activate processing of operator "setpagedevice"
+		"[1 0 0 -1 0 0] setmatrix"           // don't apply outer PS transformations
 		"(" + string(filepath) + ")run "     // execute file content
-		"\n@endspecial "                     // leave special environment
+		"@endspecial "                       // leave special environment
 	);
 	if (!groupNode->empty()) {       // has anything been drawn?
 		Matrix matrix(1);
 		if (filetype == FileType::PDF)
-			matrix.translate(0, -lly).scale(1, -1).translate(0, lly);  // flip vertically
-		matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
-		matrix.translate(-llTrans);
-		matrix.scale(sx, sy);          // resize image to width "rwi" and height "rhi"
-		matrix.translate(dviposTrans); // move image to current DVI position
+			matrix.translate(-llx, -lly).scale(1, -1); //.translate(0, lly);  // flip vertically
+		else
+			matrix.translate(-llx, lly);
+		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);
+		matrix.translate(x+hoffset, y-voffset); // move image to current DVI position
+		matrix.rmultiply(_actions->getMatrix());
 		if (!matrix.isIdentity())
 			groupNode->addAttribute("transform", matrix.getSVG());
 		_actions->appendToPage(std::move(groupNode));
@@ -356,10 +347,12 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	moveToDVIPos();
 
 	// update bounding box
-	m.scale(sx, -sy);
-	m.translate(dviposTrans);
-	bbox = BoundingBox(DPair(0, 0), abs(urTrans-llTrans));
-	bbox.transform(m);
+	BoundingBox bbox(0, 0, urx-llx, ury-lly);
+	Matrix matrix(1);
+	matrix.scale(sx, -sy).rotate(-angle).scale(hscale/100, vscale/100);
+	matrix.translate(x+hoffset, y-voffset);
+	matrix.rmultiply(_actions->getMatrix());
+	bbox.transform(matrix);
 	_actions->embed(bbox);
 }
 
