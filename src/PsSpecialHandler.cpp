@@ -328,12 +328,12 @@ void PsSpecialHandler::psfile (const string &fname, const unordered_map<string,s
 
 	auto groupNode = util::make_unique<XMLElementNode>("g");  // append following elements to this group
 	_xmlnode = groupNode.get();
-	_psi.execute("\n@beginspecial @setspecial /setpagedevice{@setpagedevice}def "); // enter \special environment
-	EPSFile epsfile(filepath);
-	_psi.limit(epsfile.pslength());  // limit the number of bytes going to be processed
-	_psi.execute(epsfile.istream()); // process EPS file
-	_psi.limit(0);                   // disable limitation
-	_psi.execute("\n@endspecial ");  // leave special environment
+	_psi.execute(
+		"\n@beginspecial @setspecial"        // enter special environment
+		"/setpagedevice{@setpagedevice}def"  // activate processing of operator "setpagedevice"
+		"(" + string(filepath) + ")run "     // execute file content
+		"\n@endspecial "                     // leave special environment
+	);
 	if (!groupNode->empty()) {       // has anything been drawn?
 		Matrix matrix(1);
 		matrix.rotate(angle).scale(hscale/100, vscale/100).translate(hoffset, voffset);
