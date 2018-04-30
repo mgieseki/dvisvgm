@@ -207,6 +207,7 @@
     <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
+    <ClCompile Include="..\src\ImageToSVG.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
@@ -216,7 +217,6 @@
     <ClCompile Include="..\src\EmSpecialHandler.cpp" />
     <ClCompile Include="..\src\EncFile.cpp" />
     <ClCompile Include="..\src\EPSFile.cpp" />
-    <ClCompile Include="..\src\EPSToSVG.cpp" />
     <ClCompile Include="..\src\ffwrapper.c" />
     <ClCompile Include="..\src\FileFinder.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</MultiProcessorCompilation>
@@ -319,6 +319,7 @@
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\CRC32.hpp" />
     <ClInclude Include="..\src\DependencyGraph.hpp" />
+    <ClInclude Include="..\src\ImageToSVG.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
