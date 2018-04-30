@@ -184,11 +184,15 @@ void CommandLine::help (ostream &os, int mode) const {
 	os << PROGRAM_NAME << ' '<< PROGRAM_VERSION << "\n\n";
 	os << _summary << "\n\n";
 	// print usage info
-	size_t start=0, pos=0;
 	string usage = _usage;
-	while ((pos = usage.find('\n', start)) != string::npos || start < usage.length()) {
-		os << (start == 0 ? "Usage: " : "       ") << PROGRAM_NAME << ' ' << usage.substr(start, pos) << '\n';
-		start = (pos != string::npos ? pos+1 : string::npos);
+	int count=0;
+	while (!usage.empty()) {
+		size_t pos = usage.find('\n');
+		os << (count++ == 0 ? "Usage: " : "       ") << PROGRAM_NAME << ' ' << usage.substr(0, pos) << '\n';
+		if (pos != string::npos)
+			usage = usage.substr(pos+1);
+		else
+			usage.clear();
 	}
 	if (mode > 0)
 		os << '\n';
@@ -197,6 +201,7 @@ void CommandLine::help (ostream &os, int mode) const {
 	unordered_map<Option*, pair<string,string>> linecols;
 	size_t col1width=0;
 	for (const OptSectPair &ospair : options()) {
+		size_t pos;
 		string line = ospair.first->helpline();
 		if ((pos = line.find('\t')) != string::npos) {
 			linecols.emplace(ospair.first, pair<string,string>(line.substr(0, pos), line.substr(pos+1)));
