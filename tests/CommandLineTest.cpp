@@ -66,7 +66,7 @@ TEST(CommandLineTest, arg_short) {
 	char **argv = const_cast<char**>(args);
 	cmd.parse(8, argv);
 
-	EXPECT_TRUE(cmd.progressOpt.given());
+	EXPECT_TRUE(cmd.pdfOpt.given());
 	EXPECT_DOUBLE_EQ(cmd.progressOpt.value(), 0.5);
 	EXPECT_TRUE(cmd.pageOpt.given());
 	EXPECT_EQ(cmd.pageOpt.value(), "5");

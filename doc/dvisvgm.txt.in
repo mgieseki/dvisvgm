@@ -32,7 +32,9 @@ Synopsis
 --------
 *dvisvgm* [ 'options' ] 'file' [.dvi]
 
-*dvisvgm* -E [ 'options' ] 'file' [.eps]
+*dvisvgm* --eps [ 'options' ] 'file' [.eps]
+
+*dvisvgm* --pdf [ 'options' ] 'file' [.pdf]
 
 
 Description
@@ -395,6 +397,13 @@ Please consider that the page values don't refer to the page numbers printed on 
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.
 
+*-P, --pdf*::
+If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
+it to SVG. In order to do so, a single 'pdffile' special command is created and forwarded to the
+PostScript special handler.
+This option is only available if dvisvgm was built with PostScript support enabled, and requires
+Ghostscript to be available. See option *--libgs* for further information.
+
 *-d, --precision*='digits'::
 Specifies the maximal number of decimal places applied to floating-point attribute values.
 All attribute values written to the generated SVG file(s) are rounded accordingly. The
@@ -402,7 +411,7 @@ parameter 'digits' accepts integer values from 0 to 6, where 0 enables the autom
 of significant decimal places. This is also the default value if dvisvgm is called without
 option *--precision*.
 
-*-P, --progress*[='delay']::
+*--progress*[='delay']::
 Enables a simple progress indicator shown when time-consuming operations like PostScript specials
 are processed. The indicator doesn't appear before the given delay (in seconds) has elapsed.
 The default delay value is 0.5 seconds.

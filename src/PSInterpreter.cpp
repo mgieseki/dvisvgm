@@ -263,6 +263,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"makepattern",    {-1, &PSActions::makepattern}},
 		{"moveto",         { 2, &PSActions::moveto}},
 		{"newpath",        { 1, &PSActions::newpath}},
+		{"pdfpagebox",     { 4, &PSActions::pdfpagebox}},
 		{"querypos",       { 2, &PSActions::querypos}},
 		{"raw",            {-1, nullptr}},
 		{"restore",        { 1, &PSActions::restore}},

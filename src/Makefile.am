@@ -153,6 +153,7 @@ libdvisvgm_a_SOURCES = \
 	PathClipper.hpp \
 	PDFParser.cpp \
 	PDFParser.hpp \
+	PDFToSVG.hpp \
 	PdfSpecialHandler.cpp \
 	PdfSpecialHandler.hpp \
 	PreScanDVIReader.cpp \

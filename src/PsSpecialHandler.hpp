@@ -128,6 +128,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void makepattern (std::vector<double> &p) override;
 		void moveto (std::vector<double> &p) override;
 		void newpath (std::vector<double> &p) override;
+		void pdfpagebox (std::vector<double> &p) override      {_pdfpagebox = BoundingBox(p[0], p[1], p[2], p[3]);}
 		void querypos (std::vector<double> &p) override        {_currentpoint = DPair(p[0], p[1]);}
 		void restore (std::vector<double> &p) override;
 		void rotate (std::vector<double> &p) override;
@@ -178,6 +179,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		ClippingStack _clipStack;
 		std::unordered_map<int, std::unique_ptr<PSPattern>> _patterns;
 		PSTilingPattern *_pattern;  ///< current pattern
+		BoundingBox _pdfpagebox;
 };
 
 #endif

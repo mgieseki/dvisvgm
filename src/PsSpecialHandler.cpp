@@ -282,6 +282,16 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	double urx = (it = attr.find("urx")) != attr.end() ? stod(it->second) : 0;
 	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
 
+	if (filetype == FileType::PDF && llx == 0 && lly == 0 && urx == 0 && ury == 0) {
+		_psi.execute("\n("+fname+")@getpdfpagebox ");
+		if (_pdfpagebox.valid()) {
+			llx = _pdfpagebox.minX();
+			lly = _pdfpagebox.minY();
+			urx = _pdfpagebox.maxX();
+			ury = _pdfpagebox.maxY();
+		}
+	}
+
 	// desired width and height of the untransformed figure in PS point units
 	double rwi = (it = attr.find("rwi")) != attr.end() ? stod(it->second)/10.0 : -1;
 	double rhi = (it = attr.find("rhi")) != attr.end() ? stod(it->second)/10.0 : -1;

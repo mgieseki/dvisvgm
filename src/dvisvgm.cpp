@@ -40,6 +40,7 @@
 #include "HyperlinkManager.hpp"
 #include "Message.hpp"
 #include "PageSize.hpp"
+#include "PDFToSVG.hpp"
 #include "PSInterpreter.hpp"
 #include "PsSpecialHandler.hpp"
 #include "SignalHandler.hpp"
@@ -69,11 +70,11 @@ static string remove_path (string fname) {
 }
 
 
-static string ensure_suffix (string fname, bool eps) {
+static string ensure_suffix (string fname, const string &suffix) {
 	if (!fname.empty()) {
 		size_t dotpos = remove_path(fname).rfind('.');
 		if (dotpos == string::npos)
-			fname += (eps ? ".eps" : ".dvi");
+			fname += "." + suffix;
 	}
 	return fname;
 }
@@ -352,7 +353,8 @@ int main (int argc, char *argv[]) {
 			throw MessageException("no input file given");
 
 		SignalHandler::instance().start();
-		string inputfile = ensure_suffix(cmdline.filenames()[0], cmdline.epsOpt.given());
+		string inputfile = ensure_suffix(cmdline.filenames()[0],
+			cmdline.epsOpt.given() ? "eps" : cmdline.pdfOpt.given() ? "pdf" : "dvi");
 		SourceInput srcin(inputfile);
 		if (!srcin.getInputStream(true))
 			throw MessageException("can't open file '" + srcin.getMessageFileName() + "' for reading");
@@ -362,9 +364,18 @@ int main (int argc, char *argv[]) {
 		SVGOutput out(cmdline.stdoutOpt.given() ? "" : srcin.getFileName(),
 			cmdline.outputOpt.value(),
 			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
-		if (cmdline.epsOpt.given()) {
-			EPSToSVG eps2svg(srcin.getFilePath(), out);
-			eps2svg.convert();
+		if (cmdline.epsOpt.given() || cmdline.pdfOpt.given()) {
+			auto img2svg = unique_ptr<ImageToSVG>(
+				cmdline.epsOpt.given()
+				? static_cast<ImageToSVG*>(new EPSToSVG(srcin.getFilePath(), out))
+				: static_cast<ImageToSVG*>(new PDFToSVG(srcin.getFilePath(), out)));
+			img2svg->convert();
+			Message::mstream().indent(0);
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
+		}
+		else if (cmdline.pdfOpt.given()) {
+			PDFToSVG pdf2svg(srcin.getFilePath(), out);
+			pdf2svg.convert();
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
 		}

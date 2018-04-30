@@ -607,5 +607,8 @@
     <ClInclude Include="..\src\ImageToSVG.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\PDFToSVG.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

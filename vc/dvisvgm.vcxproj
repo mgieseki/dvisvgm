@@ -320,6 +320,7 @@
     <ClInclude Include="..\src\CRC32.hpp" />
     <ClInclude Include="..\src\DependencyGraph.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
+    <ClInclude Include="..\src\PDFToSVG.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
