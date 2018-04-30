@@ -31,7 +31,7 @@ class EPSFile {
 		EPSFile (const std::string &fname);
 		std::istream& istream () const;
 		bool hasValidHeader () const {return _headerValid;}
-		bool bbox (BoundingBox &box) const;
+		BoundingBox bbox () const;
 		uint32_t pslength () const {return _pslength;}
 
 	private:

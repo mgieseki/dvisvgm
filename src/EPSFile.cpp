@@ -83,10 +83,10 @@ istream& EPSFile::istream () const {
 }
 
 
-/** Extracts the bounding box information from the DSC header/footer (if present)
- *  @param[out] box the extracted bounding box
- *  @return true if %%BoundingBox data could be read successfully */
-bool EPSFile::bbox (BoundingBox &box) const {
+/** Extracts the bounding box information from the DSC header/footer (if present).
+ *  @return the extracted bounding box */
+BoundingBox EPSFile::bbox () const {
+	BoundingBox box;
 	std::istream &is = EPSFile::istream();
 	if (is) {
 		char buf[64];
@@ -104,10 +104,10 @@ bool EPSFile::bbox (BoundingBox &box) const {
 						ir.parseInt(val[i]);
 					}
 					box = BoundingBox(val[0], val[1], val[2], val[3]);
-					return true;
+					break;
 				}
 			}
 		}
 	}
-	return false;
+	return box;
 }

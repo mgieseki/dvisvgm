@@ -43,8 +43,7 @@ void EPSToSVG::convert () {
 	if (!epsfile.hasValidHeader())
 		throw PSException("invalid EPS file");
 
-	BoundingBox bbox;
-	epsfile.bbox(bbox);
+	BoundingBox bbox = epsfile.bbox();
 	if (bbox.width() == 0 || bbox.height() == 0)
 		Message::wstream(true) << "bounding box of EPS file is empty\n";
 	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing EPS file\n";
