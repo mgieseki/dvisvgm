@@ -2,8 +2,8 @@ dvisvgm -- A DVI to SVG converter
 
 DESCRIPTION
 
- dvisvgm is a utility for TeX/LaTeX users. It converts DVI and EPS files to
- the XML-based scalable vector graphics format SVG.
+ dvisvgm is a utility for TeX/LaTeX users. It converts DVI, EPS, and
+ singe-page PDF files to the XML-based scalable vector graphics format SVG.
 
 
 DEPENDENCIES

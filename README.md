@@ -11,8 +11,9 @@ Description
 -----------
 
 _dvisvgm_ is a utility for TeX/LaTeX users. It converts
-[DVI](https://en.wikipedia.org/wiki/Device_independent_file_format) and
-[EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to the
+[DVI](https://en.wikipedia.org/wiki/Device_independent_file_format),
+[EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript), and
+[PDF](https://en.wikipedia.org/wiki/PDF) files to the
 XML-based scalable vector graphics format [SVG](https://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
@@ -27,6 +28,7 @@ Short overview of the main features:
 * _dvisvgm_ allows to replace [font elements](https://www.w3.org/TR/SVG/fonts.html) by [paths](https://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
+* Option `--pdf` allows to convert single-page [PDF](https://en.wikipedia.org/wiki/PDF) documents to SVG.
 * [Intersections of clipping paths](http://dvisvgm.bplaced.net/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
 * Approximates PostScript [color gradient fills](http://dvisvgm.bplaced.net/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.

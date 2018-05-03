@@ -1,3 +1,14 @@
+dvisvgm-2.4 (2018-05-03)
+- added special 'pdffile' similar to 'psfile' to embed PDF graphics
+- added option --pdf to convert single-page PDF documents to SVG
+- reassigned short option -P from --progress to --pdf
+- added option --stdin to receive input from stdin
+- option --stdout can now be combined with option --zip
+- added processing of GS operators '.setshapealpha' and '.setblendmode'
+- fixed outer transformations applied to psfile specials
+- fixed computation of bounding boxes triggered by psfile specials
+- several code refactorings
+
 dvisvgm-2.3.5 (2018-03-23)
 - added evaluation of PS operator 'setpagedevice' in psfile specials
 - fixed evaluation of dvips color names
