@@ -82,21 +82,6 @@ require an additional equals sign (+=+) between option name and argument but wit
 whitespace (e.g. +--verbosity=0+). Multiple short options that don't expect a further parameter can
 be combined after a single dash (e.g. +-ejs+ rather than +-e -j -s+).
 
-*-a, --trace-all*=['retrace']::
-This option forces dvisvgm to vectorize not only the glyphs actually required to render the
-SVG file correctly – which is the default –, but processes all glyphs of all fonts referenced in
-the DVI file. Because dvisvgm stores the tracing results in a font cache, all following conversions
-of these fonts will speed up significantly.
-The boolean option 'retrace' determines how to handle glyphs already stored in the cache.
-By default, these glyphs are skipped. Setting argument 'retrace' to 'yes' or 'true' forces dvisvgm
-to retrace the corresponding bitmaps again.
-+
-[NOTE]
-This option only takes effect if font caching is active. Therefore, *--trace-all* cannot be
-combined with option *--cache=none*.
-+
-
-
 *-b, --bbox*='fmt'::
 Sets the bounding box of the generated graphic to the specified format. The parameter 'fmt'
 takes either one of the format specifiers listed below, or a sequence of four comma- or
@@ -443,6 +428,20 @@ does not create this folder, so you must ensure that it actually exists before r
 +
 If the optional parameter 'path' is omitted, dvisvgm prints the location of the system's
 temp folder and exits.
+
+*-a, --trace-all*=['retrace']::
+This option forces dvisvgm to vectorize not only the glyphs actually required to render the
+SVG file correctly – which is the default –, but processes all glyphs of all fonts referenced in
+the DVI file. Because dvisvgm stores the tracing results in a font cache, all following conversions
+of these fonts will speed up significantly.
+The boolean option 'retrace' determines how to handle glyphs already stored in the cache.
+By default, these glyphs are skipped. Setting argument 'retrace' to 'yes' or 'true' forces dvisvgm
+to retrace the corresponding bitmaps again.
++
+[NOTE]
+This option only takes effect if font caching is active. Therefore, *--trace-all* cannot be
+combined with option *--cache=none*.
++
 
 *-T, --transform*='commands'::
 Applies a sequence of transformations to the SVG content. Each transformation is described
