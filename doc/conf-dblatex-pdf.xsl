@@ -49,4 +49,19 @@
 		</xsl:call-template>
 		<xsl:apply-templates/>
 	</xsl:template>
+
+	<!-- add named list items (e.g. command-line options, specials) to PDF bookmarks -->
+	<xsl:template match="refsect1/variablelist/varlistentry/term[emphasis]">
+		<xsl:text>\phantomsection\pdfbookmark[3]{</xsl:text>
+		<xsl:choose>
+			<xsl:when test="contains(emphasis, '--')">
+				<xsl:value-of select="concat('-{}-', substring-after(emphasis, '--'))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="emphasis"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:value-of select="concat('}{', generate-id(emphasis), '}&#10;')"/>
+		<xsl:apply-imports/>
+	</xsl:template>
 </xsl:stylesheet>
