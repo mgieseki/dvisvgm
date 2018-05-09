@@ -144,7 +144,7 @@ elements containing a 'clip-path' attribute.
 
 *--color*::
 Enables colorization of messages printed during the conversion process. The colors can be
-customized via the environment variable *DVISVGM_COLORS*. See the <<environment, Environment section>>
+customized via environment variable *DVISVGM_COLORS*. See the <<environment, Environment section>>
 below for further information.
 
 *--colornames*::
@@ -543,9 +543,9 @@ Creates a compressed SVG file with suffix .svgz. The optional argument specifies
 level. Valid values are in the range of 1 to 9 (default value is 9). Larger values cause better
 compression results but may take slightly more computation time.
 
-*-Z, --zoom*[='factor']::
-Multiplies the 'width' and 'height' attributes of the SVG root element by argument 'factor' while
-the coordinate system of the graphic content is retained. As a result, most SVG viewers zoom the
+*-Z, --zoom*='factor'::
+Multiplies the values of the 'width' and 'height' attributes of the SVG root element by argument 'factor'
+while the coordinate system of the graphic content is retained. As a result, most SVG viewers zoom the
 graphics accordingly. If a negative zoom factor is given, the 'width' and 'height' attributes are omitted.
 
 [[specials]]
