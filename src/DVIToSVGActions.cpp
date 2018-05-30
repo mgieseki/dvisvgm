@@ -280,7 +280,7 @@ BoundingBox& DVIToSVGActions::bbox(const string& name, bool reset) {
  *  a rotating dash. */
 void DVIToSVGActions::progress (const char *id) {
 	if (PROGRESSBAR_DELAY < 1000) {
-		static double time=0;
+		static double time=System::time();
 		// slow down updating the progress indicator to prevent flickering
 		if (System::time() - time > 0.1) {
 			progress(0, 0, id);

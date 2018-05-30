@@ -93,7 +93,7 @@ string ImageToSVG::getSVGFilename (unsigned pageno) const {
 
 
 void ImageToSVG::progress (const char *id) {
-	static double time=0;
+	static double time=System::time();
 	static bool draw=false; // show progress indicator?
 	static size_t count=0;
 	count++;
