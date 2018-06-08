@@ -50,58 +50,74 @@ static int fdclose (int fd) {return close(fd);}
 #endif
 
 
-SourceInput::~SourceInput () {
-	// remove temporary file created for reading from stdin
-	if (!_tmpfilepath.empty())
-		FileSystem::remove(_tmpfilepath);
-}
-
-
-/** Creates a temporary file in the configured tmp folder.
- *  @param[out] path path of the created file
- *  @return file descriptor (>= 0 on success) */
-static int create_tmp_file (string &path) {
-	path = FileSystem::tmpdir();
+/** Creates a new temporary file in the configured tmp folder.
+ *  If the object already holds an opened temporary file, it's closed
+ *  and removed before creating the new one.
+ *  @return true on success */
+bool TemporaryFile::create () {
+	if (opened())
+		close();
+	_path = FileSystem::tmpdir();
 #ifndef _WIN32
-	path += "stdinXXXXXX";
-	int fd = mkstemp(&path[0]);
+	_path += "stdinXXXXXX";
+	_fd = mkstemp(&_path[0]);
 #else
-	int fd = -1;
 	char fname[MAX_PATH];
-	std::replace(path.begin(), path.end(), '/', '\\');
-	if (GetTempFileName(path.c_str(), "stdin", 0, fname)) {
-		fd = _open(fname, _O_CREAT | _O_WRONLY | _O_BINARY, _S_IWRITE);
-		path = fname;
+	std::replace(_path.begin(), _path.end(), '/', '\\');
+	if (GetTempFileName(_path.c_str(), "stdin", 0, fname)) {
+		_fd = _open(fname, _O_CREAT | _O_WRONLY | _O_BINARY, _S_IWRITE);
+		_path = fname;
 	}
 #endif
-	return fd;
+	return opened();
 }
 
+
+/** Writes a sequence of characters to the file.
+ *  @param[in] buf buffer containing the characters to write
+ *  @param[in] len number of characters to write
+ *  @return true on success */
+bool TemporaryFile::write (const char *buf, size_t len) {
+	return opened() && fdwrite(_fd, buf, len) >= 0;
+}
+
+
+/** Closes and removes the temporary file.
+ *  @return true on success */
+bool TemporaryFile::close () {
+	bool ok = true;
+	if (opened()) {
+		ok = (fdclose(_fd) >= 0);
+		FileSystem::remove(_path);
+		_fd = -1;
+		_path.clear();
+	}
+	return ok;
+}
+
+////////////////////////////////////////////////////////////////
 
 istream& SourceInput::getInputStream (bool showMessages) {
 	if (!_ifs.is_open()) {
 		if (!_fname.empty())
 			_ifs.open(_fname, ios::binary);
 		else {
-			int fd = create_tmp_file(_tmpfilepath);
-			if (fd < 0)
-				throw MessageException("can't create temporary file for writing");
 #ifdef _WIN32
 			if (_setmode(_fileno(stdin), _O_BINARY) == -1)
 				throw MessageException("can't open stdin in binary mode");
 #endif
+			if (!_tmpfile.create())
+				throw MessageException("can't create temporary file for writing");
 			if (showMessages)
 				Message::mstream() << "reading from " << getMessageFileName() << '\n';
 			char buf[1024];
 			while (cin) {
 				cin.read(buf, 1024);
 				size_t count = cin.gcount();
-				if (fdwrite(fd, buf, count) < 0)
+				if (!_tmpfile.write(buf, count))
 					throw MessageException("failed to write data to temporary file");
 			}
-			if (fdclose(fd) < 0)
-				throw MessageException("failed to close temporary file");
-			_ifs.open(_tmpfilepath, ios::binary);
+			_ifs.open(_tmpfile.path(), ios::binary);
 		}
 	}
 	return _ifs;
@@ -119,5 +135,5 @@ string SourceInput::getMessageFileName () const {
 
 
 string SourceInput::getFilePath () const {
-	return _tmpfilepath.empty() ? _fname : _tmpfilepath;
+	return _tmpfile.path().empty() ? _fname : _tmpfile.path();
 }
