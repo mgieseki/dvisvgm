@@ -123,6 +123,9 @@ bool ReadCollectionFont(Buffer* file, const uint8_t* data, size_t len,
       (*all_tables)[table.offset] = font->FindTable(table.tag);
     } else {
       table.reuse_of = (*all_tables)[table.offset];
+      if (table.tag != table.reuse_of->tag) {
+        return FONT_COMPRESSION_FAILURE();
+      }
     }
 
   }
@@ -323,7 +326,7 @@ int NumGlyphs(const Font& font) {
     return 0;
   }
   int index_fmt = IndexFormat(font);
-  uint32_t loca_record_size = (index_fmt == 0 ? 2 : 4);
+  int loca_record_size = (index_fmt == 0 ? 2 : 4);
   if (loca_table->length < loca_record_size) {
     return 0;
   }
