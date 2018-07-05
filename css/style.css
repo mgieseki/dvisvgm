@@ -1,0 +1,187 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #2c3e50;
+}
+
+main {
+  flex: 1;
+}
+
+pre {
+   color: #2c3e50;
+   background-color: #ecf0f1;
+   border: 1px solid #cccccc;
+   padding: 10px;
+   margin-bottom: 0;
+   hyphens: none;
+}
+
+code {
+   hyphens: none;
+}
+
+*:not(pre) > code {
+	padding: 2px 4px;
+	color: #2c3e50;
+	background-color: #ecf0f1;
+	border-radius: 2px;
+}
+
+.sectionbody > .highlight + p {
+	margin-bottom: 10px;
+}
+
+a, a:hover {
+  outline: none;
+}
+
+p {
+   text-align: justify;
+   hyphens: auto;
+   margin-bottom: 0;
+}
+
+p + p {
+   margin-top: 1em;
+}
+
+dt {
+   margin-top: 1em;
+}
+
+dd {
+   padding-left: 2em;
+}
+
+.manpage h3 {
+   margin-top: 1em;
+}
+
+.text-center p {
+   text-align: inherit;
+}
+
+.description {
+   font-size: 18px;
+}
+
+.btn:focus,.btn:active,.page-link:focus {
+   outline: none !important;
+   box-shadow: none;
+}
+
+.hashbtn {
+   border-left: 1px solid white;
+	margin-left: 1px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.popover{
+    max-width: 100%;
+}
+
+header {
+  margin: 40px 0 0;
+  padding-bottom: 0;
+}
+
+footer .jumbotron {
+  margin-top: 20px;
+  margin-bottom: 0
+}
+
+footer a, footer a:hover {
+  color: white
+}
+
+.frame {
+	border: 1px solid #cccccc;
+	padding: 4px;
+	background-color: #f9f9f9;
+}
+
+.rfloat {
+	float: right;
+	margin-left: 0.5em;
+}
+
+.card-header {
+  font-size: 1.1em;
+  padding: 10px 15px;
+  margin-bottom: 0;
+}
+
+.card-body {
+  padding: 15px
+}
+
+.navbar {
+  padding: 0;
+  min-height: 40px;
+  margin-bottom: 20px;
+}
+
+#navbarNav .active > .nav-link {
+   color: white !important;
+   background-color: #1a242f;
+}
+
+.rsslink {
+   text-align: right;
+   margin-bottom: -10px;
+}
+
+.tex sub, .latex sub, .latex sup {
+	text-transform: uppercase;
+	top: 0em;
+}
+
+.tex sub, .latex sub {
+	vertical-align: -0.5ex;
+	margin-left: -0.1667em;
+	margin-right: -0.125em;
+}
+
+.tex, .latex, .tex sub, .latex sub {
+	font-size: 1em;
+}
+
+.latex sup {
+	font-size: 0.85em;
+	vertical-align: 0.15em;
+	margin-left: -0.36em;
+	margin-right: -0.15em;
+}
+
+.sample-img {
+	margin-top: 50px;
+   margin-bottom: 15px;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	-o-transition: all .2s ease-in-out;
+	-ms-transition: all .2s ease-in-out;
+}
+
+.sample-img-news {
+	border: 1pt solid black;
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+
+.zoomed {
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.pagination {
+   margin-top: 5px;
+}
+
+.ellipsis .page-link:hover {
+   background-color: #2C3E50;
+}

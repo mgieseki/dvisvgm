@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: Frequently Asked Questions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  active dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item  active" href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>Frequently Asked Questions</h2>
+      <h4>Here you find answers to a couple of questions that have frequently been asked in the past</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      I converted a simple math formula but get garbage when displaying the SVG. What’s wrong?
+    </div>
+    <div class="card-body"><p>The generated SVG is most likely valid but your SVG viewer/editor probably doesn’t support embedded fonts.
+Actually, only few SVG renderers, e.g. <a href="http://xmlgraphics.apache.org/batik">Apache Batik</a> and the
+<a href="http://www.opera.com">Opera web browser</a> evaluate embedded fonts properly (also see the
+<a href="/Screenshots/">screenshots</a>).
+You can run <em>dvisvgm</em> with option <code>--no-fonts</code> to replace the fonts with <a href="https://w3.org/TR/SVG/paths.html">path elements</a>.
+Most viewers should render the resulting SVG files correctly. As a drawback, you get bigger files, and the information
+about the text (characters, baselines, &hellip;) gets lost.</p>
+
+<p>As of version 2.0, <em>dvisvgm</em> provides the command-line option <code>--font-format</code> that allows to change the format
+used for embedded fonts from SVG to WOFF, WOFF2 or TrueType. If you call dvisvgm with option <code>--font-format=woff</code>,
+you should get SVG files that render correctly in almost all recent web browsers. Moreover, and in contrast to
+option <code>--no-fonts</code>, all text properties are retained.</p>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      The bounding box of the generated SVG is too small so that some characters are clipped. What can I do?
+    </div>
+    <div class="card-body"><p>Run <em>dvisvgm</em> with option <code>--exact</code>. By default, <em>dvisvgm</em> uses the character dimensions (height, depth, width,
+italic correction, etc.) stored in a font’s <a href="http://en.wikipedia.org/wiki/TeX_font_metric">TFM file</a> to compute
+the bounding boxes. However, as the TFM bounds are optimized for TeX’s character positioning, and as the actual
+glyphs may exceed their TFM bounds, clipped SVG files are the result. Option <code>--exact</code> tells <em>dvisvgm</em> to analyze
+each glyph and to compute the exact bounding rectangle.</p>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      Why do I get warnings like <em>can’t embed font &lsquo;FOO</em>&rsquo;?
+    </div>
+    <div class="card-body"><p>There are several reasons that could cause these warnings, e.g.:</p>
+
+<ul>
+<li>The DVI file was generated on a different computer where the mentioned font was available, but in the
+current <span class="tex">T<sub>E</sub>X</span>
+ environment it’s not.</li>
+<li>The DVI file was generated by Lua<span class="tex">T<sub>E</sub>X</span>
+ which uses an extended syntax to reference fonts in a DVI file.
+<em>dvisvgm</em> doesn’t support Lua<span class="tex">T<sub>E</sub>X</span>
+ yet. In this case you get warnings like <code>WARNING: can’t embed font 'name:LinuxLibertineO'</code>.</li>
+</ul>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      Even if I call <em>dvisvgm</em> with option <code>-n</code>, the results of some files look wrong. What can I do?
+    </div>
+    <div class="card-body"><p>Perhaps you run <em>dvisvgm</em> with PostScript support disabled. See below how to check this and how you can
+enable the processing of PostScript specials.</p>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      Why is <em>dvisvgm’s</em> PostScript support disabled on my machine?
+    </div>
+    <div class="card-body"><p><em>dvisvgm</em> requires access to the <a href="https://ghostscript.com">Ghostscript</a> library in order to process
+<a href="https://tug.org/texinfohtml/dvips.html#Interaction-with-PostScript">PostScript specials</a>. In contrast to the
+other third-party libraries needed to build <em>dvisvgm</em> (which are always linked directly), Ghostscript can be
+attached to <em>dvisvgm</em> in three different ways:</p>
+
+<ul>
+<li>direct linkage of <em>libgs.so</em> or <em>libgs.a</em> during build time</li>
+<li>no direct linkage but dynamic lookup of the Ghostscript library and its functions during runtime via <code>dlopen()</code></li>
+<li>no Ghostscript support at all</li>
+</ul>
+
+<p>Depending on the configuration options, the <em>dvisvgm</em> binary can be built in three different flavors.
+You can determine the variant used to build your binary by checking the output of <code>dvisvgm -h</code> and <code>dvisvgm -l</code>:</p>
+
+<ol>
+<li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> but <code>dvisvgm -l</code> lists entry <em>ps</em>
+
+<ul>
+<li><em>libgs</em> was linked during build time.</li>
+<li>PostScript support is always enabled.</li>
+</ul></li>
+<li><code>dvisvgm -h</code> lists option <code>--libgs</code>
+
+<ul>
+<li>PostScript support was enabled but the Ghostscript library must be looked up during runtime.</li>
+<li>If <code>dvisvgm -l</code> doesn’t show entry <em>ps</em>, verify whether the directory containing libgs.so (Linux), gsdll32.dll
+(Windows, <em>dvisvgm</em> 32 bit binary), or gsdll64.dll (Windows, <em>dvisvgm</em> 64 bit binary) is present in the library or
+program search path, respectively. On Windows, check environment variable <code>PATH</code>.</li>
+<li>If you want <em>dvisvgm</em> to look for a different filename, e.g. libgs.so.9, set environment variable <code>LIBGS</code> or call
+<em>dvisvgm</em> with option <code>--libgs</code>.</li>
+<li>Alternatively, assign the path of the Ghostscript library to environment variable <code>LIBGS</code>, e.g. with
+<code>LIBGS=/usr/lib/libgs.so</code> (Linux), or <code>set LIBGS=c:\gs\gs9.06\bin\gsdll32.dll</code> (Windows)</li>
+</ul></li>
+<li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> and <code>dvisvgm -l</code> doesn’t list entry <em>ps</em>
+
+<ul>
+<li><em>dvisvgm</em> was built without PostScript support. There’s no way to activate it. Try to get a binary with PS support enabled.</li>
+</ul></li>
+</ol>
+
+<p>The latest versions of <em>dvisvgm</em> print one of the following warnings if PostScript support is disabled:</p>
+
+<ul>
+<li><code>processing of PostScript specials is disabled (Ghostscript not found)</code>
+
+<ul>
+<li>tell <em>dvisvgm</em> where to find the Ghostscript library (see above)</li>
+</ul></li>
+<li><code>processing of PostScript specials has been disabled permanently</code>
+
+<ul>
+<li><em>dvisvgm</em> was built without PostScript support</li>
+</ul></li>
+</ul>
+
+<div class="row align-items-top">
+  <div class="col-md-6">
+  <p><strong>Output of <code>dvisvgm -l</code> showing entry <em>ps</em>:</strong></p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -l
+bgcolor    background color special
+color      complete support of color specials
+dvisvgm    special set for embedding raw SVG snippets
+em         line drawing statements of the emTeX special set
+html       hyperref specials
+papersize  special to set the page size
+pdf        PDF hyperlink, font map, and pagesize specials
+ps         dvips PostScript specials
+tpic       TPIC specials</code></pre></div>
+</div>
+
+<div class="col-md-6">
+  <p><strong>Also, option <code>-V1</code> lists <em>Ghostscript</em> if it’s found:</strong></p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -V1
+dvisvgm 2.4 (x86_64-pc-win64)
+-----------------------------
+brotli:      1.0.4
+clipper:     6.2.1
+fontforge:   20160721
+freetype:    2.9.1
+Ghostscript: 9.23
+MiKTeX:      2.9
+potrace:     1.15
+ttfautohint: 1.8.1
+woff2:       1.0.2
+xxhash:      0.6.5
+zlib:        1.2.11</code></pre></div>
+</div>
+</div>
+
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      How do I enable PostScript support on a Windows computer?
+    </div>
+    <div class="card-body"><ul>
+<li>Download and install <a href="https://ghostscript.com/download/gsdnld.html">Ghostscript</a>. The 32-bit version of
+<em>dvisvgm</em> requires the 32-bit version of Ghostscript, the 64-bit <em>dvisvgm</em> requires the 64-bit Ghostscript.</li>
+<li>As of version 1.9, <em>dvisvgm</em> should find the location of the Ghostscript DLL automatically.
+If it does not, proceed with the following steps.</li>
+<li>Look up the Ghostscript directory that contains the Ghostscript DLL <code>gsdll32.dll</code> or <code>gsdll64.dll</code>
+(usually something like <code>c:\program files\gs\gs9.23\bin</code>).</li>
+<li>Tell <em>dvisvgm</em> where to find the Ghostscript DLL. There are several alternatives to do that:
+
+<ul>
+<li>Add the path of the Ghostscript <code>bin</code> directory to environment variable PATH, e.g. with
+<code>PATH=%PATH%;&quot;c:\program files\gs\gs9.23\bin&quot;</code>. See <a href="https://java.com/en/download/help/path.xml">here</a>
+for more information on how to set the PATH variable permanently.</li>
+<li>Assign the location of the Ghostscript DLL to the environment variable LIBGS, e.g. with<br />
+<code>set LIBGS=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot;</code>.</li>
+<li>Use the command-line option <code>--libgs</code> to tell <em>dvisvgm</em> where the GS DLL is located, e.g.<br />
+<code>dvisvgm --libgs=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot; ...</code></li>
+</ul></li>
+</ul>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      What does the error <em>MiKTeX session could not be initialized</em> mean?
+    </div>
+    <div class="card-body"><p>The <em>dvisvgm</em> binaries built for <a href="https://miktex.org">MiKTeX</a> try to call some MiKTeX functions
+(e.g. those to lookup files) through the COM interface. If it’s not possible to create or access
+the MiKTeX COM object, <em>dvisvgm</em> can’t proceed and therefore aborts with the error message
+<em>MiKTeX session could not be initialized</em>. There are several reasons why the session access fails:</p>
+
+<ul>
+<li>MiKTeX isn’t installed on the computer.</li>
+<li>You use the <a href="https://miktex.org/portable">MiKTeX Portable edition</a>. Portable applications don’t
+touch the Windows registry and thus don’t register any COM objects either. Therefore, it’s not possible
+to use the external <em>dvisvgm</em> binaries together with MiKTeX Portable. Instead, install the <em>dvisvgm</em>
+package provided by MiKTeX.</li>
+<li>The registration of the COM object failed or was skipped during the installation of MiKTeX for some reason.
+You can try to register the components manually as described <a href="http://sourceforge.net/p/miktex/bugs/2376">here</a>
+(thanks to Ulrike Fischer and Christian Schenk). Run the following commands with administrator privileges:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">regsvr32 MiKTeX209-core-PS.dll
+regsvr32 MiKTeX209-core.dll
+regsvr32 MiKTeX209-packagemanager-PS.dll
+regsvr32 MiKTeX209-packagemanager.dll</code></pre></div>
+</div></li>
+</ul>
+</div>
+  </section>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">
+      DVI files containing PostScript code are not converted properly. Are you going to fix this?
+    </div>
+    <div class="card-body">
+
+<p>PostScript is a pretty complex language and its interaction with the DVI operations is rather tricky,
+especially, if plain PostScript snippets are supposed to change the current graphic position or the current font.</p>
+
+<ul>
+<li>Defining and/or changing fonts via PostScript is not supported yet.</li>
+<li><a href="/docs/gradients/">Shading/gradient fills</a> are implemented partially. Function-based (type 1),
+axial (type 2), and radial (type 3) shadings are not supported yet.</li>
+</ul>
+
+<h4 id="clipping-issues">Clipping issues</h4>
+
+<p>The SVG standard allows to define <a href="/docs/clipping/">clipping paths by intersection</a> like so:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define a rectangular clipping path --&gt;</span>
+<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
+  <span style="color:#ff79c6">&lt;rect</span> <span style="color:#50fa7b">x=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">y=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">width=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">height=</span><span style="color:#f1fa8c">&#34;50&#34;</span><span style="color:#ff79c6">/&gt;</span>
+<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+
+<span style="color:#6272a4">&lt;!-- define another clipping path by intersecting the rectangle with a circle --&gt;</span>
+<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(#clip1)&#34;</span><span style="color:#ff79c6">&gt;</span>
+  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;20&#34;</span><span style="color:#ff79c6">/&gt;</span>
+<span style="color:#ff79c6">&lt;/clipPath&gt;</span></code></pre></div>
+</div></p>
+
+<p>While clipping path <em>clip1</em> is the outline of a square, <em>clip2</em> is defined as the intersection of the square
+with a circle at the given position. Thus, we get a quadrant here. All subsequent operations restricted to <em>clip2</em>
+should produce visible results only inside the quadrant. Unfortunately, some SVG viewers render these intersections
+improperly. Since <em>dvisvgm</em> creates SVG files containing this kind of path intersections by default, the results
+might look wrong. To avoid this, <em>dvisvgm</em> offers the option <code>--clipjoin</code> which tells <em>dvisvgm</em> to compute the
+intersections directly and not to delegate this task to the SVG viewer. More detailed information can be found
+<a href="/docs/clipping/">here</a>.</p>
+
+<p>The following images show the rendering results of the same SVG file opened in several applications.
+The SVG was generated without option <code>--clipjoin</code> from
+<a href="https://texample.net/tikz/examples/focused-ion-beam-system">this TikZ example</a>.</p>
+
+<div class="row align-items-center">
+  <div class="col-md-3">
+  <div class="container">
+  <div class="row justify-content-center">
+    <a href="images/ion-opera.png" data-toggle="lightbox" data-title="Firefox, Opera, and IE">
+      <img src="images/ion-opera-sm.png" class="img-fluid">
+    </a>
+  </div>
+  <div class="row justify-content-center">Firefox, Opera, and IE</div>
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="container">
+  <div class="row justify-content-center">
+    <a href="images/ion-chrome.png" data-toggle="lightbox" data-title="Google Chrome">
+      <img src="images/ion-chrome-sm.png" class="img-fluid">
+    </a>
+  </div>
+  <div class="row justify-content-center">Google Chrome</div>
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="container">
+  <div class="row justify-content-center">
+    <a href="images/ion-batik.png" data-toggle="lightbox" data-title="Apache Batik">
+      <img src="images/ion-batik-sm.png" class="img-fluid">
+    </a>
+  </div>
+  <div class="row justify-content-center">Apache Batik</div>
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="container">
+  <div class="row justify-content-center">
+    <a href="images/ion-inkscape.png" data-toggle="lightbox" data-title="Inkscape">
+      <img src="images/ion-inkscape-sm.png" class="img-fluid">
+    </a>
+  </div>
+  <div class="row justify-content-center">Inkscape</div>
+</div>
+</div>
+</div>
+
+</div>
+  </section>
+  </div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

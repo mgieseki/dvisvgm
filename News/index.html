@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item  active">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>News</h2>
+      <h4>Information on new releases and related topics</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        <p class="rsslink">
+    <a href="/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
+  </p>
+  <a name="4d81ee4151a938fdddc3350841a015a8"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">3 May 2018: dvisvgm 2.4 has been released</div>
+    <div class="card-body">
+      <p>This feature release brings the following additions/changes:</p>
+
+<ul>
+<li>Added special <code>pdffile</code> similar to <code>psfile</code> to embed PDF graphics.</li>
+
+<li><p>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm --pdf -d2 helix.pdf
+processing PDF file
+  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   
+  output written to helix.svg
+file converted in 1.61882 seconds</code></pre></div>
+</div></p></li>
+
+<li><p>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</p></li>
+
+<li><p>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -d2 - &lt; frktest.dvi
+reading from &lt;stdin&gt;
+pre-processing DVI file (format version 2)
+processing page 1
+  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)
+  output written to stdin.svg
+1 of 1 page converted in 0.0790408 seconds</code></pre></div>
+</div></p></li>
+
+<li><p>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</p></li>
+
+<li><p>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
+conversion of more transparency parameters, e.g.:<br />
+<img src="/News/images/blendmodes.png" alt="blend modes" /></p></li>
+
+<li><p>Fixed outer transformations applied to <code>psfile</code> specials.</p></li>
+
+<li><p>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</p></li>
+
+<li><p>Several code refactorings.</p></li>
+</ul>
+</div>
+  </section><a name="5e2b7cf659069c04c85da933ee354fb8"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">23 March 2018: dvisvgm 2.3.5 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
+This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
+allowed according to the EPS specification.</li>
+<li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
+<li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
+</ul>
+</div>
+  </section><a name="249be2db725733a95e407b5205cd681e"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">14 March 2018: dvisvgm 2.3.4 has been released</div>
+    <div class="card-body">
+      <p>This is another maintenance release with the following changes:</p>
+
+<ul>
+<li>Fixed an error message printed when addding a single dash on the command-line.</li>
+<li>Added a missing data file that lead to failing tests (<a href="https://github.com/mgieseki/dvisvgm/issues/87">issue #87</a>).</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.3.</li>
+<li>Some code refactorings.</li>
+</ul>
+</div>
+  </section><a name="f1ffcf572990bc1886759b4ec37dc33f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 February 2018: dvisvgm 2.3.3 has been released</div>
+    <div class="card-body">
+      <p>This is a minor maintenance release with the following changes:</p>
+
+<ul>
+<li>Fixed a wrong behavior when requiring both default mapfiles and <code>pdf:mapline</code> or <code>pdf:mapfile</code> specials.</li>
+<li>Fixed an exception thrown in rare cases of unavailable font files.</li>
+</ul>
+</div>
+  </section><a name="23716e14524e4f885fe665d88cc8b079"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 February 2018: dvisvgm 2.3.2 has been released</div>
+    <div class="card-body">
+      <p>This is a minor maintenance release with the following changes:</p>
+
+<ul>
+<li>Prevent the creation of redundant <a href="https://www.w3.org/TR/SVG/text.html#TSpanElement"><code>tspan</code></a> elements.</li>
+<li>Added support for the new JFM specification introduced in <a href="https://www.tug.org/svn/texlive?view=revision&amp;revision=46452">TeX Live r46452</a>
+(patch by Hironobu Yamashita).</li>
+<li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
+<li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
+</ul>
+</div>
+  </section>
+  <nav><ul class="pagination pagination-sm">
+    <li class="page-item disabled">
+      <a class="page-link" href="/News/" aria-label="First"><span aria-hidden="true"><i class="fa fa-fast-backward"></i></span></a>
+    </li>
+    <li class="page-item disabled">
+      <a class="page-link" href="" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-step-backward"></i></span></a>
+    </li>
+    <li class="page-item active"><a class="page-link" href="/News/">1</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
+    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
+    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li><li class="page-item">
+      <a class="page-link" href="/News/page/2/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/9/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+    </li>
+    </ul>
+</nav></div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

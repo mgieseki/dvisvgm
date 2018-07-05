@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item  active">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>News</h2>
+      <h4>Information on new releases and related topics</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        <p class="rsslink">
+    <a href="/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
+  </p>
+  <a name="37a6f66efadbceebf2acfdbd6d9cde63"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">28 December 2015: dvisvgm 1.14 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following additions/changes:</p>
+
+<ul>
+<li>Added evaluation of PSTricks specials <code>pst:</code> and <code>PST:</code>.</li>
+<li>The bounding box data created by the <a href="https://www.ctan.org/pkg/preview">preview package</a>
+is now adapted to create a tight box by default.</li>
+<li>Added option <code>--bbox=preview</code> to apply the unmodified bounding box data created by the preview package.</li>
+<li>Improved lookup of files located in the current working directory.</li>
+<li>Fixed a memory issue related to graphics paths.</li>
+<li>Improved extraction of kapathsea version number.</li>
+<li>Minor code and test improvements.</li>
+</ul>
+</div>
+  </section><a name="47fa84d80b6d9d419a81b24afad3cb79"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 December 2015: dvisvgm 1.13 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following additions/changes:</p>
+
+<ul>
+<li>Evaluation of PS operators <code>ashow</code>, <code>awidthshow</code>, and <code>widthshow</code> has been added
+(fixes GH <a href="https://github.com/mgieseki/dvisvgm/issues/49">issue #49</a>).</li>
+<li>The conversion of fonts referenced by PS code to graphics paths has been improved.</li>
+<li>Redundant <code>moveto</code> commands are now removed from paths.</li>
+<li>An issue concerning evaluation of PS operator <code>setcolor</code> has been fixed.</li>
+<li>Fixed output of PS error messages shown when converting EPS files.</li>
+<li>Updated the bundled <a href="https://cyan4973.github.io/xxHash">xxHash library</a> to revision 42.</li>
+<li>Minor code refactorings and cleanup.</li>
+</ul>
+</div>
+  </section><a name="790a189b0fce83826fc91e2a5269aaa2"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">18 November 2015: dvisvgm 1.12 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
+<li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
+<li>A memory issue that could occur when running Metafont has been fixed.</li>
+</ul>
+</div>
+  </section><a name="73d45e4c52912212028ec9af6199cb03"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>The mapping of unknown characters to Unicode has been improved.</li>
+<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
+<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
+<li><code>xlink:title</code> attributes are now properly quoted.</li>
+</ul>
+</div>
+  </section><a name="090b91eafab646e154446d2a10dafea2"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">15 July 2015: dvisvgm 1.10 has been released</div>
+    <div class="card-body">
+      <p>This is a small feature release with the following additions/changes:</p>
+
+<ul>
+<li>Support for the new XDV format 6 introduced by XeTeX 0.99992 has been added.</li>
+<li>The mapping of PostScript character names to Unicode points has been improved.</li>
+</ul>
+</div>
+  </section>
+  <nav><ul class="pagination pagination-sm">
+    <li class="page-item">
+      <a class="page-link" href="/News/" aria-label="First"><span aria-hidden="true"><i class="fa fa-fast-backward"></i></span></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/5/" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-step-backward"></i></span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="/News/">1</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
+    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
+    <li class="page-item"><a class="page-link" href="/News/page/5/">5</a></li>
+    <li class="page-item active"><a class="page-link" href="/News/page/6/">6</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li>
+    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
+    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li><li class="page-item">
+      <a class="page-link" href="/News/page/7/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/9/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+    </li>
+    </ul>
+</nav></div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

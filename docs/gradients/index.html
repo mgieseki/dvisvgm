@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: Color Gradient Fills</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>Color Gradient Fills</h2>
+      <h4>Information on dvisvgm’s approximation of PostScript shading fills</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        
+<p>The current SVG standard 1.1 provides elements to define linear and radial
+<a href="https://w3.org/Graphics/SVG/1.1/pservers.html#Gradients">gradients</a> which allow to fill
+a region with a smooth transition of colors along a specified vector. In comparison to the
+PostScript language, these gradient variants are rather limited. PostScript supports seven
+different types of gradients including function-based shadings, Gouraud-shaded triangle meshes,
+and tensor-product patch meshes. Therefore, it’s not possible to map complex gradient definitions
+present in EPS files or PostScript specials to native SVG 1.1 constructs.</p>
+
+<p>In order to realize these gradients in SVG, <em>dvisvgm</em> approximates them by filling the specified
+area with small monochromatic segments like in the following tensor-product and triangular patch
+examples with 10 and 30 segments per row, respectively:
+<div class="row align-items-center">
+  <div class="col-md-3">
+  <a href="../images/tp1.svgz"><img src="../images/tp1.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/tp2.svgz"><img src="../images/tp2.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/trp1.svgz"><img src="../images/trp1.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/trp2.svgz"><img src="../images/trp2.png" class="img-fluid"></a></div>
+</div>
+
+The number of segments can be changed with option <code>--grad-segments</code> which defaults to 20. Increasing
+the number leads to better, more realistic results but also increases the size of the SVG file as each
+segment must be represented by a separate <a href="https://w3.org/TR/SVG/paths.html#PathElement">path element</a>.</p>
+
+<p>As you can see in the above examples, there are small visible white gaps between adjacent segments
+although they touch seamlessly. This effect results from the anti-aliasing applied by the SVG renderer
+to produce smooth segment contours which usually takes the background color into account. Option
+<code>--grad-overlap</code> allows to remove the gaps. It tells <em>dvisvgm</em> to create bigger, overlapping segments
+that extent into the region of their right and bottom neighbors. Since the latter are drawn on top of
+the overlapping parts, the visible size of all segments keeps unchanged. The results look like these:
+<div class="row align-items-center">
+  <div class="col-md-3">
+  <a href="../images/tp3.svgz"><img src="../images/tp3.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/tp4.svgz"><img src="../images/tp4.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/trp3.svgz"><img src="../images/trp3.png" class="img-fluid"></a></div>
+
+<div class="col-md-3">
+  <a href="../images/trp4.svgz"><img src="../images/trp4.png" class="img-fluid"></a></div>
+</div>
+</p>
+
+<p>The recent version of <em>dvisvgm</em> supports the following types of PostScript gradient/shading types:</p>
+
+<ul>
+<li>free-form Gouraud-shaded triangle meshes (type 4)</li>
+<li>lattice-form Gouraud-shaded triangle meshes (type 5)</li>
+<li>Coons patch meshes (type 6)</li>
+<li>tensor-product patch meshes (type 7)</li>
+</ul>
+
+</div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

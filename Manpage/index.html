@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: Manual Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  active dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item  active" href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>Manual Page</h2>
+      <h4>Brief documentation of <em>dvisvgm</em></h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        
+<section id="_name" class="manpage"><h3 style="display:inline">
+<i class="fa fa-tag fa-fw"></i> Name</h3><div class="rfloat frame">
+   <a href="dvisvgm.epub"><i class="fa fa-book"></i> EPUB version</a>
+</div>
+<div class="rfloat frame">
+   <a href="dvisvgm.pdf"><i class="fa fa-file-pdf-o"></i> PDF version</a>
+</div>
+
+
+<div class="sectionbody">dvisvgm – converts DVI and EPS files to the XML-based SVG format</div></section><span class="linktarget" id="_synopsis"></span><section class="manpage"><h3>
+<i class="fa fa-terminal fa-fw"></i> Synopsis</h3>
+<div class="sectionbody">
+<p><strong>dvisvgm</strong> [ <em>options</em> ] <em>file</em> [.dvi]</p>
+<p><strong>dvisvgm</strong> --eps [ <em>options</em> ] <em>file</em> [.eps]</p>
+<p><strong>dvisvgm</strong> --pdf [ <em>options</em> ] <em>file</em> [.pdf]</p>
+</div></section><span class="linktarget" id="_description"></span><section class="manpage"><h3>
+<i class="fa fa-info-circle fa-fw"></i> Description</h3>
+<div class="sectionbody">
+<p>The command-line utility <strong>dvisvgm</strong> converts DVI files, as generated by TeX/LaTeX, to the
+XML-based scalable vector graphics format SVG. It supports the classic DVI version 2 as
+well as version 3 (created by pTeX in vertical mode), and the XeTeX versions 5 to 7 which are
+also known as XDV. Besides the basic DVI commands, dvisvgm also evaluates many so-called
+<em>specials</em> which heavily extend the capabilities of the plain DVI format. For a more detailed
+overview, see section <a href="#specials"><strong>Supported Specials</strong></a> below.</p>
+<p>Since the current SVG standard 1.1 doesn’t specify multi-page graphics, dvisvgm creates
+separate SVG files for each DVI page. Because of compatibility reasons, only the first page
+is converted by default. In order to select a different page or arbitrary page sequences,
+use option <strong>-p</strong> which is described below.</p>
+<p>SVG is a vector-based graphics format and therefore dvisvgm tries to convert the glyph outlines
+of all fonts referenced in a DVI page section to scalable path descriptions. The fastest way
+to achieve this is to extract the path information from vector-based font files available in
+PFB, TTF, or OTF format. If dvisvgm is able to find such a file, it extracts all necessary
+outline information about the glyphs from it.</p>
+<p>However, TeX’s main source for font descriptions is Metafont, which produces bitmap output
+(GF files). That’s why not all obtainable TeX fonts are available in a scalable format.
+In these cases, dvisvgm tries to vectorize Metafont’s output by tracing the glyph bitmaps.
+The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are
+nonetheless really nice in most cases.</p>
+<p>When running dvisvgm without option <strong>--no-fonts</strong>, it creates <em>font</em> elements (<code>&lt;font&gt;</code>…<code>&lt;/font&gt;</code>)
+to embed the font data into the SVG files. Unfortunately, only few SVG renderers support these
+elements yet. Most web browsers and vector graphics applications don’t evaluate them properly so
+that the text components of the resulting graphics might look strange. In order to create more
+compatible SVG files, command-line option <strong>--no-fonts</strong> can be given to replace the font elements
+by plain graphics paths.</p>
+</div></section><span class="linktarget" id="_options"></span><section class="manpage"><h3>
+<i class="fa fa-sliders fa-fw"></i> Options</h3>
+<div class="sectionbody">
+<p>dvisvgm provides a POSIX-compliant command-line interface with short and long option names.
+They may be given before and/or after the name of the file to be converted. Also, the order of
+specifying the options is not significant, i.e. you can add them in any order without changing
+dvisvgm’s behavior. Certain options accept or require additional parameters which are directly
+appended to or separated by whitespace from a short option (e.g. <code>-v0</code> or <code>-v 0</code>). Long options
+require an additional equals sign (<code>=</code>) between option name and argument but without any surrounding
+whitespace (e.g. <code>--verbosity=0</code>). Multiple short options that don’t expect a further parameter can
+be combined after a single dash (e.g. <code>-ejs</code> rather than <code>-e -j -s</code>).</p>
+<dl>
+<a name="opt-bbox" class="linktarget"></a><dt class="hdlist1">
+<strong>-b, --bbox</strong>=<em>fmt</em>
+<dd>
+<p>
+Sets the bounding box of the generated graphic to the specified format. The parameter <em>fmt</em>
+takes either one of the format specifiers listed below, or a sequence of four comma- or
+whitespace-separated length values <em>x1</em>, <em>y1</em>, <em>x2</em> and <em>y2</em>. The latter define the absolute
+coordinates of two diagonal corners of the bounding box. Each length value consists of a floating
+point number and an optional length unit (pt, bp, cm, mm, in, pc, dd, cc, or sp). If the unit is
+omitted, TeX points (pt) are assumed.
+</p>
+<p>It’s also possible to give only one length value <em>l</em>. In this case, the minimal bounding box
+is computed and enlarged by adding (-<em>l</em>,-<em>l</em>) to the upper left and (<em>l</em>,<em>l</em>) to the lower
+right corner.</p>
+<p>Additionally, dvisvgm also supports the following format specifiers:</p>
+<dl>
+<a name="International%20DIN/ISO%20paper%20sizes" class="linktarget"></a><dt class="hdlist1">
+<strong>International DIN/ISO paper sizes</strong>
+<dd><p>
+ A<em>n</em>, B<em>n</em>, C<em>n</em>, D<em>n</em>, where <em>n</em> is a non-negative integer, e.g. A4 or a4 for DIN/ISO A4
+ format (210mm × 297mm).
+</p></dd>
+</dt>
+<a name="North%20American%20paper%20sizes" class="linktarget"></a><dt class="hdlist1">
+<strong>North American paper sizes</strong>
+<dd><p>
+   invoice, executive, legal, letter, ledger
+</p></dd>
+</dt>
+<a name="Special%20bounding%20box%20sizes" class="linktarget"></a><dt class="hdlist1">
+<strong>Special bounding box sizes</strong>
+<dd><table>
+<tr>
+<td style="padding-right:10px"><p><strong>dvi</strong></p></td>
+<td style="padding-right:10px"><p>
+page size stored in the DVI file
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>min</strong></p></td>
+<td style="padding-right:10px"><p>
+computes the minimal/tightest bounding box
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>none</strong></p></td>
+<td style="padding-right:10px"><p>
+no bounding box is assigned
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>papersize</strong></p></td>
+<td style="padding-right:10px"><p>
+box sizes specified by <em>papersize</em> specials present in the DVI file
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>preview</strong></p></td>
+<td style="padding-right:10px"><p>
+bounding box data computed by the preview package (if present in the DVI file)
+</p></td>
+</tr>
+</table></dd>
+</dt>
+<a name="Page%20orientation" class="linktarget"></a><dt class="hdlist1">
+<strong>Page orientation</strong>
+<dd>
+<p>
+   The default page orientation for DIN/ISO and American paper sizes is <em>portrait</em>,
+   i.e. <em>width</em> &lt; <em>height</em>. Appending <strong>-landscape</strong> or simply <strong>-l</strong> to the format
+   string switches to <em>landscape</em> mode (<em>width</em> &gt; <em>height</em>). For symmetry reasons you can
+   also explicitly add <strong>-portrait</strong> or <strong>-p</strong> to indicate the default portrait format.
+   Note that these suffixes are part of the size string and not separate options. Thus,
+   they must directly follow the size specifier without additional blanks.
+   Furthermore, the orientation suffixes can’t be used with <strong>dvi</strong>, <strong>min</strong>, and <strong>none</strong>.
+</p>
+<div class="admonitionblock"><table><tr>
+<td class="icon"><img src="images/note.png" alt="note"></td>
+<td class="content"><p>Option <strong>-b, --bbox</strong> only affects the bounding box and does not transform the page content.
+Hence, if you choose a landscape format, the page won’t be rotated.</p></td>
+</tr></table></div>
+</dd>
+</dt>
+</dl>
+</dd>
+</dt>
+</dl>
+<dl>
+<a name="opt-cache" class="linktarget"></a><dt class="hdlist1">
+<strong>-C, --cache</strong>[=<em>dir</em>]
+<dd><p>
+To speed up the conversion process of bitmap fonts, dvisvgm saves intermediate conversion
+information in cache files. By default, these files are stored in <code>$HOME/.dvisvgm/cache</code>.
+If you prefer a different location, use option <strong>--cache</strong> to overwrite the default. Furthermore,
+it is also possible to disable the font caching mechanism completely with option <strong>--cache=none</strong>.
+If argument <em>dir</em> is omitted, dvisvgm prints the path of the default cache directory together
+with further information about the stored fonts. Additionally, outdated and corrupted cache files
+are removed.
+</p></dd>
+</dt>
+<a name="opt-clipjoin" class="linktarget"></a><dt class="hdlist1">
+<strong>-j, --clipjoin</strong>
+<dd><p>
+This option tells dvisvgm to compute all intersections of clipping paths itself rather than
+delegating this task to the SVG renderer. The resulting SVG files are more portable because
+some SVG viewers don’t support intersecting clipping paths which are defined by <em>clipPath</em>
+elements containing a <em>clip-path</em> attribute.
+</p></dd>
+</dt>
+<a name="opt-color" class="linktarget"></a><dt class="hdlist1">
+<strong>--color</strong>
+<dd><p>
+Enables colorization of messages printed during the conversion process. The colors can be
+customized via environment variable <strong>DVISVGM_COLORS</strong>. See the <a href="#environment">Environment section</a>
+below for further information.
+</p></dd>
+</dt>
+<a name="opt-colornames" class="linktarget"></a><dt class="hdlist1">
+<strong>--colornames</strong>
+<dd><p>
+By default, dvisvgm exclusively uses RGB values of the form <em>#RRGGBB</em> to represent colors in
+the SVG file. According to the SVG standard, it’s also possible to use color names (like <code>black</code>
+and <code>darkblue</code>) for a limited number of predefined colors. In order to apply these color names
+rather than their RGB values, call dvisvgm with option <strong>--colornames</strong>. All colors without an
+SVG color name will still be represented by RGB values.
+</p></dd>
+</dt>
+<a name="opt-comments" class="linktarget"></a><dt class="hdlist1">
+<strong>--comments</strong>
+<dd><p>
+Adds comments with further information about selected data to the SVG file. Currently, only
+font elements and font CSS rules related to native fonts are annotated.
+</p></dd>
+</dt>
+<a name="opt-eps" class="linktarget"></a><dt class="hdlist1">
+<strong>-E, --eps</strong>
+<dd><p>
+If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
+it to SVG. In order to do so, a single <em>psfile</em> special command is created and forwarded to the
+PostScript special handler.
+This option is only available if dvisvgm was built with PostScript support enabled, and requires
+Ghostscript to be available. See option <strong>--libgs</strong> for further information.
+</p></dd>
+</dt>
+<a name="opt-exact" class="linktarget"></a><dt class="hdlist1">
+<strong>-e, --exact</strong>
+<dd><p>
+This option tells dvisvgm to compute the precise bounding box of each character. By default,
+the values stored in a font’s TFM file are used to determine a glyph’s extent. As these values are
+intended to implement optimal character placements and are not designed to represent the exact
+dimensions, they don’t necessarily correspond with the bounds of the visual glyphs. Thus, width
+and/or height of some glyphs may be larger (or smaller) than the respective TFM values. As a result,
+this can lead to clipped characters at the bounds of the SVG graphics. With option <strong>--exact</strong> given,
+dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
+</p></dd>
+</dt>
+<a name="opt-font-format" class="linktarget"></a><dt class="hdlist1">
+<strong>-f, --font-format</strong>=<em>format</em>
+<dd>
+<p>
+Selects the file format used to embed the font data into the SVG files. Following formats are
+supported: <code>SVG</code> (that’s the default), <code>TTF</code> (TrueType), <code>WOFF</code>, and <code>WOFF2</code> (Web Open Font Format
+version 1 and 2).
+By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
+improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
+autohinter is enabled by appending <code>,autohint</code> or <code>,ah</code> to the font format,
+e.g. <code>--font-format=woff,autohint</code> or <code>--font-format=woff,ah</code>.
+</p>
+<p>Option <strong>--font-format</strong> is only available if dvisvgm was built with WOFF support enabled.</p>
+</dd>
+</dt>
+<a name="opt-fontmap" class="linktarget"></a><dt class="hdlist1">
+<strong>-m, --fontmap</strong>=<em>filenames</em>
+<dd>
+<p>
+Loads and evaluates a single font map file or a sequence of font map files. These files are required
+to resolve font file names and encodings. dvisvgm does not provide its own map files but tries to read
+available ones coming with dvips or dvipdfm. If option <strong>--fontmap</strong> is omitted, dvisvgm looks for the
+default map files <em>ps2pk.map</em>, <em>pdftex.map</em>, <em>dvipdfm.map</em>, and <em>psfonts.map</em> (in this order).
+Otherwise, the files as option arguments are evaluated in the given order. Multiple filenames must be
+separated by commas without leading and/or trailing whitespace.
+By default, redefined mappings do not replace previous ones. However, each filename can be preceded by
+an optional mode specifier (<strong>+</strong>, <strong>-</strong>, or <strong>=</strong>) to change this behavior:
+</p>
+<dl>
+<dt class="hdlist1">
++mapfile
+<dd><p>
+    Only those entries in the given map file that don’t redefine a font mapping are applied, i.e.
+         fonts already mapped keep untouched. That’s also the default mode if no mode specifier is given.
+</p></dd>
+</dt>
+<dt class="hdlist1">
+-mapfile
+<dd><p>
+    Ensures that none of the font mappings defined in the given map file are used, i.e. previously
+    defined mappings for the specified fonts are removed.
+</p></dd>
+</dt>
+<dt class="hdlist1">
+=mapfile
+<dd>
+<p>
+    All mappings defined in the map file are applied. Previously defined settings for the same fonts
+    are replaced.
+</p>
+<p>If the first filename in the filename sequence is preceded by a mode specifier, dvisvgm loads the
+default font map (see above) and applies the other map files afterwards. Otherwise, none of default
+map files will be loaded automatically.</p>
+<p>Examples: <code>--fontmap=myfile1.map,+myfile2.map</code> loads <em>myfile1.map</em> followed by <em>myfile2.map</em> where all
+redefinitions of <code>myfile2.map</code> are ignored.
+<code>--fontmap==myfile1.map,-myfile2.map</code> loads the default map file followed by <em>myfile1.map</em> and <em>myfile2.map</em>
+where all redefinitions of <em>myfile1.map</em> replace previous entries. Afterwards, all definitions for the fonts
+given in <em>myfile2.map</em> are removed from the font map tree.</p>
+<p>For further information about the map file formats and the mode specifiers, see the manuals of
+dvips and dvipdfm.</p>
+</dd>
+</dt>
+</dl>
+</dd>
+</dt>
+<a name="opt-grad-overlap" class="linktarget"></a><dt class="hdlist1">
+<strong>--grad-overlap</strong>
+<dd><p>
+Tells dvisvgm to create overlapping grid segments when approximating color gradient fills (also see
+option <strong>--grad-segments</strong> below). By default, adjacent segments don’t overlap but only touch each other
+like separate tiles. However, this alignment can lead to visible gaps between the segments
+because the background color usually influences the color at the boundary of the segments if the
+SVG renderer uses anti-aliasing to create smooth contours.
+One way to avoid this and to create seamlessly touching color regions is to enlarge the segments so
+that they extent into the area of their right and bottom neighbors. Since the latter are drawn on top
+of the overlapping parts, the visible size of all segments keeps unchanged. Just the former gaps
+disappear as the background is now completely covered by the correct colors.
+Currently, dvisvgm computes the overlapping segments separately for each patch of the mesh (a patch mesh
+may consist of multiple patches of the same type). Therefore, there still might be visible gaps
+at the seam of two adjacent patches.
+</p></dd>
+</dt>
+<a name="opt-grad-segments" class="linktarget"></a><dt class="hdlist1">
+<strong>--grad-segments</strong>=<em>number</em>
+<dd>
+<p>
+Determines the maximal number of segments per column and row used to approximate gradient color fills.
+Since SVG 1.1 only supports a small subset of the shading algorithms available in PostScript,
+dvisvgm approximates some of them by subdividing the area to be filled into smaller, monochromatic
+segments. Each of these segments gets the average color of the region it covers. Thus, increasing the
+number of segments leads to smaller monochromatic areas and therefore a better approximation of the
+actual color gradient. As a drawback, more segments imply bigger SVG files because every segment is
+represented by a separate path element.
+</p>
+<p>Currently, dvisvgm supports free- and lattice-form triangular patch meshes as well as Coons and
+tensor-product patch meshes. They are approximated by subdividing the area of each patch into a
+<em>n</em>×<em>n</em> grid of smaller segments. The maximal number of segments per column and row can be
+changed with option <strong>--grad-segments</strong>.</p>
+</dd>
+</dt>
+<a name="opt-grad-simplify" class="linktarget"></a><dt class="hdlist1">
+<strong>--grad-simplify</strong>=<em>delta</em>
+<dd><p>
+If the size of the segments created to approximate gradient color fills falls below the given delta
+value, dvisvgm reduces their level of detail. For example, Bézier curves are replaced by straight
+lines, and triangular segments are combined to tetragons. For a small <em>delta</em>, these simplifications
+are usually not noticeable but reduce the size of the generated SVG files significantly.
+</p></dd>
+</dt>
+<a name="opt-help" class="linktarget"></a><dt class="hdlist1">
+<strong>-h, --help</strong>[=<em>mode</em>]
+<dd><p>
+Prints a short summary of all available command-line options. The optional <em>mode</em> parameter is
+an integer value between 0 and 2. It selects the display variant of the help text. Mode 0
+lists all options divided into categories with section headers. This is also the default if
+dvisvgm is called without parameters. Mode 1 lists all options ordered by the short option names,
+while mode 2 sorts the lines by the long option names.
+</p></dd>
+</dt>
+<a name="opt-keep" class="linktarget"></a><dt class="hdlist1">
+<strong>--keep</strong>
+<dd><p>
+Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files) or
+the TrueType/WOFF module.
+</p></dd>
+</dt>
+<a name="opt-libgs" class="linktarget"></a><dt class="hdlist1">
+<strong>--libgs</strong>=<em>filename</em>
+<dd><p>
+This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
+PostScript support was not completely disabled during compilation. In this case, dvisvgm tries
+to load the shared GS library dynamically during runtime. By default, it expects the library’s name
+to be <code>libgs.so.X</code> (on Unix-like systems, where <code>X</code> is the ABI version of the library) or
+<code>gsdll32.dll</code>/<code>gsdll64.dll</code> (Windows). Option <strong>--libgs</strong> can be used to give a different name.
+Alternatively, it’s also possible to set the GS library name by the environment variable <strong>LIBGS</strong>.
+The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable <strong>LIBGS</strong>
+if <strong>--libgs</strong> is given.
+</p></dd>
+</dt>
+<a name="opt-linkmark" class="linktarget"></a><dt class="hdlist1">
+<strong>-L, --linkmark</strong>=<em>style</em>
+<dd>
+<p>
+Selects the method how to mark hyperlinked areas. The <em>style</em> argument can take one of the values
+<em>none</em>, <em>box</em>, and <em>line</em>, where <em>box</em> is the default, i.e. a rectangle is drawn around
+the linked region if option <strong>--linkmark</strong> is omitted. Style argument <em>line</em> just draws the lower edge of
+the bounding rectangle, and <em>none</em> tells dvisvgm not to add any visible objects to hyperlinks.
+The lines and boxes get the current text color selected. In order to apply a different, constant color,
+a colon followed by a color specifier can be appended to the style string. A <em>color specifier</em> is either
+a hexadecimal RGB value of the form <em>#RRGGBB</em>, or a
+<a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color name</a>.
+</p>
+<p>Moreover, argument <em>style</em> can take a single color specifier to highlight the linked region by
+a frameless box filled with that color. An optional second color specifier separated by a colon
+selects the frame color.</p>
+<p>Examples: <code>box:red</code> or <code>box:#ff0000</code> draws red boxes around the linked areas. <code>yellow:blue</code> creates
+yellow filled rectangles with blue frames.</p>
+</dd>
+</dt>
+<a name="opt-list-specials" class="linktarget"></a><dt class="hdlist1">
+<strong>-l, --list-specials</strong>
+<dd><p>
+Prints a list of registered special handlers and exits. Each handler processes a set of special
+statements belonging to the same category. In most cases, the categories are identified by the
+prefix of the special statements. It’s usually a leading string followed by a colon or a blank,
+e.g. <em>color</em> or <em>ps</em>. The listed handler names, however, don’t need to match these prefixes, e.g.
+if there is no common prefix or if functionality is split into separate handlers in order to allow
+to disable them separately with option <strong>--no-specials</strong>. All special statements not covered by one
+of the special handlers are silently ignored.
+</p></dd>
+</dt>
+<a name="opt-mag" class="linktarget"></a><dt class="hdlist1">
+<strong>-M, --mag</strong>=<em>factor</em>
+<dd><p>
+Sets the magnification factor applied in conjunction with Metafont calls prior tracing the glyphs.
+The larger this value, the better the tracing results. Nevertheless, large magnification values
+can cause Metafont arithmetic errors due to number overflows. So, use this option with care.
+The default setting usually produces nice results.
+</p></dd>
+</dt>
+<a name="opt-no-merge" class="linktarget"></a><dt class="hdlist1">
+<strong>--no-merge</strong>
+<dd><p>
+Puts every single character in a separate <em>text</em> element with corresponding <em>x</em> and <em>y</em> attributes.
+By default, new <em>text</em> or <em>tspan</em> elements are only created if a string starts at a location that
+differs from the regular position defined by the characters' advance values.
+</p></dd>
+</dt>
+<a name="opt-no-mktexmf" class="linktarget"></a><dt class="hdlist1">
+<strong>--no-mktexmf</strong>
+<dd><p>
+Suppresses the generation of missing font files. If dvisvgm can’t find a font file
+through the kpathsea lookup mechanism, it calls the external tools <em>mktextfm</em> or <em>mktexmf</em>.
+This option disables these calls.
+</p></dd>
+</dt>
+<a name="opt-no-fonts" class="linktarget"></a><dt class="hdlist1">
+<strong>-n, --no-fonts</strong>[=<em>variant</em>]
+<dd><p>
+If this option is given, dvisvgm doesn’t create SVG <em>font</em> elements but uses <em>paths</em> instead. The
+resulting SVG files tend to be larger but they are concurrently more compatible with most applications that
+don’t support SVG fonts yet. The optional argument <em>variant</em> selects the method how to substitute fonts
+by paths. Variant 0 creates <em>path</em> and <em>use</em> elements in order to avoid lengthy duplicates.
+Variant 1 creates <em>path</em> elements only.
+Option <strong>--no-fonts</strong> implies <strong>--no-styles</strong>.
+</p></dd>
+</dt>
+<a name="opt-scale" class="linktarget"></a><dt class="hdlist1">
+<strong>-c, --scale</strong>=<em>sx</em>[,<em>sy</em>]
+<dd><p>
+Scales the page content horizontally by <em>sx</em> and vertically by <em>sy</em>. This option is equivalent
+to <strong>-TS</strong><em>sx</em>,<em>sy</em>.
+</p></dd>
+</dt>
+<a name="opt-no-specials" class="linktarget"></a><dt class="hdlist1">
+<strong>-S, --no-specials</strong>[=<em>names</em>]
+<dd><p>
+Disable processing of special commands embedded in the DVI file. If no further parameter is given,
+all specials are ignored. To disable a selected set of specials, an optional comma-separated list
+of names can be appended to this option. A <em>name</em> is the unique identifier referencing the intended
+special handler as listed by option <strong>--list-specials</strong>.
+</p></dd>
+</dt>
+<a name="opt-no-styles" class="linktarget"></a><dt class="hdlist1">
+<strong>--no-styles</strong>
+<dd><p>
+By default, dvisvgm creates CSS styles and class attributes to reference fonts. This variant is
+more compact than adding the complete font information to each text element over and over again.
+However, if you prefer direct font references, the default behavior can be disabled with
+option <strong>--no-styles</strong>.
+</p></dd>
+</dt>
+<a name="opt-output" class="linktarget"></a><dt class="hdlist1">
+<strong>-o, --output</strong>=<em>pattern</em>
+<dd>
+<p>
+Sets the pattern specifying the names of the generated SVG files. Parameter <em>pattern</em> is
+a string that may contain static character sequences as well as the variables <strong>%f</strong>, <strong>%p</strong>,
+and <strong>%P</strong>. <strong>%f</strong> expands to the base name of the DVI file, i.e. the filename without suffix,
+<strong>%p</strong> is the current page number, and <strong>%P</strong> the total number of pages in the DVI file. An
+optional number (0-9) given directly after the percent sign specifies the minimal number
+of digits to be written. If a particular value consists of less digits, the number is
+padded with leading zeros.
+Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.).
+Without an explicit width specifier, <strong>%p</strong> gets the same number of digits as <strong>%P</strong>.
+</p>
+<p>If you need more control over the numbering, you can use arithmetic expressions as part of
+a pattern. The syntax is <strong>%(expr)</strong> where <em>expr</em> may contain additions, subtractions,
+multiplications, and integer divisions with common precedence. The variables
+<strong>p</strong> and <strong>P</strong> contain the current page number and the total number of pages, respectively.
+For example, <code>--output="%f-%(p-1)"</code> creates filenames where the numbering starts with 0 rather
+than 1.</p>
+<p>The default pattern is <code>%f-%p.svg</code> if the DVI file consists of more than one page, and
+<code>%f.svg</code> otherwise. That means, a DVI file <em>foo.dvi</em> is converted to <em>foo.svg</em> if <em>foo.dvi</em>
+is a single-page document. Otherwise, multiple SVG files <em>foo-01.svg</em>, <em>foo-02.svg</em>, etc. are
+produced. In Windows environments, the percent sign indicates dereferenced environment
+variables, and must therefore be protected by a second percent sign, e.g. <code>--output=%%f-%%p</code>.</p>
+</dd>
+</dt>
+<a name="opt-page" class="linktarget"></a><dt class="hdlist1">
+<strong>-p, --page</strong>=<em>ranges</em>
+<dd><p>
+This option selects the pages to be processed. Parameter <em>ranges</em> consists of a comma-separated
+list of single page numbers and/or page ranges. A page range is a pair of numbers separated by
+a hyphen, e.g. 5-12. Thus, a page sequence might look like this: 2-4,6,9-12,15. It doesn’t matter
+if a page is given more than once or if page ranges overlap. dvisvgm always extracts the page
+numbers in ascending order and converts them only once.
+In order to stay compatible with previous versions, the default page sequence is 1. dvisvgm
+therefore converts only the first page and not the whole document if option <strong>--page</strong> is omitted.
+Usually, page ranges consist of two numbers denoting the first and last page to be converted.
+If the conversion should start at page 1, or if it should continue up to the last DVI page, the
+first or second range number can be omitted, respectively. Example: <code>--page=-10</code> converts all
+pages up to page 10, <code>--page=10-</code> converts all pages starting with page 10.
+Please consider that the page values don’t refer to the page numbers printed on the
+corresponding page. Instead, the physical page count is expected, where the first page always
+gets number 1.
+</p></dd>
+</dt>
+<a name="opt-pdf" class="linktarget"></a><dt class="hdlist1">
+<strong>-P, --pdf</strong>
+<dd><p>
+If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
+it to SVG. In order to do so, a single <em>pdffile</em> special command is created and forwarded to the
+PostScript special handler.
+This option is only available if dvisvgm was built with PostScript support enabled, and requires
+Ghostscript to be available. See option <strong>--libgs</strong> for further information.
+</p></dd>
+</dt>
+<a name="opt-precision" class="linktarget"></a><dt class="hdlist1">
+<strong>-d, --precision</strong>=<em>digits</em>
+<dd><p>
+Specifies the maximal number of decimal places applied to floating-point attribute values.
+All attribute values written to the generated SVG file(s) are rounded accordingly. The
+parameter <em>digits</em> accepts integer values from 0 to 6, where 0 enables the automatic selection
+of significant decimal places. This is also the default value if dvisvgm is called without
+option <strong>--precision</strong>.
+</p></dd>
+</dt>
+<a name="opt-progress" class="linktarget"></a><dt class="hdlist1">
+<strong>--progress</strong>[=<em>delay</em>]
+<dd><p>
+Enables a simple progress indicator shown when time-consuming operations like PostScript specials
+are processed. The indicator doesn’t appear before the given delay (in seconds) has elapsed.
+The default delay value is 0.5 seconds.
+</p></dd>
+</dt>
+<a name="opt-rotate" class="linktarget"></a><dt class="hdlist1">
+<strong>-r, --rotate</strong>=<em>angle</em>
+<dd><p>
+Rotates the page content clockwise by <em>angle</em> degrees around the page center.
+This option is equivalent to <strong>-TR</strong><em>angle</em>.
+</p></dd>
+</dt>
+<a name="opt-relative" class="linktarget"></a><dt class="hdlist1">
+<strong>-R, --relative</strong>
+<dd><p>
+SVG allows to define graphics paths by a sequence of absolute and/or relative path commands,
+i.e. each command expects either absolute coordinates or coordinates relative to the
+current drawing position. By default, dvisvgm creates paths made up of absolute commands.
+If option <strong>--relative</strong> is given, relative commands are created instead. This slightly reduces
+the size of the SVG files in most cases.
+</p></dd>
+</dt>
+<a name="opt-stdin" class="linktarget"></a><dt class="hdlist1">
+<strong>--stdin</strong>
+<dd><p>
+Tells dvisvgm to read the DVI or EPS input data from <strong>stdin</strong> instead from a file. Alternatively
+to option <strong>--stdin</strong>, a single dash (-) can be given. The default name of the generated SVG file
+is <em>stdin.svg</em> which can be changed with option <strong>--output</strong>.
+</p></dd>
+</dt>
+<a name="opt-stdout" class="linktarget"></a><dt class="hdlist1">
+<strong>-s, --stdout</strong>
+<dd><p>
+Don’t write the SVG output to a file but redirect it to <strong>stdout</strong>.
+</p></dd>
+</dt>
+<a name="opt-tmpdir" class="linktarget"></a><dt class="hdlist1">
+<strong>--tmpdir</strong>[=<em>path</em>]
+<dd>
+<p>
+In some cases, dvisvgm needs to create temporary files to work properly. These files go to
+the system’s temporary folder by default, e.g. <code>/tmp</code> on Linux systems. Option <strong>--tmpdir</strong>
+allows to specify a different location if necessary for some reason. Please note that dvisvgm
+does not create this folder, so you must ensure that it actually exists before running dvisvgm.
+</p>
+<p>If the optional parameter <em>path</em> is omitted, dvisvgm prints the location of the system’s
+temp folder and exits.</p>
+</dd>
+</dt>
+<a name="opt-trace-all" class="linktarget"></a><dt class="hdlist1">
+<strong>-a, --trace-all</strong>=[<em>retrace</em>]
+<dd>
+<p>
+This option forces dvisvgm to vectorize not only the glyphs actually required to render the
+SVG file correctly – which is the default –, but processes all glyphs of all fonts referenced in
+the DVI file. Because dvisvgm stores the tracing results in a font cache, all following conversions
+of these fonts will speed up significantly.
+The boolean option <em>retrace</em> determines how to handle glyphs already stored in the cache.
+By default, these glyphs are skipped. Setting argument <em>retrace</em> to <em>yes</em> or <em>true</em> forces dvisvgm
+to retrace the corresponding bitmaps again.
+</p>
+<div class="admonitionblock"><table><tr>
+<td class="icon"><img src="images/note.png" alt="note"></td>
+<td class="content"><p>This option only takes effect if font caching is active. Therefore, <strong>--trace-all</strong> cannot be
+combined with option <strong>--cache=none</strong>.</p></td>
+</tr></table></div>
+</dd>
+</dt>
+<a name="opt-transform" class="linktarget"></a><dt class="hdlist1">
+<strong>-T, --transform</strong>=<em>commands</em>
+<dd>
+<p>
+Applies a sequence of transformations to the SVG content. Each transformation is described
+by a <em>command</em> beginning with a capital letter followed by a list of comma-separated
+parameters. Following transformation commands are supported:
+</p>
+<dl>
+<a name="T" class="linktarget"></a><dt class="hdlist1">
+<strong>T</strong> <em>tx</em>[,<em>ty</em>]
+<dd><p>
+    Translates (moves/shifts) the page in direction of vector (<em>tx</em>,<em>ty</em>). If <em>ty</em> is omitted,
+    <em>ty</em>=0 is assumed.
+    The expected unit length of <em>tx</em> and <em>ty</em> are TeX points (1pt = 1/72.27in). However, there
+    are several constants defined to simplify the unit conversion (see below).
+</p></dd>
+</dt>
+<a name="S" class="linktarget"></a><dt class="hdlist1">
+<strong>S</strong> <em>sx</em>[,<em>sy</em>]
+<dd><p>
+    Scales the page horizontally by <em>sx</em> and vertically by <em>sy</em>. If <em>sy</em> is omitted,
+    <em>sy</em>=<em>sx</em> is assumed.
+</p></dd>
+</dt>
+<a name="R" class="linktarget"></a><dt class="hdlist1">
+<strong>R</strong> <em>angle</em>[,<em>x</em>,<em>y</em>]
+<dd><p>
+    Rotates the page clockwise by <em>angle</em> degrees around point (<em>x</em>,<em>y</em>). If the optional
+    arguments <em>x</em> and <em>y</em> are omitted, the page will be rotated around its center depending on
+    the chosen page format. When option <strong>-bnone</strong> is given, the rotation center is origin (0,0).
+</p></dd>
+</dt>
+<a name="KX" class="linktarget"></a><dt class="hdlist1">
+<strong>KX</strong> <em>angle</em>
+<dd><p>
+    Skews the page along the <em>x</em>-axis by <em>angle</em> degrees. Argument <em>angle</em> can take any value
+    except 90+180<em>k</em>, where <em>k</em> is an integer.
+</p></dd>
+</dt>
+<a name="KY" class="linktarget"></a><dt class="hdlist1">
+<strong>KY</strong> <em>angle</em>
+<dd><p>
+    Skews the page along the <em>y</em>-axis by <em>angle</em> degrees. Argument <em>angle</em> can take any value
+    except 90+180<em>k</em>, where <em>k</em> is an integer.
+</p></dd>
+</dt>
+<a name="FH" class="linktarget"></a><dt class="hdlist1">
+<strong>FH</strong> [<em>y</em>]
+<dd><p>
+  Mirrors (flips) the page at the horizontal line through point (0,<em>y</em>). Omitting the optional argument
+  leads to <em>y</em>=<em>h</em>/2, where <em>h</em> denotes the page height (see <a href="#constants"><em>pre-defined constants</em></a> below).
+</p></dd>
+</dt>
+<a name="FV" class="linktarget"></a><dt class="hdlist1">
+<strong>FV</strong> [<em>x</em>]
+<dd><p>
+  Mirrors (flips) the page at the vertical line through point (<em>x</em>,0). Omitting the optional argument
+  leads to <em>x</em>=<em>w</em>/2, where <em>w</em> denotes the page width (see <a href="#constants"><em>pre-defined constants</em></a> below).
+</p></dd>
+</dt>
+<a name="M" class="linktarget"></a><dt class="hdlist1">
+<strong>M</strong> <em>m1</em>,…,<em>m6</em>
+<dd>
+<p>
+  Applies a transformation described by the 3×3 matrix
+  ((<em>m1</em>,<em>m2</em>,<em>m3</em>),(<em>m4</em>,<em>m5</em>,<em>m6</em>),(0,0,1)), where the inner triples denote
+  the rows.
+</p>
+<div class="admonitionblock"><table><tr>
+<td class="icon"><img src="images/note.png" alt="note"></td>
+<td class="content">
+<p>All transformation commands of option <strong>-T, --transform</strong> are applied in the order of their appearance.
+Multiple commands can optionally be separated by spaces. In this case the whole transformation string
+has to be enclosed in double quotes to keep them together. All parameters are expressions of floating
+point type. You can either give plain numbers or arithmetic terms combined by the operators <strong>+</strong> (addition),
+<strong>-</strong> (subtraction), <strong>*</strong> (multiplication), <strong>/</strong> (division) or <strong>%</strong> (modulo) with common associativity and
+precedence rules. Parentheses may be used as well.</p>
+<span class="linktarget" id="constants"></span><p>Additionally, some pre-defined constants are provided:</p>
+<table>
+<tr>
+<td style="padding-right:10px"><p><strong>ux</strong></p></td>
+<td style="padding-right:10px"><p>
+horizontal position of upper left page corner in TeX point units
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>uy</strong></p></td>
+<td style="padding-right:10px"><p>
+vertical position of upper left page corner in TeX point units
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>h</strong></p></td>
+<td style="padding-right:10px"><p>
+page height in TeX point units (0 in case of <strong>-bnone</strong>)
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>w</strong></p></td>
+<td style="padding-right:10px"><p>
+page width in TeX point units (0 in case of <strong>-bnone</strong>)
+</p></td>
+</tr>
+</table>
+<p>Furthermore, you can use the length constants <strong>pt</strong>, <strong>mm</strong>, <strong>cm</strong> and <strong>in</strong>, e.g.
+<code>2cm</code> or <code>1.6in</code>. Thus, option <code>-TT1in,0R45</code> moves the page content 1 inch to the right and rotates it
+by 45 degrees around the page center afterwards.</p>
+<p>For single transformations, there are also the short-hand options <strong>-c</strong>, <strong>-t</strong> and <strong>-r</strong> available.
+In contrast to the <strong>--transform</strong>* commands, the order of these options is not significant, so
+that it’s not possible to describe transformation sequences with them.</p>
+</td>
+</tr></table></div>
+</dd>
+</dt>
+</dl>
+</dd>
+</dt>
+</dl>
+<dl>
+<a name="opt-translate" class="linktarget"></a><dt class="hdlist1">
+<strong>-t, --translate</strong>=<em>tx</em>[,<em>ty</em>]
+<dd><p>
+Translates (moves) the page content in direction of vector (<em>tx</em>,<em>ty</em>). This option is
+equivalent to <strong>-TT</strong><em>tx</em>,<em>ty</em>.
+</p></dd>
+</dt>
+<a name="opt-verbosity" class="linktarget"></a><dt class="hdlist1">
+<strong>-v, --verbosity</strong>=<em>level</em>
+<dd>
+<p>
+Controls the type of messages printed during a dvisvgm run:
+</p>
+<table>
+<tr>
+<td style="padding-right:10px"><p><strong>0</strong></p></td>
+<td style="padding-right:10px"><p>
+no message output at all
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>1</strong></p></td>
+<td style="padding-right:10px"><p>
+error messages only
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>2</strong></p></td>
+<td style="padding-right:10px"><p>
+warning messages only
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>4</strong></p></td>
+<td style="padding-right:10px"><p>
+informational messages only
+</p></td>
+</tr>
+</table>
+<div class="admonitionblock"><table><tr>
+<td class="icon"><img src="images/note.png" alt="note"></td>
+<td class="content"><p>By adding these values you can combine the categories. The default level is 7, i.e. all
+messages are printed.</p></td>
+</tr></table></div>
+</dd>
+</dt>
+<a name="opt-version" class="linktarget"></a><dt class="hdlist1">
+<strong>-V, --version</strong>[=<em>extended</em>]
+<dd><p>
+Prints the version of dvisvgm and exits. If the optional argument is set to <em>yes</em>, the
+version numbers of the linked libraries are printed as well.
+</p></dd>
+</dt>
+<a name="opt-zip" class="linktarget"></a><dt class="hdlist1">
+<strong>-z, --zip</strong>[=<em>level</em>]
+<dd><p>
+Creates a compressed SVG file with suffix .svgz. The optional argument specifies the compression
+level. Valid values are in the range of 1 to 9 (default value is 9). Larger values cause better
+compression results but may take slightly more computation time.
+</p></dd>
+</dt>
+<a name="opt-zoom" class="linktarget"></a><dt class="hdlist1">
+<strong>-Z, --zoom</strong>=<em>factor</em>
+<dd><p>
+Multiplies the values of the <em>width</em> and <em>height</em> attributes of the SVG root element by argument <em>factor</em>
+while the coordinate system of the graphic content is retained. As a result, most SVG viewers zoom the
+graphics accordingly. If a negative zoom factor is given, the <em>width</em> and <em>height</em> attributes are omitted.
+</p></dd>
+</dt>
+</dl>
+</div></section><span class="linktarget" id="specials"></span><section class="manpage"><h3>
+<i class="fa fa-plug fa-fw"></i> Supported Specials</h3>
+<div class="sectionbody">
+<p>dvisvgm supports several sets of <em>special commands</em> that can be used to enrich DVI files with additional
+features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
+handlers provided by dvisvgm. Each handler is responsible for all special statements of the same command set,
+i.e. commands beginning with the same prefix. To get a list of the actually provided special handlers, use
+option <strong>--list-specials</strong> (see above). This section gives an overview of the special commands currently
+supported.</p>
+<dl>
+<a name="specials-bgcolor" class="linktarget"></a><dt class="hdlist1">
+<strong>bgcolor</strong>
+<dd><p>
+Special statement for changing the background/page color. Since SVG 1.1 doesn’t support background colors,
+dvisvgm inserts a rectangle of the chosen color into the generated SVG document. This rectangle always gets
+the same size as the selected or computed bounding box. This background color command is part of the color
+special set but is handled separately in order to let the user turn it off. For an overview of the command
+syntax, see the documentation of dvips, for instance.
+</p></dd>
+</dt>
+<a name="specials-color" class="linktarget"></a><dt class="hdlist1">
+<strong>color</strong>
+<dd><p>
+Statements of this command set provide instructions to change the text/paint color. For an overview of the
+exact syntax, see the documentation of dvips, for instance.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm</strong>
+<dd>
+<p>
+dvisvgm offers its own small set of specials. The following list gives a brief overview.
+</p>
+<dl>
+<a name="specials-dvisvgm:raw" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:raw</strong> <em>text</em>
+<dd><p>
+  Adds an arbitrary sequence of characters to the page section of the SVG document. dvisvgm does not perform
+  any validation here, thus the user has to ensure that the resulting SVG is still valid. Parameter <em>text</em>
+  may contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, and <strong>{?color}</strong> that expand to the current <em>x</em> or <em>y</em> coordinate
+  and the current color, respectively. Furthermore, <strong>{?nl}</strong> expands to a newline character.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:rawdef" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:rawdef</strong> <em>text</em>
+<dd><p>
+  This command is similar to <strong>dvisvgm:raw</strong>, but puts the raw text into the &lt;defs&gt; section of the SVG document
+  currently being generated.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:rawset" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:rawset</strong> <em>name</em> … <strong>dvisvgm:endrawset</strong>
+<dd><p>
+  This pair of specials marks the begin and end of a definition of a named raw SVG fragment. All <strong>dvisvgm:raw</strong>
+  and <strong>dvisvgm:rawdef</strong> specials enclosed by <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> are not evaluated
+  immediately but jointly stored under the given <em>name</em> for later use. Once defined, the named fragment can be
+  referenced throughout the DVI file by <strong>dvisvgm:rawput</strong> (see below).
+  The two commands <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> must not be nested, i.e. each call of <strong>dvisvgm:rawset</strong>
+  has to be followed by a corresponding call of <strong>dvisvgm:endrawset</strong> before another <strong>dvisvgm:rawset</strong> may occur.
+  Also, the identifier <em>name</em> must be unique throughout the DVI file. Using <strong>dvisvgm:rawset</strong> multiple times
+  together with the same <em>name</em> leads to warning messages.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:rawput" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:rawput</strong> <em>name</em>
+<dd><p>
+  Inserts raw SVG fragments previously stored under the given <em>name</em>. dvisvgm distinguishes between fragments
+  that were specified with <strong>dvisvgm:raw</strong> or <strong>dvisvgm:rawdef</strong>, and handles them differently: It inserts all
+  <strong>dvisvgm:raw</strong> parts every time <strong>dvisvgm:rawput</strong> is called, whereas the <strong>dvisvgm:rawdef</strong> portions go to the
+  &lt;defs&gt; section of the current SVG document only once.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:img" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:img</strong> <em>width</em> <em>height</em> <em>file</em>
+<dd><p>
+  Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
+  can be used here. However, dvisvgm does not check the file format or the file name suffix. The lengths <em>width</em>
+  and <em>height</em> can be given together with a unit specifier (see option <strong>--bbox</strong>) or as plain floating point numbers.
+  In the latter case, TeX point units are assumed (1in = 72.27pt).
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:bbox</strong> n[ew] <em>name</em>
+<dd><p>
+  Defines or resets a local bounding box called <em>name</em>. The name may consist of letters and digits.
+  While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to
+  determine the minimal rectangle containing all visible page components (characters, images, drawing elements etc.)
+  Additionally to the global bounding box, the user can request an arbitrary number of named local bounding boxes.
+  Once defined, these boxes are updated together with the global bounding box starting with the first character that
+  follows the definition. Thus, the local boxes can be used to compute the extent of parts of the page. This is useful
+  for scenarios where the generated SVG file is post-processed.
+  In conjunction with special <strong>dvisvgm:raw</strong>, the macro <strong>{?bbox <em>name</em>}</strong> expands to the four values <em>x</em>, <em>y</em>, <em>w</em>, and <em>h</em>
+  (separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box <em>name</em>.
+  If box <em>name</em> wasn’t previously defined, all four values equal to zero.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:bbox</strong> <em>width</em> <em>height</em> [<em>depth</em>]
+<dd><p>
+  Updates the bounding box of the current page by embedding a virtual rectangle (<em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>)
+  where the lower left corner is located at the current DVI drawing position (<em>x</em>,<em>y</em>). If the optional parameter <em>depth</em>
+  is specified, dvisvgm embeds a second rectangle (<em>x</em>, <em>y</em>, <em>width</em>, -<em>depth</em>). The lengths <em>width</em>, <em>height</em>, and
+  <em>depth</em> can be given together with a unit specifier (see option <strong>--bbox</strong>) or as plain floating point numbers.
+  In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
+  this command either enlarges the overall bounding box or leaves it as is. It’s not possible to reduce its extent. This
+  special should be used together with <strong>dvisvgm:raw</strong> in order to update the viewport of the page properly.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:bbox</strong> a[bs] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em>
+<dd><p>
+  This variant of the bbox special updates the bounding box by embedding a virtual rectangle (<em>x1</em>,<em>y1</em>,<em>x2</em>,<em>y2</em>).
+  The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+</p></dd>
+</dt>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><dt class="hdlist1">
+<strong>dvisvgm:bbox</strong> f[ix] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em>
+<dd>
+<p>
+  This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
+  this command, dvisvgm doesn’t further alter the bounding box coordinates, except this special is called again later.
+  The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+</p>
+<p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
+<div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span>
+
+<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span>
+<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span><span style="color:#8be9fd">}</span></code></pre></div>
+</div>
+</dd>
+</dt>
+</dl>
+</dd>
+</dt>
+<a name="specials-em" class="linktarget"></a><dt class="hdlist1">
+<strong>em</strong>
+<dd><p>
+These specials were introduced with the <em>emTeX</em> distribution by Eberhard Mattes. They provide line drawing
+statements, instructions for embedding MSP, PCX, and BMP image files, as well as two PCL commands.
+dvisvgm supports only the line drawing statements and ignores all other em specials silently.
+A description of the command syntax can be found in the DVI driver documentation coming with
+<a href="https://ctan.org/pkg/emtex">emTeX</a>.
+</p></dd>
+</dt>
+<a name="specials-html" class="linktarget"></a><dt class="hdlist1">
+<strong>html</strong>
+<dd><p>
+The hyperref specification defines several variants on how to mark hyperlinked areas in a DVI file. dvisvgm
+supports the plain HyperTeX special constructs as created with hyperref package option <em>hypertex</em>.
+By default, all linked areas of the document are marked by a rectangle. Option <strong>--linkmark</strong> allows to change
+this behavior. See above for further details. Information on syntax and semantics of the HyperTeX specials can be
+found in the <a href="https://ctan.org/pkg/hyperref">hyperref manual</a>.
+</p></dd>
+</dt>
+<a name="specials-papersize" class="linktarget"></a><dt class="hdlist1">
+<strong>papersize</strong>
+<dd><p>
+The <em>papersize</em> special, which is an extension introduced by dvips, can be used to specify the widths and
+heights of the pages in the DVI file. It affects the page it appears on as well as all following pages until
+another papersize special is found. If there is more than one papersize special present on a page, dvisvgm
+applies the last one. However, in order to stay compatible with previous versions of dvisvgm that did not
+evaluate these specials, their processing must be explicitly enabled by adding option <strong>--bbox=papersize</strong> on
+the command-line. Otherwise, dvisvgm ignores them and computes tight bounding boxes.
+</p></dd>
+</dt>
+<a name="specials-pdf" class="linktarget"></a><dt class="hdlist1">
+<strong>pdf</strong>
+<dd>
+<p>
+pdfTeX and dvipdfmx introduced several special commands related to the generation of PDF files. Currently,
+only <em>pdf:mapfile</em>, <em>pdf:mapline</em>, <em>pdf:pagesize</em>, and PDF hyperlink specials are supported by dvisvgm.
+The latter are the PDF pendants to the HTML HyperTeX specials generated by the hyperref package in PDF mode.
+</p>
+<p><em>pdf:pagesize</em> is similar to the <em>papersize</em> special (see above) which specifies the size of the current
+and all folowing pages. In order to actually apply the extents to the generated SVG files,
+option <strong>--bbox=papersize</strong> must be given.</p>
+<p><em>pdf:mapfile</em> and <em>pdf:mapline</em> allow for modifying the font map tree while processing the DVI file.
+They are used by CTeX, for example. dvisvgm supports both, the dvips and dvipdfm font map format. For further
+information on the command syntax and semantics, see the documentation of <code>\pdfmapfile</code> in the
+<a href="https://ctan.org/pkg/pdftex">pdfTeX user manual</a>.</p>
+</dd>
+</dt>
+<a name="specials-ps" class="linktarget"></a><dt class="hdlist1">
+<strong>ps</strong>
+<dd>
+<p>
+The famous DVI driver <em>dvips</em> introduced its own set of specials in order to embed PostScript code into DVI files,
+which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
+PostScript snippets and to convert as many of them as possible to SVG. In contrast to dvips, dvisvgm uses
+floating point arithmetics to compute the precise position of each graphic element, i.e. it doesn’t round the
+coordinates. Therefore, the relative locations of the graphic elements may slightly differ from those computed
+by dvips.
+</p>
+<p>Since PostScript is a rather complex language, dvisvgm does not implement its own PostScript interpreter
+but relies on <a href="https://ghostscript.com">Ghostscript</a> instead. If the Ghostscript library was not linked to the
+dvisvgm binary, it is looked up and loaded dynamically during runtime. In this case, dvisvgm looks for
+<em>libgs.so.X</em> on Unix-like systems (supported ABI versions: 7,8,9), for <em>libgs.X.dylib</em> on macOS, and for
+<em>gsdll32.dll</em> or <em>gsdll64.dll</em> on Windows. You can override the default file names with environment variable
+<strong>LIBGS</strong> or the command-line option <strong>--libgs</strong>. The library must be reachable through the ld search path (*nix)
+or the PATH environment variable (Windows). Alternatively, the absolute file path can be specified. If the library
+cannot be found, dvisvgm disables the processing of PostScript specials and prints a warning message.
+Use option <strong>--list-specials</strong> to check whether PostScript support is available, i.e. entry <em>ps</em> is present.</p>
+<p>The PostScript handler also recognizes and evaluates bounding box data generated by the
+<a href="https://ctan.org/pkg/preview">preview package</a> with option <em>tightpage</em>. If such data is present in the DVI file
+and if dvisvgm is called with option <strong>--bbox=preview</strong>, dvisvgm sets the width and total height of the SVG file to
+the values derived from the preview data. Additionally, it prints a message showing the width, height,
+and depth of the box in TeX point units to the console. Especially, the depth value can be read by a post-processor
+to vertically align the SVG graphics with the baseline of surrounding text in HTML or XSL-FO documents, for example.
+Please note that SVG bounding boxes are defined by a width and (total) height. In contrast to TeX, SVG provides
+no means to differentiate between height and depth, i.e. the vertical extents above and below the baseline,
+respectively. Therefore, it is generally not possible to retrieve the depth value from the SVG file itself.</p>
+<p>If you call dvisvgm with option <strong>--bbox=min</strong> (the default) and preview data is present in the DVI file, dvisvgm
+doesn’t apply the preview extents but computes a bounding box that tightly encloses the page contents. The height,
+depth and width values written to console are adapted accordingly.</p>
+</dd>
+</dt>
+<a name="specials-tpic" class="linktarget"></a><dt class="hdlist1">
+<strong>tpic</strong>
+<dd><p>
+The TPIC special set defines instructions for drawing simple geometric objects. Some LaTeX packages, like
+eepic and tplot, use these specials to describe graphics.
+</p></dd>
+</dt>
+</dl>
+</div></section><span class="linktarget" id="_examples"></span><section class="manpage"><h3>
+<i class="fa fa-keyboard-o fa-fw"></i> Examples</h3>
+<div class="sectionbody"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm file</code></pre></div>
+<p>Converts the first page of <em>file.dvi</em> to <em>file.svg</em>.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm - &lt; file.dvi</code></pre></div>
+<p>Converts the first page of <em>file.dvi</em> to <em>stdin.svg</em> where the contents of <em>file.dvi</em>
+is read from <strong>stdin</strong>.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm -z file</code></pre></div>
+<p>Converts the first page of <em>file.dvi</em> to <em>file.svgz</em> with default compression level 9.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm -p5 -z3 -ba4-l -o newfile file</code></pre></div>
+<p>Converts the fifth page of <em>file.dvi</em> to <em>newfile.svgz</em> with compression level 3.
+The bounding box is set to DIN/ISO A4 in landscape format.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm --transform=&#34;R20,w/3,2h/5 T1cm,1cm S2,3&#34; file</code></pre></div>
+<p>Converts the first page of <em>file.dvi</em> to <em>file.svg</em> where three transformations are applied.</p>
+</div></section><span class="linktarget" id="environment"></span><section class="manpage"><h3>
+<i class="fa fa-globe fa-fw"></i> Environment</h3>
+<div class="sectionbody">
+<p>dvisvgm uses the <strong>kpathsea</strong> library for locating the files that it opens.
+Hence, the environment variables described in the library’s documentation influence the converter.</p>
+<p>If dvisvgm was linked without the Ghostscript library, and if PostScript support has not been disabled,
+the shared Ghostscript library is looked up during runtime via dlopen(). The environment variable <strong>LIBGS</strong>
+can be used to specify path and file name of the library.</p>
+<p>The pre-compiled Windows versions of dvisvgm require a working installation of MiKTeX 2.9 or above.
+dvisvgm does not work together with the portable edition of MiKTeX because it relies on MiKTeX’s COM
+interface that is only accessible in a local installation.
+To enable the evaluation of PostScript specials, the original Ghostscript DLL <em>gsdll32.dll</em> must be present
+and reachable through the search path. 64-bit Windows builds require the 64-bit Ghostscript DLL <em>gsdll64.dll</em>.
+Both DLLs come with the corresponding Ghostscript installers available from <a href="https://ghostscript.com">https://ghostscript.com</a>.</p>
+<p>The environment variable <strong>DVISVGM_COLORS</strong> specifies the colors used to highlight various parts of dvisvgm’s
+message output. It is only evaluated if option <strong>--color</strong> is given. The value of <strong>DVISVGM_COLORS</strong> is a list of
+colon-separated entries of the form <em>gg</em>=<em>BF</em>, where <em>gg</em> denotes one of the color group indicators listed
+below, and <em>BF</em> are two hexadecimal digits specifying the background (first digit) and foreground/text color
+(second digit). The color values are defined as follows: 0=black, 1=red, 2=green, 3=yellow, 4=blue,
+5=magenta, 6=cyan, 7=gray, 8=bright red, 9=bright green, A=bright yellow, B=bright blue, C=bright magenta,
+D=bright cyan, E=bright gray, F=white. Depending on the terminal, the colors may differ. Rather than changing
+both the text and background color, it’s also possible to change only one of them: An asterisk (*) in
+place of a hexadecimal digit indicates the default text or background color of the terminal.</p>
+<p>All malformed entries in the list are silently ignored.</p>
+<table>
+<tr>
+<td style="padding-right:10px"><p><strong>er</strong></p></td>
+<td style="padding-right:10px"><p>
+error messages
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>wn</strong></p></td>
+<td style="padding-right:10px"><p>
+warning messages
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>pn</strong></p></td>
+<td style="padding-right:10px"><p>
+messages about page numbers
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>ps</strong></p></td>
+<td style="padding-right:10px"><p>
+page size messages
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>fw</strong></p></td>
+<td style="padding-right:10px"><p>
+information about the files written
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>sm</strong></p></td>
+<td style="padding-right:10px"><p>
+state messages
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>tr</strong></p></td>
+<td style="padding-right:10px"><p>
+messages of the glyph tracer
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>pi</strong></p></td>
+<td style="padding-right:10px"><p>
+progress indicator
+</p></td>
+</tr>
+</table>
+<p><strong>Example:</strong><code>er=01:pi=*5</code> sets the colors of error messages (<code>er</code>) to red (<code>1</code>) on black (<code>0</code>), and those
+of progress indicators (<code>pi</code>) to cyan (<code>5</code>) on default background (<code>*</code>).</p>
+</div></section><span class="linktarget" id="_files"></span><section class="manpage"><h3>
+<i class="fa fa-files-o fa-fw"></i> Files</h3>
+<div class="sectionbody">
+<p>The location of the following files is determined by the kpathsea library.
+To check the actual kpathsea configuration you can use the <strong>kpsewhich</strong> utility.</p>
+<table>
+<tr>
+<td style="padding-right:10px"><p><strong>*.enc</strong></p></td>
+<td style="padding-right:10px"><p>
+Font encoding files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.fgd</strong></p></td>
+<td style="padding-right:10px"><p>
+Font glyph data files (cache files created by dvisvgm)
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.map</strong></p></td>
+<td style="padding-right:10px"><p>
+Font map files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.mf</strong></p></td>
+<td style="padding-right:10px"><p>
+Metafont input files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.pfb</strong></p></td>
+<td style="padding-right:10px"><p>
+PostScript Type 1 font files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.pro</strong></p></td>
+<td style="padding-right:10px"><p>
+PostScript header/prologue files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.tfm</strong></p></td>
+<td style="padding-right:10px"><p>
+TeX font metric files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.ttf</strong></p></td>
+<td style="padding-right:10px"><p>
+TrueType font files
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>*.vf</strong></p></td>
+<td style="padding-right:10px"><p>
+Virtual font files
+</p></td>
+</tr>
+</table>
+</div></section><span class="linktarget" id="_see_also"></span><section class="manpage"><h3>
+<i class="fa fa-mail-forward fa-fw"></i> See also</h3>
+<div class="sectionbody"><p><strong>tex(1), mf(1), mktexmf(1), grodvi(1), potrace(1)</strong>, and the <strong>kpathsea library</strong> info documentation.</p></div></section><span class="linktarget" id="_resources"></span><section class="manpage"><h3>
+<i class="fa fa-link fa-fw"></i> Resources</h3>
+<div class="sectionbody"><dl>
+<dt class="hdlist1">
+Project home page
+<dd><p><a href="http://dvisvgm.bplaced.net">http://dvisvgm.bplaced.net</a></p></dd>
+</dt>
+<dt class="hdlist1">
+Code repository
+<dd><p><a href="https://github.com/mgieseki/dvisvgm">https://github.com/mgieseki/dvisvgm</a></p></dd>
+</dt>
+</dl></div></section><span class="linktarget" id="_bugs"></span><section class="manpage"><h3>
+<i class="fa fa-bug fa-fw"></i> Bugs</h3>
+<div class="sectionbody"><p>Please report bugs using the bug tracker at <a href="https://github.com/mgieseki/dvisvgm/issues">GitHub</a>.</p></div></section><span class="linktarget" id="_author"></span><section class="manpage"><h3>
+<i class="fa fa-user fa-fw"></i> Author</h3>
+<div class="sectionbody"><p>Written by Martin Gieseking &lt;<a href="mailto:martin.gieseking@uos.de">martin.gieseking@uos.de</a>&gt;</p></div></section><span class="linktarget" id="_copying"></span><section class="manpage"><h3>
+<i class="fa fa-gavel fa-fw"></i> Copying</h3>
+<div class="sectionbody"><p>Copyright © 2005-2018 Martin Gieseking. Free use of this software is
+granted under the terms of the GNU General Public License (GPL) version 3
+or, (at your option) any later version.</p></div></section>
+
+<hr>
+<div class="row">
+   <div class="col-md-6">Version 2.4</div>
+   <div class="col-md-6">
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2018-07-04</span>
+   </div>
+</div>
+</div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

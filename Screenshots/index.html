@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: Screenshots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  active dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item  active" href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>Screenshots</h2>
+      <h4>Basic information on how to avoid common issues</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        
+<div class="row">
+   <div class="col-md-6">
+      <img src="images/shot1.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>To convert a DVI file to SVG, just call <em>dvisvgm</em> with the name of the DVI file. The suffix <code>.dvi</code> can be omitted.<br />
+In this example, the first page of <code>frktest.dvi</code> has been converted and written to <code>frktest.svg</code>. Since the font
+<em>yinitas</em> wasn’t available as a vector font, <em>dvisvgm</em> called Metafont and vectorized the two glyphs of Metafont’s
+bitmap output required for the document. They are stored in a cache file so that it’s not necessary to call Metafont
+for these glyphs again which will speed up the conversion process.</p>
+</div>
+</div>
+
+
+<hr />
+
+<p><div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-opera.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>Here is the resulting SVG file opened in the Opera browser. Great, the document looks as expected &ndash;
+all glyphs are rendered correctly.</p>
+</div>
+</div>
+</p>
+
+<hr />
+
+<div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-firefox1.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>And this screenshot shows the same SVG file opened in Firefox. Well, the result is not that convincing this time.
+Unfortunately, only few SVG renderers support the evaluation of
+<a href="https://w3.org/TR/SVG/fonts.html#FontElement">SVG font elements</a> properly which <em>dvisvgm</em> creates by default.
+Thus, in many cases, these SVG files look strange.</p>
+</div>
+</div>
+
+
+<hr />
+
+<p><div class="row">
+   <div class="col-md-6">
+      <img src="images/shot2.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>In order to avoid these problems, call <em>dvisvgm</em> with option <code>-n</code> or <code>--no-fonts</code>. It replaces the font
+elements by <a href="https://w3.org/TR/SVG/paths.html#PathElement">paths</a> which are supported by nearly all
+SVG renderers.</p>
+
+<p>As already mentioned above, <em>dvisvgm</em> doesn’t call Metafont again because the vectorial representation
+of the required glyphs is present in the font cache and allows a faster conversion.</p>
+</div>
+</div>
+</p>
+
+<hr />
+
+<p><div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-firefox2.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>The font-free SVG file looks identical to the previous one and Firefox, Chrome, Inkscape etc. render it
+correctly. However, as there are no longer font characters present in the SVG file, the drawn text can’t
+be selected in the browser.</p>
+</div>
+</div>
+</p>
+
+<hr />
+
+<div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-win1.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p><em>dvisvgm</em> supports the evaluation of <a href="https://tug.org/texinfohtml/dvips.html#Interaction-with-PostScript">PostScript specials</a>
+embedded in the DVI file. It requires <a href="https://ghostscript.com">Ghostscript</a> to process the PostScript instructions.
+If the Ghostscript library can’t be found, you get a corresponding warning message.</p>
+</div>
+</div>
+
+
+<hr />
+
+<p><div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-squiggle1.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>If the PostScript specials couldn’t be processed, the resulting SVG usually lacks some parts of the graphic
+and/or text elements get the wrong position.</p>
+</div>
+</div>
+</p>
+
+<hr />
+
+<div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-win2.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>There are several ways to tell <em>dvisvgm</em> where to find the Ghostscript library (see the <a href="/FAQ">FAQ</a>),
+e.g. by setting the environment variable <code>LIBGS</code>. The warning messages go away as soon as Ghostscript is accessible.</p>
+</div>
+</div>
+
+
+<hr />
+
+<div class="row">
+   <div class="col-md-6">
+      <img src="images/shot-squiggle2.png" class="img-fluid">
+   </div>
+   <div class="col-md-6 description"><p>Now all graphic and positional instructions made it to the SVG file and the result looks as expected.</p>
+</div>
+</div>
+
+
+</div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

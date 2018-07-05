@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dvisvgm: News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="alternate" type="application/rss+xml" href="/index.xml" title="News about the DVI to SVG converter dvisvgm.">
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/fork-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ekko-lightbox.css">
+  </head>
+  <body>
+    <header id="main-header" class="page-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+         <i class="fa fa-home"></i> dvisvgm</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item  active">
+               <a class="nav-link" href="/News/" >News</a>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Downloads/" >Downloads</a>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
+                  <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
+                  <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
+                  <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  </div>
+            </li>
+            <li class="nav-item  dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
+               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
+                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
+                  <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
+                  <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
+                  </div>
+            </li>
+            <li class="nav-item ">
+               <a class="nav-link" href="/Contact/" >Contact</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+<div class="jumbotron text-primary" style="padding-top:10px;padding-bottom:5px">
+   <div class="container">
+      <h2>News</h2>
+      <h4>Information on new releases and related topics</h4>
+   </div>
+</div>
+</header>
+    <main>
+      <div class="container">
+        <p class="rsslink">
+    <a href="/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
+  </p>
+  <a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
+    <div class="card-body">
+      <p>This maintenance release provides the following changes/additions:</p>
+
+<ul>
+<li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
+<li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
+For further information on how to enable it, see the <a href="/Manpage/">manual page</a>.</li>
+<li>Added support for the length units <code>cc</code>, <code>dd</code>, and <code>sp</code>.</li>
+<li>Fixed a unit conversion issue in computation of bounding boxes.</li>
+<li>Fixed the propagation of the resolution value to the glyph vectorizer.</li>
+<li>Fixed the transformation of the optional background rectangle.</li>
+<li>Prevent processing of corrupted GF files.</li>
+<li>Major refactorings of the DVI reader and the SVG backend.</li>
+</ul>
+</div>
+  </section><a name="bf0f3eb5231404387af74e0d100f04dc"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">19 April 2016: dvisvgm 1.15.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added explicit encoding attribute to the XML declaration again (<a href="https://github.com/mgieseki/dvisvgm/issues/54">issue #54</a>).</li>
+<li>Added support for <a href="https://github.com/adobe-type-tools/agl-specification">AGL</a> character names of the form <code>uFOO</code> and <code>uniFOO</code>.</li>
+<li>Fixed parsing of transformation parameters given on the command-line.</li>
+<li>Minor code and test improvements.</li>
+</ul>
+</div>
+  </section><a name="2f0cae802c17b40886ac10cf40afd7fb"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">27 February 2016: dvisvgm 1.15 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added the command-line option <code>--comments</code> to insert additional information to the SVG file.</li>
+<li>Fixed a clipping bug in the PostScript handler.</li>
+<li>Some code improvements and refactorings.</li>
+<li>Moved the test data files to a separate folder.</li>
+</ul>
+</div>
+  </section><a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
+    <div class="card-body">
+      <p>This is a bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
+Now they affect all succeeding pages until the next change occurs.</li>
+<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
+<li>Updated the bundled xxHash library to version 0.5.0.</li>
+<li>Added xxHash to the output of <code>--version=1</code>.</li>
+<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
+</ul>
+</div>
+  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small bugfix release with the following changes:</p>
+
+<ul>
+<li>Reset the PostScript graphics state at the end of every DVI page to ensure consistent
+conversions if multiple page are processed.</li>
+<li>Added checks for invalid GF files to prevent undefined behavior.</li>
+</ul>
+</div>
+  </section>
+  <nav><ul class="pagination pagination-sm">
+    <li class="page-item">
+      <a class="page-link" href="/News/" aria-label="First"><span aria-hidden="true"><i class="fa fa-fast-backward"></i></span></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/4/" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-step-backward"></i></span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="/News/">1</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/4/">4</a></li>
+    <li class="page-item active"><a class="page-link" href="/News/page/5/">5</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/6/">6</a></li>
+    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
+    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li><li class="page-item">
+      <a class="page-link" href="/News/page/6/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/9/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+    </li>
+    </ul>
+</nav></div>
+    </main>
+    <footer>
+      <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
+  <div class="container">
+    <i class="fa fa-copyright"></i> 2018 Martin Gieseking •
+    <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
+    <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
+  </div>
+</div>
+</footer>
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/ekko-lightbox.min.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>
