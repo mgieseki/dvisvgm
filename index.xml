@@ -4,14 +4,14 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Fri, 06 Jul 2018 16:30:54 +0200</pubDate>
+    <pubDate>Fri, 06 Jul 2018 16:35:58 +0200</pubDate>
     <language>en</language>
     
     <item>
-      <title>Website moved to new the domain _dvisvgm.de_</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#3ee295fc93f035a8b4bd4bf63e18b208</link>
+      <title>Website moved to the new domain _dvisvgm.de_</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#c9b07d478e839e780fccf01ce5f698bc</link>
       <pubDate>Fri, 06 Jul 2018 16:06:57 +0200</pubDate>
-      <guid>3ee295fc93f035a8b4bd4bf63e18b208</guid>
+      <guid>c9b07d478e839e780fccf01ce5f698bc</guid>
       <description>
         <![CDATA[<p>To simplify the maintenance of both the website and the program code, I rebuilt the former wiki-based website with
 a static site generator and moved everything to <a href="https://pages.github.com">GitHub pages</a>. The site is now reachable
