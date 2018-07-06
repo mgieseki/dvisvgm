@@ -282,13 +282,13 @@ especially, if plain PostScript snippets are supposed to change the current grap
 
 <ul>
 <li>Defining and/or changing fonts via PostScript is not supported yet.</li>
-<li><a href="/docs/gradients/">Shading/gradient fills</a> are implemented partially. Function-based (type 1),
+<li><a href="/Gradients/">Shading/gradient fills</a> are implemented partially. Function-based (type 1),
 axial (type 2), and radial (type 3) shadings are not supported yet.</li>
 </ul>
 
 <h4 id="clipping-issues">Clipping issues</h4>
 
-<p>The SVG standard allows to define <a href="/docs/clipping/">clipping paths by intersection</a> like so:
+<p>The SVG standard allows to define <a href="/Clipping/">clipping paths by intersection</a> like so:
 <div class="d-inline-flex">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define a rectangular clipping path --&gt;</span>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
@@ -307,7 +307,7 @@ should produce visible results only inside the quadrant. Unfortunately, some SVG
 improperly. Since <em>dvisvgm</em> creates SVG files containing this kind of path intersections by default, the results
 might look wrong. To avoid this, <em>dvisvgm</em> offers the option <code>--clipjoin</code> which tells <em>dvisvgm</em> to compute the
 intersections directly and not to delegate this task to the SVG viewer. More detailed information can be found
-<a href="/docs/clipping/">here</a>.</p>
+<a href="/Clipping/">here</a>.</p>
 
 <p>The following images show the rendering results of the same SVG file opened in several applications.
 The SVG was generated without option <code>--clipjoin</code> from
