@@ -5,6 +5,7 @@ libbrotli_a_SOURCES = \
 	common/dictionary.c \
 	common/dictionary.h \
 	common/platform.h \
+	common/transform.c \
 	common/transform.h \
 	common/version.h \
 	enc/backward_references.c \
@@ -39,11 +40,13 @@ libbrotli_a_SOURCES = \
 	enc/entropy_encode_static.h \
 	enc/fast_log.h \
 	enc/find_match_length.h \
+	enc/hash_composite_inc.h \
 	enc/hash_forgetful_chain_inc.h \
 	enc/hash.h \
 	enc/hash_longest_match64_inc.h \
 	enc/hash_longest_match_inc.h \
 	enc/hash_longest_match_quickly_inc.h \
+	enc/hash_rolling_inc.h \
 	enc/hash_to_binary_tree_inc.h \
 	enc/histogram.c \
 	enc/histogram.h \
