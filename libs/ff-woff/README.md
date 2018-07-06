@@ -1,7 +1,7 @@
 # Reduced FontForge library for dvisvgm
 
 This is a radically reduced version of the [FontForge](http://fontforge.org) library required to natively
-build [dvisvgm](http://dvisvgm.bplaced.net) on Windows. Most of the code not needed to create autohinted
+build [dvisvgm](https://dvisvgm.de) on Windows. Most of the code not needed to create autohinted
 TrueType and WOFF fonts from [SFD](https://fontforge.github.io/sfdformat.html) files has been removed.
 
 The reduced library depends on [zlib](http://www.zlib.net).
