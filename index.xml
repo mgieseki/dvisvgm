@@ -4,7 +4,7 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>http://dvisvgm.sourceforge.net</link>
-    <pubDate>Thu, 05 Jul 2018 16:41:00 +0200</pubDate>
+    <pubDate>Fri, 06 Jul 2018 11:23:28 +0200</pubDate>
     <language>en</language>
     
     <item>
@@ -156,7 +156,7 @@ call it with option <code>--font-format=woff,autohint</code>, for example. The f
 hinted with ttfautohint:
 <div class="row align-items-center">
   <div class="col-md-8">
-  <p><object data="/dvisvgm/News/images/matrices-ta.svg" type="image/svg+xml"></object></p>
+  <p><object data="/News/images/matrices-ta.svg" type="image/svg+xml"></object></p>
 
 <p>In order to build <em>dvisvgm</em> with ttfautohint support, you need the ttfautohint library and the corresponding header
 files which are provided as of the latest version 1.8.1. A pre-built DLL of ttfautohint for Windows can be found
@@ -228,7 +228,7 @@ zlib:        1.2.11</code></pre></div>
       <guid>c1c0a7bf7e1afad6a2b2ea65a7026d1a</guid>
       <description>
         <![CDATA[<ul>
-<li>Fixed a portability issue when building the <a href="/dvisvgm/Manpage/">manual page</a>.
+<li>Fixed a portability issue when building the <a href="/Manpage/">manual page</a>.
 (<a href="https://github.com/mgieseki/dvisvgm/issues/72">issue #72</a>).</li>
 <li>Fixed the incomplete conversion of the PostScript line width (<a href="https://github.com/mgieseki/dvisvgm/issues/77">issue #77</a>).</li>
 <li>Further code refactorings and improvements.</li>
@@ -391,7 +391,7 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
 usually look better on low-resolution devices or when using small font sizes.<br />
 Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates the following result:<br />
 
-<object data="/dvisvgm/News/images/matrices-ah.svg" type="image/svg+xml"></object>
+<object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
 </li>
 </ul>
 ]]>
@@ -413,7 +413,7 @@ Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a
 recent web browsers so that the text elements present in the SVG files are rendered correctly as in
 the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
 
-<object data="/dvisvgm/News/images/matrices.svg" type="image/svg+xml"></object>
+<object data="/News/images/matrices.svg" type="image/svg+xml"></object>
 <br />
 In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
 Thanks to Thomas Weidner for providing important parts of the code.</li>
