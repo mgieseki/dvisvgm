@@ -1,3 +1,10 @@
+dvisvgm-2.4.1 (2018-07-07)
+- fixed handling of delay parameter of option --progress
+- updated brotli library to version 1.0.5
+- updated woff2 library to version 1.0.2
+- updated URLs in manual page
+- several minor code refactorings
+
 dvisvgm-2.4 (2018-05-03)
 - added special 'pdffile' similar to 'psfile' to embed PDF graphics
 - added option --pdf to convert single-page PDF documents to SVG
