@@ -71,7 +71,23 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="c4479aa4beab25001669744852462e3d"></a>
+  <a name="163a8d2e67641be42533f979fd3ae0be"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">3 September 2016: dvisvgm 2.0.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following addition:</p>
+
+<ul>
+<li>Added the optional argument parameter <code>autohint</code> to option <code>--font-format</code> that allows to create
+<a href="https://en.wikipedia.org/wiki/Font_hinting">autohinted</a> TTF, WOFF, or WOFF2 fonts. These fonts
+usually look better on low-resolution devices or when using small font sizes.<br />
+Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates the following result:<br />
+
+<object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
+</li>
+</ul>
+</div>
+  </section><a name="c4479aa4beab25001669744852462e3d"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
     <div class="card-body">
@@ -136,22 +152,6 @@ For further information on how to enable it, see the <a href="/Manpage/">manual 
 <li>Fixed a clipping bug in the PostScript handler.</li>
 <li>Some code improvements and refactorings.</li>
 <li>Moved the test data files to a separate folder.</li>
-</ul>
-</div>
-  </section><a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
-    <div class="card-body">
-      <p>This is a bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
-Now they affect all succeeding pages until the next change occurs.</li>
-<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
-<li>Updated the bundled xxHash library to version 0.5.0.</li>
-<li>Added xxHash to the output of <code>--version=1</code>.</li>
-<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
-<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
 </ul>
 </div>
   </section>

@@ -71,7 +71,18 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="39c60d5cff484207e089e498b9fe43f3"></a>
+  <a name="4567ec37398a2111cd0cdb77f419eb54"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
+doesn&rsquo;t call Metafont again for that font.</li>
+<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
+<li>Several minor code improvements and test enhancements.</li>
+</ul>
+</div>
+  </section><a name="39c60d5cff484207e089e498b9fe43f3"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">19 January 2017: dvisvgm 2.1 has been released</div>
     <div class="card-body">
@@ -116,22 +127,6 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
 <ul>
 <li>Fixed a regression in determining the character depths of native fonts.</li>
 <li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
-</ul>
-</div>
-  </section><a name="163a8d2e67641be42533f979fd3ae0be"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">3 September 2016: dvisvgm 2.0.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following addition:</p>
-
-<ul>
-<li>Added the optional argument parameter <code>autohint</code> to option <code>--font-format</code> that allows to create
-<a href="https://en.wikipedia.org/wiki/Font_hinting">autohinted</a> TTF, WOFF, or WOFF2 fonts. These fonts
-usually look better on low-resolution devices or when using small font sizes.<br />
-Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates the following result:<br />
-
-<object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
-</li>
 </ul>
 </div>
   </section>

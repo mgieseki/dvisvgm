@@ -71,7 +71,23 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
+  <a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
+    <div class="card-body">
+      <p>This is a bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
+Now they affect all succeeding pages until the next change occurs.</li>
+<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
+<li>Updated the bundled xxHash library to version 0.5.0.</li>
+<li>Added xxHash to the output of <code>--version=1</code>.</li>
+<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
+</ul>
+</div>
+  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
     <div class="card-body">
@@ -127,19 +143,6 @@ is now adapted to create a tight box by default.</li>
 <li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
 <li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
 <li>A memory issue that could occur when running Metafont has been fixed.</li>
-</ul>
-</div>
-  </section><a name="73d45e4c52912212028ec9af6199cb03"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following changes:</p>
-
-<ul>
-<li>The mapping of unknown characters to Unicode has been improved.</li>
-<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
-<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
-<li><code>xlink:title</code> attributes are now properly quoted.</li>
 </ul>
 </div>
   </section>

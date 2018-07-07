@@ -71,7 +71,32 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="5a76a7d57fe7b216bf0883b52c986d0b"></a>
+  <a name="35d5bbde9940088db6dc9bd90724f6de"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">29 December 2014: dvisvgm 1.9 has been released</div>
+    <div class="card-body">
+      <p>This is a feature release with the following additions/changes:</p>
+
+<ul>
+<li>Partial evaluation of the PostScript operator <code>shfill</code> which allows to create
+<a href="/Gradients/">color gradient fills</a> has been added. The recent version of
+<em>dvisvgm</em> supports the approximation of free- and lattice-form triangle meshes as well as Coons
+and tensor-product patch meshes.</li>
+<li>The command-line options <code>--grad-segments</code>, <code>--grad-overlap</code>, and <code>--grad-simplify</code> to adapt the
+approximation of gradient fills have been added. See the <a href="/Manpage/">manual page</a>
+for further details.</li>
+<li>Option <code>--no-merge</code> has been added. It forces <em>dvisvgm</em> to create separate text elements for
+each character (patch by Khaled Hosny).</li>
+<li>When searching the location of the Ghostscript library, <em>dvisvgm</em> now also looks up the file
+path in the Windows registry.</li>
+<li>A bug in the interaction of color specials with PostScript color operators has been fixed.</li>
+<li>The validity check of DVI files has been corrected.</li>
+<li>The free replacement script <code>opt2cpp.py</code> for my non-free <code>opt2cpp.xsl</code> stylesheet has been added.
+It’s required to create the C++ files from the XML file defining the command-line options. Thanks to
+Khaled Hosny for the implementation and for providing it for free.</li>
+</ul>
+</div>
+  </section><a name="5a76a7d57fe7b216bf0883b52c986d0b"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">29 August 2014: dvisvgm 1.8.1 has been released</div>
     <div class="card-body">
@@ -140,17 +165,6 @@ size and position values of the graphic objects.</li>
 <li><em>dvisvgm</em> now looks for <em>libgs.so.X</em> rather than just <em>libgs.so</em> if the Ghostscript library is not directly
 linked to the binary. Supported ABI versions are <em>X</em> = 7, 8, and 9.</li>
 <li><em>dvisvgm</em> no longer adds a time stamp and machine triplet to the generated SVG files.</li>
-</ul>
-</div>
-  </section><a name="399724dd7b5c5032916ce7524f9fda5e"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">11 April 2014: dvisvgm 1.5.3 has been released</div>
-    <div class="card-body">
-      <p>This is a small bugfix release.</p>
-
-<ul>
-<li>A positioning bug that led to displaced DVI rules/rectangles has been fixed.</li>
-<li>The positioning of PostScript graphics has been improved.</li>
 </ul>
 </div>
   </section>
