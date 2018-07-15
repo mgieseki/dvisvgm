@@ -398,31 +398,19 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 	BoundingBox bbox;
 	if (_previewFilter.getBoundingBox(bbox)) {  // is there any data written by preview package?
-		double w = max(0.0, _previewFilter.width());
-		double h = max(0.0, _previewFilter.height());
-		double d = max(0.0, _previewFilter.depth());
+		double w=0, h=0, d=0;
 		if (actions.getBBoxFormatString() == "preview" || actions.getBBoxFormatString() == "min") {
 			if (actions.getBBoxFormatString() == "preview") {
+				w = max(0.0, _previewFilter.width());
+				h = max(0.0, _previewFilter.height());
+				d = max(0.0, _previewFilter.depth());
 				actions.bbox() = bbox;
 				Message::mstream() << "\napplying bounding box set by";
 			}
 			else {
-				// compute height, depth and width depending on the
-				// tight bounding box derived from the objects on the page
-				double y0 = bbox.maxY()-h;      // y coordinate of the baseline
-				h = actions.bbox().maxY()-y0;
-				if (h < 0) {
-					h = 0;
-					d = actions.bbox().height();
-				}
-				else {
-					d = y0-actions.bbox().minY();
-					if (d < 0) {
-						h = actions.bbox().height();
-						d = 0;
-					}
-				}
 				w = actions.bbox().width();
+				h = max(0.0, -actions.bbox().minY());
+				d = max(0.0, actions.bbox().maxY());
 				Message::mstream() << "\ncomputing extents based on data set by";
 			}
 			Message::mstream() << " preview package (version " << _previewFilter.version() << ")\n";
