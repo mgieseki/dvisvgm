@@ -89,19 +89,6 @@ bool PSPreviewFilter::getBoundingBox (BoundingBox &bbox) const {
 }
 
 
-/** Gets the 4 border position values set by the preview package (in bp units).
- *  @return true if the border data is available */
-bool PSPreviewFilter::getBorders (double &left, double &right, double &top, double &bottom) const {
-	if (_boxExtents.size() < 4)
-		return false;
-	left   = -_boxExtents[0]*_dvi2bp;
-	top    = -_boxExtents[1]*_dvi2bp;
-	right  = _boxExtents[2]*_dvi2bp;
-	bottom = _boxExtents[3]*_dvi2bp;
-	return true;
-}
-
-
 /** Returns the box height in PS points, or -1 if no data was found or read yet. */
 double PSPreviewFilter::height () const {
 	return _boxExtents.size() > 4 ? (_boxExtents[4]-_boxExtents[1])*_dvi2bp : -1;
