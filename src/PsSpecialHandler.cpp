@@ -442,28 +442,28 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 					"height=" << XMLString(h*bp2pt) << "pt, "
 					"depth=" << XMLString(d*bp2pt) << "pt\n";
 			}
-		}
 #if 0
-		XMLElementNode *rect = new XMLElementNode("rect");
-		rect->addAttribute("x", actions.bbox().minX());
-		rect->addAttribute("y", actions.bbox().minY());
-		rect->addAttribute("width", w);
-		rect->addAttribute("height", h+d);
-		rect->addAttribute("fill", "none");
-		rect->addAttribute("stroke", "red");
-		rect->addAttribute("stroke-width", "0.5");
-		actions.appendToPage(rect);
-		if (d > 0) {
-			XMLElementNode *line = new XMLElementNode("line");
-			line->addAttribute("x1", actions.bbox().minX());
-			line->addAttribute("y1", actions.bbox().minY()+h);
-			line->addAttribute("x2", actions.bbox().maxX());
-			line->addAttribute("y2", actions.bbox().minY()+h);
-			line->addAttribute("stroke", "blue");
-			line->addAttribute("stroke-width", "0.5");
-			actions.appendToPage(line);
-		}
+			auto rect = util::make_unique<XMLElementNode>("rect");
+			rect->addAttribute("x", actions.bbox().minX());
+			rect->addAttribute("y", actions.bbox().minY());
+			rect->addAttribute("width", w);
+			rect->addAttribute("height", h+d);
+			rect->addAttribute("fill", "none");
+			rect->addAttribute("stroke", "red");
+			rect->addAttribute("stroke-width", "0.1");
+			actions.appendToPage(std::move(rect));
+			if (d > 0) {
+				auto line = util::make_unique<XMLElementNode>("line");
+				line->addAttribute("x1", actions.bbox().minX());
+				line->addAttribute("y1", actions.bbox().minY()+h);
+				line->addAttribute("x2", actions.bbox().maxX());
+				line->addAttribute("y2", actions.bbox().minY()+h);
+				line->addAttribute("stroke", "blue");
+				line->addAttribute("stroke-width", "0.1");
+				actions.appendToPage(std::move(line));
+			}
 #endif
+		}
 	}
 	// close dictionary TeXDict and execute end-hook if defined
 	if (_psSection == PS_BODY) {
