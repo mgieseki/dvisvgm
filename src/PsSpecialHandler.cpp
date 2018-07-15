@@ -267,6 +267,11 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
  *  @param[in] fname EPS/PDF file to be included
  *  @param[in] attr attributes given with psfile/pdffile special */
 void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const unordered_map<string,string> &attr) {
+	// prevent warning about missing image file "/dev/null" which is
+	// added by option "psfixbb" of the preview package
+	if (fname == "/dev/null")
+		return;
+
 	const char *filepath = FileFinder::instance().lookup(fname, false);
 	if (!filepath && FileSystem::exists(fname))
 		filepath = fname.c_str();
