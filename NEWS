@@ -1,3 +1,10 @@
+dvisvgm-2.4.2 (2018-18-07)
+- fixed height and depth values computed when using the preview package
+- removed additional borders from the bounding boxes of hyperlinked areas
+- prevent warnings if special "psfile" is called with argument "/dev/null"
+  (e.g. option "psfixbb" of the preview package adds such specials)
+- "make install" no longer fails if the manpage can't be built
+
 dvisvgm-2.4.1 (2018-07-07)
 - fixed handling of delay parameter of option --progress
 - updated brotli library to version 1.0.5
