@@ -71,7 +71,22 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="961cdf56e376338f85ce3cc3a86b6327"></a>
+  <a name="17a86fddd2d683a5caf8ec5239a5433f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">18 July 2018: dvisvgm 2.4.2 has been released</div>
+    <div class="card-body">
+      <p>This is another small maintenance release.</p>
+
+<ul>
+<li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
+<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas. to ensure tight bounds.</li>
+<li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
+For example, option <code>psfixbb</code> of the preview package adds these specials to help <em>dvips</em> to compute correct bounding boxes.</li>
+<li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
+</ul>
+</div>
+  </section><a name="961cdf56e376338f85ce3cc3a86b6327"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">7 July 2018: dvisvgm 2.4.1 has been released</div>
     <div class="card-body">
@@ -155,19 +170,6 @@ allowed according to the EPS specification.</li>
 <li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
 </ul>
 </div>
-  </section><a name="249be2db725733a95e407b5205cd681e"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">14 March 2018: dvisvgm 2.3.4 has been released</div>
-    <div class="card-body">
-      <p>This is another maintenance release with the following changes:</p>
-
-<ul>
-<li>Fixed an error message printed when addding a single dash on the command-line.</li>
-<li>Added a missing data file that lead to failing tests (<a href="https://github.com/mgieseki/dvisvgm/issues/87">issue #87</a>).</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.3.</li>
-<li>Some code refactorings.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item disabled">
@@ -180,11 +182,11 @@ allowed according to the EPS specification.</li>
     <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/10/">10</a></li><li class="page-item">
       <a class="page-link" href="/News/page/2/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/9/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/10/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>

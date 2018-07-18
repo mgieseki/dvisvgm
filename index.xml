@@ -4,8 +4,28 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 07 Jul 2018 13:05:03 +0200</pubDate>
+    <pubDate>Wed, 18 Jul 2018 19:26:33 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.4.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#17a86fddd2d683a5caf8ec5239a5433f</link>
+      <pubDate>Wed, 18 Jul 2018 18:43:24 +0200</pubDate>
+      <guid>17a86fddd2d683a5caf8ec5239a5433f</guid>
+      <description>
+        <![CDATA[<p>This is another small maintenance release.</p>
+
+<ul>
+<li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
+<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas. to ensure tight bounds.</li>
+<li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
+For example, option <code>psfixbb</code> of the preview package adds these specials to help <em>dvips</em> to compute correct bounding boxes.</li>
+<li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.4.1 has been released</title>
@@ -113,7 +133,7 @@ allowed according to the EPS specification.</li>
     
     <item>
       <title>dvisvgm 2.3.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#249be2db725733a95e407b5205cd681e</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#249be2db725733a95e407b5205cd681e</link>
       <pubDate>Wed, 14 Mar 2018 13:25:12 +0200</pubDate>
       <guid>249be2db725733a95e407b5205cd681e</guid>
       <description>
@@ -228,7 +248,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#595f907cf14e9865ceffbd91fa3e2f10</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#595f907cf14e9865ceffbd91fa3e2f10</link>
       <pubDate>Tue, 12 Dec 2017 20:03:01 +0200</pubDate>
       <guid>595f907cf14e9865ceffbd91fa3e2f10</guid>
       <description>
@@ -313,7 +333,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.1.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#dd2113409e78721a1f3c2f4b2cfa5937</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#dd2113409e78721a1f3c2f4b2cfa5937</link>
       <pubDate>Sun, 12 Feb 2017 20:13:02 +0200</pubDate>
       <guid>dd2113409e78721a1f3c2f4b2cfa5937</guid>
       <description>
@@ -392,22 +412,6 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
 <ul>
 <li>Fixed a regression in the character positioning of virtual fonts.</li>
 <li>Fixed the positioning of rules.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.0.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#bf77e8ab739bd4e48157be61876cb088</link>
-      <pubDate>Mon, 19 Sep 2016 20:21:05 +0200</pubDate>
-      <guid>bf77e8ab739bd4e48157be61876cb088</guid>
-      <description>
-        <![CDATA[<p>This is a bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed a regression in determining the character depths of native fonts.</li>
-<li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
 </ul>
 ]]>
       </description>
