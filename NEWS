@@ -1,4 +1,4 @@
-dvisvgm-2.4.2 (2018-18-07)
+dvisvgm-2.4.2 (2018-07-18)
 - fixed height and depth values computed when using the preview package
 - removed additional borders from the bounding boxes of hyperlinked areas
 - prevent warnings if special "psfile" is called with argument "/dev/null"
