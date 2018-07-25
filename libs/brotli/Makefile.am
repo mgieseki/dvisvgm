@@ -1,3 +1,4 @@
+if USE_BUNDLED_LIBS
 noinst_LIBRARIES = libbrotli.a
 libbrotli_a_SOURCES = \
 	common/constants.h \
@@ -73,10 +74,10 @@ libbrotli_a_SOURCES = \
 	include/brotli/port.h \
 	include/brotli/types.h
 
-EXTRA_DIST = LICENSE
-
 AM_CFLAGS = -Wall -I$(srcdir)/include
 
 @CODE_COVERAGE_RULES@
+endif
 
+EXTRA_DIST = LICENSE
 CLEANFILES = *.gcda *.gcno

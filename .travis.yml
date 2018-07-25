@@ -34,14 +34,14 @@ addons:
          description: "dvisvgm - A fast DVI to SVG converter"
          version: 2.4.2
       notification_email: martin.gieseking@uos.de
-      build_command_prepend: "./configure; make clean"
+      build_command_prepend: "./configure --enable-bundled-libs; make clean"
       build_command: "make -j"
       branch_pattern: coverity_scan
 
 script:
    - uname -a
    - ./autogen.sh
-   - ./configure
+   - ./configure --enable-bundled-libs
    - make
    - make -C src -t
    - make check

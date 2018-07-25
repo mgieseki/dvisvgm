@@ -1,3 +1,4 @@
+if USE_BUNDLED_LIBS
 noinst_LIBRARIES = libwoff2.a
 libwoff2_a_SOURCES = \
 	include/woff2/decode.h \
@@ -25,10 +26,10 @@ libwoff2_a_SOURCES = \
 	src/woff2_enc.cc \
 	src/woff2_out.cc
 
-EXTRA_DIST = LICENSE
-
 AM_CXXFLAGS = -Wall -I$(srcdir)/include -I$(srcdir)/../brotli/include
 
 @CODE_COVERAGE_RULES@
+endif
 
+EXTRA_DIST = LICENSE
 CLEANFILES = *.gcda *.gcno

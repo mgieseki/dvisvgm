@@ -13,16 +13,28 @@ dvisvgm_SOURCES = \
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../libs/clipper/libclipper.a \
-	../libs/xxHash/libxxhash.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
 	$(ZLIB_LIBS)
 
+if USE_BUNDLED_LIBS
+dvisvgm_LDADD += ../libs/xxHash/libxxhash.a
+else
+dvisvgm_LDADD += $(XXHASH_LIBS)
+endif
+
 if ENABLE_WOFF
+if USE_BUNDLED_LIBS
 dvisvgm_LDADD += \
 	../libs/ff-woff/libfontforge.a \
 	../libs/woff2/libwoff2.a \
 	../libs/brotli/libbrotli.a
+else
+dvisvgm_LDADD += \
+	../libs/ff-woff/libfontforge.a \
+	$(WOFF2_LIBS) \
+	$(BROTLI_LIBS)
+endif
 endif
 
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
@@ -252,11 +264,16 @@ AM_CFLAGS = -Wall \
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	-I$(top_srcdir)/libs/clipper \
 	-I$(top_srcdir)/libs/variant/include \
-	-I$(top_srcdir)/libs/xxHash \
 	$(KPSE_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
+
+if USE_BUNDLED_LIBS
+AM_CXXFLAGS += -I$(top_srcdir)/libs/xxHash
+else
+AM_CXXFLAGS += $(XXHASH_CFLAGS)
+endif
 
 AM_LDFLAGS = \
 	$(KPSE_LIBS) \
@@ -267,10 +284,17 @@ AM_CFLAGS +=  \
 	-I$(top_srcdir)/libs/ff-woff/fontforge \
 	-I$(top_srcdir)/libs/ff-woff/inc
 
+AM_CXXFLAGS += $(TTFAUTOHINT_CFLAGS)
+
+if USE_BUNDLED_LIBS
 AM_CXXFLAGS +=  \
-	$(TTFAUTOHINT_CFLAGS) \
 	-I$(top_srcdir)/libs/brotli/include \
 	-I$(top_srcdir)/libs/woff2/include
+else
+AM_CXXFLAGS +=  \
+	$(BROTLI_CFLAGS) \
+	$(WOFF2_CFLAGS)
+endif
 
 AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
 endif

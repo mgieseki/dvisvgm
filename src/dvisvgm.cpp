@@ -52,7 +52,7 @@
 
 #ifndef DISABLE_WOFF
 #include <brotli/encode.h>
-#include <woff2/version.h>
+//#include <woff2/version.h>
 #include "ffwrapper.h"
 #include "TTFAutohint.hpp"
 #endif
@@ -252,7 +252,7 @@ static void print_version (bool extended) {
 		versionInfo.add("Ghostscript", Ghostscript().revisionstr(), true);
 #ifndef DISABLE_WOFF
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
-		versionInfo.add("woff2", woff2::version, 3, 0x100);
+//		versionInfo.add("woff2", woff2::version, 3, 0x100);
 		versionInfo.add("fontforge", ff_version());
 		versionInfo.add("ttfautohint", TTFAutohint().version(), true);
 #endif
