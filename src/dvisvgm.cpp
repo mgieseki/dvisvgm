@@ -373,12 +373,6 @@ int main (int argc, char *argv[]) {
 			Message::mstream().indent(0);
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
 		}
-		else if (cmdline.pdfOpt.given()) {
-			PDFToSVG pdf2svg(srcin.getFilePath(), out);
-			pdf2svg.convert();
-			Message::mstream().indent(0);
-			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
-		}
 		else {
 			init_fontmap(cmdline);
 			DVIToSVG dvi2svg(srcin.getInputStream(), out);
