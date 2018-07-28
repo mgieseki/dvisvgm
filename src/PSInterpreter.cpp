@@ -341,3 +341,16 @@ int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) {
 	return len;
 }
 
+
+/** Returns the total number of pages of a PDF file.
+ *  @param[in] fname name/path of the PDF file */
+int PSInterpreter::pdfPageCount (const string &fname) {
+	executeRaw("\n("+fname+")@pdfpagecount ", 1);
+	if (!_rawData.empty()) {
+		size_t index;
+		int ret = stoi(_rawData[0], &index, 10);
+		if (index > 0)
+			return ret;
+	}
+	return 0;
+}

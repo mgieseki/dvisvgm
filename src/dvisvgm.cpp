@@ -320,6 +320,19 @@ static void set_variables (const CommandLine &cmdline) {
 }
 
 
+static void timer_message (double start_time, const pair<int,int> *pageinfo) {
+	Message::mstream().indent(0);
+	if (!pageinfo)
+		Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << "file";
+	else {
+		Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << pageinfo->first << " of " << pageinfo->second << " page";
+		if (pageinfo->second > 1)
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << 's';
+	}
+	Message::mstream(false, Message::MC_PAGE_NUMBER) << " converted in " << (System::time()-start_time) << " seconds\n";
+}
+
+
 int main (int argc, char *argv[]) {
 	try {
 		CommandLine cmdline;
@@ -364,14 +377,14 @@ int main (int argc, char *argv[]) {
 		SVGOutput out(cmdline.stdoutOpt.given() ? "" : srcin.getFileName(),
 			cmdline.outputOpt.value(),
 			cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
+		pair<int,int> pageinfo;
 		if (cmdline.epsOpt.given() || cmdline.pdfOpt.given()) {
 			auto img2svg = unique_ptr<ImageToSVG>(
 				cmdline.epsOpt.given()
 				? static_cast<ImageToSVG*>(new EPSToSVG(srcin.getFilePath(), out))
 				: static_cast<ImageToSVG*>(new PDFToSVG(srcin.getFilePath(), out)));
-			img2svg->convert();
-			Message::mstream().indent(0);
-			Message::mstream(false, Message::MC_PAGE_NUMBER) << "file converted in " << (System::time()-start_time) << " seconds\n";
+			img2svg->convert(cmdline.pageOpt.value(), &pageinfo);
+			timer_message(start_time, img2svg->isSinglePageFormat() ? nullptr : &pageinfo);
 		}
 		else {
 			init_fontmap(cmdline);
@@ -383,13 +396,8 @@ int main (int argc, char *argv[]) {
 			dvi2svg.setPageTransformation(get_transformation_string(cmdline));
 			dvi2svg.setPageSize(cmdline.bboxOpt.value());
 
-			pair<int,int> pageinfo;
 			dvi2svg.convert(cmdline.pageOpt.value(), &pageinfo);
-			Message::mstream().indent(0);
-			Message::mstream(false, Message::MC_PAGE_NUMBER) << "\n" << pageinfo.first << " of " << pageinfo.second << " page";
-			if (pageinfo.second > 1)
-				Message::mstream(false, Message::MC_PAGE_NUMBER) << 's';
-			Message::mstream(false, Message::MC_PAGE_NUMBER) << " converted in " << (System::time()-start_time) << " seconds\n";
+			timer_message(start_time, &pageinfo);
 		}
 	}
 	catch (DVIException &e) {

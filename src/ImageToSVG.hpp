@@ -24,6 +24,7 @@
 #include <istream>
 #include <memory>
 #include <string>
+#include "PsSpecialHandler.hpp"
 #include "SpecialActions.hpp"
 #include "SVGTree.hpp"
 
@@ -33,12 +34,18 @@ class ImageToSVG : protected SpecialActions {
 	public:
 		ImageToSVG (const std::string &fname, SVGOutputBase &out) : _fname(fname), _out(out) {}
 		virtual ~ImageToSVG () =default;
-		void convert ();
+		void convert (int pageno);
+		void convert (int firstPage, int lastPage, std::pair<int,int> *pageinfo);
+		void convert (const std::string &rangestr, std::pair<int,int> *pageinfo);
 		void setTransformation (const Matrix &m);
 		void setPageSize (const std::string &name);
 		std::string filename () const {return _fname;}
+		PSInterpreter& psInterpreter () {return _psHandler.psInterpreter();}
+		virtual bool isSinglePageFormat () const =0;
+		virtual int totalPageCount () =0;
 
 	protected:
+		void checkGSAndFileFormat ();
 		virtual std::string imageFormat () const =0;
 		virtual bool imageIsValid () const =0;
 		virtual BoundingBox imageBBox () const =0;
@@ -75,6 +82,8 @@ class ImageToSVG : protected SpecialActions {
 		SVGOutputBase &_out;
 		double _x=0, _y=0;
 		BoundingBox _bbox;
+		PsSpecialHandler _psHandler;
+		bool _haveGS=false;  ///< true if Ghostscript is available
 };
 
 #endif

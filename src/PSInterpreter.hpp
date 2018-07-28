@@ -101,6 +101,7 @@ class PSInterpreter {
 		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
 		void setFilter (PSFilter *filter)      {_filter = filter;}
 		PSActions* setActions (PSActions *actions);
+		int pdfPageCount (const std::string &fname);
 		const std::vector<std::string>& rawData () const {return _rawData;}
 
 	protected:

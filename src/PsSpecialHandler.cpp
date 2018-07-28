@@ -45,7 +45,7 @@ int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
 
 
-PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _psSection(PS_NONE), _xmlnode(), _savenode()
+PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _xmlnode(), _savenode()
 {
 }
 
@@ -286,9 +286,10 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	double lly = (it = attr.find("lly")) != attr.end() ? stod(it->second) : 0;
 	double urx = (it = attr.find("urx")) != attr.end() ? stod(it->second) : 0;
 	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
+	int pageno = (it = attr.find("page")) != attr.end() ? stoi(it->second, nullptr, 10) : 1;
 
 	if (filetype == FileType::PDF && llx == 0 && lly == 0 && urx == 0 && ury == 0) {
-		_psi.execute("\n("+fname+")@getpdfpagebox ");
+		_psi.execute("\n"+to_string(pageno)+"("+fname+")@getpdfpagebox ");
 		if (_pdfpagebox.valid()) {
 			llx = _pdfpagebox.minX();
 			lly = _pdfpagebox.minY();
@@ -335,11 +336,13 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	auto groupNode = util::make_unique<XMLElementNode>("g");  // append following elements to this group
 	_xmlnode = groupNode.get();
 	_psi.execute(
-		"\n@beginspecial @setspecial"        // enter special environment
-		"/setpagedevice{@setpagedevice}def"  // activate processing of operator "setpagedevice"
-		"[1 0 0 -1 0 0] setmatrix"           // don't apply outer PS transformations
-		"(" + string(filepath) + ")run "     // execute file content
-		"@endspecial "                       // leave special environment
+		"\n@beginspecial @setspecial"          // enter special environment
+		"/setpagedevice{@setpagedevice}def"    // activate processing of operator "setpagedevice"
+		"[1 0 0 -1 0 0] setmatrix"             // don't apply outer PS transformations
+		"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
+		"/LastPage "+to_string(pageno)+" def"  // set number of last page to convert (PDF only)
+		"(" + string(filepath) + ")run "       // execute file content
+		"@endspecial "                         // leave special environment
 	);
 	if (!groupNode->empty()) {       // has anything been drawn?
 		Matrix matrix(1);

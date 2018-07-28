@@ -28,7 +28,7 @@ Short overview of the main features:
 * _dvisvgm_ allows to replace [font elements](https://www.w3.org/TR/SVG/fonts.html) by [paths](https://www.w3.org/TR/SVG/paths.html) so that applications without SVG font support are enabled to render dvisvgm's output properly.
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
-* Option `--pdf` allows to convert single-page [PDF](https://en.wikipedia.org/wiki/PDF) documents to SVG.
+* Option `--pdf` allows to convert [PDF](https://en.wikipedia.org/wiki/PDF) documents to SVG.
 * [Intersections of clipping paths](https://dvisvgm.de/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
 * Approximates PostScript [color gradient fills](https://dvisvgm.de/Gradients) not directly supported by SVG 1.1.
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
