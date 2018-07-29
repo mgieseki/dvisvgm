@@ -289,12 +289,12 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 	int pageno = (it = attr.find("page")) != attr.end() ? stoi(it->second, nullptr, 10) : 1;
 
 	if (filetype == FileType::PDF && llx == 0 && lly == 0 && urx == 0 && ury == 0) {
-		_psi.execute("\n"+to_string(pageno)+"("+fname+")@getpdfpagebox ");
-		if (_pdfpagebox.valid()) {
-			llx = _pdfpagebox.minX();
-			lly = _pdfpagebox.minY();
-			urx = _pdfpagebox.maxX();
-			ury = _pdfpagebox.maxY();
+		BoundingBox pagebox = _psi.pdfPageBox(fname, pageno);
+		if (pagebox.valid()) {
+			llx = pagebox.minX();
+			lly = pagebox.minY();
+			urx = pagebox.maxX();
+			ury = pagebox.maxY();
 		}
 	}
 

@@ -47,7 +47,6 @@ class PSTestActions : public PSActions {
 		void setpagedevice (vector<double> &p) override   {print("setpagedevice", p);}
 		void newpath (vector<double> &p) override         {print("newpath", p);}
 		void querypos (vector<double> &p) override        {print("querypos", p);}
-		void pdfpagebox (std::vector<double> &p) override {print("pdfpagebox", p);}
 		void restore(std::vector<double> &p) override     {print("restore", p);}
 		void rotate (vector<double> &p) override          {print("rotate", p);}
 		void save(std::vector<double> &p) override        {print("save", p);}
