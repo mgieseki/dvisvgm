@@ -45,7 +45,7 @@ void ImageToSVG::checkGSAndFileFormat () {
 		if (!_haveGS)
 			throw MessageException("Ghostscript is required to process "+imageFormat()+" files");
 		if (!imageIsValid())
-			throw PSException("invalid "+imageFormat()+" file");
+			throw MessageException("invalid "+imageFormat()+" file");
 	}
 }
 
