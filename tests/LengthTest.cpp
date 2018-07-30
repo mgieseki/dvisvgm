@@ -233,3 +233,19 @@ TEST(LengthTest, toString) {
 	EXPECT_EQ(Length(10, Length::Unit::CC).toString(Length::Unit::CC), "10cc");
 	EXPECT_EQ(Length(10, Length::Unit::SP).toString(Length::Unit::SP), "10sp");
 }
+
+
+TEST(LengthTest, literals) {
+	EXPECT_EQ(1_pt, Length(1, "pt"));
+	EXPECT_EQ(2_bp, Length(2, "bp"));
+	EXPECT_EQ(3_in, Length(3, "in"));
+	EXPECT_EQ(5_mm, Length(5, "mm"));
+}
+
+
+TEST(LengthTest, getUnits) {
+	for (auto unit : Length::getUnits()) {
+		EXPECT_EQ(unit.first, Length::unitToString(unit.second));
+		EXPECT_EQ(unit.second, Length::stringToUnit(unit.first));
+	}
+}
