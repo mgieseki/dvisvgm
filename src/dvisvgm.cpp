@@ -383,6 +383,7 @@ int main (int argc, char *argv[]) {
 				cmdline.epsOpt.given()
 				? static_cast<ImageToSVG*>(new EPSToSVG(srcin.getFilePath(), out))
 				: static_cast<ImageToSVG*>(new PDFToSVG(srcin.getFilePath(), out)));
+			img2svg->setPageTransformation(get_transformation_string(cmdline));
 			img2svg->convert(cmdline.pageOpt.value(), &pageinfo);
 			timer_message(start_time, img2svg->isSinglePageFormat() ? nullptr : &pageinfo);
 		}

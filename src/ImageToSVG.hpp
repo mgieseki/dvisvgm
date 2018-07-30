@@ -37,8 +37,8 @@ class ImageToSVG : protected SpecialActions {
 		void convert (int pageno);
 		void convert (int firstPage, int lastPage, std::pair<int,int> *pageinfo);
 		void convert (const std::string &rangestr, std::pair<int,int> *pageinfo);
-		void setTransformation (const Matrix &m);
-		void setPageSize (const std::string &name);
+		void setPageTransformation (const std::string &transCmds) {_transCmds = transCmds;}
+//		void setPageSize (const std::string &name);
 		std::string filename () const {return _fname;}
 		PSInterpreter& psInterpreter () {return _psHandler.psInterpreter();}
 		virtual bool isSinglePageFormat () const =0;
@@ -46,6 +46,7 @@ class ImageToSVG : protected SpecialActions {
 
 	protected:
 		void checkGSAndFileFormat ();
+		Matrix getUserMatrix (const BoundingBox &bbox) const;
 		virtual std::string imageFormat () const =0;
 		virtual bool imageIsValid () const =0;
 		virtual BoundingBox imageBBox () const =0;
@@ -83,7 +84,8 @@ class ImageToSVG : protected SpecialActions {
 		double _x=0, _y=0;
 		BoundingBox _bbox;
 		PsSpecialHandler _psHandler;
-		bool _haveGS=false;  ///< true if Ghostscript is available
+		bool _haveGS=false;      ///< true if Ghostscript is available
+		std::string _transCmds;  ///< transformation commands
 };
 
 #endif
