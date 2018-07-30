@@ -21,6 +21,20 @@ EXTRA_DIST = gtest/LICENSE \
 	gtest/src/gtest-test-part.cc \
 	gtest/src/gtest-typed-test.cc
 
+if USE_BUNDLED_LIBS
+LIBS_CFLAGS = -I$(top_srcdir)/libs/xxHash
+LIBS_LIBS   = ../libs/potrace/libpotrace.a ../libs/xxHash/libxxhash.a
+if ENABLE_WOFF
+LIBS_LIBS  += ../libs/woff2/libwoff2.a ../libs/brotli/libbrotli.a
+endif
+else
+LIBS_CFLAGS = -I$(XXHASH_CFLAGS)
+LIBS_LIBS   = $(POTRACE_LIBS) $(XXHASH_LIBS)
+if ENABLE_WOFF
+LIBS_LIBS  += $(WOFF2_LIBS) $(BROTLI_LIBS)
+endif
+endif
+
 AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/libs/variant/include \
 	-Wall -Wno-mismatched-tags \
 	-DBUILDDIR='"$(abs_builddir)"' -DSRCDIR='"$(abs_srcdir)"' \
@@ -29,18 +43,15 @@ AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/libs/variant/include \
 TESTS = hashcheck
 check_PROGRAMS = hashcheck
 nodist_hashcheck_SOURCES = hashcheck.cpp
-hashcheck_LDADD = ../libs/xxHash/libxxhash.a
-hashcheck_CPPFLAGS = -I$(top_srcdir)/libs/xxHash
+hashcheck_CPPFLAGS = $(LIBS_CFLAGS)
+hashcheck_LDADD = $(LIBS_LIBS)
 
 hashcheck.cpp: genhashcheck.py $(top_srcdir)/src/AGLTable.hpp $(top_srcdir)/libs/xxHash/xxhash.h
 	python $^ >$@
 
-TESTLIBS = libgtest.la ../src/libdvisvgm.a ../libs/xxHash/libxxhash.a -lpotrace -lfreetype
+TESTLIBS = libgtest.la ../src/libdvisvgm.a $(LIBS_LIBS) -lfreetype
 if ENABLE_WOFF
-TESTLIBS += \
-	../libs/ff-woff/libfontforge.a \
-	../libs/woff2/libwoff2.a \
-	../libs/brotli/libbrotli.a
+TESTLIBS += ../libs/ff-woff/libfontforge.a
 endif
 TESTLIBS += $(CODE_COVERAGE_LDFLAGS)
 
