@@ -20,6 +20,8 @@
 
 #include <gtest/gtest.h>
 #include "Calculator.hpp"
+#include "Length.hpp"
+
 
 TEST(CalculatorTest, eval) {
 	Calculator calc;
@@ -38,10 +40,10 @@ TEST(CalculatorTest, variables) {
 	Calculator calc;
 	calc.setVariable("a", 1);
 	EXPECT_EQ(calc.getVariable("a"), 1);
-	
+
 	calc.setVariable("a", 2);
 	EXPECT_EQ(calc.getVariable("a"), 2);
-	
+
 	calc.setVariable("b", 3);
 	EXPECT_EQ(calc.eval("a+b"), 5);
 	EXPECT_EQ(calc.eval("2a+2b"), 10);
@@ -58,3 +60,14 @@ TEST(CalculatorTest, exceptions) {
 	ASSERT_THROW(calc.eval("2*(3+4))"), CalculatorException);
 }
 
+
+TEST(CalculatorTest, units) {
+	Calculator calc;
+	for (auto unit : Length::getUnits())
+		calc.setVariable(unit.first, Length(1, unit.second).bp());
+	EXPECT_DOUBLE_EQ(calc.eval("1bp+3bp"), 4.0);
+	EXPECT_DOUBLE_EQ(calc.eval("1bp+1in"), 73.0);
+	EXPECT_DOUBLE_EQ(calc.eval("5cm/1cm"), 5.0);
+	EXPECT_DOUBLE_EQ(calc.eval("5cm/1cm"), 5.0);
+	EXPECT_DOUBLE_EQ(calc.eval("5cm"), 5/2.54*72);
+}

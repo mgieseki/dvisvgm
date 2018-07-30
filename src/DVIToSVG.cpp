@@ -248,17 +248,16 @@ void DVIToSVG::getPageTransformation(Matrix &matrix) const {
 	else {
 		Calculator calc;
 		if (_actions) {
-			const double bp2pt = 1/Length::pt2bp;
+			const double bp2pt = (1_bp).pt();
 			BoundingBox &bbox = _actions->bbox();
 			calc.setVariable("ux", bbox.minX()*bp2pt);
 			calc.setVariable("uy", bbox.minY()*bp2pt);
 			calc.setVariable("w",  bbox.width()*bp2pt);
 			calc.setVariable("h",  bbox.height()*bp2pt);
 		}
-		calc.setVariable("pt", 1);
-		calc.setVariable("in", 1/Length::pt2in);
-		calc.setVariable("cm", 1/Length::pt2cm);
-		calc.setVariable("mm", 1/Length::pt2mm);
+		// add constants for length units to calculator
+		for (auto unit : Length::getUnits())
+			calc.setVariable(unit.first, Length(1, unit.second).pt());
 		matrix.set(_transCmds, calc);
 	}
 }

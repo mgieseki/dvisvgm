@@ -504,12 +504,12 @@ Additionally, some pre-defined constants are provided:
 *h*:: page height in TeX point units (0 in case of *-bnone*)
 *w*:: page width in TeX point units (0 in case of *-bnone*)
 
-Furthermore, you can use the length constants *pt*, *mm*, *cm* and *in*, e.g.
-+2cm+ or +1.6in+. Thus, option +-TT1in,0R45+ moves the page content 1 inch to the right and rotates it
-by 45 degrees around the page center afterwards.
+Furthermore, you can use the 9 length constants +pt+, +bp+, +cm+, +mm+, +in+, +pc+, +dd+, +cc+,
+and +sp+, e.g. +2cm+ or +1.6in+. Thus, option +-TT1in,0R45+ moves the page content 1 inch to
+the right and rotates it by 45 degrees around the page center afterwards.
 
 For single transformations, there are also the short-hand options *-c*, *-t* and *-r* available.
-In contrast to the *--transform** commands, the order of these options is not significant, so
+In contrast to the *--transform* commands, the order of these options is not significant, so
 that it's not possible to describe transformation sequences with them.
 
 =================================================================================================
