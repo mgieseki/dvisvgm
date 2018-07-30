@@ -92,7 +92,7 @@
     </BuildLog>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\potrace</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HAVE_CONFIG_H;HAVE_INTTYPES_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -113,7 +113,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\potrace</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HAVE_CONFIG_H;HAVE_INTTYPES_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -136,7 +136,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\potrace</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HAVE_CONFIG_H;HAVE_INTTYPES_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -160,7 +160,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\potrace</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HAVE_CONFIG_H;HAVE_INTTYPES_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -174,21 +174,21 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\curve.c" />
-    <ClCompile Include="src\decompose.c" />
-    <ClCompile Include="src\potracelib.c" />
-    <ClCompile Include="src\trace.c" />
+    <ClCompile Include="..\..\libs\potrace\curve.c" />
+    <ClCompile Include="..\..\libs\potrace\decompose.c" />
+    <ClCompile Include="..\..\libs\potrace\potracelib.c" />
+    <ClCompile Include="..\..\libs\potrace\trace.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\auxiliary.h" />
-    <ClInclude Include="src\bitmap.h" />
-    <ClInclude Include="config.h" />
-    <ClInclude Include="src\curve.h" />
-    <ClInclude Include="src\decompose.h" />
-    <ClInclude Include="src\lists.h" />
-    <ClInclude Include="src\potracelib.h" />
-    <ClInclude Include="src\progress.h" />
-    <ClInclude Include="src\trace.h" />
+    <ClInclude Include="..\..\libs\potrace\auxiliary.h" />
+    <ClInclude Include="..\..\libs\potrace\bitmap.h" />
+    <ClInclude Include="..\..\libs\potrace\config.h" />
+    <ClInclude Include="..\..\libs\potrace\curve.h" />
+    <ClInclude Include="..\..\libs\potrace\decompose.h" />
+    <ClInclude Include="..\..\libs\potrace\lists.h" />
+    <ClInclude Include="..\..\libs\potrace\potracelib.h" />
+    <ClInclude Include="..\..\libs\potrace\progress.h" />
+    <ClInclude Include="..\..\libs\potrace\trace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

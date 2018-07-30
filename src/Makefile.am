@@ -18,9 +18,13 @@ dvisvgm_LDADD = \
 	$(ZLIB_LIBS)
 
 if USE_BUNDLED_LIBS
-dvisvgm_LDADD += ../libs/xxHash/libxxhash.a
+dvisvgm_LDADD += \
+	../libs/potrace/libpotrace.a \
+	../libs/xxHash/libxxhash.a
 else
-dvisvgm_LDADD += $(XXHASH_LIBS)
+dvisvgm_LDADD += \
+	$(POTRACE_LIBS) \
+	$(XXHASH_LIBS)
 endif
 
 if ENABLE_WOFF
@@ -270,9 +274,13 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	$(CODE_COVERAGE_CFLAGS)
 
 if USE_BUNDLED_LIBS
-AM_CXXFLAGS += -I$(top_srcdir)/libs/xxHash
+AM_CXXFLAGS +=  \
+	-I$(top_srcdir)/libs/potrace \
+	-I$(top_srcdir)/libs/xxHash
 else
-AM_CXXFLAGS += $(XXHASH_CFLAGS)
+AM_CXXFLAGS += \
+	$(POTRACE_CFLAGS) \
+	$(XXHASH_CFLAGS)
 endif
 
 AM_LDFLAGS = \

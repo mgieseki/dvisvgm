@@ -6,9 +6,8 @@ Yann Collet
 	https://github.com/Cyan4973/xxHash
 
 Google Inc.
-	libs/woff2/brotli/*
-	libs/woff2/include/*
-	libs/woff2/src/*
+	libs/brotli/*
+	libs/woff2/*
 	https://github.com/google/brotli
 	https://github.com/google/woff2
 
@@ -19,6 +18,10 @@ Angus Johnson
 Michael Park
 	libs/variant/include/mpark/*
 	https://github.com/mpark/variant
+
+Peter Selinger
+	libs/potrace/*
+	http://potrace.sourceforge.net
 
 George Williams
 	libs/ff-woff/*

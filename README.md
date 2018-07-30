@@ -60,7 +60,7 @@ _dvisvgm_ relies on the following free libraries:
   functions to create font files in these formats. A reduced version of the library is bundled
   with the _dvisvgm_ sources.
 
-* [FreeType 2](http://www.freetype.org)  
+* [FreeType 2](https://www.freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
 * [Ghostscript](https://www.ghostscript.com)  
@@ -80,7 +80,7 @@ _dvisvgm_ relies on the following free libraries:
 
 * [potracelib](http://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
-  bitmap output.
+  bitmap output. It's also bundled with the _dvisvgm_ sources.
 
 * [ttfautohint](https://www.freetype.org/ttfautohint)  
   _dvisvgm_ can optionally be built with ttfautohint support to replace the autohinting
@@ -117,7 +117,7 @@ Quick installation info:
 
 * ensure that the development packages of all libraries, listed above, are installed
 * type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
-* either type `./configure` if you don't 'want to use the bundled libraries _brotli_, _woff2_, and _xxHash_ but link
+* either type `./configure` if you don't want to use the bundled libraries _brotli_, _woff2_, and _xxHash_ but link
 against the corresponding system libraries,
 * or type `./configure --enable-bundled-libs` in order to build and statically link the bundled libraries.
 * type `make`

@@ -113,6 +113,10 @@ AM_CONDITIONAL([USE_BUNDLED_LIBS], [test "x$use_bundled_libs" = "xyes"])
 
 # If option --enable-bundled-libs is not given, look for system libraries of brotli, woff2, and xxhash.
 AS_IF([test "x$use_bundled_libs" != "xyes"],
+	[AC_CHECK_HEADER([potracelib.h],
+		[AC_CHECK_LIB(potrace, potrace_trace,,
+			[AC_MSG_ERROR([system library 'libpotrace' not found])])],
+		[AC_MSG_ERROR([header file 'potracelib.h' for system library 'libpotrace' not found])])]
 	[AS_IF([test "x$enable_woff" = "xyes"],
 		[PKG_CHECK_MODULES([BROTLI], [libbrotlienc],,
 			[AC_MSG_ERROR([system library 'libbrotlienc' not found])])]
@@ -218,6 +222,7 @@ AC_CONFIG_FILES([
 	libs/brotli/Makefile
 	libs/clipper/Makefile
 	libs/ff-woff/Makefile
+	libs/potrace/Makefile
 	libs/variant/Makefile
 	libs/woff2/Makefile
 	libs/xxHash/Makefile

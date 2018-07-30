@@ -1,8 +1,8 @@
 In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2017 you
-need to download the source code archives of the following libraries:
+need to download the source code archives of the following libraries
+which are not bundled with the dvisvgm sources:
 
 FreeType:   https://freetype.org
-Potrace:    http://potrace.sourceforge.net
 zlib:       http://zlib.net
 
 Additionally, the MiKTeX SDK is required:
