@@ -8,6 +8,10 @@ EXTRA_DIST = COPYING
 SUBDIRS = libs src tests doc
 ACLOCAL_AMFLAGS = -I m4
 
+if USE_BUNDLED_LIBS
+AM_DISTCHECK_CONFIGURE_FLAGS = --enable-bundled-libs
+endif
+
 if CODE_COVERAGE_ENABLED
 lcov_dir=$(top_builddir)/lcov
 lcov_file=$(lcov_dir)/lcov.info
