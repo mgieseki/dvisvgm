@@ -4,7 +4,7 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 18 Jul 2018 19:26:33 +0200</pubDate>
+    <pubDate>Tue, 31 Jul 2018 10:18:18 +0200</pubDate>
     <language>en</language>
     
     <item>
@@ -18,9 +18,11 @@
 <ul>
 <li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
-<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas. to ensure tight bounds.</li>
+<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas to obtain tight bounds.</li>
 <li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
-For example, option <code>psfixbb</code> of the preview package adds these specials to help <em>dvips</em> to compute correct bounding boxes.</li>
+For example, option <code>psfixbb</code> of the preview package adds these specials in order to help
+<a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
+Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
 <li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
 </ul>
 ]]>

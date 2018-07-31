@@ -185,12 +185,16 @@ Most <span class="tex">T<sub>E</sub>X</span>
 The font embedding module of <em>dvisvgm</em> uses Peter Selinger’s <em>potrace</em> library to vectorize Metafont’s bitmap
 output if corresponding Type 1 fonts cannot be found.</li>
 <li><a href="https://freetype.org/ttfautohint">ttfautohint</a> library<br />
-<em>dvisvgm</em> can optionally be built with ttfautohint support to replace the autohinting functionality of FontForge.
-Since it&rsquo;s still an experimental feature, ttfautohint support is disabled by default. To enable it, run configure
+<em>dvisvgm</em> can optionally be built with <em>ttfautohint</em> support to replace the autohinting functionality of FontForge.
+Since it&rsquo;s still an experimental feature, <em>ttfautohint</em> support is disabled by default. To enable it, run configure
 with option <code>--with-ttfautohint</code>.</li>
 <li><a href="https://github.com/google/woff2">woff2</a> and <a href="https://github.com/google/brotli">brotli</a><br />
 These Google libraries are bundled with the <em>dvisvgm</em> sources. They are used
 to create WOFF2 from TrueType fonts.</li>
+<li><a href="https://github.com/Cyan4973/xxHash">xxHash</a> library<br />
+<em>xxHash</em> provides a fast hash algorithm. <em>dvisvgm</em> uses it to create unique integer values from PostScript
+character names in order to store them in a compact way together with their Unicode points. A recent version
+of <em>xxHash</em> is bundled with the <em>dvisvgm</em> sources.</li>
 <li><a href="http://www.zlib.org">zlib</a><br />
 <em>zlib</em> is required to create compressed <code>.svgz</code> files.</li>
 </ul>
