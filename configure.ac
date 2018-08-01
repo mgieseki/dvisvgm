@@ -160,7 +160,7 @@ AC_STRUCT_TM
 
 # Check for library functions.
 AC_FUNC_STAT
-AC_CHECK_FUNCS([ftime gettimeofday sigaction uselocale])
+AC_CHECK_FUNCS_ONCE([ftime gettimeofday sigaction umask uselocale])
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options

@@ -27,16 +27,21 @@
 #include "utility.hpp"
 
 #ifdef _WIN32
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <windows.h>
+#	include <fcntl.h>
+#	include <sys/stat.h>
+#	include <windows.h>
+#else
+#	include <config.h>
+#	ifdef HAVE_UMASK
+#		include <sys/stat.h>
+#	endif
 #endif
 
 #ifdef _MSC_VER
-#include <io.h>
+#	include <io.h>
 #else
-#include <cstdlib>
-#include <unistd.h>
+#	include <cstdlib>
+#	include <unistd.h>
 #endif
 
 using namespace std;
@@ -60,8 +65,14 @@ bool TemporaryFile::create () {
 	_path = FileSystem::tmpdir();
 #ifndef _WIN32
 	_path += "stdinXXXXXX";
+#ifdef HAVE_UMASK
+	mode_t mode_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);  // set file permissions to 0600
+#endif
 	_fd = mkstemp(&_path[0]);
-#else
+#ifdef HAVE_UMASK
+	umask(mode_mask);
+#endif
+#else  // !_WIN32
 	char fname[MAX_PATH];
 	std::replace(_path.begin(), _path.end(), '/', '\\');
 	if (GetTempFileName(_path.c_str(), "stdin", 0, fname)) {
