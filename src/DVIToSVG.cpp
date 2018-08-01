@@ -189,6 +189,7 @@ void DVIToSVG::leaveEndPage (unsigned) {
 	if (_bboxFormatString == "min" || _bboxFormatString == "preview" || _bboxFormatString == "papersize") {
 		Matrix matrix;
 		getPageTransformation(matrix);
+		bbox.unlock();
 		bbox.transform(matrix);
 	}
 	else if (_bboxFormatString == "dvi") {
