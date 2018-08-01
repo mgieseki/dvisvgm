@@ -3,7 +3,7 @@ dvisvgm -- A DVI to SVG converter
 DESCRIPTION
 
  dvisvgm is a utility for TeX/LaTeX users. It converts DVI, EPS, and
- singe-page PDF files to the XML-based scalable vector graphics format SVG.
+ PDF files to the XML-based scalable vector graphics format SVG.
 
 
 DEPENDENCIES
@@ -43,7 +43,7 @@ DEPENDENCIES
 
  * potracelib (http://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
-   bitmap output.
+   bitmap output. A recent version is also part of the dvisvgm sources.
 
  * ttfautohint (https://www.freetype.org/ttfautohint)
    dvisvgm can optionally be built with ttfautohint support to replace the
@@ -77,9 +77,15 @@ BUILDING DVISVGM FROM SOURCE
  options if necessary.
 
  Quick installation info:
+   * ensure that the development packages of all libraries, listed above,
+	  are installed
    * type "./autogen.sh" if "configure" is not present in the dvisvgm
      root folder
-   * type "./configure"
+	* either type "./configure" if you don't want to use the bundled libraries
+	  brotli, woff2, and xxHash but link against the corresponding
+	  system libraries,
+	  or type "./configure --enable-bundled-libs" in order to build and
+	  statically link the bundled libraries.
    * type "make"
    * type "make install" as root (or "sudo make install")
 
