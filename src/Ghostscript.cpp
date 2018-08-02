@@ -19,7 +19,9 @@
 *************************************************************************/
 
 #include <config.h>
+#include "FilePath.hpp"
 #include "Ghostscript.hpp"
+#include "utility.hpp"
 #if !defined(DISABLE_GS)
 #include <cstring>
 #include <iomanip>
@@ -77,7 +79,27 @@ static string get_path_from_registry () {
 #endif  // RRF_RT_REG_SZ
 	return "";
 }
-#endif  // _WIN32
+#endif // _WIN32
+
+#if defined(_WIN32) && !defined(_WIN64)
+static string get_gsdll32 () {
+	string pathstr;
+#if defined(TEXLIVEWIN32)
+	char exepath[256];
+	if (GetModuleFileNameA(NULL, exepath, 256)) {
+		FilePath path(exepath);
+		path.set(path.absolute(false)+"/../../tlpkg/tlgs");
+		pathstr = util::replace(path.absolute(false)+"/", "/", "\\");
+		string envvar = "GS_LIB=";
+		for (string dirs : {"lib", "fonts", "Resource\\Init", "Resource", "kanji"})
+			envvar += pathstr+dirs+";";
+		_putenv(envvar.c_str());
+		pathstr += "bin\\";
+	}
+#endif
+	return pathstr+"gsdll32.dll";
+}
+#endif  // _WIN32  && !_WIN64
 
 
 /** Try to detect name of the Ghostscript shared library depending on the user settings.
@@ -101,11 +123,11 @@ static string get_libgs (const string &fname) {
 	string gsdll_path = get_path_from_registry();
 	if (!gsdll_path.empty())
 		return gsdll_path;
-#endif
+#endif //_WIN32
 #if defined(_WIN64)
 	return "gsdll64.dll";
 #elif defined(_WIN32)
-	return "gsdll32.dll";
+	return get_gsdll32();
 #else
 	// try to find libgs.so.X on the user's system
 	const int abi_min=7, abi_max=9; // supported libgs ABI versions
