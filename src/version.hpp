@@ -22,7 +22,7 @@
 #define VERSION_HPP
 
 constexpr const char *PROGRAM_NAME = "dvisvgm";
-constexpr const char *PROGRAM_VERSION = "2.4.2";
+constexpr const char *PROGRAM_VERSION = "2.5";
 
 #endif
 
