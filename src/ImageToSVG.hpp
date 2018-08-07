@@ -61,7 +61,6 @@ class ImageToSVG : protected SpecialActions {
 		Color getColor () const override                        {return _svg.getColor();}
 		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
-		void getPageTransform (Matrix &matrix) const override   {}
 		void setBgColor (const Color &color) override           {}
 		void appendToPage(std::unique_ptr<XMLNode> &&node) override  {_svg.appendToPage(std::move(node));}
 		void appendToDefs(std::unique_ptr<XMLNode> &&node) override  {_svg.appendToDefs(std::move(node));}
