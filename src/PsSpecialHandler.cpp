@@ -424,8 +424,7 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 			Message::mstream() << " preview package (version " << _previewFilter.version() << ")\n";
 
 			// apply page transformations to box extents
-			Matrix pagetrans;
-			actions.getPageTransform(pagetrans);
+			Matrix pagetrans = actions.getPageTransform();
 			bool isBaselineHorizontal = transform_box_extents(pagetrans, w, h, d);
 			actions.bbox().lock();
 

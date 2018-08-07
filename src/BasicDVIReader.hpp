@@ -21,21 +21,19 @@
 #ifndef BASICDVIREADER_HPP
 #define BASICDVIREADER_HPP
 
+#include "Matrix.hpp"
 #include "MessageException.hpp"
 #include "StreamReader.hpp"
 
-struct DVIException : public MessageException
-{
+struct DVIException : public MessageException {
 	explicit DVIException (const std::string &msg) : MessageException(msg) {}
 };
 
 
-struct InvalidDVIFileException : public DVIException
-{
+struct InvalidDVIFileException : public DVIException {
 	explicit InvalidDVIFileException (const std::string &msg) : DVIException(msg) {}
 };
 
-class Matrix;
 
 /** This class provides the basic functionality to read a DVI file.
  *  It just skips all DVI commands and apply any semantic to it. The latter must
@@ -44,8 +42,7 @@ class Matrix;
  *  require to read and evaluate the correct portion of data from the DVI stream.
  *  Since the DVI commands are almost skipped by advancing the file pointer,
  *  running through a DVI file is pretty fast. */
-class BasicDVIReader : public StreamReader
-{
+class BasicDVIReader : public StreamReader {
 	protected:
 		using CommandHandler = void (BasicDVIReader::*)(int);
 		enum DVIVersion {DVI_NONE=0, DVI_STANDARD=2, DVI_PTEX=3, DVI_XDV5=5, DVI_XDV6=6, DVI_XDV7=7};
@@ -62,7 +59,7 @@ class BasicDVIReader : public StreamReader
 		virtual void translateToX (double x) {}
 		virtual void translateToY (double y) {}
 		virtual int stackDepth () const   {return 0;}
-		virtual void getPageTransformation (Matrix &matrix) const {}
+		virtual Matrix getPageTransformation () const {return Matrix(1);}
 		virtual unsigned currentPageNumber () const {return 0;}
 
 	protected:

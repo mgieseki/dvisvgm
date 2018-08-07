@@ -27,7 +27,6 @@
 #include "SVGTree.hpp"
 
 struct DVIActions;
-class Matrix;
 struct SVGOutputBase;
 
 class DVIToSVG : public DVIReader {
@@ -36,7 +35,7 @@ class DVIToSVG : public DVIReader {
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
 		void setPageSize (const std::string &format)         {_bboxFormatString = format;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
-		void getPageTransformation (Matrix &matrix) const override;
+		Matrix getPageTransformation () const override;
 		void translateToX (double x) override {_tx = x-dviState().h-_tx;}
 		void translateToY (double y) override {_ty = y-dviState().v-_ty;}
 		double getXPos() const override       {return dviState().h+_tx;}

@@ -228,8 +228,7 @@ void DVIToSVGActions::beginPage (unsigned pageno, const vector<int32_t>&) {
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage (unsigned pageno) {
 	SpecialManager::instance().notifyEndPage(pageno, *this);
-	Matrix matrix;
-	_dvireader->getPageTransformation(matrix);
+	Matrix matrix = _dvireader->getPageTransformation();
 	_svg.transformPage(matrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color
