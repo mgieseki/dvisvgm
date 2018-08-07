@@ -1,3 +1,17 @@
+dvisvgm-2.5 (2018-08-08)
+- added multi-page support (option --page) to PDF mode (option --pdf)
+- added evaluation of transformation options in PDF mode
+- added support for all length units to option --transform
+- TeX Live Win32: look for Ghostscript DLL in the TL folders as well
+  (thanks to Akira Kakuto for sending the patch)
+- potrace has been added again to the bundled third-party libraries
+- instead of linking the bundled libraries brotli, potrace, woff2, and
+  xxhash, the configure script now looks for the corresponding system
+  libraries by default
+- added option --enable-bundled-libs to the configure script to build and
+  statically link the bundled libraries
+- some refactorings
+
 dvisvgm-2.4.2 (2018-07-18)
 - fixed height and depth values computed when using the preview package
 - removed additional borders from the bounding boxes of hyperlinked areas
