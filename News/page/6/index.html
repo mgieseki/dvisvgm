@@ -71,65 +71,7 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="2f0cae802c17b40886ac10cf40afd7fb"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">27 February 2016: dvisvgm 1.15 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-
-<ul>
-<li>Added the command-line option <code>--comments</code> to insert additional information to the SVG file.</li>
-<li>Fixed a clipping bug in the PostScript handler.</li>
-<li>Some code improvements and refactorings.</li>
-<li>Moved the test data files to a separate folder.</li>
-</ul>
-</div>
-  </section><a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
-    <div class="card-body">
-      <p>This is a bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
-Now they affect all succeeding pages until the next change occurs.</li>
-<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
-<li>Updated the bundled xxHash library to version 0.5.0.</li>
-<li>Added xxHash to the output of <code>--version=1</code>.</li>
-<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
-<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
-</ul>
-</div>
-  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small bugfix release with the following changes:</p>
-
-<ul>
-<li>Reset the PostScript graphics state at the end of every DVI page to ensure consistent
-conversions if multiple page are processed.</li>
-<li>Added checks for invalid GF files to prevent undefined behavior.</li>
-</ul>
-</div>
-  </section><a name="37a6f66efadbceebf2acfdbd6d9cde63"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">28 December 2015: dvisvgm 1.14 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following additions/changes:</p>
-
-<ul>
-<li>Added evaluation of PSTricks specials <code>pst:</code> and <code>PST:</code>.</li>
-<li>The bounding box data created by the <a href="https://www.ctan.org/pkg/preview">preview package</a>
-is now adapted to create a tight box by default.</li>
-<li>Added option <code>--bbox=preview</code> to apply the unmodified bounding box data created by the preview package.</li>
-<li>Improved lookup of files located in the current working directory.</li>
-<li>Fixed a memory issue related to graphics paths.</li>
-<li>Improved extraction of kapathsea version number.</li>
-<li>Minor code and test improvements.</li>
-</ul>
-</div>
-  </section><a name="47fa84d80b6d9d419a81b24afad3cb79"></a>
+  <a name="47fa84d80b6d9d419a81b24afad3cb79"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">8 December 2015: dvisvgm 1.13 has been released</div>
     <div class="card-body">
@@ -144,6 +86,71 @@ is now adapted to create a tight box by default.</li>
 <li>Fixed output of PS error messages shown when converting EPS files.</li>
 <li>Updated the bundled <a href="https://cyan4973.github.io/xxHash">xxHash library</a> to revision 42.</li>
 <li>Minor code refactorings and cleanup.</li>
+</ul>
+</div>
+  </section><a name="790a189b0fce83826fc91e2a5269aaa2"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">18 November 2015: dvisvgm 1.12 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
+<li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
+<li>A memory issue that could occur when running Metafont has been fixed.</li>
+</ul>
+</div>
+  </section><a name="73d45e4c52912212028ec9af6199cb03"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>The mapping of unknown characters to Unicode has been improved.</li>
+<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
+<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
+<li><code>xlink:title</code> attributes are now properly quoted.</li>
+</ul>
+</div>
+  </section><a name="090b91eafab646e154446d2a10dafea2"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">15 July 2015: dvisvgm 1.10 has been released</div>
+    <div class="card-body">
+      <p>This is a small feature release with the following additions/changes:</p>
+
+<ul>
+<li>Support for the new XDV format 6 introduced by XeTeX 0.99992 has been added.</li>
+<li>The mapping of PostScript character names to Unicode points has been improved.</li>
+</ul>
+</div>
+  </section><a name="85516bf886ded70e8577e2400b90897a"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 April 2015: dvisvgm 1.9.2 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>Avoid retracing of fonts if options <code>--no-fonts</code> and <code>--trace-all=y</code> are given.</li>
+<li>Skip tracer messages if no glyphs have been traced.</li>
+<li>The build system has been extended to generate code coverage reports.</li>
+<li>Some tests of the test suite have been improved.</li>
+<li>Several general code refactorings and improvements.</li>
+</ul>
+</div>
+  </section><a name="5e6a5a37aa0a4ba7a0fa4263128490d9"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">28 February 2015: dvisvgm 1.9.1 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+
+<ul>
+<li>The pattern syntax of option <code>--output</code> has been extended to support width specifiers and arithmetic
+expressions. See the <a href="/Manpage/">manual page</a> for further details.</li>
+<li>The formatting of the manual page has been improved.</li>
+<li>A Clang build issue has been fixed (patch by Peter Breitenlohner).</li>
+<li>A build error occurred with old MinGW compilers has been fixed.</li>
+<li>Code cleanup and some refactorings.</li>
 </ul>
 </div>
   </section>
@@ -161,12 +168,11 @@ is now adapted to create a tight box by default.</li>
     <li class="page-item"><a class="page-link" href="/News/page/5/">5</a></li>
     <li class="page-item active"><a class="page-link" href="/News/page/6/">6</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li>
-    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/10/">10</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
       <a class="page-link" href="/News/page/7/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/10/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>

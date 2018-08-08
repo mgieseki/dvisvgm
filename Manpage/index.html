@@ -563,10 +563,12 @@ gets number 1.
 <strong>-P, --pdf</strong>
 <dd><p>
 If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
-it to SVG. In order to do so, a single <em>pdffile</em> special command is created and forwarded to the
-PostScript special handler.
-This option is only available if dvisvgm was built with PostScript support enabled, and requires
-Ghostscript to be available. See option <strong>--libgs</strong> for further information.
+it to SVG. Similar to the conversion of DVI files, only the first page is processed by default.
+Option <strong>--page</strong> can be used to select different pages, page ranges, and/or page sequences.
+The conversion is realized by creating a single <em>pdffile</em> special command which is forwarded to
+the PostScript special handler. Therefore, this option is only available if dvisvgm was built
+with PostScript support enabled, and requires Ghostscript to be accessible. See option <strong>--libgs</strong>
+for further information.
 </p></dd>
 </dt>
 <a name="opt-precision" class="linktarget"></a><dt class="hdlist1">
@@ -755,11 +757,11 @@ page width in TeX point units (0 in case of <strong>-bnone</strong>)
 </p></td>
 </tr>
 </table>
-<p>Furthermore, you can use the length constants <strong>pt</strong>, <strong>mm</strong>, <strong>cm</strong> and <strong>in</strong>, e.g.
-<code>2cm</code> or <code>1.6in</code>. Thus, option <code>-TT1in,0R45</code> moves the page content 1 inch to the right and rotates it
-by 45 degrees around the page center afterwards.</p>
+<p>Furthermore, you can use the 9 length constants <code>pt</code>, <code>bp</code>, <code>cm</code>, <code>mm</code>, <code>in</code>, <code>pc</code>, <code>dd</code>, <code>cc</code>,
+and <code>sp</code>, e.g. <code>2cm</code> or <code>1.6in</code>. Thus, option <code>-TT1in,0R45</code> moves the page content 1 inch to
+the right and rotates it by 45 degrees around the page center afterwards.</p>
 <p>For single transformations, there are also the short-hand options <strong>-c</strong>, <strong>-t</strong> and <strong>-r</strong> available.
-In contrast to the <strong>--transform</strong>* commands, the order of these options is not significant, so
+In contrast to the <strong>--transform</strong> commands, the order of these options is not significant, so
 that it’s not possible to describe transformation sequences with them.</p>
 </td>
 </tr></table></div>
@@ -964,12 +966,12 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
-<div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span>
+<div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd;font-style:italic">{</span>dvisvgm:raw &lt;circle cx=&#39;<span style="color:#8be9fd;font-style:italic">{</span>?x<span style="color:#8be9fd;font-style:italic">}</span>&#39; cy=&#39;<span style="color:#8be9fd;font-style:italic">{</span>?y<span style="color:#8be9fd;font-style:italic">}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd;font-style:italic">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd;font-style:italic">{</span>dvisvgm:bbox 10bp 10bp 10bp<span style="color:#8be9fd;font-style:italic">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd;font-style:italic">{</span>dvisvgm:bbox -10bp 10bp 10bp<span style="color:#8be9fd;font-style:italic">}</span>
 
-<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span>
-<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span><span style="color:#8be9fd">}</span></code></pre></div>
+<span style="color:#ff79c6">\special</span><span style="color:#8be9fd;font-style:italic">{</span>dvisvgm:raw &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd;font-style:italic">}</span>
+<span style="color:#ff79c6">\special</span><span style="color:#8be9fd;font-style:italic">{</span>dvisvgm:bbox abs 10bp 200bp 100bp 250bp<span style="color:#8be9fd;font-style:italic">}</span></code></pre></div>
 </div>
 </dd>
 </dt>
@@ -1238,9 +1240,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.4.2</div>
+   <div class="col-md-6">Version 2.5</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2018-07-18</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2018-08-08</span>
    </div>
 </div>
 </div>

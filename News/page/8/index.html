@@ -71,90 +71,82 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="b634fc722579b9a20d304938aa579344"></a>
+  <a name="399724dd7b5c5032916ce7524f9fda5e"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">16 February 2015: New responsive website theme</div>
+    <div class="card-header bg-primary text-white">11 April 2014: dvisvgm 1.5.3 has been released</div>
     <div class="card-body">
-      <p>I’ve replaced the old colorful, fixed-sized website theme with a more straightforward and responsive one.
-It’s based on the nice <a href="https://bootswatch.com">Bootswatch</a> collection by Thomas Park.</p>
-</div>
-  </section><a name="35d5bbde9940088db6dc9bd90724f6de"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">29 December 2014: dvisvgm 1.9 has been released</div>
-    <div class="card-body">
-      <p>This is a feature release with the following additions/changes:</p>
+      <p>This is a small bugfix release.</p>
 
 <ul>
-<li>Partial evaluation of the PostScript operator <code>shfill</code> which allows to create
-<a href="/Gradients/">color gradient fills</a> has been added. The recent version of
-<em>dvisvgm</em> supports the approximation of free- and lattice-form triangle meshes as well as Coons
-and tensor-product patch meshes.</li>
-<li>The command-line options <code>--grad-segments</code>, <code>--grad-overlap</code>, and <code>--grad-simplify</code> to adapt the
-approximation of gradient fills have been added. See the <a href="/Manpage/">manual page</a>
-for further details.</li>
-<li>Option <code>--no-merge</code> has been added. It forces <em>dvisvgm</em> to create separate text elements for
-each character (patch by Khaled Hosny).</li>
-<li>When searching the location of the Ghostscript library, <em>dvisvgm</em> now also looks up the file
-path in the Windows registry.</li>
-<li>A bug in the interaction of color specials with PostScript color operators has been fixed.</li>
-<li>The validity check of DVI files has been corrected.</li>
-<li>The free replacement script <code>opt2cpp.py</code> for my non-free <code>opt2cpp.xsl</code> stylesheet has been added.
-It’s required to create the C++ files from the XML file defining the command-line options. Thanks to
-Khaled Hosny for the implementation and for providing it for free.</li>
+<li>A positioning bug that led to displaced DVI rules/rectangles has been fixed.</li>
+<li>The positioning of PostScript graphics has been improved.</li>
 </ul>
 </div>
-  </section><a name="5a76a7d57fe7b216bf0883b52c986d0b"></a>
+  </section><a name="a6dc88f259670137b9f2954861ce1af0"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">29 August 2014: dvisvgm 1.8.1 has been released</div>
+    <div class="card-header bg-primary text-white">29 October 2013: dvisvgm 1.5.1 has been released</div>
     <div class="card-body">
-      <p>This is a small maintenance release.</p>
-
-<ul>
-<li><em>dvisvgm</em> now removes <code>clipPath</code> elements that are not referenced in the SVG file.</li>
-<li>Unexpected <code>bop</code>/<code>eop</code> operators present in PostScript specials are no longer evaluated.
-This prevents side-effects e.g. when using the <code>standalone</code> document class.</li>
-<li>A few improvements to configure.ac have been applied (patches by Khaled Hosny)</li>
-<li>Redundant code has been removed.</li>
+      <ul>
+<li>The processing of bounding box data created by the
+<a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a> has been corrected.</li>
+<li>The processing of font definitions across page borders has been fixed.</li>
+<li>Compilation issues have been fixed that occurred if processing of PS specials was disabled.</li>
+<li>Some minor code improvements.</li>
 </ul>
 </div>
-  </section><a name="99c35178ebd06cc9faad8da4943f38e8"></a>
+  </section><a name="25091d9cd6ef1128152caf2aad8fadc9"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">30 July 2014: dvisvgm 1.8 has been released</div>
+    <div class="card-header bg-primary text-white">2 September 2013: dvisvgm 1.5 has been released</div>
     <div class="card-body">
-      <p>This is a feature release with the following additions/changes:</p>
+      <p>This is another feature update bringing these additions:</p>
 
 <ul>
-<li>The new command-line option <code>--clipjoin</code> tells <em>dvisvgm</em> to directly compute
-<a href="/Clipping/">intersections of clipping paths</a> and not to delegate this task to the SVG renderer.</li>
-<li>The new command-line option <code>--relative</code> creates relative rather than absolute
-<a href="https://w3.org/TR/SVG/paths.html#PathDataGeneralInformation">path commands</a>.</li>
-<li>The evaluation of PostScript operator <code>clippath</code> has been added.</li>
-<li>PostScript operator <code>show</code> has been fixed to prevent the creation of unintended path overlays.</li>
-<li>A memory leak in the font engine has been fixed (patch by Khaled Hosny).</li>
-<li>Option <code>--list-specials</code> no longer throws an exception.</li>
-<li><a href="https://www.cygwin.com">Cygwin</a> builds of <em>dvisvgm</em> now look for the proper filename of the Ghostscript DLL.</li>
+<li>Basic support for vertically oriented text.</li>
+<li>Support for DVI format 3 as created by <a href="http://ascii.asciimw.jp/pb/ptex">p<span class="tex">T<sub>E</sub>X</span>
+</a> in vertical/tate mode.<br />
+<a href="/News/images/vertical.svg"><img src="/News/images/vertical.png" class="sample-img-news img-responsive"></a></li>
+<li>Support for DVI format 5 (XDV) as created by <a href="http://scripts.sil.org/xetex">XeTeX</a> with option <code>--no-pdf</code>.<br />
+<a href="/News/images/xetest.svg"><img src="/News/images/xetest.png" class="sample-img-news img-responsive"></a></li>
+<li>The numeric entity references in the generated SVG files have been replaced by corresponding UTF-8 characters.</li>
+<li>In the stylesheet section, <code>font-size</code> attribute values get an explicit <code>px</code> unit to ensure proper glyph scaling,
+e.g. in Opera and Safari.</li>
 </ul>
 </div>
-  </section><a name="4214b9debb2f3b9fa2ec3588368e4fd9"></a>
+  </section><a name="cdbcb25b227edc23e121e914fd02ba8d"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">8 June 2014: dvisvgm 1.7 has been released</div>
+    <div class="card-header bg-primary text-white">2 August 2013: dvisvgm 1.4 has been released</div>
     <div class="card-body">
-      <p>This is another small feature release with the following additions/changes:</p>
+      <p>This is a feature release with the following additions:</p>
 
 <ul>
-<li>All DVI files are pre-processed now in order to allow the implementation of features that rely on data
-not available on the pages being converted.</li>
-<li>The evaluation of hyperref specials has been improved. Internal links that reference targets on
-different pages are supported now.</li>
-<li>The special command <code>dvisvgm:rawdef</code> has been added. It allows to insert raw SVG fragments to
-the <code>&lt;defs&gt;</code> section of the SVG file.</li>
-<li>The special commands <code>dvisvgm:rawset</code>, <code>dvisvgm:endrawset</code>, and <code>dvisvgm:rawput</code> have been added.
-For further information, see section <em>support of specials</em> of the <a href="/Manpage/">manual page</a>.</li>
-<li><em>dvisvgm</em> no longer adds redundant <code>missing-glyph</code> elements to the generated SVG files.</li>
-<li>The support of external fonts required by XDV files (DVI files created by XeTeX) has been improved.</li>
-<li>The extent values assigned by the <a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>
-are now correctly displayed in <span class="tex">T<sub>E</sub>X</span>
- point units.</li>
+<li>Basic support for CMap files and CID-keyed fonts has been added. This enables the processing
+of DVI files created with <a href="http://ascii.asciimw.jp/pb/ptex">pTeX</a>, for example.<br />
+<a href="/News/images/jap.svg"><img src="/News/images/jap.png" class="sample-img-news img-responsive"></a></li>
+<li><em>dvisvgm</em> also tries to translate character codes according to the available encoding tables
+stored in the referenced TrueType/OpenType font file.</li>
+<li>Support for OpenType (OTF) fonts has been added.</li>
+<li>If a DVI file contains bounding box information created by the
+<a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>, the size of the
+SVG is adapted accordingly. Also, <em>dvisvgm</em> prints a message showing the assigned width, height,
+and depth values in <span class="tex">T<sub>E</sub>X</span>
+ point units. Especially, the depth value can be used to vertically align
+the SVG graphics with the baseline of surrounding text in HTML or XSL-FO documents, for example.<br />
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm test
+processing page 1 [1]
+  applying bounding box set by preview package (version 11.87)
+  width=88.9844pt, height=7.45308pt, depth=3.95029pt
+  page size: 88.9844pt x 11.4034pt (31.2744mm x 4.00782mm)
+  page written to test.svg
+1 of 1 page converted in 0.421647 seconds</code></pre></div>
+</div></li>
+<li>The command-line option <code>--linkmark</code> has been extended to mark hyperlinked areas with an
+arbitrary background color.</li>
+<li>The processing of PostScript header specials has been improved.</li>
+<li>PostScript operator <em>show</em> creates much better results now.</li>
+<li>The DOCTYPE declaration has been removed from the generated SVG files as the
+<a href="https://w3.org/TR/SVG11/intro.html#NamespaceAndDTDIdentifiers">W3C recommends to omit it</a>.</li>
+<li>The encoding of the generated SVG files has been changed to UTF-8.</li>
 </ul>
 </div>
   </section>
@@ -170,13 +162,11 @@ are now correctly displayed in <span class="tex">T<sub>E</sub>X</span>
     <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
     <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li>
-    <li class="page-item active"><a class="page-link" href="/News/page/8/">8</a></li>
-    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li>
-    <li class="page-item"><a class="page-link" href="/News/page/10/">10</a></li><li class="page-item">
-      <a class="page-link" href="/News/page/9/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    <li class="page-item active"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item disabled">
+      <a class="page-link" href="" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
-    <li class="page-item">
-      <a class="page-link" href="/News/page/10/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+    <li class="page-item disabled">
+      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>
