@@ -107,12 +107,11 @@ AC_ARG_WITH([ttfautohint],
 
 # Add option to enable linking of bundled libraries (brotli, woff2, xxhash).
 AC_ARG_ENABLE([bundled-libs],
-	[AS_HELP_STRING([--enable-bundled-libs], [use bundled libraries instead of the system ones @<:@default=no@:>@])],
-	[use_bundled_libs=yes])
-AM_CONDITIONAL([USE_BUNDLED_LIBS], [test "x$use_bundled_libs" = "xyes"])
+	[AS_HELP_STRING([--enable-bundled-libs], [use bundled libraries instead of the system ones @<:@default=no@:>@])])
+AM_CONDITIONAL([USE_BUNDLED_LIBS], [test "x$enable_bundled_libs" = "xyes"])
 
 # If option --enable-bundled-libs is not given, look for system libraries of brotli, woff2, and xxhash.
-AS_IF([test "x$use_bundled_libs" != "xyes"],
+AS_IF([test "x$enable_bundled_libs" != "xyes"],
 	[AC_CHECK_HEADER([potracelib.h],
 		[AC_CHECK_LIB(potrace, potrace_trace,,
 			[AC_MSG_ERROR([system library 'libpotrace' not found])])],
