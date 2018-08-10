@@ -79,7 +79,17 @@
 
 <ul>
 <li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
-the pages to be processed can be selected with option <code>--page</code>.</li>
+the pages to be processed can be selected with option <code>--page</code>:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm --pdf --page=2-3 -d2 sample.pdf
+processing PDF file
+  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)
+  output written to sample-2.svg
+processing PDF file
+  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)
+  output written to sample-3.svg
+2 of 3 pages converted in 1.328 seconds</code></pre></div>
+</div></li>
 <li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
 the PDF mode too.</li>
 <li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
