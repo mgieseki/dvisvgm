@@ -174,7 +174,7 @@ void DVIReader::cmdPost (int) {
 	uint32_t pageWidth  = readUnsigned(4); // width of widest page in dvi units
 	uint16_t stackDepth = readUnsigned(2); // max. stack depth required
 	uint16_t numPages = readUnsigned(2);
-	if (numPages != numberOfPages())
+	if (numPages != (numberOfPages() & 0xffff))
 		throw DVIException("page count in postamble doesn't match actual number of pages");
 
 	// 1 dviunit * num/den == multiples of 0.0000001m
