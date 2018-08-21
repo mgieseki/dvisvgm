@@ -41,6 +41,12 @@ dvisvgm_LDADD += \
 endif
 endif
 
+if USE_BUNDLED_MD5
+dvisvgm_LDADD += ../libs/md5/libmd5.a
+else
+dvisvgm_LDADD += $(LIBCRYPTO_LIBS)
+endif
+
 dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
 
 libdvisvgm_a_SOURCES = \
@@ -131,6 +137,8 @@ libdvisvgm_a_SOURCES = \
 	Glyph.hpp \
 	GlyphTracerMessages.hpp \
 	GraphicsPath.hpp \
+	HashFunction.cpp \
+	HashFunction.hpp \
 	HtmlSpecialHandler.cpp \
 	HtmlSpecialHandler.hpp \
 	HyperlinkManager.cpp \
@@ -150,6 +158,7 @@ libdvisvgm_a_SOURCES = \
 	MapLine.hpp \
 	Matrix.cpp \
 	Matrix.hpp \
+	MD5HashFunction.hpp \
 	Message.cpp \
 	Message.hpp \
 	MessageException.hpp \
@@ -253,6 +262,7 @@ libdvisvgm_a_SOURCES = \
 	XMLNode.hpp \
 	XMLString.cpp \
 	XMLString.hpp \
+	XXHashFunction.hpp \
 	ZLibOutputStream.hpp
 
 if ENABLE_WOFF
@@ -303,6 +313,13 @@ AM_CXXFLAGS +=  \
 	$(BROTLI_CFLAGS) \
 	$(WOFF2_CFLAGS)
 endif
+
+if USE_BUNDLED_MD5
+AM_CXXFLAGS += -I$(top_srcdir)/libs/md5
+else
+AM_CXXFLAGS += $(LIBCRYPTO_CFLAGS)
+endif
+
 
 AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
 endif

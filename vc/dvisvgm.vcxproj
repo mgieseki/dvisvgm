@@ -61,14 +61,14 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</EmbedManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</EmbedManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
   </PropertyGroup>
@@ -169,7 +169,7 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>
@@ -207,6 +207,7 @@
     <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
+    <ClCompile Include="..\src\HashFunction.cpp" />
     <ClCompile Include="..\src\ImageToSVG.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
@@ -319,7 +320,9 @@
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\CRC32.hpp" />
     <ClInclude Include="..\src\DependencyGraph.hpp" />
+    <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
+    <ClInclude Include="..\src\MD5HashFunction.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
@@ -369,6 +372,7 @@
     <ClInclude Include="..\src\Unicode.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />
+    <ClInclude Include="..\src\XXHashFunction.hpp" />
     <ClInclude Include="..\src\ZLibOutputStream.hpp" />
     <ClInclude Include="config.h" />
     <ClInclude Include="..\src\DVIActions.hpp" />
@@ -417,6 +421,9 @@
     </ProjectReference>
     <ProjectReference Include="freetype\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="md5\md5.vcxproj">
+      <Project>{01089eea-d32a-4a70-bdd4-221791380931}</Project>
     </ProjectReference>
     <ProjectReference Include="potrace\libpotrace.vcxproj">
       <Project>{6f17fbf1-4304-4af2-81a8-c78787e8d0a5}</Project>

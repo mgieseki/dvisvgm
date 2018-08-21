@@ -19,6 +19,9 @@ Michael Park
 	libs/variant/include/mpark/*
 	https://github.com/mpark/variant
 
+Alexander Peslyak
+	libs/md5/*
+
 Peter Selinger
 	libs/potrace/*
 	http://potrace.sourceforge.net

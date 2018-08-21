@@ -36,11 +36,19 @@ if ENABLE_WOFF
 LIBS_LIBS  += ../libs/woff2/libwoff2.a ../libs/brotli/libbrotli.a
 endif
 else
-LIBS_CFLAGS = -I\$(XXHASH_CFLAGS)
+LIBS_CFLAGS = \$(XXHASH_CFLAGS)
 LIBS_LIBS   = \$(POTRACE_LIBS) \$(XXHASH_LIBS)
 if ENABLE_WOFF
 LIBS_LIBS  += \$(WOFF2_LIBS) \$(BROTLI_LIBS)
 endif
+endif
+
+if USE_BUNDLED_MD5
+LIBS_CFLAGS += -I\$(top_srcdir)/libs/md5
+LIBS_LIBS   += ../libs/md5/libmd5.a
+else
+LIBS_CFLAGS += \$(LIBCRYPTO_CFLAGS)
+LIBS_LIBS   += \$(LIBCRYPTO_LIBS)
 endif
 
 AM_CXXFLAGS = -I\$(top_srcdir)/src -I\$(top_srcdir)/libs/variant/include \\
@@ -71,7 +79,7 @@ for f in *Test.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f testutil.hpp
-${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include
+${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include \$(LIBS_CFLAGS)
 ${base}_LDADD = \$(TESTLIBS)
 
 EOT

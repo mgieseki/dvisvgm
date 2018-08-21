@@ -145,12 +145,16 @@ AS_IF([test "x$enable_woff" != "xyes"],
 				[AC_MSG_WARN([disabled ttfautohint support])])])]
 		[AC_SUBST(TTFAUTOHINT_CFLAGS) AC_SUBST(TTFAUTOHINT_LIBS)])])
 
+AC_CHECK_HEADERS([openssl/md5.h])
+PKG_CHECK_MODULES([LIBCRYPTO], [libcrypto], [HAVE_LIBCRYPTO=1], [HAVE_LIBCRYPTO=0])
+AM_CONDITIONAL([USE_BUNDLED_MD5], [test "$HAVE_LIBCRYPTO" -eq 0])
+
 AC_CHECK_LIB(z, gzopen)
 
 # Check for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([libintl.h stdlib.h string.h strings.h unistd.h])
+AC_CHECK_HEADERS_ONCE([libintl.h stdlib.h string.h strings.h unistd.h])
 
 # Check for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -221,6 +225,7 @@ AC_CONFIG_FILES([
 	libs/brotli/Makefile
 	libs/clipper/Makefile
 	libs/ff-woff/Makefile
+	libs/md5/Makefile
 	libs/potrace/Makefile
 	libs/variant/Makefile
 	libs/woff2/Makefile

@@ -3,7 +3,7 @@
 ##
 ## Process this file with automake.
 
-SUBDIRS = clipper potrace variant xxHash
+SUBDIRS = clipper md5 potrace variant xxHash
 
 if ENABLE_WOFF
 SUBDIRS += brotli ff-woff woff2
