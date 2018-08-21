@@ -132,10 +132,16 @@ void DVIReader::collectBopOffsets () {
 	_bopOffsets.push_back(tell());      // also add offset of postamble
 	readByte();                         // skip post command
 	uint32_t offset = readUnsigned(4);  // offset of final bop
-	while ((int32_t)offset > 0) {       // not yet on first bop?
+	while (int32_t(offset) != -1) {     // not yet on first bop?
 		_bopOffsets.push_back(offset);   // record offset
-		seek(offset+41);                 // skip bop command and the 10 \count values => now on offset of previous bop
-		offset = readUnsigned(4);
+		seek(offset);                    // now on previous bop
+		if (readByte() != OP_BOP)
+			throw DVIException("bop offset at "+to_string(offset)+" doesn't point to bop command" );
+		seek(40, ios::cur);              // skip the 10 \count values => now on offset of previous bop
+		uint32_t prevOffset = readUnsigned(4);
+		if ((prevOffset >= offset && int32_t(prevOffset) != -1))
+			throw DVIException("invalid bop offset at "+to_string(tell()-static_cast<streamoff>(4)));
+		offset = prevOffset;
 	}
 	reverse(_bopOffsets.begin(), _bopOffsets.end());
 }
