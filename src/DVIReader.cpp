@@ -27,6 +27,7 @@
 #include "DVIReader.hpp"
 #include "Font.hpp"
 #include "FontManager.hpp"
+#include "HashFunction.hpp"
 #include "VectorStream.hpp"
 
 using namespace std;
@@ -68,7 +69,7 @@ void DVIReader::executeAll () {
 
 /** Reads and executes the commands of a single page.
  *  This methods stops reading after the page's eop command has been executed.
- *  @param[in] n number of page to be executed
+ *  @param[in] n number of page to be executed (1-based)
  *  @returns true if page was read successfully */
 bool DVIReader::executePage (unsigned n) {
 	clearStream();    // reset all status bits
@@ -145,6 +146,31 @@ void DVIReader::collectBopOffsets () {
 	}
 	reverse(_bopOffsets.begin(), _bopOffsets.end());
 }
+
+
+/** Computes a hash value for a given page. The hash algorithm is selected by
+ *  a HashFunction object which will also contain the resulting hash value if
+ *  this function returns true.
+ *  @param[in] pageno number of page to process (1-based)
+ *  @param[in,out] hashFunc hash function to use
+ *  @return true on success, hashFunc contains the resulting hash value */
+bool DVIReader::computePageHash (size_t pageno, HashFunction &hashFunc) {
+	if (pageno == 0 || pageno > numberOfPages())
+		return false;
+
+	clearStream();
+	seek(_bopOffsets[pageno-1]+45);  // now on first command after bop of selected page
+	const size_t BUFSIZE = 4096;
+	char buf[BUFSIZE];
+	size_t numBytes = numberOfPageBytes(pageno-1)-46;  // number of bytes excluding bop and eop
+	while (numBytes > 0) {
+		getInputStream().read(buf, min(numBytes, BUFSIZE));
+		hashFunc.update(buf, getInputStream().gcount());
+		numBytes -= getInputStream().gcount();
+	}
+	return true;
+}
+
 
 /////////////////////////////////////
 

@@ -27,6 +27,13 @@
 
 using namespace std;
 
+
+/** Returns a vector containing the names of the currently supported hash algorithms. */
+vector<string> HashFunction::supportedAlgorithms () {
+	return vector<string> {"md5", "xxh32", "xxh64"};
+}
+
+
 /** Creates a hash function for a given algorithm name/identifier.
  *  The following names are currently supported: md5, xxh32, xxh64. */
 unique_ptr<HashFunction> HashFunction::create (const string &name) {

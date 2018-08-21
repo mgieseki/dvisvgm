@@ -28,6 +28,7 @@
 
 struct DVIActions;
 struct SVGOutputBase;
+class HashFunction;
 
 class DVIToSVG : public DVIReader {
 	public:
@@ -49,10 +50,11 @@ class DVIToSVG : public DVIReader {
 	public:
 		static bool COMPUTE_PROGRESS;  ///< if true, an action to handle the progress ratio of a page is triggered
 		static char TRACE_MODE;
+		static std::string HASH_ALGO_NAME;  ///< name/ID of hash algorithm to use for page hashes
 
 	protected:
 		DVIToSVG (const DVIToSVG&) =delete;
-		void convert (unsigned firstPage, unsigned lastPage, std::pair<int,int> *pageinfo=0);
+		void convert (unsigned firstPage, unsigned lastPage, HashFunction *hashfunc);
 		int executeCommand () override;
 		void enterBeginPage (unsigned pageno, const std::vector<int32_t> &c);
 		void leaveEndPage (unsigned pageno);

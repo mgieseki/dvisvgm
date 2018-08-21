@@ -43,9 +43,10 @@ SVGOutput::SVGOutput (const string &base, const string &pattern, int zipLevel)
 /** Returns an output stream for the given page.
  *  @param[in] page number of current page
  *  @param[in] numPages total number of pages in the DVI file
+ *  @param[in] hash hash value of the current page
  *  @return output stream for the given page */
-ostream& SVGOutput::getPageStream (int page, int numPages) const {
-	string fname = filename(page, numPages);
+ostream& SVGOutput::getPageStream (int page, int numPages, const string &hash) const {
+	string fname = filename(page, numPages, hash);
 	if (fname.empty()) {
 		if (_zipLevel == 0) {
 			_osptr.reset();
@@ -73,14 +74,18 @@ ostream& SVGOutput::getPageStream (int page, int numPages) const {
 
 /** Returns the name of the SVG file containing the given page.
  *  @param[in] page number of current page
- *  @param[in] numPages total number of pages */
-string SVGOutput::filename (int page, int numPages) const {
+ *  @param[in] numPages total number of pages
+ *  @param[in] hash hash value of current page */
+string SVGOutput::filename (int page, int numPages, const string &hash) const {
 	if (_stdout)
 		return "";
-	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages));
+
+	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages, hash));
 	// set and expand default pattern if necessary
-	if (expanded_pattern.empty())
-		expanded_pattern = expandFormatString(numPages > 1 ? "%f-%p" : "%f", page, numPages);
+	if (expanded_pattern.empty()) {
+		string pattern = hash.empty() ? (numPages > 1 ? "%f-%p" : "%f") : "%f-%h";
+		expanded_pattern = expandFormatString(pattern, page, numPages, hash);
+	}
 	// append suffix if necessary
 	FilePath outpath(expanded_pattern, true);
 	if (outpath.suffix().empty())
@@ -109,10 +114,15 @@ string SVGOutput::outpath (int page, int numPages) const {
 /** Replaces expressions in a given string by the corresponding values and returns the result.
  *  Supported constructs:
  *  %f: basename of the current file (filename without suffix)
+ *  %h: hash value of current page
  *  %[0-9]?p: current page number
  *  %[0-9]?P: number of pages in DVI file
- *  %[0-9]?(expr): arithmetic expression */
-string SVGOutput::expandFormatString (string str, int page, int numPages) const {
+ *  %[0-9]?(expr): arithmetic expression
+ *  @param[in] str string to expand
+ *  @param[in] page number of current page
+ *  @param[in] numPages total number of pages
+ *  @param[in] hash hash value of current page (skipped if empty) */
+string SVGOutput::expandFormatString (string str, int page, int numPages, const string &hash) const {
 	string result;
 	while (!str.empty()) {
 		size_t pos = str.find('%');
@@ -135,6 +145,9 @@ string SVGOutput::expandFormatString (string str, int page, int numPages) const 
 			switch (str[pos]) {
 				case 'f':
 					result += _path.basename();
+					break;
+				case 'h':
+					if (!hash.empty()) result += hash;
 					break;
 				case 'p':
 				case 'P':
@@ -167,4 +180,11 @@ string SVGOutput::expandFormatString (string str, int page, int numPages) const 
 		}
 	}
 	return result;
+}
+
+
+/** Returns true if methods 'filename' and 'getPageStream' ignore the hash
+ *  parameter because it's not requested in the filename pattern. */
+bool SVGOutput::ignoresHashes () const {
+	return _stdout || (!_pattern.empty() && _pattern.find("%h") == string::npos);
 }

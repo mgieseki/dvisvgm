@@ -27,9 +27,11 @@
 #include "Calculator.hpp"
 #include "DVIToSVG.hpp"
 #include "DVIToSVGActions.hpp"
+#include "FileSystem.hpp"
 #include "Font.hpp"
 #include "FontManager.hpp"
 #include "GlyphTracerMessages.hpp"
+#include "HashFunction.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "PageRanges.hpp"
@@ -67,6 +69,7 @@ using namespace std;
  *   0 : only trace actually required glyphs */
 char DVIToSVG::TRACE_MODE = 0;
 bool DVIToSVG::COMPUTE_PROGRESS = false;
+string DVIToSVG::HASH_ALGO_NAME;
 
 
 DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
@@ -83,8 +86,8 @@ DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
 /** Starts the conversion process.
  *  @param[in] first number of first page to convert
  *  @param[in] last number of last page to convert
- *  @param[out] pageinfo (number of converted pages, number of total pages) */
-void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) {
+ *  @param[in] hashFunc pointer to function to be used to compute page hashes */
+void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 	if (first > last)
 		swap(first, last);
 	if (first > numberOfPages()) {
@@ -95,24 +98,35 @@ void DVIToSVG::convert (unsigned first, unsigned last, pair<int,int> *pageinfo) 
 		throw DVIException(oss.str());
 	}
 	last = min(last, numberOfPages());
+	bool computeHashes = (hashFunc && !_out.ignoresHashes());
 	for (unsigned i=first; i <= last; ++i) {
-		executePage(i);
-		_svg.removeRedundantElements();
-		embedFonts(_svg.rootNode());
-		bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages()));
-		string fname = _out.filename(i, numberOfPages());
-		if (fname.empty())
-			fname = "<stdout>";
-		if (success)
-			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
-		else
-			Message::wstream(true) << "failed to write output to " << fname << '\n';
-		_svg.reset();
-		_actions->reset();
-	}
-	if (pageinfo) {
-		pageinfo->first = last-first+1;
-		pageinfo->second = numberOfPages();
+		string hash;
+		if (computeHashes) {
+			computePageHash(i, *hashFunc);
+			hash = hashFunc->digestString();
+			hashFunc->reset();
+		}
+		string fname = _out.filename(i, numberOfPages(), hash);
+		if (!hash.empty() && FileSystem::exists(fname)) {
+			Message::mstream(false, Message::MC_PAGE_NUMBER) << "skipping page " << i;
+			Message::mstream().indent(1);
+			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\nfile " << fname << " exists\n";
+			Message::mstream().indent(0);
+		}
+		else {
+			executePage(i);
+			_svg.removeRedundantElements();
+			embedFonts(_svg.rootNode());
+			bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages(), hash));
+			if (fname.empty())
+				fname = "<stdout>";
+			if (success)
+				Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
+			else
+				Message::wstream(true) << "failed to write output to " << fname << '\n';
+			_svg.reset();
+			_actions->reset();
+		}
 	}
 }
 
@@ -134,8 +148,20 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 		SpecialManager::instance().notifyPreprocessingFinished();
 	}
 
+	unique_ptr<HashFunction> hashFunc;
+	if (!HASH_ALGO_NAME.empty()) {
+		hashFunc = HashFunction::create(HASH_ALGO_NAME);
+		if (!hashFunc) {
+			string msg = "unknown hash algorithm '"+HASH_ALGO_NAME+"' (supported algorithms: ";
+			for (const string &name : HashFunction::supportedAlgorithms())
+				msg += name + ", ";
+			msg.pop_back();
+			msg.back() = ')';
+			throw MessageException(msg);
+		}
+	}
 	for (const auto &range : ranges)
-		convert(range.first, range.second);
+		convert(range.first, range.second, hashFunc.get());
 	if (pageinfo) {
 		pageinfo->first = ranges.numberOfPages();
 		pageinfo->second = numberOfPages();
