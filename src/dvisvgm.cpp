@@ -307,6 +307,7 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();
 	SVGTree::MERGE_CHARS = !cmdline.noMergeOpt.given();
 	SVGTree::ADD_COMMENTS = cmdline.commentsOpt.given();
+	DVIToSVG::HASH_ALGO_NAME = cmdline.pageHashesOpt.given() ? cmdline.pageHashesOpt.value() : "";
 	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
 	Message::LEVEL = cmdline.verbosityOpt.value();
 	PhysicalFont::EXACT_BBOX = cmdline.exactOpt.given();

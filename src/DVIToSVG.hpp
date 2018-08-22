@@ -54,7 +54,7 @@ class DVIToSVG : public DVIReader {
 
 	protected:
 		DVIToSVG (const DVIToSVG&) =delete;
-		void convert (unsigned firstPage, unsigned lastPage, HashFunction *hashfunc);
+		void convert (unsigned firstPage, unsigned lastPage, HashFunction *hashFunc);
 		int executeCommand () override;
 		void enterBeginPage (unsigned pageno, const std::vector<int32_t> &c);
 		void leaveEndPage (unsigned pageno);
