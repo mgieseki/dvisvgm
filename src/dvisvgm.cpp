@@ -115,7 +115,12 @@ static bool set_cache_dir (const CommandLine &args) {
 			Message::wstream(true) << "cache directory '" << args.cacheOpt.value() << "' does not exist (caching disabled)\n";
 	}
 	else if (const char *userdir = FileSystem::userdir()) {
-		static string cachepath = userdir + string("/.dvisvgm/cache");
+#ifdef _WIN32
+		string cachedir = "\\.dvisvgm\\cache";
+#else
+		string cachedir = "/.dvisvgm/cache";
+#endif
+		static string cachepath = userdir + cachedir;
 		if (!FileSystem::exists(cachepath))
 			FileSystem::mkdir(cachepath);
 		PhysicalFont::CACHE_PATH = cachepath.c_str();
