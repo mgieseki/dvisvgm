@@ -37,6 +37,7 @@ class HashFunction {
 		virtual std::vector<uint8_t> digestValue () const =0;
 		std::string digestString () const;
 		static std::vector<std::string> supportedAlgorithms ();
+		static bool isSupportedAlgorithm (const std::string &algo);
 		static std::unique_ptr<HashFunction> create (const std::string &name);
 };
 

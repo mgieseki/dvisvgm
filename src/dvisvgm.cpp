@@ -37,6 +37,7 @@
 #include "Font.hpp"
 #include "FontEngine.hpp"
 #include "Ghostscript.hpp"
+#include "HashFunction.hpp"
 #include "HyperlinkManager.hpp"
 #include "Message.hpp"
 #include "PageSize.hpp"
@@ -285,6 +286,31 @@ static void init_fontmap (const CommandLine &cmdline) {
 }
 
 
+static bool list_page_hashes (const CommandLine &cmdline, DVIToSVG &dvisvg) {
+	if (cmdline.pageHashesOpt.given()) {
+		auto hashParams = util::split(cmdline.pageHashesOpt.value(), ",");
+		for (string &param : hashParams)
+			param = util::trim(param);
+		if (hashParams.size() == 1) {
+			if (hashParams[0] == "list")
+				DVIToSVG::PAGE_HASH_PARAMS = {"xxh64", "list"};
+			else
+				DVIToSVG::PAGE_HASH_PARAMS.first = hashParams[0];
+		}
+		else {
+			if (!HashFunction::isSupportedAlgorithm(hashParams[0]) && HashFunction::isSupportedAlgorithm(hashParams[1]))
+				swap(hashParams[0], hashParams[1]);
+			DVIToSVG::PAGE_HASH_PARAMS = {hashParams[0], hashParams[1]};
+		}
+		if (DVIToSVG::PAGE_HASH_PARAMS.second == "list") {
+			dvisvg.listHashes(cmdline.pageOpt.value(), cout);
+			return true;
+		}
+	}
+	return false;
+}
+
+
 static void set_variables (const CommandLine &cmdline) {
 	Message::COLORIZE = cmdline.colorOpt.given();
 	if (cmdline.progressOpt.given()) {
@@ -307,7 +333,6 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();
 	SVGTree::MERGE_CHARS = !cmdline.noMergeOpt.given();
 	SVGTree::ADD_COMMENTS = cmdline.commentsOpt.given();
-	DVIToSVG::HASH_ALGO_NAME = cmdline.pageHashesOpt.given() ? cmdline.pageHashesOpt.value() : "";
 	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
 	Message::LEVEL = cmdline.verbosityOpt.value();
 	PhysicalFont::EXACT_BBOX = cmdline.exactOpt.given();
@@ -391,6 +416,8 @@ int main (int argc, char *argv[]) {
 		else {
 			init_fontmap(cmdline);
 			DVIToSVG dvi2svg(srcin.getInputStream(), out);
+			if (list_page_hashes(cmdline, dvi2svg))
+				return 0;
 			const char *ignore_specials=nullptr;
 			if (cmdline.noSpecialsOpt.given())
 				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value().c_str();

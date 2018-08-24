@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include "HashFunction.hpp"
@@ -31,6 +32,13 @@ using namespace std;
 /** Returns a vector containing the names of the currently supported hash algorithms. */
 vector<string> HashFunction::supportedAlgorithms () {
 	return vector<string> {"md5", "xxh32", "xxh64"};
+}
+
+
+/** Returns true if 'algo' is the name of a supported hash algorithm. */
+bool HashFunction::isSupportedAlgorithm (const std::string &algo) {
+	auto algos = supportedAlgorithms();
+	return find(algos.begin(), algos.end(), algo) != algos.end();
 }
 
 

@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <set>
 #include <sstream>
 #include "Calculator.hpp"
@@ -69,7 +70,7 @@ using namespace std;
  *   0 : only trace actually required glyphs */
 char DVIToSVG::TRACE_MODE = 0;
 bool DVIToSVG::COMPUTE_PROGRESS = false;
-string DVIToSVG::HASH_ALGO_NAME;
+pair<string,string> DVIToSVG::PAGE_HASH_PARAMS;
 
 
 DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
@@ -131,6 +132,23 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 }
 
 
+/** Creates a HashFunction object for a given algorithm name.
+ *  @param[in] algo name of hash algorithm
+ *  @return pointer to hash function
+ *  @throw MessageException if algorithm name is invalid or not supported */
+static unique_ptr<HashFunction> create_hash_function (const string &algo) {
+	if (auto hashFunc = HashFunction::create(algo))
+		return hashFunc;
+
+	string msg = "unknown hash algorithm '"+algo+"' (supported algorithms: ";
+	for (const string &name : HashFunction::supportedAlgorithms())
+		msg += name + ", ";
+	msg.pop_back();
+	msg.back() = ')';
+	throw MessageException(msg);
+}
+
+
 /** Convert DVI pages specified by a page range string.
  *  @param[in] rangestr string describing the pages to convert
  *  @param[out] pageinfo (number of converted pages, number of total pages) */
@@ -149,22 +167,35 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	}
 
 	unique_ptr<HashFunction> hashFunc;
-	if (!HASH_ALGO_NAME.empty()) {
-		hashFunc = HashFunction::create(HASH_ALGO_NAME);
-		if (!hashFunc) {
-			string msg = "unknown hash algorithm '"+HASH_ALGO_NAME+"' (supported algorithms: ";
-			for (const string &name : HashFunction::supportedAlgorithms())
-				msg += name + ", ";
-			msg.pop_back();
-			msg.back() = ')';
-			throw MessageException(msg);
-		}
-	}
+	if (!PAGE_HASH_PARAMS.first.empty())  // name of hash algorithm present?
+		hashFunc = create_hash_function(PAGE_HASH_PARAMS.first);
+
 	for (const auto &range : ranges)
 		convert(range.first, range.second, hashFunc.get());
 	if (pageinfo) {
 		pageinfo->first = ranges.numberOfPages();
 		pageinfo->second = numberOfPages();
+	}
+}
+
+
+/** Writes the hash values of a selected set of pages to an output stream.
+ *  @param[in] rangestr string describing the pages to convert
+ *  @param[in,out] os stream the output is written to */
+void DVIToSVG::listHashes (const string &rangestr, std::ostream &os) {
+	PageRanges ranges;
+	if (!ranges.parse(rangestr, numberOfPages()))
+		throw MessageException("invalid page range format");
+
+	auto hashFunc = create_hash_function(PAGE_HASH_PARAMS.first);
+	int width = util::ilog10(numberOfPages())+1;
+	for (const auto &range : ranges) {
+		for (int i=range.first; i <= range.second; i++) {
+			computePageHash(i, *hashFunc);
+			os << setw(width) << i;
+			os << ": " << hashFunc->digestString() << '\n';
+			hashFunc->reset();
+		}
 	}
 }
 

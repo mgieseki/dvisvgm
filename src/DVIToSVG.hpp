@@ -42,6 +42,7 @@ class DVIToSVG : public DVIReader {
 		double getXPos() const override       {return dviState().h+_tx;}
 		double getYPos() const override       {return dviState().v+_ty;}
 		void finishLine () override           {_prevYPos = std::numeric_limits<double>::min();}
+		void listHashes (const std::string &rangestr, std::ostream &os);
 
 		std::string getSVGFilename (unsigned pageno) const;
 		std::string getUserBBoxString () const  {return _bboxFormatString;}
@@ -50,7 +51,7 @@ class DVIToSVG : public DVIReader {
 	public:
 		static bool COMPUTE_PROGRESS;  ///< if true, an action to handle the progress ratio of a page is triggered
 		static char TRACE_MODE;
-		static std::string HASH_ALGO_NAME;  ///< name/ID of hash algorithm to use for page hashes
+		static std::pair<std::string, std::string> PAGE_HASH_PARAMS; ///< name of hash algorithm and optional modifier
 
 	protected:
 		DVIToSVG (const DVIToSVG&) =delete;

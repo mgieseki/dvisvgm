@@ -255,29 +255,6 @@ value, dvisvgm reduces their level of detail. For example, Bézier curves are re
 lines, and triangular segments are combined to tetragons. For a small 'delta', these simplifications
 are usually not noticeable but reduce the size of the generated SVG files significantly.
 
-*-H, --page-hashes*[='algo']::
-If this option is given, dvisvgm computes hash values of all pages to be processed. As long as the
-page contents don't change, the hash value of that page stays the same. This property can be used
-to determine whether a DVI page must be converted again or can be skipped in consecutive runs of
-dvisvgm. This is done by propagating the hash value to variable +%h+ which can be accessed in the
-output pattern (see option *--output*). By default, dvisvgm changes the output pattern to +%f-%h+
-if option *--page-hashes* is given. As a result, all SVG file names contain the hash value instead
-of the page number. When calling dvisvgm again with option *--page-hashes* and the same output
-pattern, it checks the existence of the SVG file to be created and skips the conversion if it's
-present. This also applies for consecutive calls of dvisvgm with different command-line parameters.
-If you want to force another conversion of a DVI file that hasn't changed, you must remove the
-corresponding SVG files beforehand.
-+
-Since the page number isn't part of the file name by default, different DVI pages with the
-identical contents get the same file name. Therefore, only the first one is converted while the
-others are skipped. To create separate files for each page, you can add the page number to the
-output pattern, e.g. +--output="%f-%p-%h"+.
-+
-The optional argument 'algo' allows to select the hash function to be used. At the moment, the
-following algorithms are available: +MD5+, +XXH32+, and +XXH64+, where the names can be given
-in lower-case as well. If no algorithm is specified, +XXH64+ is used by default. It's extremely
-fast, and a 64-bit hash should be sufficient for all documents with an average size of pages.
-
 *-h, --help*[='mode']::
 Prints a short summary of all available command-line options. The optional 'mode' parameter is
 an integer value between 0 and 2. It selects the display variant of the help text. Mode 0
@@ -385,7 +362,7 @@ than 1.
 +
 Variable +%h+ contains the hash value of the current page, but only if dvisvgm is called with
 option *--page-hashes*. Otherwise, it's empty. See the description of option *--page-hashes*
-above for further information.
+below for further information.
 +
 The default pattern is +%f-%p.svg+ if the DVI file consists of more than one page, and
 +%f.svg+ otherwise. That means, a DVI file 'foo.dvi' is converted to 'foo.svg' if 'foo.dvi'
@@ -408,6 +385,34 @@ pages up to page 10, +--page=10-+ converts all pages starting with page 10.
 Please consider that the page values don't refer to the page numbers printed on the
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.
+
+*-H, --page-hashes*[='algo'[,list]]::
+If this option is given, dvisvgm computes hash values of all pages to be processed. As long as the
+page contents don't change, the hash value of that page stays the same. This property can be used
+to determine whether a DVI page must be converted again or can be skipped in consecutive runs of
+dvisvgm. This is done by propagating the hash value to variable +%h+ which can be accessed in the
+output pattern (see option *--output*). By default, dvisvgm changes the output pattern to +%f-%h+
+if option *--page-hashes* is given. As a result, all SVG file names contain the hash value instead
+of the page number. When calling dvisvgm again with option *--page-hashes* and the same output
+pattern, it checks the existence of the SVG file to be created and skips the conversion if it's
+present. This also applies for consecutive calls of dvisvgm with different command-line parameters.
+If you want to force another conversion of a DVI file that hasn't changed, you must remove the
+corresponding SVG files beforehand.
++
+Since the page number isn't part of the file name by default, different DVI pages with identical
+contents get the same file name. Therefore, only the first one is converted while the others are
+skipped. To create separate files for each page, you can add the page number to the output pattern,
+e.g. +--output="%f-%p-%h"+.
++
+The optional argument 'algo' specifies the hash function to be used. At the moment, the following
+algorithms are available: +MD5+, +XXH32+, and +XXH64+, where the names can be given in lower-case
+as well. If no algorithm is specified, +XXH64+ is used by default. It's extremely fast, and a 64-bit
+hash should be sufficient for all documents with an average size of pages.
++
+Finally, option *--page-hashes* can take a second argument that must be separated by a comma.
+Currently, only the word +list+ is allowed here, e.g. +--page-hashes=md5,list+. When present,
+dvisvgm doesn't perform any conversion but just lists the hash values of the pages specified by
+option *--page*.
 
 *-P, --pdf*::
 If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert

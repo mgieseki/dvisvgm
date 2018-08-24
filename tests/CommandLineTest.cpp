@@ -155,12 +155,12 @@ TEST(CommandLineTest, string_arg) {
 
 TEST(CommandLineTest, abbrev_long) {
 	CommandLine cmd;
-	const char *args[] = {"progname", "--pa=9", "--rot=-45.5", "--out=myfile.zyx", "--color"};
+	const char *args[] = {"progname", "--pre=2", "--rot=-45.5", "--out=myfile.zyx", "--color"};
 	char **argv = const_cast<char**>(args);
 	cmd.parse(5, argv);
 
-	EXPECT_TRUE(cmd.pageOpt.given());
-	EXPECT_EQ(cmd.pageOpt.value(), "9");
+	EXPECT_TRUE(cmd.precisionOpt.given());
+	EXPECT_EQ(cmd.precisionOpt.value(), 2);
 	EXPECT_TRUE(cmd.rotateOpt.given());
 	EXPECT_EQ(cmd.rotateOpt.value(), -45.5);
 	EXPECT_TRUE(cmd.outputOpt.given());

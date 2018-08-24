@@ -41,8 +41,8 @@ class SVGOutput : public SVGOutputBase {
 		SVGOutput (const std::string &base) : SVGOutput(base, "", 0) {}
 		SVGOutput (const std::string &base, const std::string &pattern) : SVGOutput(base, pattern, 0) {}
 		SVGOutput (const std::string &base, const std::string &pattern, int zipLevel);
-		std::ostream& getPageStream (int page, int numPages, const std::string &hash) const override;
-		std::string filename (int page, int numPages, const std::string &hash) const override;
+		std::ostream& getPageStream (int page, int numPages, const std::string &hash="") const override;
+		std::string filename (int page, int numPages, const std::string &hash="") const override;
 		bool ignoresHashes () const override;
 
 	protected:
