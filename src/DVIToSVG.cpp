@@ -70,7 +70,7 @@ using namespace std;
  *   0 : only trace actually required glyphs */
 char DVIToSVG::TRACE_MODE = 0;
 bool DVIToSVG::COMPUTE_PROGRESS = false;
-pair<string,string> DVIToSVG::PAGE_HASH_PARAMS;
+DVIToSVG::HashSettings DVIToSVG::PAGE_HASH_SETTINGS;
 
 
 DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
@@ -167,8 +167,8 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 	}
 
 	unique_ptr<HashFunction> hashFunc;
-	if (!PAGE_HASH_PARAMS.first.empty())  // name of hash algorithm present?
-		hashFunc = create_hash_function(PAGE_HASH_PARAMS.first);
+	if (!PAGE_HASH_SETTINGS.algorithm().empty())  // name of hash algorithm present?
+		hashFunc = create_hash_function(PAGE_HASH_SETTINGS.algorithm());
 
 	for (const auto &range : ranges)
 		convert(range.first, range.second, hashFunc.get());
@@ -187,8 +187,9 @@ void DVIToSVG::listHashes (const string &rangestr, std::ostream &os) {
 	if (!ranges.parse(rangestr, numberOfPages()))
 		throw MessageException("invalid page range format");
 
-	auto hashFunc = create_hash_function(PAGE_HASH_PARAMS.first);
+	auto hashFunc = create_hash_function(PAGE_HASH_SETTINGS.algorithm());
 	int width = util::ilog10(numberOfPages())+1;
+	os << "hash algorithm: " << PAGE_HASH_SETTINGS.algorithm() << '\n';
 	for (const auto &range : ranges) {
 		for (int i=range.first; i <= range.second; i++) {
 			computePageHash(i, *hashFunc);
@@ -535,4 +536,22 @@ void DVIToSVG::dviXGlyphString (vector<double> &dx, vector<uint16_t> &glyphs, co
 
 void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector<uint16_t>&, vector<uint16_t> &glyphs, const Font &font) {
 	dviXGlyphArray(dx, dy, glyphs, font);
+}
+
+///////////////////////////////////////////////////////////////
+
+/** Parses a string consisting of comma-separated words, and assigns
+ *  the values to the hash settings. */
+void DVIToSVG::HashSettings::assign (const string &optstr) {
+	auto options = util::split(optstr, ",");
+	for (string &opt : options) {
+		opt = util::trim(opt);
+		if (!HashFunction::isSupportedAlgorithm(opt))
+			_options.insert(opt);
+		else if (_algo.empty())
+			_algo = opt;
+	}
+	// set default hash algorithm if none is given
+	if (_algo.empty())
+		_algo = "xxh64";
 }

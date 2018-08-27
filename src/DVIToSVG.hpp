@@ -21,6 +21,7 @@
 #ifndef DVITOSVG_HPP
 #define DVITOSVG_HPP
 
+#include <set>
 #include <string>
 #include <utility>
 #include "DVIReader.hpp"
@@ -31,6 +32,18 @@ struct SVGOutputBase;
 class HashFunction;
 
 class DVIToSVG : public DVIReader {
+	public:
+		class HashSettings {
+			public:
+				void assign (const std::string &optstr);
+				std::string algorithm () const {return _algo;}
+				bool isSet (const std::string &opt) {return _options.find(opt) != _options.end();}
+
+			private:
+				std::string _algo;
+				std::set<std::string> _options;
+		};
+
 	public:
 		explicit DVIToSVG (std::istream &is, SVGOutputBase &out);
 		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
@@ -51,7 +64,7 @@ class DVIToSVG : public DVIReader {
 	public:
 		static bool COMPUTE_PROGRESS;  ///< if true, an action to handle the progress ratio of a page is triggered
 		static char TRACE_MODE;
-		static std::pair<std::string, std::string> PAGE_HASH_PARAMS; ///< name of hash algorithm and optional modifier
+		static HashSettings PAGE_HASH_SETTINGS;
 
 	protected:
 		DVIToSVG (const DVIToSVG&) =delete;

@@ -293,21 +293,8 @@ static void init_fontmap (const CommandLine &cmdline) {
 
 static bool list_page_hashes (const CommandLine &cmdline, DVIToSVG &dvisvg) {
 	if (cmdline.pageHashesOpt.given()) {
-		auto hashParams = util::split(cmdline.pageHashesOpt.value(), ",");
-		for (string &param : hashParams)
-			param = util::trim(param);
-		if (hashParams.size() == 1) {
-			if (hashParams[0] == "list")
-				DVIToSVG::PAGE_HASH_PARAMS = {"xxh64", "list"};
-			else
-				DVIToSVG::PAGE_HASH_PARAMS.first = hashParams[0];
-		}
-		else {
-			if (!HashFunction::isSupportedAlgorithm(hashParams[0]) && HashFunction::isSupportedAlgorithm(hashParams[1]))
-				swap(hashParams[0], hashParams[1]);
-			DVIToSVG::PAGE_HASH_PARAMS = {hashParams[0], hashParams[1]};
-		}
-		if (DVIToSVG::PAGE_HASH_PARAMS.second == "list") {
+		DVIToSVG::PAGE_HASH_SETTINGS.assign(cmdline.pageHashesOpt.value());
+		if (DVIToSVG::PAGE_HASH_SETTINGS.isSet("list")) {
 			dvisvg.listHashes(cmdline.pageOpt.value(), cout);
 			return true;
 		}
