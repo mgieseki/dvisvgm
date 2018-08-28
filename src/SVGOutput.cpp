@@ -45,8 +45,8 @@ SVGOutput::SVGOutput (const string &base, const string &pattern, int zipLevel)
  *  @param[in] numPages total number of pages in the DVI file
  *  @param[in] hash hash value of the current page
  *  @return output stream for the given page */
-ostream& SVGOutput::getPageStream (int page, int numPages, const string &hash) const {
-	string fname = filename(page, numPages, hash);
+ostream& SVGOutput::getPageStream (int page, int numPages, const HashTriple &hashes) const {
+	string fname = filename(page, numPages, hashes);
 	if (fname.empty()) {
 		if (_zipLevel == 0) {
 			_osptr.reset();
@@ -76,15 +76,15 @@ ostream& SVGOutput::getPageStream (int page, int numPages, const string &hash) c
  *  @param[in] page number of current page
  *  @param[in] numPages total number of pages
  *  @param[in] hash hash value of current page */
-string SVGOutput::filename (int page, int numPages, const string &hash) const {
+string SVGOutput::filename (int page, int numPages, const HashTriple &hashes) const {
 	if (_stdout)
 		return "";
 
-	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages, hash));
+	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages, hashes));
 	// set and expand default pattern if necessary
 	if (expanded_pattern.empty()) {
-		string pattern = hash.empty() ? (numPages > 1 ? "%f-%p" : "%f") : "%f-%h";
-		expanded_pattern = expandFormatString(pattern, page, numPages, hash);
+		string pattern = hashes.empty() ? (numPages > 1 ? "%f-%p" : "%f") : "%f-%hd";
+		expanded_pattern = expandFormatString(pattern, page, numPages, hashes);
 	}
 	// append suffix if necessary
 	FilePath outpath(expanded_pattern, true);
@@ -122,7 +122,7 @@ string SVGOutput::outpath (int page, int numPages) const {
  *  @param[in] page number of current page
  *  @param[in] numPages total number of pages
  *  @param[in] hash hash value of current page (skipped if empty) */
-string SVGOutput::expandFormatString (string str, int page, int numPages, const string &hash) const {
+string SVGOutput::expandFormatString (string str, int page, int numPages, const HashTriple &hashes) const {
 	string result;
 	while (!str.empty()) {
 		size_t pos = str.find('%');
@@ -135,20 +135,27 @@ string SVGOutput::expandFormatString (string str, int page, int numPages, const 
 			str = str.substr(pos);
 			pos = 1;
 			ostringstream oss;
-			if (isdigit(str[pos])) {
+			if (!isdigit(str[pos]))
+				oss << setw(util::ilog10(numPages)+1) << setfill('0');
+			else {
 				oss << setw(str[pos]-'0') << setfill('0');
 				pos++;
-			}
-			else {
-				oss << setw(util::ilog10(numPages)+1) << setfill('0');
 			}
 			switch (str[pos]) {
 				case 'f':
 					result += _path.basename();
 					break;
-				case 'h':
-					if (!hash.empty()) result += hash;
+				case 'h': {
+					char variant = pos+1 < str.length() ? str[++pos] : '\0';
+					switch (variant) {
+						case 'd': result += hashes.dviHash(); break;
+						case 'c': result += hashes.cmbHash(); break;
+						case 'o': result += hashes.optHash(); break;
+						default:
+							throw MessageException("hash type 'd', 'c', or 'o' expected after '%h' in filename pattern");
+					}
 					break;
+				}
 				case 'p':
 				case 'P':
 					oss << (str[pos] == 'p' ? page : numPages);

@@ -291,9 +291,30 @@ static void init_fontmap (const CommandLine &cmdline) {
 }
 
 
+/** Returns a unique string for the current state of the command-line
+ *  options affecting the SVG output. */
+static string svg_options_hash (const CommandLine &cmdline) {
+	// options affecting the SVG output
+	vector<const CL::Option*> svg_options = {
+		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.colornamesOpt, &cmdline.commentsOpt,
+		&cmdline.exactOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt, &cmdline.gradOverlapOpt,
+		&cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt, &cmdline.magOpt,
+		&cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt,	&cmdline.noStylesOpt,
+		&cmdline.precisionOpt,	&cmdline.relativeOpt, &cmdline.zoomOpt
+	};
+	string idString = get_transformation_string(cmdline);
+	for (const CL::Option *opt : svg_options) {
+		idString += opt->given();
+		idString += opt->valueString();
+	}
+	return XXH64HashFunction(idString).digestString();
+}
+
+
 static bool list_page_hashes (const CommandLine &cmdline, DVIToSVG &dvisvg) {
 	if (cmdline.pageHashesOpt.given()) {
-		DVIToSVG::PAGE_HASH_SETTINGS.assign(cmdline.pageHashesOpt.value());
+		DVIToSVG::PAGE_HASH_SETTINGS.setHashParams(cmdline.pageHashesOpt.value());
+		DVIToSVG::PAGE_HASH_SETTINGS.setOptionHash(svg_options_hash(cmdline));
 		if (DVIToSVG::PAGE_HASH_SETTINGS.isSet("list")) {
 			dvisvg.listHashes(cmdline.pageOpt.value(), cout);
 			return true;

@@ -95,6 +95,38 @@ TEST_F(SVGOutputTest, expressions) {
 }
 
 
+TEST_F(SVGOutputTest, hashes) {
+	SVGOutput::HashTriple hashes("dvihash", "opthash", "cmbhash");
+	{
+		SVGOutput out("SVGOutputTest.cpp", "%f-%hd-x");
+		EXPECT_EQ(out.filename(1, 10), "SVGOutputTest--x.svg");
+		EXPECT_EQ(out.filename(1, 10, hashes), "SVGOutputTest-dvihash-x.svg");
+	}{
+		SVGOutput out("SVGOutputTest.cpp", "%f-%hd-x-%hc%ho");
+		EXPECT_EQ(out.filename(1, 10), "SVGOutputTest--x-.svg");
+		EXPECT_EQ(out.filename(1, 10, hashes), "SVGOutputTest-dvihash-x-cmbhashopthash.svg");
+	}{
+		SVGOutput out("SVGOutputTest.cpp", "%f-%hd%p%ho");
+		EXPECT_EQ(out.filename(1, 10), "SVGOutputTest-01.svg");
+		EXPECT_EQ(out.filename(1, 10, hashes), "SVGOutputTest-dvihash01opthash.svg");
+	}
+}
+
+
+TEST_F(SVGOutputTest, hashes_fail) {
+	SVGOutput::HashTriple hashes("dvihash", "opthash", "cmbhash");
+	{
+		SVGOutput out("SVGOutputTest.cpp", "%f-%h-x");
+		EXPECT_THROW(out.filename(1, 10), MessageException);
+		EXPECT_THROW(out.filename(1, 10, hashes), MessageException);
+	}{
+		SVGOutput out("SVGOutputTest.cpp", "%f-%hd-x-%ha%ho");
+		EXPECT_THROW(out.filename(1, 10), MessageException);
+		EXPECT_THROW(out.filename(1, 10, hashes), MessageException);
+	}
+}
+
+
 TEST_F(SVGOutputTest, getPageStream) {
 	{
 		SVGOutput out("", "");
