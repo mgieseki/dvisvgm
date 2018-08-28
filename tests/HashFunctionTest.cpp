@@ -74,3 +74,44 @@ TEST(HashFunctionTest, xxh64) {
 	for (uint8_t byte : xxh64.digestValue())
 		EXPECT_EQ(byte, bytes[i++]);
 }
+
+
+TEST(HashFunctionTest, createMD5) {
+	auto hashfunc = HashFunction::create("md5");
+	ASSERT_TRUE(dynamic_cast<MD5HashFunction*>(hashfunc.get()) != nullptr);
+	hashfunc->update("0123456789");
+	EXPECT_EQ(hashfunc->digestString(), "781e5e245d69b566979b86e28d23f2c7");
+
+	hashfunc = HashFunction::create("md5", "0123456789");
+	ASSERT_TRUE(dynamic_cast<MD5HashFunction*>(hashfunc.get()) != nullptr);
+	EXPECT_EQ(hashfunc->digestString(), "781e5e245d69b566979b86e28d23f2c7");
+}
+
+
+TEST(HashFunctionTest, createXXH32) {
+	auto hashfunc = HashFunction::create("xxh32");
+	ASSERT_TRUE(dynamic_cast<XXH32HashFunction*>(hashfunc.get()) != nullptr);
+	hashfunc->update("0123456789");
+	EXPECT_EQ(hashfunc->digestString(), "950c9c0a");
+
+	hashfunc = HashFunction::create("xxh32", "0123456789");
+	ASSERT_TRUE(dynamic_cast<XXH32HashFunction*>(hashfunc.get()) != nullptr);
+	EXPECT_EQ(hashfunc->digestString(), "950c9c0a");
+}
+
+
+TEST(HashFunctionTest, createXXH64) {
+	auto hashfunc = HashFunction::create("xxh64");
+	ASSERT_TRUE(dynamic_cast<XXH64HashFunction*>(hashfunc.get()) != nullptr);
+	hashfunc->update("0123456789");
+	EXPECT_EQ(hashfunc->digestString(), "3f5fc178a81867e7");
+
+	hashfunc = HashFunction::create("xxh64", "0123456789");
+	ASSERT_TRUE(dynamic_cast<XXH64HashFunction*>(hashfunc.get()) != nullptr);
+	EXPECT_EQ(hashfunc->digestString(), "3f5fc178a81867e7");
+}
+
+
+TEST(HashFunctionTest, createFail) {
+	ASSERT_TRUE(HashFunction::create("not-available") == nullptr);
+}

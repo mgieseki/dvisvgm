@@ -33,6 +33,9 @@
 class MD5HashFunction : public HashFunction {
 	public:
 		MD5HashFunction () {MD5_Init(&_context);}
+		MD5HashFunction (const char *data, size_t length) : MD5HashFunction() {update(data, length);}
+		MD5HashFunction (const std::string &data) : MD5HashFunction() {update(data);}
+		MD5HashFunction (const std::vector<uint8_t> &data) : MD5HashFunction() {update(data);}
 		int digestSize () const override {return 16;}
 		void reset () override {MD5_Init(&_context);}
 		void update (const char *data, size_t length) override {MD5_Update(&_context, data, length);}

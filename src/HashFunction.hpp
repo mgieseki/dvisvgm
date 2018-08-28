@@ -39,6 +39,9 @@ class HashFunction {
 		static std::vector<std::string> supportedAlgorithms ();
 		static bool isSupportedAlgorithm (const std::string &algo);
 		static std::unique_ptr<HashFunction> create (const std::string &name);
+		static std::unique_ptr<HashFunction> create (const std::string &name, const char *data, size_t length);
+		static std::unique_ptr<HashFunction> create (const std::string &name, const std::string &data);
+		static std::unique_ptr<HashFunction> create (const std::string &name, const std::vector<uint8_t> &data);
 };
 
 #endif

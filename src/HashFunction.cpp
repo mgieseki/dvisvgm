@@ -56,6 +56,24 @@ unique_ptr<HashFunction> HashFunction::create (const string &name) {
 }
 
 
+std::unique_ptr<HashFunction> HashFunction::create (const string &name, const char *data, size_t length) {
+	auto hashfunc = create(name);
+	if (hashfunc)
+		hashfunc->update(data, length);
+	return hashfunc;
+}
+
+
+std::unique_ptr<HashFunction> HashFunction::create (const string &name, const string &data) {
+	return create(name, data.data(), data.length());
+}
+
+
+std::unique_ptr<HashFunction> HashFunction::create (const string &name, const vector<uint8_t> &data) {
+	return create(name, reinterpret_cast<const char*>(data.data()), data.size());
+}
+
+
 /** Returns the current digest as hexadecimal value. */
 string HashFunction::digestString () const {
 	ostringstream oss;
