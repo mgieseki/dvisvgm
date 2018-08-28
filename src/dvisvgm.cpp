@@ -26,7 +26,6 @@
 #include <potracelib.h>
 #include <sstream>
 #include <vector>
-#include <xxhash.h>
 #include <zlib.h>
 #include "CommandLine.hpp"
 #include "DVIToSVG.hpp"
@@ -48,6 +47,7 @@
 #include "SourceInput.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
+#include "XXHashFunction.hpp"
 #include "utility.hpp"
 #include "version.hpp"
 
@@ -253,7 +253,7 @@ static void print_version (bool extended) {
 		versionInfo.add("clipper", CLIPPER_VERSION);
 		versionInfo.add("freetype", FontEngine::version());
 		versionInfo.add("potrace", strchr(potrace_version(), ' '));
-		versionInfo.add("xxhash", XXH_versionNumber(), 3, 100);
+		versionInfo.add("xxhash", XXH64HashFunction::version(), 3, 100);
 		versionInfo.add("zlib", zlibVersion());
 		versionInfo.add("Ghostscript", Ghostscript().revisionstr(), true);
 #ifndef DISABLE_WOFF

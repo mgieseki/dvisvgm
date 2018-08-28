@@ -73,6 +73,8 @@ class XXHashFunction : public HashFunction {
 			return hash;
 		}
 
+		static unsigned version () {return XXH_versionNumber();}
+
 	private:
 		typename Interface::State *_state;
 };
