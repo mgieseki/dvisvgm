@@ -1,7 +1,7 @@
 version: 2.5-{build}
 configuration: Release
 
-image: Visual Studio 2017
+image: Previous Visual Studio 2017
 
 platform:
   - x64
@@ -32,7 +32,7 @@ install:
   - cd ..
   - appveyor DownloadFile https://github.com/mgieseki/ttfautohint-dll/releases/download/r%TTFA_VER%-%TTFA_REV%/ttfautohint-%TTFA_VER%-dll64.zip
   - unzip -o -d ttfautohint ttfautohint-%TTFA_VER%-dll64.zip
-  - del ttfautohint-%TTF_VER%-dll64.zip
+  - del ttfautohint-%TTFA_VER%-dll64.zip
 
 build:
   project: vc\dvisvgm.sln
