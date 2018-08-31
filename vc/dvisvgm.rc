@@ -1,0 +1,34 @@
+#include <winver.h>
+
+#define DVISVGM_VERSION 2,5,0,0
+#define DVISVGM_VERSION_STR "2.5\0"
+
+VS_VERSION_INFO  VERSIONINFO
+  FILEVERSION    DVISVGM_VERSION
+  PRODUCTVERSION DVISVGM_VERSION
+  FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+  FILEFLAGS      0
+  FILEOS         VOS__WINDOWS32
+  FILETYPE       VFT_APP
+  FILESUBTYPE    0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4" // US English (0x409), ANSI codepage (1252)
+    BEGIN
+      VALUE "FileDescription", "Converts DVI, EPS, and PDF files to SVG\0"
+      VALUE "FileVersion", DVISVGM_VERSION_STR
+      VALUE "InternalName", "dvisvgm\0"
+      VALUE "LegalCopyright",	"\251 2005\2262018 Martin Gieseking\0"
+      VALUE "OriginalFilename", "dvisvgm.exe\0"
+      VALUE "ProductName",	"dvisvgm\0"
+      VALUE "ProductVersion", DVISVGM_VERSION_STR
+      VALUE "Comments", "For more information visit https://dvisvgm.de\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+    BEGIN
+      VALUE "Translation", 0x409, 1252
+    END
+END
+
