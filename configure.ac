@@ -71,12 +71,6 @@ AS_IF([test -z "$kpseversion"],
 AC_SUBST(KPSE_CFLAGS)
 AC_SUBST(KPSE_LIBS)
 
-# Check how to link potrace library
-AC_CHECK_HEADER([potracelib.h],
-	[AC_CHECK_LIB(m, sqrt)] # required to pass potrace check
-	[AC_CHECK_LIB(potrace, potrace_trace,,
-		[AC_MSG_ERROR([potrace library not found])])])
-
 # Check how to link Ghostscript
 have_libgs=yes
 AC_CHECK_HEADER([ghostscript/iapi.h],
@@ -105,14 +99,15 @@ AC_ARG_WITH([ttfautohint],
 	[with_ttfautohint="$withval"],
 	[with_ttfautohint=no])
 
-# Add option to enable linking of bundled libraries (brotli, woff2, xxhash).
+# Add option to enable linking of bundled libraries (brotli, potrace, woff2, xxhash).
 AC_ARG_ENABLE([bundled-libs],
 	[AS_HELP_STRING([--enable-bundled-libs], [use bundled libraries instead of the system ones @<:@default=no@:>@])])
 AM_CONDITIONAL([USE_BUNDLED_LIBS], [test "x$enable_bundled_libs" = "xyes"])
 
-# If option --enable-bundled-libs is not given, look for system libraries of brotli, woff2, and xxhash.
+# If option --enable-bundled-libs is not given, look for system libraries of brotli, potrace, woff2, and xxhash.
 AS_IF([test "x$enable_bundled_libs" != "xyes"],
 	[AC_CHECK_HEADER([potracelib.h],
+		[AC_CHECK_LIB(m, sqrt)] # required to pass potrace check
 		[AC_CHECK_LIB(potrace, potrace_trace,,
 			[AC_MSG_ERROR([system library 'libpotrace' not found])])],
 		[AC_MSG_ERROR([header file 'potracelib.h' for system library 'libpotrace' not found])])]
