@@ -108,7 +108,6 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			dviHash = hashFunc->digestString();
 			hashFunc->update(PAGE_HASH_SETTINGS.optionsHash());
 			combinedHash = hashFunc->digestString();
-			hashFunc->reset();
 		}
 		const SVGOutput::HashTriple hashTriple(dviHash, shortenedOptHash, combinedHash);
 		string fname = _out.filename(i, numberOfPages(), hashTriple);
@@ -207,7 +206,6 @@ void DVIToSVG::listHashes (const string &rangestr, std::ostream &os) {
 			os << ": " << hashFunc->digestString();
 			hashFunc->update(PAGE_HASH_SETTINGS.optionsHash());
 			os << ", " << hashFunc->digestString() << '\n';
-			hashFunc->reset();
 		}
 	}
 	os << "hash algorithm: " << PAGE_HASH_SETTINGS.algorithm()

@@ -158,6 +158,7 @@ bool DVIReader::computePageHash (size_t pageno, HashFunction &hashFunc) {
 	if (pageno == 0 || pageno > numberOfPages())
 		return false;
 
+	hashFunc.reset();
 	clearStream();
 	seek(_bopOffsets[pageno-1]+45);  // now on first command after bop of selected page
 	const size_t BUFSIZE = 4096;
