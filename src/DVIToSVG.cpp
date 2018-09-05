@@ -111,7 +111,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 		}
 		const SVGOutput::HashTriple hashTriple(dviHash, shortenedOptHash, combinedHash);
 		string fname = _out.filename(i, numberOfPages(), hashTriple);
-		if (!dviHash.empty() && FileSystem::exists(fname)) {
+		if (!dviHash.empty() && !PAGE_HASH_SETTINGS.isSet(HashSettings::P_REPLACE) && FileSystem::exists(fname)) {
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "skipping page " << i;
 			Message::mstream().indent(1);
 			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\nfile " << fname << " exists\n";
@@ -557,7 +557,8 @@ void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector
 void DVIToSVG::HashSettings::setParameters (const string &paramstr) {
 	auto paramnames = util::split(paramstr, ",");
 	map<string, Parameter> paramMap = {
-		{"list", P_LIST}
+		{"list", P_LIST},
+		{"replace", P_REPLACE}
 	};
 	for (string &name : paramnames) {
 		name = util::trim(name);

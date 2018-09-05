@@ -35,7 +35,7 @@ class DVIToSVG : public DVIReader {
 	public:
 		class HashSettings {
 			public:
-				enum Parameter {P_LIST};
+				enum Parameter {P_LIST, P_REPLACE};
 				void setParameters (const std::string &paramstr);
 				void setOptionHash (const std::string &optHash) {_optHash = optHash;}
 				std::string algorithm () const {return _algo;}

@@ -391,11 +391,12 @@ to determine whether a DVI page must be converted again or can be skipped in con
 dvisvgm. This is done by propagating the hash value to variable +%hd+ which can be accessed in
 the output pattern (see option *--output*). By default, dvisvgm changes the output pattern to
 +%f-%hd+ if option *--page-hashes* is given. As a result, all SVG file names contain the hash
-value instead of the page number. When calling dvisvgm again with option *--page-hashes* and the
+value instead of the page number. When calling dvisvgm again with option *--page-hashes* with the
 same output pattern, it checks the existence of the SVG file to be created and skips the conversion
-if it's present. This also applies for consecutive calls of dvisvgm with different command-line
-parameters. If you want to force another conversion of a DVI file that hasn't changed, you must
-remove the corresponding SVG files beforehand.
+if it's already present. This also applies for consecutive calls of dvisvgm with different
+command-line parameters. If you want to force another conversion of a DVI file that hasn't changed,
+you must remove the corresponding SVG files beforehand or add the parameter +replace+ (see below).
+If you manually set the output pattern to not contain a hash value, the conversion won't be skipped.
 +
 Alternatively, the output pattern may contain the variables +%ho+ and +%hc+. +%ho+ expands to a
 32-bit hash representing the given command-line options that affect the generated SVG output, like
@@ -416,9 +417,10 @@ by argument 'params' of option *--page-hashes*. It takes one of the strings +MD5
 where the names can be given in lower case too, like +--page-hashes=md5+.
 +
 Finally, option *--page-hashes* can take a second argument that must be separated by a comma.
-Currently, only the word +list+ is allowed here, e.g. +--page-hashes=md5,list+. When present, dvisvgm
-doesn't perform any conversion but just lists the hash values +%hd+ and +%hc+ of the pages specified
-by option *--page*. 
+Currently, only the two parameters 'list' and 'replace' are evaluated, e.g. +--page-hashes=md5,list+
+or +--page-hashes=replace+. When 'list' is present, dvisvgm doesn't perform any conversion but just
+lists the hash values +%hd+ and +%hc+ of the pages specified by option *--page*. Parameter 'replace'
+forces dvisvgm to convert a DVI page even if a file with the target name already exists.
 
 *-P, --pdf*::
 If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
