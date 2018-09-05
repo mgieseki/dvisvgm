@@ -35,16 +35,17 @@ class DVIToSVG : public DVIReader {
 	public:
 		class HashSettings {
 			public:
-				void setHashParams (const std::string &params);
+				enum Parameter {P_LIST};
+				void setParameters (const std::string &paramstr);
 				void setOptionHash (const std::string &optHash) {_optHash = optHash;}
 				std::string algorithm () const {return _algo;}
 				std::string optionsHash () const {return _optHash;}
-				bool isSet (const std::string &opt) {return _options.find(opt) != _options.end();}
+				bool isSet (Parameter param) {return _params.find(param) != _params.end();}
 
 			private:
 				std::string _algo;
 				std::string _optHash;
-				std::set<std::string> _options;
+				std::set<Parameter> _params;
 		};
 
 	public:

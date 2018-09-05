@@ -554,14 +554,18 @@ void DVIToSVG::dviXTextAndGlyphs (vector<double> &dx, vector<double> &dy, vector
 
 /** Parses a string consisting of comma-separated words, and assigns
  *  the values to the hash settings. */
-void DVIToSVG::HashSettings::setHashParams (const string &optstr) {
-	auto options = util::split(optstr, ",");
-	for (string &opt : options) {
-		opt = util::trim(opt);
-		if (!HashFunction::isSupportedAlgorithm(opt))
-			_options.insert(opt);
-		else if (_algo.empty())
-			_algo = opt;
+void DVIToSVG::HashSettings::setParameters (const string &paramstr) {
+	auto paramnames = util::split(paramstr, ",");
+	map<string, Parameter> paramMap = {
+		{"list", P_LIST}
+	};
+	for (string &name : paramnames) {
+		name = util::trim(name);
+		auto it = paramMap.find(name);
+		if (it != paramMap.end())
+			_params.insert(it->second);
+		else if (_algo.empty() && HashFunction::isSupportedAlgorithm(name))
+			_algo = name;
 	}
 	// set default hash algorithm if none is given
 	if (_algo.empty())

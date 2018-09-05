@@ -313,9 +313,9 @@ static string svg_options_hash (const CommandLine &cmdline) {
 
 static bool list_page_hashes (const CommandLine &cmdline, DVIToSVG &dvisvg) {
 	if (cmdline.pageHashesOpt.given()) {
-		DVIToSVG::PAGE_HASH_SETTINGS.setHashParams(cmdline.pageHashesOpt.value());
+		DVIToSVG::PAGE_HASH_SETTINGS.setParameters(cmdline.pageHashesOpt.value());
 		DVIToSVG::PAGE_HASH_SETTINGS.setOptionHash(svg_options_hash(cmdline));
-		if (DVIToSVG::PAGE_HASH_SETTINGS.isSet("list")) {
+		if (DVIToSVG::PAGE_HASH_SETTINGS.isSet(DVIToSVG::HashSettings::P_LIST)) {
 			dvisvg.listHashes(cmdline.pageOpt.value(), cout);
 			return true;
 		}
