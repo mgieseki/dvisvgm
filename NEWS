@@ -1,3 +1,12 @@
+dvisvgm-2.6 (2018-09-08)
+- added option --page-hashes that allows for skipping the conversion of
+  a page if its content hasn't changed
+- relaxed plausibility check of total page count stated in the postamble
+  (this value overflows if the DVI file contains more than 65535 pages)
+- added validity checks for bop (begin of page) offsets present in the
+  bop and post commands
+- some refactorings and minor improvements
+
 dvisvgm-2.5 (2018-08-08)
 - added multi-page support (option --page) to PDF mode (option --pdf)
 - added evaluation of transformation options in PDF mode
