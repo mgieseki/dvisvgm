@@ -64,8 +64,8 @@ static string get_path_from_registry () {
 					int major_version;
 					iss >> major_version;
 					if (major_version >= 7) {
-						char dll_path[256];  // path to Ghostscript DLL stored in the registry
-						DWORD length;
+						char dll_path[512];  // path to Ghostscript DLL stored in the registry
+						DWORD length = 512;
 						if (RegGetValueA(hkey, subkey, "GS_DLL", RRF_RT_REG_SZ, 0, dll_path, &length) == ERROR_SUCCESS) {
 							RegCloseKey(hkey);
 							return dll_path;
