@@ -71,7 +71,18 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="39c60d5cff484207e089e498b9fe43f3"></a>
+  <a name="4567ec37398a2111cd0cdb77f419eb54"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
+doesn&rsquo;t call Metafont again for that font.</li>
+<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
+<li>Several minor code improvements and test enhancements.</li>
+</ul>
+</div>
+  </section><a name="39c60d5cff484207e089e498b9fe43f3"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">19 January 2017: dvisvgm 2.1 has been released</div>
     <div class="card-body">
@@ -132,29 +143,6 @@ Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates t
 
 <object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
 </li>
-</ul>
-</div>
-  </section><a name="c4479aa4beab25001669744852462e3d"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
-    <div class="card-body">
-      <p>This is a major release with the following changes/additions:</p>
-
-<ul>
-<li>Added option <code>--font-format</code> to select the data format used to embed fonts into the SVG files.
-Besides the default SVG format, following alternatives are supported now: TrueType, WOFF, and WOFF2.
-Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a> is supported by almost all
-recent web browsers so that the text elements present in the SVG files are rendered correctly as in
-the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
-
-<object data="/News/images/matrices.svg" type="image/svg+xml"></object>
-<br />
-In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
-Thanks to Thomas Weidner for providing important parts of the code.</li>
-<li>The code base of <em>dvisvgm</em> has been switched from C++03 to C++11. Thus, you need a more recent compiler
-(e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
-<a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
-<li>The command-line parser and the CommandLine class generator have been reimplemented.</li>
 </ul>
 </div>
   </section>

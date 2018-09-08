@@ -76,30 +76,30 @@
    <div class="col-md-4">
       <h3><i class="fa fa-windows"></i> Windows</h3>
       <div class="btn-group" style="margin-bottom:10.5px">
-         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.5/dvisvgm-2.5-win32.zip">
-            <i class="fa fa-download"></i> dvisvgm 2.5 (32-bit)</a>
+         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.6/dvisvgm-2.6-win32.zip">
+            <i class="fa fa-download"></i> dvisvgm 2.6 (32-bit)</a>
          <a class="btn btn-info hashbtn" href="#" data-toggle="popover" data-html="true"
-         title="<i class=&quot;fa fa-file-zip-o&quot;></i> dvisvgm-2.5-win32.zip"
-         data-content="<small><b>MD5:</b> e8584a8a32a1ec0949c36ebd3496ead4<br><b>SHA1:</b> 8e039eff4aa2c9ac6d2fbf1b4633bf6be3dd997b</small>">
+         title="<i class=&quot;fa fa-file-zip-o&quot;></i> dvisvgm-2.6-win32.zip"
+         data-content="<small><b>MD5:</b> 0d538bc9abd8eb887b4c2f173ed0e912<br><b>SHA1:</b> 19d70eb7d5e3d147c762b9fadd14d7cf0b9f90b7</small>">
          <i class="fa fa-hashtag"></i></a>
       </div>
       <div class="btn-group" style="margin-bottom:10.5px">
-         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.5/dvisvgm-2.5-win64.zip">
-            <i class="fa fa-download"></i> dvisvgm 2.5 (64-bit)</a>
+         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.6/dvisvgm-2.6-win64.zip">
+            <i class="fa fa-download"></i> dvisvgm 2.6 (64-bit)</a>
          <a class="btn btn-info hashbtn" href="#" data-toggle="popover" data-html="true"
-         title="<i class=&quot;fa fa-file-zip-o&quot;></i> dvisvgm-2.5-win64.zip"
-         data-content="<small><b>MD5:</b> be4fee7aba5c1786ac7e7b401c568740<br><b>SHA1:</b> 1a229cb460feedb24be628cdf90936fc052b8d2a</small>">
+         title="<i class=&quot;fa fa-file-zip-o&quot;></i> dvisvgm-2.6-win64.zip"
+         data-content="<small><b>MD5:</b> 57d8aa0f939b5028733269d92a9d5a5e<br><b>SHA1:</b> b44636e80dccacfcdd1c6163da1ce6d683334651</small>">
          <i class="fa fa-hashtag"></i></a>
       </div>
    </div>
    <div class="col-md-4" style="margin-bottom:10.5px">
       <h3><i class="fa fa-linux"></i> <i class="fa fa-windows"></i> <i class="fa fa-apple"></i> All</h3>
       <div class="btn-group">
-         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.5/dvisvgm-2.5.tar.gz">
-            <i class="fa fa-download"></i> dvisvgm 2.5 (Source)</a>
+         <a class="btn btn-info" href="https://github.com/mgieseki/dvisvgm/releases/download/2.6/dvisvgm-2.6.tar.gz">
+            <i class="fa fa-download"></i> dvisvgm 2.6 (Source)</a>
          <a class="btn btn-info hashbtn" href="#" data-toggle="popover" data-html="true"
-            title="<i class=&quot;fa fa-file-archive-o&quot;></i> dvisvgm-2.5.tar.gz"
-            data-content="<small><b>MD5:</b> 4fc6001228a8902f76869719d055d948<br><b>SHA1:</b> 4c84e326948dd0a4c2a97d01fc5974a7f7cdf225</small>">
+            title="<i class=&quot;fa fa-file-archive-o&quot;></i> dvisvgm-2.6.tar.gz"
+            data-content="<small><b>MD5:</b> 0501f8c26535c6263f8fb10bbaca17dc<br><b>SHA1:</b> f6f740b0fa8afd99c142e7cac5b1fe4cc1908335</small>">
          <i class="fa fa-hashtag"></i></a>
       </div>
    </div>
@@ -181,6 +181,10 @@ you need the <em>Ghostscript</em> library (version 8.31 or newer).</li>
 In order to find files in the large texmf tree quickly, Karl Berry&rsquo;s <em>kpathsea</em> library is used by default.
 Most <span class="tex">T<sub>E</sub>X</span>
  distributions include the necessary files or provide an appropriate interface.</li>
+<li><a href="https://www.openssl.org">OpenSSL crypto library</a>
+<em>dvisvgm</em> comes with a bundled implementation of the MD5 hash algorithm which can optionally be replaced with
+the corresponding function of the OpenSSL crypto library. If the configuration script finds the OpenSSL
+development files on the build system, it links against <em>libcrypto</em> instead of the bundled MD5 module.</li>
 <li><a href="http://potrace.sourceforge.net">potrace</a> library<br />
 The font embedding module of <em>dvisvgm</em> uses Peter Selinger’s <em>potrace</em> library to vectorize Metafont’s bitmap
 output if corresponding Type 1 fonts cannot be found. The library is also bundled with the <em>dvisvgm</em> sources.</li>

@@ -517,22 +517,23 @@ option <strong>--no-styles</strong>.
 <strong>-o, --output</strong>=<em>pattern</em>
 <dd>
 <p>
-Sets the pattern specifying the names of the generated SVG files. Parameter <em>pattern</em> is
-a string that may contain static character sequences as well as the variables <strong>%f</strong>, <strong>%p</strong>,
-and <strong>%P</strong>. <strong>%f</strong> expands to the base name of the DVI file, i.e. the filename without suffix,
-<strong>%p</strong> is the current page number, and <strong>%P</strong> the total number of pages in the DVI file. An
-optional number (0-9) given directly after the percent sign specifies the minimal number
-of digits to be written. If a particular value consists of less digits, the number is
-padded with leading zeros.
-Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.).
-Without an explicit width specifier, <strong>%p</strong> gets the same number of digits as <strong>%P</strong>.
+Sets the pattern specifying the names of the generated SVG files. Parameter <em>pattern</em> is a string
+that may contain static character sequences as well as the variables <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%hd</code>,
+<code>%ho</code>, and <code>%hc</code>. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without
+suffix, <code>%p</code> is the current page number, and <code>%P</code> the total number of pages in the DVI file. An
+optional number (0-9) given directly after the percent sign specifies the minimal number of digits
+to be written. If a particular value consists of less digits, the number is padded with leading
+zeros. Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an
+explicit width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.
 </p>
-<p>If you need more control over the numbering, you can use arithmetic expressions as part of
-a pattern. The syntax is <strong>%(expr)</strong> where <em>expr</em> may contain additions, subtractions,
-multiplications, and integer divisions with common precedence. The variables
-<strong>p</strong> and <strong>P</strong> contain the current page number and the total number of pages, respectively.
-For example, <code>--output="%f-%(p-1)"</code> creates filenames where the numbering starts with 0 rather
-than 1.</p>
+<p>If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
+The syntax is <code>%(</code><em>expr</em><code>)</code> where <em>expr</em> may contain additions, subtractions, multiplications, and
+integer divisions with common precedence. The variables <strong>p</strong> and <strong>P</strong> contain the current page number
+and the total number of pages, respectively. For example, <code>--output="%f-%(p-1)"</code> creates filenames
+where the numbering starts with 0 rather than 1.</p>
+<p>The variables <code>%hX</code> contain different hash values computed from the DVI page data and the options
+given on the command-line. <code>%hd</code> and <code>%hc</code> are only set if option <strong>--page-hashes</strong> is present.
+Otherwise, it’s empty. For further information, see the description of option <strong>--page-hashes</strong> below.</p>
 <p>The default pattern is <code>%f-%p.svg</code> if the DVI file consists of more than one page, and
 <code>%f.svg</code> otherwise. That means, a DVI file <em>foo.dvi</em> is converted to <em>foo.svg</em> if <em>foo.dvi</em>
 is a single-page document. Otherwise, multiple SVG files <em>foo-01.svg</em>, <em>foo-02.svg</em>, etc. are
@@ -558,6 +559,45 @@ Please consider that the page values don’t refer to the page numbers printed o
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.
 </p></dd>
+</dt>
+<a name="opt-page-hashes" class="linktarget"></a><dt class="hdlist1">
+<strong>-H, --page-hashes</strong>[=<em>params</em>]
+<dd>
+<p>
+If this option is given, dvisvgm computes hash values of all pages to be processed. As long as the
+page contents don’t change, the hash value of that page stays the same. This property can be used
+to determine whether a DVI page must be converted again or can be skipped in consecutive runs of
+dvisvgm. This is done by propagating the hash value to variable <code>%hd</code> which can be accessed in
+the output pattern (see option <strong>--output</strong>). By default, dvisvgm changes the output pattern to
+<code>%f-%hd</code> if option <strong>--page-hashes</strong> is given. As a result, all SVG file names contain the hash
+value instead of the page number. When calling dvisvgm again with option <strong>--page-hashes</strong> with the
+same output pattern, it checks the existence of the SVG file to be created and skips the conversion
+if it’s already present. This also applies for consecutive calls of dvisvgm with different
+command-line parameters. If you want to force another conversion of a DVI file that hasn’t changed,
+you must remove the corresponding SVG files beforehand or add the parameter <code>replace</code> (see below).
+If you manually set the output pattern to not contain a hash value, the conversion won’t be skipped.
+</p>
+<p>Alternatively, the output pattern may contain the variables <code>%ho</code> and <code>%hc</code>. <code>%ho</code> expands to a
+32-bit hash representing the given command-line options that affect the generated SVG output, like
+<strong>--no-fonts</strong> and <strong>--precision</strong>. Different combinations of options and parameters lead to different
+hashes. Thus pattern <code>%f-%hd-%ho</code> creates filenames that change depending on the DVI data and
+the given command-line options. Variable <code>%hc</code> provides a combined hash computed from the DVI data
+and the command-line options. It has the same length as <code>%hd</code>.</p>
+<p>Since the page number isn’t part of the file name by default, different DVI pages with identical
+contents get the same file name. Therefore, only the first one is converted while the others are
+skipped. To create separate files for each page, you can add the page number to the output pattern,
+e.g. <code>--output="%f-%p-%hc"</code>.</p>
+<p>By default, dvisvgm uses the XXH64 hash algorithm to compute the values provided through <code>%hd</code> and
+<code>%hc</code>. It’s extremely fast, and a 64-bit hash should be sufficient for most documents with an average
+size of pages. Alternatively, XXH32 and MD5 can be used as well. The desired algorithm is specified
+by argument <em>params</em> of option <strong>--page-hashes</strong>. It takes one of the strings <code>MD5</code>, <code>XXH32</code>, and <code>XXH64</code>,
+where the names can be given in lower case too, like <code>--page-hashes=md5</code>.</p>
+<p>Finally, option <strong>--page-hashes</strong> can take a second argument that must be separated by a comma.
+Currently, only the two parameters <em>list</em> and <em>replace</em> are evaluated, e.g. <code>--page-hashes=md5,list</code>
+or <code>--page-hashes=replace</code>. When <em>list</em> is present, dvisvgm doesn’t perform any conversion but just
+lists the hash values <code>%hd</code> and <code>%hc</code> of the pages specified by option <strong>--page</strong>. Parameter <em>replace</em>
+forces dvisvgm to convert a DVI page even if a file with the target name already exists.</p>
+</dd>
 </dt>
 <a name="opt-pdf" class="linktarget"></a><dt class="hdlist1">
 <strong>-P, --pdf</strong>
@@ -1240,9 +1280,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.5</div>
+   <div class="col-md-6">Version 2.6</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2018-08-08</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2018-09-08</span>
    </div>
 </div>
 </div>

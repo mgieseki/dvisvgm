@@ -71,7 +71,67 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="893ff3b8dee919326502dc03f65fa28b"></a>
+  <a name="8d56703cbffb43bae1f0e6d10ac03542"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 September 2018: dvisvgm 2.6 has been released</div>
+    <div class="card-body">
+      <p>The main feature of this release is enabled by the new command-line option <code>--page-hashes</code>. It allows for skipping the
+conversion of a page if its content hasn&rsquo;t changed and the corresponding SVG file already exists. When this option is
+given, <em>dvisvgm</em> computes a hash value from the DVI pages and adds it to the name of the SVG file to be written.
+As the hash value only changes if the contents of the DVI page change, there&rsquo;s normally no need to convert
+existing SVG files again which should speed up the conversion of large documents significantly.
+Here&rsquo;s the output of two successive conversions:</p>
+
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm --page-hashes --page=1-3 -d2 tplot
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 1</span>
+<span style="color:#bd93f9;">  graphic size: 463.13pt x 659.91pt (162.77mm x 231.93mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-d0ab8a85f0307c6e.svg
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 2</span>
+<span style="color:#bd93f9;">  graphic size: 433.16pt x 680.74pt (152.24mm x 239.25mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-d3b405aceca3a5c0.svg
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 3</span>
+<span style="color:#bd93f9;">  graphic size: 426.79pt x 763.01pt (150mm x 268.17mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-e695ce8f0abfea95.svg
+</span><span style="color:#8be9fd;font-weight:bold;">3 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.384216 seconds
+</span></pre>
+</div>
+
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm --page-hashes --page=1-4 -d2 tplot
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 1</span><span style="color:#50fa7b;">
+  file tplot-d0ab8a85f0307c6e.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 2</span><span style="color:#50fa7b;">
+  file tplot-d3b405aceca3a5c0.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 3</span><span style="color:#50fa7b;">
+  file tplot-e695ce8f0abfea95.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 4</span>
+<span style="color:#bd93f9;">  graphic size: 427.37pt x 684.56pt (150.21mm x 240.59mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-886a8783a56c4ee7.svg
+</span><span style="color:#8be9fd;font-weight:bold;">4 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.147861 seconds
+</span></pre>
+</div>
+
+<p>Besides the DVI input, a couple of <em>dvisvgm</em>&rsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
+Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
+created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
+and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
+<a href="/Manpage/">manual page</a>.</p>
+
+<p>In addition to this new option, the following changes have been made:</p>
+
+<ul>
+<li>The plausibility check of the total number of pages given in the DVI postamble has been relaxed. This value
+overflows if the DVI file contains more than 65535 pages which previously led to an error message.</li>
+<li>Validity checks of the BOP (begin of page) offsets specified as part of each BOP and POST command have been added
+to detect DVI files with incorrect, e.g. cyclic, page references.</li>
+</ul>
+</div>
+  </section><a name="893ff3b8dee919326502dc03f65fa28b"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">8 August 2018: dvisvgm 2.5 has been released</div>
     <div class="card-body">
@@ -81,14 +141,16 @@
 <li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
 the pages to be processed can be selected with option <code>--page</code>:
 <div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm --pdf --page=2-3 -d2 sample.pdf
-processing PDF file
-  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)
-  output written to sample-2.svg
-processing PDF file
-  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)
-  output written to sample-3.svg
-2 of 3 pages converted in 1.328 seconds</code></pre></div>
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
+</span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-2.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-3.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
+</pre>
 </div></li>
 <li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
 the PDF mode too.</li>
@@ -161,25 +223,27 @@ If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p
 
 <li><p>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:
 <div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm --pdf -d2 helix.pdf
-processing PDF file
-  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   
-  output written to helix.svg
-file converted in 1.61882 seconds</code></pre></div>
-</div></p></li>
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm &ndash;pdf -d2 helix.pdf
+<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
+<span style="color:#50fa7b;">  output written to helix.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
+</pre></div></p></li>
 
 <li><p>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</p></li>
 
 <li><p>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
 <div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -d2 - &lt; frktest.dvi
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm -d2 - &lt; frktest.dvi
 reading from &lt;stdin&gt;
-pre-processing DVI file (format version 2)
-processing page 1
-  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)
-  output written to stdin.svg
-1 of 1 page converted in 0.0790408 seconds</code></pre></div>
-</div></p></li>
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+processing page 1</span>
+<span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
+<span style="color:#50fa7b;">  output written to stdin.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
+</pre></div></p></li>
 
 <li><p>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</p></li>
 
@@ -192,20 +256,6 @@ conversion of more transparency parameters, e.g.:<br />
 <li><p>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</p></li>
 
 <li><p>Several code refactorings.</p></li>
-</ul>
-</div>
-  </section><a name="5e2b7cf659069c04c85da933ee354fb8"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">23 March 2018: dvisvgm 2.3.5 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-
-<ul>
-<li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
-This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
-allowed according to the EPS specification.</li>
-<li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
-<li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
 </ul>
 </div>
   </section>

@@ -4,8 +4,73 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 08 Aug 2018 11:15:09 +0200</pubDate>
+    <pubDate>Sat, 08 Sep 2018 10:41:42 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.6 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#8d56703cbffb43bae1f0e6d10ac03542</link>
+      <pubDate>Fri, 07 Sep 2018 10:11:54 +0200</pubDate>
+      <guid>8d56703cbffb43bae1f0e6d10ac03542</guid>
+      <description>
+        <![CDATA[<p>The main feature of this release is enabled by the new command-line option <code>--page-hashes</code>. It allows for skipping the
+conversion of a page if its content hasn&rsquo;t changed and the corresponding SVG file already exists. When this option is
+given, <em>dvisvgm</em> computes a hash value from the DVI pages and adds it to the name of the SVG file to be written.
+As the hash value only changes if the contents of the DVI page change, there&rsquo;s normally no need to convert
+existing SVG files again which should speed up the conversion of large documents significantly.
+Here&rsquo;s the output of two successive conversions:</p>
+
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm --page-hashes --page=1-3 -d2 tplot
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 1</span>
+<span style="color:#bd93f9;">  graphic size: 463.13pt x 659.91pt (162.77mm x 231.93mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-d0ab8a85f0307c6e.svg
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 2</span>
+<span style="color:#bd93f9;">  graphic size: 433.16pt x 680.74pt (152.24mm x 239.25mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-d3b405aceca3a5c0.svg
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 3</span>
+<span style="color:#bd93f9;">  graphic size: 426.79pt x 763.01pt (150mm x 268.17mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-e695ce8f0abfea95.svg
+</span><span style="color:#8be9fd;font-weight:bold;">3 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.384216 seconds
+</span></pre>
+</div>
+
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm --page-hashes --page=1-4 -d2 tplot
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 1</span><span style="color:#50fa7b;">
+  file tplot-d0ab8a85f0307c6e.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 2</span><span style="color:#50fa7b;">
+  file tplot-d3b405aceca3a5c0.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">skipping page 3</span><span style="color:#50fa7b;">
+  file tplot-e695ce8f0abfea95.svg exists
+</span><span style="color:#8be9fd;font-weight:bold;">processing page 4</span>
+<span style="color:#bd93f9;">  graphic size: 427.37pt x 684.56pt (150.21mm x 240.59mm)</span>
+<span style="color:#50fa7b;">  output written to tplot-886a8783a56c4ee7.svg
+</span><span style="color:#8be9fd;font-weight:bold;">4 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.147861 seconds
+</span></pre>
+</div>
+
+<p>Besides the DVI input, a couple of <em>dvisvgm</em>&rsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
+Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
+created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
+and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
+<a href="/Manpage/">manual page</a>.</p>
+
+<p>In addition to this new option, the following changes have been made:</p>
+
+<ul>
+<li>The plausibility check of the total number of pages given in the DVI postamble has been relaxed. This value
+overflows if the DVI file contains more than 65535 pages which previously led to an error message.</li>
+<li>Validity checks of the BOP (begin of page) offsets specified as part of each BOP and POST command have been added
+to detect DVI files with incorrect, e.g. cyclic, page references.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.5 has been released</title>
@@ -17,7 +82,19 @@
 
 <ul>
 <li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
-the pages to be processed can be selected with option <code>--page</code>.</li>
+the pages to be processed can be selected with option <code>--page</code>:
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
+</span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-2.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-3.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
+</pre>
+</div></li>
 <li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
 the PDF mode too.</li>
 <li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
@@ -109,25 +186,27 @@ If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p
 
 <li><p>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:
 <div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm --pdf -d2 helix.pdf
-processing PDF file
-  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   
-  output written to helix.svg
-file converted in 1.61882 seconds</code></pre></div>
-</div></p></li>
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm &ndash;pdf -d2 helix.pdf
+<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
+<span style="color:#50fa7b;">  output written to helix.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
+</pre></div></p></li>
 
 <li><p>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</p></li>
 
 <li><p>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
 <div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -d2 - &lt; frktest.dvi
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm -d2 - &lt; frktest.dvi
 reading from &lt;stdin&gt;
-pre-processing DVI file (format version 2)
-processing page 1
-  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)
-  output written to stdin.svg
-1 of 1 page converted in 0.0790408 seconds</code></pre></div>
-</div></p></li>
+<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
+processing page 1</span>
+<span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
+<span style="color:#50fa7b;">  output written to stdin.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
+</pre></div></p></li>
 
 <li><p>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</p></li>
 
@@ -147,7 +226,7 @@ conversion of more transparency parameters, e.g.:<br />
     
     <item>
       <title>dvisvgm 2.3.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#5e2b7cf659069c04c85da933ee354fb8</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5e2b7cf659069c04c85da933ee354fb8</link>
       <pubDate>Fri, 23 Mar 2018 13:21:01 +0200</pubDate>
       <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
       <description>
@@ -281,7 +360,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#595f907cf14e9865ceffbd91fa3e2f10</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#595f907cf14e9865ceffbd91fa3e2f10</link>
       <pubDate>Tue, 12 Dec 2017 20:03:01 +0200</pubDate>
       <guid>595f907cf14e9865ceffbd91fa3e2f10</guid>
       <description>
@@ -385,7 +464,7 @@ Rasmus Larsen for their help to isolate the problems).</li>
     
     <item>
       <title>dvisvgm 2.1.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4567ec37398a2111cd0cdb77f419eb54</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#4567ec37398a2111cd0cdb77f419eb54</link>
       <pubDate>Tue, 07 Feb 2017 20:13:04 +0200</pubDate>
       <guid>4567ec37398a2111cd0cdb77f419eb54</guid>
       <description>
@@ -413,22 +492,6 @@ system&rsquo;s temp folder (<a href="https://github.com/mgieseki/dvisvgm/issues/
 <li>Fixed collision of Unicode points in AGL table (<a href="https://github.com/mgieseki/dvisvgm/issues/64">issue #64</a>).</li>
 <li>Retain letter case of filenames even if it&rsquo;s not significant (Windows only).</li>
 <li>Various code refactorings and code cleanup.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.0.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#ce8be73c30e0212775f2a93c1b82bd93</link>
-      <pubDate>Thu, 17 Nov 2016 20:21:01 +0200</pubDate>
-      <guid>ce8be73c30e0212775f2a93c1b82bd93</guid>
-      <description>
-        <![CDATA[<ul>
-<li>The reduced FontForge library <a href="https://github.com/mgieseki/ff-woff">ff-woff</a> required to
-create WOFF and TrueType fonts is now bundled with the sources.</li>
-<li>A few typos in the manual page and the <code>--help</code> output have been fixed.</li>
-<li>Few minor code improvements.</li>
 </ul>
 ]]>
       </description>
