@@ -1,25 +1,25 @@
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  color: #2c3e50;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	color: #2c3e50;
 }
 
 main {
-  flex: 1;
+	flex: 1;
 }
 
 pre {
-   color: #2c3e50;
-   background-color: #ecf0f1;
-   border: 1px solid #cccccc;
-   padding: 10px;
-   margin-bottom: 0;
-   hyphens: none;
+	color: #2c3e50;
+	background-color: #ecf0f1;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	margin-bottom: 0;
+	hyphens: none;
 }
 
 code {
-   hyphens: none;
+	hyphens: none;
 }
 
 *:not(pre) > code {
@@ -34,67 +34,67 @@ code {
 }
 
 a, a:hover {
-  outline: none;
+	outline: none;
 }
 
 p {
-   text-align: justify;
-   hyphens: auto;
-   margin-bottom: 0;
+	text-align: justify;
+	hyphens: auto;
+	margin-bottom: 0;
 }
 
 p + p {
-   margin-top: 1em;
+	margin-top: 1em;
 }
 
 dt {
-   margin-top: 1em;
+	margin-top: 1em;
 }
 
 dd {
-   padding-left: 2em;
+	padding-left: 2em;
 }
 
 .manpage h3 {
-   margin-top: 1em;
+	margin-top: 1em;
 }
 
 .text-center p {
-   text-align: inherit;
+	text-align: inherit;
 }
 
 .description {
-   font-size: 18px;
+	font-size: 18px;
 }
 
 .btn:focus,.btn:active,.page-link:focus {
-   outline: none !important;
-   box-shadow: none;
+	outline: none !important;
+	box-shadow: none;
 }
 
 .hashbtn {
-   border-left: 1px solid white;
+	border-left: 1px solid white;
 	margin-left: 1px;
 	padding-left: 2px;
 	padding-right: 2px;
 }
 
 .popover{
-    max-width: 100%;
+	 max-width: 100%;
 }
 
 header {
-  margin: 40px 0 0;
-  padding-bottom: 0;
+	margin: 40px 0 0;
+	padding-bottom: 0;
 }
 
 footer .jumbotron {
-  margin-top: 20px;
-  margin-bottom: 0
+	margin-top: 20px;
+	margin-bottom: 0
 }
 
 footer a, footer a:hover {
-  color: white
+	color: white
 }
 
 .frame {
@@ -109,29 +109,36 @@ footer a, footer a:hover {
 }
 
 .card-header {
-  font-size: 1.1em;
-  padding: 10px 15px;
-  margin-bottom: 0;
+	font-size: 1.1em;
+	padding: 10px 15px;
+	margin-bottom: 0;
 }
 
 .card-body {
-  padding: 15px
+	padding: 15px
 }
 
 .navbar {
-  padding: 0;
-  min-height: 40px;
-  margin-bottom: 20px;
+	padding: 0;
+	min-height: 40px;
+	margin-bottom: 20px;
 }
 
 #navbarNav .active > .nav-link {
-   color: white !important;
-   background-color: #1a242f;
+	color: white !important;
+	background-color: #1a242f;
 }
 
 .rsslink {
-   text-align: right;
-   margin-bottom: -10px;
+	text-align: right;
+	margin-bottom: -10px;
+}
+
+.linktarget {
+	height: 40px;
+	margin-top: -40px;
+	visibility: hidden;
+	display: block;
 }
 
 .tex sub, .latex sub, .latex sup {
@@ -158,7 +165,7 @@ footer a, footer a:hover {
 
 .sample-img {
 	margin-top: 50px;
-   margin-bottom: 15px;
+	margin-bottom: 15px;
 	-webkit-transition: all .2s ease-in-out;
 	-moz-transition: all .2s ease-in-out;
 	-o-transition: all .2s ease-in-out;
@@ -179,9 +186,9 @@ footer a, footer a:hover {
 }
 
 .pagination {
-   margin-top: 5px;
+	margin-top: 5px;
 }
 
 .ellipsis .page-link:hover {
-   background-color: #2C3E50;
+	background-color: #2C3E50;
 }
