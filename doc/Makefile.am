@@ -10,7 +10,7 @@ if BUILD_MANPAGE
 man_MANS = dvisvgm.1
 endif
 
-EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
+EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl dvisvgm.sty tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
 
 CONF_DBLATEX_MAN  = $(top_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(top_srcdir)/doc/conf-dblatex-pdf.xsl
