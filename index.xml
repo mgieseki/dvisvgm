@@ -4,13 +4,31 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 08 Sep 2018 10:41:42 +0200</pubDate>
+    <pubDate>Sun, 09 Sep 2018 20:52:07 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>Recent Fedora packages of dvisvgm available via Copr</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#d6608f8cc15d94bd4845d229bb6bfb36</link>
+      <pubDate>Sun, 09 Sep 2018 20:07:15 +0200</pubDate>
+      <guid>d6608f8cc15d94bd4845d229bb6bfb36</guid>
+      <description>
+        <![CDATA[<p><a href="https://getfedora.org">Fedora</a> packages of the latest <em>dvisvgm</em> release are now available through my
+<a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>. They replace the older
+package <em>texlive-dvisvgm</em> coming with Fedora. Run the follwowing commands to enable the repository
+and to install the new <em>dvisvgm</em> package:</p>
+
+<pre><code>dnf copr enable mgieseki/dvisvgm
+dnf install dvisvgm
+</code></pre>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.6 has been released</title>
       <link>https://mgieseki.github.io/dvisvgm/News/#8d56703cbffb43bae1f0e6d10ac03542</link>
-      <pubDate>Fri, 07 Sep 2018 10:11:54 +0200</pubDate>
+      <pubDate>Sat, 08 Sep 2018 10:11:54 +0200</pubDate>
       <guid>8d56703cbffb43bae1f0e6d10ac03542</guid>
       <description>
         <![CDATA[<p>The main feature of this release is enabled by the new command-line option <code>--page-hashes</code>. It allows for skipping the
@@ -58,7 +76,7 @@ $ dvisvgm --page-hashes --page=1-4 -d2 tplot
 Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
 created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
 and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
-<a href="/Manpage/">manual page</a>.</p>
+<a href="/Manpage/#opt-output">manual page</a>.</p>
 
 <p>In addition to this new option, the following changes have been made:</p>
 
@@ -226,7 +244,7 @@ conversion of more transparency parameters, e.g.:<br />
     
     <item>
       <title>dvisvgm 2.3.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5e2b7cf659069c04c85da933ee354fb8</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/#5e2b7cf659069c04c85da933ee354fb8</link>
       <pubDate>Fri, 23 Mar 2018 13:21:01 +0200</pubDate>
       <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
       <description>
@@ -360,7 +378,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#595f907cf14e9865ceffbd91fa3e2f10</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#595f907cf14e9865ceffbd91fa3e2f10</link>
       <pubDate>Tue, 12 Dec 2017 20:03:01 +0200</pubDate>
       <guid>595f907cf14e9865ceffbd91fa3e2f10</guid>
       <description>
@@ -376,7 +394,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#da3935202cf7114070f7bbabe2d55bb6</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#da3935202cf7114070f7bbabe2d55bb6</link>
       <pubDate>Fri, 17 Nov 2017 20:06:27 +0200</pubDate>
       <guid>da3935202cf7114070f7bbabe2d55bb6</guid>
       <description>
@@ -391,7 +409,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#c1c0a7bf7e1afad6a2b2ea65a7026d1a</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#c1c0a7bf7e1afad6a2b2ea65a7026d1a</link>
       <pubDate>Mon, 13 Nov 2017 20:07:42 +0200</pubDate>
       <guid>c1c0a7bf7e1afad6a2b2ea65a7026d1a</guid>
       <description>
@@ -464,7 +482,7 @@ Rasmus Larsen for their help to isolate the problems).</li>
     
     <item>
       <title>dvisvgm 2.1.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#4567ec37398a2111cd0cdb77f419eb54</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4567ec37398a2111cd0cdb77f419eb54</link>
       <pubDate>Tue, 07 Feb 2017 20:13:04 +0200</pubDate>
       <guid>4567ec37398a2111cd0cdb77f419eb54</guid>
       <description>
@@ -473,25 +491,6 @@ Rasmus Larsen for their help to isolate the problems).</li>
 doesn&rsquo;t call Metafont again for that font.</li>
 <li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
 <li>Several minor code improvements and test enhancements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/4/#39c60d5cff484207e089e498b9fe43f3</link>
-      <pubDate>Thu, 19 Jan 2017 20:13:15 +0200</pubDate>
-      <guid>39c60d5cff484207e089e498b9fe43f3</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added option <code>--tmpdir</code> to explicitly set folder for temporary files.</li>
-<li>Temporary files are no longer created in the current working directory by default but in the
-system&rsquo;s temp folder (<a href="https://github.com/mgieseki/dvisvgm/issues/63">issue #63</a>).</li>
-<li>Added warning/error messages if temporary files could not be written.</li>
-<li>Fixed collision of Unicode points in AGL table (<a href="https://github.com/mgieseki/dvisvgm/issues/64">issue #64</a>).</li>
-<li>Retain letter case of filenames even if it&rsquo;s not significant (Windows only).</li>
-<li>Various code refactorings and code cleanup.</li>
 </ul>
 ]]>
       </description>

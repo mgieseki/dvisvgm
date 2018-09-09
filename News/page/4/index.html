@@ -71,65 +71,7 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4567ec37398a2111cd0cdb77f419eb54"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
-doesn&rsquo;t call Metafont again for that font.</li>
-<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
-<li>Several minor code improvements and test enhancements.</li>
-</ul>
-</div>
-  </section><a name="39c60d5cff484207e089e498b9fe43f3"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">19 January 2017: dvisvgm 2.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added option <code>--tmpdir</code> to explicitly set folder for temporary files.</li>
-<li>Temporary files are no longer created in the current working directory by default but in the
-system&rsquo;s temp folder (<a href="https://github.com/mgieseki/dvisvgm/issues/63">issue #63</a>).</li>
-<li>Added warning/error messages if temporary files could not be written.</li>
-<li>Fixed collision of Unicode points in AGL table (<a href="https://github.com/mgieseki/dvisvgm/issues/64">issue #64</a>).</li>
-<li>Retain letter case of filenames even if it&rsquo;s not significant (Windows only).</li>
-<li>Various code refactorings and code cleanup.</li>
-</ul>
-</div>
-  </section><a name="ce8be73c30e0212775f2a93c1b82bd93"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">17 November 2016: dvisvgm 2.0.4 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>The reduced FontForge library <a href="https://github.com/mgieseki/ff-woff">ff-woff</a> required to
-create WOFF and TrueType fonts is now bundled with the sources.</li>
-<li>A few typos in the manual page and the <code>--help</code> output have been fixed.</li>
-<li>Few minor code improvements.</li>
-</ul>
-</div>
-  </section><a name="57e684112285d0da830ae4d01551e017"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">27 September 2016: dvisvgm 2.0.3 has been released</div>
-    <div class="card-body">
-      <p>This is another bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed a regression in the character positioning of virtual fonts.</li>
-<li>Fixed the positioning of rules.</li>
-</ul>
-</div>
-  </section><a name="bf77e8ab739bd4e48157be61876cb088"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">19 September 2016: dvisvgm 2.0.2 has been released</div>
-    <div class="card-body">
-      <p>This is a bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed a regression in determining the character depths of native fonts.</li>
-<li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
-</ul>
-</div>
-  </section><a name="163a8d2e67641be42533f979fd3ae0be"></a>
+  <a name="163a8d2e67641be42533f979fd3ae0be"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">3 September 2016: dvisvgm 2.0.1 has been released</div>
     <div class="card-body">
@@ -143,6 +85,118 @@ Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates t
 
 <object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
 </li>
+</ul>
+</div>
+  </section><a name="c4479aa4beab25001669744852462e3d"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
+    <div class="card-body">
+      <p>This is a major release with the following changes/additions:</p>
+
+<ul>
+<li>Added option <code>--font-format</code> to select the data format used to embed fonts into the SVG files.
+Besides the default SVG format, following alternatives are supported now: TrueType, WOFF, and WOFF2.
+Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a> is supported by almost all
+recent web browsers so that the text elements present in the SVG files are rendered correctly as in
+the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
+
+<object data="/News/images/matrices.svg" type="image/svg+xml"></object>
+<br />
+In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
+Thanks to Thomas Weidner for providing important parts of the code.</li>
+<li>The code base of <em>dvisvgm</em> has been switched from C++03 to C++11. Thus, you need a more recent compiler
+(e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
+<a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
+<li>The command-line parser and the CommandLine class generator have been reimplemented.</li>
+</ul>
+</div>
+  </section><a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
+    <div class="card-body">
+      <p>This maintenance release provides the following changes/additions:</p>
+
+<ul>
+<li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
+<li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
+For further information on how to enable it, see the <a href="/Manpage/">manual page</a>.</li>
+<li>Added support for the length units <code>cc</code>, <code>dd</code>, and <code>sp</code>.</li>
+<li>Fixed a unit conversion issue in computation of bounding boxes.</li>
+<li>Fixed the propagation of the resolution value to the glyph vectorizer.</li>
+<li>Fixed the transformation of the optional background rectangle.</li>
+<li>Prevent processing of corrupted GF files.</li>
+<li>Major refactorings of the DVI reader and the SVG backend.</li>
+</ul>
+</div>
+  </section><a name="bf0f3eb5231404387af74e0d100f04dc"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">19 April 2016: dvisvgm 1.15.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added explicit encoding attribute to the XML declaration again (<a href="https://github.com/mgieseki/dvisvgm/issues/54">issue #54</a>).</li>
+<li>Added support for <a href="https://github.com/adobe-type-tools/agl-specification">AGL</a> character names of the form <code>uFOO</code> and <code>uniFOO</code>.</li>
+<li>Fixed parsing of transformation parameters given on the command-line.</li>
+<li>Minor code and test improvements.</li>
+</ul>
+</div>
+  </section><a name="2f0cae802c17b40886ac10cf40afd7fb"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">27 February 2016: dvisvgm 1.15 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added the command-line option <code>--comments</code> to insert additional information to the SVG file.</li>
+<li>Fixed a clipping bug in the PostScript handler.</li>
+<li>Some code improvements and refactorings.</li>
+<li>Moved the test data files to a separate folder.</li>
+</ul>
+</div>
+  </section><a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
+    <div class="card-body">
+      <p>This is a bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
+Now they affect all succeeding pages until the next change occurs.</li>
+<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
+<li>Updated the bundled xxHash library to version 0.5.0.</li>
+<li>Added xxHash to the output of <code>--version=1</code>.</li>
+<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
+</ul>
+</div>
+  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small bugfix release with the following changes:</p>
+
+<ul>
+<li>Reset the PostScript graphics state at the end of every DVI page to ensure consistent
+conversions if multiple page are processed.</li>
+<li>Added checks for invalid GF files to prevent undefined behavior.</li>
+</ul>
+</div>
+  </section><a name="37a6f66efadbceebf2acfdbd6d9cde63"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">28 December 2015: dvisvgm 1.14 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following additions/changes:</p>
+
+<ul>
+<li>Added evaluation of PSTricks specials <code>pst:</code> and <code>PST:</code>.</li>
+<li>The bounding box data created by the <a href="https://www.ctan.org/pkg/preview">preview package</a>
+is now adapted to create a tight box by default.</li>
+<li>Added option <code>--bbox=preview</code> to apply the unmodified bounding box data created by the preview package.</li>
+<li>Improved lookup of files located in the current working directory.</li>
+<li>Fixed a memory issue related to graphics paths.</li>
+<li>Improved extraction of kapathsea version number.</li>
+<li>Minor code and test improvements.</li>
 </ul>
 </div>
   </section>
@@ -159,11 +213,11 @@ Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates t
     <li class="page-item active"><a class="page-link" href="/News/page/4/">4</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/5/">5</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li><li class="page-item">
       <a class="page-link" href="/News/page/5/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/7/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>

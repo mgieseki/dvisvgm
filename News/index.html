@@ -71,7 +71,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="8d56703cbffb43bae1f0e6d10ac03542"></a>
+  <a name="d6608f8cc15d94bd4845d229bb6bfb36"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">9 September 2018: Recent Fedora packages of dvisvgm available via Copr</div>
+    <div class="card-body">
+      <p><a href="https://getfedora.org">Fedora</a> packages of the latest <em>dvisvgm</em> release are now available through my
+<a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>. They replace the older
+package <em>texlive-dvisvgm</em> coming with Fedora. Run the follwowing commands to enable the repository
+and to install the new <em>dvisvgm</em> package:</p>
+
+<pre><code>dnf copr enable mgieseki/dvisvgm
+dnf install dvisvgm
+</code></pre>
+</div>
+  </section><a name="8d56703cbffb43bae1f0e6d10ac03542"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">8 September 2018: dvisvgm 2.6 has been released</div>
     <div class="card-body">
@@ -258,6 +271,20 @@ conversion of more transparency parameters, e.g.:<br />
 <li><p>Several code refactorings.</p></li>
 </ul>
 </div>
+  </section><a name="5e2b7cf659069c04c85da933ee354fb8"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">23 March 2018: dvisvgm 2.3.5 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
+This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
+allowed according to the EPS specification.</li>
+<li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
+<li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
+</ul>
+</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item disabled">
@@ -270,11 +297,11 @@ conversion of more transparency parameters, e.g.:<br />
     <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li><li class="page-item">
       <a class="page-link" href="/News/page/2/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/7/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>

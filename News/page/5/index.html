@@ -71,99 +71,118 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="c4479aa4beab25001669744852462e3d"></a>
+  <a name="47fa84d80b6d9d419a81b24afad3cb79"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
+    <div class="card-header bg-primary text-white">8 December 2015: dvisvgm 1.13 has been released</div>
     <div class="card-body">
-      <p>This is a major release with the following changes/additions:</p>
+      <p>This is a maintenance release with the following additions/changes:</p>
 
 <ul>
-<li>Added option <code>--font-format</code> to select the data format used to embed fonts into the SVG files.
-Besides the default SVG format, following alternatives are supported now: TrueType, WOFF, and WOFF2.
-Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a> is supported by almost all
-recent web browsers so that the text elements present in the SVG files are rendered correctly as in
-the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
-
-<object data="/News/images/matrices.svg" type="image/svg+xml"></object>
-<br />
-In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
-Thanks to Thomas Weidner for providing important parts of the code.</li>
-<li>The code base of <em>dvisvgm</em> has been switched from C++03 to C++11. Thus, you need a more recent compiler
-(e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
-<a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
-<li>The command-line parser and the CommandLine class generator have been reimplemented.</li>
+<li>Evaluation of PS operators <code>ashow</code>, <code>awidthshow</code>, and <code>widthshow</code> has been added
+(fixes GH <a href="https://github.com/mgieseki/dvisvgm/issues/49">issue #49</a>).</li>
+<li>The conversion of fonts referenced by PS code to graphics paths has been improved.</li>
+<li>Redundant <code>moveto</code> commands are now removed from paths.</li>
+<li>An issue concerning evaluation of PS operator <code>setcolor</code> has been fixed.</li>
+<li>Fixed output of PS error messages shown when converting EPS files.</li>
+<li>Updated the bundled <a href="https://cyan4973.github.io/xxHash">xxHash library</a> to revision 42.</li>
+<li>Minor code refactorings and cleanup.</li>
 </ul>
 </div>
-  </section><a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
+  </section><a name="790a189b0fce83826fc91e2a5269aaa2"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
+    <div class="card-header bg-primary text-white">18 November 2015: dvisvgm 1.12 has been released</div>
     <div class="card-body">
-      <p>This maintenance release provides the following changes/additions:</p>
+      <p>This is a maintenance release with the following changes:</p>
 
 <ul>
-<li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
-<li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
-For further information on how to enable it, see the <a href="/Manpage/">manual page</a>.</li>
-<li>Added support for the length units <code>cc</code>, <code>dd</code>, and <code>sp</code>.</li>
-<li>Fixed a unit conversion issue in computation of bounding boxes.</li>
-<li>Fixed the propagation of the resolution value to the glyph vectorizer.</li>
-<li>Fixed the transformation of the optional background rectangle.</li>
-<li>Prevent processing of corrupted GF files.</li>
-<li>Major refactorings of the DVI reader and the SVG backend.</li>
+<li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
+<li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
+<li>A memory issue that could occur when running Metafont has been fixed.</li>
 </ul>
 </div>
-  </section><a name="bf0f3eb5231404387af74e0d100f04dc"></a>
+  </section><a name="73d45e4c52912212028ec9af6199cb03"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">19 April 2016: dvisvgm 1.15.1 has been released</div>
+    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
     <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
+      <p>This is a maintenance release with the following changes:</p>
 
 <ul>
-<li>Added explicit encoding attribute to the XML declaration again (<a href="https://github.com/mgieseki/dvisvgm/issues/54">issue #54</a>).</li>
-<li>Added support for <a href="https://github.com/adobe-type-tools/agl-specification">AGL</a> character names of the form <code>uFOO</code> and <code>uniFOO</code>.</li>
-<li>Fixed parsing of transformation parameters given on the command-line.</li>
-<li>Minor code and test improvements.</li>
+<li>The mapping of unknown characters to Unicode has been improved.</li>
+<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
+<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
+<li><code>xlink:title</code> attributes are now properly quoted.</li>
 </ul>
 </div>
-  </section><a name="2f0cae802c17b40886ac10cf40afd7fb"></a>
+  </section><a name="090b91eafab646e154446d2a10dafea2"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">27 February 2016: dvisvgm 1.15 has been released</div>
+    <div class="card-header bg-primary text-white">15 July 2015: dvisvgm 1.10 has been released</div>
     <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
+      <p>This is a small feature release with the following additions/changes:</p>
 
 <ul>
-<li>Added the command-line option <code>--comments</code> to insert additional information to the SVG file.</li>
-<li>Fixed a clipping bug in the PostScript handler.</li>
-<li>Some code improvements and refactorings.</li>
-<li>Moved the test data files to a separate folder.</li>
+<li>Support for the new XDV format 6 introduced by XeTeX 0.99992 has been added.</li>
+<li>The mapping of PostScript character names to Unicode points has been improved.</li>
 </ul>
 </div>
-  </section><a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
+  </section><a name="85516bf886ded70e8577e2400b90897a"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
+    <div class="card-header bg-primary text-white">8 April 2015: dvisvgm 1.9.2 has been released</div>
     <div class="card-body">
-      <p>This is a bugfix release with the following changes:</p>
+      <p>This is a maintenance release with the following changes:</p>
 
 <ul>
-<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
-Now they affect all succeeding pages until the next change occurs.</li>
-<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
-<li>Updated the bundled xxHash library to version 0.5.0.</li>
-<li>Added xxHash to the output of <code>--version=1</code>.</li>
-<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
-<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
+<li>Avoid retracing of fonts if options <code>--no-fonts</code> and <code>--trace-all=y</code> are given.</li>
+<li>Skip tracer messages if no glyphs have been traced.</li>
+<li>The build system has been extended to generate code coverage reports.</li>
+<li>Some tests of the test suite have been improved.</li>
+<li>Several general code refactorings and improvements.</li>
 </ul>
 </div>
-  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
+  </section><a name="5e6a5a37aa0a4ba7a0fa4263128490d9"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
+    <div class="card-header bg-primary text-white">28 February 2015: dvisvgm 1.9.1 has been released</div>
     <div class="card-body">
-      <p>This is a small bugfix release with the following changes:</p>
+      <p>This is a maintenance release with the following changes:</p>
 
 <ul>
-<li>Reset the PostScript graphics state at the end of every DVI page to ensure consistent
-conversions if multiple page are processed.</li>
-<li>Added checks for invalid GF files to prevent undefined behavior.</li>
+<li>The pattern syntax of option <code>--output</code> has been extended to support width specifiers and arithmetic
+expressions. See the <a href="/Manpage/">manual page</a> for further details.</li>
+<li>The formatting of the manual page has been improved.</li>
+<li>A Clang build issue has been fixed (patch by Peter Breitenlohner).</li>
+<li>A build error occurred with old MinGW compilers has been fixed.</li>
+<li>Code cleanup and some refactorings.</li>
+</ul>
+</div>
+  </section><a name="b634fc722579b9a20d304938aa579344"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">16 February 2015: New responsive website theme</div>
+    <div class="card-body">
+      <p>I’ve replaced the old colorful, fixed-sized website theme with a more straightforward and responsive one.
+It’s based on the nice <a href="https://bootswatch.com">Bootswatch</a> collection by Thomas Park.</p>
+</div>
+  </section><a name="35d5bbde9940088db6dc9bd90724f6de"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">29 December 2014: dvisvgm 1.9 has been released</div>
+    <div class="card-body">
+      <p>This is a feature release with the following additions/changes:</p>
+
+<ul>
+<li>Partial evaluation of the PostScript operator <code>shfill</code> which allows to create
+<a href="/Gradients/">color gradient fills</a> has been added. The recent version of
+<em>dvisvgm</em> supports the approximation of free- and lattice-form triangle meshes as well as Coons
+and tensor-product patch meshes.</li>
+<li>The command-line options <code>--grad-segments</code>, <code>--grad-overlap</code>, and <code>--grad-simplify</code> to adapt the
+approximation of gradient fills have been added. See the <a href="/Manpage/">manual page</a>
+for further details.</li>
+<li>Option <code>--no-merge</code> has been added. It forces <em>dvisvgm</em> to create separate text elements for
+each character (patch by Khaled Hosny).</li>
+<li>When searching the location of the Ghostscript library, <em>dvisvgm</em> now also looks up the file
+path in the Windows registry.</li>
+<li>A bug in the interaction of color specials with PostScript color operators has been fixed.</li>
+<li>The validity check of DVI files has been corrected.</li>
+<li>The free replacement script <code>opt2cpp.py</code> for my non-free <code>opt2cpp.xsl</code> stylesheet has been added.
+It’s required to create the C++ files from the XML file defining the command-line options. Thanks to
+Khaled Hosny for the implementation and for providing it for free.</li>
 </ul>
 </div>
   </section>
@@ -180,12 +199,11 @@ conversions if multiple page are processed.</li>
     <li class="page-item"><a class="page-link" href="/News/page/4/">4</a></li>
     <li class="page-item active"><a class="page-link" href="/News/page/5/">5</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/6/">6</a></li>
-    <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li><li class="page-item">
       <a class="page-link" href="/News/page/6/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/7/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>

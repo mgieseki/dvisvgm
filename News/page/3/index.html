@@ -71,39 +71,7 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="595f907cf14e9865ceffbd91fa3e2f10"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">12 December 2017: dvisvgm 2.2.3 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.2.</li>
-<li>Updated the bundled template library <a href="https://github.com/mpark/variant"><code>mpark::variant</code></a>.</li>
-<li>Fixed a memory issue that may occur in conjuntion with option <code>--clipjoin</code>.</li>
-<li>Some test and code improvements.</li>
-</ul>
-</div>
-  </section><a name="da3935202cf7114070f7bbabe2d55bb6"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">17 November 2017: dvisvgm 2.2.2 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Fixed a memory issue regarding font maps that could lead to segfaults (<a href="https://github.com/mgieseki/dvisvgm/issues/79">issue #79</a>).</li>
-<li>Avoid scientific notation when printing floating point numbers.</li>
-<li>Minor code improvements.</li>
-</ul>
-</div>
-  </section><a name="c1c0a7bf7e1afad6a2b2ea65a7026d1a"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">13 November 2017: dvisvgm 2.2.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Fixed a portability issue when building the <a href="/Manpage/">manual page</a>.
-(<a href="https://github.com/mgieseki/dvisvgm/issues/72">issue #72</a>).</li>
-<li>Fixed the incomplete conversion of the PostScript line width (<a href="https://github.com/mgieseki/dvisvgm/issues/77">issue #77</a>).</li>
-<li>Further code refactorings and improvements.</li>
-</ul>
-</div>
-  </section><a name="ef60e16a96b2e89da46fe61ba5c89b24"></a>
+  <a name="ef60e16a96b2e89da46fe61ba5c89b24"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">20 October 2017: dvisvgm 2.2 has been released</div>
     <div class="card-body">
@@ -145,6 +113,64 @@ Rasmus Larsen for their help to isolate the problems).</li>
 (<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
 </ul>
 </div>
+  </section><a name="4567ec37398a2111cd0cdb77f419eb54"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
+doesn&rsquo;t call Metafont again for that font.</li>
+<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
+<li>Several minor code improvements and test enhancements.</li>
+</ul>
+</div>
+  </section><a name="39c60d5cff484207e089e498b9fe43f3"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">19 January 2017: dvisvgm 2.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Added option <code>--tmpdir</code> to explicitly set folder for temporary files.</li>
+<li>Temporary files are no longer created in the current working directory by default but in the
+system&rsquo;s temp folder (<a href="https://github.com/mgieseki/dvisvgm/issues/63">issue #63</a>).</li>
+<li>Added warning/error messages if temporary files could not be written.</li>
+<li>Fixed collision of Unicode points in AGL table (<a href="https://github.com/mgieseki/dvisvgm/issues/64">issue #64</a>).</li>
+<li>Retain letter case of filenames even if it&rsquo;s not significant (Windows only).</li>
+<li>Various code refactorings and code cleanup.</li>
+</ul>
+</div>
+  </section><a name="ce8be73c30e0212775f2a93c1b82bd93"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">17 November 2016: dvisvgm 2.0.4 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>The reduced FontForge library <a href="https://github.com/mgieseki/ff-woff">ff-woff</a> required to
+create WOFF and TrueType fonts is now bundled with the sources.</li>
+<li>A few typos in the manual page and the <code>--help</code> output have been fixed.</li>
+<li>Few minor code improvements.</li>
+</ul>
+</div>
+  </section><a name="57e684112285d0da830ae4d01551e017"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">27 September 2016: dvisvgm 2.0.3 has been released</div>
+    <div class="card-body">
+      <p>This is another bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed a regression in the character positioning of virtual fonts.</li>
+<li>Fixed the positioning of rules.</li>
+</ul>
+</div>
+  </section><a name="bf77e8ab739bd4e48157be61876cb088"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">19 September 2016: dvisvgm 2.0.2 has been released</div>
+    <div class="card-body">
+      <p>This is a bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed a regression in determining the character depths of native fonts.</li>
+<li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
+</ul>
+</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -158,11 +184,11 @@ Rasmus Larsen for their help to isolate the problems).</li>
     <li class="page-item active"><a class="page-link" href="/News/page/3/">3</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/4/">4</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li><li class="page-item">
       <a class="page-link" href="/News/page/4/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+      <a class="page-link" href="/News/page/7/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>
