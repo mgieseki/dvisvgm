@@ -229,7 +229,6 @@ AC_CONFIG_FILES([
 	src/version.hpp
 	tests/Makefile
 	tests/data/Makefile
-	doc/dvisvgm.txt
 	doc/Makefile])
 AC_OUTPUT
 
