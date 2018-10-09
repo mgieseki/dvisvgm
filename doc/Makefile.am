@@ -10,7 +10,7 @@ if BUILD_MANPAGE
 man_MANS = dvisvgm.1
 endif
 
-EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl dvisvgm.sty tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
+EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl dvisvgm.sty dvisvgm.txt.in tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
 
 CONF_DBLATEX_MAN  = $(top_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(top_srcdir)/doc/conf-dblatex-pdf.xsl
@@ -73,7 +73,7 @@ distclean-local:
 # Ensure that distribution tarballs always contain a recent manpage, i.e.
 # let "make dist" and "make distcheck" fail if dvisvgm.1 can't be built.
 dist-hook:
-	@if test ! -f dvisvgm.1; then \
+	@if test ! -f $(top_srcdir)/doc/dvisvgm.1; then \
 		echo "----------------------------------------------------------------"; \
 		echo "manpage file dvisvgm.1 could not be built because one or more of"; \
 		echo "the following utilities are missing: asciidoc, xmlto, xsltproc  "; \
