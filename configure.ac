@@ -106,20 +106,17 @@ AM_CONDITIONAL([USE_BUNDLED_LIBS], [test "x$enable_bundled_libs" = "xyes"])
 
 # If option --enable-bundled-libs is not given, look for system libraries of brotli, potrace, woff2, and xxhash.
 AS_IF([test "x$enable_bundled_libs" != "xyes"],
-	[AC_CHECK_HEADER([potracelib.h],
-		[AC_CHECK_LIB(m, sqrt)] # required to pass potrace check
-		[AC_CHECK_LIB(potrace, potrace_trace,,
-			[AC_MSG_ERROR([system library 'libpotrace' not found])])],
-		[AC_MSG_ERROR([header file 'potracelib.h' for system library 'libpotrace' not found])])]
-	[AS_IF([test "x$enable_woff" = "xyes"],
-		[PKG_CHECK_MODULES([BROTLI], [libbrotlienc],,
-			[AC_MSG_ERROR([system library 'libbrotlienc' not found])])]
-		[PKG_CHECK_MODULES([WOFF2], [libwoff2enc],,
-			[AC_MSG_ERROR([system library 'libwoff2enc' not found])])])]
+	[AC_CHECK_HEADER(potracelib.h,
+		[AC_SEARCH_LIBS(potrace_trace, [potrace], [have_potrace=yes])])]
 	[AC_CHECK_HEADER([xxhash.h],
-		[AC_CHECK_LIB(xxhash, XXH32,,
-			[AC_MSG_ERROR([system library 'libxxhash' not found])])],
-		[AC_MSG_ERROR([header file 'xxhash.h' for system library 'libxxhash' not found])])])
+		[AC_SEARCH_LIBS(XXH32, [xxhash], [have_xxhash=yes])])]
+	[AS_IF([test "x$enable_woff" = "xyes"],
+		[PKG_CHECK_MODULES(BROTLI, [libbrotlienc], [have_brotli=yes])]
+		[PKG_CHECK_MODULES(WOFF2, [libwoff2enc], [have_woff2=yes])])])
+AM_CONDITIONAL(HAVE_POTRACE, [test "x$have_potrace" = "xyes"])
+AM_CONDITIONAL(HAVE_BROTLI, [test "x$have_brotli" = "xyes"])
+AM_CONDITIONAL(HAVE_WOFF2, [test "x$have_woff2" = "xyes"])
+AM_CONDITIONAL(HAVE_XXHASH, [test "x$have_xxhash" = "xyes"])
 
 AS_IF([test "x$enable_woff" != "xyes"],
 	[AC_DEFINE([DISABLE_WOFF], 1, [Define if WOFF support is disabled])],

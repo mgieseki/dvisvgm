@@ -21,18 +21,12 @@ EXTRA_DIST = gtest/LICENSE \
 	gtest/src/gtest-test-part.cc \
 	gtest/src/gtest-typed-test.cc
 
-if USE_BUNDLED_LIBS
-LIBS_CFLAGS = -I$(top_srcdir)/libs/xxHash
-LIBS_LIBS   = ../libs/potrace/libpotrace.a ../libs/xxHash/libxxhash.a
-if ENABLE_WOFF
-LIBS_LIBS  += ../libs/woff2/libwoff2.a ../libs/brotli/libbrotli.a
-endif
-else
+include ../libs/defs.am
+
 LIBS_CFLAGS = $(XXHASH_CFLAGS)
 LIBS_LIBS   = $(POTRACE_LIBS) $(XXHASH_LIBS)
 if ENABLE_WOFF
 LIBS_LIBS  += $(WOFF2_LIBS) $(BROTLI_LIBS)
-endif
 endif
 
 if USE_BUNDLED_MD5

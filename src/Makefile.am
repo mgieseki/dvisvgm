@@ -10,35 +10,22 @@ dvisvgm_SOURCES = \
 	CommandLine.hpp \
 	dvisvgm.cpp
 
+include ../libs/defs.am
+
 dvisvgm_LDADD = \
 	$(noinst_LIBRARIES) \
 	../libs/clipper/libclipper.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
+	$(POTRACE_LIBS) \
+	$(XXHASH_LIBS) \
 	$(ZLIB_LIBS)
 
-if USE_BUNDLED_LIBS
-dvisvgm_LDADD += \
-	../libs/potrace/libpotrace.a \
-	../libs/xxHash/libxxhash.a
-else
-dvisvgm_LDADD += \
-	$(POTRACE_LIBS) \
-	$(XXHASH_LIBS)
-endif
-
 if ENABLE_WOFF
-if USE_BUNDLED_LIBS
-dvisvgm_LDADD += \
-	../libs/ff-woff/libfontforge.a \
-	../libs/woff2/libwoff2.a \
-	../libs/brotli/libbrotli.a
-else
 dvisvgm_LDADD += \
 	../libs/ff-woff/libfontforge.a \
 	$(WOFF2_LIBS) \
 	$(BROTLI_LIBS)
-endif
 endif
 
 if USE_BUNDLED_MD5
@@ -283,15 +270,9 @@ AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
-if USE_BUNDLED_LIBS
-AM_CXXFLAGS +=  \
-	-I$(top_srcdir)/libs/potrace \
-	-I$(top_srcdir)/libs/xxHash
-else
 AM_CXXFLAGS += \
 	$(POTRACE_CFLAGS) \
 	$(XXHASH_CFLAGS)
-endif
 
 AM_LDFLAGS = \
 	$(KPSE_LIBS) \
@@ -304,22 +285,15 @@ AM_CFLAGS +=  \
 
 AM_CXXFLAGS += $(TTFAUTOHINT_CFLAGS)
 
-if USE_BUNDLED_LIBS
-AM_CXXFLAGS +=  \
-	-I$(top_srcdir)/libs/brotli/include \
-	-I$(top_srcdir)/libs/woff2/include
-else
 AM_CXXFLAGS +=  \
 	$(BROTLI_CFLAGS) \
 	$(WOFF2_CFLAGS)
-endif
 
 if USE_BUNDLED_MD5
 AM_CXXFLAGS += -I$(top_srcdir)/libs/md5
 else
 AM_CXXFLAGS += $(LIBCRYPTO_CFLAGS)
 endif
-
 
 AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
 endif
