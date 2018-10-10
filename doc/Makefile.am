@@ -44,6 +44,8 @@ dvisvgm.epub: dvisvgm-article.xml
 	a2x -darticle -fepub -L --icons --icons-dir=. $<
 	mv $(basename $<).epub $@
 
+.SECONDARY: dvisvgm-article.xml dvisvgm-man.xml
+
 dvisvgm-man.xml: dvisvgm.txt $(TWEAK_DB_REFENTRY)
 	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage -o $@.tmp $<
 	xsltproc -o $@ $(TWEAK_DB_REFENTRY) $@.tmp
