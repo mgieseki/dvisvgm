@@ -1,3 +1,12 @@
+dvisvgm-2.6.1 (2018-10-12)
+- added configuration option --disable-manpage to prevent generating
+  the manual page (GH issue #93)
+- if configuration option --disable-bundled-libs is given and some of the
+  required system libraries are missing, the corresponding bundled library
+  is used as a fallback (GH issue #94)
+- updated bundled brotli library to version 1.0.6
+- fixed build issue occurred with GCC 4.8
+
 dvisvgm-2.6 (2018-09-08)
 - added option --page-hashes that allows for skipping the conversion of
   a page if its content hasn't changed
