@@ -4,8 +4,30 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sun, 09 Sep 2018 20:52:07 +0200</pubDate>
+    <pubDate>Fri, 12 Oct 2018 10:45:40 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.6.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#6588d151e41c570e8f55ddd8ecdbaab9</link>
+      <pubDate>Fri, 12 Oct 2018 10:35:37 +0200</pubDate>
+      <guid>6588d151e41c570e8f55ddd8ecdbaab9</guid>
+      <description>
+        <![CDATA[<p>This is a maintenance release that fixes a couple of issues regarding the build system.
+The functionality of the <em>dvisvgm</em> utility itself hasn&rsquo;t changed.</p>
+
+<ul>
+<li>Added configuration option <code>--disable-manpage</code> to prevent generating the manual page
+(<a href="https://github.com/mgieseki/dvisvgm/issues/93">issue #93</a>).</li>
+<li>If configuration option <code>--disable-bundled-libs</code> is given and some of the required system
+libraries are missing during build time, the corresponding bundled libraries are used as a fallback
+(<a href="https://github.com/mgieseki/dvisvgm/issues/94">issue #94</a>).</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.6.</li>
+<li>Fixed a build issue occurred with GCC 4.8.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>Recent Fedora packages of dvisvgm available via Copr</title>
@@ -244,7 +266,7 @@ conversion of more transparency parameters, e.g.:<br />
     
     <item>
       <title>dvisvgm 2.3.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#5e2b7cf659069c04c85da933ee354fb8</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5e2b7cf659069c04c85da933ee354fb8</link>
       <pubDate>Fri, 23 Mar 2018 13:21:01 +0200</pubDate>
       <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
       <description>
@@ -409,7 +431,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#c1c0a7bf7e1afad6a2b2ea65a7026d1a</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#c1c0a7bf7e1afad6a2b2ea65a7026d1a</link>
       <pubDate>Mon, 13 Nov 2017 20:07:42 +0200</pubDate>
       <guid>c1c0a7bf7e1afad6a2b2ea65a7026d1a</guid>
       <description>
@@ -475,22 +497,6 @@ Rasmus Larsen for their help to isolate the problems).</li>
 <li>Fixed some potential memory leaks.</li>
 <li>Removed the <code>restrict</code> keyword from the <em>xxHash</em> sources to avoid C++ compilation errors
 (<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.1.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4567ec37398a2111cd0cdb77f419eb54</link>
-      <pubDate>Tue, 07 Feb 2017 20:13:04 +0200</pubDate>
-      <guid>4567ec37398a2111cd0cdb77f419eb54</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
-doesn&rsquo;t call Metafont again for that font.</li>
-<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
-<li>Several minor code improvements and test enhancements.</li>
 </ul>
 ]]>
       </description>
