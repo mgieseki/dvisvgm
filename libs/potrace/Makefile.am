@@ -1,5 +1,4 @@
-if HAVE_POTRACE
-else
+if !HAVE_POTRACE
 noinst_LIBRARIES = libpotrace.a
 libpotrace_a_SOURCES = \
 	auxiliary.h \

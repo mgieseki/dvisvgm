@@ -1,5 +1,4 @@
-if HAVE_BROTLI
-else
+if !HAVE_BROTLI
 noinst_LIBRARIES = libbrotli.a
 libbrotli_a_SOURCES = \
 	common/constants.h \

@@ -1,23 +1,19 @@
-if HAVE_BROTLI
-else
+if !HAVE_BROTLI
 BROTLI_CFLAGS += -I$(top_srcdir)/libs/brotli/include
 BROTLI_LIBS += ../libs/brotli/libbrotli.a
 endif
 
-if HAVE_POTRACE
-else
+if !HAVE_POTRACE
 POTRACE_CFLAGS = -I$(top_srcdir)/libs/potrace
 POTRACE_LIBS = ../libs/potrace/libpotrace.a
 endif
 
-if HAVE_WOFF2
-else
+if !HAVE_WOFF2
 WOFF2_CFLAGS += -I$(top_srcdir)/libs/woff2/include
 WOFF2_LIBS += ../libs/woff2/libwoff2.a
 endif
 
-if HAVE_XXHASH
-else
+if !HAVE_XXHASH
 XXHASH_CFLAGS = -I$(top_srcdir)/libs/xxHash
 XXHASH_LIBS = ../libs/xxHash/libxxhash.a
 endif

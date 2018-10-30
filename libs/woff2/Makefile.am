@@ -1,5 +1,4 @@
-if HAVE_WOFF2
-else
+if !HAVE_WOFF2
 noinst_LIBRARIES = libwoff2.a
 libwoff2_a_SOURCES = \
 	include/woff2/decode.h \
