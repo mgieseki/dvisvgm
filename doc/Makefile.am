@@ -12,11 +12,11 @@ endif
 
 EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl dvisvgm.sty dvisvgm.txt.in tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
 
-CONF_DBLATEX_MAN  = $(top_srcdir)/doc/conf-dblatex-man.xsl
-CONF_DBLATEX_PDF  = $(top_srcdir)/doc/conf-dblatex-pdf.xsl
-TWEAK_DBLATEX_PDF = $(top_srcdir)/doc/tweak-dblatex-pdf.xsl
-TWEAK_DB_ARTICLE  = $(top_srcdir)/doc/tweak-db-article.xsl
-TWEAK_DB_REFENTRY = $(top_srcdir)/doc/tweak-db-refentry.xsl
+CONF_DBLATEX_MAN  = $(dvisvgm_srcdir)/doc/conf-dblatex-man.xsl
+CONF_DBLATEX_PDF  = $(dvisvgm_srcdir)/doc/conf-dblatex-pdf.xsl
+TWEAK_DBLATEX_PDF = $(dvisvgm_srcdir)/doc/tweak-dblatex-pdf.xsl
+TWEAK_DB_ARTICLE  = $(dvisvgm_srcdir)/doc/tweak-db-article.xsl
+TWEAK_DB_REFENTRY = $(dvisvgm_srcdir)/doc/tweak-db-refentry.xsl
 
 DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.section.enabled=0
 
@@ -75,7 +75,7 @@ distclean-local:
 # Ensure that distribution tarballs always contain a recent manpage, i.e.
 # let "make dist" and "make distcheck" fail if dvisvgm.1 can't be built.
 dist-hook:
-	@if test ! -f $(top_srcdir)/doc/dvisvgm.1; then \
+	@if test ! -f $(dvisvgm_srcdir)/doc/dvisvgm.1; then \
 		echo "----------------------------------------------------------------"; \
 		echo "manpage file dvisvgm.1 could not be built because one or more of"; \
 		echo "the following utilities are missing: asciidoc, xmlto, xsltproc  "; \

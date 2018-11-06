@@ -15,7 +15,7 @@ SUBDIRS = data
 
 check_LTLIBRARIES = libgtest.la
 libgtest_la_SOURCES = gtest/src/gtest-all.cc testmain.cpp
-libgtest_la_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include -I\$(top_srcdir)/tests/gtest
+libgtest_la_CPPFLAGS = -I\$(dvisvgm_srcdir)/tests/gtest/include -I\$(dvisvgm_srcdir)/tests/gtest
 libgtest_la_LDFLAGS = -pthread
 EXTRA_DIST = gtest/LICENSE \\
 	gtest/include \\
@@ -38,14 +38,14 @@ LIBS_LIBS  += \$(WOFF2_LIBS) \$(BROTLI_LIBS)
 endif
 
 if USE_BUNDLED_MD5
-LIBS_CFLAGS += -I\$(top_srcdir)/libs/md5
+LIBS_CFLAGS += -I\$(dvisvgm_srcdir)/libs/md5
 LIBS_LIBS   += ../libs/md5/libmd5.a
 else
 LIBS_CFLAGS += \$(LIBCRYPTO_CFLAGS)
 LIBS_LIBS   += \$(LIBCRYPTO_LIBS)
 endif
 
-AM_CXXFLAGS = -I\$(top_srcdir)/src -I\$(top_srcdir)/libs/variant/include \\
+AM_CXXFLAGS = -I\$(dvisvgm_srcdir)/src -I\$(dvisvgm_srcdir)/libs/variant/include \\
 	-Wall -Wno-mismatched-tags \\
 	-DBUILDDIR='"\$(abs_builddir)"' -DSRCDIR='"\$(abs_srcdir)"' \\
 	\$(CODE_COVERAGE_CFLAGS)
@@ -56,7 +56,7 @@ nodist_hashcheck_SOURCES = hashcheck.cpp
 hashcheck_CPPFLAGS = \$(LIBS_CFLAGS)
 hashcheck_LDADD = \$(LIBS_LIBS)
 
-hashcheck.cpp: genhashcheck.py \$(top_srcdir)/src/AGLTable.hpp \$(top_srcdir)/libs/xxHash/xxhash.h
+hashcheck.cpp: genhashcheck.py \$(dvisvgm_srcdir)/src/AGLTable.hpp \$(dvisvgm_srcdir)/libs/xxHash/xxhash.h
 	python \$^ >\$@
 
 TESTLIBS = libgtest.la ../src/libdvisvgm.a \$(LIBS_LIBS) -lfreetype
@@ -73,7 +73,7 @@ for f in *Test.cpp; do
 TESTS += $base
 check_PROGRAMS += $base
 ${base}_SOURCES = $f testutil.hpp
-${base}_CPPFLAGS = -I\$(top_srcdir)/tests/gtest/include \$(LIBS_CFLAGS)
+${base}_CPPFLAGS = -I\$(dvisvgm_srcdir)/tests/gtest/include \$(LIBS_CFLAGS)
 ${base}_LDADD = \$(TESTLIBS)
 
 EOT

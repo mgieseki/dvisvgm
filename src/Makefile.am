@@ -263,8 +263,8 @@ AM_CFLAGS = -Wall \
 	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
-	-I$(top_srcdir)/libs/clipper \
-	-I$(top_srcdir)/libs/variant/include \
+	-I$(dvisvgm_srcdir)/libs/clipper \
+	-I$(dvisvgm_srcdir)/libs/variant/include \
 	$(KPSE_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(ZLIB_CFLAGS) \
@@ -280,8 +280,8 @@ AM_LDFLAGS = \
 
 if ENABLE_WOFF
 AM_CFLAGS +=  \
-	-I$(top_srcdir)/libs/ff-woff/fontforge \
-	-I$(top_srcdir)/libs/ff-woff/inc
+	-I$(dvisvgm_srcdir)/libs/ff-woff/fontforge \
+	-I$(dvisvgm_srcdir)/libs/ff-woff/inc
 
 AM_CXXFLAGS += $(TTFAUTOHINT_CFLAGS)
 
@@ -290,7 +290,7 @@ AM_CXXFLAGS +=  \
 	$(WOFF2_CFLAGS)
 
 if USE_BUNDLED_MD5
-AM_CXXFLAGS += -I$(top_srcdir)/libs/md5
+AM_CXXFLAGS += -I$(dvisvgm_srcdir)/libs/md5
 else
 AM_CXXFLAGS += $(LIBCRYPTO_CFLAGS)
 endif

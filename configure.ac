@@ -211,6 +211,7 @@ AS_IF([ test "$enable_code_coverage" = "yes" ], [
 	changequote([,])
 ])
 
+AC_SUBST([dvisvgm_srcdir], ['$(top_srcdir)'])
 AC_SUBST(DATE)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
@@ -231,4 +232,3 @@ AC_CONFIG_FILES([
 	tests/data/Makefile
 	doc/Makefile])
 AC_OUTPUT
-
