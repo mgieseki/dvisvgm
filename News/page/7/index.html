@@ -35,11 +35,12 @@
             <li class="nav-item  dropdown">
                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Documentation<span class="caret"></span></a>
                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-book fa-fw"></i> Manual Page</a>
+                  <a class="dropdown-item " href="/Manpage/"><i class="fa fa-file-text-o fa-fw"></i> Manual Page</a>
                   <a class="dropdown-item " href="/FAQ/"><i class="fa fa-question-circle fa-fw"></i> Frequently Asked Questions</a>
                   <a class="dropdown-item " href="/Examples/"><i class="fa fa-image fa-fw"></i> SVG Examples</a>
                   <a class="dropdown-item " href="/Screenshots/"><i class="fa fa-camera fa-fw"></i> Screenshots</a>
                   <a class="dropdown-item " href="/Links/"><i class="fa fa-external-link fa-fw"></i> Related Projects</a>
+                  <a class="dropdown-item " href="/Literature/"><i class="fa fa-book fa-fw"></i> Further Reading</a>
                   </div>
             </li>
             <li class="nav-item ">
@@ -79,8 +80,7 @@
 
 <ul>
 <li>Basic support for vertically oriented text.</li>
-<li>Support for DVI format 3 as created by <a href="http://ascii.asciimw.jp/pb/ptex">p<span class="tex">T<sub>E</sub>X</span>
-</a> in vertical/tate mode.<br />
+<li>Support for DVI format 3 as created by <a href="http://ascii.asciimw.jp/pb/ptex">p<span class="tex">T<sub>E</sub>X</span></a> in vertical/tate mode.<br />
 <a href="/News/images/vertical.svg"><img src="/News/images/vertical.png" class="sample-img-news img-responsive"></a></li>
 <li>Support for DVI format 5 (XDV) as created by <a href="http://scripts.sil.org/xetex">XeTeX</a> with option <code>--no-pdf</code>.<br />
 <a href="/News/images/xetest.svg"><img src="/News/images/xetest.png" class="sample-img-news img-responsive"></a></li>
@@ -105,8 +105,7 @@ stored in the referenced TrueType/OpenType font file.</li>
 <li>If a DVI file contains bounding box information created by the
 <a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>, the size of the
 SVG is adapted accordingly. Also, <em>dvisvgm</em> prints a message showing the assigned width, height,
-and depth values in <span class="tex">T<sub>E</sub>X</span>
- point units. Especially, the depth value can be used to vertically align
+and depth values in <span class="tex">T<sub>E</sub>X</span> point units. Especially, the depth value can be used to vertically align
 the SVG graphics with the baseline of surrounding text in HTML or XSL-FO documents, for example.<br />
 <div class="d-inline-flex">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm test
