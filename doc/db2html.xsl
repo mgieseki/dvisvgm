@@ -103,9 +103,13 @@
 		<xsl:if test="normalize-space($id)">
 			<a name="{normalize-space($id)}" class="linktarget"/>
 		</xsl:if>
-		<dt class="hdlist1">
+		<div class="hdlist1">
 			<xsl:apply-templates/>
-		</dt>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="varlistentry/term">
+		<dt><xsl:apply-templates/></dt>
 	</xsl:template>
 
 	<xsl:template match="varlistentry/listitem">
