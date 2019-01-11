@@ -101,7 +101,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	EXPECT_EQ(actions.result(), "setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setdash 0;grestore;");
 	actions.clear();
 
 	psi.execute("1 setlinecap 5 setmiterlimit 0 1 0 setrgbcolor gsave 0 setlinecap 10 setmiterlimit ");
@@ -109,7 +109,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	EXPECT_EQ(actions.result(), "setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setdash 0;grestore;");
 }
 
 
