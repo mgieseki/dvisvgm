@@ -1,4 +1,4 @@
-version: 2.6.1-{build}
+version: 2.6.2-{build}
 configuration: Release
 
 image: Previous Visual Studio 2017
