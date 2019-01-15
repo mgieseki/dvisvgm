@@ -16,7 +16,7 @@ install:
   - set ZLIB_VER=1.2.11
   - set MIKTEX_SDK_VER=2.9.4106
   - set TTFA_VER=1.8.2
-  - set TTFA_REV=1
+  - set TTFA_REV=2
   - cd vc
   - appveyor DownloadFile https://miktex.org/download/ctan/systems/win32/miktex/sdk/miktex-%MIKTEX_SDK_VER%-sdk.zip
   - unzip -o miktex-%MIKTEX_SDK_VER%-sdk.zip
