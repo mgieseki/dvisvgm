@@ -1123,7 +1123,7 @@ void PsSpecialHandler::rotate (vector<double> &p) {
 
 
 void PsSpecialHandler::setgray (vector<double> &p) {
-	_pattern = 0;
+	_pattern = nullptr;
 	_currentcolor.setGray(p[0]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1131,7 +1131,7 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 
 
 void PsSpecialHandler::setrgbcolor (vector<double> &p) {
-	_pattern= 0;
+	_pattern= nullptr;
 	_currentcolor.setRGB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1139,7 +1139,7 @@ void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 
 
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
-	_pattern = 0;
+	_pattern = nullptr;
 	_currentcolor.setCMYK(p[0], p[1], p[2], p[3]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1147,7 +1147,7 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 
 
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
-	_pattern = 0;
+	_pattern = nullptr;
 	_currentcolor.setHSB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
