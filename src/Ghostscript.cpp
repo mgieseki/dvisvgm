@@ -237,8 +237,12 @@ int Ghostscript::revision () {
 /** Returns the revision of the GS library as a string of the form "MAJOR.MINOR". */
 string Ghostscript::revisionstr () {
 	string revstr;
-	if (int rev = revision())
-		revstr = to_string(rev/100) + "." + to_string(rev%100);
+	if (int rev = revision()) {
+		revstr = to_string(rev/100) + ".";
+		if (rev % 100 < 10)
+			revstr += "0";
+	  	revstr += to_string(rev%100);
+	}
 	return revstr;
 }
 
