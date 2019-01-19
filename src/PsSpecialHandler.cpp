@@ -545,7 +545,7 @@ static string css_blendmode_name (int mode) {
  *  @param[in] p not used */
 void PsSpecialHandler::stroke (vector<double> &p) {
 	_path.removeRedundantCommands();
-	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
+	if ((_path.empty() && !_clipStack.prependedPath()) || !_actions)
 		return;
 
 	BoundingBox bbox;
@@ -554,8 +554,8 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		if (!_xmlnode)
 			bbox.transform(_actions->getMatrix());
 	}
-	if (_clipStack.clippathLoaded() && _clipStack.top())
-		_path.prepend(*_clipStack.top());
+	if (_clipStack.prependedPath())
+		_path.prepend(*_clipStack.prependedPath());
 	unique_ptr<XMLElementNode> path;
 	Pair<double> point;
 	if (_path.isDot(point)) {  // zero-length path?
@@ -606,13 +606,13 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				path->addAttribute("stroke-dashoffset", _dashoffset);
 		}
 	}
-	if (path && _clipStack.top()) {
+	if (path && _clipStack.path()) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 		BoundingBox clipbox;
-		_clipStack.top()->computeBBox(clipbox);
+		_clipStack.path()->computeBBox(clipbox);
 		bbox.intersect(clipbox);
-		_clipStack.setClippathLoaded(false);
+		_clipStack.removePrependedPath();
 	}
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
@@ -629,7 +629,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	_path.removeRedundantCommands();
-	if ((_path.empty() && !_clipStack.clippathLoaded()) || !_actions)
+	if ((_path.empty() && !_clipStack.prependedPath()) || !_actions)
 		return;
 
 	// compute bounding box
@@ -640,8 +640,8 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		if (!_xmlnode)
 			bbox.transform(_actions->getMatrix());
 	}
-	if (_clipStack.clippathLoaded() && _clipStack.top())
-		_path.prepend(*_clipStack.top());
+	if (_clipStack.prependedPath())
+		_path.prepend(*_clipStack.prependedPath());
 
 	ostringstream oss;
 	_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
@@ -651,13 +651,13 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
 	else if (_actions->getColor() != Color::BLACK || _savenode)
 		path->addAttribute("fill", _actions->getColor().svgColorString());
-	if (_clipStack.top()) {
+	if (_clipStack.path()) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 		BoundingBox clipbox;
-		_clipStack.top()->computeBBox(clipbox);
+		_clipStack.path()->computeBBox(clipbox);
 		bbox.intersect(clipbox);
-		_clipStack.setClippathLoaded(false);
+		_clipStack.removePrependedPath();
 	}
 	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 		path->addAttribute("fill-rule", "evenodd");
@@ -779,10 +779,8 @@ void PsSpecialHandler::initclip (vector<double> &) {
 
 /** Assigns the current clipping path to the graphics path. */
 void PsSpecialHandler::clippath (std::vector<double>&) {
-	if (!_clipStack.empty()) {
-		_clipStack.setClippathLoaded(true);
-		_path.clear();
-	}
+	if (!_clipStack.empty())
+		_clipStack.setPrependedPath();
 }
 
 
@@ -802,7 +800,7 @@ void PsSpecialHandler::clip (vector<double>&, bool evenodd) {
  *  computed by intersecting the current one with the given path.
  *  @param[in] path path used to restrict the clipping region
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
-void PsSpecialHandler::clip (Path &path, bool evenodd) {
+void PsSpecialHandler::clip (Path path, bool evenodd) {
 	// when this method is called, _path contains the clipping path
 	if (path.empty() || !_actions)
 		return;
@@ -812,6 +810,8 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 
 	if (!_actions->getMatrix().isIdentity())
 		path.transform(_actions->getMatrix());
+	if (_clipStack.prependedPath())
+		path.prepend(*_clipStack.prependedPath());
 
 	int oldID = _clipStack.topID();
 
@@ -822,7 +822,7 @@ void PsSpecialHandler::clip (Path &path, bool evenodd) {
 	}
 	else {
 		// compute the intersection of the current clipping path with the current graphics path
-		const Path *oldPath = _clipStack.top();
+		const Path *oldPath = _clipStack.path();
 		Path intersectedPath(windingRule);
 		PathClipper clipper;
 		clipper.intersect(*oldPath, path, intersectedPath);
@@ -1071,10 +1071,9 @@ void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace,
 /** Clears current path */
 void PsSpecialHandler::newpath (vector<double> &p) {
 	bool drawing = (p[0] > 0);
-	if (!drawing || !_clipStack.clippathLoaded()) {
-		_path.clear();
-		_clipStack.setClippathLoaded(false);
-	}
+	if (!drawing)
+		_clipStack.removePrependedPath();
+	_path.clear();
 }
 
 
@@ -1179,10 +1178,14 @@ void PsSpecialHandler::ClippingStack::pushEmptyPath () {
 
 
 void PsSpecialHandler::ClippingStack::push (const Path &path, int saveID) {
+	shared_ptr<Path> prependedPath;
+	if (!_stack.empty())
+		prependedPath = _stack.top().prependedPath;
 	if (path.empty())
 		_stack.emplace(Entry(saveID));
 	else
 		_stack.emplace(Entry(path, ++_maxID, saveID));
+	_stack.top().prependedPath = prependedPath;
 }
 
 
@@ -1218,21 +1221,20 @@ void PsSpecialHandler::ClippingStack::pop (int saveID, bool grestoreall) {
 
 
 /** Returns a pointer to the path on top of the stack, or 0 if the stack is empty. */
-const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::top () const {
+const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::path () const {
 	return _stack.empty() ? nullptr : _stack.top().path.get();
 }
 
 
-/** Returns true if the clipping path was loaded into the graphics path (via PS operator 'clippath') */
-bool PsSpecialHandler::ClippingStack::clippathLoaded () const {
-	return !_stack.empty() && _stack.top().cpathLoaded;
+/** Returns a pointer to the path on top of the stack, or 0 if the stack is empty. */
+const PsSpecialHandler::Path* PsSpecialHandler::ClippingStack::prependedPath () const {
+	return _stack.empty() ? nullptr : _stack.top().prependedPath.get();
 }
 
 
-void PsSpecialHandler::ClippingStack::setClippathLoaded (bool loaded) {
-	if (_stack.empty())
-		return;
-	_stack.top().cpathLoaded = loaded;
+void PsSpecialHandler::ClippingStack::removePrependedPath () {
+	if (!_stack.empty())
+		_stack.top().prependedPath = nullptr;
 }
 
 
@@ -1259,6 +1261,12 @@ void PsSpecialHandler::ClippingStack::replace (const Path &path) {
 void PsSpecialHandler::ClippingStack::dup (int saveID) {
 	_stack.emplace(_stack.empty() ? Entry() : _stack.top());
 	_stack.top().saveID = saveID;
+}
+
+
+void PsSpecialHandler::ClippingStack::setPrependedPath () {
+	if (!_stack.empty())
+		_stack.top().prependedPath = _stack.top().path;
 }
 
 
