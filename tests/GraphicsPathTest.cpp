@@ -132,3 +132,75 @@ TEST(GraphicsPathTest, removeRedundantCommands) {
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10H100Q10 100 40 80C5 5 30 10 90 70M20 20V30");
 }
+
+
+TEST(GraphicsPathTest, equals) {
+	GraphicsPath<int> path1;
+	EXPECT_TRUE(path1 == path1);
+	path1.moveto(10,10);
+	path1.lineto(100,10);
+	path1.conicto(10,100,40,80);
+	path1.cubicto(5,5,30,10,90,70);
+	path1.lineto(20,30);
+	path1.closepath();
+	EXPECT_TRUE(path1 == path1);
+
+	GraphicsPath<int> path2;
+	EXPECT_FALSE(path1 == path2);
+	path2.moveto(10,10);
+	path2.lineto(100,10);
+	path2.conicto(10,100,40,80);
+	path2.cubicto(5,5,30,10,90,70);
+	path2.lineto(20,30);
+	EXPECT_FALSE(path1 == path2);
+	EXPECT_FALSE(path2 == path1);
+	path2.closepath();
+	EXPECT_TRUE(path1 == path2);
+	EXPECT_TRUE(path2 == path1);
+
+	path2.clear();
+	path2.moveto(10,10);
+	path2.lineto(100,10);
+	path2.conicto(10,100,40,80);
+	path2.cubicto(5,5,10,10,90,70);
+	path2.lineto(20,30);
+	path2.closepath();
+	EXPECT_FALSE(path1 == path2);
+	EXPECT_FALSE(path2 == path1);
+}
+
+
+TEST(GraphicsPathTest, unequals) {
+	GraphicsPath<int> path1;
+	EXPECT_FALSE(path1 != path1);
+	path1.moveto(10,10);
+	path1.lineto(100,10);
+	path1.conicto(10,100,40,80);
+	path1.cubicto(5,5,30,10,90,70);
+	path1.lineto(20,30);
+	path1.closepath();
+	EXPECT_FALSE(path1 != path1);
+
+	GraphicsPath<int> path2;
+	EXPECT_TRUE(path1 != path2);
+	path2.moveto(10,10);
+	path2.lineto(100,10);
+	path2.conicto(10,100,40,80);
+	path2.cubicto(5,5,30,10,90,70);
+	path2.lineto(20,30);
+	EXPECT_TRUE(path1 != path2);
+	EXPECT_TRUE(path2 != path1);
+	path2.closepath();
+	EXPECT_FALSE(path1 != path2);
+	EXPECT_FALSE(path2 != path1);
+
+	path2.clear();
+	path2.moveto(10,10);
+	path2.lineto(100,10);
+	path2.conicto(10,100,40,80);
+	path2.cubicto(5,5,10,10,90,70);
+	path2.lineto(20,30);
+	path2.closepath();
+	EXPECT_TRUE(path1 != path2);
+	EXPECT_TRUE(path2 != path1);
+}

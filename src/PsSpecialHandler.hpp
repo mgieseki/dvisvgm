@@ -49,7 +49,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 			ClippingStack () : _maxID(0) {}
 			void pushEmptyPath ();
 			void push (const Path &path, int saveID=-1);
-			void replace (const Path &path);
+			bool replace (const Path &path);
 			void dup (int saveID=-1);
 			void pop (int saveID=-1, bool grestore=false);
 			void clear ();

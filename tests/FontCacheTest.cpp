@@ -87,11 +87,6 @@ static string toSVG (const Glyph &glyph) {
 }
 
 
-static bool operator == (const Glyph &glyph1, const Glyph &glyph2) {
-	return toSVG(glyph1) == toSVG(glyph2);
-}
-
-
 TEST_F(FontCacheTest, glyph) {
 	EXPECT_EQ(toSVG(glyph1), "M0 0H10V10H0Z");
 	EXPECT_EQ(toSVG(glyph2), "M0 0C10 10 20 0 50 50L30 20Q20 40 20 20Z");

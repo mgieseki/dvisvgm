@@ -816,8 +816,9 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 	int oldID = _clipStack.topID();
 
 	ostringstream oss;
+	bool pathReplaced;
 	if (!COMPUTE_CLIPPATHS_INTERSECTIONS || oldID < 1) {
-		_clipStack.replace(path);
+		pathReplaced = _clipStack.replace(path);
 		path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
 	else {
@@ -826,23 +827,24 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 		Path intersectedPath(windingRule);
 		PathClipper clipper;
 		clipper.intersect(*oldPath, path, intersectedPath);
-		_clipStack.replace(intersectedPath);
+		pathReplaced = _clipStack.replace(intersectedPath);
 		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
+	if (pathReplaced) {
+		auto pathElem = util::make_unique<XMLElementNode>("path");
+		pathElem->addAttribute("d", oss.str());
+		if (evenodd)
+			pathElem->addAttribute("clip-rule", "evenodd");
 
-	auto pathElem = util::make_unique<XMLElementNode>("path");
-	pathElem->addAttribute("d", oss.str());
-	if (evenodd)
-		pathElem->addAttribute("clip-rule", "evenodd");
+		int newID = _clipStack.topID();
+		auto clipElem = util::make_unique<XMLElementNode>("clipPath");
+		clipElem->addAttribute("id", XMLString("clip")+XMLString(newID));
+		if (!COMPUTE_CLIPPATHS_INTERSECTIONS && oldID)
+			clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
 
-	int newID = _clipStack.topID();
-	auto clipElem = util::make_unique<XMLElementNode>("clipPath");
-	clipElem->addAttribute("id", XMLString("clip")+XMLString(newID));
-	if (!COMPUTE_CLIPPATHS_INTERSECTIONS && oldID)
-		clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
-
-	clipElem->append(std::move(pathElem));
-	_actions->appendToDefs(std::move(clipElem));
+		clipElem->append(std::move(pathElem));
+		_actions->appendToDefs(std::move(clipElem));
+	}
 }
 
 
@@ -1245,15 +1247,19 @@ void PsSpecialHandler::ClippingStack::clear() {
 }
 
 
-/** Replaces the top element by a new one.
- *  @param[in] path new path to be on top of the stack */
-void PsSpecialHandler::ClippingStack::replace (const Path &path) {
+/** Replaces the top path by a new one.
+ *  @param[in] path new path to put on the stack
+ *  @return true if the new path differs from the previous one */
+bool PsSpecialHandler::ClippingStack::replace (const Path &path) {
 	if (_stack.empty())
 		push(path, -1);
+	else if (_stack.top().path && path == *_stack.top().path)
+		return false;
 	else {
 		_stack.top().path = make_shared<Path>(path);
 		_stack.top().pathID = ++_maxID;
 	}
+	return true;
 }
 
 
