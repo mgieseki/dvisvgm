@@ -1068,10 +1068,10 @@ void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace,
 }
 
 
-/** Clears current path */
+/** Clears current path. */
 void PsSpecialHandler::newpath (vector<double> &p) {
-	bool drawing = (p[0] > 0);
-	if (!drawing)
+	bool calledByNewpathOp = (p[0] > 0);
+	if (calledByNewpathOp)  // function triggered by PS operator 'newpath'?
 		_clipStack.removePrependedPath();
 	_path.clear();
 }
