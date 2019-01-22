@@ -64,18 +64,18 @@ _dvisvgm_ relies on the following free libraries:
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
 * [Ghostscript](https://www.ghostscript.com)  
-  The PostScript special handler requires the Ghostscript library libgs.so (Linux)
-  or gsdll32.dll/gsdll64.dll (Windows) to be installed. If the configure script
+  The PostScript special handler requires the Ghostscript shared library `libgs.so.N` (Linux)
+  or `gsdll32.dll`/`gsdll64.dll` (Windows) to be installed. If the configure script
   finds the corresponding Ghostscript development files on the system, it
   directly links against `libgs.so.N`, where _N_ is the library's ABI version.
   Otherwise, the library is looked up during runtime, and the PostScript support is
-  enabled only if `libgs.so` can be found. Due to incompatible changes of the Ghostscript API,
-  _dvisvgm_ requires Ghostscript 8.31 or later.
+  enabled only if the shared library can be found. Due to incompatible changes of the
+  Ghostscript API, _dvisvgm_ requires Ghostscript 8.31 or later.
 
 * [Kpathsea](https://tug.org/kpathsea)  
   This library is part of the Web2C package and is usually installed in
   conjunction with a TeX distribution. Kpathsea provides functions for searching
-  files in the large texmf tree. Please ensure that you use the kpathsea version
+  files in the large `texmf` tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
 * [OpenSSL crypto library](https://www.openssl.org)
@@ -106,10 +106,6 @@ _dvisvgm_ relies on the following free libraries:
 * [zlib](http://www.zlib.org)  
   This library is required to create compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 
-If you want to build and run the test suite located in the _tests_
-subdirectory, you also need the [Google Test](https://github.com/google/googletest)
-libraries.
-
 
 Building dvisvgm from source
 ----------------------------
@@ -123,7 +119,7 @@ Quick installation info:
 
 * ensure that the development packages of all libraries, listed above, are installed
 * type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
-* either type `./configure` if you don't want to use the bundled libraries _brotli_, _woff2_, and _xxHash_ but link
+* either type `./configure` if you don't want to use the bundled libraries _brotli_, _potrace_, _woff2_, and _xxHash_ but link
 against the corresponding system libraries,
 * or type `./configure --enable-bundled-libs` in order to build and statically link the bundled libraries.
 * type `make`

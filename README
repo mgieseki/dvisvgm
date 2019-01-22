@@ -26,13 +26,13 @@ DEPENDENCIES
    (PFB, OTF, TTF).
 
  * Ghostscript (https://www.ghostscript.com)
-   The PostScript special handler requires the Ghostscript library
-   libgs.so (Linux) or gsdll32.dll/gsdll64.dll (Windows) to be installed.
+   The PostScript special handler requires the Ghostscript shared library
+   libgs.so.N (Linux) or gsdll32.dll/gsdll64.dll (Windows) to be installed.
    If the configure script finds the corresponding Ghostscript development
    files on the system, it directly links against libgs.so.N, where N is the
-   library's ABI version. Otherwise, the library is looked up at runtime,
-   and PostScript support is enabled only if libgs.so can be found.
-   Due to incompatible changes of the Ghostscript API, dvisvgm requires
+   library's ABI version. Otherwise, the library is looked up during runtime,
+   and the PostScript support is enabled only if the shared library can be
+   found. Due to incompatible changes of the Ghostscript API, dvisvgm requires
    Ghostscript 8.31 or later.
 
  * kpathsea (https://tug.org/kpathsea)
@@ -72,9 +72,6 @@ DEPENDENCIES
  * zlib (http://www.zlib.org)
    This library is required to create compressed SVGZ files.
 
- If you want to build and run the test suite located in the tests subdirectory,
- you also need the Google Test libraries (https://github.com/google/googletest).
-
 
 BUILDING DVISVGM FROM SOURCE
 
@@ -89,7 +86,7 @@ BUILDING DVISVGM FROM SOURCE
    * type "./autogen.sh" if "configure" is not present in the dvisvgm
      root folder
    * either type "./configure" if you don't want to use the bundled libraries
-     brotli, woff2, and xxHash but link against the corresponding
+     brotli, potrace, woff2, and xxHash but link against the corresponding
      system libraries,
      or type "./configure --enable-bundled-libs" in order to build and
      statically link the bundled libraries.

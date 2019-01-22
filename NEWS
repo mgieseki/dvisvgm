@@ -1,3 +1,12 @@
+dvisvgm-2.6.2 (2019-01-23)
+- fixed scaling of line properties in PS operator 'grestore'
+- fixed handling of PS operators 'charpath' and 'show' which may
+  call each other internally
+- improved processing of PS operator 'clippath'
+- prevent visible side-effects of PS operator 'stringwidth'
+- updated bundled brotli library to version 1.0.7
+- some modifications of the build system to simplify maintenance in TeX Live
+
 dvisvgm-2.6.1 (2018-10-12)
 - added configuration option --disable-manpage to prevent generating
   the manual page (GH issue #93)
