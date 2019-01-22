@@ -1,12 +1,12 @@
 sudo: required
-dist: trusty
+dist: xenial
 group: legacy
 
 language: cpp
 
 compiler:
    - gcc
-   - clang
+#   - clang
 
 branches:
    except:
@@ -17,12 +17,9 @@ before_install:
    - sudo apt-get update -qq
    - sudo apt-get install -qq autotools-dev libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml
 
-install:
-   - sudo apt-get install -qq g++-4.9
-   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100
-
 env:
    global:
+      - GTEST_COLOR=1
       # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
       # via the "travis encrypt" command using the project repo's public key
       - secure: "MlOXG2PegI8ck67gSCoY0w4hncbaJ0UG+5VUOmzZ4blJDrA2BLOnQg8n/D65ic1pzmrooUuZJJMmgWI+6F+pyZyXTOpDP50cX4i8WpcuHY/phYp9w2jdN61YgqoUIgWgxsAxBUV2Lf1ULZbWYwUoI9fLkTE6owFXZPFT5ZQnwWA="
@@ -31,7 +28,7 @@ addons:
    coverity_scan:
       project:
          name: mgieseki/dvisvgm
-         description: "dvisvgm - A fast DVI to SVG converter"
+         description: "dvisvgm -- A fast DVI to SVG converter"
          version: 2.6.2
       notification_email: martin.gieseking@uos.de
       build_command_prepend: "./configure --enable-bundled-libs; make clean"
