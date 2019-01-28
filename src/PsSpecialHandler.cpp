@@ -1020,16 +1020,15 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 }
 
 
-struct PatchVertex {
-	DPair point;
-	Color color;
-};
-
-
 void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it) {
 	int verticesPerRow = static_cast<int>(*it++);
 	if (verticesPerRow < 2)
 		return;
+
+	struct PatchVertex {
+		DPair point;
+		Color color;
+	};
 
 	// hold two adjacent rows of vertices and colors
 	vector<PatchVertex> row1(verticesPerRow);
