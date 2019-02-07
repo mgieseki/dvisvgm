@@ -146,12 +146,13 @@ Additional Information
 ----------------------
 
 This package is available from [CTAN](https://ctan.org/pkg/dvisvgm), and can be
-downloaded from the [project website](httpd://dvisvgm.de) as well.
-There you find the sources, pre-compiled binaries, the manual page, FAQs
-and further information about the converter and related topics.
+downloaded from the [project website](https://dvisvgm.de) as well. There you find
+the sources, [pre-compiled binaries](https://dvisvgm.de/Downloads), the
+[manual page](https://dvisvgm.de/Manpage), [FAQs](https://dvisvgm.de/FAQ) and further
+information about the converter and related topics.
 
 If you've found a bug, please let me know. You can either send me an email or
-preferably use the bug tracker at [GitHub](https://github.com/mgieseki/dvisvgm).
+preferably use the [bug tracker at GitHub](https://github.com/mgieseki/dvisvgm/issues).
 
 
 Copyright
@@ -159,15 +160,12 @@ Copyright
 
 Copyright &copy; 2005&ndash;2019 [Martin Gieseking](mailto:martin.gieseking@uos.de)
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 3 of the License, or (at your
-option) any later version.
+This program is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-Public License for more details.
-
-See file COPYING for details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html) for more
+details.
 
