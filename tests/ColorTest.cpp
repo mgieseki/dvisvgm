@@ -26,9 +26,9 @@ using namespace std;
 TEST(ColorTest, construct) {
 	EXPECT_EQ(Color(uint8_t(1), uint8_t(2), uint8_t(3)).rgbString(), "#010203");
 	EXPECT_EQ(Color(1.0/255, 2.0/255, 3.0/255).rgbString(), "#010203");
-	EXPECT_EQ(Color("Blue").rgbString(), "#0000ff");
-	EXPECT_EQ(Color("blue").rgbString(), "#0000ff");
-	EXPECT_EQ(Color("invalid").rgbString(), "#000000");
+	EXPECT_EQ(Color("Blue").rgbString(), "#00f");
+	EXPECT_EQ(Color("blue").rgbString(), "#00f");
+	EXPECT_EQ(Color("invalid").rgbString(), "#000");
 }
 
 
@@ -44,21 +44,21 @@ TEST(ColorTest, gray) {
 TEST(ColorTest, hsb) {
 	Color c;
 	c.setHSB(20.0/360, 0.75, 0.8);        // i==0
-	EXPECT_EQ(c.rgbString(), "#cc6633");
+	EXPECT_EQ(c.rgbString(), "#c63");
 	c.setHSB(60.0/360, 0.75, 0.8);        // i==1
-	EXPECT_EQ(c.rgbString(), "#cccc33");
+	EXPECT_EQ(c.rgbString(), "#cc3");
 	c.setHSB(120.0/360, 1.0, 1.0);        // i==2
-	EXPECT_EQ(c.rgbString(), "#00ff00");
+	EXPECT_EQ(c.rgbString(), "#0f0");
 	c.setHSB(180.0/360, 1.0, 1.0);        // i==3
-	EXPECT_EQ(c.rgbString(), "#00ffff");
+	EXPECT_EQ(c.rgbString(), "#0ff");
 	c.setHSB(240.0/360, 0.75, 0.8);       // i==4
-	EXPECT_EQ(c.rgbString(), "#3333cc");
+	EXPECT_EQ(c.rgbString(), "#33c");
 	c.setHSB(300.0/360, 0.75, 0.8);       // i==5
-	EXPECT_EQ(c.rgbString(), "#cc33cc");
+	EXPECT_EQ(c.rgbString(), "#c3c");
 	c.setHSB(0.0, 1.0, 1.0);
-	EXPECT_EQ(c.rgbString(), "#ff0000");
+	EXPECT_EQ(c.rgbString(), "#f00");
 	c.setHSB(20.0/360, 0, 0.2);           // s==0
-	EXPECT_EQ(c.rgbString(), "#333333");
+	EXPECT_EQ(c.rgbString(), "#333");
 }
 
 
@@ -85,7 +85,7 @@ TEST(ColorTest, cmyk) {
 TEST(ColorTest, name) {
 	Color c;
 	EXPECT_TRUE(c.setPSName("Magenta"));
-	EXPECT_EQ(c.rgbString(), "#ff00ff");
+	EXPECT_EQ(c.rgbString(), "#f0f");
 	EXPECT_FALSE(c.setPSName("mulberry"));
 	EXPECT_TRUE(c.setPSName("mulberry", false));
 	EXPECT_EQ(c.rgbString(), "#a314f9");
@@ -172,9 +172,9 @@ TEST(ColorTest, svgColorString) {
 	EXPECT_EQ(Color(uint32_t(0x9400d3)).svgColorString(false), "darkviolet");
 	EXPECT_EQ(Color(uint32_t(0x000001)).svgColorString(false), "#000001");
 
-	EXPECT_EQ(Color(uint32_t(0x000000)).svgColorString(true), "#000000");
-	EXPECT_EQ(Color(uint32_t(0xffffff)).svgColorString(true), "#ffffff");
-	EXPECT_EQ(Color(uint32_t(0xff0000)).svgColorString(true), "#ff0000");
+	EXPECT_EQ(Color(uint32_t(0x000000)).svgColorString(true), "#000");
+	EXPECT_EQ(Color(uint32_t(0xffffff)).svgColorString(true), "#fff");
+	EXPECT_EQ(Color(uint32_t(0xff0000)).svgColorString(true), "#f00");
 	EXPECT_EQ(Color(uint32_t(0x9400d3)).svgColorString(true), "#9400d3");
 	EXPECT_EQ(Color(uint32_t(0x000001)).svgColorString(true), "#000001");
 }
@@ -189,7 +189,7 @@ TEST(ColorTest, components) {
 
 
 TEST(ColorTest, scale) {
-	EXPECT_EQ((Color(uint32_t(0x123456)) *= 0.0).rgbString(), "#000000");
+	EXPECT_EQ((Color(uint32_t(0x123456)) *= 0.0).rgbString(), "#000");
 	EXPECT_EQ((Color(uint32_t(0x123456)) *= 1.0).rgbString(), "#123456");
 	EXPECT_EQ((Color(uint32_t(0x123456)) *= 3.0).rgbString(), "#369d02");
 	EXPECT_EQ((Color(uint32_t(0x123456)) *= 0.5).rgbString(), "#091a2b");

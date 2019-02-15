@@ -176,10 +176,10 @@ TEST_F(TensorProductPatchTest, vertices) {
 	EXPECT_EQ(_patch.valueAt(1,1), DPair(100,70));
 	EXPECT_EQ(_patch.valueAt(1,0), DPair(70,20));
 
-	EXPECT_EQ(_patch.colorAt(0,0).rgbString(), "#ff0000");
-	EXPECT_EQ(_patch.colorAt(0,1).rgbString(), "#ffff00");
-	EXPECT_EQ(_patch.colorAt(1,1).rgbString(), "#ff00ff");
-	EXPECT_EQ(_patch.colorAt(1,0).rgbString(), "#00ff00");
+	EXPECT_EQ(_patch.colorAt(0,0).rgbString(), "#f00");
+	EXPECT_EQ(_patch.colorAt(0,1).rgbString(), "#ff0");
+	EXPECT_EQ(_patch.colorAt(1,1).rgbString(), "#f0f");
+	EXPECT_EQ(_patch.colorAt(1,0).rgbString(), "#0f0");
 }
 
 
@@ -251,7 +251,7 @@ TEST_F(TensorProductPatchTest, subpatch) {
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10C5 20 7.5 27.5 10 36.25C20.625 46.875 31.25 52.1875 43.28125 54.21875C40 40.9375 36.25 27.5 36.25 15C25 10 15 5 10 10Z");
-	EXPECT_EQ(tpp.colorAt(0, 0).rgbString(), "#ff0000");
+	EXPECT_EQ(tpp.colorAt(0, 0).rgbString(), "#f00");
 	EXPECT_EQ(tpp.colorAt(0, 1).rgbString(), "#ff8000");
 	EXPECT_EQ(tpp.colorAt(1, 0).rgbString(), "#808000");
 	EXPECT_EQ(tpp.colorAt(1, 1).rgbString(), "#bf8040");
@@ -292,7 +292,7 @@ TEST_F(TensorProductPatchTest, approximate) {
 	TensorProductPatch tpp(_points, colors, Color::ColorSpace::RGB, 0, 0);
 	tpp.approximate(2, false, 0.1, callback);
 	EXPECT_EQ(callback.pathstr(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
-	EXPECT_EQ(callback.colorstr(), "#000000");
+	EXPECT_EQ(callback.colorstr(), "#000");
 
 	callback.reset();
 	_patch.approximate(2, false, 0.1, callback);

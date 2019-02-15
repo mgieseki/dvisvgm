@@ -148,11 +148,13 @@ customized via environment variable *DVISVGM_COLORS*. See the <<environment, Env
 below for further information.
 
 *--colornames*::
-By default, dvisvgm exclusively uses RGB values of the form '#RRGGBB' to represent colors in
-the SVG file. According to the SVG standard, it's also possible to use color names (like +black+
-and +darkblue+) for a limited number of predefined colors. In order to apply these color names
-rather than their RGB values, call dvisvgm with option *--colornames*. All colors without an
-SVG color name will still be represented by RGB values.
+By default, dvisvgm exclusively uses RGB values of the form '#RRGGBB' or '#RGB' to represent
+colors in the SVG file. The latter is a short form for colors whose RGB components each 
+consist of two identical hex digits, e.g. '#123' equals '#112233'.
+According to the SVG standard, it's also possible to use color names (like +black+ and +darkblue+)
+for a limited number of predefined colors. In order to apply these color names rather than their
+RGB values, call dvisvgm with option *--colornames*. All colors without an SVG color name will
+still be represented by RGB values.
 
 *--comments*::
 Adds comments with further information about selected data to the SVG file. Currently, only

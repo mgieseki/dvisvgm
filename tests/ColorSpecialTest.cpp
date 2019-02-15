@@ -49,13 +49,13 @@ TEST_F(ColorSpecialTest, info) {
 
 TEST_F(ColorSpecialTest, readColor) {
 	std::istringstream iss("rgb 1 0 1");
-	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#ff00ff");
+	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#f0f");
 	iss.clear();
 	iss.str("hsb 1 0.5 1");
 	EXPECT_EQ(ColorSpecialHandler::readColor(iss).rgbString(), "#ff8080");
 	iss.clear();
 	iss.str("0 1 0");
-	EXPECT_EQ(ColorSpecialHandler::readColor("rgb", iss).rgbString(), "#00ff00");
+	EXPECT_EQ(ColorSpecialHandler::readColor("rgb", iss).rgbString(), "#0f0");
 	iss.clear();
 	iss.str("1 0.5 1");
 	EXPECT_EQ(ColorSpecialHandler::readColor("hsb", iss).rgbString(), "#ff8080");
