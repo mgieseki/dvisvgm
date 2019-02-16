@@ -102,10 +102,10 @@ TEST_F(EmSpecialTest, lines1) {
 		handler.processSpecial(string("line ")+XMLString(i)+", "+XMLString((i+1)%n));
 	EXPECT_EQ(recorder.getPageXML(),
 		"<page>\n"
-		"<line stroke='#000' stroke-width='2' x1='0' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='10' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='10' x2='0' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='0' x2='0' y1='0' y2='0'/>\n"
+		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"</page>"
 	);
 }
@@ -127,10 +127,10 @@ TEST_F(EmSpecialTest, lines2) {
 	handler.finishPage();
 	EXPECT_EQ(recorder.getPageXML(),
 		"<page>\n"
-		"<line stroke='#000' stroke-width='2' x1='0' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='10' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='10' x2='0' y1='0' y2='0'/>\n"
-		"<line stroke='#000' stroke-width='2' x1='0' x2='0' y1='0' y2='0'/>\n"
+		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
+		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"</page>"
 	);
 }
@@ -140,7 +140,7 @@ TEST_F(EmSpecialTest, pline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1, 2, 10bp");
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<line stroke='#000' stroke-width='10' x1='10' x2='100' y1='10' y2='100'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<page>\n<line x1='10' y1='10' x2='100' y2='100' stroke-width='10' stroke='#000'/>\n</page>");
 }
 
 
@@ -171,7 +171,7 @@ TEST_F(EmSpecialTest, hvline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2h, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon fill='#00f' points='10,17.07 10,2.93 107.07,100 92.93,100'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon points='10,17.07 10,2.93 107.07,100 92.93,100' fill='#00f'/>\n</page>");
 }
 
 
@@ -187,10 +187,10 @@ TEST_F(EmSpecialTest, lineto) {
 	}
 	EXPECT_EQ(recorder.getPageXML(),
 		"<page>\n"
-		"<line stroke='#f00' stroke-width='2' x1='0' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#f00' stroke-width='4' x1='10' x2='10' y1='0' y2='0'/>\n"
-		"<line stroke='#f00' stroke-width='6' x1='10' x2='0' y1='0' y2='0'/>\n"
-		"<line stroke='#f00' stroke-width='8' x1='0' x2='0' y1='0' y2='0'/>\n"
+		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#f00'/>\n"
+		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='4' stroke='#f00'/>\n"
+		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='6' stroke='#f00'/>\n"
+		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='8' stroke='#f00'/>\n"
 		"</page>"
 	);
 }

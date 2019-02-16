@@ -201,13 +201,13 @@ TEST_F(DvisvgmSpecialTest, processImg) {
 	std::istringstream iss("img 72.27 72.27 test.png");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;72&apos; width=&apos;72&apos; x=&apos;0&apos; xlink:href=&apos;test.png&apos; y=&apos;0&apos;/>"));
+	EXPECT_TRUE(recorder.pageEquals("&lt;image x=&apos;0&apos; y=&apos;0&apos; width=&apos;72&apos; height=&apos;72&apos; xlink:href=&apos;test.png&apos;/>"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("img 10bp 20bp test2.png");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.pageEquals("&lt;image height=&apos;20&apos; width=&apos;10&apos; x=&apos;0&apos; xlink:href=&apos;test2.png&apos; y=&apos;0&apos;/>"));
+	EXPECT_TRUE(recorder.pageEquals("&lt;image x=&apos;0&apos; y=&apos;0&apos; width=&apos;10&apos; height=&apos;20&apos; xlink:href=&apos;test2.png&apos;/>"));
 }
 
 
