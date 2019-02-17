@@ -203,7 +203,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 	else if (prefix == "psfile=" || prefix == "PSfile=" || prefix == "pdffile=") {
 		if (_actions) {
 			StreamInputReader in(is);
-			const string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
+			const string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
 			map<string,string> attr;
 			in.parseAttributes(attr);
 			imgfile(prefix == "pdffile=" ? FileType::PDF : FileType::EPS, fname, attr);

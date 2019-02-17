@@ -216,13 +216,14 @@ TEST(StreamInputBufferTest, find) {
 
 
 TEST(StreamInputBufferTest, getString) {
-	istringstream iss("abcd efgh \"ijklm\"n abcdef 01234");
+	istringstream iss("abcd efgh \"ij'klm\"n abcdef '012\"34'xyz");
 	StreamInputBuffer buffer(iss);
 	BufferInputReader reader(buffer);
 	EXPECT_EQ(reader.getString(), "abcd");
 	EXPECT_EQ(reader.getString(), "efgh");
-	EXPECT_EQ(reader.getQuotedString('"'), "ijklm");
-	EXPECT_EQ(reader.getQuotedString('"'), "");
+	EXPECT_EQ(reader.getQuotedString("\""), "ij'klm");
+	EXPECT_EQ(reader.getQuotedString("\""), "");
 	EXPECT_EQ(reader.getString(4), "n ab");
 	EXPECT_EQ(reader.getQuotedString(0), "cdef");
+	EXPECT_EQ(reader.getQuotedString("\"'"), "012\"34");
 }
