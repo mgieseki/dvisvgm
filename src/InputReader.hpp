@@ -22,8 +22,8 @@
 #define INPUTREADER_HPP
 
 #include <istream>
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include "InputBuffer.hpp"
 
@@ -53,7 +53,7 @@ class InputReader {
 		virtual std::string getString (size_t n);
 		virtual std::string getString (const char *delim);
 		virtual std::string getLine ();
-		virtual int parseAttributes (std::unordered_map<std::string,std::string> &attr, char quotechar=0);
+		virtual int parseAttributes (std::map<std::string,std::string> &attr, char quotechar=0);
 		virtual operator bool () const {return !eof();}
 };
 

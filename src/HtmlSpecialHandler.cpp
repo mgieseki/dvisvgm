@@ -30,9 +30,9 @@ void HtmlSpecialHandler::preprocess (const string&, istream &is, SpecialActions 
 	StreamInputReader ir(is);
 	ir.skipSpace();
 	// collect page number and ID of named anchors
-	unordered_map<string,string> attribs;
+	map<string,string> attribs;
 	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
-		unordered_map<string,string>::iterator it;
+		map<string,string>::iterator it;
 		if ((it = attribs.find("name")) != attribs.end())
 			HyperlinkManager::instance().addNameAchor(it->second, actions.getCurrentPageNumber());
 		else if ((it = attribs.find("href")) != attribs.end())
@@ -45,8 +45,8 @@ bool HtmlSpecialHandler::process (const string&, istream &is, SpecialActions &ac
 	_active = true;
 	StreamInputReader ir(is);
 	ir.skipSpace();
-	unordered_map<string,string> attribs;
-	unordered_map<string,string>::iterator it;
+	map<string,string> attribs;
+	map<string,string>::iterator it;
 	if (ir.check("<a ") && ir.parseAttributes(attribs, '"') > 0) {
 		if ((it = attribs.find("href")) != attribs.end())   // <a href="URI">
 			HyperlinkManager::instance().createLink(it->second, actions);

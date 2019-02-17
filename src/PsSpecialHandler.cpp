@@ -204,7 +204,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		if (_actions) {
 			StreamInputReader in(is);
 			const string fname = in.getQuotedString(in.peek() == '"' ? '"' : 0);
-			unordered_map<string,string> attr;
+			map<string,string> attr;
 			in.parseAttributes(attr);
 			imgfile(prefix == "pdffile=" ? FileType::PDF : FileType::EPS, fname, attr);
 		}
@@ -266,7 +266,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
  *  @param[in] filetype type of file to process (EPS or PDF)
  *  @param[in] fname EPS/PDF file to be included
  *  @param[in] attr attributes given with psfile/pdffile special */
-void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const unordered_map<string,string> &attr) {
+void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const map<string,string> &attr) {
 	// prevent warning about missing image file "/dev/null" which is
 	// added by option "psfixbb" of the preview package
 	if (fname == "/dev/null")
@@ -279,7 +279,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const un
 		Message::wstream(true) << "file '" << fname << "' not found\n";
 		return;
 	}
-	unordered_map<string,string>::const_iterator it;
+	map<string,string>::const_iterator it;
 
 	// bounding box of EPS figure in PS point units (lower left and upper right corner)
 	double llx = (it = attr.find("llx")) != attr.end() ? stod(it->second) : 0;
