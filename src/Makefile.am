@@ -262,7 +262,7 @@ AM_CFLAGS = -Wall \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
-AM_CXXFLAGS = -Wall -Wnon-virtual-dtor -Wno-mismatched-tags \
+AM_CXXFLAGS = -Wall -Wnon-virtual-dtor \
 	-I$(dvisvgm_srcdir)/libs/clipper \
 	-I$(dvisvgm_srcdir)/libs/variant/include \
 	$(KPSE_CFLAGS) \
