@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	$("body").removeClass("preload");
+
 	$('.sample-img').hover(function() {
 		$(this).addClass('zoomed');
 	}, function() {

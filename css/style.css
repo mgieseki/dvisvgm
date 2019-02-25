@@ -129,18 +129,22 @@ footer a, footer a:hover {
 	background-color: #1a242f;
 }
 
+.preload * {
+	transition: none !important;
+}
+
 .github-corner svg {
-	fill: #1a242f;
 	color: white;
+	fill: #1a242f;
 	position: absolute;
 	top: 0;
 	border: 0;
 	right: 0;
-	transition: all 700ms;
+	transition: 700ms;
 }
 
 .github-corner svg:hover {
-	fill:#3f5973
+	fill: #3f5973
 }
 
 .github-corner:hover .octo-arm {
