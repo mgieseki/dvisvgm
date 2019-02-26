@@ -54,12 +54,12 @@ void DvisvgmSpecialHandler::preprocess (const string&, istream &is, SpecialActio
 
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	for (const Command &command : commands) {
-		if (command.name == cmdstr) {
-			ir.skipSpace();
-			(this->*command.handler)(ir);
-			return;
-		}
+	auto it = find_if(commands.begin(), commands.end(), [&](const Command &cmd) {
+		return cmd.name == cmdstr;
+	});
+	if (it != commands.end()) {
+		ir.skipSpace();
+		(this->*it->handler)(ir);
 	}
 }
 
@@ -133,12 +133,12 @@ bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialA
 	}};
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	for (const Command &command : commands) {
-		if (command.name == cmdstr) {
-			ir.skipSpace();
-			(this->*command.handler)(ir, actions);
-			return true;
-		}
+	auto it = find_if(commands.begin(), commands.end(), [&](const Command &cmd) {
+		return cmd.name == cmdstr;
+	});
+	if (it != commands.end()) {
+		ir.skipSpace();
+		(this->*it->handler)(ir, actions);
 	}
 	return true;
 }

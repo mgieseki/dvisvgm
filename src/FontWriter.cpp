@@ -39,21 +39,19 @@ const array<FontWriter::FontFormatInfo, 4> FontWriter::_formatInfos {{
 /** Returns the corresponding FontFormat for a given format name (e.g. "svg", "woff" etc.). */
 FontWriter::FontFormat FontWriter::toFontFormat (string formatstr) {
 	formatstr = util::tolower(formatstr);
-	for (const FontFormatInfo &info : _formatInfos) {
-		if (formatstr == info.formatstr_short)
-			return info.format;
-	}
-	return FontFormat::UNKNOWN;
+	auto it = find_if(_formatInfos.begin(), _formatInfos.end(), [&](const FontFormatInfo &info) {
+		return info.formatstr_short == formatstr;
+	});
+	return it != _formatInfos.end() ? it->format : FontFormat::UNKNOWN;
 }
 
 
 /** Returns the corresponding FontFormatInfo for a given FontFormat. */
 const FontWriter::FontFormatInfo* FontWriter::fontFormatInfo (FontFormat format) {
-	for (const FontFormatInfo &info : _formatInfos) {
-		if (format == info.format)
-			return &info;
-	}
-	return nullptr;
+	auto it = find_if(_formatInfos.begin(), _formatInfos.end(), [&](const FontFormatInfo &info) {
+		return info.format == format;
+	});
+	return it != _formatInfos.end() ? &(*it) : nullptr;
 }
 
 
