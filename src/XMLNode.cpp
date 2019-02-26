@@ -28,6 +28,8 @@
 
 using namespace std;
 
+bool XMLElementNode::WRITE_NEWLINES=true;
+
 
 XMLElementNode::XMLElementNode (const string &n) : _name(n) {
 }
@@ -208,13 +210,13 @@ ostream& XMLElementNode::write (ostream &os) const {
 		os << '>';
 		// Insert newlines around children except text nodes. According to the
 		// SVG specification, pure whitespace nodes are ignored by the SVG renderer.
-		if (!dynamic_cast<XMLTextNode*>(_children.front().get()))
+		if (WRITE_NEWLINES && !dynamic_cast<XMLTextNode*>(_children.front().get()))
 			os << '\n';
 		for (auto it=_children.begin(); it != _children.end(); ++it) {
 			(*it)->write(os);
 			if (!dynamic_cast<XMLTextNode*>(it->get())) {
 				auto next=it;
-				if (++next == _children.end() || !dynamic_cast<XMLTextNode*>(next->get()))
+				if (WRITE_NEWLINES && (++next == _children.end() || !dynamic_cast<XMLTextNode*>(next->get())))
 					os << '\n';
 			}
 		}
