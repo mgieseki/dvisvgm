@@ -157,6 +157,10 @@ footer a, footer a:hover {
 	40%, 80% {transform:rotate(10deg)}
 }
 
+@media only screen and (max-width: 767px) {
+	.github-corner {display: none;}
+}
+
 .rsslink {
 	text-align: right;
 	margin-bottom: -10px;
