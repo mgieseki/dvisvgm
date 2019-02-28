@@ -37,7 +37,8 @@ class InputReader {
 		virtual bool check (char c) const {return peek() == c;}
 		virtual bool check (const char *s, bool consume=true);
 		virtual void skip (size_t n);
-		virtual bool skipUntil (const char *s);
+		virtual bool skipUntil (const char *str);
+		virtual std::string readUntil (const char *str);
 		virtual int find (char c) const;
 		virtual void skipSpace ();
 		virtual int getInt ();
@@ -94,6 +95,7 @@ class StringMatcher {
 		StringMatcher (const std::string &pattern) : _charsRead(0) {setPattern(pattern);}
 		void setPattern (const std::string &pattern);
 		bool match (InputReader &ir);
+		std::string read (InputReader &ir);
 		size_t charsRead () const {return _charsRead;}
 
 	private:

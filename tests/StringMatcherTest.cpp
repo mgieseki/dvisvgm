@@ -30,6 +30,7 @@ TEST(StringMatcherTest, match1) {
 	StreamInputReader ir(iss);
 	EXPECT_FALSE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 0u);
+	EXPECT_LT(ir.peek(), 0);
 }
 
 
@@ -39,6 +40,7 @@ TEST(StringMatcherTest, match2) {
 	StreamInputReader ir(iss);
 	EXPECT_TRUE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 1u);
+	EXPECT_EQ(ir.peek(), 'b');
 }
 
 
@@ -48,6 +50,7 @@ TEST(StringMatcherTest, match3) {
 	StreamInputReader ir(iss);
 	EXPECT_FALSE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 15u);
+	EXPECT_LT(ir.peek(), 0);
 }
 
 
@@ -57,14 +60,17 @@ TEST(StringMatcherTest, match4) {
 	StreamInputReader ir(iss);
 	EXPECT_TRUE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_EQ(ir.peek(), 'x');
 	iss.clear();
 	iss.str("abcpatpattern");
 	EXPECT_TRUE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_LT(ir.peek(), 0);
 	iss.clear();
 	iss.str("pattern");
 	EXPECT_TRUE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 7u);
+	EXPECT_LT(ir.peek(), 0);
 }
 
 
@@ -74,4 +80,65 @@ TEST(StringMatcherTest, match5) {
 	StreamInputReader ir(iss);
 	EXPECT_TRUE(matcher.match(ir));
 	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_EQ(ir.peek(), 'x');
+}
+
+
+TEST(StringMatcherTest, read1) {
+	istringstream iss;
+	StringMatcher matcher("pattern");
+	StreamInputReader ir(iss);
+	EXPECT_TRUE(matcher.read(ir).empty());
+	EXPECT_EQ(matcher.charsRead(), 0u);
+	EXPECT_LT(ir.peek(), 0);
+}
+
+
+TEST(StringMatcherTest, read2) {
+	istringstream iss("abcpatpatternxyz");
+	StringMatcher matcher("");
+	StreamInputReader ir(iss);
+	EXPECT_EQ(matcher.read(ir), "a");
+	EXPECT_EQ(matcher.charsRead(), 1u);
+	EXPECT_EQ(ir.peek(), 'b');
+}
+
+
+TEST(StringMatcherTest, read3) {
+	istringstream iss("abcpatatternxyz");
+	StringMatcher matcher("pattern");
+	StreamInputReader ir(iss);
+	EXPECT_EQ(matcher.read(ir), "abcpatatternxyz");
+	EXPECT_EQ(matcher.charsRead(), 15u);
+	EXPECT_LT(ir.peek(), 0);
+}
+
+
+TEST(StringMatcherTest, read4) {
+	istringstream iss("abcpatpatternxyz");
+	StringMatcher matcher("pattern");
+	StreamInputReader ir(iss);
+	EXPECT_EQ(matcher.read(ir), "abcpatpattern");
+	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_EQ(ir.peek(), 'x');
+	iss.clear();
+	iss.str("abcpatpattern");
+	EXPECT_EQ(matcher.read(ir), "abcpatpattern");
+	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_LT(ir.peek(), 0);
+	iss.clear();
+	iss.str("pattern");
+	EXPECT_EQ(matcher.read(ir), "pattern");
+	EXPECT_EQ(matcher.charsRead(), 7u);
+	EXPECT_LT(ir.peek(), 0);
+}
+
+
+TEST(StringMatcherTest, read5) {
+	istringstream iss("abcpatpatternxyz");
+	StringMatcher matcher("pattern");
+	StreamInputReader ir(iss);
+	EXPECT_EQ(matcher.read(ir), "abcpatpattern");
+	EXPECT_EQ(matcher.charsRead(), 13u);
+	EXPECT_EQ(ir.peek(), 'x');
 }
