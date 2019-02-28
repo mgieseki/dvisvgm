@@ -21,6 +21,7 @@
 #ifndef DVISVGMSPECIALHANDLER_HPP
 #define DVISVGMSPECIALHANDLER_HPP
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -28,6 +29,7 @@
 
 class InputReader;
 class SpecialActions;
+class XMLNode;
 
 class DvisvgmSpecialHandler : public SpecialHandler {
 	using StringVector = std::vector<std::string>;
@@ -42,6 +44,7 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 
 	protected:
+		void createSVGPageNodes (InputReader &ir, SpecialActions &actions);
 		void preprocessRaw (InputReader &ir);
 		void preprocessRawDef (InputReader &ir);
 		void preprocessRawSet (InputReader &ir);
@@ -60,7 +63,8 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 	private:
 		MacroMap _macros;
 		MacroMap::iterator _currentMacro;
-		int _nestingLevel;
+		int _nestingLevel;  ///< nesting depth of rawset specials
+		std::vector<std::string> _elemStack; ///< stack holding the names of elements created by raw special
 };
 
 #endif

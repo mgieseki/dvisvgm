@@ -186,13 +186,87 @@ static void expand_constants (string &str, SpecialActions &actions) {
 }
 
 
+/** Parses the XML code read by the given input reader, creates corresponding XML nodes and
+ *  adds the to the SVG page group. It stops reading as soon as EOF is reached.
+ *  The XML data must represent a single or multiple syntactically complete XML parts, like
+ *  opening/closing tags, comments, or CDATA blocks. These must not be split and distributed
+ *  over several 'raw' statements. Elements can be split but element tags can't.
+ *  Example: "<g transform=" is invalid, "<g transform='scale(2,3)'>" is ok.
+ *  @param[in,out] ir reader delivering the characters of the raw XML fragment to parse
+ *  @param[in] actions object providing the SVG tree functions */
+void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions &actions) {
+	while (!ir.eof()) {
+		ir.skipSpace();
+		if (ir.peek() != '<') {  // text node
+			string xml = ir.getString("<");
+			actions.appendToPage(util::make_unique<XMLTextNode>(xml));
+		}
+		else {
+			ir.get();  // skip '<'
+			if (isalpha(ir.peek())) {  // opening XML tag
+				string name = ir.getString(">/ \t");
+				ir.skipSpace();
+				auto elemNode = util::make_unique<XMLElementNode>(name);
+				map<string, string> attribs;
+				if (ir.parseAttributes(attribs, "\"'")) {
+					for (auto attrpair : attribs)
+						elemNode->addAttribute(attrpair.first, attrpair.second);
+				}
+				ir.skipSpace();
+				if (ir.peek() == '>') { // end of opening tag
+					ir.get();
+					_elemStack.push_back(name);
+					actions.pushContextElement(std::move(elemNode));
+				}
+				else if (ir.check("/>"))  // end of empty element tag
+					actions.appendToPage(std::move(elemNode));
+				else
+					throw SpecialException("'>' or '/>' expected at end of opening XML tag");
+			}
+			else if (ir.peek() == '/') {  // closing tag
+				ir.get();
+				string name = ir.getString("> \t");
+				ir.skipSpace();
+				if (ir.get() != '>')
+					throw SpecialException("'>' expected at end of closing XML tag");
+				if (_elemStack.empty())
+					throw SpecialException("spurious closing tag </" + name + ">");
+				if (_elemStack.back() != name)
+					throw SpecialException("expected </" + name + "> but found </" + _elemStack.back() + ">");
+				actions.popContextElement();
+				_elemStack.pop_back();
+			}
+			else {
+				// for now, create text nodes for CDATA, comments, and processing instructions
+				// they should not be split over several raw specials
+				string chunk;
+				if (ir.check("![CDATA["))
+					chunk = "<![CDATA[" + ir.readUntil("]]>");
+				else if (ir.check("!--"))
+					chunk = "<!--" + ir.readUntil("-->");
+				else if (ir.check("?"))
+					chunk = "<?" + ir.readUntil("?>");
+				else
+					chunk = ir.getString("<");
+				actions.appendToPage(util::make_unique<XMLTextNode>(chunk));
+			}
+		}
+	}
+}
+
+
+/** Processes raw SVG fragments from the input stream. The SVG data must represent
+ *  a single or multiple syntactically complete XML parts, like opening/closing tags,
+ *  comments, or CDATA blocks. These must not be split and distributed over several
+ *  'raw' statements. Elements can be split but element tags can't.
+ *  Example: "<g transform=" is invalid, "<g transform='scale(2,3)'>" is ok. */
 void DvisvgmSpecialHandler::processRaw (InputReader &ir, SpecialActions &actions) {
 	if (_nestingLevel == 0) {
-		string str = ir.getLine();
-		if (!str.empty()) {
-			expand_constants(str, actions);
-			actions.appendToPage(util::make_unique<XMLTextNode>(str));
-		}
+		string xml = ir.getLine();
+		expand_constants(xml, actions);
+		StringInputBuffer ib(xml);
+		BufferInputReader stringReader(ib);
+		createSVGPageNodes(stringReader, actions);
 	}
 }
 
@@ -233,8 +307,11 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 		string def = defstr.substr(1);
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
-			if (type == 'P')
-				actions.appendToPage(util::make_unique<XMLTextNode>(def));
+			if (type == 'P') {
+				StringInputBuffer ib(def);
+				BufferInputReader stringReader(ib);
+				createSVGPageNodes(stringReader, actions);
+			}
 			else {          // type == 'D'
 				actions.appendToDefs(util::make_unique<XMLTextNode>(def));
 				type = 'L';  // locked
@@ -351,6 +428,7 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 
 
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions&) {
+	_elemStack.clear();
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;
 		for (string &str : vec) {

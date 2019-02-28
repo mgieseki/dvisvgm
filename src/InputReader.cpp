@@ -295,7 +295,7 @@ char InputReader::getPunct () {
 }
 
 
-/** Reads a string optionally delimited by a given quotation character.
+/** Reads a string optionally enclosed by a given quotation character.
  *  Before reading the string, all leading whitespace is skipped. Then, the function checks
  *  for one of the the given quotation characters. If it is found, all characters until the
  *  second appearance of the same quotation char are appended to the result. Otherwise, an
