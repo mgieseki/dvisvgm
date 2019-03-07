@@ -272,10 +272,12 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	if (fname == "/dev/null")
 		return;
 
-	const char *filepath = FileFinder::instance().lookup(fname, false);
-	if (!filepath && FileSystem::exists(fname))
-		filepath = fname.c_str();
-	if (!filepath) {
+	string filepath;
+	if (const char *path = FileFinder::instance().lookup(fname, false))
+		filepath = FileSystem::adaptPathSeperators(path);
+	if ((filepath.empty() || !FileSystem::exists(filepath)) && FileSystem::exists(fname))
+		filepath = fname;
+	if (filepath.empty()) {
 		Message::wstream(true) << "file '" << fname << "' not found\n";
 		return;
 	}
@@ -341,7 +343,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		"[1 0 0 -1 0 0] setmatrix"             // don't apply outer PS transformations
 		"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
 		"/LastPage "+to_string(pageno)+" def"  // set number of last page to convert (PDF only)
-		"(" + string(filepath) + ")run "       // execute file content
+		"("+ filepath + ")run "                // execute file content
 		"@endspecial "                         // leave special environment
 	);
 	if (!groupNode->empty()) {       // has anything been drawn?
