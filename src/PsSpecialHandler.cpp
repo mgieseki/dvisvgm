@@ -335,25 +335,22 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setY(0);
 	moveToDVIPos();
 
-	auto groupNode = util::make_unique<XMLElementNode>("g");  // append following elements to this group
+	auto groupNode = util::make_unique<XMLElementNode>("g"); // put SVG nodes created from the EPS/PDF file in this group
 	_xmlnode = groupNode.get();
 	_psi.execute(
 		"\n@beginspecial @setspecial"          // enter special environment
-		"/setpagedevice{@setpagedevice}def"    // activate processing of operator "setpagedevice"
-		"[1 0 0 -1 0 0] setmatrix"             // don't apply outer PS transformations
+		"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
+		"matrix setmatrix"                     // don't apply outer PS transformations
 		"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
 		"/LastPage "+to_string(pageno)+" def"  // set number of last page to convert (PDF only)
 		"("+ filepath + ")run "                // execute file content
 		"@endspecial "                         // leave special environment
 	);
-	if (!groupNode->empty()) {       // has anything been drawn?
+	if (!groupNode->empty()) {  // has anything been drawn?
 		Matrix matrix(1);
-		if (filetype == FileType::PDF)
-			matrix.translate(-llx, -lly).scale(1, -1); //.translate(0, lly);  // flip vertically
-		else
-			matrix.translate(-llx, lly);
-		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);
-		matrix.translate(x+hoffset, y-voffset); // move image to current DVI position
+		matrix.translate(-llx, -lly).scale(1, -1);  // flip vertically to adapt orientation of y-coordinates
+		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
+		matrix.translate(x+hoffset, y-voffset);     // move image to current DVI position
 		matrix.rmultiply(_actions->getMatrix());
 		if (!matrix.isIdentity())
 			groupNode->addAttribute("transform", matrix.getSVG());
