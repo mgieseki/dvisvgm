@@ -1,3 +1,12 @@
+dvisvgm-2.6.3 (2019-03-09)
+- create short RGB hex values for color attributes if possible
+- fixed rejection of paper formats, like A4, by option --bbox
+- fixed incomplete adaption of vertical orientation when processing
+  EPS/PDF files
+- fixed handling of backslashes in EPS/PDF file paths (Windows only)
+- updated bundled Google Test library to version 1.8.1
+- some code refactorings and improvements of the build system
+
 dvisvgm-2.6.2 (2019-01-23)
 - fixed scaling of line properties in PS operator 'grestore'
 - fixed handling of PS operators 'charpath' and 'show' which may
