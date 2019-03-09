@@ -348,10 +348,17 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	);
 	if (!groupNode->empty()) {  // has anything been drawn?
 		Matrix matrix(1);
-		matrix.translate(-llx, -lly).scale(1, -1);  // flip vertically to adapt orientation of y-coordinates
-		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
+		matrix.scale(sx, -sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
 		matrix.translate(x+hoffset, y-voffset);     // move image to current DVI position
 		matrix.rmultiply(_actions->getMatrix());
+
+		// update bounding box
+		BoundingBox bbox(0, 0, urx-llx, ury-lly);
+		bbox.transform(matrix);
+		_actions->embed(bbox);
+
+		// insert group containing SVG nodes created from image
+		matrix.lmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		if (!matrix.isIdentity())
 			groupNode->addAttribute("transform", matrix.getSVG());
 		_actions->appendToPage(std::move(groupNode));
@@ -362,15 +369,6 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setX(x);
 	_actions->setY(y);
 	moveToDVIPos();
-
-	// update bounding box
-	BoundingBox bbox(0, 0, urx-llx, ury-lly);
-	Matrix matrix(1);
-	matrix.scale(sx, -sy).rotate(-angle).scale(hscale/100, vscale/100);
-	matrix.translate(x+hoffset, y-voffset);
-	matrix.rmultiply(_actions->getMatrix());
-	bbox.transform(matrix);
-	_actions->embed(bbox);
 }
 
 
