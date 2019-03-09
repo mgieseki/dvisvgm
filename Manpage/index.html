@@ -271,11 +271,13 @@ below for further information.
 <strong>--colornames</strong>
 </dt>
 <dd><p>
-By default, dvisvgm exclusively uses RGB values of the form <em>#RRGGBB</em> to represent colors in
-the SVG file. According to the SVG standard, it’s also possible to use color names (like <code>black</code>
-and <code>darkblue</code>) for a limited number of predefined colors. In order to apply these color names
-rather than their RGB values, call dvisvgm with option <strong>--colornames</strong>. All colors without an
-SVG color name will still be represented by RGB values.
+By default, dvisvgm exclusively uses RGB values of the form <em>#RRGGBB</em> or <em>#RGB</em> to represent
+colors in the SVG file. The latter is a short form for colors whose RGB components each
+consist of two identical hex digits, e.g. <em>#123</em> equals <em>#112233</em>.
+According to the SVG standard, it’s also possible to use color names (like <code>black</code> and <code>darkblue</code>)
+for a limited number of predefined colors. In order to apply these color names rather than their
+RGB values, call dvisvgm with option <strong>--colornames</strong>. All colors without an SVG color name will
+still be represented by RGB values.
 </p></dd>
 </div>
 <a name="opt-comments" class="linktarget"></a><div class="hdlist1">
@@ -1444,9 +1446,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.6.2</div>
+   <div class="col-md-6">Version 2.6.3</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-01-23</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-03-09</span>
    </div>
 </div>
 </div>

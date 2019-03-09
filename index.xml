@@ -4,8 +4,28 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 23 Jan 2019 11:00:34 +0100</pubDate>
+    <pubDate>Sat, 09 Mar 2019 14:47:32 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.6.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#cc9ed6a8f3a0ef7ffdcf7718852ab870</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>cc9ed6a8f3a0ef7ffdcf7718852ab870</guid>
+      <description>
+        <![CDATA[<p>This is mainly a bugfix release with the following changes:</p>
+
+<ul>
+<li><em>dvisvgm</em> now creates short, <a href="https://www.w3.org/TR/css-color-3/#rgb-color">three-digit RGB hex values</a> for color attributes if possible, e.g. <code>#123</code> instead of <code>#112233</code>.</li>
+<li>Fixed the rejection of paper formats, like <code>A4</code>, given as argument to option <code>--bbox</code>.</li>
+<li>Fixed the adaption of the vertical orientation when processing EPS/PDF files.</li>
+<li>Fixed the handling of backslashes in EPS/PDF file paths (Windows only).</li>
+<li>Updated the bundled <a href="https://github.com/google/googletest">Google Test</a> library to version 1.8.1.</li>
+<li>Some code refactorings and improvements of the build system.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.6.2 has been released</title>
@@ -218,7 +238,7 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     
     <item>
       <title>Website moved to the new domain _dvisvgm.de_</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#c9b07d478e839e780fccf01ce5f698bc</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#c9b07d478e839e780fccf01ce5f698bc</link>
       <pubDate>Fri, 06 Jul 2018 16:06:57 +0200</pubDate>
       <guid>c9b07d478e839e780fccf01ce5f698bc</guid>
       <description>
@@ -420,7 +440,7 @@ zlib:        1.2.11</code></pre></div>
     
     <item>
       <title>dvisvgm 2.2.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#595f907cf14e9865ceffbd91fa3e2f10</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#595f907cf14e9865ceffbd91fa3e2f10</link>
       <pubDate>Tue, 12 Dec 2017 20:03:01 +0200</pubDate>
       <guid>595f907cf14e9865ceffbd91fa3e2f10</guid>
       <description>
@@ -484,20 +504,6 @@ zlib:        1.2.11</code></pre></div>
 <li>Fixed transformation issue in computation of <code>psfile</code> position (<a href="https://github.com/mgieseki/dvisvgm/issues/70">issue #70</a>).</li>
 <li>Updated the bundled brotli, woff2, and xxHash libraries.</li>
 <li>Several code refactorings and improvements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.1.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#e86e61a3431d09a388c481df9dfc7db0</link>
-      <pubDate>Mon, 20 Feb 2017 20:13:00 +0200</pubDate>
-      <guid>e86e61a3431d09a388c481df9dfc7db0</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Fixed build failures of the bundled FontForge library on Solaris 10.</li>
-<li>Increased code portability.</li>
 </ul>
 ]]>
       </description>
