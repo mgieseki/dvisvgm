@@ -83,6 +83,20 @@ TEST(StreamInputBufferTest, skip) {
 }
 
 
+TEST(StreamInputBufferTest, readUntil) {
+	istringstream iss("abcdefghijklmnopqrstuvwxyz");
+	StreamInputBuffer buffer(iss, 10);
+	BufferInputReader in(buffer);
+	EXPECT_EQ(in.readUntil("ijk"), "abcdefghijk");
+	EXPECT_EQ(in.peek(), 'l');
+	EXPECT_EQ(in.readUntil("q"), "lmnopq");
+	EXPECT_EQ(in.peek(), 'r');
+	EXPECT_EQ(in.readUntil("X"), "rstuvwxyz");
+	EXPECT_LT(in.peek(), 0);
+	EXPECT_TRUE(in.eof());
+}
+
+
 TEST(StreamInputBufferTest, parseInt) {
 	istringstream iss("1234,-5,+6,10.-");
 	StreamInputBuffer buffer(iss, 10);

@@ -47,6 +47,7 @@ class XMLElementNode : public XMLNode {
 			std::string value;
 		};
 		using ChildList = std::deque<std::unique_ptr<XMLNode>>;
+		static bool WRITE_NEWLINES;  ///< insert line breaks after element tags
 
 	public:
 		XMLElementNode (const std::string &name);
@@ -70,6 +71,7 @@ class XMLElementNode : public XMLNode {
 		bool empty () const                  {return _children.empty();}
 		const ChildList& children () const   {return _children;}
 		const std::string& getName () const  {return _name;}
+
 	protected:
 		Attribute* getAttribute (const std::string &name);
 		const Attribute* getAttribute (const std::string &name) const;

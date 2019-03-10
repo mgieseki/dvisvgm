@@ -41,11 +41,15 @@ void StringMatcher::setPattern (const string &pattern) {
 }
 
 
+/** Reads characters from an input stream until the pattern string or EOF is reached.
+ *  The matching string is read too if found. An empty pattern matches any character, i.e.
+ *  reading stops after the first character.
+ *  @return true if the pattern was found */
 bool StringMatcher::match (InputReader &ir) {
-	_charsRead = 0;
 	int c;
 	int i=0;
 	const int len = static_cast<int>(_pattern.length());
+	_charsRead = 0;
 	while ((c = ir.get()) >= 0) {
 		_charsRead++;
 		while (i >= 0 && c != _pattern[i])
@@ -54,6 +58,25 @@ bool StringMatcher::match (InputReader &ir) {
 			return true;
 	}
 	return false;
+}
+
+
+/** Reads characters from an input stream until the pattern string or EOF is reached
+ *  and returns them as a string. The matching string is also appended to the returned string. */
+string StringMatcher::read (InputReader &ir) {
+	string ret;
+	int c;
+	int i=0;
+	const int len = static_cast<int>(_pattern.length());
+	while ((c = ir.get()) >= 0) {
+		ret += c;
+		while (i >= 0 && c != _pattern[i])
+			i = _borders[i];
+		if (++i == len)
+			break;
+	}
+	_charsRead = ret.length();
+	return ret;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -73,12 +96,23 @@ void InputReader::skipSpace () {
 }
 
 
-/** Tries to find a given string and skips all characters preceding that string.
+/** Tries to find a given string and skips all characters preceding that string. If
+ *  the string can't be found, all characters until EOF are skipped.
  *  @param[in] str string to look for (must not be longer than the maximal buffer size)
- *  @return true if s was found */
+ *  @return true if str was found */
 bool InputReader::skipUntil (const char *str) {
 	StringMatcher matcher(str);
 	return matcher.match(*this);
+}
+
+
+/** Tries to find a given string and returns all characters including that string. If
+ *  the string can't be found, all characters until EOF are read.
+ *  @param[in] str string to look for (must not be longer than the maximal buffer size)
+ *  @return the read characters */
+string InputReader::readUntil (const char *str) {
+	StringMatcher matcher(str);
+	return matcher.read(*this);
 }
 
 
@@ -261,7 +295,7 @@ char InputReader::getPunct () {
 }
 
 
-/** Reads a string optionally delimited by a given quotation character.
+/** Reads a string optionally enclosed by a given quotation character.
  *  Before reading the string, all leading whitespace is skipped. Then, the function checks
  *  for one of the the given quotation characters. If it is found, all characters until the
  *  second appearance of the same quotation char are appended to the result. Otherwise, an
