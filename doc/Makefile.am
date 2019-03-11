@@ -57,9 +57,12 @@ dvisvgm-article.xml: dvisvgm.txt
 	rm $@.tmp
 	sed -i "s/{VERSION}/@VERSION@/" $@
 
-dvisvgm.txt: dvisvgm.txt.in
+dvisvgm.txt: dvisvgm.txt.in ../configure.ac
 	sed -e 's/@VERSION[@]/@VERSION@/g' -e 's/@PACKAGE_BUGREPORT[@]/@PACKAGE_BUGREPORT@/g' $< >$@
-	touch -r $< $@
+	if [ $< -nt ../configure.ac ]; \
+	then touch -r $< $@; \
+	else touch -r ../configure.ac $@; \
+	fi
 
 epub: dvisvgm.epub
 html: dvisvgm.html
