@@ -29,13 +29,13 @@ using namespace std;
 
 
 TEST(XMLNodeTest, appendElement) {
-	XMLElementNode root("root");
-	root.append(util::make_unique<XMLElementNode>("child1"));
-	root.append(util::make_unique<XMLElementNode>("child2"));
+	XMLElement root("root");
+	root.append(util::make_unique<XMLElement>("child1"));
+	root.append(util::make_unique<XMLElement>("child2"));
 	EXPECT_EQ(root.children().size(), 2u);
 	EXPECT_FALSE(root.empty());
-	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front().get());
-	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back().get());
+	XMLElement *child1 = dynamic_cast<XMLElement*>(root.children().front().get());
+	XMLElement *child2 = dynamic_cast<XMLElement*>(root.children().back().get());
 	ASSERT_NE(child1, nullptr);
 	ASSERT_NE(child2, nullptr);
 	EXPECT_EQ(child1->getName(), "child1");
@@ -46,12 +46,12 @@ TEST(XMLNodeTest, appendElement) {
 
 
 TEST(XMLNodeTest, prependElement) {
-	XMLElementNode root("root");
-	root.prepend(util::make_unique<XMLElementNode>("child1"));
-	root.prepend(util::make_unique<XMLElementNode>("child2"));
+	XMLElement root("root");
+	root.prepend(util::make_unique<XMLElement>("child1"));
+	root.prepend(util::make_unique<XMLElement>("child2"));
 	EXPECT_EQ(root.children().size(), 2u);
-	XMLElementNode *child1 = dynamic_cast<XMLElementNode*>(root.children().front().get());
-	XMLElementNode *child2 = dynamic_cast<XMLElementNode*>(root.children().back().get());
+	XMLElement *child1 = dynamic_cast<XMLElement*>(root.children().front().get());
+	XMLElement *child2 = dynamic_cast<XMLElement*>(root.children().back().get());
 	ASSERT_NE(child1, nullptr);
 	ASSERT_NE(child2, nullptr);
 	EXPECT_EQ(child1->getName(), "child2");
@@ -60,34 +60,34 @@ TEST(XMLNodeTest, prependElement) {
 
 
 TEST(XMLNodeTest, appendText) {
-	XMLElementNode root("root");
-	root.append(util::make_unique<XMLTextNode>("first string"));
+	XMLElement root("root");
+	root.append(util::make_unique<XMLText>("first string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	XMLTextNode *lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
+	XMLText *lastChild = dynamic_cast<XMLText*>(root.children().back().get());
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string");
 
-	root.append(util::make_unique<XMLTextNode>(",second string"));
+	root.append(util::make_unique<XMLText>(",second string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
+	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string,second string");
 
 	root.append(",third string");
 	EXPECT_EQ(root.children().size(), 1u);
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
+	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string,second string,third string");
 
-	root.append(util::make_unique<XMLElementNode>("separator"));
+	root.append(util::make_unique<XMLElement>("separator"));
 	root.append(",fourth string");
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
+	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), ",fourth string");
 
-	root.append(util::make_unique<XMLElementNode>("separator"));
-	root.append(util::make_unique<XMLTextNode>(",fifth string"));
-	lastChild = dynamic_cast<XMLTextNode*>(root.children().back().get());
+	root.append(util::make_unique<XMLElement>("separator"));
+	root.append(util::make_unique<XMLText>(",fifth string"));
+	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), ",fifth string");
 
@@ -97,29 +97,29 @@ TEST(XMLNodeTest, appendText) {
 
 
 TEST(XMLNodeTest, prependText) {
-	XMLElementNode root("root");
-	root.prepend(util::make_unique<XMLTextNode>("first string"));
+	XMLElement root("root");
+	root.prepend(util::make_unique<XMLText>("first string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	XMLTextNode *firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
+	XMLText *firstChild = dynamic_cast<XMLText*>(root.children().front().get());
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "first string");
 
-	root.prepend(util::make_unique<XMLTextNode>("second string,"));
+	root.prepend(util::make_unique<XMLText>("second string,"));
 	EXPECT_EQ(root.children().size(), 1u);
-	firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
+	firstChild = dynamic_cast<XMLText*>(root.children().front().get());
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "second string,first string");
 
-	root.prepend(util::make_unique<XMLElementNode>("separator"));
-	root.prepend(util::make_unique<XMLTextNode>("third string,"));
-	firstChild = dynamic_cast<XMLTextNode*>(root.children().front().get());
+	root.prepend(util::make_unique<XMLElement>("separator"));
+	root.prepend(util::make_unique<XMLText>("third string,"));
+	firstChild = dynamic_cast<XMLText*>(root.children().front().get());
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "third string,");
 }
 
 
 TEST(XMLNodeTest, attributes) {
-	XMLElementNode root("root");
+	XMLElement root("root");
 	root.addAttribute("string", "text");
 	root.addAttribute("integer", 42);
 	root.addAttribute("double", 42.24);
@@ -136,12 +136,12 @@ TEST(XMLNodeTest, attributes) {
 
 
 TEST(XMLNodeTest, clone) {
-	XMLElementNode root ("root");
+	XMLElement root ("root");
 	root.addAttribute("string", "text");
 	root.addAttribute("integer", 42);
 	root.addAttribute("double", 42.24);
 	root.append("text");
-	unique_ptr<XMLElementNode> clone = util::static_unique_ptr_cast<XMLElementNode>(root.clone());
+	unique_ptr<XMLElement> clone = util::static_unique_ptr_cast<XMLElement>(root.clone());
 	EXPECT_EQ(clone->children().size(), 1u);
 	EXPECT_STREQ(clone->getAttributeValue("string"), "text");
 	EXPECT_STREQ(clone->getAttributeValue("integer"), "42");
@@ -150,23 +150,23 @@ TEST(XMLNodeTest, clone) {
 
 
 TEST(XMLNodeTest, insertBefore) {
-	XMLElementNode root("root");
-	auto child1 = util::make_unique<XMLElementNode>("child1");
-	auto child2 = util::make_unique<XMLElementNode>("child2");
+	XMLElement root("root");
+	auto child1 = util::make_unique<XMLElement>("child1");
+	auto child2 = util::make_unique<XMLElement>("child2");
 	XMLNode* child1Ptr = root.append(std::move(child1));
 	XMLNode* child2Ptr = root.append(std::move(child2));
-	auto node = util::make_unique<XMLElementNode>("node");
-	EXPECT_FALSE(root.insertBefore(util::make_unique<XMLElementNode>("dummy"), node.get()));
+	auto node = util::make_unique<XMLElement>("node");
+	EXPECT_FALSE(root.insertBefore(util::make_unique<XMLElement>("dummy"), node.get()));
 	EXPECT_EQ(root.children().size(), 2u);
-	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElementNode>("child3"), child1Ptr));
+	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElement>("child3"), child1Ptr));
 	EXPECT_EQ(root.children().size(), 3u);
-	XMLElementNode *child = dynamic_cast<XMLElementNode*>(root.children().front().get());
+	XMLElement *child = dynamic_cast<XMLElement*>(root.children().front().get());
 	EXPECT_EQ(child->getName(), "child3");
-	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElementNode>("child4"), child2Ptr));
+	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElement>("child4"), child2Ptr));
 	const char *names[] = {"child3", "child1", "child4", "child2"};
 	const char **p = names;
 	for (const auto &node : root.children()) {
-		XMLElementNode *elem = dynamic_cast<XMLElementNode*>(node.get());
+		XMLElement *elem = dynamic_cast<XMLElement*>(node.get());
 		ASSERT_NE(elem, nullptr);
 		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
 	}
@@ -174,21 +174,21 @@ TEST(XMLNodeTest, insertBefore) {
 
 
 TEST(XMLNodeTest, insertAfter) {
-	XMLElementNode root("root");
-	auto child1 = util::make_unique<XMLElementNode>("child1");
-	auto child2 = util::make_unique<XMLElementNode>("child2");
+	XMLElement root("root");
+	auto child1 = util::make_unique<XMLElement>("child1");
+	auto child2 = util::make_unique<XMLElement>("child2");
 	XMLNode *child1Ptr = root.append(std::move(child1));
 	XMLNode *child2Ptr =root.append(std::move(child2));
-	auto node = util::make_unique<XMLElementNode>("node");
-	EXPECT_FALSE(root.insertAfter(util::make_unique<XMLElementNode>("dummy"), node.get()));
+	auto node = util::make_unique<XMLElement>("node");
+	EXPECT_FALSE(root.insertAfter(util::make_unique<XMLElement>("dummy"), node.get()));
 	EXPECT_EQ(root.children().size(), 2u);
-	EXPECT_TRUE(root.insertAfter(util::make_unique<XMLElementNode>("child3"), child1Ptr));
-	EXPECT_TRUE(root.insertAfter(util::make_unique<XMLElementNode>("child4"), child2Ptr));
+	EXPECT_TRUE(root.insertAfter(util::make_unique<XMLElement>("child3"), child1Ptr));
+	EXPECT_TRUE(root.insertAfter(util::make_unique<XMLElement>("child4"), child2Ptr));
 	EXPECT_EQ(root.children().size(), 4u);
 	const char *names[] = {"child1", "child3", "child2", "child4"};
 	const char **p = names;
 	for (const auto &node : root.children()) {
-		XMLElementNode *elem = dynamic_cast<XMLElementNode*>(node.get());
+		XMLElement *elem = dynamic_cast<XMLElement*>(node.get());
 		ASSERT_NE(elem, nullptr);
 		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
 	}
@@ -196,53 +196,53 @@ TEST(XMLNodeTest, insertAfter) {
 
 
 TEST(XMLNodeTest, getDescendants) {
-	XMLElementNode root("root");
-	auto child1 = util::make_unique<XMLElementNode>("child");
-	auto child2 = util::make_unique<XMLElementNode>("childX");
-	auto child3 = util::make_unique<XMLElementNode>("child");
-	auto child4 = util::make_unique<XMLElementNode>("child");
+	XMLElement root("root");
+	auto child1 = util::make_unique<XMLElement>("child");
+	auto child2 = util::make_unique<XMLElement>("childX");
+	auto child3 = util::make_unique<XMLElement>("child");
+	auto child4 = util::make_unique<XMLElement>("child");
 	child1->addAttribute("attr", "value");
 	child2->addAttribute("attr", "value");
 	child3->addAttribute("attr", "value");
 	child3->append("text");
-	XMLElementNode *child3Ptr = static_cast<XMLElementNode*>(child2->append(std::move(child3)));
-	XMLElementNode *child2Ptr = static_cast<XMLElementNode*>(child1->append(std::move(child2)));
-	XMLElementNode *child1Ptr = static_cast<XMLElementNode*>(root.append(std::move(child1)));
-	XMLElementNode *child4Ptr = static_cast<XMLElementNode*>(root.append(std::move(child4)));
-	vector<XMLElementNode*> elements;
+	XMLElement *child3Ptr = static_cast<XMLElement*>(child2->append(std::move(child3)));
+	XMLElement *child2Ptr = static_cast<XMLElement*>(child1->append(std::move(child2)));
+	XMLElement *child1Ptr = static_cast<XMLElement*>(root.append(std::move(child1)));
+	XMLElement *child4Ptr = static_cast<XMLElement*>(root.append(std::move(child4)));
+	vector<XMLElement*> elements;
 	root.getDescendants("child", nullptr, elements);
 	EXPECT_EQ(elements.size(), 3u);
 	{
-		XMLElementNode *nodes[] = {child1Ptr, child3Ptr, child4Ptr};
-		XMLElementNode **p = nodes;
-		for (const XMLElementNode *elem : elements)
+		XMLElement *nodes[] = {child1Ptr, child3Ptr, child4Ptr};
+		XMLElement **p = nodes;
+		for (const XMLElement *elem : elements)
 			EXPECT_EQ(elem, *p++);
 	}{
 		elements.clear();
 		root.getDescendants("child", "attr", elements);
 		EXPECT_EQ(elements.size(), 2u);
-		XMLElementNode *nodes[] = {child1Ptr, child3Ptr};
-		XMLElementNode **p = nodes;
-		for (const XMLElementNode *elem : elements)
+		XMLElement *nodes[] = {child1Ptr, child3Ptr};
+		XMLElement **p = nodes;
+		for (const XMLElement *elem : elements)
 			EXPECT_EQ(elem, *p++);
 	}{
 		elements.clear();
 		root.getDescendants(nullptr, "attr", elements);
 		EXPECT_EQ(elements.size(), 3u);
-		XMLElementNode *nodes[] = {child1Ptr, child2Ptr, child3Ptr};
-		XMLElementNode **p = nodes;
-		for (const XMLElementNode *elem : elements)
+		XMLElement *nodes[] = {child1Ptr, child2Ptr, child3Ptr};
+		XMLElement **p = nodes;
+		for (const XMLElement *elem : elements)
 			EXPECT_EQ(elem, *p++);
 	}
 }
 
 
 TEST(XMLNodeTest, getFirstDescendant) {
-	XMLElementNode root("root");
-	auto child1 = util::make_unique<XMLElementNode>("child");
-	auto child2 = util::make_unique<XMLElementNode>("childX");
-	auto child3 = util::make_unique<XMLElementNode>("child");
-	auto child4 = util::make_unique<XMLElementNode>("child");
+	XMLElement root("root");
+	auto child1 = util::make_unique<XMLElement>("child");
+	auto child2 = util::make_unique<XMLElement>("childX");
+	auto child3 = util::make_unique<XMLElement>("child");
+	auto child4 = util::make_unique<XMLElement>("child");
 	child1->addAttribute("attr", "valueX");
 	child2->addAttribute("attr", "value");
 	child3->addAttribute("attrX", "value");
@@ -262,11 +262,11 @@ TEST(XMLNodeTest, getFirstDescendant) {
 
 
 TEST(XMLNodeTest, write) {
-	XMLElementNode root("root");
-	auto child1 = util::make_unique<XMLElementNode>("child");
-	auto child2 = util::make_unique<XMLElementNode>("childX");
-	auto child3 = util::make_unique<XMLElementNode>("child");
-	auto child4 = util::make_unique<XMLElementNode>("child");
+	XMLElement root("root");
+	auto child1 = util::make_unique<XMLElement>("child");
+	auto child2 = util::make_unique<XMLElement>("childX");
+	auto child3 = util::make_unique<XMLElement>("child");
+	auto child4 = util::make_unique<XMLElement>("child");
 	child1->addAttribute("attr", "valueX");
 	child2->addAttribute("attr", "value");
 	child3->addAttribute("attrX", "value");
@@ -284,10 +284,10 @@ TEST(XMLNodeTest, write) {
 
 
 TEST(XMLNodeTest, cdata) {
-	XMLElementNode root("root");
-	auto cdataNode = util::make_unique<XMLCDataNode>("text & <text>");
+	XMLElement root("root");
+	auto cdataNode = util::make_unique<XMLCData>("text & <text>");
 	XMLNode *cdataNodePtr = root.append(std::move(cdataNode));
-	root.append(util::make_unique<XMLElementNode>("element"));
+	root.append(util::make_unique<XMLElement>("element"));
 	root.append(cdataNodePtr->clone());
 	ostringstream oss;
 	root.write(oss);

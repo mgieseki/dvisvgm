@@ -39,7 +39,7 @@ class SVGCharPathHandler : public SVGCharHandler {
 	private:
 		AppendMethod _appendChar;       ///< method called to append a single character
 		bool _relativePathCommands;     ///< if true, create relative rather than absolute SVG path commands
-		XMLElementNode *_groupNode;     ///< current group node taking the path elements
+		XMLElement *_groupNode;     ///< current group node taking the path elements
 		CharProperty<Color> _fontColor; ///< color of current font
 };
 

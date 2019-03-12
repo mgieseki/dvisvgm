@@ -199,14 +199,14 @@ void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions 
 		ir.skipSpace();
 		if (ir.peek() != '<') {  // text node
 			string xml = ir.getString("<");
-			actions.appendToPage(util::make_unique<XMLTextNode>(xml));
+			actions.appendToPage(util::make_unique<XMLText>(xml));
 		}
 		else {
 			ir.get();  // skip '<'
 			if (isalpha(ir.peek())) {  // opening XML tag
 				string name = ir.getString(">/ \t");
 				ir.skipSpace();
-				auto elemNode = util::make_unique<XMLElementNode>(name);
+				auto elemNode = util::make_unique<XMLElement>(name);
 				map<string, string> attribs;
 				if (ir.parseAttributes(attribs, "\"'")) {
 					for (auto attrpair : attribs)
@@ -248,7 +248,7 @@ void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions 
 					chunk = "<?" + ir.readUntil("?>");
 				else
 					chunk = ir.getString("<");
-				actions.appendToPage(util::make_unique<XMLTextNode>(chunk));
+				actions.appendToPage(util::make_unique<XMLText>(chunk));
 			}
 		}
 	}
@@ -276,7 +276,7 @@ void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &acti
 		string str = ir.getLine();
 		if (!str.empty()) {
 			expand_constants(str, actions);
-			actions.appendToDefs(util::make_unique<XMLTextNode>(str));
+			actions.appendToDefs(util::make_unique<XMLText>(str));
 		}
 	}
 }
@@ -313,7 +313,7 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 				createSVGPageNodes(stringReader, actions);
 			}
 			else {          // type == 'D'
-				actions.appendToDefs(util::make_unique<XMLTextNode>(def));
+				actions.appendToDefs(util::make_unique<XMLText>(def));
 				type = 'L';  // locked
 			}
 		}
@@ -399,7 +399,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		Length h = read_length(ir);
 		string f = ir.getString();
 		update_bbox(w, h, 0, actions);
-		auto img = util::make_unique<XMLElementNode>("image");
+		auto img = util::make_unique<XMLElement>("image");
 		img->addAttribute("x", actions.getX());
 		img->addAttribute("y", actions.getY());
 		img->addAttribute("width", w.bp());

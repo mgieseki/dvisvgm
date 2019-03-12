@@ -54,7 +54,7 @@ class SVGTree {
 		void appendChar (int c, double x, double y) {_charHandler->appendChar(c, x, y);}
 		void appendFontStyles (const std::unordered_set<const Font*> &fonts);
 		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *callback=0);
-		void pushContextElement (std::unique_ptr<XMLElementNode> &&node);
+		void pushContextElement (std::unique_ptr<XMLElement> &&node);
 		void popContextElement ();
 		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
@@ -68,10 +68,10 @@ class SVGTree {
 		void transformPage (const Matrix &m);
 		Color getColor () const           {return _charHandler->getColor();}
 		const Matrix& getMatrix () const  {return _charHandler->getMatrix();}
-		XMLElementNode* rootNode () const {return _root;}
+		XMLElement* rootNode () const {return _root;}
 
 	protected:
-		XMLCDataNode* styleCDataNode ();
+		XMLCData* styleCDataNode ();
 
 	public:
 		static bool USE_FONTS;           ///< if true, create font references and don't draw paths directly
@@ -85,10 +85,10 @@ class SVGTree {
 
 	private:
 		XMLDocument _doc;
-		XMLElementNode *_root, *_page, *_defs;
-		XMLCDataNode *_styleCDataNode;
+		XMLElement *_root, *_page, *_defs;
+		XMLCData *_styleCDataNode;
 		std::unique_ptr<SVGCharHandler> _charHandler;
-		std::stack<XMLElementNode*> _contextElementStack;
+		std::stack<XMLElement*> _contextElementStack;
 };
 
 #endif

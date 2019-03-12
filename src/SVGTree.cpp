@@ -56,7 +56,7 @@ SVGTree::SVGTree () : _charHandler(SVGCharHandlerFactory::createHandler()) {
 /** Clears the SVG tree and initializes the root element. */
 void SVGTree::reset () {
 	_doc.clear();
-	auto rootNode = util::make_unique<XMLElementNode>("svg");
+	auto rootNode = util::make_unique<XMLElement>("svg");
 	rootNode->addAttribute("version", "1.1");
 	rootNode->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	rootNode->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -112,7 +112,7 @@ bool SVGTree::setFontFormat (string formatstr) {
 /** Starts a new page.
  *  @param[in] pageno number of new page */
 void SVGTree::newPage (int pageno) {
-	auto pageNode = util::make_unique<XMLElementNode>("g");
+	auto pageNode = util::make_unique<XMLElement>("g");
 	if (pageno >= 0)
 		pageNode->addAttribute("id", string("page")+XMLString(pageno));
 	_charHandler->setInitialContextNode(pageNode.get());
@@ -125,7 +125,7 @@ void SVGTree::newPage (int pageno) {
 
 void SVGTree::appendToDefs (unique_ptr<XMLNode> &&node) {
 	if (!_defs) {
-		auto defsNode = util::make_unique<XMLElementNode>("defs");
+		auto defsNode = util::make_unique<XMLElement>("defs");
 		_defs = defsNode.get();
 		_root->prepend(std::move(defsNode));
 	}
@@ -134,7 +134,7 @@ void SVGTree::appendToDefs (unique_ptr<XMLNode> &&node) {
 
 
 void SVGTree::appendToPage (unique_ptr<XMLNode> &&node) {
-	XMLElementNode *parent = _contextElementStack.empty() ? _page : _contextElementStack.top();
+	XMLElement *parent = _contextElementStack.empty() ? _page : _contextElementStack.top();
 	parent->append(std::move(node));
 	_charHandler->setInitialContextNode(parent);
 }
@@ -159,17 +159,17 @@ void SVGTree::transformPage (const Matrix &usermatrix) {
  *  @param[in] font font to extract the glyph from
  *  @param[in] cb pointer to callback object for sending feedback to the glyph tracer (may be 0)
  *  @return pointer to element node if glyph exists, 0 otherwise */
-static unique_ptr<XMLElementNode> createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
+static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
 	Glyph glyph;
 	if (!font.getGlyph(c, glyph, cb) || (!SVGTree::USE_FONTS && !SVGTree::CREATE_USE_ELEMENTS))
 		return nullptr;
 
 	double sx=1.0, sy=1.0;
 	double upem = font.unitsPerEm();
-	unique_ptr<XMLElementNode> glyphNode;
+	unique_ptr<XMLElement> glyphNode;
 	if (SVGTree::USE_FONTS) {
 		double extend = font.style() ? font.style()->extend : 1;
-		glyphNode = util::make_unique<XMLElementNode>("glyph");
+		glyphNode = util::make_unique<XMLElement>("glyph");
 		glyphNode->addAttribute("unicode", XMLString(font.unicode(c), false));
 		glyphNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)*extend));
 		glyphNode->addAttribute("vert-adv-y", XMLString(font.vAdvance(c)));
@@ -178,7 +178,7 @@ static unique_ptr<XMLElementNode> createGlyphNode (int c, const PhysicalFont &fo
 			glyphNode->addAttribute("glyph-name", name);
 	}
 	else {
-		glyphNode = util::make_unique<XMLElementNode>("path");
+		glyphNode = util::make_unique<XMLElement>("path");
 		glyphNode->addAttribute("id", "g"+to_string(FontManager::instance().fontID(&font))+"-"+to_string(c));
 		sx = font.scaledSize()/upem;
 		sy = -sx;
@@ -255,14 +255,14 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			if (ADD_COMMENTS) {
 				string info = font_info(font);
 				if (!info.empty())
-					appendToDefs(util::make_unique<XMLCommentNode>(string(" font: ")+info+" "));
+					appendToDefs(util::make_unique<XMLComment>(string(" font: ")+info+" "));
 			}
-			auto fontNode = util::make_unique<XMLElementNode>("font");
+			auto fontNode = util::make_unique<XMLElement>("font");
 			string fontname = font.name();
 			fontNode->addAttribute("id", fontname);
 			fontNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance()));
 
-			auto faceNode = util::make_unique<XMLElementNode>("font-face");
+			auto faceNode = util::make_unique<XMLElement>("font-face");
 			faceNode->addAttribute("font-family", fontname);
 			faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
 			if (!font.verticalLayout()) {
@@ -281,7 +281,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 		// reference the already embedded path together with a transformation attribute and let the SVG renderer
 		// scale the glyphs properly. This is only necessary if we don't want to use font but path elements.
 		for (int c : chars) {
-			auto useNode = util::make_unique<XMLElementNode>("use");
+			auto useNode = util::make_unique<XMLElement>("use");
 			useNode->addAttribute("id", "g"+to_string(FontManager::instance().fontID(&font))+"-"+to_string(c));
 			useNode->addAttribute("xlink:href", "#g"+to_string(FontManager::instance().fontID(font.uniqueFont()))+"-"+to_string(c));
 			double scale = font.scaledSize()/font.uniqueFont()->scaledSize();
@@ -298,8 +298,8 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 
 
 /** Pushes a new context element that will take all following nodes added to the page. */
-void SVGTree::pushContextElement (unique_ptr<XMLElementNode> &&node) {
-	XMLElementNode *nodePtr = node.get();
+void SVGTree::pushContextElement (unique_ptr<XMLElement> &&node) {
+	XMLElement *nodePtr = node.get();
 	if (_contextElementStack.empty())
 		_page->append(std::move(node));
 	else
@@ -326,13 +326,13 @@ static inline string extract_id_from_url (const string &url) {
 /** Removes elements present in the SVG tree that are not required.
  *  For now, only clipPath elements are removed. */
 void SVGTree::removeRedundantElements () {
-	vector<XMLElementNode*> clipPathElements;
+	vector<XMLElement*> clipPathElements;
 	if (!_defs || !_defs->getDescendants("clipPath", nullptr, clipPathElements))
 		return;
 
 	// collect dependencies between clipPath elements in the defs section of the SVG tree
 	DependencyGraph<string> idTree;
-	for (const XMLElementNode *clip : clipPathElements) {
+	for (const XMLElement *clip : clipPathElements) {
 		if (const char *id = clip->getAttributeValue("id")) {
 			if (const char *url = clip->getAttributeValue("clip-path"))
 				idTree.insert(extract_id_from_url(url), id);
@@ -341,26 +341,26 @@ void SVGTree::removeRedundantElements () {
 		}
 	}
 	// collect elements that reference a clipPath, i.e. have a clip-path attribute
-	vector<XMLElementNode*> descendants;
+	vector<XMLElement*> descendants;
 	_page->getDescendants(nullptr, "clip-path", descendants);
 	// remove referenced IDs and their dependencies from the dependency graph
-	for (const XMLElementNode *elem : descendants) {
+	for (const XMLElement *elem : descendants) {
 		string idref = extract_id_from_url(elem->getAttributeValue("clip-path"));
 		idTree.removeDependencyPath(idref);
 	}
 	descendants.clear();
 	for (const string &str : idTree.getKeys()) {
-		XMLElementNode *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
+		XMLElement *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
 		_defs->remove(node);
 	}
 }
 
 
-XMLCDataNode* SVGTree::styleCDataNode () {
+XMLCData* SVGTree::styleCDataNode () {
 	if (!_styleCDataNode) {
-		auto styleNode = util::make_unique<XMLElementNode>("style");
+		auto styleNode = util::make_unique<XMLElement>("style");
 		styleNode->addAttribute("type", "text/css");
-		auto cdataNode = util::make_unique<XMLCDataNode>();
+		auto cdataNode = util::make_unique<XMLCData>();
 		_styleCDataNode = cdataNode.get();
 		styleNode->append(std::move(cdataNode));
 		_root->insertBefore(std::move(styleNode), _page);

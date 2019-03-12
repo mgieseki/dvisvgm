@@ -53,7 +53,7 @@ class EmSpecialTest : public ::testing::Test {
 			private:
 				double x, y;
 				Color color;
-				XMLElementNode page;
+				XMLElement page;
 				BoundingBox bbox;
 		};
 

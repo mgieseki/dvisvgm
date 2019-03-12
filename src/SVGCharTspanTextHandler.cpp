@@ -47,7 +47,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	// Glyphs of non-black fonts (e.g. defined in a XeTeX document) can't change their color.
 	bool applyColor = _color.get() != Color::BLACK && _font.get()->color() == Color::BLACK;
 	if (_xchanged || _ychanged || (_color.changed() && applyColor)) {
-		_tspanNode = pushContextNode(util::make_unique<XMLElementNode>("tspan"));
+		_tspanNode = pushContextNode(util::make_unique<XMLElement>("tspan"));
 		if (applyColor)
 			_tspanNode->addAttribute("fill", _color.get().svgColorString());
 		_color.changed(false);
@@ -70,7 +70,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 }
 
 
-void SVGCharTspanTextHandler::setInitialContextNode (XMLElementNode *node) {
+void SVGCharTspanTextHandler::setInitialContextNode (XMLElement *node) {
 	SVGCharHandler::setInitialContextNode(node);
 	_textNode = _tspanNode = 0;
 	_xchanged = _ychanged = false;

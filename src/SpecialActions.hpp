@@ -28,7 +28,7 @@
 #include "Matrix.hpp"
 
 class XMLNode;
-class XMLElementNode;
+class XMLElement;
 
 class SpecialActions {
 	public:
@@ -47,7 +47,7 @@ class SpecialActions {
 		virtual void appendToPage(std::unique_ptr<XMLNode> &&node) =0;
 		virtual void appendToDefs(std::unique_ptr<XMLNode> &&node) =0;
 		virtual void prependToPage(std::unique_ptr<XMLNode> &&node) =0;
-		virtual void pushContextElement (std::unique_ptr<XMLElementNode> &&node) =0;
+		virtual void pushContextElement (std::unique_ptr<XMLElement> &&node) =0;
 		virtual void popContextElement () =0;
 		virtual BoundingBox& bbox () =0;
 		virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
@@ -78,7 +78,7 @@ class EmptySpecialActions : public SpecialActions {
 		void appendToPage(std::unique_ptr<XMLNode> &&node) override {}
 		void appendToDefs(std::unique_ptr<XMLNode> &&node) override {}
 		void prependToPage(std::unique_ptr<XMLNode> &&node) override {}
-		void pushContextElement (std::unique_ptr<XMLElementNode> &&node) override {}
+		void pushContextElement (std::unique_ptr<XMLElement> &&node) override {}
 		void popContextElement () override {}
 		BoundingBox& bbox () override {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}

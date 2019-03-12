@@ -28,14 +28,14 @@
 
 using namespace std;
 
-bool XMLElementNode::WRITE_NEWLINES=true;
+bool XMLElement::WRITE_NEWLINES=true;
 
 
-XMLElementNode::XMLElementNode (const string &n) : _name(n) {
+XMLElement::XMLElement (const string &n) : _name(n) {
 }
 
 
-XMLElementNode::XMLElementNode (const XMLElementNode &node)
+XMLElement::XMLElement (const XMLElement &node)
 	: _name(node._name), _attributes(node._attributes)
 {
 	for (const auto &child : node._children)
@@ -43,19 +43,19 @@ XMLElementNode::XMLElementNode (const XMLElementNode &node)
 }
 
 
-XMLElementNode::XMLElementNode (XMLElementNode &&node)
+XMLElement::XMLElement (XMLElement &&node)
 	: _name(std::move(node._name)), _attributes(std::move(node._attributes)), _children(std::move(node._children))
 {
 }
 
 
-void XMLElementNode::clear () {
+void XMLElement::clear () {
 	_attributes.clear();
 	_children.clear();
 }
 
 
-void XMLElementNode::addAttribute (const string &name, const string &value) {
+void XMLElement::addAttribute (const string &name, const string &value) {
 	if (Attribute *attr = getAttribute(name))
 		attr->value = value;
 	else
@@ -63,7 +63,7 @@ void XMLElementNode::addAttribute (const string &name, const string &value) {
 }
 
 
-void XMLElementNode::addAttribute (const string &name, double value) {
+void XMLElement::addAttribute (const string &name, double value) {
 	addAttribute(name, XMLString(value));
 }
 
@@ -71,15 +71,15 @@ void XMLElementNode::addAttribute (const string &name, double value) {
 /** Appends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be appended
  *  @return raw pointer to the appended child node */
-XMLNode* XMLElementNode::append (unique_ptr<XMLNode> &&child) {
+XMLNode* XMLElement::append (unique_ptr<XMLNode> &&child) {
 	if (!child)
 		return nullptr;
-	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child.get());
+	XMLText *textNode1 = dynamic_cast<XMLText*>(child.get());
 	if (!textNode1 || _children.empty())
 		_children.emplace_back(std::move(child));
 	else {
-		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.back().get()))
-			textNode2->append(util::static_unique_ptr_cast<XMLTextNode>(std::move(child)));  // merge two consecutive text nodes
+		if (XMLText *textNode2 = dynamic_cast<XMLText*>(_children.back().get()))
+			textNode2->append(util::static_unique_ptr_cast<XMLText>(std::move(child)));  // merge two consecutive text nodes
 		else
 			_children.emplace_back(std::move(child));
 	}
@@ -91,11 +91,11 @@ XMLNode* XMLElementNode::append (unique_ptr<XMLNode> &&child) {
  *  appended there, otherwise a new text node is created.
  *  @param[in] str string to be appended
  *  @return raw pointer to the text node the string was appended to */
-XMLNode* XMLElementNode::append (const string &str) {
-	if (_children.empty() || !dynamic_cast<XMLTextNode*>(_children.back().get()))
-		_children.emplace_back(util::make_unique<XMLTextNode>(str));
+XMLNode* XMLElement::append (const string &str) {
+	if (_children.empty() || !dynamic_cast<XMLText*>(_children.back().get()))
+		_children.emplace_back(util::make_unique<XMLText>(str));
 	else
-		static_cast<XMLTextNode*>(_children.back().get())->append(str);
+		static_cast<XMLText*>(_children.back().get())->append(str);
 	return _children.back().get();
 }
 
@@ -103,13 +103,13 @@ XMLNode* XMLElementNode::append (const string &str) {
 /** Prepends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be prepended
  *  @return raw pointer to the prepended child node */
-XMLNode* XMLElementNode::prepend (unique_ptr<XMLNode> &&child) {
+XMLNode* XMLElement::prepend (unique_ptr<XMLNode> &&child) {
 	if (!child)
 		return nullptr;
-	XMLTextNode *textNode1 = dynamic_cast<XMLTextNode*>(child.get());
+	XMLText *textNode1 = dynamic_cast<XMLText*>(child.get());
 	if (textNode1 && !_children.empty()) {
-		if (XMLTextNode *textNode2 = dynamic_cast<XMLTextNode*>(_children.front().get())) {
-			textNode2->prepend(util::static_unique_ptr_cast<XMLTextNode>(std::move(child)));  // merge two consecutive text nodes
+		if (XMLText *textNode2 = dynamic_cast<XMLText*>(_children.front().get())) {
+			textNode2->prepend(util::static_unique_ptr_cast<XMLText>(std::move(child)));  // merge two consecutive text nodes
 			return textNode2;
 		}
 	}
@@ -124,7 +124,7 @@ XMLNode* XMLElementNode::prepend (unique_ptr<XMLNode> &&child) {
  *  @param[in] child node to be inserted
  *  @param[in] sibling following sibling of 'child'
  *  @return true on success */
-bool XMLElementNode::insertBefore (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
+bool XMLElement::insertBefore (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
 	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
@@ -141,7 +141,7 @@ bool XMLElementNode::insertBefore (unique_ptr<XMLNode> &&child, XMLNode *sibling
  *  @param[in] child node to be inserted
  *  @param[in] sibling preceding sibling of 'child'
  *  @return true on success */
-bool XMLElementNode::insertAfter (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
+bool XMLElement::insertAfter (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
 	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
@@ -153,7 +153,7 @@ bool XMLElementNode::insertAfter (unique_ptr<XMLNode> &&child, XMLNode *sibling)
 
 
 /** Removes a given child from the element. */
-void XMLElementNode::remove (const XMLNode *child) {
+void XMLElement::remove (const XMLNode *child) {
 	auto it = find_if(_children.begin(), _children.end(), [=](const unique_ptr<XMLNode> &ptr) {
 		return ptr.get() == child;
 	});
@@ -167,9 +167,9 @@ void XMLElementNode::remove (const XMLNode *child) {
  *  @param[in] attrName name of attribute to find
  *  @param[out] descendants all elements found
  *  @return true if at least one element was found  */
-bool XMLElementNode::getDescendants (const char *name, const char *attrName, vector<XMLElementNode*> &descendants) const {
+bool XMLElement::getDescendants (const char *name, const char *attrName, vector<XMLElement*> &descendants) const {
 	for (auto &child : _children) {
-		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(child.get())) {
+		if (XMLElement *elem = dynamic_cast<XMLElement*>(child.get())) {
 			if ((!name || elem->getName() == name) && (!attrName || elem->hasAttribute(attrName)))
 				descendants.push_back(elem);
 			elem->getDescendants(name, attrName, descendants);
@@ -184,15 +184,15 @@ bool XMLElementNode::getDescendants (const char *name, const char *attrName, vec
  *  @param[in] attrName if not 0, only elements with an attribute of this name are considered
  *  @param[in] attrValue if not 0, only elements with attribute attrName="attrValue" are considered
  *  @return pointer to the found element or 0 */
-XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
+XMLElement* XMLElement::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
 	for (auto &child : _children) {
-		if (XMLElementNode *elem = dynamic_cast<XMLElementNode*>(child.get())) {
+		if (XMLElement *elem = dynamic_cast<XMLElement*>(child.get())) {
 			if (!name || elem->getName() == name) {
 				const char *value;
 				if (!attrName || (((value = elem->getAttributeValue(attrName)) != 0) && (!attrValue || string(value) == attrValue)))
 					return elem;
 			}
-			if (XMLElementNode *descendant = elem->getFirstDescendant(name, attrName, attrValue))
+			if (XMLElement *descendant = elem->getFirstDescendant(name, attrName, attrValue))
 				return descendant;
 		}
 	}
@@ -200,7 +200,7 @@ XMLElementNode* XMLElementNode::getFirstDescendant (const char *name, const char
 }
 
 
-ostream& XMLElementNode::write (ostream &os) const {
+ostream& XMLElement::write (ostream &os) const {
 	os << '<' << _name;
 	for (const auto &attrib : _attributes)
 		os << ' ' << attrib.name << "='" << attrib.value << '\'';
@@ -210,13 +210,13 @@ ostream& XMLElementNode::write (ostream &os) const {
 		os << '>';
 		// Insert newlines around children except text nodes. According to the
 		// SVG specification, pure whitespace nodes are ignored by the SVG renderer.
-		if (WRITE_NEWLINES && !dynamic_cast<XMLTextNode*>(_children.front().get()))
+		if (WRITE_NEWLINES && !dynamic_cast<XMLText*>(_children.front().get()))
 			os << '\n';
 		for (auto it=_children.begin(); it != _children.end(); ++it) {
 			(*it)->write(os);
-			if (!dynamic_cast<XMLTextNode*>(it->get())) {
+			if (!dynamic_cast<XMLText*>(it->get())) {
 				auto next=it;
-				if (WRITE_NEWLINES && (++next == _children.end() || !dynamic_cast<XMLTextNode*>(next->get())))
+				if (WRITE_NEWLINES && (++next == _children.end() || !dynamic_cast<XMLText*>(next->get())))
 					os << '\n';
 			}
 		}
@@ -227,7 +227,7 @@ ostream& XMLElementNode::write (ostream &os) const {
 
 
 /** Returns true if this element has an attribute of given name. */
-bool XMLElementNode::hasAttribute (const string &name) const {
+bool XMLElement::hasAttribute (const string &name) const {
 	return getAttribute(name) != nullptr;
 }
 
@@ -235,14 +235,14 @@ bool XMLElementNode::hasAttribute (const string &name) const {
 /** Returns the value of an attribute.
  *  @param[in] name name of attribute
  *  @return attribute value or 0 if attribute doesn't exist */
-const char* XMLElementNode::getAttributeValue (const std::string& name) const {
+const char* XMLElement::getAttributeValue (const std::string& name) const {
 	if (const Attribute *attr = getAttribute(name))
 		return attr->value.c_str();
 	return nullptr;
 }
 
 
-XMLElementNode::Attribute* XMLElementNode::getAttribute (const string &name) {
+XMLElement::Attribute* XMLElement::getAttribute (const string &name) {
 	auto it = find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
 		return attr.name == name;
 	});
@@ -250,7 +250,7 @@ XMLElementNode::Attribute* XMLElementNode::getAttribute (const string &name) {
 }
 
 
-const XMLElementNode::Attribute* XMLElementNode::getAttribute (const string &name) const {
+const XMLElement::Attribute* XMLElement::getAttribute (const string &name) const {
 	auto it = find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
 		return attr.name == name;
 	});
@@ -260,11 +260,11 @@ const XMLElementNode::Attribute* XMLElementNode::getAttribute (const string &nam
 
 //////////////////////
 
-void XMLTextNode::append (unique_ptr<XMLNode> &&node) {
+void XMLText::append (unique_ptr<XMLNode> &&node) {
 	if (!node)
 		return;
-	if (dynamic_cast<XMLTextNode*>(node.get()))
-		append(util::static_unique_ptr_cast<XMLTextNode>(std::move(node)));
+	if (dynamic_cast<XMLText*>(node.get()))
+		append(util::static_unique_ptr_cast<XMLText>(std::move(node)));
 	else {
 		// append text representation of the node
 		ostringstream oss;
@@ -274,32 +274,32 @@ void XMLTextNode::append (unique_ptr<XMLNode> &&node) {
 }
 
 
-void XMLTextNode::append (unique_ptr<XMLTextNode> &&node) {
+void XMLText::append (unique_ptr<XMLText> &&node) {
 	if (node)
 		_text += node->_text;
 }
 
 
-void XMLTextNode::append (const string &str) {
+void XMLText::append (const string &str) {
 	_text += str;
 }
 
 
-void XMLTextNode::prepend (unique_ptr<XMLNode> &&node) {
-	if (XMLTextNode *textNode = dynamic_cast<XMLTextNode*>(node.get()))
+void XMLText::prepend (unique_ptr<XMLNode> &&node) {
+	if (XMLText *textNode = dynamic_cast<XMLText*>(node.get()))
 		_text = textNode->_text + _text;
 }
 
 /////////////////////////////////////////////////////////////////////
 
-ostream& XMLCDataNode::write (ostream &os) const {
+ostream& XMLCData::write (ostream &os) const {
 	if (!_data.empty())
 		os << "<![CDATA[\n" << _data << "]]>";
 	return os;
 }
 
 
-void XMLCDataNode::append (string &&str) {
+void XMLCData::append (string &&str) {
 	if (_data.empty())
 		_data = move(str);
 	else

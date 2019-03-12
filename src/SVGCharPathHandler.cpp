@@ -69,7 +69,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 	if (color.changed() || _matrix.changed()) {
 		resetContextNode();
 		if (applyColor || applyMatrix) {
-			_groupNode = pushContextNode(util::make_unique<XMLElementNode>("g"));
+			_groupNode = pushContextNode(util::make_unique<XMLElement>("g"));
 			if (applyColor)
 				contextNode()->addAttribute("fill", color.get().svgColorString());
 			if (applyMatrix)
@@ -109,7 +109,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 
 void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const Matrix &matrix) {
 	string id = "#g" + to_string(FontManager::instance().fontID(_font)) + "-" + to_string(c);
-	auto useNode = util::make_unique<XMLElementNode>("use");
+	auto useNode = util::make_unique<XMLElement>("use");
 	useNode->addAttribute("x", XMLString(x));
 	useNode->addAttribute("y", XMLString(y));
 	useNode->addAttribute("xlink:href", id);
@@ -127,7 +127,7 @@ void SVGCharPathHandler::appendPathElement (uint32_t c, double x, double y, cons
 		double sy = -sx;
 		ostringstream oss;
 		glyph.writeSVG(oss, _relativePathCommands, sx, sy, x, y);
-		auto glyphNode = util::make_unique<XMLElementNode>("path");
+		auto glyphNode = util::make_unique<XMLElement>("path");
 		glyphNode->addAttribute("d", oss.str());
 		if (!matrix.isIdentity())
 			glyphNode->addAttribute("transform", matrix.getSVG());

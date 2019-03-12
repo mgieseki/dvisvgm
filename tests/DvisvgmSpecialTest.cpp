@@ -44,8 +44,8 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				ActionsRecorder () : defs(""), page("page")            {context.push_back(&page);}
 				void appendToDefs(unique_ptr<XMLNode> &&node) override {defs.append(std::move(node));}
 				void appendToPage(unique_ptr<XMLNode> &&node) override {context.back()->append(std::move(node));}
-				void pushContextElement (unique_ptr<XMLElementNode> &&node) override {
-					XMLElementNode *elem = node.get();
+				void pushContextElement (unique_ptr<XMLElement> &&node) override {
+					XMLElement *elem = node.get();
 					context.back()->append(std::move(node));
 					context.push_back(elem);
 				}
@@ -76,15 +76,15 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				}
 
 			private:
-				XMLTextNode defs;
-				XMLElementNode page;
-				vector<XMLElementNode*> context;
+				XMLText defs;
+				XMLElement page;
+				vector<XMLElement*> context;
 				BoundingBox bbox;
 		};
 
 		void SetUp () override {
 			recorder.clear();
-			XMLElementNode::WRITE_NEWLINES = false;
+			XMLElement::WRITE_NEWLINES = false;
 		}
 
 	protected:

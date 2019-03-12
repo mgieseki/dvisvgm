@@ -76,7 +76,7 @@ class DVIToSVG : public DVIReader {
 		int executeCommand () override;
 		void enterBeginPage (unsigned pageno, const std::vector<int32_t> &c);
 		void leaveEndPage (unsigned pageno);
-		void embedFonts (XMLElementNode *svgElement);
+		void embedFonts (XMLElement *svgElement);
 		void moveRight (double dx, MoveMode mode) override;
 		void moveDown (double dy, MoveMode mode) override;
 

@@ -125,7 +125,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 		bbox.transform(getMatrix());
 	embed(bbox);
 #if 0
-	XMLElementNode *rect = new XMLElementNode("rect");
+	XMLElement *rect = new XMLElement("rect");
 	rect->addAttribute("x", x-metrics.wl);
 	rect->addAttribute("y", y-metrics.h);
 	rect->addAttribute("width", metrics.wl+metrics.wr);
@@ -135,7 +135,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 	rect->addAttribute("stroke-width", "0.5");
 	_svg.appendToPage(rect);
 	if (metrics.d > 0) {
-		XMLElementNode *line = new XMLElementNode("line");
+		XMLElement *line = new XMLElement("line");
 		line->addAttribute("x1", x-metrics.wl);
 		line->addAttribute("y1", y);
 		line->addAttribute("x2", x+metrics.wr);
@@ -145,7 +145,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 		_svg.appendToPage(line);
 	}
 	if (metrics.wl > 0) {
-		XMLElementNode *line = new XMLElementNode("line");
+		XMLElement *line = new XMLElement("line");
 		line->addAttribute("x1", x);
 		line->addAttribute("y1", y-metrics.h);
 		line->addAttribute("x2", x);
@@ -166,7 +166,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
  *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
 	// (x,y) is the lower left corner of the rectangle
-	auto rect = util::make_unique<XMLElementNode>("rect");
+	auto rect = util::make_unique<XMLElement>("rect");
 	rect->addAttribute("x", x);
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
@@ -232,7 +232,7 @@ void DVIToSVGActions::endPage (unsigned pageno) {
 	_svg.transformPage(matrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color
-		auto rect = util::make_unique<XMLElementNode>("rect");
+		auto rect = util::make_unique<XMLElement>("rect");
 		rect->addAttribute("x", _bbox.minX());
 		rect->addAttribute("y", _bbox.minY());
 		rect->addAttribute("width", _bbox.width());

@@ -106,7 +106,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 			uri = "/" + uri;
 		uri = _base + uri;
 	}
-	auto anchorNode = util::make_unique<XMLElementNode>("a");
+	auto anchorNode = util::make_unique<XMLElement>("a");
 	anchorNode->addAttribute("xlink:href", uri);
 	anchorNode->addAttribute("xlink:title", XMLString(name.empty() ? uri : name, false));
 	actions.pushContextElement(std::move(anchorNode));
@@ -148,7 +148,7 @@ void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
 	if (bbox.width() > 0 && bbox.height() > 0) {  // does the bounding box extend in both dimensions?
 		if (MARKER_TYPE != MarkerType::NONE) {
 			const double linewidth = _linewidth >= 0 ? _linewidth : min(0.5, bbox.height()/15);
-			auto rect = util::make_unique<XMLElementNode>("rect");
+			auto rect = util::make_unique<XMLElement>("rect");
 			double x = bbox.minX();
 			double y = bbox.maxY()+linewidth;
 			double w = bbox.width();
@@ -192,7 +192,7 @@ void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
 		// Create an invisible rectangle around the linked area so that it's easier to access.
 		// This is only necessary when using paths rather than real text elements together with fonts.
 		if (!SVGTree::USE_FONTS) {
-			auto rect = util::make_unique<XMLElementNode>("rect");
+			auto rect = util::make_unique<XMLElement>("rect");
 			rect->addAttribute("x", bbox.minX());
 			rect->addAttribute("y", bbox.minY());
 			rect->addAttribute("width", bbox.width());
@@ -213,7 +213,7 @@ void HyperlinkManager::createViews (unsigned pageno, SpecialActions &actions) {
 			ostringstream oss;
 			oss << pagebox.minX() << ' ' << stranchorpair.second.pos << ' '
 				 << pagebox.width() << ' ' << pagebox.height();
-			auto view = util::make_unique<XMLElementNode>("view");
+			auto view = util::make_unique<XMLElement>("view");
 			view->addAttribute("id", "loc"+XMLString(stranchorpair.second.id));
 			view->addAttribute("viewBox", oss.str());
 			actions.appendToDefs(std::move(view));

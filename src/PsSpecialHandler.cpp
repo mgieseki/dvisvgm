@@ -335,7 +335,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setY(0);
 	moveToDVIPos();
 
-	auto groupNode = util::make_unique<XMLElementNode>("g"); // put SVG nodes created from the EPS/PDF file in this group
+	auto groupNode = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
 	_xmlnode = groupNode.get();
 	_psi.execute(
 		"\n@beginspecial @setspecial"          // enter special environment
@@ -435,7 +435,7 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 					"depth=" << XMLString(d*bp2pt) << "pt\n";
 			}
 #if 0
-			auto rect = util::make_unique<XMLElementNode>("rect");
+			auto rect = util::make_unique<XMLElement>("rect");
 			rect->addAttribute("x", actions.bbox().minX());
 			rect->addAttribute("y", actions.bbox().minY());
 			rect->addAttribute("width", w);
@@ -445,7 +445,7 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 			rect->addAttribute("stroke-width", "0.1");
 			actions.appendToPage(std::move(rect));
 			if (d > 0) {
-				auto line = util::make_unique<XMLElementNode>("line");
+				auto line = util::make_unique<XMLElement>("line");
 				line->addAttribute("x1", actions.bbox().minX());
 				line->addAttribute("y1", actions.bbox().minY()+h);
 				line->addAttribute("x2", actions.bbox().maxX());
@@ -553,14 +553,14 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 	}
 	if (_clipStack.prependedPath())
 		_path.prepend(*_clipStack.prependedPath());
-	unique_ptr<XMLElementNode> path;
+	unique_ptr<XMLElement> path;
 	Pair<double> point;
 	if (_path.isDot(point)) {  // zero-length path?
 		if (_linecap == 1) {    // round line ends?  => draw dot
 			double x = point.x();
 			double y = point.y();
 			double r = _linewidth/2.0;
-			path = util::make_unique<XMLElementNode>("circle");
+			path = util::make_unique<XMLElement>("circle");
 			path->addAttribute("cx", x);
 			path->addAttribute("cy", y);
 			path->addAttribute("r", r);
@@ -575,7 +575,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 
 		ostringstream oss;
 		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-		path = util::make_unique<XMLElementNode>("path");
+		path = util::make_unique<XMLElement>("path");
 		path->addAttribute("d", oss.str());
 		path->addAttribute("stroke", _actions->getColor().svgColorString());
 		path->addAttribute("fill", "none");
@@ -642,7 +642,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 
 	ostringstream oss;
 	_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-	unique_ptr<XMLElementNode> path = util::make_unique<XMLElementNode>("path");
+	unique_ptr<XMLElement> path = util::make_unique<XMLElement>("path");
 	path->addAttribute("d", oss.str());
 	if (_pattern)
 		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
@@ -828,13 +828,13 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
 	if (pathReplaced) {
-		auto pathElem = util::make_unique<XMLElementNode>("path");
+		auto pathElem = util::make_unique<XMLElement>("path");
 		pathElem->addAttribute("d", oss.str());
 		if (evenodd)
 			pathElem->addAttribute("clip-rule", "evenodd");
 
 		int newID = _clipStack.topID();
-		auto clipElem = util::make_unique<XMLElementNode>("clipPath");
+		auto clipElem = util::make_unique<XMLElement>("clipPath");
 		clipElem->addAttribute("id", XMLString("clip")+XMLString(newID));
 		if (!COMPUTE_CLIPPATHS_INTERSECTIONS && oldID)
 			clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
@@ -951,10 +951,10 @@ static void read_patch_data (ShadingPatch &patch, int edgeflag,
 
 class ShadingCallback : public ShadingPatch::Callback {
 	public:
-		ShadingCallback (SpecialActions &actions, XMLElementNode *parent, int clippathID)
+		ShadingCallback (SpecialActions &actions, XMLElement *parent, int clippathID)
 			: _actions(actions)
 		{
-			auto group = util::make_unique<XMLElementNode>("g");
+			auto group = util::make_unique<XMLElement>("g");
 			_group = group.get();
 			if (parent)
 				parent->append(std::move(group));
@@ -971,7 +971,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 			// draw a single patch segment
 			ostringstream oss;
 			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-			auto pathElem = util::make_unique<XMLElementNode>("path");
+			auto pathElem = util::make_unique<XMLElement>("path");
 			pathElem->addAttribute("d", oss.str());
 			pathElem->addAttribute("fill", color.svgColorString());
 			_group->append(std::move(pathElem));
@@ -979,7 +979,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 
 	private:
 		SpecialActions &_actions;
-		XMLElementNode *_group;
+		XMLElement *_group;
 };
 
 
