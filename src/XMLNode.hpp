@@ -29,13 +29,30 @@
 #include <vector>
 #include "utility.hpp"
 
+class XMLCData;
+class XMLComment;
+class XMLElement;
+class XMLText;
 
 class XMLNode {
+	template <typename T>
+	T* cast (const T* (XMLNode::*func)() const) {
+		return const_cast<T*>((const_cast<const XMLNode*>(this)->*func)());
+	}
+
 	public:
 		virtual ~XMLNode () =default;
 		virtual std::unique_ptr<XMLNode> clone () const =0;
 		virtual void clear () =0;
 		virtual std::ostream& write (std::ostream &os) const =0;
+		virtual const XMLElement* toElement () const {return nullptr;}
+		virtual const XMLText* toText () const       {return nullptr;}
+		virtual const XMLComment* toComment () const {return nullptr;}
+		virtual const XMLCData* toCData () const     {return nullptr;}
+		XMLElement* toElement ()  {return cast<XMLElement>(&XMLNode::toElement);}
+		XMLText* toText ()        {return cast<XMLText>(&XMLNode::toText);}
+		XMLComment* toComment ()  {return cast<XMLComment>(&XMLNode::toComment);}
+		XMLCData* toCData ()      {return cast<XMLCData>(&XMLNode::toCData);}
 };
 
 
@@ -68,9 +85,10 @@ class XMLElement : public XMLNode {
 		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElement*> &descendants) const;
 		XMLElement* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
 		std::ostream& write (std::ostream &os) const override;
-		bool empty () const                  {return _children.empty();}
-		const ChildList& children () const   {return _children;}
-		const std::string& getName () const  {return _name;}
+		bool empty () const {return _children.empty();}
+		const ChildList& children () const {return _children;}
+		const std::string& getName () const {return _name;}
+		const XMLElement* toElement () const override {return this;}
 
 	protected:
 		Attribute* getAttribute (const std::string &name);
@@ -95,6 +113,7 @@ class XMLText : public XMLNode {
 		void prepend (std::unique_ptr<XMLNode> &&node);
 		std::ostream& write (std::ostream &os) const override {return os << _text;}
 		const std::string& getText () const {return _text;}
+		const XMLText* toText () const override {return this;}
 
 	private:
 		std::string _text;
@@ -108,6 +127,7 @@ class XMLComment : public XMLNode {
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLComment>(*this);}
 		void clear () override {_text.clear();}
 		std::ostream& write (std::ostream &os) const override {return os << "<!--" << _text << "-->";}
+		const XMLComment* toComment () const override {return this;}
 
 	private:
 		std::string _text;
@@ -123,6 +143,7 @@ class XMLCData : public XMLNode {
 		void clear () override                {_data.clear();}
 		void append (std::string &&str);
 		std::ostream& write (std::ostream &os) const override;
+		const XMLCData* toCData () const override {return this;}
 
 	private:
 		std::string _data;

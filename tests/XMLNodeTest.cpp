@@ -28,14 +28,41 @@
 using namespace std;
 
 
+TEST(XMLNodeTest, downcast) {
+	unique_ptr<XMLNode> elem = util::make_unique<XMLElement>("element");
+	EXPECT_EQ(elem->toElement(), elem.get());
+	EXPECT_EQ(elem->toText(), nullptr);
+	EXPECT_EQ(elem->toCData(), nullptr);
+	EXPECT_EQ(elem->toComment(), nullptr);
+
+	unique_ptr<XMLNode> text = util::make_unique<XMLText>("text");
+	EXPECT_EQ(text->toElement(), nullptr);
+	EXPECT_EQ(text->toText(), text.get());
+	EXPECT_EQ(text->toCData(), nullptr);
+	EXPECT_EQ(text->toComment(), nullptr);
+
+	unique_ptr<XMLNode> cdata = util::make_unique<XMLCData>("cdata");
+	EXPECT_EQ(cdata->toElement(), nullptr);
+	EXPECT_EQ(cdata->toText(), nullptr);
+	EXPECT_EQ(cdata->toCData(), cdata.get());
+	EXPECT_EQ(cdata->toComment(), nullptr);
+
+	unique_ptr<XMLNode> comment = util::make_unique<XMLComment>("comment");
+	EXPECT_EQ(comment->toElement(), nullptr);
+	EXPECT_EQ(comment->toText(), nullptr);
+	EXPECT_EQ(comment->toCData(), nullptr);
+	EXPECT_EQ(comment->toComment(), comment.get());
+}
+
+
 TEST(XMLNodeTest, appendElement) {
 	XMLElement root("root");
 	root.append(util::make_unique<XMLElement>("child1"));
 	root.append(util::make_unique<XMLElement>("child2"));
 	EXPECT_EQ(root.children().size(), 2u);
 	EXPECT_FALSE(root.empty());
-	XMLElement *child1 = dynamic_cast<XMLElement*>(root.children().front().get());
-	XMLElement *child2 = dynamic_cast<XMLElement*>(root.children().back().get());
+	XMLElement *child1 = root.children().front()->toElement();
+	XMLElement *child2 = root.children().back()->toElement();
 	ASSERT_NE(child1, nullptr);
 	ASSERT_NE(child2, nullptr);
 	EXPECT_EQ(child1->getName(), "child1");
@@ -50,8 +77,8 @@ TEST(XMLNodeTest, prependElement) {
 	root.prepend(util::make_unique<XMLElement>("child1"));
 	root.prepend(util::make_unique<XMLElement>("child2"));
 	EXPECT_EQ(root.children().size(), 2u);
-	XMLElement *child1 = dynamic_cast<XMLElement*>(root.children().front().get());
-	XMLElement *child2 = dynamic_cast<XMLElement*>(root.children().back().get());
+	XMLElement *child1 = root.children().front()->toElement();
+	XMLElement *child2 = root.children().back()->toElement();
 	ASSERT_NE(child1, nullptr);
 	ASSERT_NE(child2, nullptr);
 	EXPECT_EQ(child1->getName(), "child2");
@@ -63,31 +90,31 @@ TEST(XMLNodeTest, appendText) {
 	XMLElement root("root");
 	root.append(util::make_unique<XMLText>("first string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	XMLText *lastChild = dynamic_cast<XMLText*>(root.children().back().get());
+	XMLText *lastChild = root.children().back()->toText();
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string");
 
 	root.append(util::make_unique<XMLText>(",second string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
+	lastChild = root.children().back()->toText();
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string,second string");
 
 	root.append(",third string");
 	EXPECT_EQ(root.children().size(), 1u);
-	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
+	lastChild = root.children().back()->toText();
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), "first string,second string,third string");
 
 	root.append(util::make_unique<XMLElement>("separator"));
 	root.append(",fourth string");
-	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
+	lastChild = root.children().back()->toText();
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), ",fourth string");
 
 	root.append(util::make_unique<XMLElement>("separator"));
 	root.append(util::make_unique<XMLText>(",fifth string"));
-	lastChild = dynamic_cast<XMLText*>(root.children().back().get());
+	lastChild = root.children().back()->toText();
 	ASSERT_NE(lastChild, nullptr);
 	EXPECT_EQ(lastChild->getText(), ",fifth string");
 
@@ -100,19 +127,19 @@ TEST(XMLNodeTest, prependText) {
 	XMLElement root("root");
 	root.prepend(util::make_unique<XMLText>("first string"));
 	EXPECT_EQ(root.children().size(), 1u);
-	XMLText *firstChild = dynamic_cast<XMLText*>(root.children().front().get());
+	XMLText *firstChild = root.children().front()->toText();
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "first string");
 
 	root.prepend(util::make_unique<XMLText>("second string,"));
 	EXPECT_EQ(root.children().size(), 1u);
-	firstChild = dynamic_cast<XMLText*>(root.children().front().get());
+	firstChild = root.children().front()->toText();
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "second string,first string");
 
 	root.prepend(util::make_unique<XMLElement>("separator"));
 	root.prepend(util::make_unique<XMLText>("third string,"));
-	firstChild = dynamic_cast<XMLText*>(root.children().front().get());
+	firstChild = root.children().front()->toText();
 	ASSERT_NE(firstChild, nullptr);
 	EXPECT_EQ(firstChild->getText(), "third string,");
 }
@@ -160,13 +187,13 @@ TEST(XMLNodeTest, insertBefore) {
 	EXPECT_EQ(root.children().size(), 2u);
 	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElement>("child3"), child1Ptr));
 	EXPECT_EQ(root.children().size(), 3u);
-	XMLElement *child = dynamic_cast<XMLElement*>(root.children().front().get());
+	XMLElement *child = root.children().front()->toElement();
 	EXPECT_EQ(child->getName(), "child3");
 	EXPECT_TRUE(root.insertBefore(util::make_unique<XMLElement>("child4"), child2Ptr));
 	const char *names[] = {"child3", "child1", "child4", "child2"};
 	const char **p = names;
 	for (const auto &node : root.children()) {
-		XMLElement *elem = dynamic_cast<XMLElement*>(node.get());
+		XMLElement *elem = node->toElement();
 		ASSERT_NE(elem, nullptr);
 		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
 	}
@@ -188,7 +215,7 @@ TEST(XMLNodeTest, insertAfter) {
 	const char *names[] = {"child1", "child3", "child2", "child4"};
 	const char **p = names;
 	for (const auto &node : root.children()) {
-		XMLElement *elem = dynamic_cast<XMLElement*>(node.get());
+		XMLElement *elem = node->toElement();
 		ASSERT_NE(elem, nullptr);
 		EXPECT_EQ(elem->getName(), *p++) << "name=" << elem->getName();
 	}
