@@ -33,7 +33,7 @@ class EmSpecialTest : public ::testing::Test {
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : x(), y(), page("page") {}
-				void appendToPage(unique_ptr<XMLNode> &&node) {page.append(std::move(node));}
+				void appendToPage (unique_ptr<XMLNode> node) {page.append(std::move(node));}
 				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
 				void setX (double xx)                         {x = xx;}
 				void setY (double yy)                         {x = yy;}

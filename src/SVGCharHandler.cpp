@@ -34,7 +34,7 @@ void SVGCharHandler::setInitialContextNode (XMLElement *node) {
 /** Changes the context element. All following nodes will be appended to this node.
  *  @param[in] node the new context node
  *  @return bare pointer to the new context node or 0 if context hasn't changed */
-XMLElement* SVGCharHandler::pushContextNode (unique_ptr<XMLElement> &&node) {
+XMLElement* SVGCharHandler::pushContextNode (unique_ptr<XMLElement> node) {
 	if (node && (_contextNodeStack.empty() || node.get() != _contextNodeStack.top())) {
 		XMLElement *nodeptr = node.get();
 		contextNode()->append(std::move(node));

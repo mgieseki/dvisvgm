@@ -54,10 +54,10 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		Color getColor () const override                        {return _svg.getColor();}
 		int getDVIStackDepth() const override                   {return _dvireader->stackDepth();}
 		unsigned getCurrentPageNumber() const override          {return _dvireader->currentPageNumber();}
-		void appendToPage(std::unique_ptr<XMLNode> &&node) override  {_svg.appendToPage(std::move(node));}
-		void appendToDefs(std::unique_ptr<XMLNode> &&node) override  {_svg.appendToDefs(std::move(node));}
-		void prependToPage(std::unique_ptr<XMLNode> &&node) override {_svg.prependToPage(std::move(node));}
-		void pushContextElement (std::unique_ptr<XMLElement> &&node) override {_svg.pushContextElement(std::move(node));}
+		void appendToPage (std::unique_ptr<XMLNode> node) override  {_svg.appendToPage(std::move(node));}
+		void appendToDefs (std::unique_ptr<XMLNode> node) override  {_svg.appendToDefs(std::move(node));}
+		void prependToPage (std::unique_ptr<XMLNode> node) override {_svg.prependToPage(std::move(node));}
+		void pushContextElement (std::unique_ptr<XMLElement> node) override {_svg.pushContextElement(std::move(node));}
 		void popContextElement () override                      {_svg.popContextElement();}
 		void setTextOrientation(bool vertical) override         {_svg.setVertical(vertical);}
 		void moveToX (double x, bool forceSVGMove) override;

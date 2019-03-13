@@ -123,7 +123,7 @@ void SVGTree::newPage (int pageno) {
 }
 
 
-void SVGTree::appendToDefs (unique_ptr<XMLNode> &&node) {
+void SVGTree::appendToDefs (unique_ptr<XMLNode> node) {
 	if (!_defs) {
 		auto defsNode = util::make_unique<XMLElement>("defs");
 		_defs = defsNode.get();
@@ -133,14 +133,14 @@ void SVGTree::appendToDefs (unique_ptr<XMLNode> &&node) {
 }
 
 
-void SVGTree::appendToPage (unique_ptr<XMLNode> &&node) {
+void SVGTree::appendToPage (unique_ptr<XMLNode> node) {
 	XMLElement *parent = _contextElementStack.empty() ? _page : _contextElementStack.top();
 	parent->append(std::move(node));
 	_charHandler->setInitialContextNode(parent);
 }
 
 
-void SVGTree::prependToPage (unique_ptr<XMLNode> &&node) {
+void SVGTree::prependToPage (unique_ptr<XMLNode> node) {
 	if (_contextElementStack.empty())
 		_page->prepend(std::move(node));
 	else
@@ -298,7 +298,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 
 
 /** Pushes a new context element that will take all following nodes added to the page. */
-void SVGTree::pushContextElement (unique_ptr<XMLElement> &&node) {
+void SVGTree::pushContextElement (unique_ptr<XMLElement> node) {
 	XMLElement *nodePtr = node.get();
 	if (_contextElementStack.empty())
 		_page->append(std::move(node));

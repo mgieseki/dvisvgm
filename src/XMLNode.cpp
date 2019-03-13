@@ -71,7 +71,7 @@ void XMLElement::addAttribute (const string &name, double value) {
 /** Appends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be appended
  *  @return raw pointer to the appended child node */
-XMLNode* XMLElement::append (unique_ptr<XMLNode> &&child) {
+XMLNode* XMLElement::append (unique_ptr<XMLNode> child) {
 	if (!child)
 		return nullptr;
 	XMLText *textNode1 = child->toText();
@@ -104,7 +104,7 @@ XMLNode* XMLElement::append (const string &str) {
 /** Prepends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be prepended
  *  @return raw pointer to the prepended child node */
-XMLNode* XMLElement::prepend (unique_ptr<XMLNode> &&child) {
+XMLNode* XMLElement::prepend (unique_ptr<XMLNode> child) {
 	if (!child)
 		return nullptr;
 	XMLText *textNode1 = child->toText();
@@ -125,7 +125,7 @@ XMLNode* XMLElement::prepend (unique_ptr<XMLNode> &&child) {
  *  @param[in] child node to be inserted
  *  @param[in] sibling following sibling of 'child'
  *  @return true on success */
-bool XMLElement::insertBefore (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
+bool XMLElement::insertBefore (unique_ptr<XMLNode> child, XMLNode *sibling) {
 	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
@@ -142,7 +142,7 @@ bool XMLElement::insertBefore (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
  *  @param[in] child node to be inserted
  *  @param[in] sibling preceding sibling of 'child'
  *  @return true on success */
-bool XMLElement::insertAfter (unique_ptr<XMLNode> &&child, XMLNode *sibling) {
+bool XMLElement::insertAfter (unique_ptr<XMLNode> child, XMLNode *sibling) {
 	auto it = _children.begin();
 	while (it != _children.end() && it->get() != sibling)
 		++it;
@@ -261,7 +261,7 @@ const XMLElement::Attribute* XMLElement::getAttribute (const string &name) const
 
 //////////////////////
 
-void XMLText::append (unique_ptr<XMLNode> &&node) {
+void XMLText::append (unique_ptr<XMLNode> node) {
 	if (!node)
 		return;
 	if (node->toText())
@@ -275,7 +275,7 @@ void XMLText::append (unique_ptr<XMLNode> &&node) {
 }
 
 
-void XMLText::append (unique_ptr<XMLText> &&node) {
+void XMLText::append (unique_ptr<XMLText> node) {
 	if (node)
 		_text += node->_text;
 }
@@ -286,7 +286,7 @@ void XMLText::append (const string &str) {
 }
 
 
-void XMLText::prepend (unique_ptr<XMLNode> &&node) {
+void XMLText::prepend (unique_ptr<XMLNode> node) {
 	if (XMLText *textNode = node->toText())
 		_text = textNode->_text + _text;
 }

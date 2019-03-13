@@ -74,7 +74,7 @@ class SVGCharHandler {
 
 	protected:
 		virtual void resetContextNode ();
-		XMLElement* pushContextNode (std::unique_ptr<XMLElement> &&node);
+		XMLElement* pushContextNode (std::unique_ptr<XMLElement> node);
 		void popContextNode ();
 
 		XMLElement* contextNode () const {

@@ -61,7 +61,7 @@ class PSTilingPattern : public PSPattern {
 		virtual std::unique_ptr<XMLElement> createClipNode () const;
 		virtual std::unique_ptr<XMLElement> createGroupNode () const;
 		virtual XMLElement* getGroupNode () const    {return _groupNodePtr;}
-		virtual void setGroupNode (std::unique_ptr<XMLElement> &&node);
+		virtual void setGroupNode (std::unique_ptr<XMLElement> node);
 
 	private:
 		BoundingBox _bbox;           ///< bounding box of the tile graphics

@@ -37,7 +37,7 @@ class SpecialManager {
 
 	public:
 		static SpecialManager& instance ();
-		void registerHandler (std::unique_ptr<SpecialHandler> &&handler);
+		void registerHandler (std::unique_ptr<SpecialHandler> handler);
 		void registerHandlers (std::vector<std::unique_ptr<SpecialHandler>> &handlers, const char *ignorelist);
 		void unregisterHandlers ();
 		void preprocess (const std::string &special, SpecialActions &actions) const;

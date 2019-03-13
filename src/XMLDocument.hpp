@@ -28,11 +28,11 @@
 class XMLDocument {
 	public:
 		XMLDocument () =default;
-		XMLDocument (std::unique_ptr<XMLElement> &&root);
+		XMLDocument(std::unique_ptr<XMLElement> root);
 		void clear ();
-		void append (std::unique_ptr<XMLElement> &&node);
-		void append (std::unique_ptr<XMLNode> &&node);
-		void setRootNode (std::unique_ptr<XMLElement> &&root);
+		void append (std::unique_ptr<XMLElement> node);
+		void append (std::unique_ptr<XMLNode> node);
+		void setRootNode (std::unique_ptr<XMLElement> root);
 		const XMLElement* getRootElement () const {return _rootElement.get();}
 		std::ostream& write (std::ostream &os) const;
 

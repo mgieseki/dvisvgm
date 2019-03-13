@@ -54,7 +54,7 @@ PSTilingPattern::PSTilingPattern (int id, BoundingBox &bbox, Matrix &matrix, dou
 
 
 /** Assigns a new group element. */
-void PSTilingPattern::setGroupNode (unique_ptr<XMLElement> &&node) {
+void PSTilingPattern::setGroupNode (unique_ptr<XMLElement> node) {
 	_groupNode = std::move(node);
 	_groupNodePtr = _groupNode.get();
 }

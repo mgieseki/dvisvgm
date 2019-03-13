@@ -59,7 +59,7 @@ class XMLNode {
 class XMLElement : public XMLNode {
 	public:
 		struct Attribute {
-			Attribute (const std::string &nam, const std::string &val) : name(nam), value(val) {}
+			Attribute (std::string nam, std::string val) : name(std::move(nam)), value(std::move(val)) {}
 			std::string name;
 			std::string value;
 		};
@@ -74,12 +74,12 @@ class XMLElement : public XMLNode {
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
-		XMLNode* append (std::unique_ptr<XMLNode> &&child);
+		XMLNode* append (std::unique_ptr<XMLNode> child);
 		XMLNode* append (const std::string &str);
-		XMLNode* prepend (std::unique_ptr<XMLNode> &&child);
+		XMLNode* prepend (std::unique_ptr<XMLNode> child);
 		void remove (const XMLNode *child);
-		bool insertAfter (std::unique_ptr<XMLNode> &&child, XMLNode *sibling);
-		bool insertBefore (std::unique_ptr<XMLNode> &&child, XMLNode *sibling);
+		bool insertAfter (std::unique_ptr<XMLNode> child, XMLNode *sibling);
+		bool insertBefore (std::unique_ptr<XMLNode> child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
 		const char* getAttributeValue (const std::string &name) const;
 		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElement*> &descendants) const;
@@ -107,10 +107,10 @@ class XMLText : public XMLNode {
 		XMLText (std::string &&str) : _text(std::move(str)) {}
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLText>(*this);}
 		void clear () override {_text.clear();}
-		void append (std::unique_ptr<XMLNode> &&node);
-		void append (std::unique_ptr<XMLText> &&node);
+		void append (std::unique_ptr<XMLNode> node);
+		void append (std::unique_ptr<XMLText> node);
 		void append (const std::string &str);
-		void prepend (std::unique_ptr<XMLNode> &&node);
+		void prepend (std::unique_ptr<XMLNode> node);
 		std::ostream& write (std::ostream &os) const override {return os << _text;}
 		const std::string& getText () const {return _text;}
 		const XMLText* toText () const override {return this;}

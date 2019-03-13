@@ -44,10 +44,10 @@ class SpecialActions {
 		virtual const Matrix& getMatrix () const =0;
 		virtual Matrix getPageTransformation () const {return Matrix(1);}
 		virtual void setBgColor (const Color &color) =0;
-		virtual void appendToPage(std::unique_ptr<XMLNode> &&node) =0;
-		virtual void appendToDefs(std::unique_ptr<XMLNode> &&node) =0;
-		virtual void prependToPage(std::unique_ptr<XMLNode> &&node) =0;
-		virtual void pushContextElement (std::unique_ptr<XMLElement> &&node) =0;
+		virtual void appendToPage (std::unique_ptr<XMLNode> node) =0;
+		virtual void appendToDefs (std::unique_ptr<XMLNode> node) =0;
+		virtual void prependToPage (std::unique_ptr<XMLNode> node) =0;
+		virtual void pushContextElement (std::unique_ptr<XMLElement> node) =0;
 		virtual void popContextElement () =0;
 		virtual BoundingBox& bbox () =0;
 		virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
@@ -75,10 +75,10 @@ class EmptySpecialActions : public SpecialActions {
 		Color getColor () const override {return Color::BLACK;}
 		void setMatrix (const Matrix &m) override {}
 		const Matrix& getMatrix () const override {return _matrix;}
-		void appendToPage(std::unique_ptr<XMLNode> &&node) override {}
-		void appendToDefs(std::unique_ptr<XMLNode> &&node) override {}
-		void prependToPage(std::unique_ptr<XMLNode> &&node) override {}
-		void pushContextElement (std::unique_ptr<XMLElement> &&node) override {}
+		void appendToPage (std::unique_ptr<XMLNode> node) override {}
+		void appendToDefs (std::unique_ptr<XMLNode> node) override {}
+		void prependToPage (std::unique_ptr<XMLNode> node) override {}
+		void pushContextElement (std::unique_ptr<XMLElement> node) override {}
 		void popContextElement () override {}
 		BoundingBox& bbox () override {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}

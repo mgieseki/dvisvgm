@@ -42,9 +42,9 @@ class DvisvgmSpecialTest : public ::testing::Test {
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : defs(""), page("page")            {context.push_back(&page);}
-				void appendToDefs(unique_ptr<XMLNode> &&node) override {defs.append(std::move(node));}
-				void appendToPage(unique_ptr<XMLNode> &&node) override {context.back()->append(std::move(node));}
-				void pushContextElement (unique_ptr<XMLElement> &&node) override {
+				void appendToDefs (unique_ptr<XMLNode> node) override {defs.append(std::move(node));}
+				void appendToPage (unique_ptr<XMLNode> node) override {context.back()->append(std::move(node));}
+				void pushContextElement (unique_ptr<XMLElement> node) override {
 					XMLElement *elem = node.get();
 					context.back()->append(std::move(node));
 					context.push_back(elem);
