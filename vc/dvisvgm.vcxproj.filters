@@ -305,6 +305,9 @@
     <ClCompile Include="..\src\HashFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\SVGOptimizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -623,6 +626,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\XXHashFunction.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SVGOptimizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

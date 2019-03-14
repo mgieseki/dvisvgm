@@ -68,6 +68,13 @@ void XMLElement::addAttribute (const string &name, double value) {
 }
 
 
+void XMLElement::removeAttribute (const std::string &name) {
+	_attributes.erase(find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
+		return attr.name == name;
+	}));
+}
+
+
 /** Appends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be appended
  *  @return raw pointer to the appended child node */
@@ -153,6 +160,42 @@ bool XMLElement::insertAfter (unique_ptr<XMLNode> child, XMLNode *sibling) {
 }
 
 
+/** Moves a sequence of child nodes to a new element of a given name and inserts
+ *  this (wrapper) element at the former position of the first node of the sequence.
+ *  Example: wrap 3 child nodes of element a with b:
+ *  <a>text1<c/>text2<d/></a> => <a>text1<b><c/>text2<d/></b></a>
+ *  @param[in] first first node to be moved
+ *  @param[in] last first node after last node to be moved
+ *  @param[in] name name of the wrapper element to be created
+ *  @return iterator pointing to the new wrapper element */
+XMLElement::Iterator XMLElement::wrap (Iterator first, Iterator last, const string &name) {
+	auto wrapper = util::make_unique<XMLElement>(name);
+	Children &wrapperChildren = wrapper->_children;
+	wrapperChildren.insert(wrapperChildren.end(), make_move_iterator(first), make_move_iterator(last));
+	auto it = _children.erase(first, last);
+	return _children.insert(it, std::move(wrapper));
+}
+
+
+/** Moves all child nodes C1,...,Cn of a given child element E of *this to *this
+ *  and removes E afterwards, so that C1 is located at the former position of E
+ *  followed by C2,...,Cn.
+ *  Example: unwrap a child element b of a:
+ *  <a>text1<b><c/>text2<d/></b></a> => <a>text1<c/>text2<d/></a>
+ *  @param[in] pos position of element to unwrap
+ *  @return iterator pointing to the first node C1 of the unwrapped sequence */
+XMLElement::Iterator XMLElement::unwrap (Iterator pos) {
+	if (XMLElement *elem = (*pos)->toElement()) {
+		auto it = _children.insert(
+			std::next(pos),
+			make_move_iterator(elem->begin()),
+			make_move_iterator(elem->end()));
+		return _children.erase(std::prev(it));
+	}
+	return pos;
+}
+
+
 /** Removes a given child from the element. */
 void XMLElement::remove (const XMLNode *child) {
 	auto it = find_if(_children.begin(), _children.end(), [=](const unique_ptr<XMLNode> &ptr) {
@@ -160,6 +203,11 @@ void XMLElement::remove (const XMLNode *child) {
 	});
 	if (it != _children.end())
 		_children.erase(it);
+}
+
+
+void XMLElement::remove (Iterator childIt) {
+	_children.erase(childIt);
 }
 
 

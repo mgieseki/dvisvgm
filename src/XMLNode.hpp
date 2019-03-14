@@ -63,7 +63,9 @@ class XMLElement : public XMLNode {
 			std::string name;
 			std::string value;
 		};
-		using ChildList = std::deque<std::unique_ptr<XMLNode>>;
+		using Children = std::deque<std::unique_ptr<XMLNode>>;
+		using Iterator = Children::iterator;
+		using Attributes = std::vector<Attribute>;
 		static bool WRITE_NEWLINES;  ///< insert line breaks after element tags
 
 	public:
@@ -74,10 +76,12 @@ class XMLElement : public XMLNode {
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
+		void removeAttribute (const std::string &name);
 		XMLNode* append (std::unique_ptr<XMLNode> child);
 		XMLNode* append (const std::string &str);
 		XMLNode* prepend (std::unique_ptr<XMLNode> child);
 		void remove (const XMLNode *child);
+		void remove (Iterator childIt);
 		bool insertAfter (std::unique_ptr<XMLNode> child, XMLNode *sibling);
 		bool insertBefore (std::unique_ptr<XMLNode> child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
@@ -86,9 +90,14 @@ class XMLElement : public XMLNode {
 		XMLElement* getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const;
 		std::ostream& write (std::ostream &os) const override;
 		bool empty () const {return _children.empty();}
-		const ChildList& children () const {return _children;}
+		const Children& children () const {return _children;}
+		Attributes& attributes () {return _attributes;}
+		Iterator begin () {return _children.begin();}
+		Iterator end () {return _children.end();}
 		const std::string& getName () const {return _name;}
 		const XMLElement* toElement () const override {return this;}
+		Iterator wrap (Iterator first, Iterator last, const std::string &name);
+		Iterator unwrap (Iterator pos);
 
 	protected:
 		Attribute* getAttribute (const std::string &name);
@@ -97,7 +106,7 @@ class XMLElement : public XMLNode {
 	private:
 		std::string _name;     // element name (<name a1="v1" .. an="vn">...</name>)
 		std::vector<Attribute> _attributes;
-		ChildList _children;   // child nodes
+		Children _children;   // child nodes
 };
 
 

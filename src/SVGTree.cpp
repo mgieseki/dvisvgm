@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstring>
 #include <sstream>
 #include "BoundingBox.hpp"
 #include "DependencyGraph.hpp"
@@ -29,6 +30,7 @@
 #include "FontManager.hpp"
 #include "FontWriter.hpp"
 #include "SVGCharHandlerFactory.hpp"
+#include "SVGOptimizer.hpp"
 #include "SVGTree.hpp"
 #include "XMLDocument.hpp"
 #include "XMLNode.hpp"

@@ -281,6 +281,7 @@
     <ClCompile Include="..\src\SVGCharHandler.cpp" />
     <ClCompile Include="..\src\SVGCharHandlerFactory.cpp" />
     <ClCompile Include="..\src\SVGCharPathHandler.cpp" />
+    <ClCompile Include="..\src\SVGOptimizer.cpp" />
     <ClCompile Include="..\src\SVGSingleCharTextHandler.cpp" />
     <ClCompile Include="..\src\SVGCharTspanTextHandler.cpp" />
     <ClCompile Include="..\src\SVGOutput.cpp" />
@@ -359,6 +360,7 @@
     <ClInclude Include="..\src\SVGCharHandler.hpp" />
     <ClInclude Include="..\src\SVGCharHandlerFactory.hpp" />
     <ClInclude Include="..\src\SVGCharPathHandler.hpp" />
+    <ClInclude Include="..\src\SVGOptimizer.hpp" />
     <ClInclude Include="..\src\SVGSingleCharTextHandler.hpp" />
     <ClInclude Include="..\src\SVGCharTspanTextHandler.hpp" />
     <ClInclude Include="..\src\SVGOutput.hpp" />
