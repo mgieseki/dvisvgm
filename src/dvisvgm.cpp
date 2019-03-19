@@ -45,6 +45,7 @@
 #include "PsSpecialHandler.hpp"
 #include "SignalHandler.hpp"
 #include "SourceInput.hpp"
+#include "SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
 #include "XXHashFunction.hpp"
@@ -298,11 +299,11 @@ static void init_fontmap (const CommandLine &cmdline) {
 static string svg_options_hash (const CommandLine &cmdline) {
 	// options affecting the SVG output
 	vector<const CL::Option*> svg_options = {
-		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.colornamesOpt, &cmdline.commentsOpt,
-		&cmdline.exactOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt, &cmdline.gradOverlapOpt,
-		&cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt, &cmdline.magOpt,
-		&cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt,	&cmdline.noStylesOpt,
-		&cmdline.precisionOpt,	&cmdline.relativeOpt, &cmdline.zoomOpt
+		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.groupAttributesOpt, &cmdline.colornamesOpt,
+		&cmdline.commentsOpt, &cmdline.exactOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt,
+		&cmdline.gradOverlapOpt, &cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt,
+		&cmdline.magOpt, &cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt,
+		&cmdline.noStylesOpt, &cmdline.precisionOpt,	&cmdline.relativeOpt, &cmdline.zoomOpt
 	};
 	string idString = get_transformation_string(cmdline);
 	for (const CL::Option *opt : svg_options) {
@@ -348,6 +349,7 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();
 	SVGTree::MERGE_CHARS = !cmdline.noMergeOpt.given();
 	SVGTree::ADD_COMMENTS = cmdline.commentsOpt.given();
+	SVGOptimizer::GROUP_ATTRIBUTES = cmdline.groupAttributesOpt.given();
 	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
 	Message::LEVEL = cmdline.verbosityOpt.value();
 	PhysicalFont::EXACT_BBOX = cmdline.exactOpt.given();

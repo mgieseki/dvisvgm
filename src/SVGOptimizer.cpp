@@ -25,16 +25,18 @@
 
 using namespace std;
 
+bool SVGOptimizer::GROUP_ATTRIBUTES=false;
 
 void SVGOptimizer::execute () {
 	if (_svg.pageNode()) {
-		AttributeExtractor().execute(*_svg.pageNode());
-		GroupCollapser().execute(*_svg.pageNode());
+		if (GROUP_ATTRIBUTES) {
+			AttributeExtractor().execute(*_svg.pageNode());
+			GroupCollapser().execute(*_svg.pageNode());
+		}
 		if (_svg.defsNode())
 			RedundantElementRemover().execute(*_svg.defsNode(), *_svg.pageNode());
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 

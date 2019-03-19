@@ -31,6 +31,7 @@ class SVGOptimizer {
 		SVGOptimizer (SVGTree &svg) : _svg(svg) {}
 		void execute ();
 
+		static bool GROUP_ATTRIBUTES;
 	private:
 		SVGTree &_svg;
 };

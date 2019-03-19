@@ -77,6 +77,9 @@
 				<arg type="double" name="delta" default="0.05"/>
 				<description>reduce level of detail for small segments</description>
 			</option>
+			<option long="group-attributes" short="g">
+				<description>move common attributes to parent elements</description>
+			</option>
 			<option long="linkmark" short="L">
 				<arg type="string" name="style" default="box"/>
 				<description>select how to mark hyperlinked areas</description>

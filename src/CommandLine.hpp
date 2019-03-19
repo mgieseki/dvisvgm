@@ -41,6 +41,7 @@ class CommandLine : public CL::CommandLine {
 		Option gradOverlapOpt {"grad-overlap", '\0', "create overlapping color gradient segments"};
 		TypedOption<int, Option::ArgMode::REQUIRED> gradSegmentsOpt {"grad-segments", '\0', "number", 20, "number of color gradient segments per row"};
 		TypedOption<double, Option::ArgMode::REQUIRED> gradSimplifyOpt {"grad-simplify", '\0', "delta", 0.05, "reduce level of detail for small segments"};
+		Option groupAttributesOpt {"group-attributes", 'g', "move common attributes to parent elements"};
 		TypedOption<int, Option::ArgMode::OPTIONAL> helpOpt {"help", 'h', "mode", 0, "print this summary of options and exit"};
 		Option keepOpt {"keep", '\0', "keep temporary files"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> libgsOpt {"libgs", '\0', "filename", "set name of Ghostscript shared library"};
@@ -113,6 +114,7 @@ class CommandLine : public CL::CommandLine {
 #if !defined(DISABLE_GS)
 			{&gradSimplifyOpt, 1},
 #endif
+			{&groupAttributesOpt, 1},
 			{&linkmarkOpt, 1},
 			{&outputOpt, 1},
 			{&precisionOpt, 1},

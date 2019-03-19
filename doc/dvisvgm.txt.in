@@ -160,7 +160,6 @@ In order to apply these color names rather than their RGB values, call dvisvgm w
 Adds comments with further information about selected data to the SVG file. Currently, only
 font elements and font CSS rules related to native fonts are annotated.
 
-
 *-E, --eps*::
 If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
 it to SVG. In order to do so, a single 'psfile' special command is created and forwarded to the
@@ -256,6 +255,12 @@ If the size of the segments created to approximate gradient color fills falls be
 value, dvisvgm reduces their level of detail. For example, Bézier curves are replaced by straight
 lines, and triangular segments are combined to tetragons. For a small 'delta', these simplifications
 are usually not noticeable but reduce the size of the generated SVG files significantly.
+
+*-g, --group-attributes*::
+Groups common attributes of adjacent elements together by moving them to their parent or newly
+created group (<g>...</g>) elements. The algorithm only takes inheritable properties, such as
++fill+ or +stroke-width+, into account and only removes them from an element if none of the other
+attributes, like +id+, prevents this.
 
 *-h, --help*[='mode']::
 Prints a short summary of all available command-line options. The optional 'mode' parameter is
