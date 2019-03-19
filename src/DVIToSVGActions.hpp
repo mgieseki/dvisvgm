@@ -57,9 +57,11 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void appendToPage (std::unique_ptr<XMLNode> node) override  {_svg.appendToPage(std::move(node));}
 		void appendToDefs (std::unique_ptr<XMLNode> node) override  {_svg.appendToDefs(std::move(node));}
 		void prependToPage (std::unique_ptr<XMLNode> node) override {_svg.prependToPage(std::move(node));}
-		void pushContextElement (std::unique_ptr<XMLElement> node) override {_svg.pushContextElement(std::move(node));}
-		void popContextElement () override                      {_svg.popContextElement();}
-		void setTextOrientation(bool vertical) override         {_svg.setVertical(vertical);}
+		void pushPageContext (std::unique_ptr<XMLElement> node) override {_svg.pushPageContext(std::move(node));}
+		void popPageContext () override                                  {_svg.popPageContext();}
+		void pushDefsContext (std::unique_ptr<XMLElement> node) override {_svg.pushDefsContext(std::move(node));}
+		void popDefsContext () override                                  {_svg.popDefsContext();}
+		void setTextOrientation(bool vertical) override                  {_svg.setVertical(vertical);}
 		void moveToX (double x, bool forceSVGMove) override;
 		void moveToY (double y, bool forceSVGMove) override;
 		void setFont (int num, const Font &font) override;

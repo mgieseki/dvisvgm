@@ -109,7 +109,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 	auto anchorNode = util::make_unique<XMLElement>("a");
 	anchorNode->addAttribute("xlink:href", uri);
 	anchorNode->addAttribute("xlink:title", XMLString(name.empty() ? uri : name, false));
-	actions.pushContextElement(std::move(anchorNode));
+	actions.pushPageContext(std::move(anchorNode));
 	actions.bbox("{anchor}", true);  // start computing the bounding box of the linked area
 	_depthThreshold = actions.getDVIStackDepth();
 	_anchorType = AnchorType::HREF;
@@ -119,7 +119,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 void HyperlinkManager::closeAnchor (SpecialActions &actions) {
 	if (_anchorType == AnchorType::HREF) {
 		markLinkedBox(actions);
-		actions.popContextElement();
+		actions.popPageContext();
 		_depthThreshold = 0;
 	}
 	_anchorType = AnchorType::NONE;

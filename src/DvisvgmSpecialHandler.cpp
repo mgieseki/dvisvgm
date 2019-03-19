@@ -186,6 +186,17 @@ static void expand_constants (string &str, SpecialActions &actions) {
 }
 
 
+struct ContextFunctions {
+	using AppendFunc = void (SpecialActions::*)(std::unique_ptr<XMLNode>);
+	using PushFunc = void (SpecialActions::*)(std::unique_ptr<XMLElement>);
+	using PopFunc = void (SpecialActions::*)();
+	ContextFunctions (AppendFunc ap, PushFunc push, PopFunc pop) : append(ap), pushContext(push), popContext(pop) {}
+	AppendFunc append;
+	PushFunc pushContext;
+	PopFunc popContext;
+};
+
+
 /** Parses the XML code read by the given input reader, creates corresponding XML nodes and
  *  adds the to the SVG page group. It stops reading as soon as EOF is reached.
  *  The XML data must represent a single or multiple syntactically complete XML parts, like
@@ -194,12 +205,12 @@ static void expand_constants (string &str, SpecialActions &actions) {
  *  Example: "<g transform=" is invalid, "<g transform='scale(2,3)'>" is ok.
  *  @param[in,out] ir reader delivering the characters of the raw XML fragment to parse
  *  @param[in] actions object providing the SVG tree functions */
-void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions &actions) {
+void create_svg_nodes (InputReader &ir, SpecialActions &actions, ContextFunctions funcs, vector<string> &stack) {
 	while (!ir.eof()) {
 		ir.skipSpace();
 		if (ir.peek() != '<') {  // text node
 			string xml = ir.getString("<");
-			actions.appendToPage(util::make_unique<XMLText>(xml));
+			(actions.*funcs.append)(util::make_unique<XMLText>(xml));
 		}
 		else {
 			ir.get();  // skip '<'
@@ -215,11 +226,11 @@ void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions 
 				ir.skipSpace();
 				if (ir.peek() == '>') { // end of opening tag
 					ir.get();
-					_elemStack.push_back(name);
-					actions.pushContextElement(std::move(elemNode));
+					stack.push_back(name);
+					(actions.*funcs.pushContext)(std::move(elemNode));
 				}
 				else if (ir.check("/>"))  // end of empty element tag
-					actions.appendToPage(std::move(elemNode));
+					(actions.*funcs.append)(std::move(elemNode));
 				else
 					throw SpecialException("'>' or '/>' expected at end of opening XML tag");
 			}
@@ -229,12 +240,12 @@ void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions 
 				ir.skipSpace();
 				if (ir.get() != '>')
 					throw SpecialException("'>' expected at end of closing XML tag");
-				if (_elemStack.empty())
+				if (stack.empty())
 					throw SpecialException("spurious closing tag </" + name + ">");
-				if (_elemStack.back() != name)
-					throw SpecialException("expected </" + name + "> but found </" + _elemStack.back() + ">");
-				actions.popContextElement();
-				_elemStack.pop_back();
+				if (stack.back() != name)
+					throw SpecialException("expected </" + name + "> but found </" + stack.back() + ">");
+				(actions.*funcs.popContext)();
+				stack.pop_back();
 			}
 			else {
 				// for now, create text nodes for CDATA, comments, and processing instructions
@@ -248,7 +259,7 @@ void DvisvgmSpecialHandler::createSVGPageNodes (InputReader &ir, SpecialActions 
 					chunk = "<?" + ir.readUntil("?>");
 				else
 					chunk = ir.getString("<");
-				actions.appendToPage(util::make_unique<XMLText>(chunk));
+				(actions.*funcs.append)(util::make_unique<XMLText>(chunk));
 			}
 		}
 	}
@@ -266,17 +277,29 @@ void DvisvgmSpecialHandler::processRaw (InputReader &ir, SpecialActions &actions
 		expand_constants(xml, actions);
 		StringInputBuffer ib(xml);
 		BufferInputReader stringReader(ib);
-		createSVGPageNodes(stringReader, actions);
+		create_svg_nodes(stringReader, actions,
+			ContextFunctions(
+				&SpecialActions::appendToPage,
+				&SpecialActions::pushPageContext,
+				&SpecialActions::popPageContext),
+			_pageNameStack);
 	}
 }
 
 
 void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &actions) {
 	if (_nestingLevel == 0) {
-		string str = ir.getLine();
-		if (!str.empty()) {
-			expand_constants(str, actions);
-			actions.appendToDefs(util::make_unique<XMLText>(str));
+		string xml = ir.getLine();
+		if (!xml.empty()) {
+			expand_constants(xml, actions);
+			StringInputBuffer ib(xml);
+			BufferInputReader stringReader(ib);
+			create_svg_nodes(stringReader, actions,
+				ContextFunctions(
+				  &SpecialActions::appendToDefs,
+				  &SpecialActions::pushDefsContext,
+				  &SpecialActions::popDefsContext),
+				_defsNameStack);
 		}
 	}
 }
@@ -307,13 +330,23 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 		string def = defstr.substr(1);
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
+			StringInputBuffer ib(def);
+			BufferInputReader stringReader(ib);
 			if (type == 'P') {
-				StringInputBuffer ib(def);
-				BufferInputReader stringReader(ib);
-				createSVGPageNodes(stringReader, actions);
+				create_svg_nodes(stringReader, actions,
+					ContextFunctions(
+						&SpecialActions::appendToPage,
+						&SpecialActions::pushPageContext,
+						&SpecialActions::popPageContext),
+					_pageNameStack);
 			}
 			else {          // type == 'D'
-				actions.appendToDefs(util::make_unique<XMLText>(def));
+				create_svg_nodes(stringReader, actions,
+					ContextFunctions(
+						&SpecialActions::appendToDefs,
+						&SpecialActions::pushDefsContext,
+						&SpecialActions::popDefsContext),
+					_defsNameStack);
 				type = 'L';  // locked
 			}
 		}
@@ -428,7 +461,8 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 
 
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions&) {
-	_elemStack.clear();
+	_defsNameStack.clear();
+	_pageNameStack.clear();
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;
 		for (string &str : vec) {

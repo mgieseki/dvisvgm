@@ -29,11 +29,14 @@
 
 class InputReader;
 class SpecialActions;
+class SVGTree;
+class XMLElement;
 class XMLNode;
 
 class DvisvgmSpecialHandler : public SpecialHandler {
 	using StringVector = std::vector<std::string>;
 	using MacroMap = std::unordered_map<std::string, StringVector>;
+	using NameStack = std::vector<std::string>;
 
 	public:
 		DvisvgmSpecialHandler ();
@@ -44,7 +47,7 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 
 	protected:
-		void createSVGPageNodes (InputReader &ir, SpecialActions &actions);
+//		void createSVGPageNodes (InputReader &ir, SpecialActions &actions, ContextFunctions funcs, NameStack &stack);
 		void preprocessRaw (InputReader &ir);
 		void preprocessRawDef (InputReader &ir);
 		void preprocessRawSet (InputReader &ir);
@@ -64,7 +67,8 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		MacroMap _macros;
 		MacroMap::iterator _currentMacro;
 		int _nestingLevel;  ///< nesting depth of rawset specials
-		std::vector<std::string> _elemStack; ///< stack holding the names of elements created by raw special
+		NameStack _defsNameStack; ///< stack holding the names of elements created by rawdef special
+		NameStack _pageNameStack; ///< stack holding the names of elements created by raw special
 };
 
 #endif

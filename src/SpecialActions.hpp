@@ -26,9 +26,7 @@
 #include "BoundingBox.hpp"
 #include "Color.hpp"
 #include "Matrix.hpp"
-
-class XMLNode;
-class XMLElement;
+#include "XMLNode.hpp"
 
 class SpecialActions {
 	public:
@@ -47,8 +45,10 @@ class SpecialActions {
 		virtual void appendToPage (std::unique_ptr<XMLNode> node) =0;
 		virtual void appendToDefs (std::unique_ptr<XMLNode> node) =0;
 		virtual void prependToPage (std::unique_ptr<XMLNode> node) =0;
-		virtual void pushContextElement (std::unique_ptr<XMLElement> node) =0;
-		virtual void popContextElement () =0;
+		virtual void pushPageContext (std::unique_ptr<XMLElement> node) =0;
+		virtual void popPageContext () =0;
+		virtual void pushDefsContext (std::unique_ptr<XMLElement> node) =0;
+		virtual void popDefsContext () =0;
 		virtual BoundingBox& bbox () =0;
 		virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
 		virtual void embed (const BoundingBox &bbox) =0;
@@ -78,8 +78,10 @@ class EmptySpecialActions : public SpecialActions {
 		void appendToPage (std::unique_ptr<XMLNode> node) override {}
 		void appendToDefs (std::unique_ptr<XMLNode> node) override {}
 		void prependToPage (std::unique_ptr<XMLNode> node) override {}
-		void pushContextElement (std::unique_ptr<XMLElement> node) override {}
-		void popContextElement () override {}
+		void pushPageContext (std::unique_ptr<XMLElement> node) override {}
+		void popPageContext () override {}
+		void pushDefsContext (std::unique_ptr<XMLElement> node) override {}
+		void popDefsContext () override {}
 		BoundingBox& bbox () override {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}
 		void embed (const BoundingBox &bbox) override {}

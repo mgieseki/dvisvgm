@@ -54,8 +54,10 @@ class SVGTree {
 		void appendChar (int c, double x, double y) {_charHandler->appendChar(c, x, y);}
 		void appendFontStyles (const std::unordered_set<const Font*> &fonts);
 		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *callback=0);
-		void pushContextElement (std::unique_ptr<XMLElement> node);
-		void popContextElement ();
+		void pushDefsContext (std::unique_ptr<XMLElement> node);
+		void popDefsContext ();
+		void pushPageContext (std::unique_ptr<XMLElement> node);
+		void popPageContext ();
 		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
@@ -88,7 +90,8 @@ class SVGTree {
 		XMLElement *_root, *_page, *_defs;
 		XMLCData *_styleCDataNode;
 		std::unique_ptr<SVGCharHandler> _charHandler;
-		std::stack<XMLElement*> _contextElementStack;
+		std::stack<XMLElement*> _defsContextStack;
+		std::stack<XMLElement*> _pageContextStack;
 };
 
 #endif

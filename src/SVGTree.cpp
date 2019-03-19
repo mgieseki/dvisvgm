@@ -118,8 +118,8 @@ void SVGTree::newPage (int pageno) {
 	_charHandler->setInitialContextNode(pageNode.get());
 	_page = pageNode.get();
 	_root->append(std::move(pageNode));
-	while (!_contextElementStack.empty())
-		_contextElementStack.pop();
+	_defsContextStack = {};
+	_pageContextStack = {};
 }
 
 
@@ -134,17 +134,17 @@ void SVGTree::appendToDefs (unique_ptr<XMLNode> node) {
 
 
 void SVGTree::appendToPage (unique_ptr<XMLNode> node) {
-	XMLElement *parent = _contextElementStack.empty() ? _page : _contextElementStack.top();
+	XMLElement *parent = _pageContextStack.empty() ? _page : _pageContextStack.top();
 	parent->append(std::move(node));
 	_charHandler->setInitialContextNode(parent);
 }
 
 
 void SVGTree::prependToPage (unique_ptr<XMLNode> node) {
-	if (_contextElementStack.empty())
+	if (_pageContextStack.empty())
 		_page->prepend(std::move(node));
 	else
-		_contextElementStack.top()->prepend(std::move(node));
+		_pageContextStack.top()->prepend(std::move(node));
 }
 
 
@@ -297,22 +297,38 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 }
 
 
-/** Pushes a new context element that will take all following nodes added to the page. */
-void SVGTree::pushContextElement (unique_ptr<XMLElement> node) {
+void SVGTree::pushDefsContext (unique_ptr<XMLElement> node) {
 	XMLElement *nodePtr = node.get();
-	if (_contextElementStack.empty())
+	if (_defsContextStack.empty())
+		_defs->append(std::move(node));
+	else
+		_defsContextStack.top()->append(std::move(node));
+	_defsContextStack.push(nodePtr);
+}
+
+
+void SVGTree::popDefsContext () {
+	if (!_defsContextStack.empty())
+		_defsContextStack.pop();
+}
+
+
+/** Pushes a new context element that will take all following nodes added to the page. */
+void SVGTree::pushPageContext (unique_ptr<XMLElement> node) {
+	XMLElement *nodePtr = node.get();
+	if (_pageContextStack.empty())
 		_page->append(std::move(node));
 	else
-		_contextElementStack.top()->append(std::move(node));
-	_contextElementStack.push(nodePtr);
+		_pageContextStack.top()->append(std::move(node));
+	_pageContextStack.push(nodePtr);
 	_charHandler->setInitialContextNode(nodePtr);
 }
 
 
 /** Pops the current context element and restored the previous one. */
-void SVGTree::popContextElement () {
-	if (!_contextElementStack.empty())
-		_contextElementStack.pop();
+void SVGTree::popPageContext () {
+	if (!_pageContextStack.empty())
+		_pageContextStack.pop();
 	_charHandler->setInitialContextNode(_page);
 }
 
