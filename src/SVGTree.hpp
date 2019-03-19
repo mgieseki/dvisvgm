@@ -58,7 +58,6 @@ class SVGTree {
 		void popDefsContext ();
 		void pushPageContext (std::unique_ptr<XMLElement> node);
 		void popPageContext ();
-		void removeRedundantElements ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
 		static bool setFontFormat (std::string formatstr);
@@ -70,7 +69,9 @@ class SVGTree {
 		void transformPage (const Matrix &m);
 		Color getColor () const           {return _charHandler->getColor();}
 		const Matrix& getMatrix () const  {return _charHandler->getMatrix();}
-		XMLElement* rootNode () const {return _root;}
+		XMLElement* rootNode () const     {return _root;}
+		XMLElement* defsNode () const     {return _defs;}
+		XMLElement* pageNode () const     {return _page;}
 
 	protected:
 		XMLCData* styleCDataNode ();

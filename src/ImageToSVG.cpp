@@ -27,6 +27,7 @@
 #include "MessageException.hpp"
 #include "PageRanges.hpp"
 #include "PsSpecialHandler.hpp"
+#include "SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
 #include "utility.hpp"
@@ -78,7 +79,7 @@ void ImageToSVG::convert (int pageno) {
 	progress(0);
 	Matrix matrix = getUserMatrix(_bbox);
 	// output SVG file
-	_svg.removeRedundantElements();
+	SVGOptimizer(_svg).execute();
 	_svg.transformPage(matrix);
 	_bbox.transform(matrix);
 	_svg.setBBox(_bbox);

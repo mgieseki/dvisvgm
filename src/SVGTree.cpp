@@ -335,45 +335,6 @@ void SVGTree::popPageContext () {
 }
 
 
-/** Extracts the ID from a local URL reference like url(#abcde) */
-static inline string extract_id_from_url (const string &url) {
-	return url.substr(5, url.length()-6);
-}
-
-
-/** Removes elements present in the SVG tree that are not required.
- *  For now, only clipPath elements are removed. */
-void SVGTree::removeRedundantElements () {
-	vector<XMLElement*> clipPathElements;
-	if (!_defs || !_defs->getDescendants("clipPath", nullptr, clipPathElements))
-		return;
-
-	// collect dependencies between clipPath elements in the defs section of the SVG tree
-	DependencyGraph<string> idTree;
-	for (const XMLElement *clip : clipPathElements) {
-		if (const char *id = clip->getAttributeValue("id")) {
-			if (const char *url = clip->getAttributeValue("clip-path"))
-				idTree.insert(extract_id_from_url(url), id);
-			else
-				idTree.insert(id);
-		}
-	}
-	// collect elements that reference a clipPath, i.e. have a clip-path attribute
-	vector<XMLElement*> descendants;
-	_page->getDescendants(nullptr, "clip-path", descendants);
-	// remove referenced IDs and their dependencies from the dependency graph
-	for (const XMLElement *elem : descendants) {
-		string idref = extract_id_from_url(elem->getAttributeValue("clip-path"));
-		idTree.removeDependencyPath(idref);
-	}
-	descendants.clear();
-	for (const string &str : idTree.getKeys()) {
-		XMLElement *node = _defs->getFirstDescendant("clipPath", "id", str.c_str());
-		_defs->remove(node);
-	}
-}
-
-
 XMLCData* SVGTree::styleCDataNode () {
 	if (!_styleCDataNode) {
 		auto styleNode = util::make_unique<XMLElement>("style");

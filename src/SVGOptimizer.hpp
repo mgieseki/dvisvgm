@@ -24,9 +24,15 @@
 #include <set>
 #include "XMLNode.hpp"
 
+class SVGTree;
+
 class SVGOptimizer {
 	public:
-		void execute (XMLElement &context);
+		SVGOptimizer (SVGTree &svg) : _svg(svg) {}
+		void execute ();
+
+	private:
+		SVGTree &_svg;
 };
 
 
@@ -77,5 +83,10 @@ class GroupCollapser {
 		static bool unwrappable (const XMLElement &element, const XMLElement &parent);
 };
 
+
+class RedundantElementRemover {
+	public:
+		void execute (XMLElement &defs, XMLElement &context);
+};
 
 #endif

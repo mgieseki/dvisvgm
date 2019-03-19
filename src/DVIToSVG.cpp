@@ -38,6 +38,7 @@
 #include "PageSize.hpp"
 #include "PreScanDVIReader.hpp"
 #include "SignalHandler.hpp"
+#include "SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "utility.hpp"
 #include "version.hpp"
@@ -119,7 +120,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 		}
 		else {
 			executePage(i);
-			_svg.removeRedundantElements();
+			SVGOptimizer(_svg).execute();
 			embedFonts(_svg.rootNode());
 			bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages(), hashTriple));
 			if (fname.empty())
