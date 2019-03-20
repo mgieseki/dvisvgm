@@ -46,7 +46,7 @@ class ZLibOutputBuffer : public std::streambuf {
 			open(sbuf, format, zipLevel);
 		}
 
-		~ZLibOutputBuffer () {
+		~ZLibOutputBuffer () override {
 			close();
 		}
 
@@ -84,7 +84,7 @@ class ZLibOutputBuffer : public std::streambuf {
 			else {
 				if (_inbuf.size() == _inbuf.capacity())
 					flush(Z_NO_FLUSH);
-				_inbuf.push_back(c);
+				_inbuf.push_back(static_cast<unsigned char>(c));
 			}
 			return c;
 		}
@@ -101,10 +101,10 @@ class ZLibOutputBuffer : public std::streambuf {
 		 *  @throws ZLibException if compression failed */
 		void flush (int flushmode) {
 			if (_opened) {
-				_zstream.avail_in = _inbuf.size();
+				_zstream.avail_in = static_cast<uInt>(_inbuf.size());
 				_zstream.next_in = _inbuf.data();
 				do {
-					_zstream.avail_out = _zbuf.size();
+					_zstream.avail_out = static_cast<uInt>(_zbuf.size());
 					_zstream.next_out = _zbuf.data();
 					int ret = deflate(&_zstream, flushmode);
 					if (ret == Z_STREAM_ERROR) {
@@ -146,7 +146,7 @@ class ZLibOutputStream : private ZLibOutputBuffer, public std::ostream {
 		ZLibOutputStream (std::ostream &os, ZLibCompressionFormat format, int zipLevel)
 			: ZLibOutputBuffer(os.rdbuf(), format, zipLevel), std::ostream(this) {}
 
-		~ZLibOutputStream () {close();}
+		~ZLibOutputStream () override {close();}
 
 		bool open (std::ostream &os, ZLibCompressionFormat format, int zipLevel) {
 			ZLibOutputBuffer::close();
@@ -172,7 +172,7 @@ class ZLibOutputFileStream : public ZLibOutputStream {
 			}
 		}
 
-		~ZLibOutputFileStream () {close();}
+		~ZLibOutputFileStream () override {close();}
 
 	private:
 		std::ofstream _ofs;
