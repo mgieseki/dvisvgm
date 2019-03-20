@@ -187,7 +187,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 			fontindex = map_entry->fontindex;
 		}
 		// try to find font file with the exact given name
-		if (filename.rfind(".") != string::npos)
+		if (filename.rfind('.') != string::npos)
 			newfont = create_font(filename, name, fontindex, checksum, dsize, ssize);
 		else {
 			// try various font file formats if the given file has no extension
@@ -204,7 +204,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 		else {
 			// create dummy font as a placeholder if the proper font is not available
 			newfont = util::make_unique<EmptyFont>(name);
-			if (filename.rfind(".") == string::npos)
+			if (filename.rfind('.') == string::npos)
 				filename += ".mf";
 			// print warning message about missing font file (only once for each filename)
 			static set<string> missing_fonts;
