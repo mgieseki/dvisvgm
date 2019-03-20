@@ -50,7 +50,8 @@ class DVIToSVG : public DVIReader {
 
 	public:
 		explicit DVIToSVG (std::istream &is, SVGOutputBase &out);
-		void convert (const std::string &range, std::pair<int,int> *pageinfo=0);
+		DVIToSVG (const DVIToSVG&) =delete;
+		void convert (const std::string &range, std::pair<int,int> *pageinfo=nullptr);
 		void setPageSize (const std::string &format)         {_bboxFormatString = format;}
 		void setPageTransformation (const std::string &cmds) {_transCmds = cmds;}
 		Matrix getPageTransformation () const override;
@@ -71,7 +72,6 @@ class DVIToSVG : public DVIReader {
 		static HashSettings PAGE_HASH_SETTINGS;
 
 	protected:
-		DVIToSVG (const DVIToSVG&) =delete;
 		void convert (unsigned firstPage, unsigned lastPage, HashFunction *hashFunc);
 		int executeCommand () override;
 		void enterBeginPage (unsigned pageno, const std::vector<int32_t> &c);

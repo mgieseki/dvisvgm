@@ -37,6 +37,7 @@ class Subfont;
 class SubfontDefinition {
 	using Subfonts = std::map<std::string, std::unique_ptr<Subfont>>;
 	public:
+		SubfontDefinition (const SubfontDefinition &sfd) =delete;
 		static SubfontDefinition* lookup (const std::string &name);
 //		int getIDs (std::vector<std::string> &ids) const;
 		const std::string& name() const {return _sfname;}
@@ -47,7 +48,6 @@ class SubfontDefinition {
 
 	protected:
 		SubfontDefinition (const std::string &name, const char *fpath);
-		SubfontDefinition (const SubfontDefinition &sfd) =delete;
 
 	private:
 		std::string _sfname; ///< name of subfont
@@ -59,12 +59,12 @@ class SubfontDefinition {
 class Subfont {
 	friend class SubfontDefinition;
 	public:
+		Subfont (const Subfont &sf) =delete;
 		const std::string& id () const {return _id;}
 		uint16_t decode (unsigned char c);
 
 	protected:
 		Subfont (SubfontDefinition &sfd, const std::string &id) : _sfd(sfd), _id(id), _mapping(0) {}
-		Subfont (const Subfont &sf) =delete;
 		bool read ();
 
 	private:
