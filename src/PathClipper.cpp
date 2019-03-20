@@ -159,8 +159,8 @@ static void remove_redundant_vertices (Polygon &polygon) {
 void PathClipper::flatten (const CurvedPath &curvedPath, Polygons &polygons) {
 	FlattenActions flattenActions(_curves, polygons, _numLines);
 	curvedPath.iterate(flattenActions, false);
-	for (size_t i=0; i < polygons.size(); i++)
-		remove_redundant_vertices(polygons[i]);
+	for (Polygon &poly : polygons)
+		remove_redundant_vertices(poly);
 }
 
 

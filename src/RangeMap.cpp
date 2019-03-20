@@ -191,7 +191,7 @@ ostream& RangeMap::Range::write (ostream& os) const {
 
 
 ostream& RangeMap::write (ostream& os) const {
-	for (size_t i=0; i < _ranges.size(); i++)
-		_ranges[i].write(os) << '\n';
+	for (const Range &range : _ranges)
+		range.write(os) << '\n';
 	return os;
 }
