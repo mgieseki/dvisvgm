@@ -391,7 +391,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 
 
 struct FontException : public MessageException {
-	FontException (const std::string &msg) : MessageException(msg) {}
+	explicit FontException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

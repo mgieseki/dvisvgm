@@ -59,7 +59,7 @@ class FontWriter {
 
 
 struct FontWriterException : MessageException {
-	FontWriterException (const std::string &msg) : MessageException(msg) {}
+	explicit FontWriterException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

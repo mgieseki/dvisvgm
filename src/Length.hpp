@@ -30,7 +30,7 @@
 #endif
 
 struct UnitException : MessageException {
-	UnitException (const std::string &msg) : MessageException(msg) {}
+	explicit UnitException (const std::string &msg) : MessageException(msg) {}
 };
 
 

@@ -68,7 +68,7 @@ class TrueTypeFont {
 
 
 struct TrueTypeFontException : public MessageException {
-	TrueTypeFontException (const std::string &msg) : MessageException(msg) {}
+	explicit TrueTypeFontException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

@@ -25,17 +25,13 @@
 #include "StreamReader.hpp"
 
 
-struct VFException : public MessageException
-{
-	VFException (const std::string &msg) : MessageException(msg) {}
+struct VFException : public MessageException {
+	explicit VFException (const std::string &msg) : MessageException(msg) {}
 };
-
 
 struct VFActions;
 
-
-class VFReader : public StreamReader
-{
+class VFReader : public StreamReader{
 	using ApproveAction = bool (*)(int);
 	public:
 		VFReader (std::istream &is);

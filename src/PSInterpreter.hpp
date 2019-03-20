@@ -32,7 +32,7 @@
 
 
 struct PSException : public MessageException {
-	PSException (const std::string &msg) : MessageException(msg) {}
+	explicit PSException (const std::string &msg) : MessageException(msg) {}
 };
 
 

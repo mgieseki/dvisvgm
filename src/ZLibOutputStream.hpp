@@ -33,7 +33,7 @@
 #endif
 
 struct ZLibException : public MessageException {
-	ZLibException (const std::string &msg) : MessageException(msg) {}
+	explicit ZLibException (const std::string &msg) : MessageException(msg) {}
 };
 
 enum ZLibCompressionFormat {ZLIB_DEFLATE=0, ZLIB_GZIP=16};

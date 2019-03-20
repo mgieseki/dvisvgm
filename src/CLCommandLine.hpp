@@ -60,7 +60,7 @@ class CommandLine {
 
 
 struct CommandLineException : public MessageException {
-	CommandLineException (const std::string &msg) : MessageException(msg) {}
+	explicit CommandLineException (const std::string &msg) : MessageException(msg) {}
 };
 
 } // namespace CL

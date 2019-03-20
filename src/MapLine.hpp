@@ -31,14 +31,12 @@ class InputReader;
 class SubfontDefinition;
 
 
-struct MapLineException : MessageException
-{
-	MapLineException (const std::string &msg) : MessageException(msg) {}
+struct MapLineException : MessageException {
+	explicit MapLineException (const std::string &msg) : MessageException(msg) {}
 };
 
 
-class MapLine
-{
+class MapLine {
 	public:
 		MapLine (std::istream &is);
 		MapLine (std::string str);

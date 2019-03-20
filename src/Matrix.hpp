@@ -30,7 +30,7 @@
 
 
 struct ParserException : public MessageException {
-	ParserException (const std::string &msg) : MessageException(msg) {}
+	explicit ParserException (const std::string &msg) : MessageException(msg) {}
 };
 
 class Calculator;

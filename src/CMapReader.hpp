@@ -73,7 +73,7 @@ class CMapReader {
 
 
 struct CMapReaderException : public MessageException {
-	CMapReaderException (const std::string &msg) : MessageException(msg) {}
+	explicit CMapReaderException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

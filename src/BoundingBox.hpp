@@ -35,7 +35,7 @@ class XMLElement;
 
 
 struct BoundingBoxException : MessageException {
-	BoundingBoxException (const std::string &msg) : MessageException(msg) {}
+	explicit BoundingBoxException (const std::string &msg) : MessageException(msg) {}
 };
 
 

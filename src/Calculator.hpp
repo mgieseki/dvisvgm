@@ -28,7 +28,7 @@
 
 
 struct CalculatorException : public MessageException {
-	CalculatorException (const std::string &msg) : MessageException(msg) {}
+	explicit CalculatorException (const std::string &msg) : MessageException(msg) {}
 };
 
 class Calculator {

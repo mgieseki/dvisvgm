@@ -62,7 +62,7 @@ class StreamReader {
 
 
 struct StreamReaderException : public MessageException {
-	StreamReaderException (const std::string &msg) : MessageException(msg) {}
+	explicit StreamReaderException (const std::string &msg) : MessageException(msg) {}
 };
 
 #endif

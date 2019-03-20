@@ -25,7 +25,7 @@
 #include "MessageException.hpp"
 
 struct PageSizeException : public MessageException {
-	PageSizeException (const std::string &msg) : MessageException(msg) {}
+	explicit PageSizeException (const std::string &msg) : MessageException(msg) {}
 };
 
 class PageSize {

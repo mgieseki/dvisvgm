@@ -31,16 +31,13 @@
 class CharInfo;
 
 
-struct GFException : public MessageException
-{
-	GFException (const std::string &msg) : MessageException(msg) {}
+struct GFException : public MessageException {
+	explicit GFException (const std::string &msg) : MessageException(msg) {}
 };
 
 
-class GFReader
-{
-	struct CharInfo
-	{
+class GFReader {
+	struct CharInfo {
 		CharInfo () : dx(0), dy(0), width(0), location(0) {}
 		CharInfo (int32_t dxx, int32_t dyy, int32_t w, uint32_t p) : dx(dxx), dy(dyy), width(w), location(p) {}
 

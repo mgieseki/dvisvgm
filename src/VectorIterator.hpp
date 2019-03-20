@@ -25,15 +25,13 @@
 #include "MessageException.hpp"
 
 
-struct IteratorException : public MessageException
-{
-	IteratorException (const std::string &msg) : MessageException(msg) {}
+struct IteratorException : public MessageException {
+	explicit IteratorException (const std::string &msg) : MessageException(msg) {}
 };
 
 
 template <typename T>
-class VectorIterator
-{
+class VectorIterator {
 	public:
 		VectorIterator (std::vector<T> &vec) : _vector(vec), _pos(0) {}
 
