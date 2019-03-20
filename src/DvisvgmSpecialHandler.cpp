@@ -439,7 +439,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		img->addAttribute("height", h.bp());
 		img->addAttribute("xlink:href", f);
 		if (!actions.getMatrix().isIdentity())
-			img->addAttribute("transform", actions.getMatrix().getSVG());
+			img->addAttribute("transform", actions.getMatrix().toSVG());
 		actions.appendToPage(std::move(img));
 	}
 	catch (const UnitException &e) {

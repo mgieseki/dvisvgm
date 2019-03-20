@@ -72,7 +72,7 @@ class Matrix {
 		bool operator != (const Matrix &m) const;
 		bool isIdentity() const;
 		bool isTranslation (double &tx, double &ty) const;
-		std::string getSVG () const;
+		std::string toSVG () const;
 		std::ostream& write (std::ostream &os) const;
 
 	private:

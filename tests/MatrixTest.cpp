@@ -68,14 +68,14 @@ TEST(MatrixTest, svg) {
 	ostringstream oss;
 	m1.write(oss);
 	EXPECT_EQ(oss.str(), "((1,2,3),(4,5,6),(7,8,9))");
-	EXPECT_EQ(m1.getSVG(), "matrix(1 4 2 5 3 6)");
+	EXPECT_EQ(m1.toSVG(), "matrix(1 4 2 5 3 6)");
 
 	double v2[] = {1,2};
 	Matrix m2(v2, 2);
 	oss.str("");
 	m2.write(oss);
 	EXPECT_EQ(oss.str(), "((1,2,0),(0,1,0),(0,0,1))");
-	EXPECT_EQ(m2.getSVG(), "matrix(1 0 2 1 0 0)");
+	EXPECT_EQ(m2.toSVG(), "matrix(1 0 2 1 0 0)");
 }
 
 
@@ -86,7 +86,7 @@ TEST(MatrixTest, transpose) {
 	ostringstream oss;
 	m.write(oss);
 	EXPECT_EQ(oss.str(), "((1,4,7),(2,5,8),(3,6,9))");
-	EXPECT_EQ(m.getSVG(), "matrix(1 2 4 5 7 8)");
+	EXPECT_EQ(m.toSVG(), "matrix(1 2 4 5 7 8)");
 }
 
 

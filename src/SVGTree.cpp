@@ -152,7 +152,7 @@ void SVGTree::prependToPage (unique_ptr<XMLNode> node) {
 
 void SVGTree::transformPage (const Matrix &usermatrix) {
 	if (!usermatrix.isIdentity())
-		_page->addAttribute("transform", usermatrix.getSVG());
+		_page->addAttribute("transform", usermatrix.toSVG());
 }
 
 

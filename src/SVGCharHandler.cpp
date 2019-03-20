@@ -87,6 +87,6 @@ unique_ptr<XMLElement> SVGCharTextHandler::createTextNode (double x, double y) c
 	textNode->addAttribute("x", x);
 	textNode->addAttribute("y", y);
 	if (!_matrix.get().isIdentity())
-		textNode->addAttribute("transform", _matrix.get().getSVG());
+		textNode->addAttribute("transform", _matrix.get().toSVG());
 	return textNode;
 }

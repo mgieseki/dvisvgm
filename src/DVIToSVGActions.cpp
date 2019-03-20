@@ -172,7 +172,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
 	if (!getMatrix().isIdentity())
-		rect->addAttribute("transform", getMatrix().getSVG());
+		rect->addAttribute("transform", getMatrix().toSVG());
 	if (getColor() != Color::BLACK)
 		rect->addAttribute("fill", _svg.getColor().svgColorString());
 	_svg.appendToPage(std::move(rect));

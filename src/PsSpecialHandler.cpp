@@ -360,7 +360,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		// insert group containing SVG nodes created from image
 		matrix.lmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		if (!matrix.isIdentity())
-			groupNode->addAttribute("transform", matrix.getSVG());
+			groupNode->addAttribute("transform", matrix.toSVG());
 		_actions->appendToPage(std::move(groupNode));
 	}
 	_xmlnode = nullptr;   // append following elements to page group again

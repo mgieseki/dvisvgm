@@ -73,7 +73,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 			if (applyColor)
 				contextNode()->addAttribute("fill", color.get().svgColorString());
 			if (applyMatrix)
-				contextNode()->addAttribute("transform", _matrix.get().getSVG());
+				contextNode()->addAttribute("transform", _matrix.get().toSVG());
 		}
 		color.changed(false);
 		_matrix.changed(false);
@@ -114,7 +114,7 @@ void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const
 	useNode->addAttribute("y", XMLString(y));
 	useNode->addAttribute("xlink:href", id);
 	if (!matrix.isIdentity())
-		useNode->addAttribute("transform", matrix.getSVG());
+		useNode->addAttribute("transform", matrix.toSVG());
 	contextNode()->append(std::move(useNode));
 }
 
@@ -130,7 +130,7 @@ void SVGCharPathHandler::appendPathElement (uint32_t c, double x, double y, cons
 		auto glyphNode = util::make_unique<XMLElement>("path");
 		glyphNode->addAttribute("d", oss.str());
 		if (!matrix.isIdentity())
-			glyphNode->addAttribute("transform", matrix.getSVG());
+			glyphNode->addAttribute("transform", matrix.toSVG());
 		contextNode()->append(std::move(glyphNode));
 	}
 }

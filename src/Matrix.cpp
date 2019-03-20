@@ -437,17 +437,14 @@ Matrix& Matrix::parse (const string &cmds, Calculator &calc) {
 
 /** Returns an SVG matrix expression that can be used in transform attributes.
  *  ((a,b,c),(d,e,f),(0,0,1)) => matrix(a d b e c f) */
-string Matrix::getSVG () const {
+string Matrix::toSVG () const {
 	ostringstream oss;
 	oss << "matrix(";
 	for (int i=0; i < 3; i++) {
-		for (int j=0; j < 2; j++) {
-			if (i > 0 || j > 0)
-				oss << ' ';
-			oss << XMLString(_values[j][i]);
-		}
+		for (int j=0; j < 2; j++)
+			oss << _values[j][i] << ' ';
 	}
-	oss << ')';
+	oss.seekp(-1, ios::cur) << ')';  // overwrite trailing space character
 	return oss.str();
 }
 

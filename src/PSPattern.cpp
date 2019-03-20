@@ -74,7 +74,7 @@ unique_ptr<XMLElement> PSTilingPattern::createPatternNode () const {
 	pattern->addAttribute("viewBox", box.toSVGViewBox());
 	pattern->addAttribute("patternUnits", "userSpaceOnUse");
 	if (!_matrix.isIdentity())
-		pattern->addAttribute("patternTransform", _matrix.getSVG());
+		pattern->addAttribute("patternTransform", _matrix.toSVG());
 	if (_xstep < _bbox.width() || _ystep < _bbox.height()) {  // overlapping tiles?
 		// disable clipping at the tile borders => tiles become "transparent"
 		pattern->addAttribute("overflow", "visible");
