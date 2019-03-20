@@ -69,7 +69,7 @@ FileFinder::FileFinder () {
 
 void FileFinder::init (const std::string &argv0, const std::string &progname, bool enable_mktexmf) {
 	_argv0 = argv0;
-	_progname = progname.c_str();
+	_progname = progname;
 	_enableMktex = enable_mktexmf;
 }
 

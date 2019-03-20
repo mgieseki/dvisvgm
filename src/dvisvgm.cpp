@@ -144,7 +144,7 @@ static bool set_cache_dir (const CommandLine &args) {
 static bool set_temp_dir (const CommandLine &args) {
 	if (args.tmpdirOpt.given()) {
 		if (!args.tmpdirOpt.value().empty())
-			FileSystem::TMPDIR = args.tmpdirOpt.value().c_str();
+			FileSystem::TMPDIR = args.tmpdirOpt.value();
 		else {
 			cout << "temporary folder: " << FileSystem::tmpdir() << '\n';
 			return false;

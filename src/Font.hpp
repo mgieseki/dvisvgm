@@ -115,7 +115,7 @@ class PhysicalFont : public virtual Font {
 		static std::unique_ptr<Font> create (const std::string &name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static std::unique_ptr<Font> create (const std::string &name, int fontindex, uint32_t checksum, double dsize, double ssize);
 		virtual Type type () const =0;
-		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override;
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override;
 		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=nullptr) const;
 		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb=nullptr) const;
 		virtual bool isCIDFont () const;
@@ -258,7 +258,7 @@ class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 class NativeFont : public PhysicalFont {
 	public:
 		virtual std::unique_ptr<NativeFont> clone (double ptsize, const FontStyle &style, Color color) const =0;
-		virtual std::unique_ptr<Font> clone (double ds, double sc) const override =0;
+		std::unique_ptr<Font> clone (double ds, double sc) const override =0;
 		std::string name () const override;
 		Type type () const override;
 		double designSize () const override  {return _ptsize;}

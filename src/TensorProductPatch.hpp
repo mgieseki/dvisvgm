@@ -36,10 +36,8 @@
  *  \f[P(u,v):=\sum_{i=0}^3\sum_{j=0}^3 p_{ij} B_i(u) B_j(v)\f]
  *  where \f$B_k(t)={3\choose k}(1-t)^k t^k\f$ and \f$u,v \in [0,1]\f$. The four colors assigned
  *  to the vertices are interpolated bilinearily over the unit square. */
-class TensorProductPatch : public ShadingPatch
-{
+class TensorProductPatch : public ShadingPatch {
 	friend class CoonsPatch;
-
 	public:
 		TensorProductPatch () : ShadingPatch(Color::ColorSpace::RGB) {}
 		TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
@@ -78,16 +76,15 @@ class TensorProductPatch : public ShadingPatch
  *  depend on the outer ones, i.e. they are computed automatically and can't be set by the user.
  *  Thus, a Coons patch is defined by 12 control points, 4 vertex colors and a corresponding
  *  color space. */
-class CoonsPatch : public TensorProductPatch
-{
+class CoonsPatch : public TensorProductPatch {
 	public:
-		CoonsPatch () {}
+		CoonsPatch () =default;
 		CoonsPatch (Color::ColorSpace cspace) : TensorProductPatch(cspace) {}
 		CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch);
 		int psShadingType() const override {return 6;}
-		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;
-		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
-		virtual DPair valueAt (double u, double v) const override;
+		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;
+		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
+		DPair valueAt (double u, double v) const override;
 		int numPoints (int edgeflag) const override {return edgeflag == 0 ? 12 : 8;}
 		int numColors (int edgeflag) const override {return edgeflag == 0 ? 4 : 2;}
 };
