@@ -152,7 +152,7 @@ void FilePath::add (const string &dir) {
 	if (dir == ".." && !_dirs.empty())
 		_dirs.pop_back();
 	else if (dir.length() > 0 && dir != ".")
-		_dirs.push_back(dir);
+		_dirs.emplace_back(dir);
 }
 
 

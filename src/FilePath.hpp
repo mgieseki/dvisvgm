@@ -59,7 +59,7 @@ class FilePath {
 		void add (const std::string &elem);
 
 	private:
-		std::vector<std::string> _dirs;
+		std::vector<Directory> _dirs;
 		std::string _fname;
 #ifdef _WIN32
 		char _drive;
