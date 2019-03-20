@@ -28,8 +28,8 @@
 
 using namespace std;
 
-MessageStream::MessageStream (std::ostream &os)
-	: _os(&os), _nl(true), _col(1), _indent(0)
+MessageStream::MessageStream (std::ostream &os) noexcept
+	: _os(&os), _nl(true)
 {
 	Terminal::init(os);
 }

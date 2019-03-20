@@ -31,13 +31,12 @@
 
 class Message;
 
-class MessageStream
-{
+class MessageStream {
 	friend class Message;
 
 	public:
 		MessageStream () =default;
-		MessageStream (std::ostream &os);
+		MessageStream (std::ostream &os) noexcept;
 		~MessageStream ();
 
 		template <typename T>
@@ -69,15 +68,14 @@ class MessageStream
 };
 
 
-class Message
-{
+class Message {
 	struct Color {
-		Color () : foreground(-1), background(-1) {}
-		Color (int8_t fgcolor) : foreground(fgcolor), background(-1) {}
-		Color (int8_t fgcolor, bool light) : foreground(fgcolor + (light ? 8 : 0)), background(-1) {}
-		Color (int8_t fgcolor, int8_t bgcolor) : foreground(fgcolor), background(bgcolor) {}
-		int8_t foreground;
-		int8_t background;
+		Color () =default;
+		Color (int8_t fgcolor) noexcept : foreground(fgcolor) {}
+		Color (int8_t fgcolor, bool light) noexcept: foreground(fgcolor + (light ? 8 : 0)) {}
+		Color (int8_t fgcolor, int8_t bgcolor) noexcept : foreground(fgcolor), background(bgcolor) {}
+		int8_t foreground = -1;
+		int8_t background = -1;
 	};
 
 	public:

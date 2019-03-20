@@ -30,8 +30,7 @@
 #undef TRANSPARENT
 #endif
 
-class Color
-{
+class Color {
 	public:
 		static bool SUPPRESS_COLOR_NAMES;
 		static const Color BLACK;
@@ -42,10 +41,10 @@ class Color
 
 	public:
 		Color () : _rgb(0) {}
-		Color (uint32_t rgb) : _rgb(rgb)         {}
-		Color (uint8_t r, uint8_t g, uint8_t b)  {setRGB(r,g,b);}
-		Color (double r, double g, double b)     {setRGB(r,g,b);}
-		Color (const std::valarray<double> &rgb) {setRGB(rgb);}
+		Color (uint32_t rgb) noexcept : _rgb(rgb)         {}
+		Color (uint8_t r, uint8_t g, uint8_t b) noexcept  {setRGB(r,g,b);}
+		Color (double r, double g, double b) noexcept     {setRGB(r,g,b);}
+		Color (const std::valarray<double> &rgb) noexcept {setRGB(rgb);}
 		Color (const std::string &name);
 		explicit operator uint32_t () const            {return _rgb;}
 		bool operator == (const Color &c) const        {return _rgb == c._rgb;}

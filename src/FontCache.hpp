@@ -39,7 +39,6 @@ class FontCache {
 		};
 
 	public:
-		FontCache () : _changed(false) {}
 		~FontCache () {clear();}
 		bool read (const std::string &fontname, const std::string &dir);
 		bool read (const std::string &fontname, std::istream &is);
@@ -59,7 +58,7 @@ class FontCache {
 		static const uint8_t FORMAT_VERSION;
 		std::string _fontname;
 		std::map<int, Glyph> _glyphs;
-		bool _changed;
+		bool _changed=false;
 };
 
 #endif

@@ -25,8 +25,8 @@
 
 /** Represents a character map of a font. */
 struct CharMapID {
-	CharMapID () : platform_id(0), encoding_id(0) {}
-	CharMapID (uint8_t plf_id, uint8_t enc_id) : platform_id(plf_id), encoding_id(enc_id) {}
+	CharMapID () noexcept : platform_id(0), encoding_id(0) {}
+	CharMapID (uint8_t plf_id, uint8_t enc_id) noexcept : platform_id(plf_id), encoding_id(enc_id) {}
 
 	bool operator == (const CharMapID &ids) const {
 		return platform_id == ids.platform_id && encoding_id == ids.encoding_id;
