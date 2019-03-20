@@ -300,7 +300,7 @@ static string svg_options_hash (const CommandLine &cmdline) {
 	// options affecting the SVG output
 	vector<const CL::Option*> svg_options = {
 		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.groupAttributesOpt, &cmdline.colornamesOpt,
-		&cmdline.commentsOpt, &cmdline.exactOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt,
+		&cmdline.commentsOpt, &cmdline.exactBboxOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt,
 		&cmdline.gradOverlapOpt, &cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt,
 		&cmdline.magOpt, &cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt,
 		&cmdline.noStylesOpt, &cmdline.precisionOpt,	&cmdline.relativeOpt, &cmdline.zoomOpt
@@ -352,7 +352,7 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGOptimizer::GROUP_ATTRIBUTES = cmdline.groupAttributesOpt.given();
 	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
 	Message::LEVEL = cmdline.verbosityOpt.value();
-	PhysicalFont::EXACT_BBOX = cmdline.exactOpt.given();
+	PhysicalFont::EXACT_BBOX = cmdline.exactBboxOpt.given();
 	PhysicalFont::KEEP_TEMP_FILES = cmdline.keepOpt.given();
 	PhysicalFont::METAFONT_MAG = max(1.0, cmdline.magOpt.value());
 	XMLString::DECIMAL_PLACES = max(0, min(6, cmdline.precisionOpt.value()));

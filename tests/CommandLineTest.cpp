@@ -95,7 +95,7 @@ TEST(CommandLineTest, arg_combined) {
 	EXPECT_EQ(cmd.pageOpt.value(), "5");
 	EXPECT_TRUE(cmd.listSpecialsOpt.given());
 	EXPECT_TRUE(cmd.stdoutOpt.given());
-	EXPECT_TRUE(cmd.exactOpt.given());
+	EXPECT_TRUE(cmd.exactBboxOpt.given());
 
 	// can't combine short options that accept optional parameters
 	const char *args2[] = {"progname", "-nls", "-p5", "-omyfile.xyz"};

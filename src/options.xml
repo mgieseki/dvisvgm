@@ -144,8 +144,8 @@
 				<arg type="string" name="dir" optional="yes"/>
 				<description>set/print path of cache directory</description>
 			</option>
-			<option long="exact" short="e">
-				<description>compute exact glyph boxes</description>
+			<option long="exact-bbox" short="e">
+				<description>compute exact glyph bounding boxes</description>
 			</option>
 			<option long="keep">
 				<description>keep temporary files</description>

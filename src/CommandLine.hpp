@@ -35,7 +35,7 @@ class CommandLine : public CL::CommandLine {
 		Option colornamesOpt {"colornames", '\0', "prefer color names to RGB values if possible"};
 		Option commentsOpt {"comments", '\0', "add comments with additional information"};
 		Option epsOpt {"eps", 'E', "convert EPS file to SVG"};
-		Option exactOpt {"exact", 'e', "compute exact glyph boxes"};
+		Option exactBboxOpt {"exact-bbox", 'e', "compute exact glyph bounding boxes"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> fontFormatOpt {"font-format", 'f', "format", "svg", "select file format of embedded fonts"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> fontmapOpt {"fontmap", 'm', "filenames", "evaluate (additional) font map files"};
 		Option gradOverlapOpt {"grad-overlap", '\0', "create overlapping color gradient segments"};
@@ -131,7 +131,7 @@ class CommandLine : public CL::CommandLine {
 			{&transformOpt, 2},
 			{&zoomOpt, 2},
 			{&cacheOpt, 3},
-			{&exactOpt, 3},
+			{&exactBboxOpt, 3},
 			{&keepOpt, 3},
 #if !defined(HAVE_LIBGS) && !defined(DISABLE_GS)
 			{&libgsOpt, 3},

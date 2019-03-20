@@ -167,14 +167,14 @@ PostScript special handler.
 This option is only available if dvisvgm was built with PostScript support enabled, and requires
 Ghostscript to be available. See option *--libgs* for further information.
 
-*-e, --exact*::
+*-e, --exact-bbox*::
 This option tells dvisvgm to compute the precise bounding box of each character. By default,
 the values stored in a font's TFM file are used to determine a glyph's extent. As these values are
 intended to implement optimal character placements and are not designed to represent the exact
 dimensions, they don't necessarily correspond with the bounds of the visual glyphs. Thus, width
 and/or height of some glyphs may be larger (or smaller) than the respective TFM values. As a result,
-this can lead to clipped characters at the bounds of the SVG graphics. With option *--exact* given,
-dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
+this can lead to clipped characters at the bounds of the SVG graphics. With option *--exact-bbox*
+given, dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
 
 *-f, --font-format*='format'::
 Selects the file format used to embed the font data into the SVG files. Following formats are
