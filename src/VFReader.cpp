@@ -28,8 +28,8 @@
 using namespace std;
 
 
-VFReader::VFReader (istream &is)
-	: StreamReader(is), _actions(0), _designSize(0) {
+VFReader::VFReader (istream &is) : StreamReader(is)
+{
 }
 
 
@@ -57,7 +57,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 	bool approved = !approve || approve(opcode);
 	VFActions *actions = _actions;
 	if (!approved)
-		replaceActions(0);  // disable actions
+		replaceActions(nullptr);  // disable actions
 
 	if (opcode <= 241)     // short character definition?
 		cmdShortChar(opcode);

@@ -53,7 +53,7 @@ class SVGTree {
 		void appendToRoot (std::unique_ptr<XMLNode> node) {_root->append(std::move(node));}
 		void appendChar (int c, double x, double y) {_charHandler->appendChar(c, x, y);}
 		void appendFontStyles (const std::unordered_set<const Font*> &fonts);
-		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *callback=0);
+		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *callback=nullptr);
 		void pushDefsContext (std::unique_ptr<XMLElement> node);
 		void popDefsContext ();
 		void pushPageContext (std::unique_ptr<XMLElement> node);

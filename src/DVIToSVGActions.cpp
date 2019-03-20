@@ -306,7 +306,7 @@ static int digits (int n) {
 void DVIToSVGActions::progress (size_t current, size_t total, const char *id) {
 	static double time=0;
 	static bool draw=false; // show progress indicator?
-	static const char *prev_id=0;
+	static const char *prev_id=nullptr;
 	if (current == 0 && total > 0) {
 		time = System::time();
 		draw = false;

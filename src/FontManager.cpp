@@ -191,7 +191,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 			newfont = create_font(filename, name, fontindex, checksum, dsize, ssize);
 		else {
 			// try various font file formats if the given file has no extension
-			const char *exts[] = {"pfb", "otf", "ttc", "ttf", "vf", "mf", 0};
+			const char *exts[] = {"pfb", "otf", "ttc", "ttf", "vf", "mf", nullptr};
 			for (const char **p = exts; *p && !newfont; ++p)
 				newfont = create_font(filename+"."+*p, name, fontindex, checksum, dsize, ssize);
 		}

@@ -205,10 +205,10 @@ const char* FileFinder::findMappedFile (std::string fname) const {
 	if (const FontMap::Entry *entry = FontMap::instance().lookup(base)) {
 		const char *path=nullptr;
 		if (entry->fontname.find('.') != std::string::npos)  // does the mapped filename has an extension?
-			path = findFile(entry->fontname, 0);             // look for that file
+			path = findFile(entry->fontname, nullptr);        // look for that file
 		else {                             // otherwise, use extension of unmapped file
 			fname = entry->fontname + "." + ext;
-			(path = findFile(fname, 0)) || (path = mktex(fname));
+			(path = findFile(fname, nullptr)) || (path = mktex(fname));
 		}
 		return path;
 	}
@@ -233,7 +233,7 @@ const char* FileFinder::mktex (const std::string &fname) const {
 	// maketfm and makemf are located in miktex/bin which is in the search PATH
 	std::string toolname = (ext == "tfm" ? "miktex-maketfm" : "miktex-makemf");
 	system((toolname+".exe "+fname).c_str());
-	path = findFile(fname, 0);
+	path = findFile(fname, nullptr);
 #else
 	kpse_file_format_type type = (ext == "tfm" ? kpse_tfm_format : kpse_mf_format);
 	path = kpse_make_tex(type, fname.c_str());

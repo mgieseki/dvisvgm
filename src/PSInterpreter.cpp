@@ -111,7 +111,7 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 
 	if (_filter && _filter->active()) {
 		PSFilter *filter = _filter;
-		_filter = 0;             // prevent recursion when filter calls execute()
+		_filter = nullptr;       // prevent recursion when filter calls execute()
 		filter->execute(str, len);
 		if (filter->active())    // filter still active after execution?
 			_filter = filter;

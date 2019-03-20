@@ -109,7 +109,7 @@ static void set_libgs (CommandLine &args) {
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cacheOpt.given() && !args.cacheOpt.value().empty()) {
 		if (args.cacheOpt.value() == "none")
-			PhysicalFont::CACHE_PATH = 0;
+			PhysicalFont::CACHE_PATH = nullptr;
 		else if (FileSystem::exists(args.cacheOpt.value()))
 			PhysicalFont::CACHE_PATH = args.cacheOpt.value().c_str();
 		else

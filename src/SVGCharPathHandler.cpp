@@ -31,7 +31,7 @@ using namespace std;
  *  @param[in] createUseElements determines whether to create "use" elements to reference previous paths or not
  *  @param[in] relativePathCommands determines whether to create relative or absolute SVG path commands */
 SVGCharPathHandler::SVGCharPathHandler (bool createUseElements, bool relativePathCommands)
-	: _relativePathCommands(relativePathCommands), _groupNode(0), _fontColor(Color::BLACK)
+	: _relativePathCommands(relativePathCommands)
 {
 	if (createUseElements)
 		_appendChar = &SVGCharPathHandler::appendUseElement;
@@ -42,7 +42,7 @@ SVGCharPathHandler::SVGCharPathHandler (bool createUseElements, bool relativePat
 
 void SVGCharPathHandler::resetContextNode () {
 	SVGCharHandler::resetContextNode();
-	_groupNode = 0;
+	_groupNode = nullptr;
 }
 
 

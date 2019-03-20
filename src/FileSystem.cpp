@@ -175,7 +175,7 @@ const char* FileSystem::userdir () {
 		if (!ret.empty())
 			return ret.c_str();
 	}
-	return 0;
+	return nullptr;
 #else
 	const char *dir=getenv("HOME");
 	if (!dir) {

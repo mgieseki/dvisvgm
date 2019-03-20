@@ -61,7 +61,7 @@ void Color::setRGB (double r, double g, double b) {
  *  @return true if color name could be applied properly */
 bool Color::setPSName (string name, bool case_sensitive) {
 	if (name[0] == '#') {
-		char *p=0;
+		char *p=nullptr;
 		_rgb = uint32_t(strtol(name.c_str()+1, &p, 16));
 		while (isspace(*p))
 			p++;
@@ -394,7 +394,7 @@ string Color::svgColorString (bool rgbonly) const {
 			{0xfffff0, "ivory"},
 			{0xffffff, "white"}
 		}};
-		ColorName cmppair = {_rgb, 0};
+		ColorName cmppair = {_rgb, nullptr};
 		auto it = lower_bound(colornames.begin(), colornames.end(), cmppair, [](const ColorName &c1, const ColorName &c2) {
 			return c1.rgb < c2.rgb;
 		});

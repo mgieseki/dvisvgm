@@ -53,8 +53,7 @@ class MapLine
 		SubfontDefinition* sfd () const       {return _sfd;}
 
 	protected:
-		MapLine ();
-		void init ();
+		MapLine () =default;
 		bool isDVIPSFormat (const char *line) const;
 		void parse (const char *line);
 		void parseDVIPSLine (InputReader &ir);
@@ -62,13 +61,13 @@ class MapLine
 		void parseFilenameOptions (std::string opt);
 
 	private:
-		std::string _texname;     ///< TeX font name
-		std::string _psname;      ///< PS font name
-		std::string _fontfname;   ///< name of fontfile
-		std::string _encname;     ///< name of encoding (without file suffix ".enc")
-		SubfontDefinition *_sfd;  ///< subfont definition to be used
-		int _fontindex;           ///< font index of file with multiple fonts (e.g. ttc files)
-		double _slant, _bold, _extend;
+		std::string _texname;             ///< TeX font name
+		std::string _psname;              ///< PS font name
+		std::string _fontfname;           ///< name of fontfile
+		std::string _encname;             ///< name of encoding (without file suffix ".enc")
+		SubfontDefinition *_sfd=nullptr;  ///< subfont definition to be used
+		int _fontindex=0;                 ///< font index of file with multiple fonts (e.g. ttc files)
+		double _slant=0, _bold=0, _extend=1;
 };
 
 

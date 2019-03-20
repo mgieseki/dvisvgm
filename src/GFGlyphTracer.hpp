@@ -39,7 +39,7 @@ class GFGlyphTracer : public GFTracer
 
 	public:
 		GFGlyphTracer ();
-		GFGlyphTracer (std::string &fname, double upp, Callback *cb=0);
+		GFGlyphTracer (std::string &fname, double upp, Callback *cb=nullptr);
 		void reset (std::string &fname, double upp);
 		void setCallback (Callback *cb) {_callback = cb;}
 		bool executeChar (uint8_t c) override;
@@ -53,8 +53,8 @@ class GFGlyphTracer : public GFTracer
 
 	private:
 		std::ifstream _ifs;
-		Glyph *_glyph;
-		Callback *_callback;
+		Glyph *_glyph = nullptr;
+		Callback *_callback = nullptr;
 };
 
 #endif

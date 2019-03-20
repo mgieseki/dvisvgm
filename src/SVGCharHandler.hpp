@@ -58,7 +58,7 @@ class XMLElement;
  *  for the added characters and append them to the SVG tree. */
 class SVGCharHandler {
 	public:
-		SVGCharHandler () : _color(Color::BLACK), _font(0), _fontnum(0), _matrix(1), _vertical(false), _initialContextNode(0) {}
+		SVGCharHandler () : _matrix(1) {}
 		virtual ~SVGCharHandler() =default;
 		virtual void setInitialContextNode (XMLElement *node);
 		virtual void appendChar (uint32_t c, double x, double y) =0;
@@ -81,14 +81,14 @@ class SVGCharHandler {
 			return _contextNodeStack.empty() ? _initialContextNode : _contextNodeStack.top();
 		}
 
-		CharProperty<Color> _color;       ///< current color
-		CharProperty<const Font*> _font;  ///< current font
-		int _fontnum;                     ///< current font ID
-		CharProperty<Matrix> _matrix;     ///< current transformation
-		CharProperty<bool> _vertical;     ///< current writing mode
+		CharProperty<Color> _color=Color::BLACK;   ///< current color
+		CharProperty<const Font*> _font=0;         ///< current font
+		int _fontnum=0;                            ///< current font ID
+		CharProperty<Matrix> _matrix;              ///< current transformation
+		CharProperty<bool> _vertical=false;        ///< current writing mode
 
 	private:
-		XMLElement *_initialContextNode;  ///< SVG element the generated character nodes are attached to
+		XMLElement *_initialContextNode= nullptr;  ///< SVG element the generated character nodes are attached to
 		std::stack<XMLElement*> _contextNodeStack;
 };
 

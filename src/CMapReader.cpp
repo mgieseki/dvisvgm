@@ -135,7 +135,7 @@ void CMapReader::op_usecmap (InputReader &) {
 		throw CMapReaderException("stack underflow while processing usecmap");
 	else {
 		const string name = popToken().strvalue();
-		if ((_cmap->_basemap = CMapManager::instance().lookup(name)) == 0)
+		if ((_cmap->_basemap = CMapManager::instance().lookup(name)) == nullptr)
 			throw CMapReaderException("CMap file '"+name+"' not found");
 	}
 }

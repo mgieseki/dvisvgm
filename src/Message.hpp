@@ -36,7 +36,7 @@ class MessageStream
 	friend class Message;
 
 	public:
-		MessageStream ();
+		MessageStream () =default;
 		MessageStream (std::ostream &os);
 		~MessageStream ();
 
@@ -62,10 +62,10 @@ class MessageStream
 		std::ostream* os () {return _os;}
 
 	private:
-		std::ostream *_os;
-		bool _nl;     ///< true if previous character was a newline
-		int _col;     ///< current terminal column
-		int _indent;  ///< indentation width (number of columns/characters)
+		std::ostream *_os=nullptr;
+		bool _nl=false;     ///< true if previous character was a newline
+		int _col=1;         ///< current terminal column
+		int _indent=0;      ///< indentation width (number of columns/characters)
 };
 
 

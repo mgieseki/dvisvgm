@@ -34,7 +34,7 @@ class FileFinder {
 		std::string version () const;
 		void addLookupDir (const std::string &path);
 		const char* lookup (const std::string &fname, const char *ftype, bool extended=true) const;
-		const char* lookup (const std::string &fname, bool extended=true) const {return lookup(fname, 0, extended);}
+		const char* lookup (const std::string &fname, bool extended=true) const {return lookup(fname, nullptr, extended);}
 
 	protected:
 		FileFinder ();

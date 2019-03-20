@@ -90,7 +90,7 @@ class PSInterpreter {
 	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};
 
 	public:
-		explicit PSInterpreter (PSActions *actions=0);
+		explicit PSInterpreter (PSActions *actions=nullptr);
 		PSInterpreter (const PSInterpreter &psi) =delete;
 		bool execute (const char *str, size_t len, bool flush=true);
 		bool execute (const char *str, bool flush=true)        {return execute(str, std::strlen(str), flush);}

@@ -159,7 +159,7 @@ bool TFMFont::verifyChecksums () const {
 // static class variables
 bool PhysicalFont::EXACT_BBOX = false;
 bool PhysicalFont::KEEP_TEMP_FILES = false;
-const char *PhysicalFont::CACHE_PATH = 0;
+const char *PhysicalFont::CACHE_PATH = nullptr;
 double PhysicalFont::METAFONT_MAG = 4;
 FontCache PhysicalFont::_cache;
 
@@ -175,14 +175,14 @@ unique_ptr<Font> PhysicalFont::create (const string &name, int fontindex, uint32
 
 
 const char* PhysicalFont::path () const {
-	const char *ext=0;
+	const char *ext=nullptr;
 	switch (type()) {
 		case Type::OTF: ext = "otf"; break;
 		case Type::PFB: ext = "pfb"; break;
 		case Type::TTC: ext = "ttc"; break;
 		case Type::TTF: ext = "ttf"; break;
 		case Type::MF : ext = "mf";  break;
-		default : ext = 0;
+		default : ext = nullptr;
 	}
 	if (ext)
 		return FileFinder::instance().lookup(name()+"."+ext);
@@ -323,7 +323,7 @@ std::string PhysicalFont::styleName () const {
  *  @return true if outline could be computed */
 bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer::Callback *callback) const {
 	if (type() == Type::MF) {
-		const Glyph *cached_glyph=0;
+		const Glyph *cached_glyph=nullptr;
 		if (CACHE_PATH) {
 			_cache.write(CACHE_PATH);
 			_cache.read(name(), CACHE_PATH);
@@ -671,6 +671,6 @@ void VirtualFontImpl::assignChar (uint32_t c, DVIVector &&dvi) {
  *  @return pointer to vector of DVI commands, or 0 if character doesn't exist */
 const vector<uint8_t>* VirtualFontImpl::getDVI (int c) const {
 	auto it = _charDefs.find(c);
-	return (it == _charDefs.end() ? 0 : &it->second);
+	return (it == _charDefs.end() ? nullptr : &it->second);
 }
 

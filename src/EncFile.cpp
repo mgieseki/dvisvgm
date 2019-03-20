@@ -127,6 +127,6 @@ static bool valid_name_char (int c) {
  * @return character name assigned to character code c*/
 const char* EncFile::charName (uint32_t c) const {
 	if (c < _table.size())
-		return !_table[c].empty() ? _table[c].c_str() : 0;
-	return 0;
+		return !_table[c].empty() ? _table[c].c_str() : nullptr;
+	return nullptr;
 }

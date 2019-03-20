@@ -64,7 +64,7 @@ class DVIToSVG : public DVIReader {
 
 		std::string getSVGFilename (unsigned pageno) const;
 		std::string getUserBBoxString () const  {return _bboxFormatString;}
-		static void setProcessSpecials (const char *ignorelist=0, bool pswarning=false);
+		static void setProcessSpecials (const char *ignorelist=nullptr, bool pswarning=false);
 
 	public:
 		static bool COMPUTE_PROGRESS;  ///< if true, an action to handle the progress ratio of a page is triggered

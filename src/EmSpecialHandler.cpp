@@ -163,7 +163,7 @@ bool EmSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		{"moveto",    &EmSpecialHandler::moveto},
 		{"lineto",    &EmSpecialHandler::lineto},
 		{"linewidth", &EmSpecialHandler::linewidth},
-		{0, 0}
+		{nullptr, nullptr}
 	};
 
 	StreamInputReader ir(is);

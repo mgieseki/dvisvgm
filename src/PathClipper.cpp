@@ -237,7 +237,7 @@ void PathClipper::callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, I
  *  @param[out] label if not 0, retrieves the label of the endpoint
  *  @param[in] startLabel if true, the found endpoint is treated as start point and
  *             parameter 'label' gets the corresponding value */
-static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabel *label=0, bool startLabel=false) {
+static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabel *label=nullptr, bool startLabel=false) {
 	if (polygon.empty())
 		return 0;
 

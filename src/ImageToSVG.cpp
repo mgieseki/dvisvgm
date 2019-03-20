@@ -73,10 +73,10 @@ void ImageToSVG::convert (int pageno) {
 		_psHandler.process(psSpecialCmd(), ss, *this);
 	}
 	catch (...) {
-		progress(0);  // remove progress message
+		progress(nullptr);  // remove progress message
 		throw;
 	}
-	progress(0);
+	progress(nullptr);
 	Matrix matrix = getUserMatrix(_bbox);
 	// output SVG file
 	SVGOptimizer(_svg).execute();
@@ -163,13 +163,13 @@ void ImageToSVG::progress (const char *id) {
 		Terminal::cursor(false);
 		Message::mstream(false) << "\n";
 	}
-	if (draw && ((System::time() - time > 0.05) || id == 0)) {
+	if (draw && ((System::time() - time > 0.05) || id == nullptr)) {
 		const size_t DIGITS=6;
 		Message::mstream(false, Message::MC_PROGRESS)
 			<< string(DIGITS-min(DIGITS, static_cast<size_t>(log10(count))), ' ')
 			<< count << " PostScript instructions processed\r";
 		// overprint indicator when finished
-		if (id == 0) {
+		if (id == nullptr) {
 			Message::estream().clearline();
 			Terminal::cursor(true);
 		}

@@ -238,7 +238,7 @@ XMLElement* XMLElement::getFirstDescendant (const char *name, const char *attrNa
 		if (XMLElement *elem = child->toElement()) {
 			if (!name || elem->getName() == name) {
 				const char *value;
-				if (!attrName || (((value = elem->getAttributeValue(attrName)) != 0) && (!attrValue || string(value) == attrValue)))
+				if (!attrName || (((value = elem->getAttributeValue(attrName)) != nullptr) && (!attrValue || string(value) == attrValue)))
 					return elem;
 			}
 			if (XMLElement *descendant = elem->getFirstDescendant(name, attrName, attrValue))

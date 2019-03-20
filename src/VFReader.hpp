@@ -46,7 +46,7 @@ class VFReader : public StreamReader
 		bool executeCharDefs ();
 
 	protected:
-		int executeCommand (ApproveAction approve=0);
+		int executeCommand (ApproveAction approve=nullptr);
 
 		// the following methods represent the VF commands
 		// they are called by executeCommand and should not be used directly
@@ -57,8 +57,8 @@ class VFReader : public StreamReader
 		void cmdFontDef (int len);
 
 	private:
-		VFActions *_actions; ///< actions to execute when reading a VF command
-		double _designSize;  ///< design size of currently read VF in PS points
+		VFActions *_actions=nullptr; ///< actions to execute when reading a VF command
+		double _designSize=0;  ///< design size of currently read VF in PS points
 };
 
 #endif

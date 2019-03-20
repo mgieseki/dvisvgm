@@ -41,7 +41,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	if (_tspanNode && (_xchanged || _ychanged || _color.changed())) {
 		// if drawing position or color was explicitly changed, finish current tspan element
 		popContextNode();
-		_tspanNode = 0;
+		_tspanNode = nullptr;
 	}
 	// Apply text color changes only if the color of the entire font is black.
 	// Glyphs of non-black fonts (e.g. defined in a XeTeX document) can't change their color.
@@ -72,14 +72,14 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 
 void SVGCharTspanTextHandler::setInitialContextNode (XMLElement *node) {
 	SVGCharHandler::setInitialContextNode(node);
-	_textNode = _tspanNode = 0;
+	_textNode = _tspanNode = nullptr;
 	_xchanged = _ychanged = false;
 }
 
 
 void SVGCharTspanTextHandler::resetContextNode () {
 	SVGCharHandler::resetContextNode();
-	_textNode = _tspanNode = 0;
+	_textNode = _tspanNode = nullptr;
 	_xchanged = _ychanged = false;
 	_font.changed(false);
 	_matrix.changed(false);

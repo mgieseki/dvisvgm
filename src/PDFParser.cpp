@@ -119,7 +119,7 @@ static pair<bool,int> parse_escape_seq (InputReader &ir) {
 		string str;
 		for (int i=0; i < 3 && isoctaldigit(ir.peek()); i++)
 			str += static_cast<char>(ir.get());
-		return pair<bool,int>{true, stoi(str, 0, 8)};
+		return pair<bool,int>{true, stoi(str, nullptr, 8)};
 	}
 	char c = static_cast<char>(ir.get());
 	switch (c) {
@@ -190,7 +190,7 @@ static string parse_hex_string (InputReader &ir) {
 		else if (ir.peek() == '>')
 			hexpair += '0';
 		ir.skipSpace();
-		str += static_cast<char>(stoi(hexpair, 0, 16));
+		str += static_cast<char>(stoi(hexpair, nullptr, 16));
 	}
 	if (ir.peek() != '>')
 		throw PDFException("missing '>' at end of hexadecimal string");
@@ -316,7 +316,7 @@ static string& subst_numeric_chars (string &str) {
 		if (pos > str.length()-3)
 			throw PDFException("sign character # must be followed by two hexadecimal digits");
 		if (isxdigit(str[pos+1]) && isxdigit(str[pos+2])) {
-			int c = stoi(str.substr(pos+1, 2), 0, 16);
+			int c = stoi(str.substr(pos+1, 2), nullptr, 16);
 			if (c == 0)
 				throw PDFException("null character not permitted in name");
 			str.replace(pos, 3, 1, static_cast<char>(c));

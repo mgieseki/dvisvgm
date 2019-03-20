@@ -37,8 +37,8 @@ class FontWriter {
 
 	public:
 		FontWriter (const PhysicalFont &font);
-		std::string createFontFile (FontFormat format, const std::set<int> &charcodes, GFGlyphTracer::Callback *cb=0) const;
-		bool writeCSSFontFace (FontFormat format, const std::set<int> &charcodes, std::ostream &os, GFGlyphTracer::Callback *cb=0) const;
+		std::string createFontFile (FontFormat format, const std::set<int> &charcodes, GFGlyphTracer::Callback *cb=nullptr) const;
+		bool writeCSSFontFace (FontFormat format, const std::set<int> &charcodes, std::ostream &os, GFGlyphTracer::Callback *cb=nullptr) const;
 		static FontFormat toFontFormat (std::string formatstr);
 		static std::vector<std::string> supportedFormats ();
 

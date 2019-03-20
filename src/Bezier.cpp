@@ -51,13 +51,13 @@ Bezier::Bezier (const Bezier &source, double t0, double t1) {
 		if (t0 > t1)
 			swap(t0, t1);
 		if (t0 == 0)
-			source.subdivide(t1, this, 0);
+			source.subdivide(t1, this, nullptr);
 		else if (t1 == 1)
-			source.subdivide(t0, 0, this);
+			source.subdivide(t0, nullptr, this);
 		else {
 			Bezier subcurve;
-			source.subdivide(t0, 0, &subcurve);
-			subcurve.subdivide((t1-t0)/(1-t0), this, 0);
+			source.subdivide(t0, nullptr, &subcurve);
+			subcurve.subdivide((t1-t0)/(1-t0), this, nullptr);
 		}
 	}
 }
