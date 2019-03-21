@@ -145,7 +145,7 @@ string PSUncoloredTilingPattern::svgID () const {
 /** Appends the definition of this pattern with the current color applied
  *  to the "def" section of the SVG tree. */
 void PSUncoloredTilingPattern::apply (SpecialActions &actions) {
-	set<Color>::iterator it=_colors.find(_currentColor);
+	auto it=_colors.find(_currentColor);
 	if (it == _colors.end()) {
 		if (_applied)
 			setGroupNode(util::static_unique_ptr_cast<XMLElement>(getGroupNode()->clone()));

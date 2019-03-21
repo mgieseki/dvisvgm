@@ -130,9 +130,9 @@ class FlattenActions : public CurvedPath::Actions {
 
 /** Removes adjacent polygon vertices that equal their predecessor. */
 static void remove_redundant_vertices (Polygon &polygon) {
-	Polygon::iterator it1=polygon.begin();
+	auto it1=polygon.begin();
 	while (it1 != polygon.end()) {
-		Polygon::iterator it2 = it1+1;
+		auto it2 = it1+1;
 		if (it2 == polygon.end())
 			it2 = polygon.begin();
 		if (it1 == it2)
