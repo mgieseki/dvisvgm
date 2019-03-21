@@ -32,8 +32,7 @@ struct SVGOutputBase;
 
 class ImageToSVG : protected SpecialActions {
 	public:
-		ImageToSVG (const std::string &fname, SVGOutputBase &out) : _fname(fname), _out(out) {}
-		virtual ~ImageToSVG () =default;
+		ImageToSVG (std::string fname, SVGOutputBase &out) : _fname(std::move(fname)), _out(out) {}
 		void convert (int pageno);
 		void convert (int firstPage, int lastPage, std::pair<int,int> *pageinfo);
 		void convert (const std::string &rangestr, std::pair<int,int> *pageinfo);

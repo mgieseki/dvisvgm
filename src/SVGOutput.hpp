@@ -31,8 +31,8 @@ struct SVGOutputBase {
 	class HashTriple {
 		public:
 			HashTriple () =default;
-			HashTriple (const std::string &dviHash, const std::string &optHash, const std::string &cmbHash)
-				: _dviHash(dviHash), _optHash(optHash), _cmbHash(cmbHash) {}
+			HashTriple (std::string dviHash, std::string optHash, std::string cmbHash)
+				: _dviHash(std::move(dviHash)), _optHash(std::move(optHash)), _cmbHash(std::move(cmbHash)) {}
 			std::string dviHash () const {return _dviHash;}
 			std::string optHash () const {return _optHash;}
 			std::string cmbHash () const {return _cmbHash;}

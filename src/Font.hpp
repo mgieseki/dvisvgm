@@ -88,7 +88,7 @@ class Font {
  *  The metric values returned by the member functions are based on cmr10. */
 class EmptyFont : public Font {
 	public:
-		EmptyFont (const std::string &name) : _fontname(name) {}
+		EmptyFont (std::string name) : _fontname(std::move(name)) {}
 		std::unique_ptr<Font> clone (double ds, double sc) const override  {return util::make_unique<EmptyFont>(*this);}
 		const Font* uniqueFont () const override           {return this;}
 		std::string name () const override                 {return _fontname;}
@@ -312,8 +312,8 @@ class NativeFontProxy : public NativeFont {
 
 class NativeFontImpl : public NativeFont {
 	public:
-		NativeFontImpl (const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color)
-			: NativeFont(ptsize, style, color), _path(fname), _fontIndex(fontIndex) {}
+		NativeFontImpl (std::string fname, int fontIndex, double ptsize, const FontStyle &style, Color color)
+			: NativeFont(ptsize, style, color), _path(std::move(fname)), _fontIndex(fontIndex) {}
 
 		std::unique_ptr<NativeFont> clone (double ptsize, const FontStyle &style, Color color) const override {
 			return std::unique_ptr<NativeFontProxy>(new NativeFontProxy(this, ptsize, style, color));

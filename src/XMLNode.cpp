@@ -43,12 +43,6 @@ XMLElement::XMLElement (const XMLElement &node)
 }
 
 
-XMLElement::XMLElement (XMLElement &&node)
-	: _name(std::move(node._name)), _attributes(std::move(node._attributes)), _children(std::move(node._children))
-{
-}
-
-
 void XMLElement::clear () {
 	_attributes.clear();
 	_children.clear();

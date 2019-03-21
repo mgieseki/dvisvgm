@@ -69,9 +69,9 @@ class XMLElement : public XMLNode {
 		static bool WRITE_NEWLINES;  ///< insert line breaks after element tags
 
 	public:
-		XMLElement (const std::string &name);
+		explicit XMLElement (const std::string &name);
 		XMLElement (const XMLElement &node);
-		XMLElement (XMLElement &&node);
+		XMLElement (XMLElement &&node) =default;
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLElement>(*this);}
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
@@ -112,8 +112,7 @@ class XMLElement : public XMLNode {
 
 class XMLText : public XMLNode {
 	public:
-		XMLText (const std::string &str) : _text(str) {}
-		XMLText (std::string &&str) : _text(std::move(str)) {}
+		explicit XMLText (std::string str) : _text(std::move(str)) {}
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLText>(*this);}
 		void clear () override {_text.clear();}
 		void append (std::unique_ptr<XMLNode> node);
@@ -131,8 +130,7 @@ class XMLText : public XMLNode {
 
 class XMLComment : public XMLNode {
 	public:
-		XMLComment (const std::string &str) : _text(str) {}
-		XMLComment (std::string &&str) : _text(std::move(str)) {}
+		explicit XMLComment (std::string str) : _text(std::move(str)) {}
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLComment>(*this);}
 		void clear () override {_text.clear();}
 		std::ostream& write (std::ostream &os) const override {return os << "<!--" << _text << "-->";}
@@ -146,8 +144,7 @@ class XMLComment : public XMLNode {
 class XMLCData : public XMLNode {
 	public:
 		XMLCData () =default;
-		XMLCData (const std::string &d) : _data(d) {}
-		XMLCData (std::string &&d) : _data(std::move(d)) {}
+		explicit XMLCData (std::string data) : _data(std::move(data)) {}
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLCData>(*this);}
 		void clear () override                {_data.clear();}
 		void append (std::string &&str);

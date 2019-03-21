@@ -76,8 +76,8 @@ class Subfont {
 
 class SubfontException : public MessageException {
 	public:
-		SubfontException (const std::string &msg, const std::string &fname, int lineno=0)
-			: MessageException(msg), _fname(fname), _lineno(lineno) {}
+		SubfontException (const std::string &msg, std::string fname, int lineno=0)
+			: MessageException(msg), _fname(std::move(fname)), _lineno(lineno) {}
 
 		const char* filename () const {return _fname.c_str();}
 		int lineno () const           {return _lineno;}

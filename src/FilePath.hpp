@@ -28,7 +28,7 @@
 class FilePath {
 	class Directory {
 		public:
-			Directory (const std::string &dir) : _dirstr(dir) {}
+			Directory (std::string dir) : _dirstr(std::move(dir)) {}
 			Directory (std::string &&dir) : _dirstr(std::move(dir)) {}
 			bool operator == (const Directory &dir) const;
 			bool operator != (const Directory &dir) const {return !(*this == dir);}
