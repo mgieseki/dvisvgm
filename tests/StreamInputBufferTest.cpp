@@ -195,7 +195,7 @@ TEST(StreamInputBufferTest, parseDouble) {
 
 
 TEST(StreamInputBufferTest, attribs) {
-	istringstream iss("aaa=1 bbb=2 ccc=3 d e");
+	istringstream iss("aaa=1 bbb=2 c-c-c=3 3d=4 e");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	map<string,string> attr;
@@ -203,7 +203,7 @@ TEST(StreamInputBufferTest, attribs) {
 	EXPECT_EQ(s, 3);
 	EXPECT_EQ(attr["aaa"], "1");
 	EXPECT_EQ(attr["bbb"], "2");
-	EXPECT_EQ(attr["ccc"], "3");
+	EXPECT_EQ(attr["c-c-c"], "3");
 }
 
 

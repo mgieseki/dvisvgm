@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <cmath>
+#include <cstring>
 #include <functional>
 #include "InputReader.hpp"
 
@@ -280,7 +281,7 @@ string InputReader::getWord () {
 	string ret;
 	skipSpace();
 	while (isalpha(peek()))
-		ret += get();
+		ret += char(get());
 	return ret;
 }
 
@@ -312,7 +313,7 @@ string InputReader::getQuotedString (const char *quotechars) {
 	if (const char *quotechar = strchr(quotechars, peek())) {
 		get();
 		while (!eof() && peek() != *quotechar)
-			ret += get();
+			ret += char(get());
 		get();
 	}
 	return ret;
@@ -328,7 +329,7 @@ string InputReader::getString () {
 	string ret;
 	skipSpace();
 	while (!eof() && !isspace(peek()) && isprint(peek()))
-		ret += get();
+		ret += char(get());
 	return ret;
 }
 
@@ -339,7 +340,7 @@ string InputReader::getString () {
 string InputReader::getString (size_t n) {
 	string ret;
 	while (n-- > 0)
-		ret += get();
+		ret += char(get());
 	return ret;
 }
 
@@ -353,7 +354,7 @@ string InputReader::getString (const char *delim) {
 	string ret;
 	skipSpace();
 	while (!eof() && peek() > 0 && !strchr(delim, peek()))
-		ret += get();
+		ret += char(get());
 	return ret;
 }
 
@@ -362,7 +363,7 @@ string InputReader::getLine () {
 	string ret;
 	skipSpace();
 	while (!eof() && peek() > 0 && peek() != '\n')
-		ret += get();
+		ret += char(get());
 	// trim trailing whitespace
 	ret.erase(std::find_if(ret.rbegin(), ret.rend(), not1(ptr_fun<int, int>(isspace))).base(), ret.end());
 	return ret;
@@ -374,21 +375,21 @@ string InputReader::getLine () {
  *  @param[in] quotechars recognized quote characters used to enclose the attribute values
  *  @return number of attributes scanned */
 int InputReader::parseAttributes (map<string,string> &attr, const char *quotechars) {
-	bool ready=false;
-	while (!eof() && !ready) {
+	while (!eof()) {
 		string key;
 		skipSpace();
-		while (isalnum(peek()))
-			key += get();
+		if (!isalpha(peek()))  // first character of attribute name must be a letter
+			break;
+		key += char(get());
+		while (isalnum(peek()) || strchr("-:._", peek()))
+			key += char(get());
 		skipSpace();
-		if (peek() == '=') {
-			get();
-			skipSpace();
-			string val = getQuotedString(quotechars);
-			attr[key] = val;
-		}
-		else
-			ready = true;
+		if (peek() != '=')
+			break;
+		get();
+		skipSpace();
+		string val = getQuotedString(quotechars);
+		attr[key] = val;
 	}
 	return attr.size();
 }
