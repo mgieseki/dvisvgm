@@ -33,10 +33,42 @@ class SVGTree;
 class XMLElement;
 class XMLNode;
 
+#ifdef _MSC_VER
+// MSVC: Prevent aggressive optimization of pointers to member functions.
+// Instatiating class DvisvgmSpecialHandler without the following pragma
+// leads to memory corruption.
+// https://docs.microsoft.com/en-us/cpp/preprocessor/pointers-to-members
+#pragma pointers_to_members(full_generality, single_inheritance)
+#endif
+
 class DvisvgmSpecialHandler : public SpecialHandler {
+	class XMLParser {
+		using AppendFunc = void (SpecialActions::*)(std::unique_ptr<XMLNode>);
+		using PushFunc = void (SpecialActions::*)(std::unique_ptr<XMLElement>);
+		using PopFunc = void (SpecialActions::*)();
+		using NameStack = std::vector<std::string>;
+
+		public:
+			XMLParser (AppendFunc append, PushFunc push, PopFunc pop)
+				: _append(append), _pushContext(push), _popContext(pop) {}
+
+			void parse (const std::string &xml, SpecialActions &actions, bool finish=false);
+			void flush (SpecialActions &actions);
+
+		protected:
+			void openElement (std::string tag, SpecialActions &actions);
+			void closeElement (std::string tag, SpecialActions &actions);
+
+		private:
+			AppendFunc _append;
+			PushFunc _pushContext;
+			PopFunc _popContext;
+			std::string _xmlbuf;
+			NameStack _nameStack;  ///< names of nested elements still missing a closing tag
+	};
+
 	using StringVector = std::vector<std::string>;
 	using MacroMap = std::unordered_map<std::string, StringVector>;
-	using NameStack = std::vector<std::string>;
 
 	public:
 		DvisvgmSpecialHandler ();
@@ -47,7 +79,6 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 
 	protected:
-//		void createSVGPageNodes (InputReader &ir, SpecialActions &actions, ContextFunctions funcs, NameStack &stack);
 		void preprocessRaw (InputReader &ir);
 		void preprocessRawDef (InputReader &ir);
 		void preprocessRawSet (InputReader &ir);
@@ -66,9 +97,9 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 	private:
 		MacroMap _macros;
 		MacroMap::iterator _currentMacro;
-		int _nestingLevel;  ///< nesting depth of rawset specials
-		NameStack _defsNameStack; ///< stack holding the names of elements created by rawdef special
-		NameStack _pageNameStack; ///< stack holding the names of elements created by raw special
+		int _nestingLevel=0;    ///< nesting depth of rawset specials
+		XMLParser _defsParser;  ///< parses XML added by 'rawdef' specials
+		XMLParser _pageParser;  ///< parses XML added by 'raw' specials
 };
 
 #endif

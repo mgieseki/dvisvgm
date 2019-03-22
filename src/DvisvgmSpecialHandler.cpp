@@ -33,8 +33,10 @@
 using namespace std;
 
 
-DvisvgmSpecialHandler::DvisvgmSpecialHandler ()
-	: _currentMacro(_macros.end()), _nestingLevel(0)
+DvisvgmSpecialHandler::DvisvgmSpecialHandler () :
+	_currentMacro(_macros.end()),
+	_defsParser(&SpecialActions::appendToDefs, &SpecialActions::pushDefsContext, &SpecialActions::popDefsContext),
+	_pageParser(&SpecialActions::appendToPage, &SpecialActions::pushPageContext, &SpecialActions::popPageContext)
 {
 }
 
@@ -186,86 +188,6 @@ static void expand_constants (string &str, SpecialActions &actions) {
 }
 
 
-struct ContextFunctions {
-	using AppendFunc = void (SpecialActions::*)(std::unique_ptr<XMLNode>);
-	using PushFunc = void (SpecialActions::*)(std::unique_ptr<XMLElement>);
-	using PopFunc = void (SpecialActions::*)();
-	ContextFunctions (AppendFunc ap, PushFunc push, PopFunc pop) : append(ap), pushContext(push), popContext(pop) {}
-	AppendFunc append;
-	PushFunc pushContext;
-	PopFunc popContext;
-};
-
-
-/** Parses the XML code read by the given input reader, creates corresponding XML nodes and
- *  adds the to the SVG page group. It stops reading as soon as EOF is reached.
- *  The XML data must represent a single or multiple syntactically complete XML parts, like
- *  opening/closing tags, comments, or CDATA blocks. These must not be split and distributed
- *  over several 'raw' statements. Elements can be split but element tags can't.
- *  Example: "<g transform=" is invalid, "<g transform='scale(2,3)'>" is ok.
- *  @param[in,out] ir reader delivering the characters of the raw XML fragment to parse
- *  @param[in] actions object providing the SVG tree functions */
-void create_svg_nodes (InputReader &ir, SpecialActions &actions, ContextFunctions funcs, vector<string> &stack) {
-	while (!ir.eof()) {
-		ir.skipSpace();
-		if (ir.peek() != '<') {  // text node
-			string xml = ir.getString("<");
-			(actions.*funcs.append)(util::make_unique<XMLText>(xml));
-		}
-		else {
-			ir.get();  // skip '<'
-			if (isalpha(ir.peek())) {  // opening XML tag
-				string name = ir.getString(">/ \t");
-				ir.skipSpace();
-				auto elemNode = util::make_unique<XMLElement>(name);
-				map<string, string> attribs;
-				if (ir.parseAttributes(attribs, "\"'")) {
-					for (auto attrpair : attribs)
-						elemNode->addAttribute(attrpair.first, attrpair.second);
-				}
-				ir.skipSpace();
-				if (ir.peek() == '>') { // end of opening tag
-					ir.get();
-					stack.push_back(name);
-					(actions.*funcs.pushContext)(std::move(elemNode));
-				}
-				else if (ir.check("/>"))  // end of empty element tag
-					(actions.*funcs.append)(std::move(elemNode));
-				else
-					throw SpecialException("'>' or '/>' expected at end of opening XML tag");
-			}
-			else if (ir.peek() == '/') {  // closing tag
-				ir.get();
-				string name = ir.getString("> \t");
-				ir.skipSpace();
-				if (ir.get() != '>')
-					throw SpecialException("'>' expected at end of closing XML tag");
-				if (stack.empty())
-					throw SpecialException("spurious closing tag </" + name + ">");
-				if (stack.back() != name)
-					throw SpecialException("expected </" + name + "> but found </" + stack.back() + ">");
-				(actions.*funcs.popContext)();
-				stack.pop_back();
-			}
-			else {
-				// for now, create text nodes for CDATA, comments, and processing instructions
-				// they should not be split over several raw specials
-				string chunk;
-				if (ir.check("![CDATA["))
-					chunk = "<![CDATA[" + ir.readUntil("]]>");
-				else if (ir.check("!--"))
-					chunk = "<!--" + ir.readUntil("-->");
-				else if (ir.check("?"))
-					chunk = "<?" + ir.readUntil("?>");
-				else
-					chunk = ir.getString("<");
-				(actions.*funcs.append)(util::make_unique<XMLText>(chunk));
-			}
-		}
-	}
-}
-
-
 /** Processes raw SVG fragments from the input stream. The SVG data must represent
  *  a single or multiple syntactically complete XML parts, like opening/closing tags,
  *  comments, or CDATA blocks. These must not be split and distributed over several
@@ -274,15 +196,10 @@ void create_svg_nodes (InputReader &ir, SpecialActions &actions, ContextFunction
 void DvisvgmSpecialHandler::processRaw (InputReader &ir, SpecialActions &actions) {
 	if (_nestingLevel == 0) {
 		string xml = ir.getLine();
-		expand_constants(xml, actions);
-		StringInputBuffer ib(xml);
-		BufferInputReader stringReader(ib);
-		create_svg_nodes(stringReader, actions,
-			ContextFunctions(
-				&SpecialActions::appendToPage,
-				&SpecialActions::pushPageContext,
-				&SpecialActions::popPageContext),
-			_pageNameStack);
+		if (!xml.empty()) {
+			expand_constants(xml, actions);
+			_pageParser.parse(xml, actions);
+		}
 	}
 }
 
@@ -292,14 +209,7 @@ void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &acti
 		string xml = ir.getLine();
 		if (!xml.empty()) {
 			expand_constants(xml, actions);
-			StringInputBuffer ib(xml);
-			BufferInputReader stringReader(ib);
-			create_svg_nodes(stringReader, actions,
-				ContextFunctions(
-				  &SpecialActions::appendToDefs,
-				  &SpecialActions::pushDefsContext,
-				  &SpecialActions::popDefsContext),
-				_defsNameStack);
+			_defsParser.parse(xml, actions);
 		}
 	}
 }
@@ -330,23 +240,10 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 		string def = defstr.substr(1);
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
-			StringInputBuffer ib(def);
-			BufferInputReader stringReader(ib);
-			if (type == 'P') {
-				create_svg_nodes(stringReader, actions,
-					ContextFunctions(
-						&SpecialActions::appendToPage,
-						&SpecialActions::pushPageContext,
-						&SpecialActions::popPageContext),
-					_pageNameStack);
-			}
+			if (type == 'P')
+				_pageParser.parse(def, actions);
 			else {          // type == 'D'
-				create_svg_nodes(stringReader, actions,
-					ContextFunctions(
-						&SpecialActions::appendToDefs,
-						&SpecialActions::pushDefsContext,
-						&SpecialActions::popDefsContext),
-					_defsNameStack);
+				_defsParser.parse(def, actions);
 				type = 'L';  // locked
 			}
 		}
@@ -460,9 +357,9 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 }
 
 
-void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions&) {
-	_defsNameStack.clear();
-	_pageNameStack.clear();
+void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
+	_defsParser.flush(actions);
+	_pageParser.flush(actions);
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;
 		for (string &str : vec) {
@@ -477,4 +374,141 @@ void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions&) {
 vector<const char*> DvisvgmSpecialHandler::prefixes() const {
 	vector<const char*> pfx {"dvisvgm:"};
 	return pfx;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** Parses a fragment of XML code, creates corresponding XML nodes and adds them
+ *  to the SVG tree. The code may be split and processed by several calls of this
+ *  function. Incomplete chunks that can't be processed yet are stored and picked
+ *  up again together with the next incoming XML fragment. If no further code should
+ *  be appended, parameter 'finish' must be set.
+ *  @param[in] xml XML fragment to parse
+ *  @param[in] actions object providing the SVG tree functions
+ *  @param[in] finish if true, no more XML is expected and parsing is finished */
+void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions &actions, bool finish) {
+	// collect/extract an XML fragment that only contains complete tags
+	// incomplete tags are held back
+	_xmlbuf += xml;
+	size_t left=0, right;
+	while (left != string::npos) {
+		right = _xmlbuf.find('<', left);
+		if (left < right && left < _xmlbuf.length())  // plain text found?
+			(actions.*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
+		if (right != string::npos) {
+			left = right;
+			if (_xmlbuf.compare(left, 9, "<![CDATA[") == 0) {
+				right = _xmlbuf.find("]]>", left+9);
+				if (right == string::npos) {
+					if (finish)	throw SpecialException("expected ']]>' at end of CDATA block");
+					break;
+				}
+				(actions.*_append)(util::make_unique<XMLCData>(_xmlbuf.substr(left+9, right-left-9)));
+				right += 2;
+			}
+			else if (_xmlbuf.compare(left, 4, "<!--") == 0) {
+				right = _xmlbuf.find("-->", left+4);
+				if (right == string::npos) {
+					if (finish)	throw SpecialException("expected '-->' at end of comment");
+					break;
+				}
+				(actions.*_append)(util::make_unique<XMLComment>(_xmlbuf.substr(left+4, right-left-4)));
+				right += 2;
+			}
+			else if (_xmlbuf.compare(left, 2, "<?") == 0) {
+				right = _xmlbuf.find("?>", left+2);
+				if (right == string::npos) {
+					if (finish)	throw SpecialException("expected '?>' at end of processing instruction");
+					break;
+				}
+				(actions.*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left+2)));
+				right++;
+			}
+			else if (_xmlbuf.compare(left, 2, "</") == 0) {
+				right = _xmlbuf.find('>', left+2);
+				if (right == string::npos) {
+					if (finish)	throw SpecialException("missing '>' at end of closing XML tag");
+					break;
+				}
+				closeElement(_xmlbuf.substr(left+2, right-left-2), actions);
+			}
+			else {
+				right = _xmlbuf.find('>', left+1);
+				if (right == string::npos) {
+					if (finish)	throw SpecialException("missing '>' or '/>' at end of opening XML tag");
+					break;
+				}
+				openElement(_xmlbuf.substr(left+1, right-left-1), actions);
+			}
+		}
+		left = right;
+		if (right != string::npos)
+			left++;
+	}
+	if (left == string::npos)
+		_xmlbuf.clear();
+	else
+		_xmlbuf.erase(0, left);
+}
+
+
+/** Processes an opening element tag.
+ *  @param[in] tag tag without leading and trailing angle brackets */
+void DvisvgmSpecialHandler::XMLParser::openElement (string tag, SpecialActions &actions) {
+	StringInputBuffer ib(tag);
+	BufferInputReader ir(ib);
+	string name = ir.getString("/ \t\n\r");
+	ir.skipSpace();
+	auto elemNode = util::make_unique<XMLElement>(name);
+	map<string, string> attribs;
+	if (ir.parseAttributes(attribs, "\"'")) {
+		for (const auto &attrpair : attribs)
+			elemNode->addAttribute(attrpair.first, attrpair.second);
+	}
+	ir.skipSpace();
+	if (ir.peek() == '/')       // end of empty element tag
+		(actions.*_append)(std::move(elemNode));
+	else if (ir.peek() < 0) {   // end of opening tag
+		_nameStack.push_back(name);
+		(actions.*_pushContext)(std::move(elemNode));
+	}
+	else
+		throw SpecialException("'>' or '/>' expected at end of opening tag <"+name);
+}
+
+
+/** Processes a closing element tag.
+ *  @param[in] tag tag without leading and trailing angle brackets */
+void DvisvgmSpecialHandler::XMLParser::closeElement (string tag, SpecialActions &actions) {
+	StringInputBuffer ib(tag);
+	BufferInputReader ir(ib);
+	string name = ir.getString(" \t\n\r");
+	ir.skipSpace();
+	if (ir.peek() >= 0)
+		throw SpecialException("'>' expected at end of closing tag </"+name);
+	if (_nameStack.empty())
+		throw SpecialException("spurious closing tag </" + name + ">");
+	if (_nameStack.back() != name)
+		throw SpecialException("expected </" + name + "> but found </" + _nameStack.back() + ">");
+	(actions.*_popContext)();
+	_nameStack.pop_back();
+}
+
+
+/** Processes any remaining XML fragments, checks for missing closing tags,
+ *  and resets the parser state. */
+void DvisvgmSpecialHandler::XMLParser::flush (SpecialActions &actions) {
+	if (!_xmlbuf.empty()) {
+		parse("", actions, true);
+		_xmlbuf.clear();
+	}
+	string tags;
+	while (!_nameStack.empty()) {
+		tags += "</"+_nameStack.back()+">, ";
+		_nameStack.pop_back();
+	}
+	if (!tags.empty()) {
+		tags.resize(tags.length()-2);
+		throw SpecialException("missing closing tags: "+tags);
+	}
 }

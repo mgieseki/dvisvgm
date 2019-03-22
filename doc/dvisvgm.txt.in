@@ -624,11 +624,11 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
   proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different +raw+
-  specials. The tags themselves must not be split but completely placed in a single special. Otherwise, dvisvgm
-  prints an error message. Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, and *{?color}* that
-  expand to the current 'x' or 'y' coordinate and the current color, respectively. Furthermore, *{?nl}* expands
-  to a newline character.
- 
+  specials. The tags themselves can also be split but must be continued with the immediatly following +raw+
+  special. Both syntactically incorrect and wrongly nested tags lead to error messages.
+  Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, and *{?color}* that expand to the current
+  'x' or 'y' coordinate and the current color, respectively. Furthermore, *{?nl}* expands to a newline character.
+
   *dvisvgm:rawdef* 'text';;
   This command is similar to *dvisvgm:raw*, but puts the XML nodes into the <defs> section of the SVG document
   currently being generated.
@@ -654,7 +654,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   can be used here. However, dvisvgm does not check the file format or the file name suffix. The lengths 'width'
   and 'height' can be given together with a unit specifier (see option *--bbox*) or as plain floating point numbers.
   In the latter case, TeX point units are assumed (1in = 72.27pt).
- 
+
   *dvisvgm:bbox* n[ew] 'name';;
   Defines or resets a local bounding box called 'name'. The name may consist of letters and digits.
   While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to
@@ -666,7 +666,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   In conjunction with special *dvisvgm:raw*, the macro *{?bbox 'name'}* expands to the four values 'x', 'y', 'w', and 'h'
   (separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box 'name'.
   If box 'name' wasn't previously defined, all four values equal to zero.
- 
+
   *dvisvgm:bbox* 'width' 'height' ['depth'];;
   Updates the bounding box of the current page by embedding a virtual rectangle ('x', 'y', 'width', 'height')
   where the lower left corner is located at the current DVI drawing position ('x','y'). If the optional parameter 'depth'
@@ -675,11 +675,11 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
   this command either enlarges the overall bounding box or leaves it as is. It's not possible to reduce its extent. This
   special should be used together with *dvisvgm:raw* in order to update the viewport of the page properly.
- 
+
   *dvisvgm:bbox* a[bs] 'x1' 'y1' 'x2' 'y2';;
   This variant of the bbox special updates the bounding box by embedding a virtual rectangle ('x1','y1','x2','y2').
   The points ('x1','y1') and ('x2','y2') denote the absolute coordinates of two diagonal corners of the rectangle.
- 
+
   *dvisvgm:bbox* f[ix] 'x1' 'y1' 'x2' 'y2';;
   This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
   this command, dvisvgm doesn't further alter the bounding box coordinates, except this special is called again later.

@@ -337,7 +337,7 @@ void XMLText::prepend (unique_ptr<XMLNode> node) {
 
 ostream& XMLCData::write (ostream &os) const {
 	if (!_data.empty())
-		os << "<![CDATA[\n" << _data << "]]>";
+		os << "<![CDATA[" << _data << "]]>";
 	return os;
 }
 

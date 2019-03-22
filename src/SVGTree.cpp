@@ -131,7 +131,8 @@ void SVGTree::appendToDefs (unique_ptr<XMLNode> node) {
 		_defs = defsNode.get();
 		_root->prepend(std::move(defsNode));
 	}
-	_defs->append(std::move(node));
+	XMLElement *parent = _defsContextStack.empty() ? _defs : _defsContextStack.top();
+	parent->append(std::move(node));
 }
 
 
@@ -302,7 +303,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 void SVGTree::pushDefsContext (unique_ptr<XMLElement> node) {
 	XMLElement *nodePtr = node.get();
 	if (_defsContextStack.empty())
-		_defs->append(std::move(node));
+		appendToDefs(std::move(node));
 	else
 		_defsContextStack.top()->append(std::move(node));
 	_defsContextStack.push(nodePtr);

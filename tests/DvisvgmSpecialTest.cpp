@@ -119,7 +119,7 @@ TEST_F(DvisvgmSpecialTest, rawText) {
 	iss.clear(); iss.str("raw \t second {?bbox dummy} \t");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("<defs/>"));
-	EXPECT_TRUE(recorder.pageEquals("<page>first\nsecond 0 0 0 0</page>"));
+	EXPECT_TRUE(recorder.pageEquals("<page>first\nsecond 0 0 0 0</page>")) << recorder.pageString();
 }
 
 
@@ -127,19 +127,31 @@ TEST_F(DvisvgmSpecialTest, rawPage1) {
 	istringstream iss("raw <elem attr1='1' attr2='20'>text1<inner>&lt;text2</inner>text3</elem>");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("<defs/>"));
-	EXPECT_TRUE(recorder.pageEquals("<page><elem attr1='1' attr2='20'>text1<inner>&lt;text2</inner>text3</elem></page>"));
+	EXPECT_TRUE(recorder.pageEquals("<page><elem attr1='1' attr2='20'>text1<inner>&lt;text2</inner>text3</elem></page>")) << recorder.pageString();
 }
 
 
 TEST_F(DvisvgmSpecialTest, rawPage2) {
 	istringstream iss("raw <elem attr1='1' attr2='20'>text1");
 	handler.process("", iss, recorder);
-	iss.clear(); iss.str("raw text2<inner>text3</inner>text4");
+	iss.clear(); iss.str("raw text2<inner>text3</inner><my:empty-elem/>text4");
 	handler.process("", iss, recorder);
 	iss.clear(); iss.str("raw </elem>");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("<defs/>"));
-	EXPECT_TRUE(recorder.pageEquals("<page><elem attr1='1' attr2='20'>text1text2<inner>text3</inner>text4</elem></page>"));
+	EXPECT_TRUE(recorder.pageEquals("<page><elem attr1='1' attr2='20'>text1text2<inner>text3</inner><my:empty-elem/>text4</elem></page>")) << recorder.pageString();
+}
+
+
+TEST_F(DvisvgmSpecialTest, rawPage3) {
+	istringstream iss("raw <elem attr1='1' attr2=");
+	handler.process("", iss, recorder);
+	iss.clear(); iss.str("raw '20'>text2<inner>text3</inner>text4</e");
+	handler.process("", iss, recorder);
+	iss.clear(); iss.str("raw lem>");
+	handler.process("", iss, recorder);
+	EXPECT_TRUE(recorder.defsEquals("<defs/>"));
+	EXPECT_TRUE(recorder.pageEquals("<page><elem attr1='1' attr2='20'>text2<inner>text3</inner>text4</elem></page>")) << recorder.pageString();
 }
 
 
@@ -159,6 +171,18 @@ TEST_F(DvisvgmSpecialTest, rawDefs2) {
 	iss.clear(); iss.str("rawdef </elem>");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals("<defs><elem attr1='1' attr2='20'>text1text2<inner>text3</inner>text4</elem></defs>"));
+	EXPECT_TRUE(recorder.pageEquals("<page/>"));
+}
+
+
+TEST_F(DvisvgmSpecialTest, rawDefs3) {
+	istringstream iss("rawdef <elem attr1='1' a");
+	handler.process("", iss, recorder);
+	iss.clear(); iss.str("rawdef ttr2='20'>text2<inner>text3</in");
+	handler.process("", iss, recorder);
+	iss.clear(); iss.str("rawdef ner>text4</elem>");
+	handler.process("", iss, recorder);
+	EXPECT_TRUE(recorder.defsEquals("<defs><elem attr1='1' attr2='20'>text2<inner>text3</inner>text4</elem></defs>"));
 	EXPECT_TRUE(recorder.pageEquals("<page/>"));
 }
 
@@ -189,7 +213,7 @@ TEST_F(DvisvgmSpecialTest, rawPI) {
 
 TEST_F(DvisvgmSpecialTest, rawPageFail) {
 	istringstream iss("raw <elem attr1='1' attr2='20'");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // incomplete opening tag
+	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, SpecialException);  // incomplete opening tag
 	iss.clear(); iss.str("raw </elem>");
 	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // spurious closing tag
 	iss.clear(); iss.str("raw <open>text</close>");
@@ -199,7 +223,7 @@ TEST_F(DvisvgmSpecialTest, rawPageFail) {
 
 TEST_F(DvisvgmSpecialTest, rawDefsFail) {
 	istringstream iss("rawdef <elem attr1='1' attr2='20'");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // incomplete opening tag
+	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, SpecialException);  // incomplete opening tag
 	iss.clear(); iss.str("rawdef </elem>");
 	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // spurious closing tag
 	iss.clear(); iss.str("rawdef <open>text</close>");
