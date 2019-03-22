@@ -38,8 +38,7 @@ struct InputBuffer
 };
 
 
-class StreamInputBuffer : public InputBuffer
-{
+class StreamInputBuffer : public InputBuffer {
 	public:
 		StreamInputBuffer (std::istream &is, size_t bufsize=1024);
 		~StreamInputBuffer ();
@@ -64,24 +63,23 @@ class StreamInputBuffer : public InputBuffer
 };
 
 
-class StringInputBuffer : public InputBuffer
-{
+class StringInputBuffer : public InputBuffer {
 	public:
-		StringInputBuffer (const std::string &str) : _str(str), _pos(0) {}
-		int get () override                {return _pos < _str.length() ? _str[_pos++] : -1;}
-		int peek () const override         {return _pos < _str.length() ? _str[_pos] : -1;}
-		int peek (size_t n) const override {return _pos+n < _str.length() ? _str[_pos+n] : -1;}
-		bool eof () const override         {return _pos >= _str.length();}
-		void invalidate () override        {_pos = _str.length();}
+		explicit StringInputBuffer (const std::string &str) : _str(&str) {}
+		void assign (const std::string &str) {_str = &str; _pos=0;}
+		int get () override                  {return _pos < _str->length() ? _str->at(_pos++) : -1;}
+		int peek () const override           {return _pos < _str->length() ? _str->at(_pos) : -1;}
+		int peek (size_t n) const override   {return _pos+n < _str->length() ? _str->at(_pos+n) : -1;}
+		bool eof () const override           {return _pos >= _str->length();}
+		void invalidate () override          {_pos = _str->length();}
 
 	private:
-		const std::string &_str;
-		size_t _pos;
+		const std::string *_str;
+		size_t _pos=0;
 };
 
 
-class CharInputBuffer : public InputBuffer
-{
+class CharInputBuffer : public InputBuffer {
 	public:
 		CharInputBuffer (const char *buf, size_t size) : _pos(buf), _size(buf ? size : 0) {}
 
@@ -112,8 +110,7 @@ class CharInputBuffer : public InputBuffer
 };
 
 
-class SplittedCharInputBuffer : public InputBuffer
-{
+class SplittedCharInputBuffer : public InputBuffer {
 	public:
 		SplittedCharInputBuffer (const char *buf1, size_t s1, const char *buf2, size_t s2);
 		int get () override;
@@ -129,8 +126,7 @@ class SplittedCharInputBuffer : public InputBuffer
 };
 
 
-class TextStreamInputBuffer : public StreamInputBuffer
-{
+class TextStreamInputBuffer : public StreamInputBuffer {
 	public:
 		TextStreamInputBuffer (std::istream &is) : StreamInputBuffer(is), _line(1), _col(1) {}
 		int get () override;
