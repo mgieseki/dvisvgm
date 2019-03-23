@@ -47,6 +47,7 @@ class XMLNode {
 		virtual std::ostream& write (std::ostream &os) const =0;
 		virtual const XMLElement* toElement () const {return nullptr;}
 		virtual const XMLText* toText () const       {return nullptr;}
+		virtual const XMLText* toWSNode () const     {return nullptr;}
 		virtual const XMLComment* toComment () const {return nullptr;}
 		virtual const XMLCData* toCData () const     {return nullptr;}
 		XMLElement* toElement ()  {return cast<XMLElement>(&XMLNode::toElement);}
@@ -81,7 +82,7 @@ class XMLElement : public XMLNode {
 		XMLNode* append (const std::string &str);
 		XMLNode* prepend (std::unique_ptr<XMLNode> child);
 		void remove (const XMLNode *child);
-		void remove (Iterator childIt);
+		Iterator remove (Iterator childIt);
 		bool insertAfter (std::unique_ptr<XMLNode> child, XMLNode *sibling);
 		bool insertBefore (std::unique_ptr<XMLNode> child, XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
@@ -122,6 +123,7 @@ class XMLText : public XMLNode {
 		std::ostream& write (std::ostream &os) const override {return os << _text;}
 		const std::string& getText () const {return _text;}
 		const XMLText* toText () const override {return this;}
+		const XMLText* toWSNode () const override;
 
 	private:
 		std::string _text;

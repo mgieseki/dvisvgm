@@ -30,6 +30,7 @@ bool SVGOptimizer::GROUP_ATTRIBUTES=false;
 void SVGOptimizer::execute () {
 	if (_svg.pageNode()) {
 		if (GROUP_ATTRIBUTES) {
+			WSNodeRemover().execute(*_svg.pageNode());
 			AttributeExtractor().execute(*_svg.pageNode());
 			GroupCollapser().execute(*_svg.pageNode());
 		}
@@ -269,6 +270,21 @@ bool GroupCollapser::unwrappable (const XMLElement &element, const XMLElement &p
 		return element.hasAttribute(name);
 	});
 	return it == attribs.end();
+}
+/////////////////////////////////////////////////////////////////////////////
+
+void WSNodeRemover::execute (XMLElement &context) {
+	bool removeWS = context.getName() != "text" && context.getName() != "tspan";
+	auto it=context.begin();
+	while (it != context.end()) {
+		if (removeWS && (*it)->toWSNode()) {
+			it = context.remove(it);
+			continue;
+		}
+		if (XMLElement *elem = (*it)->toElement())
+			execute(*elem);
+		++it;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

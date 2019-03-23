@@ -85,6 +85,12 @@ class GroupCollapser {
 };
 
 
+class WSNodeRemover {
+	public:
+		void execute (XMLElement &context);
+};
+
+
 class RedundantElementRemover {
 	public:
 		void execute (XMLElement &defs, XMLElement &context);

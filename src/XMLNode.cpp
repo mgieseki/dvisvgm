@@ -200,8 +200,8 @@ void XMLElement::remove (const XMLNode *child) {
 }
 
 
-void XMLElement::remove (Iterator childIt) {
-	_children.erase(childIt);
+XMLElement::Iterator XMLElement::remove (Iterator childIt) {
+	return _children.erase(childIt);
 }
 
 
@@ -331,6 +331,11 @@ void XMLText::append (const string &str) {
 void XMLText::prepend (unique_ptr<XMLNode> node) {
 	if (XMLText *textNode = node->toText())
 		_text = textNode->_text + _text;
+}
+
+
+const XMLText* XMLText::toWSNode () const {
+	return _text.find_first_not_of(" \t\n\r") == string::npos ? this : nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////
