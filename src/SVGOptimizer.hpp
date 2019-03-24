@@ -85,6 +85,17 @@ class GroupCollapser {
 };
 
 
+class Matrix;
+
+class TransformSimplifier {
+	public:
+		void execute (XMLElement &context);
+
+	protected:
+		std::string decompose (const Matrix &matrix);
+};
+
+
 class WSNodeRemover {
 	public:
 		void execute (XMLElement &context);

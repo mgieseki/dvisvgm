@@ -75,6 +75,8 @@ class Matrix {
 		std::string toSVG () const;
 		std::ostream& write (std::ostream &os) const;
 
+		static Matrix parseSVGTransform (const std::string &transform);
+
 	private:
 		double _values[3][3];  // row x col
 };
@@ -91,7 +93,17 @@ struct ScalingMatrix : public Matrix {
 
 
 struct RotationMatrix : public Matrix {
-	RotationMatrix (double deg);
+	explicit RotationMatrix (double deg);
+};
+
+
+struct XSkewingMatrix : public Matrix {
+	explicit XSkewingMatrix (double deg);
+};
+
+
+struct YSkewingMatrix : public Matrix {
+	explicit YSkewingMatrix (double deg);
 };
 
 

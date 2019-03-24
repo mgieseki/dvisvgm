@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <vector>
+#include <XMLString.hpp>
 #include "Calculator.hpp"
 #include "Matrix.hpp"
 
@@ -253,4 +254,24 @@ TEST(MatrixTest, fail) {
 	EXPECT_THROW(Matrix("KX90", calc), ParserException);  // invalid argument (pole at 90+180k degrees)
 	EXPECT_THROW(Matrix("KY270", calc), ParserException); // invalid argument (pole at 90+180k degrees)
 	EXPECT_THROW(Matrix("S2,", calc), ParserException);   // missing argument
+}
+
+
+TEST(MatrixTest, parseSVGTransform) {
+	XMLString::DECIMAL_PLACES = 3;
+	EXPECT_EQ(
+		Matrix::parseSVGTransform("translate(50, 90)").toSVG(),
+		"matrix(1 0 0 1 50 90)");
+	EXPECT_EQ(
+		Matrix::parseSVGTransform("scale(10 20)").toSVG(),
+		"matrix(10 0 0 20 0 0)");
+	EXPECT_EQ(
+		Matrix::parseSVGTransform("rotate(-45)").toSVG(),
+		"matrix(0.707 -0.707 0.707 0.707 0 0)");
+	EXPECT_EQ(
+		Matrix::parseSVGTransform("translate(50, 90) rotate(-45) ").toSVG(),
+		"matrix(0.707 -0.707 0.707 0.707 50 90)");
+	EXPECT_EQ(
+		Matrix::parseSVGTransform("translate(50, 90) rotate(-45) , translate(130 160)").toSVG(),
+		"matrix(0.707 -0.707 0.707 0.707 255.061 111.213)");
 }

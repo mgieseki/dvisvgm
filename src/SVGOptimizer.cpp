@@ -33,6 +33,7 @@ void SVGOptimizer::execute () {
 			WSNodeRemover().execute(*_svg.pageNode());
 			AttributeExtractor().execute(*_svg.pageNode());
 			GroupCollapser().execute(*_svg.pageNode());
+			TransformSimplifier().execute(*_svg.pageNode());
 		}
 		if (_svg.defsNode())
 			RedundantElementRemover().execute(*_svg.defsNode(), *_svg.pageNode());
@@ -271,6 +272,113 @@ bool GroupCollapser::unwrappable (const XMLElement &element, const XMLElement &p
 	});
 	return it == attribs.end();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+#include "Matrix.hpp"
+
+void TransformSimplifier::execute (XMLElement &context) {
+	if (const char *transform = context.getAttributeValue("transform")) {
+		Matrix matrix = Matrix::parseSVGTransform(transform);
+		string decomp = decompose(matrix);
+		if (decomp.length() > matrix.toSVG().length())
+			context.addAttribute("transform", matrix.toSVG());
+		else {
+			if (decomp.empty())
+				context.removeAttribute("transform");
+			else
+				context.addAttribute("transform", decomp);
+		}
+	}
+	for (auto &child : context) {
+		if (XMLElement *elem = child->toElement())
+			execute(*elem);
+	}
+}
+
+static string translate_str (double dx, double dy) {
+	string ret;
+	if (dx != 0 || dy != 0) {
+		ret = "translate("+XMLString(dx);
+		if (dy != 0)
+			ret += " "+XMLString(dy);
+		ret += ')';
+	}
+	return ret;
+}
+
+
+static string scale_str (double sx, double sy) {
+	string ret;
+	if (sx != 1 || sy != 1) {
+		ret = "scale("+XMLString(sx);
+		if (sy != 1)
+			ret += " "+XMLString(sy);
+		ret += ')';
+	}
+	return ret;
+}
+
+
+static string rotate_str (double rad) {
+	string ret;
+	rad = fmod(rad, math::TWO_PI);
+	if (rad >= 1e-6)
+		ret = "rotate("+XMLString(math::rad2deg(rad))+")";
+	return ret;
+}
+
+
+static string skewx_str (double rad) {
+	string ret;
+	rad = fmod(rad, math::TWO_PI);
+	if (rad >= 1e-6)
+		ret = "skewX("+XMLString(math::rad2deg(rad))+")";
+	return ret;
+}
+
+
+static string skewy_str (double rad) {
+	string ret;
+	rad = fmod(rad, math::TWO_PI);
+	if (rad >= 1e-6)
+		ret = "skewY("+XMLString(math::rad2deg(rad))+")";
+	return ret;
+}
+
+
+/** Decomposes a transformation matrix into a sequence of basic SVG transformations,
+ *  like translation, rotation, and scaling.
+ *  @param[in] matrix matrix to decompose
+ *  @return string containing the SVG transformation commands
+ *  http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html */
+string TransformSimplifier::decompose (const Matrix &matrix) {
+	string ret;
+	double a = matrix.get(0, 0);
+	double b = matrix.get(1, 0);
+	double c = matrix.get(0, 1);
+	double d = matrix.get(1, 1);
+	double e = matrix.get(0, 2);
+	double f = matrix.get(1, 2);
+	ret += translate_str(e, f);
+	double delta = a*d - b*c;
+	if (a != 0 || b != 0) {
+		double r = sqrt(a*a + b*b);
+		ret += rotate_str(b > 0 ? acos(a/r) : -acos(a/r));
+		ret += scale_str(r, delta/r);
+		ret += skewx_str(atan((a*c + b*d)/(r*r)));
+	}
+	else if (c != 0 || d != 0) {
+		double s = sqrt(c*c + d*d);
+		ret += rotate_str(math::HALF_PI - (d > 0 ? acos(-c/s) : -acos(c/s)));
+		ret += scale_str(delta/s, s);
+		ret += skewy_str(atan((a*c + b*d)/(s*s)));
+	}
+	else
+		ret += scale_str(0, 0);
+	return ret;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 void WSNodeRemover::execute (XMLElement &context) {

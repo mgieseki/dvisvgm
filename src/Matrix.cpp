@@ -442,7 +442,7 @@ string Matrix::toSVG () const {
 	oss << "matrix(";
 	for (int i=0; i < 3; i++) {
 		for (int j=0; j < 2; j++)
-			oss << _values[j][i] << ' ';
+			oss << XMLString(_values[j][i]) << ' ';
 	}
 	oss.seekp(-1, ios::cur) << ')';  // overwrite trailing space character
 	return oss.str();
@@ -464,8 +464,117 @@ ostream& Matrix::write (ostream &os) const {
 }
 
 
-//////////////////////////////////////////////////////////////////
+static const char* ord_suffix (int n) {
+	static const char *suffixes[] = {"th", "st", "nd", "rd"};
+	if (abs(n) < 4)
+		return suffixes[n];
+	return suffixes[0];
+}
 
+
+static void skip_comma_wsp (istream &is) {
+	is >> ws;
+	if (is.peek() == ',') is.ignore(1);
+	is >> ws;
+}
+
+
+static size_t parse_transform_cmd (istream &is, string cmd, size_t minparams, size_t maxparams, vector<double> &params) {
+	for (int i=0; i < int(cmd.length()); i++) {
+		if (is.get() != cmd[i]) {
+			is.seekg(-i-1, ios::cur);
+			return 0;
+		}
+	}
+	params.clear();
+	is >> ws;
+	if (is.get() != '(')
+		throw ParserException("missing '(' after command '"+cmd+"'");
+	for (size_t i=1; i <= maxparams; i++) {
+		is >> ws;
+		double val;
+		if (is.fail())
+			throw ParserException(to_string(i)+ord_suffix(i)+" parameter of '"+cmd+"' must be a number");
+		is >> val;
+		params.push_back(val);
+		is >> ws;
+		if (i == minparams && is.peek() == ')') {
+			is.ignore(1);
+			return i;
+		}
+		if (i == maxparams) {
+			if (is.peek() != ')')
+				throw ParserException("missing ')' at end of command '"+cmd+"'");
+			is.ignore(1);
+		}
+		skip_comma_wsp(is);
+	}
+	return maxparams;
+}
+
+
+static bool ne (double x, double y) {return abs(x-y) >= 1e-6;}
+static bool ne_angle (double x, double y) {return abs(x-y) >= 1e-3;}
+
+
+Matrix Matrix::parseSVGTransform (const string &transform) {
+	istringstream iss(transform);
+	Matrix matrix(1);
+	iss >> ws;
+	while (iss) {
+		vector<double> params;
+		if (parse_transform_cmd(iss, "matrix", 6, 6, params)) {
+			if (ne(params[0], 1) || ne(params[1], 0) || ne(params[2], 0) || ne(params[3], 1) || ne(params[4], 0) || ne(params[5], 0))
+				matrix.rmultiply({params[0], params[2], params[4], params[1], params[3], params[5]});
+		}
+		else if (parse_transform_cmd(iss, "rotate", 1, 3, params)) {
+			if (params.size() == 1) {
+				params.push_back(0);
+				params.push_back(0);
+			}
+			if (ne_angle(fmod(params[0], 360), 0)) {
+				bool translate = ne(params[1], 0) || ne(params[2], 0);
+				if (translate)
+					matrix.rmultiply(TranslationMatrix(params[1], params[2]));
+				matrix.rmultiply(RotationMatrix(params[0]));
+				if (translate)
+					matrix.rmultiply(TranslationMatrix(-params[1], -params[2]));
+			}
+		}
+		else if (parse_transform_cmd(iss, "scale", 1, 2, params)) {
+			if (params.size() == 1)
+				params.push_back(1);
+			if (ne(params[0], 1) || ne(params[1], 1))
+				matrix.rmultiply(ScalingMatrix(params[0], params[1]));
+		}
+		else if (parse_transform_cmd(iss, "skewX", 1, 1, params)) {
+			if (ne_angle(fmod(abs(params[0])-90, 180), 0))
+				matrix.rmultiply(XSkewingMatrix(params[0]));
+		}
+		else if (parse_transform_cmd(iss, "skewY", 1, 1, params)) {
+			if (ne_angle(fmod(abs(params[0])-90, 180), 0))
+				matrix.rmultiply(YSkewingMatrix(params[0]));
+		}
+		else if (parse_transform_cmd(iss, "translate", 1, 2, params)) {
+			if (params.size() == 1)
+				params.push_back(0);
+			if (ne(params[0], 0) || ne(params[1], 0))
+				matrix.rmultiply(TranslationMatrix(params[0], params[1]));
+		}
+		else {  // invalid command
+			string cmd;
+			while (isalpha(iss.peek()))
+				cmd += char(iss.get());
+			if (cmd.empty())
+				throw ParserException("unexpected character in transform attribute: "+to_string(char(iss.get())));
+			throw ParserException("invalid command in transform attribute: "+cmd);
+		}
+		skip_comma_wsp(iss);
+	}
+	return matrix;
+}
+
+//////////////////////////////////////////////////////////////////
 
 TranslationMatrix::TranslationMatrix (double tx, double ty) {
 	double v[] = {1, 0, tx, 0, 1, ty};
@@ -487,3 +596,14 @@ RotationMatrix::RotationMatrix (double deg) {
 	set(v, 5);
 }
 
+
+XSkewingMatrix::XSkewingMatrix (double deg) {
+	double xyratio = tan(deg2rad(deg));
+	lmultiply(Matrix({1, xyratio}));
+}
+
+
+YSkewingMatrix::YSkewingMatrix (double deg) {
+	double xyratio = tan(deg2rad(deg));
+	lmultiply(Matrix({1, 0, 0, xyratio}));
+}

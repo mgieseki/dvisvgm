@@ -35,6 +35,7 @@ constexpr const double TWO_PI  = 6.283185307179586476925286766559005768;
 constexpr const double SQRT2   = 1.414213562373095048801688724209698079;
 
 inline double deg2rad (double deg) {return PI*deg/180.0;}
+inline double rad2deg (double rad) {return 180.0*rad/PI;}
 
 } // namespace math
 
