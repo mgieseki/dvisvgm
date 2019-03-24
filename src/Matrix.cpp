@@ -143,7 +143,7 @@ Matrix& Matrix::set(const string &cmds, Calculator &calc) {
 Matrix& Matrix::translate (double tx, double ty) {
 	if (tx != 0 || ty != 0) {
 		TranslationMatrix t(tx, ty);
-		rmultiply(t);
+		lmultiply(t);
 	}
 	return *this;
 }
@@ -152,7 +152,7 @@ Matrix& Matrix::translate (double tx, double ty) {
 Matrix& Matrix::scale (double sx, double sy) {
 	if (sx != 1 || sy != 1) {
 		ScalingMatrix s(sx, sy);
-		rmultiply(s);
+		lmultiply(s);
 	}
 	return *this;
 }
@@ -163,7 +163,7 @@ Matrix& Matrix::scale (double sx, double sy) {
  *  @param[in] deg rotation angle in degrees */
 Matrix& Matrix::rotate (double deg) {
 	RotationMatrix r(deg);
-	rmultiply(r);
+	lmultiply(r);
 	return *this;
 }
 
@@ -179,7 +179,7 @@ Matrix& Matrix::xskewByRatio (double xyratio) {
 	if (xyratio != 0) {
 		double v[] = {1, xyratio};
 		Matrix t(v, 2);
-		rmultiply(t);
+		lmultiply(t);
 	}
 	return *this;
 }
@@ -196,7 +196,7 @@ Matrix& Matrix::yskewByRatio (double xyratio) {
 	if (xyratio != 0) {
 		double v[] = {1, 0, 0, xyratio};
 		Matrix t(v, 4);
-		rmultiply(t);
+		lmultiply(t);
 	}
 	return *this;
 }
@@ -208,7 +208,7 @@ Matrix& Matrix::flip (bool haxis, double a) {
 		s = -1;
 	double v[] = {-s, 0, (haxis ? 0 : 2*a), 0, s, (haxis ? 2*a : 0), 0, 0, 1};
 	Matrix t(v);
-	rmultiply(t);
+	lmultiply(t);
 	return *this;
 }
 
@@ -222,8 +222,8 @@ Matrix& Matrix::transpose () {
 }
 
 
-/** Multiplies this matrix M with matrix tm (tm is the factor on the left side): M := tm * M */
-Matrix& Matrix::lmultiply (const Matrix &tm) {
+/** Multiplies this matrix M with matrix tm (tm is the factor on the right side): M := M * tm */
+Matrix& Matrix::rmultiply (const Matrix &tm) {
 	Matrix ret;
 	for (int i=0; i < 3; i++)
 		for (int j=0; j < 3; j++)
@@ -233,8 +233,8 @@ Matrix& Matrix::lmultiply (const Matrix &tm) {
 }
 
 
-/** Multiplies this matrix M with matrix tm (tm is the factor on the right side): M := M * tm */
-Matrix& Matrix::rmultiply (const Matrix &tm) {
+/** Multiplies this matrix M with matrix tm (tm is the factor on the left side): M := tm * M */
+Matrix& Matrix::lmultiply (const Matrix &tm) {
 	Matrix ret;
 	for (int i=0; i < 3; i++)
 		for (int j=0; j < 3; j++)
@@ -415,7 +415,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				v[6] = v[7] = 0;
 				v[8] = 1;
 				Matrix tm(v);
-				rmultiply(tm);
+				lmultiply(tm);
 				break;
 			}
 			default:

@@ -350,7 +350,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		Matrix matrix(1);
 		matrix.scale(sx, -sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
 		matrix.translate(x+hoffset, y-voffset);     // move image to current DVI position
-		matrix.rmultiply(_actions->getMatrix());
+		matrix.lmultiply(_actions->getMatrix());
 
 		// update bounding box
 		BoundingBox bbox(0, 0, urx-llx, ury-lly);
@@ -358,7 +358,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		_actions->embed(bbox);
 
 		// insert group containing SVG nodes created from image
-		matrix.lmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
+		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		if (!matrix.isIdentity())
 			groupNode->addAttribute("transform", matrix.toSVG());
 		_actions->appendToPage(std::move(groupNode));
@@ -724,7 +724,7 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 
 			Matrix matrix;  // transformation matrix given together with pattern definition
 			create_matrix(p, 9, matrix);
-			matrix.rmultiply(_actions->getMatrix());
+			matrix.lmultiply(_actions->getMatrix());
 
 			unique_ptr<PSTilingPattern> pattern;
 			if (paint_type == 1)
@@ -1093,7 +1093,7 @@ void PsSpecialHandler::scale (vector<double> &p) {
 	if (_actions) {
 		Matrix m = _actions->getMatrix();
 		ScalingMatrix s(p[0], p[1]);
-		m.lmultiply(s);
+		m.rmultiply(s);
 		_actions->setMatrix(m);
 	}
 }
@@ -1103,7 +1103,7 @@ void PsSpecialHandler::translate (vector<double> &p) {
 	if (_actions) {
 		Matrix m = _actions->getMatrix();
 		TranslationMatrix t(p[0], p[1]);
-		m.lmultiply(t);
+		m.rmultiply(t);
 		_actions->setMatrix(m);
 	}
 }
@@ -1113,7 +1113,7 @@ void PsSpecialHandler::rotate (vector<double> &p) {
 	if (_actions) {
 		Matrix m = _actions->getMatrix();
 		RotationMatrix r(p[0]);
-		m.lmultiply(r);
+		m.rmultiply(r);
 		_actions->setMatrix(m);
 	}
 }

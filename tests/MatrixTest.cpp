@@ -131,25 +131,25 @@ TEST(MatrixTest, isTranslation) {
 }
 
 
-TEST(MatrixTest, lmultiply) {
-	const Matrix m1({1, 2, 3, 4, 5, 6, 7, 8, 9});
-	const Matrix m2({9, 8, 7, 6, 5, 4, 3, 2, 1});
-	EXPECT_NE(m1, m2);
-	Matrix m3;
-	EXPECT_EQ((m3=m1).lmultiply(m2), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
-	EXPECT_EQ((m3=m2).lmultiply(m1), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
-	EXPECT_EQ((m3=m1).lmultiply(Matrix(1)), m1);
-}
-
-
 TEST(MatrixTest, rmultiply) {
 	const Matrix m1({1, 2, 3, 4, 5, 6, 7, 8, 9});
 	const Matrix m2({9, 8, 7, 6, 5, 4, 3, 2, 1});
 	EXPECT_NE(m1, m2);
 	Matrix m3;
-	EXPECT_EQ((m3=m1).rmultiply(m2), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
-	EXPECT_EQ((m3=m2).rmultiply(m1), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
-	EXPECT_EQ((m3=m1).rmultiply(Matrix(1)), m1);
+	EXPECT_EQ((m3 = m1).rmultiply(m2), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
+	EXPECT_EQ((m3 = m2).rmultiply(m1), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
+	EXPECT_EQ((m3 = m1).rmultiply(Matrix(1)), m1);
+}
+
+
+TEST(MatrixTest, lmultiply) {
+	const Matrix m1({1, 2, 3, 4, 5, 6, 7, 8, 9});
+	const Matrix m2({9, 8, 7, 6, 5, 4, 3, 2, 1});
+	EXPECT_NE(m1, m2);
+	Matrix m3;
+	EXPECT_EQ((m3 = m1).lmultiply(m2), Matrix({90, 114, 138, 54, 69, 84, 18, 24, 30}));
+	EXPECT_EQ((m3 = m2).lmultiply(m1), Matrix({30, 24, 18, 84, 69, 54, 138, 114, 90}));
+	EXPECT_EQ((m3 = m1).lmultiply(Matrix(1)), m1);
 }
 
 
