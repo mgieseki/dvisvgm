@@ -27,7 +27,7 @@
 #include "MessageException.hpp"
 #include "PageRanges.hpp"
 #include "PsSpecialHandler.hpp"
-#include "SVGOptimizer.hpp"
+#include "optimizer/SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
 #include "utility.hpp"

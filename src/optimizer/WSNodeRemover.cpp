@@ -1,5 +1,5 @@
 /*************************************************************************
-** DependencyGraphTest.cpp                                              **
+** WSNodeRemover.cpp                                                    **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2019 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,54 +18,26 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <gtest/gtest.h>
-#include "optimizer/DependencyGraph.hpp"
+#include "WSNodeRemover.hpp"
+#include "../XMLNode.hpp"
 
-using namespace std;
-
-static void populate (DependencyGraph<int> &tree) {
-	tree.insert(1);
-	tree.insert(2);
-	tree.insert(1, 3);
-	tree.insert(1, 4);
-	tree.insert(1, 5);
-	tree.insert(4, 6);
-	tree.insert(4, 7);
+const char* WSNodeRemover::info () const {
+	return "remove redundant whitespace nodes";
 }
 
 
-TEST(DependencyGraphTest, getKeys) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	auto keys = graph.getKeys();
-	ASSERT_EQ(keys.size(), 7u);
-	int count=0;
-	for (int key : keys) {
-		ASSERT_EQ(keys[count++], key);
+void WSNodeRemover::execute (XMLElement *context) {
+	if (!context)
+		return;
+	bool removeWS = context->getName() != "text" && context->getName() != "tspan";
+	auto it=context->begin();
+	while (it != context->end()) {
+		if (removeWS && (*it)->toWSNode()) {
+			it = context->remove(it);
+			continue;
+		}
+		if (XMLElement *elem = (*it)->toElement())
+			execute(elem);
+		++it;
 	}
-}
-
-
-TEST(DependencyGraphTest, insert) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	for (int i=1; i <= 7; i++) {
-		ASSERT_TRUE(graph.contains(i));
-	}
-	ASSERT_FALSE(graph.contains(0));
-	ASSERT_FALSE(graph.contains(8));
-}
-
-
-TEST(DependencyGraphTest, removeDependencyPath) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	graph.removeDependencyPath(4);
-	ASSERT_FALSE(graph.contains(1));
-	ASSERT_TRUE(graph.contains(2));
-	ASSERT_TRUE(graph.contains(3));
-	ASSERT_FALSE(graph.contains(4));
-	ASSERT_TRUE(graph.contains(5));
-	ASSERT_TRUE(graph.contains(6));
-	ASSERT_TRUE(graph.contains(7));
 }

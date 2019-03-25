@@ -59,7 +59,7 @@ hashcheck_LDADD = \$(LIBS_LIBS)
 hashcheck.cpp: genhashcheck.py \$(dvisvgm_srcdir)/src/AGLTable.hpp \$(dvisvgm_srcdir)/libs/xxHash/xxhash.h
 	python \$^ >\$@
 
-TESTLIBS = libgtest.la ../src/libdvisvgm.a \$(LIBS_LIBS) -lfreetype
+TESTLIBS = libgtest.la ../src/libdvisvgm.la \$(LIBS_LIBS) -lfreetype
 if ENABLE_WOFF
 TESTLIBS += ../libs/ff-woff/libfontforge.a
 endif

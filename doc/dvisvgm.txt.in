@@ -256,12 +256,6 @@ value, dvisvgm reduces their level of detail. For example, Bézier curves are re
 lines, and triangular segments are combined to tetragons. For a small 'delta', these simplifications
 are usually not noticeable but reduce the size of the generated SVG files significantly.
 
-*-g, --group-attributes*::
-Groups common attributes of adjacent elements together by moving them to their parent or newly
-created group (<g>...</g>) elements. The algorithm only takes inheritable properties, such as
-+fill+ or +stroke-width+, into account and only removes them from an element if none of the other
-attributes, like +id+, prevents this.
-
 *-h, --help*[='mode']::
 Prints a short summary of all available command-line options. The optional 'mode' parameter is
 an integer value between 0 and 2. It selects the display variant of the help text. Mode 0
@@ -348,6 +342,50 @@ By default, dvisvgm creates CSS styles and class attributes to reference fonts. 
 more compact than adding the complete font information to each text element over and over again.
 However, if you prefer direct font references, the default behavior can be disabled with
 option *--no-styles*.
+
+*-O, --optimize*[='modules']::
+Applies several optimizations on the generated SVG to reduce the file size. The optimizations
+are performed by running separate optimizer modules specified by option argument 'modules'.
+It may consist of a single module name or a comma-separated list of several module names.
+The corresponding modules are executed one by one in the given order and thus transform the
+XML tree gradually.
++
+The following list describes the currently available optimizer modules.
+
+  *list*;;
+  Lists all available optimizer modules and exits.
+
+  *none*;;
+  If this argument is given, dvisvgm doesn't apply any optimization. *none* can't be combined
+  with other module names.
+
+  *all*;;
+  Performs all optimizations listed below. This is also the default if option *--optimize* is
+  used without argument. The modules are executed in a predefined order that usually lead to the
+  best results. *all* can't be combined with other module names.
+
+  *collapse-groups*;;
+  Combines nested group elements that contain only a single group each. If possible, the attributes
+  are moved to the outermost element of the processed subtree.
+
+  *group-attributes*;;
+  Creates groups (+<g>+...+</g>+) for common attributes around adjacent elements. Each attribute is
+  moved to a separate group so that multiple common attributes lead to nested groups. They can be
+  combined by applying optimizer module 'collapse-groups' afterwards. The algorithm only takes
+  inheritable properties, such as +fill+ or +stroke-width+, into account and only removes them from
+  an element if none of the other attributes, like +id+, prevents this.
+
+  *remove-clippath*;;
+  Removes all redundant 'clipPath' elements. This optimization was already present in former versions
+  of dvisvgm and was always applied by default. This behavior is retained, i.e. dvisvgm executes
+  this module even if option *--optimize* is not given. You can use argument 'none' to prevent that.
+
+  *simplify-transform*;;
+  Tries to shorten all 'transform' attributes. This module combines the transformation commands of
+  each attribute and decomposes the resulting transformation matrix into a sequence of basic
+  transformations, i.e. translation, scaling, rotation, and skewing. If this sequence is shorter
+  than the equivalent 'matrix' expression, it's assigned to the attribute. Otherwise, the matrix
+  expression is used.
 
 *-o, --output*='pattern'::
 Sets the pattern specifying the names of the generated SVG files. Parameter 'pattern' is a string

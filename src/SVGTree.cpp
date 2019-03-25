@@ -23,21 +23,18 @@
 #include <cstring>
 #include <sstream>
 #include "BoundingBox.hpp"
-#include "DependencyGraph.hpp"
 #include "DVIToSVG.hpp"
 #include "FileSystem.hpp"
 #include "Font.hpp"
 #include "FontManager.hpp"
 #include "FontWriter.hpp"
 #include "SVGCharHandlerFactory.hpp"
-#include "SVGOptimizer.hpp"
 #include "SVGTree.hpp"
 #include "XMLDocument.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
 
 using namespace std;
-
 
 // static class variables
 bool SVGTree::CREATE_CSS=true;

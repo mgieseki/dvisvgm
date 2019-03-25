@@ -1,5 +1,5 @@
 /*************************************************************************
-** SVGOptimizer.hpp                                                     **
+** AttributeExtractor.hpp                                               **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2019 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,49 +18,38 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef SVGOPTIMIZER_HPP
-#define SVGOPTIMIZER_HPP
+#pragma once
 
 #include <set>
-#include "XMLNode.hpp"
-
-class SVGTree;
-
-class SVGOptimizer {
-	public:
-		SVGOptimizer (SVGTree &svg) : _svg(svg) {}
-		void execute ();
-
-		static bool GROUP_ATTRIBUTES;
-	private:
-		SVGTree &_svg;
-};
-
+#include <string>
+#include "OptimizerModule.hpp"
+#include "../XMLNode.hpp"
 
 /** Moves common attributes of adjacent elements to enclosing groups. */
-class AttributeExtractor {
-	friend class GroupCollapser;
-	using Attribute = XMLElement::Attribute;
-	using Iterator = XMLElement::Iterator;
+class AttributeExtractor : public OptimizerModule {
+		friend class GroupCollapser;
+		using Attribute = XMLElement::Attribute;
+		using Iterator = XMLElement::Iterator;
 
-	/** Represents a range of adjacent nodes where all elements have a common attribute. */
-	struct AttributeRun {
-		public:
-			AttributeRun (const Attribute &attr, Iterator first, Iterator last);
-			Iterator begin () {return _begin;}
-			Iterator end () {return _end;}
-			int length () const {return _length;}
+		/** Represents a range of adjacent nodes where all elements have a common attribute. */
+		struct AttributeRun {
+			public:
+				AttributeRun (const Attribute &attr, Iterator first, Iterator last);
+				Iterator begin () {return _begin;}
+				Iterator end () {return _end;}
+				int length () const {return _length;}
 
-		private:
-			int _length;  ///< run length excluding non-element nodes
-			Iterator _begin, _end;  ///< run range
-	};
+			private:
+				int _length;  ///< run length excluding non-element nodes
+				Iterator _begin, _end;  ///< run range
+		};
 
 	public:
-		void execute (XMLElement &context) {execute(context, true);};
+		void execute (XMLElement*, XMLElement *context) override {execute(context, true);};
+		const char* info () const override;
 
 	protected:
-		void execute (XMLElement &context, bool recurse);
+		void execute (XMLElement *context, bool recurse);
 		Iterator extractAttribute (Iterator pos, XMLElement &parent);
 		bool extracted (const Attribute &attr) const;
 		static bool groupable (const XMLElement &elem);
@@ -72,39 +61,3 @@ class AttributeExtractor {
 		static constexpr int MIN_RUN_LENGTH = 3;
 };
 
-
-/** Joins the attributes of nested groups and removes groups without attributes. */
-class GroupCollapser {
-	public:
-		void execute (XMLElement &context);
-
-	protected:
-		bool moveAttributes (XMLElement &source, XMLElement &dest);
-		static bool collapsible (const XMLElement &elem);
-		static bool unwrappable (const XMLElement &element, const XMLElement &parent);
-};
-
-
-class Matrix;
-
-class TransformSimplifier {
-	public:
-		void execute (XMLElement &context);
-
-	protected:
-		std::string decompose (const Matrix &matrix);
-};
-
-
-class WSNodeRemover {
-	public:
-		void execute (XMLElement &context);
-};
-
-
-class RedundantElementRemover {
-	public:
-		void execute (XMLElement &defs, XMLElement &context);
-};
-
-#endif

@@ -45,7 +45,7 @@
 #include "PsSpecialHandler.hpp"
 #include "SignalHandler.hpp"
 #include "SourceInput.hpp"
-#include "SVGOptimizer.hpp"
+#include "optimizer/SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
 #include "XXHashFunction.hpp"
@@ -299,11 +299,11 @@ static void init_fontmap (const CommandLine &cmdline) {
 static string svg_options_hash (const CommandLine &cmdline) {
 	// options affecting the SVG output
 	vector<const CL::Option*> svg_options = {
-		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.groupAttributesOpt, &cmdline.colornamesOpt,
-		&cmdline.commentsOpt, &cmdline.exactBboxOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt,
-		&cmdline.gradOverlapOpt, &cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt,
-		&cmdline.magOpt, &cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt,
-		&cmdline.noStylesOpt, &cmdline.precisionOpt,	&cmdline.relativeOpt, &cmdline.zoomOpt
+		&cmdline.bboxOpt,	&cmdline.clipjoinOpt, &cmdline.colornamesOpt, &cmdline.commentsOpt,
+		&cmdline.exactBboxOpt, &cmdline.fontFormatOpt, &cmdline.fontmapOpt, &cmdline.gradOverlapOpt,
+		&cmdline.gradSegmentsOpt, &cmdline.gradSimplifyOpt, &cmdline.linkmarkOpt, &cmdline.magOpt,
+		&cmdline.noFontsOpt, &cmdline.noMergeOpt,	&cmdline.noSpecialsOpt, &cmdline.noStylesOpt,
+		&cmdline.optimizeOpt, &cmdline.precisionOpt, &cmdline.relativeOpt, &cmdline.zoomOpt
 	};
 	string idString = get_transformation_string(cmdline);
 	for (const CL::Option *opt : svg_options) {
@@ -338,10 +338,9 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGTree::USE_FONTS = !cmdline.noFontsOpt.given();
 	if (!SVGTree::setFontFormat(cmdline.fontFormatOpt.value())) {
 		string msg = "unknown font format '"+cmdline.fontFormatOpt.value()+"' (supported formats: ";
-		ostringstream oss;
 		for (const string &format : FontWriter::supportedFormats())
-			oss << ", " << format;
-		msg += oss.str().substr(2) + ')';
+			msg += format + ", ";
+		msg.erase(msg.end()-2);
 		throw CL::CommandLineException(msg);
 	}
 	SVGTree::CREATE_USE_ELEMENTS = cmdline.noFontsOpt.value() < 1;
@@ -349,7 +348,6 @@ static void set_variables (const CommandLine &cmdline) {
 	SVGTree::RELATIVE_PATH_CMDS = cmdline.relativeOpt.given();
 	SVGTree::MERGE_CHARS = !cmdline.noMergeOpt.given();
 	SVGTree::ADD_COMMENTS = cmdline.commentsOpt.given();
-	SVGOptimizer::GROUP_ATTRIBUTES = cmdline.groupAttributesOpt.given();
 	DVIToSVG::TRACE_MODE = cmdline.traceAllOpt.given() ? (cmdline.traceAllOpt.value() ? 'a' : 'm') : 0;
 	Message::LEVEL = cmdline.verbosityOpt.value();
 	PhysicalFont::EXACT_BBOX = cmdline.exactBboxOpt.given();
@@ -360,6 +358,19 @@ static void set_variables (const CommandLine &cmdline) {
 	PsSpecialHandler::SHADING_SEGMENT_OVERLAP = cmdline.gradOverlapOpt.given();
 	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, cmdline.gradSegmentsOpt.value());
 	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = cmdline.gradSimplifyOpt.value();
+	if (cmdline.optimizeOpt.given()) {
+		SVGOptimizer::MODULE_SEQUENCE = cmdline.optimizeOpt.value();
+		vector<string> modnames;
+		if (!SVGOptimizer().checkModuleString(SVGOptimizer::MODULE_SEQUENCE, modnames)) {
+			string msg = "invalid optimizer module";
+			if (modnames.size() > 1) msg += 's';
+			msg += ": ";
+			for (const string &modname : modnames)
+				msg += modname + ", ";
+			msg.erase(msg.end()-2);
+			throw CL::CommandLineException(msg);
+		}
+	}
 }
 
 
@@ -393,6 +404,10 @@ int main (int argc, char *argv[]) {
 		if (cmdline.listSpecialsOpt.given()) {
 			DVIToSVG::setProcessSpecials();
 			SpecialManager::instance().writeHandlerInfo(cout);
+			return 0;
+		}
+		if (cmdline.optimizeOpt.value() == "list") {
+			SVGOptimizer().listModules(cout);
 			return 0;
 		}
 		if (!set_cache_dir(cmdline) || !set_temp_dir(cmdline))

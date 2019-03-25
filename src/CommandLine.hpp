@@ -41,7 +41,6 @@ class CommandLine : public CL::CommandLine {
 		Option gradOverlapOpt {"grad-overlap", '\0', "create overlapping color gradient segments"};
 		TypedOption<int, Option::ArgMode::REQUIRED> gradSegmentsOpt {"grad-segments", '\0', "number", 20, "number of color gradient segments per row"};
 		TypedOption<double, Option::ArgMode::REQUIRED> gradSimplifyOpt {"grad-simplify", '\0', "delta", 0.05, "reduce level of detail for small segments"};
-		Option groupAttributesOpt {"group-attributes", 'g', "move common attributes to parent elements"};
 		TypedOption<int, Option::ArgMode::OPTIONAL> helpOpt {"help", 'h', "mode", 0, "print this summary of options and exit"};
 		Option keepOpt {"keep", '\0', "keep temporary files"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> libgsOpt {"libgs", '\0', "filename", "set name of Ghostscript shared library"};
@@ -53,6 +52,7 @@ class CommandLine : public CL::CommandLine {
 		Option noMktexmfOpt {"no-mktexmf", '\0', "don't try to create missing fonts"};
 		TypedOption<std::string, Option::ArgMode::OPTIONAL> noSpecialsOpt {"no-specials", 'S', "prefixes", "don't process [selected] specials"};
 		Option noStylesOpt {"no-styles", '\0', "don't use CSS styles to reference fonts"};
+		TypedOption<std::string, Option::ArgMode::OPTIONAL> optimizeOpt {"optimize", 'O', "modules", "all", "perform several SVG optimizations"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> outputOpt {"output", 'o', "pattern", "set name pattern of output files"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> pageOpt {"page", 'p', "ranges", "1", "choose page(s) to convert"};
 		TypedOption<std::string, Option::ArgMode::OPTIONAL> pageHashesOpt {"page-hashes", 'H', "params", "xxh64", "activate usage of page hashes"};
@@ -114,8 +114,8 @@ class CommandLine : public CL::CommandLine {
 #if !defined(DISABLE_GS)
 			{&gradSimplifyOpt, 1},
 #endif
-			{&groupAttributesOpt, 1},
 			{&linkmarkOpt, 1},
+			{&optimizeOpt, 1},
 			{&outputOpt, 1},
 			{&precisionOpt, 1},
 			{&relativeOpt, 1},

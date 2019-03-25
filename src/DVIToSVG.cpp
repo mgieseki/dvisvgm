@@ -38,7 +38,7 @@
 #include "PageSize.hpp"
 #include "PreScanDVIReader.hpp"
 #include "SignalHandler.hpp"
-#include "SVGOptimizer.hpp"
+#include "optimizer/SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "utility.hpp"
 #include "version.hpp"

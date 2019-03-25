@@ -209,6 +209,12 @@
     <ClCompile Include="..\src\DLLoader.cpp" />
     <ClCompile Include="..\src\HashFunction.cpp" />
     <ClCompile Include="..\src\ImageToSVG.cpp" />
+    <ClCompile Include="..\src\optimizer\AttributeExtractor.cpp" />
+    <ClCompile Include="..\src\optimizer\GroupCollapser.cpp" />
+    <ClCompile Include="..\src\optimizer\RedundantElementRemover.cpp" />
+    <ClCompile Include="..\src\optimizer\SVGOptimizer.cpp" />
+    <ClCompile Include="..\src\optimizer\TransformSimplifier.cpp" />
+    <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
@@ -281,7 +287,6 @@
     <ClCompile Include="..\src\SVGCharHandler.cpp" />
     <ClCompile Include="..\src\SVGCharHandlerFactory.cpp" />
     <ClCompile Include="..\src\SVGCharPathHandler.cpp" />
-    <ClCompile Include="..\src\SVGOptimizer.cpp" />
     <ClCompile Include="..\src\SVGSingleCharTextHandler.cpp" />
     <ClCompile Include="..\src\SVGCharTspanTextHandler.cpp" />
     <ClCompile Include="..\src\SVGOutput.cpp" />
@@ -320,10 +325,17 @@
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\CRC32.hpp" />
-    <ClInclude Include="..\src\DependencyGraph.hpp" />
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
     <ClInclude Include="..\src\MD5HashFunction.hpp" />
+    <ClInclude Include="..\src\optimizer\AttributeExtractor.hpp" />
+    <ClInclude Include="..\src\optimizer\DependencyGraph.hpp" />
+    <ClInclude Include="..\src\optimizer\GroupCollapser.hpp" />
+    <ClInclude Include="..\src\optimizer\OptimizerModule.hpp" />
+    <ClInclude Include="..\src\optimizer\RedundantElementRemover.hpp" />
+    <ClInclude Include="..\src\optimizer\SVGOptimizer.hpp" />
+    <ClInclude Include="..\src\optimizer\TransformSimplifier.hpp" />
+    <ClInclude Include="..\src\optimizer\WSNodeRemover.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
@@ -360,7 +372,6 @@
     <ClInclude Include="..\src\SVGCharHandler.hpp" />
     <ClInclude Include="..\src\SVGCharHandlerFactory.hpp" />
     <ClInclude Include="..\src\SVGCharPathHandler.hpp" />
-    <ClInclude Include="..\src\SVGOptimizer.hpp" />
     <ClInclude Include="..\src\SVGSingleCharTextHandler.hpp" />
     <ClInclude Include="..\src\SVGCharTspanTextHandler.hpp" />
     <ClInclude Include="..\src\SVGOutput.hpp" />

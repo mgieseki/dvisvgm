@@ -12,6 +12,12 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{5c0e8de5-5203-477a-a1e9-265973e55172}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\optimizer">
+      <UniqueIdentifier>{64ff1813-983e-4360-bc0b-6857f8e321c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\optimizer">
+      <UniqueIdentifier>{30c147de-3bba-4bb4-9415-c0b6f86f88a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BgColorSpecialHandler.cpp">
@@ -305,8 +311,23 @@
     <ClCompile Include="..\src\HashFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\SVGOptimizer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\optimizer\AttributeExtractor.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\optimizer\GroupCollapser.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\optimizer\RedundantElementRemover.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\optimizer\SVGOptimizer.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\optimizer\TransformSimplifier.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp">
+      <Filter>Source Files\optimizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -541,9 +562,6 @@
     <ClInclude Include="..\src\Bezier.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\DependencyGraph.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TensorProductPatch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -628,8 +646,29 @@
     <ClInclude Include="..\src\XXHashFunction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\SVGOptimizer.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\optimizer\AttributeExtractor.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\DependencyGraph.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\GroupCollapser.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\RedundantElementRemover.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\SVGOptimizer.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\TransformSimplifier.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\WSNodeRemover.hpp">
+      <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\OptimizerModule.hpp">
+      <Filter>Header Files\optimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

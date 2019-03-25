@@ -176,14 +176,14 @@ XMLElement::Iterator XMLElement::wrap (Iterator first, Iterator last, const stri
  *  followed by C2,...,Cn.
  *  Example: unwrap a child element b of a:
  *  <a>text1<b><c/>text2<d/></b></a> => <a>text1<c/>text2<d/></a>
- *  @param[in] pos position of element to unwrap
+ *  @param[in] pos position of child element to unwrap
  *  @return iterator pointing to the first node C1 of the unwrapped sequence */
 XMLElement::Iterator XMLElement::unwrap (Iterator pos) {
-	if (XMLElement *elem = (*pos)->toElement()) {
+	if (XMLElement *child = (*pos)->toElement()) {
 		auto it = _children.insert(
 			std::next(pos),
-			make_move_iterator(elem->begin()),
-			make_move_iterator(elem->end()));
+			make_move_iterator(child->begin()),
+			make_move_iterator(child->end()));
 		return _children.erase(std::prev(it));
 	}
 	return pos;

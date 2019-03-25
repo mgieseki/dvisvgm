@@ -1,5 +1,5 @@
 /*************************************************************************
-** DependencyGraphTest.cpp                                              **
+** SVGOptimizer.hpp                                                     **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2019 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,54 +18,42 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <gtest/gtest.h>
-#include "optimizer/DependencyGraph.hpp"
+#pragma once
 
-using namespace std;
+#include <memory>
+#include <ostream>
+#include <set>
+#include <vector>
+#include "OptimizerModule.hpp"
+#include "../XMLNode.hpp"
 
-static void populate (DependencyGraph<int> &tree) {
-	tree.insert(1);
-	tree.insert(2);
-	tree.insert(1, 3);
-	tree.insert(1, 4);
-	tree.insert(1, 5);
-	tree.insert(4, 6);
-	tree.insert(4, 7);
-}
+class SVGTree;
 
+class SVGOptimizer {
+	struct ModuleEntry {
+		ModuleEntry (std::string name, std::unique_ptr<OptimizerModule> mod)
+			: modname(std::move(name)), module(std::move(mod)) {}
 
-TEST(DependencyGraphTest, getKeys) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	auto keys = graph.getKeys();
-	ASSERT_EQ(keys.size(), 7u);
-	int count=0;
-	for (int key : keys) {
-		ASSERT_EQ(keys[count++], key);
-	}
-}
+		std::string modname;
+		std::unique_ptr<OptimizerModule> module;
+	};
+	public:
+		explicit SVGOptimizer (SVGTree *svg=nullptr);
+		explicit SVGOptimizer (SVGTree &svg) : SVGOptimizer(&svg) {}
+		void execute ();
+		void listModules (std::ostream &os) const;
+		bool checkModuleString (std::string &namestr, std::vector<std::string> &unknownNames) const;
 
+		static std::string MODULE_SEQUENCE;
 
-TEST(DependencyGraphTest, insert) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	for (int i=1; i <= 7; i++) {
-		ASSERT_TRUE(graph.contains(i));
-	}
-	ASSERT_FALSE(graph.contains(0));
-	ASSERT_FALSE(graph.contains(8));
-}
+	protected:
+		OptimizerModule* getModule (const std::string &name) const;
+
+	private:
+		SVGTree *_svg;
+		std::vector<ModuleEntry> _moduleEntries;
+};
 
 
-TEST(DependencyGraphTest, removeDependencyPath) {
-	DependencyGraph<int> graph;
-	populate(graph);
-	graph.removeDependencyPath(4);
-	ASSERT_FALSE(graph.contains(1));
-	ASSERT_TRUE(graph.contains(2));
-	ASSERT_TRUE(graph.contains(3));
-	ASSERT_FALSE(graph.contains(4));
-	ASSERT_TRUE(graph.contains(5));
-	ASSERT_TRUE(graph.contains(6));
-	ASSERT_TRUE(graph.contains(7));
-}
+
+

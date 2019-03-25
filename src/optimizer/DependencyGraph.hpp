@@ -25,7 +25,7 @@
 #include <memory>
 #include <set>
 #include <vector>
-#include "utility.hpp"
+#include "../utility.hpp"
 
 template <typename T>
 class DependencyGraph {

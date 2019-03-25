@@ -4,7 +4,8 @@
 ## Process this file with automake.
 
 bin_PROGRAMS     = dvisvgm
-noinst_LIBRARIES = libdvisvgm.a
+noinst_LTLIBRARIES = libdvisvgm.la
+SUBDIRS = optimizer
 
 dvisvgm_SOURCES = \
 	CommandLine.hpp \
@@ -13,7 +14,7 @@ dvisvgm_SOURCES = \
 include ../libs/defs.am
 
 dvisvgm_LDADD = \
-	$(noinst_LIBRARIES) \
+	$(noinst_LTLIBRARIES) \
 	../libs/clipper/libclipper.a \
 	$(FREETYPE_LIBS) \
 	$(FONTFORGE_LIBS) \
@@ -34,9 +35,9 @@ else
 dvisvgm_LDADD += $(LIBCRYPTO_LIBS)
 endif
 
-dvisvgm_DEPENDENCIES = $(noinst_LIBRARIES)
+dvisvgm_DEPENDENCIES = $(noinst_LTLIBRARIES)
 
-libdvisvgm_a_SOURCES = \
+libdvisvgm_la_SOURCES = \
 	AGLTable.hpp \
 	BasicDVIReader.hpp           BasicDVIReader.cpp \
 	Bezier.hpp                   Bezier.cpp \
@@ -55,7 +56,6 @@ libdvisvgm_a_SOURCES = \
 	ColorSpecialHandler.hpp      ColorSpecialHandler.cpp \
 	CommandLine.hpp \
 	CRC32.hpp                    CRC32.cpp \
-	DependencyGraph.hpp \
 	Directory.hpp                Directory.cpp \
 	DVIActions.hpp \
 	DLLoader.hpp                 DLLoader.cpp \
@@ -134,7 +134,6 @@ libdvisvgm_a_SOURCES = \
 	SVGCharHandlerFactory.hpp    SVGCharHandlerFactory.cpp \
 	SVGCharPathHandler.hpp       SVGCharPathHandler.cpp \
 	SVGCharTspanTextHandler.hpp  SVGCharTspanTextHandler.cpp \
-	SVGOptimizer.hpp             SVGOptimizer.cpp \
 	SVGOutput.hpp                SVGOutput.cpp \
 	SVGSingleCharTextHandler.hpp SVGSingleCharTextHandler.cpp \
 	SVGTree.hpp                  SVGTree.cpp \
@@ -160,8 +159,10 @@ libdvisvgm_a_SOURCES = \
 	ZLibOutputStream.hpp
 
 if ENABLE_WOFF
-libdvisvgm_a_SOURCES += ffwrapper.c ffwrapper.h
+libdvisvgm_la_SOURCES += ffwrapper.c ffwrapper.h
 endif
+
+libdvisvgm_la_LIBADD = optimizer/liboptimizer.la
 
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.hpp MiKTeXCom.cpp
 
