@@ -52,8 +52,6 @@ class Matrix {
 		double get (int row, int col) const {return _values[row][col];}
 		Matrix& transpose ();
 		Matrix& invert ();
-		Matrix& parse (std::istream &is, Calculator &c);
-		Matrix& parse (const std::string &cmds, Calculator &c);
 		Matrix& rmultiply (const Matrix &tm);
 		Matrix& lmultiply (const Matrix &tm);
 		Matrix& translate (double tx, double ty);
@@ -75,6 +73,8 @@ class Matrix {
 		std::string toSVG () const;
 		std::ostream& write (std::ostream &os) const;
 
+		static Matrix parse (std::istream &is, Calculator &c);
+		static Matrix parse (const std::string &cmds, Calculator &c);
 		static Matrix parseSVGTransform (const std::string &transform);
 
 	private:

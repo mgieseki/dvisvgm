@@ -86,7 +86,7 @@ Matrix::Matrix (const std::vector<double> &v, int start) {
 
 
 Matrix::Matrix (const string &cmds, Calculator &calc) {
-	parse(cmds, calc);
+	*this = parse(cmds, calc);
 }
 
 
@@ -134,8 +134,8 @@ Matrix& Matrix::set (const vector<double> &v, int start) {
 }
 
 
-Matrix& Matrix::set(const string &cmds, Calculator &calc) {
-	parse(cmds, calc);
+Matrix& Matrix::set (const string &cmds, Calculator &calc) {
+	*this = parse(cmds, calc);
 	return *this;
 }
 
@@ -356,8 +356,8 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
 }
 
 
-Matrix& Matrix::parse (istream &is, Calculator &calc) {
-	*this = Matrix(1);
+Matrix Matrix::parse (istream &is, Calculator &calc) {
+	Matrix ret(1);
 	while (is) {
 		is >> ws;
 		int cmd = is.get();
@@ -365,22 +365,22 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 			case 'T': {
 				double tx = getArgument(is, calc, 0, false, false);
 				double ty = getArgument(is, calc, 0, true, true);
-				translate(tx, ty);
+				ret.translate(tx, ty);
 				break;
 			}
 			case 'S': {
 				double sx = getArgument(is, calc, 1, false, false);
 				double sy = getArgument(is, calc, sx, true, true );
-				scale(sx, sy);
+				ret.scale(sx, sy);
 				break;
 			}
 			case 'R': {
 				double a = getArgument(is, calc, 0, false, false);
 				double x = getArgument(is, calc, calc.getVariable("ux")+calc.getVariable("w")/2, true, true);
 				double y = getArgument(is, calc, calc.getVariable("uy")+calc.getVariable("h")/2, true, true);
-				translate(-x, -y);
-				rotate(a);
-				translate(x, y);
+				ret.translate(-x, -y);
+				ret.rotate(a);
+				ret.translate(x, y);
 				break;
 			}
 			case 'F': {
@@ -388,7 +388,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				if (c != 'H' && c != 'V')
 					throw ParserException("'H' or 'V' expected");
 				double a = getArgument(is, calc, 0, false, false);
-				flip(c == 'H', a);
+				ret.flip(c == 'H', a);
 				break;
 			}
 			case 'K': {
@@ -402,9 +402,9 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 					throw ParserException(oss.str());
 				}
 				if (c == 'X')
-					xskewByAngle(a);
+					ret.xskewByAngle(a);
 				else
-					yskewByAngle(a);
+					ret.yskewByAngle(a);
 				break;
 			}
 			case 'M': {
@@ -415,7 +415,7 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				v[6] = v[7] = 0;
 				v[8] = 1;
 				Matrix tm(v);
-				lmultiply(tm);
+				ret.lmultiply(tm);
 				break;
 			}
 			default:
@@ -424,11 +424,11 @@ Matrix& Matrix::parse (istream &is, Calculator &calc) {
 				throw ParserException(oss.str());
 		}
 	}
-	return *this;
+	return ret;
 }
 
 
-Matrix& Matrix::parse (const string &cmds, Calculator &calc) {
+Matrix Matrix::parse (const string &cmds, Calculator &calc) {
 	istringstream iss;
 	iss.str(cmds);
 	return parse(iss, calc);
