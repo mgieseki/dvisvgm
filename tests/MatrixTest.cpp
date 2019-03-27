@@ -267,11 +267,11 @@ TEST(MatrixTest, parseSVGTransform) {
 		"matrix(10 0 0 20 0 0)");
 	EXPECT_EQ(
 		Matrix::parseSVGTransform("rotate(-45)").toSVG(),
-		"matrix(0.707 -0.707 0.707 0.707 0 0)");
+		"matrix(.707 -.707 .707 .707 0 0)");
 	EXPECT_EQ(
 		Matrix::parseSVGTransform("translate(50, 90) rotate(-45) ").toSVG(),
-		"matrix(0.707 -0.707 0.707 0.707 50 90)");
+		"matrix(.707 -.707 .707 .707 50 90)");
 	EXPECT_EQ(
 		Matrix::parseSVGTransform("translate(50, 90) rotate(-45) , translate(130 160)").toSVG(),
-		"matrix(0.707 -0.707 0.707 0.707 255.061 111.213)");
+		"matrix(.707 -.707 .707 .707 255.061 111.213)");
 }

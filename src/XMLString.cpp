@@ -99,4 +99,7 @@ XMLString::XMLString (double x) {
 				pop_back();  // remove trailing dot
 		}
 	}
+	pos = find("0.");
+	if (pos != string::npos && (pos == 0 || at(pos-1) == '-'))
+		erase(pos, 1);
 }
