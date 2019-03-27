@@ -239,15 +239,23 @@ class GraphicsPath {
 						case 'z': _currentPoint = _startPoint; break;
 						case 'H': _os << XMLString(_sx*points->x()+_dx); break;
 						case 'V': _os << XMLString(_sy*points->y()+_dy); break;
-						default :
+						default : {
 							for (int i=0; i < n; i++) {
-								if (i > 0)
-									_os << ' ';
 								Point p = points[i];
 								if (_relative)
 									p -= _currentPoint;
-								_os << XMLString(_sx*p.x()+_dx) << ' ' << XMLString(_sy*p.y()+_dy);
+								double x = _sx*p.x() + _dx;
+								XMLString xstr(x);
+								if (i > 0 && (xstr[0] != '-'))  // space required to separate numbers?
+									_os << ' ';
+								_os << xstr;
+								double y = _sy*p.y() + _dy;
+								XMLString ystr(y);
+								if (ystr[0] != '-')    // space required to separate numbers?
+									_os << ' ';
+								_os << ystr;
 							}
+						}
 					}
 					if (cmd == 'm')
 						_startPoint = points[0];
