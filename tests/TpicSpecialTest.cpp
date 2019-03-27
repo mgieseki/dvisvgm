@@ -251,7 +251,7 @@ TEST_F(TpicSpecialTest, stroke_spline) {
 	handler.processSpecial("pa", "1000 500");
 	handler.processSpecial("sp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54Q108 36 126 54T180 108Q216 144 144 90L72 36' stroke='#000' stroke-width='1'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000' stroke-width='1'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -267,7 +267,7 @@ TEST_F(TpicSpecialTest, stroke_dashed_spline) {
 	handler.processSpecial("pa", "0 0");
 	handler.processSpecial("sp", "1");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54Q108 36 126 54T180 108Q216 144 108 72Z' stroke='#000' stroke-width='1' stroke-dasharray='72'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T108 72Z' stroke='#000' stroke-width='1' stroke-dasharray='72'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -283,7 +283,7 @@ TEST_F(TpicSpecialTest, stroke_dotted_spline) {
 	handler.processSpecial("pa", "1000 500");
 	handler.processSpecial("sp", "-1");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54Q108 36 126 54T180 108Q216 144 144 90L72 36' stroke='#000' stroke-width='1' stroke-dasharray='1 72'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000' stroke-width='1' stroke-dasharray='1 72'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);

@@ -384,6 +384,7 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 	Point fp; // first point of current path
 	Point cp; // current point
 	Point pstore[2];
+	const double eps = XMLString::DECIMAL_PLACES > 0 ? pow(10, -XMLString::DECIMAL_PLACES) : 1e-7;
 	for (auto it=_commands.begin(); it != _commands.end() && !actions.quit(); ++it) {
 		const Point *params = it->params;
 		switch (it->type) {
@@ -394,11 +395,11 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				break;
 			case Command::Type::LINETO:
 				if (optimize) {
-					if (cp.x() == params[0].x()) {
+					if (std::abs(cp.x()-params[0].x()) < 1e-6) {
 						actions.vlineto(params[0].y());
 						actions.draw('V', params, 1);
 					}
-					else if (cp.y() == params[0].y()) {
+					else if (std::abs(cp.y()-params[0].y()) < 1e-6) {
 						actions.hlineto(params[0].x());
 						actions.draw('H', params, 1);
 					}
@@ -412,8 +413,11 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 					actions.draw('L', params, 1);
 				}
 				break;
-			case Command::Type::CONICTO:
-				if (optimize && prev != _commands.end() && prev->type == Command::Type::CONICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+			case Command::Type::CONICTO: {
+				// check if first control point is the reflection of the preceding second control point?
+				Point diff = abs(params[0]-pstore[1]*T(2)+pstore[0]);
+				bool isReflection = diff.x() < eps && diff.y() < eps;
+				if (optimize && prev != _commands.end() && prev->type == Command::Type::CONICTO && isReflection) {
 					actions.conicto(params[1]);
 					actions.draw('T', params+1, 1);
 				}
@@ -424,9 +428,13 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				pstore[0] = params[0]; // store control point and
 				pstore[1] = params[1]; // curve endpoint
 				break;
-			case Command::Type::CUBICTO:
+			}
+			case Command::Type::CUBICTO: {
+				// check if first control point is the reflection of the preceding second control point?
+				Point diff = abs(params[0]-pstore[1]*T(2)+pstore[0]);
+				bool isReflection = diff.x() < eps && diff.y() < eps;
 				// is first control point reflection of preceding second control point?
-				if (optimize && prev != _commands.end() && prev->type == Command::Type::CUBICTO && params[0] == pstore[1]*T(2)-pstore[0]) {
+				if (optimize && prev != _commands.end() && prev->type == Command::Type::CUBICTO && isReflection) {
 					actions.cubicto(params[1], params[2]);
 					actions.draw('S', params+1, 2);
 				}
@@ -437,6 +445,7 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				pstore[0] = params[1]; // store second control point and
 				pstore[1] = params[2]; // curve endpoint
 				break;
+			}
 			case Command::Type::CLOSEPATH:
 				actions.closepath();
 				actions.draw('Z', params, 0);
