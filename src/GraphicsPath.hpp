@@ -393,13 +393,16 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 				actions.draw('M', params, 1);
 				fp = params[0];
 				break;
-			case Command::Type::LINETO:
+			case Command::Type::LINETO: {
+				Point diff = abs(cp - params[0]);
+				if (diff.x() < eps && diff.y() < eps)
+					break;
 				if (optimize) {
-					if (std::abs(cp.x()-params[0].x()) < 1e-6) {
+					if (diff.x() < eps) {
 						actions.vlineto(params[0].y());
 						actions.draw('V', params, 1);
 					}
-					else if (std::abs(cp.y()-params[0].y()) < 1e-6) {
+					else if (diff.y() < eps) {
 						actions.hlineto(params[0].x());
 						actions.draw('H', params, 1);
 					}
@@ -413,6 +416,7 @@ void GraphicsPath<T>::iterate (Actions &actions, bool optimize) const {
 					actions.draw('L', params, 1);
 				}
 				break;
+			}
 			case Command::Type::CONICTO: {
 				// check if first control point is the reflection of the preceding second control point?
 				Point diff = abs(params[0]-pstore[1]*T(2)+pstore[0]);
