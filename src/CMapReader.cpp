@@ -74,7 +74,7 @@ unique_ptr<CMap> CMapReader::read (std::istream& is, const string &name) {
 		}
 	}
 	catch (CMapReaderException &e) {
-		_cmap.release();
+		_cmap.reset();
 		throw;
 	}
 	return std::move(_cmap);
