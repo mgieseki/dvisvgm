@@ -83,7 +83,7 @@ libfontforge_a_SOURCES = \
 
 EXTRA_DIST = LICENSE
 
-AM_CFLAGS = -I$(srcdir)/inc -I$(srcdir)/fontforge
+AM_CFLAGS = -I$(srcdir)/inc -I$(srcdir)/fontforge $(ZLIB_CFLAGS)
 
 @CODE_COVERAGE_RULES@
 
