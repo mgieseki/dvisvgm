@@ -28,65 +28,68 @@
 
 using namespace std;
 
+
 const char* GroupCollapser::info () const {
 	return "join nested group elements";
 }
 
 
-/** Checks if the only children of a given element are a single element and
- *  optional whitespace nodes.
+/** Checks if there's only a single child element and optional whitespace
+ *  siblings in a given element.
  *  @param[in] elem element to check
- *  @return iterator pointing to the only child element or elem->end() */
-static XMLElement::Iterator only_child_element (XMLElement *elem) {
-	auto childIt = elem->end();
-	for (auto it=elem->begin(); it != elem->end(); ++it) {
-		if ((*it)->toElement()) {
-			if (childIt != elem->end())
-				return elem->end();
-			childIt = it;
+ *  @return pointer to the only child element or nullptr */
+static XMLElement* only_child_element (XMLElement *elem) {
+	XMLElement *firstChildElement=nullptr;
+	for (XMLNode *child : *elem) {
+		if (XMLElement *childElement = child->toElement()) {
+			if (firstChildElement)
+				return nullptr;
+			firstChildElement = childElement;
 		}
-		else if (!(*it)->toWSNode())
-			return elem->end();
+		else if (!child->toWSNode())
+			return nullptr;
 	}
-	return childIt;
+	return firstChildElement;
 }
 
 
-/** Removes all whitespace nodes from a given element. */
+/** Removes all whitespace child nodes from a given element. */
 static void remove_ws_nodes (XMLElement *elem) {
-	auto it=elem->begin();
-	while (it != elem->end()) {
-		if ((*it)->toWSNode())
-			it = elem->remove(it);
-		else
-			++it;
+	XMLNode *node = elem->firstChild();
+	while (node) {
+		if (!node->toWSNode())
+			node = node->next();
+		else {
+			XMLNode *next = node->next();
+			XMLElement::remove(node);
+			node = next;
+		}
 	}
 }
 
 
 /** Recursively removes all redundant group elements from the given context element
- *  and moves the attributes to the corresponding parent element. */
+ *  and moves their attributes to the corresponding parent element.
+ *  @param[in] context root of the subtree to process */
 void GroupCollapser::execute (XMLElement *context) {
 	if (!context)
 		return;
-	for (auto &node : *context) {
+	for (XMLNode *node : *context) {
 		if (XMLElement *elem = node->toElement())
 			execute(elem);
 	}
-	auto it = only_child_element(context);
-	if (it != context->end() && collapsible(*context)) {
-		XMLElement *child = (*it)->toElement();
-		if (child->getName() == "g" && unwrappable(*child, *context) && moveAttributes(*child, *context)) {
+	XMLElement *child = only_child_element(context);
+	if (child && collapsible(*context)) {
+		if (child->name() == "g" && unwrappable(*child, *context) && moveAttributes(*child, *context)) {
 			remove_ws_nodes(context);
-			context->unwrap(context->begin());
+			XMLElement::unwrap(child);
 		}
 	}
 }
 
 
-/** Moves all attributes from an element to another one. The attributes are
- *  removed from the source. Attributes already present in the destination
- *  element are overwritten or combined.
+/** Moves all attributes from an element to another one. Attributes already
+ *  present in the destination element are overwritten or combined.
  *  @param[in] source element the attributes are taken from
  *  @param[in] dest element that receives the attributes
  *  @return true if all attributes have been moved */
@@ -123,7 +126,7 @@ bool GroupCollapser::collapsible (const XMLElement &element) {
 		"animate", "animateColor", "animateMotion", "animateTransform", "set"
 	);
 	auto it = find_if(names.begin(), names.end(), [&](const string &name) {
-		return element.getName() == name;
+		return element.name() == name;
 	});
 	return it == names.end();
 }

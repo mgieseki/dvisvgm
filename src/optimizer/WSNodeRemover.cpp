@@ -29,15 +29,17 @@ const char* WSNodeRemover::info () const {
 void WSNodeRemover::execute (XMLElement *context) {
 	if (!context)
 		return;
-	bool removeWS = context->getName() != "text" && context->getName() != "tspan";
-	auto it=context->begin();
-	while (it != context->end()) {
-		if (removeWS && (*it)->toWSNode()) {
-			it = context->remove(it);
+	bool removeWS = context->name() != "text" && context->name() != "tspan";
+	XMLNode *child = context->firstChild();
+	while (child) {
+		if (removeWS && child->toWSNode()) {
+			XMLNode *next = child->next();
+			XMLElement::remove(child);
+			child = next;
 			continue;
 		}
-		if (XMLElement *elem = (*it)->toElement())
+		if (XMLElement *elem = child->toElement())
 			execute(elem);
-		++it;
+		child = child->next();
 	}
 }

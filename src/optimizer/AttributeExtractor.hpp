@@ -29,19 +29,20 @@
 class AttributeExtractor : public OptimizerModule {
 		friend class GroupCollapser;
 		using Attribute = XMLElement::Attribute;
-		using Iterator = XMLElement::Iterator;
 
 		/** Represents a range of adjacent nodes where all elements have a common attribute. */
 		struct AttributeRun {
 			public:
-				AttributeRun (const Attribute &attr, Iterator first, Iterator last);
-				Iterator begin () {return _begin;}
-				Iterator end () {return _end;}
+				AttributeRun (const Attribute &attr, XMLElement *first);
+				XMLNode* first () {return _first;}
+				XMLNode* last ()  {return _last;}
+//				XMLNodeIterator begin () {return XMLNodeIterator(_first);}
+//				XMLNodeIterator end ()   {return XMLNodeIterator(_last);}
 				int length () const {return _length;}
 
 			private:
 				int _length;  ///< run length excluding non-element nodes
-				Iterator _begin, _end;  ///< run range
+				XMLNode *_first, *_last;  ///< first and last node in run
 		};
 
 	public:
@@ -50,7 +51,7 @@ class AttributeExtractor : public OptimizerModule {
 
 	protected:
 		void execute (XMLElement *context, bool recurse);
-		Iterator extractAttribute (Iterator pos, XMLElement &parent);
+		XMLNode* extractAttribute (XMLElement *elem);
 		bool extracted (const Attribute &attr) const;
 		static bool groupable (const XMLElement &elem);
 		static bool inheritable (const Attribute &attrib);

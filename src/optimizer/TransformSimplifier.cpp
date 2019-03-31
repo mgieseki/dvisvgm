@@ -21,6 +21,7 @@
 #include <cmath>
 #include "TransformSimplifier.hpp"
 #include "../Matrix.hpp"
+#include "../utility.hpp"
 #include "../XMLNode.hpp"
 #include "../XMLString.hpp"
 
@@ -48,7 +49,7 @@ void TransformSimplifier::execute (XMLElement *context) {
 		}
 	}
 	// continue with child elements
-	for (auto &child : *context) {
+	for (XMLNode *child : *context) {
 		if (XMLElement *elem = child->toElement())
 			execute(elem);
 	}
@@ -113,9 +114,9 @@ static bool not_equal (double x, double y) {
 }
 
 
-/** Decomposes a transformation matrix into a sequence of basic SVG transformations,
- *  i.e. translation, rotation, scaling, and skewing. The algorithm is taken from
- *  http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+/** Decomposes a transformation matrix into a sequence of basic SVG transformations, i.e.
+ *  translation, rotation, scaling, and skewing. The algorithm (QR-based decomposition)
+ *  is taken from http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html.
  *  @param[in] matrix matrix to decompose
  *  @return string containing the SVG transformation commands */
 string TransformSimplifier::decompose (const Matrix &matrix) {

@@ -31,21 +31,64 @@ using namespace std;
 bool XMLElement::WRITE_NEWLINES=true;
 
 
-XMLElement::XMLElement (const string &n) : _name(n) {
+/** Inserts a sibling node after this one.
+ *  @param[in] node node to insert
+ *  @return raw pointer to inserted node */
+XMLNode* XMLNode::insertNext (unique_ptr<XMLNode> node) {
+	if (_next) {
+		_next->_prev = node.get();
+		node->_next = std::move(_next);
+	}
+	node->_prev = this;
+	node->_parent = _parent;
+	_next = std::move(node);
+	return _next.get();
+}
+
+
+/** Removes the following sibling node of this one.
+ *  @return pointer to the removed node */
+unique_ptr<XMLNode> XMLNode::removeNext () {
+	unique_ptr<XMLNode> oldnext = std::move(_next);
+	if (oldnext) {
+		oldnext->_parent = oldnext->_prev = nullptr;
+		if ((_next = std::move(oldnext->_next))) {
+			_next->_prev = this;
+			oldnext->_next.reset();
+		}
+	}
+	return oldnext;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+XMLElement::XMLElement (string name) : _name(std::move(name)) {
 }
 
 
 XMLElement::XMLElement (const XMLElement &node)
-	: _name(node._name), _attributes(node._attributes)
+	: XMLNode(node), _name(node._name), _attributes(node._attributes)
 {
-	for (const auto &child : node._children)
-		_children.emplace_back(unique_ptr<XMLNode>(child->clone()));
+	for (XMLNode *child=_firstChild.get(); child; child = child->next())
+		insertLast(child->clone());
 }
 
 
+XMLElement::XMLElement (XMLElement &&node) noexcept
+	: XMLNode(std::move(node)),
+	_name(std::move(node._name)),
+	_attributes(std::move(node._attributes)),
+	_firstChild(std::move(node._firstChild)),
+	_lastChild(node._lastChild)
+{
+}
+
+
+/** Removes all attributes and children. */
 void XMLElement::clear () {
 	_attributes.clear();
-	_children.clear();
+	_firstChild.reset();
+	_lastChild = nullptr;
 }
 
 
@@ -69,6 +112,38 @@ void XMLElement::removeAttribute (const std::string &name) {
 }
 
 
+/** Inserts a new last child node and returns a raw pointer to it. */
+XMLNode* XMLElement::insertLast (unique_ptr<XMLNode> child) {
+	if (!child)
+		return nullptr;
+	child->parent(this);
+	if (!empty())
+		_lastChild = _lastChild->insertNext(std::move(child));
+	else {
+		_firstChild = std::move(child);
+		_lastChild = _firstChild.get();
+	}
+	return _lastChild;
+}
+
+
+/** Inserts a new first child node and returns a raw pointer to it. */
+XMLNode* XMLElement::insertFirst (unique_ptr<XMLNode> child) {
+	if (!child)
+		return nullptr;
+	child->parent(this);
+	if (empty()) {
+		_firstChild = std::move(child);
+		_lastChild = _firstChild.get();
+	}
+	else {
+		child->insertNext(std::move(_firstChild));
+		_firstChild = std::move(child);
+	}
+	return _firstChild.get();
+}
+
+
 /** Appends a child node to this element. The element also takes the ownership of the child.
  *  @param[in] child node to be appended
  *  @return raw pointer to the appended child node */
@@ -76,15 +151,15 @@ XMLNode* XMLElement::append (unique_ptr<XMLNode> child) {
 	if (!child)
 		return nullptr;
 	XMLText *textNode1 = child->toText();
-	if (!textNode1 || _children.empty())
-		_children.emplace_back(std::move(child));
+	if (!textNode1 || empty())
+		insertLast(std::move(child));
 	else {
-		if (XMLText *textNode2 = _children.back()->toText())
+		if (XMLText *textNode2 = _lastChild->toText())
 			textNode2->append(util::static_unique_ptr_cast<XMLText>(std::move(child)));  // merge two consecutive text nodes
 		else
-			_children.emplace_back(std::move(child));
+			insertLast(std::move(child));
 	}
-	return _children.back().get();
+	return _lastChild;
 }
 
 
@@ -93,12 +168,12 @@ XMLNode* XMLElement::append (unique_ptr<XMLNode> child) {
  *  @param[in] str string to be appended
  *  @return raw pointer to the text node the string was appended to */
 XMLNode* XMLElement::append (const string &str) {
-	XMLText *lastNode;
-	if (!_children.empty() && (lastNode = _children.back()->toText()))
-		lastNode->append(str);
+	XMLText *last;
+	if (!empty() && (last = _lastChild->toText()))
+		last->append(str);
 	else
-		_children.emplace_back(util::make_unique<XMLText>(str));
-	return _children.back().get();
+		insertLast(util::make_unique<XMLText>(str));
+	return _lastChild;
 }
 
 
@@ -109,14 +184,14 @@ XMLNode* XMLElement::prepend (unique_ptr<XMLNode> child) {
 	if (!child)
 		return nullptr;
 	XMLText *textNode1 = child->toText();
-	if (textNode1 && !_children.empty()) {
-		if (XMLText *textNode2 = _children.front()->toText()) {
+	if (textNode1 && !empty()) {
+		if (XMLText *textNode2 = _firstChild->toText()) {
 			textNode2->prepend(util::static_unique_ptr_cast<XMLText>(std::move(child)));  // merge two consecutive text nodes
 			return textNode2;
 		}
 	}
-	_children.emplace_front(std::move(child));
-	return _children.front().get();
+	insertFirst(std::move(child));
+	return _firstChild.get();
 }
 
 
@@ -125,15 +200,15 @@ XMLNode* XMLElement::prepend (unique_ptr<XMLNode> child) {
  *  node present, nothing is inserted.
  *  @param[in] child node to be inserted
  *  @param[in] sibling following sibling of 'child'
- *  @return true on success */
-bool XMLElement::insertBefore (unique_ptr<XMLNode> child, XMLNode *sibling) {
-	auto it = _children.begin();
-	while (it != _children.end() && it->get() != sibling)
-		++it;
-	if (it == _children.end())
-		return false;
-	_children.emplace(it, std::move(child));
-	return true;
+ *  @return raw pointer to inserted node */
+XMLNode* XMLElement::insertBefore (unique_ptr<XMLNode> child, XMLNode *sibling) {
+	if (!child || (sibling && sibling->parent() != this))
+		return nullptr;
+	if (!sibling)
+		return insertLast(std::move(child));
+	if (sibling == _firstChild.get())
+		return insertFirst(std::move(child));
+	return sibling->prev()->insertNext(std::move(child));
 }
 
 
@@ -142,15 +217,15 @@ bool XMLElement::insertBefore (unique_ptr<XMLNode> child, XMLNode *sibling) {
  *  node present, nothing is inserted.
  *  @param[in] child node to be inserted
  *  @param[in] sibling preceding sibling of 'child'
- *  @return true on success */
-bool XMLElement::insertAfter (unique_ptr<XMLNode> child, XMLNode *sibling) {
-	auto it = _children.begin();
-	while (it != _children.end() && it->get() != sibling)
-		++it;
-	if (it == _children.end())
-		return false;
-	_children.emplace(++it, std::move(child));
-	return true;
+ *  @return raw pointer to inserted node */
+XMLNode* XMLElement::insertAfter (unique_ptr<XMLNode> child, XMLNode *sibling) {
+	if (!child || (sibling && sibling->parent() != this))
+		return nullptr;
+	if (!sibling)
+		return insertFirst(std::move(child));
+	if (sibling == _lastChild)
+		return insertLast(std::move(child));
+	return sibling->insertNext(std::move(child));
 }
 
 
@@ -158,50 +233,77 @@ bool XMLElement::insertAfter (unique_ptr<XMLNode> child, XMLNode *sibling) {
  *  this (wrapper) element at the former position of the first node of the sequence.
  *  Example: wrap 3 child nodes of element a with b:
  *  <a>text1<c/>text2<d/></a> => <a>text1<b><c/>text2<d/></b></a>
- *  @param[in] first first node to be moved
- *  @param[in] last first node after last node to be moved
+ *  @param[in] first first node to wrap
+ *  @param[in] last last node to wrap (or nullptr if all following siblings of 'first' are to be wrapped)
  *  @param[in] name name of the wrapper element to be created
- *  @return iterator pointing to the new wrapper element */
-XMLElement::Iterator XMLElement::wrap (Iterator first, Iterator last, const string &name) {
+ *  @return raw pointer to the new wrapper element */
+XMLElement* XMLElement::wrap (XMLNode *first, XMLNode *last, const string &name) {
+	if (!first || !first->parent() || (last && first->parent() != last->parent()))
+		return nullptr;
+	XMLElement *parent = first->parent()->toElement();
+	XMLNode *prev = first->prev();
 	auto wrapper = util::make_unique<XMLElement>(name);
-	Children &wrapperChildren = wrapper->_children;
-	wrapperChildren.insert(wrapperChildren.end(), make_move_iterator(first), make_move_iterator(last));
-	auto it = _children.erase(first, last);
-	return _children.insert(it, std::move(wrapper));
+	if (last)
+		last = last->next();
+	XMLNode *child = first;
+	while (child && child != last) {
+		XMLNode *next = child->next();
+		wrapper->insertLast(remove(child));
+		child = next;
+	}
+	XMLElement *ret = wrapper.get();
+	if (prev)
+		parent->insertAfter(std::move(wrapper), prev);
+	else
+		parent->insertFirst(std::move(wrapper));
+	return ret;
 }
 
 
-/** Moves all child nodes C1,...,Cn of a given child element E of *this to *this
- *  and removes E afterwards, so that C1 is located at the former position of E
+/** Moves all child nodes C1,...,Cn of a given element E to its parent and
+ *  removes E afterwards, so that C1 is located at the former position of E
  *  followed by C2,...,Cn.
  *  Example: unwrap a child element b of a:
  *  <a>text1<b><c/>text2<d/></b></a> => <a>text1<c/>text2<d/></a>
- *  @param[in] pos position of child element to unwrap
- *  @return iterator pointing to the first node C1 of the unwrapped sequence */
-XMLElement::Iterator XMLElement::unwrap (Iterator pos) {
-	if (XMLElement *child = (*pos)->toElement()) {
-		auto it = _children.insert(
-			std::next(pos),
-			make_move_iterator(child->begin()),
-			make_move_iterator(child->end()));
-		return _children.erase(std::prev(it));
+ *  @param[in] child child element to unwrap
+ *  @return raw pointer to the first node C1 of the unwrapped sequence */
+XMLNode* XMLElement::unwrap (XMLElement *child) {
+	if (!child || !child->parent())
+		return nullptr;
+	XMLElement *parent = child->parent()->toElement();
+	auto removedChild = remove(child);
+	if (child->empty())
+		return child->next();
+	XMLNode *firstGrandchild = child->firstChild();
+	XMLNode *prev = child->prev();
+	unique_ptr<XMLNode> grandchild = std::move(child->_firstChild);
+	while (grandchild) {
+		prev = parent->insertAfter(std::move(grandchild), prev);
+		grandchild = std::move(prev->_next);
 	}
-	return pos;
+	return firstGrandchild;
 }
 
 
-/** Removes a given child from the element. */
-void XMLElement::remove (const XMLNode *child) {
-	auto it = find_if(_children.begin(), _children.end(), [=](const unique_ptr<XMLNode> &ptr) {
-		return ptr.get() == child;
-	});
-	if (it != _children.end())
-		_children.erase(it);
-}
-
-
-XMLElement::Iterator XMLElement::remove (Iterator childIt) {
-	return _children.erase(childIt);
+/** Removes a child node from the element.
+ *  @param[in] child pointer to child to remove
+ *  @return pointer to removed child or nullptr if given child doesn't belong to this element */
+unique_ptr<XMLNode> XMLElement::remove (XMLNode *child) {
+	unique_ptr<XMLNode> node;
+	if (child && child->parent()) {
+		XMLElement *parent = child->parent()->toElement();
+		if (child == parent->_lastChild)
+			parent->_lastChild = child->prev();
+		if (child != parent->firstChild())
+			node = child->prev()->removeNext();
+		else {
+			node = std::move(parent->_firstChild);
+			if ((parent->_firstChild = std::move(node->_next)))
+				parent->_firstChild->prev(nullptr);
+		}
+		child->parent(nullptr);
+	}
+	return node;
 }
 
 
@@ -211,9 +313,9 @@ XMLElement::Iterator XMLElement::remove (Iterator childIt) {
  *  @param[out] descendants all elements found
  *  @return true if at least one element was found  */
 bool XMLElement::getDescendants (const char *name, const char *attrName, vector<XMLElement*> &descendants) const {
-	for (auto &child : _children) {
+	for (XMLNode *child = _firstChild.get(); child; child = child->next()) {
 		if (XMLElement *elem = child->toElement()) {
-			if ((!name || elem->getName() == name) && (!attrName || elem->hasAttribute(attrName)))
+			if ((!name || elem->name() == name) && (!attrName || elem->hasAttribute(attrName)))
 				descendants.push_back(elem);
 			elem->getDescendants(name, attrName, descendants);
 		}
@@ -228,9 +330,9 @@ bool XMLElement::getDescendants (const char *name, const char *attrName, vector<
  *  @param[in] attrValue if not 0, only elements with attribute attrName="attrValue" are considered
  *  @return pointer to the found element or 0 */
 XMLElement* XMLElement::getFirstDescendant (const char *name, const char *attrName, const char *attrValue) const {
-	for (auto &child : _children) {
+	for (XMLNode *child = _firstChild.get(); child; child = child->next()) {
 		if (XMLElement *elem = child->toElement()) {
-			if (!name || elem->getName() == name) {
+			if (!name || elem->name() == name) {
 				const char *value;
 				if (!attrName || (((value = elem->getAttributeValue(attrName)) != nullptr) && (!attrValue || string(value) == attrValue)))
 					return elem;
@@ -247,19 +349,18 @@ ostream& XMLElement::write (ostream &os) const {
 	os << '<' << _name;
 	for (const auto &attrib : _attributes)
 		os << ' ' << attrib.name << "='" << attrib.value << '\'';
-	if (_children.empty())
+	if (empty())
 		os << "/>";
 	else {
 		os << '>';
 		// Insert newlines around children except text nodes. According to the
 		// SVG specification, pure whitespace nodes are ignored by the SVG renderer.
-		if (WRITE_NEWLINES && !_children.front()->toText())
+		if (WRITE_NEWLINES && !_firstChild->toText())
 			os << '\n';
-		for (auto it=_children.begin(); it != _children.end(); ++it) {
-			(*it)->write(os);
-			if (!(*it)->toText()) {
-				auto next=it;
-				if (WRITE_NEWLINES && (++next == _children.end() || !(*next)->toText()))
+		for (XMLNode *child = _firstChild.get(); child; child = child->next()) {
+			child->write(os);
+			if (!child->toText()) {
+				if (WRITE_NEWLINES && (!child->next() || !child->next()->toText()))
 					os << '\n';
 			}
 		}

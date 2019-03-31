@@ -46,7 +46,7 @@ class TpicSpecialTest : public ::testing::Test {
 				const Matrix& getMatrix () const              {static Matrix m(1); return m;}
 				string getXMLSnippet () const {
 					ostringstream oss;
-					for (const auto &child : page.children())
+					for (const XMLNode *child : page)
 						child->write(oss);
 					return oss.str();
 				}
