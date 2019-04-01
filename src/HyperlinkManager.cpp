@@ -109,7 +109,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 	auto anchorNode = util::make_unique<XMLElement>("a");
 	anchorNode->addAttribute("xlink:href", uri);
 	anchorNode->addAttribute("xlink:title", XMLString(name.empty() ? uri : name, false));
-	actions.pushPageContext(std::move(anchorNode));
+	actions.svgTree().pushPageContext(std::move(anchorNode));
 	actions.bbox("{anchor}", true);  // start computing the bounding box of the linked area
 	_depthThreshold = actions.getDVIStackDepth();
 	_anchorType = AnchorType::HREF;
@@ -119,7 +119,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 void HyperlinkManager::closeAnchor (SpecialActions &actions) {
 	if (_anchorType == AnchorType::HREF) {
 		markLinkedBox(actions);
-		actions.popPageContext();
+		actions.svgTree().popPageContext();
 		_depthThreshold = 0;
 	}
 	_anchorType = AnchorType::NONE;
@@ -179,7 +179,7 @@ void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
 			rect->addAttribute("y", y);
 			rect->addAttribute("width", w);
 			rect->addAttribute("height", h);
-			actions.prependToPage(std::move(rect));
+			actions.svgTree().prependToPage(std::move(rect));
 			if (MARKER_TYPE == MarkerType::BOX || MARKER_TYPE == MarkerType::BGCOLOR) {
 				// slightly enlarge the boxed area
 				x -= linewidth/2;
@@ -199,7 +199,7 @@ void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
 			rect->addAttribute("height", bbox.height());
 			rect->addAttribute("fill", "white");
 			rect->addAttribute("fill-opacity", 0);
-			actions.appendToPage(std::move(rect));
+			actions.svgTree().appendToPage(std::move(rect));
 		}
 	}
 }
@@ -216,7 +216,7 @@ void HyperlinkManager::createViews (unsigned pageno, SpecialActions &actions) {
 			auto view = util::make_unique<XMLElement>("view");
 			view->addAttribute("id", "loc"+XMLString(stranchorpair.second.id));
 			view->addAttribute("viewBox", oss.str());
-			actions.appendToDefs(std::move(view));
+			actions.svgTree().appendToDefs(std::move(view));
 		}
 	}
 	closeAnchor(actions);

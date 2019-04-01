@@ -60,14 +60,8 @@ class ImageToSVG : protected SpecialActions {
 		Color getColor () const override                        {return _svg.getColor();}
 		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
+		const SVGTree& svgTree () const override                {return _svg;}
 		void setBgColor (const Color &color) override           {}
-		void appendToPage (std::unique_ptr<XMLNode> node) override  {_svg.appendToPage(std::move(node));}
-		void appendToDefs (std::unique_ptr<XMLNode> node) override  {_svg.appendToDefs(std::move(node));}
-		void prependToPage (std::unique_ptr<XMLNode> node) override {_svg.prependToPage(std::move(node));}
-		void pushPageContext (std::unique_ptr<XMLElement> node) override {_svg.pushPageContext(std::move(node));}
-		void popPageContext () override                                  {_svg.popPageContext();}
-		void pushDefsContext (std::unique_ptr<XMLElement> node) override {_svg.pushDefsContext(std::move(node));}
-		void popDefsContext () override                                  {_svg.popDefsContext();}
 		void embed (const BoundingBox &bbox) override           {_bbox.embed(bbox);}
 		void embed (const DPair &p, double r=0) override        {if (r==0) _bbox.embed(p); else _bbox.embed(p, r);}
 		void progress (const char *id) override;

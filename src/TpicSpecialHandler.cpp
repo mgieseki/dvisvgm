@@ -131,7 +131,7 @@ void TpicSpecialHandler::drawLines (double ddist, SpecialActions &actions) {
 			elem->addAttribute("points", oss.str());
 			add_stroke_attribs(elem.get(), _penwidth, Color::BLACK, ddist);
 		}
-		actions.appendToPage(std::move(elem));
+		actions.svgTree().appendToPage(std::move(elem));
 	}
 	reset();
 }
@@ -180,7 +180,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions &actions) {
 			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 			pathElem->addAttribute("d", oss.str());
 			add_stroke_attribs(pathElem.get(), _penwidth, _dviColor, ddist);
-			actions.appendToPage(std::move(pathElem));
+			actions.svgTree().appendToPage(std::move(pathElem));
 		}
 	}
 	reset();
@@ -238,7 +238,7 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 				elem->addAttribute("stroke-linecap", "round");
 		}
 		elem->addAttribute("fill", _grayLevel < 0 ? "none" : fillColor(true).svgColorString());
-		actions.appendToPage(std::move(elem));
+		actions.svgTree().appendToPage(std::move(elem));
 		double pw = _penwidth/2.0;
 		actions.embed(BoundingBox(cx-rx-pw, cy-ry-pw, cx+rx+pw, cy+ry+pw));
 	}

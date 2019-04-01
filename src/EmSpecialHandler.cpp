@@ -24,6 +24,7 @@
 #include "InputReader.hpp"
 #include "Length.hpp"
 #include "SpecialActions.hpp"
+#include "SVGTree.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
 
@@ -117,7 +118,7 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 		actions.embed(q21);
 		actions.embed(q22);
 	}
-	actions.appendToPage(std::move(node));
+	actions.svgTree().appendToPage(std::move(node));
 }
 
 

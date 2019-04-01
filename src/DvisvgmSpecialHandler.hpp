@@ -43,9 +43,9 @@ class XMLNode;
 
 class DvisvgmSpecialHandler : public SpecialHandler {
 	class XMLParser {
-		using AppendFunc = void (SpecialActions::*)(std::unique_ptr<XMLNode>);
-		using PushFunc = void (SpecialActions::*)(std::unique_ptr<XMLElement>);
-		using PopFunc = void (SpecialActions::*)();
+		using AppendFunc = void (SVGTree::*)(std::unique_ptr<XMLNode>);
+		using PushFunc = void (SVGTree::*)(std::unique_ptr<XMLElement>);
+		using PopFunc = void (SVGTree::*)();
 		using NameStack = std::vector<std::string>;
 
 		public:

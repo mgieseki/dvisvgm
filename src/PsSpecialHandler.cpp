@@ -361,7 +361,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		if (!matrix.isIdentity())
 			groupNode->addAttribute("transform", matrix.toSVG());
-		_actions->appendToPage(std::move(groupNode));
+		_actions->svgTree().appendToPage(std::move(groupNode));
 	}
 	_xmlnode = nullptr;   // append following elements to page group again
 
@@ -614,7 +614,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
 	else {
-		_actions->appendToPage(std::move(path));
+		_actions->svgTree().appendToPage(std::move(path));
 		_actions->embed(bbox);
 	}
 	_path.clear();
@@ -665,7 +665,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
 	else {
-		_actions->appendToPage(std::move(path));
+		_actions->svgTree().appendToPage(std::move(path));
 		_actions->embed(bbox);
 	}
 	_path.clear();
@@ -840,7 +840,7 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 			clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
 
 		clipElem->append(std::move(pathElem));
-		_actions->appendToDefs(std::move(clipElem));
+		_actions->svgTree().appendToDefs(std::move(clipElem));
 	}
 }
 
@@ -959,7 +959,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 			if (parent)
 				parent->append(std::move(group));
 			else
-				actions.appendToPage(std::move(group));
+				actions.svgTree().appendToPage(std::move(group));
 			if (clippathID > 0)
 				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
 		}

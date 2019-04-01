@@ -52,16 +52,9 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
 		Matrix getPageTransformation () const override          {return _dvireader->getPageTransformation();}
 		Color getColor () const override                        {return _svg.getColor();}
-		int getDVIStackDepth() const override                   {return _dvireader->stackDepth();}
-		unsigned getCurrentPageNumber() const override          {return _dvireader->currentPageNumber();}
-		void appendToPage (std::unique_ptr<XMLNode> node) override  {_svg.appendToPage(std::move(node));}
-		void appendToDefs (std::unique_ptr<XMLNode> node) override  {_svg.appendToDefs(std::move(node));}
-		void prependToPage (std::unique_ptr<XMLNode> node) override {_svg.prependToPage(std::move(node));}
-		void pushPageContext (std::unique_ptr<XMLElement> node) override {_svg.pushPageContext(std::move(node));}
-		void popPageContext () override                                  {_svg.popPageContext();}
-		void pushDefsContext (std::unique_ptr<XMLElement> node) override {_svg.pushDefsContext(std::move(node));}
-		void popDefsContext () override                                  {_svg.popDefsContext();}
-		void setTextOrientation(bool vertical) override                  {_svg.setVertical(vertical);}
+		int getDVIStackDepth () const override                  {return _dvireader->stackDepth();}
+		unsigned getCurrentPageNumber () const override         {return _dvireader->currentPageNumber();}
+		void setTextOrientation (bool vertical) override        {_svg.setVertical(vertical);}
 		void moveToX (double x, bool forceSVGMove) override;
 		void moveToY (double y, bool forceSVGMove) override;
 		void setFont (int num, const Font &font) override;
@@ -75,6 +68,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void setX (double x) override {_dvireader->translateToX(x); _svg.setX(x);}
 		void setY (double y) override {_dvireader->translateToY(y); _svg.setY(y);}
 		void finishLine () override   {_dvireader->finishLine();}
+		const SVGTree& svgTree () const override  {return _svg;}
 		BoundingBox& bbox () override {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override;
 		void embed (const BoundingBox &bbox) override;

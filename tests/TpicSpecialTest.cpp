@@ -33,40 +33,39 @@ class TpicSpecialTest : public ::testing::Test {
 	protected:
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
-				ActionsRecorder () : x(), y(), page("page") {}
-				void appendToPage (unique_ptr<XMLNode> node) {page.append(std::move(node));}
-				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
-				void setX (double xx)                         {x = xx;}
-				void setY (double yy)                         {x = yy;}
-				double getX () const                          {return x;}
-				double getY () const                          {return y;}
-				Color getColor () const                       {return color;}
-				void setColor (const Color &c)                {color = c;}
-				void clear ()                                 {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
-				const Matrix& getMatrix () const              {static Matrix m(1); return m;}
+				ActionsRecorder () : x(), y() {}
+				void embed (const BoundingBox &bb) override  {bbox.embed(bb);}
+				void setX (double xx) override               {x = xx;}
+				void setY (double yy) override               {x = yy;}
+				double getX () const override                {return x;}
+				double getY () const override                {return y;}
+				Color getColor () const override             {return color;}
+				void setColor (const Color &c) override      {color = c;}
+				const Matrix& getMatrix () const override    {static Matrix m(1); return m;}
+
 				string getXMLSnippet () const {
 					ostringstream oss;
-					for (const XMLNode *child : page)
+					for (XMLNode *child : *svgTree().pageNode())
 						child->write(oss);
 					return oss.str();
 				}
 
-				void write (ostream &os) const {
-					os << "page: " << page << '\n'
-						<< "bbox: " << bbox.toSVGViewBox() << '\n';
+				void clear () {
+					SpecialActions::svgTree().reset();
+					SpecialActions::svgTree().newPage(1);
+					bbox = BoundingBox(0, 0, 0, 0);
 				}
 
 			private:
 				double x, y;
 				Color color;
-				XMLElement page;
 				BoundingBox bbox;
 		};
 
 
 		class MyTpicSpecialHandler : public TpicSpecialHandler {
 			public:
-				MyTpicSpecialHandler (SpecialActions &a) : actions(a) {}
+				explicit MyTpicSpecialHandler (SpecialActions &a) : actions(a) {}
 				void finishPage () {dviEndPage(0, actions);}
 				bool processSpecial (const string &cmd, string params="") {
 					stringstream ss;

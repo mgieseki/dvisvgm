@@ -39,7 +39,7 @@ string PSPattern::svgID () const {
 /** Appends the definition of this pattern to the "def" section of the SVG tree. */
 void PSPattern::apply (SpecialActions &actions) {
 	if (auto pattern = createPatternNode())
-		actions.appendToDefs(std::move(pattern));
+		actions.svgTree().appendToDefs(std::move(pattern));
 }
 
 

@@ -26,6 +26,7 @@
 #include "InputReader.hpp"
 #include "Length.hpp"
 #include "SpecialActions.hpp"
+#include "SVGTree.hpp"
 #include "utility.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
@@ -35,8 +36,8 @@ using namespace std;
 
 DvisvgmSpecialHandler::DvisvgmSpecialHandler () :
 	_currentMacro(_macros.end()),
-	_defsParser(&SpecialActions::appendToDefs, &SpecialActions::pushDefsContext, &SpecialActions::popDefsContext),
-	_pageParser(&SpecialActions::appendToPage, &SpecialActions::pushPageContext, &SpecialActions::popPageContext)
+	_defsParser(&SVGTree::appendToDefs, &SVGTree::pushDefsContext, &SVGTree::popDefsContext),
+	_pageParser(&SVGTree::appendToPage, &SVGTree::pushPageContext, &SVGTree::popPageContext)
 {
 }
 
@@ -337,7 +338,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		img->addAttribute("xlink:href", f);
 		if (!actions.getMatrix().isIdentity())
 			img->addAttribute("transform", actions.getMatrix().toSVG());
-		actions.appendToPage(std::move(img));
+		actions.svgTree().appendToPage(std::move(img));
 	}
 	catch (const UnitException &e) {
 		throw SpecialException(string("dvisvgm:img: ") + e.what());
@@ -394,7 +395,7 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 	while (left != string::npos) {
 		right = _xmlbuf.find('<', left);
 		if (left < right && left < _xmlbuf.length())  // plain text found?
-			(actions.*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
+			(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
 		if (right != string::npos) {
 			left = right;
 			if (_xmlbuf.compare(left, 9, "<![CDATA[") == 0) {
@@ -403,7 +404,7 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 					if (finish)	throw SpecialException("expected ']]>' at end of CDATA block");
 					break;
 				}
-				(actions.*_append)(util::make_unique<XMLCData>(_xmlbuf.substr(left+9, right-left-9)));
+				(actions.svgTree().*_append)(util::make_unique<XMLCData>(_xmlbuf.substr(left+9, right-left-9)));
 				right += 2;
 			}
 			else if (_xmlbuf.compare(left, 4, "<!--") == 0) {
@@ -412,7 +413,7 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 					if (finish)	throw SpecialException("expected '-->' at end of comment");
 					break;
 				}
-				(actions.*_append)(util::make_unique<XMLComment>(_xmlbuf.substr(left+4, right-left-4)));
+				(actions.svgTree().*_append)(util::make_unique<XMLComment>(_xmlbuf.substr(left+4, right-left-4)));
 				right += 2;
 			}
 			else if (_xmlbuf.compare(left, 2, "<?") == 0) {
@@ -421,7 +422,7 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 					if (finish)	throw SpecialException("expected '?>' at end of processing instruction");
 					break;
 				}
-				(actions.*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left+2)));
+				(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left+2)));
 				right++;
 			}
 			else if (_xmlbuf.compare(left, 2, "</") == 0) {
@@ -467,10 +468,10 @@ void DvisvgmSpecialHandler::XMLParser::openElement (string tag, SpecialActions &
 	}
 	ir.skipSpace();
 	if (ir.peek() == '/')       // end of empty element tag
-		(actions.*_append)(std::move(elemNode));
+		(actions.svgTree().*_append)(std::move(elemNode));
 	else if (ir.peek() < 0) {   // end of opening tag
 		_nameStack.push_back(name);
-		(actions.*_pushContext)(std::move(elemNode));
+		(actions.svgTree().*_pushContext)(std::move(elemNode));
 	}
 	else
 		throw SpecialException("'>' or '/>' expected at end of opening tag <"+name);
@@ -490,7 +491,7 @@ void DvisvgmSpecialHandler::XMLParser::closeElement (string tag, SpecialActions 
 		throw SpecialException("spurious closing tag </" + name + ">");
 	if (_nameStack.back() != name)
 		throw SpecialException("expected </" + name + "> but found </" + _nameStack.back() + ">");
-	(actions.*_popContext)();
+	(actions.svgTree().*_popContext)();
 	_nameStack.pop_back();
 }
 

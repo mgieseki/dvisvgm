@@ -24,6 +24,7 @@
 #include "SpecialActions.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
+#include "SVGTree.hpp"
 
 using namespace std;
 
@@ -32,35 +33,38 @@ class EmSpecialTest : public ::testing::Test {
 	protected:
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
-				ActionsRecorder () : x(), y(), page("page") {}
-				void appendToPage (unique_ptr<XMLNode> node) {page.append(std::move(node));}
-				void embed (const BoundingBox &bb)            {bbox.embed(bb);}
-				void setX (double xx)                         {x = xx;}
-				void setY (double yy)                         {x = yy;}
-				double getX () const                          {return x;}
-				double getY () const                          {return y;}
-				Color getColor () const                       {return color;}
-				void setColor (const Color &c)                {color = c;}
-				void clear ()                                 {page.clear(); bbox=BoundingBox(0, 0, 0, 0);}
-				string getPageXML () const                    {ostringstream oss; oss << page; return oss.str();}
-				const Matrix& getMatrix () const              {static Matrix m(1); return m;}
+				ActionsRecorder () : x(), y() {}
+				void embed (const BoundingBox &bb) override  {bbox.embed(bb);}
+				void setX (double xx) override               {x = xx;}
+				void setY (double yy) override               {x = yy;}
+				double getX () const override                {return x;}
+				double getY () const override                {return y;}
+				Color getColor () const override             {return color;}
+				void setColor (const Color &c) override      {color = c;}
+				string getPageXML () const                   {ostringstream oss; oss << *svgTree().pageNode(); return oss.str();}
+				const Matrix& getMatrix () const override    {static Matrix m(1); return m;}
 
-				void write (ostream &os) const {
+				void clear () {
+					SpecialActions::svgTree().reset();
+					SpecialActions::svgTree().newPage(1);
+					bbox = BoundingBox(0, 0, 0, 0);
+				}
+
+/*				void write (ostream &os) const {
 					os << "page: " << page << '\n'
 						<< "bbox: " << bbox.toSVGViewBox() << '\n';
-				}
+				} */
 
 			private:
 				double x, y;
-				Color color;
-				XMLElement page;
 				BoundingBox bbox;
+				Color color;
 		};
 
 
 		class MyEmSpecialHandler : public EmSpecialHandler {
 			public:
-				MyEmSpecialHandler (SpecialActions &a) : actions(a) {}
+				explicit MyEmSpecialHandler (SpecialActions &a) : actions(a) {}
 				void finishPage () {dviEndPage(0, actions);}
 				void processSpecial (const string &str) {stringstream ss;	ss << str; process("em", ss, actions);}
 
@@ -96,17 +100,17 @@ TEST_F(EmSpecialTest, lines1) {
 		recorder.setY(p[i].y());
 		handler.processSpecial(string("point ")+XMLString(i));
 	}
-	EXPECT_EQ(recorder.getPageXML(), "<page/>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'/>");
 	handler.processSpecial("linewidth 2bp");
 	for (int i=0; i < n; i++)
 		handler.processSpecial(string("line ")+XMLString(i)+", "+XMLString((i+1)%n));
 	EXPECT_EQ(recorder.getPageXML(),
-		"<page>\n"
+		"<g id='page1'>\n"
 		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
-		"</page>"
+		"</g>"
 	);
 }
 
@@ -126,12 +130,12 @@ TEST_F(EmSpecialTest, lines2) {
 	}
 	handler.finishPage();
 	EXPECT_EQ(recorder.getPageXML(),
-		"<page>\n"
+		"<g id='page1'>\n"
 		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
 		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='2' stroke='#000'/>\n"
-		"</page>"
+		"</g>"
 	);
 }
 
@@ -140,7 +144,7 @@ TEST_F(EmSpecialTest, pline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1, 2, 10bp");
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<line x1='10' y1='10' x2='100' y2='100' stroke-width='10' stroke='#000'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<line x1='10' y1='10' x2='100' y2='100' stroke-width='10' stroke='#000'/>\n</g>");
 }
 
 
@@ -148,7 +152,7 @@ TEST_F(EmSpecialTest, vline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2v, 10bp");  // cut line ends vertically
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon points='10,17.07 10,2.93 100,92.93 100,107.07'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10,17.07 10,2.93 100,92.93 100,107.07'/>\n</g>");
 }
 
 
@@ -156,7 +160,7 @@ TEST_F(EmSpecialTest, hline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2h, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon points='2.93,10 17.07,10 107.07,100 92.93,100'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93,10 17.07,10 107.07,100 92.93,100'/>\n</g>");
 }
 
 
@@ -164,14 +168,14 @@ TEST_F(EmSpecialTest, hvline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2v, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon points='2.93,10 17.07,10 100,92.93 100,107.07'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93,10 17.07,10 100,92.93 100,107.07'/>\n</g>");
 
 	recorder.clear();
 	recorder.setColor(Color(0.0, 0.0, 1.0));
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2h, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<page>\n<polygon points='10,17.07 10,2.93 107.07,100 92.93,100' fill='#00f'/>\n</page>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10,17.07 10,2.93 107.07,100 92.93,100' fill='#00f'/>\n</g>");
 }
 
 
@@ -186,12 +190,12 @@ TEST_F(EmSpecialTest, lineto) {
 		handler.processSpecial(i == 0 ? "moveto" : "lineto");
 	}
 	EXPECT_EQ(recorder.getPageXML(),
-		"<page>\n"
+		"<g id='page1'>\n"
 		"<line x1='0' y1='0' x2='10' y2='0' stroke-width='2' stroke='#f00'/>\n"
 		"<line x1='10' y1='0' x2='10' y2='0' stroke-width='4' stroke='#f00'/>\n"
 		"<line x1='10' y1='0' x2='0' y2='0' stroke-width='6' stroke='#f00'/>\n"
 		"<line x1='0' y1='0' x2='0' y2='0' stroke-width='8' stroke='#f00'/>\n"
-		"</page>"
+		"</g>"
 	);
 }
 
