@@ -74,15 +74,25 @@ static void remove_ws_nodes (XMLElement *elem) {
 void GroupCollapser::execute (XMLElement *context) {
 	if (!context)
 		return;
-	for (XMLNode *node : *context) {
+	XMLNode *node=context->firstChild();
+	while (node) {
+		XMLNode *next = node->next();  // keep safe pointer to next node
 		if (XMLElement *elem = node->toElement())
 			execute(elem);
+		node = next;
 	}
-	XMLElement *child = only_child_element(context);
-	if (child && collapsible(*context)) {
-		if (child->name() == "g" && unwrappable(*child, *context) && moveAttributes(*child, *context)) {
-			remove_ws_nodes(context);
-			XMLElement::unwrap(child);
+	if (context->name() == "g" && context->attributes().empty()) {
+		// unwrap group without attributes
+		remove_ws_nodes(context);
+		XMLElement::unwrap(context);
+	}
+	else {
+		XMLElement *child = only_child_element(context);
+		if (child && collapsible(*context)) {
+			if (child->name() == "g" && unwrappable(*child, *context) && moveAttributes(*child, *context)) {
+				remove_ws_nodes(context);
+				XMLElement::unwrap(child);
+			}
 		}
 	}
 }
