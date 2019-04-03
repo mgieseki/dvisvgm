@@ -174,6 +174,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		{"pro",  kpse_tex_ps_header_format},
 		{"sfd",  kpse_sfd_format},
 		{"eps",  kpse_pict_format},
+		{"pdf",  kpse_tex_format},
 	};
 	auto it = types.find(ext);
 	if (it == types.end())
