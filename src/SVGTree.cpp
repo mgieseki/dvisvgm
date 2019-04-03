@@ -117,8 +117,8 @@ void SVGTree::newPage (int pageno) {
 	_charHandler->setInitialContextNode(pageNode.get());
 	_page = pageNode.get();
 	_root->append(std::move(pageNode));
-	_defsContextStack = {};
-	_pageContextStack = {};
+	_defsContextStack = stack<XMLElement*>();
+	_pageContextStack = stack<XMLElement*>();
 }
 
 
