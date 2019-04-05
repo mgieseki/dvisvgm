@@ -316,6 +316,8 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	double vscale  = (it = attr.find("vscale")) != attr.end() ? stod(it->second) : 100;
 	double angle   = (it = attr.find("angle")) != attr.end() ? stod(it->second) : 0;
 
+	bool clipToBbox = (attr.find("clip") != attr.end());
+
 	// compute factors to scale the bounding box to width rwi and height rhi
 	double sx = rwi/abs(llx-urx);
 	double sy = rhi/abs(lly-ury);
@@ -335,6 +337,11 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setY(0);
 	moveToDVIPos();
 
+	// clip image to its bounding box if flag 'clip' is given
+	string rectclip;
+	if (clipToBbox)
+		rectclip = to_string(llx)+" "+to_string(lly)+" "+to_string(urx-llx)+" "+to_string(ury-lly)+" rectclip";
+
 	auto groupNode = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
 	_xmlnode = groupNode.get();
 	_psi.execute(
@@ -342,7 +349,8 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
 		"matrix setmatrix"                     // don't apply outer PS transformations
 		"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
-		"/LastPage "+to_string(pageno)+" def"  // set number of last page to convert (PDF only)
+		"/LastPage "+to_string(pageno)+" def " // set number of last page to convert (PDF only)
+		+rectclip+                             // clip to bounding box (if requexted by attribute 'clip')
 		"("+ filepath + ")run "                // execute file content
 		"@endspecial "                         // leave special environment
 	);
