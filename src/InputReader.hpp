@@ -54,7 +54,7 @@ class InputReader {
 		virtual std::string getString (size_t n);
 		virtual std::string getString (const char *delim);
 		virtual std::string getLine ();
-		virtual int parseAttributes (std::map<std::string,std::string> &attr, const char *quotechars=nullptr);
+		virtual int parseAttributes (std::map<std::string,std::string> &attr, bool requireValues, const char *quotechars=nullptr);
 		virtual operator bool () const {return !eof();}
 };
 

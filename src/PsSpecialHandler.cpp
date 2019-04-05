@@ -205,7 +205,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 			StreamInputReader in(is);
 			const string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
 			map<string,string> attr;
-			in.parseAttributes(attr);
+			in.parseAttributes(attr, false);
 			imgfile(prefix == "pdffile=" ? FileType::PDF : FileType::EPS, fname, attr);
 		}
 	}

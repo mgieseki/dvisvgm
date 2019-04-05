@@ -370,11 +370,13 @@ string InputReader::getLine () {
 }
 
 
-/** Parses a sequence of key-value pairs of the form KEY=VALUE or KEY="VALUE"
+/** Parses a sequence of key-value pairs of the form KEY=VALUE or KEY="VALUE".
+ *  If parameter 'requireValues' is false, attributes may also consist of a key only.
  *  @param[out] attr the scanned atributes
+ *  @param[in] requireValues true if all attributes require a value
  *  @param[in] quotechars recognized quote characters used to enclose the attribute values
  *  @return number of attributes scanned */
-int InputReader::parseAttributes (map<string,string> &attr, const char *quotechars) {
+int InputReader::parseAttributes (map<string,string> &attr, bool requireValues, const char *quotechars) {
 	while (!eof()) {
 		string key;
 		skipSpace();
@@ -384,12 +386,14 @@ int InputReader::parseAttributes (map<string,string> &attr, const char *quotecha
 		while (isalnum(peek()) || strchr("-:._", peek()))
 			key += char(get());
 		skipSpace();
-		if (peek() != '=')
-			break;
-		get();
-		skipSpace();
-		string val = getQuotedString(quotechars);
-		attr[key] = val;
+		if (peek() == '=') {
+			get();
+			skipSpace();
+			string val = getQuotedString(quotechars);
+			attr.emplace(std::move(key), std::move(val));
+		}
+		else if (!requireValues)
+			attr.emplace(std::move(key), "");
 	}
 	return attr.size();
 }

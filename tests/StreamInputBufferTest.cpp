@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 #include <map>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
@@ -194,16 +195,34 @@ TEST(StreamInputBufferTest, parseDouble) {
 }
 
 
-TEST(StreamInputBufferTest, attribs) {
+TEST(StreamInputBufferTest, attribs1) {
 	istringstream iss("aaa=1 bbb=2 c-c-c=3 3d=4 e");
 	StreamInputBuffer buffer(iss, 10);
 	BufferInputReader in(buffer);
 	map<string,string> attr;
-	int s = in.parseAttributes(attr);
+	int s = in.parseAttributes(attr, true);
 	EXPECT_EQ(s, 3);
 	EXPECT_EQ(attr["aaa"], "1");
 	EXPECT_EQ(attr["bbb"], "2");
 	EXPECT_EQ(attr["c-c-c"], "3");
+	EXPECT_THROW(attr.at("3d"), std::out_of_range);
+	EXPECT_THROW(attr.at("e"), std::out_of_range);
+}
+
+
+TEST(StreamInputBufferTest, attribs2) {
+	istringstream iss("aaa='1' bbb='2' c-c-c='3' d e='value'");
+	StreamInputBuffer buffer(iss, 10);
+	BufferInputReader in(buffer);
+	map<string,string> attr;
+	int s = in.parseAttributes(attr, false, "'");
+	EXPECT_EQ(s, 5);
+	EXPECT_EQ(attr["aaa"], "1");
+	EXPECT_EQ(attr["bbb"], "2");
+	EXPECT_EQ(attr["c-c-c"], "3");
+	EXPECT_EQ(attr["e"], "value");
+	EXPECT_NO_THROW(attr.at("d"));
+	EXPECT_TRUE(attr.at("d").empty());
 }
 
 

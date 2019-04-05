@@ -462,7 +462,7 @@ void DvisvgmSpecialHandler::XMLParser::openElement (string tag, SpecialActions &
 	ir.skipSpace();
 	auto elemNode = util::make_unique<XMLElement>(name);
 	map<string, string> attribs;
-	if (ir.parseAttributes(attribs, "\"'")) {
+	if (ir.parseAttributes(attribs, true, "\"'")) {
 		for (const auto &attrpair : attribs)
 			elemNode->addAttribute(attrpair.first, attrpair.second);
 	}
