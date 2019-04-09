@@ -192,8 +192,9 @@ Loads and evaluates a single font map file or a sequence of font map files. Thes
 to resolve font file names and encodings. dvisvgm does not provide its own map files but tries to read
 available ones coming with dvips or dvipdfm. If option *--fontmap* is omitted, dvisvgm looks for the
 default map files 'ps2pk.map', 'pdftex.map', 'dvipdfm.map', and 'psfonts.map' (in this order).
-Otherwise, the files as option arguments are evaluated in the given order. Multiple filenames must be
-separated by commas without leading and/or trailing whitespace.
+Otherwise, the files given as option arguments are evaluated in the given order. Multiple filenames
+must be separated by commas without leading and/or trailing whitespace.
++
 By default, redefined mappings do not replace previous ones. However, each filename can be preceded by
 an optional mode specifier (*+*, *-*, or *=*) to change this behavior:
  
@@ -220,7 +221,7 @@ where all redefinitions of 'myfile1.map' replace previous entries. Afterwards, a
 given in 'myfile2.map' are removed from the font map tree.
 +
 For further information about the map file formats and the mode specifiers, see the manuals of
-dvips and dvipdfm.
+https://tug.org/texinfohtml/dvips.html[dvips] and https://ctan.org/tex-archive/dviware/dvipdfm[dvipdfm].
 
 *--grad-overlap*::
 Tells dvisvgm to create overlapping grid segments when approximating color gradient fills (also see
@@ -267,15 +268,19 @@ while mode 2 sorts the lines by the long option names.
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files) or
 the TrueType/WOFF module.
 
-*--libgs*='filename'::
+*--libgs*='path'::
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
 PostScript support was not completely disabled during compilation. In this case, dvisvgm tries
 to load the shared GS library dynamically during runtime. By default, it expects the library's name
 to be +libgs.so.X+ (on Unix-like systems, where +X+ is the ABI version of the library) or
-+gsdll32.dll+/+gsdll64.dll+ (Windows). Option *--libgs* can be used to give a different name.
-Alternatively, it's also possible to set the GS library name by the environment variable *LIBGS*.
-The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable *LIBGS*
-if *--libgs* is given.
++gsdll32.dll+/+gsdll64.dll+ (Windows). If dvisvgm doesn't find the library, option *--libgs* can be
+used to specify the correct path and filename, e.g. +--libgs=/usr/local/lib/libgs.so.9+ or
++--libgs=\gs\gs9.25\bin\gsdll64.dll+.
++
+Alternatively, it's also possible to assign the path to environment variable *LIBGS*, e.g.
++export LIBGS=/usr/local/lib/libgs.so.9+ or +set LIBGS=\gs\gs9.25\bin\gsdll63.dll+. *LIBGS* has
+less precedence than the command-line option, i.e. dvisvgm ignores variable *LIBGS* if *--libgs*
+is given.
 
 *-L, --linkmark*='style'::
 Selects the method how to mark hyperlinked areas. The 'style' argument can take one of the values
@@ -321,8 +326,8 @@ This option disables these calls.
 
 *-n, --no-fonts*[='variant']::
 If this option is given, dvisvgm doesn't create SVG 'font' elements but uses 'paths' instead. The
-resulting SVG files tend to be larger but they are concurrently more compatible with most applications that
-don't support SVG fonts yet. The optional argument 'variant' selects the method how to substitute fonts
+resulting SVG files tend to be larger but are concurrently more compatible with most applications that
+don't support SVG fonts. The optional argument 'variant' selects the method how to substitute fonts
 by paths. Variant 0 creates 'path' and 'use' elements in order to avoid lengthy duplicates.
 Variant 1 creates 'path' elements only.
 Option *--no-fonts* implies *--no-styles*.
@@ -344,8 +349,8 @@ However, if you prefer direct font references, the default behavior can be disab
 option *--no-styles*.
 
 *-O, --optimize*[='modules']::
-Applies several optimizations on the generated SVG to reduce the file size. The optimizations
-are performed by running separate optimizer modules specified by option argument 'modules'.
+Applies several optimizations on the generated SVG tree to reduce the file size. The optimizations
+are performed by running separate optimizer modules specified by optional argument 'modules'.
 It may consist of a single module name or a comma-separated list of several module names.
 The corresponding modules are executed one by one in the given order and thus transform the
 XML tree gradually.
@@ -361,12 +366,13 @@ The following list describes the currently available optimizer modules.
 
   *all*;;
   Performs all optimizations listed below. This is also the default if option *--optimize* is
-  used without argument. The modules are executed in a predefined order that usually lead to the
+  used without argument. The modules are executed in a predefined order that usually leads to the
   best results. *all* can't be combined with other module names.
 
   *collapse-groups*;;
-  Combines nested group elements that contain only a single group each. If possible, the attributes
-  are moved to the outermost element of the processed subtree.
+  Combines nested group elements (+<g>+...+</g>+) that contain only a single group each. If possible,
+  the group attributes are moved to the outermost element of the processed subtree. This module also
+  unwraps group elements that have no attributes at all.
 
   *group-attributes*;;
   Creates groups (+<g>+...+</g>+) for common attributes around adjacent elements. Each attribute is
