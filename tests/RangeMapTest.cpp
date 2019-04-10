@@ -46,12 +46,14 @@ TEST(RangeMapTest, disjoint_ranges) {
 	RangeMap rangemap;
 	rangemap.addRange(5, 8, 1);
 	ASSERT_EQ(rangemap.numRanges(), 1u);
+	EXPECT_EQ(rangemap.numValues(), 4u);
 	CHECK_RANGE("A", rangemap, 5, 8, 1);
 	CHECK_ZERO("B", rangemap, 0, 4);
 	CHECK_ZERO("C", rangemap, 9, 20);
 
 	rangemap.addRange(10, 15, 5);
 	ASSERT_EQ(rangemap.numRanges(), 2u);
+	EXPECT_EQ(rangemap.numValues(), 10u);
 	CHECK_RANGE("D", rangemap, 5, 8, 1);
 	CHECK_RANGE("E", rangemap, 10, 15, 5);
 	CHECK_ZERO("F", rangemap, 0, 4);
@@ -60,6 +62,7 @@ TEST(RangeMapTest, disjoint_ranges) {
 
 	rangemap.addRange(0, 3, 50);
 	ASSERT_EQ(rangemap.numRanges(), 3u);
+	EXPECT_EQ(rangemap.numValues(), 14u);
 	CHECK_RANGE("I", rangemap, 0, 3, 50);
 	CHECK_RANGE("J", rangemap, 5, 8, 1);
 	CHECK_RANGE("K", rangemap, 10, 15, 5);
@@ -69,6 +72,7 @@ TEST(RangeMapTest, disjoint_ranges) {
 
 	rangemap.addRange(16, 20, 1);
 	ASSERT_EQ(rangemap.numRanges(), 4u);
+	EXPECT_EQ(rangemap.numValues(), 19u);
 	CHECK_RANGE("O", rangemap, 5, 8, 1);
 	CHECK_RANGE("P", rangemap, 10, 15, 5);
 	CHECK_RANGE("Q", rangemap, 0, 3, 50);
@@ -80,19 +84,23 @@ TEST(RangeMapTest, touching_ranges1) {
 	RangeMap rangemap;
 	rangemap.addRange(5, 8, 10);
 	ASSERT_EQ(rangemap.numRanges(), 1u);
+	EXPECT_EQ(rangemap.numValues(), 4u);
 	CHECK_RANGE("A", rangemap, 5, 8, 10);
 
 	rangemap.addRange(9, 15, 14);
 	ASSERT_EQ(rangemap.numRanges(), 1u);
+	EXPECT_EQ(rangemap.numValues(), 11u);
 	CHECK_RANGE("B", rangemap, 5, 15, 10);
 
 	rangemap.addRange(1, 4, 5);
 	ASSERT_EQ(rangemap.numRanges(), 2u);
+	EXPECT_EQ(rangemap.numValues(), 15u);
 	CHECK_RANGE("C", rangemap, 1, 4, 5);
 	CHECK_RANGE("D", rangemap, 5, 15, 10);
 
 	rangemap.addRange(1, 4, 6);
 	ASSERT_EQ(rangemap.numRanges(), 1u);
+	EXPECT_EQ(rangemap.numValues(), 15u);
 	CHECK_RANGE("E", rangemap, 1, 15, 6);
 }
 
