@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <array>
 #include <cstring>
 #include <istream>
 #include <limits>
@@ -98,12 +99,12 @@ BoundingBox EPSFile::bbox () const {
 				ir.skip(14);
 				ir.skipSpace();
 				if (!ir.check("(atend)", true)) {
-					int val[4];
-					for (int i=0; i < 4; i++) {
+					array<int, 4> values;
+					for (int &v : values) {
 						ir.skipSpace();
-						ir.parseInt(val[i]);
+						ir.parseInt(v);
 					}
-					box = BoundingBox(val[0], val[1], val[2], val[3]);
+					box = BoundingBox(values[0], values[1], values[2], values[3]);
 					break;
 				}
 			}
