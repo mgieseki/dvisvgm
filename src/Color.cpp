@@ -213,7 +213,7 @@ Color Color::operator *= (double c) {
 	else if (abs(c-trunc(c)) < 0.999) {
 		uint32_t rgb=0;
 		for (int i=0; i < 3; i++) {
-			rgb |= uint32_t((_rgb & 0xff)*c+0.5) << (8*i);
+			rgb |= lround((_rgb & 0xff)*c) << (8*i);
 			_rgb >>= 8;
 		}
 		_rgb = rgb;

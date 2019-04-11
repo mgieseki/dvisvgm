@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cmath>
 #include <sstream>
 #include <ft2build.h>
 #include FT_ADVANCES_H
@@ -36,7 +37,7 @@ using namespace std;
 
 /** Converts a floating point value to a 16.16 fixed point value. */
 static inline FT_Fixed to_16dot16 (double val) {
-	return static_cast<FT_Fixed>(val*65536.0 + 0.5);
+	return static_cast<FT_Fixed>(lround(val*65536.0));
 }
 
 

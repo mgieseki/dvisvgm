@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cmath>
 #include "Bezier.hpp"
 #include "PathClipper.hpp"
 
@@ -31,9 +32,7 @@ using CurvedPath = PathClipper::CurvedPath;
 const int SCALE_FACTOR = 1000;
 
 inline cInt to_cInt (double x) {
-	if (x < 0)
-		return static_cast<cInt>(x*SCALE_FACTOR - 0.5);
-	return static_cast<cInt>(x*SCALE_FACTOR + 0.5);
+	return static_cast<cInt>(lround(x*SCALE_FACTOR));
 }
 
 
