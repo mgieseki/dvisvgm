@@ -61,7 +61,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void special (const std::string &spc, double dvi2bp, bool preprocessing=false) override;
 		void beginPage (unsigned pageno, const std::vector<int32_t> &c) override;
 		void endPage (unsigned pageno) override;
-		void progress (size_t current, size_t total, const char *id=0) override;
+		void progress (size_t current, size_t total, const char *id=nullptr) override;
 		void progress (const char *id) override;
 		double getX() const override  {return _dvireader->getXPos();}
 		double getY() const override  {return _dvireader->getYPos();}

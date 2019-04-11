@@ -129,7 +129,7 @@ bool SignalHandler::Impl::setSigintHandler (HandlerFunc handler) {
 bool SignalHandler::Impl::restoreSigintHandler () {
 	if (_origSigaction.sa_handler == nullptr)
 		return false;
-	return (sigaction(SIGINT, &_origSigaction, 0) == 0);
+	return (sigaction(SIGINT, &_origSigaction, nullptr) == 0);
 }
 
 #else  // !HAVE_SIGACTION

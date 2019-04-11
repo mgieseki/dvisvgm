@@ -69,7 +69,7 @@ class Font {
 		virtual const char* path () const =0;
 		virtual const char* filename () const;
 		virtual const FontEncoding* encoding () const;
-		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *callback=0) const =0;
+		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *callback=nullptr) const =0;
 		virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
 		virtual uint32_t unicode (uint32_t c) const;
 		virtual void tidy () const {}
@@ -100,7 +100,7 @@ class EmptyFont : public Font {
 		double italicCorr (int c) const override           {return 0;}
 		const FontMetrics* getMetrics () const override    {return nullptr;}
 		const char* path () const override                 {return nullptr;}
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=0) const override {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override {return false;}
 
 	private:
 		std::string _fontname;
