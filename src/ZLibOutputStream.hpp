@@ -40,7 +40,7 @@ enum ZLibCompressionFormat {ZLIB_DEFLATE=0, ZLIB_GZIP=16};
 
 class ZLibOutputBuffer : public std::streambuf {
 	public:
-		ZLibOutputBuffer () {}
+		ZLibOutputBuffer () =default;
 
 		ZLibOutputBuffer (std::streambuf *sbuf, ZLibCompressionFormat format, int zipLevel) {
 			open(sbuf, format, zipLevel);
