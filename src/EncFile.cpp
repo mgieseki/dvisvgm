@@ -101,7 +101,7 @@ static string read_entry (InputReader &in) {
 	while (!in.eof() && ((in.peek() == '/' && accept_slashes) || valid_name_char(in.peek()))) {
 		if (in.peek() != '/')
 			accept_slashes = false;
-		entry += in.get();
+		entry += char(in.get());
 	}
 	if (entry.length() > 1) {
 		// strip leading slashes

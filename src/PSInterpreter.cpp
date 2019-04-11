@@ -213,7 +213,7 @@ int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 						if (in.check("Unrecoverable error: ")) {
 							self->_errorMessage.clear();
 							while (!in.eof())
-								self->_errorMessage += in.get();
+								self->_errorMessage += char(in.get());
 							self->_inError = true;
 						}
 						else if (in.check("dvi."))

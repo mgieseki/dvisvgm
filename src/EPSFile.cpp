@@ -66,8 +66,8 @@ EPSFile::EPSFile (const string &fname) : _ifs(fname, ios::binary) {
 			_ifs.seekg(_offset);             // continue reading at the beginning of the PS section
 		}
 		string str;
-		str += _ifs.get();
-		str += _ifs.get();
+		str += char(_ifs.get());
+		str += char(_ifs.get());
 		_headerValid = (str == "%!");
 		_ifs.seekg(0);
 	}

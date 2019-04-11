@@ -127,8 +127,8 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 static double read_length (InputReader &in) {
 	double val = in.getDouble();
 	string unitstr;
-	if (isalpha(in.peek())) unitstr += in.get();
-	if (isalpha(in.peek())) unitstr += in.get();
+	if (isalpha(in.peek())) unitstr += char(in.get());
+	if (isalpha(in.peek())) unitstr += char(in.get());
 	Length::Unit unit = Length::Unit::PT;
 	try {
 		unit = Length::stringToUnit(unitstr);

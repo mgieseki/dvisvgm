@@ -87,7 +87,7 @@ string StreamReader::readString () {
 		throw StreamReaderException("no stream assigned");
 	string ret;
 	while (!_is->eof() && _is->peek() > 0)
-		ret += _is->get();
+		ret += char(_is->get());
 	_is->get();  // skip 0-byte
 	return ret;
 }

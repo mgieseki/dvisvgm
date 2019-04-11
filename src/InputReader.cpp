@@ -70,7 +70,7 @@ string StringMatcher::read (InputReader &ir) {
 	int i=0;
 	const int len = static_cast<int>(_pattern.length());
 	while ((c = ir.get()) >= 0) {
-		ret += c;
+		ret += char(c);
 		while (i >= 0 && c != _pattern[i])
 			i = _borders[i];
 		if (++i == len)

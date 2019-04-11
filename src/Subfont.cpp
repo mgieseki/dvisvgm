@@ -51,7 +51,7 @@ SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _
 		else {
 			string id;
 			while (is && !isspace(is.peek()))
-				id += is.get();
+				id += char(is.get());
 			if (!id.empty()) {
 				auto state = _subfonts.emplace(pair<string,unique_ptr<Subfont>>(id, unique_ptr<Subfont>()));
 				if (state.second) // id was not present in map already
@@ -136,7 +136,7 @@ bool Subfont::read () {
 			else {
 				string id;
 				while (is && !isspace(is.peek()))
-					id += is.get();
+					id += char(is.get());
 				if (id != _id)
 					lineno += skip_mapping_data(is);
 				else {

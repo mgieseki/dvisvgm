@@ -216,9 +216,9 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 			// collect characters inside the brackets
 			string code;
 			for (int i=0; i < 9 && is.peek() != ']' && !is.eof(); ++i)
-				code += is.get();
+				code += char(is.get());
 			if (is.peek() == ']')
-				code += is.get();
+				code += char(is.get());
 
 			if (code == "[begin]" || code == "[nobreak]") {
 				moveToDVIPos();

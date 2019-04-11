@@ -307,7 +307,7 @@ static string svg_options_hash (const CommandLine &cmdline) {
 	};
 	string idString = get_transformation_string(cmdline);
 	for (const CL::Option *opt : svg_options) {
-		idString += opt->given();
+		idString += char(opt->given());
 		idString += opt->valueString();
 	}
 	return XXH64HashFunction(idString).digestString();

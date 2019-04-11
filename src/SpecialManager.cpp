@@ -104,11 +104,11 @@ static string extract_prefix (istream &is) {
 	int c;
 	string prefix;
 	while (isalnum(c=is.get()))
-		prefix += c;
+		prefix += char(c);
 	if (ispunct(c)) // also add separation character to identifying prefix
-		prefix += c;
+		prefix += char(c);
 	if (prefix == "ps:" && is.peek() == ':')
-		prefix += is.get();
+		prefix += char(is.get());
 	return prefix;
 }
 
