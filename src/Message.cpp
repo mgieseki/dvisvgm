@@ -41,7 +41,7 @@ MessageStream::~MessageStream () {
 }
 
 
-void MessageStream::putChar (const char c, ostream &os) {
+void MessageStream::putChar (char c, ostream &os) {
 	switch (c) {
 		case '\r':
 			os << '\r';

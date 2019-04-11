@@ -57,7 +57,7 @@ class MessageStream {
 		void clearline ();
 
 	protected:
-		void putChar (const char c, std::ostream &os);
+		void putChar (char c, std::ostream &os);
 		std::ostream* os () {return _os;}
 
 	private:
