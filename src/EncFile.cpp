@@ -32,7 +32,7 @@ static string read_entry (InputReader &in);
 static bool valid_name_char (int c);
 
 
-EncFile::EncFile (const string &encname) : _encname(encname)
+EncFile::EncFile (string encname) : _encname(std::move(encname))
 {
 	read();
 }

@@ -34,13 +34,13 @@ using namespace std;
 // helper functions
 
 static int skip_mapping_data (istream &is);
-static bool scan_line (const char *line, int lineno, vector<uint16_t> &mapping, const string &fname, long &pos);
+static bool scan_line (const char *line, int lineno, vector<uint16_t> &mapping, const string &fname, long &offset);
 
 
 /** Constructs a new SubfontDefinition object.
  *  @param[in] name name of subfont definition
  *  @param[in] fpath path to corresponding .sfd file*/
-SubfontDefinition::SubfontDefinition (const string &name, const char *fpath) : _sfname(name) {
+SubfontDefinition::SubfontDefinition (string name, const char *fpath) : _sfname(std::move(name)) {
 	// read all subfont IDs from the .sfd file but skip the mapping data
 	ifstream is(fpath);
 	while (is) {

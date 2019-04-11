@@ -21,9 +21,9 @@
 #ifdef _WIN32
 	#include "windows.hpp"
 #else
+	#include <csignal>
 	#include <fcntl.h>
 	#include <sys/wait.h>
-	#include <signal.h>
 	#include <unistd.h>
 #endif
 
@@ -61,8 +61,8 @@ class Subprocess {
 };
 
 
-Process::Process (const string &cmd, const string &paramstr)
-	: _cmd(cmd), _paramstr(paramstr)
+Process::Process (string cmd, string paramstr)
+	: _cmd(std::move(cmd)), _paramstr(std::move(paramstr))
 {
 }
 

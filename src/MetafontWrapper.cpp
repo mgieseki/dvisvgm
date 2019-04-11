@@ -32,7 +32,8 @@
 using namespace std;
 
 
-MetafontWrapper::MetafontWrapper (const string &fname, const string &dir) : _fontname(fname), _dir(dir)
+MetafontWrapper::MetafontWrapper (string fname, string dir)
+	: _fontname(std::move(fname)), _dir(std::move(dir))
 {
 	// ensure that folder paths ends with slash
 	if (_dir.empty())

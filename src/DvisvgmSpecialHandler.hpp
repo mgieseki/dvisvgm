@@ -56,8 +56,8 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 			void flush (SpecialActions &actions);
 
 		protected:
-			void openElement (std::string tag, SpecialActions &actions);
-			void closeElement (std::string tag, SpecialActions &actions);
+			void openElement (const std::string &tag, SpecialActions &actions);
+			void closeElement (const std::string &tag, SpecialActions &actions);
 
 		private:
 			AppendFunc _append;

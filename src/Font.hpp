@@ -168,7 +168,7 @@ class VirtualFont : public virtual Font {
 
 class TFMFont : public virtual Font {
 	public:
-		TFMFont (const std::string &name, uint32_t checksum, double dsize, double ssize);
+		TFMFont (std::string name, uint32_t cs, double ds, double ss);
 		const FontMetrics* getMetrics () const override;
 		std::string name () const override  {return _fontname;}
 		double designSize () const override {return _dsize;}
@@ -227,7 +227,7 @@ class PhysicalFontProxy : public PhysicalFont {
 class PhysicalFontImpl : public PhysicalFont, public TFMFont {
 	friend class PhysicalFont;
 	public:
-		~PhysicalFontImpl();
+		~PhysicalFontImpl () override;
 
 		std::unique_ptr<Font> clone (double ds, double ss) const override {
 			return std::unique_ptr<PhysicalFontProxy>(new PhysicalFontProxy(this, ds, ss));

@@ -99,8 +99,8 @@ const char* Font::filename () const {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-TFMFont::TFMFont (const string &name, uint32_t cs, double ds, double ss)
-	: _fontname(name), _checksum(cs), _dsize(ds), _ssize(ss)
+TFMFont::TFMFont (string name, uint32_t cs, double ds, double ss)
+	: _fontname(std::move(name)), _checksum(cs), _dsize(ds), _ssize(ss)
 {
 }
 

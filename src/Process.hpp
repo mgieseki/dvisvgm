@@ -25,7 +25,7 @@
 
 class Process {
 	public:
-		Process (const std::string &cmd, const std::string &paramstr);
+		Process (std::string cmd, std::string paramstr);
 		Process (const Process &orig) =delete;
 		Process (Process &&orig) =delete;
 		bool run (std::string *out=nullptr);

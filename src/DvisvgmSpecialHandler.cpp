@@ -455,7 +455,7 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 
 /** Processes an opening element tag.
  *  @param[in] tag tag without leading and trailing angle brackets */
-void DvisvgmSpecialHandler::XMLParser::openElement (string tag, SpecialActions &actions) {
+void DvisvgmSpecialHandler::XMLParser::openElement (const string &tag, SpecialActions &actions) {
 	StringInputBuffer ib(tag);
 	BufferInputReader ir(ib);
 	string name = ir.getString("/ \t\n\r");
@@ -480,7 +480,7 @@ void DvisvgmSpecialHandler::XMLParser::openElement (string tag, SpecialActions &
 
 /** Processes a closing element tag.
  *  @param[in] tag tag without leading and trailing angle brackets */
-void DvisvgmSpecialHandler::XMLParser::closeElement (string tag, SpecialActions &actions) {
+void DvisvgmSpecialHandler::XMLParser::closeElement (const string &tag, SpecialActions &actions) {
 	StringInputBuffer ib(tag);
 	BufferInputReader ir(ib);
 	string name = ir.getString(" \t\n\r");
