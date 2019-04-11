@@ -61,7 +61,7 @@ class InputReader {
 
 class StreamInputReader : public InputReader {
 	public:
-		StreamInputReader (std::istream &is) : _is(is) {}
+		explicit StreamInputReader (std::istream &is) : _is(is) {}
 		int get () override        {return _is.get();}
 		int peek () const override {return _is.peek();}
 		int peek (size_t n) const override;
@@ -75,7 +75,7 @@ class StreamInputReader : public InputReader {
 
 class BufferInputReader : public InputReader {
 	public:
-		BufferInputReader (InputBuffer &ib) : _ib(&ib) {}
+		explicit BufferInputReader (InputBuffer &ib) : _ib(&ib) {}
 		void assign (InputBuffer &ib) {_ib = &ib;}
 		int get () override                {return _ib->get();}
 		int peek () const override         {return _ib->peek();}
@@ -92,7 +92,7 @@ class BufferInputReader : public InputReader {
 class StringMatcher {
 	public:
 		StringMatcher () : _charsRead(0) {}
-		StringMatcher (const std::string &pattern) : _charsRead(0) {setPattern(pattern);}
+		explicit StringMatcher (const std::string &pattern) : _charsRead(0) {setPattern(pattern);}
 		void setPattern (const std::string &pattern);
 		bool match (InputReader &ir);
 		std::string read (InputReader &ir);

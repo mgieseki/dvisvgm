@@ -88,7 +88,7 @@ class Font {
  *  The metric values returned by the member functions are based on cmr10. */
 class EmptyFont : public Font {
 	public:
-		EmptyFont (std::string name) : _fontname(std::move(name)) {}
+		explicit EmptyFont (std::string name) : _fontname(std::move(name)) {}
 		std::unique_ptr<Font> clone (double ds, double sc) const override  {return util::make_unique<EmptyFont>(*this);}
 		const Font* uniqueFont () const override           {return this;}
 		std::string name () const override                 {return _fontname;}

@@ -34,7 +34,7 @@ class Directory {
 
 	public:
 		Directory ();
-		Directory (const std::string &path);
+		explicit Directory (const std::string &path);
 		~Directory ();
 		bool open (std::string path);
 		void close ();

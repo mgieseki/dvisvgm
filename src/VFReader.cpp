@@ -33,10 +33,6 @@ VFReader::VFReader (istream &is) : StreamReader(is)
 }
 
 
-VFReader::~VFReader () {
-}
-
-
 VFActions* VFReader::replaceActions (VFActions *a) {
 	VFActions *ret = _actions;
 	_actions = a;

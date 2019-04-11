@@ -36,7 +36,7 @@ class FontWriter {
 		static bool AUTOHINT_FONTS;
 
 	public:
-		FontWriter (const PhysicalFont &font);
+		explicit FontWriter (const PhysicalFont &font);
 		std::string createFontFile (FontFormat format, const std::set<int> &charcodes, GFGlyphTracer::Callback *cb=nullptr) const;
 		bool writeCSSFontFace (FontFormat format, const std::set<int> &charcodes, std::ostream &os, GFGlyphTracer::Callback *cb=nullptr) const;
 		static FontFormat toFontFormat (std::string formatstr);

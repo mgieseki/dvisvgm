@@ -33,7 +33,7 @@ class StreamReader;
 class TFM : public FontMetrics
 {
 	public:
-		TFM (std::istream &is);
+		explicit TFM (std::istream &is);
 		double getCharWidth (int c) const override;
 		double getCharHeight (int c) const override;
 		double getCharDepth (int c) const override;

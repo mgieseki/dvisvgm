@@ -31,7 +31,7 @@
 template <typename T>
 class CharProperty {
 	public:
-		CharProperty (const T &v) : _value(v), _changed(false) {}
+		CharProperty (const T &v) : _value(v) {}
 
 		void set (const T &v) {
 			if (v != _value) {
@@ -47,7 +47,7 @@ class CharProperty {
 
 	private:
 		T _value;
-		bool _changed;
+		bool _changed=false;
 };
 
 
@@ -96,7 +96,7 @@ class SVGCharHandler {
 /** Base class for all character handlers that create SVG <text> elements. */
 class SVGCharTextHandler : public SVGCharHandler {
 	public:
-		SVGCharTextHandler (bool selectFontByClass) : _selectFontByClass(selectFontByClass) {}
+		explicit SVGCharTextHandler (bool selectFontByClass) : _selectFontByClass(selectFontByClass) {}
 
 	protected:
 		std::unique_ptr<XMLElement> createTextNode (double x, double y) const;

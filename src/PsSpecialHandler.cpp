@@ -872,7 +872,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		case 3: colorSpace = Color::ColorSpace::RGB; break;
 		case 4: colorSpace = Color::ColorSpace::CMYK; break;
 	}
-	VectorIterator<double> it = params;
+	VectorIterator<double> it(params);
 	it += 2;     // skip shading type and color space
 	// Get color to fill the whole mesh area before drawing the gradient colors on top of that background.
 	// This is an optional parameter to shfill.

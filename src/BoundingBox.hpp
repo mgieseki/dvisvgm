@@ -45,7 +45,7 @@ class BoundingBox {
 		BoundingBox (double ulxx, double ulyy, double lrxx, double lryy);
 		BoundingBox (const DPair &p1, const DPair &p2);
 		BoundingBox (const Length &ulxx, const Length &ulyy, const Length &lrxx, const Length &lryy);
-		BoundingBox (const std::string &boxstr);
+		explicit BoundingBox (const std::string &boxstr);
 		void set (const std::string &boxstr);
 		void set (const std::vector<Length> &lengths);
 		void embed (double x, double y);

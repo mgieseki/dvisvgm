@@ -38,7 +38,7 @@ class CMapReader {
 			enum class Type {UNKNOWN, END, DELIM, NUMBER, STRING, NAME, OPERATOR};
 
 		public:
-			Token (InputReader &ir);
+			explicit Token (InputReader &ir);
 			void scan (InputReader &ir);
 			Type type () const                   {return _type;}
 			const std::string& strvalue () const {return _value;}

@@ -24,12 +24,10 @@
 #include <istream>
 #include "GFReader.hpp"
 
-class GFTracer : public GFReader
-{
+class GFTracer : public GFReader {
 	public:
-		GFTracer (std::istream &is);
+		explicit GFTracer (std::istream &is);
 		GFTracer (std::istream &is, double upp);
-		virtual ~GFTracer () =default;
 		virtual void moveTo (double x, double y) =0;
 		virtual void lineTo (double x, double y) =0;
 		virtual void curveTo (double c1x, double c1y, double c2x, double c2y, double x, double y) =0;

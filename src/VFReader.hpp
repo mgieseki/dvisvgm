@@ -34,8 +34,7 @@ struct VFActions;
 class VFReader : public StreamReader{
 	using ApproveAction = bool (*)(int);
 	public:
-		VFReader (std::istream &is);
-		virtual ~VFReader ();
+		explicit VFReader (std::istream &is);
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();
 		bool executePreambleAndFontDefs ();

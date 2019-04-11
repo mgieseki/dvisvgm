@@ -25,7 +25,7 @@ using namespace std;
 #ifdef _WIN32
 	#include "windows.hpp"
 #else
-	#include <errno.h>
+	#include <cerrno>
 	#include <sys/stat.h>
 #endif
 

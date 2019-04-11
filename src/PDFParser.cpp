@@ -458,7 +458,7 @@ static ostream& operator << (ostream &os, const unique_ptr<Dictionary<string,PDF
 
 
 struct WriteVisitor {
-	WriteVisitor (ostream &os) : _os(os) {}
+	explicit WriteVisitor (ostream &os) : _os(os) {}
 	template <typename T> void operator () (const T &val) {_os << val;}
 	ostream &_os;
 };

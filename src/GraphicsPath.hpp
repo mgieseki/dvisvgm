@@ -40,7 +40,7 @@ class GraphicsPath {
 		struct Command {
 			enum class Type {MOVETO, LINETO, CONICTO, CUBICTO, CLOSEPATH};
 
-			Command (Type t) : type(t) {}
+			explicit Command (Type t) : type(t) {}
 
 			Command (Type t, const Point &p) : type(t) {
 				params[0] = p;
@@ -108,7 +108,7 @@ class GraphicsPath {
 		};
 
 	public:
-		GraphicsPath (WindingRule wr=WindingRule::NON_ZERO) : _windingRule(wr) {}
+		explicit GraphicsPath (WindingRule wr=WindingRule::NON_ZERO) : _windingRule(wr) {}
 
 		void setWindingRule (WindingRule wr) {_windingRule = wr;}
 		WindingRule windingRule () const     {return _windingRule;}
@@ -300,7 +300,7 @@ class GraphicsPath {
 		 *  @param[out] bbox the computed bounding box */
 		void computeBBox (BoundingBox &bbox) const {
 			struct BBoxActions : Actions {
-				BBoxActions (BoundingBox &bb) : bbox(bb) {}
+				explicit BBoxActions (BoundingBox &bb) : bbox(bb) {}
 				void moveto (const Point &p) override {bbox.embed(p);}
 				void lineto (const Point &p) override {bbox.embed(p);}
 				void conicto (const Point &p1, const Point &p2) override {bbox.embed(p1); bbox.embed(p2);}

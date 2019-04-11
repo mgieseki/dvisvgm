@@ -36,7 +36,7 @@ class MessageStream {
 
 	public:
 		MessageStream () =default;
-		MessageStream (std::ostream &os) noexcept;
+		explicit MessageStream (std::ostream &os) noexcept;
 		~MessageStream ();
 
 		template <typename T>
@@ -71,7 +71,7 @@ class MessageStream {
 class Message {
 	struct Color {
 		Color () =default;
-		Color (int8_t fgcolor) noexcept : foreground(fgcolor) {}
+		explicit Color (int8_t fgcolor) noexcept : foreground(fgcolor) {}
 		Color (int8_t fgcolor, bool light) noexcept: foreground(fgcolor + (light ? 8 : 0)) {}
 		Color (int8_t fgcolor, int8_t bgcolor) noexcept : foreground(fgcolor), background(bgcolor) {}
 		int8_t foreground = -1;

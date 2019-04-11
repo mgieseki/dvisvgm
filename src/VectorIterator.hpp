@@ -33,7 +33,7 @@ struct IteratorException : public MessageException {
 template <typename T>
 class VectorIterator {
 	public:
-		VectorIterator (std::vector<T> &vec) : _vector(vec), _pos(0) {}
+		explicit VectorIterator (std::vector<T> &vec) : _vector(vec), _pos(0) {}
 
 		VectorIterator operator ++ () {
 			_pos++;

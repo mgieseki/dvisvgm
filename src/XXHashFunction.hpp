@@ -57,9 +57,9 @@ class XXHashFunction : public HashFunction {
 	public:
 		XXHashFunction () : _state(Interface::createState()) {Interface::reset(_state, 0);}
 		XXHashFunction(const char *data, size_t length) : XXHashFunction() {update(data, length);}
-		XXHashFunction(const std::string &data) : XXHashFunction() {update(data);}
-		XXHashFunction(const std::vector<uint8_t> &data) : XXHashFunction() {update(data);}
-		~XXHashFunction () {Interface::freeState(_state);}
+		explicit XXHashFunction(const std::string &data) : XXHashFunction() {update(data);}
+		explicit XXHashFunction(const std::vector<uint8_t> &data) : XXHashFunction() {update(data);}
+		~XXHashFunction () override {Interface::freeState(_state);}
 		int digestSize () const override {return HASH_BYTES;}
 		void reset () override {Interface::reset(_state, 0);}
 		void update (const char *data, size_t length) override {Interface::update(_state, data, length);}

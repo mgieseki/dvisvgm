@@ -42,7 +42,7 @@ class PSPattern {
 		virtual void apply (SpecialActions &actions);
 
 	protected:
-		PSPattern (int id) : _id(id) {}
+		explicit PSPattern (int id) : _id(id) {}
 		virtual std::unique_ptr<XMLElement> createPatternNode () const =0;
 
 	private:

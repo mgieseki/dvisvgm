@@ -329,7 +329,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		Length w = read_length(ir);
 		Length h = read_length(ir);
 		string f = ir.getString();
-		update_bbox(w, h, 0, actions);
+		update_bbox(w, h, Length(0), actions);
 		auto img = util::make_unique<XMLElement>("image");
 		img->addAttribute("x", actions.getX());
 		img->addAttribute("y", actions.getY());

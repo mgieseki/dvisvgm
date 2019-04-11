@@ -29,7 +29,7 @@ template <typename T>
 class Pair
 {
 	public:
-		Pair (T x=0, T y=0) : _x(x), _y(y) {}
+		explicit Pair (T x=0, T y=0) : _x(x), _y(y) {}
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
 		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
 		Pair operator *= (T c)                 {_x *= c; _y *= c; return *this;}
@@ -54,10 +54,9 @@ inline Pair<T> abs (const Pair<T> &p) {
 	return Pair<T>(std::abs(p.x()), std::abs(p.y()));
 }
 
-struct Pair32 : public Pair<int32_t>
-{
-	Pair32 (int32_t x=0, int32_t y=0) : Pair<int32_t>(x, y) {}
-	explicit Pair32 (double x, double y) : Pair<int32_t>(int32_t(x+0.5), int32_t(y+0.5)) {}
+struct Pair32 : public Pair<int32_t> {
+	explicit Pair32 (int32_t x=0, int32_t y=0) : Pair<int32_t>(x, y) {}
+	explicit Pair32 (double x, double y) : Pair<int32_t>(lround(x), lround(y)) {}
 	Pair32 (const Pair<int32_t> &p) : Pair<int32_t>(p) {}
 };
 

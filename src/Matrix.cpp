@@ -70,7 +70,7 @@ Matrix::Matrix (double d) {
  *  remaining matrix components will be set to those of the identity matrix.
  *  @param[in] v array containing the matrix components
  *  @param[in] size size of array v */
-Matrix::Matrix (double v[], unsigned size) {
+Matrix::Matrix (const double *v, unsigned size) {
 	set(v, size);
 }
 
@@ -109,7 +109,7 @@ Matrix& Matrix::set (double d) {
 }
 
 
-Matrix& Matrix::set (double v[], unsigned size) {
+Matrix& Matrix::set (const double *v, unsigned size) {
 	size = min(size, 9u);
 	for (unsigned i=0; i < size; i++)
 		_values[i/3][i%3] = v[i];

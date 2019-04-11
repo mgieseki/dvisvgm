@@ -28,8 +28,8 @@
 class FilePath {
 	class Directory {
 		public:
-			Directory (std::string dir) : _dirstr(std::move(dir)) {}
-			Directory (std::string &&dir) : _dirstr(std::move(dir)) {}
+			explicit Directory (std::string dir) : _dirstr(std::move(dir)) {}
+			explicit Directory (std::string &&dir) : _dirstr(std::move(dir)) {}
 			bool operator == (const Directory &dir) const;
 			bool operator != (const Directory &dir) const {return !(*this == dir);}
 			explicit operator std::string () const {return _dirstr;}
@@ -39,7 +39,7 @@ class FilePath {
 	};
 
 	public:
-		FilePath (const std::string &path) {set(path);}
+		explicit FilePath (const std::string &path) {set(path);}
 		FilePath (const std::string &path, bool isfile) : FilePath(path, isfile, "") {}
 		FilePath (const std::string &path, bool isfile, const std::string &current_dir);
 		void set (const std::string &path);

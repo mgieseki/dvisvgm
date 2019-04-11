@@ -79,12 +79,12 @@ struct PDFObjectRef {
 };
 
 struct PDFOperator {
-	PDFOperator (std::string name) : opname(std::move(name)) {}
+	explicit PDFOperator (std::string name) : opname(std::move(name)) {}
 	std::string opname;
 };
 
 struct PDFName {
-	PDFName (std::string val) : str(std::move(val)) {}
+	explicit PDFName (std::string val) : str(std::move(val)) {}
 	bool operator == (const PDFName &name) const {return str == name.str;}
 	std::string str;
 };

@@ -38,8 +38,8 @@ struct MapLineException : MessageException {
 
 class MapLine {
 	public:
-		MapLine (std::istream &is);
-		MapLine (std::string str);
+		explicit MapLine (std::istream &is);
+		explicit MapLine (std::string str);
 		const std::string& texname () const   {return _texname;}
 		const std::string& psname () const    {return _psname;}
 		const std::string& fontfname () const {return _fontfname;}

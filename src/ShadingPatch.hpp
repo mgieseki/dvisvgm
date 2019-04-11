@@ -38,7 +38,7 @@ class ShadingPatch {
 		using ColorVec = std::vector<Color>;
 
 	public:
-		ShadingPatch (Color::ColorSpace colorSpace) : _colorspace(colorSpace) {}
+		explicit ShadingPatch (Color::ColorSpace colorSpace) : _colorspace(colorSpace) {}
 		virtual ~ShadingPatch () =default;
 		virtual int psShadingType () const =0;
 		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;

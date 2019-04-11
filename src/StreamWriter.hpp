@@ -28,8 +28,7 @@ class CRC32;
 
 class StreamWriter {
 	public:
-		StreamWriter (std::ostream &os) : _os(os) {}
-		virtual ~StreamWriter () =default;
+		explicit StreamWriter (std::ostream &os) : _os(os) {}
 		void writeUnsigned (uint32_t val, int n);
 		void writeSigned (int32_t val, int n);
 		void writeBytes (const std::vector<uint8_t> &bytes);

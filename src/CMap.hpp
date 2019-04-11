@@ -28,9 +28,7 @@
 #include "RangeMap.hpp"
 
 
-struct CMap : public NamedFontEncoding
-{
-	virtual ~CMap () =default;
+struct CMap : public NamedFontEncoding {
 	virtual bool vertical () const =0;
 	virtual bool mapsToCID () const =0;
 	virtual uint32_t cid (uint32_t c) const =0;
@@ -48,8 +46,7 @@ struct CMap : public NamedFontEncoding
 };
 
 
-struct IdentityCMap : public CMap
-{
+struct IdentityCMap : public CMap {
 	uint32_t cid (uint32_t c) const override      {return c;}
 	uint32_t bfcode (uint32_t cid) const override {return 0;}
 	std::string getROString () const override     {return "Adobe-Identity";}
@@ -57,22 +54,19 @@ struct IdentityCMap : public CMap
 };
 
 
-struct IdentityHCMap : public IdentityCMap
-{
+struct IdentityHCMap : public IdentityCMap {
 	bool vertical () const override    {return false;}
 	const char* name () const override {return "Identity-H";}
 };
 
 
-struct IdentityVCMap : public IdentityCMap
-{
+struct IdentityVCMap : public IdentityCMap {
 	bool vertical () const override    {return true;}
 	const char* name () const override {return "Identity-V";}
 };
 
 
-struct UnicodeCMap : public CMap
-{
+struct UnicodeCMap : public CMap {
 	bool vertical () const override               {return false;}
 	const char* name () const override            {return "unicode";}
 	bool mapsToCID () const override              {return false;}
@@ -83,12 +77,11 @@ struct UnicodeCMap : public CMap
 };
 
 
-class SegmentedCMap : public CMap
-{
+class SegmentedCMap : public CMap {
 	friend class CMapReader;
 
 	public:
-		SegmentedCMap (std::string fname) : _filename(std::move(fname)) {}
+		explicit SegmentedCMap (std::string fname) : _filename(std::move(fname)) {}
 		const char* name () const override {return _filename.c_str();}
 		uint32_t cid (uint32_t c) const override;
 		uint32_t bfcode (uint32_t cid) const override;

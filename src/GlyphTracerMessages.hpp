@@ -25,12 +25,11 @@
 #include "GFGlyphTracer.hpp"
 #include "Message.hpp"
 
-class GlyphTracerMessages : public GFGlyphTracer::Callback
-{
+class GlyphTracerMessages : public GFGlyphTracer::Callback {
 	public:
-		GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl), _traced(false) {}
+		explicit GlyphTracerMessages (bool sfmsg=true, bool autonl=true) : _sfmsg(sfmsg), _autonl(autonl), _traced(false) {}
 
-		~GlyphTracerMessages () {
+		~GlyphTracerMessages () override {
 			if (_autonl)
 				Message::mstream() << '\n';
 		}

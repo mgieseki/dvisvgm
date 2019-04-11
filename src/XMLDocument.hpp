@@ -28,7 +28,7 @@
 class XMLDocument {
 	public:
 		XMLDocument () =default;
-		XMLDocument(std::unique_ptr<XMLElement> root);
+		explicit XMLDocument(std::unique_ptr<XMLElement> root);
 		void clear ();
 		void append (std::unique_ptr<XMLElement> node);
 		void append (std::unique_ptr<XMLNode> node);

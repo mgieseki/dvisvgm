@@ -96,7 +96,7 @@ FontWriter::FontWriter (const PhysicalFont &font) : _font(font) {
 
 
 struct SFDActions : Glyph::Actions {
-	SFDActions (ostream &os) : _os(os) {}
+	explicit SFDActions (ostream &os) : _os(os) {}
 	void draw (char cmd, const Glyph::Point *points, int n) override {
 		if (cmd == 'Q') {
 			// convert quadratic Bézier curve to cubic one

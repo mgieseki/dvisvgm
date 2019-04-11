@@ -25,11 +25,10 @@
 #include "Pair.hpp"
 #include "ShadingPatch.hpp"
 
-class TriangularPatch : public ShadingPatch
-{
+class TriangularPatch : public ShadingPatch {
 	public:
 		TriangularPatch ();
-		TriangularPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
+		explicit TriangularPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TriangularPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TriangularPatch *patch);
 		int psShadingType() const override {return 4;}
 		DPair valueAt (double u, double v) const;
@@ -54,10 +53,9 @@ class TriangularPatch : public ShadingPatch
 };
 
 
-class LatticeTriangularPatch : public TriangularPatch
-{
+class LatticeTriangularPatch : public TriangularPatch {
 	public:
-		LatticeTriangularPatch (Color::ColorSpace cspace) : TriangularPatch(cspace) {}
+		explicit LatticeTriangularPatch (Color::ColorSpace cspace) : TriangularPatch(cspace) {}
 		int psShadingType() const override {return 5;}
 };
 

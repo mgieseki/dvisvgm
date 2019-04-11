@@ -25,7 +25,7 @@
 using namespace std;
 
 Bezier::Bezier () {
-	_points[0] = _points[1] = _points[2] = _points[3] = 0;
+	_points[0] = _points[1] = _points[2] = _points[3] = DPair(0);
 }
 
 

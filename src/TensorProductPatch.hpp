@@ -40,7 +40,7 @@ class TensorProductPatch : public ShadingPatch {
 	friend class CoonsPatch;
 	public:
 		TensorProductPatch () : ShadingPatch(Color::ColorSpace::RGB) {}
-		TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
+		explicit TensorProductPatch (Color::ColorSpace cspace) : ShadingPatch(cspace) {}
 		TensorProductPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, TensorProductPatch *patch);
 		int psShadingType() const override {return 7;}
 		void setPoints (const DPair points[4][4], int edgeflag, TensorProductPatch *patch);
@@ -79,7 +79,7 @@ class TensorProductPatch : public ShadingPatch {
 class CoonsPatch : public TensorProductPatch {
 	public:
 		CoonsPatch () =default;
-		CoonsPatch (Color::ColorSpace cspace) : TensorProductPatch(cspace) {}
+		explicit CoonsPatch (Color::ColorSpace cspace) : TensorProductPatch(cspace) {}
 		CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch);
 		int psShadingType() const override {return 6;}
 		void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) override;

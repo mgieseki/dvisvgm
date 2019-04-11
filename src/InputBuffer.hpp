@@ -27,8 +27,7 @@
 #include <string>
 #include <ostream>
 
-struct InputBuffer
-{
+struct InputBuffer {
 	virtual ~InputBuffer () =default;
 	virtual int get () =0;
 	virtual int peek () const =0;
@@ -40,8 +39,8 @@ struct InputBuffer
 
 class StreamInputBuffer : public InputBuffer {
 	public:
-		StreamInputBuffer (std::istream &is, size_t bufsize=1024);
-		~StreamInputBuffer ();
+		explicit StreamInputBuffer (std::istream &is, size_t bufsize=1024);
+		~StreamInputBuffer () override;
 		int get () override;
 		int peek () const override;
 		int peek (size_t n) const override;
@@ -128,13 +127,13 @@ class SplittedCharInputBuffer : public InputBuffer {
 
 class TextStreamInputBuffer : public StreamInputBuffer {
 	public:
-		TextStreamInputBuffer (std::istream &is) : StreamInputBuffer(is), _line(1), _col(1) {}
+		explicit TextStreamInputBuffer (std::istream &is) : StreamInputBuffer(is) {}
 		int get () override;
 		int line () const {return _line;}
 		int col () const {return _col;}
 
 	private:
-		int _line, _col;
+		int _line=1, _col=1;
 };
 
 #endif

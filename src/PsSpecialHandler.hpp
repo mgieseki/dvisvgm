@@ -68,7 +68,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 				int saveID;        ///< if >=0, path was pushed by 'save', and saveID holds the ID of the PS memory object
 				Entry () : Entry(-1) {}
 				Entry (const Path &p, int pid, int sid) : path(std::make_shared<Path>(p)), pathID(pid), saveID(sid) {}
-				Entry (int sid) : path(nullptr), pathID(0), saveID(sid) {}
+				explicit Entry (int sid) : path(nullptr), pathID(0), saveID(sid) {}
 				Entry (const Entry &entry) =default;
 				Entry (Entry &&entry) =default;
 			};
@@ -81,7 +81,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 
 	public:
 		PsSpecialHandler ();
-		~PsSpecialHandler ();
+		~PsSpecialHandler () override;
 		const char* name () const override {return "ps";}
 		const char* info () const override {return "dvips PostScript specials";}
 		std::vector<const char*> prefixes() const override;

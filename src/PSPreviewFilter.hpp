@@ -30,7 +30,7 @@ class SpecialActions;
 
 class PSPreviewFilter : public PSFilter {
 	public:
-		PSPreviewFilter (PSInterpreter &psi);
+		explicit PSPreviewFilter (PSInterpreter &psi);
 		void activate ();
 		void execute (const char *code, size_t len) override;
 		bool active () const override          {return _active;}
