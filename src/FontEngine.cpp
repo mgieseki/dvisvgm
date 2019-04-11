@@ -102,7 +102,7 @@ bool FontEngine::setFont (const Font &font) {
 		return true;
 
 	if (const char *path=font.path()) {
-		const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(&font);
+		auto pf = dynamic_cast<const PhysicalFont*>(&font);
 		if (setFont(path, font.fontIndex(), pf ? pf->getCharMapID() : CharMapID())) {
 			_currentFont = &font;
 			return true;
@@ -210,7 +210,7 @@ int FontEngine::getAdvance (int c) const {
 
 int FontEngine::getHAdvance () const {
 	if (_currentFace) {
-		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
+		auto table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
 		return table ? table->xAvgCharWidth : 0;
 	}
 	return 0;
@@ -292,7 +292,7 @@ string FontEngine::getGlyphName (const Character &c) const {
 vector<int> FontEngine::getPanose () const {
 	vector<int> panose(10);
 	if (_currentFace) {
-		TT_OS2 *table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
+		auto table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
 		if (table)
 			for (int i=0; i < 10; i++)
 				panose[i] = table->panose[i];
@@ -337,28 +337,28 @@ CharMapID FontEngine::setCustomCharMap () {
 
 // Callback functions used by trace_outline/FT_Outline_Decompose
 static int moveto (FTVectorPtr to, void *user) {
-	Glyph *glyph = static_cast<Glyph*>(user);
+	auto glyph = static_cast<Glyph*>(user);
 	glyph->moveto(to->x, to->y);
 	return 0;
 }
 
 
 static int lineto (FTVectorPtr to, void *user) {
-	Glyph *glyph = static_cast<Glyph*>(user);
+	auto glyph = static_cast<Glyph*>(user);
 	glyph->lineto(to->x, to->y);
 	return 0;
 }
 
 
 static int conicto (FTVectorPtr control, FTVectorPtr to, void *user) {
-	Glyph *glyph = static_cast<Glyph*>(user);
+	auto glyph = static_cast<Glyph*>(user);
 	glyph->conicto(control->x, control->y, to->x, to->y);
 	return 0;
 }
 
 
 static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, void *user) {
-	Glyph *glyph = static_cast<Glyph*>(user);
+	auto glyph = static_cast<Glyph*>(user);
 	glyph->cubicto(control1->x, control1->y, control2->x, control2->y, to->x, to->y);
 	return 0;
 }

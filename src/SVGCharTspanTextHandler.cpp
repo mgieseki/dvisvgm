@@ -54,7 +54,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 		if (_xchanged) {
 			if (_vertical) {
 				// align glyphs designed for horizontal layout properly
-				if (const PhysicalFont *pf = dynamic_cast<const PhysicalFont*>(_font.get()))
+				if (auto pf = dynamic_cast<const PhysicalFont*>(_font.get()))
 					if (!pf->getMetrics()->verticalLayout())
 						x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
 			}

@@ -63,7 +63,7 @@ void TensorProductPatch::setFirstMatrixColumn (DPair source[4][4], int col, bool
  *  @param[in] edgeflag defines how to connect this patch with another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
 void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) {
-	TensorProductPatch *tpPatch = dynamic_cast<TensorProductPatch*>(patch);
+	auto tpPatch = dynamic_cast<TensorProductPatch*>(patch);
 	if (edgeflag > 0 && !tpPatch)
 		throw ShadingException("missing preceding data in definition of tensor-product patch");
 	if ((edgeflag == 0 && points.size() != 16) || (edgeflag > 0 && points.size() != 12))
@@ -107,7 +107,7 @@ void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, Shadin
  *  @param[in] edgeflag defines how to connect this patch with another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
 void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, ShadingPatch* patch) {
-	TensorProductPatch *tpPatch = dynamic_cast<TensorProductPatch*>(patch);
+	auto tpPatch = dynamic_cast<TensorProductPatch*>(patch);
 	if (edgeflag > 0 && !tpPatch)
 		throw ShadingException("missing preceding data in definition of tensor-product patch");
 	if ((edgeflag == 0 && colors.size() != 4) || (edgeflag > 0 && colors.size() != 2))
@@ -492,7 +492,7 @@ DPair CoonsPatch::valueAt (double u, double v) const {
  *  @param[in] edgeflag defines how to connect this patch to another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
 void CoonsPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) {
-	CoonsPatch *coonsPatch = dynamic_cast<CoonsPatch*>(patch);
+	auto coonsPatch = dynamic_cast<CoonsPatch*>(patch);
 	if (edgeflag > 0 && !coonsPatch)
 		throw ShadingException("missing preceding data in definition of relative Coons patch");
 	if ((edgeflag == 0 && points.size() != 12) || (edgeflag > 0 && points.size() != 8))
@@ -529,7 +529,7 @@ void CoonsPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *
 
 
 void CoonsPatch::setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) {
-	CoonsPatch *coonsPatch = dynamic_cast<CoonsPatch*>(patch);
+	auto coonsPatch = dynamic_cast<CoonsPatch*>(patch);
 	if (edgeflag > 0 && !coonsPatch)
 		throw ShadingException("missing preceding data in definition of relative Coons patch");
 	if ((edgeflag == 0 && colors.size() != 4) || (edgeflag > 0 && colors.size() != 2))

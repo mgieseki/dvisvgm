@@ -136,10 +136,10 @@ void TrueTypeFont::writeWOFF (const string &fname) const {
  *  @param[out] os stream to write the WOFF2 data to
  *  @return true on success */
 bool TrueTypeFont::writeWOFF2 (ostream &os) const {
-	const uint8_t* input_data = reinterpret_cast<const uint8_t*>(_buffer.data());
+	auto input_data = reinterpret_cast<const uint8_t*>(_buffer.data());
 	size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, _buffer.size());
 	string output(output_size, 0);
-	uint8_t* output_data = reinterpret_cast<uint8_t*>(&output[0]);
+	auto output_data = reinterpret_cast<uint8_t*>(&output[0]);
 	woff2::WOFF2Params params;
 	if (woff2::ConvertTTFToWOFF2(input_data, _buffer.size(), output_data, &output_size, params)) {
 		output.resize(output_size);
@@ -167,8 +167,8 @@ string TrueTypeFont::TTFTableRecord::name () const {
 
 uint32_t TrueTypeFont::TTFTableRecord::computeChecksum () const {
 	uint32_t sum=0;
-	const uint32_t *startptr = reinterpret_cast<const uint32_t*>(data);
-	const uint32_t *endptr = startptr + paddedSize()/sizeof(uint32_t);
+	auto startptr = reinterpret_cast<const uint32_t*>(data);
+	auto endptr = startptr + paddedSize()/sizeof(uint32_t);
 	while (startptr < endptr)
 		 sum += *startptr++;
 	return sum;

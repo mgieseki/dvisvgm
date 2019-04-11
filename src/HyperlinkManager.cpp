@@ -88,7 +88,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 	string name;
 	if (uri[0] == '#') {  // reference to named anchor?
 		name = uri.substr(1);
-		NamedAnchors::iterator it = _namedAnchors.find(name);
+		auto it = _namedAnchors.find(name);
 		if (it == _namedAnchors.end() || it->second.id < 0)
 			Message::wstream(true) << "reference to undefined anchor '" << name << "'\n";
 		else {

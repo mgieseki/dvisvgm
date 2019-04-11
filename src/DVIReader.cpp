@@ -277,7 +277,7 @@ void DVIReader::cmdPop (int) {
  *  @param[in] font current font (corresponding to _currFontNum)
  *  @param[in] c character to typeset */
 void DVIReader::putVFChar (Font *font, uint32_t c) {
-	if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
+	if (auto vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		if (const vector<uint8_t> *dvi = vf->getDVI(c)) { // try to get DVI snippet that represents character c
 			FontManager &fm = FontManager::instance();
 			DVIState savedState = _dviState;  // save current cursor position
@@ -522,7 +522,7 @@ const Font* DVIReader::defineFont (uint32_t fontnum, const string &name, uint32_
 	if (!font) {
 		int id = fm.registerFont(fontnum, name, cs, ds, ss);
 		font = fm.getFontById(id);
-		if (VirtualFont *vf = dynamic_cast<VirtualFont*>(font)) {
+		if (auto vf = dynamic_cast<VirtualFont*>(font)) {
 			// read vf file, register its font and character definitions
 			fm.enterVF(vf);
 			ifstream ifs(vf->path(), ios::binary);

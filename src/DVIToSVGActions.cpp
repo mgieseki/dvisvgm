@@ -70,14 +70,14 @@ void DVIToSVGActions::moveToY (double y, bool forceSVGMove) {
 
 
 string DVIToSVGActions::getSVGFilename (unsigned pageno) const {
-	if (DVIToSVG *dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
+	if (auto dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
 		return dvi2svg->getSVGFilename(pageno);
 	return "";
 }
 
 
 string DVIToSVGActions::getBBoxFormatString () const {
-	if (DVIToSVG *dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
+	if (auto dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
 		return dvi2svg->getUserBBoxString();
 	return "";
 }
@@ -108,7 +108,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 
 	GlyphMetrics metrics;
 	font.getGlyphMetrics(c, vertical, metrics);
-	const PhysicalFont* pf = dynamic_cast<const PhysicalFont*>(&font);
+	auto pf = dynamic_cast<const PhysicalFont*>(&font);
 	if (PhysicalFont::EXACT_BBOX && pf) {
 		GlyphMetrics exact_metrics;
 		pf->getExactGlyphBox(c, exact_metrics, vertical, &callback);

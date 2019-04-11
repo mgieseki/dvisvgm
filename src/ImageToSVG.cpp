@@ -191,7 +191,7 @@ Matrix ImageToSVG::getUserMatrix (const BoundingBox &bbox) const {
 		calc.setVariable("w",  bbox.width()*bp2pt);
 		calc.setVariable("h",  bbox.height()*bp2pt);
 		// add constants for length units to calculator
-		for (auto unit : Length::getUnits())
+		for (const auto &unit : Length::getUnits())
 			calc.setVariable(unit.first, Length(1, unit.second).pt());
 		matrix.set(_transCmds, calc);
 	}

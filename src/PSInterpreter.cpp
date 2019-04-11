@@ -189,7 +189,7 @@ int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
  *  @param[in] len number of characters in buf
  *  @return number of processed characters (equals 'len') */
 int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
-	PSInterpreter *self = static_cast<PSInterpreter*>(inst);
+	auto self = static_cast<PSInterpreter*>(inst);
 	if (self && self->_actions) {
 		const size_t MAXLEN = 512;    // maximal line length (longer lines are of no interest)
 		const char *end = buf+len-1;  // last position of buf

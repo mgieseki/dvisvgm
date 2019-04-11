@@ -162,7 +162,7 @@ void DVIToSVG::convert (const string &rangestr, pair<int,int> *pageinfo) {
 		throw MessageException("invalid page range format");
 
 	Message::mstream(false, Message::MC_PAGE_NUMBER) << "pre-processing DVI file (format version "  << getDVIVersion() << ")\n";
-	if (DVIToSVGActions *actions = dynamic_cast<DVIToSVGActions*>(_actions.get())) {
+	if (auto actions = dynamic_cast<DVIToSVGActions*>(_actions.get())) {
 		PreScanDVIReader prescan(getInputStream(), actions);
 		actions->setDVIReader(prescan);
 		prescan.executeAllPages();
@@ -323,7 +323,7 @@ Matrix DVIToSVG::getPageTransformation () const {
 			calc.setVariable("h",  bbox.height()*bp2pt);
 		}
 		// add constants for length units to calculator
-		for (auto unit : Length::getUnits())
+		for (const auto &unit : Length::getUnits())
 			calc.setVariable(unit.first, Length(1, unit.second).pt());
 		matrix.set(_transCmds, calc);
 	}
@@ -356,7 +356,7 @@ void DVIToSVG::embedFonts (XMLElement *svgElement) {
 	unordered_set<const Font*> tracedFonts;  // collect unique fonts already traced
 	for (const auto &fontchar : usedCharsMap) {
 		const Font *font = fontchar.first;
-		if (const PhysicalFont *ph_font = dynamic_cast<const PhysicalFont*>(font)) {
+		if (auto ph_font = dynamic_cast<const PhysicalFont*>(font)) {
 			// Check if glyphs should be traced. Only trace the glyphs of unique fonts, i.e.
 			// avoid retracing the same glyphs again if they are referenced in various sizes.
 			if (TRACE_MODE != 0 && tracedFonts.find(ph_font->uniqueFont()) == tracedFonts.end()) {

@@ -263,7 +263,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 	const int newid = _fonts.size();   // the new font gets this ID
 	auto it = _name2id.find(fontname);
 	if (it != _name2id.end()) {  // font with same name already registered?
-		if (NativeFont *font = dynamic_cast<NativeFont*>(_fonts[it->second].get()))
+		if (auto font = dynamic_cast<NativeFont*>(_fonts[it->second].get()))
 			newfont = font->clone(ptsize, style, color);
 	}
 	else {

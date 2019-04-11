@@ -548,7 +548,7 @@ uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 
 
 const FontStyle* PhysicalFontImpl::style () const {
-	if (auto *entry = fontMapEntry())
+	if (auto entry = fontMapEntry())
 		return &entry->style;
 	return nullptr;
 }

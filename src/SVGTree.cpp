@@ -192,7 +192,7 @@ static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, 
 
 static string font_info (const Font &font) {
 	ostringstream oss;
-	if (const NativeFont *nf = dynamic_cast<const NativeFont*>(&font)) {
+	if (auto nf = dynamic_cast<const NativeFont*>(&font)) {
 		oss << nf->familyName() << ' ' << nf->styleName() << "; " << nf->filename();
 		if (nf->style()) {
 			if (nf->style()->bold != 0)

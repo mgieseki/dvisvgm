@@ -134,14 +134,14 @@ class PDFObject {
 
 
 template<> inline const PDFArray* PDFObject::get() const {
-	if (auto *p = mpark::get_if<std::unique_ptr<PDFArray>>(&_value))
+	if (auto p = mpark::get_if<std::unique_ptr<PDFArray>>(&_value))
 		return &(**p);
 	return nullptr;
 }
 
 
 template<> inline const PDFDict* PDFObject::get() const {
-	if (auto *p = mpark::get_if<std::unique_ptr<PDFDict>>(&_value))
+	if (auto p = mpark::get_if<std::unique_ptr<PDFDict>>(&_value))
 		return &(**p);
 	return nullptr;
 }

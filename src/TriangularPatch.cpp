@@ -31,7 +31,7 @@ TriangularPatch::TriangularPatch (const PointVec &points, const ColorVec &colors
 
 
 void TriangularPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) {
-	TriangularPatch *triangularPatch = dynamic_cast<TriangularPatch*>(patch);
+	auto triangularPatch = dynamic_cast<TriangularPatch*>(patch);
 	if (edgeflag > 0 && !triangularPatch)
 		throw ShadingException("missing preceding data in definition of triangular patch");
 	if ((edgeflag == 0 && points.size() != 3) || (edgeflag > 0 && points.size() != 1))
@@ -62,7 +62,7 @@ void TriangularPatch::setPoints (const DPair &p1, const DPair &p2, const DPair &
 
 
 void TriangularPatch::setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) {
-	TriangularPatch *triangularPatch = dynamic_cast<TriangularPatch*>(patch);
+	auto triangularPatch = dynamic_cast<TriangularPatch*>(patch);
 	if (edgeflag > 0 && !triangularPatch)
 		throw ShadingException("missing preceding data in definition of triangular patch");
 	if ((edgeflag == 0 && colors.size() != 3) || (edgeflag > 0 && colors.size() != 1))
