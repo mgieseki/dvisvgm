@@ -699,6 +699,14 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   and 'height' can be given together with a unit specifier (see option *--bbox*) or as plain floating point numbers.
   In the latter case, TeX point units are assumed (1in = 72.27pt).
 
+  *dvisvgm:bbox* lock;;
+  Locks the bounding box of the current page and prevents it from further updating, i.e. graphics elements added
+  after calling this special are not taken into account in determining the extent of the bounding box.
+
+  *dvisvgm:bbox* unlock;;
+  Unlocks the previously locked bounding box of the current page so that it gets updated again when adding
+  graphics elements to the page.
+
   *dvisvgm:bbox* n[ew] 'name';;
   Defines or resets a local bounding box called 'name'. The name may consist of letters and digits.
   While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to

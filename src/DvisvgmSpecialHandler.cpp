@@ -279,47 +279,54 @@ static Length read_length (InputReader &ir) {
  *  variant 1: dvisvgm:bbox [r[el]] <width> <height> [<depth>]
  *  variant 2: dvisvgm:bbox a[bs] <x1> <y1> <x2> <y2>
  *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2>
- *  variant 4: dvisvgm:bbox n[ew] <name> */
+ *  variant 4: dvisvgm:bbox n[ew] <name>
+ *  variant 5: dvisvgm:bbox lock | unlock */
 void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &actions) {
 	ir.skipSpace();
-	int c = ir.peek();
-	try {
-		if (!isalpha(c))
-			c = 'r';   // no mode specifier => relative box parameters
-		else {
-			while (!isspace(ir.peek()))  // skip trailing characters
-				ir.get();
-			if (c == 'n') {   // "new": create new local bounding box
-				ir.skipSpace();
-				string name;
-				while (isalnum(ir.peek()))
-					name += char(ir.get());
-				ir.skipSpace();
-				if (!name.empty() && ir.eof())
-					actions.bbox(name, true); // create new user box
-			}
-			else if (c == 'a' || c == 'f') {  // "abs" or "fix"
-				Length lengths[4];
-				for (Length &len : lengths)
-					len = read_length(ir);
-				BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);
-				if (c == 'a')
-					actions.embed(b);
-				else {
-					actions.bbox() = b;
-					actions.bbox().lock();
+	if (ir.check("lock"))
+		actions.bbox().lock();
+	else if (ir.check("unlock"))
+		actions.bbox().unlock();
+	else {
+		int c = ir.peek();
+		try {
+			if (!isalpha(c))
+				c = 'r';   // no mode specifier => relative box parameters
+			else {
+				while (!isspace(ir.peek()))  // skip trailing characters
+					ir.get();
+				if (c == 'n') {   // "new": create new local bounding box
+					ir.skipSpace();
+					string name;
+					while (isalnum(ir.peek()))
+						name += char(ir.get());
+					ir.skipSpace();
+					if (!name.empty() && ir.eof())
+						actions.bbox(name, true); // create new user box
+				}
+				else if (c == 'a' || c == 'f') {  // "abs" or "fix"
+					Length lengths[4];
+					for (Length &len : lengths)
+						len = read_length(ir);
+					BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);
+					if (c == 'a')
+						actions.embed(b);
+					else {
+						actions.bbox() = b;
+						actions.bbox().lock();
+					}
 				}
 			}
+			if (c == 'r') {
+				Length w = read_length(ir);
+				Length h = read_length(ir);
+				Length d = read_length(ir);
+				update_bbox(w, h, d, actions);
+			}
 		}
-		if (c == 'r') {
-			Length w = read_length(ir);
-			Length h = read_length(ir);
-			Length d = read_length(ir);
-			update_bbox(w, h, d, actions);
+		catch (const UnitException &e) {
+			throw SpecialException(string("dvisvgm:bbox: ") + e.what());
 		}
-	}
-	catch (const UnitException &e) {
-		throw SpecialException(string("dvisvgm:bbox: ") + e.what());
 	}
 }
 
@@ -361,6 +368,7 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 	_defsParser.flush(actions);
 	_pageParser.flush(actions);
+	actions.bbox().unlock();
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;
 		for (string &str : vec) {
