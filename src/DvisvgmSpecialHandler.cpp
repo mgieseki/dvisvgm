@@ -257,28 +257,39 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
  *  @param[in] w width of the rectangle in PS point units
  *  @param[in] h height of the rectangle in PS point units
  *  @param[in] d depth of the rectangle in PS point units
+ *  @param[in] transform if true, apply the current transformation matrix to the rectangle
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
-static void update_bbox (Length w, Length h, Length d, SpecialActions &actions) {
+static void update_bbox (Length w, Length h, Length d, bool transform, SpecialActions &actions) {
 	double x = actions.getX();
 	double y = actions.getY();
-	actions.embed(BoundingBox(x, y, x+w.bp(), y-h.bp()));
-	actions.embed(BoundingBox(x, y, x+w.bp(), y+d.bp()));
+	BoundingBox bbox1(x, y, x+w.bp(), y-h.bp());
+	BoundingBox bbox2(x, y, x+w.bp(), y+d.bp());
+	if (transform) {
+		bbox1.transform(actions.getMatrix());
+		bbox2.transform(actions.getMatrix());
+	}
+	actions.embed(bbox1);
+	actions.embed(bbox2);
 }
 
 
 /** Reads a length value including a trailing unit specifier and returns it. */
 static Length read_length (InputReader &ir) {
+	Length length;
 	ir.skipSpace();
-	double val = ir.getDouble();
-	string unit = isalpha(ir.peek()) ? ir.getString(2) : "pt";
-	return Length(val, unit);
+	if (!isalpha(ir.peek())) {
+		double val = ir.getDouble();
+		string unit = isalpha(ir.peek()) ? ir.getString(2) : "pt";
+		length = Length(val, unit);
+	}
+	return length;
 }
 
 
 /** Evaluates the special dvisvgm:bbox.
- *  variant 1: dvisvgm:bbox [r[el]] <width> <height> [<depth>]
- *  variant 2: dvisvgm:bbox a[bs] <x1> <y1> <x2> <y2>
- *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2>
+ *  variant 1: dvisvgm:bbox [r[el]] <width> <height> [<depth>] [transform]
+ *  variant 2: dvisvgm:bbox a[bs] <x1> <y1> <x2> <y2> [transform]
+ *  variant 3: dvisvgm:bbox f[ix] <x1> <y1> <x2> <y2> [transform]
  *  variant 4: dvisvgm:bbox n[ew] <name>
  *  variant 5: dvisvgm:bbox lock | unlock */
 void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &actions) {
@@ -309,6 +320,9 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 					for (Length &len : lengths)
 						len = read_length(ir);
 					BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);
+					ir.skipSpace();
+					if (ir.check("transform"))
+						b.transform(actions.getMatrix());
 					if (c == 'a')
 						actions.embed(b);
 					else {
@@ -321,7 +335,8 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 				Length w = read_length(ir);
 				Length h = read_length(ir);
 				Length d = read_length(ir);
-				update_bbox(w, h, d, actions);
+				ir.skipSpace();
+				update_bbox(w, h, d, ir.check("transform"), actions);
 			}
 		}
 		catch (const UnitException &e) {
@@ -336,7 +351,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		Length w = read_length(ir);
 		Length h = read_length(ir);
 		string f = ir.getString();
-		update_bbox(w, h, Length(0), actions);
+		update_bbox(w, h, Length(0), false, actions);
 		auto img = util::make_unique<XMLElement>("image");
 		img->addAttribute("x", actions.getX());
 		img->addAttribute("y", actions.getY());

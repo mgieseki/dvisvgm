@@ -719,7 +719,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   (separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box 'name'.
   If box 'name' wasn't previously defined, all four values equal to zero.
 
-  *dvisvgm:bbox* 'width' 'height' ['depth'];;
+  *dvisvgm:bbox* 'width' 'height' ['depth'] [+transform+];;
   Updates the bounding box of the current page by embedding a virtual rectangle ('x', 'y', 'width', 'height')
   where the lower left corner is located at the current DVI drawing position ('x','y'). If the optional parameter 'depth'
   is specified, dvisvgm embeds a second rectangle ('x', 'y', 'width', -__depth__). The lengths 'width', 'height', and
@@ -727,15 +727,22 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
   this command either enlarges the overall bounding box or leaves it as is. It's not possible to reduce its extent. This
   special should be used together with *dvisvgm:raw* in order to update the viewport of the page properly.
+  By default, the box extents are assigned unchanged and, in particular, are not altered by transformation commands.
+  In order to apply the current transformation matrix, the optional modifier +transform+ can be added at the end of
+  the special statement.
 
-  *dvisvgm:bbox* a[bs] 'x1' 'y1' 'x2' 'y2';;
+  *dvisvgm:bbox* a[bs] 'x1' 'y1' 'x2' 'y2' [+transform+];;
   This variant of the bbox special updates the bounding box by embedding a virtual rectangle ('x1','y1','x2','y2').
   The points ('x1','y1') and ('x2','y2') denote the absolute coordinates of two diagonal corners of the rectangle.
+  As with the relative special variant described above, the optional modifier +transform+ allows for applying the
+  current transformation matrix to the bounding box.
 
-  *dvisvgm:bbox* f[ix] 'x1' 'y1' 'x2' 'y2';;
+  *dvisvgm:bbox* f[ix] 'x1' 'y1' 'x2' 'y2' [+transform+];;
   This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
   this command, dvisvgm doesn't further alter the bounding box coordinates, except this special is called again later.
   The points ('x1','y1') and ('x2','y2') denote the absolute coordinates of two diagonal corners of the rectangle.
+  As with the relative special variant described above, the optional modifier +transform+ allows for applying the
+  current transformation matrix to the bounding box.
 +
 The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:
 +
