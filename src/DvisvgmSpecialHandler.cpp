@@ -172,10 +172,11 @@ static void expand_constants (string &str, SpecialActions &actions) {
 		const char *name;
 		string val;
 	};
-	const array<Constant, 4> constants {{
-		{"x",     XMLString(actions.getX())},
-		{"y",     XMLString(actions.getY())},
-		{"color", actions.getColor().svgColorString()},
+	const array<Constant, 5> constants {{
+		{"x",      XMLString(actions.getX())},
+		{"y",      XMLString(actions.getY())},
+		{"color",  actions.getColor().svgColorString()},
+		{"matrix", actions.getMatrix().toSVG()},
 		{"nl",    "\n"},
 	}};
 	for (const Constant &constant : constants) {

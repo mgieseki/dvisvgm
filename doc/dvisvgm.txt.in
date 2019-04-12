@@ -670,8 +670,9 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different +raw+
   specials. The tags themselves can also be split but must be continued with the immediatly following +raw+
   special. Both syntactically incorrect and wrongly nested tags lead to error messages.
-  Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, and *{?color}* that expand to the current
-  'x' or 'y' coordinate and the current color, respectively. Furthermore, *{?nl}* expands to a newline character.
+  Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, *{?color}*, and *{?matrix}* that expand to
+  the current 'x' or 'y' coordinate, the current color, and current transformation matrix, respectively.
+  Furthermore, *{?nl}* expands to a newline character.
 
   *dvisvgm:rawdef* 'text';;
   This command is similar to *dvisvgm:raw*, but puts the XML nodes into the <defs> section of the SVG document
