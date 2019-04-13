@@ -4,8 +4,62 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 09 Mar 2019 14:47:32 +0100</pubDate>
+    <pubDate>Sat, 13 Apr 2019 12:01:23 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.7 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#ed26fc1f97db41d498f4198055773fd3</link>
+      <pubDate>Sat, 13 Apr 2019 10:19:58 +0200</pubDate>
+      <guid>ed26fc1f97db41d498f4198055773fd3</guid>
+      <description>
+        <![CDATA[<p>The main new feature of this release is command-line option <code>--optimize</code> which
+allows for optimization of the generated SVG tree after it has completely been built from the DVI data.
+The optimizations are performed by running separate optimizer modules which are executed one by one in
+a given order and thus transform the XML tree gradually. Currently, the following optimizations are available:</p>
+
+<ul>
+<li>Move common inheritable attributes of adjacent elements to <a href="https://www.w3.org/TR/SVG11/struct.html#Groups">group elements</a>.</li>
+<li>Combine nested groups and unwrap groups without attributes.</li>
+<li>Remove redundant <code>clipPath</code> elements.</li>
+<li>Simplify <code>transform</code> attributes.</li>
+</ul>
+
+<p>More detailed information on option <code>--optimize</code> and the optimizer modules can be found on the <a href="/Manpage/#opt-optimize">manual page</a>.</p>
+
+<p>Furthermore, a couple of smaller additions and changes have been made:</p>
+
+<ul>
+<li>All <code>raw</code> specials are now parsed and converted to proper XML nodes so that the optimizer
+can also process SVG fragments added by the user.</li>
+<li>Several improvements to SVG graphics path descriptions:
+
+<ul>
+<li>Redundant spaces and leading zeros are omitted.</li>
+<li><a href="https://www.w3.org/TR/SVG11/paths.html#PathDataLinetoCommands">Line commands</a> representing zero-length lines are removed.</li>
+<li>The detection of reflected control points in Bézier curve sequences has been improved. As a result,
+the shorthand <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataCurveCommands">curve commands</a>
+are applied more often.</li>
+</ul></li>
+<li>Added support for PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code>.</li>
+<li>Added evaluation of optional <code>psfile</code>/<code>pdffile</code> special attribute <code>clip</code> which clips the
+drawing region to the bounding box of the image being processed.</li>
+<li>Added the <code>\special</code> variants <code>dvisvgm:bbox lock</code> and <code>dvisvgm:bbox unlock</code> to
+disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
+bounding box of the current page if a new graphics element is added. This behaviour can
+be paused and resumed with the new specials.</li>
+<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
+applying the current transformation matrix to the bounding box.</li>
+<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
+current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
+<li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
+<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
+<li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
+<li>Lots of code refactorings.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.6.3 has been released</title>
@@ -219,7 +273,7 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     
     <item>
       <title>dvisvgm 2.4.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#961cdf56e376338f85ce3cc3a86b6327</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#961cdf56e376338f85ce3cc3a86b6327</link>
       <pubDate>Sat, 07 Jul 2018 12:49:27 +0200</pubDate>
       <guid>961cdf56e376338f85ce3cc3a86b6327</guid>
       <description>
@@ -394,7 +448,7 @@ prints a corresponding warning message.</li>
     
     <item>
       <title>dvisvgm 2.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#e0d0591a1cb960b93762bc32e54855db</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#e0d0591a1cb960b93762bc32e54855db</link>
       <pubDate>Thu, 28 Dec 2017 14:16:56 +0200</pubDate>
       <guid>e0d0591a1cb960b93762bc32e54855db</guid>
       <description>
@@ -480,30 +534,6 @@ zlib:        1.2.11</code></pre></div>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/72">issue #72</a>).</li>
 <li>Fixed the incomplete conversion of the PostScript line width (<a href="https://github.com/mgieseki/dvisvgm/issues/77">issue #77</a>).</li>
 <li>Further code refactorings and improvements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#ef60e16a96b2e89da46fe61ba5c89b24</link>
-      <pubDate>Fri, 20 Oct 2017 20:07:52 +0200</pubDate>
-      <guid>ef60e16a96b2e89da46fe61ba5c89b24</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added evaluation of <code>pdf:pagesize</code> specials.</li>
-<li>Added evaluation of PDF hyperlink specials.</li>
-<li>Try to load Ghostscript dylib on Mac systems (patch by Toby Fleming, <a href="https://github.com/mgieseki/dvisvgm/issues/66">issue #66</a>).</li>
-<li>Improved the TPIC special handler, added evaluation of the <code>tx</code> special.</li>
-<li>Length values in dvisvgm specials now accept unit specifiers.</li>
-<li>Added <code>pdftex.map</code> to default map files.</li>
-<li>Fixed potential infinite loop after starting subprocesses (<a href="https://github.com/mgieseki/dvisvgm/issues/68">issue #68</a>).</li>
-<li>Files included with <code>psfile</code> are now also searched in the texmf tree if not present in the current working directory
-(<a href="https://github.com/mgieseki/dvisvgm/issues/69">issue #69</a>).</li>
-<li>Fixed transformation issue in computation of <code>psfile</code> position (<a href="https://github.com/mgieseki/dvisvgm/issues/70">issue #70</a>).</li>
-<li>Updated the bundled brotli, woff2, and xxHash libraries.</li>
-<li>Several code refactorings and improvements.</li>
 </ul>
 ]]>
       </description>

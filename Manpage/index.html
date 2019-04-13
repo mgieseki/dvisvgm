@@ -273,11 +273,11 @@ below for further information.
 <dd><p>
 By default, dvisvgm exclusively uses RGB values of the form <em>#RRGGBB</em> or <em>#RGB</em> to represent
 colors in the SVG file. The latter is a short form for colors whose RGB components each
-consist of two identical hex digits, e.g. <em>#123</em> equals <em>#112233</em>.
+consist of two identical hex digits, e.g. <code>#123</code> equals <code>#112233</code>.
 According to the SVG standard, it’s also possible to use color names (like <code>black</code> and <code>darkblue</code>)
-for a limited number of predefined colors. In order to apply these color names rather than their
-RGB values, call dvisvgm with option <strong>--colornames</strong>. All colors without an SVG color name will
-still be represented by RGB values.
+for a limited number of <a href="https://www.w3.org/TR/SVG11/types.html#ColorKeywords">predefined colors</a>.
+In order to apply these color names rather than their RGB values, call dvisvgm with option
+<strong>--colornames</strong>. All colors without an SVG color name will still be represented by RGB values.
 </p></dd>
 </div>
 <a name="opt-comments" class="linktarget"></a><div class="hdlist1">
@@ -301,9 +301,9 @@ This option is only available if dvisvgm was built with PostScript support enabl
 Ghostscript to be available. See option <strong>--libgs</strong> for further information.
 </p></dd>
 </div>
-<a name="opt-exact" class="linktarget"></a><div class="hdlist1">
+<a name="opt-exact-bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>-e, --exact</strong>
+<strong>-e, --exact-bbox</strong>
 </dt>
 <dd><p>
 This option tells dvisvgm to compute the precise bounding box of each character. By default,
@@ -311,8 +311,8 @@ the values stored in a font’s TFM file are used to determine a glyph’s exten
 intended to implement optimal character placements and are not designed to represent the exact
 dimensions, they don’t necessarily correspond with the bounds of the visual glyphs. Thus, width
 and/or height of some glyphs may be larger (or smaller) than the respective TFM values. As a result,
-this can lead to clipped characters at the bounds of the SVG graphics. With option <strong>--exact</strong> given,
-dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
+this can lead to clipped characters at the bounds of the SVG graphics. With option <strong>--exact-bbox</strong>
+given, dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
 </p></dd>
 </div>
 <a name="opt-font-format" class="linktarget"></a><div class="hdlist1">
@@ -342,11 +342,11 @@ Loads and evaluates a single font map file or a sequence of font map files. Thes
 to resolve font file names and encodings. dvisvgm does not provide its own map files but tries to read
 available ones coming with dvips or dvipdfm. If option <strong>--fontmap</strong> is omitted, dvisvgm looks for the
 default map files <em>ps2pk.map</em>, <em>pdftex.map</em>, <em>dvipdfm.map</em>, and <em>psfonts.map</em> (in this order).
-Otherwise, the files as option arguments are evaluated in the given order. Multiple filenames must be
-separated by commas without leading and/or trailing whitespace.
-By default, redefined mappings do not replace previous ones. However, each filename can be preceded by
-an optional mode specifier (<strong>+</strong>, <strong>-</strong>, or <strong>=</strong>) to change this behavior:
+Otherwise, the files given as option arguments are evaluated in the given order. Multiple filenames
+must be separated by commas without leading and/or trailing whitespace.
 </p>
+<p>By default, redefined mappings do not replace previous ones. However, each filename can be preceded by
+an optional mode specifier (<strong>+</strong>, <strong>-</strong>, or <strong>=</strong>) to change this behavior:</p>
 <dl>
 <div class="hdlist1">
 <dt>
@@ -384,7 +384,7 @@ redefinitions of <code>myfile2.map</code> are ignored.
 where all redefinitions of <em>myfile1.map</em> replace previous entries. Afterwards, all definitions for the fonts
 given in <em>myfile2.map</em> are removed from the font map tree.</p>
 <p>For further information about the map file formats and the mode specifiers, see the manuals of
-dvips and dvipdfm.</p>
+<a href="https://tug.org/texinfohtml/dvips.html">dvips</a> and <a href="https://ctan.org/tex-archive/dviware/dvipdfm">dvipdfm</a>.</p>
 </dd>
 </div>
 </dl>
@@ -463,18 +463,23 @@ the TrueType/WOFF module.
 </div>
 <a name="opt-libgs" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>--libgs</strong>=<em>filename</em>
+<strong>--libgs</strong>=<em>path</em>
 </dt>
-<dd><p>
+<dd>
+<p>
 This option is only available if the Ghostscript library is not directly linked to dvisvgm and if
 PostScript support was not completely disabled during compilation. In this case, dvisvgm tries
 to load the shared GS library dynamically during runtime. By default, it expects the library’s name
 to be <code>libgs.so.X</code> (on Unix-like systems, where <code>X</code> is the ABI version of the library) or
-<code>gsdll32.dll</code>/<code>gsdll64.dll</code> (Windows). Option <strong>--libgs</strong> can be used to give a different name.
-Alternatively, it’s also possible to set the GS library name by the environment variable <strong>LIBGS</strong>.
-The latter has less precedence than the command-line option, i.e. dvisvgm ignores variable <strong>LIBGS</strong>
-if <strong>--libgs</strong> is given.
-</p></dd>
+<code>gsdll32.dll</code>/<code>gsdll64.dll</code> (Windows). If dvisvgm doesn’t find the library, option <strong>--libgs</strong> can be
+used to specify the correct path and filename, e.g. <code>--libgs=/usr/local/lib/libgs.so.9</code> or
+<code>--libgs=\gs\gs9.25\bin\gsdll64.dll</code>.
+</p>
+<p>Alternatively, it’s also possible to assign the path to environment variable <strong>LIBGS</strong>, e.g.
+<code>export LIBGS=/usr/local/lib/libgs.so.9</code> or <code>set LIBGS=\gs\gs9.25\bin\gsdll63.dll</code>. <strong>LIBGS</strong> has
+less precedence than the command-line option, i.e. dvisvgm ignores variable <strong>LIBGS</strong> if <strong>--libgs</strong>
+is given.</p>
+</dd>
 </div>
 <a name="opt-linkmark" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -549,8 +554,8 @@ This option disables these calls.
 </dt>
 <dd><p>
 If this option is given, dvisvgm doesn’t create SVG <em>font</em> elements but uses <em>paths</em> instead. The
-resulting SVG files tend to be larger but they are concurrently more compatible with most applications that
-don’t support SVG fonts yet. The optional argument <em>variant</em> selects the method how to substitute fonts
+resulting SVG files tend to be larger but are concurrently more compatible with most applications that
+don’t support SVG fonts. The optional argument <em>variant</em> selects the method how to substitute fonts
 by paths. Variant 0 creates <em>path</em> and <em>use</em> elements in order to avoid lengthy duplicates.
 Variant 1 creates <em>path</em> elements only.
 Option <strong>--no-fonts</strong> implies <strong>--no-styles</strong>.
@@ -586,6 +591,94 @@ more compact than adding the complete font information to each text element over
 However, if you prefer direct font references, the default behavior can be disabled with
 option <strong>--no-styles</strong>.
 </p></dd>
+</div>
+<a name="opt-optimize" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>-O, --optimize</strong>[=<em>modules</em>]
+</dt>
+<dd>
+<p>
+Applies several optimizations on the generated SVG tree to reduce the file size. The optimizations
+are performed by running separate optimizer modules specified by optional argument <em>modules</em>.
+It may consist of a single module name or a comma-separated list of several module names.
+The corresponding modules are executed one by one in the given order and thus transform the
+XML tree gradually.
+</p>
+<p>The following list describes the currently available optimizer modules.</p>
+<dl>
+<a name="list" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>list</strong>
+</dt>
+<dd><p>
+  Lists all available optimizer modules and exits.
+</p></dd>
+</div>
+<a name="none" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>none</strong>
+</dt>
+<dd><p>
+  If this argument is given, dvisvgm doesn’t apply any optimization. <strong>none</strong> can’t be combined
+  with other module names.
+</p></dd>
+</div>
+<a name="all" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>all</strong>
+</dt>
+<dd><p>
+  Performs all optimizations listed below. This is also the default if option <strong>--optimize</strong> is
+  used without argument. The modules are executed in a predefined order that usually leads to the
+  best results. <strong>all</strong> can’t be combined with other module names.
+</p></dd>
+</div>
+<a name="collapse-groups" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>collapse-groups</strong>
+</dt>
+<dd><p>
+  Combines nested group elements (<code>&lt;g&gt;</code>…<code>&lt;/g&gt;</code>) that contain only a single group each. If possible,
+  the group attributes are moved to the outermost element of the processed subtree. This module also
+  unwraps group elements that have no attributes at all.
+</p></dd>
+</div>
+<a name="group-attributes" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>group-attributes</strong>
+</dt>
+<dd><p>
+  Creates groups (<code>&lt;g&gt;</code>…<code>&lt;/g&gt;</code>) for common attributes around adjacent elements. Each attribute is
+  moved to a separate group so that multiple common attributes lead to nested groups. They can be
+  combined by applying optimizer module <em>collapse-groups</em> afterwards. The algorithm only takes
+  inheritable properties, such as <code>fill</code> or <code>stroke-width</code>, into account and only removes them from
+  an element if none of the other attributes, like <code>id</code>, prevents this.
+</p></dd>
+</div>
+<a name="remove-clippath" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>remove-clippath</strong>
+</dt>
+<dd><p>
+  Removes all redundant <em>clipPath</em> elements. This optimization was already present in former versions
+  of dvisvgm and was always applied by default. This behavior is retained, i.e. dvisvgm executes
+  this module even if option <strong>--optimize</strong> is not given. You can use argument <em>none</em> to prevent that.
+</p></dd>
+</div>
+<a name="simplify-transform" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>simplify-transform</strong>
+</dt>
+<dd><p>
+  Tries to shorten all <em>transform</em> attributes. This module combines the transformation commands of
+  each attribute and decomposes the resulting transformation matrix into a sequence of basic
+  transformations, i.e. translation, scaling, rotation, and skewing. If this sequence is shorter
+  than the equivalent <em>matrix</em> expression, it’s assigned to the attribute. Otherwise, the matrix
+  expression is used.
+</p></dd>
+</div>
+</dl>
+</dd>
 </div>
 <a name="opt-output" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -1053,10 +1146,14 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 <strong>dvisvgm:raw</strong> <em>text</em>
 </dt>
 <dd><p>
-  Adds an arbitrary sequence of characters to the page section of the SVG document. dvisvgm does not perform
-  any validation here, thus the user has to ensure that the resulting SVG is still valid. Parameter <em>text</em>
-  may contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, and <strong>{?color}</strong> that expand to the current <em>x</em> or <em>y</em> coordinate
-  and the current color, respectively. Furthermore, <strong>{?nl}</strong> expands to a newline character.
+  Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
+  proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
+  that the resulting SVG is still valid. Opening and closing tags may be distributed among different <code>raw</code>
+  specials. The tags themselves can also be split but must be continued with the immediatly following <code>raw</code>
+  special. Both syntactically incorrect and wrongly nested tags lead to error messages.
+  Parameter <em>text</em> may also contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, <strong>{?color}</strong>, and <strong>{?matrix}</strong> that expand to
+  the current <em>x</em> or <em>y</em> coordinate, the current color, and current transformation matrix, respectively.
+  Furthermore, <strong>{?nl}</strong> expands to a newline character.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:rawdef" class="linktarget"></a><div class="hdlist1">
@@ -1064,7 +1161,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 <strong>dvisvgm:rawdef</strong> <em>text</em>
 </dt>
 <dd><p>
-  This command is similar to <strong>dvisvgm:raw</strong>, but puts the raw text into the &lt;defs&gt; section of the SVG document
+  This command is similar to <strong>dvisvgm:raw</strong>, but puts the XML nodes into the &lt;defs&gt; section of the SVG document
   currently being generated.
 </p></dd>
 </div>
@@ -1075,7 +1172,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 <dd><p>
   This pair of specials marks the begin and end of a definition of a named raw SVG fragment. All <strong>dvisvgm:raw</strong>
   and <strong>dvisvgm:rawdef</strong> specials enclosed by <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> are not evaluated
-  immediately but jointly stored under the given <em>name</em> for later use. Once defined, the named fragment can be
+  immediately but stored together under the given <em>name</em> for later use. Once defined, the named fragment can be
   referenced throughout the DVI file by <strong>dvisvgm:rawput</strong> (see below).
   The two commands <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> must not be nested, i.e. each call of <strong>dvisvgm:rawset</strong>
   has to be followed by a corresponding call of <strong>dvisvgm:endrawset</strong> before another <strong>dvisvgm:rawset</strong> may occur.
@@ -1107,6 +1204,24 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
+<strong>dvisvgm:bbox</strong> lock
+</dt>
+<dd><p>
+  Locks the bounding box of the current page and prevents it from further updating, i.e. graphics elements added
+  after calling this special are not taken into account in determining the extent of the bounding box.
+</p></dd>
+</div>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>dvisvgm:bbox</strong> unlock
+</dt>
+<dd><p>
+  Unlocks the previously locked bounding box of the current page so that it gets updated again when adding
+  graphics elements to the page.
+</p></dd>
+</div>
+<a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
+<dt>
 <strong>dvisvgm:bbox</strong> n[ew] <em>name</em>
 </dt>
 <dd><p>
@@ -1124,7 +1239,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>dvisvgm:bbox</strong> <em>width</em> <em>height</em> [<em>depth</em>]
+<strong>dvisvgm:bbox</strong> <em>width</em> <em>height</em> [<em>depth</em>] [<code>transform</code>]
 </dt>
 <dd><p>
   Updates the bounding box of the current page by embedding a virtual rectangle (<em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>)
@@ -1134,26 +1249,33 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
   this command either enlarges the overall bounding box or leaves it as is. It’s not possible to reduce its extent. This
   special should be used together with <strong>dvisvgm:raw</strong> in order to update the viewport of the page properly.
+  By default, the box extents are assigned unchanged and, in particular, are not altered by transformation commands.
+  In order to apply the current transformation matrix, the optional modifier <code>transform</code> can be added at the end of
+  the special statement.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>dvisvgm:bbox</strong> a[bs] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em>
+<strong>dvisvgm:bbox</strong> a[bs] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em> [<code>transform</code>]
 </dt>
 <dd><p>
   This variant of the bbox special updates the bounding box by embedding a virtual rectangle (<em>x1</em>,<em>y1</em>,<em>x2</em>,<em>y2</em>).
   The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+  As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
+  current transformation matrix to the bounding box.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>dvisvgm:bbox</strong> f[ix] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em>
+<strong>dvisvgm:bbox</strong> f[ix] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em> [<code>transform</code>]
 </dt>
 <dd>
 <p>
   This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
   this command, dvisvgm doesn’t further alter the bounding box coordinates, except this special is called again later.
   The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+  As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
+  current transformation matrix to the bounding box.
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
 <div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
@@ -1446,9 +1568,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.6.3</div>
+   <div class="col-md-6">Version 2.7</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-03-09</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-04-13</span>
    </div>
 </div>
 </div>
