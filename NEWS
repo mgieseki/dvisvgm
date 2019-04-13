@@ -1,3 +1,25 @@
+dvisvgm-2.7 (2019-04-13)
+- added option --optimize to perform several optimizations on the
+  generated SVG files (current optimizer modules: collapse-groups,
+  group-attributes, remove-clippath, simplify-transform) (GH #97)
+- dvisvgm's "raw" specials are now parsed and converted to proper XML nodes
+- several improvements to SVG graphics path descriptions:
+  * omit redundant spaces and leading zeros
+  * omit line commands representing zero-length lines
+  * improved detection of reflected control points in Bézier curve sequences
+- added evaluation of PS operators xshow, yshow, and xyshow
+- added evaluation of psfile/pdffile attribute 'clip' to clip the
+  drawing region to the bounding box of the image being processed (GH #104)
+- added specials 'dvisvgm:bbox lock' and 'dvisvgm:bbox unlock' to disable and
+  enable updating the bounding box of the current page (GH #105)
+- added optional modifier 'transform' to dvisvgm:bbox specials to allow for
+  applying the current transformation to the bounding box
+- added macro '{?matrix}' to dvisvgm's 'raw' specials that expands to the
+  current transformation matrix
+- renamed option --exact to --exact-bbox (backward compatible change)
+- updated the bundled xxHash library to version 0.7.0
+- lots of code refactorings
+
 dvisvgm-2.6.3 (2019-03-09)
 - create short RGB hex values for color attributes if possible
 - fixed rejection of paper formats, like A4, by option --bbox
