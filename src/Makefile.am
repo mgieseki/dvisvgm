@@ -152,6 +152,7 @@ libdvisvgm_la_SOURCES = \
 	VectorStream.hpp \
 	VFActions.hpp \
 	VFReader.hpp                 VFReader.cpp \
+	windows.hpp \
 	XMLDocument.hpp              XMLDocument.cpp \
 	XMLNode.hpp                  XMLNode.cpp \
 	XMLString.hpp                XMLString.cpp \
