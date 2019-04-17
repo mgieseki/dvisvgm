@@ -53,7 +53,7 @@ _dvisvgm_ relies on the following free libraries:
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
   the curves afterwards. A slightly modified version of Clipper is bundled with the sources.
 
-* [FontForge library](https://www.fontforge.org)  
+* [FontForge library](https://fontforge.github.io)  
   _dvisvgm_ can be built with optional WOFF support that allows to embed the font data
   in WOFF or TrueType format rather than as SVG. The FontForge library provides the required
   functions to create font files in these formats. A reduced version of the library is bundled

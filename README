@@ -14,7 +14,7 @@ DEPENDENCIES
    to polygons, intersects them using Clipper, and reconstructs the curves
    afterwards.
 
- * FontForge library (https://www.fontforge.org)
+ * FontForge library (https://fontforge.github.io)
    dvisvgm can be built with optional WOFF support that allows to embed the
    font data in WOFF or TrueType format rather than as SVG. The FontForge
    library provides the required functions to create font files in these
