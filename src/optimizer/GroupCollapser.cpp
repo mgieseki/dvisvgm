@@ -132,13 +132,13 @@ bool GroupCollapser::moveAttributes (XMLElement &source, XMLElement &dest) {
 bool GroupCollapser::collapsible (const XMLElement &element) {
 	// the 'fill' attribute of animation elements has different semantics than
 	// that of graphics elements => don't collapse them
-	static constexpr auto names = util::make_array(
+	static const char *names[] = {
 		"animate", "animateColor", "animateMotion", "animateTransform", "set"
-	);
-	auto it = find_if(names.begin(), names.end(), [&](const string &name) {
+	};
+	auto it = find_if(begin(names), end(names), [&](const string &name) {
 		return element.name() == name;
 	});
-	return it == names.end();
+	return it == end(names);
 }
 
 
@@ -155,11 +155,11 @@ bool GroupCollapser::unwrappable (const XMLElement &source, const XMLElement &de
 		}
 	}
 	// these attributes prevent a group from being unwrapped
-	static constexpr auto attribs = util::make_array(
+	static const char *attribs[] = {
 		"class", "id", "filter", "mask", "style"
-	);
-	auto it = find_if(attribs.begin(), attribs.end(), [&](const string &name) {
+	};
+	auto it = find_if(begin(attribs), end(attribs), [&](const string &name) {
 		return source.hasAttribute(name) || dest.hasAttribute(name);
 	});
-	return it == attribs.end();
+	return it == end(attribs);
 }

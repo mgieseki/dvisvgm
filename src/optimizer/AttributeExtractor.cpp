@@ -113,14 +113,14 @@ XMLNode* AttributeExtractor::extractAttribute (XMLElement *elem) {
  *  @return true if the element is groupable */
 bool AttributeExtractor::groupable (const XMLElement &elem) {
 	// https://www.w3.org/TR/SVG/struct.html#GElement
-	static constexpr auto names = util::make_array(
+	static const char *names[] = {
 		"a", "altGlyphDef", "animate", "animateColor", "animateMotion", "animateTransform",
 		"circle", "clipPath", "color-profile", "cursor", "defs", "desc", "ellipse", "filter",
 		"font", "font-face", "foreignObject", "g", "image", "line", "linearGradient", "marker",
 		"mask", "path", "pattern", "polygon", "polyline", "radialGradient", "rect", "set",
 		"style", "switch", "symbol", "text", "title", "use", "view"
-	);
-	return binary_search(names.begin(), names.end(), elem.name(), [](const string &name1, const string &name2) {
+	};
+	return binary_search(begin(names), end(names), elem.name(), [](const string &name1, const string &name2) {
 		return name1 < name2;
 	});
 }
@@ -136,15 +136,15 @@ bool AttributeExtractor::inheritable (const Attribute &attrib) {
 	// clip-path is not inheritable but can be moved to the parent element as long as
 	// no child gets an different clip-path attribute
 	// https://www.w3.org/TR/SVG11/styling.html#Inheritance
-	static constexpr auto names = util::make_array(
+	static const char *names[] = {
 		"clip-path", "clip-rule", "color", "color-interpolation", "color-interpolation-filters", "color-profile",
 		"color-rendering", "direction", "fill", "fill-opacity", "fill-rule", "font", "font-family", "font-size",
 		"font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight", "glyph-orientation-horizontal",
 		"glyph-orientation-vertical", "letter-spacing", "paint-order", "stroke", "stroke-dasharray", "stroke-dashoffset",
 		"stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "transform",
 		"visibility", "word-spacing", "writing-mode"
-	);
-	return binary_search(names.begin(), names.end(), attrib.name, [](const string &name1, const string &name2) {
+	};
+	return binary_search(begin(names), end(names), attrib.name, [](const string &name1, const string &name2) {
 		return name1 < name2;
 	});
 }
@@ -159,13 +159,13 @@ bool AttributeExtractor::extractable (const Attribute &attrib, XMLElement &eleme
 	// the 'fill' attribute of animation elements has different semantics than
 	// that of graphics elements => don't extract it from animation nodes
 	// https://www.w3.org/TR/SVG11/animate.html#TimingAttributes
-	static constexpr auto names = util::make_array(
+	static const char *names[] = {
 		"animate", "animateColor", "animateMotion", "animateTransform", "set"
-	);
-	auto it = find_if(names.begin(), names.end(), [&](const string &name) {
+	};
+	auto it = find_if(begin(names), end(names), [&](const string &name) {
 		return element.name() == name;
 	});
-	return it == names.end();
+	return it == end(names);
 }
 
 
