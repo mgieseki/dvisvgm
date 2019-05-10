@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -113,7 +113,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -142,7 +142,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -169,7 +169,7 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\miktex-2.9.4106-sdk\include;..\vc\freetype\include;..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>Full</Optimization>

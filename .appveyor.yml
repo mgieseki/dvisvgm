@@ -14,13 +14,9 @@ branches:
 install:
   - set FREETYPE_VER=2.10.0
   - set ZLIB_VER=1.2.11
-  - set MIKTEX_SDK_VER=2.9.4106
   - set TTFA_VER=1.8.2
   - set TTFA_REV=3
   - cd vc
-  - appveyor DownloadFile https://miktex.org/download/ctan/systems/win32/miktex/sdk/miktex-%MIKTEX_SDK_VER%-sdk.zip
-  - unzip -o miktex-%MIKTEX_SDK_VER%-sdk.zip
-  - del miktex-%MIKTEX_SDK_VER%-sdk.zip
   - cd freetype
   - appveyor DownloadFile http://download.savannah.gnu.org/releases/freetype/freetype-%FREETYPE_VER%.tar.gz
   - tar xzf freetype-%FREETYPE_VER%.tar.gz --strip-components=1

@@ -5,22 +5,13 @@ which are not bundled with the dvisvgm sources:
 FreeType:   https://freetype.org
 zlib:       http://zlib.net
 
-Additionally, the MiKTeX SDK is required:
-http://www.miktex.org/sdk
-
 If you want to build dvisvgm with ttfautohint support, the related
 development files as well as the ttfautohint DLL are needed. They are
 available from https://github.com/mgieseki/ttfautohint-dll.
 
-Unpack the MiKTeX SDK into the "vc" directory so that the new subfolder
-miktex-2.9.4106-sdk is created there.
-
-The contents of the library archives go into the corresponding subfolders
-already present in the "vc" directory. Extract the archives and move the
-contents of the versioned root folders, e.g. zlib-1.2.11, to the dedicated
-subfolders of the "vc" directory.
-For example, the contents of zlib-1.2.8 should be moved to dvisvgm\vc\zlib.
-The versioned library folders are not required and can be deleted.
+Extract the contents of the usually versioned root folders present in the
+library archives to the corresponding subfolders in the "vc" directory, e.g.
+the contents of zlib-1.2.11, should go to vc\zlib.
 
 Now open the Visual Studio IDE, load dvisvgm.sln, and start the build process.
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dvisvgm", "dvisvgm.vcxproj", "{86046918-771F-4654-AFC5-AF4F8AC974EF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -13,6 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dvisvgm", "dvisvgm.vcxproj"
 		{F296E0C2-0D37-44CD-961D-87681418683F} = {F296E0C2-0D37-44CD-961D-87681418683F}
 		{52C2C7C6-3BCE-4434-9A02-EA920C15FB65} = {52C2C7C6-3BCE-4434-9A02-EA920C15FB65}
 		{01089EEA-D32A-4A70-BDD4-221791380931} = {01089EEA-D32A-4A70-BDD4-221791380931}
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7} = {E22874EE-D0EE-4AAC-A7A5-7795917203F7}
 		{6F17FBF1-4304-4AF2-81A8-C78787E8D0A5} = {6F17FBF1-4304-4AF2-81A8-C78787E8D0A5}
 	EndProjectSection
 EndProject
@@ -39,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "woff2", "woff2\woff2.vcxpro
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "md5", "md5\md5.vcxproj", "{01089EEA-D32A-4A70-BDD4-221791380931}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miktex-com", "miktex-com\miktex-com.vcxproj", "{E22874EE-D0EE-4AAC-A7A5-7795917203F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,6 +131,14 @@ Global
 		{01089EEA-D32A-4A70-BDD4-221791380931}.Release|Win32.Build.0 = Release|Win32
 		{01089EEA-D32A-4A70-BDD4-221791380931}.Release|x64.ActiveCfg = Release|x64
 		{01089EEA-D32A-4A70-BDD4-221791380931}.Release|x64.Build.0 = Release|x64
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Debug|Win32.Build.0 = Debug|Win32
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Debug|x64.ActiveCfg = Debug|x64
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Debug|x64.Build.0 = Debug|x64
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Release|Win32.ActiveCfg = Release|Win32
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Release|Win32.Build.0 = Release|Win32
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Release|x64.ActiveCfg = Release|x64
+		{E22874EE-D0EE-4AAC-A7A5-7795917203F7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
