@@ -1,3 +1,10 @@
+dvisvgm-2.7.1 (2019-05-20)
+- fixed a bug in PS operator 'setmatrix' (GH #106)
+- fixed build issue reported on MacPorts
+  (https://trac.macports.org/ticket/58347)
+- added source files required to access the MIKTeX session object
+  (required due to deprecation of the MiKTeX SDK)
+
 dvisvgm-2.7 (2019-04-13)
 - added option --optimize to perform several optimizations on the
   generated SVG files (current optimizer modules: collapse-groups,
