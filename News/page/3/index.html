@@ -79,7 +79,18 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="e0d0591a1cb960b93762bc32e54855db"></a>
+  <a name="8d864b9b45e4e2c3d8a34361b5086d24"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">12 January 2018: dvisvgm 2.3.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Fixed the width of characters slanted by a mapfile entry (<a href="https://github.com/mgieseki/dvisvgm/issues/82">issue #82</a>).</li>
+<li>If <a href="https://www.freetype.org/ttfautohint">ttfautohint</a> fails for a font, <em>dvisvgm</em> now uses the unhinted font and
+prints a corresponding warning message.</li>
+<li>Some code cleanup.</li>
+</ul>
+</div>
+  </section><a name="e0d0591a1cb960b93762bc32e54855db"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">28 December 2017: dvisvgm 2.3 has been released</div>
     <div class="card-body">
@@ -192,17 +203,6 @@ Rasmus Larsen for their help to isolate the problems).</li>
 <li>Fixed some potential memory leaks.</li>
 <li>Removed the <code>restrict</code> keyword from the <em>xxHash</em> sources to avoid C++ compilation errors
 (<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
-</ul>
-</div>
-  </section><a name="4567ec37398a2111cd0cdb77f419eb54"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
-doesn&rsquo;t call Metafont again for that font.</li>
-<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
-<li>Several minor code improvements and test enhancements.</li>
 </ul>
 </div>
   </section>

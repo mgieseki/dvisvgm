@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="ed26fc1f97db41d498f4198055773fd3"></a>
+  <a name="132ffe0d1afe073c5693a47e91aed30f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 May 2019: dvisvgm 2.7.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
+<li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
+<li>Added the source files required to access the MiKTeX session object as the MiKTeX SDK has been deprecated.</li>
+</ul>
+</div>
+  </section><a name="ed26fc1f97db41d498f4198055773fd3"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">13 April 2019: dvisvgm 2.7 has been released</div>
     <div class="card-body">
@@ -284,23 +296,6 @@ system libraries by default (<a href="https://github.com/mgieseki/dvisvgm/issues
 <li>Added option <code>--enable-bundled-libs</code> to the <code>configure</code> script to build and statically link
 the bundled libraries.</li>
 <li>Some code refactorings.</li>
-</ul>
-</div>
-  </section><a name="17a86fddd2d683a5caf8ec5239a5433f"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">18 July 2018: dvisvgm 2.4.2 has been released</div>
-    <div class="card-body">
-      <p>This is another small maintenance release.</p>
-
-<ul>
-<li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
-<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas to obtain tight bounds.</li>
-<li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
-For example, option <code>psfixbb</code> of the preview package adds these specials in order to help
-<a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
-Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
-<li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
 </ul>
 </div>
   </section>
