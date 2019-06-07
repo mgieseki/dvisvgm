@@ -4,7 +4,7 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Fri, 07 Jun 2019 11:44:46 +0200</pubDate>
+    <pubDate>Fri, 07 Jun 2019 12:05:02 +0200</pubDate>
     <language>en</language>
     
     <item>
@@ -15,12 +15,12 @@
       <description>
         <![CDATA[<p>This maintenance release fixes an issue introduced with Ghostscript 9.27.
 The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
-the public interface, leads to an error message when processing PDF files with
+the public interface leads to an error message when processing PDF files with
 <em>dvisvgm</em>.</p>
 
 <p>The changes in Ghostscript 9.27 also break the PDF functionality of
 <a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
-An unofficial, fixed version can be dowloaded <a href="https://github.com/mgieseki/gsview">here</a>.</p>
+An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview">here</a>.</p>
 ]]>
       </description>
     </item>
