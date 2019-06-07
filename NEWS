@@ -1,3 +1,7 @@
+dvisvgm-2.7.2 (2019-06-07)
+- adapted PostScript handler to incompatible changes introduced with
+  Ghostscript 9.27 (removal of GS_PDF_ProcSet and pdfdict)
+
 dvisvgm-2.7.1 (2019-05-20)
 - fixed a bug in PS operator 'setmatrix' (GH #106)
 - fixed build issue reported on MacPorts
