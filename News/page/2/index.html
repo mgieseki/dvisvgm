@@ -79,7 +79,45 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="17a86fddd2d683a5caf8ec5239a5433f"></a>
+  <a name="893ff3b8dee919326502dc03f65fa28b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 August 2018: dvisvgm 2.5 has been released</div>
+    <div class="card-body">
+      <p>This is a small feature release with the following additions/changes:</p>
+
+<ul>
+<li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
+the pages to be processed can be selected with option <code>--page</code>:
+<div class="d-inline-flex">
+<pre style="color:#f8f8f2;background-color:#282a36">
+$ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
+</span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-2.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
+<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
+<span style="color:#50fa7b;">  output written to sample-3.svg</span>
+<span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
+</pre>
+</div></li>
+<li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
+the PDF mode too.</li>
+<li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
+them were available. For further information see the <a href="/Manpage/">manual page</a>.</li>
+<li>TeX Live 32-bit Windows binaries only: The <a href="https://www.ghostscript.com/">Ghostscript</a> DLL
+is now looked up in the TeX Live folders as well (thanks to Akira Kakuto for sending the patch).</li>
+<li>At the request of the TeX Live maintainers, <a href="http://potrace.sourceforge.net">potrace</a> has been
+added to the bundled third-party libraries again, in order to simplify maintaining this dependency.</li>
+<li>Instead of linking the bundled libraries <a href="https://github.com/google/brotli">brotli</a>,
+<a href="http://potrace.sourceforge.net">potrace</a>, <a href="https://github.com/google/woff2">woff2</a>, and
+<a href="https://github.com/Cyan4973/xxHash">xxhash</a>, the configure script now looks for the corresponding
+system libraries by default (<a href="https://github.com/mgieseki/dvisvgm/issues/90">issue #90</a>).</li>
+<li>Added option <code>--enable-bundled-libs</code> to the <code>configure</code> script to build and statically link
+the bundled libraries.</li>
+<li>Some code refactorings.</li>
+</ul>
+</div>
+  </section><a name="17a86fddd2d683a5caf8ec5239a5433f"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">18 July 2018: dvisvgm 2.4.2 has been released</div>
     <div class="card-body">
@@ -204,20 +242,6 @@ allowed according to the EPS specification.</li>
 <ul>
 <li>Fixed a wrong behavior when requiring both default mapfiles and <code>pdf:mapline</code> or <code>pdf:mapfile</code> specials.</li>
 <li>Fixed an exception thrown in rare cases of unavailable font files.</li>
-</ul>
-</div>
-  </section><a name="23716e14524e4f885fe665d88cc8b079"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">8 February 2018: dvisvgm 2.3.2 has been released</div>
-    <div class="card-body">
-      <p>This is a minor maintenance release with the following changes:</p>
-
-<ul>
-<li>Prevent the creation of redundant <a href="https://www.w3.org/TR/SVG/text.html#TSpanElement"><code>tspan</code></a> elements.</li>
-<li>Added support for the new JFM specification introduced in <a href="https://www.tug.org/svn/texlive?view=revision&amp;revision=46452">TeX Live r46452</a>
-(patch by Hironobu Yamashita).</li>
-<li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
-<li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
 </ul>
 </div>
   </section>

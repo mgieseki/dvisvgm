@@ -4,8 +4,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Mon, 20 May 2019 14:11:51 +0200</pubDate>
+    <pubDate>Fri, 07 Jun 2019 11:44:46 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.7.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#6c01c957e0db5e41406e40486fe0acd1</link>
+      <pubDate>Fri, 07 Jun 2019 11:01:49 +0200</pubDate>
+      <guid>6c01c957e0db5e41406e40486fe0acd1</guid>
+      <description>
+        <![CDATA[<p>This maintenance release fixes an issue introduced with Ghostscript 9.27.
+The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
+the public interface, leads to an error message when processing PDF files with
+<em>dvisvgm</em>.</p>
+
+<p>The changes in Ghostscript 9.27 also break the PDF functionality of
+<a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
+An unofficial, fixed version can be dowloaded <a href="https://github.com/mgieseki/gsview">here</a>.</p>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.7.1 has been released</title>
@@ -225,7 +243,7 @@ to detect DVI files with incorrect, e.g. cyclic, page references.</li>
     
     <item>
       <title>dvisvgm 2.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#893ff3b8dee919326502dc03f65fa28b</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#893ff3b8dee919326502dc03f65fa28b</link>
       <pubDate>Wed, 08 Aug 2018 09:49:29 +0200</pubDate>
       <guid>893ff3b8dee919326502dc03f65fa28b</guid>
       <description>
@@ -430,7 +448,7 @@ allowed according to the EPS specification.</li>
     
     <item>
       <title>dvisvgm 2.3.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#23716e14524e4f885fe665d88cc8b079</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#23716e14524e4f885fe665d88cc8b079</link>
       <pubDate>Thu, 08 Feb 2018 13:29:02 +0200</pubDate>
       <guid>23716e14524e4f885fe665d88cc8b079</guid>
       <description>
@@ -520,21 +538,6 @@ zlib:        1.2.11</code></pre></div>
 <li>Updated the bundled template library <a href="https://github.com/mpark/variant"><code>mpark::variant</code></a>.</li>
 <li>Fixed a memory issue that may occur in conjuntion with option <code>--clipjoin</code>.</li>
 <li>Some test and code improvements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.2.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#da3935202cf7114070f7bbabe2d55bb6</link>
-      <pubDate>Fri, 17 Nov 2017 20:06:27 +0200</pubDate>
-      <guid>da3935202cf7114070f7bbabe2d55bb6</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Fixed a memory issue regarding font maps that could lead to segfaults (<a href="https://github.com/mgieseki/dvisvgm/issues/79">issue #79</a>).</li>
-<li>Avoid scientific notation when printing floating point numbers.</li>
-<li>Minor code improvements.</li>
 </ul>
 ]]>
       </description>
