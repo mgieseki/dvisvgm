@@ -29,6 +29,7 @@ if (len(sys.argv) < 2):
 print("""\
 #include <xxhash.h>
 #include <cstdint>
+#include <iterator>
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -44,15 +45,14 @@ extract_hashes(sys.argv[1])
 print(r"""};
 
 int main () {
-    uint32_t prev_hash=0;
-    size_t size = sizeof(nameHashes)/sizeof(NameHash);
-    if (size == 0) {
+    if (distance(begin(nameHashes), end(nameHashes)) == 0) {
         cout << "hash table is empty\n";
         return 1;
     }
-    for (size_t i=0; i < size; i++) {
-        const string &name = nameHashes[i].name;
-        const uint32_t hash = nameHashes[i].hash;
+    uint32_t prev_hash=0;
+    for (NameHash &nameHash : nameHashes) {
+        const string &name = nameHash.name;
+        const uint32_t hash = nameHash.hash;
         if (XXH32(&name[0], name.length(), 0) != hash) {
             cout << "hash of '" << name << "' doesn't match\n";
             return 1;
