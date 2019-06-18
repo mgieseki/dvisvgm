@@ -750,11 +750,11 @@ The following TeX snippet adds two raw SVG elements to the output and updates th
 [source,tex]
 -------------------------------------------------------------------------------------
 \special{dvisvgm:raw <circle cx='{?x}' cy='{?y}' r='10' stroke='black' fill='red'/>}%
-\special{dvisvgm:bbox 10bp 10bp 10bp}%
-\special{dvisvgm:bbox -10bp 10bp 10bp}
+\special{dvisvgm:bbox 10bp 10bp 10bp transform}%
+\special{dvisvgm:bbox -10bp 10bp 10bp transform}
 
-\special{dvisvgm:raw <path d='M50 200 L10 250 H100 Z' stroke='black' fill='blue'/>}
-\special{dvisvgm:bbox abs 10bp 200bp 100bp 250bp}
+\special{dvisvgm:raw <path d='M50 200 L10 250 H100 Z' stroke='black' fill='blue'/>}%
+\special{dvisvgm:bbox abs 10bp 200bp 100bp 250bp transform}
 -------------------------------------------------------------------------------------
 +
 
