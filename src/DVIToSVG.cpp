@@ -332,12 +332,16 @@ Matrix DVIToSVG::getPageTransformation () const {
 
 
 static void collect_chars (unordered_map<const Font*, set<int>> &fontmap) {
+	unordered_map<const Font*, set<int>> insertedChars;
 	for (const auto &entry : fontmap) {
-		if (entry.first->uniqueFont() != entry.first) {
+		const Font *unique_font = entry.first->uniqueFont();
+		if (unique_font != entry.first) {
 			for (int c : entry.second)
-				fontmap[entry.first->uniqueFont()].insert(c);
+				insertedChars[unique_font].insert(c);
 		}
 	}
+	for (const auto &entry : insertedChars)
+		fontmap[entry.first].insert(entry.second.begin(), entry.second.end());
 }
 
 
