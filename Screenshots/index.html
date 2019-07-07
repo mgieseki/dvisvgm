@@ -81,14 +81,12 @@
    <div class="col-md-6">
       <img src="images/shot1.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>To convert a DVI file to SVG, just call <em>dvisvgm</em> with the name of the DVI file. The suffix <code>.dvi</code> can be omitted.<br />
+   <div class="col-md-6 description">To convert a DVI file to SVG, just call <em>dvisvgm</em> with the name of the DVI file. The suffix <code>.dvi</code> can be omitted.<br />
 In this example, the first page of <code>frktest.dvi</code> has been converted and written to <code>frktest.svg</code>. Since the font
 <em>yinitas</em> wasn’t available as a vector font, <em>dvisvgm</em> called Metafont and vectorized the two glyphs of Metafont’s
 bitmap output required for the document. They are stored in a cache file so that it’s not necessary to call Metafont
-for these glyphs again which will speed up the conversion process.</p>
+for these glyphs again which will speed up the conversion process.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -96,11 +94,9 @@ for these glyphs again which will speed up the conversion process.</p>
    <div class="col-md-6">
       <img src="images/shot-opera.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>Here is the resulting SVG file opened in the Opera browser. Great, the document looks as expected &ndash;
-all glyphs are rendered correctly.</p>
+   <div class="col-md-6 description">Here is the resulting SVG file opened in the Opera browser. Great, the document looks as expected &ndash;
+all glyphs are rendered correctly.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -108,13 +104,11 @@ all glyphs are rendered correctly.</p>
    <div class="col-md-6">
       <img src="images/shot-firefox1.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>And this screenshot shows the same SVG file opened in Firefox. Well, the result is not that convincing this time.
+   <div class="col-md-6 description">And this screenshot shows the same SVG file opened in Firefox. Well, the result is not that convincing this time.
 Unfortunately, only few SVG renderers support the evaluation of
 <a href="https://w3.org/TR/SVG/fonts.html#FontElement">SVG font elements</a> properly which <em>dvisvgm</em> creates by default.
-Thus, in many cases, these SVG files look strange.</p>
+Thus, in many cases, these SVG files look strange.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -131,19 +125,16 @@ of the required glyphs is present in the font cache and allows for a faster conv
 </div>
 </div>
 
-
 <hr />
 
 <div class="row">
    <div class="col-md-6">
       <img src="images/shot-firefox2.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>The font-free SVG file looks identical to the previous one and Firefox, Chrome, Inkscape etc. render it
+   <div class="col-md-6 description">The font-free SVG file looks identical to the previous one and Firefox, Chrome, Inkscape etc. render it
 correctly. However, as there are no longer font characters present in the SVG file, the drawn text can’t
-be selected in the browser.</p>
+be selected in the browser.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -151,12 +142,10 @@ be selected in the browser.</p>
    <div class="col-md-6">
       <img src="images/shot-win1.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p><em>dvisvgm</em> supports the evaluation of <a href="https://tug.org/texinfohtml/dvips.html#Interaction-with-PostScript">PostScript specials</a>
+   <div class="col-md-6 description"><em>dvisvgm</em> supports the evaluation of <a href="https://tug.org/texinfohtml/dvips.html#Interaction-with-PostScript">PostScript specials</a>
 embedded in the DVI file. It requires <a href="https://ghostscript.com">Ghostscript</a> to process the PostScript instructions.
-If the Ghostscript library can’t be found, you get a corresponding warning message.</p>
+If the Ghostscript library can’t be found, you get a corresponding warning message.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -164,11 +153,9 @@ If the Ghostscript library can’t be found, you get a corresponding warning mes
    <div class="col-md-6">
       <img src="images/shot-squiggle1.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>If the PostScript specials couldn’t be processed, the resulting SVG usually lacks some parts of the graphic
-and/or text elements get the wrong position.</p>
+   <div class="col-md-6 description">If the PostScript specials couldn’t be processed, the resulting SVG usually lacks some parts of the graphic
+and/or text elements get the wrong position.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -176,11 +163,9 @@ and/or text elements get the wrong position.</p>
    <div class="col-md-6">
       <img src="images/shot-win2.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>There are several ways to tell <em>dvisvgm</em> where to find the Ghostscript library (see the <a href="/FAQ">FAQ</a>),
-e.g. by setting the environment variable <code>LIBGS</code>. The warning messages go away as soon as Ghostscript is accessible.</p>
+   <div class="col-md-6 description">There are several ways to tell <em>dvisvgm</em> where to find the Ghostscript library (see the <a href="/FAQ">FAQ</a>),
+e.g. by setting the environment variable <code>LIBGS</code>. The warning messages go away as soon as Ghostscript is accessible.</div>
 </div>
-</div>
-
 
 <hr />
 
@@ -188,10 +173,8 @@ e.g. by setting the environment variable <code>LIBGS</code>. The warning message
    <div class="col-md-6">
       <img src="images/shot-squiggle2.png" class="img-fluid">
    </div>
-   <div class="col-md-6 description"><p>Now all graphic and positional instructions made it to the SVG file and the result looks as expected.</p>
+   <div class="col-md-6 description">Now all graphic and positional instructions made it to the SVG file and the result looks as expected.</div>
 </div>
-</div>
-
 
 </div>
     </main>
