@@ -2,9 +2,10 @@ _dvisvgm_ &ndash; A fast DVI to SVG converter
 =============================================
 [![Build Status](https://travis-ci.org/mgieseki/dvisvgm.svg?branch=master)](https://travis-ci.org/mgieseki/dvisvgm)
 [![Build Status](https://ci.appveyor.com/api/projects/status/0rbkw88js1on4g2u/branch/master?svg=true)](https://ci.appveyor.com/project/mgieseki/dvisvgm/branch/master)
+[![Copr Status](https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm/package/dvisvgm/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm)
+[![Code Status](https://scan.coverity.com/projects/1099/badge.svg)](https://scan.coverity.com/projects/1099)
 [![License](https://img.shields.io/:license-GPL%20v3+-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Releases](https://img.shields.io/github/release/mgieseki/dvisvgm.svg)](https://github.com/mgieseki/dvisvgm/releases)
-[![Donate](https://img.shields.io/badge/donate-PayPal-orange.svg)](https://www.paypal.me/mgieseking)
 
 Description
 -----------
