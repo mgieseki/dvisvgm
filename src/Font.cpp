@@ -159,7 +159,7 @@ bool TFMFont::verifyChecksums () const {
 // static class variables
 bool PhysicalFont::EXACT_BBOX = false;
 bool PhysicalFont::KEEP_TEMP_FILES = false;
-const char *PhysicalFont::CACHE_PATH = nullptr;
+string PhysicalFont::CACHE_PATH;
 double PhysicalFont::METAFONT_MAG = 4;
 FontCache PhysicalFont::_cache;
 
@@ -324,7 +324,7 @@ std::string PhysicalFont::styleName () const {
 bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer::Callback *callback) const {
 	if (type() == Type::MF) {
 		const Glyph *cached_glyph=nullptr;
-		if (CACHE_PATH) {
+		if (!CACHE_PATH.empty()) {
 			_cache.write(CACHE_PATH);
 			_cache.read(name(), CACHE_PATH);
 			cached_glyph = _cache.getGlyph(c);
@@ -342,7 +342,7 @@ bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer:
 					tracer.setGlyph(glyph);
 					tracer.executeChar(c);
 					glyph.closeOpenSubPaths();
-					if (CACHE_PATH)
+					if (!CACHE_PATH.empty())
 						_cache.setGlyph(c, glyph);
 					return true;
 				}
@@ -392,7 +392,7 @@ bool PhysicalFont::createGF (string &gfname) const {
  *  @return number of glyphs traced */
 int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const {
 	int count = 0;
-	if (type() == Type::MF && CACHE_PATH) {
+	if (type() == Type::MF && !CACHE_PATH.empty()) {
 		if (const FontMetrics *metrics = getMetrics()) {
 			int fchar = metrics->firstChar();
 			int lchar = metrics->lastChar();
@@ -479,7 +479,7 @@ PhysicalFontImpl::PhysicalFontImpl (const string &name, int fontindex, uint32_t 
 
 
 PhysicalFontImpl::~PhysicalFontImpl () {
-	if (CACHE_PATH)
+	if (!CACHE_PATH.empty())
 		_cache.write(CACHE_PATH);
 	if (!KEEP_TEMP_FILES)
 		tidy();

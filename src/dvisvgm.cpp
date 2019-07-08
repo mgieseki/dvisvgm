@@ -109,9 +109,9 @@ static void set_libgs (CommandLine &args) {
 static bool set_cache_dir (const CommandLine &args) {
 	if (args.cacheOpt.given() && !args.cacheOpt.value().empty()) {
 		if (args.cacheOpt.value() == "none")
-			PhysicalFont::CACHE_PATH = nullptr;
+			PhysicalFont::CACHE_PATH.clear();
 		else if (FileSystem::exists(args.cacheOpt.value()))
-			PhysicalFont::CACHE_PATH = args.cacheOpt.value().c_str();
+			PhysicalFont::CACHE_PATH = args.cacheOpt.value();
 		else
 			Message::wstream(true) << "cache directory '" << args.cacheOpt.value() << "' does not exist (caching disabled)\n";
 	}
@@ -127,9 +127,9 @@ static bool set_cache_dir (const CommandLine &args) {
 		PhysicalFont::CACHE_PATH = cachepath.c_str();
 	}
 	if (args.cacheOpt.given() && args.cacheOpt.value().empty()) {
-		cout << "cache directory: " << (PhysicalFont::CACHE_PATH ? PhysicalFont::CACHE_PATH : "(none)") << '\n';
+		cout << "cache directory: " << (PhysicalFont::CACHE_PATH.empty() ? "(none)" : PhysicalFont::CACHE_PATH) << '\n';
 		try {
-			if (PhysicalFont::CACHE_PATH)
+			if (!PhysicalFont::CACHE_PATH.empty())
 				FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
 		}
 		catch (StreamReaderException &e) {

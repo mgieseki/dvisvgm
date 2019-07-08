@@ -142,7 +142,7 @@ class PhysicalFont : public virtual Font {
 	public:
 		static bool EXACT_BBOX;
 		static bool KEEP_TEMP_FILES;
-		static const char *CACHE_PATH; ///< path to cache directory (0 if caching is disabled)
+		static std::string CACHE_PATH; ///< path to cache directory ("" if caching is disabled)
 		static double METAFONT_MAG;    ///< magnification factor for Metafont calls
 
 	protected:
