@@ -119,6 +119,17 @@ TEST(UtilityTest, ilog10) {
 }
 
 
+TEST(UtilityTest, to_string) {
+	ASSERT_EQ(util::to_string(0), "0");
+	ASSERT_EQ(util::to_string(1), "1");
+	ASSERT_EQ(util::to_string(100), "100");
+	ASSERT_EQ(util::to_string(-1), "-1");
+	ASSERT_EQ(util::to_string(2.123), "2.123");
+	ASSERT_EQ(util::to_string(-2.123), "-2.123");
+	ASSERT_EQ(util::to_string(1.500e-5), "0.000015");
+}
+
+
 static string base64 (const string &str) {
 	istringstream iss(str);
 	ostringstream oss;

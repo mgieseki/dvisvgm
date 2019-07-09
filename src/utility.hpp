@@ -52,6 +52,7 @@ std::string trim (const std::string &str, const char *ws=" \t\n\r\f");
 std::string normalize_space (std::string str, const char *ws=" \t\n\r\f");
 std::string tolower (const std::string &str);
 std::string replace (std::string str, const std::string &find, const std::string &repl);
+std::string to_string (double val);
 std::vector<std::string> split (const std::string &str, const std::string &sep);
 int ilog10 (int n);
 

@@ -109,6 +109,20 @@ string util::tolower (const string &str) {
 }
 
 
+/** Converts a double to a string and strips redundant trailing digits/dots. */
+string util::to_string (double val) {
+	string str = std::to_string(val);
+	if (str.find('.') != string::npos) {  // double value and not an integer?
+		size_t pos = str.find_last_not_of('0');
+		if (pos != string::npos)  // trailing zeros
+			str.erase(pos+1, string::npos);
+		if (str.back() == '.')    // trailing dot?
+			str.pop_back();
+	}
+	return str;
+}
+
+
 /** Returns the integer part of log10 of a given integer \f$n>0\f$.
  *  If \f$n<0\f$, the result is 0. */
 int util::ilog10 (int n) {
