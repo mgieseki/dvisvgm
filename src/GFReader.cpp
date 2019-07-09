@@ -106,11 +106,8 @@ int GFReader::executeCommand () {
 		cmdPaint0(opcode);
 	else if (opcode >= 74 && opcode <= 238)
 		cmdNewRow(opcode-74);
-	else if (opcode >= 250) {
-		ostringstream oss;
-		oss << "undefined GF command (opcode " << opcode << ")";
-		throw GFException(oss.str());
-	}
+	else if (opcode >= 250)
+		throw GFException("undefined GF command (opcode " + std::to_string(opcode) + ")");
 	else {
 		int offset = opcode <= 73 ? 64 : 239-(73-64+1);
 		const GFCommand &cmd = commands[opcode-offset];

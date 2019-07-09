@@ -457,11 +457,8 @@ void DVIReader::cmdDir (int) {
 	uint8_t wmode = readUnsigned(1);
 	if (wmode == 4)  // yoko mode (4) equals default LR mode (0)
 		wmode = 0;
-	if (wmode == 2 || wmode > 3) {
-		ostringstream oss;
-		oss << "invalid writing mode value " << wmode << " (0, 1, 3, or 4 expected)";
-		throw DVIException(oss.str());
-	}
+	if (wmode == 2 || wmode > 3)
+		throw DVIException("invalid writing mode value " + std::to_string(wmode) + " (0, 1, 3, or 4 expected)");
 	_dviState.d = (WritingMode)wmode;
 	dviDir(_dviState.d);
 }
@@ -485,11 +482,8 @@ void DVIReader::setFont (int fontnum, SetFontMode mode) {
 		_currFontNum = fontnum;
 		dviFontNum(uint32_t(fontnum), mode, font);
 	}
-	else {
-		ostringstream oss;
-		oss << "undefined font number " << fontnum;
-		throw DVIException(oss.str());
-	}
+	else
+		throw DVIException("undefined font number " + std::to_string(fontnum));
 }
 
 

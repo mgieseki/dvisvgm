@@ -249,9 +249,7 @@ void CMapReader::Token::scan (InputReader &ir) {
 	else if (isdigit(ir.peek())) {  // number?
 		double val;
 		if (ir.parseDouble(val)) {
-			ostringstream oss;
-			oss << val;
-			_value = oss.str();
+			_value = util::to_string(val);
 			_type = Type::NUMBER;
 		}
 	}

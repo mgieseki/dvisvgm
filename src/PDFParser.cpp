@@ -168,10 +168,8 @@ static string parse_literal_string (InputReader &ir) {
 static char get_hex_digit (InputReader &ir) {
 	int c = ir.get();
 	if (isxdigit(c))
-		return static_cast<char>(c);
-	ostringstream oss;
-	oss << "invalid hexadecimal digit '" << static_cast<char>(c) << "'";
-	throw PDFException(oss.str());
+		return char(c);
+	throw PDFException("invalid hexadecimal digit '" + string(1, char(c)) + "'");
 }
 
 

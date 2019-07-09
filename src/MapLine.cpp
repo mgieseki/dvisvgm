@@ -221,9 +221,7 @@ void MapLine::parseDVIPDFMLine (InputReader &ir) {
 					throw_number_expected('w', true);
 				break;
 			default:
-				ostringstream oss;
-				oss << "invalid option: -" << option;
-				throw MapLineException(oss.str());
+				throw MapLineException("invalid option: -" + string(1, option));
 		}
 		ir.skipSpace();
 	}

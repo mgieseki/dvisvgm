@@ -66,9 +66,7 @@ int VFReader::executeCommand (ApproveAction approve) {
 			case 248: cmdPost();     break;  // postamble
 			default : {                      // invalid opcode
 				replaceActions(actions);      // reenable actions
-				ostringstream oss;
-				oss << "undefined VF command (opcode " << opcode << ')';
-				throw VFException(oss.str());
+				throw VFException("undefined VF command (opcode " + std::to_string(opcode) + ")");
 			}
 		}
 	}

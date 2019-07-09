@@ -396,11 +396,8 @@ Matrix Matrix::parse (istream &is, Calculator &calc) {
 				if (c != 'X' && c != 'Y')
 					throw ParserException("transformation command 'K' must be followed by 'X' or 'Y'");
 				double a = getArgument(is, calc, 0, false, false);
-				if (std::abs(cos(deg2rad(a))) < numeric_limits<double>::epsilon()) {
-					ostringstream oss;
-					oss << "illegal skewing angle: " << a << " degrees";
-					throw ParserException(oss.str());
-				}
+				if (std::abs(cos(deg2rad(a))) < numeric_limits<double>::epsilon())
+					throw ParserException("illegal skewing angle: " + util::to_string(a) + " degrees");
 				if (c == 'X')
 					ret.xskewByAngle(a);
 				else
@@ -419,9 +416,7 @@ Matrix Matrix::parse (istream &is, Calculator &calc) {
 				break;
 			}
 			default:
-				ostringstream oss;
-				oss << "transformation command expected (found '" << char(cmd) << "' instead)";
-				throw ParserException(oss.str());
+				throw ParserException("transformation command expected (found '" + string(1, cmd) + "' instead)");
 		}
 	}
 	return ret;

@@ -174,9 +174,7 @@ string SVGOutput::expandFormatString (string str, int page, int numPages, const 
 							result += oss.str();
 						}
 						catch (CalculatorException &e) {
-							oss.str("");
-							oss << "error in filename pattern (" << e.what() << ")";
-							throw MessageException(oss.str());
+							throw MessageException("error in filename pattern (" + string(e.what()) + ")");
 						}
 						pos = endpos;
 					}

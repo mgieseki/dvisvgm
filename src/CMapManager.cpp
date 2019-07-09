@@ -44,9 +44,7 @@ CMap* CMapManager::lookup (const string &name) {
 
 	if (_includedCMaps.find(name) != _includedCMaps.end()) {
 		_level = 0;
-		ostringstream oss;
-		oss << "circular reference of CMap " << name;
-		throw CMapReaderException(oss.str());
+		throw CMapReaderException("circular reference of CMap " + name);
 	}
 
 	unique_ptr<CMap> cmap_ptr;
