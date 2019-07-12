@@ -79,7 +79,30 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
+  <a name="c4479aa4beab25001669744852462e3d"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
+    <div class="card-body">
+      <p>This is a major release with the following changes/additions:</p>
+
+<ul>
+<li>Added option <code>--font-format</code> to select the data format used to embed fonts into the SVG files.
+Besides the default SVG format, following alternatives are supported now: TrueType, WOFF, and WOFF2.
+Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a> is supported by almost all
+recent web browsers so that the text elements present in the SVG files are rendered correctly as in
+the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
+
+<object data="/News/images/matrices.svg" type="image/svg+xml"></object>
+<br />
+In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
+Thanks to Thomas Weidner for providing important parts of the code.</li>
+<li>The code base of <em>dvisvgm</em> has been switched from C++03 to C++11. Thus, you need a more recent compiler
+(e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
+<a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
+<li>The command-line parser and the CommandLine class generator have been reimplemented.</li>
+</ul>
+</div>
+  </section><a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
     <div class="card-body">
@@ -183,18 +206,6 @@ is now adapted to create a tight box by default.</li>
 <li>Fixed output of PS error messages shown when converting EPS files.</li>
 <li>Updated the bundled <a href="https://cyan4973.github.io/xxHash">xxHash library</a> to revision 42.</li>
 <li>Minor code refactorings and cleanup.</li>
-</ul>
-</div>
-  </section><a name="790a189b0fce83826fc91e2a5269aaa2"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">18 November 2015: dvisvgm 1.12 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following changes:</p>
-
-<ul>
-<li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
-<li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
-<li>A memory issue that could occur when running Metafont has been fixed.</li>
 </ul>
 </div>
   </section>

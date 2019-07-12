@@ -79,7 +79,25 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4214b9debb2f3b9fa2ec3588368e4fd9"></a>
+  <a name="99c35178ebd06cc9faad8da4943f38e8"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">30 July 2014: dvisvgm 1.8 has been released</div>
+    <div class="card-body">
+      <p>This is a feature release with the following additions/changes:</p>
+
+<ul>
+<li>The new command-line option <code>--clipjoin</code> tells <em>dvisvgm</em> to directly compute
+<a href="/Clipping/">intersections of clipping paths</a> and not to delegate this task to the SVG renderer.</li>
+<li>The new command-line option <code>--relative</code> creates relative rather than absolute
+<a href="https://w3.org/TR/SVG/paths.html#PathDataGeneralInformation">path commands</a>.</li>
+<li>The evaluation of PostScript operator <code>clippath</code> has been added.</li>
+<li>PostScript operator <code>show</code> has been fixed to prevent the creation of unintended path overlays.</li>
+<li>A memory leak in the font engine has been fixed (patch by Khaled Hosny).</li>
+<li>Option <code>--list-specials</code> no longer throws an exception.</li>
+<li><a href="https://www.cygwin.com">Cygwin</a> builds of <em>dvisvgm</em> now look for the proper filename of the Ghostscript DLL.</li>
+</ul>
+</div>
+  </section><a name="4214b9debb2f3b9fa2ec3588368e4fd9"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">8 June 2014: dvisvgm 1.7 has been released</div>
     <div class="card-body">

@@ -1279,11 +1279,11 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
 <div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span><span style="color:#8be9fd">}</span>
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span>
 
-<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span>
-<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span><span style="color:#8be9fd">}</span></code></pre></div>
+<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span></code></pre></div>
 </div>
 </dd>
 </div>
@@ -1568,9 +1568,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.7.2</div>
+   <div class="col-md-6">Version 2.7.3</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-06-07</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-07-12</span>
    </div>
 </div>
 </div>
