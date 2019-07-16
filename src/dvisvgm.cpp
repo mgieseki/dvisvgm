@@ -115,16 +115,25 @@ static bool set_cache_dir (const CommandLine &args) {
 		else
 			Message::wstream(true) << "cache directory '" << args.cacheOpt.value() << "' does not exist (caching disabled)\n";
 	}
-	else if (const char *userdir = FileSystem::userdir()) {
+	else {
+		string &cachepath = PhysicalFont::CACHE_PATH;
+		const char *cachehome = getenv("XDG_CACHE_HOME");
+		if (!cachehome || util::trim(cachehome).empty()) {
 #ifdef _WIN32
-		string cachedir = "\\.dvisvgm\\cache";
+			cachehome = "~\\.cache";
 #else
-		string cachedir = "/.dvisvgm/cache";
+			cachehome = "~/.cache";
 #endif
-		static string cachepath = userdir + cachedir;
+		}
+		cachepath = util::trim(cachehome) + FileSystem::PATHSEP + "dvisvgm";
+		if (cachepath[0] == '~' && cachepath[1] == FileSystem::PATHSEP) {
+			if (FileSystem::userdir())
+				cachepath.replace(0, 1, FileSystem::userdir());
+			else
+				cachepath.erase(0, 2);  // strip leading "~/"
+		}
 		if (!FileSystem::exists(cachepath))
 			FileSystem::mkdir(cachepath);
-		PhysicalFont::CACHE_PATH = cachepath.c_str();
 	}
 	if (args.cacheOpt.given() && args.cacheOpt.value().empty()) {
 		cout << "cache directory: " << (PhysicalFont::CACHE_PATH.empty() ? "(none)" : PhysicalFont::CACHE_PATH) << '\n';

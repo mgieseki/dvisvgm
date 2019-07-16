@@ -129,7 +129,8 @@ Hence, if you choose a landscape format, the page won't be rotated.
 //
 *-C, --cache*[='dir']::
 To speed up the conversion process of bitmap fonts, dvisvgm saves intermediate conversion
-information in cache files. By default, these files are stored in +$HOME/.dvisvgm/cache+.
+information in cache files. By default, these files are stored in +$XDG_CACHE_HOME/dvisvgm/+
+or +$HOME/.cache/dvisvgm+ if +XDG_CACHE_HOME+ is not set.
 If you prefer a different location, use option *--cache* to overwrite the default. Furthermore,
 it is also possible to disable the font caching mechanism completely with option *--cache=none*.
 If argument 'dir' is omitted, dvisvgm prints the path of the default cache directory together
