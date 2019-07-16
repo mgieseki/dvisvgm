@@ -38,7 +38,7 @@ MetafontWrapper::MetafontWrapper (string fname, string dir)
 	// ensure that folder paths ends with slash
 	if (_dir.empty())
 		_dir = "./";
-	else if (_dir != "/" && dir[dir.length()-1] != '/')
+	else if (_dir != "/" && _dir.back() != '/')
 		_dir += '/';
 }
 
