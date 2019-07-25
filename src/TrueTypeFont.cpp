@@ -127,7 +127,7 @@ void TrueTypeFont::writeWOFF (ostream &os) const {
 
 
 void TrueTypeFont::writeWOFF (const string &fname) const {
-	ofstream ofs(fname.c_str(), ios::binary);
+	ofstream ofs(fname, ios::binary);
 	writeWOFF(ofs);
 }
 
@@ -151,7 +151,7 @@ bool TrueTypeFont::writeWOFF2 (ostream &os) const {
 
 
 bool TrueTypeFont::writeWOFF2 (const string &fname) const {
-	ofstream ofs(fname.c_str(), ios::binary);
+	ofstream ofs(fname, ios::binary);
 	return writeWOFF2(ofs);
 }
 
