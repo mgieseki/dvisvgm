@@ -10,22 +10,30 @@ if BUILD_MANPAGE
 man_MANS = dvisvgm.1
 endif
 
-EXTRA_DIST = $(man_MANS) conf-dblatex-man.xsl conf-dblatex-pdf.xsl dvisvgm.sty dvisvgm.txt.in tweak-dblatex-pdf.xsl tweak-db-refentry.xsl
+EXTRA_DIST = $(man_MANS) \
+	conf-dblatex-man.xsl \
+	conf-dblatex-pdf.xsl \
+	dvisvgm.txt.in \
+	generate-dvisvgm-sty.xsl \
+	tweak-dblatex-pdf.xsl \
+	tweak-db-refentry.xsl
 
 CONF_DBLATEX_MAN  = $(dvisvgm_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(dvisvgm_srcdir)/doc/conf-dblatex-pdf.xsl
 TWEAK_DBLATEX_PDF = $(dvisvgm_srcdir)/doc/tweak-dblatex-pdf.xsl
 TWEAK_DB_ARTICLE  = $(dvisvgm_srcdir)/doc/tweak-db-article.xsl
 TWEAK_DB_REFENTRY = $(dvisvgm_srcdir)/doc/tweak-db-refentry.xsl
+GEN_DBLATEX_STY   = $(dvisvgm_srcdir)/doc/generate-dvisvgm-sty.xsl
 
 DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.section.enabled=0
 
 dvisvgm.1: dvisvgm-man.xml $(CONF_DBLATEX_MAN)
 	xmlto -m $(CONF_DBLATEX_MAN) $(addprefix --stringparam , $(DB_VARS)) man $<
 
-dvisvgm.pdf: dvisvgm-man.xml $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF)
+dvisvgm.pdf: dvisvgm-man.xml $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF) $(GEN_DBLATEX_STY)
 	mv $< $<.tmp
 	xsltproc -o $< $(TWEAK_DBLATEX_PDF) $<.tmp
+	xsltproc -o dvisvgm.sty $(GEN_DBLATEX_STY) $<
 	dblatex -bxetex --texstyle=./dvisvgm.sty -p $(CONF_DBLATEX_PDF) $<
 	mv $<.tmp $<
 	mv $(basename $<).pdf $@
@@ -51,7 +59,7 @@ dvisvgm-man.xml: dvisvgm.txt $(TWEAK_DB_REFENTRY)
 	xsltproc -o $@ $(TWEAK_DB_REFENTRY) $@.tmp
 	rm $@.tmp
 
-dvisvgm-article.xml: dvisvgm.txt
+dvisvgm-article.xml: dvisvgm.txt $(TWEAK_DB_ARTICLE)
 	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -darticle -o $@.tmp $<
 	xsltproc -o $@ $(TWEAK_DB_ARTICLE) $@.tmp
 	rm $@.tmp
@@ -70,10 +78,10 @@ man: dvisvgm.1
 pdf: dvisvgm.pdf
 
 clean:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.dvi dvisvgm.epub
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub
 
 distclean-local:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.dvi dvisvgm.epub dvisvgm.1
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub dvisvgm.1
 
 # Ensure that distribution tarballs always contain a recent manpage, i.e.
 # let "make dist" and "make distcheck" fail if dvisvgm.1 can't be built.
