@@ -40,7 +40,7 @@ const Color Color::TRANSPARENT(uint32_t(0xff000000));
 
 static inline uint8_t double_to_byte (double v) {
 	v = max(0.0, min(1.0, v));
-	return uint8_t(floor(255*v+0.5));
+	return uint8_t(round(255.0*v));
 }
 
 
