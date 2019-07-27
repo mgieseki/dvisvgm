@@ -30,10 +30,9 @@ DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.se
 dvisvgm.1: dvisvgm-man.xml $(CONF_DBLATEX_MAN)
 	xmlto -m $(CONF_DBLATEX_MAN) $(addprefix --stringparam , $(DB_VARS)) man $<
 
-dvisvgm.pdf: dvisvgm-man.xml $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF) $(GEN_DBLATEX_STY)
+dvisvgm.pdf: dvisvgm-man.xml dvisvgm.sty $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF)
 	mv $< $<.tmp
 	xsltproc -o $< $(TWEAK_DBLATEX_PDF) $<.tmp
-	xsltproc -o dvisvgm.sty $(GEN_DBLATEX_STY) $<
 	dblatex -bxetex --texstyle=./dvisvgm.sty -p $(CONF_DBLATEX_PDF) $<
 	mv $<.tmp $<
 	mv $(basename $<).pdf $@
@@ -52,7 +51,7 @@ dvisvgm.epub: dvisvgm-article.xml
 	a2x -darticle -fepub -L --icons --icons-dir=. $<
 	mv $(basename $<).epub $@
 
-.SECONDARY: dvisvgm-article.xml dvisvgm-man.xml
+.SECONDARY: dvisvgm-article.xml dvisvgm-man.xml dvisvgm.sty
 
 dvisvgm-man.xml: dvisvgm.txt $(TWEAK_DB_REFENTRY)
 	asciidoc -a icons -a 'iconsdir=.' -a badges -a 'revnumber=@VERSION@' --unsafe -bdocbook -dmanpage -o $@.tmp $<
@@ -64,6 +63,9 @@ dvisvgm-article.xml: dvisvgm.txt $(TWEAK_DB_ARTICLE)
 	xsltproc -o $@ $(TWEAK_DB_ARTICLE) $@.tmp
 	rm $@.tmp
 	sed -i "s/{VERSION}/@VERSION@/" $@
+
+dvisvgm.sty: $(GEN_DBLATEX_STY)
+	xsltproc -o dvisvgm.sty $(GEN_DBLATEX_STY) $<
 
 dvisvgm.txt: dvisvgm.txt.in ../configure.ac
 	sed -e 's/@VERSION[@]/@VERSION@/g' -e 's/@PACKAGE_BUGREPORT[@]/@PACKAGE_BUGREPORT@/g' $< >$@
