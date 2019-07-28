@@ -1,3 +1,10 @@
+dvisvgm-2.7.4 (2019-07-28)
+- fixed memory issue occurred when calling Metafont
+- fixed rounding issue in color conversion (GH #116)
+- changed location of cache files from ~/.dvisvgm/cache to
+  $XDG_CACHE_HOME/dvisvgm which usually expands to ~/.cache/dvisvgm (GH #112)
+- some minor refactorings
+
 dvisvgm-2.7.3 (2019-07-12)
 - fixed randomly missing glyph paths referenced by 'use' elements (GH #110)
 - minor update of the man page
