@@ -64,7 +64,7 @@ dvisvgm-article.xml: dvisvgm.txt $(TWEAK_DB_ARTICLE)
 	rm $@.tmp
 	sed -i "s/{VERSION}/@VERSION@/" $@
 
-dvisvgm.sty: $(GEN_DBLATEX_STY)
+dvisvgm.sty: dvisvgm-man.xml $(GEN_DBLATEX_STY)
 	xsltproc -o dvisvgm.sty $(GEN_DBLATEX_STY) $<
 
 dvisvgm.txt: dvisvgm.txt.in ../configure.ac
