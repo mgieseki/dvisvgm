@@ -79,104 +79,40 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="ef60e16a96b2e89da46fe61ba5c89b24"></a>
+  <a name="cdbcb25b227edc23e121e914fd02ba8d"></a>
   <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 October 2017: dvisvgm 2.2 has been released</div>
+    <div class="card-header bg-primary text-white">2 August 2013: dvisvgm 1.4 has been released</div>
     <div class="card-body">
-      <ul>
-<li>Added evaluation of <code>pdf:pagesize</code> specials.</li>
-<li>Added evaluation of PDF hyperlink specials.</li>
-<li>Try to load Ghostscript dylib on Mac systems (patch by Toby Fleming, <a href="https://github.com/mgieseki/dvisvgm/issues/66">issue #66</a>).</li>
-<li>Improved the TPIC special handler, added evaluation of the <code>tx</code> special.</li>
-<li>Length values in dvisvgm specials now accept unit specifiers.</li>
-<li>Added <code>pdftex.map</code> to default map files.</li>
-<li>Fixed potential infinite loop after starting subprocesses (<a href="https://github.com/mgieseki/dvisvgm/issues/68">issue #68</a>).</li>
-<li>Files included with <code>psfile</code> are now also searched in the texmf tree if not present in the current working directory
-(<a href="https://github.com/mgieseki/dvisvgm/issues/69">issue #69</a>).</li>
-<li>Fixed transformation issue in computation of <code>psfile</code> position (<a href="https://github.com/mgieseki/dvisvgm/issues/70">issue #70</a>).</li>
-<li>Updated the bundled brotli, woff2, and xxHash libraries.</li>
-<li>Several code refactorings and improvements.</li>
-</ul>
-</div>
-  </section><a name="e86e61a3431d09a388c481df9dfc7db0"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 February 2017: dvisvgm 2.1.3 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Fixed build failures of the bundled FontForge library on Solaris 10.</li>
-<li>Increased code portability.</li>
-</ul>
-</div>
-  </section><a name="dd2113409e78721a1f3c2f4b2cfa5937"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">12 February 2017: dvisvgm 2.1.2 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Bundled the <a href="https://github.com/google/googletest">googletest</a> sources to simplify
-building and executing the tests.</li>
-<li>Fixed a couple of issues related to LLVM&rsquo;s libc++ (thanks to Mojca Miklavec and
-Rasmus Larsen for their help to isolate the problems).</li>
-<li>Fixed some potential memory leaks.</li>
-<li>Removed the <code>restrict</code> keyword from the <em>xxHash</em> sources to avoid C++ compilation errors
-(<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
-</ul>
-</div>
-  </section><a name="4567ec37398a2111cd0cdb77f419eb54"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Metafont is now called only once for each font. If the required files can&rsquo;t be found, <em>dvisvgm</em>
-doesn&rsquo;t call Metafont again for that font.</li>
-<li>Fixed a build failure on OS X (<a href="https://github.com/mgieseki/dvisvgm/issues/65">issue #65</a>).</li>
-<li>Several minor code improvements and test enhancements.</li>
-</ul>
-</div>
-  </section><a name="39c60d5cff484207e089e498b9fe43f3"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">19 January 2017: dvisvgm 2.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added option <code>--tmpdir</code> to explicitly set folder for temporary files.</li>
-<li>Temporary files are no longer created in the current working directory by default but in the
-system&rsquo;s temp folder (<a href="https://github.com/mgieseki/dvisvgm/issues/63">issue #63</a>).</li>
-<li>Added warning/error messages if temporary files could not be written.</li>
-<li>Fixed collision of Unicode points in AGL table (<a href="https://github.com/mgieseki/dvisvgm/issues/64">issue #64</a>).</li>
-<li>Retain letter case of filenames even if it&rsquo;s not significant (Windows only).</li>
-<li>Various code refactorings and code cleanup.</li>
-</ul>
-</div>
-  </section><a name="ce8be73c30e0212775f2a93c1b82bd93"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">17 November 2016: dvisvgm 2.0.4 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>The reduced FontForge library <a href="https://github.com/mgieseki/ff-woff">ff-woff</a> required to
-create WOFF and TrueType fonts is now bundled with the sources.</li>
-<li>A few typos in the manual page and the <code>--help</code> output have been fixed.</li>
-<li>Few minor code improvements.</li>
-</ul>
-</div>
-  </section><a name="57e684112285d0da830ae4d01551e017"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">27 September 2016: dvisvgm 2.0.3 has been released</div>
-    <div class="card-body">
-      <p>This is another bugfix release with the following changes:</p>
+      <p>This is a feature release with the following additions:</p>
 
 <ul>
-<li>Fixed a regression in the character positioning of virtual fonts.</li>
-<li>Fixed the positioning of rules.</li>
-</ul>
-</div>
-  </section><a name="bf77e8ab739bd4e48157be61876cb088"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">19 September 2016: dvisvgm 2.0.2 has been released</div>
-    <div class="card-body">
-      <p>This is a bugfix release with the following changes:</p>
-
-<ul>
-<li>Fixed a regression in determining the character depths of native fonts.</li>
-<li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
+<li>Basic support for CMap files and CID-keyed fonts has been added. This enables the processing
+of DVI files created with <a href="http://ascii.asciimw.jp/pb/ptex">pTeX</a>, for example.<br />
+<a href="/News/images/jap.svg"><img src="/News/images/jap.png" class="sample-img-news img-responsive"></a></li>
+<li><em>dvisvgm</em> also tries to translate character codes according to the available encoding tables
+stored in the referenced TrueType/OpenType font file.</li>
+<li>Support for OpenType (OTF) fonts has been added.</li>
+<li>If a DVI file contains bounding box information created by the
+<a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>, the size of the
+SVG is adapted accordingly. Also, <em>dvisvgm</em> prints a message showing the assigned width, height,
+and depth values in <span class="tex">T<sub>E</sub>X</span> point units. Especially, the depth value can be used to vertically align
+the SVG graphics with the baseline of surrounding text in HTML or XSL-FO documents, for example.<br />
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm test
+processing page 1 [1]
+  applying bounding box set by preview package (version 11.87)
+  width=88.9844pt, height=7.45308pt, depth=3.95029pt
+  page size: 88.9844pt x 11.4034pt (31.2744mm x 4.00782mm)
+  page written to test.svg
+1 of 1 page converted in 0.421647 seconds</code></pre></div>
+</div></li>
+<li>The command-line option <code>--linkmark</code> has been extended to mark hyperlinked areas with an
+arbitrary background color.</li>
+<li>The processing of PostScript header specials has been improved.</li>
+<li>PostScript operator <em>show</em> creates much better results now.</li>
+<li>The DOCTYPE declaration has been removed from the generated SVG files as the
+<a href="https://w3.org/TR/SVG11/intro.html#NamespaceAndDTDIdentifiers">W3C recommends to omit it</a>.</li>
+<li>The encoding of the generated SVG files has been changed to UTF-8.</li>
 </ul>
 </div>
   </section>
@@ -185,18 +121,17 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
       <a class="page-link" href="/News/" aria-label="First"><span aria-hidden="true"><i class="fa fa-fast-backward"></i></span></a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/News/page/3/" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-step-backward"></i></span></a>
+      <a class="page-link" href="/News/page/7/" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-step-backward"></i></span></a>
     </li>
     <li class="page-item"><a class="page-link" href="/News/">1</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/2/">2</a></li>
     <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
-    <li class="page-item active"><a class="page-link" href="/News/page/4/">4</a></li>
-    <li class="page-item"><a class="page-link" href="/News/page/5/">5</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
-    <li class="page-item"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item">
-      <a class="page-link" href="/News/page/5/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li>
+    <li class="page-item active"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item disabled">
+      <a class="page-link" href="" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
-    <li class="page-item">
+    <li class="page-item disabled">
       <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
