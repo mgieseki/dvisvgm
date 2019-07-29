@@ -78,10 +78,9 @@ bool FontCache::write (const string &fontname, const string &dir) const {
 		return true;
 
 	if (!fontname.empty()) {
-		string dirstr = dir.empty() ? FileSystem::getcwd() : dir;
-		ostringstream oss;
-		oss << dirstr << '/' << fontname << ".fgd";
-		ofstream ofs(oss.str(), ios::binary);
+		string pathstr = dir.empty() ? FileSystem::getcwd() : dir;
+		pathstr += "/" + fontname + ".fgd";
+		ofstream ofs(pathstr, ios::binary);
 		return write(fontname, ofs);
 	}
 	return false;
