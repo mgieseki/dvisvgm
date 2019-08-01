@@ -32,7 +32,7 @@
 
 class MD5HashFunction : public HashFunction {
 	public:
-		explicit MD5HashFunction () {MD5_Init(&_context);}
+		MD5HashFunction () {MD5_Init(&_context);}
 		MD5HashFunction (const char *data, size_t length) : MD5HashFunction() {update(data, length);}
 		explicit MD5HashFunction (const std::string &data) : MD5HashFunction() {update(data);}
 		explicit MD5HashFunction (const std::vector<uint8_t> &data) : MD5HashFunction() {update(data);}
