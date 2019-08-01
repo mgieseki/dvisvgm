@@ -49,7 +49,7 @@ inline DPair to_DPair (const IntPoint &p) {
 /** In order to flatten a curved path, all path segements are processed sequentially.
  *  Depending on the type of the segment, one of the methods provided by this class
  *  is called. */
-class FlattenActions : public CurvedPath::Actions {
+class FlattenActions : public CurvedPath::IterationActions {
 	public:
 		FlattenActions (vector<Bezier> &curves, Polygons &polygons, int &numLines)
 			: _polygons(polygons), _curves(curves), _numLines(numLines) {}
@@ -73,7 +73,7 @@ class FlattenActions : public CurvedPath::Actions {
 			_currentPoint = p;
 		}
 
-		void conicto (const CurvedPath::Point &p1, const CurvedPath::Point &p2) override {
+		void quadto (const CurvedPath::Point &p1, const CurvedPath::Point &p2) override {
 			Bezier bezier(_currentPoint, p1, p2);
 			addCurvePoints(bezier);
 		}

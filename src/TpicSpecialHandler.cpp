@@ -164,7 +164,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions &actions) {
 				const DPair p1 = p+_points[i];
 				const DPair p2 = p+_points[i+1];
 				mid = p1+(p2-p1)/2.0;
-				path.conicto(p1, mid);
+				path.quadto(p1, mid);
 				actions.embed(mid);
 				actions.embed((p0+p1*6.0+p2)/8.0, _penwidth);
 			}

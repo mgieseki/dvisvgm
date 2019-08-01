@@ -351,9 +351,9 @@ static int lineto (FTVectorPtr to, void *user) {
 }
 
 
-static int conicto (FTVectorPtr control, FTVectorPtr to, void *user) {
+static int quadto (FTVectorPtr control, FTVectorPtr to, void *user) {
 	auto glyph = static_cast<Glyph*>(user);
-	glyph->conicto(control->x, control->y, to->x, to->y);
+	glyph->quadto(control->x, control->y, to->x, to->y);
 	return 0;
 }
 
@@ -366,7 +366,7 @@ static int cubicto (FTVectorPtr control1, FTVectorPtr control2, FTVectorPtr to, 
 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
- *  Each glyph is composed of straight lines, quadratic (conic) or cubic B�zier curves.
+ *  Each glyph is composed of straight lines, quadratic or cubic Bézier curves.
  *  This function creates a Glyph object representing these graphics segments.
  *  @param[in] face FreeType object representing the font to scan
  *  @param[in] font corresponding Font object providing additional data
@@ -392,7 +392,7 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 			if (style->bold != 0)
 				FT_Outline_Embolden(&outline, style->bold/font->scaledSize()*face->units_per_EM);
 		}
-		const FT_Outline_Funcs funcs = {moveto, lineto, conicto, cubicto, 0, 0};
+		const FT_Outline_Funcs funcs = {moveto, lineto, quadto, cubicto, 0, 0};
 		FT_Outline_Decompose(&outline, &funcs, &glyph);
 		return true;
 	}
@@ -402,7 +402,7 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 
 
 /** Traces the outline of a glyph by calling the corresponding "drawing" functions.
- *  Each glyph is composed of straight lines, quadratic (conic) or cubic B�zier curves.
+ *  Each glyph is composed of straight lines, quadratic or cubic Bézier curves.
  *  This function creates a Glyph object representing these graphics segments.
  *  @param[in] c the glyph of this character will be traced
  *  @param[out] glyph resulting Glyph object containing the graphics segments

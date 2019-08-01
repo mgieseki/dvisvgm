@@ -92,7 +92,7 @@ TEST(GraphicsPathTest, relative1) {
 	path.lineto(10,10);
 	path.lineto(10,20);
 	path.cubicto(20,20,30,30,40,40);
-	path.conicto(50, 50, 60, 60);
+	path.quadto(50, 50, 60, 60);
 	path.lineto(100,60);
 	path.closepath();
 	ostringstream oss;
@@ -105,7 +105,7 @@ TEST(GraphicsPathTest, computeBBox) {
 	GraphicsPath<int> path;
 	path.moveto(10,10);
 	path.lineto(100,10);
-	path.conicto(10,100,40,80);
+	path.quadto(10, 100, 40, 80);
 	path.cubicto(5,5,30,10,90,70);
 	path.lineto(20,30);
 	path.closepath();
@@ -119,7 +119,7 @@ TEST(GraphicsPathTest, removeRedundantCommands) {
 	GraphicsPath<int> path;
 	path.moveto(10,10);
 	path.lineto(100,10);
-	path.conicto(10,100,40,80);
+	path.quadto(10, 100, 40, 80);
 	path.cubicto(5,5,30,10,90,70);
 	path.moveto(10,10);
 	path.moveto(15,10);
@@ -133,13 +133,34 @@ TEST(GraphicsPathTest, removeRedundantCommands) {
 	EXPECT_EQ(oss.str(), "M10 10H100Q10 100 40 80C5 5 30 10 90 70M20 20V30");
 }
 
+TEST(GraphicsPathTest, cmd_equals) {
+	using Point = Pair<int>;
+	gp::MoveTo<int> m1(Point(1, 2));
+	gp::MoveTo<int> m2(Point(1, 2));
+	gp::MoveTo<int> m3(Point(2, 1));
+	EXPECT_EQ(m1, m2);
+	EXPECT_EQ(m2, m1);
+	EXPECT_NE(m1, m3);
+	EXPECT_NE(m3, m1);
+	gp::LineTo<int> l1(Point(1, 2));
+	EXPECT_NE(l1, m1);
+	EXPECT_NE(m1, l1);
+	gp::CubicTo<int> c1(Point(1, 2), Point(3, 4), Point(5, 6));
+	gp::CubicTo<int> c2(Point(1, 2), Point(3, 4), Point(5, 6));
+	gp::CubicTo<int> c3(Point(1, 2), Point(0, 4), Point(5, 6));
+	EXPECT_EQ(c1, c2);
+	EXPECT_EQ(c2, c1);
+	EXPECT_NE(c1, c3);
+	EXPECT_NE(c3, c1);
+}
+
 
 TEST(GraphicsPathTest, equals) {
 	GraphicsPath<int> path1;
 	EXPECT_TRUE(path1 == path1);
 	path1.moveto(10,10);
 	path1.lineto(100,10);
-	path1.conicto(10,100,40,80);
+	path1.quadto(10, 100, 40, 80);
 	path1.cubicto(5,5,30,10,90,70);
 	path1.lineto(20,30);
 	path1.closepath();
@@ -149,7 +170,7 @@ TEST(GraphicsPathTest, equals) {
 	EXPECT_FALSE(path1 == path2);
 	path2.moveto(10,10);
 	path2.lineto(100,10);
-	path2.conicto(10,100,40,80);
+	path2.quadto(10, 100, 40, 80);
 	path2.cubicto(5,5,30,10,90,70);
 	path2.lineto(20,30);
 	EXPECT_FALSE(path1 == path2);
@@ -161,7 +182,7 @@ TEST(GraphicsPathTest, equals) {
 	path2.clear();
 	path2.moveto(10,10);
 	path2.lineto(100,10);
-	path2.conicto(10,100,40,80);
+	path2.quadto(10, 100, 40, 80);
 	path2.cubicto(5,5,10,10,90,70);
 	path2.lineto(20,30);
 	path2.closepath();
@@ -175,7 +196,7 @@ TEST(GraphicsPathTest, unequals) {
 	EXPECT_FALSE(path1 != path1);
 	path1.moveto(10,10);
 	path1.lineto(100,10);
-	path1.conicto(10,100,40,80);
+	path1.quadto(10, 100, 40, 80);
 	path1.cubicto(5,5,30,10,90,70);
 	path1.lineto(20,30);
 	path1.closepath();
@@ -185,7 +206,7 @@ TEST(GraphicsPathTest, unequals) {
 	EXPECT_TRUE(path1 != path2);
 	path2.moveto(10,10);
 	path2.lineto(100,10);
-	path2.conicto(10,100,40,80);
+	path2.quadto(10, 100, 40, 80);
 	path2.cubicto(5,5,30,10,90,70);
 	path2.lineto(20,30);
 	EXPECT_TRUE(path1 != path2);
@@ -197,7 +218,7 @@ TEST(GraphicsPathTest, unequals) {
 	path2.clear();
 	path2.moveto(10,10);
 	path2.lineto(100,10);
-	path2.conicto(10,100,40,80);
+	path2.quadto(10, 100, 40, 80);
 	path2.cubicto(5,5,10,10,90,70);
 	path2.lineto(20,30);
 	path2.closepath();

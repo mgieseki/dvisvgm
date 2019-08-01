@@ -26,7 +26,6 @@
 #include "CRC32.hpp"
 #include "FileSystem.hpp"
 #include "FontCache.hpp"
-#include "Glyph.hpp"
 #include "Pair.hpp"
 #include "StreamReader.hpp"
 #include "StreamWriter.hpp"
@@ -93,7 +92,7 @@ bool FontCache::write (const string &dir) const {
 
 
 /** Returns the minimal number of bytes needed to store the given value. */
-static int max_int_size (int32_t value) {
+static int max_number_of_bytes (int32_t value) {
 	int32_t limit = 0x7f;
 	for (int i=1; i <= 4; i++) {
 		if ((value < 0  && -value <= limit+1) || (value >= 0 && value <= limit))
@@ -103,17 +102,47 @@ static int max_int_size (int32_t value) {
 	return 4;
 }
 
-
-/** Returns the minimal number of bytes needed to store the biggest
- *  pair component of the given vector. */
-static int max_int_size (const Pair<int32_t> *pairs, size_t n) {
-	int ret=0;
-	for (size_t i=0; i < n; i++) {
-		ret = max(ret, max_int_size(pairs[i].x()));
-		ret = max(ret, max_int_size(pairs[i].y()));
-	}
-	return ret;
+static int max_int_size () {
+	return 0;
 }
+
+template <typename ...Args>
+static int max_int_size (const Glyph::Point &p1, const Args& ...args) {
+	int max1 = max(max_number_of_bytes(p1.x()), max_number_of_bytes(p1.y()));
+	return max(max1, max_int_size(args...));
+}
+
+
+struct WriteActions : Glyph::IterationActions {
+	WriteActions (StreamWriter &sw, CRC32 &crc32) : _sw(sw), _crc32(crc32) {}
+
+	using Point = Glyph::Point;
+	void moveto (const Point &p) override {write('M', p);}
+	void lineto (const Point &p) override {write('L', p);}
+	void quadto (const Point &p1, const Point &p2) override {write('Q', p1, p2);}
+	void cubicto (const Point &p1, const Point &p2, const Point &p3) override {write('C', p1, p2, p3);	}
+	void closepath () override {write('Z');}
+
+	template <typename ...Args>
+	void write (char cmd, Args ...args) {
+		int bytesPerValue = max_int_size(args...);
+		int cmdchar = (bytesPerValue << 5) | (cmd - 'A');
+		_sw.writeUnsigned(cmdchar, 1, _crc32);
+		writeParams(bytesPerValue, args...);
+	}
+
+	static void writeParams (int bytesPerValue) {}
+
+	template <typename ...Args>
+	void writeParams (int bytesPerValue, const Point &p, const Args& ...args) {
+		_sw.writeSigned(p.x(), bytesPerValue, _crc32);
+		_sw.writeSigned(p.y(), bytesPerValue, _crc32);
+		writeParams(bytesPerValue, args...);
+	}
+
+	StreamWriter &_sw;
+	CRC32 &_crc32;
+};
 
 
 /** Writes the current cache data to a stream (only if anything changed after
@@ -130,26 +159,11 @@ bool FontCache::write (const string &fontname, ostream &os) const {
 	StreamWriter sw(os);
 	CRC32 crc32;
 
-	struct WriteActions : Glyph::Actions {
-		WriteActions (StreamWriter &sw, CRC32 &crc32) : _sw(sw), _crc32(crc32) {}
-
-		void draw (char cmd, const Glyph::Point *points, int n) override {
-			int bytes = max_int_size(points, n);
-			int cmdchar = (bytes << 5) | (cmd - 'A');
-			_sw.writeUnsigned(cmdchar, 1, _crc32);
-			for (int i=0; i < n; i++) {
-				_sw.writeSigned(points[i].x(), bytes, _crc32);
-				_sw.writeSigned(points[i].y(), bytes, _crc32);
-			}
-		}
-		StreamWriter &_sw;
-		CRC32 &_crc32;
-	} actions(sw, crc32);
-
 	sw.writeUnsigned(FORMAT_VERSION, 1, crc32);
 	sw.writeUnsigned(0, 4);  // space for checksum
 	sw.writeString(fontname, crc32, true);
 	sw.writeUnsigned(_glyphs.size(), 4, crc32);
+	WriteActions actions(sw, crc32);
 	for (const auto &charglyphpair : _glyphs) {
 		const Glyph &glyph = charglyphpair.second;
 		sw.writeUnsigned(charglyphpair.first, 4, crc32);
@@ -236,7 +250,7 @@ bool FontCache::read (const string &fontname, istream &is) {
 				case 'Q': {
 					Pair32 p1 = read_pair(bytes, sr);
 					Pair32 p2 = read_pair(bytes, sr);
-					glyph.conicto(p1, p2);
+					glyph.quadto(p1, p2);
 					break;
 				}
 				case 'Z':

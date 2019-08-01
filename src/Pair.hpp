@@ -26,8 +26,7 @@
 #include "macros.hpp"
 
 template <typename T>
-class Pair
-{
+class Pair {
 	public:
 		explicit Pair (T x=0, T y=0) : _x(x), _y(y) {}
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
@@ -61,6 +60,10 @@ struct Pair32 : public Pair<int32_t> {
 };
 
 typedef Pair<double> DPair;
+
+inline DPair round (const DPair &p) {
+	return DPair(std::lround(p.x()), std::lround(p.y()));
+}
 
 template <typename T>
 IMPLEMENT_ARITHMETIC_OPERATOR(Pair<T>, +)
