@@ -632,14 +632,14 @@ double Color::deltaE (const Color &c) const {
 	c.getLab(l2, a2, b2);
 	const double deltaL = l2-l1;
 	const double lBar = (l1+l2)/2;
-	const double c1 = sqrt(a1*a1 + b1*b1);
-	const double c2 = sqrt(a2*a2 + b2*b2);
+	const double c1 = hypot(a1, b1);
+	const double c2 = hypot(a2, b2);
 	const double cBar = (c1+c2)/2.0;
 	const double g = (1.0-sqrt(pow(cBar, 7.0)/(pow(cBar, 7.0)+6103515625.0)))/2.0;
 	const double aa1 = a1*(1.0+g);
 	const double aa2 = a2*(1.0+g);
-	const double cc1 = sqrt(aa1*aa1 + b1*b1);
-	const double cc2 = sqrt(aa2*aa2 + b2*b2);
+	const double cc1 = hypot(aa1, b1);
+	const double cc2 = hypot(aa2, b2);
 	const double ccBar = (cc1+cc2)/2.0;
 	const double deltaCC = cc2-cc1;
 	double hh1 = atan2(b1, aa1);

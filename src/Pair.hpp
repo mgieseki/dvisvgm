@@ -36,7 +36,7 @@ class Pair
 		Pair operator /= (T c)                 {_x /= c; _y /= c; return *this;}
 		Pair operator - () const               {return Pair(-_x, -_y);}
 		Pair ortho () const                    {return Pair(-_y, _x);}
-		double length () const                 {return std::sqrt(_x*_x + _y*_y);}
+		double length () const                 {return std::hypot(_x, _y);}
 		bool operator == (const Pair &p) const {return _x == p._x && _y == p._y;}
 		bool operator != (const Pair &p) const {return _x != p._x || _y != p._y;}
 		T x () const                           {return _x;}
