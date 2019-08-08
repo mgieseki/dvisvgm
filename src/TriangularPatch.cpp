@@ -161,8 +161,7 @@ static inline double snap (double x) {
  *  @param[in] callback object notified */
 void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2]) {
-		GraphicsPath<double> path;
-		getBoundaryPath(path);
+		GraphicsPath<double> path = getBoundaryPath();
 		callback.patchSegment(path, _colors[0]);
 	}
 	else {
@@ -197,12 +196,14 @@ void TriangularPatch::approximate (int gridsize, bool overlap, double delta, Cal
 }
 
 
-void TriangularPatch::getBoundaryPath(GraphicsPath<double> &path) const {
+GraphicsPath<double> TriangularPatch::getBoundaryPath () const {
+	GraphicsPath<double> path;
 	path.clear();
 	path.moveto(_points[0]);
 	path.lineto(_points[1]);
 	path.lineto(_points[2]);
 	path.closepath();
+	return path;
 }
 
 

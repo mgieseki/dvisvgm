@@ -235,8 +235,7 @@ TEST_F(TensorProductPatchTest, values) {
 
 
 TEST_F(TensorProductPatchTest, boundaryPath) {
-	GraphicsPath<double> path;
-	_patch.getBoundaryPath(path);
+	GraphicsPath<double> path = _patch.getBoundaryPath();
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
@@ -246,8 +245,7 @@ TEST_F(TensorProductPatchTest, boundaryPath) {
 TEST_F(TensorProductPatchTest, subpatch) {
 	TensorProductPatch tpp;
 	_patch.subpatch(0, 0.5, 0, 0.5, tpp);
-	GraphicsPath<double> path;
-	tpp.getBoundaryPath(path);
+	GraphicsPath<double> path = tpp.getBoundaryPath();
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10C5 20 7.5 27.5 10 36.25C20.625 46.875 31.25 52.1875 43.28125 54.21875C40 40.9375 36.25 27.5 36.25 15C25 10 15 5 10 10Z");

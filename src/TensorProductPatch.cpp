@@ -201,16 +201,18 @@ Color TensorProductPatch::averageColor (const Color &c1, const Color &c2, const 
 }
 
 
-void TensorProductPatch::getBoundaryPath (GraphicsPath<double> &path) const {
+GraphicsPath<double> TensorProductPatch::getBoundaryPath () const {
 	// Simple approach: Use the outer curves as boundary path. This doesn't always lead
 	// to correct results since, depending on the control points, P(u,v) might exceed
 	// the simple boundary.
+	GraphicsPath<double> path;
 	path.moveto(_points[0][0]);
 	path.cubicto(_points[0][1], _points[0][2], _points[0][3]);
 	path.cubicto(_points[1][3], _points[2][3], _points[3][3]);
 	path.cubicto(_points[3][2], _points[3][1], _points[3][0]);
 	path.cubicto(_points[2][0], _points[1][0], _points[0][0]);
 	path.closepath();
+	return path;
 }
 
 
@@ -354,8 +356,7 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, do
 void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
 	if (_colors[0] == _colors[1] && _colors[1] == _colors[2] && _colors[2] == _colors[3]) {
 		// simple case: monochromatic patch
-		GraphicsPath<double> path;
-		getBoundaryPath(path);
+		GraphicsPath<double> path = getBoundaryPath();
 		callback.patchSegment(path, _colors[0]);
 	}
 	else {

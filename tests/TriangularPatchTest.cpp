@@ -135,8 +135,7 @@ TEST(TriangularPatchTest, boundaryPath) {
 	points[2] = DPair(0, 10);
 	vector<Color> colors(3);
 	TriangularPatch tp(points, colors, Color::ColorSpace::RGB, 0, 0);
-	GraphicsPath<double> path;
-	tp.getBoundaryPath(path);
+	GraphicsPath<double> path = tp.getBoundaryPath();
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M0 0H10L0 10Z");

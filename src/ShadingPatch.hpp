@@ -43,7 +43,7 @@ class ShadingPatch {
 		virtual int psShadingType () const =0;
 		virtual void approximate (int gridsize, bool overlap, double delta, Callback &callback) const =0;
 		virtual BoundingBox getBBox () const =0;
-		virtual void getBoundaryPath (GraphicsPath<double> &path) const =0;
+		virtual GraphicsPath<double> getBoundaryPath () const =0;
 		virtual void setPoints (const PointVec &points, int edgeflag, ShadingPatch *patch) =0;
 		virtual void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) =0;
 		virtual int numPoints (int edgeflag) const =0;

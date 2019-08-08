@@ -1007,8 +1007,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 #if 0
 		if (bgcolorGiven) {
 			// fill whole patch area with given background color
-			GraphicsPath<double> outline;
-			patch->getBoundaryPath(outline);
+			GraphicsPath<double> outline = patch->getBoundaryPath();
 			callback.patchSegment(outline, bgcolor);
 		}
 #endif
