@@ -1015,8 +1015,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 		patch->approximate(SHADING_SEGMENT_SIZE, SHADING_SEGMENT_OVERLAP, SHADING_SIMPLIFY_DELTA, callback);
 		if (!_xmlnode) {
 			// update bounding box
-			BoundingBox bbox;
-			patch->getBBox(bbox);
+			BoundingBox bbox = patch->getBBox();
 			bbox.transform(_actions->getMatrix());
 			_actions->embed(bbox);
 		}

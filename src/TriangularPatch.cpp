@@ -206,9 +206,10 @@ void TriangularPatch::getBoundaryPath(GraphicsPath<double> &path) const {
 }
 
 
-void TriangularPatch::getBBox (BoundingBox &bbox) const {
-	bbox.invalidate();
+BoundingBox TriangularPatch::getBBox () const {
+	BoundingBox bbox;
 	bbox.embed(_points[0]);
 	bbox.embed(_points[1]);
 	bbox.embed(_points[2]);
+	return bbox;
 }

@@ -259,8 +259,7 @@ TEST_F(TensorProductPatchTest, subpatch) {
 
 
 TEST_F(TensorProductPatchTest, bbox) {
-	BoundingBox bbox;
-	_patch.getBBox(bbox);
+	BoundingBox bbox = _patch.getBBox();
 	EXPECT_NEAR(bbox.minX(), 7.1132, 0.0001);
 	EXPECT_NEAR(bbox.minY(), 7.9289, 0.0001);
 	EXPECT_DOUBLE_EQ(bbox.maxX(), 100.0);

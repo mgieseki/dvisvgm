@@ -377,17 +377,16 @@ void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, 
 }
 
 
-void TensorProductPatch::getBBox (BoundingBox &bbox) const {
+BoundingBox TensorProductPatch::getBBox () const {
+	BoundingBox bbox;
 	Bezier bezier;
-	BoundingBox bezierBox;
 	for (int i=0; i <= 1; i++) {
 		horizontalCurve(i, bezier);
-		bezier.getBBox(bezierBox);
-		bbox.embed(bezierBox);
+		bbox.embed(bezier.getBBox());
 		verticalCurve(i, bezier);
-		bezier.getBBox(bezierBox);
-		bbox.embed(bezierBox);
+		bbox.embed(bezier.getBBox());
 	}
+	return bbox;
 }
 
 

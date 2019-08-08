@@ -123,8 +123,7 @@ TEST(TriangularPatchTest, bbox) {
 	points[2] = DPair(0, 10);
 	vector<Color> colors(3);
 	TriangularPatch tp(points, colors, Color::ColorSpace::RGB, 0, 0);
-	BoundingBox bbox;
-	tp.getBBox(bbox);
+	BoundingBox bbox = tp.getBBox();
 	EXPECT_EQ(bbox, BoundingBox(0, 0, 10, 10));
 }
 

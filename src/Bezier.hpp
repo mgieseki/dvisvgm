@@ -25,8 +25,7 @@
 #include "BoundingBox.hpp"
 #include "Pair.hpp"
 
-class Bezier
-{
+class Bezier {
 	public:
 		Bezier ();
 		Bezier (const DPair &p0, const DPair &p1, const DPair &p2);
@@ -40,7 +39,7 @@ class Bezier
 		int approximate (double delta, std::vector<DPair> &p, std::vector<double> *t=nullptr) const;
 		const DPair& point (int i) const {return _points[i];}
 		int reduceDegree (double delta, std::vector<DPair> &p) const;
-		void getBBox (BoundingBox &bbox) const;
+		BoundingBox getBBox () const;
 
 	protected:
 		int approximate (double delta, double t0, double t1, std::vector<DPair> &p, std::vector<double> *t) const;

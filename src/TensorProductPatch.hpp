@@ -56,7 +56,7 @@ class TensorProductPatch : public ShadingPatch {
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
 		DPair blossomValue (double u[3], double v[3]) const {return blossomValue(u[0], u[1], u[2], v[0], v[1], v[2]);}
 		void approximate (int gridsize, bool overlap, double delta, Callback &callback) const override;
-		void getBBox (BoundingBox &bbox) const override;
+		BoundingBox getBBox () const override;
 		int numPoints (int edgeflag) const override {return edgeflag == 0 ? 16 : 12;}
 		int numColors (int edgeflag) const override {return edgeflag == 0 ? 4 : 2;}
 

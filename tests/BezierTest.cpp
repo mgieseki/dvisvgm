@@ -108,9 +108,7 @@ TEST(BezierTest, reverse) {
 
 TEST(BezierTest, bbox) {
 	Bezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
-	BoundingBox bbox;
-	bezier.getBBox(bbox);
-	EXPECT_BBOX_NEAR(bbox, BoundingBox(0, -5, 30, 6.598));
+	EXPECT_BBOX_NEAR(bezier.getBBox(), BoundingBox(0, -5, 30, 6.598));
 }
 
 
