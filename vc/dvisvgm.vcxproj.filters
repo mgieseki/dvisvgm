@@ -329,6 +329,9 @@
     <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp">
       <Filter>Source Files\optimizer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\EllipticalArc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -669,6 +672,9 @@
     </ClInclude>
     <ClInclude Include="..\src\optimizer\OptimizerModule.hpp">
       <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EllipticalArc.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,11 @@ template <typename T>
 class Pair {
 	public:
 		explicit Pair (T x=0, T y=0) : _x(x), _y(y) {}
+		template <typename U> Pair (const Pair<U> &p) : _x(U(p.x())), _y(U(p.y())) {}
+		Pair (const Pair &p) =default;
+		Pair (Pair &&p) =default;
+		Pair& operator = (const Pair &p) =default;
+		Pair& operator = (Pair &&p) =default;
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
 		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
 		Pair operator *= (T c)                 {_x *= c; _y *= c; return *this;}
@@ -51,6 +56,18 @@ class Pair {
 template <typename T>
 inline Pair<T> abs (const Pair<T> &p) {
 	return Pair<T>(std::abs(p.x()), std::abs(p.y()));
+}
+
+/** Returns the dot product of two 2D vectors. */
+template <typename T>
+inline T dot (const Pair<T> &p1, const Pair<T> &p2) {
+	return p1.x()*p1.y() + p1.y()*p2.y();
+}
+
+/** Returns the determinant of two 2D vectors. */
+template <typename T>
+inline T det (const Pair<T> &p1, const Pair<T> &p2) {
+	return p1.x()*p2.y() - p1.y()*p2.x();
 }
 
 struct Pair32 : public Pair<int32_t> {

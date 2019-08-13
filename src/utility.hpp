@@ -36,6 +36,13 @@ constexpr const double SQRT2   = 1.414213562373095048801688724209698079;
 
 inline double deg2rad (double deg) {return PI*deg/180.0;}
 inline double rad2deg (double rad) {return 180.0*rad/PI;}
+double normalize_angle (double angle, double mod);
+double normalize_0_2pi (double rad);
+std::vector<double> svd (const double (&m)[2][2]);
+
+/** Signum function (returns x/abs(x) if x != 0, and 0 otherwise). */
+template <typename T>
+inline int sgn (T x) {return (x > T(0)) - (x < T(0));}
 
 } // namespace math
 

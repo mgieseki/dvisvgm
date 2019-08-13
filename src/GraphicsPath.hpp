@@ -27,8 +27,10 @@
 #include <type_traits>
 #include <mpark/variant.hpp>
 #include "BoundingBox.hpp"
+#include "EllipticalArc.hpp"
 #include "Matrix.hpp"
 #include "Pair.hpp"
+#include "utility.hpp"
 #include "XMLString.hpp"
 
 template <typename T>
@@ -97,6 +99,46 @@ struct ClosePath : public Command<T, 0> {
 	ClosePath () : Command<T, 0>() {}
 };
 
+template <typename T>
+struct ArcTo : Command<T, 1> {
+	ArcTo (T rxx, T ryy, double xrot, bool laf, bool sf, const Pair<T> &pp)
+		: Command<T, 1>({pp}), rx(rxx < 0 ? -rxx : rxx), ry(ryy < 0 ? -ryy : ryy),
+		  xrotation(xrot), largeArgFlag(laf), sweepFlag(sf) {}
+
+	bool operator == (const ArcTo &arc) const {
+		return rx == arc.rx
+			&& ry == arc.ry
+			&& xrotation == arc.xrotation
+			&& largeArgFlag == arc.largeArgFlag
+			&& sweepFlag == arc.sweepFlag
+			&& this->points[0] == arc.points[0];
+	}
+
+	void transform (const Matrix &matrix, const Pair<T> &currentPoint);
+
+	bool operator != (const ArcTo &arc) const {return !(*this == arc);}
+
+	T rx, ry;          ///< length of the semi-major and semi-minor axes
+	double xrotation;  ///< rotation of the semi-major axis in degrees
+	bool largeArgFlag; ///< if true, the longer arc from start to end point is chosen, else the shorter one
+	bool sweepFlag;    ///< if true, arc is drawn in direction of positive angles, else the opposite direction
+};
+
+/** Applies an affine transformation described by a given matrix to the arc segment.
+ *  @params[in] matrix describes the affine transformation to apply
+ *  @params[in] currentPoint the untransformed end point of the preceding command */
+template <typename T>
+void ArcTo<T>::transform (const Matrix &matrix, const Pair<T> &currentPoint) {
+	EllipticalArc arc(currentPoint, rx, ry, math::deg2rad(xrotation), largeArgFlag, sweepFlag, this->points[0]);
+	arc.transform(matrix);
+	rx = arc.rx();
+	ry = arc.ry();
+	xrotation = math::rad2deg(arc.rotationAngle());
+	largeArgFlag = arc.largeArc();
+	sweepFlag = arc.sweepPositive();
+	this->points[0] = Pair<T>(arc.endPoint());
+}
+
 /** Returns true if two path command objects are identical (same command and same parameters). */
 template <typename Cmd1, typename Cmd2>
 inline typename std::enable_if<std::is_base_of<CommandBase, Cmd1>::value, bool>::type
@@ -153,10 +195,11 @@ class GraphicsPath {
 		using LineTo = gp::LineTo<T>;
 		using CubicTo = gp::CubicTo<T>;
 		using QuadTo = gp::QuadTo<T>;
+		using ArcTo = gp::ArcTo<T>;
 		using ClosePath = gp::ClosePath<T>;
 
 		/// Variant representing a single path command
-		using CommandVariant = mpark::variant<MoveTo, LineTo, CubicTo, QuadTo, ClosePath>;
+		using CommandVariant = mpark::variant<MoveTo, LineTo, CubicTo, QuadTo, ArcTo, ClosePath>;
 
 		class IterationVisitor;
 
@@ -175,6 +218,7 @@ class GraphicsPath {
 				virtual void quadto (const Point &p1, const Point &p2) {}
 				virtual void cubicto (const Point &p1, const Point &p2) {}
 				virtual void cubicto (const Point &p1, const Point &p2, const Point &p3) {}
+				virtual void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) {}
 				virtual void closepath () {}
 				virtual bool quit () {return false;}
 				virtual void finished () {}
@@ -201,6 +245,38 @@ class GraphicsPath {
 				void cubicto (const Point &p1, const Point &p2) override {write('S', {p1, p2});}
 				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {write('C', {p1, p2, p3});}
 				void closepath () override {_os << (_relative ? 'z' : 'Z');}
+
+				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {
+					Point diff = p-this->currentPoint();
+					if (std::abs(diff.x()) < 1e-7 && std::abs(diff.y()) < 1e-7)
+						return;
+					if (std::abs(rx) < 1e-7 && std::abs(ry) < 1e-7)
+						lineto(p);
+					else {
+						if (std::abs(std::abs(_sx) - std::abs(_sy)) < 1e-7)  {  // symmetric scaling?
+							angle *= math::sgn(_sx) * math::sgn(_sy);
+							rx *= std::abs(_sx);
+							ry *= std::abs(_sx);
+						}
+						else {  // asymmetric scaling => compute new shape parameters
+							EllipticalArc arc(this->currentPoint(), double(rx), double(ry), angle, largeArgFlag, sweepFlag, p);
+							arc.transform(ScalingMatrix(_sx, _sy));
+							angle = math::rad2deg(arc.rotationAngle());
+							rx = arc.rx();
+							ry = arc.ry();
+						}
+						_os << (_relative ? 'a' : 'A')
+							 << to_param_str(rx, 1.0, 0, false)
+							 << to_param_str(ry, 1.0, 0, true)
+							 << to_param_str(angle, 1.0, 0, true)
+							 << ' ' << (largeArgFlag ? 1 : 0)
+							 << ' ' << (sweepFlag ? 1 : 0);
+						if (_relative)
+							_os << to_param_str(p, this->currentPoint(), _sx, _sy, _dx, _dy, true);
+						else
+							_os << to_param_str(p, _sx, _sy, _dx, _dy, true);
+					}
+				}
 
 			protected:
 				void write (char cmdchar, std::initializer_list<Point> points) const {
@@ -301,6 +377,11 @@ class GraphicsPath {
 					_actions._currentPoint = _actions._startPoint;
 				}
 
+				void operator () (const ArcTo &cmd) {
+					_actions.arcto(cmd.rx, cmd.ry, cmd.xrotation, cmd.largeArgFlag, cmd.sweepFlag, cmd.points[0]);
+					_actions._currentPoint = cmd.points[0];
+				}
+
 			private:
 				IterationActions &_actions;
 				bool _shortCommandsActive=false;
@@ -314,6 +395,7 @@ class GraphicsPath {
 		class TransformVisior {
 			public:
 				explicit TransformVisior (const Matrix &m) : matrix(m) {}
+
 				template <typename Cmd>	void operator () (Cmd &cmd) {
 					Point cp = cmd.point(cmd.numPoints()-1);
 					cmd.transform(matrix, _currentPoint);
@@ -400,6 +482,10 @@ class GraphicsPath {
 			_commands.emplace_back(ClosePath{});
 		}
 
+		void arcto (double rx, double ry, double angle, bool laf, bool sweep, const Point &p) {
+			_commands.emplace_back(ArcTo{rx, ry, angle, laf, sweep, p});
+		}
+
 		/** Detects all open subpaths and closes them by adding a closePath command.
 		 *	 Most font formats only support closed outline paths so there are no explicit closePath statements
 		 *	 in the glyph's outline description. All open paths are automatically closed by the renderer.
@@ -459,6 +545,9 @@ class GraphicsPath {
 				void lineto (const Point &p) override {bbox.embed(p);}
 				void quadto (const Point &p1, const Point &p2) override {bbox.embed(p1); bbox.embed(p2);}
 				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {bbox.embed(p1); bbox.embed(p2); bbox.embed(p3);}
+				void arcto (T rx, T ry, double angle, bool laf, bool sweep, const Point &p) override {
+					bbox.embed(EllipticalArc(this->currentPoint(), double(rx), double(ry), angle, laf, sweep, p).getBBox());
+				}
 				BoundingBox &bbox;
 			} actions(bbox);
 			iterate(actions, false);
@@ -474,6 +563,7 @@ class GraphicsPath {
 				void lineto (const Point &p) override {differs = (p != point);}
 				void quadto (const Point &p1, const Point &p2) override { differs = (point != p1 || point != p2);}
 				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {differs = (point != p1 || point != p2 || point != p3);}
+				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {differs = (point != p);}
 				bool quit () override {return differs;}
 				Point point;
 				bool differs;
@@ -539,4 +629,3 @@ class GraphicsPath {
 		std::deque<CommandVariant> _commands;
 		WindingRule _windingRule;
 };
-

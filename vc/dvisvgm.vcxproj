@@ -207,6 +207,7 @@
     <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
+    <ClCompile Include="..\src\EllipticalArc.cpp" />
     <ClCompile Include="..\src\HashFunction.cpp" />
     <ClCompile Include="..\src\ImageToSVG.cpp" />
     <ClCompile Include="..\src\optimizer\AttributeExtractor.cpp" />
@@ -325,6 +326,7 @@
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\CRC32.hpp" />
+    <ClInclude Include="..\src\EllipticalArc.hpp" />
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
     <ClInclude Include="..\src\MD5HashFunction.hpp" />

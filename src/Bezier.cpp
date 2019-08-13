@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <utility>
 #include "Bezier.hpp"
+#include "Matrix.hpp"
 
 using namespace std;
 
@@ -254,4 +255,11 @@ BoundingBox Bezier::getBBox () const {
 	bbox.embed(_points[0]);
 	bbox.embed(_points[3]);
 	return bbox;
+}
+
+
+Bezier& Bezier::transform (const Matrix &matrix) {
+	for (int i=0; i < 4; i++)
+		_points[i] = matrix*_points[i];
+	return *this;
 }

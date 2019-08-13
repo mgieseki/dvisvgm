@@ -63,6 +63,7 @@ libdvisvgm_la_SOURCES = \
 	DvisvgmSpecialHandler.hpp    DvisvgmSpecialHandler.cpp \
 	DVIToSVG.hpp                 DVIToSVG.cpp \
 	DVIToSVGActions.hpp          DVIToSVGActions.cpp \
+	EllipticalArc.hpp            EllipticalArc.cpp \
 	EmSpecialHandler.hpp         EmSpecialHandler.cpp \
 	EncFile.hpp                  EncFile.cpp \
 	EPSFile.hpp                  EPSFile.cpp \

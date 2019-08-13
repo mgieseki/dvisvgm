@@ -147,6 +147,12 @@ DvisvgmSpecialTest_SOURCES = DvisvgmSpecialTest.cpp testutil.hpp
 DvisvgmSpecialTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 DvisvgmSpecialTest_LDADD = $(TESTLIBS)
 
+TESTS += EllipticalArcTest
+check_PROGRAMS += EllipticalArcTest
+EllipticalArcTest_SOURCES = EllipticalArcTest.cpp testutil.hpp
+EllipticalArcTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
+EllipticalArcTest_LDADD = $(TESTLIBS)
+
 TESTS += EmSpecialTest
 check_PROGRAMS += EmSpecialTest
 EmSpecialTest_SOURCES = EmSpecialTest.cpp testutil.hpp
