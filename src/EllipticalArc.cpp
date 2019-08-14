@@ -155,6 +155,57 @@ void EllipticalArc::transform (const Matrix &matrix) {
 }
 
 
+/** Approximates an arc of the unit circle by a single cubic Bézier curve.
+ *  @param[in] phi start angle of the arc in radians
+ *  @param[in] delta length of the arc */
+Bezier approx_unit_arc (double phi, double delta) {
+	double c = 0.551915024494;  // see http://spencermortensen.com/articles/bezier-circle
+	if (abs(delta + math::HALF_PI) < 1e-7)
+		c = -c;
+	else
+		c = 4.0/3*tan(delta/4);
+	DPair p1(cos(phi), sin(phi));
+	DPair p4(cos(phi+delta), sin(phi+delta));
+	DPair p2(p1.x()-c*p1.y(), p1.y()+c*p1.x());
+	DPair p3(p4.x()+c*p4.y(), p4.y()-c*p4.x());
+	return Bezier(p1, p2, p3, p4);
+}
+
+
+/** Approximates the arc by a sequence of cubic Bézier curves. */
+vector<Bezier> EllipticalArc::approximate () const {
+	vector<Bezier> beziers;
+	if (_startPoint != _endPoint) {
+		if (isStraightLine()) {
+			DPair dir = (_endPoint - _startPoint);
+			dir /= dir.length()/3.0;
+			beziers.emplace_back(Bezier(_startPoint, _startPoint+dir, _endPoint-dir, _endPoint));
+		}
+		else {
+			CenterParams cparams = getCenterParams();
+			int numCurves = ceil(cparams.deltaAngle/math::HALF_PI);
+			double remainder = abs(fmod(cparams.deltaAngle, math::HALF_PI));
+			if (remainder < 1e-7)
+				numCurves--;
+			else if (math::HALF_PI-remainder < 1e-7)
+				numCurves++;
+			if (numCurves > 0) {
+				double c = cos(_rotationAngle);
+				double s = sin(_rotationAngle);
+				Matrix ellipse = {_rx*c, -_ry*s, cparams.center.x(), _rx*s, _ry*c, cparams.center.y()};
+				double angle = cparams.startAngle;
+				double diff = cparams.deltaAngle/numCurves;
+				while (numCurves-- > 0) {
+					beziers.emplace_back(approx_unit_arc(angle, diff).transform(ellipse));
+					angle += diff;
+				}
+			}
+		}
+	}
+	return beziers;
+}
+
+
 static inline bool is_angle_between (double t, double angle1, double angle2) {
 	if (angle1 < angle2)
 		return angle1 < t && t < angle2;

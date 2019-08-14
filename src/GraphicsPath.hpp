@@ -49,6 +49,7 @@ class Command : public CommandBase {
 	public:
 		int numPoints () const {return NUM_POINTS;}
 		Pair<T>& point (int n) {return points[n];}
+		const Pair<T>& point (int n) const {return points[n];}
 
 		/** Transforms the command by a given transformation matrix.
  		 *  @params[in] matrix describes the affine transformation to apply
@@ -231,6 +232,20 @@ class GraphicsPath {
 		};
 
 	protected:
+		class ModificationActions : public IterationActions {
+			friend class GraphicsPath;
+			public:
+				explicit ModificationActions (GraphicsPath &path) : _path(path) {}
+
+			protected:
+				GraphicsPath& path () {return _path;}
+				int commandPos () const {return _commandPos;}
+
+			private:
+				GraphicsPath &_path;
+				int _commandPos=0;  ///< number of command in path being processed
+		};
+
 		class WriteActions : public IterationActions {
 			public:
 				WriteActions (std::ostream &os, bool rel, double sx, double sy, double dx, double dy)
@@ -259,7 +274,7 @@ class GraphicsPath {
 							ry *= std::abs(_sx);
 						}
 						else {  // asymmetric scaling => compute new shape parameters
-							EllipticalArc arc(this->currentPoint(), double(rx), double(ry), angle, largeArgFlag, sweepFlag, p);
+							EllipticalArc arc(this->currentPoint(), double(rx), double(ry), math::deg2rad(angle), largeArgFlag, sweepFlag, p);
 							arc.transform(ScalingMatrix(_sx, _sy));
 							angle = math::rad2deg(arc.rotationAngle());
 							rx = arc.rx();
@@ -315,7 +330,7 @@ class GraphicsPath {
 		 *  curve connections etc. Otherwise, the full command templates are triggered. */
 		class IterationVisitor {
 			public:
-				IterationVisitor (IterationActions &actions, bool useShortCmds, double eps)
+				IterationVisitor (IterationActions &actions, bool useShortCmds, double eps=1e-7)
 					: _actions(actions), _shortCommandsActive(useShortCmds), _eps(eps) {}
 
 				void setPrevCommand (const CommandVariant &prevCommand) {
@@ -573,6 +588,21 @@ class GraphicsPath {
 			return !actions.differs;
 		}
 
+		/** Replaces all elliptic arcs with cubic Bézier curves. */
+		void approximateArcs () {
+			struct ArcActions : ModificationActions {
+				explicit ArcActions (GraphicsPath &path) : ModificationActions(path) {}
+				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {
+					EllipticalArc arc(this->currentPoint(), rx, ry, angle, largeArgFlag, sweepFlag, p);
+					std::vector<CommandVariant> cmds;
+					for (const Bezier &bezier : arc.approximate())
+						cmds.emplace_back(CubicTo{bezier.point(1), bezier.point(2), bezier.point(3)});
+					this->path().replace(this->commandPos(), cmds);
+				}
+			} actions(*this);
+			iterate(actions);
+		}
+
 		/** Transforms the path according to a given Matrix.
 		 *  @param[in] matrix Matrix describing the affine transformation */
 		void transform (const Matrix &matrix) {
@@ -621,6 +651,35 @@ class GraphicsPath {
 					break;
 				mpark::visit(visitor, cmd);
 				visitor.setPrevCommand(cmd);
+			}
+			actions.finished();
+		}
+
+	protected:
+		/** Replaces a command by a sequence of other ones.
+		 *  @param[in] pos position of command to replace (0-based)
+		 *  @param[in] cmds commands to insert */
+		void replace (int pos, const std::vector<CommandVariant> &cmds) {
+			auto it = _commands.end();
+			if (!_commands.empty()) {
+				it = _commands.begin()+pos;
+				it = _commands.erase(it);
+			}
+			_commands.insert(it, cmds.begin(), cmds.end());
+		}
+
+		/** Iterates over all commands of the path and calls the corresponding template methods.
+		 *  In contrast to the public iterate() method, this one allows to modify the command sequence.
+		 *  @param[in] actions template methods called by each iteration step */
+		void iterate (ModificationActions &actions) {
+			IterationVisitor visitor(actions, false);
+			// no iterators here since they may be invalidated during path modifications
+			for (size_t i=0; i < _commands.size(); i++) {
+				if (actions.quit())
+					break;
+				actions._commandPos = i;
+				mpark::visit(visitor, _commands[i]);
+				visitor.setPrevCommand(_commands[i]);
 			}
 			actions.finished();
 		}

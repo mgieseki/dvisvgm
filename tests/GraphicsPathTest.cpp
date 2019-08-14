@@ -22,7 +22,7 @@
 #include <sstream>
 #include "GraphicsPath.hpp"
 
-using std::ostringstream;
+using namespace std;
 
 TEST(GraphicsPathTest, svg) {
 	GraphicsPath<int> path;
@@ -224,4 +224,20 @@ TEST(GraphicsPathTest, unequals) {
 	path2.closepath();
 	EXPECT_TRUE(path1 != path2);
 	EXPECT_TRUE(path2 != path1);
+}
+
+
+TEST(GraphicsPathTest, approximate_arcs) {
+	GraphicsPath<double> path;
+	XMLString::DECIMAL_PLACES = 2;
+	path.moveto(10, 10);
+	path.lineto(20, 0);
+	path.arcto(30, 20, 20, 1, 1, DPair(50, 50));
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10L20 0A30 20 20 1 1 50 50");
+	path.approximateArcs();
+	oss.str("");
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10L20 0C25.05-7.15 34.02-8.12 42.72-2.44S58.14 14.42 59.73 25.91S57.48 46.9 50 50");
 }

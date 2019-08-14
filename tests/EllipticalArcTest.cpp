@@ -111,3 +111,32 @@ TEST(EllipticalArcTest, bbox2) {
 	EXPECT_NEAR(bbox.width(), 100, 0.1);
   	EXPECT_NEAR(bbox.height(), 50, 0.1);
 }
+
+
+TEST(EllipticalArcTest, approximate1) {
+	EllipticalArc arc(DPair(125,75), 100, 50, math::deg2rad(30), 1, 1, DPair(225, 125));
+	auto beziers = arc.approximate();
+	ASSERT_EQ(beziers.size(), 4u);
+	DPair data[4][4] = {
+		{DPair(125, 75),         DPair(96.271, 46.768),   DPair(88.655, 17.402),   DPair(106.223, 2.602)},
+		{DPair(106.223, 2.602),  DPair(123.791, -12.198), DPair(162.434, -8.971),  DPair(201.493, 10.558)},
+		{DPair(201.493, 10.558), DPair(240.551, 30.088),  DPair(270.89, 61.351),   DPair(276.289, 87.635)},
+		{DPair(276.289, 87.635), DPair(281.688, 113.919), DPair(260.884, 129.074), DPair(225, 125)}
+	};
+	for (int i=0; i < 4; i++) {
+		for (int j=0; j < 4; j++) {
+			EXPECT_NEAR_PAIR(beziers[i].point(j), data[i][j], 0.001);
+		}
+	}
+}
+
+
+TEST(EllipticalArcTest, approximate2) {
+	EllipticalArc arc(DPair(125,75), 100, 50, math::deg2rad(30), 0, 1, DPair(225, 125));
+	auto beziers = arc.approximate();
+	ASSERT_EQ(beziers.size(), 1u);
+	DPair data[] = {DPair(125, 75), DPair(158.522, 78.806), DPair(198.163, 98.627), DPair(225, 125)};
+	for (int j=0; j < 4; j++) {
+		EXPECT_NEAR_PAIR(beziers[0].point(j), data[j], 0.001);
+	}
+}
