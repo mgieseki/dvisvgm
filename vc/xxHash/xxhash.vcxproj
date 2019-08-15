@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\libs\xxHash\xxh3.h" />
     <ClInclude Include="..\..\libs\xxHash\xxhash.h" />
   </ItemGroup>
   <ItemGroup>
