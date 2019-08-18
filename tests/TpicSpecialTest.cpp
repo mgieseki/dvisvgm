@@ -343,22 +343,22 @@ TEST_F(TpicSpecialTest, stroke_arc) {
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(3*math::PI/4));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 0 1 -50.91 25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 0 1-50.91 25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(math::PI));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1 -72 0' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1-72 0' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(5*math::PI/4));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1 -50.91 -25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1-50.91-25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(3*math::PI/2));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1 0 -36' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1 0-36' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(-3*math::PI/2));

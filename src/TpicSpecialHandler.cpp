@@ -23,6 +23,7 @@
 #include <sstream>
 #include <string>
 #include "Color.hpp"
+#include "EllipticalArc.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "GraphicsPath.hpp"
@@ -187,14 +188,6 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions &actions) {
 }
 
 
-static double normalized_angle (double rad) {
-	rad = fmod(rad, math::TWO_PI);
-	if (rad < 0)
-		rad += math::TWO_PI;
-	return rad;
-}
-
-
 /** Draws an elliptical arc.
  *  @param[in] cx x-coordinate of arc center relative to current DVI position
  *  @param[in] cy y-coordinate of arc center relative to current DVI position
@@ -205,8 +198,6 @@ static double normalized_angle (double rad) {
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions &actions) {
 	if (_penwidth > 0 || _grayLevel >= 0) {
-		angle1 = -angle1;
-		angle2 = -angle2;
 		cx += actions.getX();
 		cy += actions.getY();
 		unique_ptr<XMLElement> elem;
@@ -214,21 +205,17 @@ void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, do
 		if (abs(angle2-angle1) >= math::TWO_PI) // closed ellipse?
 			elem = create_ellipse_element(cx, cy, rx, ry);
 		else {
-			angle1 = normalized_angle(angle1);
-			angle2 = normalized_angle(angle2);
-			double delta = normalized_angle(angle2-angle1);
-			int large_arg = (delta < math::PI) ? 1 : 0;
-			ostringstream oss;
-			oss << 'M' << XMLString(cx+rx*cos(angle1)) << ' ' << XMLString(cy+ry*sin(-angle1))
-				 << 'A' << XMLString(rx) << ' ' << XMLString(ry)
-				 << " 0 "                 // no rotation of x-axis
-				 << large_arg << " 1 "    // always draw arc clockwise (sweep flag == 1)
-				 << XMLString(cx+rx*cos(angle2)) << ' ' << XMLString(cy-ry*sin(angle2));
+			EllipticalArc arc(DPair(cx, cy), rx, ry, 0, -angle1, math::normalize_0_2pi(angle2-angle1));
+			GraphicsPath<double> path;
+			path.moveto(arc.startPoint());
+			path.arcto(rx, ry, 0, arc.largeArc(), arc.sweepPositive(), arc.endPoint());
 			if (_grayLevel >= 0)
-				oss << 'Z';
+				path.closepath();
 			else
 				closed = false;
 			elem = util::make_unique<XMLElement>("path");
+			ostringstream oss;
+			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 			elem->addAttribute("d", oss.str());
 		}
 		if (_penwidth > 0) {
