@@ -241,3 +241,25 @@ TEST(GraphicsPathTest, approximate_arcs) {
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10L20 0C25.05-7.15 34.02-8.12 42.72-2.44S58.14 14.42 59.73 25.91S57.48 46.9 50 50");
 }
+
+
+TEST(GraphicsPathTest, smooth_quadto) {
+	GraphicsPath<int> path;
+	path.moveto(10, 10);
+	path.quadto(DPair(30, 20), DPair(40, 10));
+	path.quadto(DPair(100, 30));
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10Q30 20 40 10T100 30");
+}
+
+
+TEST(GraphicsPathTest, smooth_cubicto) {
+	GraphicsPath<int> path;
+	path.moveto(10, 10);
+	path.cubicto(DPair(30, 20), DPair(40, 0), DPair(20, 50));
+	path.cubicto(DPair(80, 100), DPair(100, 30));
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10C30 20 40 0 20 50S80 100 100 30");
+}

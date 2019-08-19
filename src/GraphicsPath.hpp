@@ -452,6 +452,9 @@ class GraphicsPath {
 			return _commands.size();
 		}
 
+		const Point& startPoint () const {return _startPoint;}
+		const Point& finalPoint () const {return _finalPoint;}
+
 		/// Insert another path at the beginning of this one.
 		void prepend (const GraphicsPath &path) {
 			_commands.insert(_commands.begin(), path._commands.begin(), path._commands.end());
@@ -467,6 +470,7 @@ class GraphicsPath {
 				_commands.emplace_back(MoveTo{p});
 			else
 				mpark::get<MoveTo>(_commands.back()).points[0] = p;
+			_startPoint = _finalPoint = p;
 		}
 
 		void lineto (const T &x, const T &y) {
@@ -475,30 +479,67 @@ class GraphicsPath {
 
 		void lineto (const Point &p) {
 			_commands.emplace_back(LineTo{p});
+			_finalPoint = p;
 		}
 
 		void quadto (const T &x1, const T &y1, const T &x2, const T &y2) {
 			quadto(Point(x1, y1), Point(x2, y2));
 		}
 
+		/** Creates a quadratic Bézier segment. */
 		void quadto (const Point &p1, const Point &p2) {
 			_commands.emplace_back(QuadTo{p1, p2});
+			_finalPoint = p2;
+		}
+
+		/** Creates a quadratic Bézier segment smoothly extending a preceding one, i.e. the gradients
+		 *  of the two curves are identical at the connection point. The control point of the second
+		 *  curve is computed as the reflection of the preceding curve's control point at the connection
+		 *  point. */
+		void quadto (const Point &p2) {
+			Point p1;
+			if (!_commands.empty()) {
+				if (auto qto = mpark::get_if<QuadTo>(&_commands.back()))
+					p1 = _finalPoint*T(2) - qto->point(0);  // reflect previous control point at current point
+				else                  // previous command isn't a quadto?
+					p1 = _finalPoint;  // => use current point as control point
+			}
+			quadto(p1, p2);
 		}
 
 		void cubicto (const T &x1, const T &y1, const T &x2, const T &y2, const T &x3, const T &y3) {
 			cubicto(Point(x1, y1), Point(x2, y2), Point(x3, y3));
 		}
 
+		/** Creates a cubic Bézier segment. */
 		void cubicto (const Point &p1, const Point &p2, const Point &p3) {
 			_commands.emplace_back(CubicTo{p1, p2, p3});
+			_finalPoint = p3;
+		}
+
+		/** Creates a cubic Bézier segment smoothly extending a preceding one, i.e. the gradients
+		 *  of the two curves are identical at the connection point. The first control point of
+		 *  the second curve is computed as the reflection of the preceding curve's second control
+		 *  point at the connection point. */
+		void cubicto (const Point &p2, const Point &p3) {
+			Point p1;
+			if (!_commands.empty()) {
+				if (auto cto = mpark::get_if<CubicTo>(&_commands.back()))
+					p1 = _finalPoint*T(2) - cto->point(1);  // reflect previous control point at current point
+				else                  // previous command isn't a cubicto?
+					p1 = _finalPoint;  // => use current point as control point
+			}
+			cubicto(p1, p2, p3);
 		}
 
 		void closepath () {
 			_commands.emplace_back(ClosePath{});
+			_finalPoint = _startPoint;
 		}
 
 		void arcto (double rx, double ry, double angle, bool laf, bool sweep, const Point &p) {
 			_commands.emplace_back(ArcTo{rx, ry, angle, laf, sweep, p});
+			_finalPoint = p;
 		}
 
 		/** Detects all open subpaths and closes them by adding a closePath command.
@@ -685,6 +726,8 @@ class GraphicsPath {
 		}
 
 	private:
-		std::deque<CommandVariant> _commands;
+		std::deque<CommandVariant> _commands; ///< sequence of path commands
 		WindingRule _windingRule;
+		Point _startPoint; ///< start point of final sub-path
+		Point _finalPoint; ///< final point reached by last command in path
 };
