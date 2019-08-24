@@ -533,8 +533,10 @@ class GraphicsPath {
 		}
 
 		void closepath () {
-			_commands.emplace_back(ClosePath{});
-			_finalPoint = _startPoint;
+			if (!_commands.empty() && !mpark::get_if<ClosePath>(&_commands.back())) {
+				_commands.emplace_back(ClosePath{});
+				_finalPoint = _startPoint;
+			}
 		}
 
 		void arcto (double rx, double ry, double angle, bool laf, bool sweep, const Point &p) {
