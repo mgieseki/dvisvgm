@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2019-07-26 22:29 +0200
+:revdate: 2019-08-25 20:14 +0200
 
 Name
 ----
@@ -467,7 +467,10 @@ By default, dvisvgm uses the XXH64 hash algorithm to compute the values provided
 +%hc+. It's extremely fast, and a 64-bit hash should be sufficient for most documents with an average
 size of pages. Alternatively, XXH32 and MD5 can be used as well. The desired algorithm is specified
 by argument 'params' of option *--page-hashes*. It takes one of the strings +MD5+, +XXH32+, and +XXH64+,
-where the names can be given in lower case too, like +--page-hashes=md5+.
+where the names can be given in lower case too, like +--page-hashes=md5+. Since version 0.7.1,
+xxHash provides an experimental 128-bit hash function, whose algorithm may still change with the next
+versions of the library. If the corresponding API is available, dvisvgm supports the new hash function
+and option *--page-hashes* additionally accepts the algorithm specifier +XXH128+.
 +
 Finally, option *--page-hashes* can take a second argument that must be separated by a comma.
 Currently, only the two parameters 'list' and 'replace' are evaluated, e.g. +--page-hashes=md5,list+

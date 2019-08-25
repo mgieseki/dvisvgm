@@ -76,6 +76,25 @@ TEST(HashFunctionTest, xxh64) {
 }
 
 
+#ifdef ENABLE_XXH128
+TEST(HashFunctionTest, xxh128) {
+	XXH128HashFunction xxh128;
+	ASSERT_EQ(xxh128.digestSize(), 16);
+	xxh128.update("0123456789");
+	EXPECT_EQ(xxh128.digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+	xxh128.update("abcdefghij");
+	EXPECT_EQ(xxh128.digestString(), "1a57c18c0ca790305397dc99249bfabe");
+	xxh128.reset();
+	xxh128.update("0123456789");
+	EXPECT_EQ(xxh128.digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+	uint8_t bytes[] = {0xd1, 0xcc, 0x67, 0xbb, 0xe7, 0xcb, 0x43, 0x38, 0x50, 0xf9, 0x51, 0x9a, 0xc9, 0xab, 0xc5, 0xf6};
+	int i=0;
+	for (uint8_t byte : xxh128.digestValue())
+		EXPECT_EQ(byte, bytes[i++]);
+}
+#endif
+
+
 TEST(HashFunctionTest, createMD5) {
 	auto hashfunc = HashFunction::create("md5");
 	ASSERT_TRUE(dynamic_cast<MD5HashFunction*>(hashfunc.get()) != nullptr);
@@ -110,6 +129,20 @@ TEST(HashFunctionTest, createXXH64) {
 	ASSERT_TRUE(dynamic_cast<XXH64HashFunction*>(hashfunc.get()) != nullptr);
 	EXPECT_EQ(hashfunc->digestString(), "3f5fc178a81867e7");
 }
+
+
+#ifdef ENABLE_XXH128
+TEST(HashFunctionTest, createXXH128) {
+	auto hashfunc = HashFunction::create("xxh128");
+	ASSERT_TRUE(dynamic_cast<XXH128HashFunction*>(hashfunc.get()) != nullptr);
+	hashfunc->update("0123456789");
+	EXPECT_EQ(hashfunc->digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+
+	hashfunc = HashFunction::create("xxh128", "0123456789");
+	ASSERT_TRUE(dynamic_cast<XXH128HashFunction*>(hashfunc.get()) != nullptr);
+	EXPECT_EQ(hashfunc->digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+}
+#endif
 
 
 TEST(HashFunctionTest, createFail) {

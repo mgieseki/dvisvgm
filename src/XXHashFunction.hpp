@@ -24,6 +24,9 @@
 #include <xxhash.h>
 #include "HashFunction.hpp"
 
+#if (XXH_VERSION_NUMBER >= 701) && defined(XXH3_SECRET_SIZE_MIN)
+#define ENABLE_XXH128
+#endif
 
 template <int HASH_SIZE>
 struct XXHInterface {
@@ -49,6 +52,17 @@ struct XXHInterface<8> {
 	static constexpr auto digest = &XXH64_digest;
 };
 
+#ifdef ENABLE_XXH128
+template<>
+struct XXHInterface<16> {
+	using State = XXH3_state_t;
+	static constexpr auto createState = &XXH3_createState;
+	static constexpr auto freeState = &XXH3_freeState;
+	static constexpr auto reset = &XXH3_128bits_reset_withSeed;
+	static constexpr auto update = &XXH3_128bits_update;
+	static constexpr auto digest = &XXH3_128bits_digest;
+};
+#endif
 
 /** Implements the HashFunction class for the xxHash algorithms. */
 template <int HASH_BYTES>
@@ -84,5 +98,23 @@ class XXHashFunction : public HashFunction {
 
 using XXH32HashFunction = XXHashFunction<4>;
 using XXH64HashFunction = XXHashFunction<8>;
+
+#ifdef ENABLE_XXH128
+using XXH128HashFunction = XXHashFunction<16>;
+
+template<>
+inline std::vector<uint8_t> XXHashFunction<16>::digestValue () const {
+	std::vector<uint8_t> hash(16);
+	auto digest = Interface::digest(_state);
+	int pos=15;
+	for (auto chunk : {digest.low64, digest.high64}) {
+		for (int i=0; i < 8; i++) {
+			hash[pos--] = chunk & 0xff;
+			chunk >>= 8;
+		}
+	}
+	return hash;
+}
+#endif
 
 #endif

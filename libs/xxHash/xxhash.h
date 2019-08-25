@@ -268,7 +268,7 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(const XXH64_canonical_t* src
 #endif  /* XXH_NO_LONG_LONG */
 
 
-
+#define XXH_STATIC_LINKING_ONLY
 #ifdef XXH_STATIC_LINKING_ONLY
 
 /* ================================================================================================
