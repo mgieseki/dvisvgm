@@ -44,8 +44,8 @@ class StreamReader {
 		std::string readString (CRC32 &crc32, bool finalZero=false);
 		std::string readString (int length);
 		std::string readString (int length, CRC32 &crc32);
-		std::vector<uint8_t>& readBytes (int n, std::vector<uint8_t> &bytes);
-		std::vector<uint8_t>& readBytes (int n, std::vector<uint8_t> &bytes, CRC32 &crc32);
+		std::vector<uint8_t> readBytes (int n);
+		std::vector<uint8_t> readBytes (int n, CRC32 &crc32);
 		int readByte ()                 {return _is->get();}
 		int readByte (CRC32 &crc32);
 		void seek (std::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}

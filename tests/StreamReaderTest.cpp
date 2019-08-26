@@ -102,13 +102,11 @@ TEST(StreamReaderTest, readBytes) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	vector<uint8_t> bytes(4);
-	memset(&bytes[0], 0, 4);
-	reader.readBytes(3, bytes);
+	vector<uint8_t> bytes = reader.readBytes(3);
+	EXPECT_EQ(bytes.size(), 3u);
 	EXPECT_EQ(bytes[0], 0xff);
 	EXPECT_EQ(bytes[1], 0xee);
 	EXPECT_EQ(bytes[2], 0xdd);
-	EXPECT_EQ(bytes[3], 0);
 }
 
 
@@ -116,17 +114,15 @@ TEST(StreamReaderTest, readBytesCRC) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	vector<uint8_t> bytes(4);
-	memset(&bytes[0], 0, 4);
 	CRC32 crc;
-	reader.readBytes(3, bytes, crc);
+	vector<uint8_t> bytes = reader.readBytes(3, crc);
+	EXPECT_EQ(bytes.size(), 3u);
 	EXPECT_EQ(bytes[0], 0xff);
 	EXPECT_EQ(bytes[1], 0xee);
 	EXPECT_EQ(bytes[2], 0xdd);
-	EXPECT_EQ(bytes[3], 0);
-	EXPECT_EQ(crc.get(), 0x68ab9f15u);
+	EXPECT_EQ(crc.get(), 0X79469df4u);
 	int byte = reader.readByte(crc);
 	EXPECT_EQ(byte, 0xcc);
-	EXPECT_EQ(crc.get(), 0x2d652e62u);
+	EXPECT_EQ(crc.get(), 0xfa79118eu);
 }
 

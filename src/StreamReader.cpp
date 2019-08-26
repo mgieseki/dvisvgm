@@ -130,16 +130,17 @@ string StreamReader::readString (int length, CRC32 &crc32) {
 }
 
 
-vector<uint8_t>& StreamReader::readBytes (int n, vector<uint8_t> &bytes) {
+vector<uint8_t> StreamReader::readBytes (int n) {
+	vector<uint8_t> bytes(n);
 	if (n > 0)
-		_is->read((char*)&bytes[0], n);
+		_is->read(reinterpret_cast<char*>(bytes.data()), n);
 	return bytes;
 }
 
 
-vector<uint8_t>& StreamReader::readBytes (int n, vector<uint8_t> &bytes, CRC32 &crc32) {
-	readBytes(n, bytes);
-	crc32.update(&bytes[0], bytes.size());
+vector<uint8_t> StreamReader::readBytes (int n, CRC32 &crc32) {
+	vector<uint8_t> bytes = readBytes(n);
+	crc32.update(bytes.data(), bytes.size());
 	return bytes;
 }
 

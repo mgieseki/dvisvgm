@@ -137,8 +137,7 @@ void VFReader::cmdLongChar () {
 	else {
 		uint32_t cc  = readUnsigned(4); // character code
 		readUnsigned(4);                // equals character width from corresponding TFM file
-		vector<uint8_t> dvi(pl);        // DVI subroutine
-		readBytes(pl, dvi);
+		auto dvi = readBytes(pl);       // DVI subroutine
 		_actions->defineVFChar(cc, std::move(dvi)); // call template method for user actions
 	}
 }
@@ -152,8 +151,7 @@ void VFReader::cmdShortChar (int pl) {
 	else {
 		uint32_t cc  = readUnsigned(1); // character code
 		readUnsigned(3);                // character width from corresponding TFM file
-		vector<uint8_t> dvi(pl);        // DVI subroutine
-		readBytes(pl, dvi);
+		auto dvi = readBytes(pl);       // DVI subroutine
 		_actions->defineVFChar(cc, std::move(dvi)); // call template method for user actions
 	}
 }
