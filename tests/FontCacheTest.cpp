@@ -39,8 +39,8 @@ class LocalCache {
 		}
 
 		~LocalCache () {
-			if (_created)
-				FileSystem::rmdir(_cachedir);
+//			if (_created)
+//				FileSystem::rmdir(_cachedir);
 		}
 
 		string cachedir () const {return _cachedir;}
@@ -70,8 +70,8 @@ class FontCacheTest : public testing::Test {
 			glyph2.closepath();
 		}
 
-		~FontCacheTest () {
-			FileSystem::remove(cachedir+"/testfont.fgd");
+		~FontCacheTest () override {
+//			FileSystem::remove(cachedir+"/testfont.fgd");
 		}
 
 		Glyph glyph1, glyph2;
@@ -112,8 +112,8 @@ TEST_F(FontCacheTest, write2) {
 	ASSERT_TRUE(FileSystem::exists(cachedir));
 	ASSERT_TRUE(cache.write("testfont", cachedir));
 	cache.setGlyph(10, glyph2);
-	ASSERT_TRUE(cache.write("testfont", cachedir));
-	ASSERT_TRUE(cache.fontname().empty());
+	EXPECT_TRUE(cache.write("testfont", cachedir));
+	EXPECT_TRUE(cache.fontname().empty());
 }
 
 
@@ -123,17 +123,17 @@ TEST_F(FontCacheTest, read) {
 	ASSERT_TRUE(cache.write("testfont", cachedir));
 	// clear cache object
 	cache.clear();
-	ASSERT_EQ(cache.getGlyph(1), nullptr);
-	ASSERT_EQ(cache.getGlyph(2), nullptr);
-	ASSERT_EQ(cache.getGlyph(10), nullptr);
+	EXPECT_EQ(cache.getGlyph(1), nullptr);
+	EXPECT_EQ(cache.getGlyph(2), nullptr);
+	EXPECT_EQ(cache.getGlyph(10), nullptr);
 	// read glyph data from cache file
 	ASSERT_TRUE(cache.read("testfont", cachedir));
-	ASSERT_EQ(cache.fontname(), "testfont");
+	EXPECT_EQ(cache.fontname(), "testfont");
 	ASSERT_NE(cache.getGlyph(1), nullptr);
-	ASSERT_EQ(cache.getGlyph(2), nullptr);
+	EXPECT_EQ(cache.getGlyph(2), nullptr);
 	ASSERT_NE(cache.getGlyph(10), nullptr);
-	ASSERT_EQ(*cache.getGlyph(1), glyph1);
-	ASSERT_EQ(*cache.getGlyph(10), glyph2);
+	EXPECT_EQ(*cache.getGlyph(1), glyph1);
+	EXPECT_EQ(*cache.getGlyph(10), glyph2);
 }
 
 
@@ -168,6 +168,6 @@ TEST_F(FontCacheTest, fontinfo2) {
 	cache.fontinfo(cachedir, oss);
 	ASSERT_EQ(oss.str(),
 		"cache format version 5\n"
-		"testfont      2 glyphs        10 cmds          58 bytes  crc:38cb5c67\n"
+		"testfont      2 glyphs        10 cmds          58 bytes  hash:3cb32ab6\n"
 	);
 }

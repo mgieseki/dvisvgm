@@ -83,6 +83,15 @@ std::unique_ptr<HashFunction> HashFunction::create (const string &name, const ve
 }
 
 
+void HashFunction::update (istream &is) {
+	char buf[4096];
+	while (is) {
+		is.read(buf, 4096);
+		update(buf, is.gcount());
+	}
+}
+
+
 /** Returns the current digest as hexadecimal value. */
 string HashFunction::digestString () const {
 	ostringstream oss;

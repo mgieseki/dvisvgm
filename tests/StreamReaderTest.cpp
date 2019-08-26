@@ -22,8 +22,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "CRC32.hpp"
 #include "StreamReader.hpp"
+#include "XXHashFunction.hpp"
 
 using namespace std;
 
@@ -41,20 +41,20 @@ TEST(StreamReaderTest, readString) {
 }
 
 
-TEST(StreamReaderTest, readStringCRC) {
+TEST(StreamReaderTest, readString_hashed) {
 	string str1 = "dvisvgm converts DVI files to SVG.";
 	istringstream iss(str1);
 	ASSERT_TRUE(bool(iss));
 	StreamReader reader(iss);
-	CRC32 crc;
-	string str2 = reader.readString(iss.str().length(), crc);
+	XXH32HashFunction hashfunc;
+	string str2 = reader.readString(iss.str().length(), hashfunc);
 	EXPECT_EQ(str1, str2);
-	EXPECT_EQ(crc.get(), 0x7c4ef359u);
+	EXPECT_EQ(hashfunc.digestString(), "190cc9d2");
 	iss.clear();
 	iss.str(str1);
-	crc.reset();
-	str2 = reader.readString(crc, false);
-	EXPECT_EQ(crc.get(), 0x7c4ef359u);
+	hashfunc.reset();
+	str2 = reader.readString(hashfunc, false);
+	EXPECT_EQ(hashfunc.digestString(), "190cc9d2");
 }
 
 
@@ -67,14 +67,14 @@ TEST(StreamReaderTest, readUnsigned) {
 }
 
 
-TEST(StreamReaderTest, readUnsignedCRC) {
+TEST(StreamReaderTest, readUnsigned_hashed) {
 	string str = "\x01\x02\x03\x04";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	CRC32 crc;
-	uint32_t val = reader.readUnsigned(4, crc);
+	XXH32HashFunction hashfunc;
+	uint32_t val = reader.readUnsigned(4, hashfunc);
 	EXPECT_EQ(val, 0x01020304u);
-	EXPECT_EQ(crc.get(), 0xb63cfbcdu);
+	EXPECT_EQ(hashfunc.digestString(), "fe96d19c");
 }
 
 
@@ -87,14 +87,14 @@ TEST(StreamReaderTest, readSigned) {
 }
 
 
-TEST(StreamReaderTest, readSignedCRC) {
+TEST(StreamReaderTest, readSigned_hashed) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	CRC32 crc;
-	int32_t val = reader.readSigned(4, crc);
+	XXH32HashFunction hashfunc;
+	int32_t val = reader.readSigned(4, hashfunc);
 	EXPECT_EQ(val, int32_t(0xffeeddcc));
-	EXPECT_EQ(crc.get(), 0xfa79118eu);
+	EXPECT_EQ(hashfunc.digestString(), "8baa29bd");
 }
 
 
@@ -110,19 +110,19 @@ TEST(StreamReaderTest, readBytes) {
 }
 
 
-TEST(StreamReaderTest, readBytesCRC) {
+TEST(StreamReaderTest, readBytes_hashed) {
 	string str = "\xff\xee\xdd\xcc";
 	istringstream iss(str);
 	StreamReader reader(iss);
-	CRC32 crc;
-	vector<uint8_t> bytes = reader.readBytes(3, crc);
+	XXH32HashFunction hashfunc;
+	vector<uint8_t> bytes = reader.readBytes(3, hashfunc);
 	EXPECT_EQ(bytes.size(), 3u);
 	EXPECT_EQ(bytes[0], 0xff);
 	EXPECT_EQ(bytes[1], 0xee);
 	EXPECT_EQ(bytes[2], 0xdd);
-	EXPECT_EQ(crc.get(), 0X79469df4u);
-	int byte = reader.readByte(crc);
+	EXPECT_EQ(hashfunc.digestString(), "5eda43a0");
+	int byte = reader.readByte(hashfunc);
 	EXPECT_EQ(byte, 0xcc);
-	EXPECT_EQ(crc.get(), 0xfa79118eu);
+	EXPECT_EQ(hashfunc.digestString(), "8baa29bd");
 }
 

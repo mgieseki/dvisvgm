@@ -26,7 +26,7 @@
 #include <vector>
 #include "MessageException.hpp"
 
-class CRC32;
+class HashFunction;
 
 class StreamReader {
 	public:
@@ -37,17 +37,17 @@ class StreamReader {
 		void clearStream ()         {_is->clear();}
 		std::istream& replaceStream (std::istream &s);
 		uint32_t readUnsigned (int n);
-		uint32_t readUnsigned (int n, CRC32 &crc32);
+		uint32_t readUnsigned (int n, HashFunction &hashfunc);
 		int32_t readSigned (int n);
-		int32_t readSigned (int n, CRC32 &crc32);
+		int32_t readSigned (int n, HashFunction &hashfunc);
 		std::string readString ();
-		std::string readString (CRC32 &crc32, bool finalZero=false);
+		std::string readString (HashFunction &hashfunc, bool finalZero=false);
 		std::string readString (int length);
-		std::string readString (int length, CRC32 &crc32);
+		std::string readString (int length, HashFunction &hashfunc);
 		std::vector<uint8_t> readBytes (int n);
-		std::vector<uint8_t> readBytes (int n, CRC32 &crc32);
+		std::vector<uint8_t> readBytes (int n, HashFunction &hash);
 		int readByte ()                 {return _is->get();}
-		int readByte (CRC32 &crc32);
+		int readByte (HashFunction &hashfunc);
 		void seek (std::streampos pos, std::ios::seekdir dir) {_is->seekg(pos, dir);}
 		void seek (std::streampos pos)  {_is->seekg(pos);}
 		std::streampos tell () const    {return _is->tellg();}

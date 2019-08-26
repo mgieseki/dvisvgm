@@ -117,12 +117,6 @@ CommandLineTest_SOURCES = CommandLineTest.cpp testutil.hpp
 CommandLineTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 CommandLineTest_LDADD = $(TESTLIBS)
 
-TESTS += CRC32Test
-check_PROGRAMS += CRC32Test
-CRC32Test_SOURCES = CRC32Test.cpp testutil.hpp
-CRC32Test_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
-CRC32Test_LDADD = $(TESTLIBS)
-
 TESTS += DependencyGraphTest
 check_PROGRAMS += DependencyGraphTest
 DependencyGraphTest_SOURCES = DependencyGraphTest.cpp testutil.hpp

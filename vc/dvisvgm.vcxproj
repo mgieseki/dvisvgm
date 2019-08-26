@@ -204,7 +204,6 @@
     <ClCompile Include="..\src\CMapReader.cpp" />
     <ClCompile Include="..\src\Color.cpp" />
     <ClCompile Include="..\src\ColorSpecialHandler.cpp" />
-    <ClCompile Include="..\src\CRC32.cpp" />
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
     <ClCompile Include="..\src\EllipticalArc.cpp" />
@@ -325,7 +324,6 @@
     <ClInclude Include="..\src\Color.hpp" />
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />
-    <ClInclude Include="..\src\CRC32.hpp" />
     <ClInclude Include="..\src\EllipticalArc.hpp" />
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />

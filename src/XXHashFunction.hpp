@@ -79,6 +79,7 @@ class XXHashFunction : public HashFunction {
 		void update (const char *data, size_t length) override {Interface::update(_state, data, length);}
 		void update (const std::string &data) override {update(data.data(), data.length());}
 		void update (const std::vector<uint8_t> &data) override {update(reinterpret_cast<const char*>(data.data()), data.size());}
+		using HashFunction::update;  // unhide update(istream &is) defined in base class
 
 		std::vector<uint8_t> digestValue () const override {
 			std::vector<uint8_t> hash(HASH_BYTES);

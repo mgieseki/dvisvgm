@@ -23,12 +23,12 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include "CRC32.hpp"
 #include "FileSystem.hpp"
 #include "FontCache.hpp"
 #include "Pair.hpp"
 #include "StreamReader.hpp"
 #include "StreamWriter.hpp"
+#include "XXHashFunction.hpp"
 
 using namespace std;
 
@@ -114,7 +114,7 @@ static int max_int_size (const Glyph::Point &p1, const Args& ...args) {
 
 
 struct WriteActions : Glyph::IterationActions {
-	WriteActions (StreamWriter &sw, CRC32 &crc32) : _sw(sw), _crc32(crc32) {}
+	WriteActions (StreamWriter &sw, HashFunction &hashfunc) : _sw(sw), _hashfunc(hashfunc) {}
 
 	using Point = Glyph::Point;
 	void moveto (const Point &p) override {write('M', p);}
@@ -127,7 +127,7 @@ struct WriteActions : Glyph::IterationActions {
 	void write (char cmd, Args ...args) {
 		int bytesPerValue = max_int_size(args...);
 		int cmdchar = (bytesPerValue << 5) | (cmd - 'A');
-		_sw.writeUnsigned(cmdchar, 1, _crc32);
+		_sw.writeUnsigned(cmdchar, 1, _hashfunc);
 		writeParams(bytesPerValue, args...);
 	}
 
@@ -135,13 +135,13 @@ struct WriteActions : Glyph::IterationActions {
 
 	template <typename ...Args>
 	void writeParams (int bytesPerValue, const Point &p, const Args& ...args) {
-		_sw.writeSigned(p.x(), bytesPerValue, _crc32);
-		_sw.writeSigned(p.y(), bytesPerValue, _crc32);
+		_sw.writeSigned(p.x(), bytesPerValue, _hashfunc);
+		_sw.writeSigned(p.y(), bytesPerValue, _hashfunc);
 		writeParams(bytesPerValue, args...);
 	}
 
 	StreamWriter &_sw;
-	CRC32 &_crc32;
+	HashFunction &_hashfunc;
 };
 
 
@@ -157,21 +157,22 @@ bool FontCache::write (const string &fontname, ostream &os) const {
 		return false;
 
 	StreamWriter sw(os);
-	CRC32 crc32;
+	XXH32HashFunction hashfunc;
 
-	sw.writeUnsigned(FORMAT_VERSION, 1, crc32);
-	sw.writeUnsigned(0, 4);  // space for checksum
-	sw.writeString(fontname, crc32, true);
-	sw.writeUnsigned(_glyphs.size(), 4, crc32);
-	WriteActions actions(sw, crc32);
+	sw.writeUnsigned(FORMAT_VERSION, 1, hashfunc);
+	sw.writeBytes(hashfunc.digestValue());  // space for checksum
+	sw.writeString(fontname, hashfunc, true);
+	sw.writeUnsigned(_glyphs.size(), 4, hashfunc);
+	WriteActions actions(sw, hashfunc);
 	for (const auto &charglyphpair : _glyphs) {
 		const Glyph &glyph = charglyphpair.second;
-		sw.writeUnsigned(charglyphpair.first, 4, crc32);
-		sw.writeUnsigned(glyph.size(), 2, crc32);
+		sw.writeUnsigned(charglyphpair.first, 4, hashfunc);
+		sw.writeUnsigned(glyph.size(), 2, hashfunc);
 		glyph.iterate(actions, false);
 	}
 	os.seekp(1);
-	sw.writeUnsigned(crc32.get(), 4);  // insert CRC32 checksum
+	auto digest = hashfunc.digestValue();
+	sw.writeBytes(digest);  // insert checksum
 	os.seekp(0, ios::end);
 	return true;
 }
@@ -208,17 +209,17 @@ bool FontCache::read (const string &fontname, istream &is) {
 		return false;
 
 	StreamReader sr(is);
-	CRC32 crc32;
-	if (sr.readUnsigned(1, crc32) != FORMAT_VERSION)
+	XXH32HashFunction hashfunc;
+	if (sr.readUnsigned(1, hashfunc) != FORMAT_VERSION)
 		return false;
 
-	uint32_t crc32_cmp = sr.readUnsigned(4);
-	crc32.update(is);
-	if (crc32.get() != crc32_cmp)
+	auto hashcmp = sr.readBytes(hashfunc.digestSize());
+	hashfunc.update(is);
+	if (hashfunc.digestValue() != hashcmp)
 		return false;
 
 	is.clear();
-	is.seekg(5);  // continue reading after checksum
+	is.seekg(hashfunc.digestSize()+1);  // continue reading after checksum
 
 	string fname = sr.readString();
 	if (fname != fontname)
@@ -302,17 +303,17 @@ bool FontCache::fontinfo (std::istream &is, FontInfo &info) {
 		is.seekg(0);
 		try {
 			StreamReader sr(is);
-			CRC32 crc32;
-			if ((info.version = sr.readUnsigned(1, crc32)) != FORMAT_VERSION)
+			XXH32HashFunction hashfunc;
+			if ((info.version = sr.readUnsigned(1, hashfunc)) != FORMAT_VERSION)
 				return false;
 
-			info.checksum = sr.readUnsigned(4);
-			crc32.update(is);
-			if (crc32.get() != info.checksum)
+			info.checksum = sr.readBytes(hashfunc.digestSize());
+			hashfunc.update(is);
+			if (hashfunc.digestValue() != info.checksum)
 				return false;
 
 			is.clear();
-			is.seekg(5);  // continue reading after checksum
+			is.seekg(hashfunc.digestSize()+1);  // continue reading after checksum
 
 			info.name = sr.readString();
 			info.numchars = sr.readUnsigned(4);
@@ -374,8 +375,10 @@ void FontCache::fontinfo (const string &dirname, ostream &os, bool purge) {
 					<< setw(5)  << right << strinfopair.second->numchars << " glyph" << (strinfopair.second->numchars == 1 ? ' ':'s')
 					<< setw(10) << right << strinfopair.second->numcmds  << " cmd"   << (strinfopair.second->numcmds == 1 ? ' ':'s')
 					<< setw(12) << right << strinfopair.second->numbytes << " byte"  << (strinfopair.second->numbytes == 1 ? ' ':'s')
-					<< setw(6) << "crc:" << setw(8) << hex << right << setfill('0') << strinfopair.second->checksum
-					<< endl;
+					<< "  hash:" << hex;
+				for (int byte : strinfopair.second->checksum)
+					os << setw(2) << setfill('0') << byte;
+				os << '\n';
 			}
 		}
 		if (purge) {

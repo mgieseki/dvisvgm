@@ -55,7 +55,6 @@ libdvisvgm_la_SOURCES = \
 	Color.hpp                    Color.cpp \
 	ColorSpecialHandler.hpp      ColorSpecialHandler.cpp \
 	CommandLine.hpp \
-	CRC32.hpp                    CRC32.cpp \
 	Directory.hpp                Directory.cpp \
 	DVIActions.hpp \
 	DLLoader.hpp                 DLLoader.cpp \

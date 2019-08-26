@@ -30,12 +30,12 @@
 class FontCache {
 	public:
 		struct FontInfo {
-			std::string name;   // fontname
-			uint16_t version;   // file format version
-			uint32_t checksum;  // CRC32 checksum of file data
-			uint32_t numchars;  // number of characters
-			uint32_t numbytes;  // number of bytes
-			uint32_t numcmds;   // number of path commands
+			std::string name;               // fontname
+			uint16_t version;               // file format version
+			std::vector<uint8_t> checksum;  // checksum of file data
+			uint32_t numchars;              // number of characters
+			uint32_t numbytes;              // number of bytes
+			uint32_t numcmds;               // number of path commands
 		};
 
 	public:

@@ -21,8 +21,8 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <string>
-#include "CRC32.hpp"
 #include "StreamWriter.hpp"
+#include "XXHashFunction.hpp"
 
 using namespace std;
 
@@ -40,21 +40,21 @@ TEST(StreamWriterTest, writeString) {
 }
 
 
-TEST(StreamWriterTest, writeStringCRC) {
+TEST(StreamWriterTest, writeString_hashed) {
 	ostringstream oss;
 	StreamWriter writer(oss);
-	CRC32 crc;
+	XXH32HashFunction hashfunc;
 	string str = "dvisvgm converts DVI files to SVG.";
-	writer.writeString(str, crc);
+	writer.writeString(str, hashfunc);
 	EXPECT_EQ(oss.str(), str);
-	EXPECT_EQ(crc.get(), 0x7C4EF359u);
+	EXPECT_EQ(hashfunc.digestString(), "190cc9d2");
 
 	oss.str("");
-	crc.reset();
-	writer.writeString(str, crc, true);
+	hashfunc.reset();
+	writer.writeString(str, hashfunc, true);
 	str.push_back('\0');
 	EXPECT_EQ(oss.str(), str);
-	EXPECT_EQ(crc.get(), 0xc0c9482e);
+	EXPECT_EQ(hashfunc.digestString(), "f82e1606");
 }
 
 
@@ -71,18 +71,18 @@ TEST(StreamWriterTest, writeUnsigned) {
 }
 
 
-TEST(StreamWriterTest, writeUnsignedCRC) {
+TEST(StreamWriterTest, writeUnsigned_hashed) {
 	ostringstream oss;
 	StreamWriter writer(oss);
-	CRC32 crc;
-	writer.writeUnsigned(0x00010203, 4, crc);
+	XXH32HashFunction hashfunc;
+	writer.writeUnsigned(0x00010203, 4, hashfunc);
 	string str;
 	str.push_back('\x00');
 	str.push_back('\x01');
 	str.push_back('\x02');
 	str.push_back('\x03');
 	EXPECT_EQ(oss.str(), str);
-	EXPECT_EQ(crc.get(), 0x8bb98613);
+	EXPECT_EQ(hashfunc.digestString(), "80691e66");
 }
 
 
@@ -95,12 +95,12 @@ TEST(StreamWriterTest, writeSigned) {
 }
 
 
-TEST(StreamWriterTest, writeSignedCRC) {
+TEST(StreamWriterTest, writeSigned_hashed) {
 	ostringstream oss;
 	StreamWriter writer(oss);
-	CRC32 crc;
-	writer.writeSigned(0xffeeddcc, 4, crc);
+	XXH32HashFunction hashfunc;
+	writer.writeSigned(0xffeeddcc, 4, hashfunc);
 	string str = "\xff\xee\xdd\xcc";
 	EXPECT_EQ(oss.str(), str);
-	EXPECT_EQ(crc.get(), 0xfa79118e);
+	EXPECT_EQ(hashfunc.digestString(), "8baa29bd");
 }
