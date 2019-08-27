@@ -23,6 +23,7 @@
 
 #include <xxhash.h>
 #include "HashFunction.hpp"
+#include "utility.hpp"
 
 #if (XXH_VERSION_NUMBER >= 701) && defined(XXH3_SECRET_SIZE_MIN)
 #define ENABLE_XXH128
@@ -79,16 +80,11 @@ class XXHashFunction : public HashFunction {
 		void update (const char *data, size_t length) override {Interface::update(_state, data, length);}
 		void update (const std::string &data) override {update(data.data(), data.length());}
 		void update (const std::vector<uint8_t> &data) override {update(reinterpret_cast<const char*>(data.data()), data.size());}
+
 		using HashFunction::update;  // unhide update(istream &is) defined in base class
 
 		std::vector<uint8_t> digestValue () const override {
-			std::vector<uint8_t> hash(HASH_BYTES);
-			auto digest = Interface::digest(_state);
-			for (int i=HASH_BYTES-1; i >= 0; i--) {
-				hash[i] = digest & 0xff;
-				digest >>= 8;
-			}
-			return hash;
+			return util::bytes(Interface::digest(_state), HASH_BYTES);
 		}
 
 		static unsigned version () {return XXH_versionNumber();}
@@ -105,14 +101,11 @@ using XXH128HashFunction = XXHashFunction<16>;
 
 template<>
 inline std::vector<uint8_t> XXHashFunction<16>::digestValue () const {
-	std::vector<uint8_t> hash(16);
+	std::vector<uint8_t> hash;
 	auto digest = Interface::digest(_state);
-	int pos=15;
-	for (auto chunk : {digest.low64, digest.high64}) {
-		for (int i=0; i < 8; i++) {
-			hash[pos--] = chunk & 0xff;
-			chunk >>= 8;
-		}
+	for (auto chunk : {digest.high64, digest.low64}) {
+		auto bytes = util::bytes(chunk);
+		hash.insert(hash.end(), bytes.begin(), bytes.end());
 	}
 	return hash;
 }

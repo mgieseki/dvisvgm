@@ -35,10 +35,8 @@ TEST(HashFunctionTest, md5) {
 	md5.reset();
 	md5.update("0123456789");
 	EXPECT_EQ(md5.digestString(), "781e5e245d69b566979b86e28d23f2c7");
-	uint8_t bytes[] = {0x78, 0x1e, 0x5e, 0x24, 0x5d, 0x69, 0xb5, 0x66, 0x97, 0x9b, 0x86, 0xe2, 0x8d, 0x23, 0xf2, 0xc7};
-	int i=0;
-	for (uint8_t byte : md5.digestValue())
-		EXPECT_EQ(byte, bytes[i++]);
+	vector<uint8_t> bytes = {0x78, 0x1e, 0x5e, 0x24, 0x5d, 0x69, 0xb5, 0x66, 0x97, 0x9b, 0x86, 0xe2, 0x8d, 0x23, 0xf2, 0xc7};
+	EXPECT_EQ(md5.digestValue(), bytes);
 }
 
 
@@ -52,10 +50,8 @@ TEST(HashFunctionTest, xxh32) {
 	xxh32.reset();
 	xxh32.update("0123456789");
 	EXPECT_EQ(xxh32.digestString(), "950c9c0a");
-	uint8_t bytes[] = {0x95, 0x0c, 0x9c, 0x0a};
-	int i=0;
-	for (uint8_t byte : xxh32.digestValue())
-		EXPECT_EQ(byte, bytes[i++]);
+	vector<uint8_t> bytes = {0x95, 0x0c, 0x9c, 0x0a};
+	EXPECT_EQ(xxh32.digestValue(), bytes);
 }
 
 
@@ -69,10 +65,8 @@ TEST(HashFunctionTest, xxh64) {
 	xxh64.reset();
 	xxh64.update("0123456789");
 	EXPECT_EQ(xxh64.digestString(), "3f5fc178a81867e7");
-	uint8_t bytes[] = {0x3f, 0x5f, 0xc1, 0x78, 0xa8, 0x18, 0x67, 0xe7};
-	int i=0;
-	for (uint8_t byte : xxh64.digestValue())
-		EXPECT_EQ(byte, bytes[i++]);
+	vector<uint8_t> bytes = {0x3f, 0x5f, 0xc1, 0x78, 0xa8, 0x18, 0x67, 0xe7};
+	EXPECT_EQ(xxh64.digestValue(), bytes);
 }
 
 
@@ -87,10 +81,8 @@ TEST(HashFunctionTest, xxh128) {
 	xxh128.reset();
 	xxh128.update("0123456789");
 	EXPECT_EQ(xxh128.digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
-	uint8_t bytes[] = {0xd1, 0xcc, 0x67, 0xbb, 0xe7, 0xcb, 0x43, 0x38, 0x50, 0xf9, 0x51, 0x9a, 0xc9, 0xab, 0xc5, 0xf6};
-	int i=0;
-	for (uint8_t byte : xxh128.digestValue())
-		EXPECT_EQ(byte, bytes[i++]);
+	vector<uint8_t> bytes = {0xd1, 0xcc, 0x67, 0xbb, 0xe7, 0xcb, 0x43, 0x38, 0x50, 0xf9, 0x51, 0x9a, 0xc9, 0xab, 0xc5, 0xf6};
+	EXPECT_EQ(xxh128.digestValue(), bytes);
 }
 #endif
 
