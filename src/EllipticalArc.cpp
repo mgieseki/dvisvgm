@@ -22,8 +22,6 @@
 #include "EllipticalArc.hpp"
 #include "utility.hpp"
 
-#include "debug.h"
-
 using namespace std;
 
 
