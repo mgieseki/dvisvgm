@@ -104,13 +104,13 @@ template <typename T>
 struct ArcTo : Command<T, 1> {
 	ArcTo (T rxx, T ryy, double xrot, bool laf, bool sf, const Pair<T> &pp)
 		: Command<T, 1>({pp}), rx(rxx < 0 ? -rxx : rxx), ry(ryy < 0 ? -ryy : ryy),
-		  xrotation(xrot), largeArgFlag(laf), sweepFlag(sf) {}
+		  xrotation(xrot), largeArcFlag(laf), sweepFlag(sf) {}
 
 	bool operator == (const ArcTo &arc) const {
 		return rx == arc.rx
 			&& ry == arc.ry
 			&& xrotation == arc.xrotation
-			&& largeArgFlag == arc.largeArgFlag
+			&& largeArcFlag == arc.largeArcFlag
 			&& sweepFlag == arc.sweepFlag
 			&& this->points[0] == arc.points[0];
 	}
@@ -121,7 +121,7 @@ struct ArcTo : Command<T, 1> {
 
 	T rx, ry;          ///< length of the semi-major and semi-minor axes
 	double xrotation;  ///< rotation of the semi-major axis in degrees
-	bool largeArgFlag; ///< if true, the longer arc from start to end point is chosen, else the shorter one
+	bool largeArcFlag; ///< if true, the longer arc from start to end point is chosen, else the shorter one
 	bool sweepFlag;    ///< if true, arc is drawn in direction of positive angles, else the opposite direction
 };
 
@@ -130,12 +130,12 @@ struct ArcTo : Command<T, 1> {
  *  @params[in] currentPoint the untransformed end point of the preceding command */
 template <typename T>
 void ArcTo<T>::transform (const Matrix &matrix, const Pair<T> &currentPoint) {
-	EllipticalArc arc(currentPoint, rx, ry, math::deg2rad(xrotation), largeArgFlag, sweepFlag, this->points[0]);
+	EllipticalArc arc(currentPoint, rx, ry, math::deg2rad(xrotation), largeArcFlag, sweepFlag, this->points[0]);
 	arc.transform(matrix);
 	rx = arc.rx();
 	ry = arc.ry();
 	xrotation = math::rad2deg(arc.rotationAngle());
-	largeArgFlag = arc.largeArc();
+	largeArcFlag = arc.largeArc();
 	sweepFlag = arc.sweepPositive();
 	this->points[0] = Pair<T>(arc.endPoint());
 }
@@ -219,7 +219,7 @@ class GraphicsPath {
 				virtual void quadto (const Point &p1, const Point &p2) {}
 				virtual void cubicto (const Point &p1, const Point &p2) {}
 				virtual void cubicto (const Point &p1, const Point &p2, const Point &p3) {}
-				virtual void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) {}
+				virtual void arcto (T rx, T ry, double angle, bool largeArcFlag, bool sweepFlag, const Point &p) {}
 				virtual void closepath () {}
 				virtual bool quit () {return false;}
 				virtual void finished () {}
@@ -261,7 +261,7 @@ class GraphicsPath {
 				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {write('C', {p1, p2, p3});}
 				void closepath () override {_os << (_relative ? 'z' : 'Z');}
 
-				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {
+				void arcto (T rx, T ry, double angle, bool largeArcFlag, bool sweepFlag, const Point &p) override {
 					Point diff = p-this->currentPoint();
 					if (std::abs(diff.x()) < 1e-7 && std::abs(diff.y()) < 1e-7)
 						return;
@@ -274,7 +274,7 @@ class GraphicsPath {
 							ry *= std::abs(_sx);
 						}
 						else {  // asymmetric scaling => compute new shape parameters
-							EllipticalArc arc(this->currentPoint(), double(rx), double(ry), math::deg2rad(angle), largeArgFlag, sweepFlag, p);
+							EllipticalArc arc(this->currentPoint(), double(rx), double(ry), math::deg2rad(angle), largeArcFlag, sweepFlag, p);
 							arc.transform(ScalingMatrix(_sx, _sy));
 							angle = math::rad2deg(arc.rotationAngle());
 							rx = arc.rx();
@@ -284,7 +284,7 @@ class GraphicsPath {
 							 << to_param_str(rx, 1.0, 0, false)
 							 << to_param_str(ry, 1.0, 0, true)
 							 << to_param_str(angle, 1.0, 0, true)
-							 << ' ' << (largeArgFlag ? 1 : 0)
+							 << ' ' << (largeArcFlag ? 1 : 0)
 							 << ' ' << (sweepFlag ? 1 : 0);
 						if (_relative)
 							_os << to_param_str(p, this->currentPoint(), _sx, _sy, _dx, _dy, true);
@@ -393,7 +393,7 @@ class GraphicsPath {
 				}
 
 				void operator () (const ArcTo &cmd) {
-					_actions.arcto(cmd.rx, cmd.ry, cmd.xrotation, cmd.largeArgFlag, cmd.sweepFlag, cmd.points[0]);
+					_actions.arcto(cmd.rx, cmd.ry, cmd.xrotation, cmd.largeArcFlag, cmd.sweepFlag, cmd.points[0]);
 					_actions._currentPoint = cmd.points[0];
 				}
 
@@ -621,7 +621,7 @@ class GraphicsPath {
 				void lineto (const Point &p) override {differs = (p != point);}
 				void quadto (const Point &p1, const Point &p2) override { differs = (point != p1 || point != p2);}
 				void cubicto (const Point &p1, const Point &p2, const Point &p3) override {differs = (point != p1 || point != p2 || point != p3);}
-				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {differs = (point != p);}
+				void arcto (T rx, T ry, double angle, bool largeArcFlag, bool sweepFlag, const Point &p) override { differs = (point != p);}
 				bool quit () override {return differs;}
 				Point point;
 				bool differs;
@@ -635,8 +635,8 @@ class GraphicsPath {
 		void approximateArcs () {
 			struct ArcActions : ModificationActions {
 				explicit ArcActions (GraphicsPath &path) : ModificationActions(path) {}
-				void arcto (T rx, T ry, double angle, bool largeArgFlag, bool sweepFlag, const Point &p) override {
-					EllipticalArc arc(this->currentPoint(), rx, ry, angle, largeArgFlag, sweepFlag, p);
+				void arcto (T rx, T ry, double angle, bool largeArcFlag, bool sweepFlag, const Point &p) override {
+					EllipticalArc arc(this->currentPoint(), rx, ry, angle, largeArcFlag, sweepFlag, p);
 					std::vector<CommandVariant> cmds;
 					for (const Bezier &bezier : arc.approximate())
 						cmds.emplace_back(CubicTo{bezier.point(1), bezier.point(2), bezier.point(3)});
