@@ -206,7 +206,7 @@ static double division_ratio (const IntPoint &p1, const IntPoint &p2, const IntP
 
 /** Returns the label of point q that lies on the line between points p1 and p2. */
 inline ZLabel division_label (const IntPoint &p1, const IntPoint &p2, const IntPoint &q) {
-	double t1, t2;
+	double t1=0, t2=0;
 	double s=0;
 	int32_t id = segment_id(p1, p2, t1, t2);
 	if (id > 0)
