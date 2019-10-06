@@ -128,7 +128,7 @@ void EllipticalArc::transform (const Matrix &matrix) {
 	Matrix ellipse({_rx*c, -_ry*s, 0, _rx*s, _ry*c});  // E := rotate(xrot)*scale(rx, ry)
 	ellipse.lmultiply(matrix);                         // E':= M*E
 	// Compute the singular value decomposition of the transformed ellipse shape:
-	// svd(E') = rotate(phi)*scale(sx, sy)*rotate(theta)
+	// E' = rotate(phi)*scale(sx, sy)*rotate(theta)
 	// The initial, right-hand rotation can be ignored because it rotates the unit circle
 	// around the origin, i.e. rotate(theta) maps the circle to itself.
 	// The signs of sx and sy don't matter either. They just flip the yet unrotated
@@ -156,7 +156,7 @@ void EllipticalArc::transform (const Matrix &matrix) {
 /** Approximates an arc of the unit circle by a single cubic Bézier curve.
  *  @param[in] phi start angle of the arc in radians
  *  @param[in] delta length of the arc */
-Bezier approx_unit_arc (double phi, double delta) {
+static Bezier approx_unit_arc (double phi, double delta) {
 	double c = 0.551915024494;  // see http://spencermortensen.com/articles/bezier-circle
 	if (abs(delta + math::HALF_PI) < 1e-7)
 		c = -c;
@@ -217,7 +217,6 @@ BoundingBox EllipticalArc::getBBox () const {
 	bbox.embed(_startPoint);
 	bbox.embed(_endPoint);
 	if (!isStraightLine()) {
-		CenterParams cparams = getCenterParams();
 		// compute extremes of ellipse centered at the origin
 		double c = cos(_rotationAngle);
 		double s = sin(_rotationAngle);
@@ -236,6 +235,7 @@ BoundingBox EllipticalArc::getBBox () const {
 		DPair ph2 = -ph1;                                          // E(ty2), 2nd point on ellipse with horizontal tangent
 
 		// translate extreme points to actual coordinates
+		CenterParams cparams = getCenterParams();
 		pv1 += cparams.center;
 		pv2 += cparams.center;
 		ph1 += cparams.center;
