@@ -51,8 +51,15 @@ void PSInterpreter::init () {
 			"-dWRITESYSTEMDICT", // leave systemdict writable as some operators must be replaced
 			"-dNOPROMPT"
 		};
-		if (int gsrev = _gs.revision())
+		if (int gsrev = _gs.revision()) {
 			gsargs.emplace_back(gsrev == 922 ? "-dREALLYDELAYBIND" : "-dDELAYBIND");
+			// As of GS 9.50, -dSAFER is active by default which leads to warnings
+			// in conjunction with -dDELAYBIND and -dWRITESYSTEMDICT.
+			// Thus, -dDELAYSAFER (or -dNOSAFER) must be added.
+			// https://www.ghostscript.com/doc/9.50/Use.htm#Safer
+			if (gsrev >= 950)
+				gsargs.emplace_back("-dDELAYSAFER");
+		}
 		_gs.init(gsargs.size(), gsargs.data(), this);
 		_gs.set_stdio(input, output, error);
 		_initialized = true;
