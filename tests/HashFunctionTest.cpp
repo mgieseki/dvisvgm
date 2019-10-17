@@ -75,13 +75,13 @@ TEST(HashFunctionTest, xxh128) {
 	XXH128HashFunction xxh128;
 	ASSERT_EQ(xxh128.digestSize(), 16);
 	xxh128.update("0123456789");
-	EXPECT_EQ(xxh128.digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+	EXPECT_EQ(xxh128.digestString(), "942eb242912d99ecb1844fcc57198e3a");
 	xxh128.update("abcdefghij");
-	EXPECT_EQ(xxh128.digestString(), "1a57c18c0ca790305397dc99249bfabe");
+	EXPECT_EQ(xxh128.digestString(), "f37bc26b7087c656f0345fdf02a75bc4");
 	xxh128.reset();
 	xxh128.update("0123456789");
-	EXPECT_EQ(xxh128.digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
-	vector<uint8_t> bytes = {0xd1, 0xcc, 0x67, 0xbb, 0xe7, 0xcb, 0x43, 0x38, 0x50, 0xf9, 0x51, 0x9a, 0xc9, 0xab, 0xc5, 0xf6};
+	EXPECT_EQ(xxh128.digestString(), "942eb242912d99ecb1844fcc57198e3a");
+	vector<uint8_t> bytes = {0x94, 0x2e, 0xb2, 0x42, 0x91, 0x2d, 0x99, 0xec, 0xb1, 0x84, 0x4f, 0xcc, 0x57, 0x19, 0x8e, 0x3a};
 	EXPECT_EQ(xxh128.digestValue(), bytes);
 }
 #endif
@@ -128,11 +128,11 @@ TEST(HashFunctionTest, createXXH128) {
 	auto hashfunc = HashFunction::create("xxh128");
 	ASSERT_TRUE(dynamic_cast<XXH128HashFunction*>(hashfunc.get()) != nullptr);
 	hashfunc->update("0123456789");
-	EXPECT_EQ(hashfunc->digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+	EXPECT_EQ(hashfunc->digestString(), "942eb242912d99ecb1844fcc57198e3a");
 
 	hashfunc = HashFunction::create("xxh128", "0123456789");
 	ASSERT_TRUE(dynamic_cast<XXH128HashFunction*>(hashfunc.get()) != nullptr);
-	EXPECT_EQ(hashfunc->digestString(), "d1cc67bbe7cb433850f9519ac9abc5f6");
+	EXPECT_EQ(hashfunc->digestString(), "942eb242912d99ecb1844fcc57198e3a");
 }
 #endif
 
