@@ -421,7 +421,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 			"\n@beginspecial @setspecial"          // enter special environment
 			"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
 			"matrix setmatrix"                     // don't apply outer PS transformations
-			"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
+			"/FirstPage "+to_string(pageno)+" def" // set number of first page to convert (PDF only)
 			"/LastPage "+to_string(pageno)+" def " // set number of last page to convert (PDF only)
 			+rectclip+                             // clip to bounding box (if requexted by attribute 'clip')
 			"(" + pathstr + ")run "                // execute file content
@@ -449,15 +449,17 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 		return false;                 // => non-horizontal baseline, can't compute meaningful extents
 
 	if (ex.y() == 0)  // horizontal scaling or skewing?
-		w *= fabs(ex.x());
+		w *= abs(ex.x());
 	if (ey.x()==0 || ex.y()==0) { // vertical scaling?
-		if (ey.y() < 0) swap(h, d);
-		if (double sy = fabs(ey.y())/ey.length()) {
-			h *= fabs(ey.y()/sy);
-			d *= fabs(ey.y()/sy);
-		}
-		else
+		if (ey.y() < 0)
+			swap(h, d);
+		double sy = abs(ey.y())/ey.length();
+		if (sy < 1e-8)
 			h = d = 0;
+		else {
+			h *= abs(ey.y()/sy);
+			d *= abs(ey.y()/sy);
+		}
 	}
 	return true;
 }
@@ -655,13 +657,11 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		if (_blendmode > 0 && _blendmode < 16)
 			path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
 		if (!_dashpattern.empty()) {
-			ostringstream oss;
-			for (size_t i=0; i < _dashpattern.size(); i++) {
-				if (i > 0)
-					oss << ',';
-				oss << XMLString(_dashpattern[i]);
-			}
-			path->addAttribute("stroke-dasharray", oss.str());
+			string patternStr;
+			for (double dashValue : _dashpattern)
+				patternStr += XMLString(dashValue)+",";
+			patternStr.pop_back();
+			path->addAttribute("stroke-dasharray", patternStr);
 			if (_dashoffset != 0)
 				path->addAttribute("stroke-dashoffset", _dashoffset);
 		}
@@ -745,7 +745,7 @@ static void create_matrix (vector<double> &v, int startindex, Matrix &matrix) {
 	// using corresponding values of the identity matrix.
 	if (v.size()-startindex < 6) {
 		v.resize(6+startindex);
-		for (int i=v.size()-startindex; i < 6; ++i)
+		for (size_t i=v.size()-startindex; i < 6; ++i)
 			v[i+startindex] = (i%3 ? 0 : 1);
 	}
 	// PS matrix [a b c d e f] equals ((a,b,0),(c,d,0),(e,f,1)).
