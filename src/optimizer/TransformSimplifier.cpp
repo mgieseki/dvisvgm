@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <cmath>
+#include <cstdlib>
 #include "TransformSimplifier.hpp"
 #include "../Matrix.hpp"
 #include "../utility.hpp"
@@ -38,14 +39,16 @@ void TransformSimplifier::execute (XMLElement *context) {
 		return;
 	if (const char *transform = context->getAttributeValue("transform")) {
 		Matrix matrix = Matrix::parseSVGTransform(transform);
-		string decomp = decompose(matrix);
-		if (decomp.length() > matrix.toSVG().length())
-			context->addAttribute("transform", matrix.toSVG());
-		else {
-			if (decomp.empty())
-				context->removeAttribute("transform");
-			else
-				context->addAttribute("transform", decomp);
+		if (!incorporateTransform(context, matrix)) {
+			string decomp = decompose(matrix);
+			if (decomp.length() > matrix.toSVG().length())
+				context->addAttribute("transform", matrix.toSVG());
+			else {
+				if (decomp.empty())
+					context->removeAttribute("transform");
+				else
+					context->addAttribute("transform", decomp);
+			}
 		}
 	}
 	// continue with child elements
@@ -53,6 +56,36 @@ void TransformSimplifier::execute (XMLElement *context) {
 		if (XMLElement *elem = child->toElement())
 			execute(elem);
 	}
+}
+
+
+/** Tries to incorporate the translation and scaling components of the 'transform' attribute
+ *  of a given element into the positional and/or size attributes of that element. If successful,
+ *  the 'transform' attribute is removed.
+ *  Currently, only 'image' and 'rect' elements are considered.
+ *  @param[in] elem element to check
+ *  @param[in] matrix matrix representing the 'transform' attribute of the element
+ *  @return true on success */
+bool TransformSimplifier::incorporateTransform (XMLElement *elem, const Matrix &matrix) {
+	if ((elem->name() == "image" || elem->name() == "rect") && matrix.get(0, 1) == 0 && matrix.get(1, 0) == 0) {
+		double tx = matrix.get(0, 2);
+		double ty = matrix.get(1, 2);
+		double sx = matrix.get(0, 0);
+		double sy = matrix.get(1, 1);
+		if (const char *xstr = elem->getAttributeValue("x"))
+			tx += sx*strtod(xstr, nullptr);
+		if (const char *ystr = elem->getAttributeValue("y"))
+			ty += sy*strtod(ystr, nullptr);
+		if (const char *wstr = elem->getAttributeValue("width"))
+			elem->addAttribute("width", sx*strtod(wstr, nullptr));
+		if (const char *hstr = elem->getAttributeValue("height"))
+			elem->addAttribute("height", sy*strtod(hstr, nullptr));
+		elem->addAttribute("x", tx);  // update x attribute
+		elem->addAttribute("y", ty);  // update x attribute
+		elem->removeAttribute("transform");
+		return true;
+	}
+	return false;
 }
 
 

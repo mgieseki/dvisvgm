@@ -32,5 +32,6 @@ class TransformSimplifier : public OptimizerModule {
 		const char* info () const override;
 
 	protected:
+		bool incorporateTransform (XMLElement *elem, const Matrix &matrix);
 		std::string decompose (const Matrix &matrix);
 };
