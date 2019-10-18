@@ -25,6 +25,7 @@
 #include <sstream>
 #include "EPSFile.hpp"
 #include "FileFinder.hpp"
+#include "FilePath.hpp"
 #include "FileSystem.hpp"
 #include "Message.hpp"
 #include "PathClipper.hpp"
@@ -183,6 +184,15 @@ void PsSpecialHandler::preprocess (const string &prefix, istream &is, SpecialAct
 }
 
 
+static string filename_suffix (const string &fname) {
+	string ret;
+	size_t pos = fname.rfind('.');
+	if (pos != string::npos)
+		ret = util::tolower(fname.substr(pos+1));
+	return ret;
+}
+
+
 bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialActions &actions) {
 	// process PS headers only once (in prescan)
 	if (prefix == "!" || prefix == "header=")
@@ -204,9 +214,22 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		if (_actions) {
 			StreamInputReader in(is);
 			const string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
+			FileType fileType = FileType::EPS;
+			if (prefix == "pdffile")
+				fileType = FileType::PDF;
+			else {
+				// accept selected non-PS files in psfile special
+				string ext = filename_suffix(fname);
+				if (ext == "pdf")
+					fileType = FileType::PDF;
+				else if (ext == "svg")
+					fileType = FileType::SVG;
+				else if (ext == "jpg" || ext == "jpeg" || ext == "png")
+					fileType = FileType::BITMAP;
+			}
 			map<string,string> attr;
 			in.parseAttributes(attr, false);
-			imgfile(prefix == "pdffile=" ? FileType::PDF : FileType::EPS, fname, attr);
+			imgfile(fileType, fname, attr);
 		}
 	}
 	else if (prefix == "ps::") {
@@ -290,7 +313,9 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	double ury = (it = attr.find("ury")) != attr.end() ? stod(it->second) : 0;
 	int pageno = (it = attr.find("page")) != attr.end() ? stoi(it->second, nullptr, 10) : 1;
 
-	if (filetype == FileType::PDF && llx == 0 && lly == 0 && urx == 0 && ury == 0) {
+	if (filetype == FileType::BITMAP || filetype == FileType::SVG)
+		swap(lly, ury);
+	else if (filetype == FileType::PDF && llx == 0 && lly == 0 && urx == 0 && ury == 0) {
 		BoundingBox pagebox = _psi.pdfPageBox(fname, pageno);
 		if (pagebox.valid()) {
 			llx = pagebox.minX();
@@ -337,26 +362,12 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setY(0);
 	moveToDVIPos();
 
-	// clip image to its bounding box if flag 'clip' is given
-	string rectclip;
-	if (clipToBbox)
-		rectclip = to_string(llx)+" "+to_string(lly)+" "+to_string(urx-llx)+" "+to_string(ury-lly)+" rectclip";
-
-	auto groupNode = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
-	_xmlnode = groupNode.get();
-	_psi.execute(
-		"\n@beginspecial @setspecial"          // enter special environment
-		"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
-		"matrix setmatrix"                     // don't apply outer PS transformations
-		"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
-		"/LastPage "+to_string(pageno)+" def " // set number of last page to convert (PDF only)
-		+rectclip+                             // clip to bounding box (if requexted by attribute 'clip')
-		"("+ filepath + ")run "                // execute file content
-		"@endspecial "                         // leave special environment
-	);
-	if (!groupNode->empty()) {  // has anything been drawn?
+	auto imgNode = createImageNode(filetype, filepath, pageno, BoundingBox(llx, lly, urx, ury), clipToBbox);
+	if (imgNode) {  // has anything been drawn?
 		Matrix matrix(1);
-		matrix.scale(sx, -sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
+		if (filetype == FileType::EPS || filetype == FileType::PDF)
+			sy = -sy;  // adapt orientation of y-coordinates
+		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
 		matrix.translate(x+hoffset, y-voffset);     // move image to current DVI position
 		matrix.lmultiply(_actions->getMatrix());
 
@@ -365,18 +376,62 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		bbox.transform(matrix);
 		_actions->embed(bbox);
 
-		// insert group containing SVG nodes created from image
+		// insert element containing the image data
 		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		if (!matrix.isIdentity())
-			groupNode->addAttribute("transform", matrix.toSVG());
-		_actions->svgTree().appendToPage(std::move(groupNode));
+			imgNode->addAttribute("transform", matrix.toSVG());
+		_actions->svgTree().appendToPage(std::move(imgNode));
 	}
-	_xmlnode = nullptr;   // append following elements to page group again
-
 	// restore DVI position
 	_actions->setX(x);
 	_actions->setY(y);
 	moveToDVIPos();
+}
+
+
+/** Creates an XML element containing the image data depending on the file type.
+ *  @param[in] type file type of the image
+ *  @param[in] pathstr absolute path to image file
+ *  @param[in] pageno number of page to process (PDF only)
+ *  @param[in] bbox bounding box of the image
+ *  @param[in] clip if true, the image is clipped to its bounding box
+ *  @return pointer to the element or nullptr if there's no image data */
+unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const string &pathstr, int pageno, BoundingBox bbox, bool clip) {
+	unique_ptr<XMLElement> node;
+	if (type == FileType::BITMAP || type == FileType::SVG) {
+		node = util::make_unique<XMLElement>("image");
+		node->addAttribute("x", 0);
+		node->addAttribute("y", 0);
+		node->addAttribute("width", bbox.width());
+		node->addAttribute("height", bbox.height());
+		// add path to image file relative to SVG file being generated
+		FilePath imgPath(pathstr);
+		string svgPathStr = _actions->getSVGFilePath(pageno).absolute(false);
+		node->addAttribute("xlink:href", imgPath.relative(svgPathStr));
+	}
+	else {  // PostScript or PDF
+		// clip image to its bounding box if flag 'clip' is given
+		string rectclip;
+		if (clip)
+			rectclip = to_string(bbox.minX())+" "+to_string(bbox.minY())+" "+to_string(bbox.width())+" "+to_string(bbox.height())+" rectclip";
+
+		node = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
+		_xmlnode = node.get();
+		_psi.execute(
+			"\n@beginspecial @setspecial"          // enter special environment
+			"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
+			"matrix setmatrix"                     // don't apply outer PS transformations
+			"/FirstPage "+to_string(pageno)+" def" // set number of fisrt page to convert (PDF only)
+			"/LastPage "+to_string(pageno)+" def " // set number of last page to convert (PDF only)
+			+rectclip+                             // clip to bounding box (if requexted by attribute 'clip')
+			"(" + pathstr + ")run "                // execute file content
+			"@endspecial "                         // leave special environment
+		);
+		if (node->empty())
+			node.reset(nullptr);
+		_xmlnode = nullptr;   // append following elements to page group again
+	}
+	return node;
 }
 
 
