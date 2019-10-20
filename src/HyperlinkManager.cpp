@@ -96,7 +96,7 @@ void HyperlinkManager::createLink (string uri, SpecialActions &actions) {
 			uri = "#loc"+XMLString(id);
 			if (actions.getCurrentPageNumber() != it->second.pageno) {
 				ostringstream oss;
-				oss << actions.getSVGFilename(it->second.pageno) << uri;
+				oss << actions.getSVGFilePath(it->second.pageno).relative() << uri;
 				uri = oss.str();
 			}
 		}

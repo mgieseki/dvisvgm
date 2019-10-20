@@ -46,7 +46,7 @@ struct SVGOutputBase {
 
 	virtual ~SVGOutputBase () =default;
 	virtual std::ostream& getPageStream (int page, int numPages, const HashTriple &hashes=HashTriple()) const =0;
-	virtual std::string filename (int page, int numPages, const HashTriple &hashes=HashTriple()) const =0;
+	virtual FilePath filepath (int page, int numPages, const HashTriple &hashes= HashTriple()) const =0;
 	virtual bool ignoresHashes () const {return true;}
 };
 
@@ -58,7 +58,7 @@ class SVGOutput : public SVGOutputBase {
 		SVGOutput (const std::string &base, const std::string &pattern) : SVGOutput(base, pattern, 0) {}
 		SVGOutput (const std::string &base, std::string pattern, int zipLevel);
 		std::ostream& getPageStream (int page, int numPages, const HashTriple &hash=HashTriple()) const override;
-		std::string filename (int page, int numPages, const HashTriple &hash=HashTriple()) const override;
+		FilePath filepath (int page, int numPages, const HashTriple &hash=HashTriple()) const override;
 		bool ignoresHashes () const override;
 
 	protected:

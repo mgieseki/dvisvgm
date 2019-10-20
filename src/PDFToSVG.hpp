@@ -60,4 +60,3 @@ class PDFToSVG : public ImageToSVG {
 };
 
 #endif
-

@@ -73,7 +73,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		BoundingBox& bbox (const std::string &name, bool reset=false) override;
 		void embed (const BoundingBox &bbox) override;
 		void embed (const DPair &p, double r=0) override;
-		std::string getSVGFilename (unsigned pageno) const override;
+		FilePath getSVGFilePath (unsigned pageno) const override;
 		std::string getBBoxFormatString () const override;
 		CharMap& getUsedChars () const        {return _usedChars;}
 		const FontSet& getUsedFonts () const  {return _usedFonts;}

@@ -25,6 +25,7 @@
 #include <memory>
 #include "BoundingBox.hpp"
 #include "Color.hpp"
+#include "FilePath.hpp"
 #include "Matrix.hpp"
 #include "SVGTree.hpp"
 
@@ -52,7 +53,7 @@ class SpecialActions {
 		virtual void embed (const BoundingBox &bbox) =0;
 		virtual void embed (const DPair &p, double r=0) =0;
 		virtual unsigned getCurrentPageNumber () const =0;
-		virtual std::string getSVGFilename (unsigned pageno) const =0;
+		virtual FilePath getSVGFilePath (unsigned pageno) const =0;
 		virtual std::string getBBoxFormatString () const =0;
 		virtual void progress (const char *id) {}
 		virtual int getDVIStackDepth () const  {return 0;}
@@ -80,7 +81,7 @@ class EmptySpecialActions : public SpecialActions {
 		void embed (const BoundingBox &bbox) override {}
 		void embed (const DPair &p, double r=0) override {}
 		unsigned getCurrentPageNumber() const override {return 0;}
-		std::string getSVGFilename (unsigned pageno) const override {return "";}
+		FilePath getSVGFilePath (unsigned pageno) const override {return FilePath();}
 		std::string getBBoxFormatString () const override {return "";}
 
 	private:

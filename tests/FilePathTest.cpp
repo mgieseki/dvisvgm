@@ -30,6 +30,15 @@
 using namespace std;
 
 
+TEST(FilePathTest, empty) {
+	FilePath path;
+	ASSERT_TRUE(path.empty());
+	path.set("/a/b/c/d", false, "/");
+	ASSERT_FALSE(path.empty());
+	ASSERT_EQ(path.absolute(), "/a/b/c/d");
+}
+
+
 TEST(FilePathTest, dir1) {
 	FilePath fp("a/b/c/d", false, "/");
 	ASSERT_EQ(fp.absolute(), "/a/b/c/d");
@@ -91,4 +100,3 @@ TEST(FilePathTest, autodetect) {
 	ASSERT_FALSE(fp2.empty());
 	ASSERT_EQ(fp2.absolute(), FileSystem::getcwd());
 }
-

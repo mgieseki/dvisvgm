@@ -68,7 +68,7 @@ class ImageToSVG : protected SpecialActions {
 		unsigned getCurrentPageNumber() const override          {return 0;}
 		BoundingBox& bbox () override                           {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override {return _bbox;}
-		std::string getSVGFilename (unsigned pageno) const override;
+		FilePath getSVGFilePath (unsigned pageno) const override;
 		std::string getBBoxFormatString () const override {return "";}
 
 	private:

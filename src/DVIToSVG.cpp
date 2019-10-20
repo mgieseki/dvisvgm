@@ -111,11 +111,11 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			combinedHash = hashFunc->digestString();
 		}
 		const SVGOutput::HashTriple hashTriple(dviHash, shortenedOptHash, combinedHash);
-		string fname = _out.filename(i, numberOfPages(), hashTriple);
-		if (!dviHash.empty() && !PAGE_HASH_SETTINGS.isSet(HashSettings::P_REPLACE) && FileSystem::exists(fname)) {
+		FilePath path = _out.filepath(i, numberOfPages(), hashTriple);
+		if (!dviHash.empty() && !PAGE_HASH_SETTINGS.isSet(HashSettings::P_REPLACE) && path.exists()) {
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "skipping page " << i;
 			Message::mstream().indent(1);
-			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\nfile " << fname << " exists\n";
+			Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\nfile " << path.shorterAbsoluteOrRelative() << " exists\n";
 			Message::mstream().indent(0);
 		}
 		else {
@@ -123,6 +123,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			SVGOptimizer(_svg).execute();
 			embedFonts(_svg.rootNode());
 			bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages(), hashTriple));
+			string fname = path.shorterAbsoluteOrRelative();
 			if (fname.empty())
 				fname = "<stdout>";
 			if (success)
@@ -425,8 +426,8 @@ void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 }
 
 
-string DVIToSVG::getSVGFilename (unsigned pageno) const {
-	return _out.filename(pageno, numberOfPages());
+FilePath DVIToSVG::getSVGFilePath (unsigned pageno) const {
+	return _out.filepath(pageno, numberOfPages());
 }
 
 

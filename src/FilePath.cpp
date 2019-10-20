@@ -87,10 +87,28 @@ FilePath::FilePath (const string &path, bool isfile, const string &current_dir) 
 }
 
 
-/** Assigns a new path. Relative paths are relative to the current working directory.
+/** Assigns a new path of a file or directory that already exists.
+ *  Relative paths are relative to the current working directory.
  *  @param[in] path absolute or relative path to a file or directory */
-void FilePath::set(const string &path) {
-	init(path, !FileSystem::isDirectory(path), FileSystem::getcwd());
+void FilePath::set (const string &path) {
+	set(path, !FileSystem::isDirectory(path));
+}
+
+
+/** Assigns a new path. Relative paths are relative to the current working directory.
+ *  @param[in] path absolute or relative path to a file or directory
+ *  @param[in] isfile true if 'path' references a file, false if a directory is referenced */
+void FilePath::set (const string &path, bool isfile) {
+	init(path, isfile, FileSystem::getcwd());
+}
+
+
+/** Assigns a new path. Relative paths are relative to the current working directory.
+ *  @param[in] path absolute or relative path to a file or directory
+ *  @param[in] isfile true if 'path' references a file, false if a directory is referenced
+ *  @param[in] current_dir if 'path' is a relative path expression it will be related to 'current_dir' */
+void FilePath::set (const string &path, bool isfile, const string &current_dir) {
+	init(path, isfile, current_dir);
 }
 
 
@@ -256,4 +274,19 @@ string FilePath::relative (string reldir, bool with_filename) const {
 	if (path.empty())
 		path = ".";
 	return single_slashes(path);
+}
+
+
+/** Return the absolute or relative path whichever is shorter.
+*  @param[in] reldir absolute path to a directory
+*  @param[in] with_filename if false, the filename is omitted */
+string FilePath::shorterAbsoluteOrRelative (string reldir, bool with_filename) const {
+	string abs = absolute(with_filename);
+	string rel = relative(reldir, with_filename);
+	return abs.length() < rel.length() ? abs : rel;
+}
+
+
+bool FilePath::exists () const {
+	return empty() ? false : FileSystem::exists(absolute());
 }

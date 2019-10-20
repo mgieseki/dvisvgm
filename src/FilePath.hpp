@@ -39,12 +39,16 @@ class FilePath {
 	};
 
 	public:
+		FilePath () =default;
 		explicit FilePath (const std::string &path) {set(path);}
 		FilePath (const std::string &path, bool isfile) : FilePath(path, isfile, "") {}
 		FilePath (const std::string &path, bool isfile, const std::string &current_dir);
 		void set (const std::string &path);
+		void set (const std::string &path, bool isfile);
+		void set (const std::string &path, bool isfile, const std::string &current_dir);
 		std::string absolute (bool with_filename=true) const;
 		std::string relative (std::string reldir="", bool with_filename=true) const;
+		std::string shorterAbsoluteOrRelative (std::string reldir="", bool with_filename=true) const;
 		std::string basename () const;
 		std::string suffix () const;
 		void suffix (const std::string &s);
@@ -53,6 +57,7 @@ class FilePath {
 		bool empty () const                      {return _dirs.empty() && _fname.empty();}
 		const std::string& filename () const     {return _fname;}
 		void filename (const std::string &fname) {_fname = fname;}
+		bool exists () const;
 
 	protected:
 		void init (std::string path, bool isfile, std::string current_dir);
@@ -62,7 +67,7 @@ class FilePath {
 		std::vector<Directory> _dirs;
 		std::string _fname;
 #ifdef _WIN32
-		char _drive;
+		char _drive=0;
 #endif
 };
 

@@ -25,6 +25,7 @@
 #include <string>
 #include <utility>
 #include "DVIReader.hpp"
+#include "FilePath.hpp"
 #include "SVGTree.hpp"
 
 struct DVIActions;
@@ -62,7 +63,7 @@ class DVIToSVG : public DVIReader {
 		void finishLine () override           {_prevYPos = std::numeric_limits<double>::min();}
 		void listHashes (const std::string &rangestr, std::ostream &os);
 
-		std::string getSVGFilename (unsigned pageno) const;
+		FilePath getSVGFilePath (unsigned pageno) const;
 		std::string getUserBBoxString () const  {return _bboxFormatString;}
 		static void setProcessSpecials (const char *ignorelist=nullptr, bool pswarning=false);
 

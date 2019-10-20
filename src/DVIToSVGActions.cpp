@@ -69,17 +69,19 @@ void DVIToSVGActions::moveToY (double y, bool forceSVGMove) {
 }
 
 
-string DVIToSVGActions::getSVGFilename (unsigned pageno) const {
+FilePath DVIToSVGActions::getSVGFilePath (unsigned pageno) const {
+	FilePath path;
 	if (auto dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
-		return dvi2svg->getSVGFilename(pageno);
-	return "";
+		path = dvi2svg->getSVGFilePath(pageno);
+	return path;
 }
 
 
 string DVIToSVGActions::getBBoxFormatString () const {
+	string boxstr;
 	if (auto dvi2svg = dynamic_cast<DVIToSVG*>(_dvireader))
-		return dvi2svg->getUserBBoxString();
-	return "";
+		boxstr = dvi2svg->getUserBBoxString();
+	return boxstr;
 }
 
 

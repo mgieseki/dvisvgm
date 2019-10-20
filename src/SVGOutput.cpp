@@ -46,8 +46,8 @@ SVGOutput::SVGOutput (const string &base, string pattern, int zipLevel)
  *  @param[in] hash hash value of the current page
  *  @return output stream for the given page */
 ostream& SVGOutput::getPageStream (int page, int numPages, const HashTriple &hashes) const {
-	string fname = filename(page, numPages, hashes);
-	if (fname.empty()) {
+	FilePath path = filepath(page, numPages, hashes);
+	if (path.empty()) {
 		if (_zipLevel == 0) {
 			_osptr.reset();
 			return cout;
@@ -63,52 +63,35 @@ ostream& SVGOutput::getPageStream (int page, int numPages, const HashTriple &has
 
 	_page = page;
 	if (_zipLevel > 0)
-		_osptr = util::make_unique<ZLibOutputFileStream>(fname, ZLIB_GZIP, _zipLevel);
+		_osptr = util::make_unique<ZLibOutputFileStream>(path.absolute(), ZLIB_GZIP, _zipLevel);
 	else
-		_osptr = util::make_unique<ofstream>(fname);
+		_osptr = util::make_unique<ofstream>(path.absolute());
 	if (!_osptr)
-		throw MessageException("can't open file "+fname+" for writing");
+		throw MessageException("can't open file "+path.shorterAbsoluteOrRelative()+" for writing");
 	return *_osptr;
 }
 
 
-/** Returns the name of the SVG file containing the given page.
+/** Returns the path of the SVG file containing the given page number.
  *  @param[in] page number of current page
  *  @param[in] numPages total number of pages
  *  @param[in] hash hash value of current page */
-string SVGOutput::filename (int page, int numPages, const HashTriple &hashes) const {
-	if (_stdout)
-		return "";
-
-	string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages, hashes));
-	// set and expand default pattern if necessary
-	if (expanded_pattern.empty()) {
-		string pattern = hashes.empty() ? (numPages > 1 ? "%f-%p" : "%f") : "%f-%hd";
-		expanded_pattern = expandFormatString(pattern, page, numPages, hashes);
+FilePath SVGOutput::filepath (int page, int numPages, const HashTriple &hashes) const {
+	FilePath outpath;
+	if (!_stdout) {
+		string expanded_pattern = util::trim(expandFormatString(_pattern, page, numPages, hashes));
+		// set and expand default pattern if necessary
+		if (expanded_pattern.empty()) {
+			string pattern = hashes.empty() ? (numPages > 1 ? "%f-%p" : "%f") : "%f-%hd";
+			expanded_pattern = expandFormatString(pattern, page, numPages, hashes);
+		}
+		// append suffix if necessary
+		outpath.set(expanded_pattern, true);
+		if (outpath.suffix().empty())
+			outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
 	}
-	// append suffix if necessary
-	FilePath outpath(expanded_pattern, true);
-	if (outpath.suffix().empty())
-		outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
-	string abspath = outpath.absolute();
-	string relpath = outpath.relative();
-	return abspath.length() < relpath.length() ? abspath : relpath;
+	return outpath;
 }
-
-
-#if 0
-string SVGOutput::outpath (int page, int numPages) const {
-	string path = filename(page, numPages);
-	if (path.empty())
-		return "";
-	size_t pos = path.rfind('/');
-	if (pos == string::npos)
-		return ".";
-	if (pos == 0)
-		return "/";
-	return path.substr(0, pos);
-}
-#endif
 
 
 /** Replaces expressions in a given string by the corresponding values and returns the result.
