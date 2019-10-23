@@ -89,9 +89,10 @@ void CMapReader::executeOperator (const string &opname, InputReader &ir) {
 		const char *name;
 		void (CMapReader::*handler)(InputReader&);
 	};
-	constexpr array<Operator, 6> operators {{
+	constexpr array<Operator, 7> operators {{
 		{"beginbfchar",   &CMapReader::op_beginbfchar},
 		{"beginbfrange",  &CMapReader::op_beginbfrange},
+		{"begincidchar",  &CMapReader::op_begincidchar},
 		{"begincidrange", &CMapReader::op_begincidrange},
 		{"def",           &CMapReader::op_def},
 		{"endcmap",       &CMapReader::op_endcmap},
@@ -153,6 +154,22 @@ static uint32_t parse_hexentry (InputReader &ir) {
 	return uint32_t(val);
 }
 
+
+void CMapReader::op_begincidchar (InputReader &ir) {
+	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
+		ir.skipSpace();
+		int num_entries = static_cast<int>(popToken().numvalue());
+		while (num_entries > 0 && ir.peek() == '<') {
+			uint32_t first = parse_hexentry(ir);
+			uint32_t cid;
+			ir.skipSpace();
+			if (!ir.parseUInt(cid))
+				throw CMapReaderException("invalid char entry (decimal value expected)");
+			_cmap->addCIDRange(first, first, cid);
+			ir.skipSpace();
+		}
+	}
+}
 
 void CMapReader::op_begincidrange (InputReader &ir) {
 	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {

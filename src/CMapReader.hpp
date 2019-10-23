@@ -59,6 +59,7 @@ class CMapReader {
 		void executeOperator (const std::string &op, InputReader &ir);
 		void op_beginbfchar (InputReader &ir);
 		void op_beginbfrange (InputReader &ir);
+		void op_begincidchar (InputReader &ir);
 		void op_begincidrange (InputReader &ir);
 		void op_def (InputReader &ir);
 		void op_endcmap (InputReader &ir);
