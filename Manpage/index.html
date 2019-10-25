@@ -765,7 +765,10 @@ e.g. <code>--output="%f-%p-%hc"</code>.</p>
 <code>%hc</code>. It’s extremely fast, and a 64-bit hash should be sufficient for most documents with an average
 size of pages. Alternatively, XXH32 and MD5 can be used as well. The desired algorithm is specified
 by argument <em>params</em> of option <strong>--page-hashes</strong>. It takes one of the strings <code>MD5</code>, <code>XXH32</code>, and <code>XXH64</code>,
-where the names can be given in lower case too, like <code>--page-hashes=md5</code>.</p>
+where the names can be given in lower case too, like <code>--page-hashes=md5</code>. Since version 0.7.1,
+xxHash provides an experimental 128-bit hash function, whose algorithm may still change with the next
+versions of the library. If the corresponding API is available, dvisvgm supports the new hash function
+and option <strong>--page-hashes</strong> additionally accepts the algorithm specifier <code>XXH128</code>.</p>
 <p>Finally, option <strong>--page-hashes</strong> can take a second argument that must be separated by a comma.
 Currently, only the two parameters <em>list</em> and <em>replace</em> are evaluated, e.g. <code>--page-hashes=md5,list</code>
 or <code>--page-hashes=replace</code>. When <em>list</em> is present, dvisvgm doesn’t perform any conversion but just
@@ -1569,9 +1572,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.7.4</div>
+   <div class="col-md-6">Version 2.8</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-07-26</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-08-25</span>
    </div>
 </div>
 </div>

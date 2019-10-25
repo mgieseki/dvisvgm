@@ -3,8 +3,54 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sun, 28 Jul 2019 12:27:52 +0200</pubDate>
+    <pubDate>Fri, 25 Oct 2019 18:52:06 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.8 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#57192fe118cc7abbba232e51f3d2adf0</link>
+      <pubDate>Fri, 25 Oct 2019 17:42:50 +0200</pubDate>
+      <guid>57192fe118cc7abbba232e51f3d2adf0</guid>
+      <description>
+        <![CDATA[<p>This is a small feature release with the following additions/changes:</p>
+
+<ul>
+<li>Added support for JPEG, PNG, PDF, and SVG files to special <code>psfile</code>.</li>
+<li>Added support for Ghostscript 9.50 which introduced incompatible changes regarding option <code>-dSAFER</code>. Due
+to security reasons <code>SAFER</code> is now <a href="https://www.ghostscript.com/doc/9.50/Use.htm#Safer">active by default</a>
+and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</code>. Since <em>dvisvgm</em> requires the latter two to work
+correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
+stops with a PostScript error, e.g. like so:
+<div class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"> *** WARNING - you have selected SAFER, indicating you want Ghostscript
+               to execute in a safer environment, but at the same time
+               have selected DELAYBIND. Unless you use this option with
+               care (and specifically, remember to call .bindnow) it is
+               possible that malicious code may be able to evade the
+               limited security offered by the SAFER option.
+
+ *** WARNING - you have selected SAFER, indicating you want Ghostscript
+               to execute in a safer environment, but at the same time
+               have selected WRITESYSTEMDICT. Unless you use this option with
+               care and specifically, remember to execute code like:
+                      &#34;systemdict readonly pop&#34;
+  PostScript error: invalidfileaccess in run</code></pre></div>
+</div><br />
+<em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
+<li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
+<li>Added support for CMap operator <code>begincidchar</code> (thanks to Akira Kakuto for sending the patch).</li>
+<li>Added suport for experimental 128-bit <a href="https://github.com/Cyan4973/xxHash#new-experimental-hash-algorithm"><code>XXH3</code> hashes</a>.</li>
+<li>The SVG optimizer module <code>simplify-transform</code> has been extended to incorporate translation and scaling components
+into positional and size attributes if possible.</li>
+<li>The CRC32 checksums used to verify the sanity of cache files has been replaced with <code>XXH32</code> hashes.</li>
+<li>The bundled <a href="http://potrace.sourceforge.net">potrace</a> library has been updated to version 1.16.</li>
+<li>The bundled <a href="http://www.xxhash.com">xxHash</a> library has been updated to version 2.7.2.</li>
+<li>The bundled <a href="https://github.com/google/googletest">Google Test</a> library has been updated to version 1.10.</li>
+<li>Lots of code has been refactored and improved.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.7.4 has been released</title>
@@ -173,7 +219,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     
     <item>
       <title>dvisvgm 2.6.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#6588d151e41c570e8f55ddd8ecdbaab9</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6588d151e41c570e8f55ddd8ecdbaab9</link>
       <pubDate>Fri, 12 Oct 2018 10:35:37 +0200</pubDate>
       <guid>6588d151e41c570e8f55ddd8ecdbaab9</guid>
       <description>
@@ -430,7 +476,7 @@ conversion of more transparency parameters, e.g.:<br />
     
     <item>
       <title>dvisvgm 2.3.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5e2b7cf659069c04c85da933ee354fb8</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#5e2b7cf659069c04c85da933ee354fb8</link>
       <pubDate>Fri, 23 Mar 2018 13:21:01 +0200</pubDate>
       <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
       <description>
@@ -495,22 +541,6 @@ allowed according to the EPS specification.</li>
 (patch by Hironobu Yamashita).</li>
 <li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
 <li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.3.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#8d864b9b45e4e2c3d8a34361b5086d24</link>
-      <pubDate>Fri, 12 Jan 2018 13:28:49 +0200</pubDate>
-      <guid>8d864b9b45e4e2c3d8a34361b5086d24</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Fixed the width of characters slanted by a mapfile entry (<a href="https://github.com/mgieseki/dvisvgm/issues/82">issue #82</a>).</li>
-<li>If <a href="https://www.freetype.org/ttfautohint">ttfautohint</a> fails for a font, <em>dvisvgm</em> now uses the unhinted font and
-prints a corresponding warning message.</li>
-<li>Some code cleanup.</li>
 </ul>
 ]]>
       </description>
