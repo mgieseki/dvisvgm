@@ -39,8 +39,8 @@ class LocalCache {
 		}
 
 		~LocalCache () {
-//			if (_created)
-//				FileSystem::rmdir(_cachedir);
+			if (_created)
+				FileSystem::rmdir(_cachedir);
 		}
 
 		string cachedir () const {return _cachedir;}
@@ -71,7 +71,7 @@ class FontCacheTest : public testing::Test {
 		}
 
 		~FontCacheTest () override {
-//			FileSystem::remove(cachedir+"/testfont.fgd");
+			FileSystem::remove(cachedir+"/testfont.fgd");
 		}
 
 		Glyph glyph1, glyph2;
