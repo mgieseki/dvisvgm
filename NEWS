@@ -1,3 +1,17 @@
+dvisvgm-2.8 (2019-10-25)
+- added support for JPEG, PNG, PDF, and SVG files to special 'psfile'
+- added support for Ghostscript 9.50
+- added support for elliptical arc segments in graphics paths
+- added support for CMap operator 'begincidchar' (patch by Akira Kakuto)
+- added suport for experimental 128-bit XXH3 hashes
+- extended optimizer module 'simplify-transform' to incorporate translation and
+  scaling components into positional and size attributes
+- replaced CRC32 checksums used in cache files with XXH32 hashes
+- updated potrace to version 1.16
+- updated xxHash to version 2.7.2
+- updated gtest to 1.10
+- lots of code refactorings
+
 dvisvgm-2.7.4 (2019-07-28)
 - fixed memory issue occurred when calling Metafont
 - fixed rounding issue in color conversion (GH #116)
