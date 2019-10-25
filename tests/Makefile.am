@@ -16,6 +16,7 @@ EXTRA_DIST = gtest/LICENSE \
 	gtest/src/gtest-filepath.cc \
 	gtest/src/gtest-internal-inl.h \
 	gtest/src/gtest_main.cc \
+	gtest/src/gtest-matchers.cc \
 	gtest/src/gtest-port.cc \
 	gtest/src/gtest-printers.cc \
 	gtest/src/gtest-test-part.cc \
