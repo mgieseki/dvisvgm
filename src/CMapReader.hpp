@@ -50,13 +50,13 @@ class CMapReader {
 	};
 
 	public:
-		CMapReader ();
 		std::unique_ptr<CMap> read (const std::string &fname);
 		std::unique_ptr<CMap> read (std::istream &is, const std::string &name);
 
 	protected:
 		Token popToken () {Token t=_tokens.back(); _tokens.pop_back(); return t;}
 		void executeOperator (const std::string &op, InputReader &ir);
+		void parseCIDChars (InputReader &ir, bool isRange);
 		void op_beginbfchar (InputReader &ir);
 		void op_beginbfrange (InputReader &ir);
 		void op_begincidchar (InputReader &ir);
@@ -68,9 +68,8 @@ class CMapReader {
 	private:
 		std::unique_ptr<SegmentedCMap> _cmap; ///< pointer to CMap being read
 		std::vector<Token> _tokens; ///< stack of tokens to be processed
-		bool _inCMap;               ///< operator begincmap has been executed
+		bool _inCMap=false;         ///< true if operator begincmap has been executed
 };
-
 
 
 struct CMapReaderException : public MessageException {

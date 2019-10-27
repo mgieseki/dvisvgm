@@ -73,6 +73,11 @@ const char *CMapReaderTest::cmapsrc =
 "<5833> <5834> <8c86>\n"
 "<5837> <5838> <8c9b>\n"
 "endbfrange\n"
+"3 begincidchar\n"
+"<1000> 50\n"
+"<1005> 60\n"
+"<1008> 70\n"
+"endcidchar\n"
 "2 begincidrange\n"
 "<1234> <1240> 100\n"
 "<1300> <1302> 200\n"
@@ -109,7 +114,11 @@ TEST_F(CMapReaderTest, cid) {
 	const SegmentedCMap *seg_cmap = dynamic_cast<const SegmentedCMap*>(cmap.get());
 	ASSERT_NE(seg_cmap, nullptr);
 	ASSERT_EQ(seg_cmap->numBFRanges(), 9u);
-	ASSERT_EQ(seg_cmap->numCIDRanges(), 2u);
+	ASSERT_EQ(seg_cmap->numCIDRanges(), 5u);
+	ASSERT_EQ(seg_cmap->cid(0x1000), 50u);
+	ASSERT_EQ(seg_cmap->cid(0x1005), 60u);
+	ASSERT_EQ(seg_cmap->cid(0x1008), 70u);
+
 	ASSERT_EQ(seg_cmap->cid(0x1233), 0u);
 	ASSERT_EQ(seg_cmap->cid(0x1234), 100u);
 	ASSERT_EQ(seg_cmap->cid(0x1240), 112u);

@@ -32,10 +32,6 @@
 using namespace std;
 
 
-CMapReader::CMapReader () : _inCMap(false) {
-}
-
-
 /** Reads a cmap file and returns the corresponding CMap object.
  *  @param fname[in] name/path of cmap file
  *  @return CMap object representing the read data, or 0 if file could not be read */
@@ -155,37 +151,33 @@ static uint32_t parse_hexentry (InputReader &ir) {
 }
 
 
-void CMapReader::op_begincidchar (InputReader &ir) {
+void CMapReader::parseCIDChars (InputReader &ir, bool isRange) {
 	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
 		ir.skipSpace();
 		int num_entries = static_cast<int>(popToken().numvalue());
 		while (num_entries > 0 && ir.peek() == '<') {
 			uint32_t first = parse_hexentry(ir);
-			uint32_t cid;
+			uint32_t last = first;
+			if (isRange)
+				last = parse_hexentry(ir);
 			ir.skipSpace();
+			uint32_t cid;
 			if (!ir.parseUInt(cid))
 				throw CMapReaderException("invalid char entry (decimal value expected)");
-			_cmap->addCIDRange(first, first, cid);
+			_cmap->addCIDRange(first, last, cid);
 			ir.skipSpace();
 		}
 	}
 }
 
+
+void CMapReader::op_begincidchar (InputReader &ir) {
+	parseCIDChars(ir, false);
+}
+
+
 void CMapReader::op_begincidrange (InputReader &ir) {
-	if (!_tokens.empty() && _tokens.back().type() == Token::Type::NUMBER) {
-		ir.skipSpace();
-		int num_entries = static_cast<int>(popToken().numvalue());
-		while (num_entries > 0 && ir.peek() == '<') {
-			uint32_t first = parse_hexentry(ir);
-			uint32_t last = parse_hexentry(ir);
-			uint32_t cid;
-			ir.skipSpace();
-			if (!ir.parseUInt(cid))
-				throw CMapReaderException("invalid range entry (decimal value expected)");
-			_cmap->addCIDRange(first, last, cid);
-			ir.skipSpace();
-		}
-	}
+	parseCIDChars(ir, true);
 }
 
 
