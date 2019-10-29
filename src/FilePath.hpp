@@ -48,6 +48,7 @@ class FilePath {
 		void set (const std::string &path, bool isfile, const std::string &current_dir);
 		std::string absolute (bool with_filename=true) const;
 		std::string relative (std::string reldir="", bool with_filename=true) const;
+		std::string relative (const FilePath &filepath, bool with_filename=true) const;
 		std::string shorterAbsoluteOrRelative (std::string reldir="", bool with_filename=true) const;
 		std::string basename () const;
 		std::string suffix () const;
@@ -58,6 +59,7 @@ class FilePath {
 		const std::string& filename () const     {return _fname;}
 		void filename (const std::string &fname) {_fname = fname;}
 		bool exists () const;
+		static bool isAbsolute (std::string path);
 
 	protected:
 		void init (std::string path, bool isfile, std::string current_dir);

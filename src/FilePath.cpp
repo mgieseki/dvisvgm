@@ -277,6 +277,11 @@ string FilePath::relative (string reldir, bool with_filename) const {
 }
 
 
+string FilePath::relative (const FilePath &filepath, bool with_filename) const {
+	return relative(filepath.absolute(false), with_filename);
+}
+
+
 /** Return the absolute or relative path whichever is shorter.
 *  @param[in] reldir absolute path to a directory
 *  @param[in] with_filename if false, the filename is omitted */
@@ -289,4 +294,18 @@ string FilePath::shorterAbsoluteOrRelative (string reldir, bool with_filename) c
 
 bool FilePath::exists () const {
 	return empty() ? false : FileSystem::exists(absolute());
+}
+
+
+/** Checks if a given path is absolute or relative.
+ *  @param[in] path path string to check
+ *  @return true if path is absolute */
+bool FilePath::isAbsolute (string path) {
+	path = util::trim(path);
+#ifdef _WIN32
+	path = FileSystem::adaptPathSeperators(path);
+	if (path.length() >= 2 && path[1] == ':' && isalpha(path[0]))
+		path.erase(0, 2);  // remove drive letter and colon
+#endif
+	return !path.empty() && path[0] == '/';
 }
