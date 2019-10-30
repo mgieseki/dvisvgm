@@ -213,7 +213,8 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 	else if (prefix == "psfile=" || prefix == "PSfile=" || prefix == "pdffile=") {
 		if (_actions) {
 			StreamInputReader in(is);
-			const string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
+			string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
+			fname = FileSystem::adaptPathSeperators(fname);
 			FileType fileType = FileType::EPS;
 			if (prefix == "pdffile")
 				fileType = FileType::PDF;
@@ -295,15 +296,6 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	if (fname == "/dev/null")
 		return;
 
-	string filepath;
-	if (const char *path = FileFinder::instance().lookup(fname, false))
-		filepath = FileSystem::adaptPathSeperators(path);
-	if ((filepath.empty() || !FileSystem::exists(filepath)) && FileSystem::exists(fname))
-		filepath = fname;
-	if (filepath.empty()) {
-		Message::wstream(true) << "file '" << fname << "' not found\n";
-		return;
-	}
 	map<string,string>::const_iterator it;
 
 	// bounding box of EPS figure in PS point units (lower left and upper right corner)
@@ -362,7 +354,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 	_actions->setY(0);
 	moveToDVIPos();
 
-	auto imgNode = createImageNode(filetype, filepath, pageno, BoundingBox(llx, lly, urx, ury), clipToBbox);
+	auto imgNode = createImageNode(filetype, fname, pageno, BoundingBox(llx, lly, urx, ury), clipToBbox);
 	if (imgNode) {  // has anything been drawn?
 		Matrix matrix(1);
 		if (filetype == FileType::EPS || filetype == FileType::PDF)
@@ -391,23 +383,34 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 
 /** Creates an XML element containing the image data depending on the file type.
  *  @param[in] type file type of the image
- *  @param[in] pathstr absolute path to image file
+ *  @param[in] fname file name/path of image file
  *  @param[in] pageno number of page to process (PDF only)
  *  @param[in] bbox bounding box of the image
  *  @param[in] clip if true, the image is clipped to its bounding box
  *  @return pointer to the element or nullptr if there's no image data */
-unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const string &pathstr, int pageno, BoundingBox bbox, bool clip) {
+unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, BoundingBox bbox, bool clip) {
 	unique_ptr<XMLElement> node;
-	if (type == FileType::BITMAP || type == FileType::SVG) {
+	string pathstr;
+	if (const char *path = FileFinder::instance().lookup(fname, false))
+		pathstr = FileSystem::adaptPathSeperators(path);
+	if ((pathstr.empty() || !FileSystem::exists(pathstr)) && FileSystem::exists(fname))
+		pathstr = fname;
+	if (pathstr.empty())
+		Message::wstream(true) << "file '" << fname << "' not found\n";
+	else if (type == FileType::BITMAP || type == FileType::SVG) {
 		node = util::make_unique<XMLElement>("image");
 		node->addAttribute("x", 0);
 		node->addAttribute("y", 0);
 		node->addAttribute("width", bbox.width());
 		node->addAttribute("height", bbox.height());
-		// add path to image file relative to SVG file being generated
-		FilePath imgPath(pathstr);
-		string svgPathStr = _actions->getSVGFilePath(pageno).absolute(false);
-		node->addAttribute("xlink:href", imgPath.relative(svgPathStr));
+
+		// Only reference the image with an absolute path if either an absolute path was given by the user
+		// or a given plain filename is not present in the current working directory but was found through
+		// the FileFinder, i.e. it's usually located somewhere in the texmf tree.
+		string href = pathstr;
+		if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
+			href = FilePath(pathstr).relative(FilePath(_actions->getSVGFilePath(pageno)));
+		node->addAttribute("xlink:href", href);
 	}
 	else {  // PostScript or PDF
 		// clip image to its bounding box if flag 'clip' is given
