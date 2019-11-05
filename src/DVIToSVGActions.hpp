@@ -42,7 +42,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 	using BoxMap = std::unordered_map<std::string,BoundingBox>;
 
 	public:
-		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg);
+		DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg) : _svg(svg), _dvireader(&dvisvg) {}
 		void reset () override;
 		void setChar (double x, double y, unsigned c, bool vertical, const Font &f) override;
 		void setRule (double x, double y, double height, double width) override;
@@ -83,11 +83,11 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		SVGTree &_svg;
 		BasicDVIReader *_dvireader;
 		BoundingBox _bbox;
-		int _pageCount;
-		int _currentFontNum;
+		int _pageCount=0;
+		int _currentFontNum=-1;
 		mutable CharMap _usedChars;
 		FontSet _usedFonts;
-		Color _bgcolor;
+		Color _bgcolor=Color::TRANSPARENT;
 		BoxMap _boxes;
 };
 

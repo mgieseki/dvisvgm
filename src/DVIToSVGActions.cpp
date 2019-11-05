@@ -32,14 +32,6 @@
 using namespace std;
 
 
-DVIToSVGActions::DVIToSVGActions (DVIToSVG &dvisvg, SVGTree &svg)
-	: _svg(svg), _dvireader(&dvisvg), _bgcolor(Color::TRANSPARENT)
-{
-	_currentFontNum = -1;
-	_pageCount = 0;
-}
-
-
 void DVIToSVGActions::reset() {
 	_usedChars.clear();
 	_usedFonts.clear();

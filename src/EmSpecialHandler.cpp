@@ -31,10 +31,6 @@
 using namespace std;
 
 
-EmSpecialHandler::EmSpecialHandler () : _linewidth(0.4*72/72.27) {
-}
-
-
 /** Computes the "cut vector" that is used to compute the line shape.
  *  Because each line has a width > 0 the actual shape of the line is a tetragon.
  *  The 4 vertices can be influenced by the cut parameter c that specifies
