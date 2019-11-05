@@ -68,6 +68,9 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void setX (double x) override {_dvireader->translateToX(x); _svg.setX(x);}
 		void setY (double y) override {_dvireader->translateToY(y); _svg.setY(y);}
 		void finishLine () override   {_dvireader->finishLine();}
+		void lockOutput () override   {_outputLocked = true;}
+		void unlockOutput () override {_outputLocked = false;}
+		bool outputLocked () const override       {return _outputLocked;}
 		const SVGTree& svgTree () const override  {return _svg;}
 		BoundingBox& bbox () override {return _bbox;}
 		BoundingBox& bbox (const std::string &name, bool reset=false) override;
@@ -89,6 +92,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		FontSet _usedFonts;
 		Color _bgcolor=Color::TRANSPARENT;
 		BoxMap _boxes;
+		bool _outputLocked=false;
 };
 
 

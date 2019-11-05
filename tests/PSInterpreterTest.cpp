@@ -61,6 +61,7 @@ class PSTestActions : public PSActions {
 		void setlinewidth (vector<double> &p) override    {print("setlinewidth", p);}
 		void setmatrix (vector<double> &p) override       {print("setmatrix", p);}
 		void setmiterlimit (vector<double> &p) override   {print("setmiterlimit", p);}
+		void setnulldevice (vector<double> &p) override   {print("setnulldevice", p);}
 		void setopacityalpha (vector<double> &p) override {print("setopacityalpha", p);}
 		void setshapealpha (vector<double> &p) override   {print("setshapealpha", p);}
 		void setrgbcolor (vector<double> &p) override     {print("setrgbcolor", p);}

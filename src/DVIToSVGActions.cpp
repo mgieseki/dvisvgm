@@ -85,6 +85,9 @@ string DVIToSVGActions::getBBoxFormatString () const {
  *  @param[in] vertical true if we're in vertical mode
  *  @param[in] font font to be used */
 void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, const Font &font) {
+	if (_outputLocked)
+		return;
+
 	// If we use SVG fonts there is no need to record all font name/char/size combinations
 	// because the SVG font mechanism handles this automatically. It's sufficient to
 	// record font names and chars. The various font sizes can be ignored here.
@@ -159,6 +162,9 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
  *  @param[in] height length of the vertical edges
  *  @param[in] width length of the horizontal edges */
 void DVIToSVGActions::setRule (double x, double y, double height, double width) {
+	if (_outputLocked)
+		return;
+
 	// (x,y) is the lower left corner of the rectangle
 	auto rect = util::make_unique<XMLElement>("rect");
 	rect->addAttribute("x", x);

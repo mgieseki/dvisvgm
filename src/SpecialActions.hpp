@@ -57,6 +57,9 @@ class SpecialActions {
 		virtual std::string getBBoxFormatString () const =0;
 		virtual void progress (const char *id) {}
 		virtual int getDVIStackDepth () const  {return 0;}
+		virtual void lockOutput () {}
+		virtual void unlockOutput () {}
+		virtual bool outputLocked () const {return false;}
 
 		static double PROGRESSBAR_DELAY; ///< progress bar doesn't appear before this time has elapsed (in sec)
 };

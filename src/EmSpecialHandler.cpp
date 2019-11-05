@@ -75,6 +75,8 @@ static DPair cut_vector (char cuttype, const DPair &linedir, double linewidth) {
  * @param[in] lw line width in PS point units
  * @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions &actions) {
+	if (actions.outputLocked())
+		return;
 	unique_ptr<XMLElement> node;
 	DPair dir = p2-p1;
 	if (dir.x() == 0 || dir.y() == 0 || (c1 == 'p' && c2 == 'p')) {

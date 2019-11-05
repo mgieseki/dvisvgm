@@ -1231,6 +1231,18 @@ void PsSpecialHandler::executed () {
 		_actions->progress("ps");
 }
 
+
+/** This method is called by PSInterpreter if the status of the output devices has changed.
+ *  @param[in] p 1 if output device is the nulldevice, 1 otherwise */
+void PsSpecialHandler::setnulldevice (vector<double> &p) {
+	if (_actions) {
+		if (p[0] != 0)
+			_actions->lockOutput();   // prevent further SVG output
+		else
+			_actions->unlockOutput(); // enable SVG output again
+	}
+}
+
 ////////////////////////////////////////////
 
 void PsSpecialHandler::ClippingStack::pushEmptyPath () {

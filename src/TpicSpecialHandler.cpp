@@ -101,7 +101,7 @@ static unique_ptr<XMLElement> create_ellipse_element (double cx, double cy, doub
  *  @param[in] ddist dash/dot distance of line in PS point units (0:solid line, >0:dashed line, <0:dotted line)
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawLines (double ddist, SpecialActions &actions) {
-	if (!_points.empty() && (_penwidth > 0 || _grayLevel >= 0)) {
+	if (!_points.empty() && (_penwidth > 0 || _grayLevel >= 0) && !actions.outputLocked()) {
 		unique_ptr<XMLElement> elem;
 		if (_points.size() == 1) {
 			const DPair &p = _points.back();
@@ -147,7 +147,7 @@ void TpicSpecialHandler::drawLines (double ddist, SpecialActions &actions) {
  *  @param[in] ddist length of dashes and gaps
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawSplines (double ddist, SpecialActions &actions) {
-	if (!_points.empty() && _penwidth > 0) {
+	if (!_points.empty() && _penwidth > 0 && !actions.outputLocked()) {
 		const size_t numPoints = _points.size();
 		if (numPoints < 3) {
 			_grayLevel = -1;
@@ -197,7 +197,7 @@ void TpicSpecialHandler::drawSplines (double ddist, SpecialActions &actions) {
  *  @param[in] angle2 ending angle (clockwise) relative to x-axis
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 void TpicSpecialHandler::drawArc (double cx, double cy, double rx, double ry, double angle1, double angle2, SpecialActions &actions) {
-	if (_penwidth > 0 || _grayLevel >= 0) {
+	if ((_penwidth > 0 || _grayLevel >= 0) && !actions.outputLocked()) {
 		cx += actions.getX();
 		cy += actions.getY();
 		unique_ptr<XMLElement> elem;

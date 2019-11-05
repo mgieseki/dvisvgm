@@ -286,6 +286,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"setlinewidth",   { 1, &PSActions::setlinewidth}},
 		{"setmatrix",      { 6, &PSActions::setmatrix}},
 		{"setmiterlimit",  { 1, &PSActions::setmiterlimit}},
+		{"setnulldevice",  { 1, &PSActions::setnulldevice}},
 		{"setopacityalpha",{ 1, &PSActions::setopacityalpha}},
 		{"setshapealpha",  { 1, &PSActions::setshapealpha}},
 		{"setpagedevice",  { 0, &PSActions::setpagedevice}},

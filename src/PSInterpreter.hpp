@@ -71,6 +71,7 @@ struct PSActions {
 	virtual void setlinewidth (std::vector<double> &p) =0;
 	virtual void setmatrix (std::vector<double> &p) =0;
 	virtual void setmiterlimit (std::vector<double> &p) =0;
+	virtual void setnulldevice (std::vector<double> &p) =0;
 	virtual void setopacityalpha (std::vector<double> &p) =0;
 	virtual void setshapealpha (std::vector<double> &p) =0;
 	virtual void setpagedevice (std::vector<double> &p) =0;

@@ -146,6 +146,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void setlinewidth (std::vector<double> &p) override    {_linewidth = scale(p[0] ? p[0] : 0.5);}
 		void setmatrix (std::vector<double> &p) override;
 		void setmiterlimit (std::vector<double> &p) override   {_miterlimit = p[0];}
+		void setnulldevice (std::vector<double> &p) override;
 		void setopacityalpha (std::vector<double> &p) override {_opacityalpha = p[0];}
 		void setshapealpha (std::vector<double> &p) override   {_shapealpha = p[0];}
 		void setpagedevice (std::vector<double> &p) override;
