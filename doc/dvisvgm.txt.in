@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2019-11-08 13:37 +0100
+:revdate: 2019-11-08 23:09 +0100
 
 Name
 ----
@@ -389,9 +389,9 @@ The following list describes the currently available optimizer modules.
   this module even if option *--optimize* is not given. You can use argument 'none' to prevent that.
 
   *simplify-text*;;
-  If a +text+ element only contains whitespace nodes and a single +tspan+ element, attributes and
-  content of the +tspan+ are merged into the +text+ element, i.e. the +tspan+ is removed without
-  changing the visible appearance of the text.
+  If a +text+ element only contains whitespace nodes and +tspan+ elements, all common inheritable
+  attributes of the latter are moved to the enclosing text element. All +tspan+ elements without
+  further attributes are unwrapped.
 
   *simplify-transform*;;
   Tries to shorten all 'transform' attributes. This module combines the transformation commands of

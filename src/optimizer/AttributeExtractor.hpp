@@ -27,35 +27,32 @@
 
 /** Moves common attributes of adjacent elements to enclosing groups. */
 class AttributeExtractor : public OptimizerModule {
-		friend class GroupCollapser;
-		using Attribute = XMLElement::Attribute;
+	using Attribute = XMLElement::Attribute;
 
-		/** Represents a range of adjacent nodes where all elements have a common attribute. */
-		struct AttributeRun {
-			public:
-				AttributeRun (const Attribute &attr, XMLElement *first);
-				XMLNode* first () {return _first;}
-				XMLNode* last ()  {return _last;}
-//				XMLNodeIterator begin () {return XMLNodeIterator(_first);}
-//				XMLNodeIterator end ()   {return XMLNodeIterator(_last);}
-				int length () const {return _length;}
+	/** Represents a range of adjacent nodes where all elements have a common attribute. */
+	struct AttributeRun {
+		public:
+			AttributeRun (const Attribute &attr, XMLElement *first);
+			XMLNode* first () {return _first;}
+			XMLNode* last ()  {return _last;}
+			int length () const {return _length;}
 
-			private:
-				int _length;  ///< run length excluding non-element nodes
-				XMLNode *_first, *_last;  ///< first and last node in run
-		};
+		private:
+			int _length;  ///< run length excluding non-element nodes
+			XMLNode *_first, *_last;  ///< first and last node in run
+	};
 
 	public:
 		void execute (XMLElement*, XMLElement *context) override {execute(context, true);};
 		const char* info () const override;
+		static bool groupable (const XMLElement &elem);
+		static bool inheritable (const Attribute &attrib);
+		static bool extractable (const Attribute &attr, XMLElement &element);
 
 	protected:
 		void execute (XMLElement *context, bool recurse);
 		XMLNode* extractAttribute (XMLElement *elem);
 		bool extracted (const Attribute &attr) const;
-		static bool groupable (const XMLElement &elem);
-		static bool inheritable (const Attribute &attrib);
-		static bool extractable (const Attribute &attr, XMLElement &element);
 
 	private:
 		std::set<std::string> _extractedAttributes;

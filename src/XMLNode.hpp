@@ -144,14 +144,15 @@ class XMLElement : public XMLNode {
 		XMLNode* lastChild () const {return _lastChild;}
 		std::ostream& write (std::ostream &os) const override;
 		bool empty () const {return !_firstChild;}
-//		const Children& children () const {return _children;}
 		Attributes& attributes () {return _attributes;}
+		const Attributes& attributes () const {return _attributes;}
 		XMLNodeIterator begin () {return XMLNodeIterator(_firstChild.get());}
 		XMLNodeIterator end () {return XMLNodeIterator(nullptr);}
 		ConstXMLNodeIterator begin () const {return ConstXMLNodeIterator(_firstChild.get());}
 		ConstXMLNodeIterator end () const {return ConstXMLNodeIterator(nullptr);}
 		const std::string& name () const {return _name;}
 		const XMLElement* toElement () const override {return this;}
+		const Attribute* getAttribute (const std::string &name) const;
 
 		static std::unique_ptr<XMLNode> remove (XMLNode *child);
 		static XMLElement* wrap (XMLNode *first, XMLNode *last, const std::string &name);
@@ -159,7 +160,6 @@ class XMLElement : public XMLNode {
 
 	protected:
 		Attribute* getAttribute (const std::string &name);
-		const Attribute* getAttribute (const std::string &name) const;
 		XMLNode* insertFirst (std::unique_ptr<XMLNode> child);
 		XMLNode* insertLast (std::unique_ptr<XMLNode> child);
 

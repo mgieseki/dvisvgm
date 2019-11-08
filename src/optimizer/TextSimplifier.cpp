@@ -18,31 +18,71 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <vector>
+#include "AttributeExtractor.hpp"
 #include "TextSimplifier.hpp"
 #include "../XMLNode.hpp"
 
+using namespace std;
+
+
 const char* TextSimplifier::info () const {
-	return "merge single tspans into surrounding text elements";
+	return "merge data of tspans into enclosing text elements";
 }
 
-/** Checks if there's only a single tspan element and optional whitespace
- *  siblings inside a given text element.
+
+/** Returns all common inheritable attributes of multiple elements. */
+static XMLElement::Attributes common_inheritable_attributes (const vector<XMLElement*> &elements) {
+	bool intersected=false;
+	XMLElement::Attributes commonAttribs;
+	for (const XMLElement *elem : elements) {
+		if (commonAttribs.empty()) {
+			if (intersected)
+				break;
+			for (const auto attrib : elem->attributes()) {
+				if (AttributeExtractor::inheritable(attrib))
+					commonAttribs.push_back(attrib);
+			}
+		}
+		else {
+			for (auto it = commonAttribs.begin(); it != commonAttribs.end();) {
+				auto *attrib = elem->getAttribute(it->name);
+				if (!attrib || attrib->value != it->value)
+					it = commonAttribs.erase(it);
+				else
+					++it;
+			}
+		}
+		intersected = true;
+	}
+	return commonAttribs;
+}
+
+
+/** Returns all tspan elements of a text element if the latter doesn't contain
+ *  any non-whitespace text nodes. Otherwise, the returned vector is empty.
  *  @param[in] textElement text element to check
- *  @return pointer to the only tspan element or nullptr */
-static XMLElement* only_tspan_child (XMLElement *textElement) {
-	XMLElement *tspan=nullptr;
+ *  @return the tspan children of the text element */
+static vector<XMLElement*> get_tspans (XMLElement *textElement) {
+	vector<XMLElement*> tspans;
+	bool failed=false;
 	for (XMLNode *child : *textElement) {
 		if (child->toWSNode() || child->toComment())
 			continue;
 		if (child->toText())
-			return nullptr;
-		if (XMLElement *childElement = child->toElement()) {
-			if (tspan || childElement->name() != "tspan")
-				return nullptr;
-			tspan = childElement;
+			failed = true;
+		else if (XMLElement *childElement = child->toElement()) {
+			if (childElement->name() != "tspan")
+				failed = true;
+			else
+				tspans.push_back(childElement);
+		}
+		if (failed) {
+			tspans.clear();
+			break;
 		}
 	}
-	return tspan;
+	return tspans;
 }
 
 
@@ -50,11 +90,20 @@ void TextSimplifier::execute (XMLElement *context) {
 	if (!context)
 		return;
 	if (context->name() == "text") {
-		if (XMLElement *tspan = only_tspan_child(context)) {
-			// move all attributes of the tspan to the text element and unwrap the tspan
-			for (const XMLElement::Attribute &attr : tspan->attributes())
+		vector<XMLElement*> tspans = get_tspans(context);
+		vector<XMLElement::Attribute> attribs = common_inheritable_attributes(tspans);
+		if (!tspans.empty() && !attribs.empty()) {
+			// move all common tspan attributes to the parent text element
+			for (const XMLElement::Attribute &attr : attribs)
 				context->addAttribute(attr.name, attr.value);
-			XMLElement::unwrap(tspan);
+			// remove all common attributes from the tspan elements
+			for (XMLElement *tspan : tspans) {
+				for (const XMLElement::Attribute &attr : attribs)
+					tspan->removeAttribute(attr.name);
+				// unwrap the tspan if there are no remaining attributes
+				if (tspan->attributes().empty())
+					XMLElement::unwrap(tspan);
+			}
 		}
 	}
 	else {
