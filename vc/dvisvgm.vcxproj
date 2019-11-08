@@ -213,6 +213,7 @@
     <ClCompile Include="..\src\optimizer\GroupCollapser.cpp" />
     <ClCompile Include="..\src\optimizer\RedundantElementRemover.cpp" />
     <ClCompile Include="..\src\optimizer\SVGOptimizer.cpp" />
+    <ClCompile Include="..\src\optimizer\TextSimplifier.cpp" />
     <ClCompile Include="..\src\optimizer\TransformSimplifier.cpp" />
     <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="..\src\optimizer\OptimizerModule.hpp" />
     <ClInclude Include="..\src\optimizer\RedundantElementRemover.hpp" />
     <ClInclude Include="..\src\optimizer\SVGOptimizer.hpp" />
+    <ClInclude Include="..\src\optimizer\TextSimplifier.hpp" />
     <ClInclude Include="..\src\optimizer\TransformSimplifier.hpp" />
     <ClInclude Include="..\src\optimizer\WSNodeRemover.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
