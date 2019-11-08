@@ -30,7 +30,7 @@ class GroupCollapser : public OptimizerModule {
 		const char* info () const override;
 
 	protected:
-		bool moveAttributes (XMLElement &source, XMLElement &dest);
+		static bool moveAttributes (XMLElement &source, XMLElement &dest);
 		static bool collapsible (const XMLElement &elem);
 		static bool unwrappable (const XMLElement &source, const XMLElement &dest);
 };
