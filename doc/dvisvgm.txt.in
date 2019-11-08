@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2019-08-25 20:14 +0200
+:revdate: 2019-11-08 13:37 +0100
 
 Name
 ----
@@ -387,6 +387,11 @@ The following list describes the currently available optimizer modules.
   Removes all redundant 'clipPath' elements. This optimization was already present in former versions
   of dvisvgm and was always applied by default. This behavior is retained, i.e. dvisvgm executes
   this module even if option *--optimize* is not given. You can use argument 'none' to prevent that.
+
+  *simplify-text*;;
+  If a +text+ element only contains whitespace nodes and a single +tspan+ element, attributes and
+  content of the +tspan+ are merged into the +text+ element, i.e. the +tspan+ is removed without
+  changing the visible appearance of the text.
 
   *simplify-transform*;;
   Tries to shorten all 'transform' attributes. This module combines the transformation commands of

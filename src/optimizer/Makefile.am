@@ -7,6 +7,7 @@ liboptimizer_la_SOURCES = \
 	OptimizerModule.hpp \
 	RedundantElementRemover.hpp RedundantElementRemover.cpp \
 	SVGOptimizer.hpp            SVGOptimizer.cpp \
+	TextSimplifier.hpp          TextSimplifier.cpp \
 	TransformSimplifier.hpp     TransformSimplifier.cpp \
   	WSNodeRemover.hpp           WSNodeRemover.cpp
 
