@@ -120,4 +120,5 @@ const char *PSInterpreter::PSDEFS =
 "ty 15/CompatibleOverprint 16>>exch get 1(setblendmode)prcmd}def/@pdfpagecount{"
 "(r)file runpdfbegin pdfpagecount runpdfend}def/@pdfpagebox{(r)file runpdfbegin"
 " dup dup 1 lt exch pdfpagecount gt or{pop}{pdfgetpage/MediaBox pget pop aload "
-"pop}ifelse runpdfend}def DELAYBIND{.bindnow}if "; 
+"pop}ifelse runpdfend}def DELAYBIND{.bindnow}if ";
+
