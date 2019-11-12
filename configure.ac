@@ -4,8 +4,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([dvisvgm],[2.8],[martin.gieseking@uos.de])
-DATE="October 2019"
+AC_INIT([dvisvgm],[2.8.1],[martin.gieseking@uos.de])
+DATE="November 2019"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
