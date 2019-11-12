@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2019-11-08 23:09 +0100
+:revdate: 2019-11-12 20:21 +0100
 
 Name
 ----
@@ -468,14 +468,14 @@ contents get the same file name. Therefore, only the first one is converted whil
 skipped. To create separate files for each page, you can add the page number to the output pattern,
 e.g. +--output="%f-%p-%hc"+.
 +
-By default, dvisvgm uses the XXH64 hash algorithm to compute the values provided through +%hd+ and
-+%hc+. It's extremely fast, and a 64-bit hash should be sufficient for most documents with an average
-size of pages. Alternatively, XXH32 and MD5 can be used as well. The desired algorithm is specified
-by argument 'params' of option *--page-hashes*. It takes one of the strings +MD5+, +XXH32+, and +XXH64+,
-where the names can be given in lower case too, like +--page-hashes=md5+. Since version 0.7.1,
-xxHash provides an experimental 128-bit hash function, whose algorithm may still change with the next
-versions of the library. If the corresponding API is available, dvisvgm supports the new hash function
-and option *--page-hashes* additionally accepts the algorithm specifier +XXH128+.
+By default, dvisvgm uses the fast XXH64 hash algorithm to compute the values provided through +%hd+ and
++%hc+. 64-bit hashes should be sufficient for most documents with an average size of pages. Alternatively,
+XXH32 and MD5 can be used as well. The desired algorithm is specified by argument 'params' of option
+*--page-hashes*. It takes one of the strings +MD5+, +XXH32+, and +XXH64+, where the names can be given
+in lower case too, like +--page-hashes=md5+. Since version 0.7.1, xxHash provides an experimental 128-bit
+hash function, whose algorithm may still change with the next versions of the library. If the
+corresponding API is available, dvisvgm supports the new hash function and option *--page-hashes*
+additionally accepts the algorithm specifier +XXH128+.
 +
 Finally, option *--page-hashes* can take a second argument that must be separated by a comma.
 Currently, only the two parameters 'list' and 'replace' are evaluated, e.g. +--page-hashes=md5,list+
@@ -805,12 +805,12 @@ information on the command syntax and semantics, see the documentation of +\pdfm
 https://ctan.org/pkg/pdftex[pdfTeX user manual].
 
 *ps*::
-The famous DVI driver 'dvips' introduced its own set of specials in order to embed PostScript code into DVI files,
-which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
-PostScript snippets and to convert as many of them as possible to SVG. In contrast to dvips, dvisvgm uses
-floating point arithmetics to compute the precise position of each graphic element, i.e. it doesn't round the
-coordinates. Therefore, the relative locations of the graphic elements may slightly differ from those computed
-by dvips.
+The famous DVI driver https://www.tug.org/texinfohtml/dvips.html['dvips'] introduced its own set of specials
+in order to embed PostScript code into DVI files, which greatly improves the capabilities of DVI documents.
+One aim of dvisvgm is to completely evaluate all PostScript fragments and to convert as many of them as possible
+to SVG. In contrast to dvips, dvisvgm uses floating point arithmetics to compute the precise position of each
+graphic element, i.e. it doesn't round the coordinates. Therefore, the relative locations of the graphic elements
+may slightly differ from those computed by dvips.
 +
 Since PostScript is a rather complex language, dvisvgm does not implement its own PostScript interpreter
 but relies on https://ghostscript.com[Ghostscript] instead. If the Ghostscript library was not linked to the
@@ -843,32 +843,29 @@ eepic and tplot, use these specials to describe graphics.
 
 Examples
 --------
-------------
-dvisvgm file
-------------
-Converts the first page of 'file.dvi' to 'file.svg'.
++dvisvgm file+::
+	Converts the first page of 'file.dvi' to 'file.svg'.
 
---------------------
-dvisvgm - < file.dvi
---------------------
-Converts the first page of 'file.dvi' to 'stdin.svg' where the contents of 'file.dvi'
-is read from *stdin*.
++dvisvgm -p1-5 file+::
+	Converts the first five pages of 'file.dvi' to 'file-1.svg',...,'file-5.svg'.
 
----------------
-dvisvgm -z file
----------------
-Converts the first page of 'file.dvi' to 'file.svgz' with default compression level 9.
++dvisvgm -p1- file+::
+	Converts all pages of 'file.dvi' to separate SVG files.
 
--------------------------------------
-dvisvgm -p5 -z3 -ba4-l -onewfile file
--------------------------------------
-Converts the fifth page of 'file.dvi' to 'newfile.svgz' with compression level 3.
-The bounding box is set to DIN/ISO A4 in landscape format.
++dvisvgm -p1,3 -O file+::
+	Converts the first and third page of 'file.dvi' to optimized SVG files.
 
------------------------------------------------------
-dvisvgm --transform="R20,w/3,2h/5 T1cm,1cm S2,3" file
------------------------------------------------------
-Converts the first page of 'file.dvi' to 'file.svg' where three transformations are applied.
++dvisvgm - < file.dvi+::
+	Converts the first page of 'file.dvi' to 'stdin.svg' where the contents of 'file.dvi' is read from *stdin*.
+
++dvisvgm -z file+::
+	Converts the first page of 'file.dvi' to 'file.svgz' with default compression level 9.
+
++dvisvgm -p5 -z3 -ba4-l -o newfile file+::
+	Converts the fifth page of 'file.dvi' to 'newfile.svgz' with compression level 3. The bounding box is set to DIN/ISO A4 in landscape format.
+
++dvisvgm --transform="R20,w/3,2h/5 T1cm,1cm S2,3" file+::
+	Converts the first page of 'file.dvi' to 'file.svg' where three transformations are applied.
 
 [[environment]]
 Environment
