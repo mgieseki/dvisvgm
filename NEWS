@@ -1,3 +1,9 @@
+dvisvgm-2.8.1 (2019-11-14)
+- added SVG optimizer module 'simplify-text'
+- added support for PS operator 'nulldevice'
+- copy absolute paths from special 'psfile' unchanged to the SVG file
+- some code refactorings
+
 dvisvgm-2.8 (2019-10-25)
 - added support for JPEG, PNG, PDF, and SVG files to special 'psfile'
 - added support for Ghostscript 9.50
@@ -8,7 +14,7 @@ dvisvgm-2.8 (2019-10-25)
   scaling components into positional and size attributes
 - replaced CRC32 checksums used in cache files with XXH32 hashes
 - updated potrace to version 1.16
-- updated xxHash to version 2.7.2
+- updated xxHash to version 0.7.2
 - updated gtest to 1.10
 - lots of code refactorings
 
