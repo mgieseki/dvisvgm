@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Fri, 25 Oct 2019 18:52:06 +0200</pubDate>
+    <pubDate>Thu, 14 Nov 2019 16:37:46 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.8.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#8d0ef4dc302ef6102e094359ddf31b2d</link>
+      <pubDate>Thu, 14 Nov 2019 16:25:12 +0100</pubDate>
+      <guid>8d0ef4dc302ef6102e094359ddf31b2d</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added SVG optimizer module <code>simplify-text</code> to move common attributes from <code>tspan</code> elements to the enclosing <code>text</code> element. Redundant <code>tspan</code> elements are removed afterwards.</li>
+<li>Added support for PS operator <code>nulldevice</code> which is used by a couple of LaTeX packages.
+It&rsquo;s used to temporarily suppress graphic output when executing drawing or text commands.</li>
+<li>Absolute paths given in special <code>psfile</code> are now retained in the SVG file when referencing external image files.</li>
+<li>Some code refactorings.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.8 has been released</title>
@@ -199,7 +216,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     
     <item>
       <title>dvisvgm 2.6.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#dcf8791dee146c9bf9bd340c4514d551</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#dcf8791dee146c9bf9bd340c4514d551</link>
       <pubDate>Wed, 23 Jan 2019 10:48:53 +0100</pubDate>
       <guid>dcf8791dee146c9bf9bd340c4514d551</guid>
       <description>
@@ -425,7 +442,7 @@ If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p
     
     <item>
       <title>dvisvgm 2.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4d81ee4151a938fdddc3350841a015a8</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4d81ee4151a938fdddc3350841a015a8</link>
       <pubDate>Thu, 03 May 2018 13:01:52 +0200</pubDate>
       <guid>4d81ee4151a938fdddc3350841a015a8</guid>
       <description>
@@ -522,25 +539,6 @@ allowed according to the EPS specification.</li>
 <ul>
 <li>Fixed a wrong behavior when requiring both default mapfiles and <code>pdf:mapline</code> or <code>pdf:mapfile</code> specials.</li>
 <li>Fixed an exception thrown in rare cases of unavailable font files.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.3.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#23716e14524e4f885fe665d88cc8b079</link>
-      <pubDate>Thu, 08 Feb 2018 13:29:02 +0200</pubDate>
-      <guid>23716e14524e4f885fe665d88cc8b079</guid>
-      <description>
-        <![CDATA[<p>This is a minor maintenance release with the following changes:</p>
-
-<ul>
-<li>Prevent the creation of redundant <a href="https://www.w3.org/TR/SVG/text.html#TSpanElement"><code>tspan</code></a> elements.</li>
-<li>Added support for the new JFM specification introduced in <a href="https://www.tug.org/svn/texlive?view=revision&amp;revision=46452">TeX Live r46452</a>
-(patch by Hironobu Yamashita).</li>
-<li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
-<li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
 </ul>
 ]]>
       </description>

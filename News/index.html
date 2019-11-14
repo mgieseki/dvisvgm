@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="57192fe118cc7abbba232e51f3d2adf0"></a>
+  <a name="8d0ef4dc302ef6102e094359ddf31b2d"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">14 November 2019: dvisvgm 2.8.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Added SVG optimizer module <code>simplify-text</code> to move common attributes from <code>tspan</code> elements to the enclosing <code>text</code> element. Redundant <code>tspan</code> elements are removed afterwards.</li>
+<li>Added support for PS operator <code>nulldevice</code> which is used by a couple of LaTeX packages.
+It&rsquo;s used to temporarily suppress graphic output when executing drawing or text commands.</li>
+<li>Absolute paths given in special <code>psfile</code> are now retained in the SVG file when referencing external image files.</li>
+<li>Some code refactorings.</li>
+</ul>
+</div>
+  </section><a name="57192fe118cc7abbba232e51f3d2adf0"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">25 October 2019: dvisvgm 2.8 has been released</div>
     <div class="card-body">
@@ -233,21 +245,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
 <li>Fixed the handling of backslashes in EPS/PDF file paths (Windows only).</li>
 <li>Updated the bundled <a href="https://github.com/google/googletest">Google Test</a> library to version 1.8.1.</li>
 <li>Some code refactorings and improvements of the build system.</li>
-</ul>
-</div>
-  </section><a name="dcf8791dee146c9bf9bd340c4514d551"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">23 January 2019: dvisvgm 2.6.2 has been released</div>
-    <div class="card-body">
-      <p>This maintenance release resolves a couple of PostScript issues that were reported recently.</p>
-
-<ul>
-<li>Fixed the scaling of line properties in PS operator <code>grestore</code>.</li>
-<li>Fixed the handling of PS operators <code>charpath</code> and <code>show</code> which may call each other internally.</li>
-<li>Improved the processing of PS operator <code>clippath</code>.</li>
-<li>Prevent visible side-effects of PS operator <code>stringwidth</code>.</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.7.</li>
-<li>Some modifications of the build system to simplify the maintenance of <em>dvisvgm</em> in TeX Live.</li>
 </ul>
 </div>
   </section>

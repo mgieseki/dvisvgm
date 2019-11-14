@@ -666,6 +666,16 @@ XML tree gradually.
   this module even if option <strong>--optimize</strong> is not given. You can use argument <em>none</em> to prevent that.
 </p></dd>
 </div>
+<a name="simplify-text" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>simplify-text</strong>
+</dt>
+<dd><p>
+  If a <code>text</code> element only contains whitespace nodes and <code>tspan</code> elements, all common inheritable
+  attributes of the latter are moved to the enclosing text element. All <code>tspan</code> elements without
+  further attributes are unwrapped.
+</p></dd>
+</div>
 <a name="simplify-transform" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>simplify-transform</strong>
@@ -761,14 +771,14 @@ and the command-line options. It has the same length as <code>%hd</code>.</p>
 contents get the same file name. Therefore, only the first one is converted while the others are
 skipped. To create separate files for each page, you can add the page number to the output pattern,
 e.g. <code>--output="%f-%p-%hc"</code>.</p>
-<p>By default, dvisvgm uses the XXH64 hash algorithm to compute the values provided through <code>%hd</code> and
-<code>%hc</code>. It’s extremely fast, and a 64-bit hash should be sufficient for most documents with an average
-size of pages. Alternatively, XXH32 and MD5 can be used as well. The desired algorithm is specified
-by argument <em>params</em> of option <strong>--page-hashes</strong>. It takes one of the strings <code>MD5</code>, <code>XXH32</code>, and <code>XXH64</code>,
-where the names can be given in lower case too, like <code>--page-hashes=md5</code>. Since version 0.7.1,
-xxHash provides an experimental 128-bit hash function, whose algorithm may still change with the next
-versions of the library. If the corresponding API is available, dvisvgm supports the new hash function
-and option <strong>--page-hashes</strong> additionally accepts the algorithm specifier <code>XXH128</code>.</p>
+<p>By default, dvisvgm uses the fast XXH64 hash algorithm to compute the values provided through <code>%hd</code> and
+<code>%hc</code>. 64-bit hashes should be sufficient for most documents with an average size of pages. Alternatively,
+XXH32 and MD5 can be used as well. The desired algorithm is specified by argument <em>params</em> of option
+<strong>--page-hashes</strong>. It takes one of the strings <code>MD5</code>, <code>XXH32</code>, and <code>XXH64</code>, where the names can be given
+in lower case too, like <code>--page-hashes=md5</code>. Since version 0.7.1, xxHash provides an experimental 128-bit
+hash function, whose algorithm may still change with the next versions of the library. If the
+corresponding API is available, dvisvgm supports the new hash function and option <strong>--page-hashes</strong>
+additionally accepts the algorithm specifier <code>XXH128</code>.</p>
 <p>Finally, option <strong>--page-hashes</strong> can take a second argument that must be separated by a comma.
 Currently, only the two parameters <em>list</em> and <em>replace</em> are evaluated, e.g. <code>--page-hashes=md5,list</code>
 or <code>--page-hashes=replace</code>. When <em>list</em> is present, dvisvgm doesn’t perform any conversion but just
@@ -1356,12 +1366,12 @@ information on the command syntax and semantics, see the documentation of <code>
 </dt>
 <dd>
 <p>
-The famous DVI driver <em>dvips</em> introduced its own set of specials in order to embed PostScript code into DVI files,
-which greatly improves the capabilities of DVI documents. One aim of dvisvgm is to completely evaluate all
-PostScript snippets and to convert as many of them as possible to SVG. In contrast to dvips, dvisvgm uses
-floating point arithmetics to compute the precise position of each graphic element, i.e. it doesn’t round the
-coordinates. Therefore, the relative locations of the graphic elements may slightly differ from those computed
-by dvips.
+The famous DVI driver <a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> introduced its own set of specials
+in order to embed PostScript code into DVI files, which greatly improves the capabilities of DVI documents.
+One aim of dvisvgm is to completely evaluate all PostScript fragments and to convert as many of them as possible
+to SVG. In contrast to dvips, dvisvgm uses floating point arithmetics to compute the precise position of each
+graphic element, i.e. it doesn’t round the coordinates. Therefore, the relative locations of the graphic elements
+may slightly differ from those computed by dvips.
 </p>
 <p>Since PostScript is a rather complex language, dvisvgm does not implement its own PostScript interpreter
 but relies on <a href="https://ghostscript.com">Ghostscript</a> instead. If the Ghostscript library was not linked to the
@@ -1398,15 +1408,72 @@ eepic and tplot, use these specials to describe graphics.
 </dl>
 </div></section><span class="linktarget" id="_examples"></span><section class="manpage"><h3>
 <i class="fa fa-keyboard-o fa-fw"></i> Examples</h3>
-<div class="sectionbody"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm file</code></pre></div>
-<p>Converts the first page of <em>file.dvi</em> to <em>file.svg</em>.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm - &lt; file.dvi</code></pre></div>
-<p>Converts the first page of <em>file.dvi</em> to <em>stdin.svg</em> where the contents of <em>file.dvi</em>
-is read from <strong>stdin</strong>.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm -z file</code></pre></div>
-<p>Converts the first page of <em>file.dvi</em> to <em>file.svgz</em> with default compression level 9.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm -p5 -z3 -ba4-l -o newfile file</code></pre></div>
-<p>Converts the fifth page of <em>file.dvi</em> to <em>newfile.svgz</em> with compression level 3.
-The bounding box is set to DIN/ISO A4 in landscape format.</p><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">dvisvgm --transform=&#34;R20,w/3,2h/5 T1cm,1cm S2,3&#34; file</code></pre></div>
-<p>Converts the first page of <em>file.dvi</em> to <em>file.svg</em> where three transformations are applied.</p>
-</div></section><span class="linktarget" id="environment"></span><section class="manpage"><h3>
+<div class="sectionbody"><dl>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm file</code>
+</dt>
+<dd><p>
+        Converts the first page of <em>file.dvi</em> to <em>file.svg</em>.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm -p1-5 file</code>
+</dt>
+<dd><p>
+        Converts the first five pages of <em>file.dvi</em> to <em>file-1.svg</em>,…,<em>file-5.svg</em>.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm -p1- file</code>
+</dt>
+<dd><p>
+        Converts all pages of <em>file.dvi</em> to separate SVG files.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm -p1,3 -O file</code>
+</dt>
+<dd><p>
+        Converts the first and third page of <em>file.dvi</em> to optimized SVG files.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm - &lt; file.dvi</code>
+</dt>
+<dd><p>
+        Converts the first page of <em>file.dvi</em> to <em>stdin.svg</em> where the contents of <em>file.dvi</em> is read from <strong>stdin</strong>.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm -z file</code>
+</dt>
+<dd><p>
+        Converts the first page of <em>file.dvi</em> to <em>file.svgz</em> with default compression level 9.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm -p5 -z3 -ba4-l -o newfile file</code>
+</dt>
+<dd><p>
+        Converts the fifth page of <em>file.dvi</em> to <em>newfile.svgz</em> with compression level 3. The bounding box is set to DIN/ISO A4 in landscape format.
+</p></dd>
+</div>
+<div class="hdlist1">
+<dt>
+<code>dvisvgm --transform="R20,w/3,2h/5 T1cm,1cm S2,3" file</code>
+</dt>
+<dd><p>
+        Converts the first page of <em>file.dvi</em> to <em>file.svg</em> where three transformations are applied.
+</p></dd>
+</div>
+</dl></div></section><span class="linktarget" id="environment"></span><section class="manpage"><h3>
 <i class="fa fa-globe fa-fw"></i> Environment</h3>
 <div class="sectionbody">
 <p>dvisvgm uses the <strong>kpathsea</strong> library for locating the files that it opens.
@@ -1572,9 +1639,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.8</div>
+   <div class="col-md-6">Version 2.8.1</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-08-25</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-11-12</span>
    </div>
 </div>
 </div>
