@@ -22,6 +22,7 @@
 
 #include <array>
 #include <cctype>
+#include <cmath>
 #include <deque>
 #include <ostream>
 #include <type_traits>
@@ -687,7 +688,7 @@ class GraphicsPath {
 		 *  @param[in] actions template methods called by each iteration step
 		 *  @param[in] optimize if true, shorthand drawing commands (hlineto, vlineto,...) are considered */
 		void iterate (IterationActions &actions, bool optimize) const {
-			double eps = XMLString::DECIMAL_PLACES > 0 ? pow(10, -XMLString::DECIMAL_PLACES) : 1e-7;
+			double eps = XMLString::DECIMAL_PLACES > 0 ? std::pow(10, -XMLString::DECIMAL_PLACES) : 1e-7;
 			IterationVisitor visitor(actions, optimize, eps);
 			for (const CommandVariant &cmd : _commands) {
 				if (actions.quit())
