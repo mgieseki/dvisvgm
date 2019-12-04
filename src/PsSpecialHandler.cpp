@@ -214,7 +214,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 		if (_actions) {
 			StreamInputReader in(is);
 			string fname = in.getQuotedString(in.peek() == '"' ? "\"" : nullptr);
-			fname = FileSystem::adaptPathSeperators(fname);
+			fname = FileSystem::ensureForwardSlashes(fname);
 			FileType fileType = FileType::EPS;
 			if (prefix == "pdffile")
 				fileType = FileType::PDF;
@@ -392,7 +392,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 	unique_ptr<XMLElement> node;
 	string pathstr;
 	if (const char *path = FileFinder::instance().lookup(fname, false))
-		pathstr = FileSystem::adaptPathSeperators(path);
+		pathstr = FileSystem::ensureForwardSlashes(path);
 	if ((pathstr.empty() || !FileSystem::exists(pathstr)) && FileSystem::exists(fname))
 		pathstr = fname;
 	if (pathstr.empty())

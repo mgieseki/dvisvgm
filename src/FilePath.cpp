@@ -122,7 +122,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 	single_slashes(path);
 	single_slashes(current_dir);
 #ifdef _WIN32
-	path = FileSystem::adaptPathSeperators(path);
+	path = FileSystem::ensureForwardSlashes(path);
 	_drive = strip_drive_letter(path);
 #endif
 	if (isfile) {
@@ -303,7 +303,7 @@ bool FilePath::exists () const {
 bool FilePath::isAbsolute (string path) {
 	path = util::trim(path);
 #ifdef _WIN32
-	path = FileSystem::adaptPathSeperators(path);
+	path = FileSystem::ensureForwardSlashes(path);
 	if (path.length() >= 2 && path[1] == ':' && isalpha(path[0]))
 		path.erase(0, 2);  // remove drive letter and colon
 #endif

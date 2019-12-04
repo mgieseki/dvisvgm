@@ -64,7 +64,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 
 static string remove_path (string fname) {
-	fname = FileSystem::adaptPathSeperators(fname);
+	fname = FileSystem::ensureForwardSlashes(fname);
 	size_t slashpos = fname.rfind('/');
 	if (slashpos == string::npos)
 		return fname;

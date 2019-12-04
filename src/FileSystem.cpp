@@ -133,7 +133,7 @@ uint64_t FileSystem::filesize (const string &fname) {
 }
 
 
-string FileSystem::adaptPathSeperators (string path) {
+string FileSystem::ensureForwardSlashes (string path) {
 	std::replace(path.begin(), path.end(), PATHSEP, '/');
 	return path;
 }
@@ -142,7 +142,7 @@ string FileSystem::adaptPathSeperators (string path) {
 string FileSystem::getcwd () {
 	char buf[1024];
 #ifdef _WIN32
-	return adaptPathSeperators(_getcwd(buf, 1024));
+	return ensureForwardSlashes(_getcwd(buf, 1024));
 #else
 	return ::getcwd(buf, 1024);
 #endif
@@ -198,7 +198,7 @@ string FileSystem::tmpdir () {
 #ifdef _WIN32
 		char buf[MAX_PATH];
 		if (GetTempPath(MAX_PATH, buf))
-			ret = adaptPathSeperators(buf);
+			ret = ensureForwardSlashes(buf);
 		else
 			ret = ".";
 #else
@@ -232,7 +232,7 @@ bool FileSystem::mkdir (const string &dirname) {
 	bool success = false;
 	if (const char *cdirname = dirname.c_str()) {
 		success = true;
-		const string dirstr = adaptPathSeperators(util::trim(cdirname));
+		const string dirstr = ensureForwardSlashes(util::trim(cdirname));
 		for (size_t pos=1; success && (pos = dirstr.find('/', pos)) != string::npos; pos++)
 			success &= s_mkdir(dirstr.substr(0, pos));
 		success &= s_mkdir(dirstr);
