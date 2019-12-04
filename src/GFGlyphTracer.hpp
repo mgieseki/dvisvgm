@@ -26,8 +26,7 @@
 #include "GFTracer.hpp"
 #include "Glyph.hpp"
 
-class GFGlyphTracer : public GFTracer
-{
+class GFGlyphTracer : public GFTracer {
 	public:
 		struct Callback {
 			virtual ~Callback () =default;
@@ -38,7 +37,7 @@ class GFGlyphTracer : public GFTracer
 		};
 
 	public:
-		GFGlyphTracer ();
+		GFGlyphTracer () : GFTracer(_ifs, 0) {}
 		GFGlyphTracer (std::string &fname, double upp, Callback *cb=nullptr);
 		void reset (std::string &fname, double upp);
 		void setCallback (Callback *cb) {_callback = cb;}

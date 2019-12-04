@@ -22,10 +22,6 @@
 
 using namespace std;
 
-GFGlyphTracer::GFGlyphTracer () : GFTracer(_ifs, 0)
-{
-}
-
 /** Constructs a new glyph tracer.
  *  @param[in] is GF input stream
  *  @param[in] upp target units per PS point */

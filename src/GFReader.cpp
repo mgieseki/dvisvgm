@@ -40,16 +40,6 @@ static inline double scaled2double (int32_t scaled) {
 }
 
 
-GFReader::GFReader (istream &is) : _in(is), _insideCharDef(false), _penDown(false)
-{
-	_minX = _maxX = _minY = _maxY = _x = _y = 0;
-	_currentChar = 0;
-	_designSize = 0;
-	_hppp = _vppp = 0;
-	_checksum = 0;
-}
-
-
 uint32_t GFReader::readUnsigned (int bytes) {
 	uint32_t ret = 0;
 	for (int i=bytes-1; i >= 0 && !_in.eof(); i--) {

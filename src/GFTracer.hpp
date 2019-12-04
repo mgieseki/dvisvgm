@@ -26,7 +26,7 @@
 
 class GFTracer : public GFReader {
 	public:
-		explicit GFTracer (std::istream &is);
+		explicit GFTracer (std::istream &is) : GFReader(is) {}
 		GFTracer (std::istream &is, double upp);
 		virtual void moveTo (double x, double y) =0;
 		virtual void lineTo (double x, double y) =0;
@@ -39,7 +39,7 @@ class GFTracer : public GFReader {
 		void unitsPerPoint(double upp) {_unitsPerPoint = upp;}
 
 	private:
-		double _unitsPerPoint; ///< target units per PS point
+		double _unitsPerPoint=0; ///< target units per PS point
 };
 
 #endif

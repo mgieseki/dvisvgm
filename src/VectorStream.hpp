@@ -28,9 +28,7 @@ template <typename T>
 class VectorStreamBuffer : public std::streambuf {
 	public:
 		explicit VectorStreamBuffer (const std::vector<T> &v) {
-			if (v.empty())
-				_begin = _end = _curr = nullptr;
-			else {
+			if (!v.empty()) {
 				_begin = _curr = &v[0];
 				_end = &v[0]+v.size();
 			}
@@ -68,9 +66,9 @@ class VectorStreamBuffer : public std::streambuf {
 		}
 
 	private:
-		const T *_begin;
-		const T *_end;
-		const T *_curr;
+		const T *_begin=nullptr;
+		const T *_end=nullptr;
+		const T *_curr=nullptr;
 };
 
 

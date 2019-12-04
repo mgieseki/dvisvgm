@@ -22,35 +22,20 @@
 
 using namespace std;
 
-#ifdef _WIN32
-	#include "windows.hpp"
-#else
+#ifndef _WIN32
 	#include <cerrno>
 	#include <sys/stat.h>
 #endif
 
 
 Directory::Directory () {
-#if _WIN32
-	_handle = INVALID_HANDLE_VALUE;
-	_firstread = true;
+#ifdef _WIN32
 	memset(&_fileData, 0, sizeof(WIN32_FIND_DATA));
-#else
-	_dir = nullptr;
-	_dirent = nullptr;
 #endif
 }
 
 
-Directory::Directory (const string &dirname) {
-#if _WIN32
-	_handle = INVALID_HANDLE_VALUE;
-	_firstread = true;
-	memset(&_fileData, 0, sizeof(WIN32_FIND_DATA));
-#else
-	_dir = nullptr;
-	_dirent = nullptr;
-#endif
+Directory::Directory (const string &dirname) : Directory() {
 	open(dirname);
 }
 

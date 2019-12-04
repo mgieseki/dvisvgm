@@ -47,7 +47,7 @@ class GFReader {
 	};
 
 	public:
-		explicit GFReader (std::istream &is);
+		explicit GFReader (std::istream &is) : _in(is) {}
 		virtual ~GFReader () =default;
 		virtual bool executeChar (uint8_t c);
 		virtual bool executeAllChars ();
@@ -91,16 +91,16 @@ class GFReader {
 
 	private:
 		std::istream &_in;
-		int32_t _minX, _maxX, _minY, _maxY;
-		int32_t _x, _y;        ///< current pen location (pixel units)
-		int32_t _currentChar;
-		Bitmap _bitmap;        ///< bitmap of current char
-		double _designSize;    ///< designSize in PS points
-		double _hppp, _vppp;   ///< horizontal and vertical pixel per point
-		uint32_t _checksum;
+		int32_t _minX=0, _maxX=0, _minY=0, _maxY=0;
+		int32_t _x=0, _y=0;          ///< current pen location (pixel units)
+		int32_t _currentChar=0;
+		Bitmap _bitmap;              ///< bitmap of current char
+		double _designSize=0;        ///< designSize in PS points
+		double _hppp=0, _vppp=0;     ///< horizontal and vertical pixel per point
+		uint32_t _checksum=0;
 		std::unordered_map<uint8_t,CharInfo> _charInfoMap;
-		bool _insideCharDef;   ///< true if inside a character definition (between BOC and EOC)
-		bool _penDown;
+		bool _insideCharDef=false;   ///< true if inside a character definition (between BOC and EOC)
+		bool _penDown=false;
 };
 
 #endif

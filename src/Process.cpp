@@ -42,7 +42,7 @@ class Subprocess {
 		enum class State {RUNNING, FINISHED, FAILED};
 
 	public:
-		Subprocess ();
+		Subprocess () =default;
 		Subprocess (const Subprocess&) =delete;
 		Subprocess (Subprocess&&) =delete;
 		~Subprocess ();
@@ -52,11 +52,11 @@ class Subprocess {
 
 	private:
 #ifdef _WIN32
-		HANDLE _pipeReadHandle;   ///< handle of read end of pipe
-		HANDLE _childProcHandle;  ///< handle of child process
+		HANDLE _pipeReadHandle=NULL;   ///< handle of read end of pipe
+		HANDLE _childProcHandle=NULL;  ///< handle of child process
 #else
-		int _readfd; ///< file descriptor of read end of pipe
-		pid_t _pid;  ///< PID of the subprocess
+		int _readfd=-1; ///< file descriptor of read end of pipe
+		pid_t _pid=-1;  ///< PID of the subprocess
 #endif
 };
 
@@ -110,10 +110,6 @@ bool Process::run (const string &dir, string *out) {
 static inline void close_and_zero_handle (HANDLE &handle) {
 	CloseHandle(handle);
 	handle = NULL;
-}
-
-
-Subprocess::Subprocess() : _pipeReadHandle(NULL), _childProcHandle(NULL) {
 }
 
 
@@ -213,10 +209,6 @@ Subprocess::State Subprocess::state () {
 }
 
 #else  // !_WIN32
-
-Subprocess::Subprocess () : _readfd(-1), _pid(-1) {
-}
-
 
 Subprocess::~Subprocess () {
 	if (_readfd >= 0)

@@ -53,7 +53,7 @@ struct SVGOutputBase {
 
 class SVGOutput : public SVGOutputBase {
 	public:
-		SVGOutput () : SVGOutput("", "", 0) {}
+		SVGOutput () =default;
 		explicit SVGOutput (const std::string &base) : SVGOutput(base, "", 0) {}
 		SVGOutput (const std::string &base, const std::string &pattern) : SVGOutput(base, pattern, 0) {}
 		SVGOutput (const std::string &base, std::string pattern, int zipLevel);
@@ -67,9 +67,9 @@ class SVGOutput : public SVGOutputBase {
 	private:
 		FilePath _path;
 		std::string _pattern;
-		bool _stdout;      ///< write to STDOUT?
-		int _zipLevel;     ///< compression level
-		mutable int _page; ///< number of current page being written
+		bool _stdout=true;    ///< write to STDOUT?
+		int _zipLevel=0;      ///< compression level
+		mutable int _page=-1; ///< number of current page being written
 		mutable std::unique_ptr<std::ostream> _osptr;
 };
 

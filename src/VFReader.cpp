@@ -28,11 +28,6 @@
 using namespace std;
 
 
-VFReader::VFReader (istream &is) : StreamReader(is)
-{
-}
-
-
 VFActions* VFReader::replaceActions (VFActions *a) {
 	VFActions *ret = _actions;
 	_actions = a;

@@ -31,10 +31,10 @@ struct VFException : public MessageException {
 
 struct VFActions;
 
-class VFReader : public StreamReader{
+class VFReader : public StreamReader {
 	using ApproveAction = bool (*)(int);
 	public:
-		explicit VFReader (std::istream &is);
+		explicit VFReader (std::istream &is) : StreamReader(is) {}
 		VFActions* replaceActions (VFActions *a);
 		bool executeAll ();
 		bool executePreambleAndFontDefs ();

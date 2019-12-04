@@ -46,7 +46,6 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 	 *  clipping paths and compute their intersections locally if necessary. */
 	class ClippingStack {
 		public:
-			ClippingStack () : _maxID(0) {}
 			void pushEmptyPath ();
 			void push (const Path &path, int saveID=-1);
 			bool replace (const Path &path);
@@ -72,7 +71,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 				Entry (const Entry &entry) =default;
 				Entry (Entry &&entry) =default;
 			};
-			size_t _maxID;
+			size_t _maxID=0;
 			std::stack<Entry> _stack;  ///< stack holding the clipping information of the current graphics context
 	};
 

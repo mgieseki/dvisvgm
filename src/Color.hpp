@@ -40,7 +40,7 @@ class Color {
 		enum class ColorSpace {GRAY, RGB, CMYK, LAB};
 
 	public:
-		Color () noexcept : _rgb(0) {}
+		Color () noexcept =default;
 		explicit Color (uint32_t rgb) noexcept : _rgb(rgb)         {}
 		Color (uint8_t r, uint8_t g, uint8_t b) noexcept  {setRGB(r,g,b);}
 		Color (double r, double g, double b) noexcept     {setRGB(r,g,b);}
@@ -90,7 +90,7 @@ class Color {
 		static int numComponents (ColorSpace colorSpace);
 
 	private:
-		uint32_t _rgb;
+		uint32_t _rgb=0;
 };
 
 #endif

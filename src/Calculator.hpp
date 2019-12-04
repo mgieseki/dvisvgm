@@ -33,7 +33,6 @@ struct CalculatorException : public MessageException {
 
 class Calculator {
 	public:
-		Calculator () : _numValue(0) {}
 		double eval (std::istream &is);
 		double eval (const std::string &expr);
 		void setVariable (const std::string &name, double value) {_variables[name] = value;}
@@ -48,7 +47,7 @@ class Calculator {
 
 	private:
 		std::map<std::string,double> _variables;
-		double _numValue;
+		double _numValue=0;
 		std::string _strValue;
 };
 

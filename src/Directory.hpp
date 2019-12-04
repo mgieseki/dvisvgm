@@ -43,12 +43,12 @@ class Directory {
 	private:
 		std::string _dirname;
 #ifdef _WIN32
-		bool _firstread;
-		HANDLE _handle;
+		bool _firstread=true;
+		HANDLE _handle=INVALID_HANDLE_VALUE;
 		WIN32_FIND_DATA _fileData;
 #else
-		DIR *_dir;
-		struct dirent *_dirent;
+		DIR *_dir=nullptr;
+		struct dirent *_dirent=nullptr;
 #endif
 };
 
