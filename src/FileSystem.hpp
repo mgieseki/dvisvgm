@@ -24,8 +24,7 @@
 #include <string>
 #include <vector>
 
-class FileSystem
-{
+class FileSystem {
 	public:
 		~FileSystem ();
 		static bool remove (const std::string &fname);
@@ -51,9 +50,6 @@ class FileSystem
 		FileSystem () =default;
 		bool system_tmpdir_available ();
 		static const char* TMPSUBDIR; ///< subdirectory of the system's temporary folder
-
-	private:
-		static FileSystem _fs;
 };
 
 #endif

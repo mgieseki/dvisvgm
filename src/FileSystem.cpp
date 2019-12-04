@@ -50,7 +50,6 @@ using namespace std;
 #endif
 
 
-FileSystem FileSystem::_fs;
 string FileSystem::TMPDIR;
 const char *FileSystem::TMPSUBDIR = nullptr;
 
