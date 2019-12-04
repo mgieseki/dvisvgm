@@ -24,6 +24,7 @@
 #include <sstream>
 #include <unordered_map>
 #include "FileFinder.hpp"
+#include "FileSystem.hpp"
 #include "InputReader.hpp"
 #include "Message.hpp"
 #include "PSFilter.hpp"
@@ -352,7 +353,7 @@ int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) {
 /** Returns the total number of pages of a PDF file.
  *  @param[in] fname name/path of the PDF file */
 int PSInterpreter::pdfPageCount (const string &fname) {
-	executeRaw("\n("+fname+")@pdfpagecount ", 1);
+	executeRaw("\n("+FileSystem::adaptPathSeperators(fname)+")@pdfpagecount ", 1);
 	if (!_rawData.empty()) {
 		size_t index;
 		int ret = stoi(_rawData[0], &index, 10);
@@ -370,7 +371,7 @@ int PSInterpreter::pdfPageCount (const string &fname) {
  *  @return the bounding box of the given page */
 BoundingBox PSInterpreter::pdfPageBox (const string &fname, int pageno) {
 	BoundingBox pagebox;
-	executeRaw("\n"+to_string(pageno)+"("+fname+")@pdfpagebox ", 4);
+	executeRaw("\n"+to_string(pageno)+"("+FileSystem::adaptPathSeperators(fname)+")@pdfpagebox ", 4);
 	if (_rawData.size() < 4)
 		pagebox.invalidate();
 	else
