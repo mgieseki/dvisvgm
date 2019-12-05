@@ -133,7 +133,9 @@ uint64_t FileSystem::filesize (const string &fname) {
 
 
 string FileSystem::ensureForwardSlashes (string path) {
+#ifdef _WIN32
 	std::replace(path.begin(), path.end(), PATHSEP, '/');
+#endif
 	return path;
 }
 
