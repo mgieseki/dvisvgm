@@ -53,19 +53,19 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		return false;     // mf file not available => no need to call the "slow" Metafont
 	FileSystem::remove(_fontname+".gf");
 
-#ifdef _WIN32
-#ifdef TEXLIVEWIN32
-	const char *mfname = "mf-nowin.exe";
-#else
-	const char *mfname = "mf.exe";
+	string mfName = "mf";  // file name of Metafont executable
+#ifndef MIKTEX
+	if (const char *mfnowinPath = FileFinder::instance().lookupExecutable("mf-nowin", true))
+		mfName = mfnowinPath;
+	else
 #endif
-	const char *cmd = FileFinder::instance().lookup(mfname, false);
-	if (!cmd) {
-		Message::estream(true) << "can't run Metafont (" << mfname << " not found)\n";
-		return false;
-	}
-#else
-	const char *cmd = "mf";
+		if (const char *mfPath = FileFinder::instance().lookupExecutable(mfName, true))
+			mfName = mfPath;
+#ifdef _WIN32
+		else {
+			Message::estream(true) << "can't run Metafont (mf.exe and mf-nowin.exe not found)\n";
+			return false;
+		}
 #endif
 	ostringstream oss;
 	oss << "\"\\mode=" << mode  << ";"  // set MF mode, e.g. 'proof', 'ljfour' or 'localfont'
@@ -75,7 +75,7 @@ bool MetafontWrapper::call (const string &mode, double mag) {
 		"batchmode;"                     // don't halt on errors and don't print informational messages
 		"input " << _fontname << "\"";   // load font description
 	Message::mstream(false, Message::MC_STATE) << "\nrunning Metafont for " << _fontname << '\n';
-	Process mf_process(cmd, oss.str());
+	Process mf_process(mfName, oss.str());
 	string mf_messages;
 	mf_process.run(_dir, &mf_messages);
 
