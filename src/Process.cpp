@@ -22,6 +22,7 @@
 	#include "windows.hpp"
 #else
 	#include <csignal>
+	#include <cstring>
 	#include <fcntl.h>
 	#include <sys/wait.h>
 	#include <unistd.h>
@@ -268,12 +269,12 @@ static void split_paramstr (string &paramstr, vector<const char*> &params) {
 
 
 /** Starts a child process.
- *  @param[in] cmd name of command to execute
- *  @param[in] paramstr parameters required by command
+ *  @param[in] cmd name of command to execute or absolute path to executable
+ *  @param[in] paramstr parameters required by the command
  *  @returns true if child process started properly */
 bool Subprocess::run (const string &cmd, string paramstr) {
 	int pipefd[2];
-	if (pipe(pipefd) < 0)
+	if (cmd.empty() || pipe(pipefd) < 0)
 		return false;
 
 	_pid = fork();
@@ -291,9 +292,11 @@ bool Subprocess::run (const string &cmd, string paramstr) {
 		vector<const char*> params;
 		params.push_back(cmd.c_str());
 		split_paramstr(paramstr, params);
-		params.push_back(nullptr); // trailing null pointer marks end of parameter list
-		signal(SIGINT, SIG_IGN);   // child process is supposed to ignore ctrl-c events
-		execvp(cmd.c_str(), const_cast<char* const*>(&params[0]));
+		params.push_back(nullptr);  // trailing null pointer marks end of parameter list
+		signal(SIGINT, SIG_IGN);    // child process is supposed to ignore ctrl-c events
+		if (params[0][0] == '/')    // absolute path to executable?
+			params[0] = strrchr(params[0], '/')+1;  // filename of executable
+		execvp(cmd.c_str(), const_cast<char* const*>(params.data()));
 		exit(1);
 	}
 	_readfd = pipefd[0];
