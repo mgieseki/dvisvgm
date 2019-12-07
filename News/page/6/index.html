@@ -79,7 +79,23 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
+  <a name="58cb1ba0ce21bc95f504a85ad5009798"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">20 January 2016: dvisvgm 1.14.2 has been released</div>
+    <div class="card-body">
+      <p>This is a bugfix release with the following changes:</p>
+
+<ul>
+<li>Fixed the handling of <a href="https://www.tug.org/texinfohtml/dvips.html#Color-specials">background color specials</a>.
+Now they affect all succeeding pages until the next change occurs.</li>
+<li>Fixed a potential memory issue caused by accessing an invalid iterator.</li>
+<li>Updated the bundled xxHash library to version 0.5.0.</li>
+<li>Added xxHash to the output of <code>--version=1</code>.</li>
+<li>Minor additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Added a test case to validate the hash values used in <a href="https://github.com/mgieseki/dvisvgm/blob/master/src/Unicode.cpp">Unicode.cpp</a>.</li>
+</ul>
+</div>
+  </section><a name="a8f0258ec17232cc9c3d1b5dc6704ccd"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">5 January 2016: dvisvgm 1.14.1 has been released</div>
     <div class="card-body">
@@ -173,21 +189,6 @@ is now adapted to create a tight box by default.</li>
 <li>The build system has been extended to generate code coverage reports.</li>
 <li>Some tests of the test suite have been improved.</li>
 <li>Several general code refactorings and improvements.</li>
-</ul>
-</div>
-  </section><a name="5e6a5a37aa0a4ba7a0fa4263128490d9"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">28 February 2015: dvisvgm 1.9.1 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following changes:</p>
-
-<ul>
-<li>The pattern syntax of option <code>--output</code> has been extended to support width specifiers and arithmetic
-expressions. See the <a href="/Manpage/">manual page</a> for further details.</li>
-<li>The formatting of the manual page has been improved.</li>
-<li>A Clang build issue has been fixed (patch by Peter Breitenlohner).</li>
-<li>A build error occurred with old MinGW compilers has been fixed.</li>
-<li>Code cleanup and some refactorings.</li>
 </ul>
 </div>
   </section>

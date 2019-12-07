@@ -3,8 +3,27 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 14 Nov 2019 16:37:46 +0100</pubDate>
+    <pubDate>Sat, 07 Dec 2019 12:12:39 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.8.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#d2a122bf30fb68ee24d061cc34560ae0</link>
+      <pubDate>Sat, 07 Dec 2019 11:58:27 +0100</pubDate>
+      <guid>d2a122bf30fb68ee24d061cc34560ae0</guid>
+      <description>
+        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
+
+<ul>
+<li>If available, <em>dvisvgm</em> now calls <code>mf-nowin</code> instead of <code>mf</code> to process Metafont files (<a href="https://github.com/mgieseki/dvisvgm/issues/121">issue #121</a>).</li>
+<li>Fixed the switching between PostScript&rsquo;s null device and the regular page device in PS operator <code>restore</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/122">issue #122</a>).</li>
+<li>Fixed a PostScript error triggered by backslashes is file paths (Windows only, <a href="https://github.com/mgieseki/dvisvgm/issues/123">issue #123</a>).</li>
+<li>Fixed a build issue related to GCC on Solaris 11.</li>
+<li>Some code cleanup.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.8.1 has been released</title>
@@ -196,7 +215,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     
     <item>
       <title>dvisvgm 2.6.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#cc9ed6a8f3a0ef7ffdcf7718852ab870</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#cc9ed6a8f3a0ef7ffdcf7718852ab870</link>
       <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
       <guid>cc9ed6a8f3a0ef7ffdcf7718852ab870</guid>
       <description>
@@ -425,7 +444,7 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     
     <item>
       <title>Website moved to the new domain _dvisvgm.de_</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#c9b07d478e839e780fccf01ce5f698bc</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#c9b07d478e839e780fccf01ce5f698bc</link>
       <pubDate>Fri, 06 Jul 2018 16:06:57 +0200</pubDate>
       <guid>c9b07d478e839e780fccf01ce5f698bc</guid>
       <description>
@@ -523,22 +542,6 @@ allowed according to the EPS specification.</li>
 <li>Added a missing data file that lead to failing tests (<a href="https://github.com/mgieseki/dvisvgm/issues/87">issue #87</a>).</li>
 <li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.3.</li>
 <li>Some code refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.3.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#f1ffcf572990bc1886759b4ec37dc33f</link>
-      <pubDate>Tue, 20 Feb 2018 13:26:45 +0200</pubDate>
-      <guid>f1ffcf572990bc1886759b4ec37dc33f</guid>
-      <description>
-        <![CDATA[<p>This is a minor maintenance release with the following changes:</p>
-
-<ul>
-<li>Fixed a wrong behavior when requiring both default mapfiles and <code>pdf:mapline</code> or <code>pdf:mapfile</code> specials.</li>
-<li>Fixed an exception thrown in rare cases of unavailable font files.</li>
 </ul>
 ]]>
       </description>
