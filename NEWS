@@ -1,3 +1,11 @@
+dvisvgm-2.8.2 (2019-12-07)
+- if available, call 'mf-nowin' instead of 'mf' to process Metafont files
+  (GH #121)
+- fixed handling of null device in PS operator 'restore' (GH #122)
+- fixed PS error triggered by backslashes in file paths (GH #123)
+- fixed build issue related to GCC on Solaris 11
+- some code cleanup
+
 dvisvgm-2.8.1 (2019-11-14)
 - added SVG optimizer module 'simplify-text'
 - added support for PS operator 'nulldevice'
