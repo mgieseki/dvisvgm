@@ -3,7 +3,7 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 07 Dec 2019 12:12:39 +0100</pubDate>
+    <pubDate>Sat, 07 Dec 2019 12:26:54 +0100</pubDate>
     <language>en</language>
     
     <item>
@@ -17,7 +17,7 @@
 <ul>
 <li>If available, <em>dvisvgm</em> now calls <code>mf-nowin</code> instead of <code>mf</code> to process Metafont files (<a href="https://github.com/mgieseki/dvisvgm/issues/121">issue #121</a>).</li>
 <li>Fixed the switching between PostScript&rsquo;s null device and the regular page device in PS operator <code>restore</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/122">issue #122</a>).</li>
-<li>Fixed a PostScript error triggered by backslashes is file paths (Windows only, <a href="https://github.com/mgieseki/dvisvgm/issues/123">issue #123</a>).</li>
+<li>Fixed a PostScript error triggered by backslashes in file paths (Windows only, <a href="https://github.com/mgieseki/dvisvgm/issues/123">issue #123</a>).</li>
 <li>Fixed a build issue related to GCC on Solaris 11.</li>
 <li>Some code cleanup.</li>
 </ul>
