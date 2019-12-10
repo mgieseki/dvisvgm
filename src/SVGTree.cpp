@@ -213,10 +213,12 @@ void SVGTree::appendFontStyles (const unordered_set<const Font*> &fonts) {
 		for (const Font *font : fonts)
 			if (!dynamic_cast<const VirtualFont*>(font))   // skip virtual fonts
 				sortmap[FontManager::instance().fontID(font)] = font;
-		ostringstream style;
+		ostringstream styles;
+		static set<int> written_styles;
 		// add font style definitions in ascending order
 		for (auto &idfontpair : sortmap) {
-			if (CREATE_CSS) {
+			if (CREATE_CSS && written_styles.count(idfontpair.first) == 0) {
+				ostringstream style;
 				style << "text.f"     << idfontpair.first << ' '
 					<< "{font-family:" << idfontpair.second->name()
 					<< ";font-size:"   << XMLString(idfontpair.second->scaledSize()) << "px";
@@ -229,9 +231,14 @@ void SVGTree::appendFontStyles (const unordered_set<const Font*> &fonts) {
 						style << " /* " << info << " */";
 				}
 				style << '\n';
+				styles << style.str();
+				std::ofstream outfile;
+				outfile.open("font-styles.txt", std::ios_base::app);
+				outfile << style.str();
+				written_styles.insert(idfontpair.first);
 			}
 		}
-		styleCDataNode()->append(style.str());
+		// styleCDataNode()->append(styles.str());
 	}
 }
 
@@ -244,12 +251,20 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 	if (chars.empty())
 		return;
 
+	static set<string> written_fonts;
 	if (USE_FONTS) {
 		if (FONT_FORMAT != FontWriter::FontFormat::SVG) {
-			ostringstream style;
-			FontWriter fontWriter(font);
-			if (fontWriter.writeCSSFontFace(FONT_FORMAT, chars, style, callback))
-				styleCDataNode()->append(style.str());
+			if (written_fonts.count(font.name()) == 0) {
+				ostringstream style;
+				FontWriter fontWriter(font);
+				if (fontWriter.writeCSSFontFace(FONT_FORMAT, chars, style, callback)) {
+					std::ofstream outfile;
+					outfile.open("font-faces.txt", std::ios_base::app);
+					outfile << style.str();
+					written_fonts.insert(font.name());
+				}
+				// styleCDataNode()->append(style.str());
+			}
 		}
 		else {
 			if (ADD_COMMENTS) {
