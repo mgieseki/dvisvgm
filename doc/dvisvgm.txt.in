@@ -69,7 +69,9 @@ to embed the font data into the SVG files. Unfortunately, only few SVG renderers
 elements yet. Most web browsers and vector graphics applications don't evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option *--no-fonts* can be given to replace the font elements
-by plain graphics paths.
+by plain graphics paths. Most web browsers (but only few external SVG renderers) also suppport
+WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option *--font-format*
+offers the functionality to change the format applied to the fonts being embedded.
 
 
 Options
@@ -82,6 +84,11 @@ appended to or separated by whitespace from a short option (e.g. +-v0+ or +-v 0+
 require an additional equals sign (+=+) between option name and argument but without any surrounding
 whitespace (e.g. +--verbosity=0+). Multiple short options that don't expect a further parameter can
 be combined after a single dash (e.g. +-ejs+ rather than +-e -j -s+).
++
+Long option names may also be shortened by omitting trailing characters. As long as the shortened
+name is unambiguous, it's recognized and applied. For example, option +--exact-bbox+ can be shortened
+to +--exact+, +--exa+, or +--ex+. In case of an ambiguous abbreviation, dvisvgm prints an error
+message together with all matching option names.
 
 *-b, --bbox*='fmt'::
 Sets the bounding box of the generated graphic to the specified format. The parameter 'fmt'
@@ -232,7 +239,7 @@ like separate tiles. However, this alignment can lead to visible gaps between th
 because the background color usually influences the color at the boundary of the segments if the
 SVG renderer uses anti-aliasing to create smooth contours.
 One way to avoid this and to create seamlessly touching color regions is to enlarge the segments so
-that they extent into the area of their right and bottom neighbors. Since the latter are drawn on top
+that they extend into the area of their right and bottom neighbors. Since the latter are drawn on top
 of the overlapping parts, the visible size of all segments keeps unchanged. Just the former gaps
 disappear as the background is now completely covered by the correct colors.
 Currently, dvisvgm computes the overlapping segments separately for each patch of the mesh (a patch mesh
