@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This file is part of dvisvgm -->
-<!-- Copyright (C) 2015-2019 Martin Gieseking <martin.gieseking@uos.de> -->
+<!-- Copyright (C) 2015-2020 Martin Gieseking <martin.gieseking@uos.de> -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output doctype-public="-//OASIS//DTD DocBook XML V4.5//EN" doctype-system="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"/>
 

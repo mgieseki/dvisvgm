@@ -2,7 +2,7 @@
 # This file is part of the dvisvgm package and published under the
 # terms of the GNU General Public License version 3 or later.
 # See file COPYING for further details.
-# Copyright (C) 2016-2019 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2016-2020 Martin Gieseking <martin.gieseking@uos.de>
 
 import re
 import sys
