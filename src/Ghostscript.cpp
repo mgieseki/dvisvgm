@@ -144,6 +144,9 @@ static string get_libgs (const string &fname) {
 		dlname = "libgs." + to_string(i) + ".dylib";
 		if (loader.loadLibrary(dlname))
 			return dlname;
+		dlname = "libgs.dylib." + to_string(i);
+		if (loader.loadLibrary(dlname))
+			return dlname;
 #endif
 	}
 #endif
