@@ -540,7 +540,7 @@ class GraphicsPath {
 			}
 		}
 
-		void arcto (double rx, double ry, double angle, bool laf, bool sweep, const Point &p) {
+		void arcto (T rx, T ry, double angle, bool laf, bool sweep, const Point &p) {
 			_commands.emplace_back(ArcTo{rx, ry, angle, laf, sweep, p});
 			_finalPoint = p;
 		}
