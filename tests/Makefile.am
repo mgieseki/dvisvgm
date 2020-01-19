@@ -208,6 +208,12 @@ GhostscriptTest_SOURCES = GhostscriptTest.cpp testutil.hpp
 GhostscriptTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 GhostscriptTest_LDADD = $(TESTLIBS)
 
+TESTS += GraphicsPathParserTest
+check_PROGRAMS += GraphicsPathParserTest
+GraphicsPathParserTest_SOURCES = GraphicsPathParserTest.cpp testutil.hpp
+GraphicsPathParserTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
+GraphicsPathParserTest_LDADD = $(TESTLIBS)
+
 TESTS += GraphicsPathTest
 check_PROGRAMS += GraphicsPathTest
 GraphicsPathTest_SOURCES = GraphicsPathTest.cpp testutil.hpp

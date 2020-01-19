@@ -329,6 +329,7 @@
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\EllipticalArc.hpp" />
+    <ClInclude Include="..\src\GraphicsPathParser.hpp" />
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
     <ClInclude Include="..\src\MD5HashFunction.hpp" />

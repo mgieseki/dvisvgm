@@ -87,6 +87,7 @@ libdvisvgm_la_SOURCES = \
 	Glyph.hpp \
 	GlyphTracerMessages.hpp \
 	GraphicsPath.hpp \
+	GraphicsPathParser.hpp \
 	HashFunction.hpp             HashFunction.cpp \
 	HtmlSpecialHandler.hpp       HtmlSpecialHandler.cpp \
 	HyperlinkManager.hpp         HyperlinkManager.cpp \

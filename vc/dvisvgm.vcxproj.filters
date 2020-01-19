@@ -694,6 +694,9 @@
     <ClInclude Include="..\src\optimizer\ClipPathReassigner.hpp">
       <Filter>Header Files\optimizer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\GraphicsPathParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dvisvgm.rc">
