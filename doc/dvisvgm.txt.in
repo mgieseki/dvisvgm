@@ -272,6 +272,12 @@ an integer value between 0 and 2. It selects the display variant of the help tex
 lists all options divided into categories with section headers. This is also the default if
 dvisvgm is called without parameters. Mode 1 lists all options ordered by the short option names,
 while mode 2 sorts the lines by the long option names.
++
+A values in brackets after the description text indicate the default parameter of the option. They
+are applied if an option with a mandatory parameter is not used or if an optional parameter is omitted.
+For example, option *--bbox* requires a size parameter which defaults to +min+ if *--bbox* is not
+used. Option *--zip*, which isn't applied by default, accepts an optional compression level parameter.
+If it's omitted, the stated default value 9 is used.
 
 *--keep*::
 Disables the removal of temporary files as created by Metafont (usually .gf, .tfm, and .log files) or
