@@ -207,6 +207,8 @@ TEST(MatrixTest, invert) {
 	for (int i=0; i < 3; ++i)
 		for (int j=0; j < 3; ++j)
 			EXPECT_DOUBLE_EQ(m2.get(i,j), m3.get(i,j));
+	Matrix m4{0};
+	EXPECT_THROW(m4.invert(), exception);
 }
 
 

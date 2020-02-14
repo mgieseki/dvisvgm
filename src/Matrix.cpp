@@ -246,17 +246,17 @@ Matrix& Matrix::lmultiply (const Matrix &tm) {
 
 Matrix& Matrix::invert () {
 	Matrix ret;
-	if (double denom = det(*this)) {
-		for (int i=0; i < 3; ++i) {
-			for (int j=0; j < 3; ++j) {
-				ret._values[i][j] = det(*this, i, j)/denom;
-				if ((i+j)%2 != 0)
-					ret._values[i][j] *= -1;
-			}
+	double denom = det(*this);
+	if (abs(denom) < 1e-12)
+		throw exception();
+	for (int i=0; i < 3; ++i) {
+		for (int j=0; j < 3; ++j) {
+			ret._values[j][i] = det(*this, i, j)/denom;
+			if ((i+j)%2 != 0)
+				ret._values[j][i] *= -1;
 		}
-		return *this = ret;
 	}
-	throw exception();
+	return *this = ret;
 }
 
 
