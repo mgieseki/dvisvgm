@@ -115,6 +115,11 @@ void base64_copy (InputIterator first, InputIterator last, OutputIterator dest) 
 }
 
 
+inline void base64_copy (std::istream &is, std::ostream &os) {
+	base64_copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::ostreambuf_iterator<char>(os));
+}
+
+
 /** Simple implementation mimicking std::make_unique introduced in C++14.
  *  Constructs an object of class T on the heap and returns a unique_ptr<T> to it.
  *  @param[in] args arguments forwarded to an constructor of T */
