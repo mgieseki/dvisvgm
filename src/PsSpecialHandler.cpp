@@ -23,7 +23,6 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
-#include "EPSFile.hpp"
 #include "FileFinder.hpp"
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
@@ -36,6 +35,7 @@
 #include "SVGTree.hpp"
 #include "TensorProductPatch.hpp"
 #include "TriangularPatch.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -735,6 +735,47 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		_actions->embed(bbox);
 	}
 	_path.clear();
+}
+
+
+/** Postprocesses the 'image' operation performed by the PS interpreter. If
+ *  the PS image operator succeeded, there's now a PNG file that must be embedded
+ *  into the SVG file. */
+void PsSpecialHandler::image (std::vector<double> &p) {
+	int imgID = static_cast<int>(p[0]);   // ID of PNG file written
+	double width = p[1];
+	double height = p[2];
+	string fname = "test-" + to_string(imgID) + ".png";   // @@@@
+	ifstream ifs(fname, ios::binary);
+	if (ifs) {
+		auto image = util::make_unique<XMLElement>("image");
+		image->addAttribute("x", _actions->getX());
+		image->addAttribute("y", _actions->getY());
+		image->addAttribute("width", util::to_string(width)+"px");
+		image->addAttribute("height", util::to_string(height)+"px");
+
+		// The current transformation matrix (CTM) maps the unit square to the rectangular region
+		// of the target canvas showing the bitmap (see PS Reference Manual, 4.10.3). Therefore,
+		// the local pixel coordinates of the original bitmap must be transformed by CTM*inv(M) to
+		// get the target coordinates. M is the matrix that maps the unit square to the bitmap rectangle.
+		Matrix matrix{width, 0, 0, 0, -height, height};  // maps unit square to bitmap rectangle
+		matrix = matrix.invert().lmultiply(_actions->getMatrix());
+		image->addAttribute("transform", matrix.toSVG());
+
+		// encode image data into Base64 and embed it
+		ostringstream oss("data:image/png;base64,");
+		oss << "data:image/png;base64,";
+		util::base64_copy(ifs, oss);
+		image->addAttribute("xlink:href", oss.str());
+		if (_xmlnode)
+			_xmlnode->append(std::move(image));
+		else {
+			_actions->svgTree().appendToPage(std::move(image));
+/*			BoundingBox bbox(0, 0, width, height);
+			bbox.transform(matrix);
+			_actions->embed(bbox);*/
+		}
+	}
 }
 
 

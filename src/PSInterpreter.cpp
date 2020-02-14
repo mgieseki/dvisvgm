@@ -266,6 +266,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"grestore",       { 0, &PSActions::grestore}},
 		{"grestoreall",    { 0, &PSActions::grestoreall}},
 		{"gsave",          { 0, &PSActions::gsave}},
+		{"image",          { 3, &PSActions::image}},
 		{"initclip",       { 0, &PSActions::initclip}},
 		{"lineto",         { 2, &PSActions::lineto}},
 		{"makepattern",    {-1, &PSActions::makepattern}},

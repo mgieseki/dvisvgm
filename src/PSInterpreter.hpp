@@ -51,6 +51,7 @@ struct PSActions {
 	virtual void gsave (std::vector<double> &p) =0;
 	virtual void grestore (std::vector<double> &p) =0;
 	virtual void grestoreall (std::vector<double> &p) =0;
+	virtual void image (std::vector<double> &p) =0;
 	virtual void initclip (std::vector<double> &p) =0;
 	virtual void lineto (std::vector<double> &p) =0;
 	virtual void makepattern (std::vector<double> &p) =0;

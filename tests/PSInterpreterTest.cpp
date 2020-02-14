@@ -38,7 +38,8 @@ class PSTestActions : public PSActions {
 		void fill (vector<double> &p) override            {print("fill", p);}
 		void gsave (vector<double> &p) override           {print("gsave", p);}
 		void grestore (vector<double> &p) override        {print("grestore", p);}
-		void grestoreall(std::vector<double> &p) override {print("grestoreall", p);}
+		void grestoreall (std::vector<double> &p) override{print("grestoreall", p);}
+		void image (std::vector<double> &p) override      {print("image", p);}
 		void initclip (vector<double> &p) override        {print("initclip", p);}
 		void lineto (vector<double> &p) override          {print("lineto", p);}
 		void moveto (vector<double> &p) override          {print("moveto", p);}

@@ -125,6 +125,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void grestore (std::vector<double> &p) override;
 		void grestoreall (std::vector<double> &p) override;
 		void gsave (std::vector<double> &p) override;
+		void image (std::vector<double> &p) override;
 		void initclip (std::vector<double> &p) override;
 		void lineto (std::vector<double> &p) override;
 		void makepattern (std::vector<double> &p) override;
