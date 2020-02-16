@@ -44,6 +44,7 @@ bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
 bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
 int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
+bool PsSpecialHandler::KEEP_IMAGE_FILES = false;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _xmlnode(), _savenode()
@@ -782,6 +783,9 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 		oss << "data:image/png;base64,";
 		util::base64_copy(ifs, oss);
 		image->addAttribute("xlink:href", oss.str());
+		ifs.close();
+		if (!KEEP_IMAGE_FILES)
+			FileSystem::remove(fname);
 		if (_xmlnode)
 			_xmlnode->append(std::move(image));
 		else {

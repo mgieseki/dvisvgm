@@ -364,6 +364,7 @@ static void set_variables (const CommandLine &cmdline) {
 	PhysicalFont::METAFONT_MAG = max(1.0, cmdline.magOpt.value());
 	XMLString::DECIMAL_PLACES = max(0, min(6, cmdline.precisionOpt.value()));
 	PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = cmdline.clipjoinOpt.given();
+	PsSpecialHandler::KEEP_IMAGE_FILES = cmdline.keepOpt.given();
 	PsSpecialHandler::SHADING_SEGMENT_OVERLAP = cmdline.gradOverlapOpt.given();
 	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, cmdline.gradSegmentsOpt.value());
 	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = cmdline.gradSimplifyOpt.value();
