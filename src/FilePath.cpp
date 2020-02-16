@@ -191,14 +191,16 @@ string FilePath::suffix () const {
 
 
 /** Changes the suffix of the filename. If FilePath represents the
- *  location of a directory (and not of a file) nothing happens.
- *  @param[in] s new suffix */
-void FilePath::suffix (const string &s) {
+ *  location of a directory (and not of a file) nothing happens. An
+ *  empty new suffix leads to the removal of the current one.
+ *  @param[in] newSuffix the new suffix */
+void FilePath::suffix (const string &newSuffix) {
 	if (!_fname.empty()) {
 		string current_suffix = suffix();
 		if (!current_suffix.empty())
 			_fname.erase(_fname.length()-current_suffix.length()-1);
-		_fname += "."+s;
+		if (!newSuffix.empty())
+			_fname += "."+newSuffix;
 	}
 }
 

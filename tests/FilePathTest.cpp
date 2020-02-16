@@ -77,6 +77,9 @@ TEST(FilePathTest, file1) {
 	fp.suffix("new");
 	ASSERT_EQ(fp.suffix(), "new");
 	ASSERT_EQ(fp.relative("/a/b/x/y"), "../../c/d/f.new");
+	fp.suffix("");
+	ASSERT_EQ(fp.suffix(), "");
+	ASSERT_EQ(fp.relative("/a/b/x/y"), "../../c/d/f");
 }
 
 

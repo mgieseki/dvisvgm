@@ -52,7 +52,7 @@ class FilePath {
 		std::string shorterAbsoluteOrRelative (std::string reldir="", bool with_filename=true) const;
 		std::string basename () const;
 		std::string suffix () const;
-		void suffix (const std::string &s);
+		void suffix (const std::string &newSuffix);
 		size_t depth () const                    {return _dirs.size();}
 		bool isFile () const                     {return !_fname.empty();}
 		bool empty () const                      {return _dirs.empty() && _fname.empty();}
