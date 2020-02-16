@@ -381,6 +381,13 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 }
 
 
+static string png_base (SpecialActions &actions) {
+	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
+	imgpath.suffix("");
+	return imgpath.absolute()+"-tmp-";
+}
+
+
 /** Creates an XML element containing the image data depending on the file type.
  *  @param[in] type file type of the image
  *  @param[in] fname file name/path of image file
@@ -421,14 +428,15 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 		node = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
 		_xmlnode = node.get();
 		_psi.execute(
-			"\n@beginspecial @setspecial"          // enter special environment
-			"/setpagedevice{@setpagedevice}def "   // activate processing of operator "setpagedevice"
-			"matrix setmatrix"                     // don't apply outer PS transformations
-			"/FirstPage "+to_string(pageno)+" def" // set number of first page to convert (PDF only)
-			"/LastPage "+to_string(pageno)+" def " // set number of last page to convert (PDF only)
-			+rectclip+                             // clip to bounding box (if requexted by attribute 'clip')
-			"(" + pathstr + ")run "                // execute file content
-			"@endspecial "                         // leave special environment
+			"\n@beginspecial @setspecial"            // enter special environment
+			"/setpagedevice{@setpagedevice}def "     // activate processing of operator "setpagedevice"
+			"/@imgbase("+png_base(*_actions)+")def " // path and basename of image files
+			"matrix setmatrix"                       // don't apply outer PS transformations
+			"/FirstPage "+to_string(pageno)+" def"   // set number of first page to convert (PDF only)
+			"/LastPage "+to_string(pageno)+" def "   // set number of last page to convert (PDF only)
+			+rectclip+                               // clip to bounding box (if requexted by attribute 'clip')
+			"(" + pathstr + ")run "                  // execute file content
+			"@endspecial\n"                          // leave special environment
 		);
 		if (node->empty())
 			node.reset(nullptr);
@@ -465,6 +473,13 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 		}
 	}
 	return true;
+}
+
+
+void PsSpecialHandler::dviBeginPage (unsigned int pageno, SpecialActions &actions) {
+	FilePath imgpath = _actions->getSVGFilePath(_actions->getCurrentPageNumber());
+	imgpath.suffix("");
+	_psi.execute("/@imgbase("+png_base(actions)+")def\n"); // path and basename of image files
 }
 
 
@@ -745,7 +760,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 	int imgID = static_cast<int>(p[0]);   // ID of PNG file written
 	double width = p[1];
 	double height = p[2];
-	string fname = "test-" + to_string(imgID) + ".png";   // @@@@
+	string fname = png_base(*_actions) + to_string(imgID) + ".png";
 	ifstream ifs(fname, ios::binary);
 	if (ifs) {
 		auto image = util::make_unique<XMLElement>("image");

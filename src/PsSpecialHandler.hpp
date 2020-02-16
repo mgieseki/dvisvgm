@@ -104,6 +104,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void processHeaderFile (const char *fname);
 		void imgfile (FileType type, const std::string &fname, const std::map<std::string,std::string> &attr);
 		std::unique_ptr<XMLElement> createImageNode (FileType type, const std::string &fname, int pageno, BoundingBox bbox, bool clip);
+		void dviBeginPage (unsigned int pageno, SpecialActions &actions) override;
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path path, bool evenodd);
 		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);
