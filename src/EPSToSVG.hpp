@@ -30,7 +30,7 @@ class EPSToSVG : public ImageToSVG {
 	public:
 		EPSToSVG (const std::string &fname, SVGOutputBase &out) : ImageToSVG(fname, out) {}
 		bool isSinglePageFormat() const override {return true;}
-		int totalPageCount() override {return 1;}
+		int totalPageCount() const override {return 1;}
 
 	protected:
 		std::string imageFormat () const override {return "EPS";}

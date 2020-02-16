@@ -67,6 +67,7 @@ void ImageToSVG::convert (int pageno) {
 			"lly=" << bbox.minY() << " "
 			"urx=" << bbox.maxX() << " "
 			"ury=" << bbox.maxY();
+	_currentPageNumber = pageno;
 	if (!isSinglePageFormat())
 		ss << " page=" << pageno;
 	try {
@@ -147,8 +148,9 @@ void ImageToSVG::convert (const std::string &rangestr, pair<int,int> *pageinfo) 
 
 FilePath ImageToSVG::getSVGFilePath (unsigned pageno) const {
 	FilePath path;
-	if (pageno == 1)
-		path = _out.filepath(1, 1);
+	unsigned numPages = totalPageCount();
+	if (pageno >= 1 && pageno <= numPages)
+		path = _out.filepath(pageno, numPages);
 	return path;
 }
 

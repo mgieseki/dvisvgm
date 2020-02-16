@@ -32,7 +32,7 @@ class PDFToSVG : public ImageToSVG {
 		bool isSinglePageFormat() const override {return false;}
 
 		/** Returns the total number of pages in the PDF file. */
-		int totalPageCount() override {
+		int totalPageCount() const override {
 			if (_totalPageCount < 0) {
 				_totalPageCount = psInterpreter().pdfPageCount(filename());
 				if (_totalPageCount < 1)
