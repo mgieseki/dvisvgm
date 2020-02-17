@@ -768,8 +768,10 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 	ifstream ifs(fname, ios::binary);
 	if (ifs) {
 		auto image = util::make_unique<XMLElement>("image");
-		image->addAttribute("x", _actions->getX());
-		image->addAttribute("y", _actions->getY());
+		double x = _actions->getX();
+		double y = _actions->getY();
+		image->addAttribute("x", x);
+		image->addAttribute("y", y);
 		image->addAttribute("width", util::to_string(width)+"px");
 		image->addAttribute("height", util::to_string(height)+"px");
 
@@ -793,9 +795,9 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 			_xmlnode->append(std::move(image));
 		else {
 			_actions->svgTree().appendToPage(std::move(image));
-/*			BoundingBox bbox(0, 0, width, height);
+			BoundingBox bbox(x, y, x+width, y+height);
 			bbox.transform(matrix);
-			_actions->embed(bbox);*/
+			_actions->embed(bbox);
 		}
 	}
 }
