@@ -759,6 +759,9 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
  *  into the SVG file. */
 void PsSpecialHandler::image (std::vector<double> &p) {
 	int imgID = static_cast<int>(p[0]);   // ID of PNG file written
+	if (imgID < 0)  // PNG device not supported by local Ghostscript
+		return;
+
 	double width = p[1];
 	double height = p[2];
 	string fname = png_base(*_actions) + to_string(imgID) + ".png";
