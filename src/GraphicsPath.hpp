@@ -597,7 +597,8 @@ class GraphicsPath {
 
 		/** Computes the bounding box of the current path.
 		 *  @param[out] bbox the computed bounding box */
-		void computeBBox (BoundingBox &bbox) const {
+		BoundingBox computeBBox () const {
+			BoundingBox bbox;
 			struct BBoxActions : IterationActions {
 				explicit BBoxActions (BoundingBox &bb) : bbox(bb) {}
 				void moveto (const Point &p) override {bbox.embed(p);}
@@ -610,6 +611,7 @@ class GraphicsPath {
 				BoundingBox &bbox;
 			} actions(bbox);
 			iterate(actions, false);
+			return bbox;
 		}
 
 		/** Checks whether the current path describes a dot/point only (with no extent).

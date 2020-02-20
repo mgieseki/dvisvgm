@@ -425,10 +425,10 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
  *  @param[out] bbox the computed bounding box
  *  @param[in]  cb optional calback object forwarded to the tracer
  *  @return true if the box could be computed successfully */
-bool PhysicalFont::getExactGlyphBox(int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
+bool PhysicalFont::getExactGlyphBox (int c, BoundingBox& bbox, GFGlyphTracer::Callback* cb) const {
 	Glyph glyph;
 	if (getGlyph(c, glyph, cb)) {
-		glyph.computeBBox(bbox);
+		bbox = glyph.computeBBox();
 		double s = scaledSize()/unitsPerEm();
 		bbox.scale(s, s);
 		return true;

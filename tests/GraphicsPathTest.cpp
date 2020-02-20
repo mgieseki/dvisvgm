@@ -109,8 +109,7 @@ TEST(GraphicsPathTest, computeBBox) {
 	path.cubicto(5,5,30,10,90,70);
 	path.lineto(20,30);
 	path.closepath();
-	BoundingBox bbox;
-	path.computeBBox(bbox);
+	BoundingBox bbox = path.computeBBox();
 	EXPECT_EQ(bbox, BoundingBox(5, 5, 100, 100));
 }
 

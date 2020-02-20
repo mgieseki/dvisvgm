@@ -654,7 +654,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 	}
 	else {
 		// compute bounding box
-		_path.computeBBox(bbox);
+		bbox = _path.computeBBox();
 		bbox.expand(_linewidth/2);
 
 		ostringstream oss;
@@ -688,9 +688,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 	if (path && _clipStack.path()) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
-		BoundingBox clipbox;
-		_clipStack.path()->computeBBox(clipbox);
-		bbox.intersect(clipbox);
+		bbox.intersect(_clipStack.path()->computeBBox());
 		_clipStack.removePrependedPath();
 	}
 	if (_xmlnode)
@@ -712,8 +710,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		return;
 
 	// compute bounding box
-	BoundingBox bbox;
-	_path.computeBBox(bbox);
+	BoundingBox bbox = _path.computeBBox();
 	if (!_actions->getMatrix().isIdentity()) {
 		_path.transform(_actions->getMatrix());
 		if (!_xmlnode)
@@ -733,9 +730,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (_clipStack.path()) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
-		BoundingBox clipbox;
-		_clipStack.path()->computeBBox(clipbox);
-		bbox.intersect(clipbox);
+		bbox.intersect(_clipStack.path()->computeBBox());
 		_clipStack.removePrependedPath();
 	}
 	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
@@ -780,7 +775,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 		// the local pixel coordinates of the original bitmap must be transformed by CTM*inv(M) to
 		// get the target coordinates. M is the matrix that maps the unit square to the bitmap rectangle.
 		Matrix matrix{width, 0, 0, 0, -height, height};  // maps unit square to bitmap rectangle
-		matrix = matrix.invert().lmultiply(_actions->getMatrix()); //.lmultiply(ScalingMatrix(width, -height));
+		matrix = matrix.invert().lmultiply(_actions->getMatrix());
 		image->addAttribute("transform", matrix.toSVG());
 
 		// encode image data into Base64 and embed it
@@ -806,11 +801,8 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 			_actions->svgTree().appendToPage(std::move(image));
 			BoundingBox bbox(x, y, x+width, y+height);
 			bbox.transform(matrix);
-			if (_clipStack.path()) {
-				BoundingBox clipbox;
-				_clipStack.path()->computeBBox(clipbox);
-				bbox.intersect(clipbox);
-			}
+			if (_clipStack.path())
+				bbox.intersect(_clipStack.path()->computeBBox());
 			_actions->embed(bbox);
 		}
 	}
