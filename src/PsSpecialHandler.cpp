@@ -772,15 +772,15 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 		double y = _actions->getY();
 		image->addAttribute("x", x);
 		image->addAttribute("y", y);
-		image->addAttribute("width", util::to_string(width)+"px");
-		image->addAttribute("height", util::to_string(height)+"px");
+		image->addAttribute("width", util::to_string(width));
+		image->addAttribute("height", util::to_string(height));
 
 		// The current transformation matrix (CTM) maps the unit square to the rectangular region
 		// of the target canvas showing the bitmap (see PS Reference Manual, 4.10.3). Therefore,
 		// the local pixel coordinates of the original bitmap must be transformed by CTM*inv(M) to
 		// get the target coordinates. M is the matrix that maps the unit square to the bitmap rectangle.
 		Matrix matrix{width, 0, 0, 0, -height, height};  // maps unit square to bitmap rectangle
-		matrix = matrix.invert().lmultiply(_actions->getMatrix());
+		matrix = matrix.invert().lmultiply(_actions->getMatrix()); //.lmultiply(ScalingMatrix(width, -height));
 		image->addAttribute("transform", matrix.toSVG());
 
 		// encode image data into Base64 and embed it
@@ -789,6 +789,15 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 		util::base64_copy(ifs, oss);
 		image->addAttribute("xlink:href", oss.str());
 		ifs.close();
+
+		// if set, assign clipping path to image
+		if (_clipStack.path()) {
+			auto group = util::make_unique<XMLElement>("g");
+			group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+			group->append(std::move(image));
+			image = std::move(group);  // handle the entire group as image to add
+		}
+
 		if (!KEEP_IMAGE_FILES)
 			FileSystem::remove(fname);
 		if (_xmlnode)
@@ -797,6 +806,11 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 			_actions->svgTree().appendToPage(std::move(image));
 			BoundingBox bbox(x, y, x+width, y+height);
 			bbox.transform(matrix);
+			if (_clipStack.path()) {
+				BoundingBox clipbox;
+				_clipStack.path()->computeBBox(clipbox);
+				bbox.intersect(clipbox);
+			}
 			_actions->embed(bbox);
 		}
 	}
