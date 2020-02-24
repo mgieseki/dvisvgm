@@ -86,7 +86,6 @@
       <p>To simplify the maintenance of both the website and the program code, I rebuilt the former wiki-based website with
 a static site generator and moved everything to <a href="https://pages.github.com">GitHub Pages</a>. The site is now reachable
 under the new domain <a href="dvisvgm.de">dvisvgm.de</a>.</p>
-
 <p>The old <em>SourceForge</em> (<a href="http://dvisvgm.sf.net">dvisvgm.sf.net</a>) and <em>bplaced</em> (<a href="http://dvisvgm.bplaced.net">dvisvgm.bplaced.net</a>)
 addresses now redirect to the new location. Since I&rsquo;ve kept the page structure, all former URLs should still be valid.
 If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p>
@@ -96,25 +95,20 @@ If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p
     <div class="card-header bg-primary text-white">3 May 2018: dvisvgm 2.4 has been released</div>
     <div class="card-body">
       <p>This feature release brings the following additions/changes:</p>
-
 <ul>
 <li>Added special <code>pdffile</code> similar to <code>psfile</code> to embed PDF graphics.</li>
-
-<li><p>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+<li>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:<br/>
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm &ndash;pdf -d2 helix.pdf
 <span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
 <span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
 <span style="color:#50fa7b;">  output written to helix.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
-</pre></div></p></li>
-
-<li><p>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</p></li>
-
-<li><p>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+</pre>
+</span></li>
+<li>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</li>
+<li>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm -d2 - &lt; frktest.dvi
 reading from &lt;stdin&gt;
 <span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
@@ -122,19 +116,15 @@ processing page 1</span>
 <span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
 <span style="color:#50fa7b;">  output written to stdin.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
-</pre></div></p></li>
-
-<li><p>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</p></li>
-
-<li><p>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
-conversion of more transparency parameters, e.g.:<br />
-<img src="/News/images/blendmodes.png" alt="blend modes" /></p></li>
-
-<li><p>Fixed outer transformations applied to <code>psfile</code> specials.</p></li>
-
-<li><p>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</p></li>
-
-<li><p>Several code refactorings.</p></li>
+</pre>
+</span></li>
+<li>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</li>
+<li>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
+conversion of more transparency parameters, e.g.:
+<img src="/News/images/blendmodes.png" alt="blend modes"></li>
+<li>Fixed outer transformations applied to <code>psfile</code> specials.</li>
+<li>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</li>
+<li>Several code refactorings.</li>
 </ul>
 </div>
   </section><a name="5e2b7cf659069c04c85da933ee354fb8"></a>
@@ -142,7 +132,6 @@ conversion of more transparency parameters, e.g.:<br />
     <div class="card-header bg-primary text-white">23 March 2018: dvisvgm 2.3.5 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
 This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
@@ -156,7 +145,6 @@ allowed according to the EPS specification.</li>
     <div class="card-header bg-primary text-white">14 March 2018: dvisvgm 2.3.4 has been released</div>
     <div class="card-body">
       <p>This is another maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed an error message printed when addding a single dash on the command-line.</li>
 <li>Added a missing data file that lead to failing tests (<a href="https://github.com/mgieseki/dvisvgm/issues/87">issue #87</a>).</li>
@@ -169,7 +157,6 @@ allowed according to the EPS specification.</li>
     <div class="card-header bg-primary text-white">20 February 2018: dvisvgm 2.3.3 has been released</div>
     <div class="card-body">
       <p>This is a minor maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed a wrong behavior when requiring both default mapfiles and <code>pdf:mapline</code> or <code>pdf:mapfile</code> specials.</li>
 <li>Fixed an exception thrown in rare cases of unavailable font files.</li>
@@ -180,7 +167,6 @@ allowed according to the EPS specification.</li>
     <div class="card-header bg-primary text-white">8 February 2018: dvisvgm 2.3.2 has been released</div>
     <div class="card-body">
       <p>This is a minor maintenance release with the following changes:</p>
-
 <ul>
 <li>Prevent the creation of redundant <a href="https://www.w3.org/TR/SVG/text.html#TSpanElement"><code>tspan</code></a> elements.</li>
 <li>Added support for the new JFM specification introduced in <a href="https://www.tug.org/svn/texlive?view=revision&amp;revision=46452">TeX Live r46452</a>
@@ -207,21 +193,19 @@ prints a corresponding warning message.</li>
       <p>This is a small feature release that adds optional experimental support for <a href="https://www.freetype.org/ttfautohint">ttfautohint</a>.
 <em>ttfautohint</em> usually creates better results than the FontForge autohinter that <em>dvisvgm</em> uses by default if you
 call it with option <code>--font-format=woff,autohint</code>, for example. The fonts embedded in the following SVG file were
-hinted with ttfautohint:
+hinted with ttfautohint:</p>
 <div class="row align-items-center">
   <div class="col-md-8">
-  <p><object data="/News/images/matrices-ta.svg" type="image/svg+xml"></object></p></p>
-
-<p><p>In order to build <em>dvisvgm</em> with ttfautohint support, you need the ttfautohint library and the corresponding header
+  <p><object data="/News/images/matrices-ta.svg" type="image/svg+xml"></object></p>
+<p>In order to build <em>dvisvgm</em> with ttfautohint support, you need the ttfautohint library and the corresponding header
 files which are provided as of the latest version 1.8.1. A pre-built DLL of ttfautohint for Windows can be found
 <a href="https://github.com/mgieseki/ttfautohint-dll/releases">here</a>. By default, ttfautohint support is completely disabled
-and not available in <em>dvisvgm</em>. To enable it, add option <code>&ndash;with-ttfautohint</code> to the <code>configure</code> script, and optionally
-specify the location of the ttfautohint development files, e.g. <code>&ndash;with-ttfautohint=/opt/ttfautohint</code>. Depending on the
+and not available in <em>dvisvgm</em>. To enable it, add option <code>--with-ttfautohint</code> to the <code>configure</code> script, and optionally
+specify the location of the ttfautohint development files, e.g. <code>--with-ttfautohint=/opt/ttfautohint</code>. Depending on the
 configuration results, the ttfautohint library is either directly linked to the <em>dvisvgm</em> binary or looked up dynamically
 when running <em>dvisvgm</em>. If ttfautohint support is available, the list printed when calling <em>dvisvgm</em> with option <code>-V1</code>
 contains a corresponding entry, as shown in the box on the right.</p>
-</div></p>
-
+</div>
 <div class="col-md-4">
   <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -V1
 dvisvgm 2.3 (x86_64-pc-linux)
@@ -264,7 +248,7 @@ zlib:        1.2.11</code></pre></div></div>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

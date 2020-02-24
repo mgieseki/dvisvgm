@@ -84,48 +84,39 @@ PostScript language, these gradient variants are rather limited. PostScript supp
 different types of gradients including function-based shadings, Gouraud-shaded triangle meshes,
 and tensor-product patch meshes. Therefore, it’s not possible to map complex gradient definitions
 present in EPS files or PostScript specials to native SVG 1.1 constructs.</p>
-
 <p>In order to realize these gradients in SVG, <em>dvisvgm</em> approximates them by filling the specified
 area with small monochromatic segments like in the following tensor-product and triangular patch
-examples with 10 and 30 segments per row, respectively:
+examples with 10 and 30 segments per row, respectively:</p>
 <div class="row align-items-center">
   <div class="col-md-3">
-  <a href="images/tp1.svg"><img src="images/tp1.png" class="img-fluid"></a></div></p>
-
+  <a href="images/tp1.svg"><img src="images/tp1.png" class="img-fluid"></a></div>
 <div class="col-md-3">
   <a href="images/tp2.svg"><img src="images/tp2.png" class="img-fluid"></a></div>
-
 <div class="col-md-3">
   <a href="images/trp1.svg"><img src="images/trp1.png" class="img-fluid"></a></div>
-
 <div class="col-md-3">
   <a href="images/trp2.svg"><img src="images/trp2.png" class="img-fluid"></a></div></div>
-
+<p/>
 <p>The number of segments can be changed with option <code>--grad-segments</code> which defaults to 20. Increasing
 the number leads to better, more realistic results but also increases the size of the SVG file as each
 segment must be represented by a separate <a href="https://w3.org/TR/SVG/paths.html#PathElement">path element</a>.</p>
-
 <p>As you can see in the above examples, there are small visible white gaps between adjacent segments
 although they touch seamlessly. This effect results from the anti-aliasing applied by the SVG renderer
 to produce smooth segment contours which usually takes the background color into account. Option
 <code>--grad-overlap</code> allows to remove the gaps. It tells <em>dvisvgm</em> to create bigger, overlapping segments
 that extent into the region of their right and bottom neighbors. Since the latter are drawn on top of
-the overlapping parts, the visible size of all segments keeps unchanged. The results look like these:
+the overlapping parts, the visible size of all segments keeps unchanged. The results look like these:</p>
 <div class="row align-items-center">
   <div class="col-md-3">
-  <a href="images/tp3.svg"><img src="images/tp3.png" class="img-fluid"></a></div></p>
-
+  <a href="images/tp3.svg"><img src="images/tp3.png" class="img-fluid"></a></div>
 <div class="col-md-3">
   <a href="images/tp4.svg"><img src="images/tp4.png" class="img-fluid"></a></div>
-
 <div class="col-md-3">
   <a href="images/trp3.svg"><img src="images/trp3.png" class="img-fluid"></a></div>
-
 <div class="col-md-3">
   <a href="images/trp4.svg"><img src="images/trp4.png" class="img-fluid"></a></div></div>
-
+<p/>
 <p>The recent version of <em>dvisvgm</em> supports the following types of PostScript gradient/shading types:</p>
-
 <ul>
 <li>free-form Gouraud-shaded triangle meshes (type 4)</li>
 <li>lattice-form Gouraud-shaded triangle meshes (type 5)</li>
@@ -138,7 +129,7 @@ the overlapping parts, the visible size of all segments keeps unchanged. The res
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

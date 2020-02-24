@@ -84,7 +84,6 @@
     <div class="card-header bg-primary text-white">7 December 2019: dvisvgm 2.8.2 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>If available, <em>dvisvgm</em> now calls <code>mf-nowin</code> instead of <code>mf</code> to process Metafont files (<a href="https://github.com/mgieseki/dvisvgm/issues/121">issue #121</a>).</li>
 <li>Fixed the switching between PostScript&rsquo;s null device and the regular page device in PS operator <code>restore</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/122">issue #122</a>).</li>
@@ -110,7 +109,6 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
     <div class="card-header bg-primary text-white">25 October 2019: dvisvgm 2.8 has been released</div>
     <div class="card-body">
       <p>This is a small feature release with the following additions/changes:</p>
-
 <ul>
 <li>Added support for JPEG, PNG, PDF, and SVG files to special <code>psfile</code>.</li>
 <li>Added support for Ghostscript 9.50 which introduced incompatible changes regarding option <code>-dSAFER</code>. Due
@@ -118,21 +116,21 @@ to security reasons <code>SAFER</code> is now <a href="https://www.ghostscript.c
 and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</code>. Since <em>dvisvgm</em> requires the latter two to work
 correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
 stops with a PostScript error, e.g. like so:
-<div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"> *** WARNING - you have selected SAFER, indicating you want Ghostscript
-               to execute in a safer environment, but at the same time
-               have selected DELAYBIND. Unless you use this option with
-               care (and specifically, remember to call .bindnow) it is
-               possible that malicious code may be able to evade the
-               limited security offered by the SAFER option.
+<span class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
+              to execute in a safer environment, but at the same time
+              have selected DELAYBIND. Unless you use this option with
+              care (and specifically, remember to call .bindnow) it is
+              possible that malicious code may be able to evade the
+              limited security offered by the SAFER option.
 
- *** WARNING - you have selected SAFER, indicating you want Ghostscript
-               to execute in a safer environment, but at the same time
-               have selected WRITESYSTEMDICT. Unless you use this option with
-               care and specifically, remember to execute code like:
-                      &#34;systemdict readonly pop&#34;
-  PostScript error: invalidfileaccess in run</code></pre></div>
-</div><br />
+*** WARNING - you have selected SAFER, indicating you want Ghostscript
+              to execute in a safer environment, but at the same time
+              have selected WRITESYSTEMDICT. Unless you use this option with
+              care and specifically, remember to execute code like:
+                     &#34;systemdict readonly pop&#34;
+ PostScript error: invalidfileaccess in run</code></pre></div>
+</span><br/>
 <em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
 <li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
 <li>Added support for CMap operator <code>begincidchar</code> (thanks to Akira Kakuto for sending the patch).</li>
@@ -151,7 +149,6 @@ into positional and size attributes if possible.</li>
     <div class="card-header bg-primary text-white">28 July 2019: dvisvgm 2.7.4 has been released</div>
     <div class="card-body">
       <p>This is another small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed a memory issue occurred when calling Metafont.</li>
 <li>Fixed potential rounding issues in conversion of color values (<a href="https://github.com/mgieseki/dvisvgm/issues/116">issue #116</a>).</li>
@@ -165,7 +162,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
     <div class="card-header bg-primary text-white">12 July 2019: dvisvgm 2.7.3 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed randomly missing glyph paths referenced by <code>use</code> elements (<a href="https://github.com/mgieseki/dvisvgm/issues/110">issue #110</a>).</li>
 <li>Minor updates of the <a href="/Manpage/">manual page</a>.</li>
@@ -180,7 +176,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
 The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
 the public interface leads to an error message when processing PDF files with
 <em>dvisvgm</em>.</p>
-
 <p>The changes in Ghostscript 9.27 also break the PDF functionality of
 <a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
 An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
@@ -190,7 +185,6 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
     <div class="card-header bg-primary text-white">20 May 2019: dvisvgm 2.7.1 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
 <li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
@@ -205,30 +199,26 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
 allows for optimization of the generated SVG tree after it has completely been built from the DVI data.
 The optimizations are performed by running separate optimizer modules which are executed one by one in
 a given order and thus transform the XML tree gradually. Currently, the following optimizations are available:</p>
-
 <ul>
 <li>Move common inheritable attributes of adjacent elements to <a href="https://www.w3.org/TR/SVG11/struct.html#Groups">group elements</a>.</li>
 <li>Combine nested groups and unwrap groups without attributes.</li>
 <li>Remove redundant <code>clipPath</code> elements.</li>
 <li>Simplify <code>transform</code> attributes.</li>
 </ul>
-
 <p>More detailed information on option <code>--optimize</code> and the optimizer modules can be found on the <a href="/Manpage/#opt-optimize">manual page</a>.</p>
-
 <p>Furthermore, a couple of smaller additions and changes have been made:</p>
-
 <ul>
 <li>All <code>raw</code> specials are now parsed and converted to proper XML nodes so that the optimizer
 can also process SVG fragments added by the user.</li>
 <li>Several improvements to SVG graphics path descriptions:
-
 <ul>
 <li>Redundant spaces and leading zeros are omitted.</li>
 <li><a href="https://www.w3.org/TR/SVG11/paths.html#PathDataLinetoCommands">Line commands</a> representing zero-length lines are removed.</li>
 <li>The detection of reflected control points in Bézier curve sequences has been improved. As a result,
 the shorthand <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataCurveCommands">curve commands</a>
 are applied more often.</li>
-</ul></li>
+</ul>
+</li>
 <li>Added support for PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code>.</li>
 <li>Added evaluation of optional <code>psfile</code>/<code>pdffile</code> special attribute <code>clip</code> which clips the
 drawing region to the bounding box of the image being processed.</li>
@@ -236,12 +226,12 @@ drawing region to the bounding box of the image being processed.</li>
 disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
 bounding box of the current page if a new graphics element is added. This behaviour can
 be paused and resumed with the new specials.</li>
-<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
+<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&lsquo;s <code>bbox</code> specials to allow for
 applying the current transformation matrix to the bounding box.</li>
-<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
+<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&lsquo;s <code>raw</code> specials. It expands to the
 current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
 <li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
-<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
+<em>dvisvgm</em>&lsquo;s partial matching of option names.</li>
 <li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
 <li>Lots of code refactorings.</li>
 </ul>
@@ -270,7 +260,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

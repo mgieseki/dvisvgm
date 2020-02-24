@@ -87,7 +87,6 @@ Actually, only few SVG renderers, e.g. <a href="http://xmlgraphics.apache.org/ba
 You can run <em>dvisvgm</em> with option <code>--no-fonts</code> to replace the fonts with <a href="https://w3.org/TR/SVG/paths.html">path elements</a>.
 Most viewers should render the resulting SVG files correctly. As a drawback, you get bigger files, and the information
 about the text (characters, baselines, &hellip;) gets lost.</p>
-
 <p>As of version 2.0, <em>dvisvgm</em> provides the command-line option <code>--font-format</code> that allows to change the format
 used for embedded fonts from SVG to WOFF, WOFF2 or TrueType. If you call dvisvgm with option <code>--font-format=woff</code>,
 you should get SVG files that render correctly in almost all recent web browsers. Moreover, and in contrast to
@@ -107,10 +106,9 @@ each glyph and to compute the exact bounding rectangle.</p>
   </section>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">
-      Why do I get warnings like <em>can’t embed font &lsquo;FOO</em>&rsquo;?
+      Why do I get warnings like <em>can’t embed font &lsquo;FOO</em>'?
     </div>
     <div class="card-body"><p>There are several reasons that could cause these warnings, e.g.:</p>
-
 <ul>
 <li>The DVI file was generated on a different computer where the mentioned font was available, but in the
 current <span class="tex">T<sub>E</sub>X</span> environment it’s not.</li>
@@ -135,25 +133,21 @@ enable the processing of PostScript specials.</p>
 <a href="https://tug.org/texinfohtml/dvips.html#Interaction-with-PostScript">PostScript specials</a>. In contrast to the
 other third-party libraries needed to build <em>dvisvgm</em> (which are always linked directly), Ghostscript can be
 attached to <em>dvisvgm</em> in three different ways:</p>
-
 <ul>
 <li>direct linkage of <em>libgs.so</em> or <em>libgs.a</em> during build time</li>
 <li>no direct linkage but dynamic lookup of the Ghostscript library and its functions during runtime via <code>dlopen()</code></li>
 <li>no Ghostscript support at all</li>
 </ul>
-
 <p>Depending on the configuration options, the <em>dvisvgm</em> binary can be built in three different flavors.
 You can determine the variant used to build your binary by checking the output of <code>dvisvgm -h</code> and <code>dvisvgm -l</code>:</p>
-
 <ol>
 <li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> but <code>dvisvgm -l</code> lists entry <em>ps</em>
-
 <ul>
 <li><em>libgs</em> was linked during build time.</li>
 <li>PostScript support is always enabled.</li>
-</ul></li>
+</ul>
+</li>
 <li><code>dvisvgm -h</code> lists option <code>--libgs</code>
-
 <ul>
 <li>PostScript support was enabled but the Ghostscript library must be looked up during runtime.</li>
 <li>If <code>dvisvgm -l</code> doesn’t show entry <em>ps</em>, verify whether the directory containing libgs.so (Linux), gsdll32.dll
@@ -163,33 +157,30 @@ program search path, respectively. On Windows, check environment variable <code>
 <em>dvisvgm</em> with option <code>--libgs</code>.</li>
 <li>Alternatively, assign the path of the Ghostscript library to environment variable <code>LIBGS</code>, e.g. with
 <code>LIBGS=/usr/lib/libgs.so</code> (Linux), or <code>set LIBGS=c:\gs\gs9.06\bin\gsdll32.dll</code> (Windows)</li>
-</ul></li>
+</ul>
+</li>
 <li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> and <code>dvisvgm -l</code> doesn’t list entry <em>ps</em>
-
 <ul>
 <li><em>dvisvgm</em> was built without PostScript support. There’s no way to activate it. Try to get a binary with PS support enabled.</li>
-</ul></li>
+</ul>
+</li>
 </ol>
-
 <p>The latest versions of <em>dvisvgm</em> print one of the following warnings if PostScript support is disabled:</p>
-
 <ul>
 <li><code>processing of PostScript specials is disabled (Ghostscript not found)</code>
-
 <ul>
 <li>tell <em>dvisvgm</em> where to find the Ghostscript library (see above)</li>
-</ul></li>
+</ul>
+</li>
 <li><code>processing of PostScript specials has been disabled permanently</code>
-
 <ul>
 <li><em>dvisvgm</em> was built without PostScript support</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <div class="row align-items-top">
   <div class="col-md-6">
   <p><strong>Output of <code>dvisvgm -l</code> showing entry <em>ps</em>:</strong></p>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -l
 bgcolor    background color special
 color      complete support of color specials
@@ -201,10 +192,8 @@ pdf        PDF hyperlink, font map, and pagesize specials
 ps         dvips PostScript specials
 tpic       TPIC specials</code></pre></div>
 </div>
-
 <div class="col-md-6">
   <p><strong>Also, option <code>-V1</code> lists <em>Ghostscript</em> if it’s found:</strong></p>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -V1
 dvisvgm 2.4 (x86_64-pc-win64)
 -----------------------------
@@ -235,16 +224,16 @@ If it does not, proceed with the following steps.</li>
 <li>Look up the Ghostscript directory that contains the Ghostscript DLL <code>gsdll32.dll</code> or <code>gsdll64.dll</code>
 (usually something like <code>c:\program files\gs\gs9.23\bin</code>).</li>
 <li>Tell <em>dvisvgm</em> where to find the Ghostscript DLL. There are several alternatives to do that:
-
 <ul>
 <li>Add the path of the Ghostscript <code>bin</code> directory to environment variable PATH, e.g. with
 <code>PATH=%PATH%;&quot;c:\program files\gs\gs9.23\bin&quot;</code>. See <a href="https://java.com/en/download/help/path.xml">here</a>
 for more information on how to set the PATH variable permanently.</li>
-<li>Assign the location of the Ghostscript DLL to the environment variable LIBGS, e.g. with<br />
+<li>Assign the location of the Ghostscript DLL to the environment variable LIBGS, e.g. with<br/>
 <code>set LIBGS=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot;</code>.</li>
-<li>Use the command-line option <code>--libgs</code> to tell <em>dvisvgm</em> where the GS DLL is located, e.g.<br />
+<li>Use the command-line option <code>--libgs</code> to tell <em>dvisvgm</em> where the GS DLL is located, e.g.<br/>
 <code>dvisvgm --libgs=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot; ...</code></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 </div>
   </section>
@@ -256,7 +245,6 @@ for more information on how to set the PATH variable permanently.</li>
 (e.g. those to lookup files) through the COM interface. If it’s not possible to create or access
 the MiKTeX COM object, <em>dvisvgm</em> can’t proceed and therefore aborts with the error message
 <em>MiKTeX session could not be initialized</em>. There are several reasons why the session access fails:</p>
-
 <ul>
 <li>MiKTeX isn’t installed on the computer.</li>
 <li>You use the <a href="https://miktex.org/portable">MiKTeX Portable edition</a>. Portable applications don’t
@@ -266,12 +254,12 @@ package provided by MiKTeX.</li>
 <li>The registration of the COM object failed or was skipped during the installation of MiKTeX for some reason.
 You can try to register the components manually as described <a href="http://sourceforge.net/p/miktex/bugs/2376">here</a>
 (thanks to Ulrike Fischer and Christian Schenk). Run the following commands with administrator privileges:
-<div class="d-inline-flex">
+<span class="d-inline-flex">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">regsvr32 MiKTeX209-core-PS.dll
 regsvr32 MiKTeX209-core.dll
 regsvr32 MiKTeX209-packagemanager-PS.dll
 regsvr32 MiKTeX209-packagemanager.dll</code></pre></div>
-</div></li>
+</span></li>
 </ul>
 </div>
   </section>
@@ -279,20 +267,15 @@ regsvr32 MiKTeX209-packagemanager.dll</code></pre></div>
     <div class="card-header bg-primary text-white">
       DVI files containing PostScript code are not converted properly. Are you going to fix this?
     </div>
-    <div class="card-body">
-
-<p>PostScript is a pretty complex language and its interaction with the DVI operations is rather tricky,
+    <div class="card-body"><p>PostScript is a pretty complex language and its interaction with the DVI operations is rather tricky,
 especially, if plain PostScript snippets are supposed to change the current graphic position or the current font.</p>
-
 <ul>
 <li>Defining and/or changing fonts via PostScript is not supported yet.</li>
 <li><a href="/Gradients/">Shading/gradient fills</a> are implemented partially. Function-based (type 1),
 axial (type 2), and radial (type 3) shadings are not supported yet.</li>
 </ul>
-
 <h4 id="clipping-issues">Clipping issues</h4>
-
-<p>The SVG standard allows to define <a href="/Clipping/">clipping paths by intersection</a> like so:
+<p>The SVG standard allows to define <a href="/Clipping/">clipping paths by intersection</a> like so:</p>
 <div class="d-inline-flex">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define a rectangular clipping path --&gt;</span>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
@@ -303,8 +286,7 @@ axial (type 2), and radial (type 3) shadings are not supported yet.</li>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(#clip1)&#34;</span><span style="color:#ff79c6">&gt;</span>
   <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;20&#34;</span><span style="color:#ff79c6">/&gt;</span>
 <span style="color:#ff79c6">&lt;/clipPath&gt;</span></code></pre></div>
-</div></p>
-
+</div><p/>
 <p>While clipping path <em>clip1</em> is the outline of a square, <em>clip2</em> is defined as the intersection of the square
 with a circle at the given position. Thus, we get a quadrant here. All subsequent operations restricted to <em>clip2</em>
 should produce visible results only inside the quadrant. Unfortunately, some SVG viewers render these intersections
@@ -312,11 +294,9 @@ improperly. Since <em>dvisvgm</em> creates SVG files containing this kind of pat
 might look wrong. To avoid this, <em>dvisvgm</em> offers the option <code>--clipjoin</code> which tells <em>dvisvgm</em> to compute the
 intersections directly and not to delegate this task to the SVG viewer. More detailed information can be found
 <a href="/Clipping/">here</a>.</p>
-
 <p>The following images show the rendering results of the same SVG file opened in several applications.
 The SVG was generated without option <code>--clipjoin</code> from
 <a href="https://texample.net/tikz/examples/focused-ion-beam-system">this TikZ example</a>.</p>
-
 <div class="row align-items-center">
   <div class="col-md-3">
   <div class="container">
@@ -327,7 +307,6 @@ The SVG was generated without option <code>--clipjoin</code> from
   </div>
   <div class="row justify-content-center">Firefox, Opera, and IE</div>
 </div></div>
-
 <div class="col-md-3">
   <div class="container">
   <div class="row justify-content-center">
@@ -337,7 +316,6 @@ The SVG was generated without option <code>--clipjoin</code> from
   </div>
   <div class="row justify-content-center">Google Chrome</div>
 </div></div>
-
 <div class="col-md-3">
   <div class="container">
   <div class="row justify-content-center">
@@ -347,7 +325,6 @@ The SVG was generated without option <code>--clipjoin</code> from
   </div>
   <div class="row justify-content-center">Apache Batik</div>
 </div></div>
-
 <div class="col-md-3">
   <div class="container">
   <div class="row justify-content-center">
@@ -364,7 +341,7 @@ The SVG was generated without option <code>--clipjoin</code> from
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

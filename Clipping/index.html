@@ -83,7 +83,6 @@ of straight and curved segments. The region(s) enclosed by the path define(s) th
 applying a clipping path, only those portions of the subsequently drawn graphics that fall inside the
 enclosed area are visible, everything else is cut away. The outline of the clipping paths itself is invisible
 of course and only shown in the following examples:</p>
-
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip1.png" class="img-fluid"></div>
    <div class="col-md-6">
@@ -98,15 +97,12 @@ of course and only shown in the following examples:</p>
 </div>
 </div>
 
-
 <p>If the triangular clipping path is applied to the blue shape, we get the result on the right.
 Most SVG renderers/viewers I tested so far support this kind of clipping so that the result is displayed correctly.</p>
-
 <p>Besides defining the clipping path explicitly as shown above, it’s also possible to tell the SVG renderer to compute
 the intersection of two clipping paths and to restrict the subsequent drawing actions to the resulting area.
 In the following example, the intersection of the two circular paths leads to a rotated lens-shaped region which
 defines the actual clipping path:</p>
-
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip2.png" class="img-fluid"></div>
    <div class="col-md-6">
@@ -123,9 +119,7 @@ defines the actual clipping path:</p>
 </div>
 </div>
 
-
 <p>If we now assign this clipping path to the following blue rectangle, the result should look as follows:</p>
-
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip3.png" class="img-fluid"></div>
    <div class="col-md-6">
@@ -144,23 +138,18 @@ defines the actual clipping path:</p>
 </div>
 </div>
 
-
 <p>Fortunately, the latest releases of most web browsers handle the intersections of clipping paths correctly.
 However, some SVG renders/viewers don’t compute them as expected and display wrong results. The following
 figure shows the images created by three different applications:</p>
-
-<p><img src="images/clip4.png" class="img-fluid"></p>
-
+<img src="images/clip4.png" class="img-fluid">
 <p>As of version 1.8 <em>dvisvgm</em> provides the command-line option <code>--clipjoin</code> which tells the utility to compute the
 shape of intersecting clipping paths directly and not to delegate this task to the SVG renderer. The resulting
 SVG files should be more portable.
 The following images illustrate the effect of the option in a more complex context created from <a href="http://www.texample.net/tikz/examples/focused-ion-beam-system">this TikZ example</a> and rendered by Inkscape.
 Both SVG files were created from the same DVI file, the first one without and the second one with option <code>--clipjoin</code>:</p>
-
 <div class="row align-items-center">
   <div class="col-md-6">
   <a href="images/ion-beam1.svg"><img src="images/ion-beam1.png" class="img-fluid"></a></div>
-
 <div class="col-md-6">
   <a href="images/ion-beam2.svg"><img src="images/ion-beam2.png" class="img-fluid"></a></div></div>
 
@@ -169,7 +158,7 @@ Both SVG files were created from the same DVI file, the first one without and th
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

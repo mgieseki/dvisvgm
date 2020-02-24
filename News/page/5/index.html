@@ -95,7 +95,6 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
     <div class="card-header bg-primary text-white">27 September 2016: dvisvgm 2.0.3 has been released</div>
     <div class="card-body">
       <p>This is another bugfix release with the following changes:</p>
-
 <ul>
 <li>Fixed a regression in the character positioning of virtual fonts.</li>
 <li>Fixed the positioning of rules.</li>
@@ -106,7 +105,6 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
     <div class="card-header bg-primary text-white">19 September 2016: dvisvgm 2.0.2 has been released</div>
     <div class="card-body">
       <p>This is a bugfix release with the following changes:</p>
-
 <ul>
 <li>Fixed a regression in determining the character depths of native fonts.</li>
 <li>Fixed a regression in the computation of DVI positions (<a href="https://github.com/mgieseki/dvisvgm/issues/61">issue #61</a>).</li>
@@ -117,12 +115,11 @@ create WOFF and TrueType fonts is now bundled with the sources.</li>
     <div class="card-header bg-primary text-white">3 September 2016: dvisvgm 2.0.1 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following addition:</p>
-
 <ul>
 <li>Added the optional argument parameter <code>autohint</code> to option <code>--font-format</code> that allows to create
 <a href="https://en.wikipedia.org/wiki/Font_hinting">autohinted</a> TTF, WOFF, or WOFF2 fonts. These fonts
-usually look better on low-resolution devices or when using small font sizes.<br />
-Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates the following result:<br />
+usually look better on low-resolution devices or when using small font sizes.<br/>
+Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates the following result:<br/>
 
 <object data="/News/images/matrices-ah.svg" type="image/svg+xml"></object>
 </li>
@@ -133,18 +130,17 @@ Example: <code>dvisvgm --font-format=woff,autohint matrices.dvi</code> creates t
     <div class="card-header bg-primary text-white">29 August 2016: dvisvgm 2.0 has been released</div>
     <div class="card-body">
       <p>This is a major release with the following changes/additions:</p>
-
 <ul>
 <li>Added option <code>--font-format</code> to select the data format used to embed fonts into the SVG files.
 Besides the default SVG format, following alternatives are supported now: TrueType, WOFF, and WOFF2.
 Especially, <a href="https://en.wikipedia.org/wiki/Web_Open_Font_Format">WOFF</a> is supported by almost all
 recent web browsers so that the text elements present in the SVG files are rendered correctly as in
-the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br />
+the following <a href="https://texample.net/tikz/examples/highlighting-matrix">TikZ example</a>:<br/>
 
 <object data="/News/images/matrices.svg" type="image/svg+xml"></object>
-<br />
-In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br />
-Thanks to Thomas Weidner for providing important parts of the code.</li>
+<br/>
+In order to build <em>dvisvgm</em> with this feature, the <a href="https://fontforge.github.io">FontForge</a> library is required.<br/>
+Thanks to Thomas Weidner for providing central parts of the code.</li>
 <li>The code base of <em>dvisvgm</em> has been switched from C++03 to C++11. Thus, you need a more recent compiler
 (e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
 <a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
@@ -156,7 +152,6 @@ Thanks to Thomas Weidner for providing important parts of the code.</li>
     <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
     <div class="card-body">
       <p>This maintenance release provides the following changes/additions:</p>
-
 <ul>
 <li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
 <li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
@@ -174,7 +169,6 @@ For further information on how to enable it, see the <a href="/Manpage/">manual 
     <div class="card-header bg-primary text-white">19 April 2016: dvisvgm 1.15.1 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Added explicit encoding attribute to the XML declaration again (<a href="https://github.com/mgieseki/dvisvgm/issues/54">issue #54</a>).</li>
 <li>Added support for <a href="https://github.com/adobe-type-tools/agl-specification">AGL</a> character names of the form <code>uFOO</code> and <code>uniFOO</code>.</li>
@@ -187,7 +181,6 @@ For further information on how to enable it, see the <a href="/Manpage/">manual 
     <div class="card-header bg-primary text-white">27 February 2016: dvisvgm 1.15 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Added the command-line option <code>--comments</code> to insert additional information to the SVG file.</li>
 <li>Fixed a clipping bug in the PostScript handler.</li>
@@ -222,7 +215,7 @@ For further information on how to enable it, see the <a href="/Manpage/">manual 
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

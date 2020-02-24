@@ -78,8 +78,6 @@
       <div class="container">
         
 
-
-
 <div class="row">
    <div class="col-md-4">
       <h3><i class="fa fa-windows"></i> Windows</h3>
@@ -113,101 +111,85 @@
    </div>
 </div>
 
-
 <div class="description">The pre-built Windows binaries require Windows 7 or later and a local installation of
-<a href="https://miktex.org">MiKTeX</a> 2.9.<br />
+<a href="https://miktex.org">MiKTeX</a> 2.9.<br/>
 They don&rsquo;t work together with the MiKTeX Portable Edition.</div>
-
-<hr />
-
+<hr>
 <h3 id="linux-binary-packages">Linux Binary Packages</h3>
-
 <p>Some Linux distributions provide pre-built binary packages of <em>dvisvgm</em>. In most cases,
 they are available from the official repositories.</p>
-
 <div class="d-flex flex-row align-items-center">
    <div class="p-2"><img src="images/fedora.png" class="img-fluid" style="float:left"></div>
-   <div class="p-2">On <a href="https://fedoraproject.org">Fedora</a>, you can install the binary with <em>dnf</em>:<br />
-<code>sudo dnf install texlive-dvisvgm</code><br />
+   <div class="p-2">On <a href="https://fedoraproject.org">Fedora</a>, you can install the binary with <em>dnf</em>:<br/>
+<code>sudo dnf install texlive-dvisvgm</code><br/>
 More recent versions are also available via my <a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>.
 <a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm/package/dvisvgm/"><img src="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm/package/dvisvgm/status_image/last_build.png" /></a></div>
 </div>
-
 <div class="d-flex flex-row align-items-center">
    <div class="p-2"><img src="images/ubuntu.png" class="img-fluid" style="float:left"></div>
    <div class="p-2">On <a href="https://www.ubuntu.com">Ubuntu</a>, an old version of <em>dvisvgm</em> is part of package <code>texlive-extra-utils</code>
-which can be installed with<br />
+which can be installed with<br/>
 <code>sudo apt install texlive-extra-utils</code></div>
 </div>
-
 <div class="d-flex flex-row align-items-center">
    <div class="p-2"><img src="images/suse.png" class="img-fluid" style="float:left"></div>
-   <div class="p-2"><a href="https://www.opensuse.org">OpenSuSE</a> offers binary packages too. To install <em>dvisvgm</em> use <em>yast</em> or <em>zypper</em>:<br />
+   <div class="p-2"><a href="https://www.opensuse.org">OpenSuSE</a> offers binary packages too. To install <em>dvisvgm</em> use <em>yast</em> or <em>zypper</em>:<br/>
 <code>sudo zypper install texlive-dvisvgm</code></div>
 </div>
-
 <div class="d-flex flex-row align-items-center">
    <div class="p-2"><img src="images/gentoo.png" class="img-fluid" style="float:left"></div>
-   <div class="p-2">On <a href="https://www.gentoo.org">Gentoo Linux</a> use <em>emerge</em> to install <em>dvisvgm</em>:<br />
+   <div class="p-2">On <a href="https://www.gentoo.org">Gentoo Linux</a> use <em>emerge</em> to install <em>dvisvgm</em>:<br/>
 <code>emerge dvisvgm</code></div>
 </div>
-
-<hr />
-
+<hr>
 <h3 id="previous-releases">Previous releases</h3>
-
 <p>Previous releases of <em>dvisvgm</em> can be downloaded from the
-<a href="https://github.com/mgieseki/dvisvgm/releases">release section</a> at GitHub.<br />
+<a href="https://github.com/mgieseki/dvisvgm/releases">release section</a> at GitHub.<br/>
 If you&rsquo;re looking for even older versions (1.9 and below), you&rsquo;ll find them
 <a href="https://sourceforge.net/projects/dvisvgm/files/dvisvgm/old-releases">here</a>.</p>
-
-<hr />
-
-<h3 id="build-dvisvgm-from-the-sources">Build <em>dvisvgm</em> from the sources</h3>
-
+<hr>
+<h3 id="build-_dvisvgm_-from-the-sources">Build <em>dvisvgm</em> from the sources</h3>
 <p>In order to build <em>dvisvgm</em> from the sources, you need to install the development files of the following libraries.
 They are part of nearly all Linux distributions and can be easily installed using the respective package manager.</p>
-
 <ul>
-<li><a href="http://www.angusj.com/delphi/clipper.php">Clipper</a><br />
+<li><a href="http://www.angusj.com/delphi/clipper.php">Clipper</a><br/>
 To compute the intersection of two curved paths, <em>dvisvgm</em> flattens the paths to polygons, intersects them using
 a slightly modified version of Clipper, and reconstructs the curves afterwards. A modified version of the library
 is bundled with the sources.</li>
-<li><a href="https://fontforge.github.io">FontForge</a> library<br />
+<li><a href="https://fontforge.github.io">FontForge</a> library<br/>
 <em>dvisvgm</em> can be built with optional WOFF support that allows to embed the font data in WOFF or TrueType format
 rather than as SVG. The <em>FontForge</em> library provides the required functions to create font files in these formats.
 A reduced version of the library is bundled with the <em>dvisvgm</em> sources. It&rsquo;s also available separately at
 <a href="https://github.com/mgieseki/ff-woff">GitHub</a>.</li>
-<li><a href="https://freetype.org">FreeType library</a><br />
+<li><a href="https://freetype.org">FreeType library</a><br/>
 This library is used to extract the glyph outlines from vector fonts.</li>
-<li><a href="https://ghostscript.com">Ghostscript</a><br />
+<li><a href="https://ghostscript.com">Ghostscript</a><br/>
 <em>dvisvgm</em> optionally supports the evaluation of PostScript snippets embedded in DVI files. To enable this feature,
 you need the <em>Ghostscript</em> library (version 8.31 or newer).</li>
-<li><a href="https://tug.org/kpathsea">kpathsea library</a><br />
+<li><a href="https://tug.org/kpathsea">kpathsea library</a><br/>
 In order to find files in the large texmf tree quickly, Karl Berry&rsquo;s <em>kpathsea</em> library is used by default.
 Most <span class="tex">T<sub>E</sub>X</span> distributions include the necessary files or provide an appropriate interface.</li>
-<li><a href="https://www.openssl.org">OpenSSL crypto library</a><br />
+<li><a href="https://www.openssl.org">OpenSSL crypto library</a><br/>
 <em>dvisvgm</em> comes with a bundled implementation of the MD5 hash algorithm which can optionally be replaced with
 the corresponding function of the OpenSSL crypto library. If the configuration script finds the OpenSSL
 development files on the build system, it links against <em>libcrypto</em> instead of the bundled MD5 module.</li>
-<li><a href="http://potrace.sourceforge.net">potrace</a> library<br />
+<li><a href="http://potrace.sourceforge.net">potrace</a> library<br/>
 The font embedding module of <em>dvisvgm</em> uses Peter Selinger’s <em>potrace</em> library to vectorize Metafont’s bitmap
 output if corresponding Type 1 fonts cannot be found. The library is also bundled with the <em>dvisvgm</em> sources.</li>
-<li><a href="https://freetype.org/ttfautohint">ttfautohint</a> library<br />
+<li><a href="https://freetype.org/ttfautohint">ttfautohint</a> library<br/>
 <em>dvisvgm</em> can optionally be built with <em>ttfautohint</em> support to replace the autohinting functionality of FontForge.
 Since it&rsquo;s still an experimental feature, <em>ttfautohint</em> support is disabled by default. To enable it, run configure
 with option <code>--with-ttfautohint</code>.</li>
-<li><a href="https://github.com/google/woff2">woff2</a> and <a href="https://github.com/google/brotli">brotli</a><br />
+<li><a href="https://github.com/google/woff2">woff2</a> and <a href="https://github.com/google/brotli">brotli</a><br/>
 These Google libraries are bundled with the <em>dvisvgm</em> sources. They are used
 to create WOFF2 from TrueType fonts.</li>
-<li><a href="https://github.com/Cyan4973/xxHash">xxHash</a> library<br />
+<li><a href="https://github.com/Cyan4973/xxHash">xxHash</a> library<br/>
 <em>xxHash</em> provides a fast hash algorithm. <em>dvisvgm</em> uses it to create unique integer values from PostScript
 character names in order to store them in a compact way together with their Unicode points. A recent version
 of <em>xxHash</em> is bundled with the <em>dvisvgm</em> sources.</li>
-<li><a href="http://www.zlib.org">zlib</a><br />
+<li><a href="http://www.zlib.org">zlib</a><br/>
 <em>zlib</em> is required to create compressed <code>.svgz</code> files.</li>
 </ul>
-
 <p>For further information see the <a href="https://raw.githubusercontent.com/mgieseki/dvisvgm/master/README">README</a> and
 <a href="https://raw.githubusercontent.com/mgieseki/dvisvgm/master/INSTALL">INSTALL</a> files coming with the source archive.</p>
 
@@ -216,7 +198,7 @@ of <em>xxHash</em> is bundled with the <em>dvisvgm</em> sources.</li>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

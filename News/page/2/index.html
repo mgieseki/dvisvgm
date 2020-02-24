@@ -84,7 +84,6 @@
     <div class="card-header bg-primary text-white">9 March 2019: dvisvgm 2.6.3 has been released</div>
     <div class="card-body">
       <p>This is mainly a bugfix release with the following changes:</p>
-
 <ul>
 <li><em>dvisvgm</em> now creates short, <a href="https://www.w3.org/TR/css-color-3/#rgb-color">three-digit RGB hex values</a> for color attributes if possible, e.g. <code>#123</code> instead of <code>#112233</code>.</li>
 <li>Fixed the rejection of paper formats, like <code>A4</code>, given as argument to option <code>--bbox</code>.</li>
@@ -99,7 +98,6 @@
     <div class="card-header bg-primary text-white">23 January 2019: dvisvgm 2.6.2 has been released</div>
     <div class="card-body">
       <p>This maintenance release resolves a couple of PostScript issues that were reported recently.</p>
-
 <ul>
 <li>Fixed the scaling of line properties in PS operator <code>grestore</code>.</li>
 <li>Fixed the handling of PS operators <code>charpath</code> and <code>show</code> which may call each other internally.</li>
@@ -115,7 +113,6 @@
     <div class="card-body">
       <p>This is a maintenance release that fixes a couple of issues regarding the build system.
 The functionality of the <em>dvisvgm</em> utility itself hasn&rsquo;t changed.</p>
-
 <ul>
 <li>Added configuration option <code>--disable-manpage</code> to prevent generating the manual page
 (<a href="https://github.com/mgieseki/dvisvgm/issues/93">issue #93</a>).</li>
@@ -134,11 +131,9 @@ libraries are missing during build time, the corresponding bundled libraries are
 <a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>. They replace the older
 package <em>texlive-dvisvgm</em> coming with Fedora. Run the follwowing commands to enable the repository
 and to install the new <em>dvisvgm</em> package:</p>
-
 <pre><code>dnf copr enable mgieseki/dvisvgm
 dnf install dvisvgm
-</code></pre>
-</div>
+</code></pre></div>
   </section><a name="8d56703cbffb43bae1f0e6d10ac03542"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">8 September 2018: dvisvgm 2.6 has been released</div>
@@ -149,7 +144,6 @@ given, <em>dvisvgm</em> computes a hash value from the DVI pages and adds it to 
 As the hash value only changes if the contents of the DVI page change, there&rsquo;s normally no need to convert
 existing SVG files again which should speed up the conversion of large documents significantly.
 Here&rsquo;s the output of two successive conversions:</p>
-
 <div class="d-inline-flex">
 <pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm --page-hashes --page=1-3 -d2 tplot
@@ -166,7 +160,6 @@ $ dvisvgm --page-hashes --page=1-3 -d2 tplot
 </span><span style="color:#8be9fd;font-weight:bold;">3 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.384216 seconds
 </span></pre>
 </div>
-
 <div class="d-inline-flex">
 <pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm --page-hashes --page=1-4 -d2 tplot
@@ -183,15 +176,12 @@ $ dvisvgm --page-hashes --page=1-4 -d2 tplot
 </span><span style="color:#8be9fd;font-weight:bold;">4 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.147861 seconds
 </span></pre>
 </div>
-
-<p>Besides the DVI input, a couple of <em>dvisvgm</em>&rsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
+<p>Besides the DVI input, a couple of <em>dvisvgm</em>&lsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
 Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
 created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
 and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
 <a href="/Manpage/#opt-output">manual page</a>.</p>
-
 <p>In addition to this new option, the following changes have been made:</p>
-
 <ul>
 <li>The plausibility check of the total number of pages given in the DVI postamble has been relaxed. This value
 overflows if the DVI file contains more than 65535 pages which previously led to an error message.</li>
@@ -204,12 +194,10 @@ to detect DVI files with incorrect, e.g. cyclic, page references.</li>
     <div class="card-header bg-primary text-white">8 August 2018: dvisvgm 2.5 has been released</div>
     <div class="card-body">
       <p>This is a small feature release with the following additions/changes:</p>
-
 <ul>
 <li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
 the pages to be processed can be selected with option <code>--page</code>:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
 </span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
 <span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
@@ -219,7 +207,7 @@ $ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
 <span style="color:#50fa7b;">  output written to sample-3.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
 </pre>
-</div></li>
+</span><br/></li>
 <li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
 the PDF mode too.</li>
 <li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
@@ -242,7 +230,6 @@ the bundled libraries.</li>
     <div class="card-header bg-primary text-white">18 July 2018: dvisvgm 2.4.2 has been released</div>
     <div class="card-body">
       <p>This is another small maintenance release.</p>
-
 <ul>
 <li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
@@ -259,7 +246,6 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     <div class="card-header bg-primary text-white">7 July 2018: dvisvgm 2.4.1 has been released</div>
     <div class="card-body">
       <p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed the handling of the optional delay parameter of option <code>--progress</code>.</li>
 <li>Updated the <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.5.</li>
@@ -292,7 +278,7 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2019 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>
