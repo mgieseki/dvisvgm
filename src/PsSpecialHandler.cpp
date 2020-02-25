@@ -839,7 +839,6 @@ static void create_matrix (vector<double> &v, int startindex, Matrix &matrix) {
  *  9-14: pattern matrix */
 void PsSpecialHandler::makepattern (vector<double> &p) {
 	int pattern_type = static_cast<int>(p[0]);
-	int id = static_cast<int>(p[1]);
 	switch (pattern_type) {
 		case 0:
 			// pattern definition completed
@@ -849,6 +848,7 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 			}
 			break;
 		case 1: {  // tiling pattern
+			int id = static_cast<int>(p[1]);
 			BoundingBox bbox(p[2], p[3], p[4], p[5]);
 			const double &xstep=p[6], &ystep=p[7]; // horizontal and vertical distance of adjacent tiles
 			int paint_type = static_cast<int>(p[8]);
