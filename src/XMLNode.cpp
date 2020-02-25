@@ -87,6 +87,14 @@ XMLElement::XMLElement (XMLElement &&node) noexcept
 }
 
 
+XMLElement::~XMLElement () {
+	// explicitly remove child nodes by iteration to prevent deep recursion
+	unique_ptr<XMLNode> child = std::move(_firstChild);
+	while (child && child->next())
+		child->removeNext();
+}
+
+
 /** Removes all attributes and children. */
 void XMLElement::clear () {
 	_attributes.clear();
