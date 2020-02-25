@@ -19,15 +19,18 @@
 *************************************************************************/
 
 #include <algorithm>
-#include <map>
+#include <fstream>
 #include <list>
+#include <map>
 #include <sstream>
+#include "FileSystem.hpp"
 #include "utility.hpp"
 #include "XMLNode.hpp"
 #include "XMLString.hpp"
 
 using namespace std;
 
+bool XMLNode::KEEP_ENCODED_FILES=false;
 bool XMLElement::WRITE_NEWLINES=true;
 
 
@@ -347,8 +350,29 @@ XMLElement* XMLElement::getFirstDescendant (const char *name, const char *attrNa
 
 ostream& XMLElement::write (ostream &os) const {
 	os << '<' << _name;
-	for (const auto &attrib : _attributes)
-		os << ' ' << attrib.name << "='" << attrib.value << '\'';
+	for (const auto &attrib : _attributes) {
+		os << ' ';
+		if (attrib.name.front() != '@')
+			os << attrib.name << "='" << attrib.value << '\'';
+		else {
+			os << attrib.name.substr(1) << "='";
+			size_t pos = attrib.value.find("base64,");
+			if (pos == string::npos)
+				os << attrib.value;
+			else {
+				os << attrib.value.substr(0, pos+7);
+				string fname = attrib.value.substr(pos+7);
+				ifstream ifs(fname, ios::binary);
+				if (ifs) {
+					util::base64_copy(ifs, os);
+					ifs.close();
+					if (!KEEP_ENCODED_FILES)
+						FileSystem::remove(fname);
+				}
+			}
+			os << "'";
+		}
+	}
 	if (empty())
 		os << "/>";
 	else {

@@ -63,6 +63,8 @@ class XMLNode {
 		XMLNode* prev () const    {return _prev;}
 		XMLNode* next () const    {return _next.get();}
 
+		static bool KEEP_ENCODED_FILES;
+
 	protected:
 		XMLNode* insertNext (std::unique_ptr<XMLNode> node);
 		std::unique_ptr<XMLNode> removeNext ();

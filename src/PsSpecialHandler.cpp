@@ -44,7 +44,6 @@ bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
 bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
 int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
-bool PsSpecialHandler::KEEP_IMAGE_FILES = false;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _xmlnode(), _savenode()
@@ -762,6 +761,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 	string fname = png_base(*_actions) + to_string(imgID) + ".png";
 	ifstream ifs(fname, ios::binary);
 	if (ifs) {
+		ifs.close();
 		auto image = util::make_unique<XMLElement>("image");
 		double x = _actions->getX();
 		double y = _actions->getY();
@@ -778,12 +778,9 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 		matrix = matrix.invert().lmultiply(_actions->getMatrix());
 		image->addAttribute("transform", matrix.toSVG());
 
-		// encode image data into Base64 and embed it
-		ostringstream oss("data:image/png;base64,");
-		oss << "data:image/png;base64,";
-		util::base64_copy(ifs, oss);
-		image->addAttribute("xlink:href", oss.str());
-		ifs.close();
+		// To prevent memory issues, only add the filename to the href attribute and tag it by '@'
+		// for later base64 encoding.
+		image->addAttribute("@xlink:href", "data:image/png;base64,"+fname);
 
 		// if set, assign clipping path to image
 		if (_clipStack.path()) {
@@ -792,9 +789,6 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 			group->append(std::move(image));
 			image = std::move(group);  // handle the entire group as image to add
 		}
-
-		if (!KEEP_IMAGE_FILES)
-			FileSystem::remove(fname);
 		if (_xmlnode)
 			_xmlnode->append(std::move(image));
 		else {

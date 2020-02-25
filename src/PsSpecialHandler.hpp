@@ -95,7 +95,6 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		static bool SHADING_SEGMENT_OVERLAP;
 		static int SHADING_SEGMENT_SIZE;
 		static double SHADING_SIMPLIFY_DELTA;
-		static bool KEEP_IMAGE_FILES;
 
 	protected:
 		void initialize ();
