@@ -72,7 +72,7 @@ XMLElement::XMLElement (string name) : _name(std::move(name)) {
 XMLElement::XMLElement (const XMLElement &node)
 	: XMLNode(node), _name(node._name), _attributes(node._attributes)
 {
-	for (XMLNode *child=_firstChild.get(); child; child = child->next())
+	for (XMLNode *child=node._firstChild.get(); child; child = child->next())
 		insertLast(child->clone());
 }
 
