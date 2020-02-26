@@ -151,12 +151,11 @@ void PSUncoloredTilingPattern::apply (SpecialActions &actions) {
 			setGroupNode(util::static_unique_ptr_cast<XMLElement>(getGroupNode()->clone()));
 		// assign current color to the pattern graphic
 		vector<XMLElement*> colored_elems;
-		const array<const char*, 2> attribs = {{"fill", "stroke"}};
-		for (const char *attrib : attribs) {
-			getGroupNode()->getDescendants(nullptr, attrib, colored_elems);
+		for (const char *attrName : {"fill", "stroke"}) {
+			getGroupNode()->getDescendants(nullptr, attrName, colored_elems);
 			for (XMLElement *elem : colored_elems) {
-				if (string(elem->getAttributeValue(attrib)) != "none")
-					elem->addAttribute(attrib, _currentColor.svgColorString());
+				if (string(elem->getAttributeValue(attrName)) != "none")
+					elem->addAttribute(attrName, _currentColor.svgColorString());
 			}
 			colored_elems.clear();
 		}
