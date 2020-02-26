@@ -326,8 +326,10 @@ unique_ptr<XMLNode> XMLElement::remove (XMLNode *child) {
 bool XMLElement::getDescendants (const char *name, const char *attrName, vector<XMLElement*> &descendants) const {
 	for (XMLNode *child = _firstChild.get(); child; child = child->next()) {
 		if (XMLElement *elem = child->toElement()) {
-			if ((!name || elem->name() == name) && (!attrName || elem->hasAttribute(attrName)))
-				descendants.push_back(elem);
+			if (!name || !name[0] || (name[0] != '!' && elem->name() == name) || (name[0] == '!' && elem->name() != name+1)) {
+				if (!attrName || elem->hasAttribute(attrName))
+					descendants.push_back(elem);
+			}
 			elem->getDescendants(name, attrName, descendants);
 		}
 	}
