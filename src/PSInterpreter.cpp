@@ -279,6 +279,7 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"save",           { 1, &PSActions::save}},
 		{"scale",          { 2, &PSActions::scale}},
 		{"setblendmode",   { 1, &PSActions::setblendmode}},
+		{"setcolorspace",  { 1, &PSActions::setcolorspace}},
 		{"setcmykcolor",   { 4, &PSActions::setcmykcolor}},
 		{"setdash",        {-1, &PSActions::setdash}},
 		{"setgray",        { 1, &PSActions::setgray}},

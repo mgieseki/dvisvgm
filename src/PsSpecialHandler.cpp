@@ -83,6 +83,7 @@ void PsSpecialHandler::initgraphics () {
 	_blendmode = 0; // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
+	_patternEnabled = false;
 	_currentcolor = Color::BLACK;
 	_dashoffset = 0;
 	_dashpattern.clear();
@@ -1249,7 +1250,8 @@ void PsSpecialHandler::rotate (vector<double> &p) {
 
 
 void PsSpecialHandler::setgray (vector<double> &p) {
-	_pattern = nullptr;
+	if (!_patternEnabled)
+		_pattern = nullptr;
 	_currentcolor.setGray(p[0]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1257,7 +1259,8 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 
 
 void PsSpecialHandler::setrgbcolor (vector<double> &p) {
-	_pattern= nullptr;
+	if (!_patternEnabled)
+		_pattern= nullptr;
 	_currentcolor.setRGB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1265,7 +1268,8 @@ void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 
 
 void PsSpecialHandler::setcmykcolor (vector<double> &p) {
-	_pattern = nullptr;
+	if (!_patternEnabled)
+		_pattern = nullptr;
 	_currentcolor.setCMYK(p[0], p[1], p[2], p[3]);
 	if (_actions)
 		_actions->setColor(_currentcolor);
@@ -1273,7 +1277,8 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 
 
 void PsSpecialHandler::sethsbcolor (vector<double> &p) {
-	_pattern = nullptr;
+	if (!_patternEnabled)
+		_pattern = nullptr;
 	_currentcolor.setHSB(p[0], p[1], p[2]);
 	if (_actions)
 		_actions->setColor(_currentcolor);

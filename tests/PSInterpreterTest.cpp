@@ -53,6 +53,7 @@ class PSTestActions : public PSActions {
 		void save(std::vector<double> &p) override        {print("save", p);}
 		void scale (vector<double> &p) override           {print("scale", p);}
 		void setblendmode (vector<double> &p) override    {print("setblendmode", p);}
+		void setcolorspace (vector<double> &p) override   {print("setcolorspace", p);}
 		void setcmykcolor (vector<double> &p) override    {print("setcmykcolor", p);}
 		void setdash (vector<double> &p) override         {print("setdash", p);}
 		void setgray (vector<double> &p) override         {print("setgray", p);}
@@ -103,7 +104,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setrgbcolor 0 0 0;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 0;setlinejoin 0;setmiterlimit 10;setcolorspace 0;setrgbcolor 0 0 0;setdash 0;grestore;");
 	actions.clear();
 
 	psi.execute("1 setlinecap 5 setmiterlimit 0 1 0 setrgbcolor gsave 0 setlinecap 10 setmiterlimit ");
@@ -111,7 +112,7 @@ TEST(PSInterpreterTest, gsave_grestore) {
 	actions.clear();
 
 	psi.execute("grestore ");
-	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setrgbcolor 0 1 0;setdash 0;grestore;");
+	EXPECT_EQ(actions.result(), "setmatrix 1 0 0 1 0 0;applyscalevals 1 1 1;setlinewidth 1;setlinecap 1;setlinejoin 0;setmiterlimit 5;setcolorspace 0;setrgbcolor 0 1 0;setdash 0;grestore;");
 }
 
 
@@ -119,11 +120,11 @@ TEST(PSInterpreterTest, stroke_fill) {
 	PSTestActions actions;
 	PSInterpreter psi(&actions);
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath stroke ");
-	EXPECT_EQ(actions.result(), "setrgbcolor 0 0 0;newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
+	EXPECT_EQ(actions.result(), "setcolorspace 0;setrgbcolor 0 0 0;newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;stroke;");
 	actions.clear();
 
 	psi.execute("0 0 moveto 10 10 lineto 0 10 lineto closepath fill ");
-	EXPECT_EQ(actions.result(), "setrgbcolor 0 0 0;newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
+	EXPECT_EQ(actions.result(), "setcolorspace 0;setrgbcolor 0 0 0;newpath 0;moveto 0 0;lineto 10 10;lineto 0 10;closepath;fill;");
 }
 
 

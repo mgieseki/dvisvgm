@@ -63,6 +63,7 @@ struct PSActions {
 	virtual void save (std::vector<double> &p) =0;
 	virtual void scale (std::vector<double> &p) =0;
 	virtual void setblendmode (std::vector<double> &p) =0;
+	virtual void setcolorspace (std::vector<double> &p) =0;
 	virtual void setcmykcolor (std::vector<double> &cmyk) =0;
 	virtual void setdash (std::vector<double> &p) =0;
 	virtual void setgray (std::vector<double> &p) =0;
