@@ -685,7 +685,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 				path->addAttribute("stroke-dashoffset", _dashoffset);
 		}
 	}
-	if (path && _clipStack.path()) {
+	if (path && _clipStack.path() && !_savenode) {
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 		bbox.intersect(_clipStack.path()->computeBBox());
@@ -727,7 +727,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
 	else if (_actions->getColor() != Color::BLACK || _savenode)
 		path->addAttribute("fill", _actions->getColor().svgColorString());
-	if (_clipStack.path()) {
+	if (_clipStack.path() && !_savenode) {  // clip path active and not inside pattern definition?
 		// assign clipping path and clip bounding box
 		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
 		bbox.intersect(_clipStack.path()->computeBBox());
