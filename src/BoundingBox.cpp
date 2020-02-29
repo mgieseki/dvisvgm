@@ -207,7 +207,7 @@ void BoundingBox::operator += (const BoundingBox &bbox) {
 
 
 static inline bool almost_equal (double v1, double v2) {
-	return fabs(v1-v2) < 1e-10;
+	return abs(v1-v2) < 1e-10;
 }
 
 

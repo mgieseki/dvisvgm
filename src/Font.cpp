@@ -608,7 +608,7 @@ double NativeFont::charWidth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
 	double w = upem ? (scaledSize()*FontEngine::instance().getAdvance(c)/upem*_style.extend) : 0;
-	w += fabs(_style.slant*charHeight(c));
+	w += abs(_style.slant*charHeight(c));
 	return w;
 }
 

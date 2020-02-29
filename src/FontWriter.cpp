@@ -145,7 +145,7 @@ static void writeSFD (const string &sfdname, const PhysicalFont &font, const set
 
 	// ensure that the sum of the SFD's Ascent and Descent values equals the font's units per EM
 	double yext = font.ascent()+font.descent();
-	double scale = double(font.unitsPerEm())/(yext != 0 ? yext : fabs(font.ascent()));
+	double scale = double(font.unitsPerEm())/(yext != 0 ? yext : abs(font.ascent()));
 	sfd <<
 		"Ascent: " << font.ascent()*scale << "\n"
 		"Descent: " << font.descent()*scale << "\n"

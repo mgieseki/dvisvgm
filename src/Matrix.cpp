@@ -169,7 +169,7 @@ Matrix& Matrix::rotate (double deg) {
 
 
 Matrix& Matrix::xskewByAngle (double deg) {
-	if (fmod(fabs(deg)-90, 180) != 0)
+	if (fmod(abs(deg)-90, 180) != 0)
 		return xskewByRatio(tan(deg2rad(deg)));
 	return *this;
 }
@@ -186,7 +186,7 @@ Matrix& Matrix::xskewByRatio (double xyratio) {
 
 
 Matrix& Matrix::yskewByAngle (double deg) {
-	if (fmod(fabs(deg)-90, 180) != 0)
+	if (fmod(abs(deg)-90, 180) != 0)
 		return yskewByRatio(tan(deg2rad(deg)));
 	return *this;
 }
