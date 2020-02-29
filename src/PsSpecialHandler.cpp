@@ -478,7 +478,7 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 
 
 void PsSpecialHandler::dviBeginPage (unsigned int pageno, SpecialActions &actions) {
-	FilePath imgpath = _actions->getSVGFilePath(_actions->getCurrentPageNumber());
+	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
 	imgpath.suffix("");
 	_psi.execute("/@imgbase("+png_base(actions)+")def\n"); // path and basename of image files
 }
