@@ -26,13 +26,15 @@
 
 class FileFinder;
 
-class MetafontWrapper
-{
+class MetafontWrapper {
 	public:
 		MetafontWrapper (std::string fname, std::string dir);
 		bool call (const std::string &mode, double mag);
 		bool make (const std::string &mode, double mag);
 		bool success () const;
+
+	protected:
+		int getResolution (const std::string &mfMessage) const;
 
 	private:
 		std::string _fontname;
