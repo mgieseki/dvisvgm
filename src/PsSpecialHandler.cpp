@@ -44,10 +44,12 @@ bool PsSpecialHandler::COMPUTE_CLIPPATHS_INTERSECTIONS = false;
 bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
 int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
+string PsSpecialHandler::BITMAP_FORMAT;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _xmlnode(), _savenode()
 {
+	_psi.setImageDevice(BITMAP_FORMAT);
 }
 
 
@@ -431,7 +433,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 		_psi.execute(
 			"\n@beginspecial @setspecial"            // enter special environment
 			"/setpagedevice{@setpagedevice}def "     // activate processing of operator "setpagedevice"
-			"/@imgbase("+png_base(*_actions)+")def " // path and basename of image files
+			"/@imgbase("+png_base(*_actions)+")store " // path and basename of image files
 			"matrix setmatrix"                       // don't apply outer PS transformations
 			"/FirstPage "+to_string(pageno)+" def"   // set number of first page to convert (PDF only)
 			"/LastPage "+to_string(pageno)+" def "   // set number of last page to convert (PDF only)
@@ -754,12 +756,13 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
  *  into the SVG file. */
 void PsSpecialHandler::image (std::vector<double> &p) {
 	int imgID = static_cast<int>(p[0]);   // ID of PNG file written
-	if (imgID < 0)  // PNG device not supported by local Ghostscript
+	if (imgID < 0)  // no bitmap file written?
 		return;
 
 	double width = p[1];
 	double height = p[2];
-	string fname = png_base(*_actions) + to_string(imgID) + ".png";
+	string suffix = (BITMAP_FORMAT.substr(0, 3) == "png" ? ".png" : ".jpg");
+	string fname = png_base(*_actions) + to_string(imgID) + suffix;
 	ifstream ifs(fname, ios::binary);
 	if (ifs) {
 		ifs.close();

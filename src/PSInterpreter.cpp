@@ -30,6 +30,7 @@
 #include "PSFilter.hpp"
 #include "PSInterpreter.hpp"
 #include "SignalHandler.hpp"
+#include "utility.hpp"
 
 using namespace std;
 
@@ -379,4 +380,77 @@ BoundingBox PSInterpreter::pdfPageBox (const string &fname, int pageno) {
 	else
 		pagebox = BoundingBox(stod(_rawData[0]), stod(_rawData[1]), stod(_rawData[2]), stod(_rawData[3]));
 	return pagebox;
+}
+
+
+vector<PSDeviceInfo> PSInterpreter::getImageDeviceInfos () {
+	vector<PSDeviceInfo> infos {
+		{"jpeg", "color JPEG format"},
+		{"jpeggray", "grayscale JPEG format"},
+		{"png", "grayscale or 24-bit color PNG format"},
+		{"pnggray", "grayscale PNG format"},
+		{"pngmono", "black-and-white PNG format"},
+		{"pngmonod", "dithered black-and-white PNG format"},
+		{"png16", "4-bit color PNG format"},
+		{"png256", "8-bit color PNG format"},
+		{"png16m", "24-bit color PNG format"},
+	};
+	return infos;
+}
+
+
+void PSInterpreter::listImageDeviceInfos (ostream &os) {
+	for (const PSDeviceInfo &info : getImageDeviceInfos())
+		os << setw(8) << left << info.name << " | " << info.description << '\n';
+}
+
+
+/** Returns true if a given PS device name is known. The function deosn't
+ *  check whether the device is actually available.
+ *  @param[in] deviceStr device specifier of the form <device name>[:<param>] */
+bool PSInterpreter::imageDeviceKnown (string deviceStr) {
+	if (deviceStr.empty() || !isalpha(deviceStr[0]))
+		return false;
+	deviceStr = deviceStr.substr(0, deviceStr.find(':'));  // strip optional argument
+	auto infos = getImageDeviceInfos();
+	auto it = find_if(infos.begin(), infos.end(), [&](PSDeviceInfo &info) {
+		return info.name == deviceStr;
+	});
+	return it != infos.end();
+}
+
+
+/** Sets the output device used to create bitmap images.
+ *  @param[in] deviceStr device specifier of the form <device name>[:<param>]
+ *  @return true on success, false if device is not supported */
+bool PSInterpreter::setImageDevice (const string &deviceStr) {
+	auto params = util::split(deviceStr, ":");
+	string name = util::tolower(params[0]);
+	if (!imageDeviceKnown(name))
+		return false;
+	if (name != "jpeg" && name != "png") {
+		// check if image device is supported by Ghostscript
+		executeRaw("devicedict/"+name+" known{1}{0}ifelse\n", 1);
+		if (_rawData.empty() || _rawData[0] != "1")
+			throw PSException("output device '"+name+"' is not available");
+	}
+	string ps = "/@imgdevice("+name+")store ";
+	try {
+		if (params.size() > 1) {
+			// set JPEG quality level if given
+			if (name.substr(0, 4) == "jpeg") {
+				int quality = max(0, min(stoi(params[1]), 100));
+				ps += "/JPEGQ "+to_string(quality)+" def ";
+			}
+			else if (name == "pngmonod") {
+				int minFeatureSize = max(0, min(stoi(params[1]), 4));
+				ps += "/MinFeatureSize "+to_string(minFeatureSize)+" def ";
+			}
+		}
+	}
+	catch (...) {
+		throw PSException("invalid device option '"+params[1]+"' (integer expected)");
+	}
+	execute(ps);
+	return true;
 }

@@ -95,6 +95,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		static bool SHADING_SEGMENT_OVERLAP;
 		static int SHADING_SEGMENT_SIZE;
 		static double SHADING_SIMPLIFY_DELTA;
+		static std::string BITMAP_FORMAT;
 
 	protected:
 		void initialize ();

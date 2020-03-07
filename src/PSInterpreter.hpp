@@ -87,6 +87,11 @@ struct PSActions {
 
 class PSFilter;
 
+struct PSDeviceInfo {
+	std::string name;
+	std::string description;
+};
+
 /** This class provides methods to execute chunks of PostScript code and calls
  *  several template methods on invocation of selected PS operators (see PSActions). */
 class PSInterpreter {
@@ -107,6 +112,10 @@ class PSInterpreter {
 		int pdfPageCount (const std::string &fname);
 		BoundingBox pdfPageBox (const std::string &fname, int pageno);
 		const std::vector<std::string>& rawData () const {return _rawData;}
+		bool setImageDevice (const std::string &deviceStr);
+		static std::vector<PSDeviceInfo> getImageDeviceInfos ();
+		static void listImageDeviceInfos (std::ostream &os);
+		static bool imageDeviceKnown (std::string deviceStr);
 
 	protected:
 		void init ();
