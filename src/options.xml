@@ -53,6 +53,10 @@
 				<arg type="string" name="size" default="min"/>
 				<description>set size of bounding box</description>
 			</option>
+			<option long="bitmap-format" short="B" if="!defined(DISABLE_GS)">
+				<arg type="string" name="fmt" default="jpeg"/>
+				<description>set format used to embed PS/EPS bitmaps</description>
+			</option>
 			<option long="clipjoin" short="j" if="!defined(DISABLE_GS)">
 				<description>compute intersection of clipping paths</description>
 			</option>
@@ -64,7 +68,7 @@
 			</option>
 			<option long="font-format" short="f" if="!defined(DISABLE_WOFF)">
 				<arg type="string" name="format" default="svg"/>
-				<description>select file format of embedded fonts</description>
+				<description>set file format of embedded fonts</description>
 			</option>
 			<option long="grad-overlap" if="!defined(DISABLE_GS)">
 				<description>create overlapping color gradient segments</description>

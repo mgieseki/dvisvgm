@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2019-11-12 20:21 +0100
+:revdate: 2020-03-07 13:54 +0100
 
 Name
 ----
@@ -84,7 +84,7 @@ appended to or separated by whitespace from a short option (e.g. +-v0+ or +-v 0+
 require an additional equals sign (+=+) between option name and argument but without any surrounding
 whitespace (e.g. +--verbosity=0+). Multiple short options that don't expect a further parameter can
 be combined after a single dash (e.g. +-ejs+ rather than +-e -j -s+).
-+
+
 Long option names may also be shortened by omitting trailing characters. As long as the shortened
 name is unambiguous, it's recognized and applied. For example, option +--exact-bbox+ can be shortened
 to +--exact+, +--exa+, or +--ex+. In case of an ambiguous abbreviation, dvisvgm prints an error
@@ -113,11 +113,11 @@ Additionally, dvisvgm also supports the following format specifiers:
  
  *Special bounding box sizes*;;
 [horizontal]
-   *dvi*::: page size stored in the DVI file
-   *min*::: computes the minimal/tightest bounding box
-   *none*::: no bounding box is assigned
-	*papersize*::: box sizes specified by 'papersize' specials present in the DVI file
-	*preview*::: bounding box data computed by the preview package (if present in the DVI file)
+   *dvi*       ::: page size stored in the DVI file
+   *min*       ::: computes the minimal/tightest bounding box
+   *none*      ::: no bounding box is assigned
+   *papersize* ::: box sizes specified by 'papersize' specials present in the DVI file
+   *preview*   ::: bounding box data computed by the preview package (if present in the DVI file)
 //
  *Page orientation*;;
    The default page orientation for DIN/ISO and American paper sizes is 'portrait',
@@ -135,6 +135,34 @@ Hence, if you choose a landscape format, the page won't be rotated.
 //
 
 //
+*-B, --bitmap-format*='fmt'::
+This option sets the image format used to embed bitmaps extracted from PostScript or PDF data.
+By default, dvisvgm embeds all bitmaps as JPEG images because it's the most compact of the two formats
+supported by SVG. To select the alternative lossless PNG format, *--bitmap-format=png* can be used.
+There are some more format variants dvisvgm currently supports even though +jpeg+ and +png+ should be
+sufficient in most cases. The following list gives an overview of the known format names which
+correspond to names of Ghostscript output devices.
+[horizontal]
+    *jpeg*     ::: color JPEG format
+    *jpeggray* ::: grayscale JPEG format
+    *png*      ::: grayscale or 24-bit color PNG format depending on current color space
+    *pnggray*  ::: grayscale PNG format
+    *pngmono*  ::: black-and-white PNG format
+    *pngmonod* ::: dithered black-and-white PNG format
+    *png16*    ::: 4-bit color PNG format
+    *png256*   ::: 8-bit color PNG format
+    *png16m*   ::: 24-bit color PNG format
+
+Since the collection of supported output devices can vary among local Ghostscript installations,
+not all formats may be available in some environments. dvisvgm quits with a PostScript error message
+if the selected output format requires a locally unsupported output device.
+
+The two JPEG format specifiers accept an optional parameter to set the IJG quality level
+which must directly follow the format specifier separated by a colon, e.g. *--bitmap-format=jpeg:50*.
+The quality value is an integer between 0 and 100. Higher values result in better image quality but
+lower compression rates and therefore larger files. The default quality level is 75 which is applied
+if no quality parameter is given or if it's set to 0.
+
 *-C, --cache*[='dir']::
 To speed up the conversion process of bitmap fonts, dvisvgm saves intermediate conversion
 information in cache files. By default, these files are stored in +$XDG_CACHE_HOME/dvisvgm/+
