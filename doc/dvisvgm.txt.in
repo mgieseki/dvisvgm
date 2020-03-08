@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2020-03-07 13:54 +0100
+:revdate: 2020-03-08 09:20 +0100
 
 Name
 ----
@@ -142,21 +142,25 @@ supported by SVG. To select the alternative lossless PNG format, *--bitmap-forma
 There are some more format variants dvisvgm currently supports even though +jpeg+ and +png+ should be
 sufficient in most cases. The following list gives an overview of the known format names which
 correspond to names of Ghostscript output devices.
++
+--
 [horizontal]
-    *jpeg*     ::: color JPEG format
-    *jpeggray* ::: grayscale JPEG format
-    *png*      ::: grayscale or 24-bit color PNG format depending on current color space
-    *pnggray*  ::: grayscale PNG format
-    *pngmono*  ::: black-and-white PNG format
-    *pngmonod* ::: dithered black-and-white PNG format
-    *png16*    ::: 4-bit color PNG format
-    *png256*   ::: 8-bit color PNG format
-    *png16m*   ::: 24-bit color PNG format
-
+*none*     ::: disable processing of bitmap images
+*jpeg*     ::: color JPEG format
+*jpeggray* ::: grayscale JPEG format
+*png*      ::: grayscale or 24-bit color PNG format depending on current color space
+*pnggray*  ::: grayscale PNG format
+*pngmono*  ::: black-and-white PNG format
+*pngmonod* ::: dithered black-and-white PNG format
+*png16*    ::: 4-bit color PNG format
+*png256*   ::: 8-bit color PNG format
+*png16m*   ::: 24-bit color PNG format
+--
++
 Since the collection of supported output devices can vary among local Ghostscript installations,
 not all formats may be available in some environments. dvisvgm quits with a PostScript error message
 if the selected output format requires a locally unsupported output device.
-
++
 The two JPEG format specifiers accept an optional parameter to set the IJG quality level
 which must directly follow the format specifier separated by a colon, e.g. *--bitmap-format=jpeg:50*.
 The quality value is an integer between 0 and 100. Higher values result in better image quality but

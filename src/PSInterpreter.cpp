@@ -385,6 +385,7 @@ BoundingBox PSInterpreter::pdfPageBox (const string &fname, int pageno) {
 
 vector<PSDeviceInfo> PSInterpreter::getImageDeviceInfos () {
 	vector<PSDeviceInfo> infos {
+		{"none", "no processing of bitmap images"},
 		{"jpeg", "color JPEG format"},
 		{"jpeggray", "grayscale JPEG format"},
 		{"png", "grayscale or 24-bit color PNG format"},
@@ -428,7 +429,7 @@ bool PSInterpreter::setImageDevice (const string &deviceStr) {
 	string name = util::tolower(params[0]);
 	if (!imageDeviceKnown(name))
 		return false;
-	if (name != "jpeg" && name != "png") {
+	if (name != "jpeg" && name != "png" && name != "none") {
 		// check if image device is supported by Ghostscript
 		executeRaw("devicedict/"+name+" known{1}{0}ifelse\n", 1);
 		if (_rawData.empty() || _rawData[0] != "1")
