@@ -374,7 +374,8 @@ ostream& XMLElement::write (ostream &os) const {
 				string fname = attrib.value.substr(pos+7);
 				ifstream ifs(fname, ios::binary);
 				if (ifs) {
-					util::base64_copy(ifs, os);
+					os << '\n';
+					util::base64_copy(ifs, os, 200);
 					ifs.close();
 					if (!KEEP_ENCODED_FILES)
 						FileSystem::remove(fname);
