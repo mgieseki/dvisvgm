@@ -6,9 +6,8 @@
 # Don't try to install the manpage file if it can't be built due to missing utilities.
 # However, the distribution tarball should always contain a recent manpage. We ensure
 # this by adding a dist-hook rule below.
-if BUILD_MANPAGE
+
 man_MANS = dvisvgm.1
-endif
 
 EXTRA_DIST = $(man_MANS) \
 	conf-dblatex-man.xsl \
@@ -17,6 +16,8 @@ EXTRA_DIST = $(man_MANS) \
 	generate-dvisvgm-sty.xsl \
 	tweak-dblatex-pdf.xsl \
 	tweak-db-refentry.xsl
+
+if BUILD_MANPAGE
 
 CONF_DBLATEX_MAN  = $(dvisvgm_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(dvisvgm_srcdir)/doc/conf-dblatex-pdf.xsl
@@ -46,6 +47,9 @@ dvisvgm.dvi: dvisvgm.1
 
 dvisvgm.html: dvisvgm-man.xml db2html.xsl
 	xsltproc -o $@ db2html.xsl $<
+
+dvisvgm.md: dvisvgm-man.xml db2md.xsl
+	xsltproc -o $@ db2md.xsl $<
 
 dvisvgm.epub: dvisvgm-article.xml
 	a2x -darticle -fepub -L --icons --icons-dir=. $<
@@ -77,21 +81,24 @@ dvisvgm.txt: dvisvgm.txt.in ../configure.ac
 epub: dvisvgm.epub
 html: dvisvgm.html
 man: dvisvgm.1
+md: dvisvgm.md
 pdf: dvisvgm.pdf
 
+endif
+
 clean:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.md dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub
 
 distclean-local:
-	rm -f dvisvgm.pdf dvisvgm.html dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub dvisvgm.1
+	rm -f dvisvgm.pdf dvisvgm.html dvisvgm.md dvisvgm-man.xml dvisvgm-article.xml dvisvgm.txt dvisvgm.sty dvisvgm.dvi dvisvgm.epub dvisvgm.1
 
+if !BUILD_MANPAGE
 # Ensure that distribution tarballs always contain a recent manpage, i.e.
 # let "make dist" and "make distcheck" fail if dvisvgm.1 can't be built.
 dist-hook:
-	@if test ! -f $(dvisvgm_srcdir)/doc/dvisvgm.1; then \
-		echo "----------------------------------------------------------------"; \
-		echo "manpage file dvisvgm.1 could not be built because one or more of"; \
-		echo "the following utilities are missing: asciidoc, xmlto, xsltproc  "; \
-		echo "----------------------------------------------------------------"; \
-		false; \
-	fi
+	@echo "----------------------------------------------------------------"; \
+	echo  "manpage file dvisvgm.1 could not be built because one or more of"; \
+	echo  "the following utilities are missing: asciidoc, xmlto, xsltproc  "; \
+	echo  "----------------------------------------------------------------"; \
+	false;
+endif
