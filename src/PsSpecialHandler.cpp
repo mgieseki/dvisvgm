@@ -784,7 +784,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 
 		// To prevent memory issues, only add the filename to the href attribute and tag it by '@'
 		// for later base64 encoding.
-		image->addAttribute("@xlink:href", "data:image/png;base64,"+fname);
+		image->addAttribute("@xlink:href", string("data:image/")+(suffix == ".png" ? "png" : "jpeg")+";base64,"+fname);
 
 		// if set, assign clipping path to image
 		if (_clipStack.path()) {
