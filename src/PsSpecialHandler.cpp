@@ -384,10 +384,10 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 }
 
 
-static string png_base (SpecialActions &actions) {
+/** Returns path + basename of temporary bitmap images. */
+static string image_base_path (SpecialActions &actions) {
 	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
-	imgpath.suffix("");
-	return imgpath.absolute()+"-tmp-";
+	return FileSystem::tmpdir() + "/" + imgpath.basename() + "-tmp-";
 }
 
 
@@ -433,7 +433,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 		_psi.execute(
 			"\n@beginspecial @setspecial"            // enter special environment
 			"/setpagedevice{@setpagedevice}def "     // activate processing of operator "setpagedevice"
-			"/@imgbase("+png_base(*_actions)+")store " // path and basename of image files
+			"/@imgbase("+image_base_path(*_actions)+")store " // path and basename of image files
 			"matrix setmatrix"                       // don't apply outer PS transformations
 			"/FirstPage "+to_string(pageno)+" def"   // set number of first page to convert (PDF only)
 			"/LastPage "+to_string(pageno)+" def "   // set number of last page to convert (PDF only)
@@ -482,7 +482,7 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 void PsSpecialHandler::dviBeginPage (unsigned int pageno, SpecialActions &actions) {
 	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
 	imgpath.suffix("");
-	_psi.execute("/@imgbase("+png_base(actions)+")def\n"); // path and basename of image files
+	_psi.execute("/@imgbase("+image_base_path(actions)+")def\n"); // path and basename of image files
 }
 
 
@@ -762,7 +762,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 	double width = p[1];
 	double height = p[2];
 	string suffix = (BITMAP_FORMAT.substr(0, 3) == "png" ? ".png" : ".jpg");
-	string fname = png_base(*_actions) + to_string(imgID) + suffix;
+	string fname = image_base_path(*_actions)+to_string(imgID)+suffix;
 	ifstream ifs(fname, ios::binary);
 	if (ifs) {
 		ifs.close();
