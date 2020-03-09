@@ -47,7 +47,7 @@ double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
 string PsSpecialHandler::BITMAP_FORMAT;
 
 
-PsSpecialHandler::PsSpecialHandler () : _psi(this), _actions(), _previewFilter(_psi), _xmlnode(), _savenode()
+PsSpecialHandler::PsSpecialHandler () : _psi(this), _previewFilter(_psi)
 {
 	_psi.setImageDevice(BITMAP_FORMAT);
 }
@@ -480,9 +480,7 @@ static bool transform_box_extents (const Matrix &matrix, double &w, double &h, d
 
 
 void PsSpecialHandler::dviBeginPage (unsigned int pageno, SpecialActions &actions) {
-	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
-	imgpath.suffix("");
-	_psi.execute("/@imgbase("+image_base_path(actions)+")def\n"); // path and basename of image files
+	_psi.execute("/@imgbase("+image_base_path(actions)+")store\n"); // path and basename of image files
 }
 
 
