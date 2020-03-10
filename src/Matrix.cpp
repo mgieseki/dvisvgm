@@ -469,7 +469,7 @@ static const char* ord_suffix (int n) {
 
 static void skip_comma_wsp (istream &is) {
 	is >> ws;
-	if (is.peek() == ',') is.ignore(1);
+	if (is.peek() == ',') is.get();
 	is >> ws;
 }
 
@@ -494,13 +494,13 @@ static size_t parse_transform_cmd (istream &is, string cmd, size_t minparams, si
 		params.push_back(val);
 		is >> ws;
 		if (i == minparams && is.peek() == ')') {
-			is.ignore(1);
+			is.get();
 			return i;
 		}
 		if (i == maxparams) {
 			if (is.peek() != ')')
 				throw ParserException("missing ')' at end of command '"+cmd+"'");
-			is.ignore(1);
+			is.get();
 		}
 		skip_comma_wsp(is);
 	}
