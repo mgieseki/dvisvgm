@@ -79,7 +79,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="c9b07d478e839e780fccf01ce5f698bc"></a>
+  <a name="961cdf56e376338f85ce3cc3a86b6327"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 July 2018: dvisvgm 2.4.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+<ul>
+<li>Fixed the handling of the optional delay parameter of option <code>--progress</code>.</li>
+<li>Updated the <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.5.</li>
+<li>Updated the <a href="https://github.com/google/woff2">woff2 library</a> to version 1.0.2</li>
+<li>Updated several URLs in the <a href="/Manpage/">manual page</a>.</li>
+<li>Several minor code refactorings.</li>
+</ul>
+</div>
+  </section><a name="c9b07d478e839e780fccf01ce5f698bc"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">6 July 2018: Website moved to the new domain <em>dvisvgm.de</em></div>
     <div class="card-body">
@@ -185,43 +198,6 @@ allowed according to the EPS specification.</li>
 prints a corresponding warning message.</li>
 <li>Some code cleanup.</li>
 </ul>
-</div>
-  </section><a name="e0d0591a1cb960b93762bc32e54855db"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">28 December 2017: dvisvgm 2.3 has been released</div>
-    <div class="card-body">
-      <p>This is a small feature release that adds optional experimental support for <a href="https://www.freetype.org/ttfautohint">ttfautohint</a>.
-<em>ttfautohint</em> usually creates better results than the FontForge autohinter that <em>dvisvgm</em> uses by default if you
-call it with option <code>--font-format=woff,autohint</code>, for example. The fonts embedded in the following SVG file were
-hinted with ttfautohint:</p>
-<div class="row align-items-center">
-  <div class="col-md-8">
-  <p><object data="/News/images/matrices-ta.svg" type="image/svg+xml"></object></p>
-<p>In order to build <em>dvisvgm</em> with ttfautohint support, you need the ttfautohint library and the corresponding header
-files which are provided as of the latest version 1.8.1. A pre-built DLL of ttfautohint for Windows can be found
-<a href="https://github.com/mgieseki/ttfautohint-dll/releases">here</a>. By default, ttfautohint support is completely disabled
-and not available in <em>dvisvgm</em>. To enable it, add option <code>--with-ttfautohint</code> to the <code>configure</code> script, and optionally
-specify the location of the ttfautohint development files, e.g. <code>--with-ttfautohint=/opt/ttfautohint</code>. Depending on the
-configuration results, the ttfautohint library is either directly linked to the <em>dvisvgm</em> binary or looked up dynamically
-when running <em>dvisvgm</em>. If ttfautohint support is available, the list printed when calling <em>dvisvgm</em> with option <code>-V1</code>
-contains a corresponding entry, as shown in the box on the right.</p>
-</div>
-<div class="col-md-4">
-  <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -V1
-dvisvgm 2.3 (x86_64-pc-linux)
------------------------------
-brotli:      1.0.2
-clipper:     6.2.1
-fontforge:   20160721
-freetype:    2.8.0
-Ghostscript: 9.22
-kpathsea:    6.2.2
-potrace:     1.15
-ttfautohint: 1.8.1
-woff2:       1.0.1
-xxhash:      0.6.4
-zlib:        1.2.11</code></pre></div></div>
-</div>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">

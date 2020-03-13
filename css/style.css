@@ -29,6 +29,10 @@ code {
 	border-radius: 2px;
 }
 
+a > code {
+	color: inherit;
+}
+
 .sectionbody > .highlight + p {
 	margin-bottom: 10px;
 }

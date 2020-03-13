@@ -3,8 +3,42 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 07 Dec 2019 12:26:54 +0100</pubDate>
+    <pubDate>Fri, 13 Mar 2020 14:56:31 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.9 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#5651dc6a7c24b18f3867668516712587</link>
+      <pubDate>Fri, 13 Mar 2020 13:18:09 +0100</pubDate>
+      <guid>5651dc6a7c24b18f3867668516712587</guid>
+      <description>
+        <![CDATA[<p>The main new feature of this release is the conversion of bitmap images present in PostScript and PDF data.
+All bitmaps are embedded into the generated SVG files encoded as Base64 strings. The default format used
+for this is JPEG because it allows for high compression rates and therefore moderate impact on the SVG file size.
+If you prefer a lossless format, you can switch to one of the supported PNG variants by using the new command-line
+option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a>. Further information about the available
+formats and the usage of this option can be found on the manual page.</p>
+<p><strong>Summary of additions and fixes:</strong></p>
+<ul>
+<li>Added the processing of PostScript operators <code>image</code> and <code>colorimage</code> which now allows <em>dvisvgm</em>
+to embed bitmap images present in PS/PDF files into the generated SVG files.</li>
+<li>Added command-line option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a> to set
+the format used to embed bitmaps present in EPS/PDF files.</li>
+<li>Added a fallback method to retrieve the resolution of GF files if <code>stdout</code> of the Metafont subprocess can&rsquo;t
+be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvisvgm/issues/129">issue #129</a>).</li>
+<li>Fixed the broken conversion of PostScript tiling patterns.</li>
+<li>Fixed the functionality of PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code> for multibyte characters.</li>
+<li>Fixed a PostScript error that was triggered by yet unsupported shading types &lt; 4.</li>
+<li>Prevent negative <code>height</code> and <code>width</code> attributes created by <a href="/Manpage/#opt-optimize">optimizer module</a>
+<code>simplify-transform</code>.</li>
+<li>Fixed a potential segfault caused by deep recursion in huge SVG trees.</li>
+<li>Look for Ghostscript library name <code>libgs.dylib.N</code> additionally to <code>libgs.N.dylib</code> (Mac only).</li>
+<li>Ensure that <code>make install</code> installs the bundled manual page if it can&rsquo;t be rebuilt due to missing build tools.</li>
+<li>Updated the bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.7.3.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.8.2 has been released</title>
@@ -13,7 +47,6 @@
       <guid>d2a122bf30fb68ee24d061cc34560ae0</guid>
       <description>
         <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>If available, <em>dvisvgm</em> now calls <code>mf-nowin</code> instead of <code>mf</code> to process Metafont files (<a href="https://github.com/mgieseki/dvisvgm/issues/121">issue #121</a>).</li>
 <li>Fixed the switching between PostScript&rsquo;s null device and the regular page device in PS operator <code>restore</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/122">issue #122</a>).</li>
@@ -49,7 +82,6 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
       <guid>57192fe118cc7abbba232e51f3d2adf0</guid>
       <description>
         <![CDATA[<p>This is a small feature release with the following additions/changes:</p>
-
 <ul>
 <li>Added support for JPEG, PNG, PDF, and SVG files to special <code>psfile</code>.</li>
 <li>Added support for Ghostscript 9.50 which introduced incompatible changes regarding option <code>-dSAFER</code>. Due
@@ -57,21 +89,21 @@ to security reasons <code>SAFER</code> is now <a href="https://www.ghostscript.c
 and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</code>. Since <em>dvisvgm</em> requires the latter two to work
 correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
 stops with a PostScript error, e.g. like so:
-<div class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"> *** WARNING - you have selected SAFER, indicating you want Ghostscript
-               to execute in a safer environment, but at the same time
-               have selected DELAYBIND. Unless you use this option with
-               care (and specifically, remember to call .bindnow) it is
-               possible that malicious code may be able to evade the
-               limited security offered by the SAFER option.
+<span class="d-inline-flex">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
+              to execute in a safer environment, but at the same time
+              have selected DELAYBIND. Unless you use this option with
+              care (and specifically, remember to call .bindnow) it is
+              possible that malicious code may be able to evade the
+              limited security offered by the SAFER option.
 
- *** WARNING - you have selected SAFER, indicating you want Ghostscript
-               to execute in a safer environment, but at the same time
-               have selected WRITESYSTEMDICT. Unless you use this option with
-               care and specifically, remember to execute code like:
-                      &#34;systemdict readonly pop&#34;
-  PostScript error: invalidfileaccess in run</code></pre></div>
-</div><br />
+*** WARNING - you have selected SAFER, indicating you want Ghostscript
+              to execute in a safer environment, but at the same time
+              have selected WRITESYSTEMDICT. Unless you use this option with
+              care and specifically, remember to execute code like:
+                     &#34;systemdict readonly pop&#34;
+ PostScript error: invalidfileaccess in run</code></pre></div>
+</span><br/>
 <em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
 <li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
 <li>Added support for CMap operator <code>begincidchar</code> (thanks to Akira Kakuto for sending the patch).</li>
@@ -95,7 +127,6 @@ into positional and size attributes if possible.</li>
       <guid>8e82b41fbfdfcdf712fa21fc5e505117</guid>
       <description>
         <![CDATA[<p>This is another small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed a memory issue occurred when calling Metafont.</li>
 <li>Fixed potential rounding issues in conversion of color values (<a href="https://github.com/mgieseki/dvisvgm/issues/116">issue #116</a>).</li>
@@ -114,7 +145,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
       <guid>6f8e194693ecc2a26ed8c5de5adc7c8f</guid>
       <description>
         <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed randomly missing glyph paths referenced by <code>use</code> elements (<a href="https://github.com/mgieseki/dvisvgm/issues/110">issue #110</a>).</li>
 <li>Minor updates of the <a href="/Manpage/">manual page</a>.</li>
@@ -134,7 +164,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
 The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
 the public interface leads to an error message when processing PDF files with
 <em>dvisvgm</em>.</p>
-
 <p>The changes in Ghostscript 9.27 also break the PDF functionality of
 <a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
 An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
@@ -149,7 +178,6 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
       <guid>132ffe0d1afe073c5693a47e91aed30f</guid>
       <description>
         <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
 <li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
@@ -161,7 +189,7 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
     
     <item>
       <title>dvisvgm 2.7 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#ed26fc1f97db41d498f4198055773fd3</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#ed26fc1f97db41d498f4198055773fd3</link>
       <pubDate>Sat, 13 Apr 2019 10:19:58 +0200</pubDate>
       <guid>ed26fc1f97db41d498f4198055773fd3</guid>
       <description>
@@ -169,30 +197,26 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
 allows for optimization of the generated SVG tree after it has completely been built from the DVI data.
 The optimizations are performed by running separate optimizer modules which are executed one by one in
 a given order and thus transform the XML tree gradually. Currently, the following optimizations are available:</p>
-
 <ul>
 <li>Move common inheritable attributes of adjacent elements to <a href="https://www.w3.org/TR/SVG11/struct.html#Groups">group elements</a>.</li>
 <li>Combine nested groups and unwrap groups without attributes.</li>
 <li>Remove redundant <code>clipPath</code> elements.</li>
 <li>Simplify <code>transform</code> attributes.</li>
 </ul>
-
 <p>More detailed information on option <code>--optimize</code> and the optimizer modules can be found on the <a href="/Manpage/#opt-optimize">manual page</a>.</p>
-
 <p>Furthermore, a couple of smaller additions and changes have been made:</p>
-
 <ul>
 <li>All <code>raw</code> specials are now parsed and converted to proper XML nodes so that the optimizer
 can also process SVG fragments added by the user.</li>
 <li>Several improvements to SVG graphics path descriptions:
-
 <ul>
 <li>Redundant spaces and leading zeros are omitted.</li>
 <li><a href="https://www.w3.org/TR/SVG11/paths.html#PathDataLinetoCommands">Line commands</a> representing zero-length lines are removed.</li>
 <li>The detection of reflected control points in Bézier curve sequences has been improved. As a result,
 the shorthand <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataCurveCommands">curve commands</a>
 are applied more often.</li>
-</ul></li>
+</ul>
+</li>
 <li>Added support for PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code>.</li>
 <li>Added evaluation of optional <code>psfile</code>/<code>pdffile</code> special attribute <code>clip</code> which clips the
 drawing region to the bounding box of the image being processed.</li>
@@ -200,12 +224,12 @@ drawing region to the bounding box of the image being processed.</li>
 disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
 bounding box of the current page if a new graphics element is added. This behaviour can
 be paused and resumed with the new specials.</li>
-<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
+<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&lsquo;s <code>bbox</code> specials to allow for
 applying the current transformation matrix to the bounding box.</li>
-<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
+<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&lsquo;s <code>raw</code> specials. It expands to the
 current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
 <li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
-<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
+<em>dvisvgm</em>&lsquo;s partial matching of option names.</li>
 <li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
 <li>Lots of code refactorings.</li>
 </ul>
@@ -220,7 +244,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
       <guid>cc9ed6a8f3a0ef7ffdcf7718852ab870</guid>
       <description>
         <![CDATA[<p>This is mainly a bugfix release with the following changes:</p>
-
 <ul>
 <li><em>dvisvgm</em> now creates short, <a href="https://www.w3.org/TR/css-color-3/#rgb-color">three-digit RGB hex values</a> for color attributes if possible, e.g. <code>#123</code> instead of <code>#112233</code>.</li>
 <li>Fixed the rejection of paper formats, like <code>A4</code>, given as argument to option <code>--bbox</code>.</li>
@@ -240,7 +263,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
       <guid>dcf8791dee146c9bf9bd340c4514d551</guid>
       <description>
         <![CDATA[<p>This maintenance release resolves a couple of PostScript issues that were reported recently.</p>
-
 <ul>
 <li>Fixed the scaling of line properties in PS operator <code>grestore</code>.</li>
 <li>Fixed the handling of PS operators <code>charpath</code> and <code>show</code> which may call each other internally.</li>
@@ -261,7 +283,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
       <description>
         <![CDATA[<p>This is a maintenance release that fixes a couple of issues regarding the build system.
 The functionality of the <em>dvisvgm</em> utility itself hasn&rsquo;t changed.</p>
-
 <ul>
 <li>Added configuration option <code>--disable-manpage</code> to prevent generating the manual page
 (<a href="https://github.com/mgieseki/dvisvgm/issues/93">issue #93</a>).</li>
@@ -285,11 +306,9 @@ libraries are missing during build time, the corresponding bundled libraries are
 <a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>. They replace the older
 package <em>texlive-dvisvgm</em> coming with Fedora. Run the follwowing commands to enable the repository
 and to install the new <em>dvisvgm</em> package:</p>
-
 <pre><code>dnf copr enable mgieseki/dvisvgm
 dnf install dvisvgm
-</code></pre>
-]]>
+</code></pre>]]>
       </description>
     </item>
     
@@ -305,7 +324,6 @@ given, <em>dvisvgm</em> computes a hash value from the DVI pages and adds it to 
 As the hash value only changes if the contents of the DVI page change, there&rsquo;s normally no need to convert
 existing SVG files again which should speed up the conversion of large documents significantly.
 Here&rsquo;s the output of two successive conversions:</p>
-
 <div class="d-inline-flex">
 <pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm --page-hashes --page=1-3 -d2 tplot
@@ -322,7 +340,6 @@ $ dvisvgm --page-hashes --page=1-3 -d2 tplot
 </span><span style="color:#8be9fd;font-weight:bold;">3 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.384216 seconds
 </span></pre>
 </div>
-
 <div class="d-inline-flex">
 <pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm --page-hashes --page=1-4 -d2 tplot
@@ -339,15 +356,12 @@ $ dvisvgm --page-hashes --page=1-4 -d2 tplot
 </span><span style="color:#8be9fd;font-weight:bold;">4 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.147861 seconds
 </span></pre>
 </div>
-
-<p>Besides the DVI input, a couple of <em>dvisvgm</em>&rsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
+<p>Besides the DVI input, a couple of <em>dvisvgm</em>&lsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
 Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
 created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
 and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
 <a href="/Manpage/#opt-output">manual page</a>.</p>
-
 <p>In addition to this new option, the following changes have been made:</p>
-
 <ul>
 <li>The plausibility check of the total number of pages given in the DVI postamble has been relaxed. This value
 overflows if the DVI file contains more than 65535 pages which previously led to an error message.</li>
@@ -365,12 +379,10 @@ to detect DVI files with incorrect, e.g. cyclic, page references.</li>
       <guid>893ff3b8dee919326502dc03f65fa28b</guid>
       <description>
         <![CDATA[<p>This is a small feature release with the following additions/changes:</p>
-
 <ul>
 <li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
 the pages to be processed can be selected with option <code>--page</code>:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
 </span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
 <span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
@@ -380,7 +392,7 @@ $ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
 <span style="color:#50fa7b;">  output written to sample-3.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
 </pre>
-</div></li>
+</span><br/></li>
 <li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
 the PDF mode too.</li>
 <li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
@@ -408,7 +420,6 @@ the bundled libraries.</li>
       <guid>17a86fddd2d683a5caf8ec5239a5433f</guid>
       <description>
         <![CDATA[<p>This is another small maintenance release.</p>
-
 <ul>
 <li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
@@ -425,12 +436,11 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
     
     <item>
       <title>dvisvgm 2.4.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#961cdf56e376338f85ce3cc3a86b6327</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#961cdf56e376338f85ce3cc3a86b6327</link>
       <pubDate>Sat, 07 Jul 2018 12:49:27 +0200</pubDate>
       <guid>961cdf56e376338f85ce3cc3a86b6327</guid>
       <description>
         <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Fixed the handling of the optional delay parameter of option <code>--progress</code>.</li>
 <li>Updated the <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.5.</li>
@@ -451,7 +461,6 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
         <![CDATA[<p>To simplify the maintenance of both the website and the program code, I rebuilt the former wiki-based website with
 a static site generator and moved everything to <a href="https://pages.github.com">GitHub Pages</a>. The site is now reachable
 under the new domain <a href="dvisvgm.de">dvisvgm.de</a>.</p>
-
 <p>The old <em>SourceForge</em> (<a href="http://dvisvgm.sf.net">dvisvgm.sf.net</a>) and <em>bplaced</em> (<a href="http://dvisvgm.bplaced.net">dvisvgm.bplaced.net</a>)
 addresses now redirect to the new location. Since I&rsquo;ve kept the page structure, all former URLs should still be valid.
 If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p>
@@ -466,25 +475,20 @@ If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p
       <guid>4d81ee4151a938fdddc3350841a015a8</guid>
       <description>
         <![CDATA[<p>This feature release brings the following additions/changes:</p>
-
 <ul>
 <li>Added special <code>pdffile</code> similar to <code>psfile</code> to embed PDF graphics.</li>
-
-<li><p>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+<li>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:<br/>
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm &ndash;pdf -d2 helix.pdf
 <span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
 <span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
 <span style="color:#50fa7b;">  output written to helix.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
-</pre></div></p></li>
-
-<li><p>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</p></li>
-
-<li><p>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
-<div class="d-inline-flex">
-<pre style="color:#f8f8f2;background-color:#282a36">
+</pre>
+</span></li>
+<li>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</li>
+<li>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
+<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
 $ dvisvgm -d2 - &lt; frktest.dvi
 reading from &lt;stdin&gt;
 <span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
@@ -492,19 +496,15 @@ processing page 1</span>
 <span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
 <span style="color:#50fa7b;">  output written to stdin.svg</span>
 <span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
-</pre></div></p></li>
-
-<li><p>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</p></li>
-
-<li><p>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
-conversion of more transparency parameters, e.g.:<br />
-<img src="/News/images/blendmodes.png" alt="blend modes" /></p></li>
-
-<li><p>Fixed outer transformations applied to <code>psfile</code> specials.</p></li>
-
-<li><p>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</p></li>
-
-<li><p>Several code refactorings.</p></li>
+</pre>
+</span></li>
+<li>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</li>
+<li>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
+conversion of more transparency parameters, e.g.:
+<img src="/News/images/blendmodes.png" alt="blend modes"></li>
+<li>Fixed outer transformations applied to <code>psfile</code> specials.</li>
+<li>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</li>
+<li>Several code refactorings.</li>
 </ul>
 ]]>
       </description>
@@ -517,31 +517,12 @@ conversion of more transparency parameters, e.g.:<br />
       <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
       <description>
         <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-
 <ul>
 <li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
 This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
 allowed according to the EPS specification.</li>
 <li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
 <li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.3.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#249be2db725733a95e407b5205cd681e</link>
-      <pubDate>Wed, 14 Mar 2018 13:25:12 +0200</pubDate>
-      <guid>249be2db725733a95e407b5205cd681e</guid>
-      <description>
-        <![CDATA[<p>This is another maintenance release with the following changes:</p>
-
-<ul>
-<li>Fixed an error message printed when addding a single dash on the command-line.</li>
-<li>Added a missing data file that lead to failing tests (<a href="https://github.com/mgieseki/dvisvgm/issues/87">issue #87</a>).</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.3.</li>
-<li>Some code refactorings.</li>
 </ul>
 ]]>
       </description>

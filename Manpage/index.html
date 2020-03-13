@@ -119,7 +119,9 @@ to embed the font data into the SVG files. Unfortunately, only few SVG renderers
 elements yet. Most web browsers and vector graphics applications don’t evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option <strong>--no-fonts</strong> can be given to replace the font elements
-by plain graphics paths.</p>
+by plain graphics paths. Most web browsers (but only few external SVG renderers) also suppport
+WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option <strong>--font-format</strong>
+offers the functionality to change the format applied to the fonts being embedded.</p>
 </div></section><span class="linktarget" id="_options"></span><section class="manpage"><h3>
 <i class="fa fa-sliders fa-fw"></i> Options</h3>
 <div class="sectionbody">
@@ -131,6 +133,10 @@ appended to or separated by whitespace from a short option (e.g. <code>-v0</code
 require an additional equals sign (<code>=</code>) between option name and argument but without any surrounding
 whitespace (e.g. <code>--verbosity=0</code>). Multiple short options that don’t expect a further parameter can
 be combined after a single dash (e.g. <code>-ejs</code> rather than <code>-e -j -s</code>).</p>
+<p>Long option names may also be shortened by omitting trailing characters. As long as the shortened
+name is unambiguous, it’s recognized and applied. For example, option <code>--exact-bbox</code> can be shortened
+to <code>--exact</code>, <code>--exa</code>, or <code>--ex</code>. In case of an ambiguous abbreviation, dvisvgm prints an error
+message together with all matching option names.</p>
 <dl>
 <a name="opt-bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -230,6 +236,91 @@ Hence, if you choose a landscape format, the page won’t be rotated.</p></td>
 </div>
 </dl>
 <dl>
+<a name="opt-bitmap-format" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>-B, --bitmap-format</strong>=<em>fmt</em>
+</dt>
+<dd>
+<p>
+This option sets the image format used to embed bitmaps extracted from PostScript or PDF data.
+By default, dvisvgm embeds all bitmaps as JPEG images because it’s the most compact of the two formats
+supported by SVG. To select the alternative lossless PNG format, <strong>--bitmap-format=png</strong> can be used.
+There are some more format variants dvisvgm currently supports even though <code>jpeg</code> and <code>png</code> should be
+sufficient in most cases. The following list gives an overview of the known format names which
+correspond to names of Ghostscript output devices.
+</p>
+<table>
+<tr>
+<td style="padding-right:10px"><p><strong>none</strong></p></td>
+<td style="padding-right:10px"><p>
+disable processing of bitmap images
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>jpeg</strong></p></td>
+<td style="padding-right:10px"><p>
+color JPEG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>jpeggray</strong></p></td>
+<td style="padding-right:10px"><p>
+grayscale JPEG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>png</strong></p></td>
+<td style="padding-right:10px"><p>
+grayscale or 24-bit color PNG format depending on current color space
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>pnggray</strong></p></td>
+<td style="padding-right:10px"><p>
+grayscale PNG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>pngmono</strong></p></td>
+<td style="padding-right:10px"><p>
+black-and-white PNG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>pngmonod</strong></p></td>
+<td style="padding-right:10px"><p>
+dithered black-and-white PNG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>png16</strong></p></td>
+<td style="padding-right:10px"><p>
+4-bit color PNG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>png256</strong></p></td>
+<td style="padding-right:10px"><p>
+8-bit color PNG format
+</p></td>
+</tr>
+<tr>
+<td style="padding-right:10px"><p><strong>png16m</strong></p></td>
+<td style="padding-right:10px"><p>
+24-bit color PNG format
+</p></td>
+</tr>
+</table>
+<p>Since the collection of supported output devices can vary among local Ghostscript installations,
+not all formats may be available in some environments. dvisvgm quits with a PostScript error message
+if the selected output format requires a locally unsupported output device.</p>
+<p>The two JPEG format specifiers accept an optional parameter to set the IJG quality level
+which must directly follow the format specifier separated by a colon, e.g. <strong>--bitmap-format=jpeg:50</strong>.
+The quality value is an integer between 0 and 100. Higher values result in better image quality but
+lower compression rates and therefore larger files. The default quality level is 75 which is applied
+if no quality parameter is given or if it’s set to 0.</p>
+</dd>
+</div>
 <a name="opt-cache" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>-C, --cache</strong>[=<em>dir</em>]
@@ -401,7 +492,7 @@ like separate tiles. However, this alignment can lead to visible gaps between th
 because the background color usually influences the color at the boundary of the segments if the
 SVG renderer uses anti-aliasing to create smooth contours.
 One way to avoid this and to create seamlessly touching color regions is to enlarge the segments so
-that they extent into the area of their right and bottom neighbors. Since the latter are drawn on top
+that they extend into the area of their right and bottom neighbors. Since the latter are drawn on top
 of the overlapping parts, the visible size of all segments keeps unchanged. Just the former gaps
 disappear as the background is now completely covered by the correct colors.
 Currently, dvisvgm computes the overlapping segments separately for each patch of the mesh (a patch mesh
@@ -444,13 +535,20 @@ are usually not noticeable but reduce the size of the generated SVG files signif
 <dt>
 <strong>-h, --help</strong>[=<em>mode</em>]
 </dt>
-<dd><p>
+<dd>
+<p>
 Prints a short summary of all available command-line options. The optional <em>mode</em> parameter is
 an integer value between 0 and 2. It selects the display variant of the help text. Mode 0
 lists all options divided into categories with section headers. This is also the default if
 dvisvgm is called without parameters. Mode 1 lists all options ordered by the short option names,
 while mode 2 sorts the lines by the long option names.
-</p></dd>
+</p>
+<p>A values in brackets after the description text indicate the default parameter of the option. They
+are applied if an option with a mandatory parameter is not used or if an optional parameter is omitted.
+For example, option <strong>--bbox</strong> requires a size parameter which defaults to <code>min</code> if <strong>--bbox</strong> is not
+used. Option <strong>--zip</strong>, which isn’t applied by default, accepts an optional compression level parameter.
+If it’s omitted, the stated default value 9 is used.</p>
+</dd>
 </div>
 <a name="opt-keep" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -1632,15 +1730,15 @@ Code repository
 <i class="fa fa-user fa-fw"></i> Author</h3>
 <div class="sectionbody"><p>Written by Martin Gieseking &lt;<a href="mailto:martin.gieseking@uos.de">martin.gieseking@uos.de</a>&gt;</p></div></section><span class="linktarget" id="_copying"></span><section class="manpage"><h3>
 <i class="fa fa-gavel fa-fw"></i> Copying</h3>
-<div class="sectionbody"><p>Copyright © 2005-2019 Martin Gieseking. Free use of this software is
+<div class="sectionbody"><p>Copyright © 2005-2020 Martin Gieseking. Free use of this software is
 granted under the terms of the GNU General Public License (GPL) version 3
 or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.8.2</div>
+   <div class="col-md-6">Version 2.9</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2019-11-12</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2020-03-08</span>
    </div>
 </div>
 </div>
