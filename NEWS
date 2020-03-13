@@ -1,3 +1,23 @@
+dvisvgm-2.9 (2020-03-13)
+- added processing of PS operators 'image' and 'colorimage' to embed bitmaps
+  present in PS/PDF data into the generated SVG
+- added command-line option --bitmap-format to set the format used to embed
+  bitmaps present in EPS/PDF files
+- added fallback method to retrieve the resolution of GF files if stdout
+  of the Metafont subprocess can't be read through a pipe (GH #129)
+- fixed broken conversion of PS tiling patterns
+- fixed the functionality of PS operators 'xshow', 'yshow', and 'xyshow' for
+  multibyte characters
+- fixed a PS error triggered by unsupported shading types < 4
+- prevent negative 'height' and 'width' attributes created by optimizer
+  module 'simplify-transform'
+- fixed potential segfault caused by deep recursion in huge SVG trees
+- look for Ghostscript library name 'libgs.dylib.N' additionally to
+  'libgs.N.dylib' (Mac only)
+- ensure that 'make install' installs the bundled manual page if it can't be
+  rebuilt due to missing build tools
+- updated bundled xxHash library to version 0.7.3
+
 dvisvgm-2.8.2 (2019-12-07)
 - if available, call 'mf-nowin' instead of 'mf' to process Metafont files
   (GH #121)
