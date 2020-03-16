@@ -3,9 +3,9 @@
 <!-- Copyright (C) 2015-2020 Martin Gieseking <martin.gieseking@uos.de> -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="xetex.font">
-		<xsl:text>\setmainfont{Source Sans Pro}&#10;</xsl:text>
+		<xsl:text>\setmainfont{Source Serif Pro}&#10;</xsl:text>
 		<xsl:text>\setsansfont{Source Sans Pro}&#10;</xsl:text>
-		<xsl:text>\setmonofont{Source Code Pro}&#10;</xsl:text>
+		<xsl:text>\setmonofont[Scale=0.9]{Source Code Pro}&#10;</xsl:text>
 	</xsl:param>
 
 	<xsl:param name="doc.toc.show">0</xsl:param>
