@@ -15,6 +15,7 @@ EXTRA_DIST = $(man_MANS) \
 	dvisvgm.txt.in \
 	generate-dvisvgm-sty.xsl \
 	tweak-dblatex-pdf.xsl \
+	tweak-dblatex-tex.py \
 	tweak-db-refentry.xsl
 
 if BUILD_MANPAGE
@@ -22,6 +23,7 @@ if BUILD_MANPAGE
 CONF_DBLATEX_MAN  = $(dvisvgm_srcdir)/doc/conf-dblatex-man.xsl
 CONF_DBLATEX_PDF  = $(dvisvgm_srcdir)/doc/conf-dblatex-pdf.xsl
 TWEAK_DBLATEX_PDF = $(dvisvgm_srcdir)/doc/tweak-dblatex-pdf.xsl
+TWEAK_DBLATEX_TEX = $(dvisvgm_srcdir)/doc/tweak-dblatex-tex.py
 TWEAK_DB_ARTICLE  = $(dvisvgm_srcdir)/doc/tweak-db-article.xsl
 TWEAK_DB_REFENTRY = $(dvisvgm_srcdir)/doc/tweak-db-refentry.xsl
 GEN_DBLATEX_STY   = $(dvisvgm_srcdir)/doc/generate-dvisvgm-sty.xsl
@@ -31,10 +33,10 @@ DB_VARS = man.endnotes.list.enabled=0 man.endnotes.are.numbered=0 man.authors.se
 dvisvgm.1: dvisvgm-man.xml $(CONF_DBLATEX_MAN)
 	xmlto -m $(CONF_DBLATEX_MAN) $(addprefix --stringparam , $(DB_VARS)) man $<
 
-dvisvgm.pdf: dvisvgm-man.xml dvisvgm.sty $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF)
+dvisvgm.pdf: dvisvgm-man.xml dvisvgm.sty $(CONF_DBLATEX_PDF) $(TWEAK_DBLATEX_PDF) $(TWEAK_DBLATEX_TEX)
 	mv $< $<.tmp
 	xsltproc -o $< $(TWEAK_DBLATEX_PDF) $<.tmp
-	dblatex -bxetex --texstyle=./dvisvgm.sty -p $(CONF_DBLATEX_PDF) $<
+	dblatex -bxetex --texstyle=./dvisvgm.sty -p $(CONF_DBLATEX_PDF) -r plugin:$(basename $(TWEAK_DBLATEX_TEX)) $<
 	mv $<.tmp $<
 	mv $(basename $<).pdf $@
 

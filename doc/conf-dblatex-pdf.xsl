@@ -12,6 +12,7 @@
 	<xsl:param name="refentry.numbered">0</xsl:param>
 	<xsl:param name="figure.caution">caution</xsl:param>
 	<xsl:param name="figure.note">note</xsl:param>
+	<xsl:param name="literal.layout.options"/>
 	<xsl:param name="table.default.tabstyle">tabular</xsl:param>
 	<xsl:param name="table.in.float">0</xsl:param>
 	<xsl:param name="term.breakline">1</xsl:param>
@@ -55,7 +56,7 @@
 		<xsl:text>\phantomsection\pdfbookmark[3]{</xsl:text>
 		<xsl:choose>
 			<xsl:when test="contains(emphasis, '--')">
-				<xsl:value-of select="concat('-{}-', substring-after(emphasis, '--'))"/>
+				<xsl:value-of select="substring-after(emphasis, '--')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="emphasis"/>

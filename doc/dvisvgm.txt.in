@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2020-03-08 09:20 +0100
+:revdate: 2020-03-18 16:25 +0100
 
 Name
 ----
@@ -224,7 +224,7 @@ version 1 and 2).
 By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
 improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
 autohinter is enabled by appending +,autohint+ or +,ah+ to the font format,
-e.g. +--font-format=woff,autohint+ or +--font-format=woff,ah+.
+e.g. +--font-format=woff,autohint+ or +--fwoff,ah+.
 +
 Option *--font-format* is only available if dvisvgm was built with WOFF support enabled.
 

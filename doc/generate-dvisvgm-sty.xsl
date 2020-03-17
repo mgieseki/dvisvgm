@@ -7,6 +7,7 @@
 \ProvidesPackage{dvisvgm}[2015/02/04 dvisvgm DocBook style]
 \RequirePackageWithOptions{docbook}
 \RequirePackage[english]{babel}
+\RequirePackage[shortcuts]{extdash}
 \RequirePackage{underscore}
 \renewcommand*{\arraystretch}{-0.4}
 \AtBeginDocument{%
