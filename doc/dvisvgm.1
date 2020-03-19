@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2020-03-08
+.\"      Date: 2020-03-19
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.9
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2020\-03\-08" "dvisvgm 2\&.9" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2020\-03\-19" "dvisvgm 2\&.9" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -329,7 +329,7 @@ or
 to the font format, e\&.g\&.
 \fB\-\-font\-format=woff,autohint\fR
 or
-\fB\-\-font\-format=woff,ah\fR\&.
+\fB\-\-fwoff,ah\fR\&.
 .sp
 Option
 \fB\-\-font\-format\fR
@@ -1177,9 +1177,9 @@ dvisvgm offers its own small set of specials\&. The following list gives a brief
 \fBdvisvgm:raw\fR \fItext\fR
 .RS 4
 Adds an arbitrary sequence of XML nodes to the page section of the SVG document\&. dvisvgm checks syntax and proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure that the resulting SVG is still valid\&. Opening and closing tags may be distributed among different
-\fBraw\fR
-specials\&. The tags themselves can also be split but must be continued with the immediatly following
-\fBraw\fR
+\fIraw\fR
+specials\&. The tags themselves can also be split but must be continued with the immediately following
+\fIraw\fR
 special\&. Both syntactically incorrect and wrongly nested tags lead to error messages\&. Parameter
 \fItext\fR
 may also contain the expressions
@@ -1191,9 +1191,16 @@ that expand to the current
 \fIx\fR
 or
 \fIy\fR
-coordinate, the current color, and current transformation matrix, respectively\&. Furthermore,
+coordinate, the current color, and current transformation matrix, respectively\&. Character sequence
 \fB{?nl}\fR
-expands to a newline character\&.
+expands to a newline character\&. Finally, constructions of the form
+\fB{?(\fR\fB\fIexpr\fR\fR\fB)}\fR
+enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including modulo\&. Like above, the variables
+\fIx\fR
+and
+\fIy\fR
+represent the current coordinates\&. Example:
+\fB{?(\-10*(x+2y)\-5)}\fR\&.
 .RE
 .PP
 \fBdvisvgm:rawdef\fR \fItext\fR

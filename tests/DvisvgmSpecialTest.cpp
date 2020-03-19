@@ -27,13 +27,14 @@
 
 using namespace std;
 
+
 class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler {
 	public:
 		void finishPreprocessing () {dviPreprocessingFinished();}
-		void finishPage ()          {dviEndPage(0, emptyActions);}
+		void finishPage ()          {dviEndPage(0, _actions);}
 
 	protected:
-		EmptySpecialActions emptyActions;
+		EmptySpecialActions _actions;
 };
 
 
@@ -42,8 +43,8 @@ class DvisvgmSpecialTest : public ::testing::Test {
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				void embed (const BoundingBox &bb) override   {bbox.embed(bb);}
-				double getX () const override                 {return 0;}
-				double getY () const override                 {return 0;}
+				double getX () const override                 {return -42;}
+				double getY () const override                 {return 14;}
 				bool defsEquals (const string &str) const     {return defsString() == str;}
 				bool pageEquals (const string &str) const     {return pageString() == str;}
 				bool bboxEquals (const string &str) const     {return bbox.toSVGViewBox() == str;}
@@ -86,15 +87,15 @@ TEST_F(DvisvgmSpecialTest, basic) {
 
 
 TEST_F(DvisvgmSpecialTest, rawText) {
-	istringstream iss("raw first{?nl}");
+	istringstream iss("raw first{?nl}{?x},{?y}");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'>first\n</g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageEquals("<g id='page1'>first\n-42,14</g>")) << recorder.pageString();
 
-	iss.clear(); iss.str("raw \t second {?bbox dummy} \t");
+	iss.clear(); iss.str("raw \t ;{?(-x+2*y-5)}second {?bbox dummy} \t");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'>first\nsecond 0 0 0 0</g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageEquals("<g id='page1'>first\n-42,14;65second 0 0 0 0</g>")) << recorder.pageString();
 }
 
 
@@ -313,13 +314,13 @@ TEST_F(DvisvgmSpecialTest, processImg) {
 	std::istringstream iss("img 72.27 72.27 test.png");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='0' y='0' width='72' height='72' xlink:href='test.png'/></g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='-42' y='14' width='72' height='72' xlink:href='test.png'/></g>")) << recorder.pageString();
 
 	recorder.clear();
 	iss.clear();
 	iss.str("img 10bp 20bp test2.png");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='0' y='0' width='10' height='20' xlink:href='test2.png'/></g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='-42' y='14' width='10' height='20' xlink:href='test2.png'/></g>")) << recorder.pageString();
 }
 
 
@@ -340,19 +341,19 @@ TEST_F(DvisvgmSpecialTest, processBBox) {
 	iss.clear();
 	iss.str("bbox 72.27 72.27");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+	EXPECT_TRUE(recorder.bboxEquals("-42 -58 72 72"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox 72bp 72bp");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+	EXPECT_TRUE(recorder.bboxEquals("-42 -58 72 72"));
 
 	recorder.clear();
 	iss.clear();
 	iss.str("bbox rel 72.27 72.27");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.bboxEquals("0 -72 72 72"));
+	EXPECT_TRUE(recorder.bboxEquals("-42 -58 72 72"));
 
 	recorder.clear();
 	iss.clear();
