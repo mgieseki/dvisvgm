@@ -25,14 +25,19 @@
 
 TEST(CalculatorTest, eval) {
 	Calculator calc;
-	EXPECT_EQ(calc.eval("2+3+4"),    9);
-	EXPECT_EQ(calc.eval("2*3+4"),   10);
-	EXPECT_EQ(calc.eval("2+3*4"),   14);
-	EXPECT_EQ(calc.eval("(2+3)*4"), 20);
-	EXPECT_EQ(calc.eval("2*(3+4)"), 14);
-	EXPECT_EQ(calc.eval("-2+3+4"),   5);
-	EXPECT_EQ(calc.eval("3/2"),    1.5);
-	EXPECT_EQ(calc.eval("3%2"),      1);
+	EXPECT_EQ(calc.eval("2+3+4"),         9);
+	EXPECT_EQ(calc.eval("2*3+4"),        10);
+	EXPECT_EQ(calc.eval("2+3*4"),        14);
+	EXPECT_EQ(calc.eval("(2+3)*4"),      20);
+	EXPECT_EQ(calc.eval("2*(3+4)"),      14);
+	EXPECT_EQ(calc.eval("2(3+4)"),       14);
+	EXPECT_EQ(calc.eval("(1+2)(3+4)"),   21);
+	EXPECT_EQ(calc.eval("-(1+2)(3+4)"), -21);
+	EXPECT_EQ(calc.eval("(1+2)-(3+4)"),  -4);
+	EXPECT_EQ(calc.eval("-2+3+4"),        5);
+	EXPECT_EQ(calc.eval("3/2"),         1.5);
+	EXPECT_EQ(calc.eval("3%2"),           1);
+	EXPECT_EQ(calc.eval("-(4)"),         -4);
 }
 
 
@@ -47,6 +52,7 @@ TEST(CalculatorTest, variables) {
 	calc.setVariable("b", 3);
 	EXPECT_EQ(calc.eval("a+b"), 5);
 	EXPECT_EQ(calc.eval("2a+2b"), 10);
+	EXPECT_EQ(calc.eval("2a(1+2b)"), 28);
 }
 
 
