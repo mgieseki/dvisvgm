@@ -1,3 +1,12 @@
+dvisvgm-2.9.1 (2020-03-21)
+- added macro {?(expr)} to enable the evaluation of math expressions in
+  raw SVG fragments (GH #130)
+- multiplication operator "*" preceding an opening parentheses can now be
+  omitted in math expressions
+- fixed the evaluation of transformation command "scale(c)" which is now
+  correctly treated as "scale(c, c)" (GH #131)
+- minor layout optimizations of the PDF manual page
+
 dvisvgm-2.9 (2020-03-13)
 - added processing of PS operators 'image' and 'colorimage' to embed bitmaps
   present in PS/PDF data into the generated SVG
