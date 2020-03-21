@@ -3,8 +3,27 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Fri, 13 Mar 2020 14:56:31 +0100</pubDate>
+    <pubDate>Sat, 21 Mar 2020 13:33:06 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.9.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#7d856da14b815b8a8abea3cdae767d76</link>
+      <pubDate>Sat, 21 Mar 2020 13:16:48 +0100</pubDate>
+      <guid>7d856da14b815b8a8abea3cdae767d76</guid>
+      <description>
+        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
+<ul>
+<li>Added macro <code>{?(expr)}</code> to enable the evaluation of math expressions in raw SVG fragments
+(<a href="https://github.com/mgieseki/dvisvgm/issues/130">issue #130</a>).</li>
+<li>Multiplication operator <code>*</code> preceding an opening parentheses can now be omitted in math expressions.</li>
+<li>Fixed the evaluation of transformation command <code>scale(c)</code> which is now correctly treated as <code>scale(c,c)</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/131">issue #131</a>).</li>
+<li>Minor layout optimizations of the <a href="/Manpage/dvisvgm.pdf">PDF version of the manual page</a>.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.9 has been released</title>
@@ -173,7 +192,7 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
     
     <item>
       <title>dvisvgm 2.7.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#132ffe0d1afe073c5693a47e91aed30f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#132ffe0d1afe073c5693a47e91aed30f</link>
       <pubDate>Mon, 20 May 2019 13:56:23 +0200</pubDate>
       <guid>132ffe0d1afe073c5693a47e91aed30f</guid>
       <description>
@@ -415,7 +434,7 @@ the bundled libraries.</li>
     
     <item>
       <title>dvisvgm 2.4.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#17a86fddd2d683a5caf8ec5239a5433f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#17a86fddd2d683a5caf8ec5239a5433f</link>
       <pubDate>Wed, 18 Jul 2018 18:43:24 +0200</pubDate>
       <guid>17a86fddd2d683a5caf8ec5239a5433f</guid>
       <description>
@@ -505,24 +524,6 @@ conversion of more transparency parameters, e.g.:
 <li>Fixed outer transformations applied to <code>psfile</code> specials.</li>
 <li>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</li>
 <li>Several code refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.3.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#5e2b7cf659069c04c85da933ee354fb8</link>
-      <pubDate>Fri, 23 Mar 2018 13:21:01 +0200</pubDate>
-      <guid>5e2b7cf659069c04c85da933ee354fb8</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
-This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
-allowed according to the EPS specification.</li>
-<li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
-<li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
 </ul>
 ]]>
       </description>

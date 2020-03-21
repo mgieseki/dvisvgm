@@ -418,7 +418,7 @@ version 1 and 2).
 By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
 improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
 autohinter is enabled by appending <code>,autohint</code> or <code>,ah</code> to the font format,
-e.g. <code>--font-format=woff,autohint</code> or <code>--font-format=woff,ah</code>.
+e.g. <code>--font-format=woff,autohint</code> or <code>--fwoff,ah</code>.
 </p>
 <p>Option <strong>--font-format</strong> is only available if dvisvgm was built with WOFF support enabled.</p>
 </dd>
@@ -1259,12 +1259,15 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 <dd><p>
   Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
   proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
-  that the resulting SVG is still valid. Opening and closing tags may be distributed among different <code>raw</code>
-  specials. The tags themselves can also be split but must be continued with the immediatly following <code>raw</code>
+  that the resulting SVG is still valid. Opening and closing tags may be distributed among different <em>raw</em>
+  specials. The tags themselves can also be split but must be continued with the immediately following <em>raw</em>
   special. Both syntactically incorrect and wrongly nested tags lead to error messages.
   Parameter <em>text</em> may also contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, <strong>{?color}</strong>, and <strong>{?matrix}</strong> that expand to
   the current <em>x</em> or <em>y</em> coordinate, the current color, and current transformation matrix, respectively.
-  Furthermore, <strong>{?nl}</strong> expands to a newline character.
+  Character sequence <strong>{?nl}</strong> expands to a newline character. Finally, constructions of the form <strong>{?(<em>expr</em>)}</strong>
+  enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
+  modulo. Like above, the variables <em>x</em> and <em>y</em> represent the current coordinates.
+  Example: <code>{?(-10*(x+2y)-5)}</code>.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:rawdef" class="linktarget"></a><div class="hdlist1">
@@ -1736,9 +1739,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.9</div>
+   <div class="col-md-6">Version 2.9.1</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2020-03-08</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2020-03-19</span>
    </div>
 </div>
 </div>
