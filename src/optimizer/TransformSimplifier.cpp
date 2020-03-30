@@ -120,7 +120,7 @@ static string scale_cmd (double sx, double sy) {
 	XMLString sxstr(sx), systr(sy);
 	if (sxstr != "1" || systr != "1") {
 		ret = "scale("+sxstr;
-		if (systr != "1")
+		if (systr != sxstr)
 			ret += " "+systr;
 		ret += ')';
 	}
