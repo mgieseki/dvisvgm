@@ -519,34 +519,21 @@ static map<string,string> parse_font_attribs (const string &str) {
 
 /** Helper function to handle a font definition.
  *  @param[in] fontnum local font number
- *  @param[in] name font name
+ *  @param[in] name font name (or file path if enclosed in square brackets)
  *  @param[in] cs checksum to be compared with TFM checksum
- *  @param[in] dsize design size in PS point units
- *  @param[in] ssize scaled size in PS point units */
+ *  @param[in] dsize design size of font in PS point units
+ *  @param[in] ssize scaled size of font in PS point units */
 const Font* DVIReader::defineFont (uint32_t fontnum, const string &name, uint32_t cs, double dsize, double ssize) {
 	FontManager &fm = FontManager::instance();
 	Font *font = fm.getFont(fontnum);
-	if (!font && !name.empty()) {
-		if (name[0] != '[') {
-			int id = fm.registerFont(fontnum, name, cs, dsize, ssize);
-			font = fm.getFontById(id);
-			if (auto vf = dynamic_cast<VirtualFont*>(font)) {
-				// read vf file, register its font and character definitions
-				fm.enterVF(vf);
-				ifstream ifs(vf->path(), ios::binary);
-				VFReader vfReader(ifs);
-				vfReader.replaceActions(this);
-				vfReader.executeAll();
-				fm.leaveVF();
-			}
-		}
-		else {
-			size_t last = name.find(']');
+	if (!font && !name.empty()) {  // font not registered yet?
+		if (name[0] == '[') {       // LuaTeX native font reference?
+			size_t last = name.rfind(']');
 			if (last != string::npos) {
 				string path = name.substr(1, last-1);
 				FontStyle style;
 				int fontIndex=0;
-				if (name.size() > last && name[last+1] == ':') {
+				if (name.size() > last && name[last+1] == ':') {  // look for font attributes?
 					auto attribs = parse_font_attribs(name.substr(last+2));
 					auto it = attribs.begin();
 					if ((it = attribs.find("index")) != attribs.end())
@@ -560,6 +547,19 @@ const Font* DVIReader::defineFont (uint32_t fontnum, const string &name, uint32_
 				}
 				int id = fm.registerFont(fontnum, path, fontIndex, ssize, style, Color::BLACK);
 				font = fm.getFontById(id);
+			}
+		}
+		else {  // TFM-based font specified by name
+			int id = fm.registerFont(fontnum, name, cs, dsize, ssize);
+			font = fm.getFontById(id);
+			if (auto vf = dynamic_cast<VirtualFont*>(font)) {
+				// read vf file, register its font and character definitions
+				fm.enterVF(vf);
+				ifstream ifs(vf->path(), ios::binary);
+				VFReader vfReader(ifs);
+				vfReader.replaceActions(this);
+				vfReader.executeAll();
+				fm.leaveVF();
 			}
 		}
 	}
