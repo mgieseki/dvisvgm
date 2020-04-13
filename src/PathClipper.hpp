@@ -36,7 +36,7 @@ class PathClipper {
 		using CurvedPath = GraphicsPath<double>;
 
 	public:
-		void intersect (const CurvedPath &p1, const CurvedPath &p2, CurvedPath &result);
+		CurvedPath intersect (const CurvedPath &p1, const CurvedPath &p2);
 
 	protected:
 		void flatten (const CurvedPath &gp, ClipperLib::Paths &polygons);

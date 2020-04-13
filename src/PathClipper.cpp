@@ -310,22 +310,24 @@ inline PolyFillType polyFillType (CurvedPath::WindingRule wr) {
 }
 
 
-/** Computes the intersection of to curved paths.
+/** Computes the intersection of two curved paths.
  *  @param[in] p1 first curved path
  *  @param[in] p2 second curved path
- *  @param[out] result intersection of p1 and p2 */
-void PathClipper::intersect (const CurvedPath &p1, const CurvedPath &p2, CurvedPath &result) {
-	if (p1.size() < 2 || p2.size() < 2)
-		return;
-	Clipper clipper;
-	Polygons polygons;
-	flatten(p1, polygons);
-	clipper.AddPaths(polygons, ptSubject, true);
-	polygons.clear();
-	flatten(p2, polygons);
-	clipper.AddPaths(polygons, ptClip, true);
-	clipper.ZFillFunction(callback);
-	Polygons flattenedPath;
-	clipper.Execute(ctIntersection, flattenedPath, polyFillType(p1.windingRule()), polyFillType(p2.windingRule()));
-	reconstruct(flattenedPath, result);
+ *  @return intersection of p1 and p2 */
+CurvedPath PathClipper::intersect (const CurvedPath &p1, const CurvedPath &p2) {
+	CurvedPath result;
+	if (p1.size() > 1 && p2.size() > 1) {
+		Clipper clipper;
+		Polygons polygons;
+		flatten(p1, polygons);
+		clipper.AddPaths(polygons, ptSubject, true);
+		polygons.clear();
+		flatten(p2, polygons);
+		clipper.AddPaths(polygons, ptClip, true);
+		clipper.ZFillFunction(callback);
+		Polygons flattenedPath;
+		clipper.Execute(ctIntersection, flattenedPath, polyFillType(p1.windingRule()), polyFillType(p2.windingRule()));
+		reconstruct(flattenedPath, result);
+	}
+	return result;
 }

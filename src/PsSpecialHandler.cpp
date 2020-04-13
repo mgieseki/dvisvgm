@@ -954,9 +954,7 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 	else {
 		// compute the intersection of the current clipping path with the current graphics path
 		const Path *oldPath = _clipStack.path();
-		Path intersectedPath(windingRule);
-		PathClipper clipper;
-		clipper.intersect(*oldPath, path, intersectedPath);
+		Path intersectedPath = PathClipper().intersect(*oldPath, path);
 		pathReplaced = _clipStack.replace(intersectedPath);
 		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
