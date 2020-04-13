@@ -941,7 +941,7 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 	if (!_actions->getMatrix().isIdentity())
 		path.transform(_actions->getMatrix());
 	if (_clipStack.prependedPath())
-		path.prepend(*_clipStack.prependedPath());
+		path = PathClipper().unite(*_clipStack.prependedPath(), path);
 
 	int oldID = _clipStack.topID();
 
