@@ -209,7 +209,9 @@ static void evaluate_expressions (string &str, SpecialActions &actions) {
 		else {
 			try {
 				double val = calc.eval(expr);
-				str.replace(left, right-left+2, XMLString(val));
+				XMLString valstr(val);
+				str.replace(left, right-left+2, valstr);
+				right = left+valstr.length()-1;
 			}
 			catch (CalculatorException &e) {
 				throw SpecialException(string(e.what())+" in '{?("+expr+")}'");
