@@ -71,7 +71,7 @@ class XXHashFunction : public HashFunction {
 	using Interface = XXHInterface<HASH_BYTES>;
 	public:
 		XXHashFunction () : _state(Interface::createState()) {Interface::reset(_state, 0);}
-		XXHashFunction(const char *data, size_t length) : XXHashFunction() {update(data, length);}
+		XXHashFunction (const char *data, size_t length) : XXHashFunction() {update(data, length);}
 		explicit XXHashFunction(const std::string &data) : XXHashFunction() {update(data);}
 		explicit XXHashFunction(const std::vector<uint8_t> &data) : XXHashFunction() {update(data);}
 		~XXHashFunction () override {Interface::freeState(_state);}
@@ -83,7 +83,7 @@ class XXHashFunction : public HashFunction {
 
 		using HashFunction::update;  // unhide update(istream &is) defined in base class
 
-		std::vector<uint8_t> digestValue () const override {
+		std::vector<uint8_t> digestBytes () const override {
 			return util::bytes(Interface::digest(_state), HASH_BYTES);
 		}
 
@@ -100,7 +100,7 @@ using XXH64HashFunction = XXHashFunction<8>;
 using XXH128HashFunction = XXHashFunction<16>;
 
 template<>
-inline std::vector<uint8_t> XXHashFunction<16>::digestValue () const {
+inline std::vector<uint8_t> XXHashFunction<16>::digestBytes () const {
 	std::vector<uint8_t> hash;
 	auto digest = Interface::digest(_state);
 	for (auto chunk : {digest.high64, digest.low64}) {

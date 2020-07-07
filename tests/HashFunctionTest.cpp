@@ -36,7 +36,7 @@ TEST(HashFunctionTest, md5) {
 	md5.update("0123456789");
 	EXPECT_EQ(md5.digestString(), "781e5e245d69b566979b86e28d23f2c7");
 	vector<uint8_t> bytes = {0x78, 0x1e, 0x5e, 0x24, 0x5d, 0x69, 0xb5, 0x66, 0x97, 0x9b, 0x86, 0xe2, 0x8d, 0x23, 0xf2, 0xc7};
-	EXPECT_EQ(md5.digestValue(), bytes);
+	EXPECT_EQ(md5.digestBytes(), bytes);
 }
 
 
@@ -51,7 +51,7 @@ TEST(HashFunctionTest, xxh32) {
 	xxh32.update("0123456789");
 	EXPECT_EQ(xxh32.digestString(), "950c9c0a");
 	vector<uint8_t> bytes = {0x95, 0x0c, 0x9c, 0x0a};
-	EXPECT_EQ(xxh32.digestValue(), bytes);
+	EXPECT_EQ(xxh32.digestBytes(), bytes);
 }
 
 
@@ -66,7 +66,7 @@ TEST(HashFunctionTest, xxh64) {
 	xxh64.update("0123456789");
 	EXPECT_EQ(xxh64.digestString(), "3f5fc178a81867e7");
 	vector<uint8_t> bytes = {0x3f, 0x5f, 0xc1, 0x78, 0xa8, 0x18, 0x67, 0xe7};
-	EXPECT_EQ(xxh64.digestValue(), bytes);
+	EXPECT_EQ(xxh64.digestBytes(), bytes);
 }
 
 
@@ -82,7 +82,7 @@ TEST(HashFunctionTest, xxh128) {
 	xxh128.update("0123456789");
 	EXPECT_EQ(xxh128.digestString(), "e353667619ec664b49655fc9692165fb");
 	vector<uint8_t> bytes = {0xe3, 0x53, 0x66, 0x76, 0x19, 0xec, 0x66, 0x4b, 0x49, 0x65, 0x5F, 0xc9, 0x69, 0x21, 0x65, 0xfb};
-	EXPECT_EQ(xxh128.digestValue(), bytes);
+	EXPECT_EQ(xxh128.digestBytes(), bytes);
 }
 #endif
 
