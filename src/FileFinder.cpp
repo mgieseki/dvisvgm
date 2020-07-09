@@ -56,6 +56,10 @@ bool FileFinder::_enableMktex = false;
  *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated */
 FileFinder::FileFinder () {
 	addLookupDir(".");  // always lookup files in the current working directory
+        char *path=getenv("DVISVGM_PATH");
+        if(path)
+          addLookupDir(path);
+
 #ifdef MIKTEX
 	_miktex = util::make_unique<MiKTeXCom>();
 #else
