@@ -65,6 +65,7 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 			PopFunc _popContext;
 			std::string _xmlbuf;
 			NameStack _nameStack;  ///< names of nested elements still missing a closing tag
+			bool _error=false;
 	};
 
 	using StringVector = std::vector<std::string>;

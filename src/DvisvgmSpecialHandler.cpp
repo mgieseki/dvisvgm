@@ -449,59 +449,65 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 	// incomplete tags are held back
 	_xmlbuf += xml;
 	size_t left=0, right;
-	while (left != string::npos) {
-		right = _xmlbuf.find('<', left);
-		if (left < right && left < _xmlbuf.length())  // plain text found?
-			(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
-		if (right != string::npos) {
+	try {
+		while (left != string::npos) {
+			right = _xmlbuf.find('<', left);
+			if (left < right && left < _xmlbuf.length())  // plain text found?
+				(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
+			if (right != string::npos) {
+				left = right;
+				if (_xmlbuf.compare(left, 9, "<![CDATA[") == 0) {
+					right = _xmlbuf.find("]]>", left+9);
+					if (right == string::npos) {
+						if (finish) throw SpecialException("expected ']]>' at end of CDATA block");
+						break;
+					}
+					(actions.svgTree().*_append)(util::make_unique<XMLCData>(_xmlbuf.substr(left+9, right-left-9)));
+					right += 2;
+				}
+				else if (_xmlbuf.compare(left, 4, "<!--") == 0) {
+					right = _xmlbuf.find("-->", left+4);
+					if (right == string::npos) {
+						if (finish) throw SpecialException("expected '-->' at end of comment");
+						break;
+					}
+					(actions.svgTree().*_append)(util::make_unique<XMLComment>(_xmlbuf.substr(left+4, right-left-4)));
+					right += 2;
+				}
+				else if (_xmlbuf.compare(left, 2, "<?") == 0) {
+					right = _xmlbuf.find("?>", left+2);
+					if (right == string::npos) {
+						if (finish) throw SpecialException("expected '?>' at end of processing instruction");
+						break;
+					}
+					(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left+2)));
+					right++;
+				}
+				else if (_xmlbuf.compare(left, 2, "</") == 0) {
+					right = _xmlbuf.find('>', left+2);
+					if (right == string::npos) {
+						if (finish) throw SpecialException("missing '>' at end of closing XML tag");
+						break;
+					}
+					closeElement(_xmlbuf.substr(left+2, right-left-2), actions);
+				}
+				else {
+					right = _xmlbuf.find('>', left+1);
+					if (right == string::npos) {
+						if (finish)	throw SpecialException("missing '>' or '/>' at end of opening XML tag");
+						break;
+					}
+					openElement(_xmlbuf.substr(left+1, right-left-1), actions);
+				}
+			}
 			left = right;
-			if (_xmlbuf.compare(left, 9, "<![CDATA[") == 0) {
-				right = _xmlbuf.find("]]>", left+9);
-				if (right == string::npos) {
-					if (finish)	throw SpecialException("expected ']]>' at end of CDATA block");
-					break;
-				}
-				(actions.svgTree().*_append)(util::make_unique<XMLCData>(_xmlbuf.substr(left+9, right-left-9)));
-				right += 2;
-			}
-			else if (_xmlbuf.compare(left, 4, "<!--") == 0) {
-				right = _xmlbuf.find("-->", left+4);
-				if (right == string::npos) {
-					if (finish)	throw SpecialException("expected '-->' at end of comment");
-					break;
-				}
-				(actions.svgTree().*_append)(util::make_unique<XMLComment>(_xmlbuf.substr(left+4, right-left-4)));
-				right += 2;
-			}
-			else if (_xmlbuf.compare(left, 2, "<?") == 0) {
-				right = _xmlbuf.find("?>", left+2);
-				if (right == string::npos) {
-					if (finish)	throw SpecialException("expected '?>' at end of processing instruction");
-					break;
-				}
-				(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left+2)));
-				right++;
-			}
-			else if (_xmlbuf.compare(left, 2, "</") == 0) {
-				right = _xmlbuf.find('>', left+2);
-				if (right == string::npos) {
-					if (finish)	throw SpecialException("missing '>' at end of closing XML tag");
-					break;
-				}
-				closeElement(_xmlbuf.substr(left+2, right-left-2), actions);
-			}
-			else {
-				right = _xmlbuf.find('>', left+1);
-				if (right == string::npos) {
-					if (finish)	throw SpecialException("missing '>' or '/>' at end of opening XML tag");
-					break;
-				}
-				openElement(_xmlbuf.substr(left+1, right-left-1), actions);
-			}
+			if (right != string::npos)
+				left++;
 		}
-		left = right;
-		if (right != string::npos)
-			left++;
+	}
+	catch (const SpecialException &e) {
+		_error = true;
+		throw;
 	}
 	if (left == string::npos)
 		_xmlbuf.clear();
@@ -557,7 +563,8 @@ void DvisvgmSpecialHandler::XMLParser::closeElement (const string &tag, SpecialA
  *  and resets the parser state. */
 void DvisvgmSpecialHandler::XMLParser::flush (SpecialActions &actions) {
 	if (!_xmlbuf.empty()) {
-		parse("", actions, true);
+		if (!_error)
+			parse("", actions, true);
 		_xmlbuf.clear();
 	}
 	string tags;
@@ -565,8 +572,8 @@ void DvisvgmSpecialHandler::XMLParser::flush (SpecialActions &actions) {
 		tags += "</"+_nameStack.back()+">, ";
 		_nameStack.pop_back();
 	}
-	if (!tags.empty()) {
+	if (!tags.empty() && !_error) {
 		tags.resize(tags.length()-2);
-		throw SpecialException("missing closing tags: "+tags);
+		throw SpecialException("missing closing tag(s): "+tags);
 	}
 }
