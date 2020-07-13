@@ -227,7 +227,12 @@ void DVIToSVGActions::beginPage (unsigned pageno, const vector<int32_t>&) {
 
 /** This method is called when an "end of page (eop)" command was found in the DVI file. */
 void DVIToSVGActions::endPage (unsigned pageno) {
-	SpecialManager::instance().notifyEndPage(pageno, *this);
+	try {
+		SpecialManager::instance().notifyEndPage(pageno, *this);
+	}
+	catch (const SpecialException &e) {
+		Message::estream(true) << "error in special: " << e.what() << '\n';
+	}
 	Matrix matrix = _dvireader->getPageTransformation();
 	_svg.transformPage(matrix);
 	if (_bgcolor != Color::TRANSPARENT) {
