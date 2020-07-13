@@ -415,8 +415,8 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 
 
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
-	_defsParser.flush(actions);
-	_pageParser.flush(actions);
+	_defsParser.finish(actions);
+	_pageParser.finish(actions);
 	actions.bbox().unlock();
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;
@@ -439,8 +439,8 @@ vector<const char*> DvisvgmSpecialHandler::prefixes() const {
 /** Parses a fragment of XML code, creates corresponding XML nodes and adds them
  *  to the SVG tree. The code may be split and processed by several calls of this
  *  function. Incomplete chunks that can't be processed yet are stored and picked
- *  up again together with the next incoming XML fragment. If no further code should
- *  be appended, parameter 'finish' must be set.
+ *  up again together with the next incoming XML fragment. If a call of this function
+ *  is supposed to finish the parsing of an XML subtree, parameter 'finish' must be set.
  *  @param[in] xml XML fragment to parse
  *  @param[in] actions object providing the SVG tree functions
  *  @param[in] finish if true, no more XML is expected and parsing is finished */
@@ -561,7 +561,7 @@ void DvisvgmSpecialHandler::XMLParser::closeElement (const string &tag, SpecialA
 
 /** Processes any remaining XML fragments, checks for missing closing tags,
  *  and resets the parser state. */
-void DvisvgmSpecialHandler::XMLParser::flush (SpecialActions &actions) {
+void DvisvgmSpecialHandler::XMLParser::finish (SpecialActions &actions) {
 	if (!_xmlbuf.empty()) {
 		if (!_error)
 			parse("", actions, true);
