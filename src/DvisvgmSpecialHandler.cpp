@@ -547,7 +547,7 @@ void DvisvgmSpecialHandler::XMLParser::closeElement (const string &tag, SpecialA
 	if (_nameStack.empty())
 		throw SpecialException("spurious closing tag </" + name + ">");
 	if (_nameStack.back() != name)
-		throw SpecialException("expected </" + name + "> but found </" + _nameStack.back() + ">");
+		throw SpecialException("expected </" + _nameStack.back() + "> but found </" + name + ">");
 	(actions.svgTree().*_popContext)();
 	_nameStack.pop_back();
 }
