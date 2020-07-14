@@ -147,12 +147,15 @@ bool GroupCollapser::collapsible (const XMLElement &element) {
  *  @param[in] source element whose children and attributes should be moved
  *  @param[in] dest element that should receive the children and attributes */
 bool GroupCollapser::unwrappable (const XMLElement &source, const XMLElement &dest) {
-	// check for colliding clip-path attributes
-	if (const char *cp1 = source.getAttributeValue("clip-path")) {
-		if (const char *cp2 = dest.getAttributeValue("clip-path")) {
-			if (string(cp1) != cp2)
-				return false;
-		}
+	const char *cp1 = source.getAttributeValue("clip-path");
+	const char *cp2 = dest.getAttributeValue("clip-path");
+	if (cp2) {
+		// check for colliding clip-path attributes
+		if (cp1 && string(cp1) != string(cp2))
+			return false;
+		// don't apply inner transformations to outer clipping paths
+		if (source.hasAttribute("transform"))
+			return false;
 	}
 	// these attributes prevent a group from being unwrapped
 	static const char *attribs[] = {
