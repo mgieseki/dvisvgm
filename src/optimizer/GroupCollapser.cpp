@@ -69,31 +69,33 @@ static void remove_ws_nodes (XMLElement *elem) {
 
 
 /** Recursively removes all redundant group elements from the given context element
- *  and moves their attributes to the corresponding parent element.
+ *  and moves their attributes to the corresponding parent elements.
  *  @param[in] context root of the subtree to process */
 void GroupCollapser::execute (XMLElement *context) {
 	if (!context)
 		return;
-	XMLNode *node=context->firstChild();
-	while (node) {
-		XMLNode *next = node->next();  // keep safe pointer to next node
-		if (XMLElement *elem = node->toElement())
-			execute(elem);
-		node = next;
-	}
-	if (context->name() == "g" && context->attributes().empty()) {
-		// unwrap group without attributes
-		remove_ws_nodes(context);
-		XMLElement::unwrap(context);
-	}
-	else {
-		XMLElement *child = only_child_element(context);
-		if (child && collapsible(*context)) {
-			if (child->name() == "g" && unwrappable(*child, *context) && moveAttributes(*child, *context)) {
+
+	if (XMLElement *childElement = only_child_element(context)) {
+		if (collapsible(*context)) {
+			if (childElement->name() == "g" && unwrappable(*childElement, *context) && moveAttributes(*childElement, *context)) {
 				remove_ws_nodes(context);
-				XMLElement::unwrap(child);
+				XMLElement::unwrap(childElement);
 			}
 		}
+	}
+	XMLNode *child=context->firstChild();
+	while (child) {
+		XMLNode *next=child->next();
+		if (XMLElement *childElement = child->toElement()) {
+			execute(childElement);
+			// check for groups without attributes and remove them
+			if (childElement->name() == "g" && childElement->attributes().empty()) {
+				remove_ws_nodes(childElement);
+				if (XMLNode *firstUnwrappedNode = XMLElement::unwrap(childElement))
+					next = firstUnwrappedNode;
+			}
+		}
+		child = next;
 	}
 }
 
