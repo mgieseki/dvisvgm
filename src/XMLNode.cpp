@@ -277,22 +277,19 @@ XMLElement* XMLElement::wrap (XMLNode *first, XMLNode *last, const string &name)
  *  Example: unwrap a child element b of a:
  *  <a>text1<b><c/>text2<d/></b></a> => <a>text1<c/>text2<d/></a>
  *  @param[in] child child element to unwrap
- *  @return raw pointer to the first node C1 of the unwrapped sequence */
-XMLNode* XMLElement::unwrap (XMLElement *child) {
-	if (!child || !child->parent())
+ *  @return raw pointer to the first node C1 of the unwrapped sequence or nullptr if element was empty */
+XMLNode* XMLElement::unwrap (XMLElement *element) {
+	if (!element || !element->parent())
 		return nullptr;
-	XMLElement *parent = child->parent()->toElement();
-	auto removedChild = remove(child);
-	if (child->empty())
-		return child->next();
-	XMLNode *firstGrandchild = child->firstChild();
-	XMLNode *prev = child->prev();
-	unique_ptr<XMLNode> grandchild = std::move(child->_firstChild);
-	while (grandchild) {
-		prev = parent->insertAfter(std::move(grandchild), prev);
-		grandchild = std::move(prev->_next);
-	}
-	return firstGrandchild;
+	XMLElement *parent = element->parent()->toElement();
+	XMLNode *prev = element->prev();
+	auto unlinkedElement = util::static_unique_ptr_cast<XMLElement>(remove(element));
+	if (unlinkedElement->empty())
+		return nullptr;
+	XMLNode *firstChild = unlinkedElement->firstChild();
+	while (auto child = remove(unlinkedElement->firstChild()))
+		prev = parent->insertAfter(std::move(child), prev);
+	return firstChild;
 }
 
 
