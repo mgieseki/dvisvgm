@@ -259,7 +259,7 @@ XMLElement* XMLElement::wrap (XMLNode *first, XMLNode *last, const string &name)
 	XMLNode *child = first;
 	while (child && child != last) {
 		XMLNode *next = child->next();
-		wrapper->insertLast(remove(child));
+		wrapper->insertLast(detach(child));
 		child = next;
 	}
 	XMLElement *ret = wrapper.get();
@@ -283,35 +283,35 @@ XMLNode* XMLElement::unwrap (XMLElement *element) {
 		return nullptr;
 	XMLElement *parent = element->parent()->toElement();
 	XMLNode *prev = element->prev();
-	auto unlinkedElement = util::static_unique_ptr_cast<XMLElement>(remove(element));
+	auto unlinkedElement = util::static_unique_ptr_cast<XMLElement>(detach(element));
 	if (unlinkedElement->empty())
 		return nullptr;
 	XMLNode *firstChild = unlinkedElement->firstChild();
-	while (auto child = remove(unlinkedElement->firstChild()))
+	while (auto child = detach(unlinkedElement->firstChild()))
 		prev = parent->insertAfter(std::move(child), prev);
 	return firstChild;
 }
 
 
-/** Removes a child node from the element.
- *  @param[in] child pointer to child to remove
- *  @return pointer to removed child or nullptr if given child doesn't belong to this element */
-unique_ptr<XMLNode> XMLElement::remove (XMLNode *child) {
-	unique_ptr<XMLNode> node;
-	if (child && child->parent()) {
-		XMLElement *parent = child->parent()->toElement();
-		if (child == parent->_lastChild)
-			parent->_lastChild = child->prev();
-		if (child != parent->firstChild())
-			node = child->prev()->removeNext();
+/** Isolates a node and its descendants from a subtree.
+ *  @param[in] node raw pointer to node to be detached
+ *  @return unique pointer to the detached node. */
+unique_ptr<XMLNode> XMLElement::detach (XMLNode *node) {
+	unique_ptr<XMLNode> uniqueNode;
+	if (node && node->parent()) {
+		XMLElement *parent = node->parent()->toElement();
+		if (node == parent->_lastChild)
+			parent->_lastChild = node->prev();
+		if (node != parent->firstChild())
+			uniqueNode = node->prev()->removeNext();
 		else {
-			node = std::move(parent->_firstChild);
-			if ((parent->_firstChild = std::move(node->_next)))
+			uniqueNode = std::move(parent->_firstChild);
+			if ((parent->_firstChild = std::move(uniqueNode->_next)))
 				parent->_firstChild->prev(nullptr);
 		}
-		child->parent(nullptr);
+		node->parent(nullptr);
 	}
-	return node;
+	return uniqueNode;
 }
 
 

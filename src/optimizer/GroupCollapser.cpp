@@ -61,7 +61,7 @@ static void remove_ws_nodes (XMLElement *elem) {
 			node = node->next();
 		else {
 			XMLNode *next = node->next();
-			XMLElement::remove(node);
+			XMLElement::detach(node);
 			node = next;
 		}
 	}
