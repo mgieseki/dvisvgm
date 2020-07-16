@@ -67,7 +67,7 @@ void TransformSimplifier::execute (XMLElement *context) {
  *  @param[in] matrix matrix representing the 'transform' attribute of the element
  *  @return true on success */
 bool TransformSimplifier::incorporateTransform (XMLElement *elem, const Matrix &matrix) {
-	if ((elem->name() == "image" || elem->name() == "rect") && matrix.get(0, 1) == 0 && matrix.get(1, 0) == 0) {
+	if ((elem->name() == "rect") && matrix.get(0, 1) == 0 && matrix.get(1, 0) == 0) {
 		double tx = matrix.get(0, 2);
 		double ty = matrix.get(1, 2);
 		double sx = matrix.get(0, 0);
