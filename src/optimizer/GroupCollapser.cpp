@@ -75,14 +75,6 @@ void GroupCollapser::execute (XMLElement *context) {
 	if (!context)
 		return;
 
-	if (XMLElement *childElement = only_child_element(context)) {
-		if (collapsible(*context)) {
-			if (childElement->name() == "g" && unwrappable(*childElement, *context) && moveAttributes(*childElement, *context)) {
-				remove_ws_nodes(context);
-				XMLElement::unwrap(childElement);
-			}
-		}
-	}
 	XMLNode *child=context->firstChild();
 	while (child) {
 		XMLNode *next=child->next();
@@ -96,6 +88,14 @@ void GroupCollapser::execute (XMLElement *context) {
 			}
 		}
 		child = next;
+	}
+	if (XMLElement *childElement = only_child_element(context)) {
+		if (collapsible(*context)) {
+			if (childElement->name() == "g" && unwrappable(*childElement, *context) && moveAttributes(*childElement, *context)) {
+				remove_ws_nodes(context);
+				XMLElement::unwrap(childElement);
+			}
+		}
 	}
 }
 
