@@ -775,7 +775,7 @@ of option
 \fBMD5\fR,
 \fBXXH32\fR, and
 \fBXXH64\fR, where the names can be given in lower case too, like
-\fB\-\-page\-hashes=md5\fR\&. Since version 0\&.7\&.1, xxHash provides an experimental 128\-bit hash function, whose algorithm may still change with the next versions of the library\&. If the corresponding API is available, dvisvgm supports the new hash function and option
+\fB\-\-page\-hashes=md5\fR\&. Since version 0\&.7\&.1, xxHash provides an experimental 128\-bit hash function whose algorithm has been stabilized as of version 0\&.8\&. When using a version prior to 0\&.8, the 128\-bit hash values can vary depending on the used xxHash version\&. If the corresponding API is available, dvisvgm supports the new hash function, and option
 \fB\-\-page\-hashes\fR
 additionally accepts the algorithm specifier
 \fBXXH128\fR\&.
