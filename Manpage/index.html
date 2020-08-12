@@ -873,9 +873,10 @@ e.g. <code>--output="%f-%p-%hc"</code>.</p>
 XXH32 and MD5 can be used as well. The desired algorithm is specified by argument <em>params</em> of option
 <strong>--page-hashes</strong>. It takes one of the strings <code>MD5</code>, <code>XXH32</code>, and <code>XXH64</code>, where the names can be given
 in lower case too, like <code>--page-hashes=md5</code>. Since version 0.7.1, xxHash provides an experimental 128-bit
-hash function, whose algorithm may still change with the next versions of the library. If the
-corresponding API is available, dvisvgm supports the new hash function and option <strong>--page-hashes</strong>
-additionally accepts the algorithm specifier <code>XXH128</code>.</p>
+hash function whose algorithm has been stabilized as of version 0.8. When using a version prior to 0.8,
+the 128-bit hash values can vary depending on the used xxHash version. If the corresponding API is
+available, dvisvgm supports the new hash function, and option <strong>--page-hashes</strong> additionally accepts the
+algorithm specifier <code>XXH128</code>.</p>
 <p>Finally, option <strong>--page-hashes</strong> can take a second argument that must be separated by a comma.
 Currently, only the two parameters <em>list</em> and <em>replace</em> are evaluated, e.g. <code>--page-hashes=md5,list</code>
 or <code>--page-hashes=replace</code>. When <em>list</em> is present, dvisvgm doesn’t perform any conversion but just
@@ -1739,7 +1740,7 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.9.1</div>
+   <div class="col-md-6">Version 2.1</div>
    <div class="col-md-6">
       <span class="pull-right" style="padding-bottom:1em">Last updated: 2020-03-19</span>
    </div>

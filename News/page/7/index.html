@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="090b91eafab646e154446d2a10dafea2"></a>
+  <a name="73d45e4c52912212028ec9af6199cb03"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following changes:</p>
+<ul>
+<li>The mapping of unknown characters to Unicode has been improved.</li>
+<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
+<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
+<li><code>xlink:title</code> attributes are now properly quoted.</li>
+</ul>
+</div>
+  </section><a name="090b91eafab646e154446d2a10dafea2"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">15 July 2015: dvisvgm 1.10 has been released</div>
     <div class="card-body">
@@ -175,26 +187,6 @@ This prevents side-effects e.g. when using the <code>standalone</code> document 
 <li>A memory leak in the font engine has been fixed (patch by Khaled Hosny).</li>
 <li>Option <code>--list-specials</code> no longer throws an exception.</li>
 <li><a href="https://www.cygwin.com">Cygwin</a> builds of <em>dvisvgm</em> now look for the proper filename of the Ghostscript DLL.</li>
-</ul>
-</div>
-  </section><a name="4214b9debb2f3b9fa2ec3588368e4fd9"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">8 June 2014: dvisvgm 1.7 has been released</div>
-    <div class="card-body">
-      <p>This is another small feature release with the following additions/changes:</p>
-<ul>
-<li>All DVI files are pre-processed now in order to allow the implementation of features that rely on data
-not available on the pages being converted.</li>
-<li>The evaluation of hyperref specials has been improved. Internal links that reference targets on
-different pages are supported now.</li>
-<li>The special command <code>dvisvgm:rawdef</code> has been added. It allows to insert raw SVG fragments to
-the <code>&lt;defs&gt;</code> section of the SVG file.</li>
-<li>The special commands <code>dvisvgm:rawset</code>, <code>dvisvgm:endrawset</code>, and <code>dvisvgm:rawput</code> have been added.
-For further information, see section <em>support of specials</em> of the <a href="/Manpage/">manual page</a>.</li>
-<li><em>dvisvgm</em> no longer adds redundant <code>missing-glyph</code> elements to the generated SVG files.</li>
-<li>The support of external fonts required by XDV files (DVI files created by XeTeX) has been improved.</li>
-<li>The extent values assigned by the <a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>
-are now correctly displayed in <span class="tex">T<sub>E</sub>X</span> point units.</li>
 </ul>
 </div>
   </section>

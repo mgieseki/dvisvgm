@@ -3,8 +3,35 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 21 Mar 2020 13:33:06 +0100</pubDate>
+    <pubDate>Wed, 12 Aug 2020 10:53:42 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.10 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
+      <pubDate>Wed, 12 Aug 2020 10:23:04 +0200</pubDate>
+      <guid>2df05e60a6483e32a6c2ab7e1bb3a697</guid>
+      <description>
+        <![CDATA[<p>This is a maintenance release with the following additions and changes:</p>
+<ul>
+<li>Added evaluation of <a href="http://www.luatex.org">Lua<span class="tex">T<sub>E</sub>X</span></a> native font definitions.</li>
+<li>Added computation of of italic correction for fake slanted glyphs.</li>
+<li><em>dvisvgm</em> now creates dedicated temporary folders for each call of the program to prevent file collisions between different processes.</li>
+<li>Added evaluation of internal <a href="https://www.ghostscript.com">Ghostscript</a> operators <code>.fillstroke</code> and <code>.eofillstroke</code> introduced
+with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/139">issue #139</a>).</li>
+<li>Fixed and improved optimization of nested group elements.</li>
+<li>Fixed optimization of <code>scale</code> transformation.</li>
+<li>Fixed optimization of <code>transform</code> attributes applied to images clipping paths.</li>
+<li>Fixed processing of PostScript operator <code>eoclip</code>.</li>
+<li>Fixed processing of clipping path intersections with different fill rule properties.</li>
+<li>Fixed processing of <code>{?(...)}</code> expressions (<a href="https://github.com/mgieseki/dvisvgm/issues/136">issue #136</a>).</li>
+<li>Fixed error message about unmatched closing tags in XML parser.</li>
+<li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
+<li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.9.1 has been released</title>
@@ -175,7 +202,7 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
     
     <item>
       <title>dvisvgm 2.7.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#6c01c957e0db5e41406e40486fe0acd1</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6c01c957e0db5e41406e40486fe0acd1</link>
       <pubDate>Fri, 07 Jun 2019 11:01:49 +0200</pubDate>
       <guid>6c01c957e0db5e41406e40486fe0acd1</guid>
       <description>
@@ -243,12 +270,12 @@ drawing region to the bounding box of the image being processed.</li>
 disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
 bounding box of the current page if a new graphics element is added. This behaviour can
 be paused and resumed with the new specials.</li>
-<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&lsquo;s <code>bbox</code> specials to allow for
+<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
 applying the current transformation matrix to the bounding box.</li>
-<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&lsquo;s <code>raw</code> specials. It expands to the
+<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
 current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
 <li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
-<em>dvisvgm</em>&lsquo;s partial matching of option names.</li>
+<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
 <li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
 <li>Lots of code refactorings.</li>
 </ul>
@@ -375,7 +402,7 @@ $ dvisvgm --page-hashes --page=1-4 -d2 tplot
 </span><span style="color:#8be9fd;font-weight:bold;">4 of 7 page</span><span style="color:#8be9fd;font-weight:bold;">s</span><span style="color:#8be9fd;font-weight:bold;"> converted in 0.147861 seconds
 </span></pre>
 </div>
-<p>Besides the DVI input, a couple of <em>dvisvgm</em>&lsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
+<p>Besides the DVI input, a couple of <em>dvisvgm</em>&rsquo;s options, like <code>--no-fonts</code> or <code>--precision</code> also affect the SVG output.
 Therefore, it&rsquo;s possible to include command-line information in the hash value as well so that a new SVG file is
 created when using different options although the DVI pages haven&rsquo;t changed. For further information on this topic
 and the available hash algorithms see the sections about option <code>--page-hashes</code> and <code>--output</code> on the
@@ -393,7 +420,7 @@ to detect DVI files with incorrect, e.g. cyclic, page references.</li>
     
     <item>
       <title>dvisvgm 2.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#893ff3b8dee919326502dc03f65fa28b</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#893ff3b8dee919326502dc03f65fa28b</link>
       <pubDate>Wed, 08 Aug 2018 09:49:29 +0200</pubDate>
       <guid>893ff3b8dee919326502dc03f65fa28b</guid>
       <description>
@@ -483,48 +510,6 @@ under the new domain <a href="dvisvgm.de">dvisvgm.de</a>.</p>
 <p>The old <em>SourceForge</em> (<a href="http://dvisvgm.sf.net">dvisvgm.sf.net</a>) and <em>bplaced</em> (<a href="http://dvisvgm.bplaced.net">dvisvgm.bplaced.net</a>)
 addresses now redirect to the new location. Since I&rsquo;ve kept the page structure, all former URLs should still be valid.
 If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4d81ee4151a938fdddc3350841a015a8</link>
-      <pubDate>Thu, 03 May 2018 13:01:52 +0200</pubDate>
-      <guid>4d81ee4151a938fdddc3350841a015a8</guid>
-      <description>
-        <![CDATA[<p>This feature release brings the following additions/changes:</p>
-<ul>
-<li>Added special <code>pdffile</code> similar to <code>psfile</code> to embed PDF graphics.</li>
-<li>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:<br/>
-<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
-$ dvisvgm &ndash;pdf -d2 helix.pdf
-<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
-<span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
-<span style="color:#50fa7b;">  output written to helix.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
-</pre>
-</span></li>
-<li>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</li>
-<li>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
-<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
-$ dvisvgm -d2 - &lt; frktest.dvi
-reading from &lt;stdin&gt;
-<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
-processing page 1</span>
-<span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
-<span style="color:#50fa7b;">  output written to stdin.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
-</pre>
-</span></li>
-<li>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</li>
-<li>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
-conversion of more transparency parameters, e.g.:
-<img src="/News/images/blendmodes.png" alt="blend modes"></li>
-<li>Fixed outer transformations applied to <code>psfile</code> specials.</li>
-<li>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</li>
-<li>Several code refactorings.</li>
-</ul>
 ]]>
       </description>
     </item>
