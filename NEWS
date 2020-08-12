@@ -1,3 +1,22 @@
+dvisvgm-2.10 (2020-08-12)
+- added evaluation of LuaTeX native font definitions
+- added computation of of italic correction for fake slanted glyphs
+- dvisvgm now creates dedicated temporary folders for each call of
+  the program to prevent file collisions between different processes
+- added evaluation of internal GS operators '.fillstroke' and '.eofillstroke'
+  introduced with GS 9.52 to implement PDF operators 'B' and 'B*'
+  (GH issue #139)
+- fixed and improved optimization of nested group elements
+- fixed optimization of 'scale' transformation
+- fixed optimization of 'transform' attributes applied to images clipping paths
+- fixed processing of PS operator 'eoclip'
+- fixed processing of clipping path intersections with different
+  fill rule properties
+- fixed processing of {?(...)} expressions (GH issue #136)
+- fixed error message about unmatched closing tags in XML parser
+- updated bundled FreeType library to version 2.10.2
+- updated bundled xxHash library to version 0.8
+
 dvisvgm-2.9.1 (2020-03-21)
 - added macro {?(expr)} to enable the evaluation of math expressions in
   raw SVG fragments (GH #130)
