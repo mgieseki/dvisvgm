@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2020-03-19
+.\"      Date: 2020-08-23
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.10
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2020\-03\-19" "dvisvgm 2\&.10" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2020\-08\-23" "dvisvgm 2\&.10" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -46,7 +46,7 @@ SVG is a vector\-based graphics format and therefore dvisvgm tries to convert th
 .sp
 However, TeX\(cqs main source for font descriptions is Metafont, which produces bitmap output (GF files)\&. That\(cqs why not all obtainable TeX fonts are available in a scalable format\&. In these cases, dvisvgm tries to vectorize Metafont\(cqs output by tracing the glyph bitmaps\&. The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are nonetheless really nice in most cases\&.
 .sp
-When running dvisvgm without option \fB\-\-no\-fonts\fR, it creates \fIfont\fR elements (\fB<font>\fR\&...\fB</font>\fR) to embed the font data into the SVG files\&. Unfortunately, only few SVG renderers support these elements yet\&. Most web browsers and vector graphics applications don\(cqt evaluate them properly so that the text components of the resulting graphics might look strange\&. In order to create more compatible SVG files, command\-line option \fB\-\-no\-fonts\fR can be given to replace the font elements by plain graphics paths\&. Most web browsers (but only few external SVG renderers) also suppport WOFF and WOFF2 fonts that can be used instead of the default SVG fonts\&. Option \fB\-\-font\-format\fR offers the functionality to change the format applied to the fonts being embedded\&.
+When running dvisvgm without option \fB\-\-no\-fonts\fR, it creates \fIfont\fR elements (\fB<font>\fR\&...\fB</font>\fR) to embed the font data into the SVG files\&. Unfortunately, only few SVG renderers support these elements yet\&. Most web browsers and vector graphics applications don\(cqt evaluate them properly so that the text components of the resulting graphics might look strange\&. In order to create more compatible SVG files, command\-line option \fB\-\-no\-fonts\fR can be given to replace the font elements by plain graphics paths\&. Most web browsers (but only few external SVG renderers) also suppport WOFF and WOFF2 fonts that can be used instead of the default SVG fonts\&. Option \fB\-\-font\-format\fR offers the functionality to change the format applied to the fonts being embedded\&. This, however, only works when converting DVI files\&. Text present in PDF and PostScript files is always converted to path elements\&.
 .SH "OPTIONS"
 .sp
 dvisvgm provides a POSIX\-compliant command\-line interface with short and long option names\&. They may be given before and/or after the name of the file to be converted\&. Also, the order of specifying the options is not significant, i\&.e\&. you can add them in any order without changing dvisvgm\(cqs behavior\&. Certain options accept or require additional parameters which are directly appended to or separated by whitespace from a short option (e\&.g\&. \fB\-v0\fR or \fB\-v 0\fR)\&. Long options require an additional equals sign (\fB=\fR) between option name and argument but without any surrounding whitespace (e\&.g\&. \fB\-\-verbosity=0\fR)\&. Multiple short options that don\(cqt expect a further parameter can be combined after a single dash (e\&.g\&. \fB\-ejs\fR rather than \fB\-e \-j \-s\fR)\&.
@@ -55,7 +55,9 @@ Long option names may also be shortened by omitting trailing characters\&. As lo
 .PP
 \fB\-b, \-\-bbox\fR=\fIfmt\fR
 .RS 4
-Sets the bounding box of the generated graphic to the specified format\&. The parameter
+Sets the bounding box of the generated SVG graphic to the specified format\&. This option only affects the conversion of DVI files\&. SVG documents generated from PDF and PostScript always inherit the bounding boxes of the input files\&.
+.sp
+Parameter
 \fIfmt\fR
 takes either one of the format specifiers listed below, or a sequence of four comma\- or whitespace\-separated length values
 \fIx1\fR,
@@ -315,7 +317,9 @@ given, dvisvgm analyzes the actual shape of each character and derives a usually
 .PP
 \fB\-f, \-\-font\-format\fR=\fIformat\fR
 .RS 4
-Selects the file format used to embed the font data into the SVG files\&. Following formats are supported:
+Selects the file format used to embed font data into the generated SVG output when converting DVI files\&. It has no effect when converting PDF or PostScript files\&. Text fragments present in these files are always converted to path elements\&.
+.sp
+Following formats are supported:
 \fBSVG\fR
 (that\(cqs the default),
 \fBTTF\fR

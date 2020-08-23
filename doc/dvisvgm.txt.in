@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2020-03-19 22:06 +0100
+:revdate: 2020-08-23 09:04 +0200
 
 Name
 ----
@@ -71,7 +71,9 @@ that the text components of the resulting graphics might look strange. In order 
 compatible SVG files, command-line option *--no-fonts* can be given to replace the font elements
 by plain graphics paths. Most web browsers (but only few external SVG renderers) also suppport
 WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option *--font-format*
-offers the functionality to change the format applied to the fonts being embedded.
+offers the functionality to change the format applied to the fonts being embedded. This, however,
+only works when converting DVI files. Text present in PDF and PostScript files is always
+converted to path elements.
 
 
 Options
@@ -91,9 +93,12 @@ to +--exact+, +--exa+, or +--ex+. In case of an ambiguous abbreviation, dvisvgm 
 message together with all matching option names.
 
 *-b, --bbox*='fmt'::
-Sets the bounding box of the generated graphic to the specified format. The parameter 'fmt'
-takes either one of the format specifiers listed below, or a sequence of four comma- or
-whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define the absolute
+Sets the bounding box of the generated SVG graphic to the specified format. This option only affects
+the conversion of DVI files. SVG documents generated from PDF and PostScript always inherit the
+bounding boxes of the input files.
++
+Parameter 'fmt' takes either one of the format specifiers listed below, or a sequence of four comma-
+or whitespace-separated length values 'x1', 'y1', 'x2' and 'y2'. The latter define the absolute
 coordinates of two diagonal corners of the bounding box. Each length value consists of a floating
 point number and an optional length unit (pt, bp, cm, mm, in, pc, dd, cc, or sp). If the unit is
 omitted, TeX points (pt) are assumed.
@@ -218,9 +223,12 @@ this can lead to clipped characters at the bounds of the SVG graphics. With opti
 given, dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
 
 *-f, --font-format*='format'::
-Selects the file format used to embed the font data into the SVG files. Following formats are
-supported: +SVG+ (that's the default), +TTF+ (TrueType), +WOFF+, and +WOFF2+ (Web Open Font Format
-version 1 and 2).
+Selects the file format used to embed font data into the generated SVG output when converting DVI
+files. It has no effect when converting PDF or PostScript files. Text fragments present in these
+files are always converted to path elements.
++
+Following formats are supported: +SVG+ (that's the default), +TTF+ (TrueType), +WOFF+, and +WOFF2+
+(Web Open Font Format version 1 and 2).
 By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
 improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
 autohinter is enabled by appending +,autohint+ or +,ah+ to the font format,
