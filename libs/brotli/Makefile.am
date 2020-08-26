@@ -1,10 +1,13 @@
 if !HAVE_BROTLI
 noinst_LIBRARIES = libbrotli.a
 libbrotli_a_SOURCES = \
+	common/constants.c \
 	common/constants.h \
+	common/context.c \
 	common/context.h \
 	common/dictionary.c \
 	common/dictionary.h \
+	common/platform.c \
 	common/platform.h \
 	common/transform.c \
 	common/transform.h \
@@ -26,6 +29,7 @@ libbrotli_a_SOURCES = \
 	enc/cluster.c \
 	enc/cluster.h \
 	enc/cluster_inc.h \
+	enc/command.c \
 	enc/command.h \
 	enc/compress_fragment.c \
 	enc/compress_fragment.h \
@@ -39,6 +43,7 @@ libbrotli_a_SOURCES = \
 	enc/entropy_encode.c \
 	enc/entropy_encode.h \
 	enc/entropy_encode_static.h \
+	enc/fast_log.c \
 	enc/fast_log.h \
 	enc/find_match_length.h \
 	enc/hash_composite_inc.h \
