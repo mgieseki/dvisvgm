@@ -25,6 +25,7 @@ syntax: glob
 *.exe
 *.vcxproj.user
 .deps
+.dirstamp
 callgrind.*
 cmdline.*
 Makefile
