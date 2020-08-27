@@ -153,19 +153,25 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\libs\brotli\common\constants.c" />
+    <ClCompile Include="..\..\libs\brotli\common\context.c" />
     <ClCompile Include="..\..\libs\brotli\common\dictionary.c" />
+    <ClCompile Include="..\..\libs\brotli\common\platform.c" />
+    <ClCompile Include="..\..\libs\brotli\common\transform.c" />
     <ClCompile Include="..\..\libs\brotli\enc\backward_references.c" />
     <ClCompile Include="..\..\libs\brotli\enc\backward_references_hq.c" />
     <ClCompile Include="..\..\libs\brotli\enc\bit_cost.c" />
     <ClCompile Include="..\..\libs\brotli\enc\block_splitter.c" />
     <ClCompile Include="..\..\libs\brotli\enc\brotli_bit_stream.c" />
     <ClCompile Include="..\..\libs\brotli\enc\cluster.c" />
+    <ClCompile Include="..\..\libs\brotli\enc\command.c" />
     <ClCompile Include="..\..\libs\brotli\enc\compress_fragment.c" />
     <ClCompile Include="..\..\libs\brotli\enc\compress_fragment_two_pass.c" />
     <ClCompile Include="..\..\libs\brotli\enc\dictionary_hash.c" />
     <ClCompile Include="..\..\libs\brotli\enc\encode.c" />
     <ClCompile Include="..\..\libs\brotli\enc\encoder_dict.c" />
     <ClCompile Include="..\..\libs\brotli\enc\entropy_encode.c" />
+    <ClCompile Include="..\..\libs\brotli\enc\fast_log.c" />
     <ClCompile Include="..\..\libs\brotli\enc\histogram.c" />
     <ClCompile Include="..\..\libs\brotli\enc\literal_cost.c" />
     <ClCompile Include="..\..\libs\brotli\enc\memory.c" />
