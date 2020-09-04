@@ -283,11 +283,11 @@ XMLNode* XMLElement::unwrap (XMLElement *element) {
 		return nullptr;
 	XMLElement *parent = element->parent()->toElement();
 	XMLNode *prev = element->prev();
-	auto unlinkedElement = util::static_unique_ptr_cast<XMLElement>(detach(element));
-	if (unlinkedElement->empty())
+	auto detachedElement = util::static_unique_ptr_cast<XMLElement>(detach(element));
+	if (detachedElement->empty())
 		return nullptr;
-	XMLNode *firstChild = unlinkedElement->firstChild();
-	while (auto child = detach(unlinkedElement->firstChild()))
+	XMLNode *firstChild = detachedElement->firstChild();
+	while (auto child = detach(detachedElement->firstChild()))
 		prev = parent->insertAfter(std::move(child), prev);
 	return firstChild;
 }
