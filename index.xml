@@ -3,8 +3,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 15 Aug 2020 22:09:40 +0200</pubDate>
+    <pubDate>Tue, 22 Sep 2020 11:28:13 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.10.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#9f68ebd62bc0a3cf963a572fe77e0bd2</link>
+      <pubDate>Tue, 22 Sep 2020 11:13:47 +0200</pubDate>
+      <guid>9f68ebd62bc0a3cf963a572fe77e0bd2</guid>
+      <description>
+        <![CDATA[<p>This is a small maintenance release.</p>
+<ul>
+<li>Added support for the new <a href="https://www.ghostscript.com/doc/current/Language.htm#Transparency">Ghostscript transparency operators</a>
+<code>.setfillconstantalpha</code> and <code>.setstrokeconstantalpha</code>.</li>
+<li>Added support for the new Ghostscript versioning scheme introduced with GS 9.53.0.</li>
+<li>Added few additional information to the <a href="/Manpage/">manual page</a>.</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.0.9.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.10 has been released</title>
@@ -186,7 +204,7 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
     
     <item>
       <title>dvisvgm 2.7.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#6f8e194693ecc2a26ed8c5de5adc7c8f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6f8e194693ecc2a26ed8c5de5adc7c8f</link>
       <pubDate>Fri, 12 Jul 2019 11:30:12 +0200</pubDate>
       <guid>6f8e194693ecc2a26ed8c5de5adc7c8f</guid>
       <description>
@@ -360,7 +378,7 @@ dnf install dvisvgm
     
     <item>
       <title>dvisvgm 2.6 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#8d56703cbffb43bae1f0e6d10ac03542</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#8d56703cbffb43bae1f0e6d10ac03542</link>
       <pubDate>Sat, 08 Sep 2018 10:11:54 +0200</pubDate>
       <guid>8d56703cbffb43bae1f0e6d10ac03542</guid>
       <description>
@@ -494,22 +512,6 @@ Those DVI files used to produce a couple of redundant warnings when processed wi
 <li>Updated several URLs in the <a href="/Manpage/">manual page</a>.</li>
 <li>Several minor code refactorings.</li>
 </ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>Website moved to the new domain _dvisvgm.de_</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#c9b07d478e839e780fccf01ce5f698bc</link>
-      <pubDate>Fri, 06 Jul 2018 16:06:57 +0200</pubDate>
-      <guid>c9b07d478e839e780fccf01ce5f698bc</guid>
-      <description>
-        <![CDATA[<p>To simplify the maintenance of both the website and the program code, I rebuilt the former wiki-based website with
-a static site generator and moved everything to <a href="https://pages.github.com">GitHub Pages</a>. The site is now reachable
-under the new domain <a href="dvisvgm.de">dvisvgm.de</a>.</p>
-<p>The old <em>SourceForge</em> (<a href="http://dvisvgm.sf.net">dvisvgm.sf.net</a>) and <em>bplaced</em> (<a href="http://dvisvgm.bplaced.net">dvisvgm.bplaced.net</a>)
-addresses now redirect to the new location. Since I&rsquo;ve kept the page structure, all former URLs should still be valid.
-If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p>
 ]]>
       </description>
     </item>
