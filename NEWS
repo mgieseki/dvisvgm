@@ -1,3 +1,10 @@
+dvisvgm-2.10.1 (2020-09-22)
+- added support for new Ghostscript transparency operators
+  .setfillconstantalpha and .setstrokeconstantalpha
+- added support for new Ghostscript versioning scheme introduced with GS 9.53.0
+- added few additional information to the manual page
+- updated bundled brotli library to version 1.0.9
+
 dvisvgm-2.10 (2020-08-12)
 - added evaluation of LuaTeX native font definitions
 - added computation of of italic correction for fake slanted glyphs
