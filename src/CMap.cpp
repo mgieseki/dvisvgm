@@ -23,6 +23,7 @@
 #include "CMap.hpp"
 #include "CMapManager.hpp"
 #include "FileFinder.hpp"
+#include "Unicode.hpp"
 
 using namespace std;
 
@@ -37,6 +38,22 @@ const FontEncoding* CMap::findCompatibleBaseFontMap (const PhysicalFont *font, C
 }
 
 //////////////////////////////////////////////////////////////////////
+
+void SegmentedCMap::addCIDRange (uint32_t first, uint32_t last, uint32_t cid) {
+	if (uint32_t cp = Unicode::fromSurrogate(first))  // is 'first' a surrogate?
+		first = cp;
+	if (uint32_t cp = Unicode::fromSurrogate(last))   // is 'last' a surrogate?
+		last = cp;
+	_cidranges.addRange(first, last, cid);
+}
+
+
+void SegmentedCMap::addBFRange (uint32_t first, uint32_t last, uint32_t chrcode) {
+	if (uint32_t cp = Unicode::fromSurrogate(chrcode))  // is 'chrcode' a surrogate?
+		chrcode = cp;
+	_bfranges.addRange(first, last, chrcode);
+}
+
 
 /** Returns the RO (Registry-Ordering) string of the CMap. */
 string SegmentedCMap::getROString() const {

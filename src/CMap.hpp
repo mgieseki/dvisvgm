@@ -85,8 +85,8 @@ class SegmentedCMap : public CMap {
 		const char* name () const override {return _filename.c_str();}
 		uint32_t cid (uint32_t c) const override;
 		uint32_t bfcode (uint32_t cid) const override;
-		void addCIDRange (uint32_t first, uint32_t last, uint32_t cid)    {_cidranges.addRange(first, last, cid);}
-		void addBFRange (uint32_t first, uint32_t last, uint32_t chrcode) {_bfranges.addRange(first, last, chrcode);}
+		void addCIDRange (uint32_t first, uint32_t last, uint32_t cid);
+		void addBFRange (uint32_t first, uint32_t last, uint32_t chrcode);
 		void write (std::ostream &os) const;
 		bool vertical () const override  {return _vertical;}
 		bool mapsToCID () const override {return _mapsToCID;}
@@ -98,6 +98,7 @@ class SegmentedCMap : public CMap {
 		std::string _filename;
 		std::string _registry;
 		std::string _ordering;
+		std::string _cmaptype;
 		CMap *_basemap = nullptr;
 		bool _vertical = false;
 		bool _mapsToCID = true;   // true: chrcode->CID, false: CID->charcode
