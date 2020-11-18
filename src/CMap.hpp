@@ -74,6 +74,7 @@ struct UnicodeCMap : public CMap {
 	uint32_t cid (uint32_t c) const override      {return c;}
 	uint32_t bfcode (uint32_t cid) const override {return cid;}
 	std::string getROString () const override     {return "";}
+	bool mapsToUnicode () const override          {return true;}
 };
 
 
@@ -93,6 +94,7 @@ class SegmentedCMap : public CMap {
 		size_t numCIDRanges () const     {return _cidranges.numRanges();}
 		size_t numBFRanges () const      {return _bfranges.numRanges();}
 		std::string getROString () const override;
+		bool mapsToUnicode () const override;
 
 	private:
 		std::string _filename;
