@@ -26,6 +26,7 @@
 #include "Font.hpp"
 #include "FontManager.hpp"
 #include "HashFunction.hpp"
+#include "JFM.hpp"
 #include "utility.hpp"
 #include "VectorStream.hpp"
 
@@ -277,16 +278,22 @@ void DVIReader::cmdPop (int) {
  *  @param[in] c character to typeset */
 void DVIReader::putVFChar (Font *font, uint32_t c) {
 	if (auto vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
-		if (const vector<uint8_t> *dvi = vf->getDVI(c)) { // try to get DVI snippet that represents character c
-			FontManager &fm = FontManager::instance();
+		FontManager &fm = FontManager::instance();
+		const vector<uint8_t> *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
+		Font *firstFont = fm.vfFirstFont(vf);
+		if (!dvi && (!firstFont || !dynamic_cast<const JFM*>(firstFont->getMetrics())))
+			return;
+		fm.enterVF(vf);                              // enter VF font number context
+		int savedFontNum = _currFontNum;             // save current font number
+		setFont(fm.vfFirstFontNum(vf), SetFontMode::VF_ENTER);
+		if (!dvi)                                    // no definition present for current (Japanese) char?
+			dviPutChar(c, firstFont);                 // fallback for JFM-based virtual fonts
+		else {
+			// DVI units in virtual fonts are multiples of 1^(-20) times the scaled size of the VF
+			double savedScale = _dvi2bp;
+			_dvi2bp = vf->scaledSize()/(1 << 20);
 			DVIState savedState = _dviState;  // save current cursor position
 			_dviState.x = _dviState.y = _dviState.w = _dviState.z = 0;
-			int savedFontNum = _currFontNum; // save current font number
-			fm.enterVF(vf);                  // enter VF font number context
-			setFont(fm.vfFirstFontNum(vf), SetFontMode::VF_ENTER);
-			double savedScale = _dvi2bp;
-			// DVI units in virtual fonts are multiples of 1^(-20) times the scaled size of the VF
-			_dvi2bp = vf->scaledSize()/(1 << 20);
 			VectorInputStream<uint8_t> vis(*dvi);
 			istream &is = replaceStream(vis);
 			try {
@@ -295,12 +302,12 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 			catch (const DVIException &e) {
 				// Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
 			}
-			replaceStream(is);     // restore previous input stream
-			_dvi2bp = savedScale;  // restore previous scale factor
-			fm.leaveVF();          // restore previous font number context
-			setFont(savedFontNum, SetFontMode::VF_LEAVE);  // restore previous font number
+			replaceStream(is);       // restore previous input stream
 			_dviState = savedState;  // restore previous cursor position
+			_dvi2bp = savedScale;    // restore previous scale factor
 		}
+		fm.leaveVF();          // restore previous font number context
+		setFont(savedFontNum, SetFontMode::VF_LEAVE);  // restore previous font number
 	}
 }
 
