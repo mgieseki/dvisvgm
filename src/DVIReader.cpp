@@ -34,21 +34,9 @@ using namespace std;
 
 DVIReader::DVIReader (istream &is) : BasicDVIReader(is)
 {
-	_inPage = false;
-	_dvi2bp = 0.0;
-	_inPostamble = false;
-	_currFontNum = 0;
-	_currPageNum = 0;
-	_mag = 1;
 	executePreamble();
-	collectBopOffsets();
+	_bopOffsets = collectBopOffsets();
 	executePostamble();
-}
-
-
-int DVIReader::executeCommand () {
-	int opcode = BasicDVIReader::executeCommand();
-	return opcode;
 }
 
 
@@ -79,72 +67,9 @@ bool DVIReader::executePage (unsigned n) {
 		return false;
 
 	seek(_bopOffsets[n-1]); // goto bop of n-th page
-	_inPostamble = false;   // not in postamble
 	_currPageNum = n;
 	while (executeCommand() != OP_EOP);
 	return true;
-}
-
-
-void DVIReader::executePreamble () {
-	clearStream();
-	if (isStreamValid()) {
-		seek(0);
-		if (readByte() == OP_PRE) {
-			cmdPre(0);
-			return;
-		}
-	}
-	throw DVIException("invalid DVI file");
-}
-
-
-/** Moves stream pointer to begin of postamble */
-void DVIReader::goToPostamble () {
-	clearStream();
-	if (!isStreamValid())
-		throw DVIException("invalid DVI file");
-
-	seek(-1, ios::end);  // stream pointer to last byte
-	int count=0;
-	while (peek() == DVI_FILL) {   // skip fill bytes
-		seek(-1, ios::cur);
-		count++;
-	}
-	if (count < 4)  // the standard requires at least 4 trailing fill bytes
-		throw DVIException("missing fill bytes at end of file");
-
-	seek(-4, ios::cur);            // now at first byte of q (pointer to begin of postamble)
-	uint32_t q = readUnsigned(4);  // pointer to begin of postamble
-	seek(q);                       // now at begin of postamble
-}
-
-
-/** Reads and executes the commands of the postamble. */
-void DVIReader::executePostamble () {
-	goToPostamble();
-	while (executeCommand() != OP_POSTPOST);  // executes all commands until post_post (= 249) is reached
-}
-
-
-/** Collects and records the file offsets of all bop commands. */
-void DVIReader::collectBopOffsets () {
-	goToPostamble();
-	_bopOffsets.push_back(tell());      // also add offset of postamble
-	readByte();                         // skip post command
-	uint32_t offset = readUnsigned(4);  // offset of final bop
-	while (int32_t(offset) != -1) {     // not yet on first bop?
-		_bopOffsets.push_back(offset);   // record offset
-		seek(offset);                    // now on previous bop
-		if (readByte() != OP_BOP)
-			throw DVIException("bop offset at "+to_string(offset)+" doesn't point to bop command" );
-		seek(40, ios::cur);              // skip the 10 \count values => now on offset of previous bop
-		uint32_t prevOffset = readUnsigned(4);
-		if ((prevOffset >= offset && int32_t(prevOffset) != -1))
-			throw DVIException("invalid bop offset at "+to_string(tell()-static_cast<streamoff>(4)));
-		offset = prevOffset;
-	}
-	reverse(_bopOffsets.begin(), _bopOffsets.end());
 }
 
 
@@ -213,7 +138,6 @@ void DVIReader::cmdPost (int) {
 	// 1 dviunit * num/den == multiples of 0.0000001m
 	// 1 dviunit * _dvi2bp: length of 1 dviunit in PS points * _mag/1000
 	_dvi2bp = numer/254000.0*72.0/denom*_mag/1000.0;
-	_inPostamble = true;
 	dviPost(stackDepth, numPages, pageWidth*_dvi2bp, pageHeight*_dvi2bp, _mag, numer, denom, prevBopOffset);
 }
 
@@ -221,7 +145,6 @@ void DVIReader::cmdPost (int) {
 /** Reads and executes DVI post_post command.
  *  Format: post_post q[4] i[1] 223[>=4] */
 void DVIReader::cmdPostPost (int) {
-	_inPostamble = false;
 	uint32_t postOffset = readUnsigned(4);   // pointer to begin of postamble
 	uint8_t id = readUnsigned(1);
 	setDVIVersion(DVIVersion(id));   // identification byte

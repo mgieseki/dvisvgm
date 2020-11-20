@@ -66,7 +66,11 @@ class BasicDVIReader : public StreamReader {
 		DVIVersion getDVIVersion () const {return _dviVersion;}
 		virtual int evalCommand (CommandHandler &handler, int &param);
 		virtual int executeCommand ();
+		void executePreamble ();
+		void executePostamble ();
 		void executePostPost ();
+		void goToPostamble ();
+		std::vector<uint32_t> collectBopOffsets ();
 		bool evalXDVOpcode (int op, CommandHandler &handler) const;
 
 		// The following template methods represent the single DVI commands. They
