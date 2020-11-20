@@ -213,6 +213,14 @@ void BasicDVIReader::executePostPost () {
 }
 
 
+void BasicDVIReader::executeFontDefs () {
+	goToPostamble();
+	seek(1+28, ios::cur); // now on first fontdef or postpost
+	if (peek() != OP_POSTPOST)
+		while (executeCommand() != OP_POSTPOST);
+}
+
+
 /** Collects and records the file offsets of all bop commands. */
 vector<uint32_t> BasicDVIReader::collectBopOffsets () {
 	std::vector<uint32_t> bopOffsets;

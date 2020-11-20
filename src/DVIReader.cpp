@@ -36,7 +36,10 @@ DVIReader::DVIReader (istream &is) : BasicDVIReader(is)
 {
 	executePreamble();
 	_bopOffsets = collectBopOffsets();
-	executePostamble();
+	// read data from postamble but don't process font definitions
+	goToPostamble();
+	executeCommand();
+	executePostPost();
 }
 
 
