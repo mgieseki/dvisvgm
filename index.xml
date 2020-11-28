@@ -3,8 +3,24 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Tue, 22 Sep 2020 11:28:13 +0200</pubDate>
+    <pubDate>Sat, 28 Nov 2020 11:37:43 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.11 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#45089adf53a690978eb4e8d47ffd190e</link>
+      <pubDate>Sat, 28 Nov 2020 11:28:08 +0100</pubDate>
+      <guid>45089adf53a690978eb4e8d47ffd190e</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added fallback mechanism for JFM-based virtual fonts as proposed by Takuji Tanaka (<a href="https://github.com/mgieseki/dvisvgm/issues/144">issue #144</a>).</li>
+<li>Improved detection of proper CMap files for currently selected font encoding.</li>
+<li>Fixed processing of Unicode surrogates present in CMap files.</li>
+<li>Fixed handling of <code>pdf:mapline</code> and <code>pdf:mapfile</code> specials.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.10.1 has been released</title>
@@ -186,7 +202,7 @@ into positional and size attributes if possible.</li>
     
     <item>
       <title>dvisvgm 2.7.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#8e82b41fbfdfcdf712fa21fc5e505117</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#8e82b41fbfdfcdf712fa21fc5e505117</link>
       <pubDate>Sun, 28 Jul 2019 12:08:48 +0200</pubDate>
       <guid>8e82b41fbfdfcdf712fa21fc5e505117</guid>
       <description>
@@ -362,7 +378,7 @@ libraries are missing during build time, the corresponding bundled libraries are
     
     <item>
       <title>Recent Fedora packages of dvisvgm available via Copr</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#d6608f8cc15d94bd4845d229bb6bfb36</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#d6608f8cc15d94bd4845d229bb6bfb36</link>
       <pubDate>Sun, 09 Sep 2018 20:07:15 +0200</pubDate>
       <guid>d6608f8cc15d94bd4845d229bb6bfb36</guid>
       <description>
@@ -493,24 +509,6 @@ For example, option <code>psfixbb</code> of the preview package adds these speci
 <a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
 Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
 <li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.4.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#961cdf56e376338f85ce3cc3a86b6327</link>
-      <pubDate>Sat, 07 Jul 2018 12:49:27 +0200</pubDate>
-      <guid>961cdf56e376338f85ce3cc3a86b6327</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed the handling of the optional delay parameter of option <code>--progress</code>.</li>
-<li>Updated the <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.5.</li>
-<li>Updated the <a href="https://github.com/google/woff2">woff2 library</a> to version 1.0.2</li>
-<li>Updated several URLs in the <a href="/Manpage/">manual page</a>.</li>
-<li>Several minor code refactorings.</li>
 </ul>
 ]]>
       </description>

@@ -79,7 +79,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="99c35178ebd06cc9faad8da4943f38e8"></a>
+  <a name="5a76a7d57fe7b216bf0883b52c986d0b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">29 August 2014: dvisvgm 1.8.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release.</p>
+<ul>
+<li><em>dvisvgm</em> now removes <code>clipPath</code> elements that are not referenced in the SVG file.</li>
+<li>Unexpected <code>bop</code>/<code>eop</code> operators present in PostScript specials are no longer evaluated.
+This prevents side-effects e.g. when using the <code>standalone</code> document class.</li>
+<li>A few improvements to configure.ac have been applied (patches by Khaled Hosny)</li>
+<li>Redundant code has been removed.</li>
+</ul>
+</div>
+  </section><a name="99c35178ebd06cc9faad8da4943f38e8"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">30 July 2014: dvisvgm 1.8 has been released</div>
     <div class="card-body">
@@ -179,41 +192,6 @@ linked to the binary. Supported ABI versions are <em>X</em> = 7, 8, and 9.</li>
 e.g. in Opera and Safari.</li>
 </ul>
 </div>
-  </section><a name="cdbcb25b227edc23e121e914fd02ba8d"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">2 August 2013: dvisvgm 1.4 has been released</div>
-    <div class="card-body">
-      <p>This is a feature release with the following additions:</p>
-<ul>
-<li>Basic support for CMap files and CID-keyed fonts has been added. This enables the processing
-of DVI files created with <a href="http://ascii.asciimw.jp/pb/ptex">pTeX</a>, for example.<br/>
-<a href="/News/images/jap.svg"><img src="/News/images/jap.png" class="sample-img-news img-responsive"></a></li>
-<li><em>dvisvgm</em> also tries to translate character codes according to the available encoding tables
-stored in the referenced TrueType/OpenType font file.</li>
-<li>Support for OpenType (OTF) fonts has been added.</li>
-<li>If a DVI file contains bounding box information created by the
-<a href="https://ctan.org/tex-archive/macros/latex/contrib/preview">preview package</a>, the size of the
-SVG is adapted accordingly. Also, <em>dvisvgm</em> prints a message showing the assigned width, height,
-and depth values in <span class="tex">T<sub>E</sub>X</span> point units. Especially, the depth value can be used to vertically align
-the SVG graphics with the baseline of surrounding text in HTML or XSL-FO documents, for example.<br/>
-<span class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm test
-processing page 1 [1]
-  applying bounding box set by preview package (version 11.87)
-  width=88.9844pt, height=7.45308pt, depth=3.95029pt
-  page size: 88.9844pt x 11.4034pt (31.2744mm x 4.00782mm)
-  page written to test.svg
-1 of 1 page converted in 0.421647 seconds</code></pre></div>
-</span></li>
-<li>The command-line option <code>--linkmark</code> has been extended to mark hyperlinked areas with an
-arbitrary background color.</li>
-<li>The processing of PostScript header specials has been improved.</li>
-<li>PostScript operator <em>show</em> creates much better results now.</li>
-<li>The DOCTYPE declaration has been removed from the generated SVG files as the
-<a href="https://w3.org/TR/SVG11/intro.html#NamespaceAndDTDIdentifiers">W3C recommends to omit it</a>.</li>
-<li>The encoding of the generated SVG files has been changed to UTF-8.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -227,11 +205,12 @@ arbitrary background color.</li>
     <li class="page-item"><a class="page-link" href="/News/page/3/">3</a></li>
     <li class="page-item ellipsis"><i class="fa fa-ellipsis-h page-link"></i></li>
     <li class="page-item"><a class="page-link" href="/News/page/7/">7</a></li>
-    <li class="page-item active"><a class="page-link" href="/News/page/8/">8</a></li><li class="page-item disabled">
-      <a class="page-link" href="" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
+    <li class="page-item active"><a class="page-link" href="/News/page/8/">8</a></li>
+    <li class="page-item"><a class="page-link" href="/News/page/9/">9</a></li><li class="page-item">
+      <a class="page-link" href="/News/page/9/" aria-label="Next"><span aria-hidden="true"><i class="fa fa-step-forward"></i></span></a>
     </li>
-    <li class="page-item disabled">
-      <a class="page-link" href="/News/page/8/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
+    <li class="page-item">
+      <a class="page-link" href="/News/page/9/" aria-label="Last"><span aria-hidden="true"><i class="fa fa-fast-forward"></i></span></a>
     </li>
     </ul>
 </nav></div>
