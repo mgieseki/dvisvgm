@@ -1,3 +1,10 @@
+dvisvgm-2.11 (2020-11-28)
+- added fallback mechanism for JFM-based virtual fonts proposed
+  by Takuji Tanaka (GH issue #144)
+- improved detection of proper CMap files for current encoding
+- fixed processing of Unicode surrogates present in CMap files
+- fixed handling of pdf:mapline and pdf:mapfile specials
+
 dvisvgm-2.10.1 (2020-09-22)
 - added support for new Ghostscript transparency operators
   .setfillconstantalpha and .setstrokeconstantalpha
