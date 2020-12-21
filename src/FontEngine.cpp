@@ -139,7 +139,8 @@ void FontEngine::buildCharMap (RangeMap &charmap) {
 	FT_UInt glyph_index;
 	uint32_t charcode = FT_Get_First_Char(_currentFace, &glyph_index);
 	while (glyph_index) {
-		charmap.addRange(glyph_index, glyph_index, charcode);
+		if (!charmap.valueAt(glyph_index))
+			charmap.addRange(glyph_index, glyph_index, charcode);
 		charcode = FT_Get_Next_Char(_currentFace, charcode, &glyph_index);
 	}
 }
