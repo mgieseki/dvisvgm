@@ -636,7 +636,7 @@ bool NativeFontImpl::findAndAssignBaseFontMap () {
 	FontEngine &fe = FontEngine::instance();
 	fe.setFont(*this);
 	fe.setUnicodeCharMap();
-	fe.buildCharMap(_toUnicodeMap);
+	fe.buildGidToCharCodeMap(_toUnicodeMap);
 	if (!_toUnicodeMap.addMissingMappings(fe.getNumGlyphs()))
 		Message::wstream(true) << "incomplete Unicode mapping for native font " << name() << " (" << filename() << ")\n";
 	return true;

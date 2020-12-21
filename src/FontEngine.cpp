@@ -134,7 +134,7 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) {
 /** Returns a character map that maps from character indexes to character codes
  *  of the current encoding.
  *  @param[out] charmap the resulting charmap */
-void FontEngine::buildCharMap (RangeMap &charmap) {
+void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) {
 	charmap.clear();
 	FT_UInt glyph_index;
 	uint32_t charcode = FT_Get_First_Char(_currentFace, &glyph_index);
@@ -153,7 +153,7 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () {
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) != 0)
 		return nullptr;
 	RangeMap index_to_source_chrcode;
-	buildCharMap(index_to_source_chrcode);
+	buildGidToCharCodeMap(index_to_source_chrcode);
 	if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
 		return nullptr;
 	auto charmap = util::make_unique<RangeMap>();
