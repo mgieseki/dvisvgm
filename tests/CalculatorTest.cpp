@@ -64,6 +64,8 @@ TEST(CalculatorTest, exceptions) {
 	ASSERT_THROW(calc.eval("1%0"), CalculatorException);
 	ASSERT_THROW(calc.eval("2*(3+4"), CalculatorException);
 	ASSERT_THROW(calc.eval("2*(3+4))"), CalculatorException);
+	ASSERT_THROW(calc.eval("2*3+4)"), CalculatorException);
+	ASSERT_THROW(calc.eval("2(3+4"), CalculatorException);
 }
 
 
