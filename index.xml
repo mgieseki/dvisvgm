@@ -3,8 +3,24 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 28 Nov 2020 11:37:43 +0100</pubDate>
+    <pubDate>Thu, 21 Jan 2021 15:42:09 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.11.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
+      <pubDate>Thu, 21 Jan 2021 15:20:02 +0100</pubDate>
+      <guid>e423fc038b1ff9a9ba28e1b1cfbd3d6f</guid>
+      <description>
+        <![CDATA[<p>This is a small maintenance release.</p>
+<ul>
+<li>Fixed possible ambiguities of GID to charcode mappings (<a href="https://github.com/mgieseki/dvisvgm/issues/147">issue #147</a>).</li>
+<li>Refactored the representation of token objects in class <code>Calculator</code>.</li>
+<li>Few minor code and test improvements.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.11 has been released</title>
@@ -157,7 +173,7 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
     
     <item>
       <title>dvisvgm 2.8 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#57192fe118cc7abbba232e51f3d2adf0</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#57192fe118cc7abbba232e51f3d2adf0</link>
       <pubDate>Fri, 25 Oct 2019 17:42:50 +0200</pubDate>
       <guid>57192fe118cc7abbba232e51f3d2adf0</guid>
       <description>
@@ -357,7 +373,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     
     <item>
       <title>dvisvgm 2.6.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6588d151e41c570e8f55ddd8ecdbaab9</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6588d151e41c570e8f55ddd8ecdbaab9</link>
       <pubDate>Fri, 12 Oct 2018 10:35:37 +0200</pubDate>
       <guid>6588d151e41c570e8f55ddd8ecdbaab9</guid>
       <description>
@@ -488,27 +504,6 @@ system libraries by default (<a href="https://github.com/mgieseki/dvisvgm/issues
 <li>Added option <code>--enable-bundled-libs</code> to the <code>configure</code> script to build and statically link
 the bundled libraries.</li>
 <li>Some code refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.4.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#17a86fddd2d683a5caf8ec5239a5433f</link>
-      <pubDate>Wed, 18 Jul 2018 18:43:24 +0200</pubDate>
-      <guid>17a86fddd2d683a5caf8ec5239a5433f</guid>
-      <description>
-        <![CDATA[<p>This is another small maintenance release.</p>
-<ul>
-<li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
-<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas to obtain tight bounds.</li>
-<li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
-For example, option <code>psfixbb</code> of the preview package adds these specials in order to help
-<a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
-Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
-<li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
 </ul>
 ]]>
       </description>

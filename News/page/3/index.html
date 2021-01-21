@@ -79,7 +79,23 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="d6608f8cc15d94bd4845d229bb6bfb36"></a>
+  <a name="6588d151e41c570e8f55ddd8ecdbaab9"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">12 October 2018: dvisvgm 2.6.1 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release that fixes a couple of issues regarding the build system.
+The functionality of the <em>dvisvgm</em> utility itself hasn&rsquo;t changed.</p>
+<ul>
+<li>Added configuration option <code>--disable-manpage</code> to prevent generating the manual page
+(<a href="https://github.com/mgieseki/dvisvgm/issues/93">issue #93</a>).</li>
+<li>If configuration option <code>--disable-bundled-libs</code> is given and some of the required system
+libraries are missing during build time, the corresponding bundled libraries are used as a fallback
+(<a href="https://github.com/mgieseki/dvisvgm/issues/94">issue #94</a>).</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.6.</li>
+<li>Fixed a build issue occurred with GCC 4.8.</li>
+</ul>
+</div>
+  </section><a name="d6608f8cc15d94bd4845d229bb6bfb36"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">9 September 2018: Recent Fedora packages of dvisvgm available via Copr</div>
     <div class="card-body">
@@ -258,19 +274,6 @@ conversion of more transparency parameters, e.g.:
 <li>Several code refactorings.</li>
 </ul>
 </div>
-  </section><a name="5e2b7cf659069c04c85da933ee354fb8"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">23 March 2018: dvisvgm 2.3.5 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Added the evaluation of PostScript operator <code>setpagedevice</code> in <a href="https://tug.org/texinfohtml/dvips.html#psfile-special">psfile specials</a>.
-This enables the conversion of a broader range of EPS files created with <code>dvips</code> which sometimes contain this operator although not
-allowed according to the EPS specification.</li>
-<li>Fixed the evaluation of <a href="https://en.wikibooks.org/wiki/LaTeX/Colors#The_68_standard_colors_known_to_dvips">dvips color names</a>.</li>
-<li>Fixed the warning message printed when using <a href="https://ghostscript.com">Ghostscript</a> as of version 9.23.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -296,7 +299,7 @@ allowed according to the EPS specification.</li>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2021 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

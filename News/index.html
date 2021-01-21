@@ -79,7 +79,18 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="45089adf53a690978eb4e8d47ffd190e"></a>
+  <a name="e423fc038b1ff9a9ba28e1b1cfbd3d6f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">21 January 2021: dvisvgm 2.11.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release.</p>
+<ul>
+<li>Fixed possible ambiguities of GID to charcode mappings (<a href="https://github.com/mgieseki/dvisvgm/issues/147">issue #147</a>).</li>
+<li>Refactored the representation of token objects in class <code>Calculator</code>.</li>
+<li>Few minor code and test improvements.</li>
+</ul>
+</div>
+  </section><a name="45089adf53a690978eb4e8d47ffd190e"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">28 November 2020: dvisvgm 2.11 has been released</div>
     <div class="card-body">
@@ -193,46 +204,6 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
 <li>Some code refactorings.</li>
 </ul>
 </div>
-  </section><a name="57192fe118cc7abbba232e51f3d2adf0"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">25 October 2019: dvisvgm 2.8 has been released</div>
-    <div class="card-body">
-      <p>This is a small feature release with the following additions/changes:</p>
-<ul>
-<li>Added support for JPEG, PNG, PDF, and SVG files to special <code>psfile</code>.</li>
-<li>Added support for Ghostscript 9.50 which introduced incompatible changes regarding option <code>-dSAFER</code>. Due
-to security reasons <code>SAFER</code> is now <a href="https://www.ghostscript.com/doc/9.50/Use.htm#Safer">active by default</a>
-and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</code>. Since <em>dvisvgm</em> requires the latter two to work
-correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
-stops with a PostScript error, e.g. like so:
-<span class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
-              to execute in a safer environment, but at the same time
-              have selected DELAYBIND. Unless you use this option with
-              care (and specifically, remember to call .bindnow) it is
-              possible that malicious code may be able to evade the
-              limited security offered by the SAFER option.
-
-*** WARNING - you have selected SAFER, indicating you want Ghostscript
-              to execute in a safer environment, but at the same time
-              have selected WRITESYSTEMDICT. Unless you use this option with
-              care and specifically, remember to execute code like:
-                     &#34;systemdict readonly pop&#34;
- PostScript error: invalidfileaccess in run</code></pre></div>
-</span><br/>
-<em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
-<li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
-<li>Added support for CMap operator <code>begincidchar</code> (thanks to Akira Kakuto for sending the patch).</li>
-<li>Added suport for experimental 128-bit <a href="https://github.com/Cyan4973/xxHash#new-experimental-hash-algorithm"><code>XXH3</code> hashes</a>.</li>
-<li>The SVG optimizer module <code>simplify-transform</code> has been extended to incorporate translation and scaling components
-into positional and size attributes if possible.</li>
-<li>The CRC32 checksums used to verify the sanity of cache files has been replaced with <code>XXH32</code> hashes.</li>
-<li>The bundled <a href="http://potrace.sourceforge.net">potrace</a> library has been updated to version 1.16.</li>
-<li>The bundled <a href="http://www.xxhash.com">xxHash</a> library has been updated to version 0.7.2.</li>
-<li>The bundled <a href="https://github.com/google/googletest">Google Test</a> library has been updated to version 1.10.</li>
-<li>Lots of code has been refactored and improved.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item disabled">
@@ -257,7 +228,7 @@ into positional and size attributes if possible.</li>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2020 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2021 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>
