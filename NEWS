@@ -1,3 +1,8 @@
+dvisvgm-2.11.1 (2021-01-21)
+- fixed possible ambiguity of GID to charcode mappings (GH issue #147)
+- refactored representation of token objects in calculator class
+- few minor code and test improvements
+
 dvisvgm-2.11 (2020-11-28)
 - added fallback mechanism for JFM-based virtual fonts proposed
   by Takuji Tanaka (GH issue #144)
