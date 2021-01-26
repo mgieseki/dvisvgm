@@ -10,9 +10,9 @@ def main (latex_file, stdout):
             lines = infile.readlines()
             for line in lines:
                 if re.match(r'(.*\\def)|(.*\\href)', line) == None:
-                    line = re.sub(r'([a-zA-Z0-9]+)/', r'\1\slash{}', line)
+                    line = re.sub(r'([a-zA-Z0-9]+)/', r'\1\\slash{}', line)
                     line = re.sub(r'-{}-{}', r'\=/\=/', line)
                     line = re.sub(r'([^a-zA-Z0-9])-{}', r'\1\=/', line)
-                print >>outfile, line.rstrip()
+                print(line.rstrip(), file=outfile)
     os.remove(latex_file_old)
     return 0
