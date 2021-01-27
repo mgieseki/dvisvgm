@@ -69,7 +69,7 @@ to embed the font data into the SVG files. Unfortunately, only few SVG renderers
 elements yet. Most web browsers and vector graphics applications don't evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option *--no-fonts* can be given to replace the font elements
-by plain graphics paths. Most web browsers (but only few external SVG renderers) also suppport
+by plain graphics paths. Most web browsers (but only few external SVG renderers) also support
 WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option *--font-format*
 offers the functionality to change the format applied to the fonts being embedded. This, however,
 only works when converting DVI files. Text present in PDF and PostScript files is always
