@@ -135,6 +135,7 @@ string FileSystem::ensureForwardSlashes (string path) {
 }
 
 
+/** Returns the absolute path of the current working directory. */
 string FileSystem::getcwd () {
 	char buf[1024];
 #ifdef _WIN32
@@ -143,6 +144,26 @@ string FileSystem::getcwd () {
 	return ::getcwd(buf, 1024);
 #endif
 }
+
+
+#ifdef _WIN32
+/** Returns the absolute path of the current directory of a given drive.
+ *  Windows keeps a current directory for every drive, i.e. when accessing a drive
+ *  without specifying a path (e.g. with "cd z:"), the current directory of that
+ *  drive is used.
+ *  @param[in] drive letter of drive to get the current directory from
+ *  @return absolute path of the directory */
+string FileSystem::getcwd (char drive) {
+	string cwd = getcwd();
+	if (cwd.length() > 1 && cwd[1] == ':' && tolower(cwd[0]) != tolower(drive)) {
+		chdir(string(1, drive)+":");
+		string cwd2 = cwd;
+		cwd = getcwd();
+		chdir(string(1, cwd2[0])+":");
+	}
+	return cwd;
+}
+#endif
 
 
 /** Changes the work directory.

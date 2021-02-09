@@ -245,10 +245,13 @@ string FilePath::absolute (bool with_filename) const {
  *  @param[in] with_filename if false, the filename is omitted
  *  @return the relative path string */
 string FilePath::relative (string reldir, bool with_filename) const {
+#ifdef _WIN32
+	if (reldir.empty())
+		reldir = FileSystem::getcwd(_drive);
+	adapt_current_path(reldir, _drive);
+#else
 	if (reldir.empty())
 		reldir = FileSystem::getcwd();
-#ifdef _WIN32
-	adapt_current_path(reldir, _drive);
 #endif
 	if (reldir[0] != '/')
 		return absolute();

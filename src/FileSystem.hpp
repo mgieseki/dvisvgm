@@ -48,6 +48,9 @@ class FileSystem {
 		static uint64_t filesize (const std::string &fname);
 		static std::string ensureForwardSlashes (std::string path);
 		static std::string getcwd ();
+#ifdef _WIN32
+		static std::string getcwd (char drive);
+#endif
 		static std::string tmpdir ();
 		static bool chdir (const std::string &dir);
 		static bool exists (const std::string &fname);
