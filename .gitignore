@@ -4,6 +4,7 @@
 *.o
 *.lo
 *.Po
+*.pyc
 *.obj
 *.dvi
 *.gch
