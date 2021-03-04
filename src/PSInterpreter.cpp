@@ -309,7 +309,7 @@ void PSInterpreter::callActions (InputReader &in) {
 				_rawData.clear();
 				in.skipSpace();
 				while (!in.eof()) {
-					_rawData.emplace_back(in.getString());
+					_rawData.push_back(in.getString());
 					in.skipSpace();
 				}
 			}
@@ -320,14 +320,14 @@ void PSInterpreter::callActions (InputReader &in) {
 				if (pcount < 0) {       // variable number of parameters?
 					in.skipSpace();
 					while (!in.eof()) {  // read all available parameters
-						params.emplace_back(in.getString());
+						params.push_back(in.getString());
 						in.skipSpace();
 					}
 				}
 				else {   // fix number of parameters
 					for (int i=0; i < pcount; i++) {
 						in.skipSpace();
-						params.emplace_back(in.getString());
+						params.push_back(in.getString());
 					}
 				}
 				// convert parameter strings to doubles

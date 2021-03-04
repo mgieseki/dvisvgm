@@ -221,7 +221,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 		}
 		_name2id[name] = newid;
 	}
-	_fonts.emplace_back(std::move(newfont));
+	_fonts.push_back(std::move(newfont));
 	if (_vfStack.empty())  // register font referenced in dvi file?
 		_num2id[fontnum] = newid;
 	else {  // register font referenced in vf file
@@ -291,7 +291,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 		}
 		_name2id[fontname] = newid;
 	}
-	_fonts.emplace_back(std::move(newfont));
+	_fonts.push_back(std::move(newfont));
 	_num2id[fontnum] = newid;
 	return newid;
 }

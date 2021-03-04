@@ -59,7 +59,7 @@ const FontWriter::FontFormatInfo* FontWriter::fontFormatInfo (FontFormat format)
 vector<string> FontWriter::supportedFormats () {
 	vector<string> formats;
 	for (const FontFormatInfo &info : _formatInfos)
-		formats.emplace_back(info.formatstr_short);
+		formats.push_back(info.formatstr_short);
 	return formats;
 }
 

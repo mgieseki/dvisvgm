@@ -81,8 +81,7 @@ void DvisvgmSpecialHandler::preprocessRawSet (InputReader &ir) {
 		_currentMacro = _macros.end();
 		throw SpecialException("redefinition of SVG fragment '" + id + "'");
 	}
-	pair<string, StringVector> entry(id, StringVector());
-	pair<MacroMap::iterator, bool> state = _macros.emplace(move(entry));
+	pair<MacroMap::iterator, bool> state = _macros.emplace(id, StringVector());
 	_currentMacro = state.first;
 }
 

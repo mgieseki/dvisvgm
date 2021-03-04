@@ -107,7 +107,7 @@ void XMLElement::addAttribute (const string &name, const string &value) {
 	if (Attribute *attr = getAttribute(name))
 		attr->value = value;
 	else
-		_attributes.emplace_back(Attribute(name, value));
+		_attributes.emplace_back(name, value);
 }
 
 

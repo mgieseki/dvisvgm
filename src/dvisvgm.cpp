@@ -244,7 +244,7 @@ class VersionInfo {
 
 	protected:
 		void append (const string &name, const string &version) {
-			_versionPairs.emplace_back(pair<string,string>(name, version));
+			_versionPairs.emplace_back(name, version);
 		}
 
 	private:

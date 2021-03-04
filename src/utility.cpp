@@ -134,17 +134,17 @@ string util::replace (string str, const string &find, const string &repl) {
 vector<string> util::split (const string &str, const string &sep) {
 	vector<string> parts;
 	if (str.empty() || sep.empty())
-		parts.emplace_back(str);
+		parts.push_back(str);
 	else {
 		size_t left=0;
 		while (left <= str.length()) {
 			size_t right = str.find(sep, left);
 			if (right == string::npos) {
-				parts.emplace_back(str.substr(left));
+				parts.push_back(str.substr(left));
 				left = string::npos;
 			}
 			else {
-				parts.emplace_back(str.substr(left, right-left));
+				parts.push_back(str.substr(left, right-left));
 				left = right+sep.length();
 			}
 		}

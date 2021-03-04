@@ -39,7 +39,7 @@ void XMLDocument::append (unique_ptr<XMLNode> node) {
 		if (node->toElement())
 			_rootElement = util::static_unique_ptr_cast<XMLElement>(std::move(node));
 		else
-			_nodes.emplace_back(std::move(node));
+			_nodes.push_back(std::move(node));
 	}
 }
 

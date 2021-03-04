@@ -56,7 +56,7 @@ bool TrueTypeFont::read (const string &fname) {
 		if ((offset | length) > _buffer.size() || offset+length > _buffer.size())
 			return false;
 		TTFTableRecord record = {tag, checksum, length, reinterpret_cast<const uint8_t*>(_buffer.data())+offset};
-		_tableRecords.emplace_back(std::move(record));
+		_tableRecords.push_back(std::move(record));
 	}
 	return true;
 }
@@ -94,7 +94,7 @@ void TrueTypeFont::writeWOFF (ostream &os) const {
 		woffRecord.compressTableData();
 		woffSize += woffRecord.paddedSize();
 		ttfSize += ttfRecord.paddedSize();
-		woffRecords.emplace_back(std::move(woffRecord));
+		woffRecords.push_back(std::move(woffRecord));
 	}
 	// write WOFF header
 	StreamWriter writer(os);

@@ -36,7 +36,7 @@ void BgColorSpecialHandler::preprocess (const string&, std::istream &is, Special
 		if (!_pageColors.empty() && _pageColors.back().first == pageno)
 			_pageColors.back().second = color;
 		else
-			_pageColors.emplace_back(PageColor(pageno, color));
+			_pageColors.emplace_back(pageno, color);
 	}
 }
 

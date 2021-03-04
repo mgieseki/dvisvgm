@@ -76,7 +76,7 @@ vector<Length> BoundingBox::extractLengths (string boxstr) {
 	vector<string> lengthStrings = util::split(boxstr, " ");
 	for (const string &lenstr : lengthStrings) {
 		if (!lenstr.empty())
-			lengths.emplace_back(Length(lenstr));
+			lengths.emplace_back(lenstr);
 	}
 	return lengths;
 }
