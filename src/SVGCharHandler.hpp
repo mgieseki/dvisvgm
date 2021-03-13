@@ -31,7 +31,9 @@
 template <typename T>
 class CharProperty {
 	public:
+		CharProperty () =default;
 		CharProperty (const T &v) : _value(v) {}
+		CharProperty (T &&v) : _value(std::move(v)) {}
 
 		void set (const T &v) {
 			if (v != _value) {
