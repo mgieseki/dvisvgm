@@ -135,6 +135,7 @@ libdvisvgm_la_SOURCES = \
 	SVGCharHandlerFactory.hpp    SVGCharHandlerFactory.cpp \
 	SVGCharPathHandler.hpp       SVGCharPathHandler.cpp \
 	SVGCharTspanTextHandler.hpp  SVGCharTspanTextHandler.cpp \
+	SVGElement.hpp               SVGElement.cpp \
 	SVGOutput.hpp                SVGOutput.cpp \
 	SVGSingleCharTextHandler.hpp SVGSingleCharTextHandler.cpp \
 	SVGTree.hpp                  SVGTree.cpp \

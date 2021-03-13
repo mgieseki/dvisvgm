@@ -32,7 +32,7 @@
 #include "PSPreviewFilter.hpp"
 #include "PsSpecialHandler.hpp"
 #include "SpecialActions.hpp"
-#include "SVGTree.hpp"
+#include "SVGElement.hpp"
 #include "TensorProductPatch.hpp"
 #include "TriangularPatch.hpp"
 #include "utility.hpp"
@@ -373,8 +373,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 
 		// insert element containing the image data
 		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
-		if (!matrix.isIdentity())
-			imgNode->addAttribute("transform", matrix.toSVG());
+		imgNode->setTransform(matrix);
 		_actions->svgTree().appendToPage(std::move(imgNode));
 	}
 	// restore DVI position
@@ -398,8 +397,8 @@ static string image_base_path (SpecialActions &actions) {
  *  @param[in] bbox bounding box of the image
  *  @param[in] clip if true, the image is clipped to its bounding box
  *  @return pointer to the element or nullptr if there's no image data */
-unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, BoundingBox bbox, bool clip) {
-	unique_ptr<XMLElement> node;
+unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, BoundingBox bbox, bool clip) {
+	unique_ptr<SVGElement> node;
 	string pathstr;
 	if (const char *path = FileFinder::instance().lookup(fname, false))
 		pathstr = FileSystem::ensureForwardSlashes(path);
@@ -408,7 +407,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 	if (pathstr.empty())
 		Message::wstream(true) << "file '" << fname << "' not found\n";
 	else if (type == FileType::BITMAP || type == FileType::SVG) {
-		node = util::make_unique<XMLElement>("image");
+		node = util::make_unique<SVGElement>("image");
 		node->addAttribute("x", 0);
 		node->addAttribute("y", 0);
 		node->addAttribute("width", bbox.width());
@@ -428,7 +427,7 @@ unique_ptr<XMLElement> PsSpecialHandler::createImageNode (FileType type, const s
 		if (clip)
 			rectclip = to_string(bbox.minX())+" "+to_string(bbox.minY())+" "+to_string(bbox.width())+" "+to_string(bbox.height())+" rectclip";
 
-		node = util::make_unique<XMLElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
+		node = util::make_unique<SVGElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
 		_xmlnode = node.get();
 		_psi.execute(
 			"\n@beginspecial @setspecial"            // enter special environment
@@ -660,18 +659,18 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 	}
 	if (_clipStack.prependedPath())
 		_path.prepend(*_clipStack.prependedPath());
-	unique_ptr<XMLElement> path;
+	unique_ptr<SVGElement> path;
 	Pair<double> point;
 	if (_path.isDot(point)) {  // zero-length path?
 		if (_linecap == 1) {    // round line ends?  => draw dot
 			double x = point.x();
 			double y = point.y();
 			double r = _linewidth/2.0;
-			path = util::make_unique<XMLElement>("circle");
+			path = util::make_unique<SVGElement>("circle");
 			path->addAttribute("cx", x);
 			path->addAttribute("cy", y);
 			path->addAttribute("r", r);
-			path->addAttribute("fill", _actions->getColor().svgColorString());
+			path->setFillColor(_actions->getColor());
 			bbox = BoundingBox(x-r, y-r, x+r, y+r);
 		}
 	}
@@ -682,35 +681,20 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 
 		ostringstream oss;
 		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-		path = util::make_unique<XMLElement>("path");
+		path = util::make_unique<SVGElement>("path");
 		path->addAttribute("d", oss.str());
-		path->addAttribute("stroke", _actions->getColor().svgColorString());
-		path->addAttribute("fill", "none");
-		if (_linewidth != 1)
-			path->addAttribute("stroke-width", _linewidth);
-		if (_miterlimit != 4)
-			path->addAttribute("stroke-miterlimit", _miterlimit);
-		if (_linecap > 0)     // default value is "butt", no need to set it explicitly
-			path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
-		if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
-			path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
-		if (!_opacity.strokealpha().isOpaque())
-			path->addAttribute("stroke-opacity", _opacity.strokealpha().value());
-		if (_opacity.blendMode() != Opacity::BM_NORMAL)
-			path->addAttribute("style", "mix-blend-mode:"+_opacity.cssBlendMode());
-		if (!_dashpattern.empty()) {
-			string patternStr;
-			for (double dashValue : _dashpattern)
-				patternStr += XMLString(dashValue)+",";
-			patternStr.pop_back();
-			path->addAttribute("stroke-dasharray", patternStr);
-			if (_dashoffset != 0)
-				path->addAttribute("stroke-dashoffset", _dashoffset);
-		}
+		path->setStrokeColor(_actions->getColor());
+		path->setNoFillColor();
+		path->setStrokeWidth(_linewidth);
+		path->setStrokeMiterLimit(_miterlimit);
+		path->setStrokeLineCap(_linecap == 0 ? SVGElement::LC_BUTT : _linecap == 1 ? SVGElement::LC_ROUND : SVGElement::LC_SQUARE);
+		path->setStrokeLineJoin(_linejoin == 0 ? SVGElement::LJ_MITER : _linecap == 1 ? SVGElement::LJ_ROUND : SVGElement::LJ_BEVEL);
+		path->setStrokeOpacity(_opacity);
+		path->setStrokeDash(_dashpattern, _dashoffset);
 	}
 	if (path && _clipStack.path() && !_savenode) {
 		// assign clipping path and clip bounding box
-		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
 		bbox.intersect(_clipStack.path()->computeBBox());
 		_clipStack.removePrependedPath();
 	}
@@ -744,24 +728,20 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 
 	ostringstream oss;
 	_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-	unique_ptr<XMLElement> path = util::make_unique<XMLElement>("path");
+	auto path = util::make_unique<SVGElement>("path");
 	path->addAttribute("d", oss.str());
 	if (_pattern)
-		path->addAttribute("fill", XMLString("url(#")+_pattern->svgID()+")");
+		path->setFillPatternUrl(XMLString(_pattern->svgID()));
 	else if (_actions->getColor() != Color::BLACK || _savenode)
-		path->addAttribute("fill", _actions->getColor().svgColorString());
+		path->setFillColor(_actions->getColor());
 	if (_clipStack.path() && !_savenode) {  // clip path active and not inside pattern definition?
 		// assign clipping path and clip bounding box
-		path->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
 		bbox.intersect(_clipStack.path()->computeBBox());
 		_clipStack.removePrependedPath();
 	}
-	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
-		path->addAttribute("fill-rule", "evenodd");
-	if (!_opacity.fillalpha().isOpaque())
-		path->addAttribute("stroke-opacity", _opacity.fillalpha().value());
-	if (_opacity.blendMode() != Opacity::BM_NORMAL)
-		path->addAttribute("style", "mix-blend-mode:"+_opacity.cssBlendMode());
+	path->setFillRule(evenodd ? SVGElement::FR_EVENODD : SVGElement::FR_NONZERO);
+	path->setFillOpacity(_opacity);
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
 	else {
@@ -809,8 +789,8 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 
 		// if set, assign clipping path to image
 		if (_clipStack.path()) {
-			auto group = util::make_unique<XMLElement>("g");
-			group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(_clipStack.topID())+")");
+			auto group = util::make_unique<SVGElement>("g");
+			group->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
 			group->append(std::move(image));
 			image = std::move(group);  // handle the entire group as image to add
 		}
@@ -982,16 +962,15 @@ void PsSpecialHandler::clip (Path path, bool evenodd) {
 		intersectedPath.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	}
 	if (pathReplaced) {
-		auto pathElem = util::make_unique<XMLElement>("path");
+		auto pathElem = util::make_unique<SVGElement>("path");
 		pathElem->addAttribute("d", oss.str());
-		if (evenodd)
-			pathElem->addAttribute("clip-rule", "evenodd");
+		pathElem->setClipRule(evenodd ? SVGElement::FR_EVENODD : SVGElement::FR_NONZERO);
 
 		int newID = _clipStack.topID();
-		auto clipElem = util::make_unique<XMLElement>("clipPath");
+		auto clipElem = util::make_unique<SVGElement>("clipPath");
 		clipElem->addAttribute("id", XMLString("clip")+XMLString(newID));
 		if (!COMPUTE_CLIPPATHS_INTERSECTIONS && oldID)
-			clipElem->addAttribute("clip-path", XMLString("url(#clip")+XMLString(oldID)+")");
+			clipElem->setClipPathUrl("clip"+XMLString(oldID));
 
 		clipElem->append(std::move(pathElem));
 		_actions->svgTree().appendToDefs(std::move(clipElem));
@@ -1108,14 +1087,14 @@ class ShadingCallback : public ShadingPatch::Callback {
 		ShadingCallback (SpecialActions &actions, XMLElement *parent, int clippathID)
 			: _actions(actions)
 		{
-			auto group = util::make_unique<XMLElement>("g");
+			auto group = util::make_unique<SVGElement>("g");
 			_group = group.get();
 			if (parent)
 				parent->append(std::move(group));
 			else
 				actions.svgTree().appendToPage(std::move(group));
 			if (clippathID > 0)
-				_group->addAttribute("clip-path", XMLString("url(#clip")+XMLString(clippathID)+")");
+				_group->setClipPathUrl("clip"+XMLString(clippathID));
 		}
 
 		void patchSegment (GraphicsPath<double> &path, const Color &color) override {
@@ -1133,7 +1112,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 
 	private:
 		SpecialActions &_actions;
-		XMLElement *_group;
+		SVGElement *_group;
 };
 
 

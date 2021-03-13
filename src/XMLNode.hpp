@@ -128,7 +128,7 @@ class XMLElement : public XMLNode {
 		explicit XMLElement (std::string name);
 		XMLElement (const XMLElement &node);
 		XMLElement (XMLElement &&node) noexcept;
-		~XMLElement ();
+		~XMLElement () override;
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLElement>(*this);}
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);

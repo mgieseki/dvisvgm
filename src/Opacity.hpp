@@ -53,8 +53,10 @@ class Opacity {
 		Opacity (OpacityAlpha fillalpha, OpacityAlpha strokealpha, BlendMode bm) : _fillalpha(fillalpha), _strokealpha(strokealpha), _blendMode(bm) {}
 		Opacity (OpacityAlpha fillalpha, OpacityAlpha strokealpha) : Opacity(fillalpha, strokealpha, BM_NORMAL) {}
       explicit Opacity (BlendMode bm) : _blendMode(bm) {}
-		OpacityAlpha fillalpha () const {return _fillalpha;}
-		OpacityAlpha strokealpha () const {return _strokealpha;}
+		OpacityAlpha& fillalpha () {return _fillalpha;}
+		OpacityAlpha& strokealpha () {return _strokealpha;}
+		const OpacityAlpha& fillalpha () const {return _fillalpha;}
+		const OpacityAlpha& strokealpha () const {return _strokealpha;}
 		BlendMode blendMode () const {return _blendMode;}
 		void setBlendMode (BlendMode mode) {_blendMode = mode;}
 		std::string cssBlendMode () const {return cssBlendMode(_blendMode);}

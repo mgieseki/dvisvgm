@@ -34,6 +34,7 @@
 #include "SpecialHandler.hpp"
 
 class PSPattern;
+class SVGElement;
 class XMLElement;
 
 class PsSpecialHandler : public SpecialHandler, protected PSActions {
@@ -104,7 +105,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void executeAndSync (std::istream &is, bool updatePos);
 		void processHeaderFile (const char *fname);
 		void imgfile (FileType type, const std::string &fname, const std::map<std::string,std::string> &attr);
-		std::unique_ptr<XMLElement> createImageNode (FileType type, const std::string &fname, int pageno, BoundingBox bbox, bool clip);
+		std::unique_ptr<SVGElement> createImageNode (FileType type, const std::string &fname, int pageno, BoundingBox bbox, bool clip);
 		void dviBeginPage (unsigned int pageno, SpecialActions &actions) override;
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path path, bool evenodd);
