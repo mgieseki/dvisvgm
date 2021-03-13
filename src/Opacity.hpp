@@ -56,6 +56,7 @@ class Opacity {
 		OpacityAlpha fillalpha () const {return _fillalpha;}
 		OpacityAlpha strokealpha () const {return _strokealpha;}
 		BlendMode blendMode () const {return _blendMode;}
+		void setBlendMode (BlendMode mode) {_blendMode = mode;}
 		std::string cssBlendMode () const {return cssBlendMode(_blendMode);}
 		static std::string cssBlendMode (BlendMode bm);
 		bool isFillDefault () const {return _fillalpha.isOpaque() && _blendMode == BM_NORMAL;}
