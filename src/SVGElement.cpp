@@ -78,6 +78,18 @@ void SVGElement::setNoFillColor () {
 }
 
 
+void SVGElement::setPoints (const vector<DPair> &points) {
+	if (!points.empty()) {
+		ostringstream oss;
+		for (const DPair &p : points)
+			oss << XMLString(p.x()) << ' ' << XMLString(p.y()) << ' ';
+		string str = oss.str();
+		str.pop_back();
+		addAttribute("points", str);
+	}
+}
+
+
 void SVGElement::setStrokeColor (Color color) {
 	addAttribute("stroke", color.svgColorString());
 }

@@ -152,7 +152,7 @@ TEST_F(EmSpecialTest, vline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2v, 10bp");  // cut line ends vertically
-	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10,17.07 10,2.93 100,92.93 100,107.07'/>\n</g>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10 17.07 10 2.93 100 92.93 100 107.07'/>\n</g>");
 }
 
 
@@ -160,7 +160,7 @@ TEST_F(EmSpecialTest, hline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2h, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93,10 17.07,10 107.07,100 92.93,100'/>\n</g>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93 10 17.07 10 107.07 100 92.93 100'/>\n</g>");
 }
 
 
@@ -168,14 +168,14 @@ TEST_F(EmSpecialTest, hvline) {
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1h, 2v, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93,10 17.07,10 100,92.93 100,107.07'/>\n</g>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93 10 17.07 10 100 92.93 100 107.07'/>\n</g>");
 
 	recorder.clear();
 	recorder.setColor(Color(0.0, 0.0, 1.0));
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2h, 10bp");  // cut line ends horizontally
-	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10,17.07 10,2.93 107.07,100 92.93,100' fill='#00f'/>\n</g>");
+	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='10 17.07 10 2.93 107.07 100 92.93 100' fill='#00f'/>\n</g>");
 }
 
 

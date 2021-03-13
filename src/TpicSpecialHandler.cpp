@@ -128,16 +128,14 @@ void TpicSpecialHandler::drawLines (double ddist, SpecialActions &actions) {
 				else
 					elem->setFillColor(fillColor(false));
 			}
-			ostringstream oss;
-			for (auto it=_points.begin(); it != _points.end(); ++it) {
-				if (it != _points.begin())
-					oss << ' ';
-				double x = it->x()+actions.getX();
-				double y = it->y()+actions.getY();
-				oss << XMLString(x) << ',' << XMLString(y);
+			vector<DPair> points;
+			for (const DPair &p : _points) {
+				double x = p.x()+actions.getX();
+				double y = p.y()+actions.getY();
+				points.emplace_back(x, y);
 				actions.embed(DPair(x, y));
 			}
-			elem->addAttribute("points", oss.str());
+			elem->setPoints(points);
 			add_stroke_attribs(elem.get(), _penwidth, Color::BLACK, ddist);
 		}
 		actions.svgTree().appendToPage(std::move(elem));

@@ -99,25 +99,24 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 	}
 	else {
 		// draw polygon
+		vector<DPair> points;
 		DPair cv1 = cut_vector(c1, dir, lw);
 		DPair cv2 = cut_vector(c2, dir, lw);
-		DPair q11 = p1+cv1, q12 = p1-cv1;
-		DPair q21 = p2+cv2, q22 = p2-cv2;
-		ostringstream oss;
-		oss << XMLString(q11.x()) << ',' << XMLString(q11.y()) << ' '
-			 << XMLString(q12.x()) << ',' << XMLString(q12.y()) << ' '
-			 << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
-			 << XMLString(q21.x()) << ',' << XMLString(q21.y());
+		points.push_back(p1+cv1);
+		points.push_back(p1-cv1);
+		points.push_back(p2-cv2);
+		points.push_back(p2+cv2);
+
 		node = util::make_unique<SVGElement>("polygon");
-		node->addAttribute("points", oss.str());
+		node->setPoints(points);
 		node->setFillColor(actions.getColor());
 		node->setFillOpacity(actions.getOpacity());
 
 		// update bounding box
-		actions.embed(q11);
-		actions.embed(q12);
-		actions.embed(q21);
-		actions.embed(q22);
+		actions.embed(points[0]);
+		actions.embed(points[1]);
+		actions.embed(points[2]);
+		actions.embed(points[3]);
 	}
 	actions.svgTree().appendToPage(std::move(node));
 }

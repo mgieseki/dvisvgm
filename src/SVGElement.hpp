@@ -45,6 +45,7 @@ class SVGElement : public XMLElement {
 		void setFillPatternUrl (const std::string &url);
 		void setFillRule (FillRule rule);
 		void setNoFillColor ();
+		void setPoints (const std::vector<DPair> &points);
 		void setStrokeColor (Color color);
 		void setStrokeDash (const std::vector<double> &pattern, double offset=0);
 		void setStrokeLineCap (LineCap cap);

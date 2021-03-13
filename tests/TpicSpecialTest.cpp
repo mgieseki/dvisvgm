@@ -154,7 +154,7 @@ TEST_F(TpicSpecialTest, stroke_polyline) {
 	handler.processSpecial("pa", "1000 0");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72 72,0' stroke='#000'/>"
+		"<polyline fill='none' stroke-linecap='round' points='0 0 72 72 72 0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -169,7 +169,7 @@ TEST_F(TpicSpecialTest, stroke_polygon) {
 	handler.processSpecial("pa", "0 0");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='none' points='0,0 72,72 72,0' stroke='#000'/>"
+		"<polygon fill='none' points='0 0 72 72 72 0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -184,7 +184,7 @@ TEST_F(TpicSpecialTest, fill_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000'/>"
+		"<polygon fill='#fff' points='0 0 72 72 72 0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -196,7 +196,7 @@ TEST_F(TpicSpecialTest, fill_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("ip");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0'/>"
+		"<polygon fill='#fff' points='0 0 72 72 72 0'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -211,7 +211,7 @@ TEST_F(TpicSpecialTest, fill_dashed_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("da", "2");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000' stroke-dasharray='144'/>"
+		"<polygon fill='#fff' points='0 0 72 72 72 0' stroke='#000' stroke-dasharray='144'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -227,7 +227,7 @@ TEST_F(TpicSpecialTest, fill_dotted_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("dt", "2 2");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000' stroke-width='36' stroke-dasharray='36 144'/>"
+		"<polygon fill='#fff' points='0 0 72 72 72 0' stroke='#000' stroke-width='36' stroke-dasharray='36 144'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -239,7 +239,7 @@ TEST_F(TpicSpecialTest, stroke_spline) {
 	handler.processSpecial("pa", "1000 1000");
 	handler.processSpecial("sp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72' stroke='#000'/>"
+		"<polyline fill='none' stroke-linecap='round' points='0 0 72 72' stroke='#000'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("pa", "0 0");
