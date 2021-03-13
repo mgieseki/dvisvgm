@@ -28,10 +28,10 @@
 #include <vector>
 #include "GraphicsPath.hpp"
 #include "PSInterpreter.hpp"
-#include "SpecialHandler.hpp"
+#include "Opacity.hpp"
 #include "PSPattern.hpp"
 #include "PSPreviewFilter.hpp"
-
+#include "SpecialHandler.hpp"
 
 class PSPattern;
 class XMLElement;
@@ -142,7 +142,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void setcolorspace (std::vector<double> &p) override   {_patternEnabled = bool(p[0]);}
 		void setcmykcolor (std::vector<double> &cmyk) override;
 		void setdash (std::vector<double> &p) override;
-		void setfillconstantalpha (std::vector<double> &p) override {_fillalpha[_isshapealpha ? 1 : 0] = p[0];}
+		void setfillconstantalpha (std::vector<double> &p) override;
 		void setgray (std::vector<double> &p) override;
 		void sethsbcolor (std::vector<double> &hsb) override;
 		void setisshapealpha (std::vector<double> &p) override {_isshapealpha = bool(p[0]);}
@@ -155,7 +155,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void setpagedevice (std::vector<double> &p) override;
 		void setpattern (std::vector<double> &p) override;
 		void setrgbcolor (std::vector<double> &rgb) override;
-		void setstrokeconstantalpha (std::vector<double> &p) override  {_strokealpha[_isshapealpha ? 1 : 0] = p[0];}
+		void setstrokeconstantalpha (std::vector<double> &p) override;
 		void shfill (std::vector<double> &p) override;
 		void stroke (std::vector<double> &p) override;
 		void translate (std::vector<double> &p) override;
@@ -176,9 +176,9 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		double _cos;                       ///< cosine of angle between (1,0) and transform(1,0)
 		double _linewidth;                 ///< current line width in bp units
 		double _miterlimit;                ///< current miter limit in bp units
-		bool _isshapealpha;                ///< if true, opacity operators act on index 1 (shape component), otherwise on index 0 (constant component)
-		std::array<double,2> _fillalpha;   ///< constant and shape opacity used for fill operations (0=fully transparent, ..., 1=opaque)
-		std::array<double,2> _strokealpha; ///< constant and shape opacity used for stroke operations (0=fully transparent, ..., 1=opaque)
+		bool _isshapealpha;                ///< if true, opacity operators act on shape component, otherwise on constant component
+		OpacityAlpha _fillalpha;           ///< constant and shape opacity used for fill operations (0=fully transparent, ..., 1=opaque)
+		OpacityAlpha _strokealpha;         ///< constant and shape opacity used for stroke operations (0=fully transparent, ..., 1=opaque)
 		int _blendmode;                    ///< blend mode used when overlaying colored areas
 		uint8_t _linecap  : 2;             ///< current line cap (0=butt, 1=round, 2=projecting square)
 		uint8_t _linejoin : 2;             ///< current line join (0=miter, 1=round, 2=bevel)

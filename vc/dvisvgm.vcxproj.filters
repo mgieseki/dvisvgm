@@ -332,6 +332,9 @@
     <ClCompile Include="..\src\optimizer\TextSimplifier.cpp">
       <Filter>Source Files\optimizer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Opacity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -675,6 +678,9 @@
     </ClInclude>
     <ClInclude Include="..\src\optimizer\TextSimplifier.hpp">
       <Filter>Header Files\optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Opacity.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

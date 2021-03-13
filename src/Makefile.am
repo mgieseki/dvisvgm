@@ -104,6 +104,7 @@ libdvisvgm_la_SOURCES = \
 	MetafontWrapper.hpp          MetafontWrapper.cpp \
 	NoPsSpecialHandler.hpp       NoPsSpecialHandler.cpp \
 	NumericRanges.hpp \
+	Opacity.hpp                  Opacity.cpp \
 	PageRanges.hpp               PageRanges.cpp \
 	PageSize.hpp                 PageSize.cpp \
 	Pair.hpp \

@@ -81,8 +81,8 @@ void PsSpecialHandler::initgraphics () {
 	_linecap = _linejoin = 0;  // butt end caps and miter joins
 	_miterlimit = 4;
 	_xmlnode = _savenode = nullptr;
-	_isshapealpha = false;               // opacity operators change constant component by default
-	_fillalpha = _strokealpha = {1, 1};  // set constant and shape opacity to non-transparent
+	_isshapealpha = false;     // opacity operators change constant component by default
+	_fillalpha = _strokealpha = OpacityAlpha();  // set constant and shape opacity to non-transparent
 	_blendmode = 0;   // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
@@ -556,8 +556,8 @@ void PsSpecialHandler::setpagedevice (std::vector<double> &p) {
 	_linewidth = 1;
 	_linecap = _linejoin = 0;  // butt end caps and miter joins
 	_miterlimit = 4;
-	_isshapealpha = false;               // opacity operators change constant component by default
-	_fillalpha = _strokealpha = {1, 1};  // set constant and shape opacity to non-transparent
+	_isshapealpha = false;     // opacity operators change constant component by default
+	_fillalpha = _strokealpha = OpacityAlpha();  // set constant and shape opacity to non-transparent
 	_blendmode = 0;  // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
@@ -613,14 +613,39 @@ void PsSpecialHandler::closepath (vector<double>&) {
 }
 
 
-static string css_blendmode_name (int mode) {
-	static const array<const char*,16> modenames = {{
-	  "normal",  "multiply",  "screen", "overlay", "soft-light", "hard-light", "color-dodge", "color-burn",
-	  "darken", "lighten", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
-	}};
-	if (mode < 0 || mode > 15)
+void PsSpecialHandler::setfillconstantalpha (vector<double> &p) {
+	if (_isshapealpha)
+		_fillalpha.setShapeAlpha(p[0]);
+	else
+		_fillalpha.setConstAlpha(p[0]);
+}
+
+
+void PsSpecialHandler::setstrokeconstantalpha (vector<double> &p) {
+	if (_isshapealpha)
+		_strokealpha.setShapeAlpha(p[0]);
+	else
+		_strokealpha.setConstAlpha(p[0]);
+}
+
+
+static Opacity::BlendMode blendmode (int modeID) {
+	static const Opacity::BlendMode blendmodes[] = {
+		Opacity::BM_NORMAL, Opacity::BM_MULTIPLY, Opacity::BM_SCREEN, Opacity::BM_OVERLAY,
+		Opacity::BM_SOFTLIGHT, Opacity::BM_HARDLIGHT, Opacity::BM_COLORDODGE, Opacity::BM_COLORBURN,
+		Opacity::BM_DARKEN, Opacity::BM_LIGHTEN, Opacity::BM_DIFFERENCE, Opacity::BM_EXCLUSION,
+		Opacity::BM_HUE, Opacity::BM_SATURATION, Opacity::BM_COLOR, Opacity::BM_LUMINOSITY
+	};
+	if (modeID < 0 || modeID > 15)
+		return Opacity::BM_NORMAL;
+	return blendmodes[modeID];
+}
+
+
+static string css_blendmode_name (int modeID) {
+	if (modeID < 0 || modeID > 15)
 		return "";
-	return modenames[mode];
+	return Opacity::cssBlendMode(blendmode(modeID));
 }
 
 
@@ -673,8 +698,8 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("stroke-linecap", _linecap == 1 ? "round" : "square");
 		if (_linejoin > 0)    // default value is "miter", no need to set it explicitly
 			path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
-		if (_strokealpha[0] < 1 || _strokealpha[1] < 1)
-			path->addAttribute("stroke-opacity", _strokealpha[0] * _strokealpha[1]);
+		if (_strokealpha.value() < 1)
+			path->addAttribute("stroke-opacity", _strokealpha.value());
 		if (_blendmode > 0 && _blendmode < 16)
 			path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
 		if (!_dashpattern.empty()) {
@@ -737,8 +762,8 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	}
 	if (evenodd)  // SVG default fill rule is "nonzero" algorithm
 		path->addAttribute("fill-rule", "evenodd");
-	if (_fillalpha[0] < 1 || _fillalpha[1] < 1)
-		path->addAttribute("fill-opacity", _fillalpha[0] * _fillalpha[1]);
+	if (_fillalpha.value() < 1)
+		path->addAttribute("fill-opacity", _fillalpha.value());
 	if (_blendmode > 0 && _blendmode < 16)
 		path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
 	if (_xmlnode)

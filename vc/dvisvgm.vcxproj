@@ -209,6 +209,7 @@
     <ClCompile Include="..\src\EllipticalArc.cpp" />
     <ClCompile Include="..\src\HashFunction.cpp" />
     <ClCompile Include="..\src\ImageToSVG.cpp" />
+    <ClCompile Include="..\src\Opacity.cpp" />
     <ClCompile Include="..\src\optimizer\AttributeExtractor.cpp" />
     <ClCompile Include="..\src\optimizer\GroupCollapser.cpp" />
     <ClCompile Include="..\src\optimizer\RedundantElementRemover.cpp" />
@@ -329,6 +330,7 @@
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
     <ClInclude Include="..\src\MD5HashFunction.hpp" />
+    <ClInclude Include="..\src\Opacity.hpp" />
     <ClInclude Include="..\src\optimizer\AttributeExtractor.hpp" />
     <ClInclude Include="..\src\optimizer\DependencyGraph.hpp" />
     <ClInclude Include="..\src\optimizer\GroupCollapser.hpp" />
