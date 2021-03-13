@@ -61,6 +61,7 @@ class ImageToSVG : protected SpecialActions {
 		Color getColor () const override                        {return _svg.getColor();}
 		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
+		const Opacity& getOpacity () const override             {return _svg.getOpacity();}
 		const SVGTree& svgTree () const override                {return _svg;}
 		void setBgColor (const Color &color) override           {}
 		void embed (const BoundingBox &bbox) override           {_bbox.embed(bbox);}

@@ -1104,9 +1104,9 @@ class ShadingCallback : public ShadingPatch::Callback {
 			// draw a single patch segment
 			ostringstream oss;
 			path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-			auto pathElem = util::make_unique<XMLElement>("path");
+			auto pathElem = util::make_unique<SVGElement>("path");
 			pathElem->addAttribute("d", oss.str());
-			pathElem->addAttribute("fill", color.svgColorString());
+			pathElem->setFillColor(color);
 			_group->append(std::move(pathElem));
 		}
 

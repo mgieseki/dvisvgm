@@ -23,7 +23,7 @@
 #include "FontManager.hpp"
 #include "SVGCharPathHandler.hpp"
 #include "utility.hpp"
-#include "XMLNode.hpp"
+#include "SVGElement.hpp"
 
 using namespace std;
 
@@ -70,22 +70,14 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 	if (color.changed() || _matrix.changed() || _opacity.changed()) {
 		resetContextNode();
 		if (applyColor || applyMatrix || applyOpacity) {
-			_groupNode = pushContextNode(util::make_unique<XMLElement>("g"));
-			if (applyColor)
-				contextNode()->addAttribute("fill", color->svgColorString());
-			if (applyOpacity) {
-				double fillalpha = _opacity->fillalpha().value();
-				Opacity::BlendMode blendmode = _opacity->blendMode();
-				if (fillalpha < 1)
-					contextNode()->addAttribute("fill-opacity", fillalpha);
-				if (blendmode != Opacity::BM_NORMAL)
-					contextNode()->addAttribute("style", "mix-blend-mode:"+_opacity->cssBlendMode());
-			}
-			if (applyMatrix)
-				contextNode()->addAttribute("transform", _matrix->toSVG());
+			_groupNode = pushContextNode(util::make_unique<SVGElement>("g"));
+			contextNode()->setFillColor(color);
+			contextNode()->setFillOpacity(_opacity);
+			contextNode()->setTransform(_matrix);
 		}
 		color.changed(false);
 		_matrix.changed(false);
+		_opacity.changed(false);
 	}
 	const Font *font = _font.get();
 	if (font->verticalLayout()) {
@@ -118,12 +110,11 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 
 void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const Matrix &matrix) {
 	string id = "#g" + to_string(FontManager::instance().fontID(_font)) + "-" + to_string(c);
-	auto useNode = util::make_unique<XMLElement>("use");
+	auto useNode = util::make_unique<SVGElement>("use");
 	useNode->addAttribute("x", XMLString(x));
 	useNode->addAttribute("y", XMLString(y));
 	useNode->addAttribute("xlink:href", id);
-	if (!matrix.isIdentity())
-		useNode->addAttribute("transform", matrix.toSVG());
+	useNode->setTransform(matrix);
 	contextNode()->append(std::move(useNode));
 }
 
@@ -136,10 +127,9 @@ void SVGCharPathHandler::appendPathElement (uint32_t c, double x, double y, cons
 		double sy = -sx;
 		ostringstream oss;
 		glyph.writeSVG(oss, _relativePathCommands, sx, sy, x, y);
-		auto glyphNode = util::make_unique<XMLElement>("path");
+		auto glyphNode = util::make_unique<SVGElement>("path");
 		glyphNode->addAttribute("d", oss.str());
-		if (!matrix.isIdentity())
-			glyphNode->addAttribute("transform", matrix.toSVG());
+		glyphNode->setTransform(matrix);
 		contextNode()->append(std::move(glyphNode));
 	}
 }

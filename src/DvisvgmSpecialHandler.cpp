@@ -385,14 +385,13 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 		Length h = read_length(ir);
 		string f = ir.getString();
 		update_bbox(w, h, Length(0), false, actions);
-		auto img = util::make_unique<XMLElement>("image");
+		auto img = util::make_unique<SVGElement>("image");
 		img->addAttribute("x", actions.getX());
 		img->addAttribute("y", actions.getY());
 		img->addAttribute("width", w.bp());
 		img->addAttribute("height", h.bp());
 		img->addAttribute("xlink:href", f);
-		if (!actions.getMatrix().isIdentity())
-			img->addAttribute("transform", actions.getMatrix().toSVG());
+		img->setTransform(actions.getMatrix());
 		actions.svgTree().appendToPage(std::move(img));
 	}
 	catch (const UnitException &e) {
@@ -522,7 +521,7 @@ void DvisvgmSpecialHandler::XMLParser::openElement (const string &tag, SpecialAc
 	BufferInputReader ir(ib);
 	string name = ir.getString("/ \t\n\r");
 	ir.skipSpace();
-	auto elemNode = util::make_unique<XMLElement>(name);
+	auto elemNode = util::make_unique<SVGElement>(name);
 	map<string, string> attribs;
 	if (ir.parseAttributes(attribs, true, "\"'")) {
 		for (const auto &attrpair : attribs)

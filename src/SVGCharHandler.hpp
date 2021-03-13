@@ -55,7 +55,7 @@ class CharProperty {
 };
 
 
-class XMLElement;
+class SVGElement;
 
 
 /** Base class for all character handlers. These handlers create SVG representations
@@ -64,7 +64,7 @@ class SVGCharHandler {
 	public:
 		SVGCharHandler () : _matrix(1) {}
 		virtual ~SVGCharHandler() =default;
-		virtual void setInitialContextNode (XMLElement *node);
+		virtual void setInitialContextNode (SVGElement *node);
 		virtual void appendChar (uint32_t c, double x, double y) =0;
 		virtual void notifyXAdjusted () {}
 		virtual void notifyYAdjusted () {}
@@ -74,15 +74,16 @@ class SVGCharHandler {
 		void setMatrix (const Matrix &matrix)    {_matrix.set(matrix);}
 		void setVertical (bool vertical)         {_vertical.set(vertical);}
 		Color getColor () const                  {return _color.get();}
+		const Opacity& getOpacity () const       {return _opacity.get();}
 		const Font* getFont () const             {return _font.get();}
 		const Matrix& getMatrix () const         {return _matrix.get();}
 
 	protected:
 		virtual void resetContextNode ();
-		XMLElement* pushContextNode (std::unique_ptr<XMLElement> node);
+		SVGElement* pushContextNode (std::unique_ptr<SVGElement> node);
 		void popContextNode ();
 
-		XMLElement* contextNode () const {
+		SVGElement* contextNode () const {
 			return _contextNodeStack.empty() ? _initialContextNode : _contextNodeStack.top();
 		}
 
@@ -94,8 +95,8 @@ class SVGCharHandler {
 		CharProperty<bool> _vertical=false;        ///< current writing mode
 
 	private:
-		XMLElement *_initialContextNode= nullptr;  ///< SVG element the generated character nodes are attached to
-		std::stack<XMLElement*> _contextNodeStack;
+		SVGElement *_initialContextNode= nullptr;  ///< SVG element the generated character nodes are attached to
+		std::stack<SVGElement*> _contextNodeStack;
 };
 
 
@@ -105,7 +106,7 @@ class SVGCharTextHandler : public SVGCharHandler {
 		explicit SVGCharTextHandler (bool selectFontByClass) : _selectFontByClass(selectFontByClass) {}
 
 	protected:
-		std::unique_ptr<XMLElement> createTextNode (double x, double y) const;
+		std::unique_ptr<SVGElement> createTextNode (double x, double y) const;
 
 	private:
 		bool _selectFontByClass;

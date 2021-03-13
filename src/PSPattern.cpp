@@ -106,8 +106,8 @@ unique_ptr<XMLElement> PSTilingPattern::createClipNode() const {
  *  define the pattern graphic. */
 unique_ptr<XMLElement> PSTilingPattern::createGroupNode () const {
 	// add all succeeding path elements to this group
-	auto group = util::make_unique<XMLElement>("g");
-	group->addAttribute("clip-path", XMLString("url(#pc")+XMLString(psID())+")");
+	auto group = util::make_unique<SVGElement>("g");
+	group->setClipPathUrl("pc"+XMLString(psID()));
 	return group;
 }
 

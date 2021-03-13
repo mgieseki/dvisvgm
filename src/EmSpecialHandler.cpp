@@ -24,8 +24,8 @@
 #include "InputReader.hpp"
 #include "Length.hpp"
 #include "SpecialActions.hpp"
+#include "SVGElement.hpp"
 #include "SVGTree.hpp"
-#include "XMLNode.hpp"
 #include "XMLString.hpp"
 
 using namespace std;
@@ -77,17 +77,19 @@ static DPair cut_vector (char cuttype, const DPair &linedir, double linewidth) {
 static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, double lw, SpecialActions &actions) {
 	if (actions.outputLocked())
 		return;
-	unique_ptr<XMLElement> node;
+	unique_ptr<SVGElement> node;
 	DPair dir = p2-p1;
 	if (dir.x() == 0 || dir.y() == 0 || (c1 == 'p' && c2 == 'p')) {
 		// draw regular line
-		node = util::make_unique<XMLElement>("line");
+		node = util::make_unique<SVGElement>("line");
 		node->addAttribute("x1", p1.x());
 		node->addAttribute("y1", p1.y());
 		node->addAttribute("x2", p2.x());
 		node->addAttribute("y2", p2.y());
-		node->addAttribute("stroke-width", lw);
-		node->addAttribute("stroke", actions.getColor().svgColorString());
+		node->setStrokeWidth(lw);
+		node->setStrokeColor(actions.getColor());
+		node->setStrokeOpacity(actions.getOpacity());
+
 		// update bounding box
 		DPair cv = cut_vector('p', dir, lw);
 		actions.embed(p1+cv);
@@ -106,10 +108,11 @@ static void create_line (const DPair &p1, const DPair &p2, char c1, char c2, dou
 			 << XMLString(q12.x()) << ',' << XMLString(q12.y()) << ' '
 			 << XMLString(q22.x()) << ',' << XMLString(q22.y()) << ' '
 			 << XMLString(q21.x()) << ',' << XMLString(q21.y());
-		node = util::make_unique<XMLElement>("polygon");
+		node = util::make_unique<SVGElement>("polygon");
 		node->addAttribute("points", oss.str());
-		if (actions.getColor() != Color::BLACK)
-			node->addAttribute("fill", actions.getColor().svgColorString());
+		node->setFillColor(actions.getColor());
+		node->setFillOpacity(actions.getOpacity());
+
 		// update bounding box
 		actions.embed(q11);
 		actions.embed(q12);

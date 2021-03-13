@@ -20,7 +20,7 @@
 
 #include "SVGCharTspanTextHandler.hpp"
 #include "utility.hpp"
-#include "XMLNode.hpp"
+#include "SVGElement.hpp"
 
 using namespace std;
 
@@ -48,19 +48,12 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	bool applyColor = _color.get() != Color::BLACK && _font.get()->color() == Color::BLACK;
 	bool applyOpacity = !_opacity->isFillDefault();
 	if (_xchanged || _ychanged || (_color.changed() && applyColor) || (_opacity.changed() && applyOpacity)) {
-		_tspanNode = pushContextNode(util::make_unique<XMLElement>("tspan"));
+		_tspanNode = pushContextNode(util::make_unique<SVGElement>("tspan"));
 		if (applyColor)
-			_tspanNode->addAttribute("fill", _color->svgColorString());
+			_tspanNode->setFillColor(_color);
 		_color.changed(false);
-		if (applyOpacity) {
-			double fillalpha = _opacity->fillalpha().value();
-			Opacity::BlendMode blendmode = _opacity->blendMode();
-			if (fillalpha < 1)
-				_tspanNode->addAttribute("fill-opacity", _opacity->fillalpha().value());
-			if (blendmode != Opacity::BM_NORMAL)
-				_tspanNode->addAttribute("style", "mix-blend-mode:"+_opacity->cssBlendMode());
-			_opacity.changed(false);
-		}
+		_tspanNode->setFillOpacity(_opacity);
+		_opacity.changed(false);
 		if (_xchanged) {
 			if (_vertical) {
 				// align glyphs designed for horizontal layout properly
@@ -80,7 +73,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 }
 
 
-void SVGCharTspanTextHandler::setInitialContextNode (XMLElement *node) {
+void SVGCharTspanTextHandler::setInitialContextNode (SVGElement *node) {
 	SVGCharHandler::setInitialContextNode(node);
 	_textNode = _tspanNode = nullptr;
 	_xchanged = _ychanged = false;

@@ -166,15 +166,13 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 		return;
 
 	// (x,y) is the lower left corner of the rectangle
-	auto rect = util::make_unique<XMLElement>("rect");
+	auto rect = util::make_unique<SVGElement>("rect");
 	rect->addAttribute("x", x);
 	rect->addAttribute("y", y-height);
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
-	if (!getMatrix().isIdentity())
-		rect->addAttribute("transform", getMatrix().toSVG());
-	if (getColor() != Color::BLACK)
-		rect->addAttribute("fill", _svg.getColor().svgColorString());
+	rect->setTransform(getMatrix());
+	rect->setFillColor(_svg.getColor());
 	_svg.appendToPage(std::move(rect));
 
 	// update bounding box
@@ -237,12 +235,12 @@ void DVIToSVGActions::endPage (unsigned pageno) {
 	_svg.transformPage(matrix);
 	if (_bgcolor != Color::TRANSPARENT) {
 		// create a rectangle filled with the background color
-		auto rect = util::make_unique<XMLElement>("rect");
+		auto rect = util::make_unique<SVGElement>("rect");
 		rect->addAttribute("x", _bbox.minX());
 		rect->addAttribute("y", _bbox.minY());
 		rect->addAttribute("width", _bbox.width());
 		rect->addAttribute("height", _bbox.height());
-		rect->addAttribute("fill", _bgcolor.svgColorString());
+		rect->setFillColor(_bgcolor);
 		_svg.prependToPage(std::move(rect));
 	}
 }

@@ -29,15 +29,15 @@ class SVGCharTspanTextHandler : public SVGCharTextHandler {
 		void notifyXAdjusted () override {_xchanged = true;}
 		void notifyYAdjusted()  override {_ychanged = true;}
 		void appendChar (uint32_t c, double x, double y) override;
-		void setInitialContextNode (XMLElement *node) override;
+		void setInitialContextNode (SVGElement *node) override;
 
 	protected:
 		void resetContextNode () override;
 
 	private:
 		bool _xchanged, _ychanged;
-		XMLElement *_textNode;
-		XMLElement *_tspanNode;
+		SVGElement *_textNode;
+		SVGElement *_tspanNode;
 };
 
 #endif

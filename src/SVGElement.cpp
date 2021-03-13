@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <sstream>
 #include "Color.hpp"
 #include "Matrix.hpp"
 #include "Opacity.hpp"
@@ -47,11 +48,16 @@ void SVGElement::setFillColor (Color color) {
 
 void SVGElement::setFillOpacity (const Opacity &opacity) {
 	if (!opacity.isFillDefault()) {
-		if (!opacity.fillalpha().isOpaque())
-			addAttribute("fill-opacity", opacity.fillalpha().value());
+		setFillOpacity(opacity.fillalpha());
 		if (opacity.blendMode() != Opacity::BM_NORMAL)
 			addAttribute("style", "mix-blend-mode:"+opacity.cssBlendMode());
 	}
+}
+
+
+void SVGElement::setFillOpacity (const OpacityAlpha &alpha) {
+	if (!alpha.isOpaque())
+		addAttribute("fill-opacity", alpha.value());
 }
 
 
@@ -81,7 +87,7 @@ void SVGElement::setStrokeDash (const vector<double> &pattern, double offset) {
 	if (!pattern.empty()) {
 		string patternStr;
 		for (double dashValue : pattern)
-			patternStr += XMLString(dashValue)+",";
+			patternStr += XMLString(dashValue)+" ";
 		patternStr.pop_back();
 		addAttribute("stroke-dasharray", patternStr);
 		if (offset != 0)

@@ -31,7 +31,6 @@
 #include "SVGCharHandlerFactory.hpp"
 #include "SVGTree.hpp"
 #include "XMLDocument.hpp"
-#include "XMLNode.hpp"
 #include "XMLString.hpp"
 
 using namespace std;
@@ -55,7 +54,7 @@ SVGTree::SVGTree () : _charHandler(SVGCharHandlerFactory::createHandler()) {
 /** Clears the SVG tree and initializes the root element. */
 void SVGTree::reset () {
 	_doc.clear();
-	auto rootNode = util::make_unique<XMLElement>("svg");
+	auto rootNode = util::make_unique<SVGElement>("svg");
 	rootNode->addAttribute("version", "1.1");
 	rootNode->addAttribute("xmlns", "http://www.w3.org/2000/svg");
 	rootNode->addAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -111,20 +110,20 @@ bool SVGTree::setFontFormat (string formatstr) {
 /** Starts a new page.
  *  @param[in] pageno number of new page */
 void SVGTree::newPage (int pageno) {
-	auto pageNode = util::make_unique<XMLElement>("g");
+	auto pageNode = util::make_unique<SVGElement>("g");
 	if (pageno >= 0)
 		pageNode->addAttribute("id", string("page")+XMLString(pageno));
 	_charHandler->setInitialContextNode(pageNode.get());
 	_page = pageNode.get();
 	_root->append(std::move(pageNode));
-	_defsContextStack = stack<XMLElement*>();
-	_pageContextStack = stack<XMLElement*>();
+	_defsContextStack = stack<SVGElement*>();
+	_pageContextStack = stack<SVGElement*>();
 }
 
 
 void SVGTree::appendToDefs (unique_ptr<XMLNode> node) {
 	if (!_defs) {
-		auto defsNode = util::make_unique<XMLElement>("defs");
+		auto defsNode = util::make_unique<SVGElement>("defs");
 		_defs = defsNode.get();
 		_root->prepend(std::move(defsNode));
 	}
@@ -134,7 +133,7 @@ void SVGTree::appendToDefs (unique_ptr<XMLNode> node) {
 
 
 void SVGTree::appendToPage (unique_ptr<XMLNode> node) {
-	XMLElement *parent = _pageContextStack.empty() ? _page : _pageContextStack.top();
+	SVGElement *parent = _pageContextStack.empty() ? _page : _pageContextStack.top();
 	parent->append(std::move(node));
 	_charHandler->setInitialContextNode(parent);
 }
@@ -149,8 +148,7 @@ void SVGTree::prependToPage (unique_ptr<XMLNode> node) {
 
 
 void SVGTree::transformPage (const Matrix &usermatrix) {
-	if (!usermatrix.isIdentity())
-		_page->addAttribute("transform", usermatrix.toSVG());
+	_page->setTransform(usermatrix);
 }
 
 
@@ -297,8 +295,8 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 }
 
 
-void SVGTree::pushDefsContext (unique_ptr<XMLElement> node) {
-	XMLElement *nodePtr = node.get();
+void SVGTree::pushDefsContext (unique_ptr<SVGElement> node) {
+	SVGElement *nodePtr = node.get();
 	if (_defsContextStack.empty())
 		appendToDefs(std::move(node));
 	else
@@ -314,8 +312,8 @@ void SVGTree::popDefsContext () {
 
 
 /** Pushes a new context element that will take all following nodes added to the page. */
-void SVGTree::pushPageContext (unique_ptr<XMLElement> node) {
-	XMLElement *nodePtr = node.get();
+void SVGTree::pushPageContext (unique_ptr<SVGElement> node) {
+	SVGElement *nodePtr = node.get();
 	if (_pageContextStack.empty())
 		_page->append(std::move(node));
 	else

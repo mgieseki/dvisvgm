@@ -41,11 +41,12 @@ class SVGElement : public XMLElement {
 		void setClipRule (FillRule rule);
 		void setFillColor (Color color);
 		void setFillOpacity (const Opacity &opacity);
+		void setFillOpacity (const OpacityAlpha &alpha);
 		void setFillPatternUrl (const std::string &url);
 		void setFillRule (FillRule rule);
 		void setNoFillColor ();
 		void setStrokeColor (Color color);
-		void setStrokeDash (const std::vector<double> &pattern, double offset);
+		void setStrokeDash (const std::vector<double> &pattern, double offset=0);
 		void setStrokeLineCap (LineCap cap);
 		void setStrokeLineJoin (LineJoin join);
 		void setStrokeOpacity (const Opacity &opacity);

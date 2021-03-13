@@ -31,8 +31,8 @@
 #include "GFGlyphTracer.hpp"
 #include "Matrix.hpp"
 #include "SVGCharHandler.hpp"
+#include "SVGElement.hpp"
 #include "XMLDocument.hpp"
-#include "XMLNode.hpp"
 
 class BoundingBox;
 class Color;
@@ -55,9 +55,9 @@ class SVGTree {
 		void appendChar (int c, double x, double y) {_charHandler->appendChar(c, x, y);}
 		void appendFontStyles (const std::unordered_set<const Font*> &fonts);
 		void append (const PhysicalFont &font, const std::set<int> &chars, GFGlyphTracer::Callback *callback=nullptr);
-		void pushDefsContext (std::unique_ptr<XMLElement> node);
+		void pushDefsContext (std::unique_ptr<SVGElement> node);
 		void popDefsContext ();
-		void pushPageContext (std::unique_ptr<XMLElement> node);
+		void pushPageContext (std::unique_ptr<SVGElement> node);
 		void popPageContext ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
@@ -70,6 +70,7 @@ class SVGTree {
 		void setVertical (bool state)       {_charHandler->setVertical(state);}
 		void transformPage (const Matrix &m);
 		Color getColor () const             {return _charHandler->getColor();}
+		const Opacity& getOpacity () const  {return _charHandler->getOpacity();}
 		const Matrix& getMatrix () const    {return _charHandler->getMatrix();}
 		XMLElement* rootNode () const       {return _root;}
 		XMLElement* defsNode () const       {return _defs;}
@@ -90,11 +91,11 @@ class SVGTree {
 
 	private:
 		XMLDocument _doc;
-		XMLElement *_root, *_page, *_defs;
+		SVGElement *_root, *_page, *_defs;
 		XMLCData *_styleCDataNode;
 		std::unique_ptr<SVGCharHandler> _charHandler;
-		std::stack<XMLElement*> _defsContextStack;
-		std::stack<XMLElement*> _pageContextStack;
+		std::stack<SVGElement*> _defsContextStack;
+		std::stack<SVGElement*> _pageContextStack;
 };
 
 #endif

@@ -154,7 +154,7 @@ TEST_F(TpicSpecialTest, stroke_polyline) {
 	handler.processSpecial("pa", "1000 0");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72 72,0' stroke='#000' stroke-width='1'/>"
+		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72 72,0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -169,7 +169,7 @@ TEST_F(TpicSpecialTest, stroke_polygon) {
 	handler.processSpecial("pa", "0 0");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='none' points='0,0 72,72 72,0' stroke='#000' stroke-width='1'/>"
+		"<polygon fill='none' points='0,0 72,72 72,0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -184,7 +184,7 @@ TEST_F(TpicSpecialTest, fill_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("fp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000' stroke-width='1'/>"
+		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -211,7 +211,7 @@ TEST_F(TpicSpecialTest, fill_dashed_polygon) {
 	handler.processSpecial("wh");
 	handler.processSpecial("da", "2");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000' stroke-width='1' stroke-dasharray='144'/>"
+		"<polygon fill='#fff' points='0,0 72,72 72,0' stroke='#000' stroke-dasharray='144'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -239,7 +239,7 @@ TEST_F(TpicSpecialTest, stroke_spline) {
 	handler.processSpecial("pa", "1000 1000");
 	handler.processSpecial("sp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72' stroke='#000' stroke-width='1'/>"
+		"<polyline fill='none' stroke-linecap='round' points='0,0 72,72' stroke='#000'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("pa", "0 0");
@@ -250,7 +250,7 @@ TEST_F(TpicSpecialTest, stroke_spline) {
 	handler.processSpecial("pa", "1000 500");
 	handler.processSpecial("sp");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000' stroke-width='1'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -266,7 +266,7 @@ TEST_F(TpicSpecialTest, stroke_dashed_spline) {
 	handler.processSpecial("pa", "0 0");
 	handler.processSpecial("sp", "1");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T108 72Z' stroke='#000' stroke-width='1' stroke-dasharray='72'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T108 72Z' stroke='#000' stroke-dasharray='72'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -282,7 +282,7 @@ TEST_F(TpicSpecialTest, stroke_dotted_spline) {
 	handler.processSpecial("pa", "1000 500");
 	handler.processSpecial("sp", "-1");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000' stroke-width='1' stroke-dasharray='1 72'/>"
+		"<path fill='none' d='M0 0L36 36Q72 72 90 54T126 54T180 108T144 90L72 36' stroke='#000' stroke-dasharray='1 72'/>"
 	);
 	EXPECT_DOUBLE_EQ(handler.penwidth(), 1.0);
 	EXPECT_LT(handler.grayLevel(), 0);
@@ -292,12 +292,12 @@ TEST_F(TpicSpecialTest, stroke_dotted_spline) {
 TEST_F(TpicSpecialTest, stroke_ellipse) {
 	handler.processSpecial("ar", "0 0 500 500 0 7");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<circle cx='0' cy='0' r='36' stroke-width='1' stroke='#000' fill='none'/>"
+		"<circle cx='0' cy='0' r='36' stroke='#000' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 7");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<ellipse cx='0' cy='0' rx='72' ry='36' stroke-width='1' stroke='#000' fill='none'/>"
+		"<ellipse cx='0' cy='0' rx='72' ry='36' stroke='#000' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("pn", "100");
@@ -312,13 +312,13 @@ TEST_F(TpicSpecialTest, fill_ellipse) {
 	handler.processSpecial("bk");
 	handler.processSpecial("ia", "0 0 500 500 0 7");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<circle cx='0' cy='0' r='36' fill='#000'/>"
+		"<circle cx='0' cy='0' r='36'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("bk");
 	handler.processSpecial("ia", "0 0 1000 500 0 7");
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<ellipse cx='0' cy='0' rx='72' ry='36' fill='#000'/>"
+		"<ellipse cx='0' cy='0' rx='72' ry='36'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("pn", "100");
@@ -333,37 +333,37 @@ TEST_F(TpicSpecialTest, fill_ellipse) {
 TEST_F(TpicSpecialTest, stroke_arc) {
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(math::PI/4));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 0 1 50.91 25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 0 1 50.91 25.46' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(math::PI/2));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 0 1 0 36' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 0 1 0 36' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(3*math::PI/4));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 0 1-50.91 25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 0 1-50.91 25.46' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(math::PI));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1-72 0' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1-72 0' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(5*math::PI/4));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1-50.91-25.46' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1-50.91-25.46' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(3*math::PI/2));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 1 1 0-36' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 1 1 0-36' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 	recorder.clear();
 	handler.processSpecial("ar", "0 0 1000 500 0 "+to_string(-3*math::PI/2));
 	EXPECT_EQ(recorder.getXMLSnippet(),
-		"<path d='M72 0A72 36 0 0 1 0 36' stroke-width='1' stroke='#000' stroke-linecap='round' fill='none'/>"
+		"<path d='M72 0A72 36 0 0 1 0 36' stroke='#000' stroke-linecap='round' fill='none'/>"
 	);
 }
 
