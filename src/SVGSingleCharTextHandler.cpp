@@ -30,14 +30,14 @@ void SVGSingleCharTextHandler::appendChar (uint32_t c, double x, double y) {
 	// Apply color changes only if the color differs from black and if the font color itself is black.
 	// Glyphs from non-black fonts (e.g. defined in a XeTeX document) can't change their color.
 	if (_color.get() != Color::BLACK && font->color() == Color::BLACK) {
-		textNode->addAttribute("fill", _color.get().svgColorString());
+		textNode->addAttribute("fill", _color->svgColorString());
 		_color.changed(false);
 	}
-	if (!_opacity.get().isFillDefault()) {
-		if (!_opacity.get().fillalpha().isOpaque())
-			textNode->addAttribute("fill-opacity", _opacity.get().fillalpha().value());
-		if (_opacity.get().blendMode() != Opacity::BM_NORMAL)
-			textNode->addAttribute("style", "mix-blend-mode:"+_opacity.get().cssBlendMode());
+	if (!_opacity->isFillDefault()) {
+		if (!_opacity->fillalpha().isOpaque())
+			textNode->addAttribute("fill-opacity", _opacity->fillalpha().value());
+		if (_opacity->blendMode() != Opacity::BM_NORMAL)
+			textNode->addAttribute("style", "mix-blend-mode:"+_opacity->cssBlendMode());
 		_opacity.changed(false);
 	}
 	contextNode()->append(std::move(textNode));

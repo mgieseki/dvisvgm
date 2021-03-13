@@ -43,10 +43,11 @@ class CharProperty {
 			}
 		}
 
-		const T& get () const      {return _value;}
-		operator const T& () const {return _value;}
-		bool changed () const      {return _changed;}
-		void changed (bool c)      {_changed = c;}
+		const T& get () const         {return _value;}
+		const T* operator -> () const {return &_value;}
+		operator const T& () const    {return _value;}
+		bool changed () const         {return _changed;}
+		void changed (bool c)         {_changed = c;}
 
 	private:
 		T _value;

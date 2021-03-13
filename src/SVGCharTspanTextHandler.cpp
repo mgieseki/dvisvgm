@@ -46,19 +46,19 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	// Apply text color changes only if the color of the entire font is black.
 	// Glyphs of non-black fonts (e.g. defined in a XeTeX document) can't change their color.
 	bool applyColor = _color.get() != Color::BLACK && _font.get()->color() == Color::BLACK;
-	bool applyOpacity = !_opacity.get().isFillDefault();
+	bool applyOpacity = !_opacity->isFillDefault();
 	if (_xchanged || _ychanged || (_color.changed() && applyColor) || (_opacity.changed() && applyOpacity)) {
 		_tspanNode = pushContextNode(util::make_unique<XMLElement>("tspan"));
 		if (applyColor)
-			_tspanNode->addAttribute("fill", _color.get().svgColorString());
+			_tspanNode->addAttribute("fill", _color->svgColorString());
 		_color.changed(false);
 		if (applyOpacity) {
-			double fillalpha = _opacity.get().fillalpha().value();
-			Opacity::BlendMode blendmode = _opacity.get().blendMode();
+			double fillalpha = _opacity->fillalpha().value();
+			Opacity::BlendMode blendmode = _opacity->blendMode();
 			if (fillalpha < 1)
-				_tspanNode->addAttribute("fill-opacity", _opacity.get().fillalpha().value());
+				_tspanNode->addAttribute("fill-opacity", _opacity->fillalpha().value());
 			if (blendmode != Opacity::BM_NORMAL)
-				_tspanNode->addAttribute("style", "mix-blend-mode:"+_opacity.get().cssBlendMode());
+				_tspanNode->addAttribute("style", "mix-blend-mode:"+_opacity->cssBlendMode());
 			_opacity.changed(false);
 		}
 		if (_xchanged) {
