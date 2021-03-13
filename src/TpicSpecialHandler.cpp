@@ -90,13 +90,13 @@ static void add_stroke_attribs (SVGElement *elem, double penwidth, Color pencolo
 static unique_ptr<SVGElement> create_ellipse_element (double cx, double cy, double rx, double ry) {
 	bool is_circle = (rx == ry);
 	auto elem = util::make_unique<SVGElement>(is_circle ? "circle" : "ellipse");
-	elem->addAttribute("cx", XMLString(cx));
-	elem->addAttribute("cy", XMLString(cy));
+	elem->addAttribute("cx", cx);
+	elem->addAttribute("cy", cy);
 	if (is_circle)
-		elem->addAttribute("r", XMLString(rx));
+		elem->addAttribute("r", rx);
 	else {
-		elem->addAttribute("rx", XMLString(rx));
-		elem->addAttribute("ry", XMLString(ry));
+		elem->addAttribute("rx", rx);
+		elem->addAttribute("ry", ry);
 	}
 	return elem;
 }

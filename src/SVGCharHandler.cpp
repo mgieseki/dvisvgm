@@ -70,7 +70,7 @@ unique_ptr<SVGElement> SVGCharTextHandler::createTextNode (double x, double y) c
 		textNode->addAttribute("class", string("f")+XMLString(_fontnum));
 	else {
 		textNode->addAttribute("font-family", font->name());
-		textNode->addAttribute("font-size", XMLString(font->scaledSize()));
+		textNode->addAttribute("font-size", font->scaledSize());
 		textNode->setFillColor(font->color());
 	}
 	if (_vertical) {

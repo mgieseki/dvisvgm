@@ -111,8 +111,8 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const Matrix &matrix) {
 	string id = "#g" + to_string(FontManager::instance().fontID(_font)) + "-" + to_string(c);
 	auto useNode = util::make_unique<SVGElement>("use");
-	useNode->addAttribute("x", XMLString(x));
-	useNode->addAttribute("y", XMLString(y));
+	useNode->addAttribute("x", x);
+	useNode->addAttribute("y", y);
 	useNode->addAttribute("xlink:href", id);
 	useNode->setTransform(matrix);
 	contextNode()->append(std::move(useNode));

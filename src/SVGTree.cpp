@@ -169,8 +169,8 @@ static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, 
 		double extend = font.style() ? font.style()->extend : 1;
 		glyphNode = util::make_unique<XMLElement>("glyph");
 		glyphNode->addAttribute("unicode", XMLString(font.unicode(c), false));
-		glyphNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance(c)*extend));
-		glyphNode->addAttribute("vert-adv-y", XMLString(font.vAdvance(c)));
+		glyphNode->addAttribute("horiz-adv-x", font.hAdvance(c)*extend);
+		glyphNode->addAttribute("vert-adv-y", font.vAdvance(c));
 		string name = font.glyphName(c);
 		if (!name.empty())
 			glyphNode->addAttribute("glyph-name", name);
@@ -258,14 +258,14 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			auto fontNode = util::make_unique<XMLElement>("font");
 			string fontname = font.name();
 			fontNode->addAttribute("id", fontname);
-			fontNode->addAttribute("horiz-adv-x", XMLString(font.hAdvance()));
+			fontNode->addAttribute("horiz-adv-x", font.hAdvance());
 
 			auto faceNode = util::make_unique<XMLElement>("font-face");
 			faceNode->addAttribute("font-family", fontname);
-			faceNode->addAttribute("units-per-em", XMLString(font.unitsPerEm()));
+			faceNode->addAttribute("units-per-em", font.unitsPerEm());
 			if (!font.verticalLayout()) {
-				faceNode->addAttribute("ascent", XMLString(font.ascent()));
-				faceNode->addAttribute("descent", XMLString(font.descent()));
+				faceNode->addAttribute("ascent", font.ascent());
+				faceNode->addAttribute("descent", font.descent());
 			}
 			fontNode->append(std::move(faceNode));
 			for (int c : chars)

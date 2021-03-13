@@ -103,7 +103,7 @@ void SVGElement::setStrokeDash (const vector<double> &pattern, double offset) {
 		patternStr.pop_back();
 		addAttribute("stroke-dasharray", patternStr);
 		if (offset != 0)
-			addAttribute("stroke-dashoffset", XMLString(offset));
+			addAttribute("stroke-dashoffset", offset);
 	}
 }
 
@@ -122,7 +122,7 @@ void SVGElement::setStrokeLineJoin (LineJoin join) {
 
 void SVGElement::setStrokeMiterLimit (double limit) {
 	if (limit != 4)
-		addAttribute("stroke-miterlimit", XMLString(limit));
+		addAttribute("stroke-miterlimit", limit);
 }
 
 
@@ -138,7 +138,7 @@ void SVGElement::setStrokeOpacity (const Opacity &opacity) {
 
 void SVGElement::setStrokeWidth (double width) {
 	if (width != 1)
-		addAttribute("stroke-width", XMLString(width));
+		addAttribute("stroke-width", width);
 }
 
 

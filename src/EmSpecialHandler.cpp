@@ -26,7 +26,6 @@
 #include "SpecialActions.hpp"
 #include "SVGElement.hpp"
 #include "SVGTree.hpp"
-#include "XMLString.hpp"
 
 using namespace std;
 
