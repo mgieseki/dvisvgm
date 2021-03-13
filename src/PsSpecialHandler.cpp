@@ -83,7 +83,7 @@ void PsSpecialHandler::initgraphics () {
 	_xmlnode = _savenode = nullptr;
 	_isshapealpha = false;     // opacity operators change constant component by default
 	_fillalpha = _strokealpha = OpacityAlpha();  // set constant and shape opacity to non-transparent
-	_blendmode = 0;   // "normal" mode (no blending)
+	_blendmodeID = 0;   // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
 	_patternEnabled = false;
@@ -558,7 +558,7 @@ void PsSpecialHandler::setpagedevice (std::vector<double> &p) {
 	_miterlimit = 4;
 	_isshapealpha = false;     // opacity operators change constant component by default
 	_fillalpha = _strokealpha = OpacityAlpha();  // set constant and shape opacity to non-transparent
-	_blendmode = 0;  // "normal" mode (no blending)
+	_blendmodeID = 0;  // "normal" mode (no blending)
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
 	_currentcolor = Color::BLACK;
@@ -613,22 +613,6 @@ void PsSpecialHandler::closepath (vector<double>&) {
 }
 
 
-void PsSpecialHandler::setfillconstantalpha (vector<double> &p) {
-	if (_isshapealpha)
-		_fillalpha.setShapeAlpha(p[0]);
-	else
-		_fillalpha.setConstAlpha(p[0]);
-}
-
-
-void PsSpecialHandler::setstrokeconstantalpha (vector<double> &p) {
-	if (_isshapealpha)
-		_strokealpha.setShapeAlpha(p[0]);
-	else
-		_strokealpha.setConstAlpha(p[0]);
-}
-
-
 static Opacity::BlendMode blendmode (int modeID) {
 	static const Opacity::BlendMode blendmodes[] = {
 		Opacity::BM_NORMAL, Opacity::BM_MULTIPLY, Opacity::BM_SCREEN, Opacity::BM_OVERLAY,
@@ -646,6 +630,26 @@ static string css_blendmode_name (int modeID) {
 	if (modeID < 0 || modeID > 15)
 		return "";
 	return Opacity::cssBlendMode(blendmode(modeID));
+}
+
+
+void PsSpecialHandler::setfillconstantalpha (vector<double> &p) {
+	if (_isshapealpha)
+		_fillalpha.setShapeAlpha(p[0]);
+	else
+		_fillalpha.setConstAlpha(p[0]);
+	if (_actions)
+		_actions->setOpacity(Opacity(_fillalpha, _strokealpha, blendmode(_blendmodeID)));
+}
+
+
+void PsSpecialHandler::setstrokeconstantalpha (vector<double> &p) {
+	if (_isshapealpha)
+		_strokealpha.setShapeAlpha(p[0]);
+	else
+		_strokealpha.setConstAlpha(p[0]);
+	if (_actions)
+		_actions->setOpacity(Opacity(_fillalpha, _strokealpha, blendmode(_blendmodeID)));
 }
 
 
@@ -700,8 +704,8 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("stroke-linejoin", _linecap == 1 ? "round" : "bevel");
 		if (_strokealpha.value() < 1)
 			path->addAttribute("stroke-opacity", _strokealpha.value());
-		if (_blendmode > 0 && _blendmode < 16)
-			path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
+		if (_blendmodeID > 0 && _blendmodeID < 16)
+			path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmodeID));
 		if (!_dashpattern.empty()) {
 			string patternStr;
 			for (double dashValue : _dashpattern)
@@ -764,8 +768,8 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 		path->addAttribute("fill-rule", "evenodd");
 	if (_fillalpha.value() < 1)
 		path->addAttribute("fill-opacity", _fillalpha.value());
-	if (_blendmode > 0 && _blendmode < 16)
-		path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmode));
+	if (_blendmodeID > 0 && _blendmodeID < 16)
+		path->addAttribute("style", "mix-blend-mode:"+css_blendmode_name(_blendmodeID));
 	if (_xmlnode)
 		_xmlnode->append(std::move(path));
 	else {

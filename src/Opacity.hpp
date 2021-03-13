@@ -32,6 +32,7 @@ class OpacityAlpha {
 		double value () const {return _constalpha * _shapealpha;}
 		bool operator == (const OpacityAlpha &alpha) const {return alpha._constalpha == _constalpha && alpha._shapealpha == _shapealpha;}
 		bool operator != (const OpacityAlpha &alpha) const {return alpha._constalpha != _constalpha || alpha._shapealpha != _shapealpha;}
+		bool isOpaque () const {return _constalpha == 1.0 && _shapealpha == 1.0;}
 
 	private:
 		double _constalpha=1.0;
@@ -57,7 +58,8 @@ class Opacity {
 		BlendMode blendMode () const {return _blendMode;}
 		std::string cssBlendMode () const {return cssBlendMode(_blendMode);}
 		static std::string cssBlendMode (BlendMode bm);
-
+		bool isFillDefault () const {return _fillalpha.isOpaque() && _blendMode == BM_NORMAL;}
+		bool isStrokeDefault () const {return _strokealpha.isOpaque() && _blendMode == BM_NORMAL;}
 		bool operator == (const Opacity &opacity) const;
 		bool operator != (const Opacity &opacity) const;
 

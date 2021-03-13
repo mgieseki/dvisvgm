@@ -62,16 +62,25 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 	CharProperty<Color> &color = (_fontColor.get() != Color::BLACK) ? _fontColor : _color;
 	bool applyColor = color.get() != Color::BLACK;
 	bool applyMatrix = !_matrix.get().isIdentity();
+	bool applyOpacity = !_opacity.get().isFillDefault();
 	if (!_groupNode) {
 		color.changed(applyColor);
 		_matrix.changed(applyMatrix);
 	}
-	if (color.changed() || _matrix.changed()) {
+	if (color.changed() || _matrix.changed() || _opacity.changed()) {
 		resetContextNode();
-		if (applyColor || applyMatrix) {
+		if (applyColor || applyMatrix || applyOpacity) {
 			_groupNode = pushContextNode(util::make_unique<XMLElement>("g"));
 			if (applyColor)
 				contextNode()->addAttribute("fill", color.get().svgColorString());
+			if (applyOpacity) {
+				double fillalpha = _opacity.get().fillalpha().value();
+				Opacity::BlendMode blendmode = _opacity.get().blendMode();
+				if (fillalpha < 1)
+					contextNode()->addAttribute("fill-opacity", fillalpha);
+				if (blendmode != Opacity::BM_NORMAL)
+					contextNode()->addAttribute("style", "mix-blend-mode:"+_opacity.get().cssBlendMode());
+			}
 			if (applyMatrix)
 				contextNode()->addAttribute("transform", _matrix.get().toSVG());
 		}

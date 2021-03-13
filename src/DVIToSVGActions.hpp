@@ -49,6 +49,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void setBgColor (const Color &color) override;
 		void setColor (const Color &color) override             {_svg.setColor(color);}
 		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
+		void setOpacity (const Opacity &opacity) override       {_svg.setOpacity(opacity);}
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}
 		Matrix getPageTransformation () const override          {return _dvireader->getPageTransformation();}
 		Color getColor () const override                        {return _svg.getColor();}

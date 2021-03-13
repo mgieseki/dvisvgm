@@ -38,7 +38,7 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 		_textNode = pushContextNode(createTextNode(x, y));
 		_color.changed(true);  // force creating tspan with color attribute if current color differs from font color
 	}
-	if (_tspanNode && (_xchanged || _ychanged || _color.changed())) {
+	if (_tspanNode && (_xchanged || _ychanged || _color.changed() || _opacity.changed())) {
 		// if drawing position or color was explicitly changed, finish current tspan element
 		popContextNode();
 		_tspanNode = nullptr;
@@ -46,11 +46,21 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	// Apply text color changes only if the color of the entire font is black.
 	// Glyphs of non-black fonts (e.g. defined in a XeTeX document) can't change their color.
 	bool applyColor = _color.get() != Color::BLACK && _font.get()->color() == Color::BLACK;
-	if (_xchanged || _ychanged || (_color.changed() && applyColor)) {
+	bool applyOpacity = !_opacity.get().isFillDefault();
+	if (_xchanged || _ychanged || (_color.changed() && applyColor) || (_opacity.changed() && applyOpacity)) {
 		_tspanNode = pushContextNode(util::make_unique<XMLElement>("tspan"));
 		if (applyColor)
 			_tspanNode->addAttribute("fill", _color.get().svgColorString());
 		_color.changed(false);
+		if (applyOpacity) {
+			double fillalpha = _opacity.get().fillalpha().value();
+			Opacity::BlendMode blendmode = _opacity.get().blendMode();
+			if (fillalpha < 1)
+				_tspanNode->addAttribute("fill-opacity", _opacity.get().fillalpha().value());
+			if (blendmode != Opacity::BM_NORMAL)
+				_tspanNode->addAttribute("style", "mix-blend-mode:"+_opacity.get().cssBlendMode());
+			_opacity.changed(false);
+		}
 		if (_xchanged) {
 			if (_vertical) {
 				// align glyphs designed for horizontal layout properly

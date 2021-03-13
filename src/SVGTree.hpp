@@ -38,6 +38,7 @@ class BoundingBox;
 class Color;
 class Font;
 class Matrix;
+class Opacity;
 class PhysicalFont;
 
 class SVGTree {
@@ -61,17 +62,18 @@ class SVGTree {
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
 		static bool setFontFormat (std::string formatstr);
-		void setX (double x)              {_charHandler->notifyXAdjusted();}
-		void setY (double y)              {_charHandler->notifyYAdjusted();}
-		void setMatrix (const Matrix &m)  {_charHandler->setMatrix(m);}
+		void setX (double x)                {_charHandler->notifyXAdjusted();}
+		void setY (double y)                {_charHandler->notifyYAdjusted();}
+		void setMatrix (const Matrix &m)    {_charHandler->setMatrix(m);}
 		void setColor (const Color &c);
-		void setVertical (bool state)     {_charHandler->setVertical(state);}
+		void setOpacity (const Opacity &op) {_charHandler->setOpacity(op);}
+		void setVertical (bool state)       {_charHandler->setVertical(state);}
 		void transformPage (const Matrix &m);
-		Color getColor () const           {return _charHandler->getColor();}
-		const Matrix& getMatrix () const  {return _charHandler->getMatrix();}
-		XMLElement* rootNode () const     {return _root;}
-		XMLElement* defsNode () const     {return _defs;}
-		XMLElement* pageNode () const     {return _page;}
+		Color getColor () const             {return _charHandler->getColor();}
+		const Matrix& getMatrix () const    {return _charHandler->getMatrix();}
+		XMLElement* rootNode () const       {return _root;}
+		XMLElement* defsNode () const       {return _defs;}
+		XMLElement* pageNode () const       {return _page;}
 
 	protected:
 		XMLCData* styleCDataNode ();

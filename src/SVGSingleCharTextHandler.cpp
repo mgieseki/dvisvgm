@@ -33,5 +33,12 @@ void SVGSingleCharTextHandler::appendChar (uint32_t c, double x, double y) {
 		textNode->addAttribute("fill", _color.get().svgColorString());
 		_color.changed(false);
 	}
+	if (!_opacity.get().isFillDefault()) {
+		if (!_opacity.get().fillalpha().isOpaque())
+			textNode->addAttribute("fill-opacity", _opacity.get().fillalpha().value());
+		if (_opacity.get().blendMode() != Opacity::BM_NORMAL)
+			textNode->addAttribute("style", "mix-blend-mode:"+_opacity.get().cssBlendMode());
+		_opacity.changed(false);
+	}
 	contextNode()->append(std::move(textNode));
 }

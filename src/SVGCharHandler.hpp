@@ -26,6 +26,7 @@
 #include "Color.hpp"
 #include "Font.hpp"
 #include "Matrix.hpp"
+#include "Opacity.hpp"
 
 
 template <typename T>
@@ -66,13 +67,14 @@ class SVGCharHandler {
 		virtual void appendChar (uint32_t c, double x, double y) =0;
 		virtual void notifyXAdjusted () {}
 		virtual void notifyYAdjusted () {}
-		void setColor (const Color &color)      {_color.set(color);}
-		void setFont (const Font &font, int id) {_font.set(&font); _fontnum = id;}
-		void setMatrix (const Matrix &matrix)   {_matrix.set(matrix);}
-		void setVertical (bool vertical)        {_vertical.set(vertical);}
-		Color getColor () const                 {return _color.get();}
-		const Font* getFont () const            {return _font.get();}
-		const Matrix& getMatrix () const        {return _matrix.get();}
+		void setColor (const Color &color)       {_color.set(color);}
+		void setOpacity (const Opacity &opacity) {_opacity.set(opacity);}
+		void setFont (const Font &font, int id)  {_font.set(&font); _fontnum = id;}
+		void setMatrix (const Matrix &matrix)    {_matrix.set(matrix);}
+		void setVertical (bool vertical)         {_vertical.set(vertical);}
+		Color getColor () const                  {return _color.get();}
+		const Font* getFont () const             {return _font.get();}
+		const Matrix& getMatrix () const         {return _matrix.get();}
 
 	protected:
 		virtual void resetContextNode ();
@@ -84,6 +86,7 @@ class SVGCharHandler {
 		}
 
 		CharProperty<Color> _color=Color::BLACK;   ///< current color
+		CharProperty<Opacity> _opacity;            ///< current opacity values
 		CharProperty<const Font*> _font=0;         ///< current font
 		int _fontnum=0;                            ///< current font ID
 		CharProperty<Matrix> _matrix;              ///< current transformation

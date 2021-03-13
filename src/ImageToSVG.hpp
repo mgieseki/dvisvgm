@@ -57,6 +57,7 @@ class ImageToSVG : protected SpecialActions {
 		void setY (double y) override                           {_y = y; _svg.setY(y);}
 		void finishLine () override                             {}
 		void setColor (const Color &color) override             {_svg.setColor(color);}
+		void setOpacity (const Opacity &opacity) override       {_svg.setOpacity(opacity);}
 		Color getColor () const override                        {return _svg.getColor();}
 		void setMatrix (const Matrix &m) override               {_svg.setMatrix(m);}
 		const Matrix& getMatrix () const override               {return _svg.getMatrix();}

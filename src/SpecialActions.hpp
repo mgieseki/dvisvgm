@@ -27,6 +27,7 @@
 #include "Color.hpp"
 #include "FilePath.hpp"
 #include "Matrix.hpp"
+#include "Opacity.hpp"
 #include "SVGTree.hpp"
 
 class XMLElement;
@@ -46,6 +47,7 @@ class SpecialActions {
 		virtual const Matrix& getMatrix () const =0;
 		virtual Matrix getPageTransformation () const {return Matrix(1);}
 		virtual void setBgColor (const Color &color) =0;
+		virtual void setOpacity (const Opacity &opacity) =0;
 		virtual const SVGTree& svgTree () const =0;
 		SVGTree& svgTree () {return const_cast<SVGTree&>(const_cast<const SpecialActions*>(this)->svgTree());}
 		virtual BoundingBox& bbox () =0;
@@ -75,6 +77,7 @@ class EmptySpecialActions : public SpecialActions {
 		void finishLine ()  override {}
 		void setColor (const Color &color) override {}
 		void setBgColor (const Color &color) override {}
+		void setOpacity (const Opacity &opacity) override {}
 		Color getColor () const override {return Color::BLACK;}
 		void setMatrix (const Matrix &m) override {}
 		const Matrix& getMatrix () const override {return _matrix;}

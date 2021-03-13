@@ -138,7 +138,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void rotate (std::vector<double> &p) override;
 		void save (std::vector<double> &p) override;
 		void scale (std::vector<double> &p) override;
-		void setblendmode (std::vector<double> &p) override    {_blendmode = int(p[0]);}
+		void setblendmode (std::vector<double> &p) override    { _blendmodeID = int(p[0]);}
 		void setcolorspace (std::vector<double> &p) override   {_patternEnabled = bool(p[0]);}
 		void setcmykcolor (std::vector<double> &cmyk) override;
 		void setdash (std::vector<double> &p) override;
@@ -179,7 +179,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		bool _isshapealpha;                ///< if true, opacity operators act on shape component, otherwise on constant component
 		OpacityAlpha _fillalpha;           ///< constant and shape opacity used for fill operations (0=fully transparent, ..., 1=opaque)
 		OpacityAlpha _strokealpha;         ///< constant and shape opacity used for stroke operations (0=fully transparent, ..., 1=opaque)
-		int _blendmode;                    ///< blend mode used when overlaying colored areas
+		int _blendmodeID;                  ///< blend mode used when overlaying colored areas
 		uint8_t _linecap  : 2;             ///< current line cap (0=butt, 1=round, 2=projecting square)
 		uint8_t _linejoin : 2;             ///< current line join (0=miter, 1=round, 2=bevel)
 		double _dashoffset;                ///< current dash offset
