@@ -387,12 +387,12 @@ ostream& XMLElement::write (ostream &os) const {
 		os << '>';
 		// Insert newlines around children except text nodes. According to the
 		// SVG specification, pure whitespace nodes are ignored by the SVG renderer.
-		if (WRITE_NEWLINES && !_firstChild->toText())
+		if (WRITE_NEWLINES && name() != "text" && !_firstChild->toText())
 			os << '\n';
 		for (XMLNode *child = _firstChild.get(); child; child = child->next()) {
 			child->write(os);
 			if (!child->toText()) {
-				if (WRITE_NEWLINES && (!child->next() || !child->next()->toText()))
+				if (WRITE_NEWLINES && name() != "text" && (!child->next() || !child->next()->toText()))
 					os << '\n';
 			}
 		}
