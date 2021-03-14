@@ -49,8 +49,7 @@ void SVGElement::setFillColor (Color color) {
 void SVGElement::setFillOpacity (const Opacity &opacity) {
 	if (!opacity.isFillDefault()) {
 		setFillOpacity(opacity.fillalpha());
-		if (opacity.blendMode() != Opacity::BM_NORMAL)
-			addAttribute("style", "mix-blend-mode:"+opacity.cssBlendMode());
+		setFillOpacity(opacity.blendMode());
 	}
 }
 
@@ -58,6 +57,12 @@ void SVGElement::setFillOpacity (const Opacity &opacity) {
 void SVGElement::setFillOpacity (const OpacityAlpha &alpha) {
 	if (!alpha.isOpaque())
 		addAttribute("fill-opacity", alpha.value());
+}
+
+
+void SVGElement::setFillOpacity (Opacity::BlendMode blendMode) {
+	if (blendMode != Opacity::BM_NORMAL)
+		addAttribute("style", "mix-blend-mode:"+Opacity::cssBlendMode(blendMode));
 }
 
 

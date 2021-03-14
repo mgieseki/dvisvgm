@@ -72,7 +72,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 		if (applyColor || applyMatrix || applyOpacity) {
 			_groupNode = pushContextNode(util::make_unique<SVGElement>("g"));
 			contextNode()->setFillColor(color);
-			contextNode()->setFillOpacity(_opacity);
+			contextNode()->setFillOpacity(_opacity->fillalpha());
 			contextNode()->setTransform(_matrix);
 		}
 		color.changed(false);
@@ -114,6 +114,7 @@ void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const
 	useNode->addAttribute("x", x);
 	useNode->addAttribute("y", y);
 	useNode->addAttribute("xlink:href", id);
+	useNode->setFillOpacity(_opacity->blendMode()); // add blend mode style here because it's not inheritable
 	useNode->setTransform(matrix);
 	contextNode()->append(std::move(useNode));
 }

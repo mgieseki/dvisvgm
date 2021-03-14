@@ -42,6 +42,7 @@ class SVGElement : public XMLElement {
 		void setFillColor (Color color);
 		void setFillOpacity (const Opacity &opacity);
 		void setFillOpacity (const OpacityAlpha &alpha);
+		void setFillOpacity (Opacity::BlendMode blendMode);
 		void setFillPatternUrl (const std::string &url);
 		void setFillRule (FillRule rule);
 		void setNoFillColor ();
