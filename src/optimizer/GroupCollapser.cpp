@@ -107,7 +107,7 @@ void GroupCollapser::execute (XMLElement *context) {
  *  @return true if all attributes have been moved */
 bool GroupCollapser::moveAttributes (XMLElement &source, XMLElement &dest) {
 	vector<string> movedAttributes;
-	for (const XMLElement::Attribute &attr : source.attributes()) {
+	for (const auto &attr : source.attributes()) {
 		if (attr.name == "transform") {
 			string transform;
 			if (const char *destvalue = dest.getAttributeValue("transform"))
