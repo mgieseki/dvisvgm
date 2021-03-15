@@ -36,7 +36,8 @@ void SVGCharTspanTextHandler::appendChar (uint32_t c, double x, double y) {
 	if (!_textNode || _font.changed() || _matrix.changed() || _vertical.changed()) {
 		resetContextNode();
 		_textNode = pushContextNode(createTextNode(x, y));
-		_color.changed(true);  // force creating tspan with color attribute if current color differs from font color
+		_color.changed(true);   // force creating tspan with color attribute if current color differs from font color
+		_opacity.changed(true); // dito for opacity properties
 	}
 	if (_tspanNode && (_xchanged || _ychanged || _color.changed() || _opacity.changed())) {
 		// if drawing position or color was explicitly changed, finish current tspan element
