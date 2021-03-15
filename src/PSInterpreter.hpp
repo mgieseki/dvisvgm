@@ -62,6 +62,7 @@ struct PSActions {
 	virtual void rotate (std::vector<double> &p) =0;
 	virtual void save (std::vector<double> &p) =0;
 	virtual void scale (std::vector<double> &p) =0;
+	virtual void setalphaisshape (std::vector<double> &p) =0;
 	virtual void setblendmode (std::vector<double> &p) =0;
 	virtual void setcolorspace (std::vector<double> &p) =0;
 	virtual void setcmykcolor (std::vector<double> &cmyk) =0;
@@ -69,7 +70,6 @@ struct PSActions {
 	virtual void setfillconstantalpha (std::vector<double> &p) =0;
 	virtual void setgray (std::vector<double> &p) =0;
 	virtual void sethsbcolor (std::vector<double> &hsb) =0;
-	virtual void setisshapealpha (std::vector<double> &p) =0;
 	virtual void setlinecap (std::vector<double> &p) =0;
 	virtual void setlinejoin (std::vector<double> &p) =0;
 	virtual void setlinewidth (std::vector<double> &p) =0;

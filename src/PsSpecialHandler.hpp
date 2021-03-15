@@ -139,6 +139,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void rotate (std::vector<double> &p) override;
 		void save (std::vector<double> &p) override;
 		void scale (std::vector<double> &p) override;
+		void setalphaisshape (std::vector<double> &p) override { _isshapealpha = bool(p[0]);}
 		void setblendmode (std::vector<double> &p) override;
 		void setcolorspace (std::vector<double> &p) override   {_patternEnabled = bool(p[0]);}
 		void setcmykcolor (std::vector<double> &cmyk) override;
@@ -146,7 +147,6 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void setfillconstantalpha (std::vector<double> &p) override;
 		void setgray (std::vector<double> &p) override;
 		void sethsbcolor (std::vector<double> &hsb) override;
-		void setisshapealpha (std::vector<double> &p) override {_isshapealpha = bool(p[0]);}
 		void setlinecap (std::vector<double> &p) override      {_linecap = uint8_t(p[0]);}
 		void setlinejoin (std::vector<double> &p) override     {_linejoin = uint8_t(p[0]);}
 		void setlinewidth (std::vector<double> &p) override    {_linewidth = scale(p[0] ? p[0] : 0.5);}
