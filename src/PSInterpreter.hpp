@@ -114,6 +114,7 @@ class PSInterpreter {
 		BoundingBox pdfPageBox (const std::string &fname, int pageno);
 		const std::vector<std::string>& rawData () const {return _rawData;}
 		bool setImageDevice (const std::string &deviceStr);
+		bool hasFullOpacitySupport () const {return _gs.revision() >= 952;}
 		static std::vector<PSDeviceInfo> getImageDeviceInfos ();
 		static void listImageDeviceInfos (std::ostream &os);
 		static bool imageDeviceKnown (std::string deviceStr);

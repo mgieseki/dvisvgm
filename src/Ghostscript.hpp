@@ -78,8 +78,8 @@ class Ghostscript
 		~Ghostscript ();
 		bool init (int argc, const char **argv, void *caller=nullptr);
 		bool available ();
-		bool revision (gsapi_revision_t *r);
-		int revision ();
+		bool revision (gsapi_revision_t *r) const;
+		int revision () const;
 		std::string revisionstr ();
 		int set_stdio (Stdin in, Stdout out, Stderr err);
 		int run_string_begin (int user_errors, int *pexit_code);

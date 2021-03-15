@@ -59,8 +59,10 @@ void PSInterpreter::init () {
 			// in conjunction with -dDELAYBIND and -dWRITESYSTEMDICT.
 			// Thus, -dDELAYSAFER (or -dNOSAFER) must be added.
 			// https://www.ghostscript.com/doc/9.50/Use.htm#Safer
-			if (gsrev >= 950)
+			if (gsrev >= 950) {
 				gsargs.emplace_back("-dDELAYSAFER");
+				gsargs.emplace_back("-dALLOWPSTRANSPARENCY");
+			}
 		}
 		_gs.init(gsargs.size(), gsargs.data(), this);
 		_gs.set_stdio(input, output, error);
