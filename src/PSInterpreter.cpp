@@ -130,7 +130,7 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 	// feed Ghostscript with code chunks that are not larger than 64KB
 	// => see documentation of gsapi_run_string_foo()
 	const char *p=str;
-	while (PS_RUNNING && len > 0) {
+	while (_mode == PS_RUNNING && len > 0) {
 		SignalHandler::instance().check();
 		size_t chunksize = min(len, (size_t)0xffff);
 		_gs.run_string_continue(p, chunksize, 0, &status);
