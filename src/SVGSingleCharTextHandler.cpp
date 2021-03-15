@@ -29,13 +29,11 @@ void SVGSingleCharTextHandler::appendChar (uint32_t c, double x, double y) {
 	textNode->append(XMLString(font->unicode(c), false));
 	// Apply color changes only if the color differs from black and if the font color itself is black.
 	// Glyphs from non-black fonts (e.g. defined in a XeTeX document) can't change their color.
-	if (_color.get() != Color::BLACK && font->color() == Color::BLACK) {
+	if (_color.get() != Color::BLACK && font->color() == Color::BLACK)
 		textNode->setFillColor(_color);
-		_color.changed(false);
-	}
-	if (!_opacity->isFillDefault()) {
+	_color.changed(false);
+	if (!_opacity->isFillDefault())
 		textNode->setFillOpacity(_opacity);
-		_opacity.changed(false);
-	}
+	_opacity.changed(false);
 	contextNode()->append(std::move(textNode));
 }
