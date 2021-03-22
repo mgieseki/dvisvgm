@@ -193,7 +193,7 @@ static void expand_constants (string &str, SpecialActions &actions) {
 /** Evaluates substrings of the form {?(expr)} where 'expr' is a math expression,
  *  and replaces the substring by the computed value.
  *  @param[in,out] str string to scan for expressions */
-static void evaluate_expressions (string &str, SpecialActions &actions) {
+static void evaluate_expressions (string &str, const SpecialActions &actions) {
 	size_t left = str.find("{?(");             // start position of expression macro
 	while (left != string::npos) {
 		size_t right = str.find(")}", left+2);  // end position of expression macro
@@ -446,10 +446,10 @@ void DvisvgmSpecialHandler::XMLParser::parse (const string &xml, SpecialActions 
 	// collect/extract an XML fragment that only contains complete tags
 	// incomplete tags are held back
 	_xmlbuf += xml;
-	size_t left=0, right;
+	size_t left=0;
 	try {
 		while (left != string::npos) {
-			right = _xmlbuf.find('<', left);
+			size_t right = _xmlbuf.find('<', left);
 			if (left < right && left < _xmlbuf.length())  // plain text found?
 				(actions.svgTree().*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
 			if (right != string::npos) {
