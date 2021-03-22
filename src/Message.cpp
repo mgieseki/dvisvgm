@@ -74,7 +74,7 @@ void MessageStream::putChar (char c, ostream &os) {
 					_col++;
 			}
 			_nl = false;
-			if (!_nl || c != '\n')
+			if (c != '\n')
 				os << c;
 	}
 }

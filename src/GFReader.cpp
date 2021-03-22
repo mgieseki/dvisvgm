@@ -92,7 +92,7 @@ int GFReader::executeCommand () {
 	if (opcode < 0)  // at end of file?
 		throw GFException("unexpected end of file");
 
-	if (opcode >= 0 && opcode <= 63)
+	if (opcode <= 63)
 		cmdPaint0(opcode);
 	else if (opcode >= 74 && opcode <= 238)
 		cmdNewRow(opcode-74);
