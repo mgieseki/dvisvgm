@@ -38,8 +38,8 @@ class GFGlyphTracer : public GFTracer {
 
 	public:
 		GFGlyphTracer () : GFTracer(_ifs, 0) {}
-		GFGlyphTracer (std::string &fname, double upp, Callback *cb=nullptr);
-		void reset (std::string &fname, double upp);
+		GFGlyphTracer (const std::string &fname, double upp, Callback *cb=nullptr);
+		void reset (const std::string &fname, double upp);
 		void setCallback (Callback *cb) {_callback = cb;}
 		bool executeChar (uint8_t c) override;
 		void moveTo (double x, double y) override;

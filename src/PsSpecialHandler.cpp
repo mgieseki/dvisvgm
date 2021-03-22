@@ -384,7 +384,7 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 
 
 /** Returns path + basename of temporary bitmap images. */
-static string image_base_path (SpecialActions &actions) {
+static string image_base_path (const SpecialActions &actions) {
 	FilePath imgpath = actions.getSVGFilePath(actions.getCurrentPageNumber());
 	return FileSystem::tmpdir() + "/" + imgpath.basename() + "-tmp-";
 }
@@ -1046,7 +1046,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
  *  @param[in,out] it iterator used to sequentially access the patch data
  *  @param[out] points the points defining the geometry of the patch
  *  @param[out] colors the colors assigned to the vertices of the patch */
-static void read_patch_data (ShadingPatch &patch, int edgeflag,
+static void read_patch_data (const ShadingPatch &patch, int edgeflag,
 		VectorIterator<double> &it, vector<DPair> &points, vector<Color> &colors)
 {
 	// number of control points and colors required to define a single patch

@@ -52,7 +52,7 @@ class HyperlinkManager {
 		void checkNewLine (SpecialActions &actions);
 		void createLink (std::string uri, SpecialActions &actions);
 		void createViews (unsigned pageno, SpecialActions &actions);
-		void setBaseUrl (std::string &base) {_base = base;}
+		void setBaseUrl (const std::string &base) {_base = base;}
 		void setLineWidth (double w) {_linewidth = w;}
 		static HyperlinkManager& instance ();
 		static bool setLinkMarker (const std::string &marker);

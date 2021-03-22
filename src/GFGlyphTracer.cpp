@@ -25,7 +25,7 @@ using namespace std;
 /** Constructs a new glyph tracer.
  *  @param[in] is GF input stream
  *  @param[in] upp target units per PS point */
-GFGlyphTracer::GFGlyphTracer (string &fname, double upp, Callback *cb)
+GFGlyphTracer::GFGlyphTracer (const string &fname, double upp, Callback *cb)
 	: GFTracer(_ifs, upp), _callback(cb)
 {
 	if (_callback)
@@ -34,7 +34,7 @@ GFGlyphTracer::GFGlyphTracer (string &fname, double upp, Callback *cb)
 }
 
 
-void GFGlyphTracer::reset (string &fname, double upp) {
+void GFGlyphTracer::reset (const string &fname, double upp) {
 	if (_callback)
 		_callback->setFont(fname);
 	if (_ifs.is_open())
