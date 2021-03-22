@@ -40,6 +40,7 @@ struct InputBuffer {
 class StreamInputBuffer : public InputBuffer {
 	public:
 		explicit StreamInputBuffer (std::istream &is, size_t bufsize=1024);
+		StreamInputBuffer (const StreamInputBuffer &ib) =delete;
 		~StreamInputBuffer () override;
 		int get () override;
 		int peek () const override;
@@ -65,6 +66,7 @@ class StreamInputBuffer : public InputBuffer {
 class StringInputBuffer : public InputBuffer {
 	public:
 		explicit StringInputBuffer (const std::string &str) : _str(&str) {}
+		StringInputBuffer (const StreamInputBuffer &ib) =delete;
 		void assign (const std::string &str) {_str = &str; _pos=0;}
 		int get () override                  {return _pos < _str->length() ? _str->at(_pos++) : -1;}
 		int peek () const override           {return _pos < _str->length() ? _str->at(_pos) : -1;}
@@ -81,6 +83,7 @@ class StringInputBuffer : public InputBuffer {
 class CharInputBuffer : public InputBuffer {
 	public:
 		CharInputBuffer (const char *buf, size_t size) : _pos(buf), _size(buf ? size : 0) {}
+		CharInputBuffer (const CharInputBuffer &ib) =delete;
 
 		int get () override {
 			if (_size == 0)
@@ -112,6 +115,7 @@ class CharInputBuffer : public InputBuffer {
 class SplittedCharInputBuffer : public InputBuffer {
 	public:
 		SplittedCharInputBuffer (const char *buf1, size_t s1, const char *buf2, size_t s2);
+		SplittedCharInputBuffer (const SplittedCharInputBuffer &ib) =delete;
 		int get () override;
 		int peek () const override;
 		int peek (size_t n) const override;
