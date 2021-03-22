@@ -190,7 +190,7 @@ vector<Bezier> EllipticalArc::approximate () const {
 			if (numCurves > 0) {
 				double c = cos(_rotationAngle);
 				double s = sin(_rotationAngle);
-				Matrix ellipse = {_rx*c, -_ry*s, cparams.center.x(), _rx*s, _ry*c, cparams.center.y()};
+				Matrix ellipse{_rx*c, -_ry*s, cparams.center.x(), _rx*s, _ry*c, cparams.center.y()};
 				double angle = cparams.startAngle;
 				double diff = cparams.deltaAngle/numCurves;
 				while (numCurves-- > 0) {

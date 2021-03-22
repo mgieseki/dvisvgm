@@ -40,11 +40,12 @@ class Matrix {
 	friend double det (const Matrix &m, int row, int col);
 
 	public:
+		Matrix () {set(0);}
+		Matrix (double d);
 		Matrix (const std::string &cmds, Calculator &calc);
-		Matrix (double d=0);
 		explicit Matrix (const double *v, unsigned size=9);
 		explicit Matrix (const std::vector<double> &v, int start=0);
-		Matrix (std::initializer_list<double> initlist);
+		explicit Matrix (std::initializer_list<double> initlist);
 		Matrix& set (double d);
 		Matrix& set (const double *v, unsigned size);
 		Matrix& set (const std::vector<double> &v, int start=0);

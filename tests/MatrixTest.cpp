@@ -48,12 +48,12 @@ TEST(MatrixTest, construct1) {
 
 
 TEST(MatrixTest, construct2) {
-	Matrix m1 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	Matrix m1{1, 2, 3, 4, 5, 6, 7, 8, 9};
 	for (int row=0; row < 3; row++)
 		for (int col=0; col < 3; col++)
 			ASSERT_EQ(m1.get(row, col), 3*row+col+1) << "row=" << row << ", col=" << col;
 
-	Matrix m2 = {1, 2, 3, 4, 5, 6};
+	Matrix m2{1, 2, 3, 4, 5, 6};
 	for (int row=0; row < 2; row++)
 		for (int col=0; col < 3; col++)
 			ASSERT_EQ(m2.get(row, col), 3*row+col+1) << "row=" << row << ", col=" << col;
