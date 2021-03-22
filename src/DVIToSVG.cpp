@@ -74,13 +74,10 @@ bool DVIToSVG::COMPUTE_PROGRESS = false;
 DVIToSVG::HashSettings DVIToSVG::PAGE_HASH_SETTINGS;
 
 
-DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out) : DVIReader(is), _out(out)
+DVIToSVG::DVIToSVG (istream &is, SVGOutputBase &out)
+	: DVIReader(is), _out(out), _prevWritingMode(WritingMode::LR)
 {
-	_pageHeight = _pageWidth = 0;
-	_tx = _ty = 0;    // no cursor translation
-	_pageByte = 0;
 	_prevXPos = _prevYPos = numeric_limits<double>::min();
-	_prevWritingMode = WritingMode::LR;
 	_actions = util::make_unique<DVIToSVGActions>(*this, _svg);
 }
 
