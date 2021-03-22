@@ -227,10 +227,8 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 	else {  // register font referenced in vf file
 		const VirtualFont *vf = _vfStack.top();
 		_vfnum2id[vf][fontnum] = newid;
-		if (_vfFirstFontNumMap.find(vf) == _vfFirstFontNumMap.end()) { // first fontdef of VF?
-			_vfFirstFontNumMap.emplace(vf, fontnum);
-			_vfFirstFontMap.emplace(vf, _fonts.back().get());
-		}
+		_vfFirstFontNumMap.emplace(vf, fontnum);
+		_vfFirstFontMap.emplace(vf, _fonts.back().get());
 	}
 	return newid;
 }
