@@ -847,10 +847,8 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 	switch (pattern_type) {
 		case 0:
 			// pattern definition completed
-			if (_savenode) {
-				_xmlnode = _savenode;
-				_savenode = nullptr;
-			}
+			_xmlnode = _savenode;
+			_savenode = nullptr;
 			break;
 		case 1: {  // tiling pattern
 			int id = static_cast<int>(p[1]);
