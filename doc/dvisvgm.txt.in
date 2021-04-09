@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2021-01-03 19:25 +0100
+:revdate: 2021-04-10 01:45 +0200
 
 Name
 ----
@@ -454,14 +454,18 @@ The following list describes the currently available optimizer modules.
   expression is used.
 
 *-o, --output*='pattern'::
-Sets the pattern specifying the names of the generated SVG files. Parameter 'pattern' is a string
-that may contain static character sequences as well as the variables +%f+, +%p+, +%P+, +%hd+,
-+%ho+, and +%hc+. +%f+ expands to the base name of the DVI file, i.e. the filename without
-suffix, +%p+ is the current page number, and +%P+ the total number of pages in the DVI file. An
-optional number (0-9) given directly after the percent sign specifies the minimal number of digits
-to be written. If a particular value consists of less digits, the number is padded with leading
-zeros. Example: +%3p+ enforces 3 digits for the current page number (001, 002, etc.). Without an
-explicit width specifier, +%p+ gets the same number of digits as +%P+.
+Sets the pattern that determines the names of the generated SVG files. The required parameter
+'pattern' may consist of an arbitrary sequence of characters which make up the filenames. With the
+exception of the following mentioned variables and expressions, all characters are treated as static
+parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm.
+The strings +%f+, +%p+, +%P+, +%hd+, +%ho+, and +%hc+ are variables that can be used as part of the
+pattern. +%f+ expands to the base name of the DVI file, i.e. the filename without suffix, +%p+ is the
+current page number, and +%P+ the total number of pages in the DVI file.
+An optional number (0-9) given directly after the percent sign of a variable holding a numeric value
+denotes the minimal number of digits to be created. If a particular value consists of less digits,
+the number is padded with leading zeros.
+Example: +%3p+ enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
+width specifier, +%p+ gets the same number of digits as +%P+.
 +
 If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
 The syntax is +%(+'expr'+)+ where 'expr' may contain additions, subtractions, multiplications, and
@@ -471,7 +475,8 @@ where the numbering starts with 0 rather than 1.
 +
 The variables +%hX+ contain different hash values computed from the DVI page data and the options
 given on the command-line. +%hd+ and +%hc+ are only set if option *--page-hashes* is present.
-Otherwise, it's empty. For further information, see the description of option *--page-hashes* below.
+Otherwise, they are empty. For further information, see the description of option *--page-hashes*
+below.
 +
 The default pattern is +%f-%p.svg+ if the DVI file consists of more than one page, and
 +%f.svg+ otherwise. That means, a DVI file 'foo.dvi' is converted to 'foo.svg' if 'foo.dvi'

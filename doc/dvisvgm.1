@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2021-01-03
+.\"      Date: 2021-04-10
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.11.1
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2021\-01\-03" "dvisvgm 2\&.11\&.1" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2021\-04\-10" "dvisvgm 2\&.11\&.1" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -662,21 +662,22 @@ expression, it\(cqs assigned to the attribute\&. Otherwise, the matrix expressio
 .PP
 \fB\-o, \-\-output\fR=\fIpattern\fR
 .RS 4
-Sets the pattern specifying the names of the generated SVG files\&. Parameter
+Sets the pattern that determines the names of the generated SVG files\&. The required parameter
 \fIpattern\fR
-is a string that may contain static character sequences as well as the variables
+may consist of an arbitrary sequence of characters which make up the filenames\&. With the exception of the following mentioned variables and expressions, all characters are treated as static parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm\&. The strings
 \fB%f\fR,
 \fB%p\fR,
 \fB%P\fR,
 \fB%hd\fR,
 \fB%ho\fR, and
-\fB%hc\fR\&.
+\fB%hc\fR
+are variables that can be used as part of the pattern\&.
 \fB%f\fR
 expands to the base name of the DVI file, i\&.e\&. the filename without suffix,
 \fB%p\fR
 is the current page number, and
 \fB%P\fR
-the total number of pages in the DVI file\&. An optional number (0\-9) given directly after the percent sign specifies the minimal number of digits to be written\&. If a particular value consists of less digits, the number is padded with leading zeros\&. Example:
+the total number of pages in the DVI file\&. An optional number (0\-9) given directly after the percent sign of a variable holding a numeric value denotes the minimal number of digits to be created\&. If a particular value consists of less digits, the number is padded with leading zeros\&. Example:
 \fB%3p\fR
 enforces 3 digits for the current page number (001, 002, etc\&.)\&. Without an explicit width specifier,
 \fB%p\fR
@@ -703,7 +704,7 @@ and
 \fB%hc\fR
 are only set if option
 \fB\-\-page\-hashes\fR
-is present\&. Otherwise, it\(cqs empty\&. For further information, see the description of option
+is present\&. Otherwise, they are empty\&. For further information, see the description of option
 \fB\-\-page\-hashes\fR
 below\&.
 .sp
