@@ -40,8 +40,8 @@ void SVGElement::setClipRule (FillRule rule) {
 }
 
 
-void SVGElement::setFillColor (Color color) {
-	if (color != Color::BLACK)
+void SVGElement::setFillColor (Color color, bool skipBlack) {
+	if (color != Color::BLACK || !skipBlack)
 		addAttribute("fill", color.svgColorString());
 }
 

@@ -733,7 +733,7 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	if (_pattern)
 		path->setFillPatternUrl(XMLString(_pattern->svgID()));
 	else if (_actions->getColor() != Color::BLACK || _savenode)
-		path->setFillColor(_actions->getColor());
+		path->setFillColor(_actions->getColor(), false);
 	if (_clipStack.path() && !_savenode) {  // clip path active and not inside pattern definition?
 		// assign clipping path and clip bounding box
 		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));

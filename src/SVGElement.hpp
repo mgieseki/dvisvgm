@@ -39,7 +39,7 @@ class SVGElement : public XMLElement {
 		explicit SVGElement (XMLElement &&node) noexcept : XMLElement(std::move(node)) {}
 		void setClipPathUrl (const std::string &url);
 		void setClipRule (FillRule rule);
-		void setFillColor (Color color);
+		void setFillColor (Color color, bool skipBlack=true);
 		void setFillOpacity (const Opacity &opacity);
 		void setFillOpacity (const OpacityAlpha &alpha);
 		void setFillOpacity (Opacity::BlendMode blendMode);
