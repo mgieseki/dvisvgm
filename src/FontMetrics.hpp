@@ -43,6 +43,7 @@ struct FontMetrics {
 	virtual uint32_t getChecksum () const =0;
 	virtual uint16_t firstChar () const =0;
 	virtual uint16_t lastChar () const =0;
+	virtual bool isJFM () const {return false;}
 	static std::unique_ptr<FontMetrics> read (const std::string &fontname);
 };
 

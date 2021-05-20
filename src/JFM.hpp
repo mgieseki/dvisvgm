@@ -29,6 +29,7 @@ class JFM : public TFM {
 	public:
 		explicit JFM (std::istream &is);
 		bool verticalLayout () const  override {return _vertical;}
+		bool isJFM () const override {return true;}
 		uint32_t minChar () const {return _minchar;}
 		uint32_t maxChar () const {return static_cast<uint32_t>(_minchar+_charTypeTable.size()-1);}
 

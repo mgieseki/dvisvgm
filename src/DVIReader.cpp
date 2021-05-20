@@ -26,7 +26,6 @@
 #include "Font.hpp"
 #include "FontManager.hpp"
 #include "HashFunction.hpp"
-#include "JFM.hpp"
 #include "utility.hpp"
 #include "VectorStream.hpp"
 
@@ -207,7 +206,7 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 		FontManager &fm = FontManager::instance();
 		const vector<uint8_t> *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
 		Font *firstFont = fm.vfFirstFont(vf);
-		if (!dvi && (!firstFont || !dynamic_cast<const JFM*>(firstFont->getMetrics())))
+		if (!dvi && (!firstFont || !firstFont->getMetrics()->isJFM()))
 			return;
 		fm.enterVF(vf);                              // enter VF font number context
 		int savedFontNum = _currFontNum;             // save current font number
