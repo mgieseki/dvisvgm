@@ -103,7 +103,7 @@ bool FontEngine::setFont (const Font &font) {
 		return true;
 
 	if (const char *path=font.path()) {
-		auto pf = dynamic_cast<const PhysicalFont*>(&font);
+		auto pf = font_cast<const PhysicalFont*>(&font);
 		if (setFont(path, font.fontIndex(), pf ? pf->getCharMapID() : CharMapID())) {
 			_currentFont = &font;
 			return true;

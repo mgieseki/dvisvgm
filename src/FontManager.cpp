@@ -267,7 +267,7 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 	const int newid = _fonts.size();   // the new font gets this ID
 	auto it = _name2id.find(fontname);
 	if (it != _name2id.end()) {  // font with same name already registered?
-		if (auto font = dynamic_cast<NativeFont*>(_fonts[it->second].get()))
+		if (auto font = font_cast<NativeFont*>(_fonts[it->second].get()))
 			newfont = font->clone(ptsize, style, color);
 	}
 	else {
@@ -328,7 +328,7 @@ ostream& FontManager::write (ostream &os, Font *font, int level) {
 			if (_fonts[i] == font)
 				id = i;
 
-		VirtualFont *vf = dynamic_cast<VirtualFont*>(font);
+		VirtualFont *vf = font_cast<VirtualFont*>(font);
 		for (int j=0; j < level+1; j++)
 			os << "  ";
 		os << "id " << id

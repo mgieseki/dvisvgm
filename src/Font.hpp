@@ -50,6 +50,7 @@ struct GlyphMetrics {
 	double wl, wr, h, d;
 };
 
+class FontVisitor;
 
 /** Abstract base for all font classes. */
 class Font {
@@ -80,6 +81,8 @@ class Font {
 		virtual const FontStyle* style () const  {return nullptr;}
 		virtual Color color () const             {return Color::BLACK;}
 		virtual const FontMap::Entry* fontMapEntry () const;
+		virtual void visit (FontVisitor &visitor) =0;
+		virtual void visit (FontVisitor &visitor) const =0;
 };
 
 
@@ -101,6 +104,8 @@ class EmptyFont : public Font {
 		const FontMetrics* getMetrics () const override    {return nullptr;}
 		const char* path () const override                 {return nullptr;}
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override {return false;}
+		void visit (FontVisitor &visitor) override {}
+		void visit (FontVisitor &visitor) const override {}
 
 	private:
 		std::string _fontname;
@@ -135,6 +140,8 @@ class PhysicalFont : public virtual Font {
 		virtual void setCharMapID (const CharMapID &id) {}
 		virtual Character decodeChar (uint32_t c) const;
 		const char* path () const override;
+		void visit (FontVisitor &visitor) override;
+		void visit (FontVisitor &visitor) const override;
 
 	protected:
 		bool createGF (std::string &gfname) const;
@@ -160,6 +167,8 @@ class VirtualFont : public virtual Font {
 		static std::unique_ptr<Font> create (const std::string &name, uint32_t checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override {return false;}
+		void visit (FontVisitor &visitor) override;
+		void visit (FontVisitor &visitor) const override;
 
 	protected:
 		virtual void assignChar (uint32_t c, DVIVector &&dvi) =0;
@@ -272,6 +281,8 @@ class NativeFont : public PhysicalFont {
 		Color color () const override                    {return _color;}
 		const FontMap::Entry* fontMapEntry () const override {return nullptr;}
 		static std::string uniqueName (const std::string &path, const FontStyle &style);
+		void visit (FontVisitor &visitor) override;
+		void visit (FontVisitor &visitor) const override;
 
 	protected:
 		NativeFont (double ptsize, const FontStyle &style, Color color) : _ptsize(ptsize), _style(style), _color(color) {}
@@ -388,6 +399,33 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 	private:
 		std::unordered_map<uint32_t, DVIVector> _charDefs; ///< dvi subroutines defining the characters
 };
+
+
+struct FontVisitor {
+	virtual ~FontVisitor () =default;
+	virtual void visited (const PhysicalFont *font) {}
+	virtual void visited (const VirtualFont *font) {}
+	virtual void visited (const NativeFont *font) {visited(static_cast<const PhysicalFont*>(font));}
+	virtual void visited (PhysicalFont *font) {}
+	virtual void visited (VirtualFont *font) {}
+	virtual void visited (NativeFont *font) {visited(static_cast<PhysicalFont*>(font));}
+};
+
+
+/** This function works similar to dynamic_cast but only on pointers to Font classes.
+ *  It uses double dispatch instead of RTTI and should therefore be faster.
+ *  @param[in] font font pointer to be cast
+ *  @return cast pointer on success, nullptr otherwise */
+template <typename C>
+C font_cast (typename util::set_const_of<Font>::by<typename std::remove_pointer<C>::type>::type *font) {
+	struct : FontVisitor {
+		void visited (C font) override {result = font;}
+		C result = nullptr;
+	} visitor;
+	if (font)
+		font->visit(visitor);
+	return visitor.result;
+}
 
 
 struct FontException : public MessageException {

@@ -105,7 +105,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 
 	GlyphMetrics metrics;
 	font.getGlyphMetrics(c, vertical, metrics);
-	auto pf = dynamic_cast<const PhysicalFont*>(&font);
+	auto pf = font_cast<const PhysicalFont*>(&font);
 	if (PhysicalFont::EXACT_BBOX && pf) {
 		GlyphMetrics exact_metrics;
 		pf->getExactGlyphBox(c, exact_metrics, vertical, &callback);

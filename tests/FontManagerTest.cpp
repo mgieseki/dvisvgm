@@ -23,16 +23,23 @@
 #include "Font.hpp"
 #include "FontManager.hpp"
 
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
+
+
 class FontManagerTest : public ::testing::Test {
 	public:
 		FontManagerTest () : fm(FontManager::instance()) {
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
+			fm.registerFont(12, SRCDIR"/data/lmmono12-regular.otf", 0, 12, _fontStyle, Color(.0, .0, 1.0));
 		}
 
 	protected:
 		FontManager &fm;
+		FontStyle _fontStyle;
 };
 
 
@@ -40,11 +47,12 @@ TEST_F(FontManagerTest, fontID1) {
 	EXPECT_EQ(fm.fontID(10), 0);
 	EXPECT_EQ(fm.fontID(11), 1);
 	EXPECT_EQ(fm.fontID(9), 2);
+	EXPECT_EQ(fm.fontID(12), 3);
 	EXPECT_EQ(fm.fontID(1), -1);
 }
 
 
-TEST_F(FontManagerTest, font_ID2) {
+TEST_F(FontManagerTest, fontID2) {
 	EXPECT_EQ(fm.fontID("cmr10"), 0);
 }
 
@@ -54,6 +62,7 @@ TEST_F(FontManagerTest, getFont) {
 	EXPECT_TRUE(f1);
 	EXPECT_EQ(f1->name(), "cmr10");
 	EXPECT_TRUE(dynamic_cast<const PhysicalFontImpl*>(f1));
+	EXPECT_EQ(f1->color(), Color::BLACK);
 
 	const Font *f2 = fm.getFont(11);
 	EXPECT_TRUE(f2);
@@ -61,11 +70,42 @@ TEST_F(FontManagerTest, getFont) {
 	EXPECT_EQ(f2->name(), "cmr10");
 	EXPECT_TRUE(dynamic_cast<const PhysicalFontProxy*>(f2));
 	EXPECT_EQ(f2->uniqueFont(), f1);
+	EXPECT_EQ(f2->color(), Color::BLACK);
+
+	const Font *f3 = fm.getFont(12);
+	EXPECT_TRUE(f3);
+	EXPECT_NE(f2, f3);
+	EXPECT_EQ(f3->name(), "nf0");
+	EXPECT_TRUE(dynamic_cast<const NativeFontImpl*>(f3));
+	EXPECT_TRUE(dynamic_cast<const PhysicalFont*>(f3));
+	EXPECT_EQ(f3->uniqueFont(), f3);
+	EXPECT_EQ(f3->color(), Color(.0, .0, 1.0));
+}
+
+
+TEST_F(FontManagerTest, font_cast) {
+	const Font *f1 = fm.getFont(10);
+	EXPECT_TRUE(f1);
+	EXPECT_EQ(font_cast<const PhysicalFont*>(f1), f1);
+	EXPECT_EQ(font_cast<const NativeFont*>(f1), nullptr);
+	EXPECT_EQ(font_cast<const VirtualFont*>(f1), nullptr);
+
+	const Font *f2 = fm.getFont(11);
+	EXPECT_TRUE(f2);
+	EXPECT_EQ(font_cast<const PhysicalFont*>(f2), f2);
+	EXPECT_EQ(font_cast<const NativeFont*>(f1), nullptr);
+	EXPECT_EQ(font_cast<const VirtualFont*>(f1), nullptr);
+
+	const Font *f3 = fm.getFont(12);
+	EXPECT_TRUE(f3);
+	EXPECT_EQ(font_cast<const PhysicalFont*>(f3), f3);
+	EXPECT_EQ(font_cast<const NativeFont*>(f3), f3);
+	EXPECT_EQ(font_cast<const VirtualFont*>(f3), nullptr);
 }
 
 
 TEST_F(FontManagerTest, getFontById) {
 	EXPECT_EQ(fm.getFont(10), fm.getFontById(0));
 	EXPECT_EQ(fm.getFont("cmr10"), fm.getFontById(0));
+	EXPECT_EQ(fm.getFont(12), fm.getFontById(3));
 }
-

@@ -25,6 +25,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace math {
@@ -145,6 +146,17 @@ std::unique_ptr<T> static_unique_ptr_cast (std::unique_ptr<U> &&old){
     return std::unique_ptr<T>{static_cast<T*>(old.release())};
 }
 
+template <typename T>
+struct set_const_of { 
+	template <typename U>
+	struct by {
+		using type = typename std::conditional<
+			std::is_const<U>::value,
+			typename std::add_const<T>::type,
+			typename std::remove_const<T>::type
+		>::type;
+    };
+};
 } // namespace util
 
 #endif

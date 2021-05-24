@@ -76,7 +76,7 @@ unique_ptr<SVGElement> SVGCharTextHandler::createTextNode (double x, double y) c
 	if (_vertical) {
 		textNode->addAttribute("writing-mode", "tb");
 		// align glyphs designed for horizontal layout properly
-		if (auto pf = dynamic_cast<const PhysicalFont*>(font)) {
+		if (auto pf = font_cast<const PhysicalFont*>(font)) {
 			if (!pf->getMetrics()->verticalLayout()) { // alphabetic text designed for horizontal layout?
 				x += pf->scaledAscent()/2.5; // move vertical baseline to the right by strikethrough offset
 				textNode->addAttribute("glyph-orientation-vertical", 90); // ensure rotation

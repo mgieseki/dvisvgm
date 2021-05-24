@@ -679,3 +679,11 @@ const vector<uint8_t>* VirtualFontImpl::getDVI (int c) const {
 	return (it == _charDefs.end() ? nullptr : &it->second);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
+void PhysicalFont::visit (FontVisitor &visitor) {visitor.visited(this);}
+void VirtualFont::visit (FontVisitor &visitor) {visitor.visited(this);}
+void NativeFont::visit (FontVisitor &visitor) {visitor.visited(this);}
+void PhysicalFont::visit (FontVisitor &visitor) const {visitor.visited(this);}
+void VirtualFont::visit (FontVisitor &visitor) const {visitor.visited(this);}
+void NativeFont::visit (FontVisitor &visitor) const {visitor.visited(this);}

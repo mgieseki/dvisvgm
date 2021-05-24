@@ -85,7 +85,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 		GlyphMetrics metrics;
 		font->getGlyphMetrics(c, _vertical, metrics);
 		x -= metrics.wl;
-		if (auto pf = dynamic_cast<const PhysicalFont*>(font)) {
+		if (auto pf = font_cast<const PhysicalFont*>(font)) {
 			// Center glyph between top and bottom border of the TFM box.
 			// This is just an approximation used until I find a way to compute
 			// the exact location in vertical mode.
@@ -122,7 +122,7 @@ void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const
 
 void SVGCharPathHandler::appendPathElement (uint32_t c, double x, double y, const Matrix &matrix) {
 	Glyph glyph;
-	auto pf = dynamic_cast<const PhysicalFont*>(_font.get());
+	auto pf = font_cast<const PhysicalFont*>(_font.get());
 	if (pf && pf->getGlyph(c, glyph)) {
 		double sx = pf->scaledSize()/pf->unitsPerEm();
 		double sy = -sx;

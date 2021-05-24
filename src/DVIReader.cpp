@@ -202,7 +202,7 @@ void DVIReader::cmdPop (int) {
  *  @param[in] font current font (corresponding to _currFontNum)
  *  @param[in] c character to typeset */
 void DVIReader::putVFChar (Font *font, uint32_t c) {
-	if (auto vf = dynamic_cast<VirtualFont*>(font)) { // is current font a virtual font?
+	if (auto vf = font_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		FontManager &fm = FontManager::instance();
 		const vector<uint8_t> *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
 		Font *firstFont = fm.vfFirstFont(vf);
@@ -484,7 +484,7 @@ const Font* DVIReader::defineFont (uint32_t fontnum, const string &name, uint32_
 		else {  // TFM-based font specified by name
 			int id = fm.registerFont(fontnum, name, cs, dsize, ssize);
 			font = fm.getFontById(id);
-			if (auto vf = dynamic_cast<VirtualFont*>(font)) {
+			if (auto vf = font_cast<VirtualFont*>(font)) {
 				// read vf file, register its font and character definitions
 				fm.enterVF(vf);
 				ifstream ifs(vf->path(), ios::binary);
@@ -591,7 +591,7 @@ void DVIReader::cmdXFontDef (int) {
 		FontManager::instance().registerFont(fontnum, fontname, fontIndex, ptsize, style, color);
 		font = FontManager::instance().getFont(fontnum);
 	}
-	dviXFontDef(fontnum, dynamic_cast<const NativeFont*>(font));
+	dviXFontDef(fontnum, font_cast<const NativeFont*>(font));
 }
 
 

@@ -359,7 +359,7 @@ void DVIToSVG::embedFonts (XMLElement *svgElement) {
 	unordered_set<const Font*> tracedFonts;  // collect unique fonts already traced
 	for (const auto &fontchar : usedCharsMap) {
 		const Font *font = fontchar.first;
-		if (auto ph_font = dynamic_cast<const PhysicalFont*>(font)) {
+		if (auto ph_font = font_cast<const PhysicalFont*>(font)) {
 			// Check if glyphs should be traced. Only trace the glyphs of unique fonts, i.e.
 			// avoid retracing the same glyphs again if they are referenced in various sizes.
 			if (TRACE_MODE != 0 && tracedFonts.find(ph_font->uniqueFont()) == tracedFonts.end()) {
@@ -478,7 +478,7 @@ void DVIToSVG::dviEop () {
 
 
 void DVIToSVG::dviSetChar0 (uint32_t c, const Font *font) {
-	if (_actions && !dynamic_cast<const VirtualFont*>(font))
+	if (_actions && !font_cast<const VirtualFont*>(font))
 		_actions->setChar(dviState().h+_tx, dviState().v+_ty, c, dviState().d != WritingMode::LR, *font);
 }
 
@@ -517,7 +517,7 @@ void DVIToSVG::dviPop () {
 
 
 void DVIToSVG::dviFontNum (uint32_t fontnum, SetFontMode, const Font *font) {
-	if (_actions && font && !dynamic_cast<const VirtualFont*>(font))
+	if (_actions && font && !font_cast<const VirtualFont*>(font))
 		_actions->setFont(FontManager::instance().fontID(fontnum), *font);  // all fonts get a recomputed ID
 }
 

@@ -190,7 +190,7 @@ static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, 
 
 static string font_info (const Font &font) {
 	ostringstream oss;
-	if (auto nf = dynamic_cast<const NativeFont*>(&font)) {
+	if (auto nf = font_cast<const NativeFont*>(&font)) {
 		oss << nf->familyName() << ' ' << nf->styleName() << "; " << nf->filename();
 		if (nf->style()) {
 			if (nf->style()->bold != 0)
@@ -209,7 +209,7 @@ void SVGTree::appendFontStyles (const unordered_set<const Font*> &fonts) {
 	if (CREATE_CSS && USE_FONTS && !fonts.empty() && _page) {
 		map<int, const Font*> sortmap;
 		for (const Font *font : fonts)
-			if (!dynamic_cast<const VirtualFont*>(font))   // skip virtual fonts
+			if (!font_cast<const VirtualFont*>(font))   // skip virtual fonts
 				sortmap[FontManager::instance().fontID(font)] = font;
 		ostringstream style;
 		// add font style definitions in ascending order
