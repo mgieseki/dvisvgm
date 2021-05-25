@@ -119,7 +119,7 @@ const CMap* CMapManager::findCompatibleBaseFontMap (const PhysicalFont *font, co
 
 
 	// try to find a compatible encoding CMap
-	const bool is_unicode_map = bool(dynamic_cast<const UnicodeCMap*>(cmap));
+	const bool is_unicode_map = cmap->mapsToUnicode();
 	const string ro = cmap->getROString();
 	for (const CharMapIDToEncName &enc : encodings) {
 		for (const CharMapID &id : charmapIDs) {
