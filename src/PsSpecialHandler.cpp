@@ -890,13 +890,9 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 	if (it == _patterns.end())
 		_pattern = nullptr;
 	else {
-		if (auto pattern = dynamic_cast<PSUncoloredTilingPattern*>(it->second.get()))
-			pattern->setColor(color);
+		it->second->setColor(color);
 		it->second->apply(*_actions);
-		if (auto pattern = dynamic_cast<PSTilingPattern*>(it->second.get()))
-			_pattern = pattern;
-		else
-			_pattern = nullptr;
+		_pattern = it->second->tiled() ? static_cast<PSTilingPattern*>(it->second.get()) : nullptr;
 	}
 }
 
