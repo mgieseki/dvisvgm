@@ -95,7 +95,7 @@ static char prepare_mode (InputReader &ir) {
 void PdfSpecialHandler::preprocessPagesize (StreamInputReader &ir, SpecialActions &actions) {
 	// add page sizes to collection of paper sizes in order to handle them equally
 	SpecialHandler *handler = SpecialManager::instance().findHandlerByName("papersize");
-	if (auto papersizeHandler = dynamic_cast<PapersizeSpecialHandler*>(handler)) {
+	if (auto papersizeHandler = static_cast<PapersizeSpecialHandler*>(handler)) {
 		try {
 			Length width, height;
 			// parse parameter sequence of the form (name length)+
