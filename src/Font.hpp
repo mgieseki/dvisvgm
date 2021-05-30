@@ -70,7 +70,7 @@ class Font {
 		virtual const char* path () const =0;
 		virtual const char* filename () const;
 		virtual const FontEncoding* encoding () const;
-		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *callback=nullptr) const =0;
+		virtual bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *callback) const =0;
 		virtual void getGlyphMetrics (int c, bool vertical, GlyphMetrics &metrics) const;
 		virtual uint32_t unicode (uint32_t c) const;
 		virtual void tidy () const {}
@@ -103,7 +103,7 @@ class EmptyFont : public Font {
 		double italicCorr (int c) const override           {return 0;}
 		const FontMetrics* getMetrics () const override    {return nullptr;}
 		const char* path () const override                 {return nullptr;}
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback*) const override {return false;}
 		void visit (FontVisitor &visitor) override {}
 		void visit (FontVisitor &visitor) const override {}
 
@@ -120,9 +120,9 @@ class PhysicalFont : public virtual Font {
 		static std::unique_ptr<Font> create (const std::string &name, uint32_t checksum, double dsize, double ssize, PhysicalFont::Type type);
 		static std::unique_ptr<Font> create (const std::string &name, int fontindex, uint32_t checksum, double dsize, double ssize);
 		virtual Type type () const =0;
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override;
-		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb=nullptr) const;
-		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb=nullptr) const;
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb) const override;
+		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb) const;
+		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb) const;
 		virtual bool isCIDFont () const;
 		virtual int hAdvance () const;
 		virtual std::string familyName () const;
@@ -134,7 +134,7 @@ class PhysicalFont : public virtual Font {
 		virtual double scaledAscent () const;
 		virtual int ascent () const;
 		virtual int descent () const;
-		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb=nullptr) const;
+		virtual int traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *cb) const;
 		virtual int collectCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		virtual CharMapID getCharMapID () const =0;
 		virtual void setCharMapID (const CharMapID &id) {}
@@ -166,7 +166,7 @@ class VirtualFont : public virtual Font {
 	public:
 		static std::unique_ptr<Font> create (const std::string &name, uint32_t checksum, double dsize, double ssize);
 		virtual const DVIVector* getDVI (int c) const =0;
-		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback *cb=nullptr) const override {return false;}
+		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback*) const override {return false;}
 		void visit (FontVisitor &visitor) override;
 		void visit (FontVisitor &visitor) const override;
 

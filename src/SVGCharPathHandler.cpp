@@ -90,7 +90,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 			// This is just an approximation used until I find a way to compute
 			// the exact location in vertical mode.
 			GlyphMetrics exact_metrics;
-			pf->getExactGlyphBox(c, exact_metrics, false);
+			pf->getExactGlyphBox(c, exact_metrics, false, nullptr);
 			y += exact_metrics.h+(metrics.d-exact_metrics.h-exact_metrics.d)/2;
 		}
 		else
@@ -123,7 +123,7 @@ void SVGCharPathHandler::appendUseElement (uint32_t c, double x, double y, const
 void SVGCharPathHandler::appendPathElement (uint32_t c, double x, double y, const Matrix &matrix) {
 	Glyph glyph;
 	auto pf = font_cast<const PhysicalFont*>(_font.get());
-	if (pf && pf->getGlyph(c, glyph)) {
+	if (pf && pf->getGlyph(c, glyph, nullptr)) {
 		double sx = pf->scaledSize()/pf->unitsPerEm();
 		double sy = -sx;
 		ostringstream oss;
