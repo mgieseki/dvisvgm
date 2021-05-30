@@ -75,7 +75,7 @@ class Font {
 		virtual uint32_t unicode (uint32_t c) const;
 		virtual void tidy () const {}
 		virtual bool findAndAssignBaseFontMap () {return true;}
-		virtual bool verticalLayout () const     {return getMetrics() ? getMetrics()->verticalLayout() : false;}
+		virtual bool verticalLayout () const     {return getMetrics() != nullptr && getMetrics()->verticalLayout();}
 		virtual bool verifyChecksums () const    {return true;}
 		virtual int fontIndex () const           {return 0;}
 		virtual const FontStyle* style () const  {return nullptr;}
