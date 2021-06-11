@@ -13,6 +13,7 @@ EXTRA_DIST = \
 	frktest.dvi \
 	frktest-nf-cmp.svg \
 	frktest-wf-cmp.svg \
+	lmmono12-regular.otf \
 	sample.dvi \
 	sample-nf-cmp.svg \
 	sample.sfd \
