@@ -286,7 +286,6 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 	return true;
 }
 
-
 /** Handles a psfile/pdffile special which places an external EPS/PDF graphic
  *  at the current DVI position. The lower left corner (llx,lly) of the
  *  given bounding box is placed at the DVI position.
@@ -365,14 +364,14 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 		matrix.scale(sx, sy).rotate(-angle).scale(hscale/100, vscale/100);  // apply transformation attributes
 		matrix.translate(x+hoffset, y-voffset);     // move image to current DVI position
 		matrix.lmultiply(_actions->getMatrix());
-
 		// update bounding box
 		BoundingBox bbox(0, 0, urx-llx, ury-lly);
 		bbox.transform(matrix);
 		_actions->embed(bbox);
 
 		// insert element containing the image data
-		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
+		if (filetype != FileType::PDF)
+			matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
 		imgNode->setTransform(matrix);
 		_actions->svgTree().appendToPage(std::move(imgNode));
 	}
