@@ -128,7 +128,10 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 	if (isfile) {
 		size_t pos = path.rfind('/');
 		_fname = path.substr((pos == string::npos) ? 0 : pos+1);
-		if (pos != string::npos)
+		// remove filename from path
+		if (pos == 0 && _fname.length() > 1)  // file in root directory?
+			path.erase(1);
+		else if (pos != string::npos)
 			path.erase(pos);
 		else
 			path.clear();
