@@ -139,7 +139,8 @@ string FileSystem::ensureForwardSlashes (string path) {
 string FileSystem::getcwd () {
 	char buf[1024];
 #ifdef _WIN32
-	return ensureForwardSlashes(_getcwd(buf, 1024));
+	GetCurrentDirectoryA(1024, buf);
+	return ensureForwardSlashes(buf);
 #else
 	return ::getcwd(buf, 1024);
 #endif
