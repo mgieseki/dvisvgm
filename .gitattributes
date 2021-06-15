@@ -1,2 +1,2 @@
 doc/dvisvgm.* linguist-documentation
-libs/* linguist-vendored
+libs/** linguist-vendored
