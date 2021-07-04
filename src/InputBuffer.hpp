@@ -47,6 +47,7 @@ class StreamInputBuffer : public InputBuffer {
 		int peek (size_t n) const override;
 		bool eof () const override {return pos() == _size1 && _size2 == 0;}
 		void invalidate () override {_bufptr = _buf1+_size1; _size2 = 0;}
+		void operator = (const StreamInputBuffer &ib) =delete;
 
 	protected:
 		int fillBuffer (uint8_t *buf);
