@@ -134,7 +134,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 		else
 			path.clear();
 	}
-	if (path[0] != '/' && !current_dir.empty())
+	if ((path.empty() || path[0] != '/') && !current_dir.empty())
 		path.insert(0, current_dir + "/");
 	string elem;
 	for (char c : path) {
@@ -145,7 +145,8 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 			elem.clear();
 		}
 	}
-	add(elem);
+	if (!elem.empty())
+		add(elem);
 }
 
 
