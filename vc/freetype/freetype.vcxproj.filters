@@ -80,9 +80,6 @@
     <ClCompile Include="src\base\ftxf86.c">
       <Filter>Source Files\FT_MODULES</Filter>
     </ClCompile>
-    <ClCompile Include="src\base\ftlcdfil.c">
-      <Filter>Source Files\FT_MODULES</Filter>
-    </ClCompile>
     <ClCompile Include="src\base\ftgxval.c">
       <Filter>Source Files\FT_MODULES</Filter>
     </ClCompile>
