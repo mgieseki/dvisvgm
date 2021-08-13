@@ -85,6 +85,7 @@ void PsSpecialHandler::initgraphics () {
 	_opacity = Opacity();
 	_sx = _sy = _cos = 1.0;
 	_pattern = nullptr;
+	_makingPattern = false;
 	_patternEnabled = false;
 	_currentcolor = Color::BLACK;
 	_dashoffset = 0;
@@ -691,7 +692,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		path->setStrokeOpacity(_opacity);
 		path->setStrokeDash(_dashpattern, _dashoffset);
 	}
-	if (path && _clipStack.path() && !_savenode) {
+	if (path && _clipStack.path() && !_makingPattern) {
 		// assign clipping path and clip bounding box
 		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
 		bbox.intersect(_clipStack.path()->computeBBox());
@@ -731,9 +732,9 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	path->addAttribute("d", oss.str());
 	if (_pattern)
 		path->setFillPatternUrl(XMLString(_pattern->svgID()));
-	else if (_actions->getColor() != Color::BLACK || _savenode)
+	else if (_actions->getColor() != Color::BLACK || _makingPattern)
 		path->setFillColor(_actions->getColor(), false);
-	if (_clipStack.path() && !_savenode) {  // clip path active and not inside pattern definition?
+	if (_clipStack.path() && !_makingPattern) {  // clip path active and not inside pattern definition?
 		// assign clipping path and clip bounding box
 		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
 		bbox.intersect(_clipStack.path()->computeBBox());
@@ -848,6 +849,7 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 			// pattern definition completed
 			_xmlnode = _savenode;
 			_savenode = nullptr;
+			_makingPattern = false;
 			break;
 		case 1: {  // tiling pattern
 			int id = static_cast<int>(p[1]);
@@ -867,6 +869,7 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 			_savenode = _xmlnode;
 			_xmlnode = pattern->getContainerNode();  // insert the following SVG elements into this node
 			_patterns[id] = std::move(pattern);
+			_makingPattern = true;
 			break;
 		}
 		case 2: {
