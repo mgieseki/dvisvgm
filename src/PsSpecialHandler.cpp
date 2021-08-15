@@ -713,7 +713,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	_path.removeRedundantCommands();
-	if ((_path.empty() && !_clipStack.prependedPath()) || !_actions)
+	if ((_path.empty() && !_clipStack.prependedPath()) || (_patternEnabled && !_pattern) || !_actions)
 		return;
 
 	// compute bounding box
