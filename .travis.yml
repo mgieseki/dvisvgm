@@ -29,7 +29,7 @@ addons:
       project:
          name: mgieseki/dvisvgm
          description: "dvisvgm -- A fast DVI to SVG converter"
-         version: 2.11.1
+         version: 2.12
       notification_email: martin.gieseking@uos.de
       build_command_prepend: "./configure --enable-bundled-libs; make clean"
       build_command: "make -j"
