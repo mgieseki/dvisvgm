@@ -119,7 +119,7 @@ to embed the font data into the SVG files. Unfortunately, only few SVG renderers
 elements yet. Most web browsers and vector graphics applications don’t evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option <strong>--no-fonts</strong> can be given to replace the font elements
-by plain graphics paths. Most web browsers (but only few external SVG renderers) also suppport
+by plain graphics paths. Most web browsers (but only few external SVG renderers) also support
 WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option <strong>--font-format</strong>
 offers the functionality to change the format applied to the fonts being embedded. This, however,
 only works when converting DVI files. Text present in PDF and PostScript files is always
@@ -800,14 +800,18 @@ XML tree gradually.
 </dt>
 <dd>
 <p>
-Sets the pattern specifying the names of the generated SVG files. Parameter <em>pattern</em> is a string
-that may contain static character sequences as well as the variables <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%hd</code>,
-<code>%ho</code>, and <code>%hc</code>. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without
-suffix, <code>%p</code> is the current page number, and <code>%P</code> the total number of pages in the DVI file. An
-optional number (0-9) given directly after the percent sign specifies the minimal number of digits
-to be written. If a particular value consists of less digits, the number is padded with leading
-zeros. Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an
-explicit width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.
+Sets the pattern that determines the names of the generated SVG files. The required parameter
+<em>pattern</em> may consist of an arbitrary sequence of characters which make up the filenames. With the
+exception of the following mentioned variables and expressions, all characters are treated as static
+parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm.
+The strings <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%hd</code>, <code>%ho</code>, and <code>%hc</code> are variables that can be used as part of the
+pattern. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without suffix, <code>%p</code> is the
+current page number, and <code>%P</code> the total number of pages in the DVI file.
+An optional number (0-9) given directly after the percent sign of a variable holding a numeric value
+denotes the minimal number of digits to be created. If a particular value consists of less digits,
+the number is padded with leading zeros.
+Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
+width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.
 </p>
 <p>If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
 The syntax is <code>%(</code><em>expr</em><code>)</code> where <em>expr</em> may contain additions, subtractions, multiplications, and
@@ -816,7 +820,8 @@ and the total number of pages, respectively. For example, <code>--output="%f-%(p
 where the numbering starts with 0 rather than 1.</p>
 <p>The variables <code>%hX</code> contain different hash values computed from the DVI page data and the options
 given on the command-line. <code>%hd</code> and <code>%hc</code> are only set if option <strong>--page-hashes</strong> is present.
-Otherwise, it’s empty. For further information, see the description of option <strong>--page-hashes</strong> below.</p>
+Otherwise, they are empty. For further information, see the description of option <strong>--page-hashes</strong>
+below.</p>
 <p>The default pattern is <code>%f-%p.svg</code> if the DVI file consists of more than one page, and
 <code>%f.svg</code> otherwise. That means, a DVI file <em>foo.dvi</em> is converted to <em>foo.svg</em> if <em>foo.dvi</em>
 is a single-page document. Otherwise, multiple SVG files <em>foo-01.svg</em>, <em>foo-02.svg</em>, etc. are
@@ -1746,9 +1751,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.11.1</div>
+   <div class="col-md-6">Version 2.12</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2021-01-03</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2021-04-10</span>
    </div>
 </div>
 </div>

@@ -3,8 +3,28 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 21 Jan 2021 15:42:09 +0100</pubDate>
+    <pubDate>Mon, 16 Aug 2021 13:19:57 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.12 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#0bc5191266f5d77c936e8e667cef5f50</link>
+      <pubDate>Mon, 16 Aug 2021 12:35:08 +0200</pubDate>
+      <guid>0bc5191266f5d77c936e8e667cef5f50</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added transparency support for SVG elements created outside the PS handler (<a href="(https://github.com/mgieseki/dvisvgm/issues/148)">issue #148</a>).</li>
+<li>Fixed a spacing issue caused by unexpected newline characters in SVG output.</li>
+<li>Fixed PostScript errors occurred when defining (yet unsupported) shading patterns.</li>
+<li>Fixed a bug that prevented proper coloring of PostScript tiling patterns (<a href="(https://github.com/mgieseki/dvisvgm/issues/158)">issue #158</a>).</li>
+<li>Fixed graphics displacements that occurred if the PDF MediBox is not located at the origin.</li>
+<li>Fixed the handling of root directories of file paths.</li>
+<li>Improved the handling of drive letters (Windows only).</li>
+<li>Several code refactorings and improvements.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.11.1 has been released</title>
@@ -156,7 +176,7 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
     
     <item>
       <title>dvisvgm 2.8.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#8d0ef4dc302ef6102e094359ddf31b2d</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#8d0ef4dc302ef6102e094359ddf31b2d</link>
       <pubDate>Thu, 14 Nov 2019 16:25:12 +0100</pubDate>
       <guid>8d0ef4dc302ef6102e094359ddf31b2d</guid>
       <description>
@@ -354,7 +374,7 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
     
     <item>
       <title>dvisvgm 2.6.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#dcf8791dee146c9bf9bd340c4514d551</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#dcf8791dee146c9bf9bd340c4514d551</link>
       <pubDate>Wed, 23 Jan 2019 10:48:53 +0100</pubDate>
       <guid>dcf8791dee146c9bf9bd340c4514d551</guid>
       <description>
@@ -463,47 +483,6 @@ and the available hash algorithms see the sections about option <code>--page-has
 overflows if the DVI file contains more than 65535 pages which previously led to an error message.</li>
 <li>Validity checks of the BOP (begin of page) offsets specified as part of each BOP and POST command have been added
 to detect DVI files with incorrect, e.g. cyclic, page references.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.5 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#893ff3b8dee919326502dc03f65fa28b</link>
-      <pubDate>Wed, 08 Aug 2018 09:49:29 +0200</pubDate>
-      <guid>893ff3b8dee919326502dc03f65fa28b</guid>
-      <description>
-        <![CDATA[<p>This is a small feature release with the following additions/changes:</p>
-<ul>
-<li>Added multi-page support to PDF mode, i.e. when converting PDF file using option <code>--pdf</code>,
-the pages to be processed can be selected with option <code>--page</code>:
-<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
-$ dvisvgm &ndash;pdf &ndash;page=2-3 -d2 sample.pdf
-</span><span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
-<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
-<span style="color:#50fa7b;">  output written to sample-2.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
-<span style="color:#bd93f9;">  graphic size: 597.23pt x 845.16pt (209.9mm x 297.04mm)</span>
-<span style="color:#50fa7b;">  output written to sample-3.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">2 of 3 pages converted in 1.328 seconds</span>
-</pre>
-</span><br/></li>
-<li>All transformation options, like <code>--scale</code>, <code>--rotate</code>, and <code>--transform</code>, now work in
-the PDF mode too.</li>
-<li>Added support for all nine length units to option <code>--transform</code>. Previously, only some of
-them were available. For further information see the <a href="/Manpage/">manual page</a>.</li>
-<li>TeX Live 32-bit Windows binaries only: The <a href="https://www.ghostscript.com/">Ghostscript</a> DLL
-is now looked up in the TeX Live folders as well (thanks to Akira Kakuto for sending the patch).</li>
-<li>At the request of the TeX Live maintainers, <a href="http://potrace.sourceforge.net">potrace</a> has been
-added to the bundled third-party libraries again, in order to simplify maintaining this dependency.</li>
-<li>Instead of linking the bundled libraries <a href="https://github.com/google/brotli">brotli</a>,
-<a href="http://potrace.sourceforge.net">potrace</a>, <a href="https://github.com/google/woff2">woff2</a>, and
-<a href="https://github.com/Cyan4973/xxHash">xxhash</a>, the configure script now looks for the corresponding
-system libraries by default (<a href="https://github.com/mgieseki/dvisvgm/issues/90">issue #90</a>).</li>
-<li>Added option <code>--enable-bundled-libs</code> to the <code>configure</code> script to build and statically link
-the bundled libraries.</li>
-<li>Some code refactorings.</li>
 </ul>
 ]]>
       </description>
