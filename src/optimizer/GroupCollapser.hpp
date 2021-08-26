@@ -26,11 +26,15 @@
 class GroupCollapser : public OptimizerModule {
 	public:
 		void execute (XMLElement*, XMLElement *context) override {execute(context);};
-		void execute (XMLElement *context);
+		void execute (XMLElement *context) {execute(context, 0);}
 		const char* info () const override;
 
 	protected:
-		static bool moveAttributes (XMLElement &source, XMLElement &dest);
+		void execute (XMLElement *context, int depth);
+		bool moveAttributes (XMLElement &source, XMLElement &dest);
 		static bool collapsible (const XMLElement &elem);
 		static bool unwrappable (const XMLElement &source, const XMLElement &dest);
+
+	private:
+		bool _transformCombined=false;  ///< true if transform attributes have been combined
 };
