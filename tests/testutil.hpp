@@ -1,7 +1,7 @@
 #pragma once
 
 #define WARNING(...) \
-	ColoredPrintf(testing::internal::COLOR_YELLOW, "[ WARNING  ] "), \
-	ColoredPrintf(testing::internal::COLOR_YELLOW, __VA_ARGS__), \
+	ColoredPrintf(testing::internal::GTestColor::kYellow, "[ WARNING  ] "), \
+	ColoredPrintf(testing::internal::GTestColor::kYellow, __VA_ARGS__), \
 	printf("\n")
 
