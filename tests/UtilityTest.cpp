@@ -91,14 +91,14 @@ TEST(UtilityTest, split) {
 	parts = split("1,2 , 3, 4 ,,5", ",");
 	ASSERT_EQ(parts.size(), 6u);
 	size_t count=0;
-	for (const string &part : {"1", "2 ", " 3", " 4 ", "", "5"}) {
+	for (string part : {"1", "2 ", " 3", " 4 ", "", "5"}) {
 		EXPECT_EQ(parts[count++], part);
 	}
 
 	parts = split("1 sep2sep3, sep", "sep");
 	ASSERT_EQ(parts.size(), 4u);
 	count=0;
-	for (const string &part : {"1 ", "2", "3, ", ""}) {
+	for (string part : {"1 ", "2", "3, ", ""}) {
 		EXPECT_EQ(parts[count++], part);
 	}
 }
