@@ -29,6 +29,7 @@
 
 using namespace std;
 
+bool GroupCollapser::COMBINE_TRANSFORMS = true;
 
 const char* GroupCollapser::info () const {
 	return "join nested group elements";
@@ -99,7 +100,7 @@ void GroupCollapser::execute (XMLElement *context, int depth) {
 			}
 		}
 	}
-	if (depth == 0 && _transformCombined) {
+	if (depth == 0 && COMBINE_TRANSFORMS && _transformCombined) {
 		TransformSimplifier().execute(context);
 		_transformCombined = false;
 	}

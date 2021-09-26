@@ -29,6 +29,8 @@ class GroupCollapser : public OptimizerModule {
 		void execute (XMLElement *context) {execute(context, 0);}
 		const char* info () const override;
 
+		static bool COMBINE_TRANSFORMS;
+
 	protected:
 		void execute (XMLElement *context, int depth);
 		bool moveAttributes (XMLElement &source, XMLElement &dest);
