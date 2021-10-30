@@ -34,8 +34,6 @@
 #endif
 
 
-using namespace std;
-
 #ifdef _WIN32
 	#include <direct.h>
 	#include "windows.hpp"
@@ -51,6 +49,8 @@ using namespace std;
 	const char FileSystem::PATHSEP = '/';
 #endif
 
+
+using namespace std;
 
 string FileSystem::TMPDIR;
 FileSystem::TemporaryDirectory FileSystem::_tmpdir;
