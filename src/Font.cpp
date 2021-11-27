@@ -621,14 +621,14 @@ double NativeFont::italicCorr(int c) const {
 double NativeFont::charHeight (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getAscender()/upem) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getHeight(Character(Character::INDEX, c))/upem) : 0;
 }
 
 
 double NativeFont::charDepth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getDescender()/upem) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getDepth(Character(Character::INDEX, c))/upem) : 0;
 }
 
 

@@ -54,6 +54,9 @@ class FontEngine {
 		int getHAdvance () const;
 		int getHAdvance (const Character &c) const;
 		int getVAdvance (const Character &c) const;
+		int getWidth (const Character &c) const;
+		int getHeight (const Character &c) const;
+		int getDepth (const Character &c) const;
 		int getFirstChar () const;
 		int getNextChar () const;
 		int getCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
