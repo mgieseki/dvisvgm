@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2021-04-10 01:45 +0200
+:revdate: 2021-11-28 20:48 +0100
 
 Name
 ----
@@ -716,16 +716,20 @@ Supported Specials
 dvisvgm supports several sets of 'special commands' that can be used to enrich DVI files with additional
 features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
 handlers provided by dvisvgm. Each handler is responsible for all special statements of the same command set,
-i.e. commands beginning with the same prefix. To get a list of the actually provided special handlers, use
-option *--list-specials* (see above). This section gives an overview of the special commands currently
-supported.
+i.e. commands usually &#x2013; but not necessarily &#x2013; beginning with a common prefix. For example,
+the TPIC special set consists of 13 different commands processed by dvisvgm's *tpic* handler.
+To get a list of the actually provided special handlers, use option *--list-specials* (see above). This
+section gives an overview of the special sets currently supported. The names of the handlers listed below
+can also be used to disable the processing of individual sets of specials. For further information on this,
+see option *--no-specials*.
 
 *bgcolor*::
-Special statement for changing the background/page color. Since SVG 1.1 doesn't support background colors,
-dvisvgm inserts a rectangle of the chosen color into the generated SVG document. This rectangle always gets
-the same size as the selected or computed bounding box. This background color command is part of the color
-special set but is handled separately in order to let the user turn it off. For an overview of the command
-syntax, see the documentation of dvips, for instance.
+Special statements for changing the background/page color. Currently, dvisvgm only supports the +background+
+statement as specified in the https://tug.org/texinfohtml/dvips.html#Color-specifications[dvips manual].
+Since SVG 1.1 doesn't support background colors, dvisvgm inserts a rectangle of the chosen color into the
+generated SVG document. This rectangle always gets the same size as the selected or computed bounding box.
+This background color command is part of the color special set but is handled separately in order to let
+the user turn it off.
 
 *color*::
 Statements of this command set provide instructions to change the text/paint color. For an overview of the
