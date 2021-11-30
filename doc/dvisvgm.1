@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2021-11-28
+.\"      Date: 2021-11-30
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.12
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2021\-11\-28" "dvisvgm 2\&.12" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2021\-11\-30" "dvisvgm 2\&.12" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1163,7 +1163,9 @@ attributes are omitted\&.
 .RE
 .SH "SUPPORTED SPECIALS"
 .sp
-dvisvgm supports several sets of \fIspecial commands\fR that can be used to enrich DVI files with additional features, like color, graphics, and hyperlinks\&. The evaluation of special commands is delegated to dedicated handlers provided by dvisvgm\&. Each handler is responsible for all special statements of the same command set, i\&.e\&. commands usually \(en but not necessarily \(en beginning with a common prefix\&. For example, the TPIC special set consists of 13 different commands processed by dvisvgm\(cqs \fBtpic\fR handler\&. To get a list of the actually provided special handlers, use option \fB\-\-list\-specials\fR (see above)\&. This section gives an overview of the special sets currently supported\&. The names of the handlers listed below can also be used to disable the processing of individual sets of specials\&. For further information on this, see option \fB\-\-no\-specials\fR\&.
+dvisvgm supports several \fIspecial commands\fR that enrich the DVI command set with additional instructions for features, like color, graphics, and hyperlinks\&. The term \fIspecial command\fR, or just \fIspecial\fR, originates from the TeX command \fB\especial{\&...}\fR which does almost nothing\&. TeX only forwards the whole command to the DVI file and delegates its execution to the DVI driver\&. The DVI driver can then decide to either process or ignore it, depending on the supported statements\&. The parameter of TeX\(cqs \fB\especial\fR command is given in curly braces and may consist of an arbitrary character sequence representing the actual instruction, for example \fBcolor Red\fR\&.
+.sp
++ dvisvgm delegates the evaluation of special commands to dedicated handlers\&. Each handler is responsible for all special statements of the same command set, i\&.e\&. commands usually \(en but not necessarily \(en beginning with a common prefix\&. For example, all PDF specials start with the prefix \fBpdf:\fR, while the TPIC special set consists of 13 different commands without common identifier\&. The PDF specials are processed by dvisvgm\(cqs \fIpdf\fR handler, the TPIC ones by the \fItpic\fR handler\&. To get a list of the actually provided special handlers, use option \fB\-\-list\-specials\fR (see above)\&. The following list gives an overview of the special sets currently supported\&. The names of the handlers can also be used to disable the processing of individual sets of specials\&. For further information on this, see option \fB\-\-no\-specials\fR\&.
 .PP
 \fBbgcolor\fR
 .RS 4

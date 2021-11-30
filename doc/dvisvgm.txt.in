@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2021-11-28 20:48 +0100
+:revdate: 2021-11-30 19:47 +0100
 
 Name
 ----
@@ -713,15 +713,22 @@ graphics accordingly. If a negative zoom factor is given, the 'width' and 'heigh
 [[specials]]
 Supported Specials
 ------------------
-dvisvgm supports several sets of 'special commands' that can be used to enrich DVI files with additional
-features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
-handlers provided by dvisvgm. Each handler is responsible for all special statements of the same command set,
-i.e. commands usually &#x2013; but not necessarily &#x2013; beginning with a common prefix. For example,
-the TPIC special set consists of 13 different commands processed by dvisvgm's *tpic* handler.
-To get a list of the actually provided special handlers, use option *--list-specials* (see above). This
-section gives an overview of the special sets currently supported. The names of the handlers listed below
-can also be used to disable the processing of individual sets of specials. For further information on this,
-see option *--no-specials*.
+dvisvgm supports several 'special commands' that enrich the DVI command set with additional instructions
+for features, like color, graphics, and hyperlinks. The term 'special command', or just 'special', originates
+from the TeX command +\special{...}+ which does almost nothing. TeX only forwards the whole command to the
+DVI file and delegates its execution to the DVI driver. The DVI driver can then decide to either process or
+ignore it, depending on the supported statements. The parameter of TeX's +\special+ command is given in curly
+braces and may consist of an arbitrary character sequence representing the actual instruction, for example
++color Red+.
++
+dvisvgm delegates the evaluation of special commands to dedicated handlers. Each handler is responsible for
+all special statements of the same command set, i.e. commands usually &#x2013; but not necessarily &#x2013;
+beginning with a common prefix. For example, all PDF specials start with the prefix +pdf:+, while the TPIC
+special set consists of 13 different commands without common identifier. The PDF specials are processed by
+dvisvgm's 'pdf' handler, the TPIC ones by the 'tpic' handler. To get a list of the actually provided special
+handlers, use option *--list-specials* (see above). The following list gives an overview of the special sets
+currently supported. The names of the handlers can also be used to disable the processing of individual sets
+of specials. For further information on this, see option *--no-specials*.
 
 *bgcolor*::
 Special statements for changing the background/page color. Currently, dvisvgm only supports the +background+
