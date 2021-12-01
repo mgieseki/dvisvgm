@@ -365,8 +365,7 @@ string InputReader::getLine () {
 	while (!eof() && peek() > 0 && peek() != '\n')
 		ret += char(get());
 	// trim trailing whitespace
-	ret.erase(std::find_if(ret.rbegin(), ret.rend(), not1(ptr_fun<int, int>(isspace))).base(), ret.end());
-	return ret;
+	return ret.erase(ret.find_last_not_of(" \t\n\r\f\v")+1);
 }
 
 
