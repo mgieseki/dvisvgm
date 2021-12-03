@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2021-11-30 19:47 +0100
+:revdate: 2021-12-03 20:27 +0100
 
 Name
 ----
@@ -31,11 +31,11 @@ dvisvgm - converts DVI and EPS files to the XML-based SVG format
 
 Synopsis
 --------
-*dvisvgm* [ 'options' ] 'file' [.dvi]
+*dvisvgm* ['options'] 'file'[.dvi]
 
-*dvisvgm* --eps [ 'options' ] 'file' [.eps]
+*dvisvgm* --eps ['options'] 'file1'[.eps] 'file2'[.eps] ...
 
-*dvisvgm* --pdf [ 'options' ] 'file' [.pdf]
+*dvisvgm* --pdf ['options'] 'file'[.pdf]
 
 
 Description
@@ -207,9 +207,9 @@ Adds comments with further information about selected data to the SVG file. Curr
 font elements and font CSS rules related to native fonts are annotated.
 
 *-E, --eps*::
-If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
-it to SVG. In order to do so, a single 'psfile' special command is created and forwarded to the
-PostScript special handler.
+If this option is given, dvisvgm does not expect a DVI but a single or multiple EPS input files,
+and tries to convert them to SVG. In order to do so, a single 'psfile' special command is created
+and forwarded to the PostScript special handler.
 This option is only available if dvisvgm was built with PostScript support enabled, and requires
 Ghostscript to be available. See option *--libgs* for further information.
 
