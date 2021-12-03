@@ -668,6 +668,8 @@ may consist of an arbitrary sequence of characters which make up the filenames\&
 \fB%f\fR,
 \fB%p\fR,
 \fB%P\fR,
+\fB%n\fR,
+\fB%N\fR,
 \fB%hd\fR,
 \fB%ho\fR, and
 \fB%hc\fR
@@ -677,7 +679,13 @@ expands to the base name of the DVI file, i\&.e\&. the filename without suffix,
 \fB%p\fR
 is the current page number, and
 \fB%P\fR
-the total number of pages in the DVI file\&. An optional number (0\-9) given directly after the percent sign of a variable holding a numeric value denotes the minimal number of digits to be created\&. If a particular value consists of less digits, the number is padded with leading zeros\&. Example:
+the total number of pages in the DVI file\&. The variables
+\fB%n\fR
+and
+\fB%N\fR
+expand to the number of the current file being converted (starting at 1) and the total number of files given, respectively\&.
+.sp
+An optional number (0\-9) specified directly after the percent sign of a variable holding a numeric value denotes the minimal number of digits to be created\&. If a particular value consists of less digits, the number is padded with leading zeros\&. Example:
 \fB%3p\fR
 enforces 3 digits for the current page number (001, 002, etc\&.)\&. Without an explicit width specifier,
 \fB%p\fR

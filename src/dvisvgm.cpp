@@ -417,6 +417,7 @@ static void convert_file (size_t fnameIndex, const CommandLine &cmdline) {
 	SVGOutput out(cmdline.stdoutOpt.given() ? "" : srcin.getFileName(),
 					  cmdline.outputOpt.value(),
 					  cmdline.zipOpt.given() ? cmdline.zipOpt.value() : 0);
+	out.setFileNumbers(fnameIndex+1, cmdline.filenames().size());
 	pair<int,int> pageinfo;
 	if (cmdline.epsOpt.given() || cmdline.pdfOpt.given()) {
 		auto img2svg = unique_ptr<ImageToSVG>(

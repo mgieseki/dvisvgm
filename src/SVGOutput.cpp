@@ -139,6 +139,11 @@ string SVGOutput::expandFormatString (string str, int page, int numPages, const 
 					}
 					break;
 				}
+				case 'n':
+				case 'N':
+					oss << (str[pos] == 'n' ? _fileNumber : _fileCount);
+					result += oss.str();
+					break;
 				case 'p':
 				case 'P':
 					oss << (str[pos] == 'p' ? page : numPages);
