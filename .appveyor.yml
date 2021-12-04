@@ -1,7 +1,7 @@
 version: 2.12-{build}
 configuration: Release
 
-image: Visual Studio 2019 Preview
+image: Visual Studio 2022
 
 platform:
   - x64
@@ -12,10 +12,10 @@ branches:
       - tmp
 
 install:
-  - set FREETYPE_VER=2.11.0
+  - set FREETYPE_VER=2.11.1
   - set ZLIB_VER=1.2.11
-  - set TTFA_VER=1.8.2
-  - set TTFA_REV=3
+  - set TTFA_VER=1.8.4
+  - set TTFA_REV=1
   - cd vc
   - cd freetype
   - appveyor DownloadFile http://download.savannah.gnu.org/releases/freetype/freetype-%FREETYPE_VER%.tar.gz
