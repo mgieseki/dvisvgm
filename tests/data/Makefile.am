@@ -1,5 +1,5 @@
 ## This file is part of dvisvgm
-## Copyright (C) 2016-2021 Martin Gieseking <martin.gieseking@uos.de>
+## Copyright (C) 2016-2022 Martin Gieseking <martin.gieseking@uos.de>
 ##
 ## Process this file with automake.
 
