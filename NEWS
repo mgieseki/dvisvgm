@@ -1,10 +1,21 @@
+dvisvgm-2.13 (2022-01-20)
+- allow for conversion of multiple EPS files given on the command-line
+- added variables n and N to option --output representing the current file
+  number and total number of files given on the command-line, respectively
+- fixed selection of hash algorithm
+- improved computation of glyph height and depth
+- extended several paragraphs of the manual page with more detailed information
+- SVG optimizer: simplify transform attributes also when collapsing groups
+- updated bundled xxHash library to version 0.8.1
+- updated bundled gtest to version 1.11
+
 dvisvgm-2.12 (2021-08-16)
 - added transparency support of SVG elements created outside the PS handler
   (GH issue #148)
 - fixed spacing issue caused by unexpected newline characters in SVG output
 - fixed PS error occurred when defining (yet unsupported) PS shading patterns
 - fixed issue in color handling of PS tiling patterns (GH issue #158)
-- fixed displaced graphics occurred if PDF MediBox is not located at the origin
+- fixed displaced graphics occurred if PDF MediaBox is not located at the origin
 - fixed handling of root directories of file paths
 - improved handling of drive letters (Windows only)
 - several code refactorings and improvements
