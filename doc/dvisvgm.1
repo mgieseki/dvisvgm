@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2021-12-03
+.\"      Date: 2022-01-18
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.12
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2021\-12\-03" "dvisvgm 2\&.12" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2022\-01\-18" "dvisvgm 2\&.12" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -506,10 +506,10 @@ creates yellow filled rectangles with blue frames\&.
 .PP
 \fB\-l, \-\-list\-specials\fR
 .RS 4
-Prints a list of registered special handlers and exits\&. Each handler processes a set of special statements belonging to the same category\&. In most cases, the categories are identified by the prefix of the special statements\&. It\(cqs usually a leading string followed by a colon or a blank, e\&.g\&.
+Prints a list of registered special handlers and exits\&. Each handler processes a set of special statements belonging to the same category\&. In most cases, these categories are identified by the prefix of the special statements which is usually a leading string followed by a colon or a blank, e\&.g\&.
 \fIcolor\fR
 or
-\fIps\fR\&. The listed handler names, however, don\(cqt need to match these prefixes, e\&.g\&. if there is no common prefix or if functionality is split into separate handlers in order to allow to disable them separately with option
+\fIps\fR\&. The listed handler names, however, don\(cqt need to match these prefixes, e\&.g\&. if there is no common prefix or if functionality is split into separate handlers in order to allow them to be disabled separately using option
 \fB\-\-no\-specials\fR\&. All special statements not covered by one of the special handlers are silently ignored\&.
 .RE
 .PP
@@ -848,7 +848,7 @@ degrees around the page center\&. This option is equivalent to
 .PP
 \fB\-R, \-\-relative\fR
 .RS 4
-SVG allows to define graphics paths by a sequence of absolute and/or relative path commands, i\&.e\&. each command expects either absolute coordinates or coordinates relative to the current drawing position\&. By default, dvisvgm creates paths made up of absolute commands\&. If option
+SVG allows you to define graphics paths by a sequence of absolute and/or relative path commands, i\&.e\&. each command expects either absolute coordinates or coordinates relative to the current drawing position\&. By default, dvisvgm creates paths made up of absolute commands\&. If option
 \fB\-\-relative\fR
 is given, relative commands are created instead\&. This slightly reduces the size of the SVG files in most cases\&.
 .RE
@@ -876,7 +876,7 @@ In some cases, dvisvgm needs to create temporary files to work properly\&. These
 \fB/tmp\fR
 on Linux systems\&. Option
 \fB\-\-tmpdir\fR
-allows to specify a different location if necessary for some reason\&. Please note that dvisvgm does not create this folder, so you must ensure that it actually exists before running dvisvgm\&.
+can be used to specify a different location\&. Please note that dvisvgm does not create this folder if it doesn\(cqt exist\&. Therefore, you must ensure that it\(cqs actually present before running dvisvgm\&.
 .sp
 If the optional parameter
 \fIpath\fR
@@ -1378,7 +1378,7 @@ emTeX (\m[blue]https://ctan.org/pkg/emtex\m[])\&.
 The hyperref specification defines several variants on how to mark hyperlinked areas in a DVI file\&. dvisvgm supports the plain HyperTeX special constructs as created with hyperref package option
 \fIhypertex\fR\&. By default, all linked areas of the document are marked by a rectangle\&. Option
 \fB\-\-linkmark\fR
-allows to change this behavior\&. See above for further details\&. Information on syntax and semantics of the HyperTeX specials can be found in the
+allows you to change this behavior\&. See above for further details\&. Information on syntax and semantics of the HyperTeX specials can be found in the
 hyperref manual (\m[blue]https://ctan.org/pkg/hyperref\m[])\&.
 .RE
 .PP
@@ -1706,4 +1706,4 @@ Please report bugs using the bug tracker at GitHub (\m[blue]https://github.com/m
 Written by Martin Gieseking <\m[blue]\fBmartin\&.gieseking@uos\&.de\fR\m[]>
 .SH "COPYING"
 .sp
-Copyright \(co 2005\-2021 Martin Gieseking\&. Free use of this software is granted under the terms of the GNU General Public License (GPL) version 3 or, (at your option) any later version\&.
+Copyright \(co 2005\-2022 Martin Gieseking\&. Free use of this software is granted under the terms of the GNU General Public License (GPL) version 3 or, (at your option) any later version\&.
