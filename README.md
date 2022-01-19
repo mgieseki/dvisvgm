@@ -19,6 +19,10 @@ The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
 and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
 
+The PDF functionality of _dvisvgm_ requires Ghostscript 9.55.0 or earlier.
+As of Ghostscript 9.56.0 it won't be available any longer because of its new [PDF interpreter](https://www.ghostscript.com/blog/pdfi.html)
+which is incompatible to the previous one in terms of interoperability.
+
 To get an impression of the conversion results, have a look at the
 [examples](https://dvisvgm.de/Examples) created with _dvisvgm_.
 
@@ -38,8 +42,8 @@ Short overview of the main features:
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
 * Evaluates several [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials) including color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF hyperlink and mapfile, as well as PostScript specials.
-* The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), [W32TeX](http://w32tex.org)) systems.
-* _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [W32TeX](http://w32tex.org), [MiKTeX](https://www.miktex.org), and [MacPorts](https://www.macports.org). It is therefore available for a wide range of operating systems.
+* The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), TeX Live) systems.
+* _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [MiKTeX](https://www.miktex.org), and [MacPorts](https://www.macports.org). It is therefore available for a wide range of operating systems.
 
 
 Usage
