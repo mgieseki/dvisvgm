@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: update packages
+      run: sudo apt-get update
     - name: install dependencies
       run: sudo apt-get install -qq autotools-dev libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml asciidoc xmlto xsltproc
     - name: autogen
