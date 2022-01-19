@@ -1,4 +1,4 @@
-In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2019 you
+In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2022 you
 need to download the source code archives of the following libraries
 which are not bundled with the dvisvgm sources:
 
