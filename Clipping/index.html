@@ -50,7 +50,7 @@
                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
-                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://ci.appveyor.com/project/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> AppVeyor CI builds</a>
                   <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
                   <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
                   <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
@@ -86,7 +86,7 @@ of course and only shown in the following examples:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip1.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define triangular clipping path --&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define triangular clipping path --&gt;</span>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#39;clip1&#39;</span><span style="color:#ff79c6">&gt;</span>
   <span style="color:#ff79c6">&lt;path</span> <span style="color:#50fa7b">d=</span><span style="color:#f1fa8c">&#39;M0 0H30V-50Z&#39;</span><span style="color:#ff79c6">/&gt;</span>
 <span style="color:#ff79c6">&lt;/clipPath&gt;</span>
@@ -106,7 +106,7 @@ defines the actual clipping path:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip2.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
   <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
 <span style="color:#ff79c6">&lt;/clipPath&gt;</span>
@@ -123,7 +123,7 @@ defines the actual clipping path:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip3.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
 <span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
   <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
 <span style="color:#ff79c6">&lt;/clipPath&gt;</span>
@@ -159,7 +159,7 @@ Both SVG files were created from the same DVI file, the first one without and th
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2021 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2022 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

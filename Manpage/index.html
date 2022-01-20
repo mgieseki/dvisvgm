@@ -50,7 +50,7 @@
                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Development<span class="caret"></span></a>
                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item " href="https://github.com/mgieseki/dvisvgm"><i class='fa fa-github fa-fw'></i> GitHub</a>
-                  <a class="dropdown-item " href="https://travis-ci.org/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> Travis CI builds</a>
+                  <a class="dropdown-item " href="https://ci.appveyor.com/project/mgieseki/dvisvgm"><i class='fa fa-gears fa-fw'></i> AppVeyor CI builds</a>
                   <a class="dropdown-item " href="https://scan.coverity.com/projects/1099"><i class='fa fa-check-circle fa-fw'></i> Coverity Code Analysis</a>
                   <a class="dropdown-item " href="https://www.openhub.net/p/dvisvgm"><i class='fa fa-pie-chart fa-fw'></i> OpenHub Code Statistics</a>
                   <a class="dropdown-item " href="https://sourceforge.net/projects/dvisvgm"><i class='fa fa-database fa-fw'></i> SourceForge</a>
@@ -88,9 +88,9 @@
 <div class="sectionbody">dvisvgm – converts DVI and EPS files to the XML-based SVG format</div></section><span class="linktarget" id="_synopsis"></span><section class="manpage"><h3>
 <i class="fa fa-terminal fa-fw"></i> Synopsis</h3>
 <div class="sectionbody">
-<p><strong>dvisvgm</strong> [ <em>options</em> ] <em>file</em> [.dvi]</p>
-<p><strong>dvisvgm</strong> --eps [ <em>options</em> ] <em>file</em> [.eps]</p>
-<p><strong>dvisvgm</strong> --pdf [ <em>options</em> ] <em>file</em> [.pdf]</p>
+<p><strong>dvisvgm</strong> [<em>options</em>] <em>file</em>[.dvi]</p>
+<p><strong>dvisvgm</strong> --eps [<em>options</em>] <em>file1</em>[.eps] <em>file2</em>[.eps] …</p>
+<p><strong>dvisvgm</strong> --pdf [<em>options</em>] <em>file</em>[.pdf]</p>
 </div></section><span class="linktarget" id="_description"></span><section class="manpage"><h3>
 <i class="fa fa-info-circle fa-fw"></i> Description</h3>
 <div class="sectionbody">
@@ -389,9 +389,9 @@ font elements and font CSS rules related to native fonts are annotated.
 <strong>-E, --eps</strong>
 </dt>
 <dd><p>
-If this option is given, dvisvgm does not expect a DVI but an EPS input file, and tries to convert
-it to SVG. In order to do so, a single <em>psfile</em> special command is created and forwarded to the
-PostScript special handler.
+If this option is given, dvisvgm does not expect a DVI but a single or multiple EPS input files,
+and tries to convert them to SVG. In order to do so, a single <em>psfile</em> special command is created
+and forwarded to the PostScript special handler.
 This option is only available if dvisvgm was built with PostScript support enabled, and requires
 Ghostscript to be available. See option <strong>--libgs</strong> for further information.
 </p></dd>
@@ -613,12 +613,12 @@ yellow filled rectangles with blue frames.</p>
 </dt>
 <dd><p>
 Prints a list of registered special handlers and exits. Each handler processes a set of special
-statements belonging to the same category. In most cases, the categories are identified by the
-prefix of the special statements. It’s usually a leading string followed by a colon or a blank,
+statements belonging to the same category. In most cases, these categories are identified by the
+prefix of the special statements which is usually a leading string followed by a colon or a blank,
 e.g. <em>color</em> or <em>ps</em>. The listed handler names, however, don’t need to match these prefixes, e.g.
 if there is no common prefix or if functionality is split into separate handlers in order to allow
-to disable them separately with option <strong>--no-specials</strong>. All special statements not covered by one
-of the special handlers are silently ignored.
+them to be disabled separately using option <strong>--no-specials</strong>. All special statements not covered by
+one of the special handlers are silently ignored.
 </p></dd>
 </div>
 <a name="opt-mag" class="linktarget"></a><div class="hdlist1">
@@ -804,15 +804,17 @@ Sets the pattern that determines the names of the generated SVG files. The requi
 <em>pattern</em> may consist of an arbitrary sequence of characters which make up the filenames. With the
 exception of the following mentioned variables and expressions, all characters are treated as static
 parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm.
-The strings <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%hd</code>, <code>%ho</code>, and <code>%hc</code> are variables that can be used as part of the
-pattern. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without suffix, <code>%p</code> is the
-current page number, and <code>%P</code> the total number of pages in the DVI file.
-An optional number (0-9) given directly after the percent sign of a variable holding a numeric value
-denotes the minimal number of digits to be created. If a particular value consists of less digits,
-the number is padded with leading zeros.
-Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
-width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.
+The strings <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%n</code>, <code>%N</code>, <code>%hd</code>, <code>%ho</code>, and <code>%hc</code> are variables that can be used as
+part of the pattern. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without suffix,
+<code>%p</code> is the current page number, and <code>%P</code> the total number of pages in the DVI file. The variables
+<code>%n</code> and <code>%N</code> expand to the number of the current file being converted (starting at 1) and the total
+number of files given, respectively.
 </p>
+<p>An optional number (0-9) specified directly after the percent sign of a variable holding a numeric
+value denotes the minimal number of digits to be created. If a particular value consists of less
+digits, the number is padded with leading zeros.
+Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
+width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.</p>
 <p>If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
 The syntax is <code>%(</code><em>expr</em><code>)</code> where <em>expr</em> may contain additions, subtractions, multiplications, and
 integer divisions with common precedence. The variables <strong>p</strong> and <strong>P</strong> contain the current page number
@@ -945,7 +947,7 @@ This option is equivalent to <strong>-TR</strong><em>angle</em>.
 <strong>-R, --relative</strong>
 </dt>
 <dd><p>
-SVG allows to define graphics paths by a sequence of absolute and/or relative path commands,
+SVG allows you to define graphics paths by a sequence of absolute and/or relative path commands,
 i.e. each command expects either absolute coordinates or coordinates relative to the
 current drawing position. By default, dvisvgm creates paths made up of absolute commands.
 If option <strong>--relative</strong> is given, relative commands are created instead. This slightly reduces
@@ -976,10 +978,10 @@ Don’t write the SVG output to a file but redirect it to <strong>stdout</strong
 </dt>
 <dd>
 <p>
-In some cases, dvisvgm needs to create temporary files to work properly. These files go to
-the system’s temporary folder by default, e.g. <code>/tmp</code> on Linux systems. Option <strong>--tmpdir</strong>
-allows to specify a different location if necessary for some reason. Please note that dvisvgm
-does not create this folder, so you must ensure that it actually exists before running dvisvgm.
+In some cases, dvisvgm needs to create temporary files to work properly. These files go to the
+system’s temporary folder by default, e.g. <code>/tmp</code> on Linux systems. Option <strong>--tmpdir</strong> can be used
+to specify a different location. Please note that dvisvgm does not create this folder if it doesn’t
+exist. Therefore, you must ensure that it’s actually present before running dvisvgm.
 </p>
 <p>If the optional parameter <em>path</em> is omitted, dvisvgm prints the location of the system’s
 temp folder and exits.</p>
@@ -1227,23 +1229,34 @@ graphics accordingly. If a negative zoom factor is given, the <em>width</em> and
 </div></section><span class="linktarget" id="specials"></span><section class="manpage"><h3>
 <i class="fa fa-plug fa-fw"></i> Supported Specials</h3>
 <div class="sectionbody">
-<p>dvisvgm supports several sets of <em>special commands</em> that can be used to enrich DVI files with additional
-features, like color, graphics, and hyperlinks. The evaluation of special commands is delegated to dedicated
-handlers provided by dvisvgm. Each handler is responsible for all special statements of the same command set,
-i.e. commands beginning with the same prefix. To get a list of the actually provided special handlers, use
-option <strong>--list-specials</strong> (see above). This section gives an overview of the special commands currently
-supported.</p>
+<p>dvisvgm supports several <em>special commands</em> that enrich the DVI command set with additional instructions
+for features, like color, graphics, and hyperlinks. The term <em>special command</em>, or just <em>special</em>, originates
+from the TeX command <code>\special{…}</code> which does almost nothing. TeX only forwards the whole command to the
+DVI file and delegates its execution to the DVI driver. The DVI driver can then decide to either process or
+ignore it, depending on the supported statements. The parameter of TeX’s <code>\special</code> command is given in curly
+braces and may consist of an arbitrary character sequence representing the actual instruction, for example
+<code>color Red</code>.</p>
+<p>+
+dvisvgm delegates the evaluation of special commands to dedicated handlers. Each handler is responsible for
+all special statements of the same command set, i.e. commands usually – but not necessarily –
+beginning with a common prefix. For example, all PDF specials start with the prefix <code>pdf:</code>, while the TPIC
+special set consists of 13 different commands without common identifier. The PDF specials are processed by
+dvisvgm’s <em>pdf</em> handler, the TPIC ones by the <em>tpic</em> handler. To get a list of the actually provided special
+handlers, use option <strong>--list-specials</strong> (see above). The following list gives an overview of the special sets
+currently supported. The names of the handlers can also be used to disable the processing of individual sets
+of specials. For further information on this, see option <strong>--no-specials</strong>.</p>
 <dl>
 <a name="specials-bgcolor" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>bgcolor</strong>
 </dt>
 <dd><p>
-Special statement for changing the background/page color. Since SVG 1.1 doesn’t support background colors,
-dvisvgm inserts a rectangle of the chosen color into the generated SVG document. This rectangle always gets
-the same size as the selected or computed bounding box. This background color command is part of the color
-special set but is handled separately in order to let the user turn it off. For an overview of the command
-syntax, see the documentation of dvips, for instance.
+Special statements for changing the background/page color. Currently, dvisvgm only supports the <code>background</code>
+statement as specified in the <a href="https://tug.org/texinfohtml/dvips.html#Color-specifications">dvips manual</a>.
+Since SVG 1.1 doesn’t support background colors, dvisvgm inserts a rectangle of the chosen color into the
+generated SVG document. This rectangle always gets the same size as the selected or computed bounding box.
+This background color command is part of the color special set but is handled separately in order to let
+the user turn it off.
 </p></dd>
 </div>
 <a name="specials-color" class="linktarget"></a><div class="hdlist1">
@@ -1404,7 +1417,7 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   current transformation matrix to the bounding box.
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
-<div class="d-inline-flex"><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+<div class="d-inline-flex"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
 </span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
 </span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span>
 
@@ -1435,7 +1448,7 @@ A description of the command syntax can be found in the DVI driver documentation
 <dd><p>
 The hyperref specification defines several variants on how to mark hyperlinked areas in a DVI file. dvisvgm
 supports the plain HyperTeX special constructs as created with hyperref package option <em>hypertex</em>.
-By default, all linked areas of the document are marked by a rectangle. Option <strong>--linkmark</strong> allows to change
+By default, all linked areas of the document are marked by a rectangle. Option <strong>--linkmark</strong> allows you to change
 this behavior. See above for further details. Information on syntax and semantics of the HyperTeX specials can be
 found in the <a href="https://ctan.org/pkg/hyperref">hyperref manual</a>.
 </p></dd>
@@ -1745,15 +1758,15 @@ Code repository
 <i class="fa fa-user fa-fw"></i> Author</h3>
 <div class="sectionbody"><p>Written by Martin Gieseking &lt;<a href="mailto:martin.gieseking@uos.de">martin.gieseking@uos.de</a>&gt;</p></div></section><span class="linktarget" id="_copying"></span><section class="manpage"><h3>
 <i class="fa fa-gavel fa-fw"></i> Copying</h3>
-<div class="sectionbody"><p>Copyright © 2005-2021 Martin Gieseking. Free use of this software is
+<div class="sectionbody"><p>Copyright © 2005-2022 Martin Gieseking. Free use of this software is
 granted under the terms of the GNU General Public License (GPL) version 3
 or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.12</div>
+   <div class="col-md-6">Version 2.13</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2021-04-10</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2022-01-18</span>
    </div>
 </div>
 </div>
@@ -1761,7 +1774,7 @@ or, (at your option) any later version.</p></div></section>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2021 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2022 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

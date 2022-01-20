@@ -3,8 +3,28 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Tue, 23 Nov 2021 11:32:32 +0100</pubDate>
+    <pubDate>Thu, 20 Jan 2022 12:22:46 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.13 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#44794f1bf7aeef1aecbf496110744161</link>
+      <pubDate>Thu, 20 Jan 2022 12:09:40 +0100</pubDate>
+      <guid>44794f1bf7aeef1aecbf496110744161</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added the functionality to sequentially convert multiple EPS files given on the command-line.</li>
+<li>Added variables <code>n</code> and <code>N</code> to option <code>--output</code> that represent the number of the file currently being processed and the total number of input files given on the command-line, respectively.</li>
+<li>Fixed the selection of the hash algorithm set by option <code>--page-hashes</code>.</li>
+<li>Improved the computation of glyph heights and depths.</li>
+<li>The SVG optimizer now also simplifies <code>transform</code> attributes when collapsing group elements.</li>
+<li>Extended several paragraphs of the manual page with more detailed information on the corresponding topics.</li>
+<li>Updated the bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library to version 0.8.1.</li>
+<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> framework to version 1.11.0.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>Information on PDF support as of Ghostscript 9.56.0</title>
@@ -143,7 +163,7 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
     
     <item>
       <title>dvisvgm 2.9 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#5651dc6a7c24b18f3867668516712587</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5651dc6a7c24b18f3867668516712587</link>
       <pubDate>Fri, 13 Mar 2020 13:18:09 +0100</pubDate>
       <guid>5651dc6a7c24b18f3867668516712587</guid>
       <description>
@@ -225,7 +245,7 @@ and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</c
 correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
 stops with a PostScript error, e.g. like so:
 <span class="d-inline-flex">
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
               to execute in a safer environment, but at the same time
               have selected DELAYBIND. Unless you use this option with
               care (and specifically, remember to call .bindnow) it is
@@ -324,7 +344,7 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
     
     <item>
       <title>dvisvgm 2.7 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#ed26fc1f97db41d498f4198055773fd3</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#ed26fc1f97db41d498f4198055773fd3</link>
       <pubDate>Sat, 13 Apr 2019 10:19:58 +0200</pubDate>
       <guid>ed26fc1f97db41d498f4198055773fd3</guid>
       <description>
@@ -428,22 +448,6 @@ libraries are missing during build time, the corresponding bundled libraries are
 <li>Fixed a build issue occurred with GCC 4.8.</li>
 </ul>
 ]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>Recent Fedora packages of dvisvgm available via Copr</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#d6608f8cc15d94bd4845d229bb6bfb36</link>
-      <pubDate>Sun, 09 Sep 2018 20:07:15 +0200</pubDate>
-      <guid>d6608f8cc15d94bd4845d229bb6bfb36</guid>
-      <description>
-        <![CDATA[<p><a href="https://getfedora.org">Fedora</a> packages of the latest <em>dvisvgm</em> release are now available through my
-<a href="https://copr.fedorainfracloud.org/coprs/mgieseki/dvisvgm">Copr repository</a>. They replace the older
-package <em>texlive-dvisvgm</em> coming with Fedora. Run the follwowing commands to enable the repository
-and to install the new <em>dvisvgm</em> package:</p>
-<pre><code>dnf copr enable mgieseki/dvisvgm
-dnf install dvisvgm
-</code></pre>]]>
       </description>
     </item>
     
