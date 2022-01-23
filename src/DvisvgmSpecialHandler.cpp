@@ -242,6 +242,7 @@ void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &acti
 	if (_nestingLevel == 0) {
 		string xml = ir.getLine();
 		if (!xml.empty()) {
+			evaluate_expressions(xml, actions);
 			expand_constants(xml, actions);
 			_defsParser.parse(xml, actions);
 		}
