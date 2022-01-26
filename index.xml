@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 20 Jan 2022 12:22:46 +0100</pubDate>
+    <pubDate>Wed, 26 Jan 2022 10:13:06 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.13.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
+      <pubDate>Wed, 26 Jan 2022 10:06:55 +0100</pubDate>
+      <guid>cac0a6dd77a51a4ac4ebe47b653b4442</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Enabled the evaluation of expression <code>{?(...)}</code> in special <code>dvisvgm:rawdef</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/175">issue #175</a>).</li>
+<li>Fixed a regression concerning the positioning of PDF graphics with special <code>pdffile</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/174">issue #174</a>).</li>
+<li>Fixed some build issues for older C++ compilers.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.13 has been released</title>
@@ -144,7 +161,7 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
     
     <item>
       <title>dvisvgm 2.9.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#7d856da14b815b8a8abea3cdae767d76</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#7d856da14b815b8a8abea3cdae767d76</link>
       <pubDate>Sat, 21 Mar 2020 13:16:48 +0100</pubDate>
       <guid>7d856da14b815b8a8abea3cdae767d76</guid>
       <description>
@@ -328,7 +345,7 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
     
     <item>
       <title>dvisvgm 2.7.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#132ffe0d1afe073c5693a47e91aed30f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#132ffe0d1afe073c5693a47e91aed30f</link>
       <pubDate>Mon, 20 May 2019 13:56:23 +0200</pubDate>
       <guid>132ffe0d1afe073c5693a47e91aed30f</guid>
       <description>
@@ -425,27 +442,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
 <li>Prevent visible side-effects of PS operator <code>stringwidth</code>.</li>
 <li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.7.</li>
 <li>Some modifications of the build system to simplify the maintenance of <em>dvisvgm</em> in TeX Live.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.6.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6588d151e41c570e8f55ddd8ecdbaab9</link>
-      <pubDate>Fri, 12 Oct 2018 10:35:37 +0200</pubDate>
-      <guid>6588d151e41c570e8f55ddd8ecdbaab9</guid>
-      <description>
-        <![CDATA[<p>This is a maintenance release that fixes a couple of issues regarding the build system.
-The functionality of the <em>dvisvgm</em> utility itself hasn&rsquo;t changed.</p>
-<ul>
-<li>Added configuration option <code>--disable-manpage</code> to prevent generating the manual page
-(<a href="https://github.com/mgieseki/dvisvgm/issues/93">issue #93</a>).</li>
-<li>If configuration option <code>--disable-bundled-libs</code> is given and some of the required system
-libraries are missing during build time, the corresponding bundled libraries are used as a fallback
-(<a href="https://github.com/mgieseki/dvisvgm/issues/94">issue #94</a>).</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.6.</li>
-<li>Fixed a build issue occurred with GCC 4.8.</li>
 </ul>
 ]]>
       </description>
