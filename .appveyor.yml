@@ -1,4 +1,4 @@
-version: 2.13-{build}
+version: 2.13.1-{build}
 configuration: Release
 
 image: Visual Studio 2022
