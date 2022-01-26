@@ -1,3 +1,8 @@
+dvisvgm-2.13.1 (2022-01-26)
+- added evaluation of expression {?(...)} to special dvisvgm:rawdef
+- fixed regression regarding positioning of PDF graphics (GH issue #174)
+- fixed some build issues
+
 dvisvgm-2.13 (2022-01-20)
 - allow for conversion of multiple EPS files given on the command-line
 - added variables n and N to option --output representing the current file
