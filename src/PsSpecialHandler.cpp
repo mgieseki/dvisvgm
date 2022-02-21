@@ -432,7 +432,7 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 			node->addAttribute("y", bbox.minY());
 			node->addAttribute("width", bbox.width());
 			node->addAttribute("height", bbox.height());
-			node->addAttribute("viewBox", bbox.toSVGViewBox());
+			node->addAttribute("viewBox", bbox.svgViewBoxString());
 		}
 		_xmlnode = node.get();
 		_psi.execute(

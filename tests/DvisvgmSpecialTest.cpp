@@ -47,8 +47,8 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				double getY () const override                 {return 14;}
 				bool defsEquals (const string &str) const     {return defsString() == str;}
 				bool pageEquals (const string &str) const     {return pageString() == str;}
-				bool bboxEquals (const string &str) const     {return bbox.toSVGViewBox() == str;}
-				string bboxString () const                    {return bbox.toSVGViewBox();}
+				bool bboxEquals (const string &str) const     {return bbox.svgViewBoxString() == str;}
+				string bboxString () const                    {return bbox.svgViewBoxString();}
 				string defsString () const                    {return toString(svgTree().defsNode());}
 				string pageString () const                    {return toString(svgTree().pageNode());}
 

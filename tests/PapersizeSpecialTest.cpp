@@ -53,7 +53,7 @@ class PapersizeSpecialTest : public ::testing::Test {
 		}
 
 		string bboxString () {
-			return actions.bbox().toSVGViewBox();
+			return actions.bbox().svgViewBoxString();
 		}
 
 		void preprocess (const string &str) {

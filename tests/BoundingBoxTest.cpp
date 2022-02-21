@@ -182,7 +182,7 @@ TEST(BoundingBoxTest, transform) {
 TEST(BoundingBoxTest, svgViewBox) {
 	BoundingBox bbox(4, 5, 6, 7);
 	ostringstream oss;
-	oss << bbox.toSVGViewBox();
+	oss << bbox.svgViewBoxString();
 	EXPECT_EQ(oss.str(), "4 5 2 2");
 }
 

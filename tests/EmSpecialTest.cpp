@@ -52,7 +52,7 @@ class EmSpecialTest : public ::testing::Test {
 
 /*				void write (ostream &os) const {
 					os << "page: " << page << '\n'
-						<< "bbox: " << bbox.toSVGViewBox() << '\n';
+						<< "bbox: " << bbox.svgViewBoxString() << '\n';
 				} */
 
 			private:
