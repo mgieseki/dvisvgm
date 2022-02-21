@@ -441,7 +441,7 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 			"/@imgbase("+image_base_path(*_actions)+")store " // path and basename of image files
 			"matrix setmatrix"                       // don't apply outer PS transformations
 			"/FirstPage "+to_string(pageno)+" def"   // set number of first page to convert (PDF only)
-			"/LastPage "+to_string(pageno)+" def "   // set number of last page to convert (PDF only)
+			"/LastPage "+to_string(pageno)+" def"    // set number of last page to convert (PDF only)
 			"(" + pathstr + ")run "                  // execute file content
 			"@endspecial\n"                          // leave special environment
 		);
