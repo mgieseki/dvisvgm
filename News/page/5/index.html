@@ -79,7 +79,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="8d864b9b45e4e2c3d8a34361b5086d24"></a>
+  <a name="23716e14524e4f885fe665d88cc8b079"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 February 2018: dvisvgm 2.3.2 has been released</div>
+    <div class="card-body">
+      <p>This is a minor maintenance release with the following changes:</p>
+<ul>
+<li>Prevent the creation of redundant <a href="https://www.w3.org/TR/SVG/text.html#TSpanElement"><code>tspan</code></a> elements.</li>
+<li>Added support for the new JFM specification introduced in <a href="https://www.tug.org/svn/texlive?view=revision&amp;revision=46452">TeX Live r46452</a>
+(patch by Hironobu Yamashita).</li>
+<li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
+<li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
+</ul>
+</div>
+  </section><a name="8d864b9b45e4e2c3d8a34361b5086d24"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">12 January 2018: dvisvgm 2.3.1 has been released</div>
     <div class="card-body">
@@ -186,20 +199,6 @@ zlib:        1.2.11</code></pre></div>
       <ul>
 <li>Fixed build failures of the bundled FontForge library on Solaris 10.</li>
 <li>Increased code portability.</li>
-</ul>
-</div>
-  </section><a name="dd2113409e78721a1f3c2f4b2cfa5937"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">12 February 2017: dvisvgm 2.1.2 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Bundled the <a href="https://github.com/google/googletest">googletest</a> sources to simplify
-building and executing the tests.</li>
-<li>Fixed a couple of issues related to LLVM&rsquo;s libc++ (thanks to Mojca Miklavec and
-Rasmus Larsen for their help to isolate the problems).</li>
-<li>Fixed some potential memory leaks.</li>
-<li>Removed the <code>restrict</code> keyword from the <em>xxHash</em> sources to avoid C++ compilation errors
-(<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
 </ul>
 </div>
   </section>

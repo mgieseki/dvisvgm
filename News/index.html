@@ -79,7 +79,14 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="cac0a6dd77a51a4ac4ebe47b653b4442"></a>
+  <a name="0ad29b27d5fc33fc8a3dda38a8d2186f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">23 February 2022: dvisvgm 2.13.2 has been released</div>
+    <div class="card-body">
+      <p>This small release improves the clipping of embedded EPS/PDF graphics
+(<a href="https://github.com/mgieseki/dvisvgm/issues/176">issue #176</a>).</p>
+</div>
+  </section><a name="cac0a6dd77a51a4ac4ebe47b653b4442"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">26 January 2022: dvisvgm 2.13.1 has been released</div>
     <div class="card-body">
@@ -168,28 +175,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Added support for the new Ghostscript versioning scheme introduced with GS 9.53.0.</li>
 <li>Added few additional information to the <a href="/Manpage/">manual page</a>.</li>
 <li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.0.9.</li>
-</ul>
-</div>
-  </section><a name="2df05e60a6483e32a6c2ab7e1bb3a697"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">12 August 2020: dvisvgm 2.10 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following additions and changes:</p>
-<ul>
-<li>Added evaluation of <a href="http://www.luatex.org">Lua<span class="tex">T<sub>E</sub>X</span></a> native font definitions.</li>
-<li>Added computation of of italic correction for fake slanted glyphs.</li>
-<li><em>dvisvgm</em> now creates dedicated temporary folders for each call of the program to prevent file collisions between different processes.</li>
-<li>Added evaluation of internal <a href="https://www.ghostscript.com">Ghostscript</a> operators <code>.fillstroke</code> and <code>.eofillstroke</code> introduced
-with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/139">issue #139</a>).</li>
-<li>Fixed and improved optimization of nested group elements.</li>
-<li>Fixed optimization of <code>scale</code> transformation.</li>
-<li>Fixed optimization of <code>transform</code> attributes applied to images and clipping paths.</li>
-<li>Fixed processing of PostScript operator <code>eoclip</code>.</li>
-<li>Fixed processing of clipping path intersections that involve different fill rules.</li>
-<li>Fixed processing of <code>{?(...)}</code> expressions (<a href="https://github.com/mgieseki/dvisvgm/issues/136">issue #136</a>).</li>
-<li>Fixed error message about unmatched closing tags in XML parser.</li>
-<li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
-<li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
 </ul>
 </div>
   </section>

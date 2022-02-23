@@ -79,7 +79,21 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4567ec37398a2111cd0cdb77f419eb54"></a>
+  <a name="dd2113409e78721a1f3c2f4b2cfa5937"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">12 February 2017: dvisvgm 2.1.2 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Bundled the <a href="https://github.com/google/googletest">googletest</a> sources to simplify
+building and executing the tests.</li>
+<li>Fixed a couple of issues related to LLVM&rsquo;s libc++ (thanks to Mojca Miklavec and
+Rasmus Larsen for their help to isolate the problems).</li>
+<li>Fixed some potential memory leaks.</li>
+<li>Removed the <code>restrict</code> keyword from the <em>xxHash</em> sources to avoid C++ compilation errors
+(<a href="https://github.com/Cyan4973/xxHash/issues/88">xxHash issue 88</a>).</li>
+</ul>
+</div>
+  </section><a name="4567ec37398a2111cd0cdb77f419eb54"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">7 February 2017: dvisvgm 2.1.1 has been released</div>
     <div class="card-body">
@@ -170,23 +184,6 @@ Thanks to Thomas Weidner for providing central parts of the code.</li>
 (e.g. <a href="https://gcc.gnu.org">GCC</a> 4.8.1, <a href="https://clang.llvm.org">Clang</a> 3.3, or
 <a href="https://www.visualstudio.com/en-us/features/cplusplus.aspx">Visual C++</a> 2015) to build the binaries.</li>
 <li>The command-line parser and the CommandLine class generator have been reimplemented.</li>
-</ul>
-</div>
-  </section><a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
-    <div class="card-body">
-      <p>This maintenance release provides the following changes/additions:</p>
-<ul>
-<li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
-<li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
-For further information on how to enable it, see the <a href="/Manpage/">manual page</a>.</li>
-<li>Added support for the length units <code>cc</code>, <code>dd</code>, and <code>sp</code>.</li>
-<li>Fixed a unit conversion issue in computation of bounding boxes.</li>
-<li>Fixed the propagation of the resolution value to the glyph vectorizer.</li>
-<li>Fixed the transformation of the optional background rectangle.</li>
-<li>Prevent processing of corrupted GF files.</li>
-<li>Major refactorings of the DVI reader and the SVG backend.</li>
 </ul>
 </div>
   </section>

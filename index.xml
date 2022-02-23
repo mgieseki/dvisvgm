@@ -3,8 +3,20 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 26 Jan 2022 10:13:06 +0100</pubDate>
+    <pubDate>Wed, 23 Feb 2022 14:41:13 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.13.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
+      <pubDate>Wed, 23 Feb 2022 14:33:43 +0100</pubDate>
+      <guid>0ad29b27d5fc33fc8a3dda38a8d2186f</guid>
+      <description>
+        <![CDATA[<p>This small release improves the clipping of embedded EPS/PDF graphics
+(<a href="https://github.com/mgieseki/dvisvgm/issues/176">issue #176</a>).</p>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.13.1 has been released</title>
@@ -134,7 +146,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.10 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
       <pubDate>Wed, 12 Aug 2020 10:23:04 +0200</pubDate>
       <guid>2df05e60a6483e32a6c2ab7e1bb3a697</guid>
       <description>
@@ -328,7 +340,7 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
     
     <item>
       <title>dvisvgm 2.7.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6c01c957e0db5e41406e40486fe0acd1</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6c01c957e0db5e41406e40486fe0acd1</link>
       <pubDate>Fri, 07 Jun 2019 11:01:49 +0200</pubDate>
       <guid>6c01c957e0db5e41406e40486fe0acd1</guid>
       <description>
@@ -423,25 +435,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
 <li>Fixed the handling of backslashes in EPS/PDF file paths (Windows only).</li>
 <li>Updated the bundled <a href="https://github.com/google/googletest">Google Test</a> library to version 1.8.1.</li>
 <li>Some code refactorings and improvements of the build system.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.6.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#dcf8791dee146c9bf9bd340c4514d551</link>
-      <pubDate>Wed, 23 Jan 2019 10:48:53 +0100</pubDate>
-      <guid>dcf8791dee146c9bf9bd340c4514d551</guid>
-      <description>
-        <![CDATA[<p>This maintenance release resolves a couple of PostScript issues that were reported recently.</p>
-<ul>
-<li>Fixed the scaling of line properties in PS operator <code>grestore</code>.</li>
-<li>Fixed the handling of PS operators <code>charpath</code> and <code>show</code> which may call each other internally.</li>
-<li>Improved the processing of PS operator <code>clippath</code>.</li>
-<li>Prevent visible side-effects of PS operator <code>stringwidth</code>.</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.7.</li>
-<li>Some modifications of the build system to simplify the maintenance of <em>dvisvgm</em> in TeX Live.</li>
 </ul>
 ]]>
       </description>

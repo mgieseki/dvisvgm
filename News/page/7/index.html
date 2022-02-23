@@ -79,7 +79,24 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="bf0f3eb5231404387af74e0d100f04dc"></a>
+  <a name="fb0bea68000f83ceeb631b25a2a9da7b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">4 July 2016: dvisvgm 1.16 has been released</div>
+    <div class="card-body">
+      <p>This maintenance release provides the following changes/additions:</p>
+<ul>
+<li>Added support for XDV version 7 introduced by <a href="http://xetex.sourceforge.net">XeTeX</a> 0.99995.</li>
+<li>Added optional processing of <a href="https://tug.org/texinfohtml/dvips.html#papersize-special">papersize specials</a>.
+For further information on how to enable it, see the <a href="/Manpage/">manual page</a>.</li>
+<li>Added support for the length units <code>cc</code>, <code>dd</code>, and <code>sp</code>.</li>
+<li>Fixed a unit conversion issue in computation of bounding boxes.</li>
+<li>Fixed the propagation of the resolution value to the glyph vectorizer.</li>
+<li>Fixed the transformation of the optional background rectangle.</li>
+<li>Prevent processing of corrupted GF files.</li>
+<li>Major refactorings of the DVI reader and the SVG backend.</li>
+</ul>
+</div>
+  </section><a name="bf0f3eb5231404387af74e0d100f04dc"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">19 April 2016: dvisvgm 1.15.1 has been released</div>
     <div class="card-body">
@@ -170,18 +187,6 @@ is now adapted to create a tight box by default.</li>
 <li>Added option <code>--colornames</code> to replace RGB values by SVG color names.</li>
 <li>Resolving of character codes for fonts without supported character maps has been fixed.</li>
 <li>A memory issue that could occur when running Metafont has been fixed.</li>
-</ul>
-</div>
-  </section><a name="73d45e4c52912212028ec9af6199cb03"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">21 September 2015: dvisvgm 1.11 has been released</div>
-    <div class="card-body">
-      <p>This is a maintenance release with the following changes:</p>
-<ul>
-<li>The mapping of unknown characters to Unicode has been improved.</li>
-<li>The handling of text elements in conjunction with DVI specials has been improved.</li>
-<li>An issue that could lead to (invalid) U+0000 codepoints has been fixed.</li>
-<li><code>xlink:title</code> attributes are now properly quoted.</li>
 </ul>
 </div>
   </section>
