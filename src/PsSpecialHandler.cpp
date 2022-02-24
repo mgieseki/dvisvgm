@@ -426,15 +426,13 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 			node = util::make_unique<SVGElement>("g");
 		else {
 			// clip image to its bounding box if flag 'clip' is given
-			auto svg = util::make_unique<SVGElement>("svg");
-			svg->addAttribute("overflow", "hidden");
-			svg->addAttribute("x", bbox.minX());
-			svg->addAttribute("y", bbox.minY());
-			svg->addAttribute("width", bbox.width());
-			svg->addAttribute("height", bbox.height());
-			svg->addAttribute("viewBox", bbox.svgViewBoxString());
-			node = util::make_unique<SVGElement>("g");
-			node->append(std::move(svg));
+			node = util::make_unique<SVGElement>("svg");
+			node->addAttribute("overflow", "hidden");
+			node->addAttribute("x", bbox.minX());
+			node->addAttribute("y", bbox.minY());
+			node->addAttribute("width", bbox.width());
+			node->addAttribute("height", bbox.height());
+			node->addAttribute("viewBox", bbox.svgViewBoxString());
 		}
 		_xmlnode = node.get();
 		_psi.execute(
@@ -449,6 +447,11 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 		);
 		if (node->empty())
 			node.reset(nullptr);
+		else if (clip) {
+			auto svg = std::move(node);
+			node = util::make_unique<SVGElement>("g");
+			node->append(std::move(svg));
+		}
 		_xmlnode = nullptr;   // append following elements to page group again
 	}
 	return node;
