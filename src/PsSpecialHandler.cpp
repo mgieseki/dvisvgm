@@ -373,8 +373,17 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 
 		// insert element containing the image data
 		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
-		imgNode->setTransform(matrix);
-		_actions->svgTree().appendToPage(std::move(imgNode));
+		if (!clipToBbox) {
+			imgNode->setTransform(matrix);
+			_actions->svgTree().appendToPage(std::move(imgNode));
+		}
+		else {
+			unique_ptr<SVGElement> imgParentNode;
+			imgParentNode = util::make_unique<SVGElement>("g");
+			imgParentNode->append(std::move(imgNode));
+			imgParentNode->setTransform(matrix);
+			_actions->svgTree().appendToPage(std::move(imgParentNode));
+		}
 	}
 	// restore DVI position
 	_actions->setX(x);
