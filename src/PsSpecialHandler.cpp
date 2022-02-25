@@ -373,17 +373,8 @@ void PsSpecialHandler::imgfile (FileType filetype, const string &fname, const ma
 
 		// insert element containing the image data
 		matrix.rmultiply(TranslationMatrix(-llx, -lly));  // move lower left corner of image to origin
-		if (!clipToBbox) {
-			imgNode->setTransform(matrix);
-			_actions->svgTree().appendToPage(std::move(imgNode));
-		}
-		else {
-			unique_ptr<SVGElement> imgParentNode;
-			imgParentNode = util::make_unique<SVGElement>("g");
-			imgParentNode->append(std::move(imgNode));
-			imgParentNode->setTransform(matrix);
-			_actions->svgTree().appendToPage(std::move(imgParentNode));
-		}
+		imgNode->setTransform(matrix);
+		_actions->svgTree().appendToPage(std::move(imgNode));
 	}
 	// restore DVI position
 	_actions->setX(x);
@@ -406,6 +397,7 @@ static string image_base_path (const SpecialActions &actions) {
  *  @param[in] bbox bounding box of the image
  *  @param[in] clip if true, the image is clipped to its bounding box
  *  @return pointer to the element or nullptr if there's no image data */
+int imgClipID=0;
 unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, BoundingBox bbox, bool clip) {
 	unique_ptr<SVGElement> node;
 	string pathstr;
@@ -431,17 +423,21 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 		node->addAttribute("xlink:href", href);
 	}
 	else {  // PostScript or PDF
-		if (!clip)
-			node = util::make_unique<SVGElement>("g");
-		else {
-			// clip image to its bounding box if flag 'clip' is given
-			node = util::make_unique<SVGElement>("svg");
-			node->addAttribute("overflow", "hidden");
-			node->addAttribute("x", bbox.minX());
-			node->addAttribute("y", bbox.minY());
-			node->addAttribute("width", bbox.width());
-			node->addAttribute("height", bbox.height());
-			node->addAttribute("viewBox", bbox.svgViewBoxString());
+		node = util::make_unique<SVGElement>("g");
+		// clip image to its bounding box if flag 'clip' is given
+		if (clip) {
+			auto pathElem = util::make_unique<SVGElement>("path");
+			pathElem->addAttribute("d", XMLString("M")+XMLString(bbox.minX())+XMLString(" ")+XMLString(bbox.minY())
+					+XMLString("V")+XMLString(bbox.maxY())+XMLString("H")+XMLString(bbox.maxX())
+					+XMLString("V")+XMLString(bbox.minY())+XMLString("Z"));
+
+			auto clipElem = util::make_unique<SVGElement>("clipPath");
+			auto url = XMLString("imgClip")+XMLString(imgClipID++);
+			clipElem->addAttribute("id", url);
+			clipElem->append(std::move(pathElem));
+			_actions->svgTree().appendToDefs(std::move(clipElem));
+
+			node->setClipPathUrl(url);
 		}
 		_xmlnode = node.get();
 		_psi.execute(
