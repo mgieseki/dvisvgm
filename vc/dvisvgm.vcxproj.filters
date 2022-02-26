@@ -338,6 +338,9 @@
     <ClCompile Include="..\src\SVGElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\optimizer\ClipPathReassigner.cpp">
+      <Filter>Source Files\optimizer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -687,6 +690,9 @@
     </ClInclude>
     <ClInclude Include="..\src\SVGElement.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\optimizer\ClipPathReassigner.hpp">
+      <Filter>Header Files\optimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
