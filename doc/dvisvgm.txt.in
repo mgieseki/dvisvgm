@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-01-18 10:32 +0100
+:revdate: 2022-02-26 18:54 +0100
 
 Name
 ----
@@ -435,6 +435,11 @@ The following list describes the currently available optimizer modules.
   combined by applying optimizer module 'collapse-groups' afterwards. The algorithm only takes
   inheritable properties, such as +fill+ or +stroke-width+, into account and only removes them from
   an element if none of the other attributes, like +id+, prevents this.
+
+  *reassign-clippaths*;;
+  Collects all +clipPath+ elements that differ only by their IDs. Afterwards, the duplicates are
+  removed so that only one remains. All +clip-path+ attributes referencing one of the duplicates
+  are updated accordingly.
 
   *remove-clippath*;;
   Removes all redundant 'clipPath' elements. This optimization was already present in former versions

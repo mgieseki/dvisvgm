@@ -2,6 +2,7 @@ noinst_LTLIBRARIES = liboptimizer.la
 
 liboptimizer_la_SOURCES = \
 	AttributeExtractor.hpp      AttributeExtractor.cpp \
+	ClipPathReassigner.hpp      ClipPathReassigner.cpp \
 	DependencyGraph.hpp \
 	GroupCollapser.hpp          GroupCollapser.cpp  \
 	OptimizerModule.hpp \
