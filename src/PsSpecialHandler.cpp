@@ -452,6 +452,11 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 		);
 		if (node->empty())
 			node.reset(nullptr);
+		else if (clip) {
+			auto svg = std::move(node);
+			node = util::make_unique<SVGElement>("g");
+			node->append(std::move(svg));
+		}
 		_xmlnode = nullptr;   // append following elements to page group again
 	}
 	return node;
