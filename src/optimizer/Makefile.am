@@ -12,4 +12,7 @@ liboptimizer_la_SOURCES = \
 	TransformSimplifier.hpp     TransformSimplifier.cpp \
   	WSNodeRemover.hpp           WSNodeRemover.cpp
 
-AM_CXXFLAGS = -I$(dvisvgm_srcdir)/libs/variant/include
+include ../../libs/defs.am
+
+AM_CXXFLAGS = -I$(dvisvgm_srcdir)/libs/variant/include $(XXHASH_CFLAGS)
+
