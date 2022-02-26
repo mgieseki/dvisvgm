@@ -43,7 +43,7 @@ SVGOptimizer::SVGOptimizer (SVGTree *svg) : _svg(svg) {
 	_moduleEntries.emplace_back(ModuleEntry("simplify-transform", util::make_unique<TransformSimplifier>()));
 	_moduleEntries.emplace_back(ModuleEntry("group-attributes", util::make_unique<AttributeExtractor>()));
 	_moduleEntries.emplace_back(ModuleEntry("collapse-groups", util::make_unique<GroupCollapser>()));
-	_moduleEntries.emplace_back(ModuleEntry("remove-clippath", util::make_unique<RedundantElementRemover>()));
+	_moduleEntries.emplace_back(ModuleEntry("remove-clippaths", util::make_unique<RedundantElementRemover>()));
 	_moduleEntries.emplace_back(ModuleEntry("reassign-clippaths", util::make_unique<ClipPathReassigner>()));
 }
 
