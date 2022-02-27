@@ -1,3 +1,10 @@
+dvisvgm-2.13.3 (2022-02-27)
+- added SVG optimizer module 'reassign-clippaths' that searches for duplicate
+  clipPath elements, removes them, and updates the clip-path references	
+- replaced method to clip embedded EPS/PDF graphics that usually results in
+  faster rendering of the affected SVG sections
+- fixed a regression regarding transformations of embedded EPS/PDF graphics
+
 dvisvgm-2.13.2 (2022-02-23)
 - improved clipping of embedded EPS/PDF graphics (GH issue #176)
 
