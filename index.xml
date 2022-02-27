@@ -3,8 +3,23 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 23 Feb 2022 14:41:13 +0100</pubDate>
+    <pubDate>Sun, 27 Feb 2022 12:48:58 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.13.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#25fddacdd30de997cedabdd597cd8d8d</link>
+      <pubDate>Sun, 27 Feb 2022 12:40:35 +0100</pubDate>
+      <guid>25fddacdd30de997cedabdd597cd8d8d</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added SVG optimizer module <code>reassign-clippaths</code> that searches for duplicate <code>clipPath</code> elements, removes them, and updates the <code>clip-path</code> references.</li>
+<li>Replaced the method used to clip embedded EPS/PDF graphics that now usually results in faster rendering of the affected SVG sections.</li>
+<li>Fixed a regression regarding transformations of embedded EPS/PDF graphics.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.13.2 has been released</title>
@@ -128,7 +143,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.10.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#9f68ebd62bc0a3cf963a572fe77e0bd2</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#9f68ebd62bc0a3cf963a572fe77e0bd2</link>
       <pubDate>Tue, 22 Sep 2020 11:13:47 +0200</pubDate>
       <guid>9f68ebd62bc0a3cf963a572fe77e0bd2</guid>
       <description>
@@ -324,7 +339,7 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
     
     <item>
       <title>dvisvgm 2.7.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#6f8e194693ecc2a26ed8c5de5adc7c8f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6f8e194693ecc2a26ed8c5de5adc7c8f</link>
       <pubDate>Fri, 12 Jul 2019 11:30:12 +0200</pubDate>
       <guid>6f8e194693ecc2a26ed8c5de5adc7c8f</guid>
       <description>
@@ -416,25 +431,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
 <em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
 <li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
 <li>Lots of code refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.6.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#cc9ed6a8f3a0ef7ffdcf7718852ab870</link>
-      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
-      <guid>cc9ed6a8f3a0ef7ffdcf7718852ab870</guid>
-      <description>
-        <![CDATA[<p>This is mainly a bugfix release with the following changes:</p>
-<ul>
-<li><em>dvisvgm</em> now creates short, <a href="https://www.w3.org/TR/css-color-3/#rgb-color">three-digit RGB hex values</a> for color attributes if possible, e.g. <code>#123</code> instead of <code>#112233</code>.</li>
-<li>Fixed the rejection of paper formats, like <code>A4</code>, given as argument to option <code>--bbox</code>.</li>
-<li>Fixed the adaption of the vertical orientation when processing EPS/PDF files.</li>
-<li>Fixed the handling of backslashes in EPS/PDF file paths (Windows only).</li>
-<li>Updated the bundled <a href="https://github.com/google/googletest">Google Test</a> library to version 1.8.1.</li>
-<li>Some code refactorings and improvements of the build system.</li>
 </ul>
 ]]>
       </description>

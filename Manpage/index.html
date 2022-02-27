@@ -759,9 +759,19 @@ XML tree gradually.
   an element if none of the other attributes, like <code>id</code>, prevents this.
 </p></dd>
 </div>
-<a name="remove-clippath" class="linktarget"></a><div class="hdlist1">
+<a name="reassign-clippaths" class="linktarget"></a><div class="hdlist1">
 <dt>
-<strong>remove-clippath</strong>
+<strong>reassign-clippaths</strong>
+</dt>
+<dd><p>
+  Collects all <code>clipPath</code> elements that differ only by their IDs. Afterwards, the duplicates are
+  removed so that only one remains. All <code>clip-path</code> attributes referencing one of the duplicates
+  are updated accordingly.
+</p></dd>
+</div>
+<a name="remove-clippaths" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>remove-clippaths</strong>
 </dt>
 <dd><p>
   Removes all redundant <em>clipPath</em> elements. This optimization was already present in former versions
@@ -1764,9 +1774,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.13.2</div>
+   <div class="col-md-6">Version 2.13.3</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2022-01-18</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2022-02-26</span>
    </div>
 </div>
 </div>
