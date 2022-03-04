@@ -127,12 +127,12 @@
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">23 November 2021: Information on PDF support as of Ghostscript 9.56.0</div>
     <div class="card-body">
-      <p>Ghostscript has introduced a completely <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten implementation of its PDF interpreter</a>
+      <p>Ghostscript has introduced a completely <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten implementation of its PDF interpreter</a>,
 which is now implemented in C instead of PostScript. This has a lot of advantages besides the performance improvements. For third-party
 applications like <em>dvisvgm</em>, however, this change has significant impact on the functions that can be provided. <em>dvisvgm</em> relies on the
 possibility to overwrite PostScript and PDF operators in order to directly communicate with the interpreter. The nice thing about the
 current PostScript-based PDF interpreter is the fact that both PostScript and PDF code can be treated almost equally.</p>
-<p>As of Ghostscript 9.56.0, this will no longer be possible, and as far as I can tell form the documentation, there is no way to
+<p>As of Ghostscript 9.56.0, this will no longer be possible, and as far as I can tell from the documentation, there is no way to
 replicate the current functionality. As a consequence, all PDF functionality currently available in <em>dvisvgm</em> will no longer work with the
 upcoming Ghostscript releases. Therefore, it will require the parallel installation of Ghostscript 9.55.0 or earlier. In the long run,
 I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resources to implement a completely new PDF handler.</p>
