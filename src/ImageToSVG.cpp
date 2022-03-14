@@ -100,6 +100,7 @@ void ImageToSVG::convert (int pageno) {
 			" x " << XMLString(_bbox.height()*bp2mm) << "mm)\n";
 		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "output written to " << svgfname << '\n';
 	}
+	_bbox.invalidate();
 	_svg.reset();
 }
 
