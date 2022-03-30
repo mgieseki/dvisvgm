@@ -13,7 +13,7 @@ branches:
 
 install:
   - set FREETYPE_VER=2.11.1
-  - set ZLIB_VER=1.2.11
+  - set ZLIB_VER=1.2.12
   - set TTFA_VER=1.8.4
   - set TTFA_REV=1
   - cd vc
