@@ -63,6 +63,12 @@ void PSInterpreter::init () {
 				gsargs.emplace_back("-dDELAYSAFER");
 				gsargs.emplace_back("-dALLOWPSTRANSPARENCY");
 			}
+			// GS 9.55.0 introduced a new, C-based PDF interpreter which is enabled by default
+			// as of GS 9.56.0. Since dvisvgm relies on the old PS-based interpreter for its
+			// PDF support, we try to disable the new one.
+			// https://ghostscript.com/doc/current/Use.htm#PDF
+			if (gsrev >= 9560)
+				gsargs.emplace_back("-dNEWPDF=false");
 		}
 		_gs.init(gsargs.size(), gsargs.data(), this);
 		_gs.set_stdio(input, output, error);
