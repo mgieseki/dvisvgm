@@ -1,3 +1,9 @@
+dvisvgm-2.13.4 (2022-04-20)
+- fixed the size of bounding boxes applied when converting multiple pages
+  (GH issue #182)
+- try to enable old PDF interpreter when using Ghostscript >= 9.56.0
+  (dvisvgm does not work with Ghostscript's new PDF interpreter)
+
 dvisvgm-2.13.3 (2022-02-27)
 - added SVG optimizer module 'reassign-clippaths' that searches for duplicate
   clipPath elements, removes them, and updates the clip-path references	
