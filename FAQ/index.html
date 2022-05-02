@@ -80,17 +80,17 @@
     <div class="card-header bg-primary text-white">
       <em>dvisvgm</em> creates empty SVG graphics when converting PDF files. Why is that?
     </div>
-    <div class="card-body"><p>This is probably caused by changes in Ghostscript. Ghostscript 9.50.0 introduced a completely
+    <div class="card-body"><p>This is probably caused by changes in Ghostscript. Ghostscript 9.55.0 introduced a completely
 <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten PDF interpreter</a>, which is now implemented in C instead of
 PostScript. This has a lot of advantages besides the performance improvements. For third-party applications like dvisvgm,
 however, this change has significant impact on the functions that can be provided. <em>dvisvgm</em> relies on the possibility to
 overwrite PostScript and PDF operators in order to directly communicate with the interpreter. This is no longer possible
 with the new PDF interpreter.</p>
-<p>As of Ghostscript 9.51.0 the new PDF interpreter <a href="https://www.ghostscript.com/doc/9.56.0/News.htm">is activated by default</a>.
+<p>As of Ghostscript 9.56.0 the new PDF interpreter <a href="https://www.ghostscript.com/doc/9.56.0/News.htm">is activated by default</a>.
 Therefore, older <em>dvisvgm</em> releases can&rsquo;t process PDF files any longer. For the time being, Ghostscript still offers an
 <a href="https://ghostscript.com/doc/9.55.0/Use.htm#PDF_switches">option to reactivate the old PDF interpreter</a> which <em>dvisvgm</em>
 does as of version 2.13.4.</p>
-<p>Please check the output of <code>dvisvgm -V1</code>. If you use a <em>dvisvgm</em> version prior to 2.13.4 together with Ghostscript 9.51.0
+<p>Please check the output of <code>dvisvgm -V1</code>. If you use a <em>dvisvgm</em> version prior to 2.13.4 together with Ghostscript 9.56.0
 or later, you should update to a more recent version of <em>dvisvgm</em>. Alternatively, you could downgrade to an older Ghostscript
 release.</p>
 </div>
