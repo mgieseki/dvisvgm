@@ -19,10 +19,6 @@ The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
 and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
 
-The PDF functionality of _dvisvgm_ requires Ghostscript 9.55.0 or earlier.
-As of Ghostscript 9.56.0 it won't be available any longer because of its new [PDF interpreter](https://www.ghostscript.com/blog/pdfi.html)
-which is incompatible to the previous one in terms of interoperability.
-
 To get an impression of the conversion results, have a look at the
 [examples](https://dvisvgm.de/Examples) created with _dvisvgm_.
 
