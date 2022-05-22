@@ -91,8 +91,14 @@ Therefore, older <em>dvisvgm</em> releases can&rsquo;t process PDF files any lon
 <a href="https://ghostscript.com/doc/9.55.0/Use.htm#PDF_switches">option to reactivate the old PDF interpreter</a> which <em>dvisvgm</em>
 does as of version 2.13.4.</p>
 <p>Please check the output of <code>dvisvgm -V1</code>. If you use a <em>dvisvgm</em> version prior to 2.13.4 together with Ghostscript 9.56.0
-or later, you should update to a more recent version of <em>dvisvgm</em>. Alternatively, you could downgrade to an older Ghostscript
-release.</p>
+or later, you should update to a more recent version of <em>dvisvgm</em>.</p>
+<p>Alternatively, you can set environment variable <a href="https://www.ghostscript.com/doc/current/Use.htm#Environment_variables"><code>GS_OPTIONS</code></a>
+to value <code>-dNEWPDF=false</code> which tells Ghostscript to use the old PDF interpreter. Depending on operating system and command shell,
+the syntax to set the variable differs slightly, e.g.</p>
+<ul>
+<li><code>export GS_OPTIONS=-dNEWPDF=false</code> (Linux, bash)</li>
+<li><code>set GS_OPTIONS=-dNEWPDF=false</code> (Windows command line)</li>
+</ul>
 </div>
   </section>
   <section class="card border-primary" style="margin-top:1.33em">
