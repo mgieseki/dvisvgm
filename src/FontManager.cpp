@@ -271,8 +271,12 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 			newfont = font->clone(ptsize, style, color);
 	}
 	else {
-		if (!FileSystem::exists(path))
-			path = FileFinder::instance().lookup(filename, false);
+		if (!FileSystem::exists(path)) {
+			for (const string suffix : {"", ".otf", ".ttf"}) {
+				if ((path = FileFinder::instance().lookup(filename+suffix, false)) != nullptr)
+					break;
+			}
+		}
 		if (path) {
 			newfont.reset(new NativeFontImpl(path, fontIndex, ptsize, style, color));
 			newfont->findAndAssignBaseFontMap();
