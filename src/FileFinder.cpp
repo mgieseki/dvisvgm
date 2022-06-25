@@ -140,7 +140,18 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		return _pathbuf.empty() ? nullptr : _pathbuf.c_str();
 	}
 	try {
-		return _miktex->findFile(fname.c_str());
+		if (!ftype) // no file type given?
+			return _miktex->findFile(fname.c_str());  // lookup given filename
+		// handle file type "ttf" similar to kpathsea and look for .ttf, .ttc, and .dfont
+		std::vector<std::string> suffixes{ext};
+		if (ext == "ttf") {
+			suffixes.emplace_back("ttc");
+			suffixes.emplace_back("dfont");
+		}
+		for (const auto &suffix : suffixes) {
+			if (const char *path = _miktex->findFile((fname+"."+suffix).c_str()))
+				return path;
+		}
 	}
 	catch (const MessageException &e) {
 		return nullptr;
@@ -181,8 +192,8 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		std::free(path);
 		return _pathbuf.c_str();
 	}
-	return nullptr;
 #endif  // !MIKTEX
+	return nullptr;
 }
 
 
