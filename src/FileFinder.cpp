@@ -21,7 +21,6 @@
 #include <config.h>
 #ifdef MIKTEX
 	#include "MiKTeXCom.hpp"
-	#include "utility.hpp"
 #else
 	#ifdef KPSE_CXX_UNSAFE
 	extern "C" {
@@ -43,6 +42,7 @@
 #include "Message.hpp"
 #include "MessageException.hpp"
 #include "Process.hpp"
+#include "utility.hpp"
 
 std::string FileFinder::_argv0;
 std::string FileFinder::_progname;
@@ -125,7 +125,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 			return nullptr;  // no extension and no file type => no search
 		ext = fname.substr(pos+1);
 	}
-
+	ext = util::tolower(ext);
 #ifdef _WIN32
 	if (ext == "dll" || ext == "exe")
 		return lookupExecutable(fname);
