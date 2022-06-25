@@ -272,8 +272,9 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 	}
 	else {
 		if (!FileSystem::exists(path)) {
-			for (const string suffix : {"", ".otf", ".ttf"}) {
-				if ((path = FileFinder::instance().lookup(filename+suffix, false)) != nullptr)
+			const char *fontFormats[] = {nullptr, "otf", "ttf"};
+			for (const char *format : fontFormats) {
+				if ((path = FileFinder::instance().lookup(filename, format, false)) != nullptr)
 					break;
 			}
 		}
