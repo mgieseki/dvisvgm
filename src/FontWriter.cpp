@@ -174,8 +174,12 @@ static void writeSFD (const string &sfdname, const PhysicalFont &font, const set
 			"SplineSet\n";
 		Glyph glyph;
 		if (font.getGlyph(c, glyph, cb)) {
-			SFDActions actions(sfd);
-			glyph.iterate(actions, false);
+			if (glyph.empty())
+				sfd << "0 0 m 0\n";
+			else {
+				SFDActions actions(sfd);
+				glyph.iterate(actions, false);
+			}
 		}
 		sfd <<
 			"EndSplineSet\n"
