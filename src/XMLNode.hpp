@@ -146,7 +146,7 @@ class XMLElement : public XMLNode {
 		XMLNode* firstChild () const {return _firstChild.get();}
 		XMLNode* lastChild () const {return _lastChild;}
 		std::ostream& write (std::ostream &os) const override;
-		bool empty () const {return !_firstChild;}
+		bool empty (bool ignoreWhitespace=false) const;
 		Attributes& attributes () {return _attributes;}
 		const Attributes& attributes () const {return _attributes;}
 		XMLNodeIterator begin () {return XMLNodeIterator(_firstChild.get());}

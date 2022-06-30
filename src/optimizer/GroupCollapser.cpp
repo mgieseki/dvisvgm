@@ -83,8 +83,8 @@ void GroupCollapser::execute (XMLElement *context, int depth) {
 		XMLNode *next=child->next();
 		if (XMLElement *childElement = child->toElement()) {
 			execute(childElement, depth+1);
-			// check for groups without attributes and remove them
-			if (childElement->name() == "g" && childElement->attributes().empty()) {
+			// remove empty groups and groups without attributes
+			if (childElement->name() == "g" && (childElement->attributes().empty() || (!childElement->hasAttribute("id") && childElement->empty(true)))) {
 				remove_ws_nodes(childElement);
 				if (XMLNode *firstUnwrappedNode = XMLElement::unwrap(childElement))
 					next = firstUnwrappedNode;

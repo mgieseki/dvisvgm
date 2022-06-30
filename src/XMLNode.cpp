@@ -103,6 +103,19 @@ void XMLElement::clear () {
 }
 
 
+/** Returns true if element has no child nodes or, alternatively, only whitespace children.
+ *  @param[in] ignoreWhitespace if true and if there are only whitespace children, the functions returns true */
+bool XMLElement::empty (bool ignoreWhitespace) const {
+	if (!_firstChild || !ignoreWhitespace)
+		return _firstChild == nullptr;
+	for (const XMLNode *node : *this) {
+		if (!node->toWSNode())
+			return false;
+	}
+	return true;
+}
+
+
 void XMLElement::addAttribute (const string &name, const string &value) {
 	if (Attribute *attr = getAttribute(name))
 		attr->value = value;
