@@ -447,6 +447,29 @@ const XMLElement::Attribute* XMLElement::getAttribute (const string &name) const
 }
 
 
+/** Checks whether an SVG attribute A of an element E implicitly propagates its properties
+ *  to all child elements of E that don't specify A. For now we only consider a subset of
+ *  the inheritable properties.
+ *  @return true if the attribute is inheritable */
+bool XMLElement::Attribute::inheritable () const {
+	// subset of inheritable properties listed on https://www.w3.org/TR/SVG11/propidx.html
+	// clip-path is not inheritable but can be moved to the parent element as long as
+	// no child gets an different clip-path attribute
+	// https://www.w3.org/TR/SVG11/styling.html#Inheritance
+	static const char *names[] = {
+			"clip-path", "clip-rule", "color", "color-interpolation", "color-interpolation-filters", "color-profile",
+			"color-rendering", "direction", "fill", "fill-opacity", "fill-rule", "font", "font-family", "font-size",
+			"font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight", "glyph-orientation-horizontal",
+			"glyph-orientation-vertical", "letter-spacing", "paint-order", "stroke", "stroke-dasharray", "stroke-dashoffset",
+			"stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "transform",
+			"visibility", "word-spacing", "writing-mode"
+	};
+	return binary_search(std::begin(names), std::end(names), name, [](const string &name1, const string &name2) {
+		return name1 < name2;
+	});
+}
+
+
 //////////////////////
 
 void XMLText::append (unique_ptr<XMLNode> node) {

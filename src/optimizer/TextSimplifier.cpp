@@ -40,7 +40,7 @@ static XMLElement::Attributes common_inheritable_attributes (const vector<XMLEle
 			if (intersected)
 				break;
 			for (const auto &attrib : elem->attributes()) {
-				if (AttributeExtractor::inheritable(attrib))
+				if (attrib.inheritable())
 					commonAttribs.push_back(attrib);
 			}
 		}

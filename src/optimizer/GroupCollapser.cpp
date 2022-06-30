@@ -22,7 +22,6 @@
 #include <array>
 #include <string>
 #include <vector>
-#include "AttributeExtractor.hpp"
 #include "GroupCollapser.hpp"
 #include "TransformSimplifier.hpp"
 #include "../XMLNode.hpp"
@@ -127,7 +126,7 @@ bool GroupCollapser::moveAttributes (XMLElement &source, XMLElement &dest) {
 			dest.addAttribute("transform", transform);
 			movedAttributes.emplace_back("transform");
 		}
-		else if (AttributeExtractor::inheritable(attr)) {
+		else if (attr.inheritable()) {
 			dest.addAttribute(attr.name, attr.value);
 			movedAttributes.emplace_back(attr.name);
 		}

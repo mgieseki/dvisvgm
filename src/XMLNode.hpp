@@ -118,6 +118,7 @@ class XMLElement : public XMLNode {
 	public:
 		struct Attribute {
 			Attribute (std::string nam, std::string val) : name(std::move(nam)), value(std::move(val)) {}
+			bool inheritable () const;
 			std::string name;
 			std::string value;
 		};
