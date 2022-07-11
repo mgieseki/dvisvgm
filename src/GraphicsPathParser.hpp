@@ -29,7 +29,7 @@
 
 
 struct GraphicsPathParserException : public MessageException {
-	GraphicsPathParserException (const std::string &msg) : MessageException(msg) {}
+	explicit GraphicsPathParserException (const std::string &msg) : MessageException(msg) {}
 };
 
 
@@ -85,16 +85,16 @@ class GraphicsPathParser {
 		void parseShortQuadraticTo (std::istream &is, bool relative);
 		void parseArcTo (std::istream &is, bool relative);
 
-		void error (std::string msg, std::istream &is) const {
+		void error (const std::string &msg, std::istream &is) const {
 			throw GraphicsPathParserException(msg + " at position "+ std::to_string(is.tellg()-_startpos));
 		}
 
 	private:
-		size_t _startpos=0;              ///< stream position where the parsing started
-		GraphicsPath<T> *_path=nullptr;  ///< path being parsed
-		Pair<T> _startPoint;             ///< start point of current subpath
-		Pair<T> _currentPoint;           ///< current point reached by last path command
-		Pair<T> _prevCtrlPoint;          ///< last control point of preceding curve command
+		std::istream::pos_type _startpos=0; ///< stream position where the parsing started
+		GraphicsPath<T> *_path=nullptr;     ///< path being parsed
+		Pair<T> _startPoint;                ///< start point of current subpath
+		Pair<T> _currentPoint;              ///< current point reached by last path command
+		Pair<T> _prevCtrlPoint;             ///< last control point of preceding curve command
 };
 
 
