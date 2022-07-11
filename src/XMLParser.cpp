@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include "InputReader.hpp"
+#include "GraphicsPathParser.hpp"
 #include "XMLParser.hpp"
 
 using namespace std;
@@ -109,12 +110,22 @@ void XMLParser::openElement (const string &tag, SVGTree &svgTree) {
 	StringInputBuffer ib(tag);
 	BufferInputReader ir(ib);
 	string name = ir.getString("/ \t\n\r");
+	bool isPathElement = (name == "path" || name == "svg:path");
 	ir.skipSpace();
 	auto elemNode = util::make_unique<SVGElement>(name);
 	map<string, string> attribs;
 	if (ir.parseAttributes(attribs, true, "\"'")) {
-		for (const auto &attrpair : attribs)
-			elemNode->addAttribute(attrpair.first, attrpair.second);
+		for (const auto &attrpair : attribs) {
+			if (!isPathElement || attrpair.first != "d")
+				elemNode->addAttribute(attrpair.first, attrpair.second);
+			else {
+				// parse and reformat path definition
+				auto path = GraphicsPathParser<double>().parse(attrpair.second);
+				ostringstream oss;
+				path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+				elemNode->addAttribute("d", oss.str());
+			}
+		}
 	}
 	ir.skipSpace();
 	if (ir.peek() == '/')       // end of empty element tag
