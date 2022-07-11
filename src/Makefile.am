@@ -158,6 +158,7 @@ libdvisvgm_la_SOURCES = \
 	windows.hpp \
 	XMLDocument.hpp              XMLDocument.cpp \
 	XMLNode.hpp                  XMLNode.cpp \
+	XMLParser.hpp                XMLParser.cpp \
 	XMLString.hpp                XMLString.cpp \
 	XXHashFunction.hpp \
 	ZLibOutputStream.hpp

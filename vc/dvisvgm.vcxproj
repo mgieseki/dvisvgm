@@ -309,6 +309,7 @@
     <ClCompile Include="..\src\VFReader.cpp" />
     <ClCompile Include="..\src\XMLDocument.cpp" />
     <ClCompile Include="..\src\XMLNode.cpp" />
+    <ClCompile Include="..\src\XMLParser.cpp" />
     <ClCompile Include="..\src\XMLString.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -394,6 +395,7 @@
     <ClInclude Include="..\src\Unicode.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />
+    <ClInclude Include="..\src\XMLParser.hpp" />
     <ClInclude Include="..\src\XXHashFunction.hpp" />
     <ClInclude Include="..\src\ZLibOutputStream.hpp" />
     <ClInclude Include="config.h" />

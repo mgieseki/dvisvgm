@@ -341,6 +341,9 @@
     <ClCompile Include="..\src\optimizer\ClipPathReassigner.cpp">
       <Filter>Source Files\optimizer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\XMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -695,6 +698,9 @@
       <Filter>Header Files\optimizer</Filter>
     </ClInclude>
     <ClInclude Include="..\src\GraphicsPathParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\XMLParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

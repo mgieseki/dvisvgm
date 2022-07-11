@@ -189,21 +189,21 @@ TEST_F(DvisvgmSpecialTest, rawPI) {
 
 TEST_F(DvisvgmSpecialTest, rawPageFail) {
 	istringstream iss("raw <elem attr1='1' attr2='20'");
-	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, SpecialException);  // incomplete opening tag
+	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, XMLParserException);  // incomplete opening tag
 	iss.clear(); iss.str("raw </elem>");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // spurious closing tag
+	EXPECT_THROW(handler.process("", iss, recorder), XMLParserException);  // spurious closing tag
 	iss.clear(); iss.str("raw <open>text</close>");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // mismatching tags
+	EXPECT_THROW(handler.process("", iss, recorder), XMLParserException);  // mismatching tags
 }
 
 
 TEST_F(DvisvgmSpecialTest, rawDefsFail) {
 	istringstream iss("rawdef <elem attr1='1' attr2='20'");
-	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, SpecialException);  // incomplete opening tag
+	EXPECT_THROW({handler.process("", iss, recorder); handler.finishPage();}, XMLParserException);  // incomplete opening tag
 	iss.clear(); iss.str("rawdef </elem>");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // spurious closing tag
+	EXPECT_THROW(handler.process("", iss, recorder), XMLParserException);  // spurious closing tag
 	iss.clear(); iss.str("rawdef <open>text</close>");
-	EXPECT_THROW(handler.process("", iss, recorder), SpecialException);  // mismatching tags
+	EXPECT_THROW(handler.process("", iss, recorder), XMLParserException);  // mismatching tags
 }
 
 

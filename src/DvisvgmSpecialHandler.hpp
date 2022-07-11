@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <vector>
 #include "SpecialHandler.hpp"
+#include "XMLParser.hpp"
 
 class InputReader;
 class SpecialActions;
@@ -43,32 +44,6 @@ class XMLNode;
 #endif
 
 class DvisvgmSpecialHandler : public SpecialHandler {
-	class XMLParser {
-		using AppendFunc = void (SVGTree::*)(std::unique_ptr<XMLNode>);
-		using PushFunc = void (SVGTree::*)(std::unique_ptr<SVGElement>);
-		using PopFunc = void (SVGTree::*)();
-		using NameStack = std::vector<std::string>;
-
-		public:
-			XMLParser (AppendFunc append, PushFunc push, PopFunc pop)
-				: _append(append), _pushContext(push), _popContext(pop) {}
-
-			void parse (const std::string &xml, SpecialActions &actions, bool finish=false);
-			void finish (SpecialActions &actions);
-
-		protected:
-			void openElement (const std::string &tag, SpecialActions &actions);
-			void closeElement (const std::string &tag, SpecialActions &actions);
-
-		private:
-			AppendFunc _append;
-			PushFunc _pushContext;
-			PopFunc _popContext;
-			std::string _xmlbuf;
-			NameStack _nameStack;  ///< names of nested elements still missing a closing tag
-			bool _error=false;
-	};
-
 	using StringVector = std::vector<std::string>;
 	using MacroMap = std::unordered_map<std::string, StringVector>;
 
