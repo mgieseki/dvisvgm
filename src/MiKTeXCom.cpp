@@ -66,8 +66,7 @@ string MiKTeXCom::getVersion () {
 	MiKTeXSetupInfo info;
 	_session->GetMiKTeXSetupInfo(&info);
 #endif
-	_bstr_t version = info.version;
-	return string(version);
+	return to_string(info.series/100)+"."+ to_string(info.series%100);
 }
 
 
