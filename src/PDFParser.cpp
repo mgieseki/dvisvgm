@@ -218,7 +218,7 @@ static bool parse_number (const string &str, NumberVariant &nv) {
 		// which is not allowed in PDF real number constants
 		if (!postdot.empty() && isdigit(postdot[0])) {
 			size_t count;
-			stoi(postdot, &count, 10);
+			static_cast<void>(stoi(postdot, &count, 10));
 			if (count != postdot.length())
 				return false;
 		}
