@@ -48,6 +48,7 @@
 #include "optimizer/SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
+#include "XMLParser.hpp"
 #include "XXHashFunction.hpp"
 #include "utility.hpp"
 #include "version.hpp"
@@ -493,6 +494,10 @@ int main (int argc, char *argv[]) {
 	catch (PSException &e) {
 		Message::estream() << "\nPostScript error: " << e.what() << '\n';
 		return -2;
+	}
+	catch (XMLParserException &e) {
+		Message::estream() << "\nXML error: " << e.what() << '\n';
+		return -5;
 	}
 	catch (SignalException &e) {
 		Message::wstream().clearline();
