@@ -93,7 +93,7 @@ bool MakeEditableBuffer(Font* font, int tableTag) {
   if (table->IsReused()) {
     return true;
   }
-  uint32_t sz = Round4(table->length);
+  int sz = Round4(table->length);
   table->buffer.resize(sz);
   uint8_t* buf = &table->buffer[0];
   memcpy(buf, table->data, table->length);
@@ -213,6 +213,7 @@ bool FixChecksums(Font* font) {
   size_t offset = 8;
   StoreU32(0, &offset, head_buf);
   uint32_t file_checksum = 0;
+  uint32_t head_checksum = 0;
   for (auto& i : font->tables) {
     Font::Table* table = &i.second;
     if (table->IsReused()) {
@@ -220,6 +221,10 @@ bool FixChecksums(Font* font) {
     }
     table->checksum = ComputeULongSum(table->data, table->length);
     file_checksum += table->checksum;
+
+    if (table->tag == kHeadTableTag) {
+      head_checksum = table->checksum;
+    }
   }
 
   file_checksum += ComputeHeaderChecksum(*font);

@@ -28,12 +28,8 @@
 
 namespace woff2 {
 
+
 namespace {
-
-
-using std::string;
-using std::vector;
-
 
 const size_t kWoff2HeaderSize = 48;
 const size_t kWoff2EntrySize = 20;
@@ -183,7 +179,7 @@ size_t MaxWOFF2CompressedSize(const uint8_t* data, size_t length) {
 }
 
 size_t MaxWOFF2CompressedSize(const uint8_t* data, size_t length,
-    const string& extended_metadata) {
+                              const std::string& extended_metadata) {
   // Except for the header size, which is 32 bytes larger in woff2 format,
   // all other parts should be smaller (table header in short format,
   // transformations and compression). Just to be sure, we will give some
@@ -336,12 +332,15 @@ bool ConvertTTFToWOFF2(const uint8_t *data, size_t length,
       table.flags = src_table.flag_byte;
       table.src_length = src_table.length;
       table.transform_length = src_table.length;
+      const uint8_t* transformed_data = src_table.data;
       const Font::Table* transformed_table =
           font.FindTable(src_table.tag ^ 0x80808080);
       if (transformed_table != NULL) {
         table.flags = transformed_table->flag_byte;
         table.flags |= kWoff2FlagsTransform;
         table.transform_length = transformed_table->length;
+        transformed_data = transformed_table->data;
+
       }
       tables.push_back(table);
     }
@@ -420,6 +419,8 @@ bool ConvertTTFToWOFF2(const uint8_t *data, size_t length,
         // for reused tables, only the original has an updated offset
         uint32_t table_offset =
           table.IsReused() ? table.reuse_of->offset : table.offset;
+        uint32_t table_length =
+          table.IsReused() ? table.reuse_of->length : table.length;
         std::pair<uint32_t, uint32_t> tag_offset(table.tag, table_offset);
         if (index_by_tag_offset.find(tag_offset) == index_by_tag_offset.end()) {
 #ifdef FONT_COMPRESSION_BIN
