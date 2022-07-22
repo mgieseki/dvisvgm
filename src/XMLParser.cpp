@@ -119,11 +119,16 @@ void XMLParser::openElement (const string &tag, SVGTree &svgTree) {
 			if (!isPathElement || attrpair.first != "d")
 				elemNode->addAttribute(attrpair.first, attrpair.second);
 			else {
-				// parse and reformat path definition
-				auto path = GraphicsPathParser<double>().parse(attrpair.second);
-				ostringstream oss;
-				path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
-				elemNode->addAttribute("d", oss.str());
+				try {
+					// parse and reformat path definition
+					auto path = GraphicsPathParser<double>().parse(attrpair.second);
+					ostringstream oss;
+					path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+					elemNode->addAttribute("d", oss.str());
+				}
+				catch (const GraphicsPathParserException &e) {
+					throw XMLParserException(string("error in path data: ")+e.what());
+				}
 			}
 		}
 	}
