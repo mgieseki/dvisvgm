@@ -86,7 +86,14 @@ class GraphicsPathParser {
 		void parseArcTo (std::istream &is, bool relative);
 
 		void error (const std::string &msg, std::istream &is) const {
-			throw GraphicsPathParserException(msg + " at position "+ std::to_string(is.tellg()-_startpos));
+			std::string postext;
+			if (_startpos >= 0) { // valid start position?
+				if (is)
+					postext = " at position "+ std::to_string(is.tellg()-_startpos);
+				else
+					postext = " (premature end of data)";
+			}
+			throw GraphicsPathParserException(msg + postext);
 		}
 
 	private:
