@@ -104,6 +104,6 @@ const char* MiKTeXCom::findFile (const char *fname) {
 		return nullptr;
 	}
 	catch (_com_error &e) {
-		throw MessageException((const char*)e.Description());
+		throw MessageException(static_cast<const char*>(e.Description()));
 	}
 }
