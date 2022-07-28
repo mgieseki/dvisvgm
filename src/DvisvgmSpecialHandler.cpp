@@ -153,19 +153,19 @@ bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialA
 static void expand_constants (string &str, SpecialActions &actions) {
 	bool repl_bbox = true;
 	while (repl_bbox) {
-		auto pos = str.find("{?bbox ");
+		const auto pos = str.find("{?bbox ");
 		if (pos == string::npos)
 			repl_bbox = false;
 		else {
 			auto endpos = pos+7;
 			while (endpos < str.length() && isalnum(str[endpos]))
 				++endpos;
-			if (str[endpos] == '}') {
-				BoundingBox &box=actions.bbox(str.substr(pos+7, endpos-pos-7));
+			if (str[endpos] != '}')
+				repl_bbox = false;
+			else {
+				BoundingBox &box = actions.bbox(str.substr(pos+7, endpos-pos-7));
 				str.replace(pos, endpos-pos+1, box.svgViewBoxString());
 			}
-			else
-				repl_bbox = false;
 		}
 	}
 	struct Constant {
