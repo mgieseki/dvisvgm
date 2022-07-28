@@ -91,7 +91,7 @@ XMLString::XMLString (double x) {
 	if (std::abs(x) < 1e-6)
 		x = 0;
 	assign(util::to_string(x));
-	size_t pos = find("0.");
+	auto pos = find("0.");
 	if (pos != string::npos && (pos == 0 || at(pos-1) == '-'))
 		erase(pos, 1);
 }

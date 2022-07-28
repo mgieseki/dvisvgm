@@ -29,7 +29,7 @@ using namespace std;
 
 /** Removes redundant slashes from a given path. */
 static string& single_slashes (string &str) {
-	size_t pos=0;
+	string::size_type pos=0;
 	while ((pos = str.find("//", pos)) != string::npos)
 		str.replace(pos, 2, "/");
 	return str;
@@ -124,7 +124,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 	path = FileSystem::ensureForwardSlashes(path);
 #endif
 	if (isfile) {
-		size_t pos = path.rfind('/');
+		auto pos = path.rfind('/');
 		_fname = path.substr((pos == string::npos) ? 0 : pos+1);
 		// remove filename from path
 		if (pos == 0 && _fname.length() > 1)  // file in root directory?
@@ -163,12 +163,12 @@ void FilePath::add (const string &dir) {
  *  location of a directory (and not of a file) an empty string
  *  is returned. */
 string FilePath::suffix () const {
-	size_t start = 0;
+	string::size_type start = 0;
 	// ignore leading dots
 	while (start < _fname.length() && _fname[start] == '.')
 		start++;
 	string sub = _fname.substr(start);
-	size_t pos = sub.rfind('.');
+	auto pos = sub.rfind('.');
 	if (pos != string::npos && pos < sub.length()-1)
 		return sub.substr(pos+1);
 	return "";
@@ -194,7 +194,7 @@ void FilePath::suffix (const string &newSuffix) {
  *  Example: FilePath("/a/b/c.def", true) == "c" */
 string FilePath::basename () const {
 	if (!_fname.empty()) {
-		size_t len = suffix().length();
+		auto len = suffix().length();
 		if (len > 0)
 			len++; // strip dot too
 		return _fname.substr(0, _fname.length()-len);

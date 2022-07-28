@@ -36,10 +36,10 @@ void XMLParser::parse (const string &xml, SVGTree &svgTree, bool finish) {
 	// collect/extract an XML fragment that only contains complete tags
 	// incomplete tags are held back
 	_xmlbuf += xml;
-	size_t left=0;
+	string::size_type left=0;
 	try {
 		while (left != string::npos) {
-			size_t right = _xmlbuf.find('<', left);
+			auto right = _xmlbuf.find('<', left);
 			if (left < right && left < _xmlbuf.length())  // plain text found?
 				(svgTree.*_append)(util::make_unique<XMLText>(_xmlbuf.substr(left, right - left)));
 			if (right != string::npos) {

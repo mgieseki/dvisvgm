@@ -96,7 +96,7 @@ void PageSize::resize (string name) {
 
 	name = util::tolower(name);
 	// extract optional suffix
-	size_t pos = name.rfind('-');
+	auto pos = name.rfind('-');
 	bool landscape = false;
 	if (pos != string::npos) {
 		string suffix = name.substr(pos);

@@ -84,10 +84,10 @@ double math::normalize_0_2pi (double rad) {
  *  @param[in] ws characters treated as whitespace
  *  @return the trimmed string */
 string util::trim (const std::string &str, const char *ws) {
-	size_t first = str.find_first_not_of(ws);
+	auto first = str.find_first_not_of(ws);
 	if (first == string::npos)
 		return "";
-	size_t last = str.find_last_not_of(ws);
+	auto last = str.find_last_not_of(ws);
 	return str.substr(first, last-first+1);
 }
 
@@ -99,9 +99,9 @@ string util::trim (const std::string &str, const char *ws) {
  *  @return the normalized string */
 string util::normalize_space (string str, const char *ws) {
 	str = trim(str);
-	size_t first = str.find_first_of(ws);
+	auto first = str.find_first_of(ws);
 	while (first != string::npos) {
-		size_t last = str.find_first_not_of(ws, first);
+		auto last = str.find_first_not_of(ws, first);
 		str.replace(first, last-first, " ");
 		first = str.find_first_of(ws, first+1);
 	}
@@ -116,7 +116,7 @@ string util::normalize_space (string str, const char *ws) {
  *  @return the resulting string */
 string util::replace (string str, const string &find, const string &repl) {
 	if (!find.empty() && !repl.empty()) {
-		size_t first = str.find(find);
+		auto first = str.find(find);
 		while (first != string::npos) {
 			str.replace(first, find.length(), repl);
 			first = str.find(find, first+repl.length());
@@ -136,9 +136,9 @@ vector<string> util::split (const string &str, const string &sep) {
 	if (str.empty() || sep.empty())
 		parts.push_back(str);
 	else {
-		size_t left=0;
+		string::size_type left=0;
 		while (left <= str.length()) {
-			size_t right = str.find(sep, left);
+			auto right = str.find(sep, left);
 			if (right == string::npos) {
 				parts.push_back(str.substr(left));
 				left = string::npos;
@@ -164,7 +164,7 @@ string util::tolower (const string &str) {
 string util::to_string (double val) {
 	string str = std::to_string(val);
 	if (str.find('.') != string::npos) {  // double value and not an integer?
-		size_t pos = str.find_last_not_of('0');
+		auto pos = str.find_last_not_of('0');
 		if (pos != string::npos)  // trailing zeros
 			str.erase(pos+1, string::npos);
 		if (str.back() == '.')    // trailing dot?

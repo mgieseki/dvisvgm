@@ -460,7 +460,7 @@ const Font* DVIReader::defineFont (uint32_t fontnum, const string &name, uint32_
 	Font *font = fm.getFont(fontnum);
 	if (!font && !name.empty()) {  // font not registered yet?
 		if (name[0] == '[') {       // LuaTeX native font reference?
-			size_t last = name.rfind(']');
+			auto last = name.rfind(']');
 			if (last != string::npos) {
 				string path = name.substr(1, last-1);
 				FontStyle style;

@@ -54,7 +54,7 @@ const FontEncoding* Font::encoding () const {
 
 const FontMap::Entry* Font::fontMapEntry () const {
 	string fontname = name();
-	size_t pos = fontname.rfind('.');
+	auto pos = fontname.rfind('.');
 	if (pos != string::npos)
 		fontname = fontname.substr(0, pos); // strip extension
 	return FontMap::instance().lookup(fontname);

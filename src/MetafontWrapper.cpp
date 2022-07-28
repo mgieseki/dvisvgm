@@ -118,7 +118,7 @@ int MetafontWrapper::getResolution (const string &mfMessage) const {
 			string line = buf;
 			if (line.substr(0, 18) == "Output written on ") {
 				line = line.substr(18);
-				size_t pos = line.find(' ');
+				auto pos = line.find(' ');
 				line = line.substr(0, pos);
 				pos = line.rfind('.');
 				if (pos != string::npos && line.substr(line.length()-2) == "gf") {

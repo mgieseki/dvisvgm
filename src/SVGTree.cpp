@@ -92,7 +92,7 @@ void SVGTree::setFont (int num, const Font &font) {
 
 
 bool SVGTree::setFontFormat (string formatstr) {
-	size_t pos = formatstr.find(',');
+	auto pos = formatstr.find(',');
 	string opt;
 	if (pos != string::npos) {
 		opt = formatstr.substr(pos+1);

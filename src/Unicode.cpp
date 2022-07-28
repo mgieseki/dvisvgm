@@ -189,7 +189,7 @@ static const char* get_suffix (const string &name) {
 		"small", "swash", "superior", "inferior", "numerator", "denominator", "oldstyle",
 		"display", "text", "big", "bigg", "Big", "Bigg", 0
 	};
-	size_t pos = name.rfind('.');
+	auto pos = name.rfind('.');
 	if (pos != string::npos) {
 		string suffix = name.substr(pos+1);
 		for (const char **p=suffixes; *p; p++)

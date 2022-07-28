@@ -376,7 +376,7 @@ ostream& XMLElement::write (ostream &os) const {
 			os << attrib.name << "='" << attrib.value << '\'';
 		else {
 			os << attrib.name.substr(1) << "='";
-			size_t pos = attrib.value.find("base64,");
+			auto pos = attrib.value.find("base64,");
 			if (pos == string::npos)
 				os << attrib.value;
 			else {

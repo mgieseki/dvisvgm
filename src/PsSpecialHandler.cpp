@@ -190,7 +190,7 @@ void PsSpecialHandler::preprocess (const string &prefix, istream &is, SpecialAct
 
 static string filename_suffix (const string &fname) {
 	string ret;
-	size_t pos = fname.rfind('.');
+	auto pos = fname.rfind('.');
 	if (pos != string::npos)
 		ret = util::tolower(fname.substr(pos+1));
 	return ret;

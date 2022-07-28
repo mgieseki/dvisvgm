@@ -207,7 +207,7 @@ static bool parse_number (const string &str, NumberVariant &nv) {
 	if (str.empty())
 		return false;
 	try {
-		size_t dotpos = str.find('.');
+		auto dotpos = str.find('.');
 		if (dotpos == string::npos) {      // not a real number?
 			size_t count;
 			nv = NumberVariant(stoi(str, &count, 10));  // then try to convert str to int
@@ -310,7 +310,7 @@ static PDFObjectRef parse_object_ref (vector<PDFObject> &objects) {
 
 /** Replaces all occurences of "#XX" (XX are two hex digits) with the corresponding character. */
 static string& subst_numeric_chars (string &str) {
-	for (size_t pos=str.find('#'); pos != string::npos; pos=str.find('#', pos+1)) {
+	for (auto pos=str.find('#'); pos != string::npos; pos=str.find('#', pos+1)) {
 		if (pos > str.length()-3)
 			throw PDFException("sign character # must be followed by two hexadecimal digits");
 		if (isxdigit(str[pos+1]) && isxdigit(str[pos+2])) {

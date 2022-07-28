@@ -153,11 +153,11 @@ bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialA
 static void expand_constants (string &str, SpecialActions &actions) {
 	bool repl_bbox = true;
 	while (repl_bbox) {
-		size_t pos = str.find("{?bbox ");
+		auto pos = str.find("{?bbox ");
 		if (pos == string::npos)
 			repl_bbox = false;
 		else {
-			size_t endpos = pos+7;
+			auto endpos = pos+7;
 			while (endpos < str.length() && isalnum(str[endpos]))
 				++endpos;
 			if (str[endpos] == '}') {
@@ -181,7 +181,7 @@ static void expand_constants (string &str, SpecialActions &actions) {
 	}};
 	for (const Constant &constant : constants) {
 		const string pattern = string("{?")+constant.name+"}";
-		size_t pos = str.find(pattern);
+		auto pos = str.find(pattern);
 		while (pos != string::npos) {
 			str.replace(pos, strlen(constant.name)+3, constant.val);
 			pos = str.find(pattern, pos+constant.val.length());  // look for further matches
@@ -194,9 +194,9 @@ static void expand_constants (string &str, SpecialActions &actions) {
  *  and replaces the substring by the computed value.
  *  @param[in,out] str string to scan for expressions */
 static void evaluate_expressions (string &str, const SpecialActions &actions) {
-	size_t left = str.find("{?(");             // start position of expression macro
+	auto left = str.find("{?(");             // start position of expression macro
 	while (left != string::npos) {
-		size_t right = str.find(")}", left+2);  // end position of expression macro
+		auto right = str.find(")}", left+2);  // end position of expression macro
 		if (right == string::npos)
 			break;
 		Calculator calc;

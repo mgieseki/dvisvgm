@@ -229,7 +229,7 @@ void HyperlinkManager::createViews (unsigned pageno, SpecialActions &actions) {
 bool HyperlinkManager::setLinkMarker (const string &marker) {
 	string type;  // "none", "box", "line", or a background color specifier
 	string color; // optional line color specifier
-	size_t seppos = marker.find(':');
+	auto seppos = marker.find(':');
 	if (seppos == string::npos)
 		type = marker;
 	else {

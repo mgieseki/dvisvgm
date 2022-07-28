@@ -66,7 +66,7 @@ using namespace std;
 
 static string remove_path (string fname) {
 	fname = FileSystem::ensureForwardSlashes(fname);
-	size_t slashpos = fname.rfind('/');
+	auto slashpos = fname.rfind('/');
 	if (slashpos == string::npos)
 		return fname;
 	return fname.substr(slashpos+1);
@@ -75,7 +75,7 @@ static string remove_path (string fname) {
 
 static string ensure_suffix (string fname, const string &suffix) {
 	if (!fname.empty()) {
-		size_t dotpos = remove_path(fname).rfind('.');
+		auto dotpos = remove_path(fname).rfind('.');
 		if (dotpos == string::npos)
 			fname += "." + suffix;
 	}

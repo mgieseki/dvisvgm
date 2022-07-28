@@ -28,7 +28,7 @@ void PapersizeSpecialHandler::preprocess (const string&, std::istream &is, Speci
 	string params;
 	is >> params;
 	Length w, h;
-	const size_t splitpos = params.find(',');
+	const auto splitpos = params.find(',');
 	try {
 		if (splitpos == string::npos) {
 			w.set(params);
