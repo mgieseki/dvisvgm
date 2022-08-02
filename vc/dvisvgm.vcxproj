@@ -138,6 +138,7 @@
       <TargetMachine>MachineX64</TargetMachine>
       <MinimumRequiredVersion />
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -146,10 +147,12 @@
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -172,11 +175,12 @@
       <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -188,6 +192,7 @@
       <MinimumRequiredVersion />
       <AdditionalOptions>notelemetry.obj %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
