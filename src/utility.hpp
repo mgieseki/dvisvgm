@@ -137,17 +137,17 @@ inline void base64_copy (std::istream &is, std::ostream &os, int wrap=0) {
  *  @param[in] args arguments forwarded to an constructor of T */
 template<typename T, typename... Args>
 std::unique_ptr<T> make_unique (Args&&... args) {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 
 template<typename T, typename U>
 std::unique_ptr<T> static_unique_ptr_cast (std::unique_ptr<U> &&old){
-    return std::unique_ptr<T>{static_cast<T*>(old.release())};
+	return std::unique_ptr<T>{static_cast<T*>(old.release())};
 }
 
 template <typename T>
-struct set_const_of { 
+struct set_const_of {
 	template <typename U>
 	struct by {
 		using type = typename std::conditional<
@@ -155,7 +155,7 @@ struct set_const_of {
 			typename std::add_const<T>::type,
 			typename std::remove_const<T>::type
 		>::type;
-    };
+	};
 };
 } // namespace util
 

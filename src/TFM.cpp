@@ -43,8 +43,8 @@ static void read_words (StreamReader &reader, vector<T> &v, unsigned n) {
 
 
 TFM::TFM (istream &is) : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _ascent(0), _descent(0) {
-   if (!is)
-      return;
+	if (!is)
+		return;
 	is.seekg(0);
 	StreamReader reader(is);
 	uint16_t lf = uint16_t(reader.readUnsigned(2)); // length of entire file in 4 byte words

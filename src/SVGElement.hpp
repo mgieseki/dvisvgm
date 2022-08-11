@@ -33,7 +33,7 @@ class SVGElement : public XMLElement {
 		enum LineCap {LC_BUTT, LC_ROUND, LC_SQUARE};
 		enum LineJoin {LJ_BEVEL, LJ_MITER, LJ_ROUND};
 
-   public:
+	public:
 		explicit SVGElement (std::string name) : XMLElement(std::move(name)) {}
 		explicit SVGElement (const XMLElement &node) : XMLElement(node) {}
 		explicit SVGElement (XMLElement &&node) noexcept : XMLElement(std::move(node)) {}

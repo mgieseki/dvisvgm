@@ -28,7 +28,7 @@
 
 /** Common base class for all hash functions. */
 class HashFunction {
-   public:
+	public:
 		virtual ~HashFunction () =default;
 		virtual int digestSize () const =0;
 		virtual void reset () =0;

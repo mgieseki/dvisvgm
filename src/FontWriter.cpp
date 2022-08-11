@@ -128,7 +128,7 @@ struct SFDActions : Glyph::IterationActions {
 	}
 
 	ostream &_os;
-   Glyph::Point _startPoint, _currentPoint;
+	Glyph::Point _startPoint, _currentPoint;
 };
 
 

@@ -48,11 +48,11 @@ class Opacity {
 			BM_HUE, BM_SATURATION, BM_COLOR, BM_LUMINOSITY
 		};
 
-   public:
+	public:
 		Opacity () =default;
 		Opacity (OpacityAlpha fillalpha, OpacityAlpha strokealpha, BlendMode bm) : _fillalpha(fillalpha), _strokealpha(strokealpha), _blendMode(bm) {}
 		Opacity (OpacityAlpha fillalpha, OpacityAlpha strokealpha) : Opacity(fillalpha, strokealpha, BM_NORMAL) {}
-      explicit Opacity (BlendMode bm) : _blendMode(bm) {}
+		explicit Opacity (BlendMode bm) : _blendMode(bm) {}
 		OpacityAlpha& fillalpha () {return _fillalpha;}
 		OpacityAlpha& strokealpha () {return _strokealpha;}
 		const OpacityAlpha& fillalpha () const {return _fillalpha;}
@@ -66,7 +66,7 @@ class Opacity {
 		bool operator == (const Opacity &opacity) const;
 		bool operator != (const Opacity &opacity) const;
 
-   private:
+	private:
 		OpacityAlpha _fillalpha;
 		OpacityAlpha _strokealpha;
 		BlendMode _blendMode=BM_NORMAL;
