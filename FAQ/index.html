@@ -206,33 +206,33 @@ program search path, respectively. On Windows, check environment variable <code>
 <div class="row align-items-top">
   <div class="col-md-6">
   <p><strong>Output of <code>dvisvgm -l</code> showing entry <em>ps</em>:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ dvisvgm -l
-</span></span><span style="display:flex;"><span>bgcolor    background color special
-</span></span><span style="display:flex;"><span>color      complete support of color specials
-</span></span><span style="display:flex;"><span>dvisvgm    special set for embedding raw SVG snippets
-</span></span><span style="display:flex;"><span>em         line drawing statements of the emTeX special set
-</span></span><span style="display:flex;"><span>html       hyperref specials
-</span></span><span style="display:flex;"><span>papersize  special to set the page size
-</span></span><span style="display:flex;"><span>pdf        PDF hyperlink, font map, and pagesize specials
-</span></span><span style="display:flex;"><span>ps         dvips PostScript specials
-</span></span><span style="display:flex;"><span>tpic       TPIC specials</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -l
+bgcolor    background color special
+color      complete support of color specials
+dvisvgm    special set for embedding raw SVG snippets
+em         line drawing statements of the emTeX special set
+html       hyperref specials
+papersize  special to set the page size
+pdf        PDF hyperlink, font map, and pagesize specials
+ps         dvips PostScript specials
+tpic       TPIC specials</code></pre></div>
 </div>
 <div class="col-md-6">
   <p><strong>Also, option <code>-V1</code> lists <em>Ghostscript</em> if it’s found:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ dvisvgm -V1
-</span></span><span style="display:flex;"><span>dvisvgm 2.4 (x86_64-pc-win64)
-</span></span><span style="display:flex;"><span>-----------------------------
-</span></span><span style="display:flex;"><span>brotli:      1.0.4
-</span></span><span style="display:flex;"><span>clipper:     6.2.1
-</span></span><span style="display:flex;"><span>fontforge:   20160721
-</span></span><span style="display:flex;"><span>freetype:    2.9.1
-</span></span><span style="display:flex;"><span>Ghostscript: 9.23
-</span></span><span style="display:flex;"><span>MiKTeX:      2.9
-</span></span><span style="display:flex;"><span>potrace:     1.15
-</span></span><span style="display:flex;"><span>ttfautohint: 1.8.1
-</span></span><span style="display:flex;"><span>woff2:       1.0.2
-</span></span><span style="display:flex;"><span>xxhash:      0.6.5
-</span></span><span style="display:flex;"><span>zlib:        1.2.11</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ dvisvgm -V1
+dvisvgm 2.4 (x86_64-pc-win64)
+-----------------------------
+brotli:      1.0.4
+clipper:     6.2.1
+fontforge:   20160721
+freetype:    2.9.1
+Ghostscript: 9.23
+MiKTeX:      2.9
+potrace:     1.15
+ttfautohint: 1.8.1
+woff2:       1.0.2
+xxhash:      0.6.5
+zlib:        1.2.11</code></pre></div>
 </div>
 </div>
 </div>
@@ -280,10 +280,10 @@ package provided by MiKTeX.</li>
 You can try to register the components manually as described <a href="http://sourceforge.net/p/miktex/bugs/2376">here</a>
 (thanks to Ulrike Fischer and Christian Schenk). Run the following commands with administrator privileges:
 <span class="d-inline-flex">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>regsvr32 MiKTeX209-core-PS.dll
-</span></span><span style="display:flex;"><span>regsvr32 MiKTeX209-core.dll
-</span></span><span style="display:flex;"><span>regsvr32 MiKTeX209-packagemanager-PS.dll
-</span></span><span style="display:flex;"><span>regsvr32 MiKTeX209-packagemanager.dll</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">regsvr32 MiKTeX209-core-PS.dll
+regsvr32 MiKTeX209-core.dll
+regsvr32 MiKTeX209-packagemanager-PS.dll
+regsvr32 MiKTeX209-packagemanager.dll</code></pre></div>
 </span></li>
 </ul>
 </div>
@@ -302,15 +302,15 @@ axial (type 2), and radial (type 3) shadings are not supported yet.</li>
 <h4 id="clipping-issues">Clipping issues</h4>
 <p>The SVG standard allows to define <a href="/Clipping/">clipping paths by intersection</a> like so:</p>
 <div class="d-inline-flex">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svg" data-lang="svg"><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define a rectangular clipping path --&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;rect</span> <span style="color:#50fa7b">x=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">y=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">width=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">height=</span><span style="color:#f1fa8c">&#34;50&#34;</span><span style="color:#ff79c6">/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define another clipping path by intersecting the rectangle with a circle --&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(#clip1)&#34;</span><span style="color:#ff79c6">&gt;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;20&#34;</span><span style="color:#ff79c6">/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span></span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define a rectangular clipping path --&gt;</span>
+<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
+  <span style="color:#ff79c6">&lt;rect</span> <span style="color:#50fa7b">x=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">y=</span><span style="color:#f1fa8c">&#34;0&#34;</span> <span style="color:#50fa7b">width=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">height=</span><span style="color:#f1fa8c">&#34;50&#34;</span><span style="color:#ff79c6">/&gt;</span>
+<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+
+<span style="color:#6272a4">&lt;!-- define another clipping path by intersecting the rectangle with a circle --&gt;</span>
+<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(#clip1)&#34;</span><span style="color:#ff79c6">&gt;</span>
+  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;50&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;20&#34;</span><span style="color:#ff79c6">/&gt;</span>
+<span style="color:#ff79c6">&lt;/clipPath&gt;</span></code></pre></div>
 </div><p/>
 <p>While clipping path <em>clip1</em> is the outline of a square, <em>clip2</em> is defined as the intersection of the square
 with a circle at the given position. Thus, we get a quadrant here. All subsequent operations restricted to <em>clip2</em>

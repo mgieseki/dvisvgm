@@ -3,8 +3,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 20 Apr 2022 11:57:55 +0200</pubDate>
+    <pubDate>Fri, 12 Aug 2022 09:52:34 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 2.14 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#4468f9499cd26017882826f25736c181</link>
+      <pubDate>Fri, 12 Aug 2022 09:48:19 +0200</pubDate>
+      <guid>4468f9499cd26017882826f25736c181</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added processing of SVG <code>path</code> elements inserted by &ldquo;raw&rdquo; specials in order to treat them similar to generated ones.</li>
+<li>Added support for native font references lacking a file name suffix.</li>
+<li>Improved the lookup of native fonts.</li>
+<li>Improved the removal of redundant SVG group elements.</li>
+<li>Fixed the conversion of empty glyphs to TTF/WOFF data.</li>
+<li>Updated the bundled <a href="https://github.com/google/woff2">WOFF2 library</a>.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.13.4 has been released</title>
@@ -127,7 +145,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.11.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
       <pubDate>Thu, 21 Jan 2021 15:20:02 +0100</pubDate>
       <guid>e423fc038b1ff9a9ba28e1b1cfbd3d6f</guid>
       <description>
@@ -292,7 +310,7 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
     
     <item>
       <title>dvisvgm 2.8 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#57192fe118cc7abbba232e51f3d2adf0</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#57192fe118cc7abbba232e51f3d2adf0</link>
       <pubDate>Fri, 25 Oct 2019 17:42:50 +0200</pubDate>
       <guid>57192fe118cc7abbba232e51f3d2adf0</guid>
       <description>
@@ -382,22 +400,6 @@ the public interface leads to an error message when processing PDF files with
 <p>The changes in Ghostscript 9.27 also break the PDF functionality of
 <a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
 An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.7.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#132ffe0d1afe073c5693a47e91aed30f</link>
-      <pubDate>Mon, 20 May 2019 13:56:23 +0200</pubDate>
-      <guid>132ffe0d1afe073c5693a47e91aed30f</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
-<li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
-<li>Added the source files required to access the MiKTeX session object as the MiKTeX SDK has been deprecated.</li>
-</ul>
 ]]>
       </description>
     </item>
