@@ -306,15 +306,15 @@ int FontEngine::getNumGlyphs () const {
  * @param[in] c char code
  * @return glyph name */
 string FontEngine::getGlyphName (const Character &c) const {
+	string ret;
 	if (c.type() == Character::NAME)
-		return c.name();
-
-	if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
+		ret = c.name();
+	else if (_currentFace && FT_HAS_GLYPH_NAMES(_currentFace)) {
 		char buf[256];
 		FT_Get_Glyph_Name(_currentFace, charIndex(c), buf, 256);
-		return string(buf);
+		ret = string(buf);
 	}
-	return "";
+	return ret;
 }
 
 
