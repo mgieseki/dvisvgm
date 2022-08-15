@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-02-26 19:08 +0100
+:revdate: 2022-08-15 11:53 +0200
 
 Name
 ----
@@ -459,10 +459,11 @@ The following list describes the currently available optimizer modules.
   expression is used.
 
 *-o, --output*='pattern'::
-Sets the pattern that determines the names of the generated SVG files. The required parameter
-'pattern' may consist of an arbitrary sequence of characters which make up the filenames. With the
-exception of the following mentioned variables and expressions, all characters are treated as static
-parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm.
+Sets the pattern that determines the names of the generated SVG files, optionally including the file
+path. The required parameter 'pattern' may consist of an arbitrary sequence of characters which make
+up the filenames or file paths relative to the current working directory. With the exception of the
+following mentioned variables and expressions, all characters are treated as static parts of the
+filenames/folders and are therefore identical for all pages processed during a run of dvisvgm.
 The strings +%f+, +%p+, +%P+, +%n+, +%N+, +%hd+, +%ho+, and +%hc+ are variables that can be used as
 part of the pattern. +%f+ expands to the base name of the DVI file, i.e. the filename without suffix,
 +%p+ is the current page number, and +%P+ the total number of pages in the DVI file. The variables
@@ -475,7 +476,7 @@ digits, the number is padded with leading zeros.
 Example: +%3p+ enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
 width specifier, +%p+ gets the same number of digits as +%P+.
 +
-If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
+If you need more control over the numbering, you can use arithmetic expressions as part of the pattern.
 The syntax is +%(+'expr'+)+ where 'expr' may contain additions, subtractions, multiplications, and
 integer divisions with common precedence. The variables *p* and *P* contain the current page number
 and the total number of pages, respectively. For example, +--output="%f-%(p-1)"+ creates filenames

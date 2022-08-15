@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2022-02-26
+.\"      Date: 2022-08-15
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.14
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2022\-02\-26" "dvisvgm 2\&.14" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2022\-08\-15" "dvisvgm 2\&.14" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -671,9 +671,9 @@ expression, it\(cqs assigned to the attribute\&. Otherwise, the matrix expressio
 .PP
 \fB\-o, \-\-output\fR=\fIpattern\fR
 .RS 4
-Sets the pattern that determines the names of the generated SVG files\&. The required parameter
+Sets the pattern that determines the names of the generated SVG files, optionally including the file path\&. The required parameter
 \fIpattern\fR
-may consist of an arbitrary sequence of characters which make up the filenames\&. With the exception of the following mentioned variables and expressions, all characters are treated as static parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm\&. The strings
+may consist of an arbitrary sequence of characters which make up the filenames or file paths relative to the current working directory\&. With the exception of the following mentioned variables and expressions, all characters are treated as static parts of the filenames/folders and are therefore identical for all pages processed during a run of dvisvgm\&. The strings
 \fB%f\fR,
 \fB%p\fR,
 \fB%P\fR,
@@ -701,7 +701,7 @@ enforces 3 digits for the current page number (001, 002, etc\&.)\&. Without an e
 gets the same number of digits as
 \fB%P\fR\&.
 .sp
-If you need more control over the numbering, you can use arithmetic expressions as part of a pattern\&. The syntax is
+If you need more control over the numbering, you can use arithmetic expressions as part of the pattern\&. The syntax is
 \fB%(\fR\fIexpr\fR\fB)\fR
 where
 \fIexpr\fR
