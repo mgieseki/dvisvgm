@@ -45,6 +45,7 @@ bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
 int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
 string PsSpecialHandler::BITMAP_FORMAT;
+bool PsSpecialHandler::EMBED_BITMAP_DATA = false;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _previewFilter(_psi)
@@ -390,6 +391,26 @@ static string image_base_path (const SpecialActions &actions) {
 }
 
 
+static string mimetype (const string &fname) {
+	string ret;
+	auto pos = fname.rfind('.');
+	if (pos != string::npos) {
+		string suffix = fname.substr(pos+1);
+		if (suffix == "svg")
+			ret = "svg+xml";
+		else if (suffix == "png" || suffix == "gif")
+			ret = suffix;
+		else if (suffix == "jpg" || suffix == "jpeg")
+			ret = "jpeg";
+		else if (suffix == "tif" || suffix == "tiff")
+			ret = "tiff";
+	}
+	if (!ret.empty())
+		ret = "image/"+ret;
+	return ret;
+}
+
+
 /** Creates an XML element containing the image data depending on the file type.
  *  @param[in] type file type of the image
  *  @param[in] fname file name/path of image file
@@ -419,7 +440,11 @@ unique_ptr<SVGElement> PsSpecialHandler::createImageNode (FileType type, const s
 		string href = pathstr;
 		if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
 			href = FilePath(pathstr).relative(FilePath(_actions->getSVGFilePath(pageno)));
-		node->addAttribute("xlink:href", href);
+		if (EMBED_BITMAP_DATA)
+			node->addAttribute("@@xlink:href", "data:"+ mimetype(fname)+";base64,"+fname);
+		else
+			node->addAttribute("xlink:href", href);
+
 	}
 	else {  // PostScript or PDF
 		node = util::make_unique<SVGElement>("g"); // put SVG nodes created from the EPS/PDF file in this group
@@ -789,8 +814,7 @@ void PsSpecialHandler::image (std::vector<double> &p) {
 
 		// To prevent memory issues, only add the filename to the href attribute and tag it by '@'
 		// for later base64 encoding.
-		image->addAttribute("@xlink:href", string("data:image/")+(suffix == ".png" ? "png" : "jpeg")+";base64,"+fname);
-
+		image->addAttribute("@xlink:href", "data:"+mimetype(fname)+";base64,"+fname);
 		// if set, assign clipping path to image
 		if (_clipStack.path()) {
 			auto group = util::make_unique<SVGElement>("g");

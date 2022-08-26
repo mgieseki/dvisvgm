@@ -66,6 +66,9 @@
 			<option long="comments">
 				<description>add comments with additional information</description>
 			</option>
+			<option long="embed-bitmaps">
+				<description>embed bitmap data instead of file references</description>
+			</option>
 			<option long="font-format" short="f" if="!defined(DISABLE_WOFF)">
 				<arg type="string" name="format" default="svg"/>
 				<description>set file format of embedded fonts</description>

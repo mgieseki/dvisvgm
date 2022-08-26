@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2022-08-15
+.\"      Date: 2022-08-26
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.14
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2022\-08\-15" "dvisvgm 2\&.14" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2022\-08\-26" "dvisvgm 2\&.14" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -297,6 +297,15 @@ predefined colors (\m[blue]https://www.w3.org/TR/SVG11/types.html#ColorKeywords\
 \fB\-\-comments\fR
 .RS 4
 Adds comments with further information about selected data to the SVG file\&. Currently, only font elements and font CSS rules related to native fonts are annotated\&.
+.RE
+.PP
+\fBembed\-bitmaps\fR
+.RS 4
+Embeds the contents of bitmap files into the generated SVG files instead of adding file references\&. Because of the base64\-encoded data, the SVG files are usually much bigger but at the same time more portable because they don\(cqt rely on external bitmap files\&.
+.sp
+This option only affects bitmaps referenced in DVI/XDV files, e\&.g\&. added by
+\fB\eincludegraphics\fR\&. Bitmaps in PostScript or PDF files are always embedded\&. Also see option
+\fBbitmap\-format\fR\&.
 .RE
 .PP
 \fB\-E, \-\-eps\fR

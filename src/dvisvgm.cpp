@@ -371,6 +371,7 @@ static void set_variables (const CommandLine &cmdline) {
 	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, cmdline.gradSegmentsOpt.value());
 	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = cmdline.gradSimplifyOpt.value();
 	PsSpecialHandler::BITMAP_FORMAT = util::tolower(cmdline.bitmapFormatOpt.value());
+	PsSpecialHandler::EMBED_BITMAP_DATA = cmdline.embedBitmapsOpt.given();
 	if (!PSInterpreter::imageDeviceKnown(PsSpecialHandler::BITMAP_FORMAT)) {
 		ostringstream oss;
 		oss << "unknown image format '" << PsSpecialHandler::BITMAP_FORMAT << "'\nknown formats:\n";

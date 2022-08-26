@@ -35,6 +35,7 @@ class CommandLine : public CL::CommandLine {
 		Option colorOpt {"color", '\0', "colorize messages"};
 		Option colornamesOpt {"colornames", '\0', "prefer color names to RGB values if possible"};
 		Option commentsOpt {"comments", '\0', "add comments with additional information"};
+		Option embedBitmapsOpt {"embed-bitmaps", '\0', "embed bitmap data instead of file references"};
 		Option epsOpt {"eps", 'E', "convert EPS file to SVG"};
 		Option exactBboxOpt {"exact-bbox", 'e', "compute exact glyph bounding boxes"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> fontFormatOpt {"font-format", 'f', "format", "svg", "set file format of embedded fonts"};
@@ -106,6 +107,7 @@ class CommandLine : public CL::CommandLine {
 #endif
 			{&colornamesOpt, 1},
 			{&commentsOpt, 1},
+			{&embedBitmapsOpt, 1},
 #if !defined(DISABLE_WOFF)
 			{&fontFormatOpt, 1},
 #endif
