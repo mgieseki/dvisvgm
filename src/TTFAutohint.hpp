@@ -43,7 +43,7 @@ class TTFAutohint
 
 #ifdef HAVE_TTFAUTOHINT_H
 	private:
-		const unsigned char *_lastErrorMessage;
+		std::string _lastErrorMessage;  ///< message created by last call of 'autohint'
 #endif
 };
 

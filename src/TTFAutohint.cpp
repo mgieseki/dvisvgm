@@ -18,6 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <fstream>
+#include <memory>
 #include "TTFAutohint.hpp"
 
 using namespace std;
@@ -94,16 +96,43 @@ int TTFAutohint::autohint (const string &source, const string &target, bool rehi
 #endif
 	int ret=0;
 	if (fn) {
-		FILE *ttf_in = fopen(source.c_str(), "rb");
-		FILE *ttf_out = fopen(target.c_str(), "wb");
-		ret = fn("in-file, out-file, default-script, error-string", ttf_in, ttf_out, "latn", &_lastErrorMessage);
-		if (ret == TA_Err_Missing_Glyph && rehintIfSymbolFont) {
-			fseek(ttf_in, 0, SEEK_SET);
-			fseek(ttf_out, 0, SEEK_SET);
-			ret = fn("in-file, out-file, symbol, error-string", ttf_in, ttf_out, true, &_lastErrorMessage);
+		_lastErrorMessage.clear();
+		ifstream ifs(source, ios::binary|ios::ate);
+		if (!ifs) {
+			_lastErrorMessage = "failed to open '"+source+"' for reading";
+			return -1;
 		}
-		fclose(ttf_out);
-		fclose(ttf_in);
+		size_t inbufSize = ifs.tellg();
+		ifs.seekg(0, ios::beg);
+		unique_ptr<char[]> inbuf(new char[inbufSize]);
+		if (!ifs.read(inbuf.get(), inbufSize)) {
+			_lastErrorMessage = "failed to read from '"+source+"'";
+			return -1;
+		}
+		char *outbuf = nullptr;
+		size_t outbufSize;
+		const unsigned char *errormsg=nullptr;
+		ret = fn("in-buffer, in-buffer-len, out-buffer, out-buffer-len, default-script, error-string, alloc-func",
+			inbuf.get(), inbufSize, &outbuf, &outbufSize, "latn", &errormsg, &std::malloc);
+		if (ret == TA_Err_Missing_Glyph && rehintIfSymbolFont) {
+			ifs.clear();
+			ifs.seekg(0, ios::beg);
+			std::free(outbuf);
+			ret = fn("in-buffer, in-buffer-len, out-buffer, out-buffer-len, symbol, error-string, alloc-func",
+				inbuf.get(), inbufSize, &outbuf, &outbufSize, true, &errormsg, &std::malloc);
+		}
+		if (ret == 0) {
+			ofstream ofs(target, ios::binary);
+			if (ofs)
+				ofs.write(outbuf, outbufSize);
+			else {
+				_lastErrorMessage = "failed to open '"+target+"' for writing";
+				return -1;
+			}
+		}
+		else if (errormsg)
+			_lastErrorMessage = reinterpret_cast<const char*>(errormsg);
+		std::free(outbuf);
 	}
 	return ret;
 }
@@ -111,10 +140,7 @@ int TTFAutohint::autohint (const string &source, const string &target, bool rehi
 
 /** Returns the error message of the last autohint call. */
 string TTFAutohint::lastErrorMessage () const {
-	string message;
-	if (_lastErrorMessage)
-		message = reinterpret_cast<const char*>(_lastErrorMessage);
-	return message;
+	return _lastErrorMessage;
 }
 
 
