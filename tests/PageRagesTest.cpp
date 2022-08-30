@@ -154,10 +154,43 @@ TEST(PageRangesTest, overlap4) {
 }
 
 
+TEST(PageRangesTest, even1) {
+	PageRanges pr;
+	ASSERT_TRUE(pr.parse("3-7, 1, 6-9:even"));
+	EXPECT_EQ(pr.size(), 3u);
+	Range cmp[] = {{4,4},{6,6},{8,8}};
+	EXPECT_TRUE(is_equal(pr, cmp));
+}
+
+
+TEST(PageRangesTest, even2) {
+	PageRanges pr;
+	ASSERT_TRUE(pr.parse("1,3,5:even"));
+	EXPECT_EQ(pr.size(), 0u);
+}
+
+
+TEST(PageRangesTest, odd1) {
+	PageRanges pr;
+	ASSERT_TRUE(pr.parse("3-7, 1, 6-9:odd"));
+	EXPECT_EQ(pr.size(), 5u);
+	Range cmp[] = {{1,1},{3,3},{5,5},{7,7},{9,9}};
+	EXPECT_TRUE(is_equal(pr, cmp));
+}
+
+
+TEST(PageRangesTest, odd2) {
+	PageRanges pr;
+	ASSERT_TRUE(pr.parse("2,8,10:odd"));
+	EXPECT_EQ(pr.size(), 0u);
+}
+
+
 TEST(PageRangesTest, error) {
 	PageRanges pr;
-	ASSERT_FALSE(pr.parse("x"));
-	ASSERT_FALSE(pr.parse("5-x"));
-	ASSERT_FALSE(pr.parse("5 6"));
-	ASSERT_FALSE(pr.parse("5,"));
+	EXPECT_FALSE(pr.parse("x"));
+	EXPECT_FALSE(pr.parse("5-x"));
+	EXPECT_FALSE(pr.parse("5 6"));
+	EXPECT_FALSE(pr.parse("5,"));
+	EXPECT_FALSE(pr.parse("1-9:dummy"));
 }

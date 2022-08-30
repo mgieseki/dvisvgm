@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-08-26 15:44 +0200
+:revdate: 2022-08-30 13:57 +0200
 
 Name
 ----
@@ -507,6 +507,7 @@ list of single page numbers and/or page ranges. A page range is a pair of number
 a hyphen, e.g. 5-12. Thus, a page sequence might look like this: 2-4,6,9-12,15. It doesn't matter
 if a page is given more than once or if page ranges overlap. dvisvgm always extracts the page
 numbers in ascending order and converts them only once.
++
 In order to stay compatible with previous versions, the default page sequence is 1. dvisvgm
 therefore converts only the first page and not the whole document if option *--page* is omitted.
 Usually, page ranges consist of two numbers denoting the first and last page to be converted.
@@ -516,6 +517,10 @@ pages up to page 10, +--page=10-+ converts all pages starting with page 10.
 Please consider that the page values don't refer to the page numbers printed on the
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.
++
+At the end of the range sequence an optional filter specifier can be added. Currently, the two
+filters +:even+ and +:odd+ are supported which restrict the preceding values to even or odd
+numbers. For example, +--page=1-11,20:even+ is equivalent to +--page=2,4,6,8,10,20+.
 
 *-H, --page-hashes*[='params']::
 If this option is given, dvisvgm computes hash values of all pages to be processed. As long as the

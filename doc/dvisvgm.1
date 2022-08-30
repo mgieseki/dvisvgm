@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2022-08-26
+.\"      Date: 2022-08-30
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 2.14
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2022\-08\-26" "dvisvgm 2\&.14" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2022\-08\-30" "dvisvgm 2\&.14" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -754,13 +754,24 @@ is a single\-page document\&. Otherwise, multiple SVG files
 .RS 4
 This option selects the pages to be processed\&. Parameter
 \fIranges\fR
-consists of a comma\-separated list of single page numbers and/or page ranges\&. A page range is a pair of numbers separated by a hyphen, e\&.g\&. 5\-12\&. Thus, a page sequence might look like this: 2\-4,6,9\-12,15\&. It doesn\(cqt matter if a page is given more than once or if page ranges overlap\&. dvisvgm always extracts the page numbers in ascending order and converts them only once\&. In order to stay compatible with previous versions, the default page sequence is 1\&. dvisvgm therefore converts only the first page and not the whole document if option
+consists of a comma\-separated list of single page numbers and/or page ranges\&. A page range is a pair of numbers separated by a hyphen, e\&.g\&. 5\-12\&. Thus, a page sequence might look like this: 2\-4,6,9\-12,15\&. It doesn\(cqt matter if a page is given more than once or if page ranges overlap\&. dvisvgm always extracts the page numbers in ascending order and converts them only once\&.
+.sp
+In order to stay compatible with previous versions, the default page sequence is 1\&. dvisvgm therefore converts only the first page and not the whole document if option
 \fB\-\-page\fR
 is omitted\&. Usually, page ranges consist of two numbers denoting the first and last page to be converted\&. If the conversion should start at page 1, or if it should continue up to the last DVI page, the first or second range number can be omitted, respectively\&. Example:
 \fB\-\-page=\-10\fR
 converts all pages up to page 10,
 \fB\-\-page=10\-\fR
 converts all pages starting with page 10\&. Please consider that the page values don\(cqt refer to the page numbers printed on the corresponding page\&. Instead, the physical page count is expected, where the first page always gets number 1\&.
+.sp
+At the end of the range sequence an optional filter specifier can be added\&. Currently, the two filters
+\fB:even\fR
+and
+\fB:odd\fR
+are supported which restrict the preceding values to even or odd numbers\&. For example,
+\fB\-\-page=1\-11,20:even\fR
+is equivalent to
+\fB\-\-page=2,4,6,8,10,20\fR\&.
 .RE
 .PP
 \fB\-H, \-\-page\-hashes\fR[=\fIparams\fR]
