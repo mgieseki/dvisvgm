@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-08-30 13:57 +0200
+:revdate: 2022-09-01 12:49 +0200
 
 Name
 ----
@@ -610,8 +610,15 @@ system's temporary folder by default, e.g. +/tmp+ on Linux systems. Option *--tm
 to specify a different location. Please note that dvisvgm does not create this folder if it doesn't
 exist. Therefore, you must ensure that it's actually present before running dvisvgm.
 +
-If the optional parameter 'path' is omitted, dvisvgm prints the location of the system's
-temp folder and exits.
+In order to prevent colliding files caused by parallel calls of dvisvgm, the program doesn't write
+the files directly in the specified directory but furthermore creates a uniquely named subfolder in
+there, where the temporary files will be placed. This can be prevented by appending +//+ or +\\+
+(on Windows) to the specified directory name. For example, +--tmpdir=.//+ creates the temporary files
+directly in the current working directory, while +--tmpdir=.+ places them in a dedicated subfolder of
+the current working directory.
++
+If the optional parameter 'path' of option *--tmpdir* is omitted, dvisvgm prints the location of the
+system's temp folder and exits.
 
 *-a, --trace-all*=['retrace']::
 This option forces dvisvgm to vectorize not only the glyphs actually required to render the

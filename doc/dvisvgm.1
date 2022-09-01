@@ -7,7 +7,7 @@
 .\"    Source: dvisvgm 2.14
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2022\-08\-30" "dvisvgm 2\&.14" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2022\-09\-01" "dvisvgm 2\&.14" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -907,8 +907,20 @@ on Linux systems\&. Option
 \fB\-\-tmpdir\fR
 can be used to specify a different location\&. Please note that dvisvgm does not create this folder if it doesn\(cqt exist\&. Therefore, you must ensure that it\(cqs actually present before running dvisvgm\&.
 .sp
+In order to prevent colliding files caused by parallel calls of dvisvgm, the program doesn\(cqt write the files directly in the specified directory but furthermore creates a uniquely named subfolder in there, where the temporary files will be placed\&. This can be prevented by appending
+\fB//\fR
+or
+\fB\e\e\fR
+(on Windows) to the specified directory name\&. For example,
+\fB\-\-tmpdir=\&.//\fR
+creates the temporary files directly in the current working directory, while
+\fB\-\-tmpdir=\&.\fR
+places them in a dedicated subfolder of the current working directory\&.
+.sp
 If the optional parameter
 \fIpath\fR
+of option
+\fB\-\-tmpdir\fR
 is omitted, dvisvgm prints the location of the system\(cqs temp folder and exits\&.
 .RE
 .PP

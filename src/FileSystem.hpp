@@ -28,7 +28,7 @@ class FileSystem {
 	class TemporaryDirectory {
 		friend class FileSystem;
 		public:
-			TemporaryDirectory (const std::string &folder, std::string prefix);
+			TemporaryDirectory (const std::string &folder, std::string prefix, bool inplace=false);
 			TemporaryDirectory (TemporaryDirectory &&tmpdir) =default;
 			~TemporaryDirectory ();
 			TemporaryDirectory& operator = (TemporaryDirectory &&tmpdir) =default;
@@ -51,7 +51,7 @@ class FileSystem {
 #ifdef _WIN32
 		static std::string getcwd (char drive);
 #endif
-		static std::string tmpdir ();
+		static std::string tmpdir (bool inplace=false);
 		static bool chdir (const std::string &dir);
 		static bool exists (const std::string &fname);
 		static bool mkdir (const std::string &dirname);

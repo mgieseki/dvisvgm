@@ -207,12 +207,13 @@ const char* FileSystem::userdir () {
 }
 
 
-/** Returns the path of the temporary folder. */
-string FileSystem::tmpdir () {
+/** Returns the path of the temporary folder.
+ *  @param[in] inpace if true, don't create a uniquely named subfolder */
+string FileSystem::tmpdir (bool inplace) {
 	if (_tmpdir.path().empty()) {
 		string basedir;
 		if (!TMPDIR.empty())
-			basedir = TMPDIR;
+			basedir = ensureForwardSlashes(TMPDIR);
 		else {
 #ifdef _WIN32
 			char buf[MAX_PATH];
@@ -226,10 +227,14 @@ string FileSystem::tmpdir () {
 			else
 				basedir = "/tmp";
 #endif
-			if (basedir.back() == '/')
-				basedir.pop_back();
 		}
-		_tmpdir = TemporaryDirectory(basedir, PROGRAM_NAME);
+		if (basedir.length() > 2 && string(basedir.end()-2, basedir.end()) == "//") {
+			inplace = true;
+			basedir.pop_back();
+		}
+		if (basedir.front() != '/' && basedir.back() == '/')
+			basedir.pop_back();
+		_tmpdir = TemporaryDirectory(basedir, PROGRAM_NAME, inplace);
 	}
 	return _tmpdir.path();
 }
@@ -380,26 +385,34 @@ int FileSystem::collect (const std::string &dirname, vector<string> &entries) {
 }
 
 
-/** Creates a temporary directory in a given folder.
+/** Creates a temporary directory in a given folder or treats the given folder as temporary directory.
  *  @param[in] folder folder path in which the directory is to be created
- *  @param[in] prefix initial string of the directory name */
-FileSystem::TemporaryDirectory::TemporaryDirectory (const std::string &folder, string prefix) {
-	using namespace std::chrono;
-	auto now = system_clock::now().time_since_epoch();
-	auto now_ms = duration_cast<milliseconds>(now).count();
-	auto hash = XXH64HashFunction(to_string(now_ms)).digestValue();
-	if (!prefix.empty() && prefix.back() != '-')
-		prefix += "-";
-	for (int i=0; i < 10 && _path.empty(); i++) {
-		hash++;
-		stringstream oss;
-		oss << folder << '/' << prefix << hex << hash;
-		if (exists(oss.str()))
-			continue;
-		if (s_mkdir(oss.str()))
-			_path = oss.str() + "/";
-		else
-			break;
+ *  @param[in] prefix initial string of the directory name
+ *  @param[in] inplace if true, 'folder' is treated as temporary directory and no subfolder is created */
+FileSystem::TemporaryDirectory::TemporaryDirectory (const std::string &folder, string prefix, bool inplace) {
+	if (inplace) {
+		_path = folder;
+		if (!_path.empty() && _path.back() != '/')
+			_path.push_back('/');
+	}
+	else {
+		using namespace std::chrono;
+		auto now = system_clock::now().time_since_epoch();
+		auto now_ms = duration_cast<milliseconds>(now).count();
+		auto hash = XXH64HashFunction(to_string(now_ms)).digestValue();
+		if (!prefix.empty() && prefix.back() != '-')
+			prefix.push_back('-');
+		for (int i = 0; i < 10 && _path.empty(); i++) {
+			hash++;
+			stringstream oss;
+			oss << folder << '/' << prefix << hex << hash;
+			if (exists(oss.str()))
+				continue;
+			if (s_mkdir(oss.str()))
+				_path = oss.str() + "/";
+			else
+				break;
+		}
 	}
 }
 

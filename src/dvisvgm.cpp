@@ -156,7 +156,7 @@ static bool set_temp_dir (const CommandLine &args) {
 		if (!args.tmpdirOpt.value().empty())
 			FileSystem::TMPDIR = args.tmpdirOpt.value();
 		else {
-			cout << "temporary folder: " << FileSystem::tmpdir() << '\n';
+			cout << "temporary folder: " << FileSystem::tmpdir(true) << '\n';
 			return false;
 		}
 	}
