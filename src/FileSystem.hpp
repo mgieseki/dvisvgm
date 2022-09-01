@@ -47,6 +47,7 @@ class FileSystem {
 		static bool copy (const std::string &src, const std::string &dest, bool remove_src=false);
 		static uint64_t filesize (const std::string &fname);
 		static std::string ensureForwardSlashes (std::string path);
+		static std::string ensureSystemSlashes (std::string path);
 		static std::string getcwd ();
 #ifdef _WIN32
 		static std::string getcwd (char drive);

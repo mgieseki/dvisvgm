@@ -135,6 +135,14 @@ string FileSystem::ensureForwardSlashes (string path) {
 }
 
 
+string FileSystem::ensureSystemSlashes (string path) {
+#ifdef _WIN32
+	std::replace(path.begin(), path.end(), '/', PATHSEP);
+#endif
+	return path;
+}
+
+
 /** Returns the absolute path of the current working directory. */
 string FileSystem::getcwd () {
 	char buf[1024];
