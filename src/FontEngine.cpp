@@ -320,7 +320,7 @@ int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
 	if (_currentFace) {
 		for (int i=0; i < _currentFace->num_charmaps; i++) {
 			FT_CharMap charmap = _currentFace->charmaps[i];
-			charmapIDs.emplace_back(charmap->platform_id, charmap->encoding_id);
+			charmapIDs.emplace_back(uint8_t(charmap->platform_id), uint8_t(charmap->encoding_id));
 		}
 	}
 	return charmapIDs.size();
@@ -329,14 +329,14 @@ int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
 
 CharMapID FontEngine::setUnicodeCharMap () {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) == 0)
-		return CharMapID(_currentFace->charmap->platform_id, _currentFace->charmap->encoding_id);
+		return CharMapID(uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id));
 	return CharMapID();
 }
 
 
 CharMapID FontEngine::setCustomCharMap () {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) == 0)
-		return CharMapID(_currentFace->charmap->platform_id, _currentFace->charmap->encoding_id);
+		return CharMapID(uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id));
 	return CharMapID();
 }
 
