@@ -42,12 +42,15 @@ void XMLParser::setRootElement (XMLElement *root) {
  *  is supposed to finish the parsing of an XML subtree, parameter 'finish' must be set.
  *  @param[in] xml XML fragment to parse
  *  @param[in] finish if true, no more XML is expected and parsing is finished */
-void XMLParser::parse (const string &xml, bool finish) {
+void XMLParser::parse (string xml, bool finish) {
 	if (_elementStack.empty())  // no root element set?
 		return;
 	// collect/extract an XML fragment that only contains complete tags
 	// incomplete tags are held back
-	_xmlbuf += xml;
+	if (_xmlbuf.empty())
+		_xmlbuf.assign(std::move(xml));
+	else
+		_xmlbuf.append(xml);
 	string::size_type left=0;
 	try {
 		while (left != string::npos) {

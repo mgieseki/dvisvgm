@@ -283,7 +283,7 @@ void DvisvgmSpecialHandler::processRaw (InputReader &ir, SpecialActions &actions
 		if (!xml.empty()) {
 			evaluate_expressions(xml, actions);
 			expand_constants(xml, actions);
-			_pageParser.parse(xml);
+			_pageParser.parse(std::move(xml));
 		}
 	}
 }
@@ -295,7 +295,7 @@ void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &acti
 		if (!xml.empty()) {
 			evaluate_expressions(xml, actions);
 			expand_constants(xml, actions);
-			_defsParser.parse(xml);
+			_defsParser.parse(std::move(xml));
 		}
 	}
 }
@@ -327,9 +327,9 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
 			if (type == 'P')
-				_pageParser.parse(def);
+				_pageParser.parse(std::move(def));
 			else {          // type == 'D'
-				_defsParser.parse(def);
+				_defsParser.parse(std::move(def));
 				type = 'L';  // locked
 			}
 		}
