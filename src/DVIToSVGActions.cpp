@@ -216,10 +216,10 @@ void DVIToSVGActions::special (const string &spc, double dvi2bp, bool preprocess
  *  @param[in] c array with 10 components representing \\count0 ... \\count9. c[0] contains the
  *               current (printed) page number (may differ from page count) */
 void DVIToSVGActions::beginPage (unsigned pageno, const vector<int32_t>&) {
-	SpecialManager::instance().notifyBeginPage(pageno, *this);
 	_svg.newPage(++_pageCount);
 	_bbox = BoundingBox();  // clear bounding box
 	_boxes.clear();
+	SpecialManager::instance().notifyBeginPage(pageno, *this);
 }
 
 

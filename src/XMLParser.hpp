@@ -23,35 +23,36 @@
 
 #include <string>
 #include "MessageException.hpp"
-#include "SVGTree.hpp"
+#include "XMLNode.hpp"
 
 struct XMLParserException : MessageException {
 	explicit XMLParserException (const std::string &msg) : MessageException(msg) {}
 };
 
 class XMLParser {
-	using AppendFunc = void (SVGTree::*)(std::unique_ptr<XMLNode>);
-	using PushFunc = void (SVGTree::*)(std::unique_ptr<SVGElement>);
-	using PopFunc = void (SVGTree::*)();
-	using NameStack = std::vector<std::string>;
+	using ElementStack = std::vector<XMLElement*>;
 
 	public:
-		XMLParser (AppendFunc append, PushFunc push, PopFunc pop)
-				: _append(append), _pushContext(push), _popContext(pop) {}
-
-		void parse (const std::string &xml, SVGTree &svgTree, bool finish=false);
-		void finish (SVGTree &svgTree);
+		XMLParser () =default;
+		~XMLParser() =default;
+		explicit XMLParser (XMLElement *root) {setRootElement(root);}
+		void setRootElement (XMLElement *root);
+		void parse (const std::string &xml, bool finish=false);
+		void finish ();
 
 	protected:
-		void openElement (const std::string &tag, SVGTree &svgTree);
-		void closeElement (const std::string &tag, SVGTree &svgTree);
+		XMLElement* context () {return _elementStack.back();}
+		virtual void appendNode (std::unique_ptr<XMLNode> node);
+		virtual XMLElement* finishPushContext (std::unique_ptr<XMLElement> elem);
+		virtual void finishPopContext () {}
+		virtual XMLElement* openElement (const std::string &tag);
+		virtual void closeElement (const std::string &tag);
+		virtual XMLElement* createElementPtr (std::string name) const;
 
 	private:
-		AppendFunc _append;
-		PushFunc _pushContext;
-		PopFunc _popContext;
 		std::string _xmlbuf;
-		NameStack _nameStack;  ///< names of nested elements still missing a closing tag
+		std::unique_ptr<XMLElement> _root;  ///< element holding the parsed nodes
+		ElementStack _elementStack;         ///< elements not yet closed
 		bool _error=false;
 };
 

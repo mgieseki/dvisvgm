@@ -30,15 +30,20 @@ using namespace std;
 
 class MyDvisvgmSpecialHandler : public DvisvgmSpecialHandler {
 	public:
+		explicit MyDvisvgmSpecialHandler (EmptySpecialActions &actions) : _actions(actions) {}
 		void finishPreprocessing () {dviPreprocessingFinished();}
+		void beginPage ()           {dviBeginPage(0, _actions);}
 		void finishPage ()          {dviEndPage(0, _actions);}
 
 	protected:
-		EmptySpecialActions _actions;
+		EmptySpecialActions &_actions;
 };
 
 
 class DvisvgmSpecialTest : public ::testing::Test {
+	public:
+		DvisvgmSpecialTest () : handler(recorder) {}
+
 	protected:
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
@@ -59,7 +64,7 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				}
 
 			protected:
-				string toString (const XMLNode *node) const {
+				static string toString (const XMLNode *node) {
 					ostringstream oss;
 					if (node)
 						node->write(oss);
@@ -72,12 +77,13 @@ class DvisvgmSpecialTest : public ::testing::Test {
 
 		void SetUp () override {
 			recorder.clear();
+			handler.beginPage();
 			XMLElement::WRITE_NEWLINES = false;
 		}
 
 	protected:
-		MyDvisvgmSpecialHandler handler;
 		ActionsRecorder recorder;
+		MyDvisvgmSpecialHandler handler;
 };
 
 
