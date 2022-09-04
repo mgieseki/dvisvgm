@@ -23,8 +23,7 @@
 
 using namespace std;
 
-
-void XMLParser::setRootElement (XMLElement *root) {
+XMLElement* XMLParser::setRootElement (XMLElement *root) {
 	_elementStack.clear();
 	if (root)
 		_elementStack.push_back(root);
@@ -32,6 +31,20 @@ void XMLParser::setRootElement (XMLElement *root) {
 		_root = util::make_unique<XMLElement>("root");
 		_elementStack.push_back(_root.get());
 	}
+	return _elementStack.back();
+}
+
+
+/** Parses an XML fragment from an input stream. */
+void XMLParser::parse (istream &is) {
+	while (is) {
+		string buf;
+		buf.resize(1024);
+		is.read(&buf[0], 1024);
+		buf.resize(is.gcount());
+		parse(std::move(buf));
+	}
+	finish();
 }
 
 

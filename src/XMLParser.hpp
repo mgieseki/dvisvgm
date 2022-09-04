@@ -36,7 +36,8 @@ class XMLParser {
 		XMLParser () =default;
 		~XMLParser() =default;
 		explicit XMLParser (XMLElement *root) {setRootElement(root);}
-		void setRootElement (XMLElement *root);
+		XMLElement* setRootElement (XMLElement *root);
+		void parse (std::istream &is);
 		void parse (std::string xml, bool finish=false);
 		void finish ();
 
