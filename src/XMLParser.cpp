@@ -48,6 +48,37 @@ void XMLParser::parse (istream &is) {
 }
 
 
+static string::size_type find_end_of_tag (const string &str, string::size_type startpos) {
+	char attrval_delim = 0;
+	bool expect_attrval = false;
+	for (auto i=startpos; i < str.length(); i++) {
+		if (attrval_delim) {  // inside attrubute value?
+			if (str[i] == attrval_delim)  // end of attribute value?
+				attrval_delim = 0;
+		}
+		else if (str[i] == '>')
+			return i;
+		else if (str[i] == '"' || str[i] == '\'') { // start of attribute value?
+			if (expect_attrval)
+				attrval_delim = str[i];
+			else {
+				ostringstream oss;
+				oss << "misplaced " << str[i] << " inside tag";
+				throw XMLParserException(oss.str());
+			}
+		}
+		if (str[i] == '=') {
+			expect_attrval = true;
+			continue;
+		}
+		if (str[i] == '<')
+			throw XMLParserException("invalid '<' inside tag");
+		expect_attrval = false;
+	}
+	return string::npos;
+}
+
+
 /** Parses a fragment of XML code, creates corresponding XML nodes and adds them
  *  to an SVG tree. The code may be split and processed by several calls of this
  *  function. Incomplete chunks that can't be processed yet are stored and picked
@@ -108,7 +139,7 @@ void XMLParser::parse (string xml, bool finish) {
 					closeElement(_xmlbuf.substr(left+2, right-left-2));
 				}
 				else {
-					right = _xmlbuf.find('>', left+1);
+					right = find_end_of_tag(_xmlbuf, left+1);
 					if (right == string::npos) {
 						if (finish)	throw XMLParserException("missing '>' or '/>' at end of opening XML tag");
 						break;
