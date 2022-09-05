@@ -196,6 +196,10 @@ XMLElement* XMLParser::openElement (const string &tag) {
 		_elementStack.push_back(finishPushContext(std::move(elemNode)));
 	else
 		throw XMLParserException("'>' or '/>' expected at end of opening tag <"+name);
+	if (_notifyElementOpened)
+		_notifyElementOpened(elemPtr);
+	if (ir.peek() == '/' && _notifyElementClosed)
+		_notifyElementClosed(elemPtr);
 	return elemPtr;
 }
 
@@ -214,6 +218,8 @@ void XMLParser::closeElement (const string &tag) {
 	if (_elementStack.back()->name() != name)
 		throw XMLParserException("expected </" + _elementStack.back()->name() + "> but found </" + name + ">");
 	finishPopContext();
+	if (_notifyElementClosed)
+		_notifyElementClosed(_elementStack.back());
 	_elementStack.pop_back();
 }
 
@@ -240,4 +246,10 @@ void XMLParser::finish () {
 
 XMLElement* XMLParser::createElementPtr (std::string name) const {
 	return new XMLElement(std::move(name));
+}
+
+
+void XMLParser::setNotifyFuncs (NotifyFunc &notifyElementOpened, NotifyFunc &notifyElementClosed) {
+	_notifyElementOpened = notifyElementOpened;
+	_notifyElementClosed = notifyElementClosed;
 }

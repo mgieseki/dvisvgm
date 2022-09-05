@@ -21,6 +21,7 @@
 #ifndef XMLPARSER_HPP
 #define XMLPARSER_HPP
 
+#include <functional>
 #include <string>
 #include "MessageException.hpp"
 #include "XMLNode.hpp"
@@ -31,6 +32,7 @@ struct XMLParserException : MessageException {
 
 class XMLParser {
 	using ElementStack = std::vector<XMLElement*>;
+	using NotifyFunc = std::function<void(XMLElement*)>;
 
 	public:
 		XMLParser () =default;
@@ -40,6 +42,7 @@ class XMLParser {
 		void parse (std::istream &is);
 		void parse (std::string xml, bool finish=false);
 		void finish ();
+		void setNotifyFuncs (NotifyFunc &notifyElementOpened, NotifyFunc &notifyElementClosed);
 
 	protected:
 		XMLElement* context () {return _elementStack.back();}
@@ -55,6 +58,9 @@ class XMLParser {
 		std::unique_ptr<XMLElement> _root;  ///< element holding the parsed nodes
 		ElementStack _elementStack;         ///< elements not yet closed
 		bool _error=false;
+		std::function<void(XMLElement*)> _notifyElementOpened;
+		std::function<void(XMLElement*)> _notifyElementClosed;
+
 };
 
 #endif
