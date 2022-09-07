@@ -177,7 +177,7 @@ bool Subprocess::run (const string &cmd, string paramstr) {
 		startupInfo.dwFlags = STARTF_USESTDHANDLES;
 		startupInfo.hStdInput = nullFile;
 		startupInfo.hStdOutput = pipeWriteHandle;
-		startupInfo.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+		startupInfo.hStdError = pipeWriteHandle;
 
 		PROCESS_INFORMATION processInfo;
 		ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
