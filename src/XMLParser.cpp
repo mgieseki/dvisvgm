@@ -67,11 +67,11 @@ static string::size_type find_end_of_tag (const string &str, string::size_type s
 				throw XMLParserException(oss.str());
 			}
 		}
-		if (str[i] == '=') {
+		else if (str[i] == '=') {
 			expect_attrval = true;
 			continue;
 		}
-		if (str[i] == '<')
+		else if (str[i] == '<')
 			throw XMLParserException("invalid '<' inside tag");
 		expect_attrval = false;
 	}
@@ -99,8 +99,10 @@ void XMLParser::parse (string xml, bool finish) {
 	try {
 		while (left != string::npos) {
 			auto right = _xmlbuf.find('<', left);
-			if (left < right && left < _xmlbuf.length())  // plain text found?
-				appendNode(util::make_unique<XMLText>(_xmlbuf.substr(left, right-left)));
+			if (left < right && left < _xmlbuf.length())  {// plain text found?
+				string text = (right == string::npos ? _xmlbuf.substr(left) : _xmlbuf.substr(left, right-left));
+				appendNode(util::make_unique<XMLText>(std::move(text)));
+			}
 			if (right != string::npos) {
 				left = right;
 				if (_xmlbuf.compare(left, 9, "<![CDATA[") == 0) {
