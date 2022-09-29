@@ -280,22 +280,6 @@ int FontEngine::charIndex (const Character &c) const {
 }
 
 
-/** Get first available character of the current font face. */
-int FontEngine::getFirstChar () const {
-	if (_currentFace)
-		return _currentChar = FT_Get_First_Char(_currentFace, &_currentGlyphIndex);
-	return 0;
-}
-
-
-/** Get the next available character of the current font face. */
-int FontEngine::getNextChar () const {
-	if (_currentFace && _currentGlyphIndex)
-		return _currentChar = FT_Get_Next_Char(_currentFace, _currentChar, &_currentGlyphIndex);
-	return getFirstChar();
-}
-
-
 /** Returns the number of glyphs present in the current font face. */
 int FontEngine::getNumGlyphs () const {
 	return _currentFace ? _currentFace->num_glyphs : 0;

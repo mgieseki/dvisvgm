@@ -57,15 +57,12 @@ class FontEngine {
 		int getWidth (const Character &c) const;
 		int getHeight (const Character &c) const;
 		int getDepth (const Character &c) const;
-		int getFirstChar () const;
-		int getNextChar () const;
 		int getCharMapIDs (std::vector<CharMapID> &charmapIDs) const;
 		int getNumGlyphs () const;
 		CharMapID setUnicodeCharMap ();
 		CharMapID setCustomCharMap ();
 		std::vector<int> getPanose () const;
 		std::string getGlyphName (const Character &c) const;
-		int getCharByGlyphName (const char *name) const;
 		bool setCharMap (const CharMapID &charMapID);
 		void buildGidToCharCodeMap (RangeMap &charmap);
 		std::unique_ptr<const RangeMap> createCustomToUnicodeMap ();
@@ -76,7 +73,6 @@ class FontEngine {
 		int charIndex (const Character &c) const;
 
 	private:
-		mutable unsigned int _currentChar=0, _currentGlyphIndex=0;
 		FT_Face _currentFace = nullptr;
 		FT_Library _library;
 		const Font *_currentFont = nullptr;
