@@ -21,6 +21,7 @@
 #ifndef UNICODE_HPP
 #define UNICODE_HPP
 
+#include <cstdint>
 #include <string>
 
 struct Unicode {
