@@ -350,9 +350,7 @@ void DVIToSVG::embedFonts (XMLElement *svgElement) {
 	if (!svgElement || !_actions) // no dvi actions => no chars written => no fonts to embed
 		return;
 
-	const DVIToSVGActions *svgActions = static_cast<DVIToSVGActions*>(_actions.get());
-	auto &usedCharsMap = svgActions->getUsedChars();
-
+	auto &usedCharsMap = FontManager::instance().getUsedChars();
 	collect_chars(usedCharsMap);
 
 	GlyphTracerMessages messages;
@@ -374,7 +372,7 @@ void DVIToSVG::embedFonts (XMLElement *svgElement) {
 		else
 			Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 	}
-	_svg.appendFontStyles(svgActions->getUsedFonts());
+	_svg.appendFontStyles(FontManager::instance().getUsedFonts());
 }
 
 

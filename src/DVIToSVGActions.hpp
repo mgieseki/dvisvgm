@@ -37,8 +37,6 @@ class Font;
 class XMLNode;
 
 class DVIToSVGActions : public DVIActions, public SpecialActions {
-	using CharMap = std::unordered_map<const Font*, std::set<int>>;
-	using FontSet = std::unordered_set<const Font*>;
 	using BoxMap = std::unordered_map<std::string,BoundingBox>;
 
 	public:
@@ -80,8 +78,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		void embed (const DPair &p, double r=0) override;
 		FilePath getSVGFilePath (unsigned pageno) const override;
 		std::string getBBoxFormatString () const override;
-		CharMap& getUsedChars () const        {return _usedChars;}
-		const FontSet& getUsedFonts () const  {return _usedFonts;}
 		void setDVIReader (BasicDVIReader &r) {_dvireader = &r;}
 
 	private:
@@ -90,8 +86,6 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		BoundingBox _bbox;
 		int _pageCount=0;
 		int _currentFontNum=-1;
-		mutable CharMap _usedChars;
-		FontSet _usedFonts;
 		Color _bgcolor=Color::TRANSPARENT;
 		BoxMap _boxes;
 		bool _outputLocked=false;

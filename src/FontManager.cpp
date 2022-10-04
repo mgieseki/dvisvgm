@@ -28,6 +28,7 @@
 #include "FileFinder.hpp"
 #include "FileSystem.hpp"
 #include "Message.hpp"
+#include "SVGTree.hpp"
 
 using namespace std;
 
@@ -322,6 +323,18 @@ void FontManager::leaveVF () {
 void FontManager::assignVFChar (int c, vector<uint8_t> &&dvi) {
 	if (!_vfStack.empty())
 		_vfStack.top()->assignChar(c, std::move(dvi));
+}
+
+
+void FontManager::addUsedChar (const Font &font, int c) {
+	_usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(c);
+	_usedFonts.insert(&font);
+}
+
+
+void FontManager::resetUsedChars () {
+	_usedChars.clear();
+	_usedFonts.clear();
 }
 
 

@@ -33,8 +33,7 @@ using namespace std;
 
 
 void DVIToSVGActions::reset() {
-	_usedChars.clear();
-	_usedFonts.clear();
+	FontManager::instance().resetUsedChars();
 	_bbox = BoundingBox();
 	_currentFontNum = -1;
 	_bgcolor = Color::TRANSPARENT;
@@ -93,10 +92,7 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 	// record font names and chars. The various font sizes can be ignored here.
 	// For a given font object, Font::uniqueFont() returns the same unique font object for
 	// all fonts with the same name.
-	_usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(c);
-
-	// However, we record all required fonts
-	_usedFonts.insert(&font);
+	FontManager::instance().addUsedChar(font, c);
 	_svg.appendChar(c, x, y);
 
 	static string fontname;

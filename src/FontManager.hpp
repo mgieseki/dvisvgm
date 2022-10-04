@@ -27,6 +27,7 @@
 #include <string>
 #include <stack>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include "Color.hpp"
 #include "FontStyle.hpp"
@@ -42,6 +43,8 @@ class VirtualFont;
  *  virtual fonts are completely replaced by their DVI description so they don't
  *  appear anywhere in the output. */
 class FontManager {
+	using CharMap = std::unordered_map<const Font*, std::set<int>>;
+	using FontSet = std::unordered_set<const Font*>;
 	using Num2IdMap = std::unordered_map<uint32_t, int>;
 	using Name2IdMap = std::unordered_map<std::string, int>;
 	using VfNum2IdMap = std::unordered_map<const VirtualFont*, Num2IdMap>;
@@ -54,6 +57,7 @@ class FontManager {
 		int registerFont (uint32_t fontnum, const std::string &fontname, uint32_t checksum, double dsize, double scale);
 		int registerFont (uint32_t fontnum, const std::string &fname, double ptsize, const FontStyle &style, Color color);
 		int registerFont (uint32_t fontnum, std::string fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
+//		int registerFont (const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
 		Font* getFont (int n) const;
 		Font* getFont (const std::string &name) const;
 		Font* getFontById (int id) const;
@@ -67,6 +71,10 @@ class FontManager {
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
 		void assignVFChar (int c, std::vector<uint8_t> &&dvi);
+		void addUsedChar (const Font &font, int c);
+		void resetUsedChars ();
+		CharMap& getUsedChars ()  {return _usedChars;}
+		FontSet& getUsedFonts ()  {return _usedFonts;}
 		std::ostream& write (std::ostream &os, Font *font=nullptr, int level=0);
 
 	protected:
@@ -80,6 +88,8 @@ class FontManager {
 		VfStack        _vfStack;   ///< stack of currently processed virtual fonts
 		VfFirstFontNumMap _vfFirstFontNumMap; ///< VF -> local font number of first font defined in VF
 		VfFirstFontMap _vfFirstFontMap;       ///< VF -> first font defined
+		CharMap _usedChars;
+		FontSet _usedFonts;
 };
 
 #endif
