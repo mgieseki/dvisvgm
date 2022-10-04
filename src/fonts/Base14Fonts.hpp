@@ -1,5 +1,5 @@
 /*************************************************************************
-** PDFToSVG.hpp                                                         **
+** Base14Fonts.hpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,32 +18,15 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#ifndef PDFTOSVG_HPP
-#define PDFTOSVG_HPP
+#pragma once
 
-#include <fstream>
-#include "ImageToSVG.hpp"
-#include "PDFHandler.hpp"
+#include <cstddef>
+#include <string>
 
-
-class PDFToSVG : public ImageToSVG {
-	public:
-		PDFToSVG (const std::string &fname, SVGOutputBase &out);
-		bool isSinglePageFormat() const override {return false;}
-		int totalPageCount() const override;
-		void convert (int pageno) override;
-
-	protected:
-		void checkGSAndFileFormat () override;
-		bool imageIsValid () const override;
-		std::string imageFormat () const override {return "PDF";}
-		BoundingBox imageBBox () const override {return {};}
-		std::string psSpecialCmd () const override {return "pdffile=";}
-
-	private:
-		mutable int _totalPageCount = -1;
-		PDFHandler _pdfHandler;
-		bool _useGS = true;
+struct MemoryFontData {
+	MemoryFontData () =delete;
+	const char *data;
+	size_t size;
 };
 
-#endif
+const MemoryFontData* find_base14_font (const std::string &name);

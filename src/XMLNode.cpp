@@ -63,6 +63,14 @@ unique_ptr<XMLNode> XMLNode::removeNext () {
 	return oldnext;
 }
 
+
+XMLElement* XMLNode::nextElement () const {
+	for (XMLNode *node = next(); node; node = node->next())
+		if (node->toElement())
+			return node->toElement();
+	return nullptr;
+}
+
 /////////////////////////////////////////////////////////////////////
 
 XMLElement::XMLElement (string name) : _name(std::move(name)) {

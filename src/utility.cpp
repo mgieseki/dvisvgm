@@ -223,6 +223,26 @@ void util::write_file_contents (const string &fname, string::iterator start, str
 	copy(start, end, ostream_iterator<char>(ofs));
 }
 
+
+string util::mimetype (const string &fname) {
+	string ret;
+	auto pos = fname.rfind('.');
+	if (pos != string::npos) {
+		string suffix = fname.substr(pos+1);
+		if (suffix == "svg")
+			ret = "svg+xml";
+		else if (suffix == "png" || suffix == "gif")
+			ret = suffix;
+		else if (suffix == "jpg" || suffix == "jpeg")
+			ret = "jpeg";
+		else if (suffix == "tif" || suffix == "tiff")
+			ret = "tiff";
+	}
+	if (!ret.empty())
+		ret = "image/"+ret;
+	return ret;
+}
+
 ///////////////////////////////////////////////////////////////////////
 
 static bool is_leap_year (int year) {

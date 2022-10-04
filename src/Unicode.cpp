@@ -114,6 +114,32 @@ string Unicode::utf8 (int32_t cp) {
 }
 
 
+uint32_t Unicode::utf8ToCodepoint (const string &utf8) {
+	auto len = utf8.length();
+	if (len > 0) {
+		unsigned char c0 = utf8[0];
+		if (c0 >= 0 && c0 <= 127)
+			return c0;
+		if (len > 1) {
+			unsigned char c1 = utf8[1];
+			if (c0 >= 0xC0 && c0 <= 0xDF)
+				return ((c0-0xC0) << 6) + (c1-0x80);
+			if (len > 2 && (c0 != 0xED || (c1 & 0xA0) != 0xA0)) {
+				unsigned char c2 = utf8[2];
+				if (c0 >= 0xE0 && c0 <= 0xEF)
+					return ((c0-0xE0) << 12) + ((c1-0x80) << 6) + (c2-0x80);
+				if (len > 3) {
+					unsigned char c3 = utf8[3];
+					if (c0 >= 0xF0 && c0 <= 0xF7)
+						return  ((c0-0xF0) << 18) + ((c1-0x80) << 12) + ((c2-0x80) << 6) + (c3-0x80);
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+
 /** Converts a surrogate pair to its code point.
  *  @param[in] high high-surrogate value (upper 16 bits)
  *  @param[in] low low-surrogate value (lower 16 bits)
@@ -147,6 +173,43 @@ uint32_t Unicode::toSurrogate (uint32_t cp) {
 	return (high << 16) | low;
 }
 
+
+uint32_t Unicode::toLigature (const string &nonlig) {
+	struct Ligature {
+		const char *nonlig;
+		uint32_t lig;
+	} ligatures[39] = {
+		{u8"AA",  0xA732}, {u8"aa", 0xA733},
+		{u8"AE",  0x00C6}, {u8"ae", 0x00E6},
+		{u8"AO",  0xA734}, {u8"ao", 0xA735},
+		{u8"AU",  0xA736}, {u8"au", 0xA737},
+		{u8"AV",  0xA738}, {u8"av", 0xA739},
+		{u8"AY",  0xA73C}, {u8"ay", 0xA73D},
+		{u8"et", 0x1F670},
+		{u8"ff",  0xFB00},
+		{u8"ffi", 0xFB03},
+		{u8"ffl", 0xFB04},
+		{u8"fi",  0xFB01},
+		{u8"fl",  0xFB02},
+		{u8"Hv",  0x01F6}, {u8"hv", 0x0195},
+		{u8"lb",  0x2114},
+		{u8"lL",  0x1EFA}, {u8"ll", 0x1EFB},
+		{u8"OE",  0x0152}, {u8"oe", 0x0153},
+		{u8"OO",  0xA74E}, {u8"oo", 0xA74F},
+		{u8"OO",  0xA74E},
+		{u8"\u0254e", 0xAB62},
+		{u8"\u017Fs", 0x1E9E}, {u8"\u017Az", 0x00DF},
+		{u8"Tz",  0xA728}, {u8"tz",  0xA729},
+		{u8"ue",  0x1D6B},
+		{u8"uo",  0xAB63},
+		{u8"VV",  0x0057}, {u8"tz",  0x0077},
+		{u8"VY",  0xA760}, {u8"tz",  0xA761},
+	};
+	auto it = find_if(begin(ligatures), end(ligatures), [&nonlig](const Ligature &l) {
+		return l.nonlig == nonlig;
+	});
+	return it != end(ligatures) ? it->lig : 0;
+}
 
 #include "AGLTable.hpp"
 

@@ -231,6 +231,7 @@ AC_CONFIG_FILES([
 	m4/Makefile
 	src/Makefile
 	src/version.hpp
+	src/fonts/Makefile
 	src/optimizer/Makefile
 	src/ttf/Makefile
 	tests/Makefile

@@ -50,7 +50,7 @@ class SpecialActions {
 		virtual void setOpacity (const Opacity &opacity) =0;
 		virtual const Opacity& getOpacity () const =0;
 		virtual const SVGTree& svgTree () const =0;
-		SVGTree& svgTree () {return const_cast<SVGTree&>(const_cast<const SpecialActions*>(this)->svgTree());}
+		virtual SVGTree& svgTree () {return const_cast<SVGTree&>(const_cast<const SpecialActions*>(this)->svgTree());}
 		virtual BoundingBox& bbox () =0;
 		virtual BoundingBox& bbox (const std::string &name, bool reset=false) =0;
 		virtual void embed (const BoundingBox &bbox) =0;

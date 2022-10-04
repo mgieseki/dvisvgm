@@ -40,6 +40,7 @@
 #include "HyperlinkManager.hpp"
 #include "Message.hpp"
 #include "PageSize.hpp"
+#include "PDFHandler.hpp"
 #include "PDFToSVG.hpp"
 #include "PSInterpreter.hpp"
 #include "PsSpecialHandler.hpp"
@@ -269,6 +270,7 @@ static void print_version (bool extended) {
 		versionInfo.add("xxhash", XXH64HashFunction::version(), 3, 100);
 		versionInfo.add("zlib", zlibVersion());
 		versionInfo.add("Ghostscript", Ghostscript().revisionstr(), true);
+		versionInfo.add("mutool", PDFHandler::mutoolVersion(), true);
 #ifndef DISABLE_WOFF
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
 //		versionInfo.add("woff2", woff2::version, 3, 0x100);

@@ -111,7 +111,7 @@ class RangeMap {
 	};
 
 	public:
-		void addRange (uint32_t first, uint32_t last, uint32_t cid);
+		void addRange (uint32_t cmin, uint32_t cmax, uint32_t vmin);
 		bool valueExists (uint32_t c) const  {return lookup(c) >= 0;}
 		uint32_t valueAt (uint32_t c) const;
 		uint32_t minKey () const               {return _ranges.empty() ? 0 : _ranges.front().min();}

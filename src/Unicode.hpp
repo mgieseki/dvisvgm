@@ -27,9 +27,11 @@ struct Unicode {
 	static bool isValidCodepoint (uint32_t code);
 	static uint32_t charToCodepoint (uint32_t c);
 	static std::string utf8 (int32_t c);
+	static uint32_t utf8ToCodepoint (const std::string &utf8);
 	static uint32_t fromSurrogate (uint32_t high, uint32_t low);
 	static uint32_t fromSurrogate (uint32_t cp);
 	static uint32_t toSurrogate (uint32_t cp);
+	static uint32_t toLigature (const std::string &nonlig);
 	static int32_t aglNameToCodepoint (const std::string &name);
 };
 

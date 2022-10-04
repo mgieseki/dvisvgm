@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <cstdlib>
-#include <fstream>
 #include <set>
 #include <sstream>
 #include "CMap.hpp"
@@ -320,6 +320,14 @@ std::string PhysicalFont::styleName () const {
 }
 
 
+int PhysicalFont::charIndexByName(const string &charname) const {
+	if (charname.empty())
+		return 0;
+	FontEngine::instance().setFont(*this);
+	return FontEngine::instance().getCharIndexByGlyphName(charname.c_str());
+}
+
+
 /** Extracts the glyph outlines of a given character.
  *  @param[in]  c character code of requested glyph
  *  @param[out] glyph path segments of the glyph outline
@@ -600,7 +608,7 @@ PhysicalFont::Type NativeFont::type () const {
 				return PhysicalFont::Type::OTF;
 			if (ext == "ttf")
 				return PhysicalFont::Type::TTF;
-			if (ext == "pfb")
+			if (ext == "pfb" || ext == "pfa")
 				return PhysicalFont::Type::PFB;
 		}
 	}
@@ -611,7 +619,7 @@ PhysicalFont::Type NativeFont::type () const {
 double NativeFont::charWidth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(Character(Character::INDEX, c))/upem*_style.extend) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(decodeChar(c))/upem*_style.extend) : 0;
 }
 
 
@@ -625,14 +633,23 @@ double NativeFont::italicCorr(int c) const {
 double NativeFont::charHeight (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getHeight(Character(Character::INDEX, c))/upem) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getHeight(decodeChar(c))/upem) : 0;
 }
 
 
 double NativeFont::charDepth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getDepth(Character(Character::INDEX, c))/upem) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getDepth(decodeChar(c))/upem) : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+NativeFontImpl::NativeFontImpl (string fname, string fontname, double ptsize)
+	: NativeFont(ptsize, FontStyle(), Color::BLACK), _path(std::move(fname)), _name(std::move(fontname))
+{
+	// plus characters (as appended to subset prefixes) are not allowed in font/family names
+	std::replace(_name.begin(), _name.end(), '+', '-');
 }
 
 
@@ -648,13 +665,18 @@ bool NativeFontImpl::findAndAssignBaseFontMap () {
 
 
 Character NativeFontImpl::decodeChar (uint32_t c) const {
-	return Character(Character::INDEX, c);
+	return {Character::INDEX, c};
 }
 
 
 uint32_t NativeFontImpl::unicode (uint32_t c) const {
 	uint32_t ucode = _toUnicodeMap.valueAt(c);
 	return Unicode::charToCodepoint(ucode);
+}
+
+
+void NativeFontImpl::mapCharToUnicode (uint32_t c, uint32_t codepoint) {
+	_toUnicodeMap.addRange(c, c, codepoint);
 }
 
 

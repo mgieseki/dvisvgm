@@ -68,7 +68,7 @@ vector<string> FontWriter::supportedFormats () {
 
 #ifdef DISABLE_WOFF
 // dummy functions used if WOFF support is disabled
-FontWriter::FontWriter (const PhysicalFont &font) : _font(font) {}
+FontWriter::FontWriter (const PhysicalFont &font) : _currentFont(font) {}
 std::string FontWriter::createFontFile (FontFormat format, const set<int> &charcodes, GFGlyphTracer::Callback *cb) const {return "";}
 bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes, ostream &os, GFGlyphTracer::Callback *cb) const {return false;}
 #else

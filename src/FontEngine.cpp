@@ -29,6 +29,7 @@
 #include "Font.hpp"
 #include "FontEngine.hpp"
 #include "FontStyle.hpp"
+#include "fonts/Base14Fonts.hpp"
 #include "Message.hpp"
 #include "utility.hpp"
 
@@ -88,7 +89,19 @@ string FontEngine::version () {
 bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
 	if (_currentFace && FT_Done_Face(_currentFace))
 		Message::estream(true) << "failed to release font\n";
-	if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
+	if (fname.size() <= 6 || fname.substr(0, 6) == "sys://") {
+		if (const MemoryFontData *data = find_base14_font(fname.substr(6))) {
+			FT_Open_Args args;
+			args.flags = FT_OPEN_MEMORY;
+			args.memory_base = reinterpret_cast<const FT_Byte*>(data->data);
+			args.memory_size = FT_Long(data->size);
+			if (FT_Open_Face(_library, &args, fontindex, &_currentFace)) {
+				Message::estream(true) << "can't read memory font " << fname << '\n';
+				return false;
+			}
+		}
+	}
+	else if (FT_New_Face(_library, fname.c_str(), fontindex, &_currentFace)) {
 		Message::estream(true) << "can't read font file " << fname << '\n';
 		return false;
 	}
@@ -185,6 +198,27 @@ const char* FontEngine::getStyleName () const {
 }
 
 
+/** Returns the PS name of the current font. */
+const char* FontEngine::getPSName () const {
+	return _currentFace ? FT_Get_Postscript_Name(_currentFace) : nullptr;
+}
+
+
+/** Returns the PS name of a font given by a file.
+ *  @param[in] fname name/path of the font file
+ *  @return the PS name */
+string FontEngine::getPSName (const string &fname) const {
+	string psname;
+	FT_Face face;
+	if (FT_New_Face(_library, fname.c_str(), 0, &face) == 0) {
+		if (const char *ptr = FT_Get_Postscript_Name(face))
+			psname = ptr;
+		FT_Done_Face(face);
+	}
+	return psname;
+}
+
+
 int FontEngine::getUnitsPerEM () const {
 	return _currentFace ? _currentFace->units_per_EM : 0;
 }
@@ -263,6 +297,13 @@ int FontEngine::getDepth (const Character &c) const {
 		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
 		return _currentFace->glyph->metrics.height - _currentFace->glyph->metrics.horiBearingY;
 	}
+	return 0;
+}
+
+
+int FontEngine::getCharIndexByGlyphName(const char *name) const {
+	if (_currentFace)
+		return int(FT_Get_Name_Index(_currentFace, name));
 	return 0;
 }
 

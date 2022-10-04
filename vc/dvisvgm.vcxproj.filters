@@ -24,6 +24,12 @@
     <Filter Include="Source Files\ttf">
       <UniqueIdentifier>{e5a10433-9776-43ca-97d3-50b07775bfb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\base14fonts">
+      <UniqueIdentifier>{1aa822ed-3e57-4fa1-979e-541b9f566f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\base14fonts">
+      <UniqueIdentifier>{86a9739b-3253-4e35-a202-1571d8e2605f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BgColorSpecialHandler.cpp">
@@ -381,6 +387,57 @@
       <Filter>Source Files\optimizer</Filter>
     </ClCompile>
     <ClCompile Include="..\src\XMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\Base14Fonts.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\Dingbats.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\StandardSymbolsPS.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PDFHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PDFToSVG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -776,6 +833,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\XMLParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fonts\Base14Fonts.hpp">
+      <Filter>Header Files\base14fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PDFHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

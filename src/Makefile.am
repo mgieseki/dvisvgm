@@ -5,7 +5,7 @@
 
 bin_PROGRAMS     = dvisvgm
 noinst_LTLIBRARIES = libdvisvgm.la
-SUBDIRS = optimizer
+SUBDIRS = fonts optimizer ttf
 
 dvisvgm_SOURCES = \
 	CommandLine.hpp \
@@ -111,9 +111,10 @@ libdvisvgm_la_SOURCES = \
 	Pair.hpp \
 	PapersizeSpecialHandler.hpp  PapersizeSpecialHandler.cpp \
 	PathClipper.hpp              PathClipper.cpp \
+	PDFHandler.hpp               PDFHandler.cpp \
 	PDFParser.hpp                PDFParser.cpp \
 	PdfSpecialHandler.hpp        PdfSpecialHandler.cpp \
-	PDFToSVG.hpp \
+	PDFToSVG.hpp                 PDFToSVG.cpp \
 	PreScanDVIReader.hpp         PreScanDVIReader.cpp \
 	Process.hpp                  Process.cpp \
 	psdefs.cpp \
@@ -161,7 +162,7 @@ libdvisvgm_la_SOURCES = \
 	XXHashFunction.hpp \
 	ZLibOutputStream.hpp
 
-libdvisvgm_la_LIBADD = optimizer/liboptimizer.la
+libdvisvgm_la_LIBADD = fonts/libbase14fonts.la optimizer/liboptimizer.la
 
 if ENABLE_WOFF
 libdvisvgm_la_LIBADD += ttf/libttf.la

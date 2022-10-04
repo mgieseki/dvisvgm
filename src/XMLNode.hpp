@@ -62,6 +62,7 @@ class XMLNode {
 		XMLNode* parent () const  {return _parent;}
 		XMLNode* prev () const    {return _prev;}
 		XMLNode* next () const    {return _next.get();}
+		XMLElement* nextElement () const;
 
 		static bool KEEP_ENCODED_FILES;
 

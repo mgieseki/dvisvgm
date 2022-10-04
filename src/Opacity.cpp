@@ -45,6 +45,50 @@ string Opacity::cssBlendMode (BlendMode bm) {
 }
 
 
+static string to_lower_drop_nonalpha (const string &str) {
+	string ret;
+	if (!str.empty()) {
+		ret.reserve(str.length());
+		for (char c : str) {
+			if (isalpha(c))
+				ret += char(tolower(c));
+		}
+	}
+	return ret;
+}
+
+
+Opacity::BlendMode Opacity::blendMode (const std::string &name) {
+	struct {
+		const char *name;
+		BlendMode mode;
+	} modes[] = {
+		{"normal",     BM_NORMAL    },
+		{"multiply",   BM_MULTIPLY  },
+		{"screen",     BM_SCREEN    },
+		{"overlay",    BM_OVERLAY   },
+		{"softlight",  BM_SOFTLIGHT },
+		{"hardlight",  BM_HARDLIGHT },
+		{"colordodge", BM_COLORDODGE},
+		{"colorburn",  BM_COLORBURN },
+		{"darken",     BM_DARKEN    },
+		{"lighten",    BM_LIGHTEN   },
+		{"difference", BM_DIFFERENCE},
+		{"exclusion",  BM_EXCLUSION },
+		{"hue",        BM_HUE       },
+		{"saturation", BM_SATURATION},
+		{"color",      BM_COLOR     },
+		{"luminosity", BM_LUMINOSITY}
+	};
+	string compname = to_lower_drop_nonalpha(name);
+	for (const auto &m : modes) {
+		if (compname == m.name)
+			return m.mode;
+	}
+	return BM_NORMAL;
+}
+
+
 bool Opacity::operator == (const Opacity &opacity) const {
 	return opacity._fillalpha == _fillalpha
 		&& opacity._strokealpha == _strokealpha

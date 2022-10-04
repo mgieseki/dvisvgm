@@ -43,11 +43,14 @@ class FontEngine {
 		static FontEngine& instance ();
 		static std::string version ();
 		bool setFont (const Font &font);
+		const Font* currentFont () const {return _currentFont;}
 		bool isCIDFont() const;
 		bool hasVerticalMetrics () const;
 		bool traceOutline (const Character &c, Glyph &glyph, bool scale=true) const;
 		const char* getFamilyName () const;
 		const char* getStyleName () const;
+		const char* getPSName () const;
+		std::string getPSName (const std::string &fname) const;
 		int getUnitsPerEM () const;
 		int getAscender () const;
 		int getDescender () const;
@@ -63,7 +66,7 @@ class FontEngine {
 		CharMapID setCustomCharMap ();
 		std::vector<int> getPanose () const;
 		std::string getGlyphName (const Character &c) const;
-		int getCharByGlyphName (const char *name) const;
+		int getCharIndexByGlyphName (const char *name) const;
 		bool setCharMap (const CharMapID &charMapID);
 		void buildGidToCharCodeMap (RangeMap &charmap);
 		std::unique_ptr<const RangeMap> createCustomToUnicodeMap ();

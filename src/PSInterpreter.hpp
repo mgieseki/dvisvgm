@@ -115,6 +115,7 @@ class PSInterpreter {
 		const std::vector<std::string>& rawData () const {return _rawData;}
 		bool setImageDevice (const std::string &deviceStr);
 		bool hasFullOpacitySupport () const {return _gs.revision() >= 952;}
+		bool supportsPDF () const           {return _gs.revision() > 0 && _gs.revision() < 10010;}
 		static std::vector<PSDeviceInfo> getImageDeviceInfos ();
 		static void listImageDeviceInfos (std::ostream &os);
 		static bool imageDeviceKnown (std::string deviceStr);

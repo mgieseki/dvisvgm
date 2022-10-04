@@ -61,6 +61,7 @@ class SVGTree {
 		void popPageContext ();
 		void setBBox (const BoundingBox &bbox);
 		void setFont (int id, const Font &font);
+		std::pair<int,const Font*> getFontPair () const;
 		static bool setFontFormat (std::string formatstr);
 		void setX (double x)                {_charHandler->notifyXAdjusted();}
 		void setY (double y)                {_charHandler->notifyYAdjusted();}

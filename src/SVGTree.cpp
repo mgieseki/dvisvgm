@@ -91,6 +91,13 @@ void SVGTree::setFont (int num, const Font &font) {
 }
 
 
+pair<int,const Font*> SVGTree::getFontPair () const {
+	if (_charHandler)
+		return {_charHandler->getFontID(), _charHandler->getFont()};
+	return {0, nullptr};
+}
+
+
 bool SVGTree::setFontFormat (string formatstr) {
 	auto pos = formatstr.find(',');
 	string opt;

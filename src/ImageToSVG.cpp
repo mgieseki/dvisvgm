@@ -36,18 +36,17 @@
 using namespace std;
 
 
+ImageToSVG::ImageToSVG (std::string fname, SVGOutputBase &out)
+	: _fname(std::move(fname)), _out(out), _gsVersion(Ghostscript().revision())
+{
+}
+
+
 void ImageToSVG::checkGSAndFileFormat () {
-	if (!_haveGS) {
-#ifdef HAVE_LIBGS
-		_haveGS = true;
-#else
-		_haveGS = Ghostscript().available();
-#endif
-		if (!_haveGS)
-			throw MessageException("Ghostscript is required to process "+imageFormat()+" files");
-		if (!imageIsValid())
-			throw MessageException("invalid "+imageFormat()+" file");
-	}
+	if (!_gsVersion)
+		throw MessageException("Ghostscript is required to process "+imageFormat()+" files");
+	if (!imageIsValid())
+		throw MessageException("invalid "+imageFormat()+" file");
 }
 
 
@@ -59,7 +58,7 @@ void ImageToSVG::convert (int pageno) {
 	Message::mstream().indent(0);
 	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing " << imageFormat() << " file\n";
 	Message::mstream().indent(1);
-	_svg.newPage(1);
+	_svg.newPage(pageno);
 	// create a psfile special and forward it to the PsSpecialHandler
 	stringstream ss;
 	ss << "\"" << _fname << "\" "
@@ -69,7 +68,7 @@ void ImageToSVG::convert (int pageno) {
 			"ury=" << bbox.maxY();
 	_currentPageNumber = pageno;
 	if (!isSinglePageFormat())
-		ss << " page=" << pageno;
+		ss << " page=" << pageno << " proc=gs";
 	try {
 		_psHandler.process(psSpecialCmd(), ss, *this);
 	}
@@ -77,6 +76,11 @@ void ImageToSVG::convert (int pageno) {
 		progress(nullptr);  // remove progress message
 		throw;
 	}
+	writeSVG(pageno);
+}
+
+
+void ImageToSVG::writeSVG (int pageno) {
 	progress(nullptr);
 	Matrix matrix = getUserMatrix(_bbox);
 	// output SVG file
@@ -94,10 +98,11 @@ void ImageToSVG::convert (int pageno) {
 	else {
 		const double bp2pt = 72.27/72;
 		const double bp2mm = 25.4/72;
-		Message::mstream(false, Message::MC_PAGE_SIZE) << "graphic size: " << XMLString(_bbox.width()*bp2pt) << "pt"
-			" x " << XMLString(_bbox.height()*bp2pt) << "pt"
-			" (" << XMLString(_bbox.width()*bp2mm) << "mm"
-			" x " << XMLString(_bbox.height()*bp2mm) << "mm)\n";
+		Message::mstream(false,Message::MC_PAGE_SIZE)
+			<< "graphic size: " << XMLString(_bbox.width()*bp2pt) << "pt"
+			<< " x " << XMLString(_bbox.height()*bp2pt) << "pt"
+			<< " (" << XMLString(_bbox.width()*bp2mm) << "mm"
+			<< " x " << XMLString(_bbox.height()*bp2mm) << "mm)\n";
 		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "output written to " << svgfname << '\n';
 	}
 	_bbox.invalidate();

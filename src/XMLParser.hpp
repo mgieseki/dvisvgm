@@ -42,7 +42,7 @@ class XMLParser {
 		void parse (std::istream &is);
 		void parse (std::string xml, bool finish=false);
 		void finish ();
-		void setNotifyFuncs (NotifyFunc &notifyElementOpened, NotifyFunc &notifyElementClosed);
+		void setNotifyFuncs (NotifyFunc notifyElementOpened, NotifyFunc notifyElementClosed);
 
 	protected:
 		XMLElement* context () {return _elementStack.back();}

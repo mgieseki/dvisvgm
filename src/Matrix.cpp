@@ -85,6 +85,17 @@ Matrix::Matrix (const std::vector<double> &v, int start) {
 }
 
 
+Matrix::Matrix (const string &svgMatrix) {
+	istringstream iss(svgMatrix);
+	for (int col=0; col < 3; col++) {
+		for (int row=0; row < 2; row++)
+			iss >> _values[row][col];
+		_values[2][col] = 0;
+	}
+	_values[2][2] = 1;
+}
+
+
 Matrix::Matrix (const string &cmds, Calculator &calc) {
 	*this = parse(cmds, calc);
 }
@@ -261,9 +272,17 @@ Matrix& Matrix::invert () {
 
 
 Matrix& Matrix::operator *= (double c) {
-	for (int i=0; i < 3; i++)
-		for (int j=0; j < 3; j++)
-			_values[i][j] *= c;
+	for (auto &row : _values)
+		for (auto &val : row)
+			val *= c;
+	return *this;
+}
+
+
+Matrix& Matrix::operator /= (double c) {
+	for (auto &row : _values)
+		for (auto &val : row)
+			val /= c;
 	return *this;
 }
 

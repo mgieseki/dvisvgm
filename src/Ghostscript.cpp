@@ -228,10 +228,13 @@ bool Ghostscript::revision (gsapi_revision_t *r) const {
 
 /** Returns the revision number of the GS library. */
 int Ghostscript::revision () const {
-	gsapi_revision_t r;
-	if (revision(&r))
-		return static_cast<int>(r.revision);
-	return 0;
+	static int rev=0;
+	if (rev == 0) {
+		gsapi_revision_t r;
+		if (revision(&r))
+			rev = static_cast<int>(r.revision);
+	}
+	return rev;
 }
 
 

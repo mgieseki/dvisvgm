@@ -78,8 +78,20 @@ void SVGElement::setFillPatternUrl (const std::string &url) {
 }
 
 
+void SVGElement::setMaskUrl (const string &url) {
+	if (!url.empty())
+		addAttribute("mask", "url(#"+url+")");
+}
+
+
 void SVGElement::setNoFillColor () {
 	addAttribute("fill", "none");
+}
+
+
+void SVGElement::setOpacity (const OpacityAlpha &alpha) {
+	if (!alpha.isOpaque())
+		addAttribute("opaque", alpha.value());
 }
 
 
@@ -106,7 +118,14 @@ void SVGElement::setStrokeDash (const vector<double> &pattern, double offset) {
 		for (double dashValue : pattern)
 			patternStr += XMLString(dashValue)+" ";
 		patternStr.pop_back();
-		addAttribute("stroke-dasharray", patternStr);
+		setStrokeDash(patternStr, offset);
+	}
+}
+
+
+void SVGElement::setStrokeDash (const string &pattern, double offset) {
+	if (!pattern.empty()) {
+		addAttribute("stroke-dasharray", pattern);
 		if (offset != 0)
 			addAttribute("stroke-dashoffset", offset);
 	}

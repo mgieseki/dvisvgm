@@ -251,7 +251,7 @@ XMLElement* XMLParser::createElementPtr (std::string name) const {
 }
 
 
-void XMLParser::setNotifyFuncs (NotifyFunc &notifyElementOpened, NotifyFunc &notifyElementClosed) {
-	_notifyElementOpened = notifyElementOpened;
-	_notifyElementClosed = notifyElementClosed;
+void XMLParser::setNotifyFuncs (NotifyFunc notifyElementOpened, NotifyFunc notifyElementClosed) {
+	_notifyElementOpened = std::move(notifyElementOpened);
+	_notifyElementClosed = std::move(notifyElementClosed);
 }

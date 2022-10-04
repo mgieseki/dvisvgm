@@ -24,6 +24,8 @@
 #include <set>
 #include "CMap.hpp"
 #include "Font.hpp"
+#include "fonts/Base14Fonts.hpp"
+#include "FontEngine.hpp"
 #include "FontManager.hpp"
 #include "FileFinder.hpp"
 #include "FileSystem.hpp"
@@ -81,6 +83,17 @@ int FontManager::fontID (const string &name) const {
 }
 
 
+int FontManager::fontID (const string &name, double ptsize) const {
+	for (auto it = _fonts.begin(); it != _fonts.end(); ++it) {
+		if (auto nativeFont = font_cast<NativeFont*>(it->get())) {
+			if (nativeFont->name() == name && nativeFont->scaledSize() == ptsize)
+				return int(std::distance(_fonts.begin(), it));
+		}
+	}
+	return -1;
+}
+
+
 int FontManager::fontnum (int id) const {
 	if (id < 0 || size_t(id) > _fonts.size())
 		return -1;
@@ -124,6 +137,14 @@ Font* FontManager::getFont (int n) const {
 
 Font* FontManager::getFont (const string &name) const {
 	int id = fontID(name);
+	if (id < 0)
+		return nullptr;
+	return _fonts[id].get();
+}
+
+
+Font* FontManager::getFont (const string &name, double ptsize) {
+	int id = fontID(name, ptsize);
 	if (id < 0)
 		return nullptr;
 	return _fonts[id].get();
@@ -220,7 +241,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &name, uint32_t ch
 				missing_fonts.insert(filename);
 			}
 		}
-		_name2id[name] = newid;
+		_name2id.emplace(name, newid);
 	}
 	_fonts.push_back(std::move(newfont));
 	if (_vfStack.empty())  // register font referenced in dvi file?
@@ -257,7 +278,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &filename, double 
  *  @param[in] style font style parameters
  *  @param[in] color global font color
  *  @return global font id */
-int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex, double ptsize, const FontStyle &style, Color color) {
+int FontManager::registerFont (uint32_t fontnum, const string &filename, int fontIndex, double ptsize, const FontStyle &style, Color color) {
 	int id = fontID(fontnum);
 	if (id >= 0)
 		return id;
@@ -293,11 +314,45 @@ int FontManager::registerFont (uint32_t fontnum, string filename, int fontIndex,
 				missing_fonts.insert(filename);
 			}
 		}
-		_name2id[fontname] = newid;
+		_name2id.emplace(fontname, newid);
 	}
 	_fonts.push_back(std::move(newfont));
 	_num2id[fontnum] = newid;
 	return newid;
+}
+
+
+/** Registers a native font that is referenced by its name instead of a DVI font number.
+ *  @param[in] fname filename/path of the font file
+ *  @param[in] ptsize font size in PS points
+ *  return global ID assigned to the font */
+int FontManager::registerFont (const std::string &fname, double ptsize) {
+	if (fname.empty())
+		return -1;
+	string fontname;
+	if (fname.size() > 6 && fname.substr(0,6) == "sys://") {
+		fontname = fname.substr(6);
+		if (!find_base14_font(fontname))
+			return -1;
+	}
+	else if (!FileSystem::exists(fname) || (fontname = FontEngine::instance().getPSName(fname)).empty())
+		return -1;
+	int id = fontID(fontname, ptsize);
+	if (id >= 0)
+		return id;
+	unique_ptr<NativeFont> nativeFont;
+	id = fontID(fontname);
+	if (id < 0) {
+		nativeFont = util::make_unique<NativeFontImpl>(fname, fontname, ptsize);
+		_name2id.emplace(std::move(fontname), _fonts.size());
+	}
+	else {
+		auto *nf = font_cast<NativeFont*>(getFontById(id));
+		nativeFont = unique_ptr<NativeFont>(nf->clone(ptsize, FontStyle(), Color::BLACK));
+	}
+	id = int(_fonts.size());
+	_fonts.push_back(std::move(nativeFont));
+	return id;
 }
 
 
@@ -327,7 +382,9 @@ void FontManager::assignVFChar (int c, vector<uint8_t> &&dvi) {
 
 
 void FontManager::addUsedChar (const Font &font, int c) {
-	_usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(c);
+	_usedChars[font.uniqueFont()].insert(c);
+	if (!SVGTree::USE_FONTS)
+		_usedChars[&font].insert(c);
 	_usedFonts.insert(&font);
 }
 

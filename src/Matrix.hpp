@@ -43,9 +43,10 @@ class Matrix {
 		Matrix () {set(0);}
 		Matrix (double d);
 		Matrix (const std::string &cmds, Calculator &calc);
+		explicit Matrix (const std::string &svgMatrix);
 		explicit Matrix (const double *v, unsigned size=9);
 		explicit Matrix (const std::vector<double> &v, int start=0);
-		explicit Matrix (std::initializer_list<double> initlist);
+		Matrix (std::initializer_list<double> initlist);
 		Matrix& set (double d);
 		Matrix& set (const double *v, unsigned size);
 		Matrix& set (const std::vector<double> &v, int start=0);
@@ -66,6 +67,7 @@ class Matrix {
 		Matrix& yskewByRatio (double xyratio);
 		Matrix& flip (bool h, double a);
 		Matrix& operator *= (double c);
+		Matrix& operator /= (double c);
 		DPair operator * (const DPair &p) const;
 		bool operator == (const Matrix &m) const;
 		bool operator != (const Matrix &m) const;

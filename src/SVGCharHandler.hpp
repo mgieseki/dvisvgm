@@ -76,6 +76,7 @@ class SVGCharHandler {
 		Color getColor () const                  {return _color.get();}
 		const Opacity& getOpacity () const       {return _opacity.get();}
 		const Font* getFont () const             {return _font.get();}
+		int getFontID () const                   {return _fontnum;}
 		const Matrix& getMatrix () const         {return _matrix.get();}
 
 	protected:
