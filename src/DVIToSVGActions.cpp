@@ -36,7 +36,6 @@ void DVIToSVGActions::reset() {
 	_usedChars.clear();
 	_usedFonts.clear();
 	_bbox = BoundingBox();
-	_currentFontNum = -1;
 	_bgcolor = Color::TRANSPARENT;
 }
 
@@ -188,7 +187,6 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
  *  @param[in] num unique number of the font in the DVI file (not necessarily equal to the DVI font number)
  *  @param[in] font pointer to the font object (always represents a physical font and never a virtual font) */
 void DVIToSVGActions::setFont (int num, const Font &font) {
-	_currentFontNum = num;
 	_svg.setFont(num, font);
 }
 
