@@ -130,7 +130,7 @@ static string get_libgs (const string &fname) {
 	return get_gsdll32();
 #else
 	// try to find libgs.so.X on the user's system
-	const int abi_min=7, abi_max=9; // supported libgs ABI versions
+	const int abi_min=7, abi_max=10; // supported libgs ABI versions
 	for (int i=abi_max; i >= abi_min; i--) {
 #if defined(__CYGWIN__)
 		string dlname = "cyggs-" + to_string(i) + ".dll";
