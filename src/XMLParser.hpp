@@ -36,7 +36,7 @@ class XMLParser {
 
 	public:
 		XMLParser () =default;
-		~XMLParser() =default;
+		virtual ~XMLParser() {}
 		explicit XMLParser (XMLElement *root) {setRootElement(root);}
 		XMLElement* setRootElement (XMLElement *root);
 		void parse (std::istream &is);
@@ -60,7 +60,6 @@ class XMLParser {
 		bool _error=false;
 		std::function<void(XMLElement*)> _notifyElementOpened;
 		std::function<void(XMLElement*)> _notifyElementClosed;
-
 };
 
 #endif
