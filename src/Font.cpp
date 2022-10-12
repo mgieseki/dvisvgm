@@ -233,7 +233,8 @@ int PhysicalFont::unitsPerEm() const {
 }
 
 
-int PhysicalFont::hAdvance () const {
+/** Returns the average horizontal advance width in font units. */
+int PhysicalFont::hAverageAdvance () const {
 	if (type() == Type::MF)
 		return 0;
 	FontEngine::instance().setFont(*this);
@@ -241,6 +242,7 @@ int PhysicalFont::hAdvance () const {
 }
 
 
+/** Returns the horizontal advance width of a character in font units. */
 double PhysicalFont::hAdvance (int c) const {
 	if (type() == Type::MF)
 		return unitsPerEm()*charWidth(c)/designSize();
@@ -252,6 +254,7 @@ double PhysicalFont::hAdvance (int c) const {
 }
 
 
+/** Returns the vertical advance width of a character in font units. */
 double PhysicalFont::vAdvance (int c) const {
 	if (type() == Type::MF)
 		return unitsPerEm()*charWidth(c)/designSize();
@@ -279,7 +282,8 @@ double PhysicalFont::scaledAscent() const {
 }
 
 
-/** Returns the unscaled ascender of the font in design units. */
+/** Returns the unscaled ascender of the font in design units.
+ *  Positive values denote an extension above the baseline.'*/
 int PhysicalFont::ascent () const {
 	if (type() == Type::MF)
 		return getMetrics() ? getMetrics()->getAscent()*unitsPerEm()/getMetrics()->getQuad() : 0;
@@ -288,7 +292,8 @@ int PhysicalFont::ascent () const {
 }
 
 
-/** Returns the unscaled descender of the font in design units. */
+/** Returns the unscaled descender of the font in design units.
+ *  Positive values denote an extension below the baseline. */
 int PhysicalFont::descent () const {
 	if (type() == Type::MF)
 		return getMetrics() ? getMetrics()->getDescent()*unitsPerEm()/getMetrics()->getQuad() : 0;
@@ -313,7 +318,6 @@ std::string PhysicalFont::styleName () const {
 	const char *style = FontEngine::instance().getStyleName();
 	return style ? style : "";
 }
-
 
 
 /** Extracts the glyph outlines of a given character.
@@ -607,7 +611,7 @@ PhysicalFont::Type NativeFont::type () const {
 double NativeFont::charWidth (int c) const {
 	FontEngine::instance().setFont(*this);
 	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getAdvance(c)/upem*_style.extend) : 0;
+	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(Character(Character::INDEX, c))/upem*_style.extend) : 0;
 }
 
 
@@ -651,6 +655,13 @@ Character NativeFontImpl::decodeChar (uint32_t c) const {
 uint32_t NativeFontImpl::unicode (uint32_t c) const {
 	uint32_t ucode = _toUnicodeMap.valueAt(c);
 	return Unicode::charToCodepoint(ucode);
+}
+
+
+bool NativeFontImpl::verticalLayout() const {
+	FontEngine &fe = FontEngine::instance();
+	fe.setFont(*this);
+	return fe.hasVerticalMetrics();
 }
 
 //////////////////////////////////////////////////////////////////////////////

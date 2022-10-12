@@ -53,9 +53,6 @@ hashcheck.cpp: genhashcheck.py $(dvisvgm_srcdir)/src/AGLTable.hpp $(dvisvgm_srcd
 	python $^ >$@
 
 TESTLIBS = libgtest.la ../src/libdvisvgm.la $(LIBS_LIBS) -lfreetype
-if ENABLE_WOFF
-TESTLIBS += ../libs/ff-woff/libfontforge.a
-endif
 TESTLIBS += $(CODE_COVERAGE_LDFLAGS)
 
 TESTS += BezierTest

@@ -140,6 +140,5 @@ def create_optname (optelem):
     optname = "%sOpt" % optelem.get("long")
     return re.sub('-([a-z])', lambda pat: pat.group(1).upper(), optname)
 
-if __name__ == "__main__":
+if __name__ == "__main__" and len(sys.argv) > 1:
     print(create_hpp(sys.argv[1]))
-

@@ -258,7 +258,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			auto fontNode = util::make_unique<XMLElement>("font");
 			string fontname = font.name();
 			fontNode->addAttribute("id", fontname);
-			fontNode->addAttribute("horiz-adv-x", font.hAdvance());
+			fontNode->addAttribute("horiz-adv-x", font.hAverageAdvance());
 
 			auto faceNode = util::make_unique<XMLElement>("font-face");
 			faceNode->addAttribute("font-family", fontname);

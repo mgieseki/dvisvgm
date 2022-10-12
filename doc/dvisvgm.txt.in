@@ -240,7 +240,9 @@ Following formats are supported: +SVG+ (that's the default), +TTF+ (TrueType), +
 By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
 improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
 autohinter is enabled by appending +,autohint+ or +,ah+ to the font format,
-e.g. +--font-format=woff,autohint+ or +--fwoff,ah+.
+e.g. +--font-format=woff,autohint+ or +--fwoff,ah+. This functionality requires the
+https://freetype.org/ttfautohint[ttfautohint library]. If it's not available or can't be found,
+dvisvgm issues a corresponding warning message.
 +
 Option *--font-format* is only available if dvisvgm was built with WOFF support enabled.
 

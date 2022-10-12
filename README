@@ -14,13 +14,6 @@ DEPENDENCIES
    to polygons, intersects them using Clipper, and reconstructs the curves
    afterwards.
 
- * FontForge library (https://fontforge.github.io)
-   dvisvgm can be built with optional WOFF support that allows to embed the
-   font data in WOFF or TrueType format rather than as SVG. The FontForge
-   library provides the required functions to create font files in these
-   formats. A reduced version of the library is bundled with the dvisvgm
-   sources.
-
  * FreeType 2 (http://www.freetype.org)
    This library is used to extract the glyph outlines from vector fonts
    (PFB, OTF, TTF).
@@ -53,9 +46,9 @@ DEPENDENCIES
    bitmap output. A recent version is also part of the dvisvgm sources.
 
  * ttfautohint (https://www.freetype.org/ttfautohint)
-   dvisvgm can optionally be built with ttfautohint support to replace the
-   autohinting functionality of FontForge. Since it's still an experimental
-   feature, ttfautohint support is disabled by default.
+   dvisvgm can optionally be built with ttfautohint support to allow for
+   autohinting the generated TrueType, WOFF, and WOFF2 fonts. Since this is
+   still an experimental feature, ttfautohint support is disabled by default.
    The development files required for Windows can be found at
    https://github.com/mgieseki/ttfautohint-dll.
 

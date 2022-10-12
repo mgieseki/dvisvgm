@@ -48,6 +48,7 @@
 #include "optimizer/SVGOptimizer.hpp"
 #include "SVGOutput.hpp"
 #include "System.hpp"
+#include "ttf/TTFWriter.hpp"
 #include "XMLParser.hpp"
 #include "XXHashFunction.hpp"
 #include "utility.hpp"
@@ -56,8 +57,7 @@
 #ifndef DISABLE_WOFF
 #include <brotli/encode.h>
 //#include <woff2/version.h>
-#include "ffwrapper.h"
-#include "TTFAutohint.hpp"
+#include "ttf/TTFAutohint.hpp"
 #endif
 
 using namespace std;
@@ -272,8 +272,7 @@ static void print_version (bool extended) {
 #ifndef DISABLE_WOFF
 		versionInfo.add("brotli", BrotliEncoderVersion(), 3, 0x1000);
 //		versionInfo.add("woff2", woff2::version, 3, 0x100);
-		versionInfo.add("fontforge", ff_version());
-		versionInfo.add("ttfautohint", TTFAutohint().version(), true);
+		versionInfo.add("ttfautohint", ttf::TTFAutohint().version(), true);
 #endif
 #ifdef MIKTEX
 		versionInfo.add("MiKTeX", FileFinder::instance().version());
@@ -371,6 +370,9 @@ static void set_variables (const CommandLine &cmdline) {
 	PsSpecialHandler::SHADING_SEGMENT_SIZE = max(1, cmdline.gradSegmentsOpt.value());
 	PsSpecialHandler::SHADING_SIMPLIFY_DELTA = cmdline.gradSimplifyOpt.value();
 	PsSpecialHandler::BITMAP_FORMAT = util::tolower(cmdline.bitmapFormatOpt.value());
+#ifdef TTFDEBUG
+	ttf::TTFWriter::CREATE_PS_GLYPH_OUTLINES = cmdline.debugGlyphsOpt.given();
+#endif
 	PsSpecialHandler::EMBED_BITMAP_DATA = cmdline.embedBitmapsOpt.given();
 	if (!PSInterpreter::imageDeviceKnown(PsSpecialHandler::BITMAP_FORMAT)) {
 		ostringstream oss;

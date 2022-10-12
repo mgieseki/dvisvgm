@@ -21,7 +21,6 @@
 #ifndef DVIREADER_HPP
 #define DVIREADER_HPP
 
-#include <cstdint>
 #include <limits>
 #include <map>
 #include <stack>

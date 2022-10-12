@@ -119,6 +119,12 @@ bool FontEngine::isCIDFont() const {
 }
 
 
+/** Returns true if the current font contains vertical layout data. */
+bool FontEngine::hasVerticalMetrics () const {
+	return FT_HAS_VERTICAL(_currentFace);
+}
+
+
 bool FontEngine::setCharMap (const CharMapID &charMapID) {
 	for (int i=0; i < _currentFace->num_charmaps; i++) {
 		FT_CharMap ft_cmap = _currentFace->charmaps[i];
@@ -200,16 +206,6 @@ int FontEngine::getDescender () const {
 }
 
 
-int FontEngine::getAdvance (int c) const {
-	if (_currentFace) {
-		FT_Fixed adv=0;
-		FT_Get_Advance(_currentFace, c, FT_LOAD_NO_SCALE, &adv);
-		return adv;
-	}
-	return 0;
-}
-
-
 int FontEngine::getHAdvance () const {
 	if (_currentFace) {
 		auto table = static_cast<TT_OS2*>(FT_Get_Sfnt_Table(_currentFace, ft_sfnt_os2));
@@ -219,21 +215,26 @@ int FontEngine::getHAdvance () const {
 }
 
 
+/** Returns the horizontal advance width of a given character in font units. */
 int FontEngine::getHAdvance (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiAdvance;
+		FT_Fixed adv=0;
+		FT_Get_Advance(_currentFace, charIndex(c), FT_LOAD_NO_SCALE, &adv);
+		return adv;
 	}
 	return 0;
 }
 
 
+/** Returns the vertical advance width of a given character in font units. */
 int FontEngine::getVAdvance (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
+		FT_Fixed adv=0;
+		auto flags = FT_LOAD_NO_SCALE;
 		if (FT_HAS_VERTICAL(_currentFace))
-			return _currentFace->glyph->metrics.vertAdvance;
-		return _currentFace->glyph->metrics.horiAdvance;
+			flags |= FT_LOAD_VERTICAL_LAYOUT;
+		FT_Get_Advance(_currentFace, charIndex(c), flags, &adv);
+		return adv;
 	}
 	return 0;
 }

@@ -124,7 +124,7 @@ class PhysicalFont : public virtual Font {
 		virtual bool getExactGlyphBox (int c, BoundingBox &bbox, GFGlyphTracer::Callback *cb) const;
 		virtual bool getExactGlyphBox (int c, GlyphMetrics &metrics, bool vertical, GFGlyphTracer::Callback *cb) const;
 		virtual bool isCIDFont () const;
-		virtual int hAdvance () const;
+		virtual int hAverageAdvance () const;
 		virtual std::string familyName () const;
 		virtual std::string styleName () const;
 		virtual double hAdvance (int c) const;
@@ -311,6 +311,7 @@ class NativeFontProxy : public NativeFont {
 		Character decodeChar (uint32_t c) const override  {return _nfont->decodeChar(c);}
 		uint32_t unicode (uint32_t c) const override      {return _nfont->unicode(c);}
 		CharMapID getCharMapID () const override          {return _nfont->getCharMapID();}
+		bool verticalLayout() const override              {return _nfont->verticalLayout();}
 
 	protected:
 		NativeFontProxy (const NativeFont *nfont, double ptsize, const FontStyle &style, Color color)
@@ -342,6 +343,7 @@ class NativeFontImpl : public NativeFont {
 		CharMapID getCharMapID () const override          {return CharMapID::NONE;}
 		Character decodeChar (uint32_t c) const override;
 		uint32_t unicode (uint32_t c) const override;
+		bool verticalLayout() const override;
 
 	private:
 		std::string _path;

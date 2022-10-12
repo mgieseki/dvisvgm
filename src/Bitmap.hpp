@@ -21,7 +21,6 @@
 #ifndef BITMAP_HPP
 #define BITMAP_HPP
 
-#include <cstdint>
 #include <ostream>
 #include <vector>
 

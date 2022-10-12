@@ -157,6 +157,7 @@ AC_STRUCT_TM
 # Check for library functions.
 AC_FUNC_STAT
 AC_CHECK_FUNCS_ONCE([ftime gettimeofday sigaction umask uselocale])
+AX_GCC_BUILTIN(__builtin_clz)
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options
@@ -219,9 +220,9 @@ AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([
 	Makefile
 	libs/Makefile
+	libs/boost/Makefile
 	libs/brotli/Makefile
 	libs/clipper/Makefile
-	libs/ff-woff/Makefile
 	libs/md5/Makefile
 	libs/potrace/Makefile
 	libs/variant/Makefile
@@ -231,6 +232,7 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/version.hpp
 	src/optimizer/Makefile
+	src/ttf/Makefile
 	tests/Makefile
 	tests/data/Makefile
 	doc/Makefile])

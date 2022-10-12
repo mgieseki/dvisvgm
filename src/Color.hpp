@@ -21,7 +21,6 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
 
-#include <cstdint>
 #include <string>
 #include <valarray>
 #include <vector>

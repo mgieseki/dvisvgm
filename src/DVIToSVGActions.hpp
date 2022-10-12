@@ -89,6 +89,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		BasicDVIReader *_dvireader;
 		BoundingBox _bbox;
 		int _pageCount=0;
+		int _currentFontNum=-1;
 		mutable CharMap _usedChars;
 		FontSet _usedFonts;
 		Color _bgcolor=Color::TRANSPARENT;

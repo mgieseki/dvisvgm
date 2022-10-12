@@ -21,8 +21,6 @@
 #ifndef BASICDVIREADER_HPP
 #define BASICDVIREADER_HPP
 
-#include <cstdint>
-
 #include "Matrix.hpp"
 #include "MessageException.hpp"
 #include "StreamReader.hpp"

@@ -22,7 +22,6 @@
 #define RANGEMAP_HPP
 
 #include <algorithm>
-#include <cstdint>
 #include <ostream>
 #include <vector>
 

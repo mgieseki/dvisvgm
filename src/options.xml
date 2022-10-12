@@ -67,7 +67,7 @@
 				<description>add comments with additional information</description>
 			</option>
 			<option long="embed-bitmaps">
-				<description>embed bitmap data instead of file references</description>
+				<description>prevent references to external bitmap files</description>
 			</option>
 			<option long="font-format" short="f" if="!defined(DISABLE_WOFF)">
 				<arg type="string" name="format" default="svg"/>
@@ -151,6 +151,9 @@
 			<option long="cache" short="C">
 				<arg type="string" name="dir" optional="yes"/>
 				<description>set/print path of cache directory</description>
+			</option>
+			<option long="debug-glyphs" if="defined(TTFDEBUG)">
+				<description>create PS files for all glyphs converted to TTF</description>
 			</option>
 			<option long="exact-bbox" short="e">
 				<description>compute exact glyph bounding boxes</description>

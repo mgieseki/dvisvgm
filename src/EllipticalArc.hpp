@@ -47,7 +47,7 @@ class EllipticalArc {
 		bool isStraightLine () const {return _rx < 1e-7 || _ry < 1e-7;}
 		BoundingBox getBBox () const;
 		void transform (const Matrix &matrix);
-		std::vector<Bezier> approximate () const;
+		std::vector<CubicBezier> approximate () const;
 
 	private:
 		double _rx, _ry;       ///< length of semi-major and semi-minor axes

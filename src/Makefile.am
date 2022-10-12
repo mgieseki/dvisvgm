@@ -17,14 +17,14 @@ dvisvgm_LDADD = \
 	$(noinst_LTLIBRARIES) \
 	../libs/clipper/libclipper.a \
 	$(FREETYPE_LIBS) \
-	$(FONTFORGE_LIBS) \
 	$(POTRACE_LIBS) \
 	$(XXHASH_LIBS) \
 	$(ZLIB_LIBS)
 
 if ENABLE_WOFF
+SUBDIRS += ttf
+
 dvisvgm_LDADD += \
-	../libs/ff-woff/libfontforge.a \
 	$(WOFF2_LIBS) \
 	$(BROTLI_LIBS)
 endif
@@ -147,8 +147,6 @@ libdvisvgm_la_SOURCES = \
 	ToUnicodeMap.hpp             ToUnicodeMap.cpp \
 	TpicSpecialHandler.hpp       TpicSpecialHandler.cpp \
 	TriangularPatch.hpp          TriangularPatch.cpp \
-	TrueTypeFont.hpp             TrueTypeFont.cpp \
-	TTFAutohint.hpp              TTFAutohint.cpp \
 	Unicode.hpp                  Unicode.cpp \
 	utility.hpp                  utility.cpp \
 	VectorIterator.hpp \
@@ -163,11 +161,11 @@ libdvisvgm_la_SOURCES = \
 	XXHashFunction.hpp \
 	ZLibOutputStream.hpp
 
-if ENABLE_WOFF
-libdvisvgm_la_SOURCES += ffwrapper.c ffwrapper.h
-endif
-
 libdvisvgm_la_LIBADD = optimizer/liboptimizer.la
+
+if ENABLE_WOFF
+libdvisvgm_la_LIBADD += ttf/libttf.la
+endif
 
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.hpp MiKTeXCom.cpp
 
@@ -192,15 +190,14 @@ AM_LDFLAGS = \
 	$(CODE_COVERAGE_LDFLAGS)
 
 if ENABLE_WOFF
-AM_CFLAGS +=  \
-	-I$(dvisvgm_srcdir)/libs/ff-woff/fontforge \
-	-I$(dvisvgm_srcdir)/libs/ff-woff/inc
-
 AM_CXXFLAGS += $(TTFAUTOHINT_CFLAGS)
 
 AM_CXXFLAGS +=  \
 	$(BROTLI_CFLAGS) \
 	$(WOFF2_CFLAGS)
+
+AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
+endif
 
 if USE_BUNDLED_MD5
 AM_CXXFLAGS += -I$(dvisvgm_srcdir)/libs/md5
@@ -208,8 +205,6 @@ else
 AM_CXXFLAGS += $(LIBCRYPTO_CFLAGS)
 endif
 
-AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
-endif
 
 
 # the command-line parser class is generated from options.xml by opt2cpp

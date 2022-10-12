@@ -47,7 +47,7 @@ class PathClipper {
 		static void callback (IntPoint &e1bot, IntPoint &e1top, IntPoint &e2bot, IntPoint &e2top, IntPoint &ip);
 
 	private:
-		std::vector<Bezier> _curves;
+		std::vector<CubicBezier> _curves;
 		int _numLines=0;  ///< negative number of straight line segments in path been processed
 };
 

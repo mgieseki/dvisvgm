@@ -146,3 +146,45 @@ TEST(UtilityTest, base64_copy) {
 	ASSERT_EQ(base64("abcd"), "YWJjZA==");
 	ASSERT_EQ(base64("aBcDe\nFgHiJ\n"), "YUJjRGUKRmdIaUoK");
 }
+
+
+TEST(UtilityTest, count_leading_zeros) {
+	EXPECT_EQ(count_leading_zeros(int8_t(0)), 8);
+	EXPECT_EQ(count_leading_zeros(int16_t(0)), 16);
+	EXPECT_EQ(count_leading_zeros(int32_t(0)), 32);
+	for (int i=0; i < 8; i++) {
+		EXPECT_EQ(count_leading_zeros(uint8_t(1 << i)), 7-i);
+		EXPECT_EQ(count_leading_zeros(uint8_t((1 << i) | 1)), 7-i);
+		EXPECT_EQ(count_leading_zeros(uint8_t(0xff >> i)), i);
+	}
+	for (int i=0; i < 16; i++) {
+		EXPECT_EQ(count_leading_zeros(uint16_t(1 << i)), 15-i);
+		EXPECT_EQ(count_leading_zeros(uint16_t((1 << i) | 1)), 15-i);
+		EXPECT_EQ(count_leading_zeros(uint16_t(0xffff >> i)), i);
+	}
+	for (int i=0; i < 32; i++) {
+		EXPECT_EQ(count_leading_zeros(uint32_t(1 << i)), 31-i);
+		EXPECT_EQ(count_leading_zeros(uint32_t((1 << i) | 1)), 31-i);
+		EXPECT_EQ(count_leading_zeros(uint32_t(0xffffffff >> i)), i);
+	}
+}
+
+
+TEST(UtilityTest, ilog2) {
+	EXPECT_EQ(ilog2(0), -1);
+	for (int i=0; i < 8; i++) {
+		EXPECT_EQ(ilog2(uint8_t(1 << i)), i);
+		EXPECT_EQ(ilog2(uint8_t((1 << i)|1)), i);
+		EXPECT_EQ(ilog2(uint8_t(0xff >> i)), 7-i);
+	}
+	for (int i=0; i < 16; i++) {
+		EXPECT_EQ(ilog2(uint16_t(1 << i)), i);
+		EXPECT_EQ(ilog2(uint16_t((1 << i)|1)), i);
+		EXPECT_EQ(ilog2(uint16_t(0xffff >> i)), 15-i);
+	}
+	for (int i=0; i < 32; i++) {
+		EXPECT_EQ(ilog2(uint32_t(1 << i)), i);
+		EXPECT_EQ(ilog2(uint32_t((1 << i)|1)), i);
+		EXPECT_EQ(ilog2(uint32_t(0xffffffff >> i)), 31-i);
+	}
+}
