@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-09-01 12:49 +0200
+:revdate: 2022-10-14 12:56 +0200
 
 Name
 ----
@@ -232,8 +232,9 @@ given, dvisvgm analyzes the actual shape of each character and derives a usually
 
 *-f, --font-format*='format'::
 Selects the file format used to embed font data into the generated SVG output when converting DVI
-files. It has no effect when converting PDF or PostScript files. Text fragments present in these
-files are always converted to path elements.
+or PDF files. The latter require the new mutool-based PDF handler introduced with dvisvgm 3.0 (also
+see option *--pdf*). Option *--font-format* has no effect when converting PDF or PostScript files
+using Ghostscript. Text fragments present in these files are then always converted to path elements.
 +
 Following formats are supported: +SVG+ (that's the default), +TTF+ (TrueType), +WOFF+, and +WOFF2+
 (Web Open Font Format version 1 and 2).
@@ -570,10 +571,20 @@ forces dvisvgm to convert a DVI page even if a file with the target name already
 If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
 it to SVG. Similar to the conversion of DVI files, only the first page is processed by default.
 Option *--page* can be used to select different pages, page ranges, and/or page sequences.
-The conversion is realized by creating a single 'pdffile' special command which is forwarded to
-the PostScript special handler. Therefore, this option is only available if dvisvgm was built
-with PostScript support enabled, and requires Ghostscript to be accessible. See option *--libgs*
-for further information.
++
+If a Ghostcript version < 10.1.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
+this case, the conversion is realized by creating a single 'pdffile' special command which is
+forwarded to dvisvgm's PostScript special handler. Therefore, this option is only available if
+dvisvgm was built with PostScript support enabled, and requires Ghostscript to be accessible.
+See option *--libgs* for further information.
++
+As of Ghostscript 10.1.0, this will no longer work due to the introduction of a new PDF interpreter.
+Therefore, an alternative conversion module based on https://mupdf.com/docs/mutool.html[mutool]
+has been introduced. It's automatically invoked if Ghostscript can't be used and if a working
++mutool+ executable is present in a directory which is part of the system's search path.
++
+Alternatively, environment variable +DVISVGM_PDF_PROC+ can be used to select the PDF processor.
+The currently supported values are +gs+ and +mutool+.
 
 *-d, --precision*='digits'::
 Specifies the maximal number of decimal places applied to floating-point attribute values.
@@ -1012,6 +1023,12 @@ All malformed entries in the list are silently ignored.
 
 *Example:* +er=01:pi=\*5+ sets the colors of error messages (+er+) to red (+1+) on black (+0+), and those
 of progress indicators (+pi+) to cyan (+5+) on default background (+*+).
+
+Variable *DVISVGM_PDF_PROC* allows you to select the desired PDF processor. dvisvgm requires either
+Ghostscript (version < 10.1.0) or mutool to process PDF files. IF *DVISVGM_PDF_PROC* is not set, dvisvgm
+tries to detect the available processors. See option *--pdf* for further information. To select a
+specific PDF processor, you can set *DVISVGM_PDF_PROC* to +gs+ or +mutool+ which forces the use of
+Ghostscript and mutool respectively.
 
 Files
 -----
