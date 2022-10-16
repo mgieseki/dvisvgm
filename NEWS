@@ -1,3 +1,13 @@
+dvisvgm-3.0 (2022-10-16)
+- added new PDF handler based on mutool to keep the PDF functionality available
+  which can't no longer be realized with as of Ghostscript 10.1.0 due to the
+  replacement of its PDF interpreter
+- replaced bundled FontForge library with new FontFriter	module
+- added option --embed-bitmaps to allow for embedding external bitmaps
+  referenced in DVI files
+- added filters :even and :odd to option --page to limit the given page ranges
+  to even and odd page numbers respectively
+
 dvisvgm-2.14 (2022-08-12)
 - added processing of SVG path elements inserted by "raw" specials in order to
   treat them similar to generated ones
