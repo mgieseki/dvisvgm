@@ -3,8 +3,46 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Fri, 12 Aug 2022 09:52:34 +0200</pubDate>
+    <pubDate>Tue, 18 Oct 2022 10:21:52 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.0: Pre-release of new major version</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#4d14c1e14bfd9d193a04ea4c1c3b47ff</link>
+      <pubDate>Mon, 17 Oct 2022 09:48:19 +0200</pubDate>
+      <guid>4d14c1e14bfd9d193a04ea4c1c3b47ff</guid>
+      <description>
+        <![CDATA[<p><em>dvisvgm</em> 3.0 is a new major version of the utility that&rsquo;s still considered beta status. While the new version doesn&rsquo;t bring
+many obvious new features, essential core functionality has changed under the hood. The following list gives an overview of the
+most important changes and additions.</p>
+<ul>
+<li>The previously bundled reduced FontForge library has been replaced with a dedicated font writer library used to create TrueType
+and WOFF files from the font data processed by <em>dvisvgm</em>.</li>
+<li>A new PDF handler based on <a href="https://www.mupdf.com/docs/mutool.html">mutool</a> has been added to retain dvisvgm&rsquo;s PDF conversion
+functionality after the removal of <a href="https://www.ghostscript.com/blog/pdfi.html">Ghostscript&rsquo;s old PDF interpreter</a>
+announced for version 10.1.0.
+<ul>
+<li>The new handler supports all font options of <em>dvisvgm</em>, i.e. in contrast to the current Ghostscript-based PDF processor,
+fonts can not only be embedded as paths but also as SVG, TTF, WOFF, and WOFF2 fonts (depending on options <code>--no-fonts</code> and <code>--font-format</code>).</li>
+<li>The new handler is still experimental and may contain bugs. Please report any issues via the
+<a href="https://github.com/mgieseki/dvisvgm/issues">issue tracker at GitHub</a>.</li>
+<li>Not all PDF features are supported – either because there is no simple equivalent in SVG or because mutool doesn&rsquo;t provide
+means to access the corresponding data. For example, Type 3 fonts and color gradients fills are not yet processed by <em>dvisvgm</em>&rsquo;s
+new PDF handler.</li>
+<li>The former Ghostscript-based PDF handler is still available. It&rsquo;s automatically invoked if <em>dvisvgm</em> finds a proper Ghostscript
+version. Otherwise, it looks for the <code>mutool</code> executable through the system&rsquo;s search path and uses the new handler in case it&rsquo;s found.
+The desired PDF handler can also be selected by setting environment variable <code>DVISVGM_PDF_PROC</code> to either <code>gs</code> or <code>mutool</code>.</li>
+</ul>
+</li>
+<li>Option <code>--embed-bitmaps</code> has been added to allow for embedding of external images referenced in DVI files into the generated
+SVG files. By default the SVG only contains a reference to the image.</li>
+<li>The optional filters <code>:even</code> and <code>:odd</code> have been added to option <code>--page</code> which limit the given page ranges to even and odd
+page numbers respectively.</li>
+</ul>
+<p>You can download the sources and pre-built binaries for MiKTeX from the <a href="https://github.com/mgieseki/dvisvgm/releases">project page at GitHub</a>.</p>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 2.14 has been released</title>
@@ -125,7 +163,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.12 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#0bc5191266f5d77c936e8e667cef5f50</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#0bc5191266f5d77c936e8e667cef5f50</link>
       <pubDate>Mon, 16 Aug 2021 12:35:08 +0200</pubDate>
       <guid>0bc5191266f5d77c936e8e667cef5f50</guid>
       <description>
@@ -293,7 +331,7 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
     
     <item>
       <title>dvisvgm 2.8.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#8d0ef4dc302ef6102e094359ddf31b2d</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#8d0ef4dc302ef6102e094359ddf31b2d</link>
       <pubDate>Thu, 14 Nov 2019 16:25:12 +0100</pubDate>
       <guid>8d0ef4dc302ef6102e094359ddf31b2d</guid>
       <description>
@@ -323,19 +361,19 @@ and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</c
 correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
 stops with a PostScript error, e.g. like so:
 <span class="d-inline-flex">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">*** WARNING - you have selected SAFER, indicating you want Ghostscript
-              to execute in a safer environment, but at the same time
-              have selected DELAYBIND. Unless you use this option with
-              care (and specifically, remember to call .bindnow) it is
-              possible that malicious code may be able to evade the
-              limited security offered by the SAFER option.
-
-*** WARNING - you have selected SAFER, indicating you want Ghostscript
-              to execute in a safer environment, but at the same time
-              have selected WRITESYSTEMDICT. Unless you use this option with
-              care and specifically, remember to execute code like:
-                     &#34;systemdict readonly pop&#34;
- PostScript error: invalidfileaccess in run</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>*** WARNING - you have selected SAFER, indicating you want Ghostscript
+</span></span><span style="display:flex;"><span>              to execute in a safer environment, but at the same time
+</span></span><span style="display:flex;"><span>              have selected DELAYBIND. Unless you use this option with
+</span></span><span style="display:flex;"><span>              care (and specifically, remember to call .bindnow) it is
+</span></span><span style="display:flex;"><span>              possible that malicious code may be able to evade the
+</span></span><span style="display:flex;"><span>              limited security offered by the SAFER option.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>*** WARNING - you have selected SAFER, indicating you want Ghostscript
+</span></span><span style="display:flex;"><span>              to execute in a safer environment, but at the same time
+</span></span><span style="display:flex;"><span>              have selected WRITESYSTEMDICT. Unless you use this option with
+</span></span><span style="display:flex;"><span>              care and specifically, remember to execute code like:
+</span></span><span style="display:flex;"><span>                     &#34;systemdict readonly pop&#34;
+</span></span><span style="display:flex;"><span> PostScript error: invalidfileaccess in run</span></span></code></pre></div>
 </span><br/>
 <em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
 <li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
@@ -383,23 +421,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
 <li>Minor updates of the <a href="/Manpage/">manual page</a>.</li>
 <li>Some code refactorings.</li>
 </ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.7.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6c01c957e0db5e41406e40486fe0acd1</link>
-      <pubDate>Fri, 07 Jun 2019 11:01:49 +0200</pubDate>
-      <guid>6c01c957e0db5e41406e40486fe0acd1</guid>
-      <description>
-        <![CDATA[<p>This maintenance release fixes an issue introduced with Ghostscript 9.27.
-The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
-the public interface leads to an error message when processing PDF files with
-<em>dvisvgm</em>.</p>
-<p>The changes in Ghostscript 9.27 also break the PDF functionality of
-<a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
-An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
 ]]>
       </description>
     </item>
