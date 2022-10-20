@@ -276,6 +276,8 @@ class NativeFont : public PhysicalFont {
 		double charDepth (int c) const override;
 		double charHeight (int c) const override;
 		double italicCorr (int c) const override;
+		virtual double hAdvance (Character c) const;
+		virtual double vAdvance (Character c) const;
 		const FontMetrics* getMetrics () const override  {return nullptr;}
 		const FontStyle* style () const override         {return &_style;}
 		Color color () const override                    {return _color;}

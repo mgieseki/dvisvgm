@@ -653,6 +653,20 @@ uint32_t NativeFontImpl::unicode (uint32_t c) const {
 	return Unicode::charToCodepoint(ucode);
 }
 
+
+double NativeFont::hAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(c)/upem) : 0;
+}
+
+
+double NativeFont::vAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getVAdvance(c)/upem) : 0;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 VirtualFontImpl::VirtualFontImpl (const string &name, uint32_t cs, double ds, double ss)
