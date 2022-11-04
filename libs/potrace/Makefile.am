@@ -17,7 +17,6 @@ libpotrace_a_SOURCES = \
 
 AM_CFLAGS = -Wall -I$(srcdir)
 
-@CODE_COVERAGE_RULES@
 endif
 
 CLEANFILES = *.gcda *.gcno

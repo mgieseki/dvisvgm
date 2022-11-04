@@ -225,6 +225,4 @@ $(srcdir)/psdefs.cpp: psdefs.ps
 
 psdefs.ps: ;
 
-@CODE_COVERAGE_RULES@
-
 CLEANFILES = *.gcda *.gcno

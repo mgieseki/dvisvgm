@@ -205,6 +205,7 @@ AS_IF([test "x$enable_manpage" != "xyes"],
 AM_CONDITIONAL([BUILD_MANPAGE], [test "x$enable_manpage" = "xyes"])
 
 AX_CODE_COVERAGE
+
 AS_IF([ test "$enable_code_coverage" = "yes" ], [
 	# disable optimization
 	changequote({,})

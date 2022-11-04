@@ -6,6 +6,4 @@ AM_CXXFLAGS = -Wall
 
 clipper.cpp: clipper.hpp
 
-@CODE_COVERAGE_RULES@
-
 CLEANFILES = *.gcda *.gcno
