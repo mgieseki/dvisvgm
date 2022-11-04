@@ -83,7 +83,7 @@ BUILDING DVISVGM FROM SOURCE
  Quick installation info:
    * ensure that the development packages of all libraries, listed above,
      are installed
-   * type "./autogen.sh" if "configure" is not present in the dvisvgm
+   * type "autoreconf -fi" if "configure" is not present in the dvisvgm
      root folder
    * either type "./configure" if you don't want to use the bundled libraries
      brotli, potrace, woff2, and xxHash but link against the corresponding
