@@ -228,7 +228,6 @@ AC_CONFIG_FILES([
 	libs/variant/Makefile
 	libs/woff2/Makefile
 	libs/xxHash/Makefile
-	m4/Makefile
 	src/Makefile
 	src/version.hpp
 	src/optimizer/Makefile
