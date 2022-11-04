@@ -10,7 +10,7 @@ AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE([subdir-objects dist-xz])
 
 AH_TEMPLATE([HOST_SYSTEM], [The machine triplet of the host system])
 AC_DEFINE_UNQUOTED([HOST_SYSTEM], ["$host"])
