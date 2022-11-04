@@ -55,6 +55,7 @@ AC_CHECK_LIB([kpathsea], [kpse_find_file],,
 
 AC_MSG_CHECKING([kpathsea version])
 AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
+	#include <stdlib.h>
 	#include <kpathsea/kpathsea.h>
 	int main() {
 		FILE *f;
