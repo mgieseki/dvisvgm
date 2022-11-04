@@ -10,11 +10,10 @@ AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
-AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([subdir-objects])
 
-AH_TEMPLATE([TARGET_SYSTEM], [The machine triplet of the target system])
-AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
+AH_TEMPLATE([HOST_SYSTEM], [The machine triplet of the host system])
+AC_DEFINE_UNQUOTED([HOST_SYSTEM], ["$host"])
 
 # Checks for programs.
 AC_PROG_CC
