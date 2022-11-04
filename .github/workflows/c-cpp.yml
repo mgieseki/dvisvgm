@@ -18,7 +18,7 @@ jobs:
     - name: install dependencies
       run: sudo apt-get install -qq autotools-dev autoconf-archive pkg-config libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml asciidoc xmlto xsltproc
     - name: autogen
-      run: ./autogen.sh
+      run: autoreconf -fi
     - name: configure
       run: ./configure --enable-bundled-libs
     - name: make clean
