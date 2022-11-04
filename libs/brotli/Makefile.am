@@ -81,7 +81,6 @@ libbrotli_a_SOURCES = \
 
 AM_CFLAGS = -Wall -I$(srcdir)/include
 
-@CODE_COVERAGE_RULES@
 endif
 
 EXTRA_DIST = LICENSE

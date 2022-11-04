@@ -51,4 +51,3 @@ AS_VAR_IF(CACHEVAR,yes,
   [m4_default([$3], :)])
 AS_VAR_POPDEF([CACHEVAR])dnl
 ])dnl AX_CHECK_COMPILE_FLAGS
-

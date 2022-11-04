@@ -3,6 +3,8 @@
 ##
 ## Process this file with automake.
 
+include $(top_srcdir)/aminclude_static.am
+
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING
 SUBDIRS = libs src tests doc

@@ -16,7 +16,7 @@ jobs:
     - name: update packages
       run: sudo apt-get update
     - name: install dependencies
-      run: sudo apt-get install -qq autotools-dev libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml asciidoc xmlto xsltproc
+      run: sudo apt-get install -qq autotools-dev autoconf-archive pkg-config libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-lxml asciidoc xmlto xsltproc
     - name: autogen
       run: ./autogen.sh
     - name: configure
