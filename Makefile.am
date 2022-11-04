@@ -5,7 +5,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING
-SUBDIRS = libs m4 src tests doc
+SUBDIRS = libs src tests doc
 ACLOCAL_AMFLAGS = -I m4
 
 if USE_BUNDLED_LIBS
