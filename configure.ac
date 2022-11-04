@@ -3,7 +3,7 @@
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
+AC_PREREQ([2.69])
 AC_INIT([dvisvgm],[2.14],[martin.gieseking@uos.de])
 DATE="August 2022"
 AC_CONFIG_SRCDIR(src)
@@ -18,13 +18,11 @@ AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_CC_C99
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX([11])
 AM_PROG_AR
 LT_INIT
 
-AC_PROG_RANLIB
 AC_LANG(C)
 
 AX_CHECK_COMPILE_FLAG([-Wmismatched-tags -Wno-mismatched-tags], [CXXFLAGS="$CXXFLAGS -Wno-mismatched-tags"])
@@ -147,7 +145,7 @@ AC_CHECK_LIB(z, gzopen)
 
 # Check for header files.
 AC_HEADER_DIRENT
-AC_HEADER_STDC
+
 AC_CHECK_HEADERS_ONCE([libintl.h stdlib.h string.h strings.h unistd.h])
 
 # Check for typedefs, structures, and compiler characteristics.
