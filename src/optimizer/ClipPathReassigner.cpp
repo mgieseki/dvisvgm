@@ -35,12 +35,14 @@ const char* ClipPathReassigner::info () const {
 /** Returns a hash value for an XML element where the id attribute is not taken into account.
  *  Two elements that differ only by their id attribute get the same hash value. */
 static uint64_t hash_value (XMLElement *elem) {
-	const char *id = elem->getAttributeValue("id");
+	string id;
+	if (const char* idval = elem->getAttributeValue("id"))
+		id = idval;
 	elem->removeAttribute("id");
 	ostringstream oss;
 	elem->write(oss);
 	uint64_t value = XXH64HashFunction(oss.str().data(), oss.str().length()).digestValue();
-	if (id)
+	if (!id.empty())
 		elem->addAttribute("id", id);
 	return value;
 }
