@@ -81,8 +81,8 @@ static string get_path_from_registry () {
 }
 #endif // _WIN32
 
-#if defined(_WIN32) && !defined(_WIN64)
-static string get_gsdll32 () {
+#if defined(_WIN32)
+static string get_gsdll () {
 	string pathstr;
 #if defined(TEXLIVEWIN32)
 	char exepath[256];
@@ -97,9 +97,13 @@ static string get_gsdll32 () {
 		pathstr += "bin\\";
 	}
 #endif
+#if defined(_WIN64)
+	return pathstr+"gsdll64.dll";
+#else
 	return pathstr+"gsdll32.dll";
+#endif
 }
-#endif  // _WIN32  && !_WIN64
+#endif  // _WIN32
 
 
 /** Try to detect name of the Ghostscript shared library depending on the user settings.
@@ -123,11 +127,7 @@ static string get_libgs (const string &fname) {
 	string gsdll_path = get_path_from_registry();
 	if (!gsdll_path.empty())
 		return gsdll_path;
-#endif //_WIN32
-#if defined(_WIN64)
-	return "gsdll64.dll";
-#elif defined(_WIN32)
-	return get_gsdll32();
+	return get_gsdll();
 #else
 	// try to find libgs.so.X on the user's system
 	const int abi_min=7, abi_max=10; // supported libgs ABI versions
