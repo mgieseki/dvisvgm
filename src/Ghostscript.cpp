@@ -130,7 +130,7 @@ static string get_libgs (const string &fname) {
 	return get_gsdll32();
 #else
 	// try to find libgs.so.X on the user's system
-	const int abi_min=7, abi_max=9; // supported libgs ABI versions
+	const int abi_min=7, abi_max=10; // supported libgs ABI versions
 	for (int i=abi_max; i >= abi_min; i--) {
 #if defined(__CYGWIN__)
 		string dlname = "cyggs-" + to_string(i) + ".dll";
@@ -378,19 +378,9 @@ const char* Ghostscript::error_name (int code) {
 	if (code < 0)
 		code = -code;
 	const char *error_names[] = { ERROR_NAMES };
-	if (code == 0 || (size_t)code > sizeof(error_names)/sizeof(error_names[0]))
+	if (code == 0 || size_t(code) > sizeof(error_names)/sizeof(error_names[0]))
 		return nullptr;
-#if defined(HAVE_LIBGS)
-	// use array defined in libgs to avoid linking the error strings into the binary
-	return gs_error_names[code-1];
-#elif defined(_WIN32)
-	// gs_error_names is private in the Ghostscript DLL so we can't access it here
 	return error_names[code-1];
-#else
-	if (auto error_names = loadSymbol<const char**>("gs_error_names"))
-		return error_names[code-1];
-	return nullptr;
-#endif
 }
 
 #endif  // !DISABLE_GS
