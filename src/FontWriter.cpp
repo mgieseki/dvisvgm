@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include "FontWriter.hpp"
 #include "Message.hpp"
 #include "utility.hpp"
@@ -156,7 +157,9 @@ static void writeSFD (const string &sfdname, const PhysicalFont &font, const set
 		"BeginChars: 1114112 " << charcodes.size() << '\n';
 
 	double extend = font.style() ? font.style()->extend : 1;
+	for (int c = 0; c <= 127; ++c) assert(charcodes.count(c) == 1);
 	for (int c : charcodes) {
+		assert(0 <= c && c <= 127);
 		string name = font.glyphName(c);
 		if (name.empty()) {
 			// if the font doesn't provide glyph names, use AGL name uFOO

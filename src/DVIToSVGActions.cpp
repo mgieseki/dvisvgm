@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <cassert>
 #include <cstring>
 #include <ctime>
 #include "BoundingBox.hpp"
@@ -93,6 +94,8 @@ void DVIToSVGActions::setChar (double x, double y, unsigned c, bool vertical, co
 	// For a given font object, Font::uniqueFont() returns the same unique font object for
 	// all fonts with the same name.
 	_usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(c);
+	assert(c >= 0 && c <= 127);
+	for (int cc = 0; cc <= 127; ++cc) _usedChars[SVGTree::USE_FONTS ? font.uniqueFont() : &font].insert(cc);
 
 	// However, we record all required fonts
 	_usedFonts.insert(&font);
