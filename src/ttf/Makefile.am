@@ -17,4 +17,9 @@ libttf_la_SOURCES = \
 	VheaTable.hpp   VheaTable.cpp \
 	VmtxTable.hpp   VmtxTable.cpp
 
-AM_CXXFLAGS = -I$(dvisvgm_srcdir)/libs/boost -I$(dvisvgm_srcdir)/libs/variant/include
+include ../../libs/defs.am
+
+AM_CXXFLAGS = \
+	-I$(dvisvgm_srcdir)/libs/boost \
+	-I$(dvisvgm_srcdir)/libs/variant/include \
+	$(BROTLI_CFLAGS) $(WOFF2_CFLAGS)
