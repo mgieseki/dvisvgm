@@ -418,6 +418,4 @@ XMLStringTest_LDADD = $(TESTLIBS)
 EXTRA_DIST += check-conv genhashcheck.py normalize.xsl
 TESTS += check-conv
 
-@CODE_COVERAGE_RULES@
-
 CLEANFILES = *.gcda *.gcno hashcheck.cpp

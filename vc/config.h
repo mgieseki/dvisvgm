@@ -27,8 +27,8 @@
 #define HAVE_STRING_H 1
 
 #ifdef _WIN64
-  #define TARGET_SYSTEM "x86_64-pc-win64"
+  #define HOST_SYSTEM "x86_64-pc-win64"
 #else
-  #define TARGET_SYSTEM "i686-pc-win32"
+  #define HOST_SYSTEM "i686-pc-win32"
 #endif
 #endif

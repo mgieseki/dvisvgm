@@ -675,6 +675,20 @@ uint32_t NativeFontImpl::unicode (uint32_t c) const {
 }
 
 
+double NativeFont::hAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(c)/upem) : 0;
+}
+
+
+double NativeFont::vAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getVAdvance(c)/upem) : 0;
+}
+
+
 void NativeFontImpl::mapCharToUnicode (uint32_t c, uint32_t codepoint) {
 	_toUnicodeMap.addRange(c, c, codepoint);
 }

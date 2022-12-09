@@ -256,9 +256,9 @@ class VersionInfo {
 
 static void print_version (bool extended) {
 	string versionstr = string(PROGRAM_NAME)+" "+PROGRAM_VERSION;
-#ifdef TARGET_SYSTEM
-	if (extended && strlen(TARGET_SYSTEM) > 0)
-		versionstr += " (" TARGET_SYSTEM ")";
+#ifdef HOST_SYSTEM
+	if (extended && strlen(HOST_SYSTEM) > 0)
+		versionstr += " (" HOST_SYSTEM ")";
 #endif
 	cout << versionstr << '\n';
 	if (extended) {

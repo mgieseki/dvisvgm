@@ -141,12 +141,16 @@ static string get_libgs (const string &fname) {
 		if (loader.loaded())
 			return dlname;
 #if defined(__APPLE__)
-		dlname = "libgs." + to_string(i) + ".dylib";
-		if (loader.loadLibrary(dlname))
-			return dlname;
-		dlname = "libgs.dylib." + to_string(i);
-		if (loader.loadLibrary(dlname))
-			return dlname;
+		// dlopen() requires an absolute path in a hardened runtime such as installed
+		// by MacTeX. Thus, explicitly lookup libgs in /usr/local/lib too.
+		for (const string path : {"", "/usr/local/lib/"}) {
+			dlname = path + "libgs." + to_string(i) + ".dylib";
+			if (loader.loadLibrary(dlname))
+				return dlname;
+			dlname = path + "libgs.dylib." + to_string(i);
+			if (loader.loadLibrary(dlname))
+				return dlname;
+		}
 #endif
 	}
 #endif

@@ -3,9 +3,11 @@
 ##
 ## Process this file with automake.
 
+include $(top_srcdir)/aminclude_static.am
+
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING
-SUBDIRS = libs m4 src tests doc
+SUBDIRS = libs src tests doc
 ACLOCAL_AMFLAGS = -I m4
 
 if USE_BUNDLED_LIBS

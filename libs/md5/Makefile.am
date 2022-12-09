@@ -6,7 +6,6 @@ AM_CXXFLAGS = -Wall
 
 md5.c: md5.h
 
-@CODE_COVERAGE_RULES@
 endif
 
 CLEANFILES = *.gcda *.gcno

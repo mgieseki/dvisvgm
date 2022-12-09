@@ -10,21 +10,18 @@ AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
-AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE([subdir-objects dist-xz])
 
-AH_TEMPLATE([TARGET_SYSTEM], [The machine triplet of the target system])
-AC_DEFINE_UNQUOTED([TARGET_SYSTEM], ["$target"])
+AH_TEMPLATE([HOST_SYSTEM], [The machine triplet of the host system])
+AC_DEFINE_UNQUOTED([HOST_SYSTEM], ["$host"])
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_CC_C99
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX([11])
 AM_PROG_AR
 LT_INIT
 
-AC_PROG_RANLIB
 AC_LANG(C)
 
 AX_CHECK_COMPILE_FLAG([-Wmismatched-tags -Wno-mismatched-tags], [CXXFLAGS="$CXXFLAGS -Wno-mismatched-tags"])
@@ -55,6 +52,7 @@ AC_CHECK_LIB([kpathsea], [kpse_find_file],,
 
 AC_MSG_CHECKING([kpathsea version])
 AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
+	#include <stdlib.h>
 	#include <kpathsea/kpathsea.h>
 	int main() {
 		FILE *f;
@@ -146,7 +144,7 @@ AC_CHECK_LIB(z, gzopen)
 
 # Check for header files.
 AC_HEADER_DIRENT
-AC_HEADER_STDC
+
 AC_CHECK_HEADERS_ONCE([libintl.h stdlib.h string.h strings.h unistd.h])
 
 # Check for typedefs, structures, and compiler characteristics.
@@ -205,6 +203,7 @@ AS_IF([test "x$enable_manpage" != "xyes"],
 AM_CONDITIONAL([BUILD_MANPAGE], [test "x$enable_manpage" = "xyes"])
 
 AX_CODE_COVERAGE
+
 AS_IF([ test "$enable_code_coverage" = "yes" ], [
 	# disable optimization
 	changequote({,})
@@ -228,7 +227,6 @@ AC_CONFIG_FILES([
 	libs/variant/Makefile
 	libs/woff2/Makefile
 	libs/xxHash/Makefile
-	m4/Makefile
 	src/Makefile
 	src/version.hpp
 	src/fonts/Makefile
