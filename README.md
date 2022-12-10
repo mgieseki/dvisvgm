@@ -32,7 +32,7 @@ Short overview of the main features:
 * Computes tight bounding boxes for the generated graphics, but supports common paper formats and arbitrary user-defined sizes as well.
 * Option `--eps` allows to convert [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) files to SVG.
 * Option `--pdf` allows to convert [PDF](https://en.wikipedia.org/wiki/PDF) documents to SVG.
-* [Intersections of clipping paths](https://dvisvgm.de/Clipping) can be computed directly instead of delegating this task to the SVG renderer. This increases the compatibility of the generated SVG files.
+* [Intersections of clipping paths](https://dvisvgm.de/Clipping) can be computed directly instead of delegating this task to the SVG renderer which increases the compatibility of the generated SVG files.
 * Approximates PostScript [color gradient fills](https://dvisvgm.de/Gradients) not directly supported by SVG 1.1.
 * The generated SVG structure and data can be improved with the built-in [SVG optimizer](https://dvisvgm.de/Manpage/#opt-optimize).
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
@@ -76,7 +76,7 @@ _dvisvgm_ relies on the following free libraries:
   files in the large `texmf` tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
-* [OpenSSL crypto library](https://www.openssl.org)
+* [OpenSSL crypto library](https://www.openssl.org)  
   _dvisvgm_ comes with a bundled implementation of the MD5 hash algorithm which can optionally
   be replaced with the corresponding function of the OpenSSL crypto library. If the
   configuration script finds the OpenSSL development files on the build system, it links
