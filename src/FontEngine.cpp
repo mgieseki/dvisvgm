@@ -440,11 +440,13 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 		}
 		FT_Outline outline = face->glyph->outline;
 		// apply style parameters if set
-		if (const FontStyle *style = font->style()) {
-			FT_Matrix matrix = {to_16dot16(style->extend), to_16dot16(style->slant), 0, to_16dot16(1)};
-			FT_Outline_Transform(&outline, &matrix);
-			if (style->bold != 0)
-				FT_Outline_Embolden(&outline, style->bold/font->scaledSize()*face->units_per_EM);
+		if (font) {
+			if (const FontStyle *style = font->style()) {
+				FT_Matrix matrix = {to_16dot16(style->extend), to_16dot16(style->slant), 0, to_16dot16(1)};
+				FT_Outline_Transform(&outline, &matrix);
+				if (style->bold != 0)
+					FT_Outline_Embolden(&outline, style->bold/font->scaledSize()*face->units_per_EM);
+			}
 		}
 		const FT_Outline_Funcs funcs = {moveto, lineto, quadto, cubicto, 0, 0};
 		FT_Outline_Decompose(&outline, &funcs, &glyph);
