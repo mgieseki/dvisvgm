@@ -108,7 +108,7 @@ class PSInterpreter {
 		bool executeRaw (const std::string &str, int n);
 		bool active () const                   {return _mode != PS_QUIT;}
 		void limit (size_t max_bytes)          {_bytesToRead = max_bytes;}
-		void setFilter (PSFilter *filter)      {_filter = filter;}
+		PSFilter* setFilter (PSFilter *filter);
 		PSActions* setActions (PSActions *actions);
 		int pdfPageCount (const std::string &fname);
 		BoundingBox pdfPageBox (const std::string &fname, int pageno);

@@ -155,7 +155,9 @@ void PsSpecialHandler::executeAndSync (istream &is, bool updatePos) {
 		_actions->getColor().getRGB(r, g, b);
 		ostringstream oss;
 		oss << '\n' << r << ' ' << g << ' ' << b << " setrgbcolor ";
+		PSFilter *filter = _psi.setFilter(nullptr);  // don't apply any filters here
 		_psi.execute(oss.str(), false);
+		_psi.setFilter(filter);
 	}
 	_psi.execute(is);
 	if (updatePos) {

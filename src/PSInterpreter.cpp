@@ -81,6 +81,16 @@ void PSInterpreter::init () {
 }
 
 
+/** Sets or replaces the filter applied to the PS code.
+ *  @param[in] filter the new filter being used
+ *  @return the previous, replaced filter (nullptr if there was none) */
+PSFilter* PSInterpreter::setFilter (PSFilter *filter) {
+	PSFilter *prevFilter = _filter;
+	_filter = filter;
+	return prevFilter;
+}
+
+
 PSActions* PSInterpreter::setActions (PSActions *actions) {
 	PSActions *old_actions = _actions;
 	_actions = actions;
