@@ -16,7 +16,7 @@ _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 [PDF](https://en.wikipedia.org/wiki/PDF) files to the
 XML-based scalable vector graphics format [SVG](https://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (version 2) as well as DVI output
-created by [pTeX](http://www.ascii.co.jp/pb/ptex) in vertical mode (version 3),
+created by [pTeX](https://ctan.org/pkg/ptex) in vertical mode (version 3),
 and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
 
 To get an impression of the conversion results, have a look at the
@@ -24,7 +24,7 @@ To get an impression of the conversion results, have a look at the
 
 Short overview of the main features:
 
-* Complete font support including [virtual fonts](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=virtualfonts), evaluation of [font encodings](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=whatenc), CMap files, sub-font definitions and font maps.
+* Complete font support including [virtual fonts](https://texfaq.org/FAQ-virtualfonts), evaluation of [font encodings](https://texfaq.org/FAQ-whatenc), CMap files, sub-font definitions and font maps.
 * Glyph outlines of all required fonts are embedded into the generated SVG files.
 * The font data can be embedded in SVG, TrueType, WOFF, or WOFF2 format.
 * Glyph outlines of fonts that are not available in a vector format are generated on-the-fly by vectorizing [METAFONT](https://en.wikipedia.org/wiki/Metafont)'s bitmap output.
@@ -37,7 +37,7 @@ Short overview of the main features:
 * The generated SVG structure and data can be improved with the built-in [SVG optimizer](https://dvisvgm.de/Manpage/#opt-optimize).
 * Optionally creates compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 * Provides options for applying page transformations, like translation, rotation, scaling, and skewing.
-* Evaluates several [specials](http://www.tex.ac.uk/cgi-bin/texfaq2html?label=specials) including color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF hyperlink and mapfile, as well as PostScript specials.
+* Evaluates several [specials](https://texfaq.org/FAQ-specials) including color, emTeX, tpic, hyperref/HyperTeX, papersize, PDF hyperlink and mapfile, as well as PostScript specials.
 * The converter was successfully tested on various Linux ([TeX Live](https://www.tug.org/texlive)) and Windows ([MiKTeX](https://www.miktex.org), TeX Live) systems.
 * _dvisvgm_ has been added to [TeX Live](https://www.tug.org/texlive), [MiKTeX](https://www.miktex.org), and [MacPorts](https://www.macports.org). It is therefore available for a wide range of operating systems.
 
