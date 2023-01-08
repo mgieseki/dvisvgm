@@ -120,6 +120,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			SVGOptimizer(_svg).execute();
 			embedFonts(_svg.rootNode());
 			bool success = _svg.write(_out.getPageStream(currentPageNumber(), numberOfPages(), hashTriple));
+			_out.finish();
 			string fname = path.shorterAbsoluteOrRelative();
 			if (fname.empty())
 				fname = "<stdout>";
