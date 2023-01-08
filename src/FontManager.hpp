@@ -67,7 +67,7 @@ class FontManager {
 		int fontID (int n) const;
 		int fontID (const Font *font) const;
 		int fontID (const std::string &name) const;
-		int fontID (const std::string &name, double ptsize) const;
+		int fontID (std::string name, double ptsize) const;
 		int fontnum (int id) const;
 		int vfFirstFontNum (const VirtualFont *vf) const;
 		Font* vfFirstFont (const VirtualFont *vf) const;
