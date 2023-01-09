@@ -52,9 +52,12 @@ bool Unicode::isValidCodepoint (uint32_t c) {
 
 /** Returns a valid Unicode point for the given character code. Character codes
  *  that are invalid code points because the XML standard forbids or discourages
- *  their usage, are mapped to the Private Use Zone U+E000-U+F8FF. */
-uint32_t Unicode::charToCodepoint (uint32_t c) {
-	uint32_t ranges[] = {
+ *  their usage, are mapped to the Private Use Zone U+E000-U+F8FF.
+ *  @param[in] c character code to map
+ *  @param[in] permitSpace if true, space characters are treated as allowed code points
+ *  @return the code point */
+uint32_t Unicode::charToCodepoint (uint32_t c, bool permitSpace) {
+	static uint32_t ranges[] = {
 		0x0000, 0x0020, 0xe000, // basic control characters + space
 		0x007f, 0x009f, 0xe021, // use of control characters is discouraged by the XML standard
 		0x202a, 0x202e, 0xe042, // bidi control characters
@@ -78,9 +81,12 @@ uint32_t Unicode::charToCodepoint (uint32_t c) {
 		0xffffe, 0xfffff, 0xe885,
 		0x10fffe, 0x10ffff, 0xe887
 	};
-	for (size_t i=0; i < sizeof(ranges)/sizeof(unsigned) && c >= ranges[i]; i+=3)
-		if (c <= ranges[i+1])
-			return ranges[i+2]+c-ranges[i];
+	if (!permitSpace || c != 0x20) {
+		for (size_t i=0; i < sizeof(ranges)/sizeof(uint32_t) && c >= ranges[i]; i+=3) {
+			if (c <= ranges[i+1])
+				return ranges[i+2]+c-ranges[i];
+		}
+	}
 	return c;
 }
 

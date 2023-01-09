@@ -676,7 +676,12 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 						if (glyph == 0)
 							glyph = parse_attr_value<int>(charElement, "glyph");
 					}
-					auto utf8 = compose_utf8_char(charElement, glyph);
+					// determine code point of current character
+					string utf8;
+					if (charElement->hasAttribute("unicode"))
+						utf8 = parse_attr_value<string>(charElement, "unicode");
+					if (utf8.empty())
+						utf8 = compose_utf8_char(charElement, glyph);
 					if (glyph == 0 || utf8.empty())
 						continue;
 					DPair p(parse_attr_value<double>(charElement, "x"), parse_attr_value<double>(charElement, "y"));

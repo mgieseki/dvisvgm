@@ -671,7 +671,7 @@ Character NativeFontImpl::decodeChar (uint32_t c) const {
 
 uint32_t NativeFontImpl::unicode (uint32_t c) const {
 	uint32_t ucode = _toUnicodeMap.valueAt(c);
-	return Unicode::charToCodepoint(ucode);
+	return Unicode::charToCodepoint(ucode, true);
 }
 
 
