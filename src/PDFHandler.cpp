@@ -671,8 +671,11 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 					int glyph;
 					if (font->isCIDFont())
 						glyph = parse_attr_value<int>(charElement, "glyph");
-					else
+					else {
 						glyph = font->charIndexByName(parse_attr_value<string>(charElement, "glyph"));
+						if (glyph == 0)
+							glyph = parse_attr_value<int>(charElement, "glyph");
+					}
 					auto utf8 = compose_utf8_char(charElement, glyph);
 					if (glyph == 0 || utf8.empty())
 						continue;
