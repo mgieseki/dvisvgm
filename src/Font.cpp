@@ -643,6 +643,20 @@ double NativeFont::charDepth (int c) const {
 	return upem ? (scaledSize()*FontEngine::instance().getDepth(decodeChar(c))/upem) : 0;
 }
 
+
+double NativeFont::hAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(c)/upem) : 0;
+}
+
+
+double NativeFont::vAdvance (Character c) const {
+	FontEngine::instance().setFont(*this);
+	int upem = FontEngine::instance().getUnitsPerEM();
+	return upem ? (scaledSize()*FontEngine::instance().getVAdvance(c)/upem) : 0;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 NativeFontImpl::NativeFontImpl (string fname, string fontname, double ptsize)
@@ -672,20 +686,6 @@ Character NativeFontImpl::decodeChar (uint32_t c) const {
 uint32_t NativeFontImpl::unicode (uint32_t c) const {
 	uint32_t ucode = _toUnicodeMap.valueAt(c);
 	return Unicode::charToCodepoint(ucode, true);
-}
-
-
-double NativeFont::hAdvance (Character c) const {
-	FontEngine::instance().setFont(*this);
-	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getHAdvance(c)/upem) : 0;
-}
-
-
-double NativeFont::vAdvance (Character c) const {
-	FontEngine::instance().setFont(*this);
-	int upem = FontEngine::instance().getUnitsPerEM();
-	return upem ? (scaledSize()*FontEngine::instance().getVAdvance(c)/upem) : 0;
 }
 
 
