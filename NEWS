@@ -1,12 +1,27 @@
+dvisvgm-3.0.1 (2023-01-10)
+- added support for the 64-bit GS library in TeX Live
+  (patch sent by Akira Kakuto)
+- MacTeX: explicitly lookup libgs in /usr/local/lib (GH issue #197)
+- fixed character spacing when processing XDV glyph arrays (GH issue #198)
+- fixed invalid removal of non-redundant clipPath elements (GH issue #203)
+- fixed computation of the graphics extents printed to the console when using
+  the preview package (GH issue #209)
+- several improvements of the autotool scripts (thanks to Sam James)
+- improved processing of fonts when using the new PDF handler
+
 dvisvgm-3.0 (2022-10-16)
 - added new PDF handler based on mutool to keep the PDF functionality available
   which can't no longer be realized with as of Ghostscript 10.1.0 due to the
   replacement of its PDF interpreter
-- replaced bundled FontForge library with new FontFriter	module
-- added option --embed-bitmaps to allow for embedding external bitmaps
-  referenced in DVI files
+- replaced the bundled minimal Fontforge library (ff-woff) with a dedicated,
+  newly implemented library for embedding TTF/WOFF data into the SVG files
+- added option --embed-bitmaps to embed bitmaps into the generated SVG files
+  instead of referencing the external files
+- exteded option --tmpdir to optionally suppress the creation of uniquely
+  named subfolders
 - added filters :even and :odd to option --page to limit the given page ranges
   to even and odd page numbers respectively
+- fixed the call of ttfautohint to prevent potential memory errors
 
 dvisvgm-2.14 (2022-08-12)
 - added processing of SVG path elements inserted by "raw" specials in order to
@@ -25,7 +40,7 @@ dvisvgm-2.13.4 (2022-04-20)
 
 dvisvgm-2.13.3 (2022-02-27)
 - added SVG optimizer module 'reassign-clippaths' that searches for duplicate
-  clipPath elements, removes them, and updates the clip-path references	
+  clipPath elements, removes them, and updates the clip-path references
 - replaced method to clip embedded EPS/PDF graphics that usually results in
   faster rendering of the affected SVG sections
 - fixed a regression regarding transformations of embedded EPS/PDF graphics
