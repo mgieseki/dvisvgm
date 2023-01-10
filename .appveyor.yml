@@ -12,7 +12,7 @@ branches:
       - tmp
 
 install:
-  - set FREETYPE_VER=2.12.0
+  - set FREETYPE_VER=2.12.1
   - set ZLIB_VER=1.2.13
   - set TTFA_VER=1.8.4
   - set TTFA_REV=1
