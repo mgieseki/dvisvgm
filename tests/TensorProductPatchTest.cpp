@@ -2,7 +2,7 @@
 ** TensorProductPatchTest.cpp                                           **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -78,7 +78,7 @@ class TensorProductPatchTest : public ::testing::Test {
 			_patch.setColors(colors, 0, 0);
 		}
 
-		void checkBezierPoints (const Bezier &b, const DPair &p1, const DPair &p2, const DPair &p3, const DPair &p4) const {
+		void checkBezierPoints (const CubicBezier &b, const DPair &p1, const DPair &p2, const DPair &p3, const DPair &p4) const {
 			EXPECT_EQ(b.point(0), p1);
 			EXPECT_EQ(b.point(1), p2);
 			EXPECT_EQ(b.point(2), p3);
@@ -184,7 +184,7 @@ TEST_F(TensorProductPatchTest, vertices) {
 
 
 TEST_F(TensorProductPatchTest, curves) {
-	Bezier bezier;
+	CubicBezier bezier;
 	_patch.horizontalCurve(0, bezier);
 	CHECK_BEZIER_POINTS("A", bezier, DPair(10, 10), DPair(20, 0), DPair(50, 30), DPair(70, 20));
 	_patch.horizontalCurve(1, bezier);

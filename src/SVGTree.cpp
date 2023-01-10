@@ -2,7 +2,7 @@
 ** SVGTree.cpp                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -88,6 +88,13 @@ void SVGTree::setFont (int num, const Font &font) {
 	// set default color assigned to the font
 	if (font.color() != Color::BLACK && getColor() != font.color())
 		setColor(font.color());
+}
+
+
+pair<int,const Font*> SVGTree::getFontPair () const {
+	if (_charHandler)
+		return {_charHandler->getFontID(), _charHandler->getFont()};
+	return {0, nullptr};
 }
 
 
@@ -258,7 +265,7 @@ void SVGTree::append (const PhysicalFont &font, const set<int> &chars, GFGlyphTr
 			auto fontNode = util::make_unique<XMLElement>("font");
 			string fontname = font.name();
 			fontNode->addAttribute("id", fontname);
-			fontNode->addAttribute("horiz-adv-x", font.hAdvance());
+			fontNode->addAttribute("horiz-adv-x", font.hAverageAdvance());
 
 			auto faceNode = util::make_unique<XMLElement>("font-face");
 			faceNode->addAttribute("font-family", fontname);

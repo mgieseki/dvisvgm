@@ -2,7 +2,7 @@
 ** DvisvgmSpecialHandler.cpp                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -23,6 +23,7 @@
 #include <utility>
 #include "Calculator.hpp"
 #include "DvisvgmSpecialHandler.hpp"
+#include "GraphicsPathParser.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "Length.hpp"
@@ -35,10 +36,60 @@
 using namespace std;
 
 
-DvisvgmSpecialHandler::DvisvgmSpecialHandler () :
-	_currentMacro(_macros.end()),
-	_defsParser(&SVGTree::appendToDefs, &SVGTree::pushDefsContext, &SVGTree::popDefsContext),
-	_pageParser(&SVGTree::appendToPage, &SVGTree::pushPageContext, &SVGTree::popPageContext)
+void SVGParser::assign (SVGTree &svg, Append append, PushContext pushContext, PopContext popContext) {
+	_svg = &svg;
+	_append = append;
+	_pushContext = pushContext;
+	_popContext = popContext;
+	setRootElement(nullptr);
+}
+
+
+XMLElement* SVGParser::openElement (const std::string &tag) {
+	XMLElement *elem = XMLParser::openElement(tag);
+	if (elem->name() == "path" || elem->name() == "svg:path") {
+		if (const char *d = elem->getAttributeValue("d")) {
+			try {
+				// parse and reformat path definition
+				auto path = GraphicsPathParser<double>().parse(d);
+				ostringstream oss;
+				path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
+				elem->addAttribute("d", oss.str());
+			}
+			catch (const GraphicsPathParserException &e) {
+				throw XMLParserException(string("error in path data: ")+e.what());
+			}
+		}
+	}
+	return elem;
+}
+
+
+void SVGParser::appendNode (unique_ptr<XMLNode> node) {
+	(_svg->*_append)(std::move(node));
+}
+
+
+XMLElement* SVGParser::finishPushContext (unique_ptr<XMLElement> elem) {
+	unique_ptr<SVGElement> svgElement{static_cast<SVGElement*>(elem.release())};
+	XMLElement *elemPtr = svgElement.get();
+	(_svg->*_pushContext)(std::move(svgElement));
+	return elemPtr;
+}
+
+
+void SVGParser::finishPopContext () {
+	(_svg->*_popContext)();
+}
+
+
+XMLElement* SVGParser::createElementPtr (std::string name) const {
+	return new SVGElement(std::move(name));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+DvisvgmSpecialHandler::DvisvgmSpecialHandler () : _currentMacro(_macros.end())
 {
 }
 
@@ -232,7 +283,7 @@ void DvisvgmSpecialHandler::processRaw (InputReader &ir, SpecialActions &actions
 		if (!xml.empty()) {
 			evaluate_expressions(xml, actions);
 			expand_constants(xml, actions);
-			_pageParser.parse(xml, actions.svgTree());
+			_pageParser.parse(std::move(xml));
 		}
 	}
 }
@@ -244,7 +295,7 @@ void DvisvgmSpecialHandler::processRawDef (InputReader &ir, SpecialActions &acti
 		if (!xml.empty()) {
 			evaluate_expressions(xml, actions);
 			expand_constants(xml, actions);
-			_defsParser.parse(xml, actions.svgTree());
+			_defsParser.parse(std::move(xml));
 		}
 	}
 }
@@ -276,9 +327,9 @@ void DvisvgmSpecialHandler::processRawPut (InputReader &ir, SpecialActions &acti
 		if ((type == 'P' || type == 'D') && !def.empty()) {
 			expand_constants(def, actions);
 			if (type == 'P')
-				_pageParser.parse(def, actions.svgTree());
+				_pageParser.parse(std::move(def));
 			else {          // type == 'D'
-				_defsParser.parse(def, actions.svgTree());
+				_defsParser.parse(std::move(def));
 				type = 'L';  // locked
 			}
 		}
@@ -413,9 +464,16 @@ void DvisvgmSpecialHandler::dviPreprocessingFinished () {
 }
 
 
+void DvisvgmSpecialHandler::dviBeginPage (unsigned, SpecialActions &actions) {
+	SVGTree &svg = actions.svgTree();
+	_defsParser.assign(svg, &SVGTree::appendToDefs, &SVGTree::pushDefsContext, &SVGTree::popDefsContext);
+	_pageParser.assign(svg, &SVGTree::appendToPage, &SVGTree::pushPageContext, &SVGTree::popPageContext);
+}
+
+
 void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
-	_defsParser.finish(actions.svgTree());
-	_pageParser.finish(actions.svgTree());
+	_defsParser.finish();
+	_pageParser.finish();
 	actions.bbox().unlock();
 	for (auto &strvecpair : _macros) {
 		StringVector &vec = strvecpair.second;

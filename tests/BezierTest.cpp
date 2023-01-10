@@ -2,7 +2,7 @@
 ** BezierTest.cpp                                                       **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -34,60 +34,66 @@ const double EPS = 0.001;
 
 TEST(BezierTest, construct) {
 	// quadratic Bézier curve
-	Bezier bezier1(DPair(0,0), DPair(12,12), DPair(24,6));
+	QuadBezier bezier1(DPair(0,0), DPair(12,12), DPair(24,6));
 	EXPECT_EQ(bezier1.point(0), DPair(0,0));
-	EXPECT_EQ(bezier1.point(1), DPair(8,8));
-	EXPECT_EQ(bezier1.point(2), DPair(16,10));
-	EXPECT_EQ(bezier1.point(3), DPair(24,6));
+	EXPECT_EQ(bezier1.point(1), DPair(12,12));
+	EXPECT_EQ(bezier1.point(2), DPair(24,6));
+
+	// cubic from quadratic (elevate degree)
+	CubicBezier bezier2(bezier1);
+	EXPECT_EQ(bezier2.point(0), DPair(0,0));
+	EXPECT_EQ(bezier2.point(1), DPair(8,8));
+	EXPECT_EQ(bezier2.point(2), DPair(16,10));
+	EXPECT_EQ(bezier2.point(3), DPair(24,6));
 
 	// cubic Bézier curve
-	Bezier bezier2(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
-	EXPECT_EQ(bezier2.point(0), DPair(0,0));
-	EXPECT_EQ(bezier2.point(1), DPair(12,12));
-	EXPECT_EQ(bezier2.point(2), DPair(24,6));
-	EXPECT_EQ(bezier2.point(3), DPair(19,-4));
+	CubicBezier bezier3(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
+	EXPECT_EQ(bezier3.point(0), DPair(0,0));
+	EXPECT_EQ(bezier3.point(1), DPair(12,12));
+	EXPECT_EQ(bezier3.point(2), DPair(24,6));
+	EXPECT_EQ(bezier3.point(3), DPair(19,-4));
 }
 
 
 TEST(BezierTest, subcurve) {
-	Bezier bezier1(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
+	CubicBezier bezier1(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
 	{
-		Bezier subcurve(bezier1, 0, 1);
+		CubicBezier subcurve(bezier1, 0, 1);
 		EXPECT_EQ(subcurve.point(0), DPair(0,0));
 		EXPECT_EQ(subcurve.point(1), DPair(12,12));
 		EXPECT_EQ(subcurve.point(2), DPair(24,6));
 		EXPECT_EQ(subcurve.point(3), DPair(19,-4));
 	}
 	{
-		Bezier subcurve(bezier1, 0, 0.5);
+		CubicBezier subcurve(bezier1, 0, 0.5);
 		EXPECT_EQ(subcurve.point(0), DPair(0,0));
 		EXPECT_EQ(subcurve.point(1), DPair(6,6));
 		EXPECT_EQ(subcurve.point(2), DPair(12,7.5));
 		EXPECT_EQ(subcurve.point(3), DPair(15.875,6.25));
 	}
 	{
-		Bezier subcurve(bezier1, 1, 0.5);
+		CubicBezier subcurve(bezier1, 1, 0.5);
 		EXPECT_EQ(subcurve.point(0), DPair(15.875,6.25));
 		EXPECT_EQ(subcurve.point(1), DPair(19.75,5));
 		EXPECT_EQ(subcurve.point(2), DPair(21.5,1));
 		EXPECT_EQ(subcurve.point(3), DPair(19,-4));
 	}
 	{
-		Bezier subcurve(bezier1, 0.2, 0.8);
+		CubicBezier subcurve(bezier1, 0.2, 0.8);
 		EXPECT_PAIR_NEAR(subcurve.point(0), DPair(7.064,5.152));
 		EXPECT_PAIR_NEAR(subcurve.point(1), DPair(13.856,8.368));
 		EXPECT_PAIR_NEAR(subcurve.point(2), DPair(19.424,6.112));
 		EXPECT_PAIR_NEAR(subcurve.point(3), DPair(20.096,1.408));
 	}
 	{
-		Bezier subcurve(bezier1, 0, 0);
+		CubicBezier subcurve(bezier1, 0, 0);
 		EXPECT_EQ(subcurve.point(0), DPair(0,0));
 		EXPECT_EQ(subcurve.point(1), DPair(0,0));
 		EXPECT_EQ(subcurve.point(2), DPair(0,0));
 		EXPECT_EQ(subcurve.point(3), DPair(0,0));
 	}
 	{
-		Bezier subcurve(bezier1, 1, 1);
+		CubicBezier subcurve(bezier1, 1, 1);
 		EXPECT_EQ(subcurve.point(0), DPair(19,-4));
 		EXPECT_EQ(subcurve.point(1), DPair(19,-4));
 		EXPECT_EQ(subcurve.point(2), DPair(19,-4));
@@ -97,7 +103,7 @@ TEST(BezierTest, subcurve) {
 
 
 TEST(BezierTest, reverse) {
-	Bezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
+	CubicBezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(19,-4));
 	bezier.reverse();
 	EXPECT_EQ(bezier.point(0), DPair(19,-4));
 	EXPECT_EQ(bezier.point(1), DPair(24,6));
@@ -107,7 +113,7 @@ TEST(BezierTest, reverse) {
 
 
 TEST(BezierTest, bbox) {
-	Bezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
+	CubicBezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
 	EXPECT_BBOX_NEAR(bezier.getBBox(), BoundingBox(0, -5, 30, 6.598));
 }
 
@@ -115,7 +121,7 @@ TEST(BezierTest, bbox) {
 TEST(BezierTest, approximate) {
 	vector<DPair> points;
 	vector<double> times;
-	Bezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
+	CubicBezier bezier(DPair(0,0), DPair(12,12), DPair(24,6), DPair(30,-5));
 	size_t size = bezier.approximate(0.1, points, &times);
 	double t[] = {0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 1};
 	DPair p[] = {
@@ -134,7 +140,7 @@ TEST(BezierTest, approximate) {
 
 TEST(BezierTest, reduceDegree) {
 	vector<DPair> points;
-	Bezier bezier(DPair(0,0), DPair(5,10), DPair(10,5));
+	CubicBezier bezier(QuadBezier(DPair(0,0), DPair(5,10), DPair(10,5)));
 	int degree = bezier.reduceDegree(0.1, points);
 	EXPECT_EQ(degree, 2);
 	EXPECT_EQ(points[0], DPair(0,0));

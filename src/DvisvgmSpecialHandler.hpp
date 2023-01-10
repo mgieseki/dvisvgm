@@ -2,7 +2,7 @@
 ** DvisvgmSpecialHandler.hpp                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -43,6 +43,30 @@ class XMLNode;
 #pragma pointers_to_members(full_generality, single_inheritance)
 #endif
 
+class SVGParser : public XMLParser {
+	using Append = void (SVGTree::*)(std::unique_ptr<XMLNode> node);
+	using PushContext = void (SVGTree::*)(std::unique_ptr<SVGElement> elem);
+	using PopContext = void (SVGTree::*)();
+
+	public:
+		SVGParser () : XMLParser() {}
+		void assign (SVGTree &svg, Append append, PushContext pushContext, PopContext popContext);
+
+	protected:
+		XMLElement* openElement (const std::string &tag) override;
+		void appendNode (std::unique_ptr<XMLNode> node) override;
+		XMLElement* finishPushContext (std::unique_ptr<XMLElement> elem) override;
+		void finishPopContext () override;
+		XMLElement* createElementPtr (std::string name) const override;
+
+	private:
+		SVGTree *_svg=nullptr;
+		Append _append=nullptr;
+		PushContext _pushContext=nullptr;
+		PopContext _popContext=nullptr;
+};
+
+
 class DvisvgmSpecialHandler : public SpecialHandler {
 	using StringVector = std::vector<std::string>;
 	using MacroMap = std::unordered_map<std::string, StringVector>;
@@ -69,14 +93,15 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		void processBBox (InputReader &ir, SpecialActions &actions);
 		void processImg (InputReader &ir, SpecialActions &actions);
 		void dviPreprocessingFinished () override;
+		void dviBeginPage (unsigned pageno, SpecialActions &actions) override;
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 
 	private:
 		MacroMap _macros;
 		MacroMap::iterator _currentMacro;
 		int _nestingLevel=0;    ///< nesting depth of rawset specials
-		XMLParser _defsParser;  ///< parses XML added by 'rawdef' specials
-		XMLParser _pageParser;  ///< parses XML added by 'raw' specials
+		SVGParser _defsParser;  ///< parses XML added by 'rawdef' specials
+		SVGParser _pageParser;  ///< parses XML added by 'raw' specials
 };
 
 #endif

@@ -2,7 +2,7 @@
 ** Opacity.hpp                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -27,6 +27,7 @@ class OpacityAlpha {
 	public:
 		OpacityAlpha () =default;
 		OpacityAlpha (double constalpha, double shapealpha) : _constalpha(constalpha), _shapealpha(shapealpha) {}
+		explicit OpacityAlpha (double alpha) : _constalpha(alpha) {}
 		void setConstAlpha (double alpha) { _constalpha = alpha;}
 		void setShapeAlpha (double shapealpha) {_shapealpha = shapealpha;}
 		double value () const {return _constalpha * _shapealpha;}
@@ -65,6 +66,8 @@ class Opacity {
 		bool isStrokeDefault () const {return _strokealpha.isOpaque() && _blendMode == BM_NORMAL;}
 		bool operator == (const Opacity &opacity) const;
 		bool operator != (const Opacity &opacity) const;
+
+		static BlendMode blendMode (const std::string &name);
 
 	private:
 		OpacityAlpha _fillalpha;

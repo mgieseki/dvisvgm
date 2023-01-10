@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Header Files">
@@ -17,6 +17,18 @@
     </Filter>
     <Filter Include="Header Files\optimizer">
       <UniqueIdentifier>{30c147de-3bba-4bb4-9415-c0b6f86f88a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ttf">
+      <UniqueIdentifier>{31f4f80d-a4a2-41cb-a416-6e71a96c1492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ttf">
+      <UniqueIdentifier>{e5a10433-9776-43ca-97d3-50b07775bfb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\base14fonts">
+      <UniqueIdentifier>{1aa822ed-3e57-4fa1-979e-541b9f566f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\base14fonts">
+      <UniqueIdentifier>{86a9739b-3253-4e35-a202-1571d8e2605f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +290,6 @@
     <ClCompile Include="..\src\CLCommandLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ffwrapper.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\FontWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -293,11 +302,47 @@
     <ClCompile Include="..\src\PDFParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TrueTypeFont.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\ttf\CmapTable.cpp">
+      <Filter>Source Files\ttf</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TTFAutohint.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\ttf\GlyfTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\HeadTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\HheaTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\HmtxTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\MaxpTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\NameTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\OS2Table.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\PostTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\TTFWriter.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\TTFTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\TTFAutohint.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\VheaTable.cpp">
+      <Filter>Source Files\ttf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ttf\VmtxTable.cpp">
+      <Filter>Source Files\ttf</Filter>
     </ClCompile>
     <ClCompile Include="..\src\SourceInput.cpp">
       <Filter>Source Files</Filter>
@@ -342,6 +387,57 @@
       <Filter>Source Files\optimizer</Filter>
     </ClCompile>
     <ClCompile Include="..\src\XMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\Base14Fonts.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\Dingbats.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusRoman-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Bold.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-BoldItalic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Italic.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\NimbusSans-Regular.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fonts\StandardSymbolsPS.cff.cpp">
+      <Filter>Source Files\base14fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PDFHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PDFToSVG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -628,17 +724,53 @@
     <ClInclude Include="..\src\macros.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ffwrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\PDFParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TrueTypeFont.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\ttf\CmapTable.hpp">
+      <Filter>Header Files\ttf</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TTFAutohint.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\ttf\GlyfTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\HeadTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\HheaTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\HmtxTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\LocaTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\MaxpTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\NameTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\OS2Table.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\PostTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\TTFTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\TTFWriter.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\TTFAutohint.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\VheaTable.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ttf\VmtxTable.hpp">
+      <Filter>Header Files\ttf</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SourceInput.hpp">
       <Filter>Header Files</Filter>
@@ -701,6 +833,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\XMLParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fonts\Base14Fonts.hpp">
+      <Filter>Header Files\base14fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PDFHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

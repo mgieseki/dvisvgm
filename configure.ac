@@ -1,11 +1,11 @@
 # This file is part of dvisvgm
-# Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>
+# Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
-AC_INIT([dvisvgm],[2.14],[martin.gieseking@uos.de])
-DATE="August 2022"
+AC_PREREQ(2.59)
+AC_INIT([dvisvgm],[3.0],[martin.gieseking@uos.de])
+DATE="October 2022"
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -155,6 +155,7 @@ AC_STRUCT_TM
 # Check for library functions.
 AC_FUNC_STAT
 AC_CHECK_FUNCS_ONCE([ftime gettimeofday sigaction umask uselocale])
+AX_GCC_BUILTIN(__builtin_clz)
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options
@@ -218,9 +219,9 @@ AC_SUBST(AM_LDFLAGS)
 AC_CONFIG_FILES([
 	Makefile
 	libs/Makefile
+	libs/boost/Makefile
 	libs/brotli/Makefile
 	libs/clipper/Makefile
-	libs/ff-woff/Makefile
 	libs/md5/Makefile
 	libs/potrace/Makefile
 	libs/variant/Makefile
@@ -228,7 +229,9 @@ AC_CONFIG_FILES([
 	libs/xxHash/Makefile
 	src/Makefile
 	src/version.hpp
+	src/fonts/Makefile
 	src/optimizer/Makefile
+	src/ttf/Makefile
 	tests/Makefile
 	tests/data/Makefile
 	doc/Makefile])

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\boost;..\libs\clipper;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\variant\include;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -87,6 +87,9 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -113,7 +116,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\boost;..\libs\clipper;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\variant\include;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -125,6 +128,9 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -143,7 +149,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\boost;..\libs\clipper;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\variant\include;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -153,6 +159,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <OpenMPSupport>false</OpenMPSupport>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -172,7 +179,7 @@
     </Midl>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\vc;..\libs\clipper;..\libs\ff-woff\fontforge;..\libs\ff-woff\inc;..\libs\variant\include;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vc;..\libs\boost;..\libs\clipper;..\libs\brotli\include;..\libs\md5;..\libs\potrace;..\libs\variant\include;..\libs\woff2\include;..\libs\xxhash;..\vc\freetype\include;..\vc\miktex-com\$(Platform)\$(Configuration);..\vc\ttfautohint\include;..\vc\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MIKTEX;HAVE_TTFAUTOHINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <Optimization>MaxSpeed</Optimization>
@@ -181,6 +188,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <OpenMPSupport>false</OpenMPSupport>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -212,6 +220,21 @@
     <ClCompile Include="..\src\Directory.cpp" />
     <ClCompile Include="..\src\DLLoader.cpp" />
     <ClCompile Include="..\src\EllipticalArc.cpp" />
+    <ClCompile Include="..\src\fonts\Base14Fonts.cpp" />
+    <ClCompile Include="..\src\fonts\Dingbats.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Bold.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-BoldItalic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Italic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusMonoPS-Regular.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusRoman-Bold.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusRoman-BoldItalic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusRoman-Italic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusRoman-Regular.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusSans-Bold.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusSans-BoldItalic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusSans-Italic.cff.cpp" />
+    <ClCompile Include="..\src\fonts\NimbusSans-Regular.cff.cpp" />
+    <ClCompile Include="..\src\fonts\StandardSymbolsPS.cff.cpp" />
     <ClCompile Include="..\src\HashFunction.cpp" />
     <ClCompile Include="..\src\ImageToSVG.cpp" />
     <ClCompile Include="..\src\Opacity.cpp" />
@@ -223,6 +246,8 @@
     <ClCompile Include="..\src\optimizer\TextSimplifier.cpp" />
     <ClCompile Include="..\src\optimizer\TransformSimplifier.cpp" />
     <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp" />
+    <ClCompile Include="..\src\PDFHandler.cpp" />
+    <ClCompile Include="..\src\PDFToSVG.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
@@ -232,7 +257,6 @@
     <ClCompile Include="..\src\EmSpecialHandler.cpp" />
     <ClCompile Include="..\src\EncFile.cpp" />
     <ClCompile Include="..\src\EPSFile.cpp" />
-    <ClCompile Include="..\src\ffwrapper.c" />
     <ClCompile Include="..\src\FileFinder.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MultiProcessorCompilation>
@@ -307,8 +331,20 @@
     <ClCompile Include="..\src\ToUnicodeMap.cpp" />
     <ClCompile Include="..\src\TpicSpecialHandler.cpp" />
     <ClCompile Include="..\src\TriangularPatch.cpp" />
-    <ClCompile Include="..\src\TrueTypeFont.cpp" />
-    <ClCompile Include="..\src\TTFAutohint.cpp" />
+    <ClCompile Include="..\src\ttf\CmapTable.cpp" />
+    <ClCompile Include="..\src\ttf\GlyfTable.cpp" />
+    <ClCompile Include="..\src\ttf\HeadTable.cpp" />
+    <ClCompile Include="..\src\ttf\HheaTable.cpp" />
+    <ClCompile Include="..\src\ttf\HmtxTable.cpp" />
+    <ClCompile Include="..\src\ttf\MaxpTable.cpp" />
+    <ClCompile Include="..\src\ttf\NameTable.cpp" />
+    <ClCompile Include="..\src\ttf\OS2Table.cpp" />
+    <ClCompile Include="..\src\ttf\PostTable.cpp" />
+    <ClCompile Include="..\src\ttf\TTFAutohint.cpp" />
+    <ClCompile Include="..\src\ttf\TTFTable.cpp" />
+    <ClCompile Include="..\src\ttf\TTFWriter.cpp" />
+    <ClCompile Include="..\src\ttf\VheaTable.cpp" />
+    <ClCompile Include="..\src\ttf\VmtxTable.cpp" />
     <ClCompile Include="..\src\Unicode.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
     <ClCompile Include="..\src\VFReader.cpp" />
@@ -335,6 +371,7 @@
     <ClInclude Include="..\src\ColorSpecialHandler.hpp" />
     <ClInclude Include="..\src\CommandLine.hpp" />
     <ClInclude Include="..\src\EllipticalArc.hpp" />
+    <ClInclude Include="..\src\fonts\Base14Fonts.hpp" />
     <ClInclude Include="..\src\GraphicsPathParser.hpp" />
     <ClInclude Include="..\src\HashFunction.hpp" />
     <ClInclude Include="..\src\ImageToSVG.hpp" />
@@ -350,12 +387,12 @@
     <ClInclude Include="..\src\optimizer\TextSimplifier.hpp" />
     <ClInclude Include="..\src\optimizer\TransformSimplifier.hpp" />
     <ClInclude Include="..\src\optimizer\WSNodeRemover.hpp" />
+    <ClInclude Include="..\src\PDFHandler.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
     <ClInclude Include="..\src\EPSToSVG.hpp" />
-    <ClInclude Include="..\src\ffwrapper.h" />
     <ClInclude Include="..\src\FilePath.hpp" />
     <ClInclude Include="..\src\FixWord.hpp" />
     <ClInclude Include="..\src\FontMetrics.hpp" />
@@ -395,8 +432,21 @@
     <ClInclude Include="..\src\Terminal.hpp" />
     <ClInclude Include="..\src\ToUnicodeMap.hpp" />
     <ClInclude Include="..\src\TriangularPatch.hpp" />
-    <ClInclude Include="..\src\TrueTypeFont.hpp" />
-    <ClInclude Include="..\src\TTFAutohint.hpp" />
+    <ClInclude Include="..\src\ttf\CmapTable.hpp" />
+    <ClInclude Include="..\src\ttf\GlyfTable.hpp" />
+    <ClInclude Include="..\src\ttf\HeadTable.hpp" />
+    <ClInclude Include="..\src\ttf\HheaTable.hpp" />
+    <ClInclude Include="..\src\ttf\HmtxTable.hpp" />
+    <ClInclude Include="..\src\ttf\LocaTable.hpp" />
+    <ClInclude Include="..\src\ttf\MaxpTable.hpp" />
+    <ClInclude Include="..\src\ttf\NameTable.hpp" />
+    <ClInclude Include="..\src\ttf\OS2Table.hpp" />
+    <ClInclude Include="..\src\ttf\PostTable.hpp" />
+    <ClInclude Include="..\src\ttf\TTFAutohint.hpp" />
+    <ClInclude Include="..\src\ttf\TTFTable.hpp" />
+    <ClInclude Include="..\src\ttf\TTFWriter.hpp" />
+    <ClInclude Include="..\src\ttf\VheaTable.hpp" />
+    <ClInclude Include="..\src\ttf\VmtxTable.hpp" />
     <ClInclude Include="..\src\Unicode.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
     <ClInclude Include="..\src\VectorIterator.hpp" />
@@ -444,9 +494,6 @@
     </ProjectReference>
     <ProjectReference Include="clipper\clipper.vcxproj">
       <Project>{98d8e34d-75b4-48b6-b175-c3a7df11e52c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="fontforge\ff-woff.vcxproj">
-      <Project>{2ea12a93-b90e-3f75-8d67-6b51f83a4298}</Project>
     </ProjectReference>
     <ProjectReference Include="freetype\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>

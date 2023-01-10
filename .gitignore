@@ -34,6 +34,7 @@
 *.lastbuildstate
 *.opensdf
 *.vcxproj.user
+build
 callgrind.*
 cmdline.*
 Makefile
@@ -62,9 +63,7 @@ Win32
 x64
 Debug
 Release
-vc/freetype
 vc/miktex-com/dlldata.c
-vc/zlib*
 vc/*.s*
 vc/_*
 vc/Upgrade*

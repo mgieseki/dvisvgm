@@ -2,7 +2,7 @@
 ** PSInterpreter.cpp                                                    **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -78,6 +78,16 @@ void PSInterpreter::init () {
 		// need the completely initialized PSInterpreter object here.
 		execute(PSDEFS);
 	}
+}
+
+
+/** Sets or replaces the filter applied to the PS code.
+ *  @param[in] filter the new filter being used
+ *  @return the previous, replaced filter (nullptr if there was none) */
+PSFilter* PSInterpreter::setFilter (PSFilter *filter) {
+	PSFilter *prevFilter = _filter;
+	_filter = filter;
+	return prevFilter;
 }
 
 
