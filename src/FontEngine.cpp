@@ -221,8 +221,8 @@ int FontEngine::getHAdvance () const {
 
 int FontEngine::getHAdvance (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiAdvance;
+		if (FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE) == 0)
+			return _currentFace->glyph->metrics.horiAdvance;
 	}
 	return 0;
 }
@@ -230,10 +230,11 @@ int FontEngine::getHAdvance (const Character &c) const {
 
 int FontEngine::getVAdvance (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		if (FT_HAS_VERTICAL(_currentFace))
-			return _currentFace->glyph->metrics.vertAdvance;
-		return _currentFace->glyph->metrics.horiAdvance;
+		if (FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE) == 0) {
+			if (FT_HAS_VERTICAL(_currentFace))
+				return _currentFace->glyph->metrics.vertAdvance;
+			return _currentFace->glyph->metrics.horiAdvance;
+		}
 	}
 	return 0;
 }
@@ -241,8 +242,8 @@ int FontEngine::getVAdvance (const Character &c) const {
 
 int FontEngine::getWidth (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.width;
+		if (FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE) == 0)
+			return _currentFace->glyph->metrics.width;
 	}
 	return 0;
 }
@@ -250,8 +251,8 @@ int FontEngine::getWidth (const Character &c) const {
 
 int FontEngine::getHeight (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.horiBearingY;
+		if (FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE) == 0)
+			return _currentFace->glyph->metrics.horiBearingY;
 	}
 	return 0;
 }
@@ -259,8 +260,8 @@ int FontEngine::getHeight (const Character &c) const {
 
 int FontEngine::getDepth (const Character &c) const {
 	if (_currentFace) {
-		FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE);
-		return _currentFace->glyph->metrics.height - _currentFace->glyph->metrics.horiBearingY;
+		if (FT_Load_Glyph(_currentFace, charIndex(c), FT_LOAD_NO_SCALE) == 0)
+			return _currentFace->glyph->metrics.height - _currentFace->glyph->metrics.horiBearingY;
 	}
 	return 0;
 }
