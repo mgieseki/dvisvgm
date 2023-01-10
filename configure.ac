@@ -3,7 +3,7 @@
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
+AC_PREREQ([2.69])
 AC_INIT([dvisvgm],[3.0],[martin.gieseking@uos.de])
 DATE="October 2022"
 AC_CONFIG_SRCDIR(src)
