@@ -2,7 +2,7 @@
 ** Base14Fonts.cpp                                                      **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2022 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -38,6 +38,9 @@ extern const MemoryFontData NimbusSans_Italic_cff;
 extern const MemoryFontData NimbusSans_Regular_cff;
 extern const MemoryFontData StandardSymbolsPS_cff;
 
+/** Returns the CFF font data for a given name of a Base 14 font.
+ *  If 'fontname' doesn't specify one of the 14 PDF base fonts,
+ *  the function returns nullptr. */
 const MemoryFontData* find_base14_font (const string &fontname) {
 	struct FontData {
 		const char *name;
