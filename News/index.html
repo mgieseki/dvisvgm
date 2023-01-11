@@ -79,7 +79,27 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4d14c1e14bfd9d193a04ea4c1c3b47ff"></a>
+  <a name="055cc2d49348a3d31480705a06485048"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">10 January 2023: dvisvgm 3.0.1 has been released</div>
+    <div class="card-body">
+      <p>This is the first stable release of <em>dvisvgm</em> 3. An overview of the main changes and additions can be found in the
+announcement of pre-release version 3.0 below. Version 3.0.1 fixes several issues reported in the last weeks.</p>
+<ul>
+<li>Added support for the 64-bit Ghostscript library in TeX Live (patch sent by Akira Kakuto).</li>
+<li>MacTeX: explicitly lookup libgs in /usr/local/lib
+(<a href="https://github.com/mgieseki/dvisvgm/issues/197">issue #197</a>).</li>
+<li>Fixed the character spacing when processing XDV glyph arrays.
+(<a href="https://github.com/mgieseki/dvisvgm/issues/198">issue #198</a>).</li>
+<li>Fixed the invalid removal of non-redundant <code>clipPath</code> elements in some cases if option <code>--optimize</code> is present
+(<a href="https://github.com/mgieseki/dvisvgm/issues/203">issue #203</a>).</li>
+<li>Fixed the computation of the graphics extents printed to the console when using the <code>preview</code> package
+(<a href="https://github.com/mgieseki/dvisvgm/issues/209">issue #209</a>).</li>
+<li>Several improvements of the autotools scripts (thanks to Sam James).</li>
+<li>Improved the processing of fonts performed by the new PDF handler.</li>
+</ul>
+</div>
+  </section><a name="4d14c1e14bfd9d193a04ea4c1c3b47ff"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">17 October 2022: dvisvgm 3.0: Pre-release of new major version</div>
     <div class="card-body">
@@ -180,20 +200,6 @@ page numbers respectively.</li>
 <li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> framework to version 1.11.0.</li>
 </ul>
 </div>
-  </section><a name="1dc7a72ee07bdf41b0faaa031777dbf3"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">23 November 2021: Information on PDF support as of Ghostscript 9.56.0</div>
-    <div class="card-body">
-      <p>Ghostscript has introduced a completely <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten implementation of its PDF interpreter</a>,
-which is now implemented in C instead of PostScript. This has a lot of advantages besides the performance improvements. For third-party
-applications like <em>dvisvgm</em>, however, this change has significant impact on the functions that can be provided. <em>dvisvgm</em> relies on the
-possibility to overwrite PostScript and PDF operators in order to directly communicate with the interpreter. The nice thing about the
-current PostScript-based PDF interpreter is the fact that both PostScript and PDF code can be treated almost equally.</p>
-<p>As of Ghostscript 9.56.0, this will no longer be possible, and as far as I can tell from the documentation, there is no way to
-replicate the current functionality. As a consequence, all PDF functionality currently available in <em>dvisvgm</em> will no longer work with the
-upcoming Ghostscript releases. Therefore, it will require the parallel installation of Ghostscript 9.55.0 or earlier. In the long run,
-I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resources to implement a completely new PDF handler.</p>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item disabled">
@@ -218,7 +224,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2022 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

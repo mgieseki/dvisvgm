@@ -384,6 +384,20 @@ Adds comments with further information about selected data to the SVG file. Curr
 font elements and font CSS rules related to native fonts are annotated.
 </p></dd>
 </div>
+<a name="embed-bitmaps" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>embed-bitmaps</strong>
+</dt>
+<dd>
+<p>
+Embeds the contents of bitmap files into the generated SVG files instead of adding file references.
+Because of the base64-encoded data, the SVG files are usually much bigger but at the same time
+more portable because they don’t rely on external bitmap files.
+</p>
+<p>This option only affects bitmaps referenced in DVI/XDV files, e.g. added by <code>\includegraphics</code>.
+Bitmaps in PostScript or PDF files are always embedded. Also see option <strong>bitmap-format</strong>.</p>
+</dd>
+</div>
 <a name="opt-eps" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>-E, --eps</strong>
@@ -417,15 +431,18 @@ given, dvisvgm analyzes the actual shape of each character and derives a usually
 <dd>
 <p>
 Selects the file format used to embed font data into the generated SVG output when converting DVI
-files. It has no effect when converting PDF or PostScript files. Text fragments present in these
-files are always converted to path elements.
+or PDF files. The latter require the new mutool-based PDF handler introduced with dvisvgm 3.0 (also
+see option <strong>--pdf</strong>). Option <strong>--font-format</strong> has no effect when converting PDF or PostScript files
+using Ghostscript. Text fragments present in these files are then always converted to path elements.
 </p>
 <p>Following formats are supported: <code>SVG</code> (that’s the default), <code>TTF</code> (TrueType), <code>WOFF</code>, and <code>WOFF2</code>
 (Web Open Font Format version 1 and 2).
 By default, dvisvgm creates unhinted fonts that might look bad on low-resolution devices. In order to
 improve the display quality, the generated TrueType, WOFF, or WOFF2 fonts can be autohinted. The
 autohinter is enabled by appending <code>,autohint</code> or <code>,ah</code> to the font format,
-e.g. <code>--font-format=woff,autohint</code> or <code>--fwoff,ah</code>.</p>
+e.g. <code>--font-format=woff,autohint</code> or <code>--fwoff,ah</code>. This functionality requires the
+<a href="https://freetype.org/ttfautohint">ttfautohint library</a>. If it’s not available or can’t be found,
+dvisvgm issues a corresponding warning message.</p>
 <p>Option <strong>--font-format</strong> is only available if dvisvgm was built with WOFF support enabled.</p>
 </dd>
 </div>
@@ -810,10 +827,11 @@ XML tree gradually.
 </dt>
 <dd>
 <p>
-Sets the pattern that determines the names of the generated SVG files. The required parameter
-<em>pattern</em> may consist of an arbitrary sequence of characters which make up the filenames. With the
-exception of the following mentioned variables and expressions, all characters are treated as static
-parts of the filenames and are therefore identical for all pages processed during a run of dvisvgm.
+Sets the pattern that determines the names of the generated SVG files, optionally including the file
+path. The required parameter <em>pattern</em> may consist of an arbitrary sequence of characters which make
+up the filenames or file paths relative to the current working directory. With the exception of the
+following mentioned variables and expressions, all characters are treated as static parts of the
+filenames/folders and are therefore identical for all pages processed during a run of dvisvgm.
 The strings <code>%f</code>, <code>%p</code>, <code>%P</code>, <code>%n</code>, <code>%N</code>, <code>%hd</code>, <code>%ho</code>, and <code>%hc</code> are variables that can be used as
 part of the pattern. <code>%f</code> expands to the base name of the DVI file, i.e. the filename without suffix,
 <code>%p</code> is the current page number, and <code>%P</code> the total number of pages in the DVI file. The variables
@@ -825,7 +843,7 @@ value denotes the minimal number of digits to be created. If a particular value 
 digits, the number is padded with leading zeros.
 Example: <code>%3p</code> enforces 3 digits for the current page number (001, 002, etc.). Without an explicit
 width specifier, <code>%p</code> gets the same number of digits as <code>%P</code>.</p>
-<p>If you need more control over the numbering, you can use arithmetic expressions as part of a pattern.
+<p>If you need more control over the numbering, you can use arithmetic expressions as part of the pattern.
 The syntax is <code>%(</code><em>expr</em><code>)</code> where <em>expr</em> may contain additions, subtractions, multiplications, and
 integer divisions with common precedence. The variables <strong>p</strong> and <strong>P</strong> contain the current page number
 and the total number of pages, respectively. For example, <code>--output="%f-%(p-1)"</code> creates filenames
@@ -845,13 +863,15 @@ variables, and must therefore be protected by a second percent sign, e.g. <code>
 <dt>
 <strong>-p, --page</strong>=<em>ranges</em>
 </dt>
-<dd><p>
+<dd>
+<p>
 This option selects the pages to be processed. Parameter <em>ranges</em> consists of a comma-separated
 list of single page numbers and/or page ranges. A page range is a pair of numbers separated by
 a hyphen, e.g. 5-12. Thus, a page sequence might look like this: 2-4,6,9-12,15. It doesn’t matter
 if a page is given more than once or if page ranges overlap. dvisvgm always extracts the page
 numbers in ascending order and converts them only once.
-In order to stay compatible with previous versions, the default page sequence is 1. dvisvgm
+</p>
+<p>In order to stay compatible with previous versions, the default page sequence is 1. dvisvgm
 therefore converts only the first page and not the whole document if option <strong>--page</strong> is omitted.
 Usually, page ranges consist of two numbers denoting the first and last page to be converted.
 If the conversion should start at page 1, or if it should continue up to the last DVI page, the
@@ -859,8 +879,11 @@ first or second range number can be omitted, respectively. Example: <code>--page
 pages up to page 10, <code>--page=10-</code> converts all pages starting with page 10.
 Please consider that the page values don’t refer to the page numbers printed on the
 corresponding page. Instead, the physical page count is expected, where the first page always
-gets number 1.
-</p></dd>
+gets number 1.</p>
+<p>At the end of the range sequence an optional filter specifier can be added. Currently, the two
+filters <code>:even</code> and <code>:odd</code> are supported which restrict the preceding values to even or odd
+numbers. For example, <code>--page=1-11,20:even</code> is equivalent to <code>--page=2,4,6,8,10,20</code>.</p>
+</dd>
 </div>
 <a name="opt-page-hashes" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -911,15 +934,24 @@ forces dvisvgm to convert a DVI page even if a file with the target name already
 <dt>
 <strong>-P, --pdf</strong>
 </dt>
-<dd><p>
+<dd>
+<p>
 If this option is given, dvisvgm does not expect a DVI but a PDF input file, and tries to convert
 it to SVG. Similar to the conversion of DVI files, only the first page is processed by default.
 Option <strong>--page</strong> can be used to select different pages, page ranges, and/or page sequences.
-The conversion is realized by creating a single <em>pdffile</em> special command which is forwarded to
-the PostScript special handler. Therefore, this option is only available if dvisvgm was built
-with PostScript support enabled, and requires Ghostscript to be accessible. See option <strong>--libgs</strong>
-for further information.
-</p></dd>
+</p>
+<p>If a Ghostcript version &lt; 10.1.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
+this case, the conversion is realized by creating a single <em>pdffile</em> special command which is
+forwarded to dvisvgm’s PostScript special handler. Therefore, this option is only available if
+dvisvgm was built with PostScript support enabled, and requires Ghostscript to be accessible.
+See option <strong>--libgs</strong> for further information.</p>
+<p>As of Ghostscript 10.1.0, this will no longer work due to the introduction of a new PDF interpreter.
+Therefore, an alternative conversion module based on <a href="https://mupdf.com/docs/mutool.html">mutool</a>
+has been introduced. It’s automatically invoked if Ghostscript can’t be used and if a working
+<code>mutool</code> executable is present in a directory which is part of the system’s search path.</p>
+<p>Alternatively, environment variable <code>DVISVGM_PDF_PROC</code> can be used to select the PDF processor.
+The currently supported values are <code>gs</code> and <code>mutool</code>.</p>
+</dd>
 </div>
 <a name="opt-precision" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -993,8 +1025,14 @@ system’s temporary folder by default, e.g. <code>/tmp</code> on Linux systems.
 to specify a different location. Please note that dvisvgm does not create this folder if it doesn’t
 exist. Therefore, you must ensure that it’s actually present before running dvisvgm.
 </p>
-<p>If the optional parameter <em>path</em> is omitted, dvisvgm prints the location of the system’s
-temp folder and exits.</p>
+<p>In order to prevent colliding files caused by parallel calls of dvisvgm, the program doesn’t write
+the files directly in the specified directory but furthermore creates a uniquely named subfolder in
+there, where the temporary files will be placed. This can be prevented by appending <code>//</code> or <code>\\</code>
+(on Windows) to the specified directory name. For example, <code>--tmpdir=.//</code> creates the temporary files
+directly in the current working directory, while <code>--tmpdir=.</code> places them in a dedicated subfolder of
+the current working directory.</p>
+<p>If the optional parameter <em>path</em> of option <strong>--tmpdir</strong> is omitted, dvisvgm prints the location of the
+system’s temp folder and exits.</p>
 </dd>
 </div>
 <a name="opt-trace-all" class="linktarget"></a><div class="hdlist1">
@@ -1427,12 +1465,12 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   current transformation matrix to the bounding box.
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
-<div class="d-inline-flex"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span>
-
-<span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
-</span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span></code></pre></div>
+<div class="d-inline-flex"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tex" data-lang="tex"><span style="display:flex;"><span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:orange">-10bp</span> <span style="color:orange">10bp</span> <span style="color:orange">10bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;path d=&#39;M50 200 L10 250 H100 Z&#39; stroke=&#39;black&#39; fill=&#39;blue&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:bbox</span> <span style="color:lightblue">abs</span> <span style="color:orange">10bp</span> <span style="color:orange">200bp</span> <span style="color:orange">100bp</span> <span style="color:orange">250bp</span> <span style="color:lightblue">transform</span><span style="color:#8be9fd">}</span></span></span></code></pre></div>
 </div>
 </dd>
 </div>
@@ -1684,6 +1722,11 @@ progress indicator
 </table>
 <p><strong>Example:</strong><code>er=01:pi=*5</code> sets the colors of error messages (<code>er</code>) to red (<code>1</code>) on black (<code>0</code>), and those
 of progress indicators (<code>pi</code>) to cyan (<code>5</code>) on default background (<code>*</code>).</p>
+<p>Variable <strong>DVISVGM_PDF_PROC</strong> allows you to select the desired PDF processor. dvisvgm requires either
+Ghostscript (version &lt; 10.1.0) or mutool to process PDF files. IF <strong>DVISVGM_PDF_PROC</strong> is not set, dvisvgm
+tries to detect the available processors. See option <strong>--pdf</strong> for further information. To select a
+specific PDF processor, you can set <strong>DVISVGM_PDF_PROC</strong> to <code>gs</code> or <code>mutool</code> which forces the use of
+Ghostscript and mutool respectively.</p>
 </div></section><span class="linktarget" id="_files"></span><section class="manpage"><h3>
 <i class="fa fa-files-o fa-fw"></i> Files</h3>
 <div class="sectionbody">
@@ -1768,15 +1811,15 @@ Code repository
 <i class="fa fa-user fa-fw"></i> Author</h3>
 <div class="sectionbody"><p>Written by Martin Gieseking &lt;<a href="mailto:martin.gieseking@uos.de">martin.gieseking@uos.de</a>&gt;</p></div></section><span class="linktarget" id="_copying"></span><section class="manpage"><h3>
 <i class="fa fa-gavel fa-fw"></i> Copying</h3>
-<div class="sectionbody"><p>Copyright © 2005-2022 Martin Gieseking. Free use of this software is
+<div class="sectionbody"><p>Copyright © 2005-2023 Martin Gieseking. Free use of this software is
 granted under the terms of the GNU General Public License (GPL) version 3
 or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 2.14</div>
+   <div class="col-md-6">Version 3.0.1</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2022-02-26</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2022-10-14</span>
    </div>
 </div>
 </div>
@@ -1784,7 +1827,7 @@ or, (at your option) any later version.</p></div></section>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2022 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

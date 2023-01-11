@@ -3,8 +3,33 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Tue, 18 Oct 2022 10:21:52 +0200</pubDate>
+    <pubDate>Wed, 11 Jan 2023 11:09:30 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.0.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#055cc2d49348a3d31480705a06485048</link>
+      <pubDate>Tue, 10 Jan 2023 10:49:43 +0100</pubDate>
+      <guid>055cc2d49348a3d31480705a06485048</guid>
+      <description>
+        <![CDATA[<p>This is the first stable release of <em>dvisvgm</em> 3. An overview of the main changes and additions can be found in the
+announcement of pre-release version 3.0 below. Version 3.0.1 fixes several issues reported in the last weeks.</p>
+<ul>
+<li>Added support for the 64-bit Ghostscript library in TeX Live (patch sent by Akira Kakuto).</li>
+<li>MacTeX: explicitly lookup libgs in /usr/local/lib
+(<a href="https://github.com/mgieseki/dvisvgm/issues/197">issue #197</a>).</li>
+<li>Fixed the character spacing when processing XDV glyph arrays.
+(<a href="https://github.com/mgieseki/dvisvgm/issues/198">issue #198</a>).</li>
+<li>Fixed the invalid removal of non-redundant <code>clipPath</code> elements in some cases if option <code>--optimize</code> is present
+(<a href="https://github.com/mgieseki/dvisvgm/issues/203">issue #203</a>).</li>
+<li>Fixed the computation of the graphics extents printed to the console when using the <code>preview</code> package
+(<a href="https://github.com/mgieseki/dvisvgm/issues/209">issue #209</a>).</li>
+<li>Several improvements of the autotools scripts (thanks to Sam James).</li>
+<li>Improved the processing of fonts performed by the new PDF handler.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.0: Pre-release of new major version</title>
@@ -144,7 +169,7 @@ page numbers respectively.</li>
     
     <item>
       <title>Information on PDF support as of Ghostscript 9.56.0</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#1dc7a72ee07bdf41b0faaa031777dbf3</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#1dc7a72ee07bdf41b0faaa031777dbf3</link>
       <pubDate>Tue, 23 Nov 2021 10:11:09 +0200</pubDate>
       <guid>1dc7a72ee07bdf41b0faaa031777dbf3</guid>
       <description>
@@ -313,7 +338,7 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
     
     <item>
       <title>dvisvgm 2.8.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#d2a122bf30fb68ee24d061cc34560ae0</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#d2a122bf30fb68ee24d061cc34560ae0</link>
       <pubDate>Sat, 07 Dec 2019 11:58:27 +0100</pubDate>
       <guid>d2a122bf30fb68ee24d061cc34560ae0</guid>
       <description>
@@ -404,22 +429,6 @@ into positional and size attributes if possible.</li>
 <li>Changed the location of the cache files from <code>~/.dvisvgm/cache</code> to <code>$XDG_CACHE_HOME/dvisvgm</code>
 which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/112">issue #112</a>).</li>
 <li>Some minor refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.7.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#6f8e194693ecc2a26ed8c5de5adc7c8f</link>
-      <pubDate>Fri, 12 Jul 2019 11:30:12 +0200</pubDate>
-      <guid>6f8e194693ecc2a26ed8c5de5adc7c8f</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed randomly missing glyph paths referenced by <code>use</code> elements (<a href="https://github.com/mgieseki/dvisvgm/issues/110">issue #110</a>).</li>
-<li>Minor updates of the <a href="/Manpage/">manual page</a>.</li>
-<li>Some code refactorings.</li>
 </ul>
 ]]>
       </description>

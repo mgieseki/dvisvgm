@@ -86,14 +86,14 @@ of course and only shown in the following examples:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip1.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define triangular clipping path --&gt;</span>
-<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#39;clip1&#39;</span><span style="color:#ff79c6">&gt;</span>
-  <span style="color:#ff79c6">&lt;path</span> <span style="color:#50fa7b">d=</span><span style="color:#f1fa8c">&#39;M0 0H30V-50Z&#39;</span><span style="color:#ff79c6">/&gt;</span>
-<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
-
-<span style="color:#6272a4">&lt;!-- draw clipped circle --&gt;</span>
-<span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;30&#34;</span>
-        <span style="color:#50fa7b">fill=</span><span style="color:#f1fa8c">&#34;#8080ff&#34;</span> <span style="color:#50fa7b">stroke=</span><span style="color:#f1fa8c">&#34;#000080&#34;</span><span style="color:#ff79c6">/&gt;</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svg" data-lang="svg"><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define triangular clipping path --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#39;clip1&#39;</span><span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;path</span> <span style="color:#50fa7b">d=</span><span style="color:#f1fa8c">&#39;M0 0H30V-50Z&#39;</span><span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- draw clipped circle --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;30&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#50fa7b">fill=</span><span style="color:#f1fa8c">&#34;#8080ff&#34;</span> <span style="color:#50fa7b">stroke=</span><span style="color:#f1fa8c">&#34;#000080&#34;</span><span style="color:#ff79c6">/&gt;</span></span></span></code></pre></div>
 </div>
 </div>
 
@@ -106,16 +106,16 @@ defines the actual clipping path:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip2.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
-<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
-  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
-<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
-
-<span style="color:#6272a4">&lt;!-- define lens-shaped clipping path by intersecting
-</span><span style="color:#6272a4">      the first circle with another one --&gt;</span>
-<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span><span style="color:#ff79c6">&gt;</span>
-  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
-<span style="color:#ff79c6">&lt;/clipPath&gt;</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svg" data-lang="svg"><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define lens-shaped clipping path by intersecting
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">      the first circle with another one --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span><span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span></span></span></code></pre></div>
 </div>
 </div>
 
@@ -123,18 +123,18 @@ defines the actual clipping path:</p>
 <div class="row align-items-center" style="margin-top:1em;margin-bottom:1em">
    <div class="col-md-6"><img src="images/clip3.png" class="img-fluid"></div>
    <div class="col-md-6">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-svg" data-lang="svg"><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
-<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
-  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
-<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
-<span style="color:#6272a4">&lt;!-- define lens-shaped clipping path by intersecting
-</span><span style="color:#6272a4">      the first circle with another one --&gt;</span>
-<span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span><span style="color:#ff79c6">&gt;</span>
-  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
-<span style="color:#ff79c6">&lt;/clipPath&gt;</span>
-<span style="color:#6272a4">&lt;!-- draw clipped rectangle --&gt;</span>
-<span style="color:#ff79c6">&lt;rect</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip2&#39;)&#34;</span> <span style="color:#50fa7b">x=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">y=</span><span style="color:#f1fa8c">&#34;-60&#34;</span> <span style="color:#50fa7b">width=</span><span style="color:#f1fa8c">&#34;10&#34;</span>
-      <span style="color:#50fa7b">height=</span><span style="color:#f1fa8c">&#34;60&#34;</span> <span style="color:#50fa7b">fill=</span><span style="color:#f1fa8c">&#34;#8080ff&#34;</span> <span style="color:#50fa7b">stroke=</span><span style="color:#f1fa8c">&#34;#000080&#34;</span><span style="color:#ff79c6">/&gt;</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svg" data-lang="svg"><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define circular clipping path --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip1&#34;</span><span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-25&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- define lens-shaped clipping path by intersecting
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">      the first circle with another one --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;clipPath</span> <span style="color:#50fa7b">id=</span><span style="color:#f1fa8c">&#34;clip2&#34;</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip1&#39;)&#34;</span><span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&lt;circle</span> <span style="color:#50fa7b">cx=</span><span style="color:#f1fa8c">&#34;35&#34;</span> <span style="color:#50fa7b">cy=</span><span style="color:#f1fa8c">&#34;-35&#34;</span> <span style="color:#50fa7b">r=</span><span style="color:#f1fa8c">&#34;15&#34;</span><span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;/clipPath&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">&lt;!-- draw clipped rectangle --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;rect</span> <span style="color:#50fa7b">clip-path=</span><span style="color:#f1fa8c">&#34;url(&#39;#clip2&#39;)&#34;</span> <span style="color:#50fa7b">x=</span><span style="color:#f1fa8c">&#34;25&#34;</span> <span style="color:#50fa7b">y=</span><span style="color:#f1fa8c">&#34;-60&#34;</span> <span style="color:#50fa7b">width=</span><span style="color:#f1fa8c">&#34;10&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#50fa7b">height=</span><span style="color:#f1fa8c">&#34;60&#34;</span> <span style="color:#50fa7b">fill=</span><span style="color:#f1fa8c">&#34;#8080ff&#34;</span> <span style="color:#50fa7b">stroke=</span><span style="color:#f1fa8c">&#34;#000080&#34;</span><span style="color:#ff79c6">/&gt;</span></span></span></code></pre></div>
 </div>
 </div>
 
@@ -159,7 +159,7 @@ Both SVG files were created from the same DVI file, the first one without and th
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2022 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>
