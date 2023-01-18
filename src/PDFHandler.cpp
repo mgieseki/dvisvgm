@@ -645,7 +645,8 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 				filename = it->second.fname;
 			if (filename.empty())
 				filename = "sys://"+fontname;
-			double ptsize = abs(trm[0]);
+			double ptsize = matrix_extent({trm[0], trm[1], 0, trm[2], trm[3]});
+			ptsize = round(10*ptsize)/10;
 			int fontID = FontManager::instance().registerFont(filename, ptsize);
 			if (fontID >= 0) {
 				auto font = font_cast<NativeFont*>(FontManager::instance().getFontById(fontID));
