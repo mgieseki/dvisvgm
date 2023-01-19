@@ -32,7 +32,7 @@ class QuadBezier {
 		QuadBezier ();
 		QuadBezier (const DPair &p0, const DPair &p1, const DPair &p2);
 		void setPoints (const DPair &p0, const DPair &p1, const DPair &p2);
-		constexpr const DPair& point (int i) const {return _points[i];}
+		const DPair& point (int i) const {return _points[i];}
 		DPair valueAt (double t) const;
 		DPair derivativeAt (double t) const;
 		double arclen (double t=1.0) const;
@@ -57,7 +57,7 @@ class CubicBezier {
 		void subdivide (double t, CubicBezier *bezier1, CubicBezier *bezier2) const;
 		CubicBezier& transform (const Matrix &matrix);
 		int approximate (double delta, std::vector<DPair> &p, std::vector<double> *t=nullptr) const;
-		constexpr const DPair& point (int i) const {return _points[i];}
+		const DPair& point (int i) const {return _points[i];}
 		int reduceDegree (double delta, std::vector<DPair> &p) const;
 		std::vector<QuadBezier> toQuadBeziers (double delta, std::vector<double> *startParams=nullptr) const;
 		BoundingBox getBBox () const;
