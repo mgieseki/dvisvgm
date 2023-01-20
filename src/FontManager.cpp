@@ -345,7 +345,7 @@ int FontManager::registerFont (const std::string &fname, double ptsize) {
 	id = fontID(fontname);
 	if (id < 0) {
 		nativeFont = util::make_unique<NativeFontImpl>(fname, fontname, ptsize);
-		_name2id.emplace(std::move(fontname), _fonts.size());
+		_name2id.emplace(std::move(fontname), int(_fonts.size()));
 	}
 	else {
 		auto *nf = font_cast<NativeFont*>(getFontById(id));
