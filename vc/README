@@ -2,16 +2,16 @@ In order to build dvisvgm for MiKTeX with Microsoft Visual Studio 2022 you
 need to download the source code archives of the following libraries
 which are not bundled with the dvisvgm sources:
 
-FreeType:   https://freetype.org
-zlib:       http://zlib.net
-
-If you want to build dvisvgm with ttfautohint support, the related
-development files as well as the ttfautohint DLL are needed. They are
-available from https://github.com/mgieseki/ttfautohint-dll.
+FreeType:    https://freetype.org
+zlib:        http://zlib.net
+ttfautohint: https://github.com/mgieseki/ttfautohint-dll
 
 Extract the contents of the usually versioned root folders present in the
 library archives to the corresponding subfolders in the "vc" directory, e.g.
-the contents of zlib-1.2.11, should go to vc\zlib.
+the contents of zlib-1.2.13, should go to vc\zlib.
+
+The contents of the ttfautohint-dll release archive including the subfolders
+must be extracted to vc\ttfautohint.
 
 Now open the Visual Studio IDE, load dvisvgm.sln, and start the build process.
 
