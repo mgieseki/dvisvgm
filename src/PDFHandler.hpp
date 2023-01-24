@@ -57,7 +57,6 @@ class PDFHandler {
 		const BoundingBox& bbox () const {return _bbox;}
 		std::unique_ptr<SVGElement> convert (const std::string &fname, int pageno, std::unique_ptr<SVGElement> context=nullptr);
 		static std::string mutoolVersion ();
-		static BoundingBox bbox (std::string &fname, int pageno);
 		static bool available () {return !mutoolVersion().empty();}
 
 	protected:
@@ -77,6 +76,7 @@ class PDFHandler {
 		void collectObjects ();
 		void elementOpened (XMLElement *trcElement);
 		void elementClosed (XMLElement *trcElement);
+		void doPage (XMLElement *trcPageElement);
 		void doClipPath (XMLElement *trcClipPathElement);
 		void doClipStrokePath (XMLElement *trcClipStrokePathElement);
 		void doClipText (XMLElement *trcClipTextElement);

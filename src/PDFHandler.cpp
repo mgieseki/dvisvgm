@@ -139,19 +139,6 @@ string PDFHandler::mutoolVersion () {
 }
 
 
-/** Returns the bounding box of a selected PDF page. */
-BoundingBox PDFHandler::bbox (string &fname, int pageno) {
-	BoundingBox bbox;
-	string arraystr = mtShow(fname, "pages/" + to_string(pageno) + "/MediaBox");
-	if (arraystr.substr(0, 4) == "null")
-		arraystr = mtShow(fname, "pages/" + to_string(pageno) + "/Parent/MediaBox");
-	auto vec = parse_pdf_array<double>(arraystr);
-	if (vec.size() == 4)
-		bbox = BoundingBox(vec[0], vec[1], vec[2], vec[3]);
-	return bbox;
-}
-
-
 /** Converts a single page of a PDF file to SVG. If no context element is given,
  *  the SVG page contents are added to a page group element of the SVG tree.
  *  Otherwise, they are added to the context element which is not inserted into
@@ -220,14 +207,11 @@ void PDFHandler::finishFile () {
 
 void PDFHandler::initPage (int pageno, unique_ptr<SVGElement> context) {
 	_pageno = pageno;
-	_bbox = bbox(_fname, pageno);
-	if (context) {
+	if (!context)
+		_svg->newPage(_pageno);
+	else {
 		_context = context.get();
 		_svg->pushPageContext(std::move(context));
-	}
-	else {
-		_svg->newPage(_pageno);
-		_svg->setBBox(_bbox);
 	}
 	// collect sequence of images referenced on current page
 	collectObjects();
@@ -287,7 +271,8 @@ void PDFHandler::elementClosed (XMLElement *trcElement) {
 	struct Handler {
 		const char *name;
 		void (PDFHandler::*func)(XMLElement*);
-	} handlers[9] = {
+	} handlers[10] = {
+		{"page", &PDFHandler::doPage},
 		{"stroke_path", &PDFHandler::doStrokePath},
 		{"fill_path", &PDFHandler::doFillPath},
 		{"fill_image", &PDFHandler::doFillImage},
@@ -306,6 +291,13 @@ void PDFHandler::elementClosed (XMLElement *trcElement) {
 	else
 		return;
 	XMLElement::detach(trcElement);  // remove element from XML tree, it's no longer needed
+}
+
+
+void PDFHandler::doPage (XMLElement *trcPageElement) {
+	auto vec = parse_attr_value<vector<double>>(trcPageElement, "mediabox");
+	if (vec.size() == 4)
+		_bbox = BoundingBox(vec[0], vec[1], vec[2], vec[3]);
 }
 
 
