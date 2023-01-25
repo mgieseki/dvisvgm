@@ -57,8 +57,7 @@ class FontManager {
 		int registerFont (uint32_t fontnum, const std::string &fontname, uint32_t checksum, double dsize, double scale);
 		int registerFont (uint32_t fontnum, const std::string &fname, double ptsize, const FontStyle &style, Color color);
 		int registerFont (uint32_t fontnum, const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
-//		int registerFont (const std::string &fname, int fontIndex, double ptsize, const FontStyle &style, Color color);
-		int registerFont (const std::string &fname, double ptsize);
+		int registerFont (const std::string &fname, std::string fontname, double ptsize);
 		Font* getFont (int n) const;
 		Font* getFont (const std::string &name) const;
 		Font* getFont (const std::string &name, double ptsize);

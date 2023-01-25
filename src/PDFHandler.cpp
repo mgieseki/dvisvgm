@@ -639,7 +639,7 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 				filename = "sys://"+fontname;
 			double ptsize = matrix_extent({trm[0], trm[1], 0, trm[2], trm[3]});
 			ptsize = round(10*ptsize)/10;
-			int fontID = FontManager::instance().registerFont(filename, ptsize);
+			int fontID = FontManager::instance().registerFont(filename, fontname, ptsize);
 			if (fontID >= 0) {
 				auto font = font_cast<NativeFont*>(FontManager::instance().getFontById(fontID));
 				if (font != _currentFont) {
@@ -782,7 +782,6 @@ void PDFHandler::collectObjects () {
 	_objDict = parse_pdf_dict<ObjID>(mtShow("pages/" + to_string(_pageno) + "/Resources/XObject"));
 	// replace referenced font IDs by actual IDs used for extracted fonts
 	for (auto &entry : _objDict) {
-		string objtype = mtShow(to_string(entry.second.num)+"/Type", SearchPattern(R"(/(\w+))", "$1"));
 		// store filenames of non-font object in object map
 		auto fnameIt = _extractedFiles.find(entry.second.num);
 		entry.second.fname = fnameIt != _extractedFiles.end() ? tmpdir+fnameIt->second : "";
@@ -791,6 +790,10 @@ void PDFHandler::collectObjects () {
 		if (entry.second.substr(0, 5) == "font-") {
 			string filepath = tmpdir+entry.second;  // path to font file
 			string fontname = strip_subset_prefix(FontEngine::instance().getPSName(filepath));
+			// If the extracted font file doesn't contain a font name,
+			// try to get it from the corresponding PDF object.
+			if (fontname.empty())
+				fontname = mtShow(to_string(entry.first)+"/FontName", SearchPattern(R"(/(\w+))", "$1"));
 			_objDict.emplace(fontname, ObjID(entry.first, 0, filepath));
 		}
 	}
