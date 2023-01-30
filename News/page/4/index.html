@@ -79,7 +79,52 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="cc9ed6a8f3a0ef7ffdcf7718852ab870"></a>
+  <a name="ed26fc1f97db41d498f4198055773fd3"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">13 April 2019: dvisvgm 2.7 has been released</div>
+    <div class="card-body">
+      <p>The main new feature of this release is command-line option <code>--optimize</code> which
+allows for optimization of the generated SVG tree after it has completely been built from the DVI data.
+The optimizations are performed by running separate optimizer modules which are executed one by one in
+a given order and thus transform the XML tree gradually. Currently, the following optimizations are available:</p>
+<ul>
+<li>Move common inheritable attributes of adjacent elements to <a href="https://www.w3.org/TR/SVG11/struct.html#Groups">group elements</a>.</li>
+<li>Combine nested groups and unwrap groups without attributes.</li>
+<li>Remove redundant <code>clipPath</code> elements.</li>
+<li>Simplify <code>transform</code> attributes.</li>
+</ul>
+<p>More detailed information on option <code>--optimize</code> and the optimizer modules can be found on the <a href="/Manpage/#opt-optimize">manual page</a>.</p>
+<p>Furthermore, a couple of smaller additions and changes have been made:</p>
+<ul>
+<li>All <code>raw</code> specials are now parsed and converted to proper XML nodes so that the optimizer
+can also process SVG fragments added by the user.</li>
+<li>Several improvements to SVG graphics path descriptions:
+<ul>
+<li>Redundant spaces and leading zeros are omitted.</li>
+<li><a href="https://www.w3.org/TR/SVG11/paths.html#PathDataLinetoCommands">Line commands</a> representing zero-length lines are removed.</li>
+<li>The detection of reflected control points in Bézier curve sequences has been improved. As a result,
+the shorthand <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataCurveCommands">curve commands</a>
+are applied more often.</li>
+</ul>
+</li>
+<li>Added support for PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code>.</li>
+<li>Added evaluation of optional <code>psfile</code>/<code>pdffile</code> special attribute <code>clip</code> which clips the
+drawing region to the bounding box of the image being processed.</li>
+<li>Added the <code>\special</code> variants <code>dvisvgm:bbox lock</code> and <code>dvisvgm:bbox unlock</code> to
+disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
+bounding box of the current page if a new graphics element is added. This behaviour can
+be paused and resumed with the new specials.</li>
+<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
+applying the current transformation matrix to the bounding box.</li>
+<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
+current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
+<li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
+<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
+<li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
+<li>Lots of code refactorings.</li>
+</ul>
+</div>
+  </section><a name="cc9ed6a8f3a0ef7ffdcf7718852ab870"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">9 March 2019: dvisvgm 2.6.3 has been released</div>
     <div class="card-body">
@@ -239,19 +284,6 @@ For example, option <code>psfixbb</code> of the preview package adds these speci
 <a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
 Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
 <li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
-</ul>
-</div>
-  </section><a name="961cdf56e376338f85ce3cc3a86b6327"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 July 2018: dvisvgm 2.4.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed the handling of the optional delay parameter of option <code>--progress</code>.</li>
-<li>Updated the <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.5.</li>
-<li>Updated the <a href="https://github.com/google/woff2">woff2 library</a> to version 1.0.2</li>
-<li>Updated several URLs in the <a href="/Manpage/">manual page</a>.</li>
-<li>Several minor code refactorings.</li>
 </ul>
 </div>
   </section>

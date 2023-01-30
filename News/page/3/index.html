@@ -79,7 +79,36 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="d2a122bf30fb68ee24d061cc34560ae0"></a>
+  <a name="5651dc6a7c24b18f3867668516712587"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">13 March 2020: dvisvgm 2.9 has been released</div>
+    <div class="card-body">
+      <p>The main new feature of this release is the conversion of bitmap images present in PostScript and PDF data.
+All bitmaps are embedded into the generated SVG files encoded as Base64 strings. The default format used
+for this is JPEG because it allows for high compression rates and therefore moderate impact on the SVG file size.
+If you prefer a lossless format, you can switch to one of the supported PNG variants by using the new command-line
+option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a>. Further information about the available
+formats and the usage of this option can be found on the manual page.</p>
+<p><strong>Summary of additions and fixes:</strong></p>
+<ul>
+<li>Added the processing of PostScript operators <code>image</code> and <code>colorimage</code> which now allows <em>dvisvgm</em>
+to embed bitmap images present in PS/PDF files into the generated SVG files.</li>
+<li>Added command-line option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a> to set
+the format used to embed bitmaps present in EPS/PDF files.</li>
+<li>Added a fallback method to retrieve the resolution of GF files if <code>stdout</code> of the Metafont subprocess can&rsquo;t
+be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvisvgm/issues/129">issue #129</a>).</li>
+<li>Fixed the broken conversion of PostScript tiling patterns.</li>
+<li>Fixed the functionality of PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code> for multibyte characters.</li>
+<li>Fixed a PostScript error that was triggered by yet unsupported shading types &lt; 4.</li>
+<li>Prevent negative <code>height</code> and <code>width</code> attributes created by <a href="/Manpage/#opt-optimize">optimizer module</a>
+<code>simplify-transform</code>.</li>
+<li>Fixed a potential segfault caused by deep recursion in huge SVG trees.</li>
+<li>Look for Ghostscript library name <code>libgs.dylib.N</code> additionally to <code>libgs.N.dylib</code> (Mac only).</li>
+<li>Ensure that <code>make install</code> installs the bundled manual page if it can&rsquo;t be rebuilt due to missing build tools.</li>
+<li>Updated the bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.7.3.</li>
+</ul>
+</div>
+  </section><a name="d2a122bf30fb68ee24d061cc34560ae0"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">7 December 2019: dvisvgm 2.8.2 has been released</div>
     <div class="card-body">
@@ -189,51 +218,6 @@ An unofficial, fixed version can be downloaded <a href="https://github.com/mgies
 <li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
 <li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
 <li>Added the source files required to access the MiKTeX session object as the MiKTeX SDK has been deprecated.</li>
-</ul>
-</div>
-  </section><a name="ed26fc1f97db41d498f4198055773fd3"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">13 April 2019: dvisvgm 2.7 has been released</div>
-    <div class="card-body">
-      <p>The main new feature of this release is command-line option <code>--optimize</code> which
-allows for optimization of the generated SVG tree after it has completely been built from the DVI data.
-The optimizations are performed by running separate optimizer modules which are executed one by one in
-a given order and thus transform the XML tree gradually. Currently, the following optimizations are available:</p>
-<ul>
-<li>Move common inheritable attributes of adjacent elements to <a href="https://www.w3.org/TR/SVG11/struct.html#Groups">group elements</a>.</li>
-<li>Combine nested groups and unwrap groups without attributes.</li>
-<li>Remove redundant <code>clipPath</code> elements.</li>
-<li>Simplify <code>transform</code> attributes.</li>
-</ul>
-<p>More detailed information on option <code>--optimize</code> and the optimizer modules can be found on the <a href="/Manpage/#opt-optimize">manual page</a>.</p>
-<p>Furthermore, a couple of smaller additions and changes have been made:</p>
-<ul>
-<li>All <code>raw</code> specials are now parsed and converted to proper XML nodes so that the optimizer
-can also process SVG fragments added by the user.</li>
-<li>Several improvements to SVG graphics path descriptions:
-<ul>
-<li>Redundant spaces and leading zeros are omitted.</li>
-<li><a href="https://www.w3.org/TR/SVG11/paths.html#PathDataLinetoCommands">Line commands</a> representing zero-length lines are removed.</li>
-<li>The detection of reflected control points in Bézier curve sequences has been improved. As a result,
-the shorthand <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataCurveCommands">curve commands</a>
-are applied more often.</li>
-</ul>
-</li>
-<li>Added support for PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code>.</li>
-<li>Added evaluation of optional <code>psfile</code>/<code>pdffile</code> special attribute <code>clip</code> which clips the
-drawing region to the bounding box of the image being processed.</li>
-<li>Added the <code>\special</code> variants <code>dvisvgm:bbox lock</code> and <code>dvisvgm:bbox unlock</code> to
-disable and enable updating of the bounding box. By default, <em>dvisvgm</em> adapts the
-bounding box of the current page if a new graphics element is added. This behaviour can
-be paused and resumed with the new specials.</li>
-<li>Added optional modifier <code>transform</code> to <em>dvisvgm</em>&rsquo;s <code>bbox</code> specials to allow for
-applying the current transformation matrix to the bounding box.</li>
-<li>Added macro <code>{?matrix}</code> to <em>dvisvgm</em>&rsquo;s <code>raw</code> specials. It expands to the
-current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</li>
-<li>Option <code>--exact</code> has been renamed to <code>--exact-bbox</code>. This change is backward compatible due to
-<em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
-<li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
-<li>Lots of code refactorings.</li>
 </ul>
 </div>
   </section>

@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 11 Jan 2023 11:09:30 +0100</pubDate>
+    <pubDate>Mon, 30 Jan 2023 09:24:32 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.0.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#fd435907f32df207055b82f8cdb77c5b</link>
+      <pubDate>Mon, 30 Jan 2023 09:15:14 +0100</pubDate>
+      <guid>fd435907f32df207055b82f8cdb77c5b</guid>
+      <description>
+        <![CDATA[<p>This is a small maintenance release that addresses the following issues:</p>
+<ul>
+<li>Fixed the computation of font sizes performed by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/220">issue #220</a>).</li>
+<li>Fixed the <code>viewBox</code> coordinates determined by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/223">issue #223</a>).</li>
+<li>Improved the detection of font names used in PDF files (<a href="https://github.com/mgieseki/dvisvgm/issues/224">issue #224</a>).</li>
+<li>Minor code improvements, increased compatibility with older GCC versions.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.0.1 has been released</title>
@@ -149,7 +166,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#44794f1bf7aeef1aecbf496110744161</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#44794f1bf7aeef1aecbf496110744161</link>
       <pubDate>Thu, 20 Jan 2022 12:09:40 +0100</pubDate>
       <guid>44794f1bf7aeef1aecbf496110744161</guid>
       <description>
@@ -304,7 +321,7 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
     
     <item>
       <title>dvisvgm 2.9 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#5651dc6a7c24b18f3867668516712587</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#5651dc6a7c24b18f3867668516712587</link>
       <pubDate>Fri, 13 Mar 2020 13:18:09 +0100</pubDate>
       <guid>5651dc6a7c24b18f3867668516712587</guid>
       <description>
@@ -411,24 +428,6 @@ into positional and size attributes if possible.</li>
 <li>The bundled <a href="http://www.xxhash.com">xxHash</a> library has been updated to version 0.7.2.</li>
 <li>The bundled <a href="https://github.com/google/googletest">Google Test</a> library has been updated to version 1.10.</li>
 <li>Lots of code has been refactored and improved.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.7.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#8e82b41fbfdfcdf712fa21fc5e505117</link>
-      <pubDate>Sun, 28 Jul 2019 12:08:48 +0200</pubDate>
-      <guid>8e82b41fbfdfcdf712fa21fc5e505117</guid>
-      <description>
-        <![CDATA[<p>This is another small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed a memory issue occurred when calling Metafont.</li>
-<li>Fixed potential rounding issues in conversion of color values (<a href="https://github.com/mgieseki/dvisvgm/issues/116">issue #116</a>).</li>
-<li>Changed the location of the cache files from <code>~/.dvisvgm/cache</code> to <code>$XDG_CACHE_HOME/dvisvgm</code>
-which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/112">issue #112</a>).</li>
-<li>Some minor refactorings.</li>
 </ul>
 ]]>
       </description>
