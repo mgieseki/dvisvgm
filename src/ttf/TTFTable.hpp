@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #pragma once
+#include <cstdint>
 #include <ostream>
 #include <sstream>
 #include <vector>

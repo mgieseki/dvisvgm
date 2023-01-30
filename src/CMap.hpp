@@ -22,6 +22,7 @@
 #define CMAP_HPP
 
 #include <algorithm>
+#include <cstdint>
 #include <ostream>
 #include <vector>
 #include "FontEncoding.hpp"
