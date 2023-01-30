@@ -1,3 +1,9 @@
+dvisvgm-3.0.2 (2023-01-30)
+- fixed computation of font sizes in new PDF handler (GH issue #220)
+- fixed viewBox coordinates determined by new PDF handler (GH issue #223)
+- improved detection of font names used in PDF files (GH issue #224)
+- minor code improvements	
+
 dvisvgm-3.0.1 (2023-01-10)
 - added support for the 64-bit GS library in TeX Live
   (patch sent by Akira Kakuto)
