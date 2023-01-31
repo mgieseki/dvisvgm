@@ -117,7 +117,7 @@ adds the proper compiler options if necessary.
 Quick installation info:
 
 * ensure that the development packages of all libraries, listed above, are installed
-* type `./autogen.sh` if `configure` is not present in the _dvisvgm_ root folder
+* type `autoreconf -fi` if `configure` is not present in the _dvisvgm_ root folder
 * either type `./configure` if you don't want to use the bundled libraries _brotli_, _potrace_, _woff2_, and _xxHash_ but link
 against the corresponding system libraries,
 * or type `./configure --enable-bundled-libs` in order to build and statically link the bundled libraries.
