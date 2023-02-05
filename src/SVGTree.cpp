@@ -330,11 +330,11 @@ void SVGTree::pushPageContext (unique_ptr<SVGElement> node) {
 }
 
 
-/** Pops the current context element and restored the previous one. */
+/** Pops the current context element and restores the previous one. */
 void SVGTree::popPageContext () {
 	if (!_pageContextStack.empty())
 		_pageContextStack.pop();
-	_charHandler->setInitialContextNode(_page);
+	_charHandler->setInitialContextNode(_pageContextStack.empty() ? _page : _pageContextStack.top());
 }
 
 
