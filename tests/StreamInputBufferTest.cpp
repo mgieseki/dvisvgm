@@ -43,6 +43,27 @@ TEST(StreamInputBufferTest, get) {
 }
 
 
+TEST(StreamInputBufferTest, read) {
+	istringstream iss("abcdefghijklmnopqrst");
+	StreamInputReader ir(iss);
+	char buf[10];
+	auto count = ir.read(buf, 9);
+	ASSERT_EQ(count, 9);
+	buf[count] = 0;
+	EXPECT_EQ(string(buf), "abcdefghi");
+
+	count = ir.read(buf, 9);
+	ASSERT_EQ(count, 9);
+	buf[count] = 0;
+	EXPECT_EQ(string(buf), "jklmnopqr");
+
+	count = ir.read(buf, 9);
+	ASSERT_EQ(count, 2);
+	buf[count] = 0;
+	EXPECT_EQ(string(buf), "st");
+}
+
+
 TEST(StreamInputBufferTest, peek) {
 	istringstream iss("abcdefghijklmnopqrstuvwxyz");
 	StreamInputBuffer buffer(iss, 10);
