@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2022-10-14 12:56 +0200
+:revdate: 2023-02-21 19:20 +0100
 
 Name
 ----
@@ -206,7 +206,7 @@ In order to apply these color names rather than their RGB values, call dvisvgm w
 Adds comments with further information about selected data to the SVG file. Currently, only
 font elements and font CSS rules related to native fonts are annotated.
 
-*embed-bitmaps*::
+*--embed-bitmaps*::
 Embeds the contents of bitmap files into the generated SVG files instead of adding file references.
 Because of the base64-encoded data, the SVG files are usually much bigger but at the same time
 more portable because they don't rely on external bitmap files.
