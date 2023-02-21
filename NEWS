@@ -1,3 +1,7 @@
+dvisvgm-3.0.3 (2023-02-21)
+- fixed resetting of character contexts (GH issue #227)
+- added missing #includes required for GCC 13
+
 dvisvgm-3.0.2 (2023-01-30)
 - fixed computation of font sizes in new PDF handler (GH issue #220)
 - fixed viewBox coordinates determined by new PDF handler (GH issue #223)
