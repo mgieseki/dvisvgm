@@ -35,7 +35,6 @@
 *.opensdf
 *.vcxproj.user
 *.patch
-transfer*
 build
 callgrind.*
 cmdline.*
@@ -44,6 +43,7 @@ Makefile.in
 autom4te.*
 dvisvgm
 aclocal.*
+aminclude_static.am
 ar-lib
 compile
 libtool
@@ -56,6 +56,8 @@ doc/buildman
 doc/dvisvgm.txt
 doc/dvisvgm*.xml
 doc/dvisvgm.html
+doc/dvisvgm.sty
+doc/update-revdate
 doc/dvisvgm.1
 m4/libtool.m4
 m4/lt*.m4
@@ -70,6 +72,7 @@ vc/*.s*
 vc/_*
 vc/Upgrade*
 configure
+configure~
 depcomp
 install-sh
 src/samples
