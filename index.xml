@@ -3,8 +3,23 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Mon, 30 Jan 2023 09:24:32 +0100</pubDate>
+    <pubDate>Tue, 21 Feb 2023 12:26:07 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.0.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#a9638fb710d7e1ddd1fa29ebd520f1a4</link>
+      <pubDate>Tue, 21 Feb 2023 12:20:06 +0100</pubDate>
+      <guid>a9638fb710d7e1ddd1fa29ebd520f1a4</guid>
+      <description>
+        <![CDATA[<p>This is a small bugfix release addressing these issues:</p>
+<ul>
+<li>Fixed resetting the character context that could lead to invalid character positions and properties (<a href="https://github.com/mgieseki/dvisvgm/issues/227">issue #227</a>).</li>
+<li>Added missing <code>#include</code> directives required for GCC 13.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.0.2 has been released</title>
@@ -149,7 +164,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
       <pubDate>Wed, 26 Jan 2022 10:06:55 +0100</pubDate>
       <guid>cac0a6dd77a51a4ac4ebe47b653b4442</guid>
       <description>
@@ -302,7 +317,7 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
     
     <item>
       <title>dvisvgm 2.9.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#7d856da14b815b8a8abea3cdae767d76</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#7d856da14b815b8a8abea3cdae767d76</link>
       <pubDate>Sat, 21 Mar 2020 13:16:48 +0100</pubDate>
       <guid>7d856da14b815b8a8abea3cdae767d76</guid>
       <description>
@@ -383,51 +398,6 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
 It&rsquo;s used to temporarily suppress graphic output when executing drawing or text commands.</li>
 <li>Absolute paths given in special <code>psfile</code> are now retained in the SVG file when referencing external image files.</li>
 <li>Some code refactorings.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.8 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#57192fe118cc7abbba232e51f3d2adf0</link>
-      <pubDate>Fri, 25 Oct 2019 17:42:50 +0200</pubDate>
-      <guid>57192fe118cc7abbba232e51f3d2adf0</guid>
-      <description>
-        <![CDATA[<p>This is a small feature release with the following additions/changes:</p>
-<ul>
-<li>Added support for JPEG, PNG, PDF, and SVG files to special <code>psfile</code>.</li>
-<li>Added support for Ghostscript 9.50 which introduced incompatible changes regarding option <code>-dSAFER</code>. Due
-to security reasons <code>SAFER</code> is now <a href="https://www.ghostscript.com/doc/9.50/Use.htm#Safer">active by default</a>
-and therefore conflicts with <code>DELAYBIND</code> and <code>WRITESYSTEMDICT</code>. Since <em>dvisvgm</em> requires the latter two to work
-correctly, Ghostscript must now be called with <code>-dDELAYSAFER</code>. Otherwise, it prints some warning messages and
-stops with a PostScript error, e.g. like so:
-<span class="d-inline-flex">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>*** WARNING - you have selected SAFER, indicating you want Ghostscript
-</span></span><span style="display:flex;"><span>              to execute in a safer environment, but at the same time
-</span></span><span style="display:flex;"><span>              have selected DELAYBIND. Unless you use this option with
-</span></span><span style="display:flex;"><span>              care (and specifically, remember to call .bindnow) it is
-</span></span><span style="display:flex;"><span>              possible that malicious code may be able to evade the
-</span></span><span style="display:flex;"><span>              limited security offered by the SAFER option.
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>*** WARNING - you have selected SAFER, indicating you want Ghostscript
-</span></span><span style="display:flex;"><span>              to execute in a safer environment, but at the same time
-</span></span><span style="display:flex;"><span>              have selected WRITESYSTEMDICT. Unless you use this option with
-</span></span><span style="display:flex;"><span>              care and specifically, remember to execute code like:
-</span></span><span style="display:flex;"><span>                     &#34;systemdict readonly pop&#34;
-</span></span><span style="display:flex;"><span> PostScript error: invalidfileaccess in run</span></span></code></pre></div>
-</span><br/>
-<em>dvisvgm</em> 2.8 fixes this issue. All versions prior to 2.8 don&rsquo;t work together with GS 9.50 (and later).</li>
-<li>Added support for <a href="https://www.w3.org/TR/SVG11/paths.html#PathDataEllipticalArcCommands">elliptical arc segments</a> in graphics paths.</li>
-<li>Added support for CMap operator <code>begincidchar</code> (thanks to Akira Kakuto for sending the patch).</li>
-<li>Added suport for experimental 128-bit <a href="https://github.com/Cyan4973/xxHash#new-experimental-hash-algorithm"><code>XXH3</code> hashes</a>.</li>
-<li>The SVG optimizer module <code>simplify-transform</code> has been extended to incorporate translation and scaling components
-into positional and size attributes if possible.</li>
-<li>The CRC32 checksums used to verify the sanity of cache files has been replaced with <code>XXH32</code> hashes.</li>
-<li>The bundled <a href="http://potrace.sourceforge.net">potrace</a> library has been updated to version 1.16.</li>
-<li>The bundled <a href="http://www.xxhash.com">xxHash</a> library has been updated to version 0.7.2.</li>
-<li>The bundled <a href="https://github.com/google/googletest">Google Test</a> library has been updated to version 1.10.</li>
-<li>Lots of code has been refactored and improved.</li>
 </ul>
 ]]>
       </description>
