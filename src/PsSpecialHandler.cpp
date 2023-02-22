@@ -422,17 +422,17 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fn
 	imgnode.element->addAttribute("y", 0);
 	imgnode.element->addAttribute("width", bbox.width());
 	imgnode.element->addAttribute("height", bbox.height());
-
-	// Only reference the image with an absolute path if either an absolute path was given by the user
-	// or a given plain filename is not present in the current working directory but was found through
-	// the FileFinder, i.e. it's usually located somewhere in the texmf tree.
-	string href = path;
-	if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
-		href = FilePath(path).relative(FilePath(_actions->getSVGFilePath(pageno)));
 	if (EMBED_BITMAP_DATA)
 		imgnode.element->addAttribute("@@xlink:href", "data:" + util::mimetype(fname) + ";base64," + fname);
-	else
+	else {
+		string href = path;
+		// Only reference the image with an absolute path if either an absolute path was given by the user
+		// or a given plain filename is not present in the current working directory but was found through
+		// the FileFinder, i.e. it's usually located somewhere in the texmf tree.
+		if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
+			href = FilePath(path).relative(FilePath(_actions->getSVGFilePath(pageno)));
 		imgnode.element->addAttribute("xlink:href", href);
+	}
 	return imgnode;
 }
 
