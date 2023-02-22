@@ -100,7 +100,7 @@ class StringMatcher {
 
 	private:
 		std::string _pattern;
-		std::vector<size_t> _borders;
+		std::vector<int> _borders;
 		size_t _charsRead;
 };
 

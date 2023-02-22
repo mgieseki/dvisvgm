@@ -394,7 +394,7 @@ int InputReader::parseAttributes (map<string,string> &attr, bool requireValues, 
 		else if (!requireValues)
 			attr.emplace(std::move(key), "");
 	}
-	return attr.size();
+	return int(attr.size());
 }
 
 //////////////////////////////////////////
