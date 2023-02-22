@@ -24,18 +24,11 @@ EXTRA_DIST = gtest/LICENSE \
 
 include ../libs/defs.am
 
-LIBS_CFLAGS = $(XXHASH_CFLAGS)
-LIBS_LIBS   = $(POTRACE_LIBS) $(XXHASH_LIBS)
+LIBS_CFLAGS = $(XXHASH_CFLAGS) -I$(dvisvgm_srcdir)/libs/md5
+LIBS_LIBS   = $(POTRACE_LIBS) $(XXHASH_LIBS) ../libs/md5/libmd5.a
+
 if ENABLE_WOFF
 LIBS_LIBS  += $(WOFF2_LIBS) $(BROTLI_LIBS)
-endif
-
-if USE_BUNDLED_MD5
-LIBS_CFLAGS += -I$(dvisvgm_srcdir)/libs/md5
-LIBS_LIBS   += ../libs/md5/libmd5.a
-else
-LIBS_CFLAGS += $(LIBCRYPTO_CFLAGS)
-LIBS_LIBS   += $(LIBCRYPTO_LIBS)
 endif
 
 AM_CXXFLAGS = -I$(dvisvgm_srcdir)/src -I$(dvisvgm_srcdir)/libs/variant/include \

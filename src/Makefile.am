@@ -16,6 +16,7 @@ include ../libs/defs.am
 dvisvgm_LDADD = \
 	$(noinst_LTLIBRARIES) \
 	../libs/clipper/libclipper.a \
+	../libs/md5/libmd5.a \
 	$(FREETYPE_LIBS) \
 	$(POTRACE_LIBS) \
 	$(XXHASH_LIBS) \
@@ -27,12 +28,6 @@ SUBDIRS += ttf
 dvisvgm_LDADD += \
 	$(WOFF2_LIBS) \
 	$(BROTLI_LIBS)
-endif
-
-if USE_BUNDLED_MD5
-dvisvgm_LDADD += ../libs/md5/libmd5.a
-else
-dvisvgm_LDADD += $(LIBCRYPTO_LIBS)
 endif
 
 dvisvgm_DEPENDENCIES = $(noinst_LTLIBRARIES)
@@ -200,12 +195,7 @@ AM_CXXFLAGS +=  \
 AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
 endif
 
-if USE_BUNDLED_MD5
 AM_CXXFLAGS += -I$(dvisvgm_srcdir)/libs/md5
-else
-AM_CXXFLAGS += $(LIBCRYPTO_CFLAGS)
-endif
-
 
 
 # the command-line parser class is generated from options.xml by opt2cpp
