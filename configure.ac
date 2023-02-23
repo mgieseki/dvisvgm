@@ -12,6 +12,8 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([subdir-objects dist-xz])
 
+AM_CONDITIONAL([TEXLIVE_BUILD], [test "x$enable_texlive_build" = xyes])
+
 AH_TEMPLATE([HOST_SYSTEM], [The machine triplet of the host system])
 AC_DEFINE_UNQUOTED([HOST_SYSTEM], ["$host"])
 
