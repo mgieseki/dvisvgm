@@ -34,13 +34,6 @@ DEPENDENCIES
    searching files in the large texmf tree. Please ensure that you use the
    kpathsea version coming with or matching your TeX system.
 
- * OpenSSL crypto library (https://www.openssl.org)
-   dvisvgm comes with a bundled implementation of the MD5 hash algorithm which
-   can optionally be replaced with the corresponding function of the OpenSSL
-   crypto library. If the configuration script finds the OpenSSL development
-   files on the build system, it links against libcrypto instead of the bundled
-   MD5 module.
-
  * potracelib (http://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
    bitmap output. A recent version is also part of the dvisvgm sources.

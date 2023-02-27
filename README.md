@@ -76,12 +76,6 @@ _dvisvgm_ relies on the following free libraries:
   files in the large `texmf` tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
-* [OpenSSL crypto library](https://www.openssl.org)  
-  _dvisvgm_ comes with a bundled implementation of the MD5 hash algorithm which can optionally
-  be replaced with the corresponding function of the OpenSSL crypto library. If the
-  configuration script finds the OpenSSL development files on the build system, it links
-  against _libcrypto_ instead of the bundled MD5 module.
-
 * [potracelib](http://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
   bitmap output. It's also bundled with the _dvisvgm_ sources.
