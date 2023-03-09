@@ -118,10 +118,13 @@ bool Process::run (string *out, const SearchPattern &pattern, PipeFlags flags) {
 	Subprocess subprocess;
 	if (!subprocess.run(_cmd, _paramstr, flags))
 		return false;
+	if (out)
+		out->clear();
 	for (;;) {
 		if (out) {
-			out->clear();
-			subprocess.readFromPipe(*out, pattern);
+			string chunk;
+			subprocess.readFromPipe(chunk, pattern);
+			*out += chunk;
 		}
 		Subprocess::State state = subprocess.state();
 		if (state != Subprocess::State::RUNNING)
