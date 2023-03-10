@@ -79,7 +79,29 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="7d856da14b815b8a8abea3cdae767d76"></a>
+  <a name="2df05e60a6483e32a6c2ab7e1bb3a697"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">12 August 2020: dvisvgm 2.10 has been released</div>
+    <div class="card-body">
+      <p>This is a maintenance release with the following additions and changes:</p>
+<ul>
+<li>Added evaluation of <a href="http://www.luatex.org">Lua<span class="tex">T<sub>E</sub>X</span></a> native font definitions.</li>
+<li>Added computation of of italic correction for fake slanted glyphs.</li>
+<li><em>dvisvgm</em> now creates dedicated temporary folders for each call of the program to prevent file collisions between different processes.</li>
+<li>Added evaluation of internal <a href="https://www.ghostscript.com">Ghostscript</a> operators <code>.fillstroke</code> and <code>.eofillstroke</code> introduced
+with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/139">issue #139</a>).</li>
+<li>Fixed and improved optimization of nested group elements.</li>
+<li>Fixed optimization of <code>scale</code> transformation.</li>
+<li>Fixed optimization of <code>transform</code> attributes applied to images and clipping paths.</li>
+<li>Fixed processing of PostScript operator <code>eoclip</code>.</li>
+<li>Fixed processing of clipping path intersections that involve different fill rules.</li>
+<li>Fixed processing of <code>{?(...)}</code> expressions (<a href="https://github.com/mgieseki/dvisvgm/issues/136">issue #136</a>).</li>
+<li>Fixed error message about unmatched closing tags in XML parser.</li>
+<li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
+<li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
+</ul>
+</div>
+  </section><a name="7d856da14b815b8a8abea3cdae767d76"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">21 March 2020: dvisvgm 2.9.1 has been released</div>
     <div class="card-body">
@@ -210,18 +232,6 @@ which usually expands to <code>~/.cache/dvisvgm</code> (<a href="https://github.
 <li>Minor updates of the <a href="/Manpage/">manual page</a>.</li>
 <li>Some code refactorings.</li>
 </ul>
-</div>
-  </section><a name="6c01c957e0db5e41406e40486fe0acd1"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 June 2019: dvisvgm 2.7.2 has been released</div>
-    <div class="card-body">
-      <p>This maintenance release fixes an issue introduced with Ghostscript 9.27.
-The removal of the PostScript dictionaries <code>GS_PDF_ProcSet</code> and <code>pdfdict</code> from
-the public interface leads to an error message when processing PDF files with
-<em>dvisvgm</em>.</p>
-<p>The changes in Ghostscript 9.27 also break the PDF functionality of
-<a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
-An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">

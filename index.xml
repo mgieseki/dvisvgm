@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Tue, 21 Feb 2023 12:26:07 +0100</pubDate>
+    <pubDate>Fri, 10 Mar 2023 10:49:12 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.0.4 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#18c114b527c5addfc18c55140c88911d</link>
+      <pubDate>Fri, 10 Mar 2023 10:41:33 +0100</pubDate>
+      <guid>18c114b527c5addfc18c55140c88911d</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fixed a bug that could prevent reading the output of subprocesses (<a href="https://github.com/mgieseki/dvisvgm/issues/232">issue #232</a>).</li>
+<li>Removed the optional dependency on <a href="https://www.openssl.org/docs/man1.0.2/man3/crypto.html">libcrypto</a> (<a href="https://www.openssl.org">OpenSSL</a>)
+due to the deprecation of its MD5 functions. Instead, the bundled MD5 function is always used now.</li>
+<li>Added TeX Live conditionals to the build system (patch by Karl Berry).</li>
+<li>Small code and manpage improvements.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.0.3 has been released</title>
@@ -152,7 +169,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
       <pubDate>Wed, 23 Feb 2022 14:33:43 +0100</pubDate>
       <guid>0ad29b27d5fc33fc8a3dda38a8d2186f</guid>
       <description>
@@ -290,7 +307,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.10 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
       <pubDate>Wed, 12 Aug 2020 10:23:04 +0200</pubDate>
       <guid>2df05e60a6483e32a6c2ab7e1bb3a697</guid>
       <description>
@@ -381,23 +398,6 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
 <li>Fixed a PostScript error triggered by backslashes in file paths (Windows only, <a href="https://github.com/mgieseki/dvisvgm/issues/123">issue #123</a>).</li>
 <li>Fixed a build issue related to GCC on Solaris 11.</li>
 <li>Some code cleanup.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.8.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#8d0ef4dc302ef6102e094359ddf31b2d</link>
-      <pubDate>Thu, 14 Nov 2019 16:25:12 +0100</pubDate>
-      <guid>8d0ef4dc302ef6102e094359ddf31b2d</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added SVG optimizer module <code>simplify-text</code> to move common attributes from <code>tspan</code> elements to the enclosing <code>text</code> element. Redundant <code>tspan</code> elements are removed afterwards.</li>
-<li>Added support for PS operator <code>nulldevice</code> which is used by a couple of LaTeX packages.
-It&rsquo;s used to temporarily suppress graphic output when executing drawing or text commands.</li>
-<li>Absolute paths given in special <code>psfile</code> are now retained in the SVG file when referencing external image files.</li>
-<li>Some code refactorings.</li>
 </ul>
 ]]>
       </description>
