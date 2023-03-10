@@ -1,3 +1,11 @@
+dvisvgm-3.0.4 (2023-03-10)
+- fixed issue that could prevent reading the output of subprocesses
+  (GH issue #232)
+- removed optional dependency on libcrypto (OpenSSL) because the MD5 functions
+  have been deprecated (always using the bundled MD5 function now)
+- added TeX Live conditionals to the build system (patch by Karl Berry)
+- small code and manual page improvements
+
 dvisvgm-3.0.3 (2023-02-21)
 - fixed resetting of character contexts (GH issue #227)
 - added missing #includes required for GCC 13
