@@ -121,11 +121,8 @@ bool Process::run (string *out, const SearchPattern &pattern, PipeFlags flags) {
 	if (out)
 		out->clear();
 	for (;;) {
-		if (out) {
-			string chunk;
-			subprocess.readFromPipe(chunk, pattern);
-			*out += chunk;
-		}
+		if (out)
+			subprocess.readFromPipe(*out, pattern);
 		Subprocess::State state = subprocess.state();
 		if (state != Subprocess::State::RUNNING)
 			return state == Subprocess::State::FINISHED;
