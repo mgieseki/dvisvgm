@@ -175,6 +175,7 @@ unique_ptr<SVGElement> PDFHandler::convert (const string &fname, int pageno, uni
 void PDFHandler::initFile (const string &fname) {
 	finishFile();
 	_fname = FilePath(fname, true).absolute();
+	_fname = "\"" + _fname + "\"";
 	_numPages = parse_value<int>(mtShow("trailer/Root/Pages/Count"));
 	// extract image and font files from the PDF
 	string cwd = FileSystem::getcwd();
