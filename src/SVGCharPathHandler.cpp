@@ -85,16 +85,19 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 		GlyphMetrics metrics;
 		font->getGlyphMetrics(c, _vertical, metrics);
 		x -= metrics.wl;
-		if (auto pf = font_cast<const PhysicalFont*>(font)) {
-			// Center glyph between top and bottom border of the TFM box.
-			// This is just an approximation used until I find a way to compute
-			// the exact location in vertical mode.
-			GlyphMetrics exact_metrics;
-			pf->getExactGlyphBox(c, exact_metrics, false, nullptr);
-			y += exact_metrics.h+(metrics.d-exact_metrics.h-exact_metrics.d)/2;
+		if (_vertical) {
+			auto physicalFont = font_cast<const PhysicalFont *>(font);
+			if (!physicalFont)
+				y += metrics.d;
+			else {
+				// Center glyph between top and bottom border of the TFM box.
+				// This is just an approximation used until I find a way to compute
+				// the exact location in vertical mode.
+				GlyphMetrics exact_metrics;
+				physicalFont->getExactGlyphBox(c, exact_metrics, false, nullptr);
+				y += exact_metrics.h + (metrics.d - exact_metrics.h - exact_metrics.d) / 2;
+			}
 		}
-		else
-			y += metrics.d;
 	}
 	Matrix rotation(1);
 	if (_vertical && !font->verticalLayout()) {
