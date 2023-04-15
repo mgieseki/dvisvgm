@@ -183,13 +183,8 @@ string util::tolower (const string &str) {
 /** Converts a double to a string and strips redundant trailing digits/dots. */
 string util::to_string (double val) {
 	string str = std::to_string(val);
-	if (str.find('.') != string::npos) {  // double value and not an integer?
-		auto pos = str.find_last_not_of('0');
-		if (pos != string::npos)  // trailing zeros
-			str.erase(pos+1, string::npos);
-		if (str.back() == '.')    // trailing dot?
-			str.pop_back();
-	}
+	str.erase(str.find_last_not_of('0')+1, string::npos);
+	str.erase(str.find_last_not_of('.')+1, string::npos);
 	return str;
 }
 
