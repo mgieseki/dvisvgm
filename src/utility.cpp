@@ -58,7 +58,7 @@ vector<double> math::svd (const double (&m)[2][2]) {
 			theta = (a2-a1)/2;
 		}
 	}
-	return vector<double>{phi, sx, sy, theta};
+	return {phi, sx, sy, theta};
 }
 
 
@@ -205,7 +205,7 @@ int util::ilog10 (int n) {
  *  @param[in] fname name/path of the file */
 string util::read_file_contents (const string &fname) {
 	ifstream ifs(fname, ios::binary);
-	return string(istreambuf_iterator<char>(ifs.rdbuf()), istreambuf_iterator<char>());
+	return {istreambuf_iterator<char>(ifs.rdbuf()), istreambuf_iterator<char>()};
 }
 
 
