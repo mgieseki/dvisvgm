@@ -40,7 +40,7 @@ istream& StreamReader::replaceStream (istream &in) {
 uint32_t StreamReader::readUnsigned (int bytes) {
 	uint32_t ret = 0;
 	for (bytes--; bytes >= 0 && !_is->eof(); bytes--) {
-		uint32_t b = uint32_t(_is->get());
+		auto b = uint32_t(_is->get());
 		ret |= b << (8*bytes);
 	}
 	return ret;
@@ -62,7 +62,7 @@ uint32_t StreamReader::readUnsigned (int n, HashFunction &hashfunc) {
  *  @param[in] bytes number of bytes to read (max. 4)
  *  @return read integer */
 int32_t StreamReader::readSigned (int bytes) {
-	uint32_t ret = uint32_t(_is->get());
+	auto ret = uint32_t(_is->get());
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
 	for (bytes-=2; bytes >= 0 && !_is->eof(); bytes--)
@@ -102,7 +102,7 @@ string StreamReader::readString (HashFunction &hashfunc, bool finalZero) {
 	string ret = readString();
 	hashfunc.update(ret.data(), ret.length());
 	if (finalZero)
-		hashfunc.update(0, 1);
+		hashfunc.update(nullptr, 1);
 	return ret;
 }
 
@@ -149,7 +149,7 @@ vector<uint8_t> StreamReader::readBytes (int n, HashFunction &hashfunc) {
 int StreamReader::readByte (HashFunction &hashfunc) {
 	int ret = readByte();
 	if (ret >= 0) {
-		char c = ret & 0xff;
+		char c = char(ret & 0xff);
 		hashfunc.update(&c, 1);
 	}
 	return ret;
