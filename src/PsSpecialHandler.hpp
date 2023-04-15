@@ -93,7 +93,7 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		~PsSpecialHandler () override;
 		const char* name () const override {return "ps";}
 		const char* info () const override {return "dvips PostScript specials";}
-		std::vector<const char*> prefixes() const override;
+		std::vector<const char*> prefixes () const override;
 		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		void setDviScaleFactor (double dvi2bp) override {_previewFilter.setDviScaleFactor(dvi2bp);}

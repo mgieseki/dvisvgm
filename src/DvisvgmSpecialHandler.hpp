@@ -75,7 +75,7 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		DvisvgmSpecialHandler ();
 		const char* name () const override {return "dvisvgm";}
 		const char* info () const override {return "special set for embedding raw SVG snippets";}
-		std::vector<const char*> prefixes() const override;
+		std::vector<const char*> prefixes () const override;
 		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 

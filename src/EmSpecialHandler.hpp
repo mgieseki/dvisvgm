@@ -40,7 +40,7 @@ class EmSpecialHandler : public SpecialHandler {
 	public:
 		const char* name () const override {return "em";}
 		const char* info () const override {return "line drawing statements of the emTeX special set";}
-		std::vector<const char*> prefixes() const override;
+		std::vector<const char*> prefixes () const override;
 		bool process (const std::string &prefix, std::istream &in, SpecialActions &actions) override;
 
 	protected:

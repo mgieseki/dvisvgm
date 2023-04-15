@@ -1470,7 +1470,7 @@ void PsSpecialHandler::ClippingStack::setPrependedPath () {
 }
 
 
-vector<const char*> PsSpecialHandler::prefixes() const {
+vector<const char*> PsSpecialHandler::prefixes () const {
 	vector<const char*> pfx {
 		"header=",    // read and execute PS header file prior to the following PS statements
 		"pdffile=",   // process PDF file

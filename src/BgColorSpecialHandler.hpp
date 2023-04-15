@@ -32,7 +32,7 @@ class BgColorSpecialHandler : public SpecialHandler {
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		const char* info () const override {return "background color special";}
 		const char* name () const override {return "bgcolor";}
-		std::vector<const char*> prefixes() const override;
+		std::vector<const char*> prefixes () const override;
 
 	protected:
 		void dviBeginPage (unsigned pageno, SpecialActions &actions) override;

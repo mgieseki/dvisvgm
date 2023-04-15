@@ -113,7 +113,7 @@ bool ColorSpecialHandler::process (const string&, istream &is, SpecialActions &a
 }
 
 
-vector<const char*> ColorSpecialHandler::prefixes() const {
+vector<const char*> ColorSpecialHandler::prefixes () const {
 	vector<const char*> pfx {"color"};
 	return pfx;
 }

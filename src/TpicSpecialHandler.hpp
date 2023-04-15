@@ -30,7 +30,7 @@ class TpicSpecialHandler : public SpecialHandler {
 		TpicSpecialHandler ();
 		const char* info () const override {return "TPIC specials";}
 		const char* name () const override {return "tpic";}
-		std::vector<const char*> prefixes() const override;
+		std::vector<const char*> prefixes () const override;
 		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
 		double penwidth () const  {return _penwidth;}
 		double grayLevel () const {return _grayLevel;}

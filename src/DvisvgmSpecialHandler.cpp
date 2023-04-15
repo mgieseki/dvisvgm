@@ -486,7 +486,7 @@ void DvisvgmSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 }
 
 
-vector<const char*> DvisvgmSpecialHandler::prefixes() const {
+vector<const char*> DvisvgmSpecialHandler::prefixes () const {
 	vector<const char*> pfx {"dvisvgm:"};
 	return pfx;
 }
