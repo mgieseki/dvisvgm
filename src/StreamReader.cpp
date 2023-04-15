@@ -84,12 +84,12 @@ int32_t StreamReader::readSigned (int n, HashFunction &hashfunc) {
 
 /** Reads a string terminated by a 0-byte. */
 string StreamReader::readString () {
-	if (!_is)
-		throw StreamReaderException("no stream assigned");
 	string ret;
-	while (!_is->eof() && _is->peek() > 0)
-		ret += char(_is->get());
-	_is->get();  // skip 0-byte
+	if (_is) {
+		while (!_is->eof() && _is->peek() > 0)
+			ret += char(_is->get());
+		_is->get();  // skip 0-byte
+	}
 	return ret;
 }
 
@@ -111,11 +111,11 @@ string StreamReader::readString (HashFunction &hashfunc, bool finalZero) {
  *  @param[in] length number of characters to read
  *  @return the string read */
 string StreamReader::readString (int length) {
-	if (!_is)
-		throw StreamReaderException("no stream assigned");
-	length = max(0, length);
-	string str(length, '\0');
-	_is->read(&str[0], length);  // read 'length' bytes and append '\0'
+	string str;
+	if (_is) {
+		str.resize(max(0, length));
+		_is->read(&str[0], streamsize(str.length()));  // read 'length' bytes and append '\0'
+	}
 	return str;
 }
 
