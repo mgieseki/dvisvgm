@@ -139,6 +139,12 @@ string PDFHandler::mutoolVersion () {
 }
 
 
+/** Returns the total number of pages of a PDF file. */
+int PDFHandler::numberOfPages (const string &fname) {
+	return parse_value<int>(mtShow("\""+fname+"\"", "trailer/Root/Pages/Count"));
+}
+
+
 /** Converts a single page of a PDF file to SVG. If no context element is given,
  *  the SVG page contents are added to a page group element of the SVG tree.
  *  Otherwise, they are added to the context element which is not inserted into

@@ -59,7 +59,10 @@ void PDFToSVG::checkGSAndFileFormat () {
 /** Returns the total number of pages in the PDF file. */
 int PDFToSVG::totalPageCount () const {
 	if (_totalPageCount < 0) {
-		_totalPageCount = psInterpreter().pdfPageCount(filename());
+		if (_useGS)
+			_totalPageCount = psInterpreter().pdfPageCount(filename());
+		else
+			_totalPageCount = PDFHandler::numberOfPages(filename());
 		if (_totalPageCount < 1)
 			throw MessageException("can't retrieve number of pages from file " + filename());
 	}
