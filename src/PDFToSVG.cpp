@@ -45,7 +45,7 @@ void PDFToSVG::checkGSAndFileFormat () {
 		if (!PDFHandler::available()) {
 			ostringstream oss;
 			if (gsVersion() > 0) {
-				oss << "To process PDF files, either Ghostscript < 10.1 or mutool is required.\n";
+				oss << "To process PDF files, either Ghostscript < 10.01.0 or mutool is required.\n";
 				oss << "The installed Ghostscript version " << Ghostscript().revisionstr() << " isn't supported.\n";
 				throw MessageException(oss.str());
 			}

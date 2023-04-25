@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-02-21 19:20 +0100
+:revdate: 2023-04-25 09:53 +0200
 
 Name
 ----
@@ -572,13 +572,13 @@ If this option is given, dvisvgm does not expect a DVI but a PDF input file, and
 it to SVG. Similar to the conversion of DVI files, only the first page is processed by default.
 Option *--page* can be used to select different pages, page ranges, and/or page sequences.
 +
-If a Ghostcript version < 10.1.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
+If a Ghostcript version < 10.01.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
 this case, the conversion is realized by creating a single 'pdffile' special command which is
 forwarded to dvisvgm's PostScript special handler. Therefore, this option is only available if
 dvisvgm was built with PostScript support enabled, and requires Ghostscript to be accessible.
 See option *--libgs* for further information.
 +
-As of Ghostscript 10.1.0, this will no longer work due to the introduction of a new PDF interpreter.
+As of Ghostscript 10.01.0, this will no longer work due to the introduction of a new PDF interpreter.
 Therefore, an alternative conversion module based on https://mupdf.com/docs/mutool.html[mutool]
 has been introduced. It's automatically invoked if Ghostscript can't be used and if a working
 +mutool+ executable is present in a directory which is part of the system's search path.
@@ -1025,7 +1025,7 @@ All malformed entries in the list are silently ignored.
 of progress indicators (+pi+) to cyan (+5+) on default background (+*+).
 
 Variable *DVISVGM_PDF_PROC* allows you to select the desired PDF processor. dvisvgm requires either
-Ghostscript (version < 10.1.0) or mutool to process PDF files. IF *DVISVGM_PDF_PROC* is not set, dvisvgm
+Ghostscript (version < 10.01.0) or mutool to process PDF files. IF *DVISVGM_PDF_PROC* is not set, dvisvgm
 tries to detect the available processors. See option *--pdf* for further information. To select a
 specific PDF processor, you can set *DVISVGM_PDF_PROC* to +gs+ or +mutool+ which forces the use of
 Ghostscript and mutool respectively.

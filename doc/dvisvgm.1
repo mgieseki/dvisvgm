@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2023-02-21
+.\"      Date: 2023-04-25
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.0.4
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2023\-02\-21" "dvisvgm 3\&.0\&.4" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2023\-04\-25" "dvisvgm 3\&.0\&.4" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -853,13 +853,13 @@ If this option is given, dvisvgm does not expect a DVI but a PDF input file, and
 \fB\-\-page\fR
 can be used to select different pages, page ranges, and/or page sequences\&.
 .sp
-If a Ghostcript version < 10\&.1\&.0 is found, dvisvgm uses Ghostscript to process the PDF file\&. In this case, the conversion is realized by creating a single
+If a Ghostcript version < 10\&.01\&.0 is found, dvisvgm uses Ghostscript to process the PDF file\&. In this case, the conversion is realized by creating a single
 \fIpdffile\fR
 special command which is forwarded to dvisvgm\(cqs PostScript special handler\&. Therefore, this option is only available if dvisvgm was built with PostScript support enabled, and requires Ghostscript to be accessible\&. See option
 \fB\-\-libgs\fR
 for further information\&.
 .sp
-As of Ghostscript 10\&.1\&.0, this will no longer work due to the introduction of a new PDF interpreter\&. Therefore, an alternative conversion module based on
+As of Ghostscript 10\&.01\&.0, this will no longer work due to the introduction of a new PDF interpreter\&. Therefore, an alternative conversion module based on
 mutool (\m[blue]https://mupdf.com/docs/mutool.html\m[])
 has been introduced\&. It\(cqs automatically invoked if Ghostscript can\(cqt be used and if a working
 \fBmutool\fR
@@ -1666,7 +1666,7 @@ T}
 .sp
 \fBExample:\fR \fBer=01:pi=*5\fR sets the colors of error messages (\fBer\fR) to red (\fB1\fR) on black (\fB0\fR), and those of progress indicators (\fBpi\fR) to cyan (\fB5\fR) on default background (\fB*\fR)\&.
 .sp
-Variable \fBDVISVGM_PDF_PROC\fR allows you to select the desired PDF processor\&. dvisvgm requires either Ghostscript (version < 10\&.1\&.0) or mutool to process PDF files\&. IF \fBDVISVGM_PDF_PROC\fR is not set, dvisvgm tries to detect the available processors\&. See option \fB\-\-pdf\fR for further information\&. To select a specific PDF processor, you can set \fBDVISVGM_PDF_PROC\fR to \fBgs\fR or \fBmutool\fR which forces the use of Ghostscript and mutool respectively\&.
+Variable \fBDVISVGM_PDF_PROC\fR allows you to select the desired PDF processor\&. dvisvgm requires either Ghostscript (version < 10\&.01\&.0) or mutool to process PDF files\&. IF \fBDVISVGM_PDF_PROC\fR is not set, dvisvgm tries to detect the available processors\&. See option \fB\-\-pdf\fR for further information\&. To select a specific PDF processor, you can set \fBDVISVGM_PDF_PROC\fR to \fBgs\fR or \fBmutool\fR which forces the use of Ghostscript and mutool respectively\&.
 .SH "FILES"
 .sp
 The location of the following files is determined by the kpathsea library\&. To check the actual kpathsea configuration you can use the \fBkpsewhich\fR utility\&.
