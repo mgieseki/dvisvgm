@@ -150,14 +150,38 @@ TEST(GraphicsPathParserTest, combined) {
 }
 
 
-TEST(GraphicsPathParserTest, error) {
+TEST(GraphicsPathParserTest, floats) {
+	GraphicsPathParser<double> parser;
+	auto path = parser.parse("M10 10.1L20.2 50.3Q 100 100 -10.1 -10.2 Z C 10e-1 2e2 30 40 50 60Z");
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10.1L20.2 50.3Q100 100-10.1-10.2ZC1 200 30 40 50 60Z");
+	oss.str("");
+	path = parser.parse("m10 10.1l20.2 50.3q 100 100 -10.1 -10.2 z c 10 20 30 40 50 60 z");
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M10 10.1L30.2 60.4Q130.2 160.4 20.1 50.2ZC20 30.1 40 50.1 60 70.1Z");
+}
+
+
+TEST(GraphicsPathParserTest, error1) {
 	GraphicsPathParser<int> parser;
 	EXPECT_THROW(parser.parse("10 20"), GraphicsPathParserException);  // missing command
 	EXPECT_THROW(parser.parse("M10 "), GraphicsPathParserException);  // missing y-coordinate
 	EXPECT_THROW(parser.parse("M10 20.5"), GraphicsPathParserException); // invalid number type
+	EXPECT_THROW(parser.parse("M 10 20.5."), GraphicsPathParserException); // invalid trailing dot
 	EXPECT_THROW(parser.parse("J 10 20.5"), GraphicsPathParserException); // unknown command
 	EXPECT_THROW(parser.parse("M,10 20"), GraphicsPathParserException); // invalid comma
 	EXPECT_THROW(parser.parse("M10 20,"), GraphicsPathParserException); // missing parameters
 	EXPECT_THROW(parser.parse("A 10 20 45 2 0 100 100"), GraphicsPathParserException); // invalid large-arc-flag
 	EXPECT_THROW(parser.parse("A 10 20 45 0 5 100 100"), GraphicsPathParserException); // invalid sweep-flag
+}
+
+
+TEST(GraphicsPathParserTest, error2) {
+	GraphicsPathParser<double> parser;
+	EXPECT_THROW(parser.parse("10 20"), GraphicsPathParserException);  // missing command
+	EXPECT_THROW(parser.parse("M10 "), GraphicsPathParserException);  // missing y-coordinate
+	EXPECT_THROW(parser.parse("M 10 20..5"), GraphicsPathParserException); // invalid double dots
+	EXPECT_THROW(parser.parse("M 10-20.1+"), GraphicsPathParserException); // invalid trailing plus
+	EXPECT_THROW(parser.parse("M.+10.20"), GraphicsPathParserException); // invalid plus after dot
 }

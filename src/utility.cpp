@@ -68,7 +68,7 @@ vector<double> math::svd (const double (&m)[2][2]) {
  *  @param[in] t1 upper interval boundary
  *  @param[in] n number of slices the interval is divided into
  *  @param[in] f function to integrate */
-double math::integral (double t0, double t1, int n, const std::function<double(double)> &f) {
+double math::integral (double t0, double t1, int n, const function<double(double)> &f) {
 	double ti = t0, ui=0;
 	double h = (t1-t0)/n;
 	for (int i=0; i < n; i++) {
@@ -103,7 +103,7 @@ double math::normalize_0_2pi (double rad) {
  *  @param[in] str the string to process
  *  @param[in] ws characters treated as whitespace
  *  @return the trimmed string */
-string util::trim (const std::string &str, const char *ws) {
+string util::trim (const string &str, const char *ws) {
 	auto first = str.find_first_not_of(ws);
 	if (first == string::npos)
 		return "";
@@ -198,6 +198,64 @@ int util::ilog10 (int n) {
 		n /= 10;
 	}
 	return result;
+}
+
+
+/** Reads an integer string of the form (+|-)?[0-9]+ from an input stream
+ *  ana appends it to a given one.
+ *  @param[in] is stream to read from
+ *  @param[out] str the read string is appended to this one
+ *  @param[in] allow_leading_sign true if the first character may be '+' or '-'
+ *  @return true if the string coule be read successfully */
+static bool read_int_string (istream &is, string &str, bool allow_leading_sign=true) {
+	string intstr;
+	if (is.peek() == '-' || is.peek() == '+') {
+		if (!allow_leading_sign)
+			return false;
+		intstr += char(is.get());
+		if (!isdigit(is.peek()))
+			return false;
+	}
+	while (isdigit(is.peek()))
+		intstr += char(is.get());
+	str += intstr;
+	return !intstr.empty();
+}
+
+
+/** Reads and parses a double from an input stream.
+ *  @param[in] is stream to read from
+ *  @param[out] value the read double value
+ *  @return true if the value was read and parsed successfully */
+bool util::read_double (istream &is, double &value) {
+	is >> ws;
+	string numstr;
+	// read optional leading sign
+	bool plusminus = (is.peek() == '-' || is.peek() == '+');
+	if (plusminus)
+		numstr += char(is.get());
+	// read optional integer part (before decimal dot)
+	read_int_string(is, numstr, !plusminus);
+	if (is.peek() == '.') {
+		numstr += char(is.get());
+		// read fractional part (after decimal dot)
+		if (!read_int_string(is, numstr, false))
+			return false;
+	}
+	// read optional exponential part
+	if (std::tolower(is.peek()) == 'e') {
+		numstr += char(is.get());
+		if (!read_int_string(is, numstr))
+			return false;
+	}
+	try {
+		size_t count;
+		value = stod(numstr, &count);
+		return count == numstr.length();
+	}
+	catch (...) {
+		return false;
+	}
 }
 
 

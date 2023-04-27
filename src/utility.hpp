@@ -72,6 +72,7 @@ std::string mimetype (const std::string &fname);
 std::vector<std::string> split (const std::string &str, const std::string &sep);
 int ilog10 (int n);
 
+bool read_double (std::istream &is, double &value);
 std::string read_file_contents (const std::string &fname);
 void write_file_contents (const std::string &fname, std::string::iterator start, std::string::iterator end);
 

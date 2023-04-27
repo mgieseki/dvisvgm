@@ -188,3 +188,38 @@ TEST(UtilityTest, ilog2) {
 		EXPECT_EQ(ilog2(uint32_t(0xffffffff >> i)), 31-i);
 	}
 }
+
+
+TEST(UtilityTest, read_double) {
+	istringstream iss("123 -456 .123 -.456 0.123 -0.456 +123.456 -123.456 10e-3 -1e-3 4.5e2 1.23e-3 2.30.4");
+	double value=0;
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 123.0, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, -456.0, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, .123, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, -.456, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, .123, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, -.456, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 123.456, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, -123.456, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 10e-3, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, -1e-3, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 4.5e2, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 1.23e-3, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, 2.3, 0.000001);
+	EXPECT_TRUE(util::read_double(iss, value));
+	EXPECT_NEAR(value, .4, 0.000001);
+	EXPECT_FALSE(util::read_double(iss, value));  // eof, no further characters to read
+}
