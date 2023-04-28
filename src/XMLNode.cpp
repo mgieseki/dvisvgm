@@ -527,7 +527,7 @@ ostream& XMLCData::write (ostream &os) const {
 
 void XMLCData::append (string &&str) {
 	if (_data.empty())
-		_data = move(str);
+		_data = std::move(str);
 	else
 		_data += str;
 }

@@ -281,7 +281,7 @@ bool FontCache::fontinfo (const string &dirname, vector<FontInfo> &infos, vector
 				string path = dirname+"/"+(fname.substr(1));
 				ifstream ifs(path, ios::binary);
 				if (fontinfo(ifs, info))
-					infos.push_back(move(info));
+					infos.push_back(std::move(info));
 				else
 					invalid.push_back(fname.substr(1));
 			}
