@@ -12,20 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: update packages
-      run: sudo apt-get update
-    - name: install dependencies
-      run: sudo apt-get install -qq autotools-dev autoconf-archive pkg-config libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base python-is-python3 python3-lxml asciidoc xmlto xsltproc
-    - name: autogen
-      run: autoreconf -fi
-    - name: configure
-      run: ./configure --enable-bundled-libs
-    - name: make clean
-      run: make clean
-    - name: make
-      run: make
-    - name: update timestamps
-      run: make -C src -t
-    - name: make check
-      run: make check
+      - uses: actions/checkout@v3
+      - name: update packages
+        run: sudo apt-get update
+      - name: install dependencies
+        run: >
+          sudo apt-get install -qq autotools-dev autoconf-archive pkg-config
+          libkpathsea-dev libfreetype6-dev libgs-dev libz-dev texlive-base
+          python-is-python3 python3-lxml asciidoc xmlto xsltproc
+      - name: autogen
+        run: autoreconf -fi
+      - name: configure
+        run: ./configure --enable-bundled-libs
+      - name: make clean
+        run: make clean
+      - name: make
+        run: make
+      - name: update timestamps
+        run: make -C src -t
+      - name: make check
+        run: make check
