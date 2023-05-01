@@ -168,7 +168,6 @@ TEST(GraphicsPathParserTest, error1) {
 	EXPECT_THROW(parser.parse("10 20"), GraphicsPathParserException);  // missing command
 	EXPECT_THROW(parser.parse("M10 "), GraphicsPathParserException);  // missing y-coordinate
 	EXPECT_THROW(parser.parse("M10 20.5"), GraphicsPathParserException); // invalid number type
-	EXPECT_THROW(parser.parse("M 10 20.5."), GraphicsPathParserException); // invalid trailing dot
 	EXPECT_THROW(parser.parse("J 10 20.5"), GraphicsPathParserException); // unknown command
 	EXPECT_THROW(parser.parse("M,10 20"), GraphicsPathParserException); // invalid comma
 	EXPECT_THROW(parser.parse("M10 20,"), GraphicsPathParserException); // missing parameters
@@ -180,8 +179,10 @@ TEST(GraphicsPathParserTest, error1) {
 TEST(GraphicsPathParserTest, error2) {
 	GraphicsPathParser<double> parser;
 	EXPECT_THROW(parser.parse("10 20"), GraphicsPathParserException);  // missing command
-	EXPECT_THROW(parser.parse("M10 "), GraphicsPathParserException);  // missing y-coordinate
+	EXPECT_THROW(parser.parse("M"), GraphicsPathParserException);  // missing coordinates
+	EXPECT_THROW(parser.parse("M10.1 "), GraphicsPathParserException);  // missing y-coordinate
 	EXPECT_THROW(parser.parse("M 10 20..5"), GraphicsPathParserException); // invalid double dots
+	EXPECT_THROW(parser.parse("M 10 20.5."), GraphicsPathParserException); // invalid trailing dot
 	EXPECT_THROW(parser.parse("M 10-20.1+"), GraphicsPathParserException); // invalid trailing plus
 	EXPECT_THROW(parser.parse("M.+10.20"), GraphicsPathParserException); // invalid plus after dot
 }
