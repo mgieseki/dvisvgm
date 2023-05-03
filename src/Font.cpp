@@ -112,12 +112,12 @@ const FontMetrics* TFMFont::getMetrics () const {
 		try {
 			_metrics = FontMetrics::read(_fontname);
 			if (!_metrics) {
-				_metrics = util::make_unique<NullFontMetric>();
+				_metrics = util::make_unique<NullFontMetrics>();
 				Message::wstream(true) << "can't find "+_fontname+".tfm\n";
 			}
 		}
 		catch (FontMetricException &e) {
-			_metrics = util::make_unique<NullFontMetric>();
+			_metrics = util::make_unique<NullFontMetrics>();
 			Message::wstream(true) << e.what() << " in " << _fontname << ".tfm\n";
 		}
 	}

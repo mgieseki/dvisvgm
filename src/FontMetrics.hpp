@@ -48,7 +48,7 @@ struct FontMetrics {
 };
 
 
-struct NullFontMetric : public FontMetrics {
+struct NullFontMetrics : public FontMetrics {
 	double getDesignSize () const override      {return 1;}
 	double getCharWidth (int c) const override  {return 0;}
 	double getCharHeight (int c) const override {return 0;}

@@ -109,7 +109,7 @@ class EmptyFont : public Font {
 
 	private:
 		std::string _fontname;
-		NullFontMetric _fontMetrics;
+		NullFontMetrics _fontMetrics;
 };
 
 
