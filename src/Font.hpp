@@ -101,7 +101,7 @@ class EmptyFont : public Font {
 		double charHeight (int c) const override           {return 6.833;} // height of cmr10's 'M' in pt
 		double charDepth (int c) const override            {return 0;}
 		double italicCorr (int c) const override           {return 0;}
-		const FontMetrics* getMetrics () const override    {return nullptr;}
+		const FontMetrics* getMetrics () const override    {return &_fontMetrics;}
 		const char* path () const override                 {return nullptr;}
 		bool getGlyph (int c, Glyph &glyph, GFGlyphTracer::Callback*) const override {return false;}
 		void visit (FontVisitor &visitor) override {}
@@ -109,6 +109,7 @@ class EmptyFont : public Font {
 
 	private:
 		std::string _fontname;
+		NullFontMetric _fontMetrics;
 };
 
 
