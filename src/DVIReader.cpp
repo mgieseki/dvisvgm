@@ -206,7 +206,7 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 		FontManager &fm = FontManager::instance();
 		const vector<uint8_t> *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
 		Font *firstFont = fm.vfFirstFont(vf);
-		if (!dvi && (!firstFont || !firstFont->getMetrics()->isJFM()))
+		if (!dvi && (!firstFont || !firstFont->getMetrics() || !firstFont->getMetrics()->isJFM()))
 			return;
 		fm.enterVF(vf);                              // enter VF font number context
 		int savedFontNum = _currFontNum;             // save current font number
