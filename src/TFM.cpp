@@ -42,23 +42,23 @@ static void read_words (StreamReader &reader, vector<T> &v, unsigned n) {
 }
 
 
-TFM::TFM (istream &is) : _checksum(0), _firstChar(0), _lastChar(0), _designSize(0), _ascent(0), _descent(0) {
+void TFM::read (istream &is) {
 	if (!is)
 		return;
 	is.seekg(0);
 	StreamReader reader(is);
-	uint16_t lf = uint16_t(reader.readUnsigned(2)); // length of entire file in 4 byte words
-	uint16_t lh = uint16_t(reader.readUnsigned(2)); // length of header in 4 byte words
+	auto lf = uint16_t(reader.readUnsigned(2)); // length of entire file in 4 byte words
+	auto lh = uint16_t(reader.readUnsigned(2)); // length of header in 4 byte words
 	_firstChar= uint16_t(reader.readUnsigned(2));   // smallest character code in font
 	_lastChar = uint16_t(reader.readUnsigned(2));   // largest character code in font
-	uint16_t nw = uint16_t(reader.readUnsigned(2)); // number of words in width table
-	uint16_t nh = uint16_t(reader.readUnsigned(2)); // number of words in height table
-	uint16_t nd = uint16_t(reader.readUnsigned(2)); // number of words in depth table
-	uint16_t ni = uint16_t(reader.readUnsigned(2)); // number of words in italic corr. table
-	uint16_t nl = uint16_t(reader.readUnsigned(2)); // number of words in lig/kern table
-	uint16_t nk = uint16_t(reader.readUnsigned(2)); // number of words in kern table
-	uint16_t ne = uint16_t(reader.readUnsigned(2)); // number of words in ext. char table
-	uint16_t np = uint16_t(reader.readUnsigned(2)); // number of font parameter words
+	auto nw = uint16_t(reader.readUnsigned(2)); // number of words in width table
+	auto nh = uint16_t(reader.readUnsigned(2)); // number of words in height table
+	auto nd = uint16_t(reader.readUnsigned(2)); // number of words in depth table
+	auto ni = uint16_t(reader.readUnsigned(2)); // number of words in italic corr. table
+	auto nl = uint16_t(reader.readUnsigned(2)); // number of words in lig/kern table
+	auto nk = uint16_t(reader.readUnsigned(2)); // number of words in kern table
+	auto ne = uint16_t(reader.readUnsigned(2)); // number of words in ext. char table
+	auto np = uint16_t(reader.readUnsigned(2)); // number of font parameter words
 
 	if (6+lh+(_lastChar-_firstChar+1)+nw+nh+nd+ni+nl+nk+ne+np != lf)
 		throw FontMetricException("inconsistent length values");

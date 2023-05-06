@@ -32,7 +32,8 @@ class StreamReader;
 
 class TFM : public FontMetrics {
 	public:
-		explicit TFM (std::istream &is);
+		TFM () =default;
+		virtual void read (std::istream &is);
 		double getCharWidth (int c) const override;
 		double getCharHeight (int c) const override;
 		double getCharDepth (int c) const override;
@@ -50,7 +51,6 @@ class TFM : public FontMetrics {
 		uint16_t lastChar () const override    {return _lastChar;}
 
 	protected:
-		TFM () : _params(7) {}
 		void readHeader (StreamReader &reader);
 		void readTables (StreamReader &reader, int nw, int nh, int nd, int ni);
 		void readParameters (StreamReader &reader, int np);
@@ -67,7 +67,7 @@ class TFM : public FontMetrics {
 		std::vector<FixWord> _depthTable;    ///< character depth in design size units
 		std::vector<FixWord> _italicTable;   ///< italic corrections in design size units
 		std::vector<FixWord> _params;        ///< values of the TFM's param section
-		FixWord _ascent, _descent;           ///< max. height and depth
+		FixWord _ascent=0, _descent=0;           ///< max. height and depth
 };
 
 #endif

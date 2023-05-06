@@ -40,7 +40,8 @@ class TFMReaderTest : public ::testing::Test {
 			string fname = string(SRCDIR)+"/data/cmr10.tfm";
 			ifstream ifs(fname, ios::binary);
 			ASSERT_TRUE(ifs.is_open()) << "failed opening " << fname;
-			tfm = util::make_unique<TFM>(ifs);
+			tfm = util::make_unique<TFM>();
+			tfm->read(ifs);
 		}
 
 	protected:

@@ -27,7 +27,8 @@
 
 class JFM : public TFM {
 	public:
-		explicit JFM (std::istream &is);
+		JFM () =default;
+		void read (std::istream &is) override;
 		bool verticalLayout () const  override {return _vertical;}
 		bool isJFM () const override {return true;}
 		uint32_t minChar () const {return _minchar;}
@@ -38,8 +39,8 @@ class JFM : public TFM {
 		int charIndex (int c) const override;
 
 	private:
-		uint32_t _minchar;  ///< character code of first entry in character type table
-		bool _vertical;     ///< true if metrics refer to vertical text layout
+		uint32_t _minchar=0;   ///< character code of first entry in character type table
+		bool _vertical=false;  ///< true if metrics refer to vertical text layout
 		std::vector<uint8_t> _charTypeTable;
 };
 

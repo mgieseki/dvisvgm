@@ -29,13 +29,17 @@ using namespace std;
 
 
 unique_ptr<FontMetrics> FontMetrics::read (const string &fontname) {
+	unique_ptr<TFM> tfm;
 	const char *path = FileFinder::instance().lookup(fontname + ".tfm");
 	ifstream ifs(path, ios::binary);
-	if (!ifs)
-		return unique_ptr<FontMetrics>();
-	uint16_t id = 256*ifs.get();
-	id += ifs.get();
-	if (id == 9 || id == 11)  // Japanese font metric file?
-		return util::make_unique<JFM>(ifs);
-	return util::make_unique<TFM>(ifs);
+	if (ifs) {
+		uint16_t id = 256*ifs.get();
+		id += ifs.get();
+		if (id == 9 || id == 11)  // Japanese font metric file?
+			tfm = util::make_unique<JFM>();
+		else
+			tfm = util::make_unique<TFM>();
+		tfm->read(ifs);
+	}
+	return tfm;
 }
