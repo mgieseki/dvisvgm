@@ -36,7 +36,7 @@ class JFM : public TFM {
 
 	protected:
 		void readTables (StreamReader &reader, int nt, int nw, int nh, int nd, int ni);
-		int charIndex (int c) const override;
+		size_t charIndex (int c) const override;
 
 	private:
 		uint32_t _minchar=0;   ///< character code of first entry in character type table

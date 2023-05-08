@@ -93,7 +93,7 @@ void JFM::readTables (StreamReader &reader, int nt, int nw, int nh, int nd, int 
 }
 
 
-int JFM::charIndex (int c) const {
+size_t JFM::charIndex (int c) const {
 	uint8_t chartype = 0;
 	if (!_charTypeTable.empty() && uint32_t(c) >= _minchar && uint32_t(c) < _minchar+_charTypeTable.size())
 		chartype = _charTypeTable[c-_minchar];

@@ -75,7 +75,7 @@ void TFM::read (istream &is) {
 
 void TFM::readHeader (StreamReader &reader) {
 	_checksum = reader.readUnsigned(4);
-	_designSize = double(FixWord(reader.readUnsigned(4)))*Length::pt2bp;
+	_designSize = double(FixWord(reader.readSigned(4)))*Length::pt2bp;
 }
 
 
@@ -99,7 +99,7 @@ void TFM::readParameters (StreamReader &reader, int np) {
 	_params.resize(7);
 	np = min(np, 7);
 	for (int i=0; i < np; i++)
-		_params[i] = reader.readUnsigned(4);
+		_params[i] = reader.readSigned(4);
 	for (int i=np; i < 7; i++)
 		_params[i] = 0;
 }
@@ -134,7 +134,7 @@ double TFM::getQuad () const {
 /** Returns the index to the entry of the character info table that describes the metric of a given character.
  *  @param[in] c character whose index is retrieved
  *  @return table index for character c, or -1 if there's no entry */
-int TFM::charIndex (int c) const {
+size_t TFM::charIndex (int c) const {
 	if (c < _firstChar || c > _lastChar || size_t(c-_firstChar) >= _charInfoTable.size())
 		return -1;
 	return c-_firstChar;
@@ -151,8 +151,8 @@ int TFM::charIndex (int c) const {
 
 /** Returns the width of char c in PS point units. */
 double TFM::getCharWidth (int c) const {
-	int index = charIndex(c);
-	if (index < 0)
+	size_t index = charIndex(c);
+	if (index == size_t(-1))
 		return 0;
 	index = (_charInfoTable[index] >> 24) & 0xFF;
 	return double(_widthTable[index]) * _designSize;
@@ -161,8 +161,8 @@ double TFM::getCharWidth (int c) const {
 
 /** Returns the height of char c in PS point units. */
 double TFM::getCharHeight (int c) const {
-	int index = charIndex(c);
-	if (index < 0)
+	size_t index = charIndex(c);
+	if (index == size_t(-1))
 		return 0;
 	index = (_charInfoTable[index] >> 20) & 0x0F;
 	return double(_heightTable[index]) * _designSize;
@@ -171,8 +171,8 @@ double TFM::getCharHeight (int c) const {
 
 /** Returns the depth of char c in PS point units. */
 double TFM::getCharDepth (int c) const {
-	int index = charIndex(c);
-	if (index < 0)
+	size_t index = charIndex(c);
+	if (index == size_t(-1))
 		return 0;
 	index = (_charInfoTable[index] >> 16) & 0x0F;
 	return double(_depthTable[index]) * _designSize;
@@ -181,8 +181,8 @@ double TFM::getCharDepth (int c) const {
 
 /** Returns the italic correction of char c in PS point units. */
 double TFM::getItalicCorr (int c) const {
-	int index = charIndex(c);
-	if (index < 0)
+	size_t index = charIndex(c);
+	if (index == size_t(-1))
 		return 0;
 	index = (_charInfoTable[index] >> 10) & 0x3F;
 	return double(_italicTable[index]) * _designSize;

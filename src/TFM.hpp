@@ -54,7 +54,7 @@ class TFM : public FontMetrics {
 		void readHeader (StreamReader &reader);
 		void readTables (StreamReader &reader, int nw, int nh, int nd, int ni);
 		void readParameters (StreamReader &reader, int np);
-		virtual int charIndex (int c) const;
+		virtual size_t charIndex (int c) const;
 		void setCharRange (int firstchar, int lastchar) {_firstChar=firstchar; _lastChar=lastchar;}
 
 	private:
