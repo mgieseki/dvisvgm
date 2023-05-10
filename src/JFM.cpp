@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <algorithm>
-#include <cstring>
 #include <fstream>
 #include <sstream>
 #include "JFM.hpp"
@@ -57,7 +56,7 @@ void JFM::read (istream &is) {
 	readHeader(reader);
 	is.seekg(28+lh*4);
 	readTables(reader, nt, nw, nh, nd, ni);
-	is.seekg(4*(lf-np), ios::beg);
+	is.seekg(4*(lf-np));
 	readParameters(reader, np);   // JFM files provide 9 parameters but we don't need all of them
 }
 

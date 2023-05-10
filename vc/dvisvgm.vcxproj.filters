@@ -440,6 +440,9 @@
     <ClCompile Include="..\src\PDFToSVG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\OFM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -839,6 +842,9 @@
       <Filter>Header Files\base14fonts</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PDFHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OFM.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

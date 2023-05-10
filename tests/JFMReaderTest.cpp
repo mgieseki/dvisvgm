@@ -52,8 +52,8 @@ class JFMReaderTest : public ::testing::Test {
 TEST_F(JFMReaderTest, properties) {
 	EXPECT_EQ(jfm->getChecksum(), 0u);
 	EXPECT_FALSE(jfm->verticalLayout());
-	EXPECT_EQ(jfm->firstChar(), 0);
-	EXPECT_EQ(jfm->lastChar(), 1);
+	EXPECT_EQ(jfm->firstChar(), 0u);
+	EXPECT_EQ(jfm->lastChar(), 1u);
 	EXPECT_EQ(jfm->minChar(), 13143u);
 	EXPECT_EQ(jfm->maxChar(), 14696u);
 	EXPECT_DOUBLE_EQ(jfm->getDesignSize(), 10.0*72.0/72.27);

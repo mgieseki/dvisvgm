@@ -246,6 +246,12 @@ MessageExceptionTest_SOURCES = MessageExceptionTest.cpp testutil.hpp
 MessageExceptionTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 MessageExceptionTest_LDADD = $(TESTLIBS)
 
+TESTS += OFMReaderTest
+check_PROGRAMS += OFMReaderTest
+OFMReaderTest_SOURCES = OFMReaderTest.cpp testutil.hpp
+OFMReaderTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
+OFMReaderTest_LDADD = $(TESTLIBS)
+
 TESTS += PageRagesTest
 check_PROGRAMS += PageRagesTest
 PageRagesTest_SOURCES = PageRagesTest.cpp testutil.hpp

@@ -20,7 +20,6 @@
 
 #include <fstream>
 #include <vector>
-#include "FileFinder.hpp"
 #include "Length.hpp"
 #include "Message.hpp"
 #include "StreamReader.hpp"
@@ -35,7 +34,6 @@ using namespace std;
  *  @param[in]  n number of words to be read */
 template <typename T>
 static void read_words (StreamReader &reader, vector<T> &v, unsigned n) {
-	v.clear();
 	v.resize(n);
 	for (unsigned i=0; i < n; i++)
 		v[i] = reader.readUnsigned(4);
@@ -49,8 +47,8 @@ void TFM::read (istream &is) {
 	StreamReader reader(is);
 	auto lf = uint16_t(reader.readUnsigned(2)); // length of entire file in 4 byte words
 	auto lh = uint16_t(reader.readUnsigned(2)); // length of header in 4 byte words
-	_firstChar= uint16_t(reader.readUnsigned(2));   // smallest character code in font
-	_lastChar = uint16_t(reader.readUnsigned(2));   // largest character code in font
+	auto bc = uint16_t(reader.readUnsigned(2)); // smallest character code in font
+	auto ec = uint16_t(reader.readUnsigned(2)); // largest character code in font
 	auto nw = uint16_t(reader.readUnsigned(2)); // number of words in width table
 	auto nh = uint16_t(reader.readUnsigned(2)); // number of words in height table
 	auto nd = uint16_t(reader.readUnsigned(2)); // number of words in depth table
@@ -59,16 +57,16 @@ void TFM::read (istream &is) {
 	auto nk = uint16_t(reader.readUnsigned(2)); // number of words in kern table
 	auto ne = uint16_t(reader.readUnsigned(2)); // number of words in ext. char table
 	auto np = uint16_t(reader.readUnsigned(2)); // number of font parameter words
-
-	if (6+lh+(_lastChar-_firstChar+1)+nw+nh+nd+ni+nl+nk+ne+np != lf)
+	if (6+lh+(ec-bc+1)+nw+nh+nd+ni+nl+nk+ne+np != lf)
 		throw FontMetricException("inconsistent length values");
-	if (_firstChar >= _lastChar || _lastChar > 255 || ne > 256)
+	if (bc >= ec || ec > 255 || ne > 256)
 		throw FontMetricException("character codes out of range");
-
+	_firstChar = bc;
+	_lastChar = ec;
 	readHeader(reader);
 	is.seekg(24+lh*4);  // move to char info table
 	readTables(reader, nw, nh, nd, ni);
-	is.seekg(4*(lf-np), ios::beg);  // move to param section
+	is.seekg(4*(lf-np));  // move to param section
 	readParameters(reader, np);
 }
 

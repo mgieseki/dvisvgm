@@ -117,8 +117,9 @@ const FontMetrics* TFMFont::getMetrics () const {
 			}
 		}
 		catch (FontMetricException &e) {
+			const char *ext = (_metrics && _metrics->isOFM()) ? ".ofm" : ".tfm";
 			_metrics = util::make_unique<NullFontMetrics>();
-			Message::wstream(true) << e.what() << " in " << _fontname << ".tfm\n";
+			Message::wstream(true) << e.what() << " in " << _fontname << ext << "\n";
 		}
 	}
 	return _metrics.get();
