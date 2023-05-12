@@ -39,12 +39,12 @@ string SVGOptimizer::MODULE_SEQUENCE;
 SVGOptimizer::SVGOptimizer (SVGTree *svg) : _svg(svg) {
 	// optimizer modules available to the user; must be listed in default order
 //	_moduleEntries.emplace_back(ModuleEntry("remove-ws", util::make_unique<WSNodeRemover>()));
-	_moduleEntries.emplace_back(ModuleEntry("simplify-text", util::make_unique<TextSimplifier>()));
-	_moduleEntries.emplace_back(ModuleEntry("simplify-transform", util::make_unique<TransformSimplifier>()));
-	_moduleEntries.emplace_back(ModuleEntry("group-attributes", util::make_unique<AttributeExtractor>()));
-	_moduleEntries.emplace_back(ModuleEntry("collapse-groups", util::make_unique<GroupCollapser>()));
-	_moduleEntries.emplace_back(ModuleEntry("remove-clippaths", util::make_unique<RedundantElementRemover>()));
-	_moduleEntries.emplace_back(ModuleEntry("reassign-clippaths", util::make_unique<ClipPathReassigner>()));
+	_moduleEntries.emplace_back("simplify-text", util::make_unique<TextSimplifier>());
+	_moduleEntries.emplace_back("simplify-transform", util::make_unique<TransformSimplifier>());
+	_moduleEntries.emplace_back("group-attributes", util::make_unique<AttributeExtractor>());
+	_moduleEntries.emplace_back("collapse-groups", util::make_unique<GroupCollapser>());
+	_moduleEntries.emplace_back("remove-clippaths", util::make_unique<RedundantElementRemover>());
+	_moduleEntries.emplace_back("reassign-clippaths", util::make_unique<ClipPathReassigner>());
 }
 
 

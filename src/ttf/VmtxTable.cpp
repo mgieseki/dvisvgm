@@ -52,6 +52,6 @@ void VmtxTable::updateHeightData (uint32_t c, int16_t ymin, int16_t ymax) {
 		_runLengthOfAdvHeight++;
 	else
 		_runLengthOfAdvHeight = 1;
-	_heightInfos.emplace_back(CharHeightInfo(ymin, h));
+	_heightInfos.emplace_back(ymin, h);
 	ttfWriter()->updateGlobalAdvanceHeight(h, _heightInfos.size()-_runLengthOfAdvHeight+1);
 }

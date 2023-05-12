@@ -57,6 +57,6 @@ void HmtxTable::updateWidthData (uint32_t c, int16_t xmin, int16_t xmax) {
 		_runLengthOfAdvWidth++;
 	else
 		_runLengthOfAdvWidth = 1;
-	_widthInfos.emplace_back(CharWidthInfo(xmin, w));
+	_widthInfos.emplace_back(xmin, w);
 	ttfWriter()->updateGlobalAdvanceWidth(w, _widthInfos.size()-_runLengthOfAdvWidth+1);
 }

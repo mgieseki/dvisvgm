@@ -479,7 +479,7 @@ void PDFHandler::doClipPath (XMLElement *trcClipPathElement) {
 		auto clipPathElement = util::make_unique<SVGElement>("clipPath");
 		clipPathElement->addAttribute("id", id);
 		auto groupElement = util::make_unique<SVGElement>("g");
-		_clipPathStack.emplace(ClipPathData{std::move(id), groupElement.get()});
+		_clipPathStack.emplace(std::move(id), groupElement.get());
 		groupElement->setClipPathUrl(_clipPathStack.top().id);
 		clipPathElement->append(std::move(pathElement));
 		_svg->appendToDefs(std::move(clipPathElement));
@@ -503,7 +503,7 @@ void PDFHandler::doClipStrokePath (XMLElement *trcClipStrokePathElement) {
 		maskElement->append(std::move(pathElement));
 		auto groupElement = util::make_unique<SVGElement>("g");
 		groupElement->setMaskUrl(id);
-		_clipPathStack.emplace(ClipPathData{std::move(id), groupElement.get()});
+		_clipPathStack.emplace(std::move(id), groupElement.get());
 		_svg->appendToDefs(std::move(maskElement));
 		_svg->pushPageContext(std::move(groupElement));
 	}
@@ -515,7 +515,7 @@ void PDFHandler::doClipText (XMLElement *trcClipTextElement) {
 	auto clipPathElement = util::make_unique<SVGElement>("clipPath");
 	clipPathElement->addAttribute("id", id);
 	auto groupElement = util::make_unique<SVGElement>("g");
-	_clipPathStack.emplace(ClipPathData{std::move(id), groupElement.get()});
+	_clipPathStack.emplace(std::move(id), groupElement.get());
 	groupElement->setClipPathUrl(_clipPathStack.top().id);
 	SVGElement *cpElementPtr = clipPathElement.get();
 	_svg->pushPageContext(std::move(clipPathElement));
