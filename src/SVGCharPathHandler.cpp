@@ -60,7 +60,7 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 	// Apply text color changes only if the color of the entire font is black.
 	// Glyphs of non-black fonts (e.g. defined in a XeTeX document) can't change their color.
 	CharProperty<Color> &color = (_fontColor.get() != Color::BLACK) ? _fontColor : _color;
-	bool applyColor = color.get() != Color::BLACK;
+	bool applyColor = color.get() != Color::BLACK || (SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == Color::BLACK);
 	bool applyMatrix = !_matrix->isIdentity();
 	bool applyOpacity = !_opacity->isFillDefault();
 	if (!_groupNode) {

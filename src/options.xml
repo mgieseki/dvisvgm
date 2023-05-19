@@ -66,6 +66,10 @@
 			<option long="comments">
 				<description>add comments with additional information</description>
 			</option>
+			<option long="currentcolor">
+				<arg type="string" name="color" default="#000" optional="yes"/>
+				<description>replace given color with 'currentColor'</description>
+			</option>
 			<option long="embed-bitmaps">
 				<description>prevent references to external bitmap files</description>
 			</option>

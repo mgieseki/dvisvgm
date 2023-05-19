@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2023-04-25
+.\"      Date: 2023-05-25
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.0.4
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2023\-04\-25" "dvisvgm 3\&.0\&.4" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2023\-05\-25" "dvisvgm 3\&.0\&.4" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -297,6 +297,25 @@ predefined colors (\m[blue]https://www.w3.org/TR/SVG11/types.html#ColorKeywords\
 \fB\-\-comments\fR
 .RS 4
 Adds comments with further information about selected data to the SVG file\&. Currently, only font elements and font CSS rules related to native fonts are annotated\&.
+.RE
+.PP
+\fB\-\-currentcolor\fR[=\fIcolor\fR]
+.RS 4
+This option tells dvisvgm to replace the specified color with CSS variable
+\fBcurrentColor\fR
+which holds the current foreground color set by CSS property
+\fBcolor\fR\&. This way an application or website can change the color via CSS without the need to modify the SVG code\&.
+.sp
+The optional argument of
+\fB\-\-currentcolor\fR
+specifies the RGB color value to be replaced and must be given as either
+three or six digit hex color value (\m[blue]https://www.w3.org/TR/css-color/#typedef-hex-color\m[])
+preceded by character
+\fB#\fR, e\&.g\&.
+\fB#0000ff\fR
+or
+\fB#00f\fR
+for blue\&. If the optional argument is omitted, black is assumed\&.
 .RE
 .PP
 \fB\-\-embed\-bitmaps\fR

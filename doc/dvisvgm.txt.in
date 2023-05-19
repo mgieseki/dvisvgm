@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-04-25 09:53 +0200
+:revdate: 2023-05-25 20:41 +0200
 
 Name
 ----
@@ -205,6 +205,16 @@ In order to apply these color names rather than their RGB values, call dvisvgm w
 *--comments*::
 Adds comments with further information about selected data to the SVG file. Currently, only
 font elements and font CSS rules related to native fonts are annotated.
+
+*--currentcolor*[='color']::
+This option tells dvisvgm to replace the specified color with CSS variable `currentColor` which
+holds the current foreground color set by CSS property `color`. This way an application or website
+can change the color via CSS without the need to modify the SVG code.
++
+The optional argument of `--currentcolor` specifies the RGB color value to be replaced and must
+be given as either https://www.w3.org/TR/css-color/#typedef-hex-color[three or six digit hex color value]
+preceded by character `#`, e.g. `#0000ff` or `#00f` for blue. If the optional argument is omitted, black
+is assumed.
 
 *--embed-bitmaps*::
 Embeds the contents of bitmap files into the generated SVG files instead of adding file references.
