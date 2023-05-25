@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <array>
 #include <cstring>
 #include <utility>
 #include "Calculator.hpp"
@@ -218,17 +217,16 @@ static void expand_constants (string &str, SpecialActions &actions) {
 			}
 		}
 	}
-	struct Constant {
+	const struct Constant {
 		const char *name;
 		string val;
-	};
-	const array<Constant, 5> constants {{
+	} constants[] = {
 		{"x",      XMLString(actions.getX())},
 		{"y",      XMLString(actions.getY())},
-		{"color",  actions.getColor().svgColorString()},
+		{"color",  SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getColor() ? "currentColor" : actions.getColor().svgColorString()},
 		{"matrix", actions.getMatrix().toSVG()},
 		{"nl",    "\n"},
-	}};
+	};
 	for (const Constant &constant : constants) {
 		const string pattern = string("{?")+constant.name+"}";
 		auto pos = str.find(pattern);
