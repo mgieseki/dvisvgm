@@ -95,24 +95,23 @@ DvisvgmSpecialHandler::DvisvgmSpecialHandler () : _currentMacro(_macros.end())
 
 
 void DvisvgmSpecialHandler::preprocess (const string&, istream &is, SpecialActions&) {
-	struct Command {
+	constexpr struct Command {
 		const char *name;
 		void (DvisvgmSpecialHandler::*handler)(InputReader&);
-	};
-	constexpr array<Command, 5> commands {{
+	} commands[] = {
 		{"raw",       &DvisvgmSpecialHandler::preprocessRaw},
 		{"rawdef",    &DvisvgmSpecialHandler::preprocessRawDef},
 		{"rawset",    &DvisvgmSpecialHandler::preprocessRawSet},
 		{"endrawset", &DvisvgmSpecialHandler::preprocessEndRawSet},
 		{"rawput",    &DvisvgmSpecialHandler::preprocessRawPut}
-	}};
+	};
 
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	auto it = find_if(commands.begin(), commands.end(), [&](const Command &cmd) {
+	auto it = find_if(begin(commands), end(commands), [&](const Command &cmd) {
 		return cmd.name == cmdstr;
 	});
-	if (it != commands.end()) {
+	if (it != end(commands)) {
 		ir.skipSpace();
 		(this->*it->handler)(ir);
 	}
@@ -172,25 +171,25 @@ void DvisvgmSpecialHandler::preprocessRawPut (InputReader &ir) {
  *  @param[in] is the special statement is read from this stream
  *  @param[in] actions object providing the actions that can be performed by the SpecialHandler */
 bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialActions &actions) {
-	struct Command {
+	constexpr struct Command {
 		const char *name;
 		void (DvisvgmSpecialHandler::*handler)(InputReader&, SpecialActions&);
+	} commands[] = {
+		{"raw",          &DvisvgmSpecialHandler::processRaw},
+		{"rawdef",       &DvisvgmSpecialHandler::processRawDef},
+		{"rawset",       &DvisvgmSpecialHandler::processRawSet},
+		{"endrawset",    &DvisvgmSpecialHandler::processEndRawSet},
+		{"rawput",       &DvisvgmSpecialHandler::processRawPut},
+		{"bbox",         &DvisvgmSpecialHandler::processBBox},
+		{"img",          &DvisvgmSpecialHandler::processImg},
+		{"currentcolor", &DvisvgmSpecialHandler::processCurrentColor}
 	};
-	constexpr array<Command, 7> commands {{
-		{"raw",       &DvisvgmSpecialHandler::processRaw},
-		{"rawdef",    &DvisvgmSpecialHandler::processRawDef},
-		{"rawset",    &DvisvgmSpecialHandler::processRawSet},
-		{"endrawset", &DvisvgmSpecialHandler::processEndRawSet},
-		{"rawput",    &DvisvgmSpecialHandler::processRawPut},
-		{"bbox",      &DvisvgmSpecialHandler::processBBox},
-		{"img",       &DvisvgmSpecialHandler::processImg}
-	}};
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	auto it = find_if(commands.begin(), commands.end(), [&](const Command &cmd) {
+	auto it = find_if(begin(commands), end(commands), [&](const Command &cmd) {
 		return cmd.name == cmdstr;
 	});
-	if (it != commands.end()) {
+	if (it != end(commands)) {
 		ir.skipSpace();
 		(this->*it->handler)(ir, actions);
 	}
@@ -449,6 +448,26 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 	catch (const UnitException &e) {
 		throw SpecialException(string("dvisvgm:img: ") + e.what());
 	}
+}
+
+
+void DvisvgmSpecialHandler::processCurrentColor (InputReader &ir, SpecialActions &actions) {
+	string param = ir.getString();
+	Color color = actions.getColor();
+	if (param.empty() || param == "on") {
+		SVGElement::CURRENTCOLOR = color;
+		SVGElement::USE_CURRENTCOLOR = true;
+	}
+	else if (param == "off") {
+		if (SVGElement::USE_CURRENTCOLOR) {
+			// force a color change to get the new currentColor setting recognized
+			actions.setColor(Color{uint32_t(color)+1});
+			actions.setColor(color);
+			SVGElement::USE_CURRENTCOLOR = false;
+		}
+	}
+	else
+		throw SpecialException("currentcolor: unknown parameter '"+param+"'");
 }
 
 

@@ -1442,6 +1442,19 @@ The following TeX snippet adds two raw SVG elements to the output and updates th
 .RE
 .\}
 .RE
+.PP
+\fBdvisvgm:currentcolor\fR [on|off]
+.RS 4
+This special works similar to option
+\fB\-\-currentcolor\fR
+but doesn\(cqt require an explicit color argument\&. Instead, it takes the currently active color and replaces it with
+\fBcurrentColor\fR\&. Therefore, the result depends on the placement of the special and the preceding color changes\&. Argument
+\fBon\fR
+\(en which activates the
+\fIcurrentColor\fR
+functionality \(en can be omitted\&. When called with argument
+\fBoff\fR, the functionality is deactivated again\&.
+.RE
 .RE
 .PP
 \fBem\fR

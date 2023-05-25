@@ -93,6 +93,7 @@ class DvisvgmSpecialHandler : public SpecialHandler {
 		void processRawPut (InputReader &ir, SpecialActions &actions);
 		void processBBox (InputReader &ir, SpecialActions &actions);
 		void processImg (InputReader &ir, SpecialActions &actions);
+		void processCurrentColor (InputReader &ir, SpecialActions &actions);
 		void dviPreprocessingFinished () override;
 		void dviBeginPage (unsigned pageno, SpecialActions &actions) override;
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;

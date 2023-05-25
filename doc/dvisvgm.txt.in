@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-05-25 20:41 +0200
+:revdate: 2023-05-25 21:28 +0200
 
 Name
 ----
@@ -892,6 +892,11 @@ The following TeX snippet adds two raw SVG elements to the output and updates th
 \special{dvisvgm:bbox abs 10bp 200bp 100bp 250bp transform}
 -------------------------------------------------------------------------------------
 +
+  *dvisvgm:currentcolor* [on|off];;
+  This special works similar to option `--currentcolor` but doesn't require an explicit color argument. Instead,
+  it takes the currently active color and replaces it with `currentColor`. Therefore, the result depends on the
+  placement of the special and the preceding color changes. Argument `on` &#x2013; which activates the 'currentColor'
+  functionality &#x2013; can be omitted. When called with argument `off`, the functionality is deactivated again.
 
 *em*::
 These specials were introduced with the 'emTeX' distribution by Eberhard Mattes. They provide line drawing
