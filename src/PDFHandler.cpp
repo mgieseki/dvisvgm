@@ -637,9 +637,14 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 			auto trm = parse_attr_value<vector<double>>(spanElement, "trm");
 			if (trm.size() < 4 || trm[0] == 0)
 				continue;
-			auto fontname = strip_subset_prefix(parse_attr_value<string>(spanElement, "font"));
-			string filename;
+			auto fontname = parse_attr_value<string>(spanElement, "font");
 			auto it = _objDict.find(fontname);
+			if (it == _objDict.end()) {
+				// try to lookup font without subfont prefix
+				fontname = strip_subset_prefix(fontname);
+				it = _objDict.find(fontname);
+			}
+			string filename;
 			if (it != _objDict.end())
 				filename = it->second.fname;
 			if (filename.empty())
@@ -796,11 +801,10 @@ void PDFHandler::collectObjects () {
 	for (auto &entry : _extractedFiles) {
 		if (entry.second.substr(0, 5) == "font-") {
 			string filepath = tmpdir+entry.second;  // path to font file
-			string fontname = strip_subset_prefix(FontEngine::instance().getPSName(filepath));
-			// If the extracted font file doesn't contain a font name,
-			// try to get it from the corresponding PDF object.
-			if (fontname.empty())
-				fontname = mtShow(to_string(entry.first)+"/FontName", SearchPattern(R"(/(\w+))", "$1"));
+			string psFontname = FontEngine::instance().getPSName(filepath);
+			string fontname = mtShow(to_string(entry.first) + "/FontName", SearchPattern(R"(/((\w|[+-])+))", "$1"));
+			if (!psFontname.empty() && fontname.find('+') == string::npos)
+				fontname = std::move(psFontname);
 			_objDict.emplace(fontname, ObjID(entry.first, 0, filepath));
 		}
 	}
