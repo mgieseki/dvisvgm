@@ -82,7 +82,7 @@
     </div>
     <div class="card-body"><p>This is probably caused by changes in Ghostscript. Ghostscript 9.55.0 introduced a completely
 <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten PDF interpreter</a>, which is now implemented in C instead of
-PostScript. This has a lot of advantages besides the performance improvements. For third-party applications like dvisvgm,
+PostScript. This has a lot of advantages besides the performance improvements. For third-party applications like <em>dvisvgm</em>,
 however, this change has significant impact on the functions that can be provided. <em>dvisvgm</em> relies on the possibility to
 overwrite PostScript and PDF operators in order to directly communicate with the interpreter. This is no longer possible
 with the new PDF interpreter.</p>
@@ -99,6 +99,9 @@ the syntax to set the variable differs slightly, e.g.</p>
 <li><code>export GS_OPTIONS=-dNEWPDF=false</code> (Linux, bash)</li>
 <li><code>set GS_OPTIONS=-dNEWPDF=false</code> (Windows command line)</li>
 </ul>
+<p>Since Ghostscript 10.01.0 this workaround doesn&rsquo;t work any longer because the old PS-based PDF interpreter was finally removed
+from Ghostscript. To keep the PDF functionality of <em>dvisvgm</em> alive, a new PDF handler was introduced with <em>dvisvgm</em> 3.0 which is
+based on <a href="https://mupdf.readthedocs.io/en/latest/mupdf-command-line.html#mutool">mutool</a> (part of the <a href="https://mupdf.com">MuPDF</a> package).</p>
 </div>
   </section>
   <section class="card border-primary" style="margin-top:1.33em">
@@ -163,7 +166,8 @@ attached to <em>dvisvgm</em> in three different ways:</p>
 <li>no direct linkage but dynamic lookup of the Ghostscript library and its functions during runtime via <code>dlopen()</code></li>
 <li>no Ghostscript support at all</li>
 </ul>
-<p>Depending on the configuration options, the <em>dvisvgm</em> binary can be built in three different flavors.
+<p>Therefore, depending on the configuration options your <em>dvisvgm</em> binary was built with, there could be problems to
+find or access the Ghostscript library.
 You can determine the variant used to build your binary by checking the output of <code>dvisvgm -h</code> and <code>dvisvgm -l</code>:</p>
 <ol>
 <li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> but <code>dvisvgm -l</code> lists entry <em>ps</em>
@@ -181,7 +185,7 @@ program search path, respectively. On Windows, check environment variable <code>
 <li>If you want <em>dvisvgm</em> to look for a different filename, e.g. libgs.so.9, set environment variable <code>LIBGS</code> or call
 <em>dvisvgm</em> with option <code>--libgs</code>.</li>
 <li>Alternatively, assign the path of the Ghostscript library to environment variable <code>LIBGS</code>, e.g. with
-<code>LIBGS=/usr/lib/libgs.so</code> (Linux), or <code>set LIBGS=c:\gs\gs9.06\bin\gsdll32.dll</code> (Windows)</li>
+<code>LIBGS=/usr/lib/libgs.so.9</code> (Linux), or <code>set LIBGS=c:\gs\gs9.56\bin\gsdll64.dll</code> (Windows)</li>
 </ul>
 </li>
 <li><code>dvisvgm -h</code> doesn’t list option <code>--libgs</code> and <code>dvisvgm -l</code> doesn’t list entry <em>ps</em>
@@ -254,9 +258,9 @@ If it does not, proceed with the following steps.</li>
 <code>PATH=%PATH%;&quot;c:\program files\gs\gs9.23\bin&quot;</code>. See <a href="https://java.com/en/download/help/path.xml">here</a>
 for more information on how to set the PATH variable permanently.</li>
 <li>Assign the location of the Ghostscript DLL to the environment variable LIBGS, e.g. with<br/>
-<code>set LIBGS=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot;</code>.</li>
+<code>set LIBGS=&quot;c:\program files\gs\gs9.56\bin\gsdll64.dll&quot;</code>.</li>
 <li>Use the command-line option <code>--libgs</code> to tell <em>dvisvgm</em> where the GS DLL is located, e.g.<br/>
-<code>dvisvgm --libgs=&quot;c:\program files\gs\gs9.23\bin\gsdll32.dll&quot; ...</code></li>
+<code>dvisvgm --libgs=&quot;c:\program files\gs\gs9.56\bin\gsdll64.dll&quot; ...</code></li>
 </ul>
 </li>
 </ul>
