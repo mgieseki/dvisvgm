@@ -1,4 +1,4 @@
-version: 3.0.4-{build}
+version: 3.1-{build}
 configuration: Release
 
 image: Visual Studio 2022
@@ -12,7 +12,7 @@ branches:
       - tmp
 
 install:
-  - set FREETYPE_VER=2.13.0
+  - set FREETYPE_VER=2.13.1
   - set ZLIB_VER=1.2.13
   - set TTFA_VER=1.8.4
   - set TTFA_REV=1
