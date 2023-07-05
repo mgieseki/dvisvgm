@@ -26,6 +26,7 @@
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "Length.hpp"
+#include "Message.hpp"
 #include "SpecialActions.hpp"
 #include "SVGTree.hpp"
 #include "utility.hpp"
@@ -181,7 +182,8 @@ bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialA
 		{"rawput",       &DvisvgmSpecialHandler::processRawPut},
 		{"bbox",         &DvisvgmSpecialHandler::processBBox},
 		{"img",          &DvisvgmSpecialHandler::processImg},
-		{"currentcolor", &DvisvgmSpecialHandler::processCurrentColor}
+		{"currentcolor", &DvisvgmSpecialHandler::processCurrentColor},
+		{"message",      &DvisvgmSpecialHandler::processMessage}
 	};
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
@@ -466,6 +468,14 @@ void DvisvgmSpecialHandler::processCurrentColor (InputReader &ir, SpecialActions
 	}
 	else
 		throw SpecialException("currentcolor: unknown parameter '"+param+"'");
+}
+
+
+void DvisvgmSpecialHandler::processMessage (InputReader &ir, SpecialActions &actions) {
+	string message = ir.getLine();
+	evaluate_expressions(message, actions);
+	expand_constants(message, actions);
+	Message::mstream() << message << "\n";
 }
 
 
