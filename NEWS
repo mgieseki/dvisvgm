@@ -1,3 +1,23 @@
+dvisvgm-3.1 (2023-07-06)
+- added command-line option --currentcolor to replace a given color with
+  CSS variable 'currentColor' (GH issue #214)
+- added special dvisvgm:currentcolor to replace the currently active color
+  with CSS variable 'currentColor' (GH issue #214)
+- added special 'dvisvgm:message' to print given texts to the console
+- added support for Omega Font Metric (OFM) files
+- added fallback mechanism for missing characters in OFM-based virtual fonts
+  proposed by Takuji Tanaka (GH issue #241)
+- fixed handling of whitespace in PDF file paths (GH issue #233)
+- fixed vertical placement of "vertical fonts" in horizontal mode
+  (GH issue #235)
+- fixed parsing of floating point numbers occurred with libc++ (GH issue #240)
+- fixed potential segmentation faults triggered by missing font files
+  (GH issue #241)
+- fixed GLIBCXX assertion error in new PDF handler (GH issue #242)
+- improved handling of font subset prefixes in new, mutool-based PDF handler
+  (GH issue #242)
+- several minor code improvements
+
 dvisvgm-3.0.4 (2023-03-10)
 - fixed issue that could prevent reading the output of subprocesses
   (GH issue #232)
@@ -14,7 +34,7 @@ dvisvgm-3.0.2 (2023-01-30)
 - fixed computation of font sizes in new PDF handler (GH issue #220)
 - fixed viewBox coordinates determined by new PDF handler (GH issue #223)
 - improved detection of font names used in PDF files (GH issue #224)
-- minor code improvements	
+- minor code improvements
 
 dvisvgm-3.0.1 (2023-01-10)
 - added support for the 64-bit GS library in TeX Live
