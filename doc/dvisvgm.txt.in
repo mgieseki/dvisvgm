@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-07-05 10:37 +0200
+:revdate: 2023-07-06 21:05 +0200
 
 Name
 ----
@@ -880,10 +880,6 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   The points ('x1','y1') and ('x2','y2') denote the absolute coordinates of two diagonal corners of the rectangle.
   As with the relative special variant described above, the optional modifier +transform+ allows for applying the
   current transformation matrix to the bounding box.
-
-  *dvisvgm:message* 'msg';;
-  Prints the given text 'msg' to the console. It may also contain the macros '{?...}' mentioned above
-  (see *dvisvgm:raw*).
 +
 The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:
 +
@@ -902,6 +898,10 @@ The following TeX snippet adds two raw SVG elements to the output and updates th
   it takes the currently active color and replaces it with `currentColor`. Therefore, the result depends on the
   placement of the special and the preceding color changes. Argument `on` &#x2013; which activates the 'currentColor'
   functionality &#x2013; can be omitted. When called with argument `off`, the functionality is deactivated again.
+
+  *dvisvgm:message* 'msg';;
+  Prints the given text 'msg' to the console. It may also contain the macros '{?...}' mentioned above
+  (see *dvisvgm:raw*).
 
 *em*::
 These specials were introduced with the 'emTeX' distribution by Eberhard Mattes. They provide line drawing

@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2023-07-05
+.\"      Date: 2023-07-06
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.1
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2023\-07\-05" "dvisvgm 3\&.1" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2023\-07\-06" "dvisvgm 3\&.1" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1423,16 +1423,6 @@ allows for applying the current transformation matrix to the bounding box\&.
 This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG\&. After executing this command, dvisvgm doesn\(cqt further alter the bounding box coordinates, except this special is called again later\&. The points (\fIx1\fR,\fIy1\fR) and (\fIx2\fR,\fIy2\fR) denote the absolute coordinates of two diagonal corners of the rectangle\&. As with the relative special variant described above, the optional modifier
 \fBtransform\fR
 allows for applying the current transformation matrix to the bounding box\&.
-.RE
-.PP
-\fBdvisvgm:message\fR \fImsg\fR
-.RS 4
-Prints the given text
-\fImsg\fR
-to the console\&. It may also contain the macros
-\fI{?\&...}\fR
-mentioned above (see
-\fBdvisvgm:raw\fR)\&.
 .sp
 The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:
 .sp
@@ -1463,6 +1453,16 @@ but doesn\(cqt require an explicit color argument\&. Instead, it takes the curre
 \fIcurrentColor\fR
 functionality \(en can be omitted\&. When called with argument
 \fBoff\fR, the functionality is deactivated again\&.
+.RE
+.PP
+\fBdvisvgm:message\fR \fImsg\fR
+.RS 4
+Prints the given text
+\fImsg\fR
+to the console\&. It may also contain the macros
+\fI{?\&...}\fR
+mentioned above (see
+\fBdvisvgm:raw\fR)\&.
 .RE
 .RE
 .PP
