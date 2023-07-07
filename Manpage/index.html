@@ -1473,22 +1473,13 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
 <dt>
 <strong>dvisvgm:bbox</strong> f[ix] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em> [<code>transform</code>]
 </dt>
-<dd><p>
+<dd>
+<p>
   This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
   this command, dvisvgm doesn’t further alter the bounding box coordinates, except this special is called again later.
   The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
   As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
   current transformation matrix to the bounding box.
-</p></dd>
-</div>
-<a name="specials-dvisvgm:message" class="linktarget"></a><div class="hdlist1">
-<dt>
-<strong>dvisvgm:message</strong> <em>msg</em>
-</dt>
-<dd>
-<p>
-  Prints the given text <em>msg</em> to the console. It may also contain the macros <em>{?…}</em> mentioned above
-  (see <strong>dvisvgm:raw</strong>).
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
 <div class="d-inline-flex"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tex" data-lang="tex"><span style="display:flex;"><span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
@@ -1509,6 +1500,15 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   it takes the currently active color and replaces it with <code>currentColor</code>. Therefore, the result depends on the
   placement of the special and the preceding color changes. Argument <code>on</code> – which activates the <em>currentColor</em>
   functionality – can be omitted. When called with argument <code>off</code>, the functionality is deactivated again.
+</p></dd>
+</div>
+<a name="specials-dvisvgm:message" class="linktarget"></a><div class="hdlist1">
+<dt>
+<strong>dvisvgm:message</strong> <em>msg</em>
+</dt>
+<dd><p>
+  Prints the given text <em>msg</em> to the console. It may also contain the macros <em>{?…}</em> mentioned above
+  (see <strong>dvisvgm:raw</strong>).
 </p></dd>
 </div>
 </dl>
@@ -1856,7 +1856,7 @@ or, (at your option) any later version.</p></div></section>
 <div class="row">
    <div class="col-md-6">Version 3.1</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2023-07-05</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2023-07-06</span>
    </div>
 </div>
 </div>
