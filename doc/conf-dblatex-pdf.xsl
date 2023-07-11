@@ -3,8 +3,8 @@
 <!-- Copyright (C) 2015-2023 Martin Gieseking <martin.gieseking@uos.de> -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="xetex.font">
-		<xsl:text>\setmainfont{Source Serif Pro}&#10;</xsl:text>
-		<xsl:text>\setsansfont{Source Sans Pro}&#10;</xsl:text>
+		<xsl:text>\setmainfont{Source Serif 4}&#10;</xsl:text>
+		<xsl:text>\setsansfont{Source Sans 3}&#10;</xsl:text>
 		<xsl:text>\setmonofont[Scale=0.9]{Source Code Pro}&#10;</xsl:text>
 	</xsl:param>
 
