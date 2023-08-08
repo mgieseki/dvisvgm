@@ -52,7 +52,7 @@ void SVGOptimizer::execute () {
 	if (!_svg || MODULE_SEQUENCE == "none")
 		return;
 	if (MODULE_SEQUENCE.empty())
-		MODULE_SEQUENCE = "remove-clippath"; // default behaviour of previous dvisvgm releases
+		MODULE_SEQUENCE = "remove-clippaths"; // default behaviour of previous dvisvgm releases
 	else {
 		if (MODULE_SEQUENCE == "all") {
 			for (const auto &entry: _moduleEntries)
