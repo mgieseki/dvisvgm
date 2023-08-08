@@ -150,12 +150,13 @@ string util::replace (string str, const string &find, const string &repl) {
  *  returns the substrings.
  *  @param[in] str string to split
  *  @param[in] sep separator to look for
+ *  @param[in] allowEmptyResult if true, the result vector is empty if str is empty; otherwise an empty string is inserted
  *  @return the substrings between the separators */
-vector<string> util::split (const string &str, const string &sep) {
+vector<string> util::split (const string &str, const string &sep, bool allowEmptyResult) {
 	vector<string> parts;
-	if (str.empty() || sep.empty())
+	if ((str.empty() && !allowEmptyResult) || sep.empty())
 		parts.push_back(str);
-	else {
+	else if (!str.empty()) {
 		string::size_type left=0;
 		while (left <= str.length()) {
 			auto right = str.find(sep, left);

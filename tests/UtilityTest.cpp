@@ -80,6 +80,9 @@ TEST(UtilityTest, split) {
 	ASSERT_EQ(parts.size(), 1u);
 	EXPECT_EQ(parts[0], "");
 
+	parts = split("", ",", true);
+	ASSERT_EQ(parts.size(), 0u);
+
 	parts = split("abcde", "");
 	ASSERT_EQ(parts.size(), 1u);
 	EXPECT_EQ(parts[0], "abcde");
