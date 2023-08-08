@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-07-06 21:05 +0200
+:revdate: 2023-08-07 15:41 +0200
 
 Name
 ----
@@ -430,6 +430,10 @@ are performed by running separate optimizer modules specified by optional argume
 It may consist of a single module name or a comma-separated list of several module names.
 The corresponding modules are executed one by one in the given order and thus transform the
 XML tree gradually.
+A leading hyphen (+-+) can be used to exclude a module from processing. For example
++-Oall,-collapse-groups+ performs all optimizations except +collapse-groups+. If the first
+module name in the list starts with a hyphen, dvisvgm automatically inserts +all+ at the
+beginning, i.e. +-O-collapse-groups+ is identical to +-Oall,-collapse-groups+.
 +
 The following list describes the currently available optimizer modules.
 
@@ -442,8 +446,8 @@ The following list describes the currently available optimizer modules.
 
   *all*;;
   Performs all optimizations listed below. This is also the default if option *--optimize* is
-  used without argument. The modules are executed in a predefined order that usually leads to the
-  best results. *all* can't be combined with other module names.
+  used without any arguments. The modules are executed in a predefined order that usually leads
+  to the best results. *all* must be the only or the first entry in the list of module names.
 
   *collapse-groups*;;
   Combines nested group elements (+<g>+...+</g>+) that contain only a single group each. If possible,

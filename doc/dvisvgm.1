@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2023-07-06
+.\"      Date: 2023-08-07
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.1
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2023\-07\-06" "dvisvgm 3\&.1" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2023\-08\-07" "dvisvgm 3\&.1" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -619,7 +619,15 @@ By default, dvisvgm creates CSS styles and class attributes to reference fonts\&
 \fB\-O, \-\-optimize\fR[=\fImodules\fR]
 .RS 4
 Applies several optimizations on the generated SVG tree to reduce the file size\&. The optimizations are performed by running separate optimizer modules specified by optional argument
-\fImodules\fR\&. It may consist of a single module name or a comma\-separated list of several module names\&. The corresponding modules are executed one by one in the given order and thus transform the XML tree gradually\&.
+\fImodules\fR\&. It may consist of a single module name or a comma\-separated list of several module names\&. The corresponding modules are executed one by one in the given order and thus transform the XML tree gradually\&. A leading hyphen (\fB\-\fR) can be used to exclude a module from processing\&. For example
+\fB\-Oall,\-collapse\-groups\fR
+performs all optimizations except
+\fBcollapse\-groups\fR\&. If the first module name in the list starts with a hyphen, dvisvgm automatically inserts
+\fBall\fR
+at the beginning, i\&.e\&.
+\fB\-O\-collapse\-groups\fR
+is identical to
+\fB\-Oall,\-collapse\-groups\fR\&.
 .sp
 The following list describes the currently available optimizer modules\&.
 .PP
@@ -639,9 +647,9 @@ can\(cqt be combined with other module names\&.
 .RS 4
 Performs all optimizations listed below\&. This is also the default if option
 \fB\-\-optimize\fR
-is used without argument\&. The modules are executed in a predefined order that usually leads to the best results\&.
+is used without any arguments\&. The modules are executed in a predefined order that usually leads to the best results\&.
 \fBall\fR
-can\(cqt be combined with other module names\&.
+must be the only or the first entry in the list of module names\&.
 .RE
 .PP
 \fBcollapse\-groups\fR
