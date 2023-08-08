@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-08-07 15:41 +0200
+:revdate: 2023-08-08 10:36 +0200
 
 Name
 ----
@@ -594,7 +594,7 @@ See option *--libgs* for further information.
 +
 As of Ghostscript 10.01.0, this will no longer work due to the introduction of a new PDF interpreter.
 Therefore, an alternative conversion module based on _mutool_, a utility which is part of the
-[MuPDF](https://mupdf.com) package, has been introduced. It's automatically invoked if Ghostscript
+https://mupdf.com[MuPDF] package, has been introduced. It's automatically invoked if Ghostscript
 can't be used and if a working +mutool+ executable is present in a directory which is part of the
 system's search path.
 +
