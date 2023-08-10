@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <array>
 #include <map>
+#include <set>
 #include "SVGOptimizer.hpp"
 #include "../SVGTree.hpp"
 
@@ -30,7 +31,6 @@
 #include "RedundantElementRemover.hpp"
 #include "TextSimplifier.hpp"
 #include "TransformSimplifier.hpp"
-#include "WSNodeRemover.hpp"
 
 using namespace std;
 
@@ -53,7 +53,7 @@ void SVGOptimizer::execute () {
 		return;
 
 	vector<string> names = util::split(MODULE_SEQUENCE, ",", true);
-	set<string> ignoreNames;
+	set<string> removedNames;
 	if (names.empty())
 		names.emplace_back("remove-clippaths"); // default behaviour of previous dvisvgm releases
 	else {
@@ -61,6 +61,7 @@ void SVGOptimizer::execute () {
 		if (names[0] == "all")
 			it = names.erase(it);
 		if (names[0] == "all" || names[0][0] == '-') {
+			// add names of all optimizer modules
 			for (const auto &moduleEntry : _moduleEntries) {
 				it = names.insert(it, moduleEntry.modname);
 				++it;
@@ -70,7 +71,7 @@ void SVGOptimizer::execute () {
 	// create sequence of module names to be considered
 	for (auto it=names.begin(); it != names.end();) {
 		if ((*it)[0] == '-') {
-			ignoreNames.insert(it->substr(1));
+			removedNames.insert(it->substr(1));
 			it = names.erase(it);
 		}
 		else {
@@ -79,13 +80,10 @@ void SVGOptimizer::execute () {
 			++it;
 		}
 	}
-	auto it = find_if(names.begin(), names.end(), [](const string &name) {
-		return name == "simplify-transform";
-	});
-	GroupCollapser::COMBINE_TRANSFORMS = (it != names.end());
+	GroupCollapser::COMBINE_TRANSFORMS = (find(names.begin(), names.end(), "simplify-transform") != names.end());
 	// execute optimizer modules
 	for (const string &name: names) {
-		if (ignoreNames.find(name) == ignoreNames.end()) {
+		if (removedNames.find(name) == removedNames.end()) {
 			if (OptimizerModule *module = getModule(name))
 				module->execute(_svg->defsNode(), _svg->pageNode());
 		}
