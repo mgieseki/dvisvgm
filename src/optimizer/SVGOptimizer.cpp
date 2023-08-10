@@ -113,13 +113,13 @@ void SVGOptimizer::listModules (ostream &os) const {
  *  @return true if all names are known */
 bool SVGOptimizer::checkModuleString (string &namestr, vector<string> &unknownNames) const {
 	unknownNames.clear();
-	if (namestr.empty() || namestr == "none" || namestr.substr(0,3) == "all")
+	if (namestr.empty() || namestr == "none" || namestr == "all" || namestr.substr(0,4) == "all,")
 		return true;
 	vector<string> givenNames = util::split(namestr, ",");
 	for (string name : givenNames) {
 		if (name[0] == '-' || name[0] == '+')
 			name = name.substr(1);
-		if (!getModule(name))
+		if (!name.empty() && !getModule(name))
 			unknownNames.emplace_back(name);
 	}
 	return unknownNames.empty();
