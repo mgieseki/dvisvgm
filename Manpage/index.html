@@ -740,6 +740,10 @@ are performed by running separate optimizer modules specified by optional argume
 It may consist of a single module name or a comma-separated list of several module names.
 The corresponding modules are executed one by one in the given order and thus transform the
 XML tree gradually.
+A leading hyphen (<code>-</code>) can be used to exclude a module from processing. For example
+<code>-Oall,-collapse-groups</code> performs all optimizations except <code>collapse-groups</code>. If the first
+module name in the list starts with a hyphen, dvisvgm automatically inserts <code>all</code> at the
+beginning, i.e. <code>-O-collapse-groups</code> is identical to <code>-Oall,-collapse-groups</code>.
 </p>
 <p>The following list describes the currently available optimizer modules.</p>
 <dl>
@@ -766,8 +770,8 @@ XML tree gradually.
 </dt>
 <dd><p>
   Performs all optimizations listed below. This is also the default if option <strong>--optimize</strong> is
-  used without argument. The modules are executed in a predefined order that usually leads to the
-  best results. <strong>all</strong> can’t be combined with other module names.
+  used without any arguments. The modules are executed in a predefined order that usually leads
+  to the best results. <strong>all</strong> must be the only or the first entry in the list of module names.
 </p></dd>
 </div>
 <a name="collapse-groups" class="linktarget"></a><div class="hdlist1">
@@ -963,7 +967,7 @@ dvisvgm was built with PostScript support enabled, and requires Ghostscript to b
 See option <strong>--libgs</strong> for further information.</p>
 <p>As of Ghostscript 10.01.0, this will no longer work due to the introduction of a new PDF interpreter.
 Therefore, an alternative conversion module based on <em>mutool</em>, a utility which is part of the
-[MuPDF](<a href="https://mupdf.com">https://mupdf.com</a>) package, has been introduced. It’s automatically invoked if Ghostscript
+<a href="https://mupdf.com">MuPDF</a> package, has been introduced. It’s automatically invoked if Ghostscript
 can’t be used and if a working <code>mutool</code> executable is present in a directory which is part of the
 system’s search path.</p>
 <p>Alternatively, environment variable <code>DVISVGM_PDF_PROC</code> can be used to select the PDF processor.
@@ -1854,9 +1858,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.1</div>
+   <div class="col-md-6">Version 3.1.1</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2023-07-06</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2023-08-08</span>
    </div>
 </div>
 </div>

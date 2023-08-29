@@ -3,8 +3,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 06 Jul 2023 18:42:37 +0200</pubDate>
+    <pubDate>Tue, 29 Aug 2023 12:49:10 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.1.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#8ac049317552507edb225b808f468f9f</link>
+      <pubDate>Tue, 29 Aug 2023 12:44:48 +0200</pubDate>
+      <guid>8ac049317552507edb225b808f468f9f</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added evaluation of optional dash prefixes to command-line option <code>--optimize</code> to exclude selected optimizer modules.</li>
+<li>Fixed the invalid removal of clipping paths referenced in the <code>defs</code> section.</li>
+<li>Fixed the automatic calls of optimizer module <code>remove-clippaths</code>.</li>
+<li>Suppress warning messages about deprecated option <code>-dNEWPDF</code> introduced with Ghostscript 10.02.0 (<a href="https://github.com/mgieseki/dvisvgm/issues/245">issue #245</a>).</li>
+<li>Updated the bundled <a href="https://xxhash.com">xxHash</a> library to version 0.8.2.</li>
+<li>Fixed a few paragraphs in the manual page.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.1 has been released</title>
@@ -13,10 +31,10 @@
       <guid>422f0639756c1b2ea2e7fa87ee7a5056</guid>
       <description>
         <![CDATA[<ul>
-<li>Added the command-line option <code>--currentcolor</code> to replace a given color with CSS variable
-<a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
-<li>Added special <code>dvisvgm:currentcolor</code> to replace the currently active color with CSS variable
-<a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
+<li>Added the command-line option <a href="https://dvisvgm.de/Manpage/#opt-currentcolor"><code>--currentcolor</code></a> to replace
+a given color with CSS variable <a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
+<li>Added special <a href="https://dvisvgm.de/Manpage/#specials-dvisvgm:currentcolor"><code>dvisvgm:currentcolor</code></a> to replace
+the currently active color with CSS variable <a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
 <li>Added special <code>dvisvgm:message</code> to print given texts to the console.</li>
 <li>Added support for <a href="https://en.wikipedia.org/wiki/Omega_(TeX)">Omega</a> Font Metric (OFM) files.</li>
 <li>Added a fallback mechanism for missing characters in OFM-based virtual fonts  proposed by Takuji Tanaka (<a href="https://github.com/mgieseki/dvisvgm/issues/241">issue #241</a>).</li>
@@ -166,7 +184,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#80bac74a072a749b3ebc7726a80a0ab6</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#80bac74a072a749b3ebc7726a80a0ab6</link>
       <pubDate>Wed, 20 Apr 2022 11:49:23 +0200</pubDate>
       <guid>80bac74a072a749b3ebc7726a80a0ab6</guid>
       <description>
@@ -301,7 +319,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.11 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#45089adf53a690978eb4e8d47ffd190e</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#45089adf53a690978eb4e8d47ffd190e</link>
       <pubDate>Sat, 28 Nov 2020 11:28:08 +0100</pubDate>
       <guid>45089adf53a690978eb4e8d47ffd190e</guid>
       <description>
@@ -374,40 +392,6 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
 <li>Fixed the evaluation of transformation command <code>scale(c)</code> which is now correctly treated as <code>scale(c,c)</code>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/131">issue #131</a>).</li>
 <li>Minor layout optimizations of the <a href="/Manpage/dvisvgm.pdf">PDF version of the manual page</a>.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.9 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#5651dc6a7c24b18f3867668516712587</link>
-      <pubDate>Fri, 13 Mar 2020 13:18:09 +0100</pubDate>
-      <guid>5651dc6a7c24b18f3867668516712587</guid>
-      <description>
-        <![CDATA[<p>The main new feature of this release is the conversion of bitmap images present in PostScript and PDF data.
-All bitmaps are embedded into the generated SVG files encoded as Base64 strings. The default format used
-for this is JPEG because it allows for high compression rates and therefore moderate impact on the SVG file size.
-If you prefer a lossless format, you can switch to one of the supported PNG variants by using the new command-line
-option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a>. Further information about the available
-formats and the usage of this option can be found on the manual page.</p>
-<p><strong>Summary of additions and fixes:</strong></p>
-<ul>
-<li>Added the processing of PostScript operators <code>image</code> and <code>colorimage</code> which now allows <em>dvisvgm</em>
-to embed bitmap images present in PS/PDF files into the generated SVG files.</li>
-<li>Added command-line option <a href="/Manpage/#opt-bitmap-format"><code>--bitmap-format</code></a> to set
-the format used to embed bitmaps present in EPS/PDF files.</li>
-<li>Added a fallback method to retrieve the resolution of GF files if <code>stdout</code> of the Metafont subprocess can&rsquo;t
-be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvisvgm/issues/129">issue #129</a>).</li>
-<li>Fixed the broken conversion of PostScript tiling patterns.</li>
-<li>Fixed the functionality of PostScript operators <code>xshow</code>, <code>yshow</code>, and <code>xyshow</code> for multibyte characters.</li>
-<li>Fixed a PostScript error that was triggered by yet unsupported shading types &lt; 4.</li>
-<li>Prevent negative <code>height</code> and <code>width</code> attributes created by <a href="/Manpage/#opt-optimize">optimizer module</a>
-<code>simplify-transform</code>.</li>
-<li>Fixed a potential segfault caused by deep recursion in huge SVG trees.</li>
-<li>Look for Ghostscript library name <code>libgs.dylib.N</code> additionally to <code>libgs.N.dylib</code> (Mac only).</li>
-<li>Ensure that <code>make install</code> installs the bundled manual page if it can&rsquo;t be rebuilt due to missing build tools.</li>
-<li>Updated the bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.7.3.</li>
 </ul>
 ]]>
       </description>
