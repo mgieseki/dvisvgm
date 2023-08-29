@@ -249,6 +249,7 @@
     <ClCompile Include="..\src\optimizer\WSNodeRemover.cpp" />
     <ClCompile Include="..\src\PDFHandler.cpp" />
     <ClCompile Include="..\src\PDFToSVG.cpp" />
+    <ClCompile Include="..\src\PSPreviewHandler.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
@@ -308,7 +309,6 @@
     <ClCompile Include="..\src\psdefs.cpp" />
     <ClCompile Include="..\src\PSInterpreter.cpp" />
     <ClCompile Include="..\src\PSPattern.cpp" />
-    <ClCompile Include="..\src\PSPreviewFilter.cpp" />
     <ClCompile Include="..\src\PsSpecialHandler.cpp" />
     <ClCompile Include="..\src\RangeMap.cpp" />
     <ClCompile Include="..\src\ShadingPatch.cpp" />
@@ -391,6 +391,7 @@
     <ClInclude Include="..\src\optimizer\WSNodeRemover.hpp" />
     <ClInclude Include="..\src\PDFHandler.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
+    <ClInclude Include="..\src\PSPreviewHandler.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
@@ -413,10 +414,8 @@
     <ClInclude Include="..\src\PdfSpecialHandler.hpp" />
     <ClInclude Include="..\src\PreScanDVIReader.hpp" />
     <ClInclude Include="..\src\Process.hpp" />
-    <ClInclude Include="..\src\PSFilter.hpp" />
     <ClInclude Include="..\src\PSInterpreter.hpp" />
     <ClInclude Include="..\src\PSPattern.hpp" />
-    <ClInclude Include="..\src\PSPreviewFilter.hpp" />
     <ClInclude Include="..\src\PsSpecialHandler.hpp" />
     <ClInclude Include="..\src\RangeMap.hpp" />
     <ClInclude Include="..\src\ShadingPatch.hpp" />

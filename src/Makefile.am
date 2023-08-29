@@ -119,10 +119,9 @@ libdvisvgm_la_SOURCES = \
 	PreScanDVIReader.hpp         PreScanDVIReader.cpp \
 	Process.hpp                  Process.cpp \
 	psdefs.cpp \
-	PSFilter.hpp \
 	PSInterpreter.hpp            PSInterpreter.cpp \
 	PSPattern.hpp                PSPattern.cpp \
-	PSPreviewFilter.hpp          PSPreviewFilter.cpp \
+	PSPreviewHandler.hpp         PSPreviewHandler.cpp \
 	PsSpecialHandler.hpp         PsSpecialHandler.cpp \
 	RangeMap.hpp                 RangeMap.cpp \
 	ShadingPatch.hpp             ShadingPatch.cpp \
