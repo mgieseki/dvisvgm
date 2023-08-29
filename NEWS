@@ -1,3 +1,12 @@
+dvisvgm-3.1.1 (2022-08-29)
+- added evaluation of optional dash prefixes to command-line option --optimize
+  to exclude selected optimizer modules
+- fixed invalid removal of clipping paths referenced in 'defs' section
+- fixed automatic calls of optimizer module 'remove-clippaths'
+- suppress Ghostscript warning about deprecated option -dNEWPDF (GH issue #245)
+- updated bundled xxHash library to version 0.8.2
+- few fixes in the manual page
+
 dvisvgm-3.1 (2023-07-06)
 - added command-line option --currentcolor to replace a given color with
   CSS variable 'currentColor' (GH issue #214)
