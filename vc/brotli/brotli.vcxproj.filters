@@ -90,6 +90,9 @@
     <ClCompile Include="..\..\libs\brotli\enc\fast_log.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libs\brotli\enc\compound_dictionary.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libs\brotli\common\constants.h">
@@ -240,6 +243,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libs\brotli\common\transform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\common\shared_dictionary_internal.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\enc\compound_dictionary.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\enc\state.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libs\brotli\include\brotli\shared_dictionary.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
