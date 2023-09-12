@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-08-08 10:36 +0200
+:revdate: 2023-09-12 16:36 +0200
 
 Name
 ----
@@ -212,7 +212,7 @@ holds the current foreground color set by CSS property `color`. This way an appl
 can change the color via CSS without the need to modify the SVG code.
 +
 The optional argument of `--currentcolor` specifies the RGB color value to be replaced and must
-be given as either https://www.w3.org/TR/css-color/#typedef-hex-color[three or six digit hex color value]
+be given as either https://www.w3.org/TR/css-color/#typedef-hex-color[six or three digit hex color value]
 preceded by character `#`, e.g. `#0000ff` or `#00f` for blue. If the optional argument is omitted, black
 is assumed.
 
@@ -777,7 +777,7 @@ DVI file and delegates its execution to the DVI driver. The DVI driver can then 
 ignore it, depending on the supported statements. The parameter of TeX's +\special+ command is given in curly
 braces and may consist of an arbitrary character sequence representing the actual instruction, for example
 +color Red+.
-+
+
 dvisvgm delegates the evaluation of special commands to dedicated handlers. Each handler is responsible for
 all special statements of the same command set, i.e. commands usually &#x2013; but not necessarily &#x2013;
 beginning with a common prefix. For example, all PDF specials start with the prefix +pdf:+, while the TPIC
