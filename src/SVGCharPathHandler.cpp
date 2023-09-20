@@ -95,7 +95,9 @@ void SVGCharPathHandler::appendChar (uint32_t c, double x, double y) {
 				// the exact location in vertical mode.
 				GlyphMetrics exact_metrics;
 				physicalFont->getExactGlyphBox(c, exact_metrics, false, nullptr);
-				y += exact_metrics.h + (metrics.d - exact_metrics.h - exact_metrics.d) / 2;
+				double ed = max(0.0, exact_metrics.d);
+				double eh = max(0.0, exact_metrics.h);
+				y += eh + (metrics.d - eh - ed) / 2;
 			}
 		}
 	}
