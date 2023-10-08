@@ -142,7 +142,7 @@ TEST(TriangularPatchTest, boundaryPath) {
 }
 
 
-class Callback : public ShadingPatch::Callback {
+class TriangularPatchTestCallback : public ShadingPatch::Callback {
 	public:
 		void patchSegment (GraphicsPath<double> &path, const Color &color) {
 			ostringstream oss;
@@ -167,7 +167,7 @@ TEST(TriangularPatchTest, approximate) {
 	points[2] = DPair(0, 10);
 	vector<Color> colors(3);
 	TriangularPatch tp(points, colors, Color::ColorSpace::RGB, 0, 0);
-	Callback callback;
+	TriangularPatchTestCallback callback;
 	tp.approximate(2, false, 0.1, callback);
 	EXPECT_EQ(callback.pathstr(), "M0 0H10L0 10Z");
 	EXPECT_EQ(callback.colorstr(), "#000");
