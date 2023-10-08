@@ -1,0 +1,3 @@
+add_library(mpark_variant INTERFACE)
+target_include_directories(mpark_variant INTERFACE include)
+target_compile_features(mpark_variant INTERFACE cxx_std_11)

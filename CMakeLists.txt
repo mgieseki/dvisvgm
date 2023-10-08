@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.27)
+
+project(dvisvgm VERSION 3.1.1)
+
+option(BUILD_SHARED "Build code as a shared library" OFF)
+option(BUILD_TESTS "Build tests" ON)
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+
+if (BUILD_SHARED)
+    add_compile_options(-fPIC)
+endif()
+if (ENABLE_ASAN)
+    add_compile_options(-fsanitize=address -Og)
+    add_link_options(-fsanitize=address)
+endif()
+if (ENABLE_UBSAN)
+    add_compile_options(-fsanitize=undefined -Og)
+    add_link_options(-fsanitize=undefined)
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_options(-O2)
+endif()
+
+add_subdirectory(libs)
+add_subdirectory(src)
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
