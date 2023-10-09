@@ -24,7 +24,6 @@
 #include <string>
 
 struct MemoryFontData {
-	MemoryFontData () =delete;
 	const char *data;
 	size_t size;
 };

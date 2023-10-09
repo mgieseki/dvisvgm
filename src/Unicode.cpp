@@ -181,8 +181,13 @@ uint32_t Unicode::toSurrogate (uint32_t cp) {
 
 
 uint32_t Unicode::toLigature (const string &nonlig) {
+#if defined(__cpp_char8_t)
+	using literal_char_type = char8_t;
+#else
+	using literal_char_type = char;
+#endif
 	struct Ligature {
-		const char *nonlig;
+		const literal_char_type *nonlig;
 		uint32_t lig;
 	} ligatures[39] = {
 		{u8"AA",  0xA732}, {u8"aa", 0xA733},
@@ -212,7 +217,7 @@ uint32_t Unicode::toLigature (const string &nonlig) {
 		{u8"VY",  0xA760}, {u8"tz",  0xA761},
 	};
 	auto it = find_if(begin(ligatures), end(ligatures), [&nonlig](const Ligature &l) {
-		return l.nonlig == nonlig;
+		return reinterpret_cast<const char*>(l.nonlig) == nonlig;
 	});
 	return it != end(ligatures) ? it->lig : 0;
 }
