@@ -1,3 +1,10 @@
+dvisvgm-3.1.2 (2023-10-12)
+- improved evaluation of graphic extents created by the 'preview' package
+  (GH issue #246)
+- fixed computation of character boxes when using --exact-bbox (GH issue #248)	
+- fixed memory error in optimizer module (GH issue #250)
+- updated bundled brotli library to version 1.1.0
+
 dvisvgm-3.1.1 (2023-08-29)
 - added evaluation of optional dash prefixes to command-line option --optimize
   to exclude selected optimizer modules
