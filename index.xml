@@ -3,8 +3,24 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Tue, 29 Aug 2023 12:49:10 +0200</pubDate>
+    <pubDate>Thu, 12 Oct 2023 15:23:48 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.1.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#b9ddd429bb79cff6907c18fc32d093bf</link>
+      <pubDate>Thu, 12 Oct 2023 15:19:57 +0200</pubDate>
+      <guid>b9ddd429bb79cff6907c18fc32d093bf</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Improved the evaluation of graphic extents created by the <a href="https://ctan.org/pkg/preview"><code>preview</code> package</a> (<a href="https://github.com/mgieseki/dvisvgm/issues/246">issue #246</a>).</li>
+<li>Fixed the computation of the character box extents performed when using option <code>--exact-bbox</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/248">issue #248</a>).</li>
+<li>Fixed a memory error in the optimizer module (<a href="https://github.com/mgieseki/dvisvgm/issues/250">issue #250</a>).</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.1.0.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.1.1 has been released</title>
@@ -166,7 +182,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.14 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#4468f9499cd26017882826f25736c181</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4468f9499cd26017882826f25736c181</link>
       <pubDate>Fri, 12 Aug 2022 09:48:19 +0200</pubDate>
       <guid>4468f9499cd26017882826f25736c181</guid>
       <description>
@@ -303,7 +319,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.11.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
       <pubDate>Thu, 21 Jan 2021 15:20:02 +0100</pubDate>
       <guid>e423fc038b1ff9a9ba28e1b1cfbd3d6f</guid>
       <description>
@@ -373,25 +389,6 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
 <li>Fixed error message about unmatched closing tags in XML parser.</li>
 <li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
 <li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.9.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#7d856da14b815b8a8abea3cdae767d76</link>
-      <pubDate>Sat, 21 Mar 2020 13:16:48 +0100</pubDate>
-      <guid>7d856da14b815b8a8abea3cdae767d76</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Added macro <code>{?(expr)}</code> to enable the evaluation of math expressions in raw SVG fragments
-(<a href="https://github.com/mgieseki/dvisvgm/issues/130">issue #130</a>).</li>
-<li>Multiplication operator <code>*</code> preceding an opening parentheses can now be omitted in math expressions.</li>
-<li>Fixed the evaluation of transformation command <code>scale(c)</code> which is now correctly treated as <code>scale(c,c)</code>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/131">issue #131</a>).</li>
-<li>Minor layout optimizations of the <a href="/Manpage/dvisvgm.pdf">PDF version of the manual page</a>.</li>
 </ul>
 ]]>
       </description>
