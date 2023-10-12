@@ -58,9 +58,9 @@ void SVGOptimizer::execute () {
 		names.emplace_back("remove-clippaths"); // default behaviour of previous dvisvgm releases
 	else {
 		auto it = names.begin();
-		if (names[0] == "all")
-			it = names.erase(it);
-		if (names[0] == "all" || names[0][0] == '-') {
+		if (*it == "all" || (!it->empty() && it->at(0) == '-')) {
+			if (*it == "all")
+				it = names.erase(it);
 			// add names of all optimizer modules
 			for (const auto &moduleEntry : _moduleEntries) {
 				it = names.insert(it, moduleEntry.modname);
