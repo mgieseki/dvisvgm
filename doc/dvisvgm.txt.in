@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2023-09-12 16:36 +0200
+:revdate: 2023-12-11 12:21 +0100
 
 Name
 ----
@@ -239,6 +239,9 @@ dimensions, they don't necessarily correspond with the bounds of the visual glyp
 and/or height of some glyphs may be larger (or smaller) than the respective TFM values. As a result,
 this can lead to clipped characters at the bounds of the SVG graphics. With option *--exact-bbox*
 given, dvisvgm analyzes the actual shape of each character and derives a usually tight bounding box.
++
+This option only affects the processing of DVI files. When converting EPS or PDF files, the bounding
+box information stored in these files are used to derive the SVG bounding box.
 
 *-f, --font-format*='format'::
 Selects the file format used to embed font data into the generated SVG output when converting DVI
