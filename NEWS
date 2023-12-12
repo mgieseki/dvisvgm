@@ -65,7 +65,7 @@ dvisvgm-3.0.1 (2023-01-10)
 
 dvisvgm-3.0 (2022-10-16)
 - added a new PDF handler based on mutool to keep the PDF functionality
-  available which can't no longer be realized with Ghostscript 10.1.0 due to
+  available which can no longer be realized with Ghostscript 10.1.0 due to
   the replacement of its PostScript-based PDF interpreter
 - replaced the bundled minimal Fontforge library (ff-woff) with a dedicated,
   newly implemented library for embedding TTF/WOFF data into the SVG files
