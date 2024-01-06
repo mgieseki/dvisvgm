@@ -552,6 +552,21 @@ or
 Sets the magnification factor applied in conjunction with Metafont calls prior tracing the glyphs\&. The larger this value, the better the tracing results\&. Nevertheless, large magnification values can cause Metafont arithmetic errors due to number overflows\&. So, use this option with care\&. The default setting usually produces nice results\&.
 .RE
 .PP
+\fB\-\-message\fR=\fItext\fR
+.RS 4
+Prints a given message to the console after an SVG file has been written\&. Argument
+\fItext\fR
+may consist of static text and the macros listed below in the description of special command
+\fBdvisvgm:raw\fR\&. For example,
+\fB\-\-message="page {?pageno} written to {?svgfile}"\fR
+prints the message with the macros expanded after the conversion of each page of a DVI or PDF file or after processing an EPS file\&.
+.sp
+The output of option
+\fB\-\-message\fR
+is not affected by the specified verbosity level, i\&.e\&. it prints the text even with
+\fB\-\-verbosity=0\fR\&.
+.RE
+.PP
 \fB\-\-no\-merge\fR
 .RS 4
 Puts every single character in a separate

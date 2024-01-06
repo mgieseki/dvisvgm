@@ -22,6 +22,7 @@
 #include <fstream>
 #include <sstream>
 #include "Calculator.hpp"
+#include "DvisvgmSpecialHandler.hpp"
 #include "ImageToSVG.hpp"
 #include "Message.hpp"
 #include "MessageException.hpp"
@@ -105,6 +106,10 @@ void ImageToSVG::writeSVG (int pageno) {
 			<< " (" << XMLString(_bbox.width()*bp2mm) << "mm"
 			<< " x " << XMLString(_bbox.height()*bp2mm) << "mm)\n";
 		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "output written to " << svgfname << '\n';
+		if (!_userMessage.empty()) {
+			string msg = DvisvgmSpecialHandler::expandText(_userMessage, *this);
+			Message::ustream(true) << msg << "\n";
+		}
 	}
 	_bbox.invalidate();
 	_svg.reset();

@@ -200,6 +200,10 @@
       <option long="list-specials" short="l">
         <description>print supported special sets and exit</description>
       </option>
+      <option long="message">
+        <arg name="text" type="string"/>
+        <description>print message text after writing an SVG file</description>
+      </option>
       <option long="progress">
         <arg name="delay" type="double" optional="yes" default="0.5"/>
         <description>enable progress indicator</description>

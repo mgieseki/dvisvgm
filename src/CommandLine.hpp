@@ -51,6 +51,7 @@ class CommandLine : public CL::CommandLine {
 		TypedOption<std::string, Option::ArgMode::REQUIRED> linkmarkOpt {"linkmark", 'L', "style", "box", "select how to mark hyperlinked areas"};
 		Option listSpecialsOpt {"list-specials", 'l', "print supported special sets and exit"};
 		TypedOption<double, Option::ArgMode::REQUIRED> magOpt {"mag", 'M', "factor", 4, "magnification of Metafont output"};
+		TypedOption<std::string, Option::ArgMode::REQUIRED> messageOpt {"message", '\0', "text", "print message text after writing an SVG file"};
 		TypedOption<int, Option::ArgMode::OPTIONAL> noFontsOpt {"no-fonts", 'n', "variant", 0, "draw glyphs by using path elements"};
 		Option noMergeOpt {"no-merge", '\0', "don't merge adjacent text elements"};
 		Option noMktexmfOpt {"no-mktexmf", '\0', "don't try to create missing fonts"};
@@ -156,6 +157,7 @@ class CommandLine : public CL::CommandLine {
 			{&colorOpt, 4},
 			{&helpOpt, 4},
 			{&listSpecialsOpt, 4},
+			{&messageOpt, 4},
 			{&progressOpt, 4},
 			{&verbosityOpt, 4},
 			{&versionOpt, 4},

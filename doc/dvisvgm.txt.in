@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-01-06 12:47 +0100
+:revdate: 2024-01-06 14:30 +0100
 
 Name
 ----
@@ -392,6 +392,15 @@ Sets the magnification factor applied in conjunction with Metafont calls prior t
 The larger this value, the better the tracing results. Nevertheless, large magnification values
 can cause Metafont arithmetic errors due to number overflows. So, use this option with care.
 The default setting usually produces nice results.
+
+*--message*='text'::
+Prints a given message to the console after an SVG file has been written. Argument 'text' may consist
+of static text and the macros listed below in the description of special command +dvisvgm:raw+.
+For example, +--message="page {?pageno} written to {?svgfile}"+ prints the message with the macros
+expanded after the conversion of each page of a DVI or PDF file or after processing an EPS file.
++
+The output of option *--message* is not affected by the specified verbosity level, i.e. it prints
+the text even with +--verbosity=0+.
 
 *--no-merge*::
 Puts every single character in a separate 'text' element with corresponding 'x' and 'y' attributes.

@@ -274,6 +274,14 @@ static void evaluate_expressions (string &str, const SpecialActions &actions) {
 }
 
 
+string DvisvgmSpecialHandler::expandText (const string &text, SpecialActions &actions) {
+	string ret = text;
+	evaluate_expressions(ret, actions);
+	expand_constants(ret, actions);
+	return ret;
+}
+
+
 /** Processes raw SVG fragments from the input stream. The SVG data must represent
  *  a single or multiple syntactically complete XML parts, like opening/closing tags,
  *  comments, or CDATA blocks. These must not be split and distributed over several

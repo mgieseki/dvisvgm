@@ -124,10 +124,17 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			string fname = path.shorterAbsoluteOrRelative();
 			if (fname.empty())
 				fname = "<stdout>";
-			if (success)
-				Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
-			else
+			if (!success)
 				Message::wstream(true) << "failed to write output to " << fname << '\n';
+			else {
+				Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
+				if (!_userMessage.empty()) {
+					if (auto spcactions = dynamic_cast<SpecialActions*>(_actions.get())) {
+						string msg = DvisvgmSpecialHandler::expandText(_userMessage, *spcactions);
+						Message::ustream(true) << msg << "\n";
+					}
+				}
+			}
 			_svg.reset();
 			_actions->reset();
 		}

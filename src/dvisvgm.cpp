@@ -438,6 +438,7 @@ static void convert_file (size_t fnameIndex, const CommandLine &cmdline) {
 				? static_cast<ImageToSVG*>(new EPSToSVG(srcin.getFilePath(), out))
 				: static_cast<ImageToSVG*>(new PDFToSVG(srcin.getFilePath(), out)));
 		img2svg->setPageTransformation(get_transformation_string(cmdline));
+		img2svg->setUserMessage(cmdline.messageOpt.value());
 		img2svg->convert(cmdline.pageOpt.value(), &pageinfo);
 		timer_message(start_time, img2svg->isSinglePageFormat() ? nullptr : &pageinfo);
 	}
@@ -451,6 +452,7 @@ static void convert_file (size_t fnameIndex, const CommandLine &cmdline) {
 			dvi2svg.setProcessSpecials(ignore_specials, true);
 			dvi2svg.setPageTransformation(get_transformation_string(cmdline));
 			dvi2svg.setPageSize(cmdline.bboxOpt.value());
+			dvi2svg.setUserMessage(cmdline.messageOpt.value());
 			dvi2svg.convert(cmdline.pageOpt.value(), &pageinfo);
 			timer_message(start_time, &pageinfo);
 		}

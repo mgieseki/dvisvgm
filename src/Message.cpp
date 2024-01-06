@@ -189,10 +189,11 @@ MessageStream& Message::estream (bool prefix) {
 }
 
 
-/** Returns the output stream for user messages */
-MessageStream& Message::ustream () {
+/** Returns the output stream for user messages
+ *  @param[in] always ignore verbosity settings if true */
+MessageStream& Message::ustream (bool always) {
 	init();
-	MessageStream *ms = (LEVEL & USERMESSAGES) ? &messageStream : &nullStream;
+	MessageStream *ms = (always || (LEVEL & USERMESSAGES)) ? &messageStream : &nullStream;
 	return *ms;
 }
 
