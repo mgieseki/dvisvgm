@@ -223,11 +223,14 @@ static void expand_constants (string &str, SpecialActions &actions) {
 		const char *name;
 		string val;
 	} constants[] = {
-		{"x",      XMLString(actions.getX())},
-		{"y",      XMLString(actions.getY())},
-		{"color",  SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getColor() ? "currentColor" : actions.getColor().svgColorString()},
-		{"matrix", actions.getMatrix().toSVG()},
-		{"nl",    "\n"},
+		{"x",       XMLString(actions.getX())},
+		{"y",       XMLString(actions.getY())},
+		{"color",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getColor() ? "currentColor" : actions.getColor().svgColorString()},
+		{"matrix",  actions.getMatrix().toSVG()},
+		{"nl",      "\n"},
+		{"pageno",  to_string(actions.getCurrentPageNumber())},
+		{"svgfile", actions.getSVGFilePath(actions.getCurrentPageNumber()).relative()},
+		{"svgpath", actions.getSVGFilePath(actions.getCurrentPageNumber()).absolute()},
 	};
 	for (const Constant &constant : constants) {
 		const string pattern = string("{?")+constant.name+"}";

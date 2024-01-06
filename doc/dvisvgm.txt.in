@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-01-01 23:33 +0100
+:revdate: 2024-01-06 11:16 +0100
 
 Name
 ----
@@ -810,8 +810,10 @@ dvisvgm offers its own small set of specials. The following list gives a brief o
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different 'raw'
   specials. The tags themselves can also be split but must be continued with the immediately following 'raw'
   special. Both syntactically incorrect and wrongly nested tags lead to error messages.
-  Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, *{?color}*, and *{?matrix}* that expand to
-  the current 'x' or 'y' coordinate, the current color, and current transformation matrix, respectively.
+  Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, *{?color}*, *{?matrix}*, *{?pageno}*,
+  *{?svgfile}*, and *{?svgpath}* that expand to the current 'x' or 'y' coordinate, the current color, the
+  current transformation matrix, the current page number, and the relative and absolute path of the SVG file
+  being created, respectively.
   Character sequence *{?nl}* expands to a newline character. Finally, constructions of the form *{?(__expr__)}*
   enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
   modulo. Like above, the variables 'x' and 'y' represent the current coordinates.

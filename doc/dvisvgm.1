@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-01-01
+.\"      Date: 2024-01-06
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.1.2
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-01\-01" "dvisvgm 3\&.1\&.2" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-01\-06" "dvisvgm 3\&.1\&.2" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1293,13 +1293,16 @@ special\&. Both syntactically incorrect and wrongly nested tags lead to error me
 may also contain the expressions
 \fB{?x}\fR,
 \fB{?y}\fR,
-\fB{?color}\fR, and
-\fB{?matrix}\fR
+\fB{?color}\fR,
+\fB{?matrix}\fR,
+\fB{?pageno}\fR,
+\fB{?svgfile}\fR, and
+\fB{?svgpath}\fR
 that expand to the current
 \fIx\fR
 or
 \fIy\fR
-coordinate, the current color, and current transformation matrix, respectively\&. Character sequence
+coordinate, the current color, the current transformation matrix, the current page number, and the relative and absolute path of the SVG file being created, respectively\&. Character sequence
 \fB{?nl}\fR
 expands to a newline character\&. Finally, constructions of the form
 \fB{?(\fR\fB\fIexpr\fR\fR\fB)}\fR
