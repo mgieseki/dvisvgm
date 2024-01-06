@@ -35,7 +35,7 @@ TEST(CommandLineTest, noarg_short) {
 	EXPECT_TRUE(cmd.helpOpt.given());
 	EXPECT_FALSE(cmd.listSpecialsOpt.given());
 	EXPECT_FALSE(cmd.verbosityOpt.given());
-	EXPECT_EQ(cmd.verbosityOpt.value(), 7u);
+	EXPECT_EQ(cmd.verbosityOpt.value(), 15u);
 	EXPECT_EQ(cmd.filenames().size(), 0u);
 }
 

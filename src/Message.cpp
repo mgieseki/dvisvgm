@@ -189,6 +189,14 @@ MessageStream& Message::estream (bool prefix) {
 }
 
 
+/** Returns the output stream for user messages */
+MessageStream& Message::ustream () {
+	init();
+	MessageStream *ms = (LEVEL & USERMESSAGES) ? &messageStream : &nullStream;
+	return *ms;
+}
+
+
 static bool colorchar2int (char colorchar, int *val) {
 	colorchar = tolower(colorchar);
 	if (colorchar >= '0' && colorchar <= '9')

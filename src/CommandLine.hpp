@@ -72,7 +72,7 @@ class CommandLine : public CL::CommandLine {
 		TypedOption<bool, Option::ArgMode::OPTIONAL> traceAllOpt {"trace-all", 'a', "retrace", false, "trace all glyphs of bitmap fonts"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> transformOpt {"transform", 'T', "commands", "transform page content"};
 		TypedOption<std::string, Option::ArgMode::REQUIRED> translateOpt {"translate", 't', "tx[,ty]", "shift page content"};
-		TypedOption<unsigned, Option::ArgMode::REQUIRED> verbosityOpt {"verbosity", 'v', "level", 7, "set verbosity level (0-7)"};
+		TypedOption<unsigned, Option::ArgMode::REQUIRED> verbosityOpt {"verbosity", 'v', "level", 15, "set verbosity level (0-15)"};
 		TypedOption<bool, Option::ArgMode::OPTIONAL> versionOpt {"version", 'V', "extended", false, "print version and exit"};
 		TypedOption<int, Option::ArgMode::OPTIONAL> zipOpt {"zip", 'z', "level", 9, "create compressed .svgz file"};
 		TypedOption<double, Option::ArgMode::REQUIRED> zoomOpt {"zoom", 'Z', "factor", 1.0, "zoom page content"};

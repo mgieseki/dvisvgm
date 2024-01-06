@@ -95,8 +95,9 @@ class Message {
 		static MessageStream& mstream (bool prefix=false, MessageClass mclass=MC_MESSAGE);
 		static MessageStream& estream (bool prefix=false);
 		static MessageStream& wstream (bool prefix=false);
+		static MessageStream& ustream ();
 
-		enum {ERRORS=1, WARNINGS=2, MESSAGES=4};
+		enum {ERRORS=1, WARNINGS=2, MESSAGES=4, USERMESSAGES=8};
 		static int LEVEL;
 		static bool COLORIZE;
 

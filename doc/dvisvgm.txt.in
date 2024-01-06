@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-01-06 11:16 +0100
+:revdate: 2024-01-06 12:47 +0100
 
 Name
 ----
@@ -749,10 +749,11 @@ Controls the type of messages printed during a dvisvgm run:
   *1*;; error messages only
   *2*;; warning messages only
   *4*;; informational messages only
+  *8*;; user messages only (e.g. created by special +dvisvgm:message+)
 
 +
 [NOTE]
-By adding these values you can combine the categories. The default level is 7, i.e. all
+By adding these values you can combine the categories. The default level is 15, i.e. all
 messages are printed.
 +
 

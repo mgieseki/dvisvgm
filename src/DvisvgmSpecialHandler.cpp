@@ -478,7 +478,7 @@ void DvisvgmSpecialHandler::processMessage (InputReader &ir, SpecialActions &act
 	string message = ir.getLine();
 	evaluate_expressions(message, actions);
 	expand_constants(message, actions);
-	Message::mstream() << message << "\n";
+	Message::ustream() << message << "\n";
 }
 
 

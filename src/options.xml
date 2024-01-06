@@ -205,8 +205,8 @@
         <description>enable progress indicator</description>
       </option>
       <option long="verbosity" short="v">
-        <arg type="unsigned" name="level" default="7"/>
-        <description>set verbosity level (0-7)</description>
+        <arg type="unsigned" name="level" default="15"/>
+        <description>set verbosity level (0-15)</description>
       </option>
       <option long="version" short="V">
         <arg type="bool" name="extended" optional="yes" default="false"/>
