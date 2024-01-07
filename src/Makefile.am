@@ -127,7 +127,7 @@ libdvisvgm_la_SOURCES = \
 	ShadingPatch.hpp             ShadingPatch.cpp \
 	SignalHandler.hpp            SignalHandler.cpp \
 	SourceInput.hpp              SourceInput.cpp \
-	SpecialActions.hpp \
+	SpecialActions.hpp           SpecialActions.cpp \
 	SpecialHandler.hpp \
 	SpecialManager.hpp           SpecialManager.cpp \
 	StreamReader.hpp             StreamReader.cpp \

@@ -24,17 +24,9 @@
 #include <istream>
 #include <list>
 #include <vector>
-#include "MessageException.hpp"
-
 
 class SpecialActions;
 class SpecialManager;
-
-
-struct SpecialException : public MessageException {
-	explicit SpecialException (const std::string &msg) : MessageException(msg) {}
-};
-
 
 class SpecialHandler {
 	public:

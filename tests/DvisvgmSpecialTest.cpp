@@ -47,15 +47,17 @@ class DvisvgmSpecialTest : public ::testing::Test {
 	protected:
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
-				void embed (const BoundingBox &bb) override   {bbox.embed(bb);}
-				double getX () const override                 {return -42;}
-				double getY () const override                 {return 14;}
-				bool defsEquals (const string &str) const     {return defsString() == str;}
-				bool pageEquals (const string &str) const     {return pageString() == str;}
-				bool bboxEquals (const string &str) const     {return bbox.svgViewBoxString() == str;}
-				string bboxString () const                    {return bbox.svgViewBoxString();}
-				string defsString () const                    {return toString(svgTree().defsNode());}
-				string pageString () const                    {return toString(svgTree().pageNode());}
+				void embed (const BoundingBox &bb) override    {bbox.embed(bb);}
+				double getX () const override                  {return -42;}
+				double getY () const override                  {return 14;}
+				unsigned getCurrentPageNumber() const override {return 1;}
+				FilePath getSVGFilePath(unsigned pageno) const override {return FilePath("test.svg");}
+				bool defsEquals (const string &str) const      {return defsString() == str;}
+				bool pageEquals (const string &str) const      {return pageString() == str;}
+				bool bboxEquals (const string &str) const      {return bbox.svgViewBoxString() == str;}
+				string bboxString () const                     {return bbox.svgViewBoxString();}
+				string defsString () const                     {return toString(svgTree().defsNode());}
+				string pageString () const                     {return toString(svgTree().pageNode());}
 
 				void clear () {
 					SpecialActions::svgTree().reset();
@@ -366,6 +368,14 @@ TEST_F(DvisvgmSpecialTest, processBBox) {
 	iss.str("bbox new name");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.bboxEquals("0 0 0 0"));
+}
+
+
+TEST_F(DvisvgmSpecialTest, expandText) {
+	EXPECT_EQ(recorder.expandText(""), "");
+	EXPECT_EQ(recorder.expandText("static text"), "static text");
+	EXPECT_EQ(recorder.expandText("x={?x}, y={?y}"), "x=-42, y=14");
+	EXPECT_EQ(recorder.expandText("page:{?pageno}, file:{?svgfile}"), "page:1, file:test.svg");
 }
 
 

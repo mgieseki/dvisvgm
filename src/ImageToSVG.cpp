@@ -107,7 +107,7 @@ void ImageToSVG::writeSVG (int pageno) {
 			<< " x " << XMLString(_bbox.height()*bp2mm) << "mm)\n";
 		Message::mstream(false, Message::MC_PAGE_WRITTEN) << "output written to " << svgfname << '\n';
 		if (!_userMessage.empty()) {
-			string msg = DvisvgmSpecialHandler::expandText(_userMessage, *this);
+			string msg = expandText(_userMessage);
 			Message::ustream(true) << msg << "\n";
 		}
 	}

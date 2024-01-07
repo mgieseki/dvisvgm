@@ -129,8 +129,8 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			else {
 				Message::mstream(false, Message::MC_PAGE_WRITTEN) << "\noutput written to " << fname << '\n';
 				if (!_userMessage.empty()) {
-					if (auto spcactions = dynamic_cast<SpecialActions*>(_actions.get())) {
-						string msg = DvisvgmSpecialHandler::expandText(_userMessage, *spcactions);
+					if (auto specialActions = dynamic_cast<SpecialActions*>(_actions.get())) {
+						string msg = specialActions->expandText(_userMessage);
 						Message::ustream(true) << msg << "\n";
 					}
 				}
