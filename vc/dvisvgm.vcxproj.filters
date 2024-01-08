@@ -443,6 +443,9 @@
     <ClCompile Include="..\src\PSPreviewHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\SpecialActions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">

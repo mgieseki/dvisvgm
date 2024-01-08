@@ -313,6 +313,7 @@
     <ClCompile Include="..\src\RangeMap.cpp" />
     <ClCompile Include="..\src\ShadingPatch.cpp" />
     <ClCompile Include="..\src\SignalHandler.cpp" />
+    <ClCompile Include="..\src\SpecialActions.cpp" />
     <ClCompile Include="..\src\SpecialManager.cpp" />
     <ClCompile Include="..\src\StreamReader.cpp" />
     <ClCompile Include="..\src\StreamWriter.cpp" />
