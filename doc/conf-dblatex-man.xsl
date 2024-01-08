@@ -16,4 +16,12 @@
     <xsl:value-of select="@url"/>
     <xsl:text>\m[])</xsl:text>
   </xsl:template>
+
+  <!-- expand width of last table column up to the line end -->
+  <xsl:template match="cell" mode="table.format">
+    <xsl:apply-imports/>
+    <xsl:if test="not(following-sibling::cell) or following-sibling::cell[1]/@row != @row">
+      <xsl:text>x</xsl:text>
+    </xsl:if>
+  </xsl:template>
 </xsl:stylesheet>
