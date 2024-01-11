@@ -3,8 +3,27 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 12 Oct 2023 15:23:48 +0200</pubDate>
+    <pubDate>Thu, 11 Jan 2024 10:19:21 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#52f5c35f582d08c9bc1292ba23034f1d</link>
+      <pubDate>Thu, 11 Jan 2024 10:13:14 +0100</pubDate>
+      <guid>52f5c35f582d08c9bc1292ba23034f1d</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fixed a rounding issue that could lead to slightly bigger text extents (<a href="https://github.com/mgieseki/dvisvgm/issues/256">issue #256</a>).</li>
+<li>Added the macros <code>{?pageno}</code>, <code>{?svgfile}</code>, and <code>{?svgpath}</code> to the dvisvgm special commands.</li>
+<li>Added a separate verbosity flag 8 for user messages printed by special <code>dvisvgm:message</code>.</li>
+<li>Added the command-line option <code>--message</code> to allow for printing user messages after writing an SVG file (<a href="https://github.com/mgieseki/dvisvgm/issues/258">issue #258</a>).</li>
+<li>Applied <a href="https://github.com/google/woff2/commit/23a34adec39d7cef30c1eebbf775a1ea5cc43c53">this</a> upstream patch regarding
+undefined type punning to the bundled woff2 library.</li>
+<li>Few improvements of the manual page.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.1.2 has been released</title>
@@ -144,7 +163,7 @@ announcement of pre-release version 3.0 below. Version 3.0.1 fixes several issue
     
     <item>
       <title>dvisvgm 3.0: Pre-release of new major version</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#4d14c1e14bfd9d193a04ea4c1c3b47ff</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4d14c1e14bfd9d193a04ea4c1c3b47ff</link>
       <pubDate>Mon, 17 Oct 2022 09:48:19 +0200</pubDate>
       <guid>4d14c1e14bfd9d193a04ea4c1c3b47ff</guid>
       <description>
@@ -299,7 +318,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     
     <item>
       <title>dvisvgm 2.12 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#0bc5191266f5d77c936e8e667cef5f50</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#0bc5191266f5d77c936e8e667cef5f50</link>
       <pubDate>Mon, 16 Aug 2021 12:35:08 +0200</pubDate>
       <guid>0bc5191266f5d77c936e8e667cef5f50</guid>
       <description>
@@ -362,33 +381,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Added support for the new Ghostscript versioning scheme introduced with GS 9.53.0.</li>
 <li>Added few additional information to the <a href="/Manpage/">manual page</a>.</li>
 <li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.0.9.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.10 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#2df05e60a6483e32a6c2ab7e1bb3a697</link>
-      <pubDate>Wed, 12 Aug 2020 10:23:04 +0200</pubDate>
-      <guid>2df05e60a6483e32a6c2ab7e1bb3a697</guid>
-      <description>
-        <![CDATA[<p>This is a maintenance release with the following additions and changes:</p>
-<ul>
-<li>Added evaluation of <a href="http://www.luatex.org">Lua<span class="tex">T<sub>E</sub>X</span></a> native font definitions.</li>
-<li>Added computation of of italic correction for fake slanted glyphs.</li>
-<li><em>dvisvgm</em> now creates dedicated temporary folders for each call of the program to prevent file collisions between different processes.</li>
-<li>Added evaluation of internal <a href="https://www.ghostscript.com">Ghostscript</a> operators <code>.fillstroke</code> and <code>.eofillstroke</code> introduced
-with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/139">issue #139</a>).</li>
-<li>Fixed and improved optimization of nested group elements.</li>
-<li>Fixed optimization of <code>scale</code> transformation.</li>
-<li>Fixed optimization of <code>transform</code> attributes applied to images and clipping paths.</li>
-<li>Fixed processing of PostScript operator <code>eoclip</code>.</li>
-<li>Fixed processing of clipping path intersections that involve different fill rules.</li>
-<li>Fixed processing of <code>{?(...)}</code> expressions (<a href="https://github.com/mgieseki/dvisvgm/issues/136">issue #136</a>).</li>
-<li>Fixed error message about unmatched closing tags in XML parser.</li>
-<li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
-<li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
 </ul>
 ]]>
       </description>

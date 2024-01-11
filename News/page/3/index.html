@@ -79,7 +79,22 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="e423fc038b1ff9a9ba28e1b1cfbd3d6f"></a>
+  <a name="0bc5191266f5d77c936e8e667cef5f50"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">16 August 2021: dvisvgm 2.12 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Added transparency support for SVG elements created outside the PS handler (<a href="https://github.com/mgieseki/dvisvgm/issues/148">issue #148</a>).</li>
+<li>Fixed a spacing issue caused by unexpected newline characters in SVG output.</li>
+<li>Fixed PostScript errors occurred when defining (yet unsupported) shading patterns.</li>
+<li>Fixed a bug that prevented proper coloring of PostScript tiling patterns (<a href="https://github.com/mgieseki/dvisvgm/issues/158">issue #158</a>).</li>
+<li>Fixed graphics displacements that occurred if the PDF MediBox is not located at the origin.</li>
+<li>Fixed the handling of root directories of file paths.</li>
+<li>Improved the handling of drive letters (Windows only).</li>
+<li>Several code refactorings and improvements.</li>
+</ul>
+</div>
+  </section><a name="e423fc038b1ff9a9ba28e1b1cfbd3d6f"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">21 January 2021: dvisvgm 2.11.1 has been released</div>
     <div class="card-body">
@@ -192,18 +207,6 @@ be read through a pipe for some reason (<a href="https://github.com/mgieseki/dvi
 <li>Some code cleanup.</li>
 </ul>
 </div>
-  </section><a name="8d0ef4dc302ef6102e094359ddf31b2d"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">14 November 2019: dvisvgm 2.8.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added SVG optimizer module <code>simplify-text</code> to move common attributes from <code>tspan</code> elements to the enclosing <code>text</code> element. Redundant <code>tspan</code> elements are removed afterwards.</li>
-<li>Added support for PS operator <code>nulldevice</code> which is used by a couple of LaTeX packages.
-It&rsquo;s used to temporarily suppress graphic output when executing drawing or text commands.</li>
-<li>Absolute paths given in special <code>psfile</code> are now retained in the SVG file when referencing external image files.</li>
-<li>Some code refactorings.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -229,7 +232,7 @@ It&rsquo;s used to temporarily suppress graphic output when executing drawing or
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2024 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

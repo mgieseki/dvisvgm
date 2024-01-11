@@ -79,7 +79,40 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4468f9499cd26017882826f25736c181"></a>
+  <a name="4d14c1e14bfd9d193a04ea4c1c3b47ff"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">17 October 2022: dvisvgm 3.0: Pre-release of new major version</div>
+    <div class="card-body">
+      <p><em>dvisvgm</em> 3.0 is a new major version of the utility that&rsquo;s still considered beta status. While the new version doesn&rsquo;t bring
+many obvious new features, essential core functionality has changed under the hood. The following list gives an overview of the
+most important changes and additions.</p>
+<ul>
+<li>The previously bundled reduced FontForge library has been replaced with a dedicated font writer library used to create TrueType
+and WOFF files from the font data processed by <em>dvisvgm</em>.</li>
+<li>A new PDF handler based on <a href="https://www.mupdf.com/docs/mutool.html">mutool</a> has been added to retain dvisvgm&rsquo;s PDF conversion
+functionality after the removal of <a href="https://www.ghostscript.com/blog/pdfi.html">Ghostscript&rsquo;s old PDF interpreter</a>
+announced for version 10.1.0.
+<ul>
+<li>The new handler supports all font options of <em>dvisvgm</em>, i.e. in contrast to the current Ghostscript-based PDF processor,
+fonts can not only be embedded as paths but also as SVG, TTF, WOFF, and WOFF2 fonts (depending on options <code>--no-fonts</code> and <code>--font-format</code>).</li>
+<li>The new handler is still experimental and may contain bugs. Please report any issues via the
+<a href="https://github.com/mgieseki/dvisvgm/issues">issue tracker at GitHub</a>.</li>
+<li>Not all PDF features are supported – either because there is no simple equivalent in SVG or because mutool doesn&rsquo;t provide
+means to access the corresponding data. For example, Type 3 fonts and color gradients fills are not yet processed by <em>dvisvgm</em>&rsquo;s
+new PDF handler.</li>
+<li>The former Ghostscript-based PDF handler is still available. It&rsquo;s automatically invoked if <em>dvisvgm</em> finds a proper Ghostscript
+version. Otherwise, it looks for the <code>mutool</code> executable through the system&rsquo;s search path and uses the new handler in case it&rsquo;s found.
+The desired PDF handler can also be selected by setting environment variable <code>DVISVGM_PDF_PROC</code> to either <code>gs</code> or <code>mutool</code>.</li>
+</ul>
+</li>
+<li>Option <code>--embed-bitmaps</code> has been added to allow for embedding of external images referenced in DVI files into the generated
+SVG files. By default the SVG only contains a reference to the image.</li>
+<li>The optional filters <code>:even</code> and <code>:odd</code> have been added to option <code>--page</code> which limit the given page ranges to even and odd
+page numbers respectively.</li>
+</ul>
+<p>You can download the sources and pre-built binaries for MiKTeX from the <a href="https://github.com/mgieseki/dvisvgm/releases">project page at GitHub</a>.</p>
+</div>
+  </section><a name="4468f9499cd26017882826f25736c181"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">12 August 2022: dvisvgm 2.14 has been released</div>
     <div class="card-body">
@@ -161,21 +194,6 @@ replicate the current functionality. As a consequence, all PDF functionality cur
 upcoming Ghostscript releases. Therefore, it will require the parallel installation of Ghostscript 9.55.0 or earlier. In the long run,
 I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resources to implement a completely new PDF handler.</p>
 </div>
-  </section><a name="0bc5191266f5d77c936e8e667cef5f50"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">16 August 2021: dvisvgm 2.12 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added transparency support for SVG elements created outside the PS handler (<a href="https://github.com/mgieseki/dvisvgm/issues/148">issue #148</a>).</li>
-<li>Fixed a spacing issue caused by unexpected newline characters in SVG output.</li>
-<li>Fixed PostScript errors occurred when defining (yet unsupported) shading patterns.</li>
-<li>Fixed a bug that prevented proper coloring of PostScript tiling patterns (<a href="https://github.com/mgieseki/dvisvgm/issues/158">issue #158</a>).</li>
-<li>Fixed graphics displacements that occurred if the PDF MediBox is not located at the origin.</li>
-<li>Fixed the handling of root directories of file paths.</li>
-<li>Improved the handling of drive letters (Windows only).</li>
-<li>Several code refactorings and improvements.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -200,7 +218,7 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2024 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>

@@ -79,7 +79,21 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="6588d151e41c570e8f55ddd8ecdbaab9"></a>
+  <a name="dcf8791dee146c9bf9bd340c4514d551"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">23 January 2019: dvisvgm 2.6.2 has been released</div>
+    <div class="card-body">
+      <p>This maintenance release resolves a couple of PostScript issues that were reported recently.</p>
+<ul>
+<li>Fixed the scaling of line properties in PS operator <code>grestore</code>.</li>
+<li>Fixed the handling of PS operators <code>charpath</code> and <code>show</code> which may call each other internally.</li>
+<li>Improved the processing of PS operator <code>clippath</code>.</li>
+<li>Prevent visible side-effects of PS operator <code>stringwidth</code>.</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.0.7.</li>
+<li>Some modifications of the build system to simplify the maintenance of <em>dvisvgm</em> in TeX Live.</li>
+</ul>
+</div>
+  </section><a name="6588d151e41c570e8f55ddd8ecdbaab9"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">12 October 2018: dvisvgm 2.6.1 has been released</div>
     <div class="card-body">
@@ -237,43 +251,6 @@ under the new domain <a href="dvisvgm.de">dvisvgm.de</a>.</p>
 addresses now redirect to the new location. Since I&rsquo;ve kept the page structure, all former URLs should still be valid.
 If you find a page, a resource, or link that doesn&rsquo;t work, let me know.</p>
 </div>
-  </section><a name="4d81ee4151a938fdddc3350841a015a8"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">3 May 2018: dvisvgm 2.4 has been released</div>
-    <div class="card-body">
-      <p>This feature release brings the following additions/changes:</p>
-<ul>
-<li>Added special <code>pdffile</code> similar to <code>psfile</code> to embed PDF graphics.</li>
-<li>Added option <code>--pdf</code> to convert single-page PDF documents to SVG:<br/>
-<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
-$ dvisvgm &ndash;pdf -d2 helix.pdf
-<span style="color:#8be9fd;font-weight:bold;">processing PDF file</span>
-<span style="color:#bd93f9;">  graphic size: 597.51pt x 845.05pt (210mm x 297mm)   </span>
-<span style="color:#50fa7b;">  output written to helix.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">file converted in 1.61882 seconds</span>
-</pre>
-</span></li>
-<li>Reassigned short option <code>-P</code> from <code>--progress</code> to <code>--pdf</code>.</li>
-<li>Added option <code>--stdin</code> to receive input from stdin. Alternatively, a single dash can be used as well:
-<span class="d-inline-flex"><pre style="color:#f8f8f2;background-color:#282a36">
-$ dvisvgm -d2 - &lt; frktest.dvi
-reading from &lt;stdin&gt;
-<span style="color:#8be9fd;font-weight:bold;">pre-processing DVI file (format version 2)
-processing page 1</span>
-<span style="color:#bd93f9;">  graphic size: 398.34pt x 456.34pt (140mm x 160.39mm)</span>
-<span style="color:#50fa7b;">  output written to stdin.svg</span>
-<span style="color:#8be9fd;font-weight:bold;">1 of 1 page converted in 0.0790408 seconds</span>
-</pre>
-</span></li>
-<li>Option <code>--stdout</code> can now be combined with option <code>--zip</code> to redirect SVGZ data to stdout.</li>
-<li>Added processing of Ghostscript operators <code>.setshapealpha</code> and <code>.setblendmode</code> that allow for
-conversion of more transparency parameters, e.g.:
-<img src="/News/images/blendmodes.png" alt="blend modes"></li>
-<li>Fixed outer transformations applied to <code>psfile</code> specials.</li>
-<li>Fixed computation of bounding boxes triggered by <code>psfile</code> specials.</li>
-<li>Several code refactorings.</li>
-</ul>
-</div>
   </section>
   <nav><ul class="pagination pagination-sm">
     <li class="page-item">
@@ -301,7 +278,7 @@ conversion of more transparency parameters, e.g.:
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2023 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2024 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>
