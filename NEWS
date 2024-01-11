@@ -1,3 +1,16 @@
+dvisvgm-3.2 (2024-01-11)
+- PDF handler: fixed a rounding issue that could lead to slightly bigger
+  text extents (GH issue #256)
+- added macros {?pageno}, {?svgfile}, and {?svgpath} to the dvisvgm special
+  commands
+- added separate verbosity flag 8 for user messages printed by special
+  dvisvgm:message
+- added command-line option --message to allow for printing user messages
+  after writing an SVG file (GH issue #258)
+- applied upstream patch regarding undefined type punning to the bundled
+  woff2 library
+- few improvements of the manual page  
+
 dvisvgm-3.1.2 (2023-10-12)
 - improved evaluation of graphic extents created by the 'preview' package
   (GH issue #246)
