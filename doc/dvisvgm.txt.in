@@ -22,11 +22,11 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-01-06 14:30 +0100
+:revdate: 2024-01-16 10:37 +0100
 
 Name
 ----
-dvisvgm - converts DVI and EPS files to the XML-based SVG format
+dvisvgm - converts DVI, EPS, and PDF files to the XML-based SVG format
 
 
 Synopsis
