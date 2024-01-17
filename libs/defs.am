@@ -6,10 +6,14 @@ BROTLI_CFLAGS += -I$(dvisvgm_srcdir)/libs/brotli/include
 BROTLI_LIBS += ../libs/brotli/libbrotli.a
 endif
 
+if TEXLIVE_BUILD
+POTRACE_CFLAGS = $(POTRACE_INCLUDES)
+else
 if !HAVE_POTRACE
 POTRACE_CFLAGS = -I$(dvisvgm_srcdir)/libs/potrace
 POTRACE_LIBS = ../libs/potrace/libpotrace.a
-endif
+endif !HAVE_POTRACE
+endif !TEXLIVE_BUILD
 
 if !HAVE_WOFF2
 WOFF2_CFLAGS += -I$(dvisvgm_srcdir)/libs/woff2/include

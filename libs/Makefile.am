@@ -3,7 +3,11 @@
 ##
 ## Process this file with automake.
 
-SUBDIRS = boost clipper md5 potrace variant xxHash
+SUBDIRS = boost clipper md5 variant xxHash
+
+if !TEXLIVE_BUILD
+SUBDIRS += potrace
+endif
 
 if ENABLE_WOFF
 SUBDIRS += brotli woff2
