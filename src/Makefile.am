@@ -220,8 +220,11 @@ AM_CXXFLAGS +=  \
 	$(BROTLI_CFLAGS) \
 	$(WOFF2_CFLAGS)
 
+# TL: do not try to rebuild these source files.
+if !TEXLIVE_BUILD
 AM_LDFLAGS += $(TTFAUTOHINT_LIBS)
-endif
+endif !TEXLIVE_BUILD
+endif ENABLE_WOFF
 
 AM_CXXFLAGS += -I$(dvisvgm_srcdir)/libs/md5
 
@@ -241,6 +244,17 @@ psdefs.ps: ;
 endif !TEXLIVE_BUILD
 
 CLEANFILES = *.gcda *.gcno
+
+if TEXLIVE_BUILD
+# Rebuild libkpathsea:
+@KPATHSEA_RULE@
+# Rebuild libfreetype:
+@FREETYPE2_RULE@
+# Rebuild libz:
+@ZLIB_RULE@
+# Rebuild potrace:
+@POTRACE_RULE@
+endif TEXLIVE_BUILD
 
 if TEXLIVE_BUILD
 # Rebuild libkpathsea:
