@@ -17,10 +17,8 @@ dvisvgm_LDADD = \
 	$(noinst_LTLIBRARIES) \
 	../libs/clipper/libclipper.a \
 	../libs/md5/libmd5.a \
-	$(FREETYPE_LIBS) \
 	$(POTRACE_LIBS) \
-	$(XXHASH_LIBS) \
-	$(ZLIB_LIBS)
+	$(XXHASH_LIBS)
 
 if ENABLE_WOFF
 SUBDIRS += ttf
@@ -28,7 +26,18 @@ SUBDIRS += ttf
 dvisvgm_LDADD += \
 	$(WOFF2_LIBS) \
 	$(BROTLI_LIBS)
-endif
+endif ENABLE_WOFF
+
+if TEXLIVE_BUILD
+dvisvgm_LDADD += \
+	$(KPATHSEA_LIBS) \
+	$(FREETYPE2_LIBS) \
+	$(ZLIB_LIBS)
+else
+dvisvgm_LDADD += \
+	$(FREETYPE_LIBS) \
+	$(ZLIB_LIBS)
+endif !TEXLIVE_BUILD
 
 dvisvgm_DEPENDENCIES = $(noinst_LTLIBRARIES)
 
@@ -170,26 +179,35 @@ endif
 
 EXTRA_DIST = options.xml options.dtd iapi.h ierrors.h MiKTeXCom.hpp MiKTeXCom.cpp
 
-if !TEXLIVE_BUILD
-WARNING_CFLAGS = -Wall
-WARNING_CXXFLAGS = -Wall -Wnon-virtual-dtor
-endif
-
 AM_CFLAGS = $(WARNING_CFLAGS) \
 	$(ZLIB_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = $(WARNING_CXXFLAGS) \
 	-I$(dvisvgm_srcdir)/libs/clipper \
-	-I$(dvisvgm_srcdir)/libs/variant/include \
-	$(KPSE_CFLAGS) \
-	$(FREETYPE_CFLAGS) \
-	$(ZLIB_CFLAGS) \
-	$(CODE_COVERAGE_CFLAGS)
+	-I$(dvisvgm_srcdir)/libs/variant/include
 
 AM_CXXFLAGS += \
 	$(POTRACE_CFLAGS) \
 	$(XXHASH_CFLAGS)
+
+if TEXLIVE_BUILD
+AM_CXXFLAGS += \
+	$(KPATHSEA_INCLUDES) \
+	$(POTRACE_INCLUDES) \
+	$(FREETYPE2_INCLUDES) \
+	$(ZLIB_INCLUDES) \
+	$(CODE_COVERAGE_CFLAGS)
+if WIN32
+AM_CXXFLAGS += -DTEXLIVEWIN32
+endif WIN32
+else
+AM_CXXFLAGS += \
+	$(KPSE_CFLAGS) \
+	$(FREETYPE_CFLAGS) \
+	$(ZLIB_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS)
+endif !TEXLIVE_BUILD
 
 AM_LDFLAGS = \
 	$(KPSE_LIBS) \

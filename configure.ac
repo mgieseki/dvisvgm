@@ -119,6 +119,9 @@ AM_CONDITIONAL(HAVE_BROTLI, [test "x$have_brotli" = "xyes"])
 AM_CONDITIONAL(HAVE_WOFF2, [test "x$have_woff2" = "xyes"])
 AM_CONDITIONAL(HAVE_XXHASH, [test "x$have_xxhash" = "xyes"])
 
+# Dummy required for TL build sections in automake files
+AM_CONDITIONAL(WIN32, false)
+
 AS_IF([test "x$enable_woff" != "xyes"],
 	[AC_DEFINE([DISABLE_WOFF], 1, [Define if WOFF support is disabled])],
 	[AS_IF([test "x$with_ttfautohint" != "xno"],
