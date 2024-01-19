@@ -32,7 +32,8 @@ if TEXLIVE_BUILD
 dvisvgm_LDADD += \
 	$(KPATHSEA_LIBS) \
 	$(FREETYPE2_LIBS) \
-	$(ZLIB_LIBS)
+	$(ZLIB_LIBS) \
+	$(LIBGS_LIBS)
 else
 dvisvgm_LDADD += \
 	$(FREETYPE_LIBS) \
