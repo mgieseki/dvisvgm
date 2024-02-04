@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-01-16 10:37 +0100
+:revdate: 2024-02-04 15:33 +0100
 
 Name
 ----
@@ -785,20 +785,23 @@ Supported Specials
 ------------------
 dvisvgm supports several 'special commands' that enrich the DVI command set with additional instructions
 for features, like color, graphics, and hyperlinks. The term 'special command', or just 'special', originates
-from the TeX command +\special{...}+ which does almost nothing. TeX only forwards the whole command to the
-DVI file and delegates its execution to the DVI driver. The DVI driver can then decide to either process or
-ignore it, depending on the supported statements. The parameter of TeX's +\special+ command is given in curly
-braces and may consist of an arbitrary character sequence representing the actual instruction, for example
-+color Red+.
+from the TeX command +\special{...}+ which does almost nothing. TeX only forwards the argument of this command
+to the DVI file using the corresponding 'xxx' opcode, thus delegating its execution to the DVI driver. The
+driver can then decide to either process or ignore it, depending on the supported statements. The parameter
+of TeX's +\special+ command is given in curly braces and may consist of an arbitrary character sequence
+representing the actual instruction, for example +color Red+.
 
-dvisvgm delegates the evaluation of special commands to dedicated handlers. Each handler is responsible for
-all special statements of the same command set, i.e. commands usually &#x2013; but not necessarily &#x2013;
-beginning with a common prefix. For example, all PDF specials start with the prefix +pdf:+, while the TPIC
-special set consists of 13 different commands without common identifier. The PDF specials are processed by
-dvisvgm's 'pdf' handler, the TPIC ones by the 'tpic' handler. To get a list of the actually provided special
-handlers, use option *--list-specials* (see above). The following list gives an overview of the special sets
-currently supported. The names of the handlers can also be used to disable the processing of individual sets
-of specials. For further information on this, see option *--no-specials*.
+It might be worth mentioning that specials are only evaluated when processing DVI files. PS/EPS and PDF
+don't know anything about the concept of specials and therefore don't provide means to represent them.
+
+In order to evaluate the special commands, dvisvgm implements several dedicated handlers. Each handler is
+responsible for all special statements belonging to the same command set, i.e. commands usually &#x2013;
+but not necessarily &#x2013; beginning with a common prefix. For example, all PDF specials start with the
+prefix +pdf:+, while the TPIC special set consists of 13 different commands without common identifier. The
+PDF specials are processed by dvisvgm's 'pdf' handler, the TPIC ones by the 'tpic' handler. To get a list of
+the actually provided special handlers, use option *--list-specials* (see above). The following list gives an
+overview of the special sets currently supported. The names of the handlers can also be used to disable the
+processing of individual sets of specials. For further information on this, see option *--no-specials*.
 
 *bgcolor*::
 Special statements for changing the background/page color. Currently, dvisvgm only supports the +background+
@@ -813,8 +816,8 @@ Statements of this command set provide instructions to change the text/paint col
 exact syntax, see the documentation of dvips, for instance.
 
 *dvisvgm*::
-dvisvgm offers its own small set of specials. The following list gives a brief overview.
-  *dvisvgm:raw* 'text';;
+The following list gives a brief overview of dvisvgm's own set of currently supported specials.
+*dvisvgm:raw* 'text';;
   Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
   proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different 'raw'
