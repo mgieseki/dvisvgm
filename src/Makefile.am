@@ -133,6 +133,7 @@ libdvisvgm_la_SOURCES = \
 	PSPattern.hpp                PSPattern.cpp \
 	PSPreviewHandler.hpp         PSPreviewHandler.cpp \
 	PsSpecialHandler.hpp         PsSpecialHandler.cpp \
+	PsSpecialHandlerProxy.hpp    PsSpecialHandlerProxy.cpp \
 	RangeMap.hpp                 RangeMap.cpp \
 	ShadingPatch.hpp             ShadingPatch.cpp \
 	SignalHandler.hpp            SignalHandler.cpp \

@@ -1,5 +1,5 @@
 /*************************************************************************
-** NoPsSpecialHandler.cpp                                               **
+** PsSpecialHandlerProxy.hpp                                            **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
 ** Copyright (C) 2005-2024 Martin Gieseking <martin.gieseking@uos.de>   **
@@ -18,28 +18,22 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include "Message.hpp"
-#include "NoPsSpecialHandler.hpp"
+#pragma once
 
-using namespace std;
+#include "SpecialHandler.hpp"
 
+class PsSpecialHandlerProxy : public SpecialHandler {
+	public:
+		explicit PsSpecialHandlerProxy (bool pswarning) : _pswarning(pswarning) {}
+		void preprocess (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
+		bool process (const std::string &prefix, std::istream &is, SpecialActions &actions) override;
+		const char* name () const override {return "ps";}
+		const char* info () const override;
+		std::vector<const char*> prefixes () const override;
 
-bool NoPsSpecialHandler::process (const string&, istream&, SpecialActions&) {
-	_count++;
-	return true;
-}
+	protected:
+		SpecialHandler* replaceHandler ();
 
-
-void NoPsSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
-	if (_count > 0) {
-		string suffix = (_count > 1 ? "s" : "");
-		Message::wstream(true) << _count << " PostScript special" << suffix << " ignored. The resulting SVG might look wrong.\n";
-		_count = 0;
-	}
-}
-
-
-vector<const char*> NoPsSpecialHandler::prefixes () const {
-	vector<const char*> pfx {"header=", "psfile=", "PSfile=", "ps:", "ps::", "!", "\"", "pst:", "PST:"};
-	return pfx;
-}
+	private:
+		bool _pswarning;
+};

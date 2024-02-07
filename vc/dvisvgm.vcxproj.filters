@@ -446,6 +446,9 @@
     <ClCompile Include="..\src\SpecialActions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PsSpecialHandlerProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp">
@@ -845,6 +848,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PSPreviewHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PsSpecialHandlerProxy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

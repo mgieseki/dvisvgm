@@ -54,13 +54,8 @@
 #include "HtmlSpecialHandler.hpp"
 #include "PapersizeSpecialHandler.hpp"
 #include "PdfSpecialHandler.hpp"
+#include "PsSpecialHandlerProxy.hpp"
 #include "TpicSpecialHandler.hpp"
-#ifndef HAVE_LIBGS
-	#include "NoPsSpecialHandler.hpp"
-#endif
-#ifndef DISABLE_GS
-	#include "PsSpecialHandler.hpp"
-#endif
 
 ///////////////////////////////////
 
@@ -423,28 +418,9 @@ void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
 		SpecialManager::registerHandler<EmSpecialHandler>(ignoredHandlerName);         // handles emTeX specials
 		SpecialManager::registerHandler<HtmlSpecialHandler>(ignoredHandlerName);       // handles hyperref specials
 		SpecialManager::registerHandler<PapersizeSpecialHandler>(ignoredHandlerName);  // handles papersize special
-		SpecialManager::registerHandler<PdfSpecialHandler>(ignoredHandlerName);        // handles pdf specials
+		SpecialManager::registerHandler<PdfSpecialHandler>(ignoredHandlerName);
 		SpecialManager::registerHandler<TpicSpecialHandler>(ignoredHandlerName);       // handles tpic specials
-		if (find(ignoredHandlerName.begin(), ignoredHandlerName.end(), PsSpecialHandler::handlerName()) == ignoredHandlerName.end()) {
-#ifndef DISABLE_GS
-			if (Ghostscript().available())
-				SpecialManager::registerHandler<PsSpecialHandler>(ignoredHandlerName);   // handles PostScript specials
-			else
-#endif
-			{
-#ifndef HAVE_LIBGS
-				// dummy PS special handler that only prints warning messages
-				SpecialManager::registerHandler<NoPsSpecialHandler>(ignoredHandlerName);
-				if (pswarning) {
-#ifdef DISABLE_GS
-					Message::wstream() << "processing of PostScript specials has been disabled permanently\n";
-#else
-					Message::wstream() << "processing of PostScript specials is disabled (Ghostscript not found)\n";
-#endif
-				}
-#endif
-			}
-		}
+		SpecialManager::registerHandler(util::make_unique<PsSpecialHandlerProxy>(pswarning), ignoredHandlerName);
 	}
 }
 

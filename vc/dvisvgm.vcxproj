@@ -250,6 +250,7 @@
     <ClCompile Include="..\src\PDFHandler.cpp" />
     <ClCompile Include="..\src\PDFToSVG.cpp" />
     <ClCompile Include="..\src\PSPreviewHandler.cpp" />
+    <ClCompile Include="..\src\PsSpecialHandlerProxy.cpp" />
     <ClCompile Include="..\src\SourceInput.cpp" />
     <ClCompile Include="..\src\DVIReader.cpp" />
     <ClCompile Include="..\src\dvisvgm.cpp" />
@@ -393,6 +394,7 @@
     <ClInclude Include="..\src\PDFHandler.hpp" />
     <ClInclude Include="..\src\PDFToSVG.hpp" />
     <ClInclude Include="..\src\PSPreviewHandler.hpp" />
+    <ClInclude Include="..\src\PsSpecialHandlerProxy.hpp" />
     <ClInclude Include="..\src\SourceInput.hpp" />
     <ClInclude Include="..\src\EncFile.hpp" />
     <ClInclude Include="..\src\EPSFile.hpp" />
