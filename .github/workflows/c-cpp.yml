@@ -27,8 +27,8 @@ jobs:
       - name: make clean
         run: make clean
       - name: make
-        run: make
+        run: make -j
       - name: update timestamps
         run: make -C src -t
       - name: make check
-        run: make check
+        run: make -j check
