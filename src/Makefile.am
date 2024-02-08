@@ -162,7 +162,6 @@ libdvisvgm_la_SOURCES = \
 	Unicode.hpp                  Unicode.cpp \
 	utility.hpp                  utility.cpp \
 	VectorIterator.hpp \
-	VectorStream.hpp \
 	VFActions.hpp \
 	VFReader.hpp                 VFReader.cpp \
 	windows.hpp \
@@ -186,6 +185,7 @@ AM_CFLAGS = $(WARNING_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS)
 
 AM_CXXFLAGS = $(WARNING_CXXFLAGS) \
+	-I$(dvisvgm_srcdir)/libs/boost \
 	-I$(dvisvgm_srcdir)/libs/clipper \
 	-I$(dvisvgm_srcdir)/libs/variant/include
 

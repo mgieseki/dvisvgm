@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <vectorstream.hpp>
 #include "Color.hpp"
 #include "DVIActions.hpp"
 #include "DVIReader.hpp"
@@ -27,7 +28,6 @@
 #include "FontManager.hpp"
 #include "HashFunction.hpp"
 #include "utility.hpp"
-#include "VectorStream.hpp"
 
 using namespace std;
 
@@ -204,7 +204,7 @@ void DVIReader::cmdPop (int) {
 void DVIReader::putVFChar (Font *font, uint32_t c) {
 	if (auto vf = font_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		FontManager &fm = FontManager::instance();
-		const vector<uint8_t> *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
+		const auto *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
 		Font *firstFont = fm.vfFirstFont(vf);
 		if (!dvi) {
 			const FontMetrics *ffm = firstFont ? firstFont->getMetrics() : nullptr;
@@ -222,8 +222,8 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 			_dvi2bp = vf->scaledSize()/(1 << 20);
 			DVIState savedState = _dviState;  // save current cursor position
 			_dviState.x = _dviState.y = _dviState.w = _dviState.z = 0;
-			VectorInputStream<uint8_t> vis(*dvi);
-			istream &is = replaceStream(vis);
+			ivectorstream<vector<char>> vis(*dvi);
+			auto &is = replaceStream(vis);
 			try {
 				executeAll();  // execute DVI fragment
 			}
@@ -534,7 +534,7 @@ void DVIReader::defineVFFont (uint32_t fontnum, const string &path, const string
 /** This template method is called by the VFReader after reading a character definition from a VF file.
  *  @param[in] c character number
  *  @param[in] dvi DVI fragment describing the character */
-void DVIReader::defineVFChar (uint32_t c, vector<uint8_t> &&dvi) {
+void DVIReader::defineVFChar (uint32_t c, vector<char> &&dvi) {
 	FontManager::instance().assignVFChar(c, std::move(dvi));
 }
 

@@ -146,6 +146,14 @@ vector<uint8_t> StreamReader::readBytes (int n, HashFunction &hashfunc) {
 }
 
 
+vector<char> StreamReader::readBytesAsChars (int n) {
+	vector<char> chars(n);
+	if (n > 0)
+		_is->read(chars.data(), n);
+	return chars;
+}
+
+
 int StreamReader::readByte (HashFunction &hashfunc) {
 	int ret = readByte();
 	if (ret >= 0) {

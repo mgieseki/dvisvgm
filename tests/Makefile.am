@@ -396,12 +396,6 @@ VectorIteratorTest_SOURCES = VectorIteratorTest.cpp testutil.hpp
 VectorIteratorTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 VectorIteratorTest_LDADD = $(TESTLIBS)
 
-TESTS += VectorStreamTest
-check_PROGRAMS += VectorStreamTest
-VectorStreamTest_SOURCES = VectorStreamTest.cpp testutil.hpp
-VectorStreamTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
-VectorStreamTest_LDADD = $(TESTLIBS)
-
 TESTS += XMLNodeTest
 check_PROGRAMS += XMLNodeTest
 XMLNodeTest_SOURCES = XMLNodeTest.cpp testutil.hpp

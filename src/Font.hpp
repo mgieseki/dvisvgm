@@ -162,7 +162,7 @@ class PhysicalFont : public virtual Font {
 class VirtualFont : public virtual Font {
 	friend class FontManager;
 	public:
-		using DVIVector = std::vector<uint8_t>;
+		using DVIVector = std::vector<char>;
 
 	public:
 		static std::unique_ptr<Font> create (const std::string &name, uint32_t checksum, double dsize, double ssize);

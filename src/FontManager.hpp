@@ -72,7 +72,7 @@ class FontManager {
 		Font* vfFirstFont (const VirtualFont *vf) const;
 		void enterVF (VirtualFont *vf);
 		void leaveVF ();
-		void assignVFChar (int c, std::vector<uint8_t> &&dvi);
+		void assignVFChar (int c, std::vector<char> &&dvi);
 		void addUsedChar (const Font &font, int c);
 		void resetUsedChars ();
 		CharMap& getUsedChars ()  {return _usedChars;}

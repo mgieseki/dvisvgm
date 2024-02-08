@@ -25,13 +25,12 @@
 #include <vector>
 
 
-struct VFActions
-{
+struct VFActions {
 	virtual ~VFActions () =default;
 	virtual void vfPreamble (const std::string &comment, uint32_t checksum, double dsize) {}
 	virtual void vfPostamble () {}
 	virtual void defineVFFont (uint32_t fontnum, const std::string &path, const std::string &name, uint32_t checksum, double dsize, double ssize) {}
-	virtual void defineVFChar (uint32_t c, std::vector<uint8_t> &&dvi) {}
+	virtual void defineVFChar (uint32_t c, std::vector<char> &&dvi) {}
 };
 
 #endif

@@ -725,7 +725,7 @@ void VirtualFontImpl::assignChar (uint32_t c, DVIVector &&dvi) {
 /** Returns the DVI sippet that describes a given character of the virtual font.
  *  @param[in] c character code
  *  @return pointer to vector of DVI commands, or 0 if character doesn't exist */
-const vector<uint8_t>* VirtualFontImpl::getDVI (int c) const {
+const VirtualFont::DVIVector* VirtualFontImpl::getDVI (int c) const {
 	auto it = _charDefs.find(c);
 	return (it == _charDefs.end() ? nullptr : &it->second);
 }

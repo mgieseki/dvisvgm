@@ -77,7 +77,7 @@ class DVIReader : public BasicDVIReader, public VFActions {
 
 		// VFAction methods
 		void defineVFFont (uint32_t fontnum, const std::string &path, const std::string &name, uint32_t checksum, double dsize, double ssize) override;
-		void defineVFChar (uint32_t c, std::vector<uint8_t> &&dvi) override;
+		void defineVFChar (uint32_t c, std::vector<char> &&dvi) override;
 
 		// The following template methods provide higher-level access to the DVI commands.
 		// In contrast to their cmdXXX pendants, they don't require any handling of the input stream.
