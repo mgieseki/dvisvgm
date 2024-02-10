@@ -158,7 +158,7 @@ bool GFReader::executePostamble () {
 		throw GFException("invalid identification byte in postpost");
 	_in.seekg(-5, ios::cur);         // now on postpost
 	if (_in.get() != 249)
-		throw GFException("invalid GF file");
+		throw GFException("invalid GF file (missing postpost)");
 	uint32_t q = readUnsigned(4);    // pointer to begin of postamble
 	_in.seekg(q);                    // now on begin of postamble
 	while (executeCommand() != 249); // execute all commands until postpost is reached

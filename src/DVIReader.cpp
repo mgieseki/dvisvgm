@@ -49,7 +49,7 @@ void DVIReader::executeAll () {
 		try {
 			opcode = executeCommand();
 		}
-		catch (const InvalidDVIFileException &e) {
+		catch (const DVIPrematureEOFException &e) {
 			// end of stream reached
 			opcode = -1;
 		}
@@ -64,7 +64,7 @@ void DVIReader::executeAll () {
 bool DVIReader::executePage (unsigned n) {
 	clearStream();    // reset all status bits
 	if (!isStreamValid())
-		throw DVIException("invalid DVI file");
+		throw DVIException("invalid DVI file (page "+to_string(n)+" not found");
 	if (n < 1 || n > numberOfPages())
 		return false;
 

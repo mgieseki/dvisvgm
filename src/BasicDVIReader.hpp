@@ -32,8 +32,8 @@ struct DVIException : public MessageException {
 };
 
 
-struct InvalidDVIFileException : public DVIException {
-	explicit InvalidDVIFileException (const std::string &msg) : DVIException(msg) {}
+struct DVIPrematureEOFException : public DVIException {
+	explicit DVIPrematureEOFException () : DVIException("premature end of DVI stream") {}
 };
 
 

@@ -81,7 +81,7 @@ int BasicDVIReader::evalCommand (CommandHandler &handler, int &param) {
 
 	const int opcode = readByte();
 	if (!isStreamValid() || opcode < 0)  // at end of file
-		throw InvalidDVIFileException("invalid DVI file");
+		throw DVIPrematureEOFException();
 
 	int num_param_bytes = 0;
 	param = -1;
@@ -163,7 +163,7 @@ void BasicDVIReader::executePreamble () {
 			return;
 		}
 	}
-	throw DVIException("invalid DVI file");
+	throw DVIException("invalid DVI file (missing preamble)");
 }
 
 
@@ -171,7 +171,7 @@ void BasicDVIReader::executePreamble () {
 void BasicDVIReader::goToPostamble () {
 	clearStream();
 	if (!isStreamValid())
-		throw DVIException("invalid DVI file");
+		throw DVIException("invalid DVI file (missing postamble)");
 
 	seek(-1, ios::end);  // stream pointer to last byte
 	int count=0;
@@ -198,7 +198,7 @@ void BasicDVIReader::executePostamble () {
 void BasicDVIReader::executePostPost () {
 	clearStream();  // reset all status bits
 	if (!isStreamValid())
-		throw DVIException("invalid DVI file");
+		throw DVIException("invalid DVI file (missing postpost)");
 
 	seek(-1, ios::end);       // stream pointer to last byte
 	int count=0;
