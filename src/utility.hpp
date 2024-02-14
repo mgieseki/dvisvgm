@@ -110,7 +110,7 @@ std::vector<uint8_t> bytes (T val, int n=0) {
  *  @param[in] dest first position of the destination range
  *  @param[in] wrap if > 0, add a newline after the given number of characters written */
 template <typename InputIterator, typename OutputIterator>
-void base64_copy (InputIterator first, InputIterator last, OutputIterator dest, int wrap=0) {
+void base64_encode (InputIterator first, InputIterator last, OutputIterator dest, int wrap= 0) {
 	static const char *base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	int count=0;
 	while (first != last) {
@@ -145,8 +145,9 @@ void base64_copy (InputIterator first, InputIterator last, OutputIterator dest, 
 }
 
 
-inline void base64_copy (std::istream &is, std::ostream &os, int wrap=0) {
-	base64_copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::ostreambuf_iterator<char>(os), wrap);
+inline void base64_encode (std::istream &is, std::ostream &os, int wrap= 0) {
+	base64_encode(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(),
+					  std::ostreambuf_iterator<char>(os), wrap);
 }
 
 

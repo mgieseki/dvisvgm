@@ -400,7 +400,7 @@ ostream& XMLElement::write (ostream &os) const {
 				ifstream ifs(fname, ios::binary);
 				if (ifs) {
 					os << '\n';
-					util::base64_copy(ifs, os, 200);
+					util::base64_encode(ifs, os, 200);
 					ifs.close();
 					if (!KEEP_ENCODED_FILES && !keep)
 						FileSystem::remove(fname);

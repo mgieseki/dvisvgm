@@ -137,12 +137,12 @@ TEST(UtilityTest, to_string) {
 static string base64 (const string &str) {
 	istringstream iss(str);
 	ostringstream oss;
-	base64_copy(istreambuf_iterator<char>(iss), istreambuf_iterator<char>(), ostreambuf_iterator<char>(oss));
+	base64_encode(istreambuf_iterator<char>(iss), istreambuf_iterator<char>(), ostreambuf_iterator<char>(oss));
 	return oss.str();
 }
 
 
-TEST(UtilityTest, base64_copy) {
+TEST(UtilityTest, base64_encode) {
 	ASSERT_EQ(base64(""), "");
 	ASSERT_EQ(base64("a"), "YQ==");
 	ASSERT_EQ(base64("ab"), "YWI=");

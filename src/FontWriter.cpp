@@ -168,7 +168,7 @@ bool FontWriter::writeCSSFontFace (FontFormat format, const set<int> &charcodes,
 			os << "@font-face{"
 				<< "font-family:" << _font.name() << ';'
 				<< "src:url(data:" << info->mimetype << ";base64,";
-			util::base64_copy(ifs, os);
+			util::base64_encode(ifs, os);
 			os << ") format('" << info->formatstr_long << "');}\n";
 			ifs.close();
 			if (!PhysicalFont::KEEP_TEMP_FILES)
