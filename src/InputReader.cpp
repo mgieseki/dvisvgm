@@ -339,6 +339,7 @@ string InputReader::getString () {
  *  @return the string read */
 string InputReader::getString (size_t n) {
 	string ret;
+	ret.reserve(n);
 	while (n-- > 0)
 		ret += char(get());
 	return ret;

@@ -127,15 +127,16 @@ class PSInterpreter {
 		static int GSDLLCALL error (void *inst, const char *buf, int len);
 
 		void checkStatus (int status);
-		void callActions (InputReader &cib);
+		void processCommand ();
 
 	private:
 		Ghostscript _gs;
 		Mode _mode;                        ///< current execution mode
 		PSActions *_actions=nullptr;       ///< actions to be performed
 		size_t _bytesToRead=0;             ///< if > 0, maximal number of bytes to be processed by following calls of execute()
-		std::vector<char> _linebuf;
+		std::string _unprocessedChars;
 		std::string _errorMessage;         ///< text of error message
+		std::vector<std::string> _command; ///< current command being scanned
 		bool _inError=false;               ///< true if scanning error message
 		bool _initialized=false;           ///< true if PSInterpreter has been completely initialized
 		std::vector<std::string> _rawData; ///< raw data received

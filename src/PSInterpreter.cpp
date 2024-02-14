@@ -201,58 +201,56 @@ int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
  *  @return number of processed characters (equals 'len') */
 int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
 	auto self = static_cast<PSInterpreter*>(inst);
-	if (self && self->_actions) {
-		const size_t MAXLEN = 512;    // maximal line length (longer lines are of no interest)
-		const char *end = buf+len-1;  // last position of buf
-		for (const char *first=buf, *last=buf; first <= end; last++, first=last) {
-			// move first and last to begin and end of the next line, respectively
-			while (last < end && *last != '\n')
-				last++;
-			size_t linelength = last-first+1;
-			if (linelength > MAXLEN)  // skip long lines since they don't contain any relevant information
-				continue;
+	if (!self || !self->_actions)
+		return len;
 
-			vector<char> &linebuf = self->_linebuf;  // just a shorter name...
-			if ((*last == '\n' || !self->active()) || self->_inError) {
-				if (linelength + linebuf.size() > 1) {  // prefix "dvi." plus final newline
-					SplittedCharInputBuffer ib(linebuf.empty() ? nullptr : &linebuf[0], linebuf.size(), first, linelength);
-					BufferInputReader in(ib);
-					if (self->_inError)
-						self->_errorMessage += string(first, linelength);
-					else {
-						in.skipSpace();
-						if (in.check("Unrecoverable error: ")) {
-							self->_errorMessage.clear();
-							while (!in.eof())
-								self->_errorMessage += char(in.get());
-							self->_inError = true;
-						}
-						else if (in.check("dvi."))
-							self->callActions(in);
-					}
-				}
-				linebuf.clear();
+	SplittedCharInputBuffer ib(self->_unprocessedChars.data(), self->_unprocessedChars.length(), buf, len);
+	BufferInputReader ir(ib);
+	while (!ir.eof()) {
+		if (self->_inError) {
+			self->_errorMessage += ib.toString();
+			ib.invalidate();
+		}
+		else if (ir.check("Unrecoverable error: ")) {
+			self->_errorMessage = ib.toString();
+			ib.invalidate();
+			self->_inError = true;
+		}
+		else {
+			ir.skipSpace();
+			int spacepos = ib.find(' ');
+			if (spacepos <= 0)  // no separating space found?
+				break;           // => wait for more data
+			string entry = ir.getString(spacepos);
+			if (self->_command.empty()) {   // not yet collecting command parameters?
+				if (entry.length() < 4 || entry.substr(0, 4) != "dvi.")
+					ir.skipUntil("\n");
+				else
+					self->_command.emplace_back(entry.substr(4));
 			}
-			else { // no line end found =>
-				// save remaining characters and prepend them to the next incoming chunk of characters
-				if (linebuf.size() + linelength > MAXLEN)
-					linebuf.clear();   // don't care for long lines
-				else {
-					size_t currsize = linebuf.size();
-					linebuf.resize(currsize+linelength);
-					memcpy(&linebuf[currsize], first, linelength);
-				}
+			else if (entry[0] != '|') {   // not yet at end of command?
+				self->_command.emplace_back(std::move(entry));
+			}
+			else {
+				self->processCommand();
+				self->_command.clear();
+				ir.skipSpace();
 			}
 		}
 	}
+	if (ir.eof())
+		self->_unprocessedChars.clear();
+	else
+		self->_unprocessedChars = ib.toString();
 	return len;
 }
 
 
 /** Evaluates a command emitted by Ghostscript and invokes the corresponding
- *  method of interface class PSActions.
- *  @param[in] in reader pointing to the next command */
-void PSInterpreter::callActions (InputReader &in) {
+ *  method of interface class PSActions. */
+void PSInterpreter::processCommand () {
+	if (!_actions || _command.empty())
+		return;
 	struct Operator {
 		int pcount;       // number of parameters (< 0 : variable number of parameters)
 		void (PSActions::*handler)(vector<double> &p);  // operation handler
@@ -276,7 +274,6 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"moveto",                 { 2, &PSActions::moveto}},
 		{"newpath",                { 1, &PSActions::newpath}},
 		{"querypos",               { 2, &PSActions::querypos}},
-		{"raw",                    {-1, nullptr}},
 		{"restore",                { 1, &PSActions::restore}},
 		{"rotate",                 { 1, &PSActions::rotate}},
 		{"save",                   { 1, &PSActions::save}},
@@ -303,44 +300,20 @@ void PSInterpreter::callActions (InputReader &in) {
 		{"stroke",                 { 0, &PSActions::stroke}},
 		{"translate",              { 2, &PSActions::translate}},
 	};
-	if (_actions) {
-		in.skipSpace();
-		auto it = operators.find(in.getWord());
+
+	if (_command[0] == "raw") {
+		_rawData.resize(_command.size()-1);
+		std::copy(_command.begin()+1, _command.end(), _rawData.begin());
+	}
+	else {
+		vector<double> numbers(_command.size()-1);
+		transform(_command.begin()+1, _command.end(), numbers.begin(), [](const string &str) {
+			return stod(str);
+		});
+		auto it = operators.find(_command[0]);
 		if (it != operators.end()) {
-			if (!it->second.handler) { // raw string data received?
-				_rawData.clear();
-				in.skipSpace();
-				while (!in.eof()) {
-					_rawData.push_back(in.getString());
-					in.skipSpace();
-				}
-			}
-			else {
-				// collect parameters
-				vector<string> params;
-				int pcount = it->second.pcount;
-				if (pcount < 0) {       // variable number of parameters?
-					in.skipSpace();
-					while (!in.eof()) {  // read all available parameters
-						params.push_back(in.getString());
-						in.skipSpace();
-					}
-				}
-				else {   // fix number of parameters
-					for (int i=0; i < pcount; i++) {
-						in.skipSpace();
-						params.push_back(in.getString());
-					}
-				}
-				// convert parameter strings to doubles
-				vector<double> v(params.size());
-				algo::transform(params, v.begin(), [](const string &str) {
-					return stod(str);
-				});
-				// call operator handler
-				(_actions->*it->second.handler)(v);
-				_actions->executed();
-			}
+			(_actions->*it->second.handler)(numbers);
+			_actions->executed();
 		}
 	}
 }

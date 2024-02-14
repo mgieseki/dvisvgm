@@ -120,6 +120,8 @@ class SplittedCharInputBuffer : public InputBuffer {
 		int peek (size_t n) const override;
 		bool eof () const override  {return _size[_index] == 0;}
 		void invalidate () override {_size[_index] = 0;}
+		std::string toString () const;
+		int find (char c) const;
 
 	private:
 		const char *_buf[2];
