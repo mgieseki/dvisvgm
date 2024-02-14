@@ -81,6 +81,7 @@ class Ghostscript
 		~Ghostscript () override;
 #endif
 		bool init (int argc, const char **argv, void *caller=nullptr);
+		void finalize ();
 		bool available () const;
 		bool revision (gsapi_revision_t *r) const;
 		int revision () const;

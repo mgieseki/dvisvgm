@@ -42,6 +42,13 @@ PSInterpreter::PSInterpreter (PSActions *actions)
 }
 
 
+PSInterpreter::~PSInterpreter () {
+	// don't process any further PS code that might be received when exiting GS
+	_gs.finalize();
+	_actions = nullptr;
+}
+
+
 void PSInterpreter::init () {
 	if (!_initialized) {
 		vector<const char*> gsargs {

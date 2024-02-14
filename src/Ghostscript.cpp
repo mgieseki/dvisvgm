@@ -185,10 +185,7 @@ Ghostscript::Ghostscript (int argc, const char **argv, void *caller)
 
 /** Exits Ghostscript and unloads the dynamic library. */
 Ghostscript::~Ghostscript () {
-	if (_inst) {
-		this->exit();
-		delete_instance();
-	}
+	finalize();
 }
 
 
@@ -202,6 +199,14 @@ bool Ghostscript::init (int argc, const char **argv, void *caller) {
 		}
 	}
 	return _inst != nullptr;
+}
+
+
+void Ghostscript::finalize () {
+	if (_inst) {
+		Ghostscript::exit();
+		delete_instance();
+	}
 }
 
 
@@ -291,6 +296,7 @@ void Ghostscript::delete_instance () {
 	if (auto fn = LOAD_SYMBOL(gsapi_delete_instance))
 		fn(_inst);
 #endif
+	_inst = nullptr;
 }
 
 
