@@ -1,3 +1,11 @@
+dvisvgm-3.2.1 (2024-02-29)
+- delayed loading of Ghostscript library to speed up the conversion of
+  DVI files	without PS specials (GH issue #262)
+- some improvements required for TeX Live builds
+  (patches by Karl Berry, GH issues #259, #260)
+- added more details to some DVI warning messages
+- added some further information to the manual page
+
 dvisvgm-3.2 (2024-01-11)
 - PDF handler: fixed a rounding issue that could lead to slightly bigger
   text extents (GH issue #256)
@@ -9,12 +17,12 @@ dvisvgm-3.2 (2024-01-11)
   after writing an SVG file (GH issue #258)
 - applied upstream patch regarding undefined type punning to the bundled
   woff2 library
-- few improvements of the manual page  
+- few improvements of the manual page
 
 dvisvgm-3.1.2 (2023-10-12)
 - improved evaluation of graphic extents created by the 'preview' package
   (GH issue #246)
-- fixed computation of character boxes when using --exact-bbox (GH issue #248)	
+- fixed computation of character boxes when using --exact-bbox (GH issue #248)
 - fixed memory error in optimizer module (GH issue #250)
 - updated bundled brotli library to version 1.1.0
 
