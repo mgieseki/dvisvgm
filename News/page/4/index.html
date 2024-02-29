@@ -79,7 +79,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="8d0ef4dc302ef6102e094359ddf31b2d"></a>
+  <a name="d2a122bf30fb68ee24d061cc34560ae0"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 December 2019: dvisvgm 2.8.2 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+<ul>
+<li>If available, <em>dvisvgm</em> now calls <code>mf-nowin</code> instead of <code>mf</code> to process Metafont files (<a href="https://github.com/mgieseki/dvisvgm/issues/121">issue #121</a>).</li>
+<li>Fixed the switching between PostScript&rsquo;s null device and the regular page device in PS operator <code>restore</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/122">issue #122</a>).</li>
+<li>Fixed a PostScript error triggered by backslashes in file paths (Windows only, <a href="https://github.com/mgieseki/dvisvgm/issues/123">issue #123</a>).</li>
+<li>Fixed a build issue related to GCC on Solaris 11.</li>
+<li>Some code cleanup.</li>
+</ul>
+</div>
+  </section><a name="8d0ef4dc302ef6102e094359ddf31b2d"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">14 November 2019: dvisvgm 2.8.1 has been released</div>
     <div class="card-body">
@@ -221,20 +234,6 @@ current transformation matrix, e.g. <code>matrix(0 -1 1 0 -214.88 106)</code>.</
 <em>dvisvgm</em>&rsquo;s partial matching of option names.</li>
 <li>The bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library was updated to version 0.7.0.</li>
 <li>Lots of code refactorings.</li>
-</ul>
-</div>
-  </section><a name="cc9ed6a8f3a0ef7ffdcf7718852ab870"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">9 March 2019: dvisvgm 2.6.3 has been released</div>
-    <div class="card-body">
-      <p>This is mainly a bugfix release with the following changes:</p>
-<ul>
-<li><em>dvisvgm</em> now creates short, <a href="https://www.w3.org/TR/css-color-3/#rgb-color">three-digit RGB hex values</a> for color attributes if possible, e.g. <code>#123</code> instead of <code>#112233</code>.</li>
-<li>Fixed the rejection of paper formats, like <code>A4</code>, given as argument to option <code>--bbox</code>.</li>
-<li>Fixed the adaption of the vertical orientation when processing EPS/PDF files.</li>
-<li>Fixed the handling of backslashes in EPS/PDF file paths (Windows only).</li>
-<li>Updated the bundled <a href="https://github.com/google/googletest">Google Test</a> library to version 1.8.1.</li>
-<li>Some code refactorings and improvements of the build system.</li>
 </ul>
 </div>
   </section>

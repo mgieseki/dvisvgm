@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 11 Jan 2024 10:19:21 +0100</pubDate>
+    <pubDate>Thu, 29 Feb 2024 10:03:46 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.2.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#4b3a0a78592ad4b8011c361e4b5b8918</link>
+      <pubDate>Thu, 29 Feb 2024 09:57:09 +0100</pubDate>
+      <guid>4b3a0a78592ad4b8011c361e4b5b8918</guid>
+      <description>
+        <![CDATA[<ul>
+<li>The Ghostscript library is now only loaded when the first PostScript special is processed.
+This slightly speeds up the conversion of DVI files that don&rsquo;t contain PS specials (<a href="https://github.com/mgieseki/dvisvgm/issues/262">issue #262</a>).</li>
+<li>Applied some changes required for TeX Live builds (patches by Karl Berry, <a href="https://github.com/mgieseki/dvisvgm/issues/259">issue #259</a>, <a href="https://github.com/mgieseki/dvisvgm/issues/260">issue #260</a>).</li>
+<li>Added more details to some DVI warning messages.</li>
+<li>Added some further information to the <a href="/Manpage/">manual page</a>.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.2 has been released</title>
@@ -138,7 +155,7 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
     
     <item>
       <title>dvisvgm 3.0.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#055cc2d49348a3d31480705a06485048</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#055cc2d49348a3d31480705a06485048</link>
       <pubDate>Tue, 10 Jan 2023 10:49:43 +0100</pubDate>
       <guid>055cc2d49348a3d31480705a06485048</guid>
       <description>
@@ -299,7 +316,7 @@ page numbers respectively.</li>
     
     <item>
       <title>Information on PDF support as of Ghostscript 9.56.0</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#1dc7a72ee07bdf41b0faaa031777dbf3</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#1dc7a72ee07bdf41b0faaa031777dbf3</link>
       <pubDate>Tue, 23 Nov 2021 10:11:09 +0200</pubDate>
       <guid>1dc7a72ee07bdf41b0faaa031777dbf3</guid>
       <description>
@@ -363,24 +380,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Improved detection of proper CMap files for currently selected font encoding.</li>
 <li>Fixed processing of Unicode surrogates present in CMap files.</li>
 <li>Fixed handling of <code>pdf:mapline</code> and <code>pdf:mapfile</code> specials.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.10.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#9f68ebd62bc0a3cf963a572fe77e0bd2</link>
-      <pubDate>Tue, 22 Sep 2020 11:13:47 +0200</pubDate>
-      <guid>9f68ebd62bc0a3cf963a572fe77e0bd2</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release.</p>
-<ul>
-<li>Added support for the new <a href="https://www.ghostscript.com/doc/current/Language.htm#Transparency">Ghostscript transparency operators</a>
-<code>.setfillconstantalpha</code> and <code>.setstrokeconstantalpha</code>.</li>
-<li>Added support for the new Ghostscript versioning scheme introduced with GS 9.53.0.</li>
-<li>Added few additional information to the <a href="/Manpage/">manual page</a>.</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.0.9.</li>
 </ul>
 ]]>
       </description>
