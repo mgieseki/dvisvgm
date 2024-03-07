@@ -7,7 +7,10 @@ include $(top_srcdir)/aminclude_static.am
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = COPYING
-SUBDIRS = libs src tests doc
+SUBDIRS = libs src
+if !TEXLIVE_BUILD
+SUBDIRS += tests doc
+endif
 ACLOCAL_AMFLAGS = -I m4
 
 if USE_BUNDLED_LIBS

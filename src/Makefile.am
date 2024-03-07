@@ -257,14 +257,3 @@ if TEXLIVE_BUILD
 # Rebuild potrace:
 @POTRACE_RULE@
 endif TEXLIVE_BUILD
-
-if TEXLIVE_BUILD
-# Rebuild libkpathsea:
-@KPATHSEA_RULE@
-# Rebuild libfreetype:
-@FREETYPE2_RULE@
-# Rebuild libz:
-@ZLIB_RULE@
-# Rebuild potrace:
-@POTRACE_RULE@
-endif TEXLIVE_BUILD
