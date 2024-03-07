@@ -1,3 +1,9 @@
+dvisvgm-3.2.2 (2024-03-07)
+- fixed the extraction of bitmaps from PS/EPS files that no longer worked
+  since Ghostscript 10.02.1 due to the removal of GS-specific operators
+  (GH issue #264)
+- minor automake updates required for TeX Live builds
+
 dvisvgm-3.2.1 (2024-02-29)
 - delayed loading of Ghostscript library to speed up the conversion of
   DVI files	without PS specials (GH issue #262)
