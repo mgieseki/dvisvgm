@@ -79,7 +79,15 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="4b3a0a78592ad4b8011c361e4b5b8918"></a>
+  <a name="551d5d5d67b811ac7d4fbf99b11a1d68"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">7 March 2024: dvisvgm 3.2.2 has been released</div>
+    <div class="card-body">
+      <p>Due to the <a href="https://git.ghostscript.com/?p=ghostpdl.git;a=commit;h=08d75b62ffd9ae89797f351aae608c288e61b33f">removal of some Ghostscript-specific operators</a>
+from GS version 10.02.1, <em>dvisvgm</em> fails to extract bitmaps embedded in PS/EPS files when using the latest Ghostscript releases (<a href="https://github.com/mgieseki/dvisvgm/issues/264">issue #264</a>). <br>
+This <em>dvisvgm</em> release replaces the involved operators and should fix the issue.</p>
+</div>
+  </section><a name="4b3a0a78592ad4b8011c361e4b5b8918"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">29 February 2024: dvisvgm 3.2.1 has been released</div>
     <div class="card-body">
@@ -172,18 +180,6 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
 <ul>
 <li>Fixed resetting the character context that could lead to invalid character positions and properties (<a href="https://github.com/mgieseki/dvisvgm/issues/227">issue #227</a>).</li>
 <li>Added missing <code>#include</code> directives required for GCC 13.</li>
-</ul>
-</div>
-  </section><a name="fd435907f32df207055b82f8cdb77c5b"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">30 January 2023: dvisvgm 3.0.2 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release that addresses the following issues:</p>
-<ul>
-<li>Fixed the computation of font sizes performed by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/220">issue #220</a>).</li>
-<li>Fixed the <code>viewBox</code> coordinates determined by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/223">issue #223</a>).</li>
-<li>Improved the detection of font names used in PDF files (<a href="https://github.com/mgieseki/dvisvgm/issues/224">issue #224</a>).</li>
-<li>Minor code improvements, increased compatibility with older GCC versions.</li>
 </ul>
 </div>
   </section>

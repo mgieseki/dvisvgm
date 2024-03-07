@@ -3,8 +3,21 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 29 Feb 2024 10:03:46 +0100</pubDate>
+    <pubDate>Thu, 07 Mar 2024 13:44:00 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.2.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#551d5d5d67b811ac7d4fbf99b11a1d68</link>
+      <pubDate>Thu, 07 Mar 2024 12:37:55 +0100</pubDate>
+      <guid>551d5d5d67b811ac7d4fbf99b11a1d68</guid>
+      <description>
+        <![CDATA[<p>Due to the <a href="https://git.ghostscript.com/?p=ghostpdl.git;a=commit;h=08d75b62ffd9ae89797f351aae608c288e61b33f">removal of some Ghostscript-specific operators</a>
+from GS version 10.02.1, <em>dvisvgm</em> fails to extract bitmaps embedded in PS/EPS files when using the latest Ghostscript releases (<a href="https://github.com/mgieseki/dvisvgm/issues/264">issue #264</a>). <br>
+This <em>dvisvgm</em> release replaces the involved operators and should fix the issue.</p>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.2.1 has been released</title>
@@ -138,7 +151,7 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
     
     <item>
       <title>dvisvgm 3.0.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#fd435907f32df207055b82f8cdb77c5b</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#fd435907f32df207055b82f8cdb77c5b</link>
       <pubDate>Mon, 30 Jan 2023 09:15:14 +0100</pubDate>
       <guid>fd435907f32df207055b82f8cdb77c5b</guid>
       <description>
@@ -296,7 +309,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#44794f1bf7aeef1aecbf496110744161</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#44794f1bf7aeef1aecbf496110744161</link>
       <pubDate>Thu, 20 Jan 2022 12:09:40 +0100</pubDate>
       <guid>44794f1bf7aeef1aecbf496110744161</guid>
       <description>
@@ -364,22 +377,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Fixed possible ambiguities of GID to charcode mappings (<a href="https://github.com/mgieseki/dvisvgm/issues/147">issue #147</a>).</li>
 <li>Refactored the representation of token objects in class <code>Calculator</code>.</li>
 <li>Few minor code and test improvements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.11 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#45089adf53a690978eb4e8d47ffd190e</link>
-      <pubDate>Sat, 28 Nov 2020 11:28:08 +0100</pubDate>
-      <guid>45089adf53a690978eb4e8d47ffd190e</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added fallback mechanism for JFM-based virtual fonts as proposed by Takuji Tanaka (<a href="https://github.com/mgieseki/dvisvgm/issues/144">issue #144</a>).</li>
-<li>Improved detection of proper CMap files for currently selected font encoding.</li>
-<li>Fixed processing of Unicode surrogates present in CMap files.</li>
-<li>Fixed handling of <code>pdf:mapline</code> and <code>pdf:mapfile</code> specials.</li>
 </ul>
 ]]>
       </description>
