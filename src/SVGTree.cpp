@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
+#include <iostream>
 #include <sstream>
 #include "BoundingBox.hpp"
 #include "DVIToSVG.hpp"
@@ -158,6 +159,30 @@ void SVGTree::transformPage (const Matrix &usermatrix) {
 	_page->setTransform(usermatrix);
 }
 
+class GlyphNodeParams {
+	public:
+		const int c;
+		const PhysicalFont *font;
+		GFGlyphTracer::Callback *cb;
+		bool USE_FONTS;
+};
+
+bool operator==(const GlyphNodeParams &a, const GlyphNodeParams &b) {
+	return a.c == b.c && a.font == b.font && a.cb == b.cb && a.USE_FONTS == b.USE_FONTS;
+}
+template <>
+struct std::hash<GlyphNodeParams> {
+		std::size_t operator()(GlyphNodeParams const &p) const noexcept {
+				// based on https://en.cppreference.com/w/cpp/utility/hash#Example
+				// I don't *really* know what I'm doing
+				return std::hash<int>{}(p.c) ^
+					   (std::hash<const void *>{}(p.font) << 1) ^
+					   (std::hash<void *>{}(p.cb) << 2) ^
+					   (std::hash<bool>{}(p.USE_FONTS) << 3);
+		}
+};
+
+std::unordered_map<GlyphNodeParams, unique_ptr<XMLElement>> glyphNodeCache = {};
 
 /** Creates an SVG element for a single glyph.
  *  @param[in] c character number
@@ -165,6 +190,14 @@ void SVGTree::transformPage (const Matrix &usermatrix) {
  *  @param[in] cb pointer to callback object for sending feedback to the glyph tracer (may be 0)
  *  @return pointer to element node if glyph exists, 0 otherwise */
 static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, GFGlyphTracer::Callback *cb) {
+
+	GlyphNodeParams params = {c, &font, cb, SVGTree::USE_FONTS};
+	if (glyphNodeCache.count(params) > 0) {
+		std::cout << "cached!" << std::endl;
+		return util::static_unique_ptr_cast<XMLElement>(glyphNodeCache[params]->clone());
+
+	}
+
 	Glyph glyph;
 	if (!font.getGlyph(c, glyph, cb) || (!SVGTree::USE_FONTS && !SVGTree::CREATE_USE_ELEMENTS))
 		return nullptr;
@@ -191,6 +224,14 @@ static unique_ptr<XMLElement> createGlyphNode (int c, const PhysicalFont &font, 
 	ostringstream oss;
 	glyph.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS, sx, sy);
 	glyphNode->addAttribute("d", oss.str());
+
+	// TODO this cache strategy is crude but better than nothing
+	if (glyphNodeCache.size() > 1<<14) {
+		glyphNodeCache.clear();
+	}
+	glyphNodeCache[params] = util::static_unique_ptr_cast<XMLElement>(glyphNode->clone());
+	std::cout << "size of cache: " << glyphNodeCache.size() << std::endl;
+
 	return glyphNode;
 }
 
