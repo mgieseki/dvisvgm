@@ -98,6 +98,9 @@ void PSInterpreter::checkStatus (int status) {
 			throw PSException("fatal error");
 		if (_errorMessage.empty())
 			throw PSException(_gs.error_name(status));
+		size_t pos = _errorMessage.rfind("Operand stack:");
+		if (pos != string::npos && pos > 0 && !isspace(_errorMessage[pos-1]))
+			_errorMessage.insert(pos, "\n");
 		throw PSException(_errorMessage);
 	}
 }
