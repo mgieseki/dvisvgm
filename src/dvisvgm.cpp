@@ -293,7 +293,7 @@ static void init_fontmap (const CommandLine &cmdline) {
 	bool additional = !mapseq.empty() && strchr("+-=", mapseq[0]);
 	if (mapseq.empty() || additional) {
 		bool found = false;
-		for (string mapfile : {"ps2pk", "pdftex", "dvipdfm", "psfonts"}) {
+		for (string mapfile : {"dvisvgm", "ps2pk", "pdftex", "dvipdfm", "psfonts"}) {
 			if ((found = FontMap::instance().read(mapfile+".map")))
 				break;
 		}

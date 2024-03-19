@@ -80,10 +80,11 @@ bool FontMap::read (const string &fname, FontMap::Mode mode, vector<string> *inc
 			lineNumber++;
 		}
 		catch (const MapLineException &e) {
-			Message::wstream(true) << fname << ", line " << lineNumber << ": " << e.what() << '\n';
+			Message::wstream(true) << FilePath(fname).shorterAbsoluteOrRelative()
+				<< ", line " << lineNumber << ": " << e.what() << '\n';
 		}
 		catch (const SubfontException &e) {
-			Message::wstream(true) << e.filename();
+			Message::wstream(true) << FilePath(e.filename()).shorterAbsoluteOrRelative();
 			if (e.lineno() > 0)
 				Message::wstream(false) << ", line " << e.lineno();
 			Message::wstream(false) << e.what() << '\n';
@@ -135,7 +136,7 @@ void FontMap::include (string line, const FilePath &includingFile, vector<string
 		path = fname.c_str();
 	}
 	if (find(includedFiles.begin(), includedFiles.end(), path) != includedFiles.end())
-		throw MapLineException("recursive inclusion of file '"+string(path)+"'");
+		throw MapLineException("circular inclusion of file '"+string(FilePath(path).shorterAbsoluteOrRelative())+"'");
 	includedFiles.emplace_back(path);
 	if (!read(path, modechar, &includedFiles))
 		throw MapLineException("can't open file '"+string(path)+"' for reading");

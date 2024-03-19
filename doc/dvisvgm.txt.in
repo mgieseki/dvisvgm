@@ -264,7 +264,7 @@ Option *--font-format* is only available if dvisvgm was built with WOFF support 
 Loads and evaluates a single font map file or a sequence of font map files. These files are required
 to resolve font file names and encodings. dvisvgm does not provide its own map files but tries to read
 available ones coming with dvips or dvipdfm. If option *--fontmap* is omitted, dvisvgm looks for the
-default map files 'ps2pk.map', 'pdftex.map', 'dvipdfm.map', and 'psfonts.map' (in this order).
+default map files 'dvisvgm.map', 'ps2pk.map', 'pdftex.map', 'dvipdfm.map', and 'psfonts.map' (in this order).
 Otherwise, the files given as option arguments are evaluated in the given order. Multiple filenames
 must be separated by commas without leading and/or trailing whitespace.
 +
