@@ -26,6 +26,7 @@
 #include "CMap.hpp"
 #include "Directory.hpp"
 #include "FileFinder.hpp"
+#include "FilePath.hpp"
 #include "FontManager.hpp"
 #include "FontMap.hpp"
 #include "MapLine.hpp"
@@ -45,46 +46,100 @@ FontMap& FontMap::instance() {
 /** Reads and evaluates a single font map file.
  *  @param[in] fname name of map file to read
  *  @param[in] mode selects how to integrate the map file entries into the global map tree
+ *  @param[in,out] includedFilesRef pointer to sequence of (nested) file paths currently being included
  *  @return true if file could be opened */
-bool FontMap::read (const string &fname, FontMap::Mode mode) {
+bool FontMap::read (const string &fname, FontMap::Mode mode, vector<string> *includedFilesRef) {
 	ifstream ifs(fname);
 	if (!ifs)
 		return false;
 
-	int line_number = 1;
+	unique_ptr<vector<string>> includedFilesStore;
+	int lineNumber = 1;
 	while (ifs) {
-		int c = ifs.peek();
-		if (c < 0 || strchr("\n&#%;*", c))  // comment or empty line?
-			ifs.ignore(numeric_limits<int>::max(), '\n');
-		else {
-			try {
+		try {
+			int c = ifs.peek();
+			if (c < 0 || strchr("\n&%;*", c))  // comment or empty line?
+				ifs.ignore(numeric_limits<int>::max(), '\n');
+			else if (c != '#') {
 				MapLine mapline(ifs);
 				apply(mapline, mode);
 			}
-			catch (const MapLineException &e) {
-				Message::wstream(true) << fname << ", line " << line_number << ": " << e.what() << '\n';
+			else {
+				char line[256];
+				ifs.getline(line, 256);
+				if (strncmp(line, "#include ", 9) == 0) {
+					FilePath path(fname);
+					if (!includedFilesRef && !includedFilesStore) {  // not yet inside an include chain?
+						includedFilesStore = util::make_unique<vector<string>>();
+						includedFilesRef = includedFilesStore.get();
+						includedFilesRef->emplace_back(path.absolute());
+					}
+					include(line+9, path, *includedFilesRef);
+				}
 			}
-			catch (const SubfontException &e) {
-				Message::wstream(true) << e.filename();
-				if (e.lineno() > 0)
-					Message::wstream(false) << ", line " << e.lineno();
-				Message::wstream(false) << e.what() << '\n';
-			}
+			lineNumber++;
 		}
-		line_number++;
+		catch (const MapLineException &e) {
+			Message::wstream(true) << fname << ", line " << lineNumber << ": " << e.what() << '\n';
+		}
+		catch (const SubfontException &e) {
+			Message::wstream(true) << e.filename();
+			if (e.lineno() > 0)
+				Message::wstream(false) << ", line " << e.lineno();
+			Message::wstream(false) << e.what() << '\n';
+		}
 	}
 	return true;
 }
 
 
-bool FontMap::read (const string &fname, char modechar) {
+bool FontMap::read (const string &fname, char modechar, vector<string> *includedFilesRef) {
 	Mode mode;
 	switch (modechar) {
 		case '=': mode = Mode::REPLACE; break;
 		case '-': mode = Mode::REMOVE; break;
 		default : mode = Mode::APPEND;
 	}
-	return read(fname, mode);
+	return read(fname, mode, includedFilesRef);
+}
+
+
+/** Evaluates an #include statement and processes the contents of the included map file.
+ *  @param[in] line parameters of #include statement (optional mode character and file name/path
+ *  @param[in] includingFile path of file containing the #include statement
+ *  @param[in,out] includedFiles sequence of (nested) file paths currently being included */
+void FontMap::include (string line, const FilePath &includingFile, vector<string> &includedFiles) {
+	auto it = line.begin();
+	while (it != line.end() && isspace(*it))
+		++it;
+	char modechar = '+';
+	if (it != line.end() && strchr("+-=", *it))
+		modechar = *it++;
+   string fname = util::trim(line.substr(it-line.begin()));
+	if (fname.size() > 1 && fname[0] == '"' && fname.back() == '"')
+		fname = fname.substr(1, fname.size()-2);   // strip surrounding quotes
+	if (fname.empty())
+		throw MapLineException("file name missing after #include");
+
+	const char *path;
+	auto pos = fname.find('/');
+	if (pos == 0)  // absolute path given?
+		path = fname.c_str();
+	else if (pos == string::npos) {  // filename only given?
+		path = FileFinder::instance().lookup(fname);
+		if (!path)
+			throw MapLineException("include file '"+fname+"' not found");
+	}
+	else {
+		fname = FilePath(fname, true, includingFile.absolute(false)).absolute();
+		path = fname.c_str();
+	}
+	if (find(includedFiles.begin(), includedFiles.end(), path) != includedFiles.end())
+		throw MapLineException("recursive inclusion of file '"+string(path)+"'");
+	includedFiles.emplace_back(path);
+	if (!read(path, modechar, &includedFiles))
+		throw MapLineException("can't open file '"+string(path)+"' for reading");
+	includedFiles.pop_back();
 }
 
 

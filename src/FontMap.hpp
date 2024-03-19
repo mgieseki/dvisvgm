@@ -25,8 +25,10 @@
 #include <ostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "FontStyle.hpp"
 
+class FilePath;
 struct FontEncoding;
 class MapLine;
 class Subfont;
@@ -50,8 +52,8 @@ class FontMap {
 		enum class Mode {APPEND, REMOVE, REPLACE};
 
 		static FontMap& instance ();
-		bool read (const std::string &fname, Mode mode);
-		bool read (const std::string &fname, char modechar);
+		bool read (const std::string &fname, Mode mode, std::vector<std::string> *includedFilesRef=nullptr);
+		bool read (const std::string &fname, char modechar, std::vector<std::string> *includedFilesRef=nullptr);
 		bool read (const std::string &fname_seq);
 		void readdir (const std::string &dirname);
 		bool apply (const MapLine &mapline, Mode mode);
@@ -66,6 +68,7 @@ class FontMap {
 
 	protected:
 		FontMap () =default;
+		void include (std::string line, const FilePath &includingFile, std::vector<std::string> &includedFiles);
 
 	private:
 		std::unordered_map<std::string,std::unique_ptr<Entry>> _entries;

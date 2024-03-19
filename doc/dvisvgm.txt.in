@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-02-04 15:33 +0100
+:revdate: 2024-03-21 13:32 +0100
 
 Name
 ----
@@ -295,6 +295,28 @@ given in 'myfile2.map' are removed from the font map tree.
 +
 For further information about the map file formats and the mode specifiers, see the manuals of
 https://tug.org/texinfohtml/dvips.html[dvips] and https://ctan.org/tex-archive/dviware/dvipdfm[dvipdfm].
++
+dvisvgm supports both the 'dvips' and the 'dvipdfm' map file formats. It extends both variants by an
+include statement that allows for loading other map files inside a map file. The syntax is as follows:
++
+[source,c]
+-----------------------------------------
+#include [<modechar>] <filename|filepath>
+-----------------------------------------
++
+It must be placed on a separate line and start at the first column of that line. Otherwise, it's ignored.
+The optional parameter '<modechar>' (which can be +pass:[+]+, +-+, or +=+) determines how to integrate the data
+read from the included file into the already present mapping data. They work the same way as the mode
+specifiers described above. If '<modechar>' parameter is omitted, it defaults to +pass:[+]+.
++
+The following filename or file path specifies the file to include. In case of plain filenames (without path
+indicators), the files are looked up using the TeX file search functionality, i.e. files in the TeX directory
+tree can easily be added. Relative paths are relative to the location of the file containing the +#include+
+statement. Path components must be separated by forward slashes (+/+), also on Windows systems.
++
+Examples: +#include pdftex.map+ looks for _pdftex.map_ in the current working directory and in the
+TeX directory tree. +#include ./pdftex.map+, on the other hand, looks for _pdftex.map_ only in the
+directory where the including file is located.
 
 *--grad-overlap*::
 Tells dvisvgm to create overlapping grid segments when approximating color gradient fills (also see

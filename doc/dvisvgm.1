@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-02-04
+.\"      Date: 2024-03-21
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.2.2
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-02\-04" "dvisvgm 3\&.2\&.2" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-03\-21" "dvisvgm 3\&.2\&.2" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -379,6 +379,7 @@ is only available if dvisvgm was built with WOFF support enabled\&.
 Loads and evaluates a single font map file or a sequence of font map files\&. These files are required to resolve font file names and encodings\&. dvisvgm does not provide its own map files but tries to read available ones coming with dvips or dvipdfm\&. If option
 \fB\-\-fontmap\fR
 is omitted, dvisvgm looks for the default map files
+\fIdvisvgm\&.map\fR,
 \fIps2pk\&.map\fR,
 \fIpdftex\&.map\fR,
 \fIdvipdfm\&.map\fR, and
@@ -429,6 +430,45 @@ For further information about the map file formats and the mode specifiers, see 
 dvips (\m[blue]https://tug.org/texinfohtml/dvips.html\m[])
 and
 dvipdfm (\m[blue]https://ctan.org/tex-archive/dviware/dvipdfm\m[])\&.
+.sp
+dvisvgm supports both the
+\fIdvips\fR
+and the
+\fIdvipdfm\fR
+map file formats\&. It extends both variants by an include statement that allows for loading other map files inside a map file\&. The syntax is as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#include [<modechar>] <filename|filepath>
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+It must be placed on a separate line and start at the first column of that line\&. Otherwise, it\(cqs ignored\&. The optional parameter
+\fI<modechar>\fR
+(which can be
+\fB+\fR,
+\fB\-\fR, or
+\fB=\fR) determines how to integrate the data read from the included file into the already present mapping data\&. They work the same way as the mode specifiers described above\&. If
+\fI<modechar>\fR
+parameter is omitted, it defaults to
+\fB+\fR\&.
+.sp
+The following filename or file path specifies the file to include\&. In case of plain filenames (without path indicators), the files are looked up using the TeX file search functionality, i\&.e\&. files in the TeX directory tree can easily be added\&. Relative paths are relative to the location of the file containing the
+\fB#include\fR
+statement\&. Path components must be separated by forward slashes (\fB/\fR), also on Windows systems\&.
+.sp
+Examples:
+\fB#include pdftex\&.map\fR
+looks for
+\fIpdftex\&.map\fR
+in the current working directory and in the TeX directory tree\&.
+\fB#include \&./pdftex\&.map\fR, on the other hand, looks for
+\fIpdftex\&.map\fR
+only in the directory where the including file is located\&.
 .RE
 .RE
 .PP
