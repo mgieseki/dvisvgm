@@ -116,7 +116,7 @@ void FilePath::init (string path, bool isfile, string current_dir) {
 		current_dir = FileSystem::getcwd();
 #else
 	_drive = strip_drive_letter(path);
-	if (current_dir.empty() || drive_letter(current_dir) != _drive)
+	if (current_dir.empty() || (_drive && drive_letter(current_dir) != _drive))
 		current_dir = FileSystem::getcwd(_drive);
 	if (!_drive)
 		_drive = drive_letter(current_dir);
