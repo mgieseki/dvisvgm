@@ -86,7 +86,7 @@ FilePath SVGOutput::filepath (int page, int numPages, const HashTriple &hashes) 
 			expanded_pattern = expandFormatString(pattern, page, numPages, hashes);
 		}
 		// append suffix if necessary
-		outpath.set(expanded_pattern, true);
+		outpath.set(expanded_pattern, FilePath::PT_FILE);
 		if (outpath.suffix().empty())
 			outpath.suffix(_zipLevel > 0 ? "svgz" : "svg");
 	}

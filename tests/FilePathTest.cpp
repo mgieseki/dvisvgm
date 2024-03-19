@@ -33,14 +33,14 @@ using namespace std;
 TEST(FilePathTest, empty) {
 	FilePath path;
 	ASSERT_TRUE(path.empty());
-	path.set("/a/b/c/d", false, "/");
+	path.set("/a/b/c/d", FilePath::PT_DIR, "/");
 	ASSERT_FALSE(path.empty());
 	ASSERT_EQ(path.absolute(), "/a/b/c/d");
 }
 
 
 TEST(FilePathTest, dir1) {
-	FilePath fp("a/b/c/d", false, "/");
+	FilePath fp("a/b/c/d", FilePath::PT_DIR, "/");
 	ASSERT_EQ(fp.absolute(), "/a/b/c/d");
 	ASSERT_EQ(fp.relative("/"), "a/b/c/d");
 	ASSERT_EQ(fp.relative("/a/b"), "c/d");
@@ -52,7 +52,7 @@ TEST(FilePathTest, dir1) {
 
 
 TEST(FilePathTest, dir2) {
-	FilePath fp("a/b/c/d", false, "/x/y");
+	FilePath fp("a/b/c/d", FilePath::PT_DIR, "/x/y");
 	ASSERT_EQ(fp.absolute(), "/x/y/a/b/c/d");
 	ASSERT_EQ(fp.relative("/"), "x/y/a/b/c/d");
 	ASSERT_EQ(fp.relative("/x/y/a/b"), "c/d");
@@ -64,7 +64,7 @@ TEST(FilePathTest, dir2) {
 
 
 TEST(FilePathTest, file1) {
-	FilePath fp("a/b/c/d/f.ext", true, "/");
+	FilePath fp("a/b/c/d/f.ext", FilePath::PT_FILE, "/");
 	ASSERT_EQ(fp.absolute(), "/a/b/c/d/f.ext");
 	ASSERT_EQ(fp.relative("/"), "a/b/c/d/f.ext");
 	ASSERT_EQ(fp.relative("/a/b"), "c/d/f.ext");
@@ -84,14 +84,14 @@ TEST(FilePathTest, file1) {
 
 
 TEST(FilePathTest, file2) {
-	FilePath fp("/f.ext", true, "/");
+	FilePath fp("/f.ext", FilePath::PT_FILE, "/");
 	ASSERT_EQ(fp.absolute(), "/f.ext");
 	ASSERT_EQ(fp.relative("/a/b"), "../../f.ext");
 }
 
 
 TEST(FilePathTest, file3) {
-	FilePath fp("/f.ext", true, "/x/y");
+	FilePath fp("/f.ext", FilePath::PT_FILE, "/x/y");
 	ASSERT_EQ(fp.absolute(), "/f.ext");
 	ASSERT_EQ(fp.relative("/a/b"), "../../f.ext");
 }

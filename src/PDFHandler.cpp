@@ -166,7 +166,7 @@ unique_ptr<SVGElement> PDFHandler::convert (const string &fname, int pageno, uni
 	auto closefunc = std::bind(&PDFHandler::elementClosed, this, std::placeholders::_1);
 	xmlParser.setNotifyFuncs(openfunc, closefunc);
 	xmlParser.setRootElement(nullptr);
-	string xmlfname = FileSystem::tmpdir()+FilePath(fname, true).filename()+"-"+ to_string(_pageno)+".xml";
+	string xmlfname = FileSystem::tmpdir()+FilePath(fname, FilePath::PT_FILE).filename()+"-"+ to_string(_pageno)+".xml";
 	mutool("draw -Ftrace -o"+xmlfname+" "+_fname+" "+to_string(_pageno));
 	ifstream ifs(xmlfname);
 	xmlParser.parse(ifs);
@@ -180,7 +180,7 @@ unique_ptr<SVGElement> PDFHandler::convert (const string &fname, int pageno, uni
 
 void PDFHandler::initFile (const string &fname) {
 	finishFile();
-	_fname = FilePath(fname, true).absolute();
+	_fname = FilePath(fname, FilePath::PT_FILE).absolute();
 	_fname = "\"" + _fname + "\"";
 	_numPages = parse_value<int>(mtShow("trailer/Root/Pages/Count"));
 	// extract image and font files from the PDF

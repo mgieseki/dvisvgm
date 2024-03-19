@@ -131,7 +131,7 @@ void FontMap::include (string line, const FilePath &includingFile, vector<string
 			throw MapLineException("include file '"+fname+"' not found");
 	}
 	else {
-		fname = FilePath(fname, true, includingFile.absolute(false)).absolute();
+		fname = FilePath(fname, FilePath::PT_FILE, includingFile.absolute(false)).absolute();
 		path = fname.c_str();
 	}
 	if (find(includedFiles.begin(), includedFiles.end(), path) != includedFiles.end())
