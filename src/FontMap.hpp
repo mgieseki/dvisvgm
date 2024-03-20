@@ -54,7 +54,7 @@ class FontMap {
 		static FontMap& instance ();
 		bool read (const std::string &fname, Mode mode, std::vector<std::string> *includedFilesRef=nullptr);
 		bool read (const std::string &fname, char modechar, std::vector<std::string> *includedFilesRef=nullptr);
-		bool read (const std::string &fname_seq);
+		bool read (const std::string &fname_seq, bool warn=false);
 		void readdir (const std::string &dirname);
 		bool apply (const MapLine &mapline, Mode mode);
 		bool apply (const MapLine &mapline, char modechar);

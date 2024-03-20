@@ -301,7 +301,7 @@ static void init_fontmap (const CommandLine &cmdline) {
 			Message::wstream(true) << "none of the default map files could be found\n";
 	}
 	if (!mapseq.empty())
-		FontMap::instance().read(mapseq);
+		FontMap::instance().read(mapseq, true);
 }
 
 

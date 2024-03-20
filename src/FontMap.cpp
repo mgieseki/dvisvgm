@@ -44,7 +44,7 @@ FontMap& FontMap::instance() {
 
 
 /** Reads and evaluates a single font map file.
- *  @param[in] fname name of map file to read
+ *  @param[in] fname path/name of map file to read (it's not looked up via FileFinder)
  *  @param[in] mode selects how to integrate the map file entries into the global map tree
  *  @param[in,out] includedFilesRef pointer to sequence of (nested) file paths currently being included
  *  @return true if file could be opened */
@@ -94,6 +94,11 @@ bool FontMap::read (const string &fname, FontMap::Mode mode, vector<string> *inc
 }
 
 
+/** Reads and evaluates a single font map file.
+ *  @param[in] fname path/name of map file to read (it's not looked up via FileFinder)
+ *  @param[in] mode character '+', '-', or '=' to determine how the map file entries are merged into the global map tree
+ *  @param[in,out] includedFilesRef pointer to sequence of (nested) file paths currently being included
+ *  @return true if file could be opened */
 bool FontMap::read (const string &fname, char modechar, vector<string> *includedFilesRef) {
 	Mode mode;
 	switch (modechar) {
@@ -178,8 +183,9 @@ bool FontMap::apply (const MapLine& mapline, char modechar) {
 /** Reads and evaluates a sequence of map files. Each map file is looked up in the local
  *  directory and the TeX file tree.
  *  @param[in] fname_seq comma-separated list of map file names
+ *  @param[in] warn true: print warning if a file couldn't be read
  *  @return true if at least one of the given map files was found */
-bool FontMap::read (const string &fname_seq) {
+bool FontMap::read (const string &fname_seq, bool warn) {
 	bool found = false;
 	string::size_type left=0;
 	while (left < fname_seq.length()) {
@@ -198,8 +204,8 @@ bool FontMap::read (const string &fname_seq) {
 			if (!read(fname, modechar)) {
 				if (const char *path = FileFinder::instance().lookup(fname, false))
 					found = found || read(path, modechar);
-				else
-					Message::wstream(true) << "map file " << fname << " not found\n";
+				else if (warn)
+					Message::wstream(true) << "map file '" << fname << "' not found\n";
 			}
 		}
 		left = right+1;
