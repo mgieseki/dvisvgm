@@ -208,9 +208,11 @@ bool FontMap::read (const string &fname_seq, bool warn) {
 	bool found = false;
 	string::size_type left=0;
 	while (left < fname_seq.length()) {
-		const char modechar = fname_seq[left];
+		char modechar = fname_seq[left];
 		if (strchr("+-=", modechar))
 			left++;
+		else
+			modechar = '+';
 		string fname;
 		auto right = fname_seq.find(',', left);
 		if (right != string::npos)
