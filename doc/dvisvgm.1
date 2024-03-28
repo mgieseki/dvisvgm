@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-03-21
+.\"      Date: 2024-03-28
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.2.2
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-03\-21" "dvisvgm 3\&.2\&.2" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-03\-28" "dvisvgm 3\&.2\&.2" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -435,19 +435,26 @@ dvisvgm supports both the
 \fIdvips\fR
 and the
 \fIdvipdfm\fR
-map file formats\&. It extends both variants by an include statement that allows for loading other map files inside a map file\&. The syntax is as follows:
+map file formats\&. It extends both variants by two include statements that allow for loading other map files inside a map file\&. The syntax is as follows:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
 #include [<modechar>] <filename|filepath>
+#includefirst [<modechar>] <filename|filepath>
 .fi
 .if n \{\
 .RE
 .\}
 .sp
-It must be placed on a separate line and start at the first column of that line\&. Otherwise, it\(cqs ignored\&. The optional parameter
+They must be placed on a separate line and start at the first column of that line\&. Otherwise, they are ignored\&. While the first variant always tries to include the specified file,
+\fB#includefirst\fR
+is only executed once, i\&.e\&. once a file was successfully included by this statement, all subsequent
+\fB#includefirst\fR
+lines are skipped\&. This can be used to include one of several alternative files, whereby the first one found is loaded and all others are ignored\&.
+.sp
+The optional parameter
 \fI<modechar>\fR
 (which can be
 \fB+\fR,

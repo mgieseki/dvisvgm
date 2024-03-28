@@ -67,14 +67,17 @@ bool FontMap::read (const string &fname, FontMap::Mode mode, vector<string> *inc
 			else {
 				char line[256];
 				ifs.getline(line, 256);
-				if (strncmp(line, "#include ", 9) == 0) {
+				if (strncmp(line, "#include ", 9) == 0 || strncmp(line, "#includefirst ", 14) == 0) {
 					FilePath path(fname);
 					if (!includedFilesRef && !includedFilesStore) {  // not yet inside an include chain?
 						includedFilesStore = util::make_unique<vector<string>>();
 						includedFilesRef = includedFilesStore.get();
 						includedFilesRef->emplace_back(path.absolute());
 					}
-					include(line+9, path, *includedFilesRef);
+					if (strncmp(line, "#include ", 9) == 0)
+						include(line+9, path, *includedFilesRef);
+					else
+						includefirst(line+14, path, *includedFilesRef);
 				}
 			}
 			lineNumber++;
@@ -125,7 +128,7 @@ void FontMap::include (string line, const FilePath &includingFile, vector<string
 	if (fname.size() > 1 && fname[0] == '"' && fname.back() == '"')
 		fname = fname.substr(1, fname.size()-2);   // strip surrounding quotes
 	if (fname.empty())
-		throw MapLineException("file name missing after #include");
+		throw FontMapException("file name missing after #include");
 
 	const char *path;
 	auto pos = fname.find('/');
@@ -134,18 +137,34 @@ void FontMap::include (string line, const FilePath &includingFile, vector<string
 	else if (pos == string::npos) {  // filename only given?
 		path = FileFinder::instance().lookup(fname);
 		if (!path)
-			throw MapLineException("include file '"+fname+"' not found");
+			throw FontMapException("include file '"+fname+"' not found", FontMapException::Cause::FILE_ACCESS_ERROR);
 	}
 	else {
 		fname = FilePath(fname, FilePath::PT_FILE, includingFile.absolute(false)).absolute();
 		path = fname.c_str();
 	}
 	if (find(includedFiles.begin(), includedFiles.end(), path) != includedFiles.end())
-		throw MapLineException("circular inclusion of file '"+string(FilePath(path).shorterAbsoluteOrRelative())+"'");
+		throw FontMapException("circular inclusion of file '"+string(FilePath(path).shorterAbsoluteOrRelative())+"'");
 	includedFiles.emplace_back(path);
 	if (!read(path, modechar, &includedFiles))
-		throw MapLineException("can't open file '"+string(path)+"' for reading");
+		throw FontMapException("include file '"+fname+"' not found", FontMapException::Cause::FILE_ACCESS_ERROR);
 	includedFiles.pop_back();
+}
+
+
+void FontMap::includefirst (string line, const FilePath &includingFile, vector<string> &includedFiles) {
+	if (_firstincludeMode != FirstIncludeMode::OFF)
+		return;
+	try {
+		_firstincludeMode = FirstIncludeMode::ACTIVE;
+		include(std::move(line), includingFile, includedFiles);
+		_firstincludeMode = FirstIncludeMode::DONE;
+	}
+	catch (FontMapException &e) {
+		if (e.cause() != FontMapException::Cause::FILE_ACCESS_ERROR)
+			throw;
+		_firstincludeMode = FirstIncludeMode::OFF;
+	}
 }
 
 

@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-03-21 13:32 +0100
+:revdate: 2024-03-28 10:35 +0100
 
 Name
 ----
@@ -296,15 +296,21 @@ given in 'myfile2.map' are removed from the font map tree.
 For further information about the map file formats and the mode specifiers, see the manuals of
 https://tug.org/texinfohtml/dvips.html[dvips] and https://ctan.org/tex-archive/dviware/dvipdfm[dvipdfm].
 +
-dvisvgm supports both the 'dvips' and the 'dvipdfm' map file formats. It extends both variants by an
-include statement that allows for loading other map files inside a map file. The syntax is as follows:
+dvisvgm supports both the 'dvips' and the 'dvipdfm' map file formats. It extends both variants by two
+include statements that allow for loading other map files inside a map file. The syntax is as follows:
 +
-[source,c]
------------------------------------------
+[listing]
+----------------------------------------------
 #include [<modechar>] <filename|filepath>
------------------------------------------
+#includefirst [<modechar>] <filename|filepath>
+----------------------------------------------
 +
-It must be placed on a separate line and start at the first column of that line. Otherwise, it's ignored.
+They must be placed on a separate line and start at the first column of that line. Otherwise, they are ignored.
+While the first variant always tries to include the specified file, +#includefirst+ is only executed once, i.e.
+once a file was successfully included by this statement, all subsequent +#includefirst+ lines are skipped.
+This can be used to include one of several alternative files, whereby the first one found is loaded and all
+others are ignored.
++
 The optional parameter '<modechar>' (which can be +pass:[+]+, +-+, or +=+) determines how to integrate the data
 read from the included file into the already present mapping data. They work the same way as the mode
 specifiers described above. If '<modechar>' parameter is omitted, it defaults to +pass:[+]+.

@@ -27,10 +27,11 @@
 #include <unordered_map>
 #include <vector>
 #include "FontStyle.hpp"
+#include "MapLine.hpp"
+#include "MessageException.hpp"
 
 class FilePath;
 struct FontEncoding;
-class MapLine;
 class Subfont;
 
 class FontMap {
@@ -50,6 +51,7 @@ class FontMap {
 
 	public:
 		enum class Mode {APPEND, REMOVE, REPLACE};
+		enum class FirstIncludeMode {OFF, ACTIVE, DONE};
 
 		static FontMap& instance ();
 		bool read (const std::string &fname, Mode mode, std::vector<std::string> *includedFilesRef=nullptr);
@@ -69,9 +71,23 @@ class FontMap {
 	protected:
 		FontMap () =default;
 		void include (std::string line, const FilePath &includingFile, std::vector<std::string> &includedFiles);
+		void includefirst (std::string line, const FilePath &includingFile, std::vector<std::string> &includedFiles);
 
 	private:
 		std::unordered_map<std::string,std::unique_ptr<Entry>> _entries;
+		FirstIncludeMode _firstincludeMode = FirstIncludeMode::OFF;
+};
+
+class FontMapException : public MapLineException {
+	public:
+		enum class Cause {UNSPECIFIED, FILE_ACCESS_ERROR};
+
+		FontMapException (const std::string &msg, Cause cause) : MapLineException(msg), _cause(cause) {}
+		explicit FontMapException (const std::string &msg) : FontMapException(msg, Cause::UNSPECIFIED) {}
+		Cause cause () const {return _cause;}
+
+	private:
+		Cause _cause = FontMapException::Cause::UNSPECIFIED;
 };
 
 #endif
