@@ -20,6 +20,7 @@ libgtest_la_LDFLAGS = -pthread
 EXTRA_DIST = gtest/LICENSE \\
 	gtest/include \\
 	gtest/src/gtest.cc \\
+	gtest/src/gtest-assertion-result.cc \\
 	gtest/src/gtest-death-test.cc \\
 	gtest/src/gtest-filepath.cc \\
 	gtest/src/gtest-internal-inl.h \\
