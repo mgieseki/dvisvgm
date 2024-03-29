@@ -3128,9 +3128,7 @@ static const char* TestPartResultTypeToString(TestPartResult::Type type) {
 }
 
 namespace internal {
-namespace {
 enum class GTestColor { kDefault, kRed, kGreen, kYellow };
-}  // namespace
 
 // Prints a TestPartResult to an std::string.
 static std::string PrintTestPartResultToString(
@@ -3274,7 +3272,7 @@ bool ShouldUseColor(bool stdout_is_tty) {
 // that would be colored when printed, as can be done on Linux.
 
 GTEST_ATTRIBUTE_PRINTF_(2, 3)
-static void ColoredPrintf(GTestColor color, const char* fmt, ...) {
+void ColoredPrintf(GTestColor color, const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
 
