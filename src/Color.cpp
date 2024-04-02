@@ -469,9 +469,16 @@ valarray<double> Color::getDoubleValues () const {
  *  @param[in]  cmyk color in CMYK space
  *  @param[out] rgb  RGB approximation */
 void Color::CMYK2RGB (const valarray<double> &cmyk, valarray<double> &rgb) {
-	double kc = 1.0-cmyk[3];
+	double cc = 1-cmyk[0];
+	double mc = 1-cmyk[1];
+	double yc = 1-cmyk[2];
+	double kc = 1-cmyk[3];
+	// https://graphicdesign.stackexchange.com/a/137902
+	rgb[0] = 0.3137+0.5882*cc-0.3529*mc-0.1373*yc+0.47175*cc*mc+0.1173*yc*cc;
+	rgb[1] = 0.2588-0.1961*cc+0.2745*mc-0.0627*yc+0.54825*cc*mc+0.0204*yc*cc+0.1581*yc*mc;
+	rgb[2] = 0.3373-0.3255*cc-0.1569*mc+0.1647*yc+0.1173*cc*mc+0.31365*yc*cc+0.54825*yc*mc;
 	for (int i=0; i < 3; i++)
-		rgb[i] = min(1.0, max(0.0, (1.0-cmyk[i])*kc));
+		rgb[i] = min(1.0, max(0.0, rgb[i]*kc));
 }
 
 
