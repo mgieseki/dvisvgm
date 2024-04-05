@@ -111,15 +111,10 @@ DPair TriangularPatch::valueAt (double u, double v) const {
  *  The relation between the vertices of the triangle and their barycentric coordinates
  *  is as follows: \f$(1,0,0)=p_1, (0,1,0)=p_2, (0,0,1)=p_0\f$. */
 Color TriangularPatch::colorAt (double u, double v) const {
-	ColorGetter getComponents;
-	ColorSetter setComponents;
-	colorQueryFuncs(getComponents, setComponents);
 	valarray<double> comp[3];
 	for (int i=0; i < 3; i++)
-		(_colors[i].*getComponents)(comp[i]);
-	Color color;
-	(color.*setComponents)(comp[0]*(1-u-v) + comp[1]*u + comp[2]*v);
-	return color;
+		comp[i] = _colors[i].getDoubleValues();
+	return Color(comp[0]*(1-u-v) + comp[1]*u + comp[2]*v, colorSpace());
 }
 
 
@@ -130,16 +125,10 @@ Color TriangularPatch::averageColor () const {
 
 /** Compute the average of three given colors depending on the assigned color space. */
 Color TriangularPatch::averageColor (const Color &c1, const Color &c2, const Color &c3) const {
-	ColorGetter getComponents;
-	ColorSetter setComponents;
-	colorQueryFuncs(getComponents, setComponents);
-	valarray<double> va1, va2, va3;
-	(c1.*getComponents)(va1);
-	(c2.*getComponents)(va2);
-	(c3.*getComponents)(va3);
-	Color averageColor;
-	(averageColor.*setComponents)((va1+va2+va3)/3.0);
-	return averageColor;
+	valarray<double> va1 = c1.getDoubleValues();
+	valarray<double> va2 = c2.getDoubleValues();
+	valarray<double> va3 = c3.getDoubleValues();
+	return Color((va1+va2+va3)/3.0, colorSpace());
 }
 
 

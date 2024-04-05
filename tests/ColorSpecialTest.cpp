@@ -86,7 +86,7 @@ TEST_F(ColorSpecialTest, hsb) {
 TEST_F(ColorSpecialTest, cmyk) {
 	std::istringstream iss("cmyk 0.1 0.2 0.4 0.6");
 	handler.process("", iss, actions);
-	EXPECT_TRUE(actions.equals(0x5c523d));
+	EXPECT_TRUE(actions.equals(0x1a336699));
 }
 
 
