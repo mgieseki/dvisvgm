@@ -44,13 +44,6 @@ void TensorProductPatch::setFirstMatrixColumn (DPair source[4][4], int col, bool
 }
 
 
-/*void TensorProductPatch::setPoints (const DPair points[4][4]) {
-	for (int i=0; i < 4; i++)
-		for (int j=0; j < 4; j++)
-			_points[i][j] = points[i][j];
-}*/
-
-
 /** Sets the control points defining the structure of the patch. If the edge flag is 0,
  *  the point vector must contain all 16 control points of the 4x4 matrix in "spiral" order:
  *    0 11 10  9
@@ -73,32 +66,33 @@ void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, Shadin
 
 	// assign the 12 control points that are invariant for all edge flag values
 	int i = (edgeflag == 0 ? 4 : 0);
-	_points[3][1] = points[i++];
-	_points[3][2] = points[i++];
-	_points[3][3] = points[i++];
-	_points[2][3] = points[i++];
-	_points[1][3] = points[i++];
-	_points[0][3] = points[i++];
-	_points[0][2] = points[i++];
-	_points[0][1] = points[i++];
-	_points[1][1] = points[i++];
-	_points[2][1] = points[i++];
-	_points[2][2] = points[i++];
-	_points[1][2] = points[i];
-	// populate the first column of the control point matrix
+	_points[3][1] = points[i++];  //  4
+	_points[3][2] = points[i++];  //  5
+	_points[3][3] = points[i++];  //  6
+	_points[2][3] = points[i++];  //  7
+	_points[1][3] = points[i++];  //  8
+	_points[0][3] = points[i++];  //  9
+	_points[0][2] = points[i++];  // 10
+	_points[0][1] = points[i++];  // 11
+	_points[1][1] = points[i++];  // 12
+	_points[2][1] = points[i++];  // 13
+	_points[2][2] = points[i++];  // 14
+	_points[1][2] = points[i];    // 15
+	// populate first column of control point tensor depending on edge flag value
 	switch (edgeflag) {
 		case 0: setFirstMatrixColumn(&points[0], false); break;
 		case 1: setFirstMatrixColumn(tpPatch->_points[3], false); break;
 		case 2: setFirstMatrixColumn(tpPatch->_points, 3, true); break;
 		case 3: setFirstMatrixColumn(tpPatch->_points[0], true); break;
+		default: ;
 	}
 }
 
 
 /** Sets the vertex colors of the patch. If the edge flag is 0,
  *  the color vector must contain all 4 colors in the following order:
- *  c00, c30, c33, c03, where cXY belongs to the vertex pXY of the control
- *  point matrix.
+ *  c00, c30, c33, c03, where cXY belongs to vertex pXY of the control
+ *  point tensor.
  *  c00 ---- c03
  *   |        |
  *   |        |
@@ -108,7 +102,7 @@ void TensorProductPatch::setPoints (const PointVec &points, int edgeflag, Shadin
  *  @param[in] points the color values in the order c00, c30, c33, c03
  *  @param[in] edgeflag defines how to connect this patch with another one
  *  @param[in] patch reference patch required if edgeflag > 0 */
-void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, ShadingPatch* patch) {
+void TensorProductPatch::setColors (const ColorVec &colors, int edgeflag, ShadingPatch* patch) {
 	TensorProductPatch *tpPatch = nullptr;
 	if (patch && patch->psShadingType() == psShadingType())
 		tpPatch = static_cast<TensorProductPatch*>(patch);
@@ -132,18 +126,9 @@ void TensorProductPatch::setColors(const ColorVec &colors, int edgeflag, Shading
 /** Returns the point P(u,v) of the patch. */
 DPair TensorProductPatch::valueAt (double u, double v) const {
 	// check if we can return one of the vertices
-	if (u == 0) {
-		if (v == 0)
-			return _points[0][0];
-		else if (v == 1)
-			return _points[3][0];
-	}
-	else if (u == 1) {
-		if (v == 0)
-			return _points[0][3];
-		else if (v == 1)
-			return _points[3][3];
-	}
+	if ((u == 0 || u == 1) && (v == 0 || v == 1))
+		return _points[3*int(v)][3*int(u)];
+
 	// compute tensor product
 	DPair p[4];
 	for (int i=0; i < 4; i++) {
@@ -463,27 +448,25 @@ void TensorProductPatch::approximate (int gridsize, Callback &callback) const {
 CoonsPatch::CoonsPatch (const PointVec &points, const ColorVec &colors, Color::ColorSpace cspace, int edgeflag, CoonsPatch *patch)
 	: TensorProductPatch(cspace)
 {
-	setPoints(points, edgeflag, patch);
-	setColors(colors, edgeflag, patch);
+	CoonsPatch::setPoints(points, edgeflag, patch);
+	CoonsPatch::setColors(colors, edgeflag, patch);
 }
 
 
-DPair CoonsPatch::valueAt (double u, double v) const {
-	// Compute the value of P(u,v) using the Coons equation rather than the
-	// tensor product since the "inner" control points of the tensor matrix
-	// might not be set yet.
-	CubicBezier bezier1(_points[3][0], _points[3][1], _points[3][2], _points[3][3]);
-	CubicBezier bezier2(_points[0][0], _points[0][1], _points[0][2], _points[0][3]);
-	CubicBezier bezier3(_points[3][0], _points[2][0], _points[1][0], _points[0][0]);
-	CubicBezier bezier4(_points[3][3], _points[2][3], _points[1][3], _points[0][3]);
-	DPair ph = bezier1.valueAt(u)*(1-v) + bezier2.valueAt(u)*v;
-	DPair pv = bezier3.valueAt(v)*(1-u) + bezier4.valueAt(v)*u;
-	DPair pc = (_points[3][0]*(1-u) + _points[3][3]*u)*(1-v) + (_points[0][0]*(1-u) + _points[0][3]*u)*v;
-	return ph+pv-pc;
+inline DPair internal_control_point (const DPair p[4][4], array<int,16> i) {
+	const DPair &a = p[i[ 0]][i[ 1]];
+	const DPair &b = p[i[ 2]][i[ 3]];
+	const DPair &c = p[i[ 4]][i[ 5]];
+	const DPair &d = p[i[ 6]][i[ 7]];
+	const DPair &e = p[i[ 8]][i[ 9]];
+	const DPair &f = p[i[10]][i[11]];
+	const DPair &g = p[i[12]][i[13]];
+	const DPair &h = p[i[14]][i[15]];
+	return (-a*4.0 + (b+c)*6.0 - (d+e)*2.0 + (f+g)*3.0 - h) / 9.0;
 }
 
 
-/** Sets the 12 control points defining the geometry of the coons patch. The points
+/** Sets the 12 control points defining the geometry of the Coons patch. The points
  *  must be given in the following order:
  *  3  4  5  6
  *  2        7
@@ -505,9 +488,9 @@ void CoonsPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *
 		throw ShadingException("invalid number of control points in Coons patch definition");
 
 	// Since a Coons patch is a special tensor product patch, we only have to reorder the
-	// control points and compute the additional "inner" points of the 4x4 point tensor matrix.
+	// control points and compute the additional "internal" points of the 4x4 point tensor.
 
-	// set outer control points of the tensor matrix except those of the first column
+	// set outer control points of the tensor except those of the first column
 	// because these points depend on the edge flag
 	int i = (edgeflag == 0 ? 4 : 0);
 	_points[3][1] = points[i++];
@@ -525,12 +508,13 @@ void CoonsPatch::setPoints (const PointVec &points, int edgeflag, ShadingPatch *
 		case 1: setFirstMatrixColumn(coonsPatch->_points[3], false); break;
 		case 2: setFirstMatrixColumn(coonsPatch->_points, 3, true); break;
 		case 3: setFirstMatrixColumn(coonsPatch->_points[0], true); break;
+		default: ;
 	}
-	// compute inner control points of the tensor matrix
-	_points[1][1] = valueAt(1.0/3.0, 2.0/3.0);
-	_points[1][2] = valueAt(2.0/3.0, 2.0/3.0);
-	_points[2][1] = valueAt(1.0/3.0, 1.0/3.0);
-	_points[2][2] = valueAt(2.0/3.0, 1.0/3.0);
+	// compute internal control points of the tensor (see PDF Reference 1.7, p. 330)
+	_points[1][1] = internal_control_point(_points, {0, 0, 0, 1, 1, 0, 0, 3, 3, 0, 3, 1, 1, 3, 3, 3});
+	_points[1][2] = internal_control_point(_points, {0, 3, 0, 2, 1, 3, 0, 0, 3, 3, 3, 2, 1, 0, 3, 0});
+	_points[2][1] = internal_control_point(_points, {3, 0, 3, 1, 2, 0, 3, 3, 0, 0, 0, 1, 2, 3, 0, 3});
+	_points[2][2] = internal_control_point(_points, {3, 3, 3, 2, 2, 3, 3, 0, 0, 3, 0, 2, 2, 0, 0, 0});
 }
 
 
@@ -551,6 +535,7 @@ void CoonsPatch::setColors (const ColorVec &colors, int edgeflag, ShadingPatch *
 		case 1: _colors[0] = coonsPatch->_colors[2]; _colors[2] = coonsPatch->_colors[3]; break;
 		case 2: _colors[0] = coonsPatch->_colors[3]; _colors[2] = coonsPatch->_colors[1]; break;
 		case 3: _colors[0] = coonsPatch->_colors[1]; _colors[2] = coonsPatch->_colors[0]; break;
+		default: ;
 	}
 }
 
