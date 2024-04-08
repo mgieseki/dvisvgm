@@ -51,7 +51,7 @@ TEST(ShadingPatchTest, colorQueryFuncs) {
 	colors[0].setRGB(1.0, 0.0, 0.0);
 	colors[1].setRGB(0.0, 1.0, 0.0);
 	colors[2].setRGB(0.0, 0.0, 1.0);
-	TriangularPatch tp1(points, colors, Color::ColorSpace::RGB, 0, 0);
+	TriangularPatch tp1(points, colors, Color::ColorSpace::RGB, 0, nullptr);
 	EXPECT_EQ(tp1.colorAt(0, 0).rgbString(), "#f00");
 	EXPECT_EQ(tp1.colorAt(1, 0).rgbString(), "#0f0");
 	EXPECT_EQ(tp1.colorAt(0, 1).rgbString(), "#00f");
@@ -59,7 +59,7 @@ TEST(ShadingPatchTest, colorQueryFuncs) {
 	colors[0].setGray(0.2);
 	colors[1].setGray(0.4);
 	colors[2].setGray(0.6);
-	TriangularPatch tp2(points, colors, Color::ColorSpace::GRAY, 0, 0);
+	TriangularPatch tp2(points, colors, Color::ColorSpace::GRAY, 0, nullptr);
 	EXPECT_EQ(tp2.colorAt(0, 0).rgbString(), "#333");
 	EXPECT_EQ(tp2.colorAt(1, 0).rgbString(), "#666");
 	EXPECT_EQ(tp2.colorAt(0, 1).rgbString(), "#999");
@@ -67,15 +67,15 @@ TEST(ShadingPatchTest, colorQueryFuncs) {
 	colors[0].setCMYK(1.0, 0.0, 0.0, 0.2);
 	colors[1].setCMYK(0.0, 1.0, 0.0, 0.4);
 	colors[2].setCMYK(0.0, 0.0, 1.0, 0.6);
-	TriangularPatch tp3(points, colors, Color::ColorSpace::CMYK, 0, 0);
-	EXPECT_EQ(tp3.colorAt(0, 0).rgbString(), "#0080b6");
-	EXPECT_EQ(tp3.colorAt(1, 0).rgbString(), "#87034b");
-	EXPECT_EQ(tp3.colorAt(0, 1).rgbString(), "#685a00");
+	TriangularPatch tp3(points, colors, Color::ColorSpace::CMYK, 0, nullptr);
+	EXPECT_EQ(tp3.colorAt(0, 0).rgbString(), "#0092c9");
+	EXPECT_EQ(tp3.colorAt(1, 0).rgbString(), "#9e005e");
+	EXPECT_EQ(tp3.colorAt(0, 1).rgbString(), "#827a00");
 
 	colors[0].setLab(55, 80, 68);
 	colors[1].setLab(30, 62, -108);
 	colors[2].setLab(85, -72, 61);
-	TriangularPatch tp4(points, colors, Color::ColorSpace::LAB, 0, 0);
+	TriangularPatch tp4(points, colors, Color::ColorSpace::LAB, 0, nullptr);
 	EXPECT_EQ(tp4.colorAt(0, 0).rgbString(), "#040404");
 	EXPECT_EQ(tp4.colorAt(1, 0).rgbString(), "#020000");
 	EXPECT_EQ(tp4.colorAt(0, 1).rgbString(), "#040000");

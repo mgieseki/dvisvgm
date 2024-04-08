@@ -51,6 +51,10 @@ double integral (double t0, double t1, int n, const std::function<double(double)
 template <typename T>
 inline int sgn (T x) {return (x > T(0)) - (x < T(0));}
 
+inline double clip (double x, double min, double max) {
+	return x < min ? min : (x > max ? max : x);
+}
+
 } // namespace math
 
 namespace util {

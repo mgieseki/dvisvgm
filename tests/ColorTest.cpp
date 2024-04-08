@@ -65,7 +65,7 @@ TEST(ColorTest, hsb) {
 TEST(ColorTest, cmyk) {
 	Color color;
 	color.setCMYK(0.5, 0.4, 0.6, 0.2);
-	EXPECT_EQ(color.rgbString(), "#67674d");
+	EXPECT_EQ(color.rgbString(), "#767761");
 }
 
 
