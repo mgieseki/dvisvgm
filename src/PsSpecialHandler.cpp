@@ -865,8 +865,8 @@ void PsSpecialHandler::image (std::vector<double> &p) {
  *  The given values must be arranged in PostScript matrix order.
  *  @param[in] v vector containing the matrix values
  *  @param[in] startindex vector index of first component
- *  @param[out] matrix the generated matrix */
-static void create_matrix (vector<double> &v, int startindex, Matrix &matrix) {
+ *  @return the generated matrix */
+static Matrix create_matrix (vector<double> &v, int startindex=0) {
 	// Ensure vector p has 6 elements. If necessary, add missing ones
 	// using corresponding values of the identity matrix.
 	if (v.size()-startindex < 6) {
@@ -881,7 +881,7 @@ static void create_matrix (vector<double> &v, int startindex, Matrix &matrix) {
 	swap(v[startindex+1], v[startindex+2]);  // => (a, c, b, d, e, f)
 	swap(v[startindex+2], v[startindex+4]);  // => (a, c, e, d, b, f)
 	swap(v[startindex+3], v[startindex+4]);  // => (a, c, e, b, d, f)
-	matrix.set(v, startindex);
+	return Matrix(v, startindex);
 }
 
 
@@ -910,8 +910,8 @@ void PsSpecialHandler::makepattern (vector<double> &p) {
 			const double &xstep=p[6], &ystep=p[7]; // horizontal and vertical distance of adjacent tiles
 			int paint_type = static_cast<int>(p[8]);
 
-			Matrix matrix;  // transformation matrix given together with pattern definition
-			create_matrix(p, 9, matrix);
+			// transformation matrix given together with pattern definition
+			Matrix matrix = create_matrix(p, 9);
 			matrix.lmultiply(_actions->getMatrix());
 
 			unique_ptr<PSTilingPattern> pattern;
@@ -1256,11 +1256,8 @@ void PsSpecialHandler::newpath (vector<double> &p) {
 
 
 void PsSpecialHandler::setmatrix (vector<double> &p) {
-	if (_actions) {
-		Matrix m;
-		create_matrix(p, 0, m);
-		_actions->setMatrix(m);
-	}
+	if (_actions)
+		_actions->setMatrix(create_matrix(p));
 }
 
 
