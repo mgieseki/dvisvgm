@@ -184,7 +184,8 @@ GraphicsPath<double> TensorProductPatch::getBoundaryPath () const {
  *  runs "vertically" from P(u,0) to P(u,1) through the patch P.
  *  @param[in] u "horizontal" parameter in the range from 0 to 1
  *  @param[out] bezier the resulting Bézier curve */
-void TensorProductPatch::verticalCurve (double u, CubicBezier &bezier) const {
+CubicBezier TensorProductPatch::verticalCurve (double u) const {
+	CubicBezier bezier;
 	// check for simple cases (boundary curves) first
 	if (u == 0)
 		bezier.setPoints(_points[0][0], _points[1][0], _points[2][0], _points[3][0]);
@@ -194,11 +195,12 @@ void TensorProductPatch::verticalCurve (double u, CubicBezier &bezier) const {
 		// compute "inner" curve
 		DPair p[4];
 		for (int i=0; i < 4; i++) {
-			CubicBezier bezier(_points[i][0], _points[i][1], _points[i][2], _points[i][3]);
-			p[i] = bezier.valueAt(u);
+			CubicBezier hbezier(_points[i][0], _points[i][1], _points[i][2], _points[i][3]);
+			p[i] = hbezier.valueAt(u);
 		}
 		bezier.setPoints(p[0], p[1], p[2], p[3]);
 	}
+	return bezier;
 }
 
 
@@ -206,7 +208,8 @@ void TensorProductPatch::verticalCurve (double u, CubicBezier &bezier) const {
  *  runs "horizontally" from P(0,v) to P(1,v) through the patch P.
  *  @param[in] v "vertical" parameter in the range from 0 to 1
  *  @param[out] bezier the resulting Bézier curve */
-void TensorProductPatch::horizontalCurve (double v, CubicBezier &bezier) const {
+CubicBezier TensorProductPatch::horizontalCurve (double v) const {
+	CubicBezier bezier;
 	// check for simple cases (boundary curves) first
 	if (v == 0)
 		bezier.setPoints(_points[0][0], _points[0][1], _points[0][2], _points[0][3]);
@@ -216,11 +219,12 @@ void TensorProductPatch::horizontalCurve (double v, CubicBezier &bezier) const {
 		// compute "inner" curve
 		DPair p[4];
 		for (int i=0; i < 4; i++) {
-			CubicBezier bezier(_points[0][i], _points[1][i], _points[2][i], _points[3][i]);
-			p[i] = bezier.valueAt(v);
+			CubicBezier vbezier(_points[0][i], _points[1][i], _points[2][i], _points[3][i]);
+			p[i] = vbezier.valueAt(v);
 		}
 		bezier.setPoints(p[0], p[1], p[2], p[3]);
 	}
+	return bezier;
 }
 
 
@@ -276,9 +280,8 @@ static inline double snap (double x) {
 void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, double delta, const vector<CubicBezier> &vbeziers, Callback &callback) const {
 	double v2 = snap(v1+inc);
 	double ov2 = (overlap && v2 < 1) ? snap(v2+inc) : v2;
-	CubicBezier hbezier1, hbezier2;
-	horizontalCurve(v1, hbezier1);
-	horizontalCurve(ov2, hbezier2);
+	CubicBezier hbezier1 = horizontalCurve(v1);
+	CubicBezier hbezier2 = horizontalCurve(ov2);
 	double u1 = 0;
 	for (size_t i=1; i < vbeziers.size(); i++) {
 		double u2 = snap(u1+inc);
@@ -329,8 +332,8 @@ void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, 
 		// collect curves dividing the patch into several columns (curved vertical stripes)
 		vector<CubicBezier> vbeziers(gridsize+1);
 		double u=0;
-		for (int i=0; i <= gridsize; i++) {
-			verticalCurve(u, vbeziers[i]);
+		for (CubicBezier &vbezier : vbeziers) {
+			vbezier = verticalCurve(u);
 			u = snap(u+inc);
 		}
 		// compute the segments row by row
@@ -347,9 +350,9 @@ BoundingBox TensorProductPatch::getBBox () const {
 	BoundingBox bbox;
 	CubicBezier bezier;
 	for (int i=0; i <= 1; i++) {
-		horizontalCurve(i, bezier);
+		bezier = horizontalCurve(i);
 		bbox.embed(bezier.getBBox());
-		verticalCurve(i, bezier);
+		bezier = verticalCurve(i);
 		bbox.embed(bezier.getBBox());
 	}
 	return bbox;

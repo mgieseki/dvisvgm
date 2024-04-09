@@ -179,13 +179,13 @@ TEST_F(TensorProductPatchTest, vertices) {
 
 TEST_F(TensorProductPatchTest, curves) {
 	CubicBezier bezier;
-	_patch.horizontalCurve(0, bezier);
+	bezier = _patch.horizontalCurve(0);
 	CHECK_BEZIER_POINTS("A", bezier, DPair(10, 10), DPair(20, 0), DPair(50, 30), DPair(70, 20));
-	_patch.horizontalCurve(1, bezier);
+	bezier = _patch.horizontalCurve(1);
 	CHECK_BEZIER_POINTS("B", bezier, DPair(10, 70), DPair(20, 100), DPair(70, 100), DPair(100, 70));
-	_patch.verticalCurve(0, bezier);
+	bezier = _patch.verticalCurve(0);
 	CHECK_BEZIER_POINTS("C", bezier, DPair(10, 10), DPair(0, 30), DPair(20, 40), DPair(10, 70));
-	_patch.verticalCurve(1, bezier);
+	bezier = _patch.verticalCurve(1);
 	CHECK_BEZIER_POINTS("D", bezier, DPair(70, 20), DPair(80, 50), DPair(90, 60), DPair(100, 70));
 }
 

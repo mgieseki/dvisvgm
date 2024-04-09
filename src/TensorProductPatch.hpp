@@ -47,8 +47,8 @@ class TensorProductPatch : public ShadingPatch {
 		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
 		virtual DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
-		void horizontalCurve (double v, CubicBezier &bezier) const;
-		void verticalCurve (double u, CubicBezier &bezier) const;
+		CubicBezier horizontalCurve (double v) const;
+		CubicBezier verticalCurve (double u) const;
 		GraphicsPath<double> getBoundaryPath () const override;
 		void subpatch (double u1, double u2, double v1, double v2, TensorProductPatch &patch) const;
 		DPair blossomValue (double u1, double u2, double u3, double v1, double v2, double v3) const;
