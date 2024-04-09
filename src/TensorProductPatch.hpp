@@ -47,7 +47,6 @@ class TensorProductPatch : public ShadingPatch {
 		void setColors (const ColorVec &colors, int edgeflag, ShadingPatch *patch) override;
 		virtual DPair valueAt (double u, double v) const;
 		Color colorAt (double u, double v) const;
-		Color averageColor () const override;
 		void horizontalCurve (double v, CubicBezier &bezier) const;
 		void verticalCurve (double u, CubicBezier &bezier) const;
 		GraphicsPath<double> getBoundaryPath () const override;
@@ -60,7 +59,6 @@ class TensorProductPatch : public ShadingPatch {
 		int numColors (int edgeflag) const override {return edgeflag == 0 ? 4 : 2;}
 
 	protected:
-		Color averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const;
 		void approximateRow (double v1, double inc, bool overlap, double delta, const std::vector<CubicBezier> &beziers, Callback &callback) const;
 		void setFirstMatrixColumn (const DPair source[4], bool reverse);
 		void setFirstMatrixColumn (DPair source[4][4], int col, bool reverse);

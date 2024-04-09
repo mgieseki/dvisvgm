@@ -165,21 +165,6 @@ Color TensorProductPatch::colorAt (double u, double v) const {
 }
 
 
-Color TensorProductPatch::averageColor () const {
-	return averageColor(_colors[0], _colors[1], _colors[2], _colors[3]);
-}
-
-
-/** Compute the average of four given colors depending on the assigned color space. */
-Color TensorProductPatch::averageColor (const Color &c1, const Color &c2, const Color &c3, const Color &c4) const {
-	valarray<double> va1 = c1.getDoubleValues();
-	valarray<double> va2 = c2.getDoubleValues();
-	valarray<double> va3 = c3.getDoubleValues();
-	valarray<double> va4 = c4.getDoubleValues();
-	return Color((va1+va2+va3+va4)/4.0, colorSpace());
-}
-
-
 GraphicsPath<double> TensorProductPatch::getBoundaryPath () const {
 	// Simple approach: Use the outer curves as boundary path. This doesn't always lead
 	// to correct results since, depending on the control points, P(u,v) might exceed
@@ -317,7 +302,8 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, do
 			path.lineto(b3.point(0));
 		}
 		path.closepath();
-		callback.patchSegment(path, averageColor(colorAt(u1, v1), colorAt(u2, v1), colorAt(u1, v2), colorAt(u2, v2)));
+		// draw segment filled with its midpoint color
+		callback.patchSegment(path, colorAt((u1+u2)/2, (v1+v2)/2));
 		u1 = u2;
 	}
 }

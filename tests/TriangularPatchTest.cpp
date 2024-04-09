@@ -105,17 +105,6 @@ TEST(TriangularPatchTest, colorAt) {
 }
 
 
-TEST(TriangularPatchTest, averageColor) {
-	vector<DPair> points(3);
-	vector<Color> colors(3);
-	colors[0] = Color(1.0, 0.0, 0.0);
-	colors[1] = Color(0.0, 1.0, 0.0);
-	colors[2] = Color(0.0, 0.0, 1.0);
-	TriangularPatch tp(points, colors, Color::ColorSpace::RGB, 0, 0);
-	EXPECT_EQ(tp.averageColor(), Color(uint8_t(85), uint8_t(85), uint8_t(85)));
-}
-
-
 TEST(TriangularPatchTest, bbox) {
 	vector<DPair> points(3);
 	points[0] = DPair(0, 0);

@@ -164,12 +164,6 @@ TEST_F(TensorProductPatchTest, valueAt) {
 }
 
 
-TEST_F(TensorProductPatchTest, averageColor) {
-	EXPECT_EQ(_patch.averageColor().rgbString(), "#bf8040");
-}
-
-
-
 TEST_F(TensorProductPatchTest, vertices) {
 	EXPECT_EQ(_patch.valueAt(0,0), DPair(10,10));
 	EXPECT_EQ(_patch.valueAt(0,1), DPair(10,70));
@@ -299,9 +293,8 @@ TEST_F(TensorProductPatchTest, approximate) {
 		"M36.25 15C47.5 20 60 25 70 20C75 35 80 45 85 52.5C68.75 55 55.3125 56.25 43.28125 54.21875C40 40.9375 36.25 27.5 36.25 15Z"
 		"M10 36.25C20.625 46.875 31.25 52.1875 43.28125 54.21875C46.5625 67.5 49.375 80.625 47.5 92.5C30 92.5 15 85 10 70C15 55 12.5 45 10 36.25Z"
 		"M43.28125 54.21875C55.3125 56.25 68.75 55 85 52.5C90 60 95 65 100 70C85 85 65 92.5 47.5 92.5C49.375 80.625 46.5625 67.5 43.28125 54.21875Z");
-	EXPECT_EQ(callback.colorstr(), "#cf6010#70a030#efa030#cf6090");
+	EXPECT_EQ(callback.colorstr(), "#cf6010#709f30#ef9f30#cf608f");
 }
-
 
 
 TEST_F(TensorProductPatchTest, fail) {
