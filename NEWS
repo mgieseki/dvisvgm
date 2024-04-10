@@ -1,3 +1,13 @@
+dvisvgm-3.3 (2024-04-10)
+- added file dvisvgm.map to the default font map files being looked up
+- added evaluation of #include and #includefirst present in font map files
+- changed conversion of CMYK colors to RGB so that the resulting colors are
+  now similar to those created by Ghostscript and several PDF viewers
+- fixed invalid bounding boxes assigned when converting multiple DVI pages
+  (GH issue #268)
+- fixed computation of internal Coons tensor points
+- updated bundled Google Test to version 1.12.1
+
 dvisvgm-3.2.2 (2024-03-07)
 - fixed the extraction of bitmaps from PS/EPS files that no longer worked
   since Ghostscript 10.02.1 due to the removal of GS-specific operators
