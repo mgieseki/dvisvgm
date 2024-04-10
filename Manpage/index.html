@@ -475,7 +475,7 @@ dvisvgm issues a corresponding warning message.</p>
 Loads and evaluates a single font map file or a sequence of font map files. These files are required
 to resolve font file names and encodings. dvisvgm does not provide its own map files but tries to read
 available ones coming with dvips or dvipdfm. If option <strong>--fontmap</strong> is omitted, dvisvgm looks for the
-default map files <em>ps2pk.map</em>, <em>pdftex.map</em>, <em>dvipdfm.map</em>, and <em>psfonts.map</em> (in this order).
+default map files <em>dvisvgm.map</em>, <em>ps2pk.map</em>, <em>pdftex.map</em>, <em>dvipdfm.map</em>, and <em>psfonts.map</em> (in this order).
 Otherwise, the files given as option arguments are evaluated in the given order. Multiple filenames
 must be separated by commas without leading and/or trailing whitespace.
 </p>
@@ -519,6 +519,24 @@ where all redefinitions of <em>myfile1.map</em> replace previous entries. Afterw
 given in <em>myfile2.map</em> are removed from the font map tree.</p>
 <p>For further information about the map file formats and the mode specifiers, see the manuals of
 <a href="https://tug.org/texinfohtml/dvips.html">dvips</a> and <a href="https://ctan.org/tex-archive/dviware/dvipdfm">dvipdfm</a>.</p>
+<p>dvisvgm supports both the <em>dvips</em> and the <em>dvipdfm</em> map file formats. It extends both variants by two
+include statements that allow for loading other map files inside a map file. The syntax is as follows:</p><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>#include [&lt;modechar&gt;] &lt;filename|filepath&gt;
+</span></span><span style="display:flex;"><span>#includefirst [&lt;modechar&gt;] &lt;filename|filepath&gt;</span></span></code></pre></div>
+<p>They must be placed on a separate line and start at the first column of that line. Otherwise, they are ignored.
+While the first variant always tries to include the specified file, <code>#includefirst</code> is only executed once, i.e.
+once a file was successfully included by this statement, all subsequent <code>#includefirst</code> lines are skipped.
+This can be used to include one of several alternative files, whereby the first one found is loaded and all
+others are ignored.</p>
+<p>The optional parameter <em>&lt;modechar&gt;</em> (which can be <code>+</code>, <code>-</code>, or <code>=</code>) determines how to integrate the data
+read from the included file into the already present mapping data. They work the same way as the mode
+specifiers described above. If <em>&lt;modechar&gt;</em> parameter is omitted, it defaults to <code>+</code>.</p>
+<p>The following filename or file path specifies the file to include. In case of plain filenames (without path
+indicators), the files are looked up using the TeX file search functionality, i.e. files in the TeX directory
+tree can easily be added. Relative paths are relative to the location of the file containing the <code>#include</code>
+statement. Path components must be separated by forward slashes (<code>/</code>), also on Windows systems.</p>
+<p>Examples: <code>#include pdftex.map</code> looks for <em>pdftex.map</em> in the current working directory and in the
+TeX directory tree. <code>#include ./pdftex.map</code>, on the other hand, looks for <em>pdftex.map</em> only in the
+directory where the including file is located.</p>
 </dd>
 </div>
 </dl>
@@ -1886,9 +1904,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.2.2</div>
+   <div class="col-md-6">Version 3.3</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-02-04</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-03-28</span>
    </div>
 </div>
 </div>

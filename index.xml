@@ -3,8 +3,36 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 07 Mar 2024 13:44:00 +0100</pubDate>
+    <pubDate>Wed, 10 Apr 2024 16:18:56 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#f3047466c5139b2a690ccf34f9404a61</link>
+      <pubDate>Wed, 10 Apr 2024 15:59:07 +0200</pubDate>
+      <guid>f3047466c5139b2a690ccf34f9404a61</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added file <code>dvisvgm.map</code> to the default font map files being looked up automatically. It can be used to add font mappings
+which should always be taken into account when <em>dvisvgm</em> is called.</li>
+<li>Added evaluation of <code>#include</code> and <code>#includefirst</code> present in font map files to allow for including the contents of other map files.</li>
+<li>The conversion of CMYK colors to RGB has been modified so that the resulting colors are now close to those created by Ghostscript
+and most PDF viewers. Previously, a simple mapping of the color components, like cmyk(1,0,1,0)=rgb(0,1,0) for <em>green</em>,
+was used. Ghostscript, in contrast, applies ICC profiles to display colors as produced by a designated printer.<br>
+Here&rsquo;s an example showing the results of the old (left) and the new CMYK to RGB color conversion applied to a Coons shading patch:</li>
+</ul>
+<p style="text-align:center">
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/66254d2e-f599-4076-8da8-33f27efa880f"/>
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/7410de82-4767-4326-9043-5265cace6d12"/>
+</p>
+<ul>
+<li>Fixed the initialization of a transformation matrix which led to invalid bounding boxes when converting a sequence of DVI pages (<a href="https://github.com/mgieseki/dvisvgm/issues/268">issue #268</a>).</li>
+<li>Fixed the computation of internal Coons tensor points.</li>
+<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> to version 1.12.1.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.2.2 has been released</title>
@@ -136,7 +164,7 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
     
     <item>
       <title>dvisvgm 3.0.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#a9638fb710d7e1ddd1fa29ebd520f1a4</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#a9638fb710d7e1ddd1fa29ebd520f1a4</link>
       <pubDate>Tue, 21 Feb 2023 12:20:06 +0100</pubDate>
       <guid>a9638fb710d7e1ddd1fa29ebd520f1a4</guid>
       <description>
@@ -292,7 +320,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
       <pubDate>Wed, 26 Jan 2022 10:06:55 +0100</pubDate>
       <guid>cac0a6dd77a51a4ac4ebe47b653b4442</guid>
       <description>
@@ -361,22 +389,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Fixed the handling of root directories of file paths.</li>
 <li>Improved the handling of drive letters (Windows only).</li>
 <li>Several code refactorings and improvements.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.11.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#e423fc038b1ff9a9ba28e1b1cfbd3d6f</link>
-      <pubDate>Thu, 21 Jan 2021 15:20:02 +0100</pubDate>
-      <guid>e423fc038b1ff9a9ba28e1b1cfbd3d6f</guid>
-      <description>
-        <![CDATA[<p>This is a small maintenance release.</p>
-<ul>
-<li>Fixed possible ambiguities of GID to charcode mappings (<a href="https://github.com/mgieseki/dvisvgm/issues/147">issue #147</a>).</li>
-<li>Refactored the representation of token objects in class <code>Calculator</code>.</li>
-<li>Few minor code and test improvements.</li>
 </ul>
 ]]>
       </description>
