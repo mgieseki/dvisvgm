@@ -43,6 +43,7 @@ bool SVGTree::CREATE_USE_ELEMENTS=false;
 bool SVGTree::RELATIVE_PATH_CMDS=false;
 bool SVGTree::MERGE_CHARS=true;
 bool SVGTree::ADD_COMMENTS=false;
+bool SVGTree::EMBED_BITMAP_DATA = false;
 double SVGTree::ZOOM_FACTOR=1.0;
 
 

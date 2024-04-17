@@ -44,7 +44,6 @@ bool PsSpecialHandler::SHADING_SEGMENT_OVERLAP = false;
 int PsSpecialHandler::SHADING_SEGMENT_SIZE = 20;
 double PsSpecialHandler::SHADING_SIMPLIFY_DELTA = 0.01;
 string PsSpecialHandler::BITMAP_FORMAT;
-bool PsSpecialHandler::EMBED_BITMAP_DATA = false;
 
 
 PsSpecialHandler::PsSpecialHandler () : _psi(this), _previewHandler(_psi)
@@ -419,7 +418,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fn
 	imgnode.element->addAttribute("y", 0);
 	imgnode.element->addAttribute("width", bbox.width());
 	imgnode.element->addAttribute("height", bbox.height());
-	if (EMBED_BITMAP_DATA)
+	if (SVGTree::EMBED_BITMAP_DATA)
 		imgnode.element->addAttribute("@@xlink:href", "data:" + util::mimetype(fname) + ";base64," + fname);
 	else {
 		string href = path;

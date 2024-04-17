@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-03-28 10:35 +0100
+:revdate: 2024-04-17 17:16 +0200
 
 Name
 ----
@@ -221,8 +221,9 @@ Embeds the contents of bitmap files into the generated SVG files instead of addi
 Because of the base64-encoded data, the SVG files are usually much bigger but at the same time
 more portable because they don't rely on external bitmap files.
 +
-This option only affects bitmaps referenced in DVI/XDV files, e.g. added by +\includegraphics+.
-Bitmaps in PostScript or PDF files are always embedded. Also see option *bitmap-format*.
+This option only affects bitmaps referenced in DVI/XDV files, e.g. by +\includegraphics+ or
+special command +dvisvgm:img+ (see below). Bitmaps present in PostScript or PDF files are always
+embedded. Also see option *bitmap-format*.
 
 *-E, --eps*::
 If this option is given, dvisvgm does not expect a DVI but a single or multiple EPS input files,
@@ -881,10 +882,18 @@ The following list gives a brief overview of dvisvgm's own set of currently supp
   <defs> section of the current SVG document only once.
 
   *dvisvgm:img* 'width' 'height' 'file';;
-  Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
-  can be used here. However, dvisvgm does not check the file format or the file name suffix. The lengths 'width'
-  and 'height' can be given together with a unit specifier (see option *--bbox*) or as plain floating point numbers.
-  In the latter case, TeX point units are assumed (1in = 72.27pt).
+  Creates an +image+ element using the current graphic position, transformation matrix, the specified extents,
+  and the given filename. This special command also updates the bounding box of the resulting SVG to entirely
+  enclose the transformed image. The image itself is positioned such that the lower left corner of the
+  untransformed image lies at the current graphic position. The length 'width' and 'height' specify the extents
+  of the untransformed image. For a list of supported length units see option *--bbox*. Plain numbers without an
+  appended unit specifier imply TeX points (1in = 72.27pt).
+  +
+  Parameter 'file' can be a plain filename or a relative or absolute path of a file. By default, dvisvgm just
+  creates links referencing the image file so that the SVG renderer will evaluate the filename or path relative
+  to the location of the generated SVG file. If option *--embed-bitmaps* is given, JPEG and PNG images are
+  embedded into the SVG document. As this requires base64-encoding of the image data, the resulting SVG files
+  can become quite big.
 
   *dvisvgm:bbox* lock;;
   Locks the bounding box of the current page and prevents it from further updating, i.e. graphics elements added

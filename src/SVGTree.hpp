@@ -89,6 +89,7 @@ class SVGTree {
 		static bool MERGE_CHARS;         ///< whether to merge chars with common properties into the same <text> tag
 		static bool ADD_COMMENTS;        ///< add comments with additional information
 		static double ZOOM_FACTOR;       ///< factor applied to width/height attribute
+		static bool EMBED_BITMAP_DATA;   ///< if true, bitmaps are embedded into the SVG document
 
 	private:
 		XMLDocument _doc;

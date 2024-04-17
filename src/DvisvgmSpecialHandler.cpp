@@ -22,6 +22,8 @@
 #include <utility>
 #include "Calculator.hpp"
 #include "DvisvgmSpecialHandler.hpp"
+#include "FileFinder.hpp"
+#include "FileSystem.hpp"
 #include "GraphicsPathParser.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
@@ -355,20 +357,51 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 }
 
 
+inline string filename_suffix (const string &fname) {
+	string ret;
+	auto pos = fname.rfind('.');
+	if (pos != string::npos)
+		ret = util::tolower(fname.substr(pos+1));
+	return ret;
+}
+
+
 void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions) {
 	try {
-		Length w = read_length(ir);
-		Length h = read_length(ir);
-		string f = ir.getString();
-		update_bbox(w, h, Length(0), false, actions);
-		auto img = util::make_unique<SVGElement>("image");
-		img->addAttribute("x", actions.getX());
-		img->addAttribute("y", actions.getY());
-		img->addAttribute("width", w.bp());
-		img->addAttribute("height", h.bp());
-		img->addAttribute("xlink:href", f);
-		img->setTransform(actions.getMatrix());
-		actions.svgTree().appendToPage(std::move(img));
+		const Length width = read_length(ir);
+		const Length height = read_length(ir);
+		const string fname = ir.getString();
+		const string suffix = filename_suffix(fname);
+
+		string pathstr;
+		if (const char *path = FileFinder::instance().lookup(fname, false))
+			pathstr = FileSystem::ensureForwardSlashes(path);
+		if ((pathstr.empty() || !FileSystem::exists(pathstr)) && FileSystem::exists(fname))
+			pathstr = fname;
+		if (pathstr.empty())
+			Message::wstream(true) << "file '" << fname << "' not found\n";
+
+		update_bbox(width, height, Length(0), true, actions);
+		auto imgageNode = util::make_unique<SVGElement>("image");
+		imgageNode->addAttribute("x", actions.getX());
+		imgageNode->addAttribute("y", actions.getY()-height.bp());
+		imgageNode->addAttribute("width", width.bp());
+		imgageNode->addAttribute("height", height.bp());
+
+		string mimetype = util::mimetype(fname);
+		if (SVGTree::EMBED_BITMAP_DATA && (mimetype == "image/jpeg" || mimetype == "image/png"))
+			imgageNode->addAttribute("@@xlink:href", "data:"+mimetype+";base64,"+fname);
+		else {
+			string href = fname;
+			// Only reference the image with an absolute path if either an absolute path was given by the user
+			// or a given plain filename is not present in the current working directory but was found through
+			// the FileFinder, i.e. it's usually located somewhere in the texmf tree.
+			if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
+				href = FilePath(pathstr).relative(FilePath(actions.getSVGFilePath(1)));
+			imgageNode->addAttribute("xlink:href", href);
+		}
+		imgageNode->setTransform(actions.getMatrix());
+		actions.svgTree().appendToPage(std::move(imgageNode));
 	}
 	catch (const UnitException &e) {
 		throw SpecialException(string("dvisvgm:img: ") + e.what());

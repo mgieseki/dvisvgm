@@ -382,7 +382,7 @@ static void set_variables (const CommandLine &cmdline) {
 #ifdef TTFDEBUG
 	ttf::TTFWriter::CREATE_PS_GLYPH_OUTLINES = cmdline.debugGlyphsOpt.given();
 #endif
-	PsSpecialHandler::EMBED_BITMAP_DATA = cmdline.embedBitmapsOpt.given();
+	SVGTree::EMBED_BITMAP_DATA = cmdline.embedBitmapsOpt.given();
 	if (!PSInterpreter::imageDeviceKnown(PsSpecialHandler::BITMAP_FORMAT)) {
 		ostringstream oss;
 		oss << "unknown image format '" << PsSpecialHandler::BITMAP_FORMAT << "'\nknown formats:\n";

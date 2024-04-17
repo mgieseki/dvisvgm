@@ -20,10 +20,15 @@
 
 #include <gtest/gtest.h>
 #include <array>
+#include <regex>
 #include <sstream>
 #include "DvisvgmSpecialHandler.hpp"
 #include "SpecialActions.hpp"
 #include "XMLNode.hpp"
+
+#ifndef SRCDIR
+#define SRCDIR "."
+#endif
 
 using namespace std;
 
@@ -54,6 +59,7 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				FilePath getSVGFilePath(unsigned pageno) const override {return FilePath("test.svg");}
 				bool defsEquals (const string &str) const      {return defsString() == str;}
 				bool pageEquals (const string &str) const      {return pageString() == str;}
+				bool pageMatches (const string &pattern) const {return regex_match(pageString(), regex(pattern));}
 				bool bboxEquals (const string &str) const      {return bbox.svgViewBoxString() == str;}
 				string bboxString () const                     {return bbox.svgViewBoxString();}
 				string defsString () const                     {return toString(svgTree().defsNode());}
@@ -319,16 +325,16 @@ TEST_F(DvisvgmSpecialTest, fail2) {
 
 
 TEST_F(DvisvgmSpecialTest, processImg) {
-	std::istringstream iss("img 72.27 72.27 test.png");
+	std::istringstream iss("img 72.27 72.27 " SRCDIR "/data/rectangle.png");
 	handler.process("", iss, recorder);
 	EXPECT_TRUE(recorder.defsEquals(""));
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='-42' y='14' width='72' height='72' xlink:href='test.png'/></g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageMatches("<g id='page1'><image x='-42' y='-58' width='72' height='72' xlink:href='.*rectangle.png'/></g>")) << recorder.pageString();
 
 	recorder.clear();
 	iss.clear();
-	iss.str("img 10bp 20bp test2.png");
+	iss.str("img 10bp 20bp " SRCDIR "/data/rectangle.png");
 	handler.process("", iss, recorder);
-	EXPECT_TRUE(recorder.pageEquals("<g id='page1'><image x='-42' y='14' width='10' height='20' xlink:href='test2.png'/></g>")) << recorder.pageString();
+	EXPECT_TRUE(recorder.pageMatches("<g id='page1'><image x='-42' y='-6' width='10' height='20' xlink:href='.*rectangle.png'/></g>")) << recorder.pageString();
 }
 
 

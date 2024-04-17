@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-03-28
+.\"      Date: 2024-04-17
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.3
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-03\-28" "dvisvgm 3\&.3" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-04\-17" "dvisvgm 3\&.3" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -322,8 +322,11 @@ for blue\&. If the optional argument is omitted, black is assumed\&.
 .RS 4
 Embeds the contents of bitmap files into the generated SVG files instead of adding file references\&. Because of the base64\-encoded data, the SVG files are usually much bigger but at the same time more portable because they don\(cqt rely on external bitmap files\&.
 .sp
-This option only affects bitmaps referenced in DVI/XDV files, e\&.g\&. added by
-\fB\eincludegraphics\fR\&. Bitmaps in PostScript or PDF files are always embedded\&. Also see option
+This option only affects bitmaps referenced in DVI/XDV files, e\&.g\&. by
+\fB\eincludegraphics\fR
+or special command
+\fBdvisvgm:img\fR
+(see below)\&. Bitmaps present in PostScript or PDF files are always embedded\&. Also see option
 \fBbitmap\-format\fR\&.
 .RE
 .PP
@@ -1441,12 +1444,20 @@ portions go to the <defs> section of the current SVG document only once\&.
 .PP
 \fBdvisvgm:img\fR \fIwidth\fR \fIheight\fR \fIfile\fR
 .RS 4
-Creates an image element at the current graphic position referencing the given file\&. JPEG, PNG, and SVG images can be used here\&. However, dvisvgm does not check the file format or the file name suffix\&. The lengths
+Creates an
+\fBimage\fR
+element using the current graphic position, transformation matrix, the specified extents, and the given filename\&. This special command also updates the bounding box of the resulting SVG to entirely enclose the transformed image\&. The image itself is positioned such that the lower left corner of the untransformed image lies at the current graphic position\&. The length
 \fIwidth\fR
 and
 \fIheight\fR
-can be given together with a unit specifier (see option
-\fB\-\-bbox\fR) or as plain floating point numbers\&. In the latter case, TeX point units are assumed (1in = 72\&.27pt)\&.
+specify the extents of the untransformed image\&. For a list of supported length units see option
+\fB\-\-bbox\fR\&. Plain numbers without an appended unit specifier imply TeX points (1in = 72\&.27pt)\&.
+
+Parameter
+\fIfile\fR
+can be a plain filename or a relative or absolute path of a file\&. By default, dvisvgm just creates links referencing the image file so that the SVG renderer will evaluate the filename or path relative to the location of the generated SVG file\&. If option
+\fB\-\-embed\-bitmaps\fR
+is given, JPEG and PNG images are embedded into the SVG document\&. As this requires base64\-encoding of the image data, the resulting SVG files can become quite big\&.
 .RE
 .PP
 \fBdvisvgm:bbox\fR lock
