@@ -418,8 +418,9 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fn
 	imgnode.element->addAttribute("y", 0);
 	imgnode.element->addAttribute("width", bbox.width());
 	imgnode.element->addAttribute("height", bbox.height());
-	if (SVGTree::EMBED_BITMAP_DATA)
-		imgnode.element->addAttribute("@@xlink:href", "data:" + util::mimetype(fname) + ";base64," + fname);
+	string mimetype = util::mimetype(fname);
+	if (SVGTree::EMBED_BITMAP_DATA && mimetype != "image/svg+xml")
+		imgnode.element->addAttribute("@@xlink:href", "data:" + mimetype + ";base64," + fname);
 	else {
 		string href = path;
 		// Only reference the image with an absolute path if either an absolute path was given by the user
