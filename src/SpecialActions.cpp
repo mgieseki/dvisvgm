@@ -37,7 +37,7 @@ static void expand_constants (string &str, SpecialActions &actions) {
 			auto endpos = pos+7;
 			while (endpos < str.length() && isalnum(str[endpos]))
 				++endpos;
-			if (str[endpos] != '}')
+			if (endpos == str.length() || str[endpos] != '}')
 				repl_bbox = false;
 			else {
 				BoundingBox &box = actions.bbox(str.substr(pos+7, endpos-pos-7));
