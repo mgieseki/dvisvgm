@@ -104,7 +104,7 @@ bool SVGTree::setFontFormat (string formatstr) {
 	string opt;
 	if (pos != string::npos) {
 		opt = formatstr.substr(pos+1);
-		formatstr = formatstr.substr(0, pos);
+		formatstr.resize(pos);
 	}
 	FontWriter::FontFormat format = FontWriter::toFontFormat(formatstr);
 	if (format == FontWriter::FontFormat::UNKNOWN)

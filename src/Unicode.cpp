@@ -242,7 +242,7 @@ static int32_t extract_codepoint_from_name (const string &name) {
 	if (hexstr.length() < 4 || (offset == 3 && hexstr.length() % 4 != 0))
 		return 0;
 	if (offset == 3)
-		hexstr = hexstr.substr(0, 4);
+		hexstr.resize(4);
 	int32_t codepoint;
 	istringstream iss(hexstr);
 	iss >> hex >> codepoint;

@@ -415,7 +415,9 @@ void PSInterpreter::listImageDeviceInfos (ostream &os) {
 bool PSInterpreter::imageDeviceKnown (string deviceStr) {
 	if (deviceStr.empty() || !isalpha(deviceStr[0]))
 		return false;
-	deviceStr = deviceStr.substr(0, deviceStr.find(':'));  // strip optional argument
+	size_t colonpos = deviceStr.find(':');
+	if (colonpos != string::npos)
+		deviceStr.resize(colonpos);  // strip optional argument
 	auto infos = getImageDeviceInfos();
 	auto it = find_if(infos.begin(), infos.end(), [&](const PSDeviceInfo &info) {
 		return info.name == deviceStr;

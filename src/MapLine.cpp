@@ -39,7 +39,7 @@ MapLine::MapLine (istream &is) : MapLine() {
 MapLine::MapLine (string str) : MapLine() {
 	auto pos = str.rfind('\n');
 	if (pos != string::npos)
-		str = str.substr(0, pos);
+		str.resize(pos);
 	parse(str.c_str());
 }
 
