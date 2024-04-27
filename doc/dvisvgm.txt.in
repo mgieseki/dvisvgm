@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-04-17 17:16 +0200
+:revdate: 2024-04-27 20:18 +0200
 
 Name
 ----
@@ -852,11 +852,16 @@ The following list gives a brief overview of dvisvgm's own set of currently supp
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different 'raw'
   specials. The tags themselves can also be split but must be continued with the immediately following 'raw'
   special. Both syntactically incorrect and wrongly nested tags lead to error messages.
+  +
   Parameter 'text' may also contain the expressions *{?x}*, *{?y}*, *{?color}*, *{?matrix}*, *{?pageno}*,
-  *{?svgfile}*, and *{?svgpath}* that expand to the current 'x' or 'y' coordinate, the current color, the
-  current transformation matrix, the current page number, and the relative and absolute path of the SVG file
-  being created, respectively.
-  Character sequence *{?nl}* expands to a newline character. Finally, constructions of the form *{?(__expr__)}*
+  *{?svgfile}*, and *{?svgpath}* that respectively expand to the current 'x' and 'y' coordinate, an RGB hex
+  string of the current active color, the current transformation matrix, the current page number, and the
+  relative and absolute path of the SVG file being created.
+  As SVG doesn't support CMYK colors, e.g. in +fill+ and +stroke+ attributes, dvisvgm provides macro
+  *{?cmyk(_c_,_m_,_y_,_k_)}* to create an RGB hex string from a CMYK color. In can be used instead of
+  a combination of color or PostScript specials and +{?color}+ to directly insert a CMYK color.
+  +
+  Character sequence *{?nl}* expands to a newline character. Finally, constructions of the form *{?(_expr_)}*
   enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
   modulo. Like above, the variables 'x' and 'y' represent the current coordinates.
   Example: +{?(-10*(x+2y)-5)}+.

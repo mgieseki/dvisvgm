@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-04-17
+.\"      Date: 2024-04-27
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.3
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-04\-17" "dvisvgm 3\&.3" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-04\-27" "dvisvgm 3\&.3" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1362,7 +1362,9 @@ Adds an arbitrary sequence of XML nodes to the page section of the SVG document\
 \fIraw\fR
 specials\&. The tags themselves can also be split but must be continued with the immediately following
 \fIraw\fR
-special\&. Both syntactically incorrect and wrongly nested tags lead to error messages\&. Parameter
+special\&. Both syntactically incorrect and wrongly nested tags lead to error messages\&.
+
+Parameter
 \fItext\fR
 may also contain the expressions
 \fB{?x}\fR,
@@ -1372,11 +1374,21 @@ may also contain the expressions
 \fB{?pageno}\fR,
 \fB{?svgfile}\fR, and
 \fB{?svgpath}\fR
-that expand to the current
+that respectively expand to the current
 \fIx\fR
-or
+and
 \fIy\fR
-coordinate, the current color, the current transformation matrix, the current page number, and the relative and absolute path of the SVG file being created, respectively\&. Character sequence
+coordinate, an RGB hex string of the current active color, the current transformation matrix, the current page number, and the relative and absolute path of the SVG file being created\&. As SVG doesn\(cqt support CMYK colors, e\&.g\&. in
+\fBfill\fR
+and
+\fBstroke\fR
+attributes, dvisvgm provides macro
+\fB{?cmyk(\fR\fB\fIc\fR\fR\fB,\fR\fB\fIm\fR\fR\fB,\fR\fB\fIy\fR\fR\fB,\fR\fB\fIk\fR\fR\fB)}\fR
+to create an RGB hex string from a CMYK color\&. In can be used instead of a combination of color or PostScript specials and
+\fB{?color}\fR
+to directly insert a CMYK color\&.
+
+Character sequence
 \fB{?nl}\fR
 expands to a newline character\&. Finally, constructions of the form
 \fB{?(\fR\fB\fIexpr\fR\fR\fB)}\fR

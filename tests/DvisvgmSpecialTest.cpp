@@ -382,6 +382,8 @@ TEST_F(DvisvgmSpecialTest, expandText) {
 	EXPECT_EQ(recorder.expandText("static text"), "static text");
 	EXPECT_EQ(recorder.expandText("x={?x}, y={?y}"), "x=-42, y=14");
 	EXPECT_EQ(recorder.expandText("page:{?pageno}, file:{?svgfile}"), "page:1, file:test.svg");
+	EXPECT_EQ(recorder.expandText("xxx{?cmyk(1,0,1,0)}yyy"), "xxx#00a650yyy");
+	EXPECT_EQ(recorder.expandText("xxx{?cmyk(1,0,1,0)}yyy{?cmyk(1,0,0,0)}zzz"), "xxx#00a650yyy#00aeefzzz");
 }
 
 
