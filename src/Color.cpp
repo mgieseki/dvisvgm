@@ -44,8 +44,38 @@ inline uint8_t double_to_byte (double v) {
 }
 
 
-Color::Color (const string &psname) {
-	if (!setPSName(psname, false))
+/** Reads n double values from input stream is. The values may be
+ *  separated by whitespace and/or commas. */
+static valarray<double> read_doubles (istream &is, int n) {
+	valarray<double> values(n);
+	for (double &val : values) {
+		is >> ws;
+		if (!util::read_double(is, val))
+			val = 0;
+		is >> ws;
+		if (is.peek() == ',') {
+			is.get();
+			is >> ws;
+		}
+	}
+	return values;
+}
+
+
+/** Creates a color object from a string specifying the color. It can
+ *  either be a PS color name or one of the color functions rgb(r,g,b),
+ *  cmyk(c,m,y,k) where the parameters are numbers in the interval
+ *  from 0 to 1. */
+Color::Color (const string &colorstr) {
+	if (colorstr.substr(0, 4) == "rgb(") {
+		istringstream iss(colorstr.substr(4));
+		setRGB(read_doubles(iss, 3));
+	}
+	else if (colorstr.substr(0, 5) == "cmyk(") {
+		istringstream iss(colorstr.substr(5));
+		setCMYK(read_doubles(iss, 4));
+	}
+	else if (!setPSName(colorstr, false))
 		setGray(uint8_t(0));
 }
 

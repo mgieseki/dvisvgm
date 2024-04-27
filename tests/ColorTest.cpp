@@ -88,6 +88,22 @@ TEST(ColorTest, name) {
 }
 
 
+TEST(ColorTest, rgbfunc) {
+	EXPECT_EQ(Color("rgb(1,0,1)").rgbString(), "#f0f");
+	EXPECT_EQ(Color("rgb(1)").rgbString(), "#f00");
+	EXPECT_EQ(Color("rgb(1 1)").rgbString(), "#ff0");
+	EXPECT_EQ(Color("rgb(0 0 0.5)").rgbString(), "#000080");
+}
+
+
+TEST(ColorTest, cmykfunc) {
+	EXPECT_EQ(Color("cmyk(1,0,1,0)").rgbString(), "#00a650");
+	EXPECT_EQ(Color("cmyk(1)").rgbString(), "#00aeef");
+	EXPECT_EQ(Color("cmyk(1,1)").rgbString(), "#2e3092");
+	EXPECT_EQ(Color("cmyk(0.5 1 0 0)").rgbString(), "#92278f");
+}
+
+
 TEST(ColorTest, getXYZ) {
 	Color c;
 	double x, y, z;

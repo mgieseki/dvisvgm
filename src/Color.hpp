@@ -48,7 +48,7 @@ class Color {
 		Color (double r, double g, double b) noexcept     {setRGB(r,g,b);}
 		explicit Color (const std::valarray<double> &rgb) noexcept {setRGB(rgb);}
 		explicit Color (const std::valarray<double> &rgb, ColorSpace cs) noexcept;
-		explicit Color (const std::string &name);
+		explicit Color (const std::string &colorstr);
 		explicit operator uint32_t () const            {return _value;}
 		bool operator == (const Color &c) const        {return _value == c._value;}
 		bool operator != (const Color &c) const        {return _value != c._value;}
