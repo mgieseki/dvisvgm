@@ -35,7 +35,6 @@ bool Color::SUPPRESS_COLOR_NAMES = true;
 
 const Color Color::BLACK(uint32_t(0));
 const Color Color::WHITE(uint8_t(255), uint8_t(255), uint8_t(255));
-const Color Color::TRANSPARENT(0, ColorSpace::RGB, true);
 
 
 inline uint8_t double_to_byte (double v) {
@@ -80,7 +79,7 @@ Color::Color (const string &colorstr) {
 }
 
 
-Color::Color (const valarray<double> &values, ColorSpace cs) noexcept : _cspace(cs), _transparent(false) {
+Color::Color (const valarray<double> &values, ColorSpace cs) noexcept : _cspace(cs) {
 	int n = numComponents(cs);
 	int i=0;
 	_value = 0;
@@ -92,7 +91,6 @@ Color::Color (const valarray<double> &values, ColorSpace cs) noexcept : _cspace(
 void Color::setRGB (uint8_t r, uint8_t g, uint8_t b)  {
 	_value = (r << 16) | (g << 8) | b;
 	_cspace = ColorSpace::RGB;
-	_transparent = false;
 }
 
 
@@ -121,7 +119,6 @@ bool Color::setRGBHexString (string hexString) {
 			try {
 				_value = stoi(hexString, nullptr, 16);
 				_cspace = ColorSpace::RGB;
-				_transparent = false;
 				return true;
 			}
 			catch (...) {
@@ -138,7 +135,6 @@ bool Color::setRGBHexString (string hexString) {
  *  @return true if color name could be applied properly */
 bool Color::setPSName (string name, bool case_sensitive) {
 	_cspace = ColorSpace::RGB;
-	_transparent = false;
 	if (name[0] == '#') {
 		char *p=nullptr;
 		_value = uint32_t(strtol(name.c_str()+1, &p, 16));
@@ -261,7 +257,6 @@ void Color::setHSB (double h, double s, double b) {
 void Color::setCMYK (uint8_t c, uint8_t m, uint8_t y, uint8_t k) {
 	_value = (c << 24) | (m << 16) | (y << 8) | k;
 	_cspace = ColorSpace::CMYK;
-	_transparent = false;
 }
 
 
@@ -281,6 +276,7 @@ void Color::set (ColorSpace colorSpace, VectorIterator<double> &it) {
 		case ColorSpace::RGB : setRGB(*it, *(it+1), *(it+2)); it+=3; break;
 		case ColorSpace::LAB : setLab(*it, *(it+1), *(it+2)); it+=3; break;
 		case ColorSpace::CMYK: setCMYK(*it, *(it+1), *(it+2), *(it+3)); it+=4; break;
+		default: ;
 	}
 }
 
@@ -581,6 +577,7 @@ valarray<double> Color::getRGBDouble () const {
 			XYZ2RGB(rgbValues, values);
 			rgbValues = std::move(values);
 			break;
+		default: ;
 	}
 	return rgbValues;
 }
@@ -789,6 +786,7 @@ int Color::numComponents (ColorSpace colorSpace) {
 		case ColorSpace::LAB:
 		case ColorSpace::RGB:  return 3;
 		case ColorSpace::CMYK: return 4;
+		default: ;
 	}
 	return 0;
 }

@@ -36,14 +36,13 @@ class Color {
 		static bool SUPPRESS_COLOR_NAMES;
 		static const Color BLACK;
 		static const Color WHITE;
-		static const Color TRANSPARENT;
 
-		enum class ColorSpace {GRAY, RGB, CMYK, LAB};
+		enum class ColorSpace {GRAY, RGB, CMYK, LAB, TRANSPARENT};
 
 	public:
 		Color () noexcept =default;
 		explicit Color (uint32_t rgb) noexcept : _value(rgb) {}
-		Color (uint32_t value, ColorSpace cs, bool transparent=false) : _value(value), _cspace(cs), _transparent(transparent) {}
+		Color (uint32_t value, ColorSpace cs) : _value(value), _cspace(cs) {}
 		Color (uint8_t r, uint8_t g, uint8_t b) noexcept  {setRGB(r,g,b);}
 		Color (double r, double g, double b) noexcept     {setRGB(r,g,b);}
 		explicit Color (const std::valarray<double> &rgb) noexcept {setRGB(rgb);}
@@ -55,6 +54,7 @@ class Color {
 		bool operator < (const Color &c) const         {return _value < c._value;}
 		Color operator *= (double c);
 		Color operator * (double c) const              {return Color(*this) *= c;}
+		bool isTransparent () const                    {return _cspace == ColorSpace::TRANSPARENT;}
 		void setRGB (uint8_t r, uint8_t g, uint8_t b);
 		void setRGB (double r, double g, double b);
 		void setRGB (const std::valarray<double> &rgb) {setRGB(rgb[0], rgb[1], rgb[2]);}
@@ -99,7 +99,6 @@ class Color {
 	private:
 		uint32_t _value=0;
 		ColorSpace _cspace=ColorSpace::RGB;
-		bool _transparent=false;
 };
 
 #endif

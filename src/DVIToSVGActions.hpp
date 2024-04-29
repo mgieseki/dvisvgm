@@ -85,7 +85,7 @@ class DVIToSVGActions : public DVIActions, public SpecialActions {
 		BasicDVIReader *_dvireader;
 		BoundingBox _bbox;
 		int _pageCount=0;
-		Color _bgcolor=Color::TRANSPARENT;
+		Color _bgcolor=Color(0, Color::ColorSpace::TRANSPARENT);
 		BoxMap _boxes;
 		bool _outputLocked=false;
 };
