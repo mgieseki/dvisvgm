@@ -39,8 +39,8 @@ class TpicSpecialTest : public ::testing::Test {
 				void setY (double yy) override               {x = yy;}
 				double getX () const override                {return x;}
 				double getY () const override                {return y;}
-				Color getColor () const override             {return color;}
-				void setColor (const Color &c) override      {color = c;}
+				Color getFillColor () const override         {return color;}
+				void setFillColor (const Color &c) override  {color = c;}
 				const Matrix& getMatrix () const override    {static Matrix m(1); return m;}
 
 				string getXMLSnippet () const {

@@ -411,7 +411,7 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 
 void DvisvgmSpecialHandler::processCurrentColor (InputReader &ir, SpecialActions &actions) {
 	string param = ir.getString();
-	Color color = actions.getColor();
+	Color color = actions.getFillColor();
 	if (param.empty() || param == "on") {
 		SVGElement::CURRENTCOLOR = color;
 		SVGElement::USE_CURRENTCOLOR = true;
@@ -419,8 +419,8 @@ void DvisvgmSpecialHandler::processCurrentColor (InputReader &ir, SpecialActions
 	else if (param == "off") {
 		if (SVGElement::USE_CURRENTCOLOR) {
 			// force a color change to get the new currentColor setting recognized
-			actions.setColor(Color{uint32_t(color)+1});
-			actions.setColor(color);
+			actions.setFillColor(Color{uint32_t(color)+1});
+			actions.setFillColor(color);
 			SVGElement::USE_CURRENTCOLOR = false;
 		}
 	}

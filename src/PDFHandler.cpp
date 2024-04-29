@@ -668,7 +668,7 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 				_svg->setMatrix(matrix);
 				string colorspace = parse_attr_value<string>(trcFillTextElement, "colorspace");
 				string colorval = parse_attr_value<string>(trcFillTextElement, "color");
-				_svg->setColor(to_color(colorspace, colorval));
+				_svg->setFillColor(to_color(colorspace, colorval));
 				for (const XMLNode *spanchild : *spanElement) {
 					const XMLElement *charElement = spanchild->toElement();
 					if (!charElement || charElement->name() != "g" || !charElement->hasAttribute("glyph"))

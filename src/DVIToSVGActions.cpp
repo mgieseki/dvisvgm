@@ -167,7 +167,7 @@ void DVIToSVGActions::setRule (double x, double y, double height, double width) 
 	rect->addAttribute("height", height);
 	rect->addAttribute("width", width);
 	rect->setTransform(getMatrix());
-	rect->setFillColor(_svg.getColor());
+	rect->setFillColor(_svg.getFillColor());
 	_svg.appendToPage(std::move(rect));
 
 	// update bounding box

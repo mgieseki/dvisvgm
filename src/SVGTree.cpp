@@ -77,18 +77,25 @@ void SVGTree::setBBox (const BoundingBox &bbox) {
 }
 
 
-void SVGTree::setColor (const Color &c) {
+void SVGTree::setFillColor (const Color &c) {
 	const Font *font = _charHandler->getFont();
 	if (!font || font->color() == Color::BLACK)
-		_charHandler->setColor(c);
+		_charHandler->setFillColor(c);
+}
+
+
+void SVGTree::setStrokeColor (const Color &c) {
+	const Font *font = _charHandler->getFont();
+	if (!font || font->color() == Color::BLACK)
+		_charHandler->setStrokeColor(c);
 }
 
 
 void SVGTree::setFont (int num, const Font &font) {
 	_charHandler->setFont(font, num);
 	// set default color assigned to the font
-	if (font.color() != Color::BLACK && getColor() != font.color())
-		setColor(font.color());
+	if (font.color() != Color::BLACK && getFillColor() != font.color())
+		setFillColor(font.color());
 }
 
 

@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-04-27
+.\"      Date: 2024-04-29
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.3
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-04\-27" "dvisvgm 3\&.3" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-04\-29" "dvisvgm 3\&.3" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1350,6 +1350,25 @@ dvips manual (\m[blue]https://tug.org/texinfohtml/dvips.html#Color-specification
 \fBcolor\fR
 .RS 4
 Statements of this command set provide instructions to change the text/paint color\&. For an overview of the exact syntax, see the documentation of dvips, for instance\&.
+.sp
+dvisvgm extends the dvips syntax of the color specials by two optional modifiers to enable the differentiation between fill and stroke colors, i\&.e\&. colors used to fill enclosed areas and to draw lines, respectively\&. If one of the color specifiers, like a color name or a color model followed by a sequence of color components, is preceded by
+\fBfill\fR
+or
+\fBstroke\fR, only the corresponding color is changed\&. Without these modifiers both colors are affected\&. Example:
+\fBcolor push fill rgb 1 0 1\fR
+pushes a new color pair onto the color stack whereby the fill color is set to magenta and the stroke color retains its current value\&.
+\fBcolor push rgb 1 0 1\fR
+pushes a color pair with both colors set to magenta\&.
+.sp
+Additionally, the new special
+\fBcolor set\fR
+is introduced\&. Its syntax is the same as the one of
+\fBcolor push\fR
+including the optional
+\fBfill\fR
+and
+\fBstroke\fR
+modifiers\&. Instead of pushing a new color pair it modifies the topmost one on the stack\&. If the color stack is empty, the default (black) fill/stroke color is changed\&.
 .RE
 .PP
 \fBdvisvgm\fR

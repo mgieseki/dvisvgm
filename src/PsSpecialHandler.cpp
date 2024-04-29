@@ -147,10 +147,10 @@ void PsSpecialHandler::moveToDVIPos () {
  *  @param[in] is  stream to read the PS code from
  *  @param[in] updatePos if true, move the DVI drawing position to the current PS point */
 void PsSpecialHandler::executeAndSync (istream &is, bool updatePos) {
-	if (_actions && _actions->getColor() != _currentcolor) {
+	if (_actions && _actions->getFillColor() != _currentcolor) {
 		// update the PS graphics state if the color has been changed by a color special
 		double r, g, b;
-		_actions->getColor().getRGB(r, g, b);
+		_actions->getFillColor().getRGB(r, g, b);
 		ostringstream oss;
 		oss << '\n' << r << ' ' << g << ' ' << b << " setrgbcolor ";
 		_psi.execute(oss.str(), false);
@@ -471,7 +471,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createPDFNode (const string &fname
 		// save SVG state
 		auto savedFont = _actions->svgTree().getFontPair();
 		auto savedMatrix = _actions->svgTree().getMatrix();
-		auto savedColor = _actions->svgTree().getColor();
+		auto savedColor = _actions->svgTree().getFillColor();
 
 		imgnode.element = util::make_unique<SVGElement>("g");
 		_pdfHandler.assignSVGTree(_actions->svgTree());
@@ -481,7 +481,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createPDFNode (const string &fname
 		if (savedFont.second)
 			_actions->svgTree().setFont(savedFont.first, *savedFont.second);
 		_actions->svgTree().setMatrix(savedMatrix);
-		_actions->svgTree().setColor(savedColor);
+		_actions->svgTree().setFillColor(savedColor);
 
 		if (imgnode.element->empty())
 			imgnode.element.reset(nullptr);
@@ -724,7 +724,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 			path->addAttribute("cx", x);
 			path->addAttribute("cy", y);
 			path->addAttribute("r", r);
-			path->setFillColor(_actions->getColor());
+			path->setFillColor(_actions->getFillColor());
 			bbox = BoundingBox(x-r, y-r, x+r, y+r);
 		}
 	}
@@ -737,7 +737,7 @@ void PsSpecialHandler::stroke (vector<double> &p) {
 		_path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 		path = util::make_unique<SVGElement>("path");
 		path->addAttribute("d", oss.str());
-		path->setStrokeColor(_actions->getColor());
+		path->setStrokeColor(_actions->getStrokeColor());
 		path->setNoFillColor();
 		path->setStrokeWidth(_linewidth);
 		path->setStrokeMiterLimit(_miterlimit);
@@ -786,8 +786,8 @@ void PsSpecialHandler::fill (vector<double> &p, bool evenodd) {
 	path->addAttribute("d", oss.str());
 	if (_pattern)
 		path->setFillPatternUrl(XMLString(_pattern->svgID()));
-	else if (_actions->getColor() != Color::BLACK || _makingPattern)
-		path->setFillColor(_actions->getColor(), false);
+	else if (_actions->getFillColor() != Color::BLACK || _makingPattern)
+		path->setFillColor(_actions->getFillColor(), false);
 	if (_clipStack.path() && !_makingPattern) {  // clip path active and not inside pattern definition?
 		// assign clipping path and clip bounding box
 		path->setClipPathUrl("clip"+XMLString(_clipStack.topID()));
@@ -1300,8 +1300,10 @@ void PsSpecialHandler::setgray (vector<double> &p) {
 	if (!_patternEnabled)
 		_pattern = nullptr;
 	_currentcolor.setGray(p[0]);
-	if (_actions)
-		_actions->setColor(_currentcolor);
+	if (_actions) {
+		_actions->setFillColor(_currentcolor);
+		_actions->setStrokeColor(_currentcolor);
+	}
 }
 
 
@@ -1309,8 +1311,10 @@ void PsSpecialHandler::setrgbcolor (vector<double> &p) {
 	if (!_patternEnabled)
 		_pattern= nullptr;
 	_currentcolor.setRGB(p[0], p[1], p[2]);
-	if (_actions)
-		_actions->setColor(_currentcolor);
+	if (_actions) {
+		_actions->setFillColor(_currentcolor);
+		_actions->setStrokeColor(_currentcolor);
+	}
 }
 
 
@@ -1318,8 +1322,10 @@ void PsSpecialHandler::setcmykcolor (vector<double> &p) {
 	if (!_patternEnabled)
 		_pattern = nullptr;
 	_currentcolor.setCMYK(p[0], p[1], p[2], p[3]);
-	if (_actions)
-		_actions->setColor(_currentcolor);
+	if (_actions) {
+		_actions->setFillColor(_currentcolor);
+		_actions->setStrokeColor(_currentcolor);
+	}
 }
 
 
@@ -1327,8 +1333,10 @@ void PsSpecialHandler::sethsbcolor (vector<double> &p) {
 	if (!_patternEnabled)
 		_pattern = nullptr;
 	_currentcolor.setHSB(p[0], p[1], p[2]);
-	if (_actions)
-		_actions->setColor(_currentcolor);
+	if (_actions) {
+		_actions->setFillColor(_currentcolor);
+		_actions->setStrokeColor(_currentcolor);
+	}
 }
 
 

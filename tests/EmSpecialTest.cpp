@@ -34,15 +34,17 @@ class EmSpecialTest : public ::testing::Test {
 		class ActionsRecorder : public EmptySpecialActions {
 			public:
 				ActionsRecorder () : x(), y() {}
-				void embed (const BoundingBox &bb) override  {bbox.embed(bb);}
-				void setX (double xx) override               {x = xx;}
-				void setY (double yy) override               {x = yy;}
-				double getX () const override                {return x;}
-				double getY () const override                {return y;}
-				Color getColor () const override             {return color;}
-				void setColor (const Color &c) override      {color = c;}
-				string getPageXML () const                   {ostringstream oss; oss << *svgTree().pageNode(); return oss.str();}
-				const Matrix& getMatrix () const override    {static Matrix m(1); return m;}
+				void embed (const BoundingBox &bb) override   {bbox.embed(bb);}
+				void setX (double xx) override                {x = xx;}
+				void setY (double yy) override                {x = yy;}
+				double getX () const override                 {return x;}
+				double getY () const override                 {return y;}
+				Color getFillColor () const override          {return fillColor;}
+				void setFillColor (const Color &c) override   {fillColor = c;}
+				Color getStrokeColor () const override        {return strokeColor;}
+				void setStrokeColor (const Color &c) override {strokeColor = c;}
+				string getPageXML () const                    {ostringstream oss; oss << *svgTree().pageNode(); return oss.str();}
+				const Matrix& getMatrix () const override     {static Matrix m(1); return m;}
 
 				void clear () {
 					SpecialActions::svgTree().reset();
@@ -58,7 +60,7 @@ class EmSpecialTest : public ::testing::Test {
 			private:
 				double x, y;
 				BoundingBox bbox;
-				Color color;
+				Color fillColor, strokeColor;
 		};
 
 
@@ -171,7 +173,7 @@ TEST_F(EmSpecialTest, hvline) {
 	EXPECT_EQ(recorder.getPageXML(), "<g id='page1'>\n<polygon points='2.93 10 17.07 10 100 92.93 100 107.07'/>\n</g>");
 
 	recorder.clear();
-	recorder.setColor(Color(0.0, 0.0, 1.0));
+	recorder.setFillColor(Color(0.0, 0.0, 1.0));
 	handler.processSpecial("point 1, 10, 10");
 	handler.processSpecial("point 2, 100, 100");
 	handler.processSpecial("line 1v, 2h, 10bp");  // cut line ends horizontally
@@ -182,7 +184,7 @@ TEST_F(EmSpecialTest, hvline) {
 TEST_F(EmSpecialTest, lineto) {
 	DPair p[] = {DPair(0,0), DPair(0,10), DPair(10,10), DPair(10,0)};
 	int n = sizeof(p)/sizeof(DPair);
-	recorder.setColor(Color(1.0, 0.0, 0.0));
+	recorder.setStrokeColor(Color(1.0, 0.0, 0.0));
 	for (int i=0; i <= n; i++) {
 		recorder.setX(p[i%n].x());
 		recorder.setY(p[i%n].y());

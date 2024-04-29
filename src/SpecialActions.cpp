@@ -52,7 +52,7 @@ static void expand_constants (string &str, SpecialActions &actions) {
 	} constants[] = {
 		{"x",       XMLString(actions.getX())},
 		{"y",       XMLString(actions.getY())},
-		{"color",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getColor() ? "currentColor" : actions.getColor().svgColorString()},
+		{"color",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
 		{"matrix",  actions.getMatrix().toSVG()},
 		{"nl",      "\n"},
 		{"pageno",  to_string(actions.getCurrentPageNumber())},
