@@ -50,14 +50,16 @@ static void expand_constants (string &str, SpecialActions &actions) {
 		const char *name;
 		string val;
 	} constants[] = {
-		{"x",       XMLString(actions.getX())},
-		{"y",       XMLString(actions.getY())},
-		{"color",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
-		{"matrix",  actions.getMatrix().toSVG()},
-		{"nl",      "\n"},
-		{"pageno",  to_string(actions.getCurrentPageNumber())},
-		{"svgfile", actions.getSVGFilePath(actions.getCurrentPageNumber()).relative()},
-		{"svgpath", actions.getSVGFilePath(actions.getCurrentPageNumber()).absolute()},
+		{"x",           XMLString(actions.getX())},
+		{"y",           XMLString(actions.getY())},
+		{"color",       SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
+		{"fillcolor",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
+		{"strokecolor", SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getStrokeColor().svgColorString()},
+		{"matrix",      actions.getMatrix().toSVG()},
+		{"nl",          "\n"},
+		{"pageno",      to_string(actions.getCurrentPageNumber())},
+		{"svgfile",     actions.getSVGFilePath(actions.getCurrentPageNumber()).relative()},
+		{"svgpath",     actions.getSVGFilePath(actions.getCurrentPageNumber()).absolute()},
 	};
 	for (const Constant &constant : constants) {
 		const string pattern = string("{?")+constant.name+"}";

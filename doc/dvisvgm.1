@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-04-29
+.\"      Date: 2024-04-30
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.3
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-04\-29" "dvisvgm 3\&.3" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2024\-04\-30" "dvisvgm 3\&.3" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -1389,6 +1389,8 @@ may also contain the expressions
 \fB{?x}\fR,
 \fB{?y}\fR,
 \fB{?color}\fR,
+\fB{?fillcolor}\fR,
+\fB{?strokecolor}\fR,
 \fB{?matrix}\fR,
 \fB{?pageno}\fR,
 \fB{?svgfile}\fR, and
@@ -1397,15 +1399,19 @@ that respectively expand to the current
 \fIx\fR
 and
 \fIy\fR
-coordinate, an RGB hex string of the current active color, the current transformation matrix, the current page number, and the relative and absolute path of the SVG file being created\&. As SVG doesn\(cqt support CMYK colors, e\&.g\&. in
+coordinate, an RGB hex string of the current active fill and stroke color, the current transformation matrix, the current page number, and the relative and absolute path of the SVG file being created\&.
+\fB{?color}\fR
+expands to the same string as
+\fB{?fillcolor}\fR
+and is still available for compatibility with older dvisvgm versions that didn\(cqt distinguish between fill and stroke colors (see information about color specials below)\&.
+
+As SVG doesn\(cqt support CMYK colors, e\&.g\&. in
 \fBfill\fR
 and
 \fBstroke\fR
 attributes, dvisvgm provides macro
 \fB{?cmyk(\fR\fB\fIc\fR\fR\fB,\fR\fB\fIm\fR\fR\fB,\fR\fB\fIy\fR\fR\fB,\fR\fB\fIk\fR\fR\fB)}\fR
-to create an RGB hex string from a CMYK color\&. In can be used instead of a combination of color or PostScript specials and
-\fB{?color}\fR
-to directly insert a CMYK color\&.
+to create an RGB hex string from a CMYK color\&. It can be used instead of a combination of color/PostScript specials and color macros to directly insert a CMYK color value\&.
 
 Character sequence
 \fB{?nl}\fR

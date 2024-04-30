@@ -56,6 +56,8 @@ class DvisvgmSpecialTest : public ::testing::Test {
 				double getX () const override                  {return -42;}
 				double getY () const override                  {return 14;}
 				unsigned getCurrentPageNumber() const override {return 1;}
+				Color getFillColor () const override           {return Color(0xff0000);}
+				Color getStrokeColor () const override         {return Color(0x00ff00);}
 				FilePath getSVGFilePath(unsigned pageno) const override {return FilePath("test.svg");}
 				bool defsEquals (const string &str) const      {return defsString() == str;}
 				bool pageEquals (const string &str) const      {return pageString() == str;}
@@ -384,6 +386,8 @@ TEST_F(DvisvgmSpecialTest, expandText) {
 	EXPECT_EQ(recorder.expandText("page:{?pageno}, file:{?svgfile}"), "page:1, file:test.svg");
 	EXPECT_EQ(recorder.expandText("xxx{?cmyk(1,0,1,0)}yyy"), "xxx#00a650yyy");
 	EXPECT_EQ(recorder.expandText("xxx{?cmyk(1,0,1,0)}yyy{?cmyk(1,0,0,0)}zzz"), "xxx#00a650yyy#00aeefzzz");
+	EXPECT_EQ(recorder.expandText("fill='{?fillcolor}' stroke='{?strokecolor}'"), "fill='#f00' stroke='#0f0'");
+	EXPECT_EQ(recorder.expandText("stroke='{?color}'"), "stroke='#f00'");
 }
 
 
