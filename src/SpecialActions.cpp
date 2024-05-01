@@ -25,6 +25,14 @@
 
 using namespace std;
 
+
+inline string get_color_string (SpecialActions &actions, Color (SpecialActions::*getColor)() const) {
+	return SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == (actions.*getColor)()
+		? "currentColor"
+		: (actions.*getColor)().svgColorString();
+}
+
+
 /** Replaces constants of the form {?name} by their corresponding value.
  *  @param[in,out] str text to expand
  *  @param[in] actions interfcae to the world outside the special handler */
@@ -52,9 +60,9 @@ static void expand_constants (string &str, SpecialActions &actions) {
 	} constants[] = {
 		{"x",           XMLString(actions.getX())},
 		{"y",           XMLString(actions.getY())},
-		{"color",       SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
-		{"fillcolor",   SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getFillColor().svgColorString()},
-		{"strokecolor", SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == actions.getFillColor() ? "currentColor" : actions.getStrokeColor().svgColorString()},
+		{"color",       get_color_string(actions, &SpecialActions::getFillColor)},
+		{"fillcolor",   get_color_string(actions, &SpecialActions::getFillColor)},
+		{"strokecolor", get_color_string(actions, &SpecialActions::getStrokeColor)},
 		{"matrix",      actions.getMatrix().toSVG()},
 		{"nl",          "\n"},
 		{"pageno",      to_string(actions.getCurrentPageNumber())},
