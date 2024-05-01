@@ -300,13 +300,12 @@ void DVIToSVG::leaveEndPage (unsigned) {
 		Message::wstream(false) << "\npage is empty\n";
 	if (_bboxFormatString != "none") {
 		_svg.setBBox(bbox);
-		const double bp2pt = 72.27/72;
-		const double bp2mm = 25.4/72;
+		const double bp2pt = (1_bp).pt();
 		Message::mstream(false) << '\n';
 		Message::mstream(false, Message::MC_PAGE_SIZE) << "graphic size: " << XMLString(bbox.width()*bp2pt) << "pt"
 			" x " << XMLString(bbox.height()*bp2pt) << "pt"
-			" (" << XMLString(bbox.width()*bp2mm) << "mm"
-			" x " << XMLString(bbox.height()*bp2mm) << "mm)";
+			" (" << XMLString(bbox.width()) << "bp"
+			" x " << XMLString(bbox.height()) << "bp)";
 		Message::mstream(false) << '\n';
 	}
 }
