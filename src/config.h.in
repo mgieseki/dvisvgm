@@ -1,8 +1,8 @@
 /*************************************************************************
-** Base14Fonts.hpp                                                      **
+** config.h.in                                                          **
 **                                                                      **
 ** This file is part of dvisvgm -- a fast DVI to SVG converter          **
-** Copyright (C) 2005-2024 Martin Gieseking <martin.gieseking@uos.de>   **
+** Copyright (C) 2005-2023 Martin Gieseking <martin.gieseking@uos.de>   **
 **                                                                      **
 ** This program is free software; you can redistribute it and/or        **
 ** modify it under the terms of the GNU General Public License as       **
@@ -18,14 +18,15 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#pragma once
+#ifndef CONFIG_H_IN
+#define CONFIG_H_IN
 
-#include <cstddef>
-#include <string>
+#cmakedefine HAVE___BUILTIN_CLZ
+#cmakedefine HAVE_SIGACTION
+#cmakedefine HAVE_SYS_TIME_H
+#cmakedefine HAVE_SYS_TIMEB_H
+#cmakedefine HAVE_TERMIOS_H
+#cmakedefine HAVE_UMASK
+#cmakedefine HAVE_UNISTD_H
 
-struct MemoryFontData {
-	const char *data;
-	size_t size;
-};
-
-const MemoryFontData* find_base14_font (const std::string &name);
+#endif
