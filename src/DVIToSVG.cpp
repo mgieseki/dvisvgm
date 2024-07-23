@@ -102,7 +102,7 @@ void DVIToSVG::convert (unsigned first, unsigned last, HashFunction *hashFunc) {
 			hashFunc->update(PAGE_HASH_SETTINGS.optionsHash());
 			combinedHash = hashFunc->digestString();
 		}
-		const SVGOutput::HashTriple hashTriple(dviHash, shortenedOptHash, combinedHash);
+		const SVGOutput::HashTriple hashTriple(dviHash, shortenedOptHash, std::move(combinedHash));
 		FilePath path = _out.filepath(i, numberOfPages(), hashTriple);
 		if (!dviHash.empty() && !PAGE_HASH_SETTINGS.isSet(HashSettings::P_REPLACE) && path.exists()) {
 			Message::mstream(false, Message::MC_PAGE_NUMBER) << "skipping page " << i;
@@ -150,7 +150,7 @@ static unique_ptr<HashFunction> create_hash_function (const string &algo) {
 		msg += name + ", ";
 	msg.pop_back();
 	msg.back() = ')';
-	throw MessageException(msg);
+	throw MessageException(std::move(msg));
 }
 
 
@@ -579,7 +579,7 @@ void DVIToSVG::HashSettings::setParameters (const string &paramstr) {
 				msg.pop_back();
 				msg.pop_back();
 				msg += ')';
-				throw MessageException(msg);
+				throw MessageException(std::move(msg));
 			}
 		}
 	}

@@ -244,13 +244,13 @@ bool HyperlinkManager::setLinkMarker (const string &marker) {
 	else if (type == "box")
 		MARKER_TYPE = MarkerType::BOX;
 	else {
-		if (!LINK_BGCOLOR.setPSName(type, false))
+		if (!LINK_BGCOLOR.setPSName(std::move(type), false))
 			return false;
 		MARKER_TYPE = MarkerType::BGCOLOR;
 	}
 	COLORSOURCE = ColorSource::DEFAULT;
 	if (MARKER_TYPE != MarkerType::NONE && !color.empty()) {
-		if (!LINK_LINECOLOR.setPSName(color, false))
+		if (!LINK_LINECOLOR.setPSName(std::move(color), false))
 			return false;
 		COLORSOURCE = ColorSource::LINKMARKER;
 	}

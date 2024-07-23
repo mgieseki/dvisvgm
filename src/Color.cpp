@@ -614,7 +614,7 @@ void Color::getRGB (valarray<double> &rgb) const {
 void Color::getXYZ (double &x, double &y, double &z) const {
 	valarray<double> rgb(3), xyz(3);
 	getRGB(rgb);
-	RGB2XYZ(rgb, xyz);
+	RGB2XYZ(std::move(rgb), xyz);
 	x = xyz[0];
 	y = xyz[1];
 	z = xyz[2];

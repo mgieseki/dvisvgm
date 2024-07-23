@@ -42,7 +42,7 @@ void Length::set (const string &lenstr) {
 			if (!ir.parseDouble(val))
 				throw UnitException(string("invalid length: ")+lenstr);
 			string unit = ir.getWord();
-			set(val, unit);
+			set(val, std::move(unit));
 	}
 }
 

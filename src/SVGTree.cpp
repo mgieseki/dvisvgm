@@ -113,7 +113,7 @@ bool SVGTree::setFontFormat (string formatstr) {
 		opt = formatstr.substr(pos+1);
 		formatstr.resize(pos);
 	}
-	FontWriter::FontFormat format = FontWriter::toFontFormat(formatstr);
+	FontWriter::FontFormat format = FontWriter::toFontFormat(std::move(formatstr));
 	if (format == FontWriter::FontFormat::UNKNOWN)
 		return false;
 	FONT_FORMAT = format;

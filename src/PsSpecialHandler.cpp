@@ -1068,7 +1068,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		bboxPath.lineto(x2, y2);
 		bboxPath.lineto(x1, y2);
 		bboxPath.closepath();
-		clip(bboxPath, false);
+		clip(std::move(bboxPath), false);
 	}
 	try {
 		if (shadingTypeID == 5)
@@ -1384,7 +1384,7 @@ void PsSpecialHandler::ClippingStack::push (const Path &path, int saveID) {
 		_stack.emplace(saveID);
 	else
 		_stack.emplace(path, ++_maxID, saveID);
-	_stack.top().prependedPath = prependedPath;
+	_stack.top().prependedPath = std::move(prependedPath);
 }
 
 

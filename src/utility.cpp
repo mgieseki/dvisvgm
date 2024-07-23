@@ -286,7 +286,7 @@ string util::mimetype (const string &fname) {
 		if (suffix == "svg")
 			ret = "svg+xml";
 		else if (suffix == "png" || suffix == "gif")
-			ret = suffix;
+			ret = std::move(suffix);
 		else if (suffix == "jpg" || suffix == "jpeg")
 			ret = "jpeg";
 		else if (suffix == "tif" || suffix == "tiff")

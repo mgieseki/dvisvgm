@@ -282,7 +282,7 @@ string FilePath::relative (const FilePath &filepath, bool with_filename) const {
 *  @param[in] with_filename if false, the filename is omitted */
 string FilePath::shorterAbsoluteOrRelative (string reldir, bool with_filename) const {
 	string abs = absolute(with_filename);
-	string rel = relative(reldir, with_filename);
+	string rel = relative(std::move(reldir), with_filename);
 	return abs.length() < rel.length() ? abs : rel;
 }
 

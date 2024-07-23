@@ -124,7 +124,7 @@ void MapLine::parseDVIPSLine (InputReader &ir) {
 			if (name.length() > 4 && name.substr(name.length()-4) == ".enc")
 				_encname = name.substr(0, name.length()-4);
 			else
-				_fontfname = name;
+				_fontfname = std::move(name);
 		}
 		else {  // ir.peek() == '"' => list of PS font operators
 			string options = ir.getQuotedString("\"");

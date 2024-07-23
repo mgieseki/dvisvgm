@@ -139,7 +139,7 @@ static Color read_color_and_type (istream &is, char &type) {
 		type = token[0];
 	}
 	else {
-		model = token;
+		model = std::move(token);
 		type = '\0';
 	}
 	return ColorSpecialHandler::readColor(model, is);
