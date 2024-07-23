@@ -124,7 +124,7 @@ uint32_t Unicode::utf8ToCodepoint (const string &utf8) {
 	auto len = utf8.length();
 	if (len > 0) {
 		unsigned char c0 = utf8[0];
-		if (c0 >= 0 && c0 <= 127)
+		if (c0 <= 127)
 			return c0;
 		if (len > 1) {
 			unsigned char c1 = utf8[1];
