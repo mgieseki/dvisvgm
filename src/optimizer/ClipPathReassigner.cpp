@@ -81,12 +81,13 @@ void ClipPathReassigner::execute (XMLElement *defs, XMLElement *context) {
 				ids.insert(id);
 		}
 		for (auto it = descendants.begin(); it != descendants.end();) {
-			string id = extract_id_from_url((*it)->getAttributeValue("clip-path"));
-			if (ids.find(id) == ids.end())
-				++it;
-			else {
-				(*it)->addAttribute("clip-path", string("url(#") + (*ids.begin()) + ")");
-				it = descendants.erase(it);  // no need to process this element again
+			if (const char *clipPathRef = (*it)->getAttributeValue("clip-path")) {
+				if (ids.find(extract_id_from_url(clipPathRef)) == ids.end())
+					++it;
+				else {
+					(*it)->addAttribute("clip-path", string("url(#") + (*ids.begin()) + ")");
+					it = descendants.erase(it);  // no need to process this element again
+				}
 			}
 		}
 	}
