@@ -1,0 +1,12 @@
+pkg_check_modules(potrace potrace IMPORTED_TARGET)
+
+if (NOT potrace_FOUND)
+    add_library(potrace curve.c decompose.c potracelib.c trace.c)
+    target_include_directories(potrace PUBLIC .)
+    target_compile_definitions(potrace PRIVATE HAVE_CONFIG_H)
+    target_compile_options(potrace PRIVATE -Wall)
+    target_compile_features(potrace PUBLIC c_std_11)
+else()
+    add_library(potrace INTERFACE)
+    target_link_libraries(potrace INTERFACE PkgConfig::potrace)
+endif()

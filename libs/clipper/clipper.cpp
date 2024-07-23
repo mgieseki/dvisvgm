@@ -1970,7 +1970,7 @@ void Clipper::DeleteFromSEL(TEdge *e)
 #ifdef use_xyz
 void Clipper::SetZ(IntPoint& pt, TEdge& e1, TEdge& e2)
 {
-  if (pt.Z != 0 || !m_ZFill) return;
+  if (pt.Z != static_cast<ZType>(0) || !m_ZFill) return;
   else if (pt == e1.Bot) pt.Z = e1.Bot.Z;
   else if (pt == e1.Top) pt.Z = e1.Top.Z;
   else if (pt == e2.Bot) pt.Z = e2.Bot.Z;
