@@ -1,3 +1,19 @@
+dvisvgm-3.4 (2024-07-24)
+- option --embed-bitmaps is now also applied to images included with special
+  dvisvgm:img
+- added macro {?cmyk(c,m,y,k)} to allow for directly specifying CMYK colors
+  in literal SVG fragments
+- extended dvips color specials to distinguish between fill and stroke colors
+- added color special "color set" to replace the current color without pushing
+  a new value onto the color stack
+- added macros {?fillcolor} and {?strokecolor} to retrieve the current fill and
+  stroke color, respectively. Former macro {?color} equals {?fillcolor} and is
+  still available too
+- replaced millimeter units with big point (bp) units in the message showing
+  the extent of generated SVG file
+- fixed the detection of MIME types depending of file name suffixes
+- several small code improvements
+
 dvisvgm-3.3 (2024-04-10)
 - added file dvisvgm.map to the default font map files being looked up
 - added evaluation of #include and #includefirst present in font map files
