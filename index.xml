@@ -3,32 +3,52 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 10 Apr 2024 16:18:56 +0200</pubDate>
+    <pubDate>Wed, 24 Jul 2024 14:29:55 +0200</pubDate>
     <language>en</language>
     
     <item>
-      <title>dvisvgm 3.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#f3047466c5139b2a690ccf34f9404a61</link>
-      <pubDate>Wed, 10 Apr 2024 15:59:07 +0200</pubDate>
-      <guid>f3047466c5139b2a690ccf34f9404a61</guid>
+      <title>dvisvgm 3.4 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#3f63ce924775757c2323054679ec017d</link>
+      <pubDate>Wed, 24 Jul 2024 11:56:33 +0200</pubDate>
+      <guid>3f63ce924775757c2323054679ec017d</guid>
       <description>
         <![CDATA[<ul>
-<li>Added file <code>dvisvgm.map</code> to the default font map files being looked up automatically. It can be used to add font mappings
-which should always be taken into account when <em>dvisvgm</em> is called.</li>
-<li>Added evaluation of <code>#include</code> and <code>#includefirst</code> present in font map files to allow for including the contents of other map files.</li>
-<li>The conversion of CMYK colors to RGB has been modified so that the resulting colors are now close to those created by Ghostscript
-and most PDF viewers. Previously, a simple mapping of the color components, like cmyk(1,0,1,0)=rgb(0,1,0) for <em>green</em>,
-was used. Ghostscript, in contrast, applies ICC profiles to display colors as produced by a designated printer.<br>
-Here&rsquo;s an example showing the results of the old (left) and the new CMYK to RGB color conversion applied to a Coons shading patch:</li>
-</ul>
-<p style="text-align:center">
-<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/66254d2e-f599-4076-8da8-33f27efa880f"/>
-<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/7410de82-4767-4326-9043-5265cace6d12"/>
-</p>
-<ul>
-<li>Fixed the initialization of a transformation matrix which led to invalid bounding boxes when converting a sequence of DVI pages (<a href="https://github.com/mgieseki/dvisvgm/issues/268">issue #268</a>).</li>
-<li>Fixed the computation of internal Coons tensor points.</li>
-<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> to version 1.12.1.</li>
+<li>
+<p>Option <code>--embed-bitmaps</code> is now also applied to images included with special <code>dvisvgm:img</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/229">issue #229</a>).</p>
+</li>
+<li>
+<p>Added macro <code>{?cmyk(c,m,y,k)}</code> to allow for directly specifying CMYK colors in literal SVG fragments.</p>
+</li>
+<li>
+<p>Extended the dvips color specials to distinguish between fill and stroke colors. For further information see
+the <a href="/Manpage/#specials-dvisvgm:raw">manual page</a>.</p>
+</li>
+<li>
+<p>Added color special <code>color set</code> to replace the current color without pushing a new value onto the color stack.
+See the <a href="/Manpage/#specials-color">manual page</a> for more details.</p>
+</li>
+<li>
+<p>Added macros <code>{?fillcolor}</code> and <code>{?strokecolor}</code> to retrieve the current fill and stroke color, respectively.
+The former macro <code>{?color}</code> equals <code>{?fillcolor}</code> and is still available too.</p>
+</li>
+<li>
+<p>Replaced millimeter units with big point (bp) units in the message showing the extent of the generated SVG file.
+TeX&rsquo;s &ldquo;big points&rdquo; equal SVG, PostScript, and PDF points (1in = 72bp), while TeX points are slightly smaller (1in = 72.27pt).</p>
+<span class="d-inline-flex">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ dvisvgm -d2 frktest
+</span></span><span style="display:flex;"><span>pre-processing DVI file (format version 2)
+</span></span><span style="display:flex;"><span>  processing page 1
+</span></span><span style="display:flex;"><span>  graphic size: 398.34pt x 456.34pt (396.85bp x 454.63bp)
+</span></span><span style="display:flex;"><span>  output written to frktest.svg
+</span></span><span style="display:flex;"><span>1 of 1 page converted in 0.0754669 seconds</span></span></code></pre></div>
+</span>
+</li>
+<li>
+<p>Fixed the detection of MIME types depending of file name suffixes.</p>
+</li>
+<li>
+<p>Several small code improvements.</p>
+</li>
 </ul>
 ]]>
       </description>

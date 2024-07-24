@@ -410,8 +410,9 @@ Embeds the contents of bitmap files into the generated SVG files instead of addi
 Because of the base64-encoded data, the SVG files are usually much bigger but at the same time
 more portable because they don’t rely on external bitmap files.
 </p>
-<p>This option only affects bitmaps referenced in DVI/XDV files, e.g. added by <code>\includegraphics</code>.
-Bitmaps in PostScript or PDF files are always embedded. Also see option <strong>bitmap-format</strong>.</p>
+<p>This option only affects bitmaps referenced in DVI/XDV files, e.g. by <code>\includegraphics</code> or
+special command <code>dvisvgm:img</code> (see below). Bitmaps present in PostScript or PDF files are always
+embedded. Also see option <strong>bitmap-format</strong>.</p>
 </dd>
 </div>
 <a name="opt-eps" class="linktarget"></a><div class="hdlist1">
@@ -1376,10 +1377,22 @@ the user turn it off.
 <dt>
 <strong>color</strong>
 </dt>
-<dd><p>
+<dd>
+<p>
 Statements of this command set provide instructions to change the text/paint color. For an overview of the
 exact syntax, see the documentation of dvips, for instance.
-</p></dd>
+</p>
+<p>dvisvgm extends the dvips syntax of the color specials by two optional modifiers to enable the differentiation
+between fill and stroke colors, i.e. colors used to fill enclosed areas and to draw lines, respectively.
+If one of the color specifiers, like a color name or a color model followed by a sequence of color components,
+is preceded by <code>fill</code> or <code>stroke</code>, only the corresponding color is changed. Without these modifiers both colors
+are affected. Example: <code>color push fill rgb 1 0 1</code> pushes a new color pair onto the color stack whereby the fill
+color is set to magenta and the stroke color retains its current value.
+<code>color push rgb 1 0 1</code> pushes a color pair with both colors set to magenta.</p>
+<p>Additionally, the new special <strong>color set</strong> is introduced. Its syntax is the same as the one of <strong>color push</strong>
+including the optional <code>fill</code> and <code>stroke</code> modifiers. Instead of pushing a new color pair it modifies the
+topmost one on the stack. If the color stack is empty, the default (black) fill/stroke color is changed.</p>
+</dd>
 </div>
 <a name="specials-dvisvgm" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -1400,14 +1413,19 @@ The following list gives a brief overview of dvisvgm’s own set of currently su
   that the resulting SVG is still valid. Opening and closing tags may be distributed among different <em>raw</em>
   specials. The tags themselves can also be split but must be continued with the immediately following <em>raw</em>
   special. Both syntactically incorrect and wrongly nested tags lead to error messages.
-  Parameter <em>text</em> may also contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, <strong>{?color}</strong>, <strong>{?matrix}</strong>, <strong>{?pageno}</strong>,
-  <strong>{?svgfile}</strong>, and <strong>{?svgpath}</strong> that expand to the current <em>x</em> or <em>y</em> coordinate, the current color, the
-  current transformation matrix, the current page number, and the relative and absolute path of the SVG file
-  being created, respectively.
-  Character sequence <strong>{?nl}</strong> expands to a newline character. Finally, constructions of the form <strong>{?(<em>expr</em>)}</strong>
-  enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
-  modulo. Like above, the variables <em>x</em> and <em>y</em> represent the current coordinates.
-  Example: <code>{?(-10*(x+2y)-5)}</code>.
+<p>Parameter <em>text</em> may also contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, <strong>{?color}</strong>, <strong>{?fillcolor}</strong>, <strong>{?strokecolor}</strong>,
+<strong>{?matrix}</strong>, <strong>{?pageno}</strong>, <strong>{?svgfile}</strong>, and <strong>{?svgpath}</strong> that respectively expand to the current <em>x</em> and <em>y</em>
+coordinate, an RGB hex string of the current active fill and stroke color, the current transformation matrix,
+the current page number, and the relative and absolute path of the SVG file being created. <strong>{?color}</strong> expands
+to the same string as <strong>{?fillcolor}</strong> and is still available for compatibility with older dvisvgm versions that
+didn’t distinguish between fill and stroke colors (see information about color specials below).</p>
+<p>As SVG doesn’t support CMYK colors, e.g. in <code>fill</code> and <code>stroke</code> attributes, dvisvgm provides macro
+<strong>{?cmyk(<em>c</em>,<em>m</em>,<em>y</em>,<em>k</em>)}</strong> to create an RGB hex string from a CMYK color. It can be used instead of
+a combination of color/PostScript specials and color macros to directly insert a CMYK color value.</p>
+<p>Character sequence <strong>{?nl}</strong> expands to a newline character. Finally, constructions of the form <strong>{?(<em>expr</em>)}</strong>
+enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
+modulo. Like above, the variables <em>x</em> and <em>y</em> represent the current coordinates.
+Example: <code>{?(-10*(x+2y)-5)}</code>.</p>
 </p></dd>
 </div>
 <a name="specials-dvisvgm:rawdef" class="linktarget"></a><div class="hdlist1">
@@ -1450,10 +1468,17 @@ The following list gives a brief overview of dvisvgm’s own set of currently su
 <strong>dvisvgm:img</strong> <em>width</em> <em>height</em> <em>file</em>
 </dt>
 <dd><p>
-  Creates an image element at the current graphic position referencing the given file. JPEG, PNG, and SVG images
-  can be used here. However, dvisvgm does not check the file format or the file name suffix. The lengths <em>width</em>
-  and <em>height</em> can be given together with a unit specifier (see option <strong>--bbox</strong>) or as plain floating point numbers.
-  In the latter case, TeX point units are assumed (1in = 72.27pt).
+  Creates an <code>image</code> element using the current graphic position, transformation matrix, the specified extents,
+  and the given filename. This special command also updates the bounding box of the resulting SVG to entirely
+  enclose the transformed image. The image itself is positioned such that the lower left corner of the
+  untransformed image lies at the current graphic position. The length <em>width</em> and <em>height</em> specify the extents
+  of the untransformed image. For a list of supported length units see option <strong>--bbox</strong>. Plain numbers without an
+  appended unit specifier imply TeX points (1in = 72.27pt).
+<p>Parameter <em>file</em> can be a plain filename or a relative or absolute path of a file. By default, dvisvgm just
+creates links referencing the image file so that the SVG renderer will evaluate the filename or path relative
+to the location of the generated SVG file. If option <strong>&ndash;embed-bitmaps</strong> is given, JPEG and PNG images are
+embedded into the SVG document. As this requires base64-encoding of the image data, the resulting SVG files
+can become quite big.</p>
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
@@ -1904,9 +1929,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.3</div>
+   <div class="col-md-6">Version 3.4</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-03-28</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-04-30</span>
    </div>
 </div>
 </div>
