@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="a9638fb710d7e1ddd1fa29ebd520f1a4"></a>
+  <a name="18c114b527c5addfc18c55140c88911d"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">10 March 2023: dvisvgm 3.0.4 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Fixed a bug that could prevent reading the output of subprocesses (<a href="https://github.com/mgieseki/dvisvgm/issues/232">issue #232</a>).</li>
+<li>Removed the optional dependency on <a href="https://www.openssl.org/docs/man1.0.2/man3/crypto.html">libcrypto</a> (<a href="https://www.openssl.org">OpenSSL</a>)
+due to the deprecation of its MD5 functions. Instead, the bundled MD5 function is always used now.</li>
+<li>Added TeX Live conditionals to the build system (patch by Karl Berry).</li>
+<li>Small code and manpage improvements.</li>
+</ul>
+</div>
+  </section><a name="a9638fb710d7e1ddd1fa29ebd520f1a4"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">21 February 2023: dvisvgm 3.0.3 has been released</div>
     <div class="card-body">
@@ -187,13 +199,6 @@ page numbers respectively.</li>
 <li>Replaced the method used to clip embedded EPS/PDF graphics that now usually results in faster rendering of the affected SVG sections.</li>
 <li>Fixed a regression regarding transformations of embedded EPS/PDF graphics.</li>
 </ul>
-</div>
-  </section><a name="0ad29b27d5fc33fc8a3dda38a8d2186f"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">23 February 2022: dvisvgm 2.13.2 has been released</div>
-    <div class="card-body">
-      <p>This small release improves the clipping of embedded EPS/PDF graphics
-(<a href="https://github.com/mgieseki/dvisvgm/issues/176">issue #176</a>).</p>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">

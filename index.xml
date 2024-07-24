@@ -3,7 +3,7 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 24 Jul 2024 14:29:55 +0200</pubDate>
+    <pubDate>Wed, 24 Jul 2024 19:52:59 +0200</pubDate>
     <language>en</language>
     
     <item>
@@ -49,6 +49,34 @@ TeX&rsquo;s &ldquo;big points&rdquo; equal SVG, PostScript, and PDF points (1in 
 <li>
 <p>Several small code improvements.</p>
 </li>
+</ul>
+]]>
+      </description>
+    </item>
+    
+    <item>
+      <title>dvisvgm 3.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#f3047466c5139b2a690ccf34f9404a61</link>
+      <pubDate>Wed, 10 Apr 2024 15:59:07 +0200</pubDate>
+      <guid>f3047466c5139b2a690ccf34f9404a61</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Added file <code>dvisvgm.map</code> to the default font map files being looked up automatically. It can be used to add font mappings
+which should always be taken into account when <em>dvisvgm</em> is called.</li>
+<li>Added evaluation of <code>#include</code> and <code>#includefirst</code> present in font map files to allow for including the contents of other map files.</li>
+<li>The conversion of CMYK colors to RGB has been modified so that the resulting colors are now close to those created by Ghostscript
+and most PDF viewers. Previously, a simple mapping of the color components, like cmyk(1,0,1,0)=rgb(0,1,0) for <em>green</em>,
+was used. Ghostscript, in contrast, applies ICC profiles to display colors as produced by a designated printer.<br>
+Here&rsquo;s an example showing the results of the old (left) and the new CMYK to RGB color conversion applied to a Coons shading patch:</li>
+</ul>
+<p style="text-align:center">
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/66254d2e-f599-4076-8da8-33f27efa880f"/>
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/7410de82-4767-4326-9043-5265cace6d12"/>
+</p>
+<ul>
+<li>Fixed the initialization of a transformation matrix which led to invalid bounding boxes when converting a sequence of DVI pages (<a href="https://github.com/mgieseki/dvisvgm/issues/268">issue #268</a>).</li>
+<li>Fixed the computation of internal Coons tensor points.</li>
+<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> to version 1.12.1.</li>
 </ul>
 ]]>
       </description>
@@ -167,7 +195,7 @@ the currently active color with CSS variable <a href="https://www.w3.org/TR/css-
     
     <item>
       <title>dvisvgm 3.0.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#18c114b527c5addfc18c55140c88911d</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#18c114b527c5addfc18c55140c88911d</link>
       <pubDate>Fri, 10 Mar 2023 10:41:33 +0100</pubDate>
       <guid>18c114b527c5addfc18c55140c88911d</guid>
       <description>
@@ -328,7 +356,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
       <pubDate>Wed, 23 Feb 2022 14:33:43 +0100</pubDate>
       <guid>0ad29b27d5fc33fc8a3dda38a8d2186f</guid>
       <description>
@@ -390,26 +418,6 @@ current PostScript-based PDF interpreter is the fact that both PostScript and PD
 replicate the current functionality. As a consequence, all PDF functionality currently available in <em>dvisvgm</em> will no longer work with the
 upcoming Ghostscript releases. Therefore, it will require the parallel installation of Ghostscript 9.55.0 or earlier. In the long run,
 I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resources to implement a completely new PDF handler.</p>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.12 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#0bc5191266f5d77c936e8e667cef5f50</link>
-      <pubDate>Mon, 16 Aug 2021 12:35:08 +0200</pubDate>
-      <guid>0bc5191266f5d77c936e8e667cef5f50</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added transparency support for SVG elements created outside the PS handler (<a href="https://github.com/mgieseki/dvisvgm/issues/148">issue #148</a>).</li>
-<li>Fixed a spacing issue caused by unexpected newline characters in SVG output.</li>
-<li>Fixed PostScript errors occurred when defining (yet unsupported) shading patterns.</li>
-<li>Fixed a bug that prevented proper coloring of PostScript tiling patterns (<a href="https://github.com/mgieseki/dvisvgm/issues/158">issue #158</a>).</li>
-<li>Fixed graphics displacements that occurred if the PDF MediBox is not located at the origin.</li>
-<li>Fixed the handling of root directories of file paths.</li>
-<li>Improved the handling of drive letters (Windows only).</li>
-<li>Several code refactorings and improvements.</li>
-</ul>
 ]]>
       </description>
     </item>
