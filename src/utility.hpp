@@ -25,6 +25,7 @@
 #include <config.h>
 #endif
 
+#include <cstdint>
 #include <iomanip>
 #include <functional>
 #include <memory>
