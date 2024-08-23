@@ -57,7 +57,10 @@ void ImageToSVG::convert (int pageno) {
 	if (bbox.valid() && (bbox.width() == 0 || bbox.height() == 0))
 		Message::wstream(true) << "bounding box of " << imageFormat() << " file is empty\n";
 	Message::mstream().indent(0);
-	Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing " << imageFormat() << " file\n";
+	if (isSinglePageFormat())
+		Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing " << imageFormat() << " file\n";
+	else
+		Message::mstream(false, Message::MC_PAGE_NUMBER) << "processing page " << pageno << "\n";
 	Message::mstream().indent(1);
 	_svg.newPage(pageno);
 	// create a psfile special and forward it to the PsSpecialHandler
