@@ -1,3 +1,7 @@
+dvisvgm-3.4.1 (2024-09-16)
+- show number of page being processed when converting PDF files
+- added missing #include required as of GCC 15
+
 dvisvgm-3.4 (2024-07-24)
 - option --embed-bitmaps is now also applied to images included with special
   dvisvgm:img
