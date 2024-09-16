@@ -79,7 +79,17 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="3f63ce924775757c2323054679ec017d"></a>
+  <a name="05c944ae9c9f892539a2aeaefcf6383e"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">16 September 2024: dvisvgm 3.4.1 has been released</div>
+    <div class="card-body">
+      <p>This is just a small maintenance release with these changes:</p>
+<ul>
+<li>When converting PDF files, dvisvgm now shows the number of the page being processed.</li>
+<li>Added missing #include statement required as of GCC 15 (<a href="https://github.com/mgieseki/dvisvgm/issues/273">issue #273</a>).</li>
+</ul>
+</div>
+  </section><a name="3f63ce924775757c2323054679ec017d"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">24 July 2024: dvisvgm 3.4 has been released</div>
     <div class="card-body">
@@ -201,29 +211,6 @@ undefined type punning to the bundled woff2 library.</li>
 <li>Suppress warning messages about deprecated option <code>-dNEWPDF</code> introduced with Ghostscript 10.02.0 (<a href="https://github.com/mgieseki/dvisvgm/issues/245">issue #245</a>).</li>
 <li>Updated the bundled <a href="https://xxhash.com">xxHash</a> library to version 0.8.2.</li>
 <li>Fixed a few paragraphs in the manual page.</li>
-</ul>
-</div>
-  </section><a name="422f0639756c1b2ea2e7fa87ee7a5056"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">6 July 2023: dvisvgm 3.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added the command-line option <a href="https://dvisvgm.de/Manpage/#opt-currentcolor"><code>--currentcolor</code></a> to replace
-a given color with CSS variable <a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
-<li>Added special <a href="https://dvisvgm.de/Manpage/#specials-dvisvgm:currentcolor"><code>dvisvgm:currentcolor</code></a> to replace
-the currently active color with CSS variable <a href="https://www.w3.org/TR/css-color-3/#currentcolor"><code>currentColor</code></a> (<a href="https://github.com/mgieseki/dvisvgm/issues/214">issue #214</a>).</li>
-<li>Added special <code>dvisvgm:message</code> to print given texts to the console.</li>
-<li>Added support for <a href="https://en.wikipedia.org/wiki/Omega_(TeX)">Omega</a> Font Metric (OFM) files.</li>
-<li>Added a fallback mechanism for missing characters in OFM-based virtual fonts  proposed by Takuji Tanaka (<a href="https://github.com/mgieseki/dvisvgm/issues/241">issue #241</a>).</li>
-<li>Fixed the handling of whitespace characters in PDF file paths (<a href="https://github.com/mgieseki/dvisvgm/issues/233">issue #233</a>).</li>
-<li>Fixed the vertical placement of &ldquo;vertical fonts&rdquo; in horizontal mode (<a href="https://github.com/mgieseki/dvisvgm/issues/235">issue #235</a>).</li>
-<li>Fixed the parsing of floating point numbers which now prevents errors when using <a href="https://libcxx.llvm.org">libc++</a> instead of
-<a href="https://gcc.gnu.org/onlinedocs/libstdc++">libstdc++</a> (<a href="https://github.com/mgieseki/dvisvgm/issues/240">issue #240</a>).</li>
-<li>Fixed potential segmentation faults triggered by missing font files (<a href="https://github.com/mgieseki/dvisvgm/issues/241">issue #241</a>).</li>
-<li>Fixed a GLIBCXX assertion error occurred if <em>dvisvgm</em> is built with
-<a href="https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_macros.html"><code>_GLIBCXX_ASSERTIONS</code></a> enabled (<a href="https://github.com/mgieseki/dvisvgm/issues/242">issue #242</a>).</li>
-<li>Improved the handling of font subset prefixes in the new, mutool-based PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/242">issue #242</a>).</li>
-<li>Several minor code improvements.</li>
 </ul>
 </div>
   </section>

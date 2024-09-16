@@ -79,7 +79,17 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="0ad29b27d5fc33fc8a3dda38a8d2186f"></a>
+  <a name="25fddacdd30de997cedabdd597cd8d8d"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">27 February 2022: dvisvgm 2.13.3 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Added SVG optimizer module <code>reassign-clippaths</code> that searches for duplicate <code>clipPath</code> elements, removes them, and updates the <code>clip-path</code> references.</li>
+<li>Replaced the method used to clip embedded EPS/PDF graphics that now usually results in faster rendering of the affected SVG sections.</li>
+<li>Fixed a regression regarding transformations of embedded EPS/PDF graphics.</li>
+</ul>
+</div>
+  </section><a name="0ad29b27d5fc33fc8a3dda38a8d2186f"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">23 February 2022: dvisvgm 2.13.2 has been released</div>
     <div class="card-body">
@@ -162,19 +172,6 @@ I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resour
 <li>Improved detection of proper CMap files for currently selected font encoding.</li>
 <li>Fixed processing of Unicode surrogates present in CMap files.</li>
 <li>Fixed handling of <code>pdf:mapline</code> and <code>pdf:mapfile</code> specials.</li>
-</ul>
-</div>
-  </section><a name="9f68ebd62bc0a3cf963a572fe77e0bd2"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">22 September 2020: dvisvgm 2.10.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release.</p>
-<ul>
-<li>Added support for the new <a href="https://www.ghostscript.com/doc/current/Language.htm#Transparency">Ghostscript transparency operators</a>
-<code>.setfillconstantalpha</code> and <code>.setstrokeconstantalpha</code>.</li>
-<li>Added support for the new Ghostscript versioning scheme introduced with GS 9.53.0.</li>
-<li>Added few additional information to the <a href="/Manpage/">manual page</a>.</li>
-<li>Updated the bundled <a href="https://github.com/google/brotli">Brotli library</a> to version 1.0.9.</li>
 </ul>
 </div>
   </section>

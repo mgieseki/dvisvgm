@@ -3,8 +3,23 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Wed, 24 Jul 2024 19:52:59 +0200</pubDate>
+    <pubDate>Mon, 16 Sep 2024 12:34:30 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.4.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#05c944ae9c9f892539a2aeaefcf6383e</link>
+      <pubDate>Mon, 16 Sep 2024 12:13:14 +0200</pubDate>
+      <guid>05c944ae9c9f892539a2aeaefcf6383e</guid>
+      <description>
+        <![CDATA[<p>This is just a small maintenance release with these changes:</p>
+<ul>
+<li>When converting PDF files, dvisvgm now shows the number of the page being processed.</li>
+<li>Added missing #include statement required as of GCC 15 (<a href="https://github.com/mgieseki/dvisvgm/issues/273">issue #273</a>).</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.4 has been released</title>
@@ -167,7 +182,7 @@ undefined type punning to the bundled woff2 library.</li>
     
     <item>
       <title>dvisvgm 3.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#422f0639756c1b2ea2e7fa87ee7a5056</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#422f0639756c1b2ea2e7fa87ee7a5056</link>
       <pubDate>Thu, 06 Jul 2023 18:34:24 +0200</pubDate>
       <guid>422f0639756c1b2ea2e7fa87ee7a5056</guid>
       <description>
@@ -341,7 +356,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#25fddacdd30de997cedabdd597cd8d8d</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#25fddacdd30de997cedabdd597cd8d8d</link>
       <pubDate>Sun, 27 Feb 2022 12:40:35 +0100</pubDate>
       <guid>25fddacdd30de997cedabdd597cd8d8d</guid>
       <description>
@@ -399,25 +414,6 @@ page numbers respectively.</li>
 <li>Updated the bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library to version 0.8.1.</li>
 <li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> framework to version 1.11.0.</li>
 </ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>Information on PDF support as of Ghostscript 9.56.0</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#1dc7a72ee07bdf41b0faaa031777dbf3</link>
-      <pubDate>Tue, 23 Nov 2021 10:11:09 +0200</pubDate>
-      <guid>1dc7a72ee07bdf41b0faaa031777dbf3</guid>
-      <description>
-        <![CDATA[<p>Ghostscript has introduced a completely <a href="https://www.ghostscript.com/blog/pdfi.html">rewritten implementation of its PDF interpreter</a>,
-which is now implemented in C instead of PostScript. This has a lot of advantages besides the performance improvements. For third-party
-applications like <em>dvisvgm</em>, however, this change has significant impact on the functions that can be provided. <em>dvisvgm</em> relies on the
-possibility to overwrite PostScript and PDF operators in order to directly communicate with the interpreter. The nice thing about the
-current PostScript-based PDF interpreter is the fact that both PostScript and PDF code can be treated almost equally.</p>
-<p>As of Ghostscript 9.56.0, this will no longer be possible, and as far as I can tell from the documentation, there is no way to
-replicate the current functionality. As a consequence, all PDF functionality currently available in <em>dvisvgm</em> will no longer work with the
-upcoming Ghostscript releases. Therefore, it will require the parallel installation of Ghostscript 9.55.0 or earlier. In the long run,
-I&rsquo;ll probably have to drop PDF support since I don&rsquo;t have the resources to implement a completely new PDF handler.</p>
 ]]>
       </description>
     </item>
