@@ -1,0 +1,11 @@
+pkg_check_modules(xxhash libxxhash IMPORTED_TARGET)
+
+if (NOT xxhash_FOUND)
+    add_library(xxhash xxhash.c)
+    target_include_directories(xxhash PUBLIC .)
+    target_compile_options(xxhash PRIVATE -Wall)
+    target_compile_features(xxhash PUBLIC cxx_std_11)
+else()
+    add_library(xxhash INTERFACE)
+    target_link_libraries(xxhash INTERFACE PkgConfig::xxhash)
+endif()
