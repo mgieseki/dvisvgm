@@ -684,7 +684,7 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 					// determine code point of current character
 					string utf8;
 					if (charElement->hasAttribute("unicode"))
-						utf8 = parse_attr_value<string>(charElement, "unicode");
+						utf8 = to_utf8(parse_attr_value<string>(charElement, "unicode"));
 					if (utf8.empty())
 						utf8 = compose_utf8_char(charElement, glyph);
 					if (glyph == 0 || utf8.empty())
