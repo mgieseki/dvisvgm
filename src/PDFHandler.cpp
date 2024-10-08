@@ -662,10 +662,10 @@ void PDFHandler::doFillText (XMLElement *trcFillTextElement) {
 					_x = _y = numeric_limits<double>::max();
 				}
 				Matrix fontMatrix({trm[0]/ptsize, -trm[2]/ptsize, 0, trm[1]/ptsize, -trm[3]/ptsize});
-				fontMatrix.invert();
 				Matrix matrix = parse_attr_value<Matrix>(trcFillTextElement, "transform");
 				matrix.rmultiply(fontMatrix);
 				_svg->setMatrix(matrix);
+				fontMatrix.invert();
 				string colorspace = parse_attr_value<string>(trcFillTextElement, "colorspace");
 				string colorval = parse_attr_value<string>(trcFillTextElement, "color");
 				_svg->setFillColor(to_color(colorspace, colorval));
