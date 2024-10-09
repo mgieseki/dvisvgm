@@ -322,26 +322,19 @@ void TensorProductPatch::approximateRow (double v1, double inc, bool overlap, do
  *  @param[in] delta reduce level of detail if the segment size is smaller than the given value
  *  @param[in] callback object notified */
 void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, Callback &callback) const {
-	if (_colors[0] == _colors[1] && _colors[1] == _colors[2] && _colors[2] == _colors[3]) {
-		// simple case: monochromatic patch
-		GraphicsPath<double> path = getBoundaryPath();
-		callback.patchSegment(path, _colors[0]);
+	const double inc = 1.0/gridsize;
+	// collect curves dividing the patch into several columns (curved vertical stripes)
+	vector<CubicBezier> vbeziers(gridsize+1);
+	double u=0;
+	for (CubicBezier &vbezier : vbeziers) {
+		vbezier = verticalCurve(u);
+		u = snap(u+inc);
 	}
-	else {
-		const double inc = 1.0/gridsize;
-		// collect curves dividing the patch into several columns (curved vertical stripes)
-		vector<CubicBezier> vbeziers(gridsize+1);
-		double u=0;
-		for (CubicBezier &vbezier : vbeziers) {
-			vbezier = verticalCurve(u);
-			u = snap(u+inc);
-		}
-		// compute the segments row by row
-		double v=0;
-		for (int i=0; i < gridsize; i++) {
-			approximateRow(v, inc, overlap, delta, vbeziers, callback);
-			v = snap(v+inc);
-		}
+	// compute the segments row by row
+	double v=0;
+	for (int i=0; i < gridsize; i++) {
+		approximateRow(v, inc, overlap, delta, vbeziers, callback);
+		v = snap(v+inc);
 	}
 }
 
