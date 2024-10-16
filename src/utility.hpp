@@ -236,16 +236,6 @@ struct set_const_of {
 	};
 };
 
-class Date {
-	public:
-		Date (int year, int month, int day) : _year(year), _month(month-1), _day(day-1) {}
-		bool operator < (const Date &date) const;
-		size_t operator - (Date date2) const;
-
-	private:
-		int _year, _month, _day;  // _month and _day are 0-based
-};
-
 } // namespace util
 
 #endif
