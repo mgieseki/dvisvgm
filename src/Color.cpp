@@ -825,9 +825,9 @@ static uint32_t interpolate_cmyk2rgb (const valarray<double> &cmyk) {
 	}
 	uint32_t rgb=0;
 	for (int i=0; i < 3; i++) {
-		double y = Cmyk2RgbTable::interpolate(gi0, gi1, t, 3, i, 0);
-		y = round(math::clip(y, 0, 255));
-		rgb = (rgb << 8) | int(y);
+		double rgb_component = Cmyk2RgbTable::interpolate(gi0, gi1, t, 3, i, 0);
+		rgb_component = round(math::clip(rgb_component, 0, 255));
+		rgb = (rgb << 8) | int(rgb_component);
 	}
 	return rgb;
 }
