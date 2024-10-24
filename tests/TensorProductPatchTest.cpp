@@ -282,8 +282,13 @@ TEST_F(TensorProductPatchTest, approximate) {
 	vector<Color> colors(4);
 	TensorProductPatch tpp(_points, colors, Color::ColorSpace::RGB, 0, nullptr);
 	tpp.approximate(2, false, 0.1, callback);
-	EXPECT_EQ(callback.pathstr(), "M10 10C20 0 50 30 70 20C80 50 90 60 100 70C70 100 20 100 10 70C20 40 0 30 10 10Z");
-	EXPECT_EQ(callback.colorstr(), "#000");
+	EXPECT_EQ(callback.pathstr(),
+		"M10 10C15 5 25 10 36.25 15C36.25 27.5 40 40.9375 43.28125 54.21875C31.25 52.1875 20.625 46.875 10 36.25"
+		"C7.5 27.5 5 20 10 10ZM36.25 15C47.5 20 60 25 70 20C75 35 80 45 85 52.5C68.75 55 55.3125 56.25 43.28125 54.21875"
+		"C40 40.9375 36.25 27.5 36.25 15ZM10 36.25C20.625 46.875 31.25 52.1875 43.28125 54.21875C46.5625 67.5 49.375 80.625 47.5 92.5"
+		"C30 92.5 15 85 10 70C15 55 12.5 45 10 36.25ZM43.28125 54.21875C55.3125 56.25 68.75 55 85 52.5C90 60 95 65 100 70"
+		"C85 85 65 92.5 47.5 92.5C49.375 80.625 46.5625 67.5 43.28125 54.21875Z");
+	EXPECT_EQ(callback.colorstr(), "#000#000#000#000");
 
 	callback.reset();
 	_patch.approximate(2, false, 0.1, callback);
