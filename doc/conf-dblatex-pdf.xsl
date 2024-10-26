@@ -5,7 +5,7 @@
   <xsl:param name="xetex.font">
     <xsl:text>\setmainfont{Source Serif 4}&#10;</xsl:text>
     <xsl:text>\setsansfont{Source Sans 3}&#10;</xsl:text>
-    <xsl:text>\setmonofont[Scale=0.9]{Source Code Pro}&#10;</xsl:text>
+    <xsl:text>\setmonofont[Scale=0.9]{Source Code Pro Medium}&#10;</xsl:text>
   </xsl:param>
 
   <xsl:param name="doc.toc.show">0</xsl:param>
