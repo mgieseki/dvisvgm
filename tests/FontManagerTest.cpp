@@ -68,7 +68,7 @@ TEST_F(FontManagerTest, getFont) {
 	EXPECT_TRUE(f2);
 	EXPECT_NE(f1, f2);
 	EXPECT_EQ(f2->name(), "cmr10");
-	EXPECT_TRUE(dynamic_cast<const PhysicalFontProxy*>(f2));
+	EXPECT_TRUE(dynamic_cast<const PhysicalFontRef*>(f2));
 	EXPECT_EQ(f2->uniqueFont(), f1);
 	EXPECT_EQ(f2->color(), Color::BLACK);
 
