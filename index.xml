@@ -3,8 +3,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Mon, 16 Sep 2024 12:34:30 +0200</pubDate>
+    <pubDate>Thu, 14 Nov 2024 17:05:50 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.4.2 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#df8caf910e67221c1b391ba92162a727</link>
+      <pubDate>Thu, 14 Nov 2024 16:57:15 +0100</pubDate>
+      <guid>df8caf910e67221c1b391ba92162a727</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fixed the evaluation of Unicode data performed when converting PDF files (<a href="https://github.com/mgieseki/dvisvgm/issues/276">issue #276</a>).</li>
+<li>Fixed the horizontal character positioning in the PDF handler to prevent exceeding text lines (<a href="https://github.com/mgieseki/dvisvgm/issues/276">issue #276</a>).</li>
+<li>Fixed the drawing of single-colored tensor product patches to also get correct shapes if parts of the surface overlap.</li>
+<li>TTF/WOFF data written to SVG files now use a static creation and modification date to ensure identical SVG files for
+unchanged input files (<a href="https://github.com/mgieseki/dvisvgm/issues/120">issue #120</a>).</li>
+<li>Slightly improved formatting and wording of the <a href="https://dvisvgm.de/Manpage">manual page</a>.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.4.1 has been released</title>
@@ -164,7 +182,7 @@ undefined type punning to the bundled woff2 library.</li>
     
     <item>
       <title>dvisvgm 3.1.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#8ac049317552507edb225b808f468f9f</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#8ac049317552507edb225b808f468f9f</link>
       <pubDate>Tue, 29 Aug 2023 12:44:48 +0200</pubDate>
       <guid>8ac049317552507edb225b808f468f9f</guid>
       <description>
@@ -340,7 +358,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.13.4 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#80bac74a072a749b3ebc7726a80a0ab6</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#80bac74a072a749b3ebc7726a80a0ab6</link>
       <pubDate>Wed, 20 Apr 2022 11:49:23 +0200</pubDate>
       <guid>80bac74a072a749b3ebc7726a80a0ab6</guid>
       <description>
@@ -393,26 +411,6 @@ page numbers respectively.</li>
 <li>Fixed a regression concerning the positioning of PDF graphics with special <code>pdffile</code>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/174">issue #174</a>).</li>
 <li>Fixed some build issues for older C++ compilers.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.13 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#44794f1bf7aeef1aecbf496110744161</link>
-      <pubDate>Thu, 20 Jan 2022 12:09:40 +0100</pubDate>
-      <guid>44794f1bf7aeef1aecbf496110744161</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added the functionality to sequentially convert multiple EPS files given on the command-line.</li>
-<li>Added variables <code>n</code> and <code>N</code> to option <code>--output</code> that represent the number of the file currently being processed and the total number of input files given on the command-line, respectively.</li>
-<li>Fixed the selection of the hash algorithm set by option <code>--page-hashes</code>.</li>
-<li>Improved the computation of glyph heights and depths.</li>
-<li>The SVG optimizer now also simplifies <code>transform</code> attributes when collapsing group elements.</li>
-<li>Extended several paragraphs of the manual page with more detailed information on the corresponding topics.</li>
-<li>Updated the bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library to version 0.8.1.</li>
-<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> framework to version 1.11.0.</li>
 </ul>
 ]]>
       </description>

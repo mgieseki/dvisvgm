@@ -568,7 +568,7 @@ at the seam of two adjacent patches.
 </dt>
 <dd>
 <p>
-Determines the maximal number of segments per column and row used to approximate gradient color fills.
+Determines the maximum number of segments per column and row used to approximate gradient color fills.
 Since SVG 1.1 only supports a small subset of the shading algorithms available in PostScript,
 dvisvgm approximates some of them by subdividing the area to be filled into smaller, monochromatic
 segments. Each of these segments gets the average color of the region it covers. Thus, increasing the
@@ -578,7 +578,7 @@ represented by a separate path element.
 </p>
 <p>Currently, dvisvgm supports free- and lattice-form triangular patch meshes as well as Coons and
 tensor-product patch meshes. They are approximated by subdividing the area of each patch into a
-<em>n</em>×<em>n</em> grid of smaller segments. The maximal number of segments per column and row can be
+<em>n</em>×<em>n</em> grid of smaller segments. The maximum number of segments per column and row can be
 changed with option <strong>--grad-segments</strong>.</p>
 </dd>
 </div>
@@ -695,11 +695,11 @@ The default setting usually produces nice results.
 <dd>
 <p>
 Prints a given message to the console after an SVG file has been written. Argument <em>text</em> may consist
-of static text and the macros listed below in the description of special command <code>dvisvgm:raw</code>.
+of static text as well as the macros listed below in the description of special command <code>dvisvgm:raw</code>.
 For example, <code>--message="page {?pageno} written to {?svgfile}"</code> prints the message with the macros
 expanded after the conversion of each page of a DVI or PDF file or after processing an EPS file.
 </p>
-<p>The output of option <strong>--message</strong> is not affected by the specified verbosity level, i.e. it prints
+<p>The output of option <strong>--message</strong> is not affected by a specified verbosity level, i.e. dvisvgm prints
 the text even with <code>--verbosity=0</code>.</p>
 </dd>
 </div>
@@ -938,9 +938,10 @@ pages up to page 10, <code>--page=10-</code> converts all pages starting with pa
 Please consider that the page values don’t refer to the page numbers printed on the
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.</p>
-<p>At the end of the range sequence an optional filter specifier can be added. Currently, the two
-filters <code>:even</code> and <code>:odd</code> are supported which restrict the preceding values to even or odd
-numbers. For example, <code>--page=1-11,20:even</code> is equivalent to <code>--page=2,4,6,8,10,20</code>.</p>
+<p>At the end of the range sequence an optional filter specifier can be appended in order to remove
+certain page numbers from the sequence. Currently, the two filters <code>:even</code> and <code>:odd</code> are supported
+which restrict the preceding values to even and odd numbers, respectively. For example,
+<code>--page=1-11,20:even</code> is equivalent to <code>--page=2,4,6,8,10,20</code>.</p>
 </dd>
 </div>
 <a name="opt-page-hashes" class="linktarget"></a><div class="hdlist1">
@@ -1017,7 +1018,7 @@ The currently supported values are <code>gs</code> and <code>mutool</code>.</p>
 <strong>-d, --precision</strong>=<em>digits</em>
 </dt>
 <dd><p>
-Specifies the maximal number of decimal places applied to floating-point attribute values.
+Specifies the maximum number of decimal places applied to floating-point attribute values.
 All attribute values written to the generated SVG file(s) are rounded accordingly. The
 parameter <em>digits</em> accepts integer values from 0 to 6, where 0 enables the automatic selection
 of significant decimal places. This is also the default value if dvisvgm is called without
@@ -1407,34 +1408,37 @@ The following list gives a brief overview of dvisvgm’s own set of currently su
 <dt>
 <strong>dvisvgm:raw</strong> <em>text</em>
 </dt>
-<dd><p>
-  Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
-  proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
-  that the resulting SVG is still valid. Opening and closing tags may be distributed among different <em>raw</em>
-  specials. The tags themselves can also be split but must be continued with the immediately following <em>raw</em>
-  special. Both syntactically incorrect and wrongly nested tags lead to error messages.
+<dd>
+<p>
+Adds an arbitrary sequence of XML nodes to the page section of the SVG document. dvisvgm checks syntax and
+proper nesting of the inserted elements but does not perform any validation, thus the user has to ensure
+that the resulting SVG is still valid. Opening and closing tags may be distributed among different <em>raw</em>
+specials. The tags themselves can also be split but must be continued with the immediately following <em>raw</em>
+special. Both syntactically incorrect and wrongly nested tags lead to error messages.
+</p>
 <p>Parameter <em>text</em> may also contain the expressions <strong>{?x}</strong>, <strong>{?y}</strong>, <strong>{?color}</strong>, <strong>{?fillcolor}</strong>, <strong>{?strokecolor}</strong>,
 <strong>{?matrix}</strong>, <strong>{?pageno}</strong>, <strong>{?svgfile}</strong>, and <strong>{?svgpath}</strong> that respectively expand to the current <em>x</em> and <em>y</em>
 coordinate, an RGB hex string of the current active fill and stroke color, the current transformation matrix,
 the current page number, and the relative and absolute path of the SVG file being created. <strong>{?color}</strong> expands
 to the same string as <strong>{?fillcolor}</strong> and is still available for compatibility with older dvisvgm versions that
 didn’t distinguish between fill and stroke colors (see information about color specials below).</p>
-<p>As SVG doesn’t support CMYK colors, e.g. in <code>fill</code> and <code>stroke</code> attributes, dvisvgm provides macro
+<p>As SVG doesn’t support CMYK colors, for example in <code>fill</code> and <code>stroke</code> attributes, dvisvgm provides macro
 <strong>{?cmyk(<em>c</em>,<em>m</em>,<em>y</em>,<em>k</em>)}</strong> to create an RGB hex string from a CMYK color. It can be used instead of
 a combination of color/PostScript specials and color macros to directly insert a CMYK color value.</p>
 <p>Character sequence <strong>{?nl}</strong> expands to a newline character. Finally, constructions of the form <strong>{?(<em>expr</em>)}</strong>
 enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
-modulo. Like above, the variables <em>x</em> and <em>y</em> represent the current coordinates.
-Example: <code>{?(-10*(x+2y)-5)}</code>.</p>
-</p></dd>
+modulo. As above, the variables <em>x</em> and <em>y</em> represent the current coordinates.
+Invalid operations, like divisions by zero, lead to an error message on the console.
+Example: <code>{?(-10*(x+2y)-5)}</code> is a valid expresssion and expands to the corresponding numeric string.</p>
+</dd>
 </div>
 <a name="specials-dvisvgm:rawdef" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:rawdef</strong> <em>text</em>
 </dt>
 <dd><p>
-  This command is similar to <strong>dvisvgm:raw</strong>, but puts the XML nodes into the &lt;defs&gt; section of the SVG document
-  currently being generated.
+This command is similar to <strong>dvisvgm:raw</strong>, but puts the XML nodes into the &lt;defs&gt; section of the SVG document
+currently being generated.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:rawset" class="linktarget"></a><div class="hdlist1">
@@ -1442,14 +1446,14 @@ Example: <code>{?(-10*(x+2y)-5)}</code>.</p>
 <strong>dvisvgm:rawset</strong> <em>name</em> … <strong>dvisvgm:endrawset</strong>
 </dt>
 <dd><p>
-  This pair of specials marks the begin and end of a definition of a named raw SVG fragment. All <strong>dvisvgm:raw</strong>
-  and <strong>dvisvgm:rawdef</strong> specials enclosed by <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> are not evaluated
-  immediately but stored together under the given <em>name</em> for later use. Once defined, the named fragment can be
-  referenced throughout the DVI file by <strong>dvisvgm:rawput</strong> (see below).
-  The two commands <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> must not be nested, i.e. each call of <strong>dvisvgm:rawset</strong>
-  has to be followed by a corresponding call of <strong>dvisvgm:endrawset</strong> before another <strong>dvisvgm:rawset</strong> may occur.
-  Also, the identifier <em>name</em> must be unique throughout the DVI file. Using <strong>dvisvgm:rawset</strong> multiple times
-  together with the same <em>name</em> leads to warning messages.
+This pair of specials marks the begin and end of a definition of a named raw SVG fragment. All <strong>dvisvgm:raw</strong>
+and <strong>dvisvgm:rawdef</strong> specials enclosed by <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> are not evaluated
+immediately but stored together under the given <em>name</em> for later use. Once defined, the named fragment can be
+referenced throughout the DVI file by <strong>dvisvgm:rawput</strong> (see below).
+The two commands <strong>dvisvgm:rawset</strong> and <strong>dvisvgm:endrawset</strong> must not be nested, i.e. each call of <strong>dvisvgm:rawset</strong>
+has to be followed by a corresponding call of <strong>dvisvgm:endrawset</strong> before another <strong>dvisvgm:rawset</strong> may occur.
+Also, the identifier <em>name</em> must be unique throughout the DVI file. Using <strong>dvisvgm:rawset</strong> multiple times
+together with the same <em>name</em> leads to warning messages.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:rawput" class="linktarget"></a><div class="hdlist1">
@@ -1457,37 +1461,39 @@ Example: <code>{?(-10*(x+2y)-5)}</code>.</p>
 <strong>dvisvgm:rawput</strong> <em>name</em>
 </dt>
 <dd><p>
-  Inserts raw SVG fragments previously stored under the given <em>name</em>. dvisvgm distinguishes between fragments
-  that were specified with <strong>dvisvgm:raw</strong> or <strong>dvisvgm:rawdef</strong>, and handles them differently: It inserts all
-  <strong>dvisvgm:raw</strong> parts every time <strong>dvisvgm:rawput</strong> is called, whereas the <strong>dvisvgm:rawdef</strong> portions go to the
-  &lt;defs&gt; section of the current SVG document only once.
+Inserts raw SVG fragments previously stored under the given <em>name</em>. dvisvgm distinguishes between fragments
+that were specified with <strong>dvisvgm:raw</strong> or <strong>dvisvgm:rawdef</strong>, and handles them differently: It inserts all
+<strong>dvisvgm:raw</strong> parts every time <strong>dvisvgm:rawput</strong> is called, whereas the <strong>dvisvgm:rawdef</strong> portions go to the
+&lt;defs&gt; section of the current SVG document only once.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:img" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:img</strong> <em>width</em> <em>height</em> <em>file</em>
 </dt>
-<dd><p>
-  Creates an <code>image</code> element using the current graphic position, transformation matrix, the specified extents,
-  and the given filename. This special command also updates the bounding box of the resulting SVG to entirely
-  enclose the transformed image. The image itself is positioned such that the lower left corner of the
-  untransformed image lies at the current graphic position. The length <em>width</em> and <em>height</em> specify the extents
-  of the untransformed image. For a list of supported length units see option <strong>--bbox</strong>. Plain numbers without an
-  appended unit specifier imply TeX points (1in = 72.27pt).
+<dd>
+<p>
+Creates an <code>image</code> element using the current graphic position, transformation matrix, the specified extents,
+and the given filename. This special command also updates the bounding box of the resulting SVG to entirely
+enclose the transformed image. The image itself is positioned such that the lower left corner of the
+untransformed image lies at the current graphic position. The length <em>width</em> and <em>height</em> specify the extents
+of the untransformed image. For a list of supported length units see option <strong>--bbox</strong>. Plain numbers without an
+appended unit specifier imply TeX points (1in = 72.27pt).
+</p>
 <p>Parameter <em>file</em> can be a plain filename or a relative or absolute path of a file. By default, dvisvgm just
 creates links referencing the image file so that the SVG renderer will evaluate the filename or path relative
-to the location of the generated SVG file. If option <strong>&ndash;embed-bitmaps</strong> is given, JPEG and PNG images are
+to the location of the generated SVG file. If option <strong>--embed-bitmaps</strong> is given, JPEG and PNG images are
 embedded into the SVG document. As this requires base64-encoding of the image data, the resulting SVG files
 can become quite big.</p>
-</p></dd>
+</dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:bbox</strong> lock
 </dt>
 <dd><p>
-  Locks the bounding box of the current page and prevents it from further updating, i.e. graphics elements added
-  after calling this special are not taken into account in determining the extent of the bounding box.
+Locks the bounding box of the current page and prevents it from further updating, i.e. graphics elements added
+after calling this special are not taken into account in determining the extent of the bounding box.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
@@ -1495,53 +1501,57 @@ can become quite big.</p>
 <strong>dvisvgm:bbox</strong> unlock
 </dt>
 <dd><p>
-  Unlocks the previously locked bounding box of the current page so that it gets updated again when adding
-  graphics elements to the page.
+Unlocks the previously locked bounding box of the current page so that it gets updated again when adding
+graphics elements to the page.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:bbox</strong> n[ew] <em>name</em>
 </dt>
-<dd><p>
-  Defines or resets a local bounding box called <em>name</em>. The name may consist of letters and digits.
-  While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to
-  determine the minimal rectangle containing all visible page components (characters, images, drawing elements etc.)
-  Additionally to the global bounding box, the user can request an arbitrary number of named local bounding boxes.
-  Once defined, these boxes are updated together with the global bounding box starting with the first character that
-  follows the definition. Thus, the local boxes can be used to compute the extent of parts of the page. This is useful
-  for scenarios where the generated SVG file is post-processed.
-  In conjunction with special <strong>dvisvgm:raw</strong>, the macro <strong>{?bbox <em>name</em>}</strong> expands to the four values <em>x</em>, <em>y</em>, <em>w</em>, and <em>h</em>
-  (separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box <em>name</em>.
-  If box <em>name</em> wasn’t previously defined, all four values equal to zero.
-</p></dd>
+<dd>
+<p>
+Defines or resets a local bounding box called <em>name</em>. The name may consist of letters and digits.
+While processing a DVI page, dvisvgm continuously updates the (global) bounding box of the current page in order to
+determine the minimal rectangle containing all visible page components (characters, images, drawing elements etc.)
+Additionally to the global bounding box, the user can request an arbitrary number of named local bounding boxes.
+Once defined, these boxes are updated together with the global bounding box starting with the first character that
+follows the definition. Thus, the local boxes can be used to compute the extent of parts of the page. This is useful
+for scenarios where the generated SVG file is post-processed.
+</p>
+<p>In conjunction with special <strong>dvisvgm:raw</strong>, the macro <strong>{?bbox <em>name</em>}</strong> expands to the four values <em>x</em>, <em>y</em>, <em>w</em>, and <em>h</em>
+(separated by spaces) specifying the coordinates of the upper left corner, width, and height of the local box <em>name</em>.
+If box <em>name</em> wasn’t previously defined, all four values equal to zero.</p>
+</dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:bbox</strong> <em>width</em> <em>height</em> [<em>depth</em>] [<code>transform</code>]
 </dt>
-<dd><p>
-  Updates the bounding box of the current page by embedding a virtual rectangle (<em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>)
-  where the lower left corner is located at the current DVI drawing position (<em>x</em>,<em>y</em>). If the optional parameter <em>depth</em>
-  is specified, dvisvgm embeds a second rectangle (<em>x</em>, <em>y</em>, <em>width</em>, -<em>depth</em>). The lengths <em>width</em>, <em>height</em>, and
-  <em>depth</em> can be given together with a unit specifier (see option <strong>--bbox</strong>) or as plain floating point numbers.
-  In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
-  this command either enlarges the overall bounding box or leaves it as is. It’s not possible to reduce its extent. This
-  special should be used together with <strong>dvisvgm:raw</strong> in order to update the viewport of the page properly.
-  By default, the box extents are assigned unchanged and, in particular, are not altered by transformation commands.
-  In order to apply the current transformation matrix, the optional modifier <code>transform</code> can be added at the end of
-  the special statement.
-</p></dd>
+<dd>
+<p>
+Updates the bounding box of the current page by embedding a virtual rectangle (<em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>)
+where the lower left corner is located at the current DVI drawing position (<em>x</em>,<em>y</em>). If the optional parameter <em>depth</em>
+is specified, dvisvgm embeds a second rectangle (<em>x</em>, <em>y</em>, <em>width</em>, -<em>depth</em>). The lengths <em>width</em>, <em>height</em>, and
+<em>depth</em> can be given together with a unit specifier (see option <strong>--bbox</strong>) or as plain floating point numbers.
+In the latter case, TeX point units are assumed (1in = 72.27pt). Depending on size and position of the virtual rectangle,
+this command either enlarges the overall bounding box or leaves it as is. So, it’s not possible to reduce its extent.
+</p>
+<p>This special is supposed to be used together with <strong>dvisvgm:raw</strong> in order to update the viewport of the page properly.
+By default, the box extents are assigned unchanged and, in particular, are not altered by transformation commands.
+In order to apply the current transformation matrix, the optional modifier <code>transform</code> can be added at the end of
+the special statement.</p>
+</dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
 <strong>dvisvgm:bbox</strong> a[bs] <em>x1</em> <em>y1</em> <em>x2</em> <em>y2</em> [<code>transform</code>]
 </dt>
 <dd><p>
-  This variant of the bbox special updates the bounding box by embedding a virtual rectangle (<em>x1</em>,<em>y1</em>,<em>x2</em>,<em>y2</em>).
-  The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
-  As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
-  current transformation matrix to the bounding box.
+This variant of the bbox special updates the bounding box by embedding a virtual rectangle (<em>x1</em>,<em>y1</em>,<em>x2</em>,<em>y2</em>).
+The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
+current transformation matrix to the bounding box.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:bbox" class="linktarget"></a><div class="hdlist1">
@@ -1550,11 +1560,11 @@ can become quite big.</p>
 </dt>
 <dd>
 <p>
-  This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
-  this command, dvisvgm doesn’t further alter the bounding box coordinates, except this special is called again later.
-  The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
-  As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
-  current transformation matrix to the bounding box.
+This variant of the bbox special assigns an absolute (final) bounding box to the resulting SVG. After executing
+this command, dvisvgm doesn’t further alter the bounding box coordinates, except this special is called again later.
+The points (<em>x1</em>,<em>y1</em>) and (<em>x2</em>,<em>y2</em>) denote the absolute coordinates of two diagonal corners of the rectangle.
+As with the relative special variant described above, the optional modifier <code>transform</code> allows for applying the
+current transformation matrix to the bounding box.
 </p>
 <p>The following TeX snippet adds two raw SVG elements to the output and updates the bounding box accordingly:</p>
 <div class="d-inline-flex"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tex" data-lang="tex"><span style="display:flex;"><span><span style="color:#ff79c6">\special</span><span style="color:#8be9fd">{</span><span style="color:yellow">dvisvgm:raw</span> &lt;circle cx=&#39;<span style="color:lightgreen">{?x}</span>&#39; cy=&#39;<span style="color:lightgreen">{?y}</span>&#39; r=&#39;10&#39; stroke=&#39;black&#39; fill=&#39;red&#39;/&gt;<span style="color:#8be9fd">}</span><span style="color:#6272a4">%
@@ -1571,10 +1581,10 @@ can become quite big.</p>
 <strong>dvisvgm:currentcolor</strong> [on|off]
 </dt>
 <dd><p>
-  This special works similar to option <code>--currentcolor</code> but doesn’t require an explicit color argument. Instead,
-  it takes the currently active color and replaces it with <code>currentColor</code>. Therefore, the result depends on the
-  placement of the special and the preceding color changes. Argument <code>on</code> – which activates the <em>currentColor</em>
-  functionality – can be omitted. When called with argument <code>off</code>, the functionality is deactivated again.
+This special works similar to option <code>--currentcolor</code> but doesn’t require an explicit color argument. Instead,
+it takes the currently active color and replaces it with <code>currentColor</code>. Therefore, the result depends on both the
+placement of the special and the preceding color changes. Argument <code>on</code> – which activates the <em>currentColor</em>
+functionality – can be omitted. When called with argument <code>off</code>, the functionality is deactivated again.
 </p></dd>
 </div>
 <a name="specials-dvisvgm:message" class="linktarget"></a><div class="hdlist1">
@@ -1582,8 +1592,9 @@ can become quite big.</p>
 <strong>dvisvgm:message</strong> <em>msg</em>
 </dt>
 <dd><p>
-  Prints the given text <em>msg</em> to the console. It may also contain the macros <em>{?…}</em> mentioned above
-  (see <strong>dvisvgm:raw</strong>).
+Prints the given text <em>msg</em> to the console. Besides static text it may also contain the macros <code>{?…}</code> mentioned
+in the description of <strong>dvisvgm:raw</strong>. The messages created by this special can be suppressed with option
+<strong>--verbosity</strong> (see above).
 </p></dd>
 </div>
 </dl>
@@ -1929,9 +1940,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.4.1</div>
+   <div class="col-md-6">Version 3.4.2</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-04-30</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-11-07</span>
    </div>
 </div>
 </div>
