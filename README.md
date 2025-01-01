@@ -151,7 +151,7 @@ preferably use the [bug tracker at GitHub](https://github.com/mgieseki/dvisvgm/i
 Copyright
 ---------
 
-Copyright &copy; 2005&ndash;2024 [Martin Gieseking](mailto:martin.gieseking@uos.de)
+Copyright &copy; 2005&ndash;2025 [Martin Gieseking](mailto:martin.gieseking@uos.de)
 
 This program is free software; you can redistribute it and/or modify it under the terms
 of the GNU General Public License as published by the Free Software Foundation; either

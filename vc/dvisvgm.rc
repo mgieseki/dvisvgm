@@ -19,7 +19,7 @@ BEGIN
       VALUE "FileDescription", "Converts DVI, EPS, and PDF files to SVG\0"
       VALUE "FileVersion", DVISVGM_VERSION_STR
       VALUE "InternalName", "dvisvgm\0"
-      VALUE "LegalCopyright",	"\251 2005\2262024 Martin Gieseking\0"
+      VALUE "LegalCopyright",	"\251 2005\2262025 Martin Gieseking\0"
       VALUE "OriginalFilename", "dvisvgm.exe\0"
       VALUE "ProductName",	"dvisvgm\0"
       VALUE "ProductVersion", DVISVGM_VERSION_STR
