@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2024-11-07 12:18 +0100
+:revdate: 2025-01-04 12:26 +0100
 
 Name
 ----
@@ -58,15 +58,15 @@ to achieve this is to extract the path information from vector-based font files 
 PFB, TTF, or OTF format. If dvisvgm is able to find such a file, it extracts all necessary
 outline information about the glyphs from it.
 
-However, TeX's main source for font descriptions is Metafont, which produces bitmap output
-(GF files). That's why not all obtainable TeX fonts are available in a scalable format.
+However, TeX's former main source for font descriptions is Metafont, which produces bitmap output
+in terms of GF files. That's why not all obtainable TeX fonts are available in a scalable format.
 In these cases, dvisvgm tries to vectorize Metafont's output by tracing the glyph bitmaps.
 The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are
 nonetheless really nice in most cases.
 
 When running dvisvgm without option *--no-fonts*, it creates 'font' elements (+<font>+...+</font>+)
 to embed the font data into the SVG files. Unfortunately, only few SVG renderers support these
-elements yet. Most web browsers and vector graphics applications don't evaluate them properly so
+elements. Most web browsers and vector graphics applications don't evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option *--no-fonts* can be given to replace the font elements
 by plain graphics paths. Most web browsers (but only few external SVG renderers) also support
@@ -84,13 +84,13 @@ specifying the options is not significant, i.e. you can add them in any order wi
 dvisvgm's behavior. Certain options accept or require additional parameters which are directly
 appended to or separated by whitespace from a short option (e.g. +-v0+ or +-v 0+). Long options
 require an additional equals sign (+=+) between option name and argument but without any surrounding
-whitespace (e.g. +--verbosity=0+). Multiple short options that don't expect a further parameter can
+whitespace (e.g. +--verbosity=0+). Multiple short options that don't expect further parameters can
 be combined after a single dash (e.g. +-ejs+ rather than +-e -j -s+).
 
-Long option names may also be shortened by omitting trailing characters. As long as the shortened
-name is unambiguous, it's recognized and applied. For example, option +--exact-bbox+ can be shortened
-to +--exact+, +--exa+, or +--ex+. In case of an ambiguous abbreviation, dvisvgm prints an error
-message together with all matching option names.
+Long option names may also be shortened by omitting trailing characters as long as the shortened
+name is still unambiguous. For example, option +--exact-bbox+ can be shortened to +--exact+,
++--exa+, or +--ex+. In case of ambiguous abbreviations, dvisvgm prints an error message together
+with all matching option names.
 
 *-b, --bbox*='fmt'::
 Sets the bounding box of the generated SVG graphic to the specified format. This option only affects
@@ -141,7 +141,7 @@ Hence, if you choose a landscape format, the page won't be rotated.
 
 //
 *-B, --bitmap-format*='fmt'::
-This option sets the image format used to embed bitmaps extracted from PostScript or PDF data.
+This option sets the image format used to embed bitmaps that are extracted from PostScript or PDF data.
 By default, dvisvgm embeds all bitmaps as JPEG images because it's the most compact of the two formats
 supported by SVG. To select the alternative lossless PNG format, *--bitmap-format=png* can be used.
 There are some more format variants dvisvgm currently supports even though +jpeg+ and +png+ should be

@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2024-11-07
+.\"      Date: 2025-01-04
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.4.2
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2024\-11\-07" "dvisvgm 3\&.4\&.2" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2025\-01\-04" "dvisvgm 3\&.4\&.2" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -44,14 +44,14 @@ Since the current SVG standard 1\&.1 doesn\(cqt specify multi\-page graphics, dv
 .sp
 SVG is a vector\-based graphics format and therefore dvisvgm tries to convert the glyph outlines of all fonts referenced in a DVI page section to scalable path descriptions\&. The fastest way to achieve this is to extract the path information from vector\-based font files available in PFB, TTF, or OTF format\&. If dvisvgm is able to find such a file, it extracts all necessary outline information about the glyphs from it\&.
 .sp
-However, TeX\(cqs main source for font descriptions is Metafont, which produces bitmap output (GF files)\&. That\(cqs why not all obtainable TeX fonts are available in a scalable format\&. In these cases, dvisvgm tries to vectorize Metafont\(cqs output by tracing the glyph bitmaps\&. The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are nonetheless really nice in most cases\&.
+However, TeX\(cqs former main source for font descriptions is Metafont, which produces bitmap output in terms of GF files\&. That\(cqs why not all obtainable TeX fonts are available in a scalable format\&. In these cases, dvisvgm tries to vectorize Metafont\(cqs output by tracing the glyph bitmaps\&. The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are nonetheless really nice in most cases\&.
 .sp
-When running dvisvgm without option \fB\-\-no\-fonts\fR, it creates \fIfont\fR elements (\fB<font>\fR\&...\fB</font>\fR) to embed the font data into the SVG files\&. Unfortunately, only few SVG renderers support these elements yet\&. Most web browsers and vector graphics applications don\(cqt evaluate them properly so that the text components of the resulting graphics might look strange\&. In order to create more compatible SVG files, command\-line option \fB\-\-no\-fonts\fR can be given to replace the font elements by plain graphics paths\&. Most web browsers (but only few external SVG renderers) also support WOFF and WOFF2 fonts that can be used instead of the default SVG fonts\&. Option \fB\-\-font\-format\fR offers the functionality to change the format applied to the fonts being embedded\&. This, however, only works when converting DVI files\&. Text present in PDF and PostScript files is always converted to path elements\&.
+When running dvisvgm without option \fB\-\-no\-fonts\fR, it creates \fIfont\fR elements (\fB<font>\fR\&...\fB</font>\fR) to embed the font data into the SVG files\&. Unfortunately, only few SVG renderers support these elements\&. Most web browsers and vector graphics applications don\(cqt evaluate them properly so that the text components of the resulting graphics might look strange\&. In order to create more compatible SVG files, command\-line option \fB\-\-no\-fonts\fR can be given to replace the font elements by plain graphics paths\&. Most web browsers (but only few external SVG renderers) also support WOFF and WOFF2 fonts that can be used instead of the default SVG fonts\&. Option \fB\-\-font\-format\fR offers the functionality to change the format applied to the fonts being embedded\&. This, however, only works when converting DVI files\&. Text present in PDF and PostScript files is always converted to path elements\&.
 .SH "OPTIONS"
 .sp
-dvisvgm provides a POSIX\-compliant command\-line interface with short and long option names\&. They may be given before and/or after the name of the file to be converted\&. Also, the order of specifying the options is not significant, i\&.e\&. you can add them in any order without changing dvisvgm\(cqs behavior\&. Certain options accept or require additional parameters which are directly appended to or separated by whitespace from a short option (e\&.g\&. \fB\-v0\fR or \fB\-v 0\fR)\&. Long options require an additional equals sign (\fB=\fR) between option name and argument but without any surrounding whitespace (e\&.g\&. \fB\-\-verbosity=0\fR)\&. Multiple short options that don\(cqt expect a further parameter can be combined after a single dash (e\&.g\&. \fB\-ejs\fR rather than \fB\-e \-j \-s\fR)\&.
+dvisvgm provides a POSIX\-compliant command\-line interface with short and long option names\&. They may be given before and/or after the name of the file to be converted\&. Also, the order of specifying the options is not significant, i\&.e\&. you can add them in any order without changing dvisvgm\(cqs behavior\&. Certain options accept or require additional parameters which are directly appended to or separated by whitespace from a short option (e\&.g\&. \fB\-v0\fR or \fB\-v 0\fR)\&. Long options require an additional equals sign (\fB=\fR) between option name and argument but without any surrounding whitespace (e\&.g\&. \fB\-\-verbosity=0\fR)\&. Multiple short options that don\(cqt expect further parameters can be combined after a single dash (e\&.g\&. \fB\-ejs\fR rather than \fB\-e \-j \-s\fR)\&.
 .sp
-Long option names may also be shortened by omitting trailing characters\&. As long as the shortened name is unambiguous, it\(cqs recognized and applied\&. For example, option \fB\-\-exact\-bbox\fR can be shortened to \fB\-\-exact\fR, \fB\-\-exa\fR, or \fB\-\-ex\fR\&. In case of an ambiguous abbreviation, dvisvgm prints an error message together with all matching option names\&.
+Long option names may also be shortened by omitting trailing characters as long as the shortened name is still unambiguous\&. For example, option \fB\-\-exact\-bbox\fR can be shortened to \fB\-\-exact\fR, \fB\-\-exa\fR, or \fB\-\-ex\fR\&. In case of ambiguous abbreviations, dvisvgm prints an error message together with all matching option names\&.
 .PP
 \fB\-b, \-\-bbox\fR=\fIfmt\fR
 .RS 4
@@ -167,7 +167,7 @@ only affects the bounding box and does not transform the page content\&. Hence, 
 .PP
 \fB\-B, \-\-bitmap\-format\fR=\fIfmt\fR
 .RS 4
-This option sets the image format used to embed bitmaps extracted from PostScript or PDF data\&. By default, dvisvgm embeds all bitmaps as JPEG images because it\(cqs the most compact of the two formats supported by SVG\&. To select the alternative lossless PNG format,
+This option sets the image format used to embed bitmaps that are extracted from PostScript or PDF data\&. By default, dvisvgm embeds all bitmaps as JPEG images because it\(cqs the most compact of the two formats supported by SVG\&. To select the alternative lossless PNG format,
 \fB\-\-bitmap\-format=png\fR
 can be used\&. There are some more format variants dvisvgm currently supports even though
 \fBjpeg\fR
