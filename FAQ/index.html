@@ -115,7 +115,7 @@ Actually, only few SVG renderers, e.g. <a href="http://xmlgraphics.apache.org/ba
 You can run <em>dvisvgm</em> with option <code>--no-fonts</code> to replace the fonts with <a href="https://w3.org/TR/SVG/paths.html">path elements</a>.
 Most viewers should render the resulting SVG files correctly. As a drawback, you get bigger files, and the information
 about the text (characters, baselines, &hellip;) gets lost.</p>
-<p>As of version 2.0, <em>dvisvgm</em> provides the command-line option <code>--font-format</code> that allows to change the format
+<p>As of version 2.0, <em>dvisvgm</em> provides the command-line option <code>--font-format</code> that allows you to change the format
 used for embedded fonts from SVG to WOFF, WOFF2 or TrueType. If you call dvisvgm with option <code>--font-format=woff</code>,
 you should get SVG files that render correctly in almost all recent web browsers. Moreover, and in contrast to
 option <code>--no-fonts</code>, all text properties are retained.</p>
@@ -125,10 +125,10 @@ option <code>--no-fonts</code>, all text properties are retained.</p>
     <div class="card-header bg-primary text-white">
       The bounding box of the generated SVG is too small so that some characters are clipped. What can I do?
     </div>
-    <div class="card-body"><p>Run <em>dvisvgm</em> with option <code>--exact</code>. By default, <em>dvisvgm</em> uses the character dimensions (height, depth, width,
+    <div class="card-body"><p>Run <em>dvisvgm</em> with option <code>--exact-bbox</code>. By default, <em>dvisvgm</em> uses the character dimensions (height, depth, width,
 italic correction, etc.) stored in a font’s <a href="http://en.wikipedia.org/wiki/TeX_font_metric">TFM file</a> to compute
 the bounding boxes. However, as the TFM bounds are optimized for TeX’s character positioning, and as the actual
-glyphs may exceed their TFM bounds, clipped SVG files are the result. Option <code>--exact</code> tells <em>dvisvgm</em> to analyze
+glyphs may exceed their TFM bounds, clipped SVG files are the result. Option <code>--exact-bbox</code> tells <em>dvisvgm</em> to analyze
 each glyph and to compute the exact bounding rectangle.</p>
 </div>
   </section>
@@ -249,16 +249,16 @@ program search path, respectively. On Windows, check environment variable <code>
 <li>As of version 1.9, <em>dvisvgm</em> should find the location of the Ghostscript DLL automatically.
 If it does not, proceed with the following steps.</li>
 <li>Look up the Ghostscript directory that contains the Ghostscript DLL <code>gsdll32.dll</code> or <code>gsdll64.dll</code>
-(usually something like <code>c:\program files\gs\gs9.23\bin</code>).</li>
+(usually something like <code>c:\program files\gs\gs10.04.0\bin</code>).</li>
 <li>Tell <em>dvisvgm</em> where to find the Ghostscript DLL. There are several alternatives to do that:
 <ul>
 <li>Add the path of the Ghostscript <code>bin</code> directory to environment variable PATH, e.g. with
-<code>PATH=%PATH%;&quot;c:\program files\gs\gs9.23\bin&quot;</code>. See <a href="https://java.com/en/download/help/path.xml">here</a>
+<code>PATH=%PATH%;&quot;c:\program files\gs\gs10.04.0\bin&quot;</code>. See <a href="https://java.com/en/download/help/path.xml">here</a>
 for more information on how to set the PATH variable permanently.</li>
 <li>Assign the location of the Ghostscript DLL to the environment variable LIBGS, e.g. with<br/>
-<code>set LIBGS=&quot;c:\program files\gs\gs9.56\bin\gsdll64.dll&quot;</code>.</li>
+<code>set LIBGS=&quot;c:\program files\gs\gs10.04.0\bin\gsdll64.dll&quot;</code>.</li>
 <li>Use the command-line option <code>--libgs</code> to tell <em>dvisvgm</em> where the GS DLL is located, e.g.<br/>
-<code>dvisvgm --libgs=&quot;c:\program files\gs\gs9.56\bin\gsdll64.dll&quot; ...</code></li>
+<code>dvisvgm --libgs=&quot;c:\program files\gs\gs10.04.0\bin\gsdll64.dll&quot; ...</code></li>
 </ul>
 </li>
 </ul>
