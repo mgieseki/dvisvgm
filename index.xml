@@ -3,8 +3,23 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 14 Nov 2024 17:05:50 +0100</pubDate>
+    <pubDate>Sat, 04 Jan 2025 13:09:18 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.4.3 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#fb495316c74fdb00859f7cc359c41ecc</link>
+      <pubDate>Sat, 04 Jan 2025 13:04:24 +0100</pubDate>
+      <guid>fb495316c74fdb00859f7cc359c41ecc</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fixed an index error in PS operator <code>colorimage</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/279">issue #279</a>).</li>
+<li>Updated the bundled <a href="https://xxhash.com">xxHash</a> library to version 0.8.3.</li>
+<li>Minor changes to the <a href="https://dvisvgm.de/Manpage">manual page</a>.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.4.2 has been released</title>
@@ -166,7 +181,7 @@ undefined type punning to the bundled woff2 library.</li>
     
     <item>
       <title>dvisvgm 3.1.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#b9ddd429bb79cff6907c18fc32d093bf</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#b9ddd429bb79cff6907c18fc32d093bf</link>
       <pubDate>Thu, 12 Oct 2023 15:19:57 +0200</pubDate>
       <guid>b9ddd429bb79cff6907c18fc32d093bf</guid>
       <description>
@@ -340,7 +355,7 @@ page numbers respectively.</li>
     
     <item>
       <title>dvisvgm 2.14 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4468f9499cd26017882826f25736c181</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4468f9499cd26017882826f25736c181</link>
       <pubDate>Fri, 12 Aug 2022 09:48:19 +0200</pubDate>
       <guid>4468f9499cd26017882826f25736c181</guid>
       <description>
@@ -395,23 +410,6 @@ page numbers respectively.</li>
       <description>
         <![CDATA[<p>This small release improves the clipping of embedded EPS/PDF graphics
 (<a href="https://github.com/mgieseki/dvisvgm/issues/176">issue #176</a>).</p>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.13.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#cac0a6dd77a51a4ac4ebe47b653b4442</link>
-      <pubDate>Wed, 26 Jan 2022 10:06:55 +0100</pubDate>
-      <guid>cac0a6dd77a51a4ac4ebe47b653b4442</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Enabled the evaluation of expression <code>{?(...)}</code> in special <code>dvisvgm:rawdef</code>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/175">issue #175</a>).</li>
-<li>Fixed a regression concerning the positioning of PDF graphics with special <code>pdffile</code>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/174">issue #174</a>).</li>
-<li>Fixed some build issues for older C++ compilers.</li>
-</ul>
 ]]>
       </description>
     </item>

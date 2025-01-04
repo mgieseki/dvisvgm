@@ -109,14 +109,14 @@ of all fonts referenced in a DVI page section to scalable path descriptions. The
 to achieve this is to extract the path information from vector-based font files available in
 PFB, TTF, or OTF format. If dvisvgm is able to find such a file, it extracts all necessary
 outline information about the glyphs from it.</p>
-<p>However, TeX’s main source for font descriptions is Metafont, which produces bitmap output
-(GF files). That’s why not all obtainable TeX fonts are available in a scalable format.
+<p>However, TeX’s former main source for font descriptions is Metafont, which produces bitmap output
+in terms of GF files. That’s why not all obtainable TeX fonts are available in a scalable format.
 In these cases, dvisvgm tries to vectorize Metafont’s output by tracing the glyph bitmaps.
 The results are not as perfect as most (manually optimized) PFB or OTF counterparts, but are
 nonetheless really nice in most cases.</p>
 <p>When running dvisvgm without option <strong>--no-fonts</strong>, it creates <em>font</em> elements (<code>&lt;font&gt;</code>…<code>&lt;/font&gt;</code>)
 to embed the font data into the SVG files. Unfortunately, only few SVG renderers support these
-elements yet. Most web browsers and vector graphics applications don’t evaluate them properly so
+elements. Most web browsers and vector graphics applications don’t evaluate them properly so
 that the text components of the resulting graphics might look strange. In order to create more
 compatible SVG files, command-line option <strong>--no-fonts</strong> can be given to replace the font elements
 by plain graphics paths. Most web browsers (but only few external SVG renderers) also support
@@ -133,12 +133,12 @@ specifying the options is not significant, i.e. you can add them in any order wi
 dvisvgm’s behavior. Certain options accept or require additional parameters which are directly
 appended to or separated by whitespace from a short option (e.g. <code>-v0</code> or <code>-v 0</code>). Long options
 require an additional equals sign (<code>=</code>) between option name and argument but without any surrounding
-whitespace (e.g. <code>--verbosity=0</code>). Multiple short options that don’t expect a further parameter can
+whitespace (e.g. <code>--verbosity=0</code>). Multiple short options that don’t expect further parameters can
 be combined after a single dash (e.g. <code>-ejs</code> rather than <code>-e -j -s</code>).</p>
-<p>Long option names may also be shortened by omitting trailing characters. As long as the shortened
-name is unambiguous, it’s recognized and applied. For example, option <code>--exact-bbox</code> can be shortened
-to <code>--exact</code>, <code>--exa</code>, or <code>--ex</code>. In case of an ambiguous abbreviation, dvisvgm prints an error
-message together with all matching option names.</p>
+<p>Long option names may also be shortened by omitting trailing characters as long as the shortened
+name is still unambiguous. For example, option <code>--exact-bbox</code> can be shortened to <code>--exact</code>,
+<code>--exa</code>, or <code>--ex</code>. In case of ambiguous abbreviations, dvisvgm prints an error message together
+with all matching option names.</p>
 <dl>
 <a name="opt-bbox" class="linktarget"></a><div class="hdlist1">
 <dt>
@@ -246,7 +246,7 @@ Hence, if you choose a landscape format, the page won’t be rotated.</p></td>
 </dt>
 <dd>
 <p>
-This option sets the image format used to embed bitmaps extracted from PostScript or PDF data.
+This option sets the image format used to embed bitmaps that are extracted from PostScript or PDF data.
 By default, dvisvgm embeds all bitmaps as JPEG images because it’s the most compact of the two formats
 supported by SVG. To select the alternative lossless PNG format, <strong>--bitmap-format=png</strong> can be used.
 There are some more format variants dvisvgm currently supports even though <code>jpeg</code> and <code>png</code> should be
@@ -1934,15 +1934,15 @@ Code repository
 <i class="fa fa-user fa-fw"></i> Author</h3>
 <div class="sectionbody"><p>Written by Martin Gieseking &lt;<a href="mailto:martin.gieseking@uos.de">martin.gieseking@uos.de</a>&gt;</p></div></section><span class="linktarget" id="_copying"></span><section class="manpage"><h3>
 <i class="fa fa-gavel fa-fw"></i> Copying</h3>
-<div class="sectionbody"><p>Copyright © 2005-2024 Martin Gieseking. Free use of this software is
+<div class="sectionbody"><p>Copyright © 2005-2025 Martin Gieseking. Free use of this software is
 granted under the terms of the GNU General Public License (GPL) version 3
 or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.4.2</div>
+   <div class="col-md-6">Version 3.4.3</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2024-11-07</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2025-01-04</span>
    </div>
 </div>
 </div>
@@ -1950,7 +1950,7 @@ or, (at your option) any later version.</p></div></section>
     <footer>
       <div class="jumbotron bg-primary text-white" style="padding:20px; border-radius:0">
   <div class="container">
-    <i class="fa fa-copyright"></i> 2024 Martin Gieseking •
+    <i class="fa fa-copyright"></i> 2025 Martin Gieseking •
     <a href="/Contact"><i class="fa fa-envelope"></i> Contact</a> •
     <a href="https://github.com/mgieseki/dvisvgm/issues" target="_blank"><i class="fa fa-bug"></i> Report a Bug</a>
   </div>
