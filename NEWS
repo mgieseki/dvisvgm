@@ -1,3 +1,8 @@
+dvisvgm-3.4.3 (2025-01-04)
+- fixed index error in PS operator "colorimage" (GH issue #279)
+- updated bundled xxHash library to version 0.8.3
+- minor changes to the manual page
+
 dvisvgm-3.4.2 (2024-11-14)
 - fixed evaluation of Unicode data when converting PDF files (GH issue #276)
 - fixed horizontal character positioning in the PDF handler (GH issue #276)
