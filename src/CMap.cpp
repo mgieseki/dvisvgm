@@ -65,12 +65,10 @@ string SegmentedCMap::getROString() const {
 
 bool SegmentedCMap::mapsToUnicode () const {
 	vector<string> encstrings = {"UTF8", "UTF16", "UCS2", "UCS4", "UCS32"};
-	for (const string &encstr : encstrings) {
-		auto pos = _filename.find(encstr);
-		if (pos != string::npos && (pos == 0 || _filename[pos-1] == '-'))
-			return true;
-	}
-	return false;
+	return any_of(encstrings.begin(), encstrings.end(), [&](const string& s) {
+		auto pos = _filename.find(s);
+		return (pos != string::npos && (pos == 0 || _filename[pos-1] == '-'));
+	});
 }
 
 

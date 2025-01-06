@@ -116,11 +116,10 @@ void XMLElement::clear () {
 bool XMLElement::empty (bool ignoreWhitespace) const {
 	if (!_firstChild || !ignoreWhitespace)
 		return _firstChild == nullptr;
-	for (const XMLNode *node : *this) {
-		if (!node->toWSNode())
-			return false;
-	}
-	return true;
+
+	return all_of(begin(), end(), [](const XMLNode *node) {
+		return !node->toWSNode();
+	});
 }
 
 
