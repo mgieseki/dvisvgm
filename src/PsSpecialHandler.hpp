@@ -122,8 +122,8 @@ class PsSpecialHandler : public SpecialHandler, protected PSActions {
 		void dviBeginPage (unsigned int pageno, SpecialActions &actions) override;
 		void dviEndPage (unsigned pageno, SpecialActions &actions) override;
 		void clip (Path path, bool evenodd);
-		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it);
-		void processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it);
+		void processSequentialPatchMesh (int shadingTypeID, ColorSpace cspace, VectorIterator<double> &it) const;
+		void processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it) const;
 
 		/// scale given value by current PS scale factors
 		double scale (double v) const {return v*(_sx*(1-_cos*_cos) + _sy*_cos*_cos);}

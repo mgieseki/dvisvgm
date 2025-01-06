@@ -1167,7 +1167,7 @@ class ShadingCallback : public ShadingPatch::Callback {
 
 /** Handle all patch meshes whose patches and their connections can be processed sequentially.
  *  This comprises free-form triangular, Coons, and tensor-product patch meshes. */
-void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace colorSpace, VectorIterator<double> &it) {
+void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace colorSpace, VectorIterator<double> &it) const {
 	unique_ptr<ShadingPatch> previousPatch;
 	while (it.valid()) {
 		int edgeflag = static_cast<int>(*it++);
@@ -1197,7 +1197,7 @@ void PsSpecialHandler::processSequentialPatchMesh (int shadingTypeID, ColorSpace
 }
 
 
-void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it) {
+void PsSpecialHandler::processLatticeTriangularPatchMesh (ColorSpace colorSpace, VectorIterator<double> &it) const {
 	int verticesPerRow = static_cast<int>(*it++);
 	if (verticesPerRow < 2)
 		return;
