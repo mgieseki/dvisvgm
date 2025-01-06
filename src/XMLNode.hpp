@@ -79,40 +79,32 @@ class XMLNode {
 };
 
 
-class XMLNodeIterator {
+template <typename T>
+class XMLNodeIteratorTempl {
 	public:
-		XMLNodeIterator () =default;
-		explicit XMLNodeIterator (XMLNode *curr) : _curr(curr) {}
-		XMLNodeIterator& operator ++ ()   {_curr = _curr->next(); return *this;}
-		XMLNodeIterator& operator -- ()   {_curr = _curr->prev(); return *this;}
-		XMLNodeIterator operator ++ (int) {auto p=_curr; _curr = _curr->next(); return XMLNodeIterator(p);}
-		XMLNodeIterator operator -- (int) {auto p=_curr; _curr = _curr->prev(); return XMLNodeIterator(p);}
-		XMLNode* operator * ()     {return _curr;}
-		XMLNode& operator -> ()    {return *_curr;}
-		bool operator == (const XMLNodeIterator &it) const {return _curr == it._curr;}
-		bool operator != (const XMLNodeIterator &it) const {return _curr != it._curr;}
+		using iterator_category = std::forward_iterator_tag;
+		using value_type = T*;
+		using difference_type = std::ptrdiff_t;
+		using pointer = T*;
+		using reference = T&;
+
+		XMLNodeIteratorTempl () =default;
+		explicit XMLNodeIteratorTempl (XMLNode *curr) : _curr(curr) {}
+		XMLNodeIteratorTempl& operator ++ ()   {_curr = _curr->next(); return *this;}
+		XMLNodeIteratorTempl& operator -- ()   {_curr = _curr->prev(); return *this;}
+		XMLNodeIteratorTempl operator ++ (int) {auto p=_curr; _curr = _curr->next(); return XMLNodeIterator(p);}
+		XMLNodeIteratorTempl operator -- (int) {auto p=_curr; _curr = _curr->prev(); return XMLNodeIterator(p);}
+		T* operator * ()     {return _curr;}
+		T& operator -> ()    {return *_curr;}
+		bool operator == (const XMLNodeIteratorTempl &it) const {return _curr == it._curr;}
+		bool operator != (const XMLNodeIteratorTempl &it) const {return _curr != it._curr;}
 
 	private:
-		XMLNode *_curr=nullptr;
+		T *_curr=nullptr;
 };
 
-
-class ConstXMLNodeIterator {
-	public:
-		ConstXMLNodeIterator () =default;
-		explicit ConstXMLNodeIterator (const XMLNode *curr) : _curr(curr) {}
-		ConstXMLNodeIterator& operator ++ ()   {_curr = _curr->next(); return *this;}
-		ConstXMLNodeIterator& operator -- ()   {_curr = _curr->prev(); return *this;}
-		ConstXMLNodeIterator operator ++ (int) {auto p=_curr; _curr = _curr->next(); return ConstXMLNodeIterator(p);}
-		ConstXMLNodeIterator operator -- (int) {auto p=_curr; _curr = _curr->prev(); return ConstXMLNodeIterator(p);}
-		const XMLNode* operator * ()     {return _curr;}
-		const XMLNode& operator -> ()    {return *_curr;}
-		bool operator == (const ConstXMLNodeIterator &it) const {return _curr == it._curr;}
-		bool operator != (const ConstXMLNodeIterator &it) const {return _curr != it._curr;}
-
-	private:
-		const XMLNode *_curr=nullptr;
-};
+using XMLNodeIterator = XMLNodeIteratorTempl<XMLNode>;
+using ConstXMLNodeIterator = XMLNodeIteratorTempl<const XMLNode>;
 
 
 class XMLElement : public XMLNode {
