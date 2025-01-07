@@ -49,7 +49,7 @@ void DVIReader::executeAll () {
 		try {
 			opcode = executeCommand();
 		}
-		catch (const DVIPrematureEOFException &e) {
+		catch (const DVIPrematureEOFException &) {
 			// end of stream reached
 			opcode = -1;
 		}
@@ -227,7 +227,7 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 			try {
 				executeAll();  // execute DVI fragment
 			}
-			catch (const DVIException &e) {
+			catch (const DVIException &) {
 				// Message::estream(true) << "invalid dvi in vf: " << e.getMessage() << endl; // @@
 			}
 			replaceStream(is);       // restore previous input stream

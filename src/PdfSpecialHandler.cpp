@@ -110,7 +110,7 @@ void PdfSpecialHandler::preprocessPagesize (StreamInputReader &ir, SpecialAction
 			}
 			papersizeHandler->storePaperSize(actions.getCurrentPageNumber(), width, height);
 		}
-		catch (UnitException &e) { // ignore invalid length units for now
+		catch (UnitException &) { // ignore invalid length units for now
 		}
 	}
 }

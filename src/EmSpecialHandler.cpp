@@ -132,7 +132,7 @@ static double read_length (InputReader &in) {
 	try {
 		unit = Length::stringToUnit(unitstr);
 	}
-	catch (UnitException &e) {
+	catch (UnitException &) {
 	}
 	return Length(val, unit).bp();
 }

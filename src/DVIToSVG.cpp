@@ -292,7 +292,7 @@ void DVIToSVG::leaveEndPage (unsigned) {
 				}
 				bbox.set(lengths);
 			}
-			catch (const MessageException &e) {
+			catch (const MessageException &) {
 			}
 		}
 	}

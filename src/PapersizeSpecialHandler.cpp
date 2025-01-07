@@ -40,7 +40,7 @@ void PapersizeSpecialHandler::preprocess (const string&, std::istream &is, Speci
 		}
 		storePaperSize(actions.getCurrentPageNumber(), w, h);
 	}
-	catch (UnitException &e) { // ignore invalid length units for now
+	catch (UnitException &) { // ignore invalid length units for now
 	}
 }
 

@@ -143,7 +143,7 @@ static bool set_cache_dir (const CommandLine &args) {
 			if (!PhysicalFont::CACHE_PATH.empty())
 				FontCache::fontinfo(PhysicalFont::CACHE_PATH, cout, true);
 		}
-		catch (StreamReaderException &e) {
+		catch (StreamReaderException &) {
 			Message::wstream(true) << "failed reading cache data\n";
 		}
 		return false;
@@ -173,7 +173,7 @@ static void check_bbox (const string &bboxstr) {
 		try {
 			PageSize size(bboxstr);
 		}
-		catch (const PageSizeException &e) {
+		catch (const PageSizeException &) {
 			throw MessageException("invalid bounding box format '" + bboxstr + "'");
 		}
 	}
@@ -513,7 +513,7 @@ int main (int argc, char *argv[]) {
 		Message::estream() << "\nXML error: " << e.what() << '\n';
 		return -5;
 	}
-	catch (SignalException &e) {
+	catch (SignalException &) {
 		Message::wstream().clearline();
 		Message::wstream(true) << "execution interrupted by user\n";
 		return -3;

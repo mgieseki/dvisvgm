@@ -226,7 +226,7 @@ static bool parse_number (const string &str, NumberVariant &nv) {
 		nv = NumberVariant(stod(str, &count));
 		return count == str.length();
 	}
-	catch (invalid_argument &e) {
+	catch (invalid_argument &) {
 		return false;
 	}
 }
@@ -398,7 +398,7 @@ template<> double ToDoubleVisitor::operator () (const string &val) {
 	try {
 		return stod(val);
 	}
-	catch (exception &e) {
+	catch (exception &) {
 		return 0;
 	}
 }

@@ -359,7 +359,7 @@ bool PhysicalFont::getGlyph (int c, GraphicsPath<int32_t> &glyph, GFGlyphTracer:
 						_cache.setGlyph(c, glyph);
 					return true;
 				}
-				catch (GFException &e) {
+				catch (GFException &) {
 					// @@ print error message
 				}
 			}

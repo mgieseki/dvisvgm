@@ -150,7 +150,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 				return path;
 		}
 	}
-	catch (const MessageException &e) {
+	catch (const MessageException &) {
 		return nullptr;
 	}
 #endif  // MIKTEX

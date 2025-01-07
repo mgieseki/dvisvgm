@@ -1078,7 +1078,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		Message::estream(false) << "PostScript error: " << e.what() << '\n';
 		it.invalidate();  // stop processing the remaining patch data
 	}
-	catch (IteratorException &e) {
+	catch (IteratorException &) {
 		Message::estream(false) << "PostScript error: incomplete shading data\n";
 	}
 	if (bboxGiven)
