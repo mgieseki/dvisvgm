@@ -118,14 +118,14 @@ void VFReader::cmdPre () {
 }
 
 
-void VFReader::cmdPost () {
+void VFReader::cmdPost () const {
 	while ((readUnsigned(1)) == 248); // skip fill bytes
 	if (_actions)
 		_actions->vfPostamble();
 }
 
 
-void VFReader::cmdLongChar () {
+void VFReader::cmdLongChar () const {
 	uint32_t pl  = readUnsigned(4);     // packet length (length of DVI subroutine)
 	if (!_actions)
 		seek(8+pl, ios::cur);            // skip remaining char definition bytes
@@ -140,7 +140,7 @@ void VFReader::cmdLongChar () {
 
 /** Reads and executes short_char_x command.
  *  @param[in] pl packet length (length of DVI subroutine) */
-void VFReader::cmdShortChar (int pl) {
+void VFReader::cmdShortChar (int pl) const {
 	if (!_actions)
 		seek(4+pl, ios::cur);  // skip char definition bytes
 	else {
@@ -152,7 +152,7 @@ void VFReader::cmdShortChar (int pl) {
 }
 
 
-void VFReader::cmdFontDef (int len) {
+void VFReader::cmdFontDef (int len) const {
 	uint32_t fontnum  = readUnsigned(len);  // font number
 	uint32_t checksum = readUnsigned(4);    // font checksum (to be compared with corresponding TFM checksum)
 	uint32_t ssize    = readUnsigned(4);    // scaled size of font relative to design size (fix_word)

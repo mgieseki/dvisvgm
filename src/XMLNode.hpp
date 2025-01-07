@@ -132,7 +132,7 @@ class XMLElement : public XMLNode {
 		XMLNode* append (const std::string &str);
 		XMLNode* prepend (std::unique_ptr<XMLNode> child);
 		XMLNode* insertAfter (std::unique_ptr<XMLNode> child, XMLNode *sibling);
-		XMLNode* insertBefore (std::unique_ptr<XMLNode> child, XMLNode *sibling);
+		XMLNode* insertBefore (std::unique_ptr<XMLNode> child, const XMLNode *sibling);
 		bool hasAttribute (const std::string &name) const;
 		const char* getAttributeValue (const std::string &name) const;
 		bool getDescendants (const char *name, const char *attrName, std::vector<XMLElement*> &descendants) const;
@@ -152,7 +152,7 @@ class XMLElement : public XMLNode {
 		const Attribute* getAttribute (const std::string &name) const;
 
 		static std::unique_ptr<XMLNode> detach (XMLNode *node);
-		static XMLElement* wrap (XMLNode *first, XMLNode *last, const std::string &name);
+		static XMLElement* wrap (XMLNode *first, const XMLNode *last, const std::string &name);
 		static XMLNode* unwrap (XMLElement *child);
 
 	protected:
@@ -174,9 +174,9 @@ class XMLText : public XMLNode {
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLText>(*this);}
 		void clear () override {_text.clear();}
 		void append (std::unique_ptr<XMLNode> node);
-		void append (std::unique_ptr<XMLText> node);
+		void append (const std::unique_ptr<XMLText> &node);
 		void append (const std::string &str);
-		void prepend (std::unique_ptr<XMLNode> node);
+		void prepend (const std::unique_ptr<XMLNode> &node);
 		std::ostream& write (std::ostream &os) const override {return os << _text;}
 		const std::string& getText () const {return _text;}
 		const XMLText* toText () const override {return this;}

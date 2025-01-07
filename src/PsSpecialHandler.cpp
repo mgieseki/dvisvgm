@@ -393,7 +393,7 @@ static string image_base_path (const SpecialActions &actions) {
  *  @param[in] bbox bounding box of the image
  *  @param[in] clip if true, the image is clipped to its bounding box
  *  @return pointer to the element or nullptr if there's no image data */
-PsSpecialHandler::ImageNode PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, BoundingBox bbox, bool clip) {
+PsSpecialHandler::ImageNode PsSpecialHandler::createImageNode (FileType type, const string &fname, int pageno, const BoundingBox &bbox, bool clip) {
 	ImageNode imgnode;
 	string pathstr;
 	if (const char *path = FileFinder::instance().lookup(fname, false))
@@ -412,7 +412,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createImageNode (FileType type, co
 }
 
 
-PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fname, const string &path, int pageno, BoundingBox bbox) {
+PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fname, const string &path, int pageno, const BoundingBox &bbox) const {
 	ImageNode imgnode(util::make_unique<SVGElement>("image"));
 	imgnode.element->addAttribute("x", 0);
 	imgnode.element->addAttribute("y", 0);
@@ -434,7 +434,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createBitmapNode (const string &fn
 }
 
 
-PsSpecialHandler::ImageNode PsSpecialHandler::createPSNode (const string &fname, const string &path, int pageno, BoundingBox bbox, bool clip) {
+PsSpecialHandler::ImageNode PsSpecialHandler::createPSNode (const string &fname, const string &path, int pageno, const BoundingBox &bbox, bool clip) {
 	ImageNode imgnode(util::make_unique<SVGElement>("g")); // put SVG nodes created from the EPS/PDF file in this group
 	_xmlnode = imgnode.element.get();
 	_psi.execute(
@@ -462,7 +462,7 @@ PsSpecialHandler::ImageNode PsSpecialHandler::createPSNode (const string &fname,
 }
 
 
-PsSpecialHandler::ImageNode PsSpecialHandler::createPDFNode (const string &fname, const string &path, int pageno, BoundingBox bbox, bool clip) {
+PsSpecialHandler::ImageNode PsSpecialHandler::createPDFNode (const string &fname, const string &path, int pageno, const BoundingBox &bbox, bool clip) {
 	if (_pdfProc == "gs" || (_pdfProc.empty() && _psi.supportsPDF()))
 		return createPSNode(fname, path, pageno, bbox, clip);
 

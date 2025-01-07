@@ -51,7 +51,7 @@ class SpecialManager {
 		static void registerHandler (std::unique_ptr<SpecialHandler> handler, const std::vector<std::string> &ignoredHandlerNames);
 		void registerHandler (std::unique_ptr<SpecialHandler> handler);
 		void registerHandlers (std::vector<std::unique_ptr<SpecialHandler>> &handlers, const char *ignorelist);
-		void unregisterHandler (SpecialHandler *handler);
+		void unregisterHandler (const SpecialHandler *handler);
 		void unregisterHandlers ();
 		void preprocess (const std::string &special, SpecialActions &actions) const;
 		bool process (const std::string &special, double dvi2bp, SpecialActions &actions) const;

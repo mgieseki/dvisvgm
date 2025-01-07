@@ -127,7 +127,7 @@ bool AttributeExtractor::groupable (const XMLElement &elem) {
 
 
 /** Checks whether an attribute is allowed to be removed from a given element. */
-bool AttributeExtractor::extractable (const Attribute &attrib, XMLElement &element) {
+bool AttributeExtractor::extractable (const Attribute &attrib, const XMLElement &element) {
 	if (element.hasAttribute("id"))
 		return false;
 	if (attrib.name != "fill")

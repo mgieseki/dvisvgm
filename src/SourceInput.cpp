@@ -88,7 +88,7 @@ bool TemporaryFile::create () {
  *  @param[in] buf buffer containing the characters to write
  *  @param[in] len number of characters to write
  *  @return true on success */
-bool TemporaryFile::write (const char *buf, size_t len) {
+bool TemporaryFile::write (const char *buf, size_t len) const {
 	return opened() && fdwrite(_fd, buf, len) >= 0;
 }
 

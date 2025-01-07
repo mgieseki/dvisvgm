@@ -26,7 +26,7 @@
 using namespace std;
 
 
-inline string get_color_string (SpecialActions &actions, Color (SpecialActions::*getColor)() const) {
+inline string get_color_string (const SpecialActions &actions, Color (SpecialActions::*getColor)() const) {
 	return SVGElement::USE_CURRENTCOLOR && SVGElement::CURRENTCOLOR == (actions.*getColor)()
 		? "currentColor"
 		: (actions.*getColor)().svgColorString();

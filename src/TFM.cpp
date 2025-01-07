@@ -71,7 +71,7 @@ void TFM::read (istream &is) {
 }
 
 
-void TFM::readHeader (StreamReader &reader) {
+void TFM::readHeader (const StreamReader &reader) {
 	_checksum = reader.readUnsigned(4);
 	_designSize = double(FixWord(reader.readSigned(4)))*Length::pt2bp;
 }
@@ -93,7 +93,7 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
 /** Read the values from the param section of the TFM file.
  *  @param[in] reader read from this stream
  *  @param[in] np number of paramaters to read */
-void TFM::readParameters (StreamReader &reader, int np) {
+void TFM::readParameters (const StreamReader &reader, int np) {
 	_params.resize(7);
 	np = min(np, 7);
 	for (int i=0; i < np; i++)

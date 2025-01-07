@@ -424,7 +424,7 @@ CoonsPatch::CoonsPatch (const PointVec &points, const ColorVec &colors, Color::C
 }
 
 
-inline DPair internal_control_point (const DPair p[4][4], array<int,16> i) {
+inline DPair internal_control_point (const DPair p[4][4], const array<int,16> &i) {
 	const DPair &a = p[i[ 0]][i[ 1]];
 	const DPair &b = p[i[ 2]][i[ 3]];
 	const DPair &c = p[i[ 4]][i[ 5]];

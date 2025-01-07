@@ -55,7 +55,7 @@ static XMLElement* only_child_element (XMLElement *elem) {
 
 
 /** Removes all whitespace child nodes from a given element. */
-static void remove_ws_nodes (XMLElement *elem) {
+static void remove_ws_nodes (const XMLElement *elem) {
 	XMLNode *node = elem->firstChild();
 	while (node) {
 		if (!node->toWSNode())

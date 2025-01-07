@@ -104,7 +104,7 @@ class TTFTableRecords : public TTFTable {
 
 
 /** Writes the font data in TrueType format to the given output stream. */
-bool TTFWriter::writeTTF (ostream &os) {
+bool TTFWriter::writeTTF (ostream &os) const {
 	list<TableBuffer> buffers = createTableBuffers();
 	// write TTF data
 	for (; !buffers.empty(); buffers.pop_front())
@@ -114,7 +114,7 @@ bool TTFWriter::writeTTF (ostream &os) {
 
 
 /** Writes the font data in TrueType format to the given file. */
-bool TTFWriter::writeTTF (const string &ttfname) {
+bool TTFWriter::writeTTF (const string &ttfname) const {
 	ofstream ofs(ttfname, ios::binary);
 	if (ofs)
 		return writeTTF(ofs);
@@ -125,7 +125,7 @@ bool TTFWriter::writeTTF (const string &ttfname) {
 /** Returns a list containing the binary TTF data segmented by the TTF tables.
  *  The first two list entries represent the TTF header (aka "offset table") and
  *  the table records, respectively. */
-std::list<TableBuffer> TTFWriter::createTableBuffers () {
+std::list<TableBuffer> TTFWriter::createTableBuffers () const {
 	list<TableBuffer> buffers;
 	for (const TTFTable *table : _tables)
 		buffers.emplace_back(table->createBuffer());
@@ -221,7 +221,7 @@ static bool ttf_to_woff2 (const string &buffer, ostream &os) {
 
 
 /** Writes the font data in WOFF2 format to the given output stream. */
-bool TTFWriter::writeWOFF2 (ostream &os) {
+bool TTFWriter::writeWOFF2 (ostream &os) const {
 	ostringstream oss;
 	if (writeTTF(oss))
 		return ttf_to_woff2(oss.str(), os);
@@ -230,7 +230,7 @@ bool TTFWriter::writeWOFF2 (ostream &os) {
 
 
 /** Writes the font data in WOFF2 format to the given file. */
-bool TTFWriter::writeWOFF2 (const string &woff2name) {
+bool TTFWriter::writeWOFF2 (const string &woff2name) const {
 	ofstream ofs(woff2name, ios::binary);
 	if (ofs)
 		return writeWOFF2(ofs);

@@ -274,7 +274,7 @@ void PathClipper::reconstruct (const Polygons &polygons, CurvedPath &path) {
 /** Reconstructs a curved path from a single polygon.
  *  @param[in] polygon polygon to reconstruct
  *  @param[out] path the reconstructed curved path */
-void PathClipper::reconstruct (const Polygon &polygon, CurvedPath &path) {
+void PathClipper::reconstruct (const Polygon &polygon, CurvedPath &path) const {
 	size_t num_points = polygon.size();
 	if (num_points < 2)
 		return;

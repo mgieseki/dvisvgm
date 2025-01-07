@@ -68,7 +68,7 @@ void SVGTree::reset () {
 
 /** Sets the bounding box of the document.
  *  @param[in] bbox bounding box in PS point units */
-void SVGTree::setBBox (const BoundingBox &bbox) {
+void SVGTree::setBBox (const BoundingBox &bbox) const {
 	if (ZOOM_FACTOR >= 0) {
 		_root->addAttribute("width", XMLString(bbox.width()*ZOOM_FACTOR)+"pt");
 		_root->addAttribute("height", XMLString(bbox.height()*ZOOM_FACTOR)+"pt");
@@ -77,21 +77,21 @@ void SVGTree::setBBox (const BoundingBox &bbox) {
 }
 
 
-void SVGTree::setFillColor (const Color &c) {
+void SVGTree::setFillColor (const Color &c) const {
 	const Font *font = _charHandler->getFont();
 	if (!font || font->color() == Color::BLACK)
 		_charHandler->setFillColor(c);
 }
 
 
-void SVGTree::setStrokeColor (const Color &c) {
+void SVGTree::setStrokeColor (const Color &c) const {
 	const Font *font = _charHandler->getFont();
 	if (!font || font->color() == Color::BLACK)
 		_charHandler->setStrokeColor(c);
 }
 
 
-void SVGTree::setFont (int num, const Font &font) {
+void SVGTree::setFont (int num, const Font &font) const {
 	_charHandler->setFont(font, num);
 	// set default color assigned to the font
 	if (font.color() != Color::BLACK && getFillColor() != font.color())
@@ -162,7 +162,7 @@ void SVGTree::prependToPage (unique_ptr<XMLNode> node) {
 }
 
 
-void SVGTree::transformPage (const Matrix &usermatrix) {
+void SVGTree::transformPage (const Matrix &usermatrix) const {
 	_page->setTransform(usermatrix);
 }
 
