@@ -218,7 +218,7 @@ int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
 Character PhysicalFont::decodeChar (uint32_t c) const {
 	if (const FontEncoding *enc = encoding())
 		return enc->decode(c);
-	return Character(Character::CHRCODE, c);
+	return {Character::CHRCODE, c};
 }
 
 

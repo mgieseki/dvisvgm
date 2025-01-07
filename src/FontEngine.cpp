@@ -372,15 +372,15 @@ int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
 
 CharMapID FontEngine::setUnicodeCharMap () {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) == 0)
-		return CharMapID(uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id));
-	return CharMapID();
+		return {uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id)};
+	return {};
 }
 
 
 CharMapID FontEngine::setCustomCharMap () {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) == 0)
-		return CharMapID(uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id));
-	return CharMapID();
+		return {uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id)};
+	return {};
 }
 
 

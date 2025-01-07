@@ -42,7 +42,7 @@ unique_ptr<CMap> CMapReader::read (const string &fname) {
 			return read(ifs, fname);
 	}
 	_tokens.clear();
-	return unique_ptr<CMap>();
+	return {};
 }
 
 

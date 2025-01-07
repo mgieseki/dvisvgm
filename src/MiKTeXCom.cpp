@@ -79,7 +79,7 @@ string MiKTeXCom::getBinDir () {
 	_session->GetMiKTeXSetupInfo(&info);
 #endif
 	_bstr_t bindir = info.binDirectory;
-	return string(bindir);
+	return {bindir};
 }
 
 
