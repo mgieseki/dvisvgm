@@ -410,11 +410,11 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 			int fchar = metrics->firstChar();
 			int lchar = metrics->lastChar();
 			string gfname;
-			Glyph glyph;
 			if (createGF(gfname)) {
 				_cache.read(name(), CACHE_PATH);
 				double ds = getMetrics() ? getMetrics()->getDesignSize() : 1;
 				GFGlyphTracer tracer(gfname, unitsPerEm()/ds, cb);
+				Glyph glyph;
 				tracer.setGlyph(glyph);
 				for (int i=fchar; i <= lchar; i++) {
 					if (includeCached || !_cache.getGlyph(i)) {

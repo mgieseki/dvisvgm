@@ -158,9 +158,9 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
  *  @param[in] flush If true, a final 'flush' is sent which forces the output buffer to be written immediately.
  *  @return true if the assigned number of bytes have been read */
 bool PSInterpreter::execute (istream &is, bool flush) {
-	char buf[4096];
 	bool finished = false;
 	while (is && !is.eof() && !finished) {
+		char buf[4096];
 		is.read(buf, 4096);
 		finished = execute(buf, is.gcount(), false);
 	}

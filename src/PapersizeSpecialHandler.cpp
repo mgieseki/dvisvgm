@@ -27,9 +27,9 @@ using namespace std;
 void PapersizeSpecialHandler::preprocess (const string&, std::istream &is, SpecialActions &actions) {
 	string params;
 	is >> params;
-	Length w, h;
 	const auto splitpos = params.find(',');
 	try {
+		Length w, h;
 		if (splitpos == string::npos) {
 			w.set(params);
 			h.set(params);

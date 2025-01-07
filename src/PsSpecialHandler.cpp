@@ -540,8 +540,8 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 	_previewHandler.readDataFromStack();
 	BoundingBox bbox;
 	if (_previewHandler.getBoundingBox(bbox)) {  // is there any data written by preview package?
-		double w=0, h=0, d=0;
 		if (actions.getBBoxFormatString() == "preview" || actions.getBBoxFormatString() == "min") {
+			double w=0, h=0, d=0;
 			if (actions.getBBoxFormatString() == "preview") {
 				w = max(0.0, _previewHandler.width());
 				h = max(0.0, _previewHandler.height());

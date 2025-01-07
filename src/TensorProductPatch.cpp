@@ -341,9 +341,8 @@ void TensorProductPatch::approximate (int gridsize, bool overlap, double delta, 
 
 BoundingBox TensorProductPatch::getBBox () const {
 	BoundingBox bbox;
-	CubicBezier bezier;
 	for (int i=0; i <= 1; i++) {
-		bezier = horizontalCurve(i);
+		CubicBezier bezier = horizontalCurve(i);
 		bbox.embed(bezier.getBBox());
 		bezier = verticalCurve(i);
 		bbox.embed(bezier.getBBox());

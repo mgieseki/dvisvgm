@@ -88,10 +88,10 @@ bool DVIReader::computePageHash (size_t pageno, HashFunction &hashFunc) {
 	hashFunc.reset();
 	clearStream();
 	seek(_bopOffsets[pageno-1]+45);  // now on first command after bop of selected page
-	const size_t BUFSIZE = 4096;
-	char buf[BUFSIZE];
 	size_t numBytes = numberOfPageBytes(pageno-1)-46;  // number of bytes excluding bop and eop
 	while (numBytes > 0) {
+		constexpr size_t BUFSIZE = 4096;
+		char buf[BUFSIZE];
 		getInputStream().read(buf, min(numBytes, BUFSIZE));
 		hashFunc.update(buf, getInputStream().gcount());
 		numBytes -= getInputStream().gcount();
