@@ -50,10 +50,7 @@ std::string FileFinder::_pathbuf;
 bool FileFinder::_enableMktex = false;
 
 
-/** Constructs a new file finder.
- *  @param[in] argv0 argv[0] of main() function
- *  @param[in] progname name of application using the FileFinder
- *  @param[in] enable_mktexmf if true, tfm and mf file generation is activated */
+/** Constructs a new file finder. */
 FileFinder::FileFinder () {
 	addLookupDir(".");  // always lookup files in the current working directory
 #ifdef MIKTEX

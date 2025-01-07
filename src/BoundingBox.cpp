@@ -69,7 +69,7 @@ BoundingBox::BoundingBox (const string &boxstr)
 
 /** Extracts a sequence of length values from a string like "5cm, 2.4in, 0pt".
  *  @param[in] boxstr whitespace and/or comma separated string of lengths.
- *  @param[out] the extracted lengths */
+ *  @return the extracted lengths */
 vector<Length> BoundingBox::extractLengths (string boxstr) {
 	vector<Length> lengths;
 	boxstr = util::replace(boxstr, ",", " ");

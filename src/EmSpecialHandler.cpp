@@ -38,7 +38,7 @@ using namespace std;
  *  the 2 vertices of that line end: v1=p+v and v2=p-v.
  *  @param[in] cuttype character identifying the cut direction ('h', 'v' or 'p')
  *  @param[in] linedir direction vector of line to be drawn
- *  @param[in] lw width of line to be drawn
+ *  @param[in] linewidth width of line to be drawn
  *  @return the "cut vector" */
 static DPair cut_vector (char cuttype, const DPair &linedir, double linewidth) {
 	DPair cut;

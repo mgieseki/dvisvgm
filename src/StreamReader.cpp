@@ -72,7 +72,7 @@ int32_t StreamReader::readSigned (int bytes) {
 
 
 /** Reads an signed integer from assigned input stream and updates the hash value.
- *  @param[in] bytes number of bytes to read (max. 4)
+ *  @param[in] n number of bytes to read (max. 4)
  *  @param[in,out] hashfunc hash to update
  *  @return read integer */
 int32_t StreamReader::readSigned (int n, HashFunction &hashfunc) {

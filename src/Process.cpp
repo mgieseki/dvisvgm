@@ -171,8 +171,7 @@ Subprocess::~Subprocess () {
  *  is not empty and the line currently processed doesn't match, the line isn't
  *  appended to the output string.
  *  @param[out] out read output is appended to this string
- *  @param[in] searchPattern regex pattern applied to each line
- *  @param[in] replacePattern replacement for all lines matching the search pattern
+ *  @param[in] pattern regex pattern applied to each line
  *  @returns false on errors */
 bool Subprocess::readFromPipe (string &out, const SearchPattern &pattern) {
 	if (!_pipeReadHandle)

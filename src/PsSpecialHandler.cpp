@@ -952,8 +952,7 @@ void PsSpecialHandler::setpattern (vector<double> &p) {
 }
 
 
-/** Clears the current clipping path.
- *  @param[in] p not used */
+/** Clears the current clipping path. */
 void PsSpecialHandler::initclip (vector<double> &) {
 	_clipStack.pushEmptyPath();
 }
@@ -970,7 +969,6 @@ void PsSpecialHandler::clippath (std::vector<double>&) {
  *  If the graphics state already contains a clipping path, the new one is
  *  computed by intersecting the current clipping path with the current graphics
  *  path (see PS language reference, 3rd edition, pp. 193, 542)
- *  @param[in] p not used
  *  @param[in] evenodd true: use even-odd fill algorithm, false: use nonzero fill algorithm */
 void PsSpecialHandler::clip (vector<double>&, bool evenodd) {
 	clip(_path, evenodd);
@@ -1089,9 +1087,8 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 
 
 /** Reads position and color data of a single shading patch from the data vector.
- *  @param[in] shadingTypeID PS shading type ID identifying the format of the subsequent patch data
+ *  @param[in] patch patch to be processed
  *  @param[in] edgeflag edge flag specifying how to connect the current patch to the preceding one
- *  @param[in] cspace color space used to compute the color gradient
  *  @param[in,out] it iterator used to sequentially access the patch data
  *  @param[out] points the points defining the geometry of the patch
  *  @param[out] colors the colors assigned to the vertices of the patch */

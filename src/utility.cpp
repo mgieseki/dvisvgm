@@ -269,7 +269,7 @@ string util::read_file_contents (const string &fname) {
 
 
 /** Writes a sequence of bytes given as a string to a file.
- *  @param[in] name/path of the file to write
+ *  @param[in] fname name/path of the file to write
  *  @param[in] start iterator pointing to the begin of the byte sequence
  *  @param[in] end iterator pointing to the first byte after the byte sequence to write */
 void util::write_file_contents (const string &fname, string::iterator start, string::iterator end) {

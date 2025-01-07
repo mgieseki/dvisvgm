@@ -296,7 +296,7 @@ XMLElement* XMLElement::wrap (XMLNode *first, XMLNode *last, const string &name)
  *  followed by C2,...,Cn.
  *  Example: unwrap a child element b of a:
  *  <a>text1<b><c/>text2<d/></b></a> => <a>text1<c/>text2<d/></a>
- *  @param[in] child child element to unwrap
+ *  @param[in] element element to unwrap
  *  @return raw pointer to the first node C1 of the unwrapped sequence or nullptr if element was empty */
 XMLNode* XMLElement::unwrap (XMLElement *element) {
 	if (!element || !element->parent())
