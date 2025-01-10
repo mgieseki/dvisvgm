@@ -308,7 +308,7 @@ static PDFObjectRef parse_object_ref (vector<PDFObject> &objects) {
 }
 
 
-/** Replaces all occurences of "#XX" (XX are two hex digits) with the corresponding character. */
+/** Replaces all occurrences of "#XX" (XX are two hex digits) with the corresponding character. */
 static string& subst_numeric_chars (string &str) {
 	for (auto pos=str.find('#'); pos != string::npos; pos=str.find('#', pos+1)) {
 		if (pos > str.length()-3)

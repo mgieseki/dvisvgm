@@ -92,7 +92,7 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
 
 /** Read the values from the param section of the TFM file.
  *  @param[in] reader read from this stream
- *  @param[in] np number of paramaters to read */
+ *  @param[in] np number of parameters to read */
 void TFM::readParameters (const StreamReader &reader, int np) {
 	_params.resize(7);
 	np = min(np, 7);

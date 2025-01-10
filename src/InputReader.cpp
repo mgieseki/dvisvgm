@@ -371,7 +371,7 @@ string InputReader::getLine () {
 
 /** Parses a sequence of key-value pairs of the form KEY=VALUE or KEY="VALUE".
  *  If parameter 'requireValues' is false, attributes may also consist of a key only.
- *  @param[out] attr the scanned atributes
+ *  @param[out] attr the scanned attributes
  *  @param[in] requireValues true if all attributes require a value
  *  @param[in] quotechars recognized quote characters used to enclose the attribute values
  *  @return number of attributes scanned */

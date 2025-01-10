@@ -47,7 +47,7 @@ bool BgColorSpecialHandler::process (const string&, istream&, SpecialActions&) {
 
 
 void BgColorSpecialHandler::dviBeginPage (unsigned pageno, SpecialActions &actions) {
-	// Ensure that the background color of the preceeding page is set as the
+	// Ensure that the background color of the preceding page is set as the
 	// default background color of the current page because this special affects
 	// the current and all subsequent pages until the next change.
 	// See the documentation of the color package, section 3.5.

@@ -192,7 +192,7 @@ class TFMFont : public virtual Font {
 	private:
 		mutable std::unique_ptr<FontMetrics> _metrics;
 		std::string _fontname;
-		uint32_t _checksum; ///< cheksum to be compared with TFM checksum
+		uint32_t _checksum; ///< checksum to be compared with TFM checksum
 		double _dsize;    ///< design size in PS point units
 		double _ssize;    ///< scaled size in PS point units
 };

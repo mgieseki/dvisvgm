@@ -46,7 +46,7 @@ inline DPair to_DPair (const IntPoint &p) {
 }
 
 
-/** In order to flatten a curved path, all path segements are processed sequentially.
+/** In order to flatten a curved path, all path segments are processed sequentially.
  *  Depending on the type of the segment, one of the methods provided by this class
  *  is called. */
 class FlattenActions : public CurvedPath::IterationActions {

@@ -50,7 +50,7 @@ void TensorProductPatch::setFirstMatrixColumn (DPair source[4][4], int col, bool
  *    1 12 15  8
  *    2 13 14  7
  *    3  4  5  6
- *  If the edge flag is 1,2, or 3, the points of the first matrix collumn
+ *  If the edge flag is 1,2, or 3, the points of the first matrix column
  *  are omitted, and taken from a reference patch instead.
  *  @param[in] points the control points in "spiral" order as described in the PS reference, p. 286
  *  @param[in] edgeflag defines how to connect this patch with another one

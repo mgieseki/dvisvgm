@@ -142,7 +142,7 @@ dvisvgm-3.0 (2022-10-16)
   newly implemented library for embedding TTF/WOFF data into the SVG files
 - added option --embed-bitmaps to embed bitmaps into the generated SVG files
   instead of referencing the external files
-- exteded option --tmpdir to optionally suppress the creation of uniquely
+- extended option --tmpdir to optionally suppress the creation of uniquely
   named subfolders
 - added filters :even and :odd to option --page to limit the given page ranges
   to even and odd page numbers respectively
@@ -286,7 +286,7 @@ dvisvgm-2.8 (2019-10-25)
 - added support for Ghostscript 9.50
 - added support for elliptical arc segments in graphics paths
 - added support for CMap operator 'begincidchar' (patch by Akira Kakuto)
-- added suport for experimental 128-bit XXH3 hashes
+- added support for experimental 128-bit XXH3 hashes
 - extended optimizer module 'simplify-transform' to incorporate translation and
   scaling components into positional and size attributes
 - replaced CRC32 checksums used in cache files with XXH32 hashes
@@ -421,7 +421,7 @@ dvisvgm-2.3.5 (2018-03-23)
 - fixed warning printed when using Ghostscript 9.23
 
 dvisvgm-2.3.4 (2018-03-14)
-- fixed error message printed when addding a single '-' on the command-line
+- fixed error message printed when adding a single '-' on the command-line
 - added missing data file that lead to failing tests (GH bug #87)
 - updated brotli library to version 1.0.3
 - some code refactorings

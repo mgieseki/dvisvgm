@@ -129,7 +129,7 @@ string util::normalize_space (string str, const char *ws) {
 }
 
 
-/** Replaces all occurences of a substring with another string.
+/** Replaces all occurrences of a substring with another string.
  *  @param[in] str string to search through
  *  @param[in] find string to look for
  *  @param[in] repl replacement for "find"
@@ -146,7 +146,7 @@ string util::replace (string str, const string &find, const string &repl) {
 }
 
 
-/** Splits a string at all occurences of a given separator string and
+/** Splits a string at all occurrences of a given separator string and
  *  returns the substrings.
  *  @param[in] str string to split
  *  @param[in] sep separator to look for
