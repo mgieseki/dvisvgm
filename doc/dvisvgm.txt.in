@@ -628,7 +628,7 @@ If this option is given, dvisvgm does not expect a DVI but a PDF input file, and
 it to SVG. Similar to the conversion of DVI files, only the first page is processed by default.
 Option *--page* can be used to select different pages, page ranges, and/or page sequences.
 +
-If a Ghostcript version < 10.01.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
+If a Ghostscript version < 10.01.0 is found, dvisvgm uses Ghostscript to process the PDF file. In
 this case, the conversion is realized by creating a single 'pdffile' special command which is
 forwarded to dvisvgm's PostScript special handler. Therefore, this option is only available if
 dvisvgm was built with PostScript support enabled, and requires Ghostscript to be accessible.
@@ -882,7 +882,7 @@ Character sequence *{?nl}* expands to a newline character. Finally, construction
 enable the evaluation of mathematical expressions which may consist of basic arithmetic operations including
 modulo. As above, the variables 'x' and 'y' represent the current coordinates.
 Invalid operations, like divisions by zero, lead to an error message on the console.
-Example: +{?(-10*(x+2y)-5)}+ is a valid expresssion and expands to the corresponding numeric string.
+Example: +{?(-10*(x+2y)-5)}+ is a valid expression and expands to the corresponding numeric string.
 
 *dvisvgm:rawdef* 'text':::
 This command is similar to *dvisvgm:raw*, but puts the XML nodes into the <defs> section of the SVG document
@@ -1028,7 +1028,7 @@ https://ctan.org/pkg/pdftex[pdfTeX user manual].
 The famous DVI driver https://www.tug.org/texinfohtml/dvips.html['dvips'] introduced its own set of specials
 in order to embed PostScript code into DVI files, which greatly improves the capabilities of DVI documents.
 One aim of dvisvgm is to completely evaluate all PostScript fragments and to convert as many of them as possible
-to SVG. In contrast to dvips, dvisvgm uses floating point arithmetics to compute the precise position of each
+to SVG. In contrast to dvips, dvisvgm uses floating point arithmetic to compute the precise position of each
 graphic element, i.e. it doesn't round the coordinates. Therefore, the relative locations of the graphic elements
 may slightly differ from those computed by dvips.
 +

@@ -189,7 +189,7 @@ static int unicode_range_bit (uint32_t codepoint) {
 		{0x031A0, 0x031BF,  51},  // Bopomofo Extended
 		{0x031F0, 0x031FF,  50},  // Katakana Phonetic Extensions
 		{0x03200, 0x032FF,  54},  // Enclosed CJK Letters and Months
-		{0x03300, 0x033FF,  55},  // CJK compatability
+		{0x03300, 0x033FF,  55},  // CJK compatibility
 		{0x03400, 0x04DBF,  59},  // CJK Unified Ideographs Extension A
 		{0x04E00, 0x09FFF,  59},  // CJK Unified Ideographs
 		{0x0A500, 0x0A62B,  12},  // Vai

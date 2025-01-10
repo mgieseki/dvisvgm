@@ -401,7 +401,7 @@ static vector<string> extract_prefixes (const char *ignorelist) {
  *  the corresponding prefixes can be given separated by non alpha-numeric characters,
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
- *  @param[in] ignorelist list of hanlder names to ignore
+ *  @param[in] ignorelist list of handler names to ignore
  *  @param[in] pswarning if true, shows warning about disabled PS support
  *  @return the SpecialManager that handles special statements */
 void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {

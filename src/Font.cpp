@@ -43,7 +43,7 @@ uint32_t Font::unicode (uint32_t c) const {
 }
 
 
-/** Returns the encoding object of this font which is asigned in a map file.
+/** Returns the encoding object of this font which is assigned in a map file.
  *  If there's no encoding assigned, the function returns 0. */
 const FontEncoding* Font::encoding () const {
 	if (const FontMap::Entry *entry = fontMapEntry())
@@ -200,7 +200,7 @@ bool PhysicalFont::isCIDFont () const {
 }
 
 
-/** Retrieve the IDs of all charachter maps available in the font file.
+/** Retrieve the IDs of all character maps available in the font file.
  *  @param[out] charMapIDs IDs of the found character maps
  *  @return number of found character maps */
 int PhysicalFont::collectCharMapIDs (std::vector<CharMapID> &charMapIDs) const {
