@@ -144,7 +144,7 @@ void Contour::reduceNumberOfPoints () {
 
 /** Bits of the "Simple Glyph Flags". See section "Simple Glyph Description" of glyf table documentation. */
 enum : uint8_t {
-	ON_CURVE_PT = 1,   ///< if set, corresponing point is on the curve, otherwise off the curve (= control point)
+	ON_CURVE_PT = 1,   ///< if set, corresponding point is on the curve, otherwise off the curve (= control point)
 	X_SHORT = 2,       ///< if set, the corresponding x-coordinate is 1 byte long, otherwise it's two bytes long
 	Y_SHORT = 4,       ///< if set, the corresponding y-coordinate is 1 byte long, otherwise it's two bytes long
 	REPEAT_FLAG = 8,   ///< if set, the next byte specifies the number of additional times this flag is to be repeated

@@ -197,7 +197,7 @@ void DVIReader::cmdPop (int) {
 }
 
 
-/** Helper function that handles charaters from virtual fonts (VF).
+/** Helper function that handles characters from virtual fonts (VF).
  *  It is called by the cmdSetChar and cmdPutChar methods.
  *  @param[in] font current font (corresponding to _currFontNum)
  *  @param[in] c character to typeset */
@@ -243,7 +243,7 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 /** Reads and executes set_char_x command. Puts a character at the current
  *  position and advances the cursor.
  *  @param[in] c character to set
- *  @throw DVIException if method is called ouside a bop/eop pair */
+ *  @throw DVIException if method is called outside a bop/eop pair */
 void DVIReader::cmdSetChar0 (int c) {
 	if (!_inPage)
 		throw DVIException("setchar outside of page");
@@ -257,7 +257,7 @@ void DVIReader::cmdSetChar0 (int c) {
 /** Reads and executes setx command. Puts a character at the current
  *  position and advances the cursor.
  *  @param[in] len number of parameter bytes (possible values: 1-4)
- *  @throw DVIException if method is called ouside a bop/eop pair */
+ *  @throw DVIException if method is called outside a bop/eop pair */
 void DVIReader::cmdSetChar (int len) {
 	if (!_inPage)
 		throw DVIException("setchar outside of page");
@@ -274,7 +274,7 @@ void DVIReader::cmdSetChar (int len) {
 /** Reads and executes putx command. Puts a character at the current
  *  position but doesn't change the cursor position.
  *  @param[in] len number of parameter bytes (possible values: 1-4)
- *  @throw DVIException if method is called ouside a bop/eop pair */
+ *  @throw DVIException if method is called outside a bop/eop pair */
 void DVIReader::cmdPutChar (int len) {
 	if (!_inPage)
 		throw DVIException("putchar outside of page");
@@ -290,7 +290,7 @@ void DVIReader::cmdPutChar (int len) {
 /** Reads and executes set_rule command. Puts a solid rectangle at the current
  *  position and updates the cursor position.
  *  Format: set_rule h[+4] w[+4]
- *  @throw DVIException if method is called ouside a bop/eop pair */
+ *  @throw DVIException if method is called outside a bop/eop pair */
 void DVIReader::cmdSetRule (int) {
 	if (!_inPage)
 		throw DVIException("set_rule outside of page");
@@ -304,7 +304,7 @@ void DVIReader::cmdSetRule (int) {
 /** Reads and executes set_rule command. Puts a solid rectangle at the current
  *  position but leaves the cursor position unchanged.
  *  Format: put_rule h[+4] w[+4]
- *  @throw DVIException if method is called ouside a bop/eop pair */
+ *  @throw DVIException if method is called outside a bop/eop pair */
 void DVIReader::cmdPutRule (int) {
 	if (!_inPage)
 		throw DVIException("put_rule outside of page");

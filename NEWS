@@ -987,7 +987,7 @@ dvisvgm-0.5 (2007-03-26)
 - command-line option -m has been renamed to -M
 - added command-line options -m/--map-file and -n/--no-mktexmf
 - memory bug in StreamCounter class has been fixed
-- added sources of Peter Selinger's potrace library (part of potrace, http://potrace.sourceforge.net)
+- added sources of Peter Selinger's potrace library (part of potrace, https://potrace.sourceforge.net)
   to simplify the build process
 
 dvisvgm-0.4.3 (2007-01-03)

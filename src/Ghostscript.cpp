@@ -323,7 +323,7 @@ int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
 
 /** Initializes Ghostscript with a set of optional parameters. This
  *  method is called by the constructor and should not be used elsewhere.
- *  @param[in] argc number of paramters
+ *  @param[in] argc number of parameters
  *  @param[in] argv parameters passed to Ghostscript */
 int Ghostscript::init_with_args (int argc, char **argv) {
 #if defined(HAVE_LIBGS)

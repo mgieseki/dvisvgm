@@ -46,7 +46,7 @@ class HyperlinkManager {
 		HyperlinkManager (const HyperlinkManager&) =delete;
 		HyperlinkManager (HyperlinkManager&&) =delete;
 		void addHrefAnchor (const std::string &uri);
-		void addNameAchor (const std::string &name, int pageno);
+		void addNameAnchor (const std::string &name, int pageno);
 		void setActiveNameAnchor (const std::string &name, SpecialActions &actions);
 		void closeAnchor (SpecialActions &actions);
 		void checkNewLine (SpecialActions &actions);

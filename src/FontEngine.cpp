@@ -330,7 +330,7 @@ int FontEngine::getNumGlyphs () const {
 }
 
 
-/** Returns the glyph name for a given charater code.
+/** Returns the glyph name for a given character code.
  * @param[in] c char code
  * @return glyph name */
 string FontEngine::getGlyphName (const Character &c) const {

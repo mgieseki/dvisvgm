@@ -48,7 +48,7 @@ class PSPattern {
 		virtual std::unique_ptr<XMLElement> createPatternNode () const =0;
 
 	private:
-		int _id;  ///< PostSCript ID of this pattern
+		int _id;  ///< PostScript ID of this pattern
 };
 
 
@@ -70,7 +70,7 @@ class PSTilingPattern : public PSPattern {
 	private:
 		BoundingBox _bbox;           ///< bounding box of the tile graphics
 		Matrix _matrix;              ///< tile transformation
-		double _xstep, _ystep;       ///< horizontal and vertical distance between neighboured tiles
+		double _xstep, _ystep;       ///< horizontal and vertical distance between neighbouring tiles
 		mutable std::unique_ptr<XMLElement> _groupNode;  ///< group containing the drawing elements
 		XMLElement *_groupNodePtr; ///< keeps a pointer to the group node even after moving _groupNode to the SVGTree
 };

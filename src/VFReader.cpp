@@ -108,7 +108,7 @@ void VFReader::cmdPre () {
 	uint32_t i = readUnsigned(1);  // identification number (should be 2)
 	uint32_t k = readUnsigned(1);  // length of following comment
 	string cmt = readString(k);    // comment
-	uint32_t cs = readUnsigned(4); // check sum to be compared with TFM cecksum
+	uint32_t cs = readUnsigned(4); // check sum to be compared with TFM checksum
 	int32_t ds = readUnsigned(4);  // design size (same as TFM design size) (fix_word)
 	_designSize = double(FixWord(ds))*Length::pt2bp;
 	if (i != 202)

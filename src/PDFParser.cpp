@@ -202,7 +202,7 @@ using NumberVariant = mpark::variant<int, double>;
 /** Parses a PDF number from a string. The number is either integer or real.
  *  @param[in] str string to parse
  *  @param[out] nv variant holding the numeric value
- *  @return true if entire string has been parsed succesfully */
+ *  @return true if entire string has been parsed successfully */
 static bool parse_number (const string &str, NumberVariant &nv) {
 	if (str.empty())
 		return false;

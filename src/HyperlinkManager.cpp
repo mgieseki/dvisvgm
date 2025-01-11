@@ -55,7 +55,7 @@ void HyperlinkManager::addHrefAnchor (const string &uri) {
 }
 
 
-void HyperlinkManager::addNameAchor (const string &name, int pageno) {
+void HyperlinkManager::addNameAnchor (const string &name, int pageno) {
 	if (name.empty())
 		return;
 	auto it = _namedAnchors.find(name);

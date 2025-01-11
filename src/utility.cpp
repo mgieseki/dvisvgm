@@ -207,7 +207,7 @@ int util::ilog10 (int n) {
  *  @param[in] is stream to read from
  *  @param[out] str the read string is appended to this one
  *  @param[in] allow_leading_sign true if the first character may be '+' or '-'
- *  @return true if the string coule be read successfully */
+ *  @return true if the string could be read successfully */
 static bool read_int_string (istream &is, string &str, bool allow_leading_sign=true) {
 	string intstr;
 	if (is.peek() == '-' || is.peek() == '+') {

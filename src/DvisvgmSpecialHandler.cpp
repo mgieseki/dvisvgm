@@ -382,15 +382,15 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 			Message::wstream(true) << "file '" << fname << "' not found\n";
 
 		update_bbox(width, height, Length(0), true, actions);
-		auto imgageNode = util::make_unique<SVGElement>("image");
-		imgageNode->addAttribute("x", actions.getX());
-		imgageNode->addAttribute("y", actions.getY()-height.bp());
-		imgageNode->addAttribute("width", width.bp());
-		imgageNode->addAttribute("height", height.bp());
+		auto imageNode = util::make_unique<SVGElement>("image");
+		imageNode->addAttribute("x", actions.getX());
+		imageNode->addAttribute("y", actions.getY()-height.bp());
+		imageNode->addAttribute("width", width.bp());
+		imageNode->addAttribute("height", height.bp());
 
 		string mimetype = util::mimetype(fname);
 		if (SVGTree::EMBED_BITMAP_DATA && (mimetype == "image/jpeg" || mimetype == "image/png"))
-			imgageNode->addAttribute("@@xlink:href", "data:"+mimetype+";base64,"+fname);
+			imageNode->addAttribute("@@xlink:href", "data:"+mimetype+";base64,"+fname);
 		else {
 			string href = fname;
 			// Only reference the image with an absolute path if either an absolute path was given by the user
@@ -398,10 +398,10 @@ void DvisvgmSpecialHandler::processImg (InputReader &ir, SpecialActions &actions
 			// the FileFinder, i.e. it's usually located somewhere in the texmf tree.
 			if (!FilePath::isAbsolute(fname) && (fname.find('/') != string::npos || FilePath(fname).exists()))
 				href = FilePath(pathstr).relative(FilePath(actions.getSVGFilePath(1)));
-			imgageNode->addAttribute("xlink:href", href);
+			imageNode->addAttribute("xlink:href", href);
 		}
-		imgageNode->setTransform(actions.getMatrix());
-		actions.svgTree().appendToPage(std::move(imgageNode));
+		imageNode->setTransform(actions.getMatrix());
+		actions.svgTree().appendToPage(std::move(imageNode));
 	}
 	catch (const UnitException &e) {
 		throw SpecialException(string("dvisvgm:img: ") + e.what());
