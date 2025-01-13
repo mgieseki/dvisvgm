@@ -160,7 +160,7 @@ AX_GCC_BUILTIN(__builtin_clz)
 
 # add options for selection of "optional" library locations
 # currently these libraries are mandatory; the --with-foo options
-# are used to specify the locations explicitely
+# are used to specify the locations explicitly
 
 AC_ARG_WITH(zlib,
 	[AS_HELP_STRING([--with-zlib=DIR], [set location of the zlib library])],

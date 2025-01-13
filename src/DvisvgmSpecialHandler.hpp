@@ -37,7 +37,7 @@ class XMLNode;
 
 #ifdef _MSC_VER
 // MSVC: Prevent aggressive optimization of pointers to member functions.
-// Instatiating class DvisvgmSpecialHandler without the following pragma
+// Instantiating class DvisvgmSpecialHandler without the following pragma
 // leads to memory corruption.
 // https://docs.microsoft.com/en-us/cpp/preprocessor/pointers-to-members
 #pragma pointers_to_members(full_generality, single_inheritance)

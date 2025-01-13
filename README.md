@@ -17,7 +17,7 @@ _dvisvgm_ is a utility for TeX/LaTeX users. It converts
 XML-based scalable vector graphics format [SVG](https://www.w3.org/TR/SVG).
 The latest releases support standard DVI files (version 2) as well as DVI output
 created by [pTeX](https://ctan.org/pkg/ptex) in vertical mode (version 3),
-and [XeTeX](http://scripts.sil.org/xetex) (versions 5 to 7, also known as XDV).
+and [XeTeX](https://xetex.sourceforge.net) (versions 5 to 7, also known as XDV).
 
 To get an impression of the conversion results, have a look at the
 [examples](https://dvisvgm.de/Examples) created with _dvisvgm_.
@@ -53,12 +53,12 @@ Dependencies
 
 _dvisvgm_ relies on the following free libraries:
 
-* [Clipper](http://www.angusj.com/delphi/clipper.php)  
+* [Clipper](https://www.angusj.com/delphi/clipper/documentation/Docs/Overview/_Body.htm)  
   To compute the intersection of two curved paths, _dvisvgm_ flattens the paths to
   polygons, intersects them using a slightly modified version of Clipper, and reconstructs
   the curves afterwards. A slightly modified version of Clipper is bundled with the sources.
 
-* [FreeType 2](https://www.freetype.org)  
+* [FreeType 2](https://freetype.org)  
   This library is used to extract the glyph outlines from vector fonts (PFB, OTF, TTF).
 
 * [Ghostscript](https://www.ghostscript.com)  
@@ -76,7 +76,7 @@ _dvisvgm_ relies on the following free libraries:
   files in the large `texmf` tree. Please ensure that you use the kpathsea version
   coming with or matching your TeX system.
 
-* [potracelib](http://potrace.sourceforge.net)  
+* [potracelib](https://potrace.sourceforge.net)  
   Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
   bitmap output. It's also bundled with the _dvisvgm_ sources.
 
@@ -96,14 +96,14 @@ _dvisvgm_ relies on the following free libraries:
   a compact way together with their Unicode points. A recent version of xxHash is
   bundled with the _dvisvgm_ sources.
 
-* [zlib](http://www.zlib.org)  
+* [zlib](https://www.zlib.net)  
   This library is required to create compressed [SVGZ](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#Compression) files.
 
 
 Building dvisvgm from source
 ----------------------------
 
-_dvisvgm_ is written in C++11 ([ISO C++ standard 2011](http://www.iso.org/iso/catalogue_detail.htm?csnumber=50372))
+_dvisvgm_ is written in C++11 ([ISO C++ standard 2011](https://www.iso.org/standard/83626.html))
 and requires an appropriate compiler, like [GCC](https://gcc.gnu.org) 4.9, [Clang](https://clang.llvm.org) 3.3,
 or any later version. The configure script checks for the availability of C++11 support and
 adds the proper compiler options if necessary.

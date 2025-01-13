@@ -157,7 +157,7 @@ void PdfSpecialHandler::preprocessDest (StreamInputReader &ir, SpecialActions &a
 	// get target info from array [pageno /XYZ xpos ypos zpos]
 	if (name && dest && dest->size() >= 4 && dest->at(0).get<int>()) {
 		int pageno = *dest->at(0).get<int>();
-		HyperlinkManager::instance().addNameAchor(*name, pageno);
+		HyperlinkManager::instance().addNameAnchor(*name, pageno);
 	}
 }
 

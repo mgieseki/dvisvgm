@@ -52,7 +52,7 @@ static string::size_type find_end_of_tag (const string &str, string::size_type s
 	char attrval_delim = 0;
 	bool expect_attrval = false;
 	for (auto i=startpos; i < str.length(); i++) {
-		if (attrval_delim) {  // inside attrubute value?
+		if (attrval_delim) {  // inside attribute value?
 			if (str[i] == attrval_delim)  // end of attribute value?
 				attrval_delim = 0;
 		}

@@ -9,12 +9,12 @@ DESCRIPTION
 DEPENDENCIES
 
  dvisvgm relies on the following free libraries:
- * Clipper (http://www.angusj.com/delphi/clipper.php)
+ * Clipper (https://www.angusj.com/delphi/clipper/documentation/Docs/Overview/_Body.htm)
    To compute the intersections of two curved paths, dvisvgm flattens the paths
    to polygons, intersects them using Clipper, and reconstructs the curves
    afterwards.
 
- * FreeType 2 (http://www.freetype.org)
+ * FreeType 2 (https://freetype.org)
    This library is used to extract the glyph outlines from vector fonts
    (PFB, OTF, TTF).
 
@@ -34,7 +34,7 @@ DEPENDENCIES
    searching files in the large texmf tree. Please ensure that you use the
    kpathsea version coming with or matching your TeX system.
 
- * potracelib (http://potrace.sourceforge.net)
+ * potracelib (https://potrace.sourceforge.net)
    Peter Selinger's bitmap tracing library is utilized to vectorize Metafont's
    bitmap output. A recent version is also part of the dvisvgm sources.
 
@@ -55,7 +55,7 @@ DEPENDENCIES
    store them in a compact way together with their Unicode points. A recent
    version of xxHash is bundled with the dvisvgm sources.
 
- * zlib (http://www.zlib.org)
+ * zlib (https://www.zlib.net)
    This library is required to create compressed SVGZ files.
 
 
