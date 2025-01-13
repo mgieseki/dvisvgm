@@ -35,7 +35,7 @@ namespace internal {
 	}
 
 	template <>
-	bool parse_number (std::istream &is, double &value) {
+	inline bool parse_number (std::istream &is, double &value) {
 		// don't use operator >> for parsing floating point values because it's implemented
 		// differently in libstdc++ and libc++. Instead, use our own function to read the
 		// value from the input stream.

@@ -259,7 +259,7 @@ TEST_F(TensorProductPatchTest, bbox) {
 }
 
 
-class Callback : public ShadingPatch::Callback {
+class TensorProductPatchTestCallback : public ShadingPatch::Callback {
 	public:
 		void patchSegment (GraphicsPath<double> &path, const Color &color) override {
 			ostringstream oss;
@@ -278,7 +278,7 @@ class Callback : public ShadingPatch::Callback {
 
 
 TEST_F(TensorProductPatchTest, approximate) {
-	Callback callback;
+	TensorProductPatchTestCallback callback;
 	vector<Color> colors(4);
 	TensorProductPatch tpp(_points, colors, Color::ColorSpace::RGB, 0, nullptr);
 	tpp.approximate(2, false, 0.1, callback);
