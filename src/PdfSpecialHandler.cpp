@@ -73,9 +73,16 @@ bool PdfSpecialHandler::process (const string&, istream &is, SpecialActions &act
 		{"eannot",   &PdfSpecialHandler::processEndAnn},
 		{"endann",   &PdfSpecialHandler::processEndAnn},
 		{"dest",     &PdfSpecialHandler::processDest},
+		// No need to handle the following specials here because they have
+		// already been completely processed in the preprocessing stage.
+		{"pagesize", nullptr},
+		{"mapfile",  nullptr},
+		{"mapline",  nullptr}
 	};
 	auto it = commands.find(cmdstr);
-	if (it != commands.end())
+	if (it == commands.end())
+		_ignoreCount++;
+	else if (it->second)
 		(this->*it->second)(ir, actions);
 	return true;
 }
@@ -279,6 +286,12 @@ void PdfSpecialHandler::dviEndPage (unsigned pageno, SpecialActions &actions) {
 	if (_active) {
 		HyperlinkManager::instance().createViews(pageno, actions);
 		_active = false;
+	}
+	if (_ignoreCount > 0) {
+		string suffix = (_ignoreCount > 1 ? "s" : "");
+		Message::wstream(true) << _ignoreCount << " PDF special" << suffix << " ignored."
+			<< " The resulting SVG might look wrong.\n";
+		_ignoreCount = 0;
 	}
 }
 
