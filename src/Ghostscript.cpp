@@ -206,7 +206,7 @@ bool Ghostscript::init (int argc, const char **argv, void *caller) {
 
 
 /** Returns true if Ghostscript library was found and can be loaded. */
-bool Ghostscript::available () {
+bool Ghostscript::available () const {
 #if defined(HAVE_LIBGS)
 	return true;
 #else
@@ -243,7 +243,7 @@ int Ghostscript::revision () const {
 
 
 /** Returns the revision of the GS library as a string of the form "MAJOR.MINOR". */
-string Ghostscript::revisionstr () {
+string Ghostscript::revisionstr () const {
 	string revstr;
 	if (int rev = revision()) {
 		if (rev < 1000) {  // until GS 9.52
@@ -270,7 +270,7 @@ string Ghostscript::revisionstr () {
  *  should not be used elsewhere.
  *  @param[out] psinst handle of newly created instance (or 0 on error)
  *  @param[in] caller pointer forwarded to callback functions */
-int Ghostscript::new_instance (void **psinst, void *caller) {
+int Ghostscript::new_instance (void **psinst, void *caller) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_new_instance(psinst, caller);
 #else
@@ -295,7 +295,7 @@ void Ghostscript::delete_instance () {
 
 
 /** Exits the interpreter. Must be called before destroying the GS instance. */
-int Ghostscript::exit () {
+int Ghostscript::exit () const {
 #if defined(HAVE_LIBGS)
 	return gsapi_exit(_inst);
 #else
@@ -310,7 +310,7 @@ int Ghostscript::exit () {
  * @param[in] in pointer to stdin handler
  * @param[in] out pointer to stdout handler
  * @param[in] err pointer to stderr handler */
-int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
+int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_set_stdio(_inst, in, out, err);
 #else
@@ -325,7 +325,7 @@ int Ghostscript::set_stdio (Stdin in, Stdout out, Stderr err) {
  *  method is called by the constructor and should not be used elsewhere.
  *  @param[in] argc number of parameters
  *  @param[in] argv parameters passed to Ghostscript */
-int Ghostscript::init_with_args (int argc, char **argv) {
+int Ghostscript::init_with_args (int argc, char **argv) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_init_with_args(_inst, argc, argv);
 #else
@@ -337,7 +337,7 @@ int Ghostscript::init_with_args (int argc, char **argv) {
 
 
 /** Tells Ghostscript that several calls of run_string_continue will follow. */
-int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
+int Ghostscript::run_string_begin (int user_errors, int *pexit_code) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_begin(_inst, user_errors, pexit_code);
 #else
@@ -356,7 +356,7 @@ int Ghostscript::run_string_begin (int user_errors, int *pexit_code) {
  *  @param[in] length number of characters in buffer
  *  @param[in] user_errors if non-negative, the default PS error values will be generated, otherwise this value is returned
  *  @param[out] pexit_code takes the PS error code */
-int Ghostscript::run_string_continue (const char *str, unsigned length, int user_errors, int *pexit_code) {
+int Ghostscript::run_string_continue (const char *str, unsigned length, int user_errors, int *pexit_code) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_continue(_inst, str, length, user_errors, pexit_code);
 #else
@@ -369,7 +369,7 @@ int Ghostscript::run_string_continue (const char *str, unsigned length, int user
 
 
 /** Terminates the successive code feeding. Must be called after the last call of run_string_continue. */
-int Ghostscript::run_string_end (int user_errors, int *pexit_code) {
+int Ghostscript::run_string_end (int user_errors, int *pexit_code) const {
 #if defined(HAVE_LIBGS)
 	return gsapi_run_string_end(_inst, user_errors, pexit_code);
 #else
