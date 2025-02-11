@@ -85,6 +85,7 @@ string FontEngine::version () {
 /** Sets the font to be used.
  * @param[in] fname path to font file
  * @param[in] fontindex index of font in font collection (multi-font files, like TTC)
+ * @param[in] charMapID character map ID to assign
  * @return true on success */
 bool FontEngine::setFont (const string &fname, int fontindex, const CharMapID &charMapID) {
 	if (_currentFace && FT_Done_Face(_currentFace))
@@ -138,7 +139,7 @@ bool FontEngine::hasVerticalMetrics () const {
 }
 
 
-bool FontEngine::setCharMap (const CharMapID &charMapID) {
+bool FontEngine::setCharMap (const CharMapID &charMapID) const {
 	if (_currentFace) {
 		for (int i = 0; i < _currentFace->num_charmaps; i++) {
 			FT_CharMap ft_cmap = _currentFace->charmaps[i];
@@ -155,7 +156,7 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) {
 /** Returns a character map that maps from glyph indexes to character codes
  *  of the current encoding.
  *  @param[out] charmap the resulting charmap */
-void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) {
+void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) const {
 	charmap.clear();
 	FT_UInt gid;  // index of current glyph
 	uint32_t charcode = FT_Get_First_Char(_currentFace, &gid);
@@ -169,7 +170,7 @@ void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) {
 
 /** Creates a charmap that maps from the custom character encoding to Unicode.
  *  @return pointer to charmap if it could be created, 0 otherwise */
-unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () {
+unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 	auto charmap = util::make_unique<RangeMap>();
 	if (_currentFace) {
 		FT_CharMap ftcharmap = _currentFace->charmap;
@@ -370,14 +371,14 @@ int FontEngine::getCharMapIDs (vector<CharMapID> &charmapIDs) const {
 }
 
 
-CharMapID FontEngine::setUnicodeCharMap () {
+CharMapID FontEngine::setUnicodeCharMap () const {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) == 0)
 		return {uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id)};
 	return {};
 }
 
 
-CharMapID FontEngine::setCustomCharMap () {
+CharMapID FontEngine::setCustomCharMap () const {
 	if (_currentFace && FT_Select_Charmap(_currentFace, FT_ENCODING_ADOBE_CUSTOM) == 0)
 		return {uint8_t(_currentFace->charmap->platform_id), uint8_t(_currentFace->charmap->encoding_id)};
 	return {};
