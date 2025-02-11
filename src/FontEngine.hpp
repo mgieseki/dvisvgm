@@ -75,6 +75,7 @@ class FontEngine {
 		FontEngine ();
 		bool setFont (const std::string &fname, int fontindex, const CharMapID &charmapID);
 		int charIndex (const Character &c) const;
+		void addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap) const;
 
 	private:
 		FT_Face _currentFace = nullptr;

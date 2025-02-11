@@ -31,6 +31,7 @@
 #include "FontStyle.hpp"
 #include "fonts/Base14Fonts.hpp"
 #include "Message.hpp"
+#include "Unicode.hpp"
 #include "utility.hpp"
 
 using namespace std;
@@ -164,6 +165,34 @@ void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) const {
 		if (!charmap.valueAt(gid))
 			charmap.addRange(gid, gid, charcode);
 		charcode = FT_Get_Next_Char(_currentFace, charcode, &gid);
+	}
+	// In case the Unicode map of the font doesn't cover all characters, some
+	// of them could still be identified by their names if present in the font.
+	if (FT_HAS_GLYPH_NAMES(_currentFace)) {
+		if (charmap.empty())
+			addCharsByGlyphNames(1, getNumGlyphs(), charmap);
+		else {
+			addCharsByGlyphNames(1, charmap.minKey()-1, charmap);
+			for (size_t i=1; i < charmap.numRanges(); i++)
+				addCharsByGlyphNames(charmap.getRange(i-1).max()+1, charmap.getRange(i).min()-1, charmap);
+			addCharsByGlyphNames(charmap.maxKey()+1, getNumGlyphs(), charmap);
+		}
+	}
+}
+
+
+/** Looks for known glyph names in a given GID range and adds the corresponding
+ *  GID->code point mapping to a character map.
+ *  @param[in] minGID minimum GID of range to iterate
+ *  @param[in] maxGID maximum GID of range to iterate
+ *  @param[in,out] charmap character map taking the new mappings */
+void FontEngine::addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap) const {
+	for (uint32_t gid=minGID; gid <= maxGID; gid++) {
+		char glyphName[64];
+		if (FT_Get_Glyph_Name(_currentFace, gid, glyphName, 64) == 0) {
+			if (int32_t cp = Unicode::aglNameToCodepoint(glyphName))
+				charmap.addRange(gid, gid, cp);
+		}
 	}
 }
 
