@@ -31,6 +31,7 @@
 #include "Character.hpp"
 #include "CharMapID.hpp"
 #include "Glyph.hpp"
+#include "NumericRanges.hpp"
 #include "RangeMap.hpp"
 
 class Font;
@@ -38,6 +39,7 @@ class Font;
 /** This class provides methods to handle font files and font data.
  *  It's a wrapper for the Freetype font library. */
 class FontEngine {
+	using CodepointRanges = NumericRanges<uint32_t>;
 	public:
 		~FontEngine ();
 		static FontEngine& instance ();
@@ -75,7 +77,7 @@ class FontEngine {
 		FontEngine ();
 		bool setFont (const std::string &fname, int fontindex, const CharMapID &charmapID);
 		int charIndex (const Character &c) const;
-		void addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap) const;
+		void addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap, CodepointRanges &ucp) const;
 
 	private:
 		FT_Face _currentFace = nullptr;

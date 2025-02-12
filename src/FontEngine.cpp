@@ -169,29 +169,36 @@ void FontEngine::buildGidToCharCodeMap (RangeMap &charmap) const {
 	// In case the Unicode map of the font doesn't cover all characters, some
 	// of them could still be identified by their names if present in the font.
 	if (FT_HAS_GLYPH_NAMES(_currentFace)) {
+		NumericRanges<uint32_t> usedCodepoints;
+		for (size_t i=0; i < charmap.numRanges(); i++)
+			usedCodepoints.addRange(charmap.getRange(i).minval(), charmap.getRange(i).maxval());
 		if (charmap.empty())
-			addCharsByGlyphNames(1, getNumGlyphs(), charmap);
+			addCharsByGlyphNames(1, getNumGlyphs(), charmap, usedCodepoints);
 		else {
-			addCharsByGlyphNames(1, charmap.minKey()-1, charmap);
+			addCharsByGlyphNames(1, charmap.minKey()-1, charmap, usedCodepoints);
 			for (size_t i=1; i < charmap.numRanges(); i++)
-				addCharsByGlyphNames(charmap.getRange(i-1).max()+1, charmap.getRange(i).min()-1, charmap);
-			addCharsByGlyphNames(charmap.maxKey()+1, getNumGlyphs(), charmap);
+				addCharsByGlyphNames(charmap.getRange(i-1).max()+1, charmap.getRange(i).min()-1, charmap, usedCodepoints);
+			addCharsByGlyphNames(charmap.maxKey()+1, getNumGlyphs(), charmap, usedCodepoints);
 		}
 	}
 }
 
 
 /** Looks for known glyph names in a given GID range and adds the corresponding
- *  GID->code point mapping to a character map.
+ *  GID->code point mapping to a character map if the code point is not already present.
  *  @param[in] minGID minimum GID of range to iterate
  *  @param[in] maxGID maximum GID of range to iterate
- *  @param[in,out] charmap character map taking the new mappings */
-void FontEngine::addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap) const {
+ *  @param[in,out] charmap character map taking the new mappings
+ *  @param[in,out] ucp collection of code points already present in the character map */
+void FontEngine::addCharsByGlyphNames (uint32_t minGID, uint32_t maxGID, RangeMap &charmap, CodepointRanges &ucp) const {
 	for (uint32_t gid=minGID; gid <= maxGID; gid++) {
 		char glyphName[64];
 		if (FT_Get_Glyph_Name(_currentFace, gid, glyphName, 64) == 0) {
-			if (int32_t cp = Unicode::aglNameToCodepoint(glyphName))
+			const int32_t cp = Unicode::aglNameToCodepoint(glyphName);
+			if (cp && !ucp.valueExists(cp)) {
 				charmap.addRange(gid, gid, cp);
+				ucp.addRange(cp);
+			}
 		}
 	}
 }

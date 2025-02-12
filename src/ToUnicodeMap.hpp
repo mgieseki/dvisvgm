@@ -25,9 +25,8 @@
 #include "RangeMap.hpp"
 
 
-/** Represents a mapping from character indexes to unicode points. */
-class ToUnicodeMap : public RangeMap
-{
+/** Represents a mapping from character indexes to Unicode points. */
+class ToUnicodeMap : public RangeMap {
 	public:
 		bool addMissingMappings (uint32_t maxIndex);
 
