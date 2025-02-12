@@ -33,12 +33,12 @@ using namespace std;
  *  @param[in] maxIndex largest character index to consider
  *  @return true on success */
 bool ToUnicodeMap::addMissingMappings (uint32_t maxIndex) {
-	bool success=true;
 	// collect Unicode points already in assigned
 	NumericRanges<uint32_t> codepoints;
-	for (size_t i=0; i < numRanges() && success; i++)
+	for (size_t i=0; i < numRanges(); i++)
 		codepoints.addRange(rangeAt(i).minval(), rangeAt(i).maxval());
 	// fill unmapped ranges
+	bool success;
 	if (empty()) // no Unicode mapping present at all?
 		success = fillRange(1, maxIndex, 1, codepoints, true);
 	else {   // (partial) Unicode mapping present?
