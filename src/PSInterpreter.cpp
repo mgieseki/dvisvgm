@@ -89,7 +89,7 @@ PSActions* PSInterpreter::setActions (PSActions *actions) {
 
 
 /** Checks if the given status value returned by Ghostscript indicates an error.
- *  @param[in] status status value returned by Ghostscript after the execution of a PS snippet
+ *  @param[in] status status value returned by Ghostscript after the execution of a PS fragment
  *  @throw PSException if the status value indicates a PostScript error */
 void PSInterpreter::checkStatus (int status) {
 	if (status < 0) {
@@ -193,7 +193,7 @@ int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
  *  Ghostscript sends the text in chunks by several calls of this function.
  *  Unfortunately, the PostScript specification wants error messages also to be sent to stdout
  *  instead of stderr. Thus, we must collect and concatenate the chunks until an evaluable text
- *  snippet is completely received. Furthermore, error messages have to be recognized and to be
+ *  fragment is completely received. Furthermore, error messages have to be recognized and to be
  *  filtered out.
  *  @param[in] inst pointer to calling instance of PSInterpreter
  *  @param[in] buf contains the characters to be output

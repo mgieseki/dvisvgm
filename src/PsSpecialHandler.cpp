@@ -142,7 +142,7 @@ void PsSpecialHandler::moveToDVIPos () {
 }
 
 
-/** Executes a PS snippet and optionally synchronizes the DVI cursor position
+/** Executes a PS fragment and optionally synchronizes the DVI cursor position
  *  with the current PS point.
  *  @param[in] is  stream to read the PS code from
  *  @param[in] updatePos if true, move the DVI drawing position to the current PS point */

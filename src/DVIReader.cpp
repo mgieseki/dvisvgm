@@ -204,7 +204,7 @@ void DVIReader::cmdPop (int) {
 void DVIReader::putVFChar (Font *font, uint32_t c) {
 	if (auto vf = font_cast<VirtualFont*>(font)) { // is current font a virtual font?
 		FontManager &fm = FontManager::instance();
-		const auto *dvi = vf->getDVI(c);    // try to get DVI snippet that represents character c
+		const auto *dvi = vf->getDVI(c);    // try to get DVI sequence that represents character c
 		Font *firstFont = fm.vfFirstFont(vf);
 		if (!dvi) {
 			const FontMetrics *ffm = firstFont ? firstFont->getMetrics() : nullptr;

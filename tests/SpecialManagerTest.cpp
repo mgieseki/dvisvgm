@@ -61,7 +61,7 @@ TEST_F(SpecialManagerTest, info1) {
 	string expected =
 		"bgcolor    background color special\n"
 		"color      complete support of color specials\n"
-		"dvisvgm    special set for embedding raw SVG snippets\n"
+		"dvisvgm    special set for embedding raw SVG fragments\n"
 		"em         line drawing statements of the emTeX special set\n"
 		"html       hyperref specials\n"
 		"papersize  special to set the page size\n"
@@ -79,7 +79,7 @@ TEST_F(SpecialManagerTest, info2) {
 	sm.writeHandlerInfo(oss);
 	string expected =
 		"bgcolor    background color special\n"
-		"dvisvgm    special set for embedding raw SVG snippets\n"
+		"dvisvgm    special set for embedding raw SVG fragments\n"
 		"html       hyperref specials\n"
 		"papersize  special to set the page size\n"
 		"pdf        PDF hyperlink, font map, and pagesize specials\n"
