@@ -3,8 +3,25 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Sat, 04 Jan 2025 13:09:18 +0100</pubDate>
+    <pubDate>Thu, 06 Mar 2025 11:23:15 +0100</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.4.4 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#a0ae434745fbef4eb6f0a67f50eaac00</link>
+      <pubDate>Thu, 06 Mar 2025 11:08:05 +0100</pubDate>
+      <guid>a0ae434745fbef4eb6f0a67f50eaac00</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Extended the computation of Unicode points by looking for known glyph names.</li>
+<li>Added some common glyph names not yet covered by the AGL table.</li>
+<li>Added a  warning shown if unsupported PDF specials have been ignored.</li>
+<li>Some additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Several code improvements.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.4.3 has been released</title>
@@ -162,7 +179,7 @@ This slightly speeds up the conversion of DVI files that don&rsquo;t contain PS 
     
     <item>
       <title>dvisvgm 3.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#52f5c35f582d08c9bc1292ba23034f1d</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#52f5c35f582d08c9bc1292ba23034f1d</link>
       <pubDate>Thu, 11 Jan 2024 10:13:14 +0100</pubDate>
       <guid>52f5c35f582d08c9bc1292ba23034f1d</guid>
       <description>
@@ -317,7 +334,7 @@ announcement of pre-release version 3.0 below. Version 3.0.1 fixes several issue
     
     <item>
       <title>dvisvgm 3.0: Pre-release of new major version</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4d14c1e14bfd9d193a04ea4c1c3b47ff</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4d14c1e14bfd9d193a04ea4c1c3b47ff</link>
       <pubDate>Mon, 17 Oct 2022 09:48:19 +0200</pubDate>
       <guid>4d14c1e14bfd9d193a04ea4c1c3b47ff</guid>
       <description>
@@ -398,18 +415,6 @@ page numbers respectively.</li>
 <li>Replaced the method used to clip embedded EPS/PDF graphics that now usually results in faster rendering of the affected SVG sections.</li>
 <li>Fixed a regression regarding transformations of embedded EPS/PDF graphics.</li>
 </ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.13.2 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#0ad29b27d5fc33fc8a3dda38a8d2186f</link>
-      <pubDate>Wed, 23 Feb 2022 14:33:43 +0100</pubDate>
-      <guid>0ad29b27d5fc33fc8a3dda38a8d2186f</guid>
-      <description>
-        <![CDATA[<p>This small release improves the clipping of embedded EPS/PDF graphics
-(<a href="https://github.com/mgieseki/dvisvgm/issues/176">issue #176</a>).</p>
 ]]>
       </description>
     </item>

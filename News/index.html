@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="fb495316c74fdb00859f7cc359c41ecc"></a>
+  <a name="a0ae434745fbef4eb6f0a67f50eaac00"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">6 March 2025: dvisvgm 3.4.4 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Extended the computation of Unicode points by looking for known glyph names.</li>
+<li>Added some common glyph names not yet covered by the AGL table.</li>
+<li>Added a  warning shown if unsupported PDF specials have been ignored.</li>
+<li>Some additions to the <a href="/Manpage/">manual page</a>.</li>
+<li>Several code improvements.</li>
+</ul>
+</div>
+  </section><a name="fb495316c74fdb00859f7cc359c41ecc"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">4 January 2025: dvisvgm 3.4.3 has been released</div>
     <div class="card-body">
@@ -196,20 +208,6 @@ This slightly speeds up the conversion of DVI files that don&rsquo;t contain PS 
 <li>Applied some changes required for TeX Live builds (patches by Karl Berry, <a href="https://github.com/mgieseki/dvisvgm/issues/259">issue #259</a>, <a href="https://github.com/mgieseki/dvisvgm/issues/260">issue #260</a>).</li>
 <li>Added more details to some DVI warning messages.</li>
 <li>Added some further information to the <a href="/Manpage/">manual page</a>.</li>
-</ul>
-</div>
-  </section><a name="52f5c35f582d08c9bc1292ba23034f1d"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">11 January 2024: dvisvgm 3.2 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Fixed a rounding issue that could lead to slightly bigger text extents (<a href="https://github.com/mgieseki/dvisvgm/issues/256">issue #256</a>).</li>
-<li>Added the macros <code>{?pageno}</code>, <code>{?svgfile}</code>, and <code>{?svgpath}</code> to the dvisvgm special commands.</li>
-<li>Added a separate verbosity flag 8 for user messages printed by special <code>dvisvgm:message</code>.</li>
-<li>Added the command-line option <code>--message</code> to allow for printing user messages after writing an SVG file (<a href="https://github.com/mgieseki/dvisvgm/issues/258">issue #258</a>).</li>
-<li>Applied <a href="https://github.com/google/woff2/commit/23a34adec39d7cef30c1eebbf775a1ea5cc43c53">this</a> upstream patch regarding
-undefined type punning to the bundled woff2 library.</li>
-<li>Few improvements of the manual page.</li>
 </ul>
 </div>
   </section>
