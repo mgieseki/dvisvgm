@@ -1,3 +1,10 @@
+dvisvgm-3.4.4 (2025-03-06)
+- extended computation of Unicode points by looking for known glyph names
+- added some common glyph names not yet covered by the AGL table
+- added warning shown if unsupported PDF specials have been ignored
+- some additions to the manual page
+- several code improvements
+
 dvisvgm-3.4.3 (2025-01-04)
 - fixed index error in PS operator "colorimage" (GH issue #279)
 - updated bundled xxHash library to version 0.8.3
