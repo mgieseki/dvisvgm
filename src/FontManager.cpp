@@ -159,6 +159,18 @@ Font* FontManager::getFontById (int id) const {
 }
 
 
+vector<const Font*> FontManager::getUniqueFonts () const {
+	vector<const Font*> fonts;
+	fonts.reserve(_fonts.size());
+	for (auto &font : _fonts) {
+		auto it = _usedChars.find(font.get());
+		if (it != _usedChars.end())
+			fonts.push_back(font.get());
+	}
+	return fonts;
+}
+
+
 /** Returns the current active virtual font. */
 const VirtualFont* FontManager::getVF () const {
 	return _vfStack.empty() ? nullptr : _vfStack.top();

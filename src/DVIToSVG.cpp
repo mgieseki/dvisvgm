@@ -351,13 +351,13 @@ void DVIToSVG::embedFonts () {
 	if (!_actions) // no dvi actions => no chars written => no fonts to embed
 		return;
 
+	auto usedFonts = FontManager::instance().getUniqueFonts();
 	auto &usedCharsMap = FontManager::instance().getUsedChars();
 	collect_chars(usedCharsMap);
 
 	GlyphTracerMessages messages;
 	unordered_set<const Font*> tracedFonts;  // collect unique fonts already traced
-	for (const auto &fontchar : usedCharsMap) {
-		const Font *font = fontchar.first;
+	for (auto font : usedFonts) {
 		if (auto ph_font = font_cast<const PhysicalFont*>(font)) {
 			// Check if glyphs should be traced. Only trace the glyphs of unique fonts, i.e.
 			// avoid retracing the same glyphs again if they are referenced in various sizes.
@@ -365,8 +365,11 @@ void DVIToSVG::embedFonts () {
 				ph_font->traceAllGlyphs(TRACE_MODE == 'a', &messages);
 				tracedFonts.insert(ph_font->uniqueFont());
 			}
-			if (font->path())  // does font file exist?
-				_svg.append(*ph_font, fontchar.second, &messages);
+			if (font->path()) { // does font file exist?
+				auto it = usedCharsMap.find(font);
+				if (it != usedCharsMap.end())
+					_svg.append(*ph_font, it->second, &messages);
+			}
 			else
 				Message::wstream(true) << "can't embed font '" << font->name() << "'\n";
 		}

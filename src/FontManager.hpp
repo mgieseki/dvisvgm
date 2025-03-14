@@ -62,6 +62,7 @@ class FontManager {
 		Font* getFont (const std::string &name) const;
 		Font* getFont (const std::string &name, double ptsize);
 		Font* getFontById (int id) const;
+		std::vector<const Font*> getUniqueFonts () const;
 		const VirtualFont* getVF () const;
 		int fontID (int n) const;
 		int fontID (const Font *font) const;
