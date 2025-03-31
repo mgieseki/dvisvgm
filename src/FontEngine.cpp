@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <cmath>
+#include <set>
 #include <sstream>
 #include <ft2build.h>
 #include FT_ADVANCES_H
@@ -216,14 +217,33 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 		RangeMap gidToCharCodeMap = buildGidToCharCodeMap();
 		if (FT_Select_Charmap(_currentFace, FT_ENCODING_UNICODE) != 0)
 			return nullptr;
+		// collect character codes mapped to glyphs
+		set<uint32_t> assignedCharCodes;
+		for (const auto range : gidToCharCodeMap)
+			assignedCharCodes.insert(range.second);
+		// get code points for custom character codes from the font's Unicode map
+		set<uint32_t> assignedCodePoints;
 		FT_UInt gid;  // index of current glyph
-		uint32_t ucCharcode = FT_Get_First_Char(_currentFace, &gid);  // Unicode code point
+		uint32_t cp = FT_Get_First_Char(_currentFace, &gid);  // Unicode code point
 		while (gid) {
-			uint32_t customCharcode = gidToCharCodeMap.valueAt(gid);
-			charmap->addRange(customCharcode, customCharcode, ucCharcode);
-			ucCharcode = FT_Get_Next_Char(_currentFace, ucCharcode, &gid);
+			uint32_t charCode = gidToCharCodeMap.valueAt(gid);
+			charmap->addRange(charCode, charCode, cp);
+			assignedCharCodes.erase(charCode);
+			assignedCodePoints.insert(cp);
+			cp = FT_Get_Next_Char(_currentFace, cp, &gid);
 		}
 		FT_Set_Charmap(_currentFace, ftcharmap);
+		// assign code points from the PUA to characters not covered by the Unicode map
+		uint32_t nextPrivateCP = 0xE000;
+		for (auto charCode : assignedCharCodes) {
+			for (; nextPrivateCP <= 0xF8FF; nextPrivateCP++) {
+				if (assignedCodePoints.find(nextPrivateCP) == assignedCodePoints.end()) {
+					charmap->addRange(charCode, charCode, nextPrivateCP);
+					assignedCodePoints.insert(nextPrivateCP++);
+					break;
+				}
+			}
+		}
 	}
 	return charmap;
 }

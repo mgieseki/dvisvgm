@@ -536,6 +536,10 @@ uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 	if (type() == Type::MF)
 		return Font::unicode(c);
 	Character chr = decodeChar(c);
+	if (_localCharMap) {
+		if (uint32_t mapped_char = _localCharMap->valueAt(chr.number()))
+			return mapped_char;
+	}
 	if (type() == Type::PFB) {
 		// try to get the Unicode point from the character name
 		string glyphname = glyphName(c);
@@ -552,10 +556,6 @@ uint32_t PhysicalFontImpl::unicode (uint32_t c) const {
 	if (chr.type() == Character::NAME || chr.number() == 0)
 		return Unicode::charToCodepoint(chr.number());
 
-	if (_localCharMap) {
-		if (uint32_t mapped_char = _localCharMap->valueAt(chr.number()))
-			return mapped_char;
-	}
 	// No Unicode equivalent found in the font file.
 	// Now we should look for a smart alternative but at the moment
 	// it's sufficient to simply choose a valid unused codepoint.
