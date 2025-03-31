@@ -24,6 +24,7 @@
 #include <memory>
 #include "utility.hpp"
 #include "XMLNode.hpp"
+#include "XMLString.hpp"
 
 using namespace std;
 
@@ -390,4 +391,28 @@ TEST(XMLNodeTest, cdata) {
 	str = oss.str();
 	str.erase(remove(str.begin(), str.end(), '\n'), str.end());
 	EXPECT_EQ(str, "<root><element/><![CDATA[text & <text>]]></root>");
+}
+
+
+TEST(XMLNodeTest, empty) {
+	XMLElement root("root");
+	EXPECT_TRUE(root.empty());
+	EXPECT_TRUE(root.empty(true));
+	EXPECT_TRUE(root.attributes().empty());
+
+	root.append(XMLString(" \n "));
+	EXPECT_FALSE(root.empty());
+	EXPECT_TRUE(root.empty(true));
+
+	root.append(XMLString("\n"));
+	EXPECT_FALSE(root.empty());
+	EXPECT_TRUE(root.empty(true));
+
+	root.append(util::make_unique<XMLElement>("child"));
+	EXPECT_FALSE(root.empty());
+	EXPECT_FALSE(root.empty(true));
+
+	root.append(XMLString("\n"));
+	EXPECT_FALSE(root.empty());
+	EXPECT_FALSE(root.empty(true));
 }

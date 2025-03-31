@@ -118,7 +118,7 @@ bool XMLElement::empty (bool ignoreWhitespace) const {
 		return _firstChild == nullptr;
 
 	return all_of(begin(), end(), [](const XMLNode *node) {
-		return !node->toWSNode();
+		return node->toWSNode();
 	});
 }
 
