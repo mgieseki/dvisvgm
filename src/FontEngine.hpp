@@ -70,7 +70,7 @@ class FontEngine {
 		std::string getGlyphName (const Character &c) const;
 		int getCharIndexByGlyphName (const char *name) const;
 		bool setCharMap (const CharMapID &charMapID) const;
-		void buildGidToCharCodeMap (RangeMap &charmap) const;
+		RangeMap buildGidToCharCodeMap () const;
 		std::unique_ptr<const RangeMap> createCustomToUnicodeMap () const;
 
 	protected:

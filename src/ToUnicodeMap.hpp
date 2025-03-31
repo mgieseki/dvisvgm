@@ -28,6 +28,8 @@
 /** Represents a mapping from character indexes to Unicode points. */
 class ToUnicodeMap : public RangeMap {
 	public:
+		ToUnicodeMap () = default;
+		ToUnicodeMap (RangeMap &&charmap) : RangeMap(std::move(charmap)) {}
 		bool addMissingMappings (uint32_t maxIndex);
 
 	protected:
