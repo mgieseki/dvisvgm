@@ -245,7 +245,7 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 			}
 		}
 	}
-	return charmap;
+	return charmap->empty() ? nullptr : std::move(charmap);
 }
 
 
