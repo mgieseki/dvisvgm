@@ -247,6 +247,12 @@ MessageExceptionTest_SOURCES = MessageExceptionTest.cpp testutil.hpp
 MessageExceptionTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
 MessageExceptionTest_LDADD = $(TESTLIBS)
 
+TESTS += NumericRangesTest
+check_PROGRAMS += NumericRangesTest
+NumericRangesTest_SOURCES = NumericRangesTest.cpp testutil.hpp
+NumericRangesTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
+NumericRangesTest_LDADD = $(TESTLIBS)
+
 TESTS += OFMReaderTest
 check_PROGRAMS += OFMReaderTest
 OFMReaderTest_SOURCES = OFMReaderTest.cpp testutil.hpp

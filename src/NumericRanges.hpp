@@ -49,7 +49,7 @@ class NumericRanges {
 /** Adds a numeric range to the collection.
  *  @param[in] first left bound of new range
  *  @param[in] last right bound of new range */
-template <class T>
+template <typename T>
 void NumericRanges<T>::addRange (T first, T last) {
 	if (first > last)
 		std::swap(first, last);
@@ -97,12 +97,15 @@ void NumericRanges<T>::addRange (T first, T last) {
 
 template <class T>
 bool NumericRanges<T>::valueExists (T value) const {
-	auto it = std::lower_bound(_ranges.begin(), _ranges.end(), Range(value, 0),
+	if (_ranges.empty())
+		return false;
+	auto it = std::lower_bound(_ranges.begin(), _ranges.end(), Range(value, value),
 		[](const Range &r1, const Range &r2) {
 			return r1.first < r2.first;
 		});
-	return (it != _ranges.end() && it->first <= value && it->second >= value);
+	if (it == _ranges.end() || (it->first > value && it != _ranges.begin()))
+		--it;
+	return (it->first <= value && it->second >= value);
 }
-
 
 #endif
