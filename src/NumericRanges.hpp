@@ -95,17 +95,12 @@ void NumericRanges<T>::addRange (T first, T last) {
 }
 
 
-template <class T>
+template <typename T>
 bool NumericRanges<T>::valueExists (T value) const {
-	if (_ranges.empty())
-		return false;
-	auto it = std::lower_bound(_ranges.begin(), _ranges.end(), Range(value, value),
-		[](const Range &r1, const Range &r2) {
-			return r1.first < r2.first;
-		});
-	if (it == _ranges.end() || (it->first > value && it != _ranges.begin()))
-		--it;
-	return (it->first <= value && it->second >= value);
+	auto it = std::find_if(_ranges.begin(), _ranges.end(), [&](const Range &r) {
+		return value <= r.second && value >= r.first;
+	});
+	return it != _ranges.end();
 }
 
 #endif
