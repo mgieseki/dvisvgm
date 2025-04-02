@@ -22,6 +22,7 @@
 #define NUMERICRANGES_HPP
 
 #include <algorithm>
+#include <initializer_list>
 #include <list>
 #include <utility>
 
@@ -32,18 +33,69 @@ class NumericRanges {
 		using Container = std::list<Range>;
 		using ConstIterator = typename Container::const_iterator;
 
+		class ValueIterator {
+			friend class NumericRanges<T>;
+			public:
+				bool valid () const   {return _currentRangeIt != _endRangeIt;}
+				T operator * () const {return _currentValue;}
+
+				bool operator != (const ValueIterator &it) const {
+					return _currentRangeIt != it._currentRangeIt
+						|| (_currentRangeIt != _endRangeIt && _currentValue != it._currentValue);
+				}
+
+				bool operator == (const ValueIterator &it) const {
+					return _currentRangeIt == it._currentRangeIt
+						&& (_currentRangeIt == _endRangeIt || _currentValue == it._currentValue);
+				}
+
+				void operator ++ () {
+					if (_currentValue < _currentRangeIt->second)
+						++_currentValue;
+					else if (++_currentRangeIt != _endRangeIt)
+						_currentValue = _currentRangeIt->first;
+				}
+
+				ValueIterator operator ++ (int) {
+					ValueIterator it = *this;
+					++(*this);
+					return it;
+				}
+
+			protected:
+				ValueIterator (const NumericRanges<T> &ranges) : _currentRangeIt(ranges.begin()), _endRangeIt(ranges.end()), _currentValue() {
+					if (_currentRangeIt != ranges.end())
+						_currentValue = _currentRangeIt->first;
+				}
+
+			private:
+				ConstIterator _currentRangeIt;
+				const ConstIterator _endRangeIt;
+				T _currentValue;
+		};
+
 	public:
+		NumericRanges () = default;
+		NumericRanges (const std::initializer_list<Range> &r);
 		void addRange (T value)          {addRange(value, value);}
 		void addRange (T first, T last);
 		bool valueExists (T value) const;
-		size_t size () const             {return _ranges.size();}
-		ConstIterator begin () const     {return _ranges.begin();}
-		ConstIterator end () const       {return _ranges.end();}
-		const Container& ranges () const {return _ranges;}
+		size_t size () const                 {return _ranges.size();}
+		ConstIterator begin () const         {return _ranges.begin();}
+		ConstIterator end () const           {return _ranges.end();}
+		ValueIterator valueIterator () const {return ValueIterator(*this);}
+		const Container& ranges () const     {return _ranges;}
 
 	private:
 		Container _ranges;
 };
+
+
+template<class T>
+NumericRanges<T>::NumericRanges (const std::initializer_list<Range> &r) {
+	for (const Range &r : r)
+		addRange (r.first, r.second);
+}
 
 
 /** Adds a numeric range to the collection.

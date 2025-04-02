@@ -23,6 +23,20 @@
 
 using namespace std;
 
+TEST(NumericRangesTest, construct) {
+	NumericRanges<int> ranges{{5,9}, {20,31}};
+	EXPECT_EQ(ranges.size(), 2u);
+	auto it = ranges.begin();
+	ASSERT_NE(it, ranges.end());
+	EXPECT_EQ(it->first, 5);
+	EXPECT_EQ(it->second, 9);
+	++it;
+	EXPECT_EQ(it->first, 20);
+	EXPECT_EQ(it->second, 31);
+	++it;
+	EXPECT_EQ(it, ranges.end());
+}
+
 TEST(NumericRangesTest, addRange1) {
 	NumericRanges<int> ranges;
 	EXPECT_EQ(ranges.size(), 0u);
@@ -72,7 +86,7 @@ TEST(NumericRangesTest, addRange4) {
 	NumericRanges<int> ranges;
 	EXPECT_EQ(ranges.size(), 0u);
 	ranges.addRange (5, 10);
-	ranges.addRange (1, 4);
+	ranges.addRange (4, 1);
 	EXPECT_EQ(ranges.size(), 1u);
 	auto it = ranges.begin();
 	ASSERT_NE(it, ranges.end());
@@ -136,4 +150,35 @@ TEST(NumericRangesTest, valueExists) {
 	for (int i=0; i <= 15; ++i)
 		EXPECT_NE(ranges.valueExists(i), i > 3 && i < 8) << i;
 	EXPECT_FALSE(ranges.valueExists(16));
+}
+
+
+TEST(NumericRangesTest, iterate1) {
+	NumericRanges<int> ranges({{3, 9}, {15, 20}});
+	auto it = ranges.valueIterator();
+	ASSERT_TRUE(it.valid());
+	for (int i=3; i <= 9; i++) {
+		EXPECT_EQ(*it, i);
+		ASSERT_TRUE(it.valid());
+		++it;
+	}
+	for (int i=15; i <= 20; i++) {
+		EXPECT_EQ(*it, i);
+		ASSERT_TRUE(it.valid());
+		++it;
+	}
+	ASSERT_FALSE(it.valid());
+}
+
+
+TEST(NumericRangesTest, iterate2) {
+	NumericRanges<int> ranges({{3, 9}});
+	auto it = ranges.valueIterator();
+	EXPECT_EQ(*it, 3);
+	++it;
+	EXPECT_EQ(*it, 4);
+	it++;
+	EXPECT_EQ(*it, 5);
+	EXPECT_EQ(*it++, 5);
+	EXPECT_EQ(*it, 6);
 }
