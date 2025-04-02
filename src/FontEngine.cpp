@@ -234,12 +234,13 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 		}
 		FT_Set_Charmap(_currentFace, ftcharmap);
 		// assign code points from the PUA to characters not covered by the Unicode map
-		uint32_t nextPrivateCP = 0xE000;
+		NumericRanges<uint32_t> pua({{0xE000, 0xF8FF}});
+		auto puaIt = pua.valueIterator();
 		for (auto charCode : assignedCharCodes) {
-			for (; nextPrivateCP <= 0xF8FF; nextPrivateCP++) {
-				if (assignedCodePoints.find(nextPrivateCP) == assignedCodePoints.end()) {
-					charmap->addRange(charCode, charCode, nextPrivateCP);
-					assignedCodePoints.insert(nextPrivateCP++);
+			for (; puaIt.valid(); ++puaIt) {
+				if (assignedCodePoints.find(*puaIt) == assignedCodePoints.end()) {
+					charmap->addRange(charCode, charCode, *puaIt);
+					assignedCodePoints.insert(*puaIt++);
 					break;
 				}
 			}
