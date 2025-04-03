@@ -234,7 +234,7 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 		}
 		FT_Set_Charmap(_currentFace, ftcharmap);
 		// assign code points from the PUA to characters not covered by the Unicode map
-		NumericRanges<uint32_t> pua({{0xE000, 0xF8FF}});
+		NumericRanges<uint32_t> pua({{0xE000, 0xF8FF}, {0xF0000, 0xFFFFD}, {0x100000, 0x10FFFD}});
 		auto puaIt = pua.valueIterator();
 		for (auto charCode : assignedCharCodes) {
 			for (; puaIt.valid(); ++puaIt) {
