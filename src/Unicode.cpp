@@ -36,17 +36,17 @@ bool Unicode::isValidCodepoint (uint32_t c) {
 	if ((c & 0xffff) == 0xfffe || (c & 0xffff) == 0xffff)
 		return false;
 
-	uint32_t ranges[] = {
-		0x0000, 0x0020,  // basic control characters + space
-		0x007f, 0x009f,  // use of control characters is discouraged by the XML standard
-		0x202a, 0x202e,  // bidi control characters
-		0xd800, 0xdfff,  // High Surrogates are not allowed in XML
-		0xfdd0, 0xfdef,  // non-characters for internal use by applications
+	using CPRange = pair<uint32_t, uint32_t>;
+	CPRange ranges[] = {
+		{0x0000, 0x0020},  // basic control characters + space
+		{0x007f, 0x009f},  // use of control characters is discouraged by the XML standard
+		{0x202a, 0x202e},  // bidi control characters
+		{0xd800, 0xdfff},  // High Surrogates are not allowed in XML
+		{0xfdd0, 0xfdef}   // non-characters for internal use by applications
 	};
-	for (size_t i=0; i < sizeof(ranges)/sizeof(uint32_t) && c >= ranges[i]; i+=2)
-		if (c <= ranges[i+1])
-			return false;
-	return true;
+	return none_of(begin(ranges), end(ranges), [&](const CPRange &range) {
+		return c <= range.second && c >= range.first;
+	});
 }
 
 
