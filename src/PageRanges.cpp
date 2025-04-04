@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <numeric>
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "PageRanges.hpp"
@@ -110,8 +111,7 @@ PageRanges PageRanges::filter (FilterFunc filterFunc) const {
 
 /** Returns the number of pages. */
 size_t PageRanges::numberOfPages () const {
-	size_t sum=0;
-	for (const auto &entry : *this)
-		sum += entry.second - entry.first + 1;
-	return sum;
+	return accumulate(begin(), end(), 0, [](int sum, const Range &range) {
+		return sum + range.second - range.first + 1;
+	});
 }
