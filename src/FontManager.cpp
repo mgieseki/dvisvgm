@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
@@ -65,10 +66,10 @@ int FontManager::fontID (int n) const {
  *  @param[in] font pointer to font object to be identified
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const Font *font) const {
-	for (size_t i=0; i < _fonts.size(); i++)
-		if (_fonts[i].get() == font)
-			return i;
-	return -1;
+	auto it = find_if(_fonts.begin(), _fonts.end(), [&](const unique_ptr<Font> &f) {
+		return f.get() == font;
+	});
+	return it != _fonts.end() ? std::distance(_fonts.begin(), it) : -1;
 }
 
 
@@ -85,13 +86,11 @@ int FontManager::fontID (const string &name) const {
 
 int FontManager::fontID (string name, double ptsize) const {
 	std::replace(name.begin(), name.end(), '+', '-');
-	for (auto it = _fonts.begin(); it != _fonts.end(); ++it) {
-		if (auto nativeFont = font_cast<NativeFont*>(it->get())) {
-			if (nativeFont->name() == name && nativeFont->scaledSize() == ptsize)
-				return int(std::distance(_fonts.begin(), it));
-		}
-	}
-	return -1;
+	auto it = find_if(_fonts.begin(), _fonts.end(), [&](const unique_ptr<Font> &f) {
+		auto nativeFont = font_cast<NativeFont*>(f.get());
+		return nativeFont && nativeFont->name() == name && nativeFont->scaledSize() == ptsize;
+	});
+	return it != _fonts.end() ? std::distance(_fonts.begin(), it) : -1;
 }
 
 
