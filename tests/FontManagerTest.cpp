@@ -34,7 +34,7 @@ class FontManagerTest : public ::testing::Test {
 			fm.registerFont(10, "cmr10", 1274110073, 10, 10);
 			fm.registerFont(11, "cmr10", 1274110073, 10, 12);
 			fm.registerFont( 9, "cmr10", 1274110073, 10, 14);
-			fm.registerFont(12, SRCDIR"/data/lmmono12-regular.otf", 0, 12, _fontStyle, Color(.0, .0, 1.0));
+			fm.registerFont(12, SRCDIR "/data/lmmono12-regular.otf", 0, 12, _fontStyle, Color(.0, .0, 1.0));
 		}
 
 	protected:
@@ -54,6 +54,28 @@ TEST_F(FontManagerTest, fontID1) {
 
 TEST_F(FontManagerTest, fontID2) {
 	EXPECT_EQ(fm.fontID("cmr10"), 0);
+	EXPECT_EQ(fm.fontID("nf0"), 3);
+}
+
+
+TEST_F(FontManagerTest, fontID3) {
+	EXPECT_EQ(fm.fontID("nf0", 12), 3);
+}
+
+
+TEST_F(FontManagerTest, fontID4) {
+	EXPECT_EQ(fm.fontID(fm.getFontById(0)), 0);
+	EXPECT_EQ(fm.fontID(fm.getFontById(1)), 1);
+	EXPECT_EQ(fm.fontID(fm.getFontById(2)), 2);
+	EXPECT_EQ(fm.fontID(fm.getFontById(3)), 3);
+}
+
+
+TEST_F(FontManagerTest, fontnum) {
+	EXPECT_EQ(fm.fontnum(0), 10);
+	EXPECT_EQ(fm.fontnum(1), 11);
+	EXPECT_EQ(fm.fontnum(2),  9);
+	EXPECT_EQ(fm.fontnum(3), 12);
 }
 
 
