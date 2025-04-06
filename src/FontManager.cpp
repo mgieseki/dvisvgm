@@ -95,20 +95,19 @@ int FontManager::fontID (string name, double ptsize) const {
 
 
 int FontManager::fontnum (int id) const {
-	if (id < 0 || size_t(id) > _fonts.size())
-		return -1;
-	if (_vfStack.empty()) {
-		for (const auto &entry : _num2id)
-			if (entry.second == id)
-				return entry.first;
-	}
-	else {
-		auto it = _vfnum2id.find(_vfStack.top());
-		if (it == _vfnum2id.end())
-			return -1;
-		for (const auto &entry : it->second)
-			if (entry.second == id)
-				return entry.first;
+	if (id >= 0 && size_t(id) < _fonts.size()) {
+		const Num2IdMap *idmap = &_num2id;
+		if (!_vfStack.empty()) {
+			auto it = _vfnum2id.find(_vfStack.top());
+			idmap = it != _vfnum2id.end() ? &it->second : nullptr;
+		}
+		if (idmap) {
+			auto it = find_if(idmap->begin(), idmap->end(), [&](const pair<uint32_t,int> &entry) {
+				return entry.second == id;
+			});
+			if (it != idmap->end())
+				return it->first;
+		}
 	}
 	return -1;
 }
