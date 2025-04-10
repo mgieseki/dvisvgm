@@ -231,8 +231,7 @@ bool PsSpecialHandler::process (const string &prefix, istream &is, SpecialAction
 					fileType = FileType::BITMAP;
 			}
 			map<string,string> attr;
-			in.parseAttributes(attr, false);
-			imgfile(fileType, fname, attr);
+			imgfile(fileType, fname, in.parseAttributes(false));
 		}
 	}
 	else if (prefix == "ps::") {
