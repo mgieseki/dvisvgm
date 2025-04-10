@@ -58,6 +58,11 @@ TEST_F(TFMReaderTest, properties) {
 	EXPECT_DOUBLE_EQ(tfm->getDesignSize(), 10.0*72.0/72.27);
 }
 
+TEST_F(TFMReaderTest, ascent_descent) {
+	ASSERT_NE(tfm, nullptr);
+	EXPECT_DOUBLE_EQ(tfm->getAscent(), 0.75*tfm->getDesignSize());
+	EXPECT_DOUBLE_EQ(tfm->getDescent(), 0.25*tfm->getDesignSize());
+}
 
 TEST_F(TFMReaderTest, charWidth) {
 	ASSERT_NE(tfm, nullptr);

@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <fstream>
 #include <vector>
 #include "Length.hpp"
@@ -83,10 +84,8 @@ void TFM::readTables (StreamReader &reader, int nw, int nh, int nd, int ni) {
 	read_words(reader, _heightTable, nh);
 	read_words(reader, _depthTable, nd);
 	read_words(reader, _italicTable, ni);
-	for (FixWord h : _heightTable)
-		_ascent = max(_ascent, h);
-	for (FixWord d : _depthTable)
-		_descent = max(_descent, d);
+	_ascent = nh > 0 ? *std::max_element(_heightTable.begin(), _heightTable.end()) : 0;
+	_descent = nd > 0 ? *std::max_element(_depthTable.begin(), _depthTable.end()) : 0;
 }
 
 
