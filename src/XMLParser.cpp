@@ -185,8 +185,7 @@ XMLElement* XMLParser::openElement (const string &tag) {
 	string name = ir.getString("/ \t\n\r");
 	ir.skipSpace();
 	unique_ptr<XMLElement> elemNode{createElementPtr(name)};
-	for (const auto &attrpair : ir.parseAttributes(true, "\"'"))
-		elemNode->addAttribute(attrpair.first, attrpair.second);
+	elemNode->addAttributes(ir.parseAttributes(true, "\"'"));
 	ir.skipSpace();
 	XMLElement *elemPtr = elemNode.get();
 	if (ir.peek() == '/')       // end of empty element tag

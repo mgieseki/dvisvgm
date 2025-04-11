@@ -111,6 +111,7 @@ class XMLElement : public XMLNode {
 	public:
 		struct Attribute {
 			Attribute (std::string nam, std::string val) : name(std::move(nam)), value(std::move(val)) {}
+			Attribute (std::pair<std::string, std::string> attr) : name(std::move(attr.first)), value(std::move(attr.second)) {}
 			bool inheritable () const;
 			std::string name;
 			std::string value;
@@ -127,6 +128,7 @@ class XMLElement : public XMLNode {
 		void clear () override;
 		void addAttribute (const std::string &name, const std::string &value);
 		void addAttribute (const std::string &name, double value);
+		void addAttributes (const std::map<std::string, std::string> &attribs);
 		void removeAttribute (const std::string &name);
 		XMLNode* append (std::unique_ptr<XMLNode> child);
 		XMLNode* append (const std::string &str);

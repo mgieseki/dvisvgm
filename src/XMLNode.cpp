@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iterator>
 #include <list>
 #include <map>
 #include <sstream>
@@ -133,6 +134,12 @@ void XMLElement::addAttribute (const string &name, const string &value) {
 
 void XMLElement::addAttribute (const string &name, double value) {
 	addAttribute(name, XMLString(value));
+}
+
+
+void XMLElement::addAttributes (const map<string, string> &attribs) {
+	for (auto &attr : attribs)
+		_attributes.emplace_back(attr);
 }
 
 
