@@ -32,9 +32,9 @@ class Pair {
 		explicit Pair (T x=0, T y=0) : _x(x), _y(y) {}
 		template <typename U> Pair (const Pair<U> &p) : _x(U(p.x())), _y(U(p.y())) {}
 		Pair (const Pair &p) =default;
-		Pair (Pair &&p) =default;
+		Pair (Pair &&p) noexcept =default;
 		Pair& operator = (const Pair &p) =default;
-		Pair& operator = (Pair &&p) =default;
+		Pair& operator = (Pair &&p) noexcept =default;
 		Pair operator += (const Pair &p)       {_x += p._x; _y += p._y; return *this;}
 		Pair operator -= (const Pair &p)       {_x -= p._x; _y -= p._y; return *this;}
 		Pair operator *= (T c)                 {_x *= c; _y *= c; return *this;}
