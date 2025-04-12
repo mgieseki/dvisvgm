@@ -209,7 +209,7 @@ void CommandLine::help (ostream &os, int mode) const {
 		}
 	}
 	if (mode > 0) {
-		bool (*isless)(const OptSectPair&, const OptSectPair&) = [](const OptSectPair &p1, const OptSectPair &p2) {
+		auto isless = +[](const OptSectPair &p1, const OptSectPair &p2) {
 			return p1.first->longName() < p2.first->longName();
 		};
 		if (mode == 1) {
