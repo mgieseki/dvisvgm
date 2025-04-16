@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <cstring>
 #include <sstream>
 #include <vector>
@@ -42,8 +43,9 @@ static double read_double (istream &is) {
  *  @param[in]  is stream to be read from
  *  @param[out] vec the resulting values */
 static void read_doubles (istream &is, vector<double> &vec) {
-	for (double &val : vec)
-		val = read_double(is);
+	std::generate(vec.begin(), vec.end(), [&is]() {
+		return read_double(is);
+	});
 }
 
 

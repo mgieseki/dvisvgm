@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <cstring>
 #include <utility>
 #include "Calculator.hpp"
@@ -328,8 +329,9 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 				}
 				else if (c == 'a' || c == 'f') {  // "abs" or "fix"
 					Length lengths[4];
-					for (Length &len : lengths)
-						len = read_length(ir);
+					std::generate(begin(lengths), end(lengths), [&ir]() {
+						return read_length(ir);
+					});
 					BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);
 					ir.skipSpace();
 					if (ir.check("transform"))
