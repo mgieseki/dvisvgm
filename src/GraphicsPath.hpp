@@ -57,8 +57,9 @@ class Command : public CommandBase {
  		 *  @params[in] matrix describes the affine transformation to apply
 		 *  @params[in] currentPoint the untransformed end point of the preceding command */
 		void transform (const Matrix &matrix, const Pair<T> &currentPoint) {
-			for (Pair<T> &p : points)
-				p = matrix * p;
+			std::transform(points.begin(), points.end(), points.begin(), [&matrix](const Pair<T> &p) {
+				return matrix * p;
+			});
 		}
 
 		/** Returns true if all points are identical to those of another command. */

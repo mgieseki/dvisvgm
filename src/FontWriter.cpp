@@ -58,11 +58,11 @@ const FontWriter::FontFormatInfo* FontWriter::fontFormatInfo (FontFormat format)
 /** Returns the names of all supported font formats. */
 vector<string> FontWriter::supportedFormats () {
 	vector<string> formats;
-	for (const FontFormatInfo &info : _formatInfos)
-		formats.push_back(info.formatstr_short);
+	std::transform(_formatInfos.begin(), _formatInfos.end(), std::back_inserter(formats), [](const FontFormatInfo &info) {
+		return info.formatstr_short;
+	});
 	return formats;
 }
-
 
 #include <config.h>
 

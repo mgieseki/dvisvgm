@@ -387,8 +387,9 @@ BoundingBox CubicBezier::getBBox () const {
 
 
 CubicBezier& CubicBezier::transform (const Matrix &matrix) {
-	for (auto &point : _points)
-		point = matrix * point;
+	std::transform(begin(_points), end(_points), begin(_points), [&matrix](const DPair &p) {
+		return matrix * p;
+	});
 	return *this;
 }
 
