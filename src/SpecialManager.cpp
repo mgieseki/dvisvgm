@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <iomanip>
 #include <map>
 #include <sstream>
@@ -114,11 +115,11 @@ SpecialHandler* SpecialManager::findHandlerByPrefix (const string &prefix) const
  *  @param[in] name name of handler to look for, e.g. "papersize"
  *  @return in case of success: pointer to handler, 0 otherwise */
 SpecialHandler* SpecialManager::findHandlerByName (const string &name) const {
-	for (auto &handler : _handlerPool) {
-		if (handler->name() == name)
-			return handler.get();
-	}
-	return nullptr;
+	using HandlerPtr = unique_ptr<SpecialHandler>;
+	auto it = std::find_if(_handlerPool.begin(), _handlerPool.end(), [=](const HandlerPtr &hptr) {
+		return hptr->name() == name;
+	});
+	return it != _handlerPool.end() ? it->get() : nullptr;
 }
 
 

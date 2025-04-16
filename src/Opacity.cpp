@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include "Opacity.hpp"
 
 using namespace std;
@@ -59,7 +60,7 @@ static string to_lower_drop_nonalpha (const string &str) {
 
 
 Opacity::BlendMode Opacity::blendMode (const std::string &name) {
-	struct {
+	struct NamedMode {
 		const char *name;
 		BlendMode mode;
 	} modes[] = {
@@ -81,11 +82,10 @@ Opacity::BlendMode Opacity::blendMode (const std::string &name) {
 		{"luminosity", BM_LUMINOSITY}
 	};
 	string compname = to_lower_drop_nonalpha(name);
-	for (const auto &m : modes) {
-		if (compname == m.name)
-			return m.mode;
-	}
-	return BM_NORMAL;
+	auto it = std::find_if(begin(modes), end(modes), [&compname](const NamedMode &m) {
+		return compname == m.name;
+	});
+	return it != end(modes) ? it->mode : BM_NORMAL;
 }
 
 

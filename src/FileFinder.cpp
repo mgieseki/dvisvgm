@@ -31,6 +31,7 @@
 	#endif
 #endif
 
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <map>
@@ -145,10 +146,10 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 			suffixes.emplace_back("ttc");
 			suffixes.emplace_back("dfont");
 		}
-		for (const auto &suffix : suffixes) {
-			if (const char *path = _miktex->findFile((fname+"."+suffix).c_str()))
-				return path;
-		}
+		auto it = std::find_if(suffixes.begin(), suffixes.end(), [&](const std::string &suffix) {
+			return _miktex->findFile((fname+"."+suffix).c_str()) != nullptr;
+		});
+		return it != suffixes.end() ? it->c_str() : nullptr;
 	}
 	catch (const MessageException &) {
 		return nullptr;
@@ -190,8 +191,8 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 		std::free(path);
 		return _pathbuf.c_str();
 	}
-#endif  // !MIKTEX
 	return nullptr;
+#endif  // !MIKTEX
 }
 
 
