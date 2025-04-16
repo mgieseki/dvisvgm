@@ -23,6 +23,7 @@
 #include <clipper.hpp>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <potracelib.h>
 #include <sstream>
 #include <vector>
@@ -234,9 +235,9 @@ class VersionInfo {
 			sort(_versionPairs.begin(), _versionPairs.end(), [](const Entry &e1, const Entry &e2) {
 				return util::tolower(e1.first) < util::tolower(e2.first);
 			});
-			size_t maxNameLength=0;
-			for (const Entry &versionPair : _versionPairs)
-				maxNameLength = max(maxNameLength, versionPair.first.length());
+			size_t maxNameLength = std::accumulate(_versionPairs.begin(), _versionPairs.end(), 0, [](size_t len, const Entry &e) {
+				return max(len, e.first.length());
+			});
 			for (const Entry &versionPair : _versionPairs) {
 				string name = versionPair.first+":";
 				os << left << setw(maxNameLength+2) << name;

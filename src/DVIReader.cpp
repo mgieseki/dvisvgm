@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <algorithm>
+#include <numeric>
 #include <sstream>
 #include <vectorstream.hpp>
 #include "Color.hpp"
@@ -603,12 +604,12 @@ void DVIReader::cmdXFontDef (int) {
  *  @param[in] font assigned font
  *  @return width in bp units */
 static double string_width (const vector<uint16_t> &glyphs, const Font *font) {
-	double width=0;
 	if (auto nfont = font_cast<const NativeFont*>(font)) {
-		for (auto glyph: glyphs)
-			width += nfont->hAdvance(Character(Character::INDEX, glyph));
+		return std::accumulate(glyphs.begin(), glyphs.end(), 0.0, [&nfont](double w, uint16_t gid) {
+			return w + nfont->hAdvance(Character(Character::INDEX, gid));
+		});
 	}
-	return width;
+	return 0;
 }
 
 

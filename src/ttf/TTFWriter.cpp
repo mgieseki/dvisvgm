@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <cmath>
 #include <iterator>
 #include <fstream>
@@ -138,9 +139,9 @@ std::list<TableBuffer> TTFWriter::createTableBuffers () const {
 	buffers.emplace_front(records.createBuffer());
 	buffers.emplace_front(header.createBuffer());
 	// compute global checksum (checkSumAdjustment entry of head table)
-	uint32_t checksum=0;
-	for (const TableBuffer &buffer : buffers)
-		checksum += buffer.checksum();
+	uint32_t checksum = std::accumulate(buffers.begin(), buffers.end(), 0, [](uint32_t sum, const TableBuffer &buf) {
+		return sum + buf.checksum();
+	});
 	checksum = 0xB1B0AFBA-checksum;
 	// write checksum directly to the head table buffer
 	auto headBufferIt = find_if(buffers.begin(), buffers.end(), [](const TableBuffer &buf) {
