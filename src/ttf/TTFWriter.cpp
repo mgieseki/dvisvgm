@@ -83,10 +83,9 @@ class TTFTableRecords : public TTFTable {
 		uint32_t tag () const override {return 0;}
 
 		void write (ostream &os) const override {
-			int numTables = 0;
-			for (const TableBuffer &buffer : _buffers)
-				if (buffer.tag())
-					numTables++;
+			int numTables = std::count_if(_buffers.begin(), _buffers.end(), [](const TableBuffer &buffer) {
+				return buffer.tag() != 0;
+			});
 			uint32_t offset = 12 + 16*numTables;
 			for (const TableBuffer &buffer : _buffers) {
 				if (buffer.tag()) {
