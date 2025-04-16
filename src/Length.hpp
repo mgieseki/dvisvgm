@@ -43,7 +43,7 @@ class Length {
 		explicit constexpr Length (long double pt) : _pt(static_cast<double>(pt)) {}
 		Length (double val, Unit unit)                  {set(val, unit);}
 		Length (double val, const std::string &unitstr) {set(val, unitstr);}
-		explicit Length (const std::string &lenstr)     {set(lenstr);}
+		Length (const std::string &lenstr) {set(lenstr);}
 		void set (double val, Unit unit);
 		void set (double val, std::string unit);
 		void set (const std::string &lenstr);

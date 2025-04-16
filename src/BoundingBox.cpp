@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <algorithm>
+#include <iterator>
 #include <sstream>
 #include "BoundingBox.hpp"
 #include "Matrix.hpp"
@@ -75,10 +76,9 @@ vector<Length> BoundingBox::extractLengths (string boxstr) {
 	boxstr = util::replace(boxstr, ",", " ");
 	boxstr = util::normalize_space(boxstr);
 	vector<string> lengthStrings = util::split(boxstr, " ");
-	for (const string &lenstr : lengthStrings) {
-		if (!lenstr.empty())
-			lengths.emplace_back(lenstr);
-	}
+	std::copy_if(lengthStrings.begin(), lengthStrings.end(), back_inserter(lengths), [](const string &lenstr) {
+		return !lenstr.empty();
+	});
 	return lengths;
 }
 

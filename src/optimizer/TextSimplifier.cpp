@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <vector>
 #include "AttributeExtractor.hpp"
 #include "TextSimplifier.hpp"
@@ -39,10 +40,10 @@ static XMLElement::Attributes common_inheritable_attributes (const vector<XMLEle
 		if (commonAttribs.empty()) {
 			if (intersected)
 				break;
-			for (const auto &attrib : elem->attributes()) {
-				if (attrib.inheritable())
-					commonAttribs.push_back(attrib);
-			}
+			auto attribs = elem->attributes();
+			std::copy_if(attribs.begin(), attribs.end(), back_inserter(commonAttribs), [](const XMLElement::Attribute &attrib) {
+				return attrib.inheritable();
+			});
 		}
 		else {
 			for (auto it = commonAttribs.begin(); it != commonAttribs.end();) {
