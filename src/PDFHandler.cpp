@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include <algorithm>
 #include <fstream>
 #include <iterator>
 #include <limits>
@@ -227,10 +228,8 @@ void PDFHandler::initPage (int pageno, unique_ptr<SVGElement> context) {
 	string content = mtShow("pages/" + to_string(_pageno) + "/Contents", pattern);
 	if (content.empty())
 		content = mtShow("pages/" + to_string(_pageno) + "/Contents/*", pattern);
-	for (const string &entry : util::split(content, "\n")) {
-		if (!entry.empty())
-			_imgSeq.push_back(entry);
-	}
+	_imgSeq = util::split(content, "\n");
+	_imgSeq.erase(std::remove_if(_imgSeq.begin(), _imgSeq.end(), util::IsEmptyString()), _imgSeq.end());
 }
 
 

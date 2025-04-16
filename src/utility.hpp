@@ -60,6 +60,10 @@ inline double clip (double x, double min, double max) {
 
 namespace util {
 
+struct IsEmptyString {
+	bool operator () (const std::string &str) const {return str.empty();}
+};
+
 template <typename T>
 std::string tohex (T val) {
 	std::ostringstream oss;

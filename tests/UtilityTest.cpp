@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <sstream>
@@ -225,4 +226,19 @@ TEST(UtilityTest, read_double) {
 	EXPECT_TRUE(util::read_double(iss, value));
 	EXPECT_NEAR(value, .4, 0.000001);
 	EXPECT_FALSE(util::read_double(iss, value));  // eof, no further characters to read
+}
+
+
+TEST(UtilityTest, is_empty_string) {
+	EXPECT_TRUE(util::IsEmptyString()(""));
+	EXPECT_FALSE(util::IsEmptyString()("x"));
+	vector<string> vec{"1", "", " ", "2", "3", "", "4"};
+	int count = std::count_if(vec.begin(), vec.end(), util::IsEmptyString());
+	EXPECT_EQ(count, 2);
+	EXPECT_EQ(vec.size(), 7u);
+	vec.erase(std::remove_if(vec.begin(), vec.end(), util::IsEmptyString()), vec.end());
+	EXPECT_EQ(vec.size(), 5u);
+	ostringstream oss;
+	std::copy(vec.begin(), vec.end(), ostream_iterator<string>(oss));
+	EXPECT_EQ(oss.str(), "1 234");
 }
