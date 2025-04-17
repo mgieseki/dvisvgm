@@ -31,8 +31,8 @@ using namespace std;
  *  not all but only selected DVI pages are converted. */
 void BgColorSpecialHandler::preprocess (const string&, std::istream &is, SpecialActions &actions) {
 	Color color = ColorSpecialHandler::readColor(is);
-	unsigned pageno = actions.getCurrentPageNumber();
 	if (_pageColors.empty() || _pageColors.back().second != color) {
+		unsigned pageno = actions.getCurrentPageNumber();
 		if (!_pageColors.empty() && _pageColors.back().first == pageno)
 			_pageColors.back().second = color;
 		else

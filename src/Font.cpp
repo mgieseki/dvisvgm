@@ -407,8 +407,6 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 	int count = 0;
 	if (type() == Type::MF && !CACHE_PATH.empty()) {
 		if (const FontMetrics *metrics = getMetrics()) {
-			int fchar = metrics->firstChar();
-			int lchar = metrics->lastChar();
 			string gfname;
 			if (createGF(gfname)) {
 				_cache.read(name(), CACHE_PATH);
@@ -416,6 +414,8 @@ int PhysicalFont::traceAllGlyphs (bool includeCached, GFGlyphTracer::Callback *c
 				GFGlyphTracer tracer(gfname, unitsPerEm()/ds, cb);
 				Glyph glyph;
 				tracer.setGlyph(glyph);
+				int fchar = metrics->firstChar();
+				int lchar = metrics->lastChar();
 				for (int i=fchar; i <= lchar; i++) {
 					if (includeCached || !_cache.getGlyph(i)) {
 						glyph.clear();
