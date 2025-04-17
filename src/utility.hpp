@@ -60,7 +60,7 @@ inline double clip (double x, double min, double max) {
 
 namespace util {
 
-struct IsEmptyString {
+struct IsEmptyString : std::function<bool(std::string)> {
 	bool operator () (const std::string &str) const {return str.empty();}
 };
 
