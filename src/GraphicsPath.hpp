@@ -145,7 +145,7 @@ void ArcTo<T>::transform (const Matrix &matrix, const Pair<T> &currentPoint) {
 
 /** Returns true if two path command objects are identical (same command and same parameters). */
 template <typename Cmd1, typename Cmd2>
-inline typename std::enable_if<std::is_base_of<CommandBase, Cmd1>::value, bool>::type
+typename std::enable_if<std::is_base_of<CommandBase, Cmd1>::value, bool>::type
 operator == (const Cmd1 &cmd1, const Cmd2 &cmd2) {
 	if (std::is_convertible<Cmd1, Cmd2>::value && std::is_convertible<Cmd2, Cmd1>::value)
 		return cmd1.pointsEqual(cmd2);
@@ -154,7 +154,7 @@ operator == (const Cmd1 &cmd1, const Cmd2 &cmd2) {
 
 /** Returns true if two path command objects differ (different commands or different parameters). */
 template <typename Cmd1, typename Cmd2>
-inline typename std::enable_if<std::is_base_of<CommandBase, Cmd1>::value, bool>::type
+typename std::enable_if<std::is_base_of<CommandBase, Cmd1>::value, bool>::type
 operator != (const Cmd1 &cmd1, const Cmd2 &cmd2) {
 	if (std::is_convertible<Cmd1, Cmd2>::value && std::is_convertible<Cmd2, Cmd1>::value)
 		return !cmd1.pointsEqual(cmd2);

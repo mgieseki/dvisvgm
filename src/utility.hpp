@@ -50,7 +50,7 @@ double integral (double t0, double t1, int n, const std::function<double(double)
 
 /** Signum function (returns x/abs(x) if x != 0, and 0 otherwise). */
 template <typename T>
-inline int sgn (T x) {return (x > T(0)) - (x < T(0));}
+int sgn (T x) {return (x > T(0)) - (x < T(0));}
 
 inline double clip (double x, double min, double max) {
 	return x < min ? min : (x > max ? max : x);
@@ -154,7 +154,7 @@ inline void base64_copy (std::istream &is, std::ostream &os, int wrap=0) {
  *  Constructs an object of class T on the heap and returns a unique_ptr<T> to it.
  *  @param[in] args arguments forwarded to an constructor of T */
 template<typename T, typename... Args>
-inline std::unique_ptr<T> make_unique (Args&&... args) {
+std::unique_ptr<T> make_unique (Args&&... args) {
 	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
@@ -163,13 +163,13 @@ inline std::unique_ptr<T> make_unique (Args&&... args) {
  *  Constructs an array of class T on the heap and returns a unique_ptr<T>(size) to it.
  *  @param[in] size size of array */
 template<typename T>
-inline std::unique_ptr<T> make_unique (std::size_t size) {
+std::unique_ptr<T> make_unique (std::size_t size) {
 	return std::unique_ptr<T>(new typename std::remove_extent<T>::type[size]());
 }
 
 
 template<typename T, typename U>
-inline std::unique_ptr<T> static_unique_ptr_cast (std::unique_ptr<U> &&old){
+std::unique_ptr<T> static_unique_ptr_cast (std::unique_ptr<U> &&old){
 	return std::unique_ptr<T>{static_cast<T*>(old.release())};
 }
 

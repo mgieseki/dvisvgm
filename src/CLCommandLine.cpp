@@ -131,7 +131,7 @@ void CommandLine::parseLongOption (istream &is) {
 	vector<Option*> options = lookupOption(optname);
 	if (options.empty())
 		throw CommandLineException("unknown option --"+optname);
-	else if (options.size() == 1) {
+	if (options.size() == 1) {
 		if (!options[0]->parse(is, true))
 			type_error(*options[0], false);
 	}
