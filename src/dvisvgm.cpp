@@ -293,12 +293,11 @@ static void init_fontmap (const CommandLine &cmdline) {
 		mapseq = cmdline.fontmapOpt.value();
 	bool additional = !mapseq.empty() && strchr("+-=", mapseq[0]);
 	if (mapseq.empty() || additional) {
-		bool found = false;
-		for (string mapfile : {"dvisvgm", "ps2pk", "pdftex", "dvipdfm", "psfonts"}) {
-			if ((found = FontMap::instance().read(mapfile+".map")))
-				break;
-		}
-		if (!found)
+		string mapfiles[] = {"dvisvgm", "ps2pk", "pdftex", "dvipdfm", "psfonts"};
+		auto it = algo::find_if(mapfiles, [](const string &mapfile) {
+			return FontMap::instance().read(mapfile+".map");
+		});
+		if (it == std::end(mapfiles))
 			Message::wstream(true) << "none of the default map files could be found\n";
 	}
 	if (!mapseq.empty())
