@@ -18,6 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
+#include "algorithm.hpp"
 #include "Message.hpp"
 #include "PapersizeSpecialHandler.hpp"
 #include "SpecialActions.hpp"
@@ -66,7 +67,7 @@ void PapersizeSpecialHandler::storePaperSize (unsigned pageno, Length width, Len
 /** Applies the previously recorded size to a given page. */
 void PapersizeSpecialHandler::applyPaperSize (unsigned pageno, SpecialActions &actions) {
 	// find page n >= pageno that contains a papersize special
-	auto lb_it = lower_bound(_pageSizes.begin(), _pageSizes.end(), PageSize(pageno, DoublePair()),
+	auto lb_it = algo::lower_bound(_pageSizes, PageSize(pageno, DoublePair()),
 		[](const PageSize &ps1, const PageSize &ps2) {
 			// order PageSize objects by page number
 			return ps1.first < ps2.first;

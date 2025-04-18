@@ -18,13 +18,13 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cctype>
 #include <cstddef>
 #include <iomanip>
 #include <sstream>
 #include <tuple>
 #include <xxhash.h>
+#include "algorithm.hpp"
 #include "Unicode.hpp"
 
 using namespace std;
@@ -45,7 +45,7 @@ bool Unicode::isValidCodepoint (uint32_t c) {
 		{0xd800, 0xdfff},  // High Surrogates are not allowed in XML
 		{0xfdd0, 0xfdef}   // non-characters for internal use by applications
 	};
-	return none_of(begin(ranges), end(ranges), [&](const CPRange &range) {
+	return algo::none_of(ranges, [&](const CPRange &range) {
 		return c <= range.second && c >= range.first;
 	});
 }
@@ -84,7 +84,7 @@ uint32_t Unicode::charToCodepoint (uint32_t c, bool permitSpace) {
 		{0x10fffe, 0x10ffff, 0xe887}
 	};
 	if (!permitSpace || c != 0x20) {
-		auto it = find_if(begin(ranges), end(ranges), [&](const Triple &range) {
+		auto it = algo::find_if(ranges, [&](const Triple &range) {
 			return c < std::get<0>(range) || c <= std::get<1>(range);
 		});
 		if (it != end(ranges) && c >= std::get<0>(*it))
@@ -214,7 +214,7 @@ uint32_t Unicode::toLigature (const string &nonlig) {
 		{u8"VV",  0x0057}, {u8"tz",  0x0077},
 		{u8"VY",  0xA760}, {u8"tz",  0xA761},
 	};
-	auto it = find_if(begin(ligatures), end(ligatures), [&nonlig](const Ligature &l) {
+	auto it = algo::find_if(ligatures, [&nonlig](const Ligature &l) {
 		return l.nonlig == nonlig;
 	});
 	return it != end(ligatures) ? it->lig : 0;
@@ -282,7 +282,7 @@ int32_t Unicode::aglNameToCodepoint (const string &name) {
 
 	uint32_t hash = XXH32(&name[0], name.length(), 0);
 	const HashCodepointPair cmppair = {hash, 0};
-	auto it = lower_bound(hash2unicode.begin(), hash2unicode.end(), cmppair,
+	auto it = algo::lower_bound(hash2unicode, cmppair,
 		[](const HashCodepointPair &p1, const HashCodepointPair &p2) {
 			return p1.hash < p2.hash;
 		}

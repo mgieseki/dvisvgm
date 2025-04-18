@@ -91,7 +91,7 @@ string Subprocess::read (const SearchPattern &pattern, bool *error) {
 			overlappos = max(bufendpos - min(bufendpos, MAX_OVERLAP), matchendpos);
 		else
 			overlappos = matchendpos - min(MAX_OVERLAP, matchendpos);
-		copy(_rdbuf.begin()+overlappos, _rdbuf.begin()+bufendpos, _rdbuf.begin());
+		std::copy(_rdbuf.begin()+overlappos, _rdbuf.begin()+bufendpos, _rdbuf.begin());
 		_bufstartpos = bufendpos-overlappos;
 	}
 	return result;

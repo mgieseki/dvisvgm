@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
+#include "algorithm.hpp"
 #include "Opacity.hpp"
 
 using namespace std;
@@ -82,7 +82,7 @@ Opacity::BlendMode Opacity::blendMode (const std::string &name) {
 		{"luminosity", BM_LUMINOSITY}
 	};
 	string compname = to_lower_drop_nonalpha(name);
-	auto it = std::find_if(begin(modes), end(modes), [&compname](const NamedMode &m) {
+	auto it = algo::find_if(modes, [&compname](const NamedMode &m) {
 		return compname == m.name;
 	});
 	return it != end(modes) ? it->mode : BM_NORMAL;

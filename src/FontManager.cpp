@@ -18,11 +18,11 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
 #include <set>
+#include "algorithm.hpp"
 #include "CMap.hpp"
 #include "Font.hpp"
 #include "fonts/Base14Fonts.hpp"
@@ -66,7 +66,7 @@ int FontManager::fontID (int n) const {
  *  @param[in] font pointer to font object to be identified
  *  @return non-negative font ID if font was found, -1 otherwise */
 int FontManager::fontID (const Font *font) const {
-	auto it = find_if(_fonts.begin(), _fonts.end(), [&](const unique_ptr<Font> &f) {
+	auto it = algo::find_if(_fonts, [&](const unique_ptr<Font> &f) {
 		return f.get() == font;
 	});
 	return it != _fonts.end() ? std::distance(_fonts.begin(), it) : -1;
@@ -86,7 +86,7 @@ int FontManager::fontID (const string &name) const {
 
 int FontManager::fontID (string name, double ptsize) const {
 	std::replace(name.begin(), name.end(), '+', '-');
-	auto it = find_if(_fonts.begin(), _fonts.end(), [&](const unique_ptr<Font> &f) {
+	auto it = algo::find_if(_fonts, [&](const unique_ptr<Font> &f) {
 		auto nativeFont = font_cast<NativeFont*>(f.get());
 		return nativeFont && nativeFont->name() == name && nativeFont->scaledSize() == ptsize;
 	});
@@ -102,7 +102,7 @@ int FontManager::fontnum (int id) const {
 			idmap = it != _vfnum2id.end() ? &it->second : nullptr;
 		}
 		if (idmap) {
-			auto it = find_if(idmap->begin(), idmap->end(), [&](const pair<uint32_t,int> &entry) {
+			auto it = algo::find_if(*idmap, [&](const pair<uint32_t,int> &entry) {
 				return entry.second == id;
 			});
 			if (it != idmap->end())
@@ -307,7 +307,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &filename, int fon
 	else {
 		if (!FileSystem::exists(path)) {
 			const char *fontFormats[] = {nullptr, "otf", "ttf"};
-			auto it = std::find_if(begin(fontFormats), end(fontFormats), [&](const char *format) {
+			auto it = algo::find_if(fontFormats, [&](const char *format) {
 				return FileFinder::instance().lookup(filename, format, false) != nullptr;
 			});
 			path = it != end(fontFormats) ? *it : nullptr;

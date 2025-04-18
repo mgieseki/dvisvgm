@@ -19,6 +19,7 @@
 *************************************************************************/
 
 #include <numeric>
+#include "algorithm.hpp"
 #include "InputBuffer.hpp"
 #include "InputReader.hpp"
 #include "PageRanges.hpp"
@@ -111,7 +112,7 @@ PageRanges PageRanges::filter (FilterFunc filterFunc) const {
 
 /** Returns the number of pages. */
 size_t PageRanges::numberOfPages () const {
-	return accumulate(begin(), end(), 0, [](int sum, const Range &range) {
+	return algo::accumulate(*this, 0, [](int sum, const Range &range) {
 		return sum + range.second - range.first + 1;
 	});
 }

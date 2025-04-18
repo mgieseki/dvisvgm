@@ -18,10 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <array>
 #include <string>
 #include <vector>
+#include "../algorithm.hpp"
 #include "GroupCollapser.hpp"
 #include "TransformSimplifier.hpp"
 #include "../XMLNode.hpp"
@@ -146,7 +146,7 @@ bool GroupCollapser::collapsible (const XMLElement &element) {
 	static const char *names[] = {
 		"animate", "animateColor", "animateMotion", "animateTransform", "set"
 	};
-	auto it = find_if(begin(names), end(names), [&](const string &name) {
+	auto it = algo::find_if(names, [&](const string &name) {
 		return element.name() == name;
 	});
 	return it == end(names);
@@ -172,7 +172,7 @@ bool GroupCollapser::unwrappable (const XMLElement &source, const XMLElement &de
 	static const char *attribs[] = {
 		"class", "id", "filter", "mask", "style"
 	};
-	auto it = find_if(begin(attribs), end(attribs), [&](const string &name) {
+	auto it = algo::find_if(attribs, [&](const string &name) {
 		return source.hasAttribute(name) || dest.hasAttribute(name);
 	});
 	return it == end(attribs);

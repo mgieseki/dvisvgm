@@ -18,10 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <array>
 #include <map>
 #include <set>
+#include "../algorithm.hpp"
 #include "SVGOptimizer.hpp"
 #include "../SVGTree.hpp"
 
@@ -125,7 +125,7 @@ bool SVGOptimizer::checkModuleString (const string &namestr, vector<string> &unk
 
 
 OptimizerModule* SVGOptimizer::getModule (const string &name) const {
-	auto it = find_if(_moduleEntries.begin(), _moduleEntries.end(), [&](const ModuleEntry &entry) {
+	auto it = algo::find_if(_moduleEntries, [&](const ModuleEntry &entry) {
 		return entry.modname == name;
 	});
 	if (it != _moduleEntries.end())

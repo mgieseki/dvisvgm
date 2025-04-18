@@ -19,7 +19,6 @@
 *************************************************************************/
 
 #include <config.h>
-#include <algorithm>
 #include <clipper.hpp>
 #include <fstream>
 #include <iostream>
@@ -28,6 +27,7 @@
 #include <sstream>
 #include <vector>
 #include <zlib.h>
+#include "algorithm.hpp"
 #include "CommandLine.hpp"
 #include "DVIToSVG.hpp"
 #include "DVIToSVGActions.hpp"
@@ -232,10 +232,10 @@ class VersionInfo {
 		/** Writes the version information to the given output stream. */
 		void write (ostream &os) {
 			using Entry = pair<string,string>;
-			sort(_versionPairs.begin(), _versionPairs.end(), [](const Entry &e1, const Entry &e2) {
+			algo::sort(_versionPairs, [](const Entry &e1, const Entry &e2) {
 				return util::tolower(e1.first) < util::tolower(e2.first);
 			});
-			size_t maxNameLength = std::accumulate(_versionPairs.begin(), _versionPairs.end(), 0, [](size_t len, const Entry &e) {
+			size_t maxNameLength = algo::accumulate(_versionPairs, 0, [](size_t len, const Entry &e) {
 				return max(len, e.first.length());
 			});
 			for (const Entry &versionPair : _versionPairs) {

@@ -18,9 +18,9 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cstdint>
 #include <string>
+#include "algorithm.hpp"
 #include "Length.hpp"
 #include "OFM.hpp"
 
@@ -104,8 +104,8 @@ void OFM::readTables (StreamReader &reader, const FileDimensions &dim) {
 	reader.skip(8*dim.nl + 4*dim.nk + 8*dim.ne);
 	read_words(reader, _params, min(dim.np, 7u));  // we only need params 0-6
 	_params.resize(7, 0);   // ensure 7 parameters
-	_ascent = dim.nh > 0 ? *std::max_element(_heightTable.begin(), _heightTable.end()) : 0;
-	_descent = dim.nd > 0 ? *std::max_element(_depthTable.begin(), _depthTable.end()) : 0;
+	_ascent = dim.nh > 0 ? *algo::max_element(_heightTable) : 0;
+	_descent = dim.nd > 0 ? *algo::max_element(_depthTable) : 0;
 }
 
 

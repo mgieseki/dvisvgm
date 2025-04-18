@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <numeric>
+#include "algorithm.hpp"
 #include "RangeMap.hpp"
 
 using namespace std;
@@ -179,7 +179,7 @@ uint32_t RangeMap::valueAt (uint32_t c) const {
 
 /** Returns the number of values mapped. */
 size_t RangeMap::numValues () const {
-	return std::accumulate(_ranges.begin(), _ranges.end(), size_t(0), [](size_t sum, const Range &range) {
+	return algo::accumulate(_ranges, size_t(0), [](size_t sum, const Range &range) {
 		return sum+range.max()-range.min()+1;
 	});
 }

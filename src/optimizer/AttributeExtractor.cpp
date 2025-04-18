@@ -18,8 +18,8 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <array>
+#include "../algorithm.hpp"
 #include "AttributeExtractor.hpp"
 
 using namespace std;
@@ -120,7 +120,7 @@ bool AttributeExtractor::groupable (const XMLElement &elem) {
 		"mask", "path", "pattern", "polygon", "polyline", "radialGradient", "rect", "set",
 		"style", "switch", "symbol", "text", "title", "use", "view"
 	};
-	return binary_search(begin(names), end(names), elem.name(), [](const string &name1, const string &name2) {
+	return algo::binary_search(names, elem.name(), [](const string &name1, const string &name2) {
 		return name1 < name2;
 	});
 }
@@ -138,7 +138,7 @@ bool AttributeExtractor::extractable (const Attribute &attrib, const XMLElement 
 	static const char *names[] = {
 		"animate", "animateColor", "animateMotion", "animateTransform", "set"
 	};
-	auto it = find_if(begin(names), end(names), [&](const string &name) {
+	auto it = algo::find_if(names, [&](const string &name) {
 		return element.name() == name;
 	});
 	return it == end(names);

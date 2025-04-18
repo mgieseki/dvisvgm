@@ -18,14 +18,13 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cmath>
 #include <iterator>
 #include <fstream>
 #include <list>
-#include <numeric>
 #include <woff2/encode.h>
 #include "TTFWriter.hpp"
+#include "../algorithm.hpp"
 #include "../Font.hpp"
 #include "../utility.hpp"
 
@@ -83,7 +82,7 @@ class TTFTableRecords : public TTFTable {
 		uint32_t tag () const override {return 0;}
 
 		void write (ostream &os) const override {
-			int numTables = std::count_if(_buffers.begin(), _buffers.end(), [](const TableBuffer &buffer) {
+			int numTables = algo::count_if(_buffers, [](const TableBuffer &buffer) {
 				return buffer.tag() != 0;
 			});
 			uint32_t offset = 12 + 16*numTables;
@@ -138,12 +137,12 @@ std::list<TableBuffer> TTFWriter::createTableBuffers () const {
 	buffers.emplace_front(records.createBuffer());
 	buffers.emplace_front(header.createBuffer());
 	// compute global checksum (checkSumAdjustment entry of head table)
-	uint32_t checksum = std::accumulate(buffers.begin(), buffers.end(), 0, [](uint32_t sum, const TableBuffer &buf) {
+	uint32_t checksum = algo::accumulate(buffers, 0, [](uint32_t sum, const TableBuffer &buf) {
 		return sum + buf.checksum();
 	});
 	checksum = 0xB1B0AFBA-checksum;
 	// write checksum directly to the head table buffer
-	auto headBufferIt = find_if(buffers.begin(), buffers.end(), [](const TableBuffer &buf) {
+	auto headBufferIt = algo::find_if(buffers, [](const TableBuffer &buf) {
 		return buf.tag() == TTFTable::name2id("head");
 	});
 	headBufferIt->setData(_head.offsetToChecksum(), checksum);
@@ -206,14 +205,14 @@ void TTFWriter::updateGlobalBbox (uint32_t c, int16_t xmin, int16_t ymin, int16_
  *  @param[in,out] os WOFF2 output stream
  *  @return true on success */
 static bool ttf_to_woff2 (const string &buffer, ostream &os) {
-	const uint8_t* input_data = reinterpret_cast<const uint8_t*>(buffer.data());
+	const auto input_data = reinterpret_cast<const uint8_t*>(buffer.data());
 	size_t output_size = woff2::MaxWOFF2CompressedSize(input_data, buffer.size());
 	string output(output_size, 0);
-	uint8_t* output_data = reinterpret_cast<uint8_t*>(&output[0]);
+	auto output_data = reinterpret_cast<uint8_t*>(&output[0]);
 	woff2::WOFF2Params params;
 	if (woff2::ConvertTTFToWOFF2(input_data, buffer.size(), output_data, &output_size, params)) {
 		output.resize(output_size);
-		copy(output.begin(), output.end(), ostream_iterator<uint8_t>(os));
+		algo::copy(output, ostream_iterator<uint8_t>(os));
 		return true;
 	}
 	return false;
@@ -322,14 +321,14 @@ class WOFFTableRecords : public TTFTable {
 
 
 static bool ttf_to_woff (list<TableBuffer> &&buffers, ostream &os) {
-	size_t ttfSize = std::accumulate(buffers.begin(), buffers.end(), size_t(0), [](size_t sum, const TableBuffer &buf) {
+	size_t ttfSize = algo::accumulate(buffers, size_t(0), [](size_t sum, const TableBuffer &buf) {
 		return sum + buf.paddedSize();
 	});
 	buffers.pop_front();  // remove TTF header
 	buffers.pop_front();  // remove TTF table records
 	for (TableBuffer &buffer : buffers)
 		buffer.compress();
-	size_t woffSize = std::accumulate(buffers.begin(), buffers.end(), size_t(0), [](size_t sum, const TableBuffer &buf) {
+	size_t woffSize = algo::accumulate(buffers, size_t(0), [](size_t sum, const TableBuffer &buf) {
 		return sum + buf.paddedSize();
 	});
 	woffSize += 44 + 20*buffers.size();  // add size of header and table records

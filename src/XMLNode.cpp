@@ -18,12 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <fstream>
 #include <iterator>
 #include <list>
 #include <map>
 #include <sstream>
+#include "algorithm.hpp"
 #include "FileSystem.hpp"
 #include "utility.hpp"
 #include "XMLNode.hpp"
@@ -118,7 +118,7 @@ bool XMLElement::empty (bool ignoreWhitespace) const {
 	if (!_firstChild || !ignoreWhitespace)
 		return _firstChild == nullptr;
 
-	return all_of(begin(), end(), [](const XMLNode *node) {
+	return algo::all_of(*this, [](const XMLNode *node) {
 		return node->toWSNode();
 	});
 }
@@ -144,7 +144,7 @@ void XMLElement::addAttributes (const map<string, string> &attribs) {
 
 
 void XMLElement::removeAttribute (const std::string &name) {
-	_attributes.erase(find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
+	_attributes.erase(algo::find_if(_attributes, [&](const Attribute &attr) {
 		return attr.name == name;
 	}));
 }
@@ -447,7 +447,7 @@ const char* XMLElement::getAttributeValue (const std::string& name) const {
 
 
 XMLElement::Attribute* XMLElement::getAttribute (const string &name) {
-	auto it = find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
+	auto it = algo::find_if(_attributes, [&](const Attribute &attr) {
 		return attr.name == name;
 	});
 	return it != _attributes.end() ? &(*it) : nullptr;
@@ -455,7 +455,7 @@ XMLElement::Attribute* XMLElement::getAttribute (const string &name) {
 
 
 const XMLElement::Attribute* XMLElement::getAttribute (const string &name) const {
-	auto it = find_if(_attributes.begin(), _attributes.end(), [&](const Attribute &attr) {
+	auto it = algo::find_if(_attributes, [&](const Attribute &attr) {
 		return attr.name == name;
 	});
 	return it != _attributes.end() ? &(*it) : nullptr;
@@ -479,7 +479,7 @@ bool XMLElement::Attribute::inheritable () const {
 			"stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "transform",
 			"visibility", "word-spacing", "writing-mode"
 	};
-	return binary_search(std::begin(names), std::end(names), name, [](const string &name1, const string &name2) {
+	return algo::binary_search(names, name, [](const string &name1, const string &name2) {
 		return name1 < name2;
 	});
 }

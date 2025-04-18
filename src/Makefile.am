@@ -49,6 +49,7 @@ endif
 
 libdvisvgm_la_SOURCES = \
 	AGLTable.hpp \
+	algorithm.hpp \
 	BasicDVIReader.hpp           BasicDVIReader.cpp \
 	Bezier.hpp                   Bezier.cpp \
 	BgColorSpecialHandler.hpp    BgColorSpecialHandler.cpp \

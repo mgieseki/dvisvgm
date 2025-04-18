@@ -21,10 +21,10 @@
 #ifndef NUMERICRANGES_HPP
 #define NUMERICRANGES_HPP
 
-#include <algorithm>
 #include <initializer_list>
 #include <list>
 #include <utility>
+#include "algorithm.hpp"
 
 template <class T>
 class NumericRanges {
@@ -149,7 +149,7 @@ void NumericRanges<T>::addRange (T first, T last) {
 
 template <typename T>
 bool NumericRanges<T>::valueExists (T value) const {
-	auto it = std::find_if(_ranges.begin(), _ranges.end(), [&](const Range &r) {
+	auto it = algo::find_if(_ranges, [&](const Range &r) {
 		return value <= r.second && value >= r.first;
 	});
 	return it != _ranges.end();

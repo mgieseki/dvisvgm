@@ -18,9 +18,9 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cstring>
 #include <utility>
+#include "algorithm.hpp"
 #include "Calculator.hpp"
 #include "DvisvgmSpecialHandler.hpp"
 #include "FileFinder.hpp"
@@ -111,7 +111,7 @@ void DvisvgmSpecialHandler::preprocess (const string&, istream &is, SpecialActio
 
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	auto it = find_if(begin(commands), end(commands), [&](const Command &cmd) {
+	auto it = algo::find_if(commands, [&](const Command &cmd) {
 		return cmd.name == cmdstr;
 	});
 	if (it != end(commands)) {
@@ -190,7 +190,7 @@ bool DvisvgmSpecialHandler::process (const string &prefix, istream &is, SpecialA
 	};
 	StreamInputReader ir(is);
 	const string cmdstr = ir.getWord();
-	auto it = find_if(begin(commands), end(commands), [&](const Command &cmd) {
+	auto it = algo::find_if(commands, [&](const Command &cmd) {
 		return cmd.name == cmdstr;
 	});
 	if (it != end(commands)) {
@@ -329,7 +329,7 @@ void DvisvgmSpecialHandler::processBBox (InputReader &ir, SpecialActions &action
 				}
 				else if (c == 'a' || c == 'f') {  // "abs" or "fix"
 					Length lengths[4];
-					std::generate(begin(lengths), end(lengths), [&ir]() {
+					algo::generate(lengths, [&ir]() {
 						return read_length(ir);
 					});
 					BoundingBox b(lengths[0], lengths[1], lengths[2], lengths[3]);

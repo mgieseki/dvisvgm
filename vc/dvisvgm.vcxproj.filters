@@ -853,6 +853,9 @@
     <ClInclude Include="..\src\PsSpecialHandlerProxy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\algorithm.hpp">
+      <Filter>Header Files\ttf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dvisvgm.rc">

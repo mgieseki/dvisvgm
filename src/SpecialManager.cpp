@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <iomanip>
 #include <map>
 #include <sstream>
@@ -88,7 +87,7 @@ void SpecialManager::registerHandlers (vector<unique_ptr<SpecialHandler>> &handl
 /** Removes a handler and the corresponding prefixes. */
 void SpecialManager::unregisterHandler (const SpecialHandler *handler) {
 	if (handler) {
-		auto it = find_if(_handlerPool.begin(), _handlerPool.end(), [=](unique_ptr<SpecialHandler> &h) {
+		auto it = algo::find_if(_handlerPool, [&](unique_ptr<SpecialHandler> &h) {
 			return h.get() == handler;
 		});
 		if (it != _handlerPool.end()) {
@@ -116,7 +115,7 @@ SpecialHandler* SpecialManager::findHandlerByPrefix (const string &prefix) const
  *  @return in case of success: pointer to handler, 0 otherwise */
 SpecialHandler* SpecialManager::findHandlerByName (const string &name) const {
 	using HandlerPtr = unique_ptr<SpecialHandler>;
-	auto it = std::find_if(_handlerPool.begin(), _handlerPool.end(), [=](const HandlerPtr &hptr) {
+	auto it = algo::find_if(_handlerPool, [&](const HandlerPtr &hptr) {
 		return hptr->name() == name;
 	});
 	return it != _handlerPool.end() ? it->get() : nullptr;

@@ -358,6 +358,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AGLTable.hpp" />
+    <ClInclude Include="..\src\algorithm.hpp" />
     <ClInclude Include="..\src\BasicDVIReader.hpp" />
     <ClInclude Include="..\src\Bezier.hpp" />
     <ClInclude Include="..\src\BgColorSpecialHandler.hpp" />

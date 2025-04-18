@@ -18,7 +18,7 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
+#include "../algorithm.hpp"
 #include "Base14Fonts.hpp"
 
 using namespace std;
@@ -61,7 +61,7 @@ const MemoryFontData* find_base14_font (const string &fontname) {
 		{"Symbol", &StandardSymbolsPS_cff},
 		{"ZapfDingbats", &Dingbats_cff}
 	};
-	auto it = find_if(begin(names), end(names), [&fontname](const FontData &data) {
+	auto it = algo::find_if(names, [&fontname](const FontData &data) {
 		return data.name == fontname;
 	});
 	return it != end(names) ? it->font : nullptr;

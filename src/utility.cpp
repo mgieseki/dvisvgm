@@ -18,12 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cctype>
 #include <cmath>
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include "algorithm.hpp"
 #include "utility.hpp"
 
 using namespace std;
@@ -176,7 +176,7 @@ vector<string> util::split (const string &str, const string &sep, bool allowEmpt
 
 string util::tolower (const string &str) {
 	string ret=str;
-	transform(str.begin(), str.end(), ret.begin(), ::tolower);
+	algo::transform(str, ret.begin(), ::tolower);
 	return ret;
 }
 
@@ -274,7 +274,7 @@ string util::read_file_contents (const string &fname) {
  *  @param[in] end iterator pointing to the first byte after the byte sequence to write */
 void util::write_file_contents (const string &fname, string::iterator start, string::iterator end) {
 	ofstream ofs(fname, ios::binary);
-	copy(start, end, ostream_iterator<char>(ofs));
+	std::copy(start, end, ostream_iterator<char>(ofs));
 }
 
 

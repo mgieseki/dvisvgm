@@ -18,10 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <numeric>
 #include <sstream>
 #include <vectorstream.hpp>
+#include "algorithm.hpp"
 #include "Color.hpp"
 #include "DVIActions.hpp"
 #include "DVIReader.hpp"
@@ -605,7 +605,7 @@ void DVIReader::cmdXFontDef (int) {
  *  @return width in bp units */
 static double string_width (const vector<uint16_t> &glyphs, const Font *font) {
 	if (auto nfont = font_cast<const NativeFont*>(font)) {
-		return std::accumulate(glyphs.begin(), glyphs.end(), 0.0, [&nfont](double w, uint16_t gid) {
+		return algo::accumulate(glyphs, 0.0, [&nfont](double w, uint16_t gid) {
 			return w + nfont->hAdvance(Character(Character::INDEX, gid));
 		});
 	}

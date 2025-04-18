@@ -18,13 +18,12 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <limits>
 #include <cmath>
-#include <numeric>
 #include <sstream>
 #include "GlyfTable.hpp"
 #include "TTFWriter.hpp"
+#include "../algorithm.hpp"
 #include "../Bezier.hpp"
 #include "../Font.hpp"
 
@@ -134,11 +133,9 @@ void Contour::reduceNumberOfPoints () {
 		}
 	}
 	// actually remove marked points from vector
-	_pointInfos.erase(
-		remove_if(_pointInfos.begin(), _pointInfos.end(), [](const PointInfo &pi) {
-			return pi.removed();
-		}),
-		_pointInfos.end());
+	algo::erase_if(_pointInfos, [](const PointInfo &pi) {
+		return pi.removed();
+	});
 }
 
 
@@ -212,7 +209,7 @@ size_t GlyfTable::writeGlyphContours (ostream &os, uint32_t charcode) const {
 		return 0;
 	}
 	ttfWriter()->updateContourInfo(contours.size(),
-		std::accumulate(contours.begin(), contours.end(), size_t(0), [](size_t sum, const Contour &contour) {
+		algo::accumulate(contours, size_t(0), [](size_t sum, const Contour &contour) {
 			return sum + contour.numPoints();
 		}));
 	auto offset = os.tellp();

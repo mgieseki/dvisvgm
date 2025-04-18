@@ -18,9 +18,9 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cstring>
 #include <unordered_map>
+#include "algorithm.hpp"
 #include "CLCommandLine.hpp"
 #include "version.hpp"
 
@@ -136,7 +136,7 @@ void CommandLine::parseLongOption (istream &is) {
 			type_error(*options[0], false);
 	}
 	else {  // is partially given option ambiguous?
-		sort(options.begin(), options.end(), [](const Option *opt1, const Option *opt2) {
+		algo::sort(options, [](const Option *opt1, const Option *opt2) {
 			return opt1->longName() < opt2->longName();
 		});
 		string msg = "option --" + optname + " is ambiguous (";
@@ -170,7 +170,7 @@ vector<Option*> CommandLine::lookupOption (const string &optname) const {
 
 /** Returns the option that match the given short name. */
 Option* CommandLine::lookupOption (char optchar) const {
-	auto it = find_if(options().begin(), options().end(), [=](const OptSectPair &optsect) {
+	auto it = algo::find_if(options(), [&](const OptSectPair &optsect) {
 		return optsect.first->shortName() == optchar;
 	});
 	return (it != options().end()) ? it->first : nullptr;
@@ -222,7 +222,7 @@ void CommandLine::help (ostream &os, int mode) const {
 				return tolower(c1) < tolower(c2);
 			};
 		}
-		sort(options().begin(), options().end(), isless);
+		algo::sort(options(), isless);
 	}
 
 	// print summary of options

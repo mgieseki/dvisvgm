@@ -18,11 +18,11 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include "algorithm.hpp"
 #include "FileFinder.hpp"
 #include "FileSystem.hpp"
 #include "InputReader.hpp"
@@ -334,7 +334,7 @@ void PSInterpreter::callActions (InputReader &in) {
 				}
 				// convert parameter strings to doubles
 				vector<double> v(params.size());
-				transform(params.begin(), params.end(), v.begin(), [](const string &str) {
+				algo::transform(params, v.begin(), [](const string &str) {
 					return stod(str);
 				});
 				// call operator handler
@@ -419,7 +419,7 @@ bool PSInterpreter::imageDeviceKnown (string deviceStr) {
 	if (colonpos != string::npos)
 		deviceStr.resize(colonpos);  // strip optional argument
 	auto infos = getImageDeviceInfos();
-	auto it = find_if(infos.begin(), infos.end(), [&](const PSDeviceInfo &info) {
+	auto it = algo::find_if(infos, [&](const PSDeviceInfo &info) {
 		return info.name == deviceStr;
 	});
 	return it != infos.end();

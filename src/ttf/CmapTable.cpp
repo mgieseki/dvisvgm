@@ -18,7 +18,6 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include "CmapTable.hpp"
 #include "TTFWriter.hpp"
 #include "../Font.hpp"

@@ -26,7 +26,6 @@
 #include <ostream>
 #include <vector>
 
-
 class RangeMap {
 	class Range {
 		friend class RangeMap;

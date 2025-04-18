@@ -18,11 +18,11 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <fstream>
 #include <iterator>
 #include <limits>
 #include <sstream>
+#include "algorithm.hpp"
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
 #include "FontEngine.hpp"
@@ -229,7 +229,7 @@ void PDFHandler::initPage (int pageno, unique_ptr<SVGElement> context) {
 	if (content.empty())
 		content = mtShow("pages/" + to_string(_pageno) + "/Contents/*", pattern);
 	_imgSeq = util::split(content, "\n");
-	_imgSeq.erase(std::remove_if(_imgSeq.begin(), _imgSeq.end(), util::IsEmptyString()), _imgSeq.end());
+	algo::erase_if(_imgSeq, util::IsEmptyString());
 }
 
 
@@ -277,7 +277,7 @@ void PDFHandler::elementClosed (XMLElement *trcElement) {
 	struct Handler {
 		const char *name;
 		void (PDFHandler::*func)(XMLElement*);
-	} handlers[10] = {
+	} handlers[] = {
 		{"page", &PDFHandler::doPage},
 		{"stroke_path", &PDFHandler::doStrokePath},
 		{"fill_path", &PDFHandler::doFillPath},
@@ -289,7 +289,7 @@ void PDFHandler::elementClosed (XMLElement *trcElement) {
 		{"pop_clip", &PDFHandler::doPopClip},
 		{"tile", &PDFHandler::doCloseTile},
 	};
-	auto it = find_if(begin(handlers), end(handlers), [&name](const Handler &handler) {
+	auto it = algo::find_if(handlers, [&name](const Handler &handler) {
 		return handler.name == name;
 	});
 	if (it != end(handlers))

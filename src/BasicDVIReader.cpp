@@ -239,7 +239,7 @@ vector<uint32_t> BasicDVIReader::collectBopOffsets () {
 			throw DVIException("invalid bop offset at "+to_string(tell()-static_cast<streamoff>(4)));
 		offset = prevOffset;
 	}
-	reverse(bopOffsets.begin(), bopOffsets.end());
+	std::reverse(bopOffsets.begin(), bopOffsets.end());
 	return bopOffsets;
 }
 

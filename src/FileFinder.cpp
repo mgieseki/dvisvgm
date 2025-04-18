@@ -31,11 +31,11 @@
 	#endif
 #endif
 
-#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <map>
 #include <set>
+#include "algorithm.hpp"
 #include "FileFinder.hpp"
 #include "FilePath.hpp"
 #include "FileSystem.hpp"
@@ -146,7 +146,7 @@ const char* FileFinder::findFile (const std::string &fname, const char *ftype) c
 			suffixes.emplace_back("ttc");
 			suffixes.emplace_back("dfont");
 		}
-		auto it = std::find_if(suffixes.begin(), suffixes.end(), [&](const std::string &suffix) {
+		auto it = algo::find_if(suffixes, [&](const std::string &suffix) {
 			return _miktex->findFile((fname+"."+suffix).c_str()) != nullptr;
 		});
 		return it != suffixes.end() ? it->c_str() : nullptr;

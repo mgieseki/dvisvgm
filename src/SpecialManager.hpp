@@ -21,12 +21,12 @@
 #ifndef SPECIALMANAGER_HPP
 #define SPECIALMANAGER_HPP
 
-#include <algorithm>
 #include <memory>
 #include <ostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "algorithm.hpp"
 #include "SpecialHandler.hpp"
 #include "utility.hpp"
 
@@ -44,7 +44,7 @@ class SpecialManager {
 		template <class Handler>
 		static void registerHandler (const std::vector<std::string> &ignoredHandlerNames) {
 			const char *name = Handler::handlerName();
-			if (!name || find(ignoredHandlerNames.begin(), ignoredHandlerNames.end(), std::string(name)) == ignoredHandlerNames.end())
+			if (!name || algo::find(ignoredHandlerNames, std::string(name)) == ignoredHandlerNames.end())
 				instance().registerHandler(util::make_unique<Handler>());
 		}
 

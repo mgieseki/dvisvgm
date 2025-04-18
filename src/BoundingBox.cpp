@@ -18,9 +18,9 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <iterator>
 #include <sstream>
+#include "algorithm.hpp"
 #include "BoundingBox.hpp"
 #include "Matrix.hpp"
 #include "utility.hpp"
@@ -76,7 +76,7 @@ vector<Length> BoundingBox::extractLengths (string boxstr) {
 	boxstr = util::replace(boxstr, ",", " ");
 	boxstr = util::normalize_space(boxstr);
 	vector<string> lengthStrings = util::split(boxstr, " ");
-	std::copy_if(lengthStrings.begin(), lengthStrings.end(), back_inserter(lengths), std::not1(util::IsEmptyString()));
+	algo::copy_if(lengthStrings, back_inserter(lengths), std::not1(util::IsEmptyString()));
 	return lengths;
 }
 

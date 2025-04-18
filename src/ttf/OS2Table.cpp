@@ -18,10 +18,10 @@
 ** along with this program; if not, see <http://www.gnu.org/licenses/>. **
 *************************************************************************/
 
-#include <algorithm>
 #include <array>
 #include <cmath>
 #include <vector>
+#include "../algorithm.hpp"
 #include "OS2Table.hpp"
 #include "TTFWriter.hpp"
 #include "../Font.hpp"
@@ -217,7 +217,7 @@ static int unicode_range_bit (uint32_t codepoint) {
 		{0x2B740, 0x2B81F,  59},  // CJK Unified Ideographs Extension D
 		{0x2F800, 0x2FA1F,  61},  // CJK Compatibility Ideographs Supplement
 	}};
-	auto it = lower_bound(ucranges.begin(), ucranges.end(), UCRange(codepoint), [](const UCRange &r1, const UCRange &r2) {
+	auto it = algo::lower_bound(ucranges, UCRange(codepoint), [](const UCRange &r1, const UCRange &r2) {
 		return r1.last < r2.first;
 	});
 	if (it != ucranges.end() && codepoint >= it->first && codepoint <= it->last)
