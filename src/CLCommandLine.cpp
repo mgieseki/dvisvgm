@@ -140,12 +140,11 @@ void CommandLine::parseLongOption (istream &is) {
 			return opt1->longName() < opt2->longName();
 		});
 		string msg = "option --" + optname + " is ambiguous (";
-		for (const Option *opt : options) {
-			if (opt != options[0])
-				msg += ", ";
-			msg += opt->longName();
-		}
-		msg += ')';
+		msg = algo::accumulate(options, msg, [](const string &str, Option *opt) {
+			return str + opt->longName() + ", ";
+		});
+		msg.pop_back();
+		msg.back() = ')';
 		throw CommandLineException(msg);
 	}
 }

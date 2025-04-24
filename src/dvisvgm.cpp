@@ -202,12 +202,10 @@ class VersionInfo {
 		}
 
 		void add (const string &name, const vector<int> &versionComponents) {
-			string version;
-			for (auto it=versionComponents.begin(); it != versionComponents.end(); ++it) {
-				if (it != versionComponents.begin())
-					version += '.';
-				version += to_string(*it);
-			}
+			string version = algo::accumulate(versionComponents, string(), [](const string &ver, int comp) {
+				return ver + to_string(comp) + ".";
+			});
+			version.pop_back();
 			append(name, version);
 		}
 
