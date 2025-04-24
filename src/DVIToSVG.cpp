@@ -579,8 +579,7 @@ void DVIToSVG::HashSettings::setParameters (const string &paramstr) {
 				for (string str: HashFunction::supportedAlgorithms())
 					msg += str + ", ";
 				msg.pop_back();
-				msg.pop_back();
-				msg += ')';
+				msg.back() = ')';
 				throw MessageException(std::move(msg));
 			}
 		}

@@ -358,8 +358,8 @@ static void set_variables (const CommandLine &cmdline) {
 		string msg = "unknown font format '"+cmdline.fontFormatOpt.value()+"' (supported formats: ";
 		for (const string &format : FontWriter::supportedFormats())
 			msg += format + ", ";
-		msg.erase(msg.end()-2, msg.end());
-		msg += ")";
+		msg.pop_back();
+		msg.back() = ')';
 		throw CL::CommandLineException(msg);
 	}
 	SVGTree::CREATE_USE_ELEMENTS = cmdline.noFontsOpt.value() < 1;

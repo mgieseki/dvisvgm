@@ -76,9 +76,10 @@ class NumericRanges {
 
 	public:
 		NumericRanges () = default;
-		NumericRanges (const std::initializer_list<Range> &r);
-		void addRange (T value)          {addRange(value, value);}
+		NumericRanges (const std::initializer_list<Range> &ranges);
+		void addRange (T value)              {addRange(value, value);}
 		void addRange (T first, T last);
+		void addRange (const Range &range)   {addRange(range.first, range.second);}
 		bool valueExists (T value) const;
 		size_t size () const                 {return _ranges.size();}
 		ConstIterator begin () const         {return _ranges.begin();}
@@ -92,9 +93,9 @@ class NumericRanges {
 
 
 template<class T>
-NumericRanges<T>::NumericRanges (const std::initializer_list<Range> &r) {
-	for (const Range &r : r)
-		addRange (r.first, r.second);
+NumericRanges<T>::NumericRanges (const std::initializer_list<Range> &ranges) {
+	for (const Range &r : ranges)
+		addRange(r);
 }
 
 
