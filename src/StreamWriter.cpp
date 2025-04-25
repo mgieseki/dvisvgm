@@ -62,10 +62,7 @@ void StreamWriter::writeBytes (int byte, size_t count) const {
  *  @param[in] str the string to write
  *  @param[in] finalZero if true, a final 0-byte is appended */
 void StreamWriter::writeString (const string &str, bool finalZero) const {
-	for (char c : str)
-		_os.put(c);
-	if (finalZero)
-		_os.put(0);
+	_os.write(str.c_str(), str.length() + (finalZero ? 1 : 0));
 }
 
 
