@@ -444,9 +444,9 @@ static void convert_file (size_t fnameIndex, const CommandLine &cmdline) {
 		init_fontmap(cmdline);
 		DVIToSVG dvi2svg(srcin.getInputStream(), out);
 		if (!list_page_hashes(cmdline, dvi2svg)) {
-			const char *ignore_specials = nullptr;
+			string ignore_specials;
 			if (cmdline.noSpecialsOpt.given())
-				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value().c_str();
+				ignore_specials = cmdline.noSpecialsOpt.value().empty() ? "*" : cmdline.noSpecialsOpt.value();
 			dvi2svg.setProcessSpecials(ignore_specials, true);
 			dvi2svg.setPageTransformation(get_transformation_string(cmdline));
 			dvi2svg.setPageSize(cmdline.bboxOpt.value());

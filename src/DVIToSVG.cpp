@@ -380,18 +380,19 @@ void DVIToSVG::embedFonts () {
 }
 
 
-static vector<string> extract_prefixes (const char *ignorelist) {
+static vector<string> extract_prefixes (const string &ignorelist) {
 	vector<string> prefixes;
-	if (ignorelist) {
-		const char *left = ignorelist;
-		while (*left) {
-			while (*left && !isalnum(*left))
-				left++;
-			const char *right = left;
-			while (*right && isalnum(*right))
-				right++;
-			if (*left)
-				prefixes.emplace_back(left, right-left);
+	if (!ignorelist.empty()) {
+		auto left = ignorelist.begin();
+		while (left != ignorelist.end()) {
+			left = std::find_if(left, ignorelist.end(), [](char c) {
+				return isalnum(c);
+			});
+			auto right = std::find_if(left, ignorelist.end(), [](char c) {
+				return !isalnum(c);
+			});
+			if (left != ignorelist.end())
+				prefixes.emplace_back(left-ignorelist.begin(), right-left);
 			left = right;
 		}
 	}
@@ -407,8 +408,8 @@ static vector<string> extract_prefixes (const char *ignorelist) {
  *  @param[in] ignorelist list of handler names to ignore
  *  @param[in] pswarning if true, shows warning about disabled PS support
  *  @return the SpecialManager that handles special statements */
-void DVIToSVG::setProcessSpecials (const char *ignorelist, bool pswarning) {
-	if (ignorelist && strcmp(ignorelist, "*") == 0)  // ignore all specials?
+void DVIToSVG::setProcessSpecials (const string &ignorelist, bool pswarning) {
+	if (ignorelist == "*")  // ignore all specials?
 		SpecialManager::instance().unregisterHandlers();
 	else {
 		auto ignoredHandlerName = extract_prefixes(ignorelist);
