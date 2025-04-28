@@ -406,8 +406,7 @@ static vector<string> extract_prefixes (const string &ignorelist) {
  *  e.g. "color, ps, em" or "color: ps em" etc.
  *  A single "*" in the ignore list disables all specials.
  *  @param[in] ignorelist list of handler names to ignore
- *  @param[in] pswarning if true, shows warning about disabled PS support
- *  @return the SpecialManager that handles special statements */
+ *  @param[in] pswarning if true, shows warning about disabled PS support */
 void DVIToSVG::setProcessSpecials (const string &ignorelist, bool pswarning) {
 	if (ignorelist == "*")  // ignore all specials?
 		SpecialManager::instance().unregisterHandlers();
