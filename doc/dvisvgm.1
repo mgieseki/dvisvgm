@@ -2,12 +2,12 @@
 .\"     Title: dvisvgm
 .\"    Author: Martin Gieseking <martin.gieseking@uos.de>
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 2025-03-06
+.\"      Date: 2025-04-30
 .\"    Manual: dvisvgm Manual
 .\"    Source: dvisvgm 3.4.4
 .\"  Language: English
 .\"
-.TH "DVISVGM" "1" "2025\-03\-06" "dvisvgm 3\&.4\&.4" "dvisvgm Manual"
+.TH "DVISVGM" "1" "2025\-04\-30" "dvisvgm 3\&.4\&.4" "dvisvgm Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -721,7 +721,7 @@ must be the only or the first entry in the list of module names\&.
 .PP
 \fBcollapse\-groups\fR
 .RS 4
-Combines nested group elements (\fB<g>\fR\&...\fB</g>\fR) that contain only a single group each\&. If possible, the group attributes are moved to the outermost element of the processed subtree\&. This module also unwraps group elements that have no attributes at all\&.
+Combines nested group elements (\fB<g>\fR\&...\fB</g>\fR) that contain only a single attribute each\&. If possible, the group attributes are moved to the outermost element of the processed subtree\&. This module also unwraps group elements that have no attributes at all\&.
 .RE
 .PP
 \fBgroup\-attributes\fR
@@ -763,7 +763,9 @@ element only contains whitespace nodes and
 \fBtspan\fR
 elements, all common inheritable attributes of the latter are moved to the enclosing text element\&. All
 \fBtspan\fR
-elements without further attributes are unwrapped\&.
+elements without further attributes are unwrapped, i\&.e\&. the
+\fBtspan\fR
+tags are removed\&.
 .RE
 .PP
 \fBsimplify\-transform\fR

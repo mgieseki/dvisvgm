@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2025-03-06 10:05 +0100
+:revdate: 2025-04-30 19:17 +0200
 
 Name
 ----
@@ -491,7 +491,7 @@ The following list describes the currently available optimizer modules.
   to the best results. *all* must be the only or the first entry in the list of module names.
 
   *collapse-groups*;;
-  Combines nested group elements (+<g>+...+</g>+) that contain only a single group each. If possible,
+  Combines nested group elements (+<g>+...+</g>+) that contain only a single attribute each. If possible,
   the group attributes are moved to the outermost element of the processed subtree. This module also
   unwraps group elements that have no attributes at all.
 
@@ -515,7 +515,7 @@ The following list describes the currently available optimizer modules.
   *simplify-text*;;
   If a +text+ element only contains whitespace nodes and +tspan+ elements, all common inheritable
   attributes of the latter are moved to the enclosing text element. All +tspan+ elements without
-  further attributes are unwrapped.
+  further attributes are unwrapped, i.e. the +tspan+ tags are removed.
 
   *simplify-transform*;;
   Tries to shorten all 'transform' attributes. This module combines the transformation commands of
