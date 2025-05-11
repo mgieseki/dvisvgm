@@ -82,7 +82,7 @@ class TTFTableRecords : public TTFTable {
 		uint32_t tag () const override {return 0;}
 
 		void write (ostream &os) const override {
-			int numTables = algo::count_if(_buffers, [](const TableBuffer &buffer) {
+			size_t numTables = algo::count_if(_buffers, [](const TableBuffer &buffer) {
 				return buffer.tag() != 0;
 			});
 			uint32_t offset = 12 + 16*numTables;
@@ -104,9 +104,8 @@ class TTFTableRecords : public TTFTable {
 
 /** Writes the font data in TrueType format to the given output stream. */
 bool TTFWriter::writeTTF (ostream &os) const {
-	list<TableBuffer> buffers = createTableBuffers();
 	// write TTF data
-	for (; !buffers.empty(); buffers.pop_front())
+	for (list<TableBuffer> buffers = createTableBuffers(); !buffers.empty(); buffers.pop_front())
 		buffers.front().write(os);
 	return true; // @@
 }
@@ -145,7 +144,7 @@ std::list<TableBuffer> TTFWriter::createTableBuffers () const {
 	auto headBufferIt = algo::find_if(buffers, [](const TableBuffer &buf) {
 		return buf.tag() == TTFTable::name2id("head");
 	});
-	headBufferIt->setData(_head.offsetToChecksum(), checksum);
+	headBufferIt->setData(HeadTable::offsetToChecksum(), checksum);
 	return buffers;
 }
 
