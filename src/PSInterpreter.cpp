@@ -122,6 +122,11 @@ bool PSInterpreter::execute (const char *str, size_t len, bool flush) {
 	init();
 	if (_mode == PS_QUIT)
 		return false;
+	if (_mode == PS_EXCEPTION) {
+		if (_errorMessage.empty())
+			return false;
+		throw PSException(_errorMessage);
+	}
 
 	int status=0;
 	if (_mode == PS_NONE) {
@@ -190,7 +195,7 @@ bool PSInterpreter::executeRaw (const string &str, int n) {
  *  @param[in] buf takes the read characters
  *  @param[in] len size of buffer buf
  *  @return number of characters read */
-int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
+int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) noexcept {
 	return 0;
 }
 
@@ -206,49 +211,55 @@ int GSDLLCALL PSInterpreter::input (void *inst, char *buf, int len) {
  *  @param[in] buf contains the characters to be output
  *  @param[in] len number of characters in buf
  *  @return number of processed characters (equals 'len') */
-int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) {
+int GSDLLCALL PSInterpreter::output (void *inst, const char *buf, int len) noexcept {
 	auto self = static_cast<PSInterpreter*>(inst);
-	if (!self || !self->_actions)
+	if (!self || !self->_actions || self->_mode == PS_EXCEPTION)
 		return len;
 
-	SplittedCharInputBuffer ib(self->_unprocessedChars.data(), self->_unprocessedChars.length(), buf, len);
-	BufferInputReader ir(ib);
-	while (!ir.eof()) {
-		if (self->_inError) {
-			self->_errorMessage += ib.toString();
-			ib.invalidate();
-		}
-		else if (ir.check("Unrecoverable error: ")) {
-			self->_errorMessage = ib.toString();
-			ib.invalidate();
-			self->_inError = true;
-		}
-		else {
-			ir.skipSpace();
-			int spacepos = ib.find(' ');
-			if (spacepos <= 0)  // no separating space found?
-				break;           // => wait for more data
-			string entry = ir.getString(spacepos);
-			if (self->_command.empty()) {   // not yet collecting command parameters?
-				if (entry.length() < 4 || entry.substr(0, 4) != "dvi.")
-					ir.skipUntil("\n");
-				else
-					self->_command.emplace_back(entry.substr(4));
+	try {
+		SplittedCharInputBuffer ib(self->_unprocessedChars.data(), self->_unprocessedChars.length(), buf, len);
+		BufferInputReader ir(ib);
+		while (!ir.eof()) {
+			if (self->_inError) {
+				self->_errorMessage += ib.toString();
+				ib.invalidate();
 			}
-			else if (entry[0] != '|') {   // not yet at end of command?
-				self->_command.emplace_back(std::move(entry));
+			else if (ir.check("Unrecoverable error: ")) {
+				self->_errorMessage = ib.toString();
+				ib.invalidate();
+				self->_inError = true;
 			}
 			else {
-				self->processCommand();
-				self->_command.clear();
 				ir.skipSpace();
+				int spacepos = ib.find(' ');
+				if (spacepos <= 0)  // no separating space found?
+					break;           // => wait for more data
+				string entry = ir.getString(spacepos);
+				if (self->_command.empty()) {   // not yet collecting command parameters?
+					if (entry.length() < 4 || entry.substr(0, 4) != "dvi.")
+						ir.skipUntil("\n");
+					else
+						self->_command.emplace_back(entry.substr(4));
+				}
+				else if (entry[0] != '|') {   // not yet at end of command?
+					self->_command.emplace_back(std::move(entry));
+				}
+				else {
+					self->processCommand();
+					self->_command.clear();
+					ir.skipSpace();
+				}
 			}
 		}
+		if (ir.eof())
+			self->_unprocessedChars.clear();
+		else
+			self->_unprocessedChars = ib.toString();
 	}
-	if (ir.eof())
-		self->_unprocessedChars.clear();
-	else
-		self->_unprocessedChars = ib.toString();
+	catch (exception &e) {
+		self->_mode = PS_EXCEPTION;
+		self->_errorMessage = e.what();
+	}
 	return len;
 }
 
@@ -331,7 +342,7 @@ void PSInterpreter::processCommand () {
  *  @param[in] buf contains the characters to be output
  *  @param[in] len number of chars in buf
  *  @return number of processed characters */
-int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) {
+int GSDLLCALL PSInterpreter::error (void *inst, const char *buf, int len) noexcept {
 	return len;
 }
 

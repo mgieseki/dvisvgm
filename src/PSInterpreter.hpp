@@ -96,7 +96,7 @@ struct PSDeviceInfo {
 /** This class provides methods to execute chunks of PostScript code and calls
  *  several template methods on invocation of selected PS operators (see PSActions). */
 class PSInterpreter {
-	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT};
+	enum Mode {PS_NONE, PS_RUNNING, PS_QUIT, PS_EXCEPTION};
 
 	public:
 		explicit PSInterpreter (PSActions *actions=nullptr);
@@ -123,9 +123,9 @@ class PSInterpreter {
 	protected:
 		void init ();
 		// callback functions
-		static int GSDLLCALL input (void *inst, char *buf, int len);
-		static int GSDLLCALL output (void *inst, const char *buf, int len);
-		static int GSDLLCALL error (void *inst, const char *buf, int len);
+		static int GSDLLCALL input (void *inst, char *buf, int len) noexcept;
+		static int GSDLLCALL output (void *inst, const char *buf, int len) noexcept;
+		static int GSDLLCALL error (void *inst, const char *buf, int len) noexcept;
 
 		void checkStatus (int status);
 		void processCommand ();
