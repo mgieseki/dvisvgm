@@ -716,11 +716,7 @@ void PDFHandler::doOpenTile (XMLElement *trcTileElement) {
 
 static unique_ptr<SVGElement> rect_path_elem (const vector<double> &coords) {
 	GraphicsPath<double> path;
-	path.moveto(coords[0], coords[1]);
-	path.lineto(coords[2], coords[1]);
-	path.lineto(coords[2], coords[3]);
-	path.lineto(coords[0], coords[3]);
-	path.closepath();
+	path.rect(coords[0], coords[1], coords[2], coords[3]);
 	ostringstream oss;
 	path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	auto pathElement = util::make_unique<SVGElement>("path");

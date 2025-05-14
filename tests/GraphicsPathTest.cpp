@@ -111,6 +111,11 @@ TEST(GraphicsPathTest, computeBBox) {
 	path.closepath();
 	BoundingBox bbox = path.computeBBox();
 	EXPECT_EQ(bbox, BoundingBox(5, 5, 100, 100));
+
+	path.clear();
+	path.rect(10, 20, 30, 40);
+	bbox = path.computeBBox();
+	EXPECT_EQ(bbox, BoundingBox(10, 20, 30, 40));
 }
 
 
@@ -261,4 +266,13 @@ TEST(GraphicsPathTest, smooth_cubicto) {
 	ostringstream oss;
 	path.writeSVG(oss, false);
 	EXPECT_EQ(oss.str(), "M10 10C30 20 40 0 20 50S80 100 100 30");
+}
+
+
+TEST(GraphicsPathTest, rect) {
+	GraphicsPath<int> path;
+	path.rect(DPair(30, 20), DPair(40, 0));
+	ostringstream oss;
+	path.writeSVG(oss, false);
+	EXPECT_EQ(oss.str(), "M30 20H40V0H30Z");
 }

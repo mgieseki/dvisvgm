@@ -1060,11 +1060,7 @@ void PsSpecialHandler::shfill (vector<double> &params) {
 		const double &y1 = *it++;
 		const double &x2 = *it++;
 		const double &y2 = *it++;
-		bboxPath.moveto(x1, y1);
-		bboxPath.lineto(x2, y1);
-		bboxPath.lineto(x2, y2);
-		bboxPath.lineto(x1, y2);
-		bboxPath.closepath();
+		bboxPath.rect(x1, y1, x2, y2);
 		clip(std::move(bboxPath), false);
 	}
 	try {

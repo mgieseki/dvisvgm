@@ -275,11 +275,7 @@ unique_ptr<XMLElement> BoundingBox::createSVGRect () const {
 
 unique_ptr<XMLElement> BoundingBox::createSVGPath () const {
 	GraphicsPath<double> path;
-	path.moveto(minX(), minY());
-	path.lineto(maxX(), minY());
-	path.lineto(maxX(), maxY());
-	path.lineto(minX(), maxY());
-	path.closepath();
+	path.rect(minX(), minY(), maxX(), maxY());
 	ostringstream oss;
 	path.writeSVG(oss, SVGTree::RELATIVE_PATH_CMDS);
 	auto pathElem = util::make_unique<XMLElement>("path");

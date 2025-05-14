@@ -485,6 +485,18 @@ class GraphicsPath {
 			_finalPoint = p;
 		}
 
+		void rect (const T &x1, const T &y1, const T &x2, const T &y2) {
+			rect(Point(x1, y1), Point(x2, y2));
+		}
+
+		void rect (const Point &p1, const Point &p2) {
+			moveto(p1.x(), p1.y());
+			lineto(p2.x(), p1.y());
+			lineto(p2.x(), p2.y());
+			lineto(p1.x(), p2.y());
+			closepath();
+		}
+
 		void quadto (const T &x1, const T &y1, const T &x2, const T &y2) {
 			quadto(Point(x1, y1), Point(x2, y2));
 		}
