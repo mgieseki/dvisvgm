@@ -248,10 +248,12 @@ void DVIReader::putVFChar (Font *font, uint32_t c) {
 void DVIReader::cmdSetChar0 (int c) {
 	if (!_inPage)
 		throw DVIException("setchar outside of page");
-	Font *font = FontManager::instance().getFont(_currFontNum);
-	dviSetChar0(c, font); // template method that may trigger further actions
-	putVFChar(font, c);   // further character processing if current font is a virtual font
-	moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0, MoveMode::SETCHAR);
+	if (Font *font = FontManager::instance().getFont(_currFontNum)) {
+		dviSetChar0(c, font); // template method that may trigger further actions
+		putVFChar(font, c);   // further character processing if current font is a virtual font
+		moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0, MoveMode::SETCHAR);
+	}
+	else throw DVIException("no font selected prior to setchar");
 }
 
 
@@ -265,10 +267,12 @@ void DVIReader::cmdSetChar (int len) {
 	// According to the dvi specification all character codes are unsigned
 	// except len == 4. At the moment all char codes are treated as unsigned...
 	uint32_t c = readUnsigned(len); // if len == 4 c may be signed
-	Font *font = FontManager::instance().getFont(_currFontNum);
-	dviSetChar(c, font); // template method that may trigger further actions
-	putVFChar(font, c);  // further character processing if current font is a virtual font
-	moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0, MoveMode::SETCHAR);
+	if (Font *font = FontManager::instance().getFont(_currFontNum)) {
+		dviSetChar(c, font); // template method that may trigger further actions
+		putVFChar(font, c);  // further character processing if current font is a virtual font
+		moveRight(font->charWidth(c)*font->scaleFactor()*_mag/1000.0, MoveMode::SETCHAR);
+	}
+	else throw DVIException("no font selected prior to setchar");
 }
 
 
@@ -282,9 +286,11 @@ void DVIReader::cmdPutChar (int len) {
 	// According to the dvi specification all character codes are unsigned
 	// except len == 4. At the moment all char codes are treated as unsigned...
 	int32_t c = readUnsigned(len);
-	Font *font = FontManager::instance().getFont(_currFontNum);
-	dviPutChar(c, font);
-	putVFChar(font, c);
+	if (Font *font = FontManager::instance().getFont(_currFontNum)) {
+		dviPutChar(c, font);
+		putVFChar(font, c);
+	}
+	else throw DVIException("no font selected prior to putchar");
 }
 
 
