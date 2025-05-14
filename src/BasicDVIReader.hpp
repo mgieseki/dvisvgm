@@ -65,6 +65,7 @@ class BasicDVIReader : public StreamReader {
 		virtual unsigned currentPageNumber () const {return 0;}
 
 	protected:
+		void throwDVIException (const std::string &msg) const;
 		void setDVIVersion (DVIVersion version);
 		DVIVersion getDVIVersion () const {return _dviVersion;}
 		virtual int evalCommand (CommandHandler &handler, int &param);

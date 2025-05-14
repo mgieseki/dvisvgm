@@ -54,6 +54,7 @@ class StreamReader {
 		void skip (std::streampos n) const   {_is->seekg(n, std::ios::cur);}
 		std::streampos tell () const {return _is->tellg();}
 		int peek () const            {return _is->peek();}
+		std::streampos tellg () const {return _is->tellg();}
 
 	protected:
 		std::istream& getInputStream () const {return *_is;}
