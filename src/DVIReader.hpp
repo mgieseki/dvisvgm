@@ -43,22 +43,19 @@ class DVIReader : public BasicDVIReader, public VFActions {
 		enum class MoveMode {SETCHAR, CHANGEPOS};
 
 		struct DVIState {
-			double h, v;        ///< horizontal and vertical cursor position
-			double x, w, y, z;  ///< additional registers to store horizontal (x, w) and vertical (y, z) positions
-			WritingMode d;      ///< direction: 0: horizontal, 1: vertical(top->bottom), 3: vertical (bottom->top)
-			DVIState ()   {reset();}
+			double h=0, v=0;               ///< horizontal and vertical cursor position
+			double x=0, w=0, y=0, z=0;     ///< additional registers to store horizontal (x, w) and vertical (y, z) positions
+			WritingMode d=WritingMode::LR; ///< direction: 0: horizontal, 1: vertical(top->bottom), 3: vertical (bottom->top)
 			void reset () {h = v = x = w = y = z = 0.0; d=WritingMode::LR;}
 		};
 
 	public:
 		explicit DVIReader (std::istream &is);
-		bool executeDocument ();
 		void executeAll ();
 		bool executePage (unsigned n);
 		double getXPos () const override             {return _dviState.h;}
 		double getYPos () const override             {return _dviState.v;}
 		int stackDepth () const override             {return _stateStack.size();}
-		int currentFontNumber () const               {return _currFontNum;}
 		unsigned currentPageNumber () const override {return _currPageNum;}
 		unsigned numberOfPages () const              {return _bopOffsets.empty() ? 0 : _bopOffsets.size()-1;}
 
