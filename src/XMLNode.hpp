@@ -208,7 +208,7 @@ class XMLCData : public XMLNode {
 		explicit XMLCData (std::string data) : _data(std::move(data)) {}
 		std::unique_ptr<XMLNode> clone () const override {return util::make_unique<XMLCData>(*this);}
 		void clear () override                {_data.clear();}
-		void append (std::string &&str);
+		void append (std::string str);
 		std::ostream& write (std::ostream &os) const override;
 		const XMLCData* toCData () const override {return this;}
 

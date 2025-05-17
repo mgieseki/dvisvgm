@@ -717,7 +717,7 @@ const char* VirtualFontImpl::path () const {
 }
 
 
-void VirtualFontImpl::assignChar (uint32_t c, DVIVector &&dvi) {
+void VirtualFontImpl::assignChar (uint32_t c, DVIVector dvi) {
 	_charDefs.emplace(c, std::move(dvi));
 }
 

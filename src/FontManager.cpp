@@ -387,7 +387,7 @@ void FontManager::leaveVF () {
 /** Assigns a sequence of DVI commands to a char code.
  * @param[in] c character code
  * @param[in] dvi DVI commands that describe character c */
-void FontManager::assignVFChar (int c, vector<char> &&dvi) {
+void FontManager::assignVFChar (int c, vector<char> dvi) {
 	if (!_vfStack.empty())
 		_vfStack.top()->assignChar(c, std::move(dvi));
 }

@@ -172,7 +172,7 @@ class VirtualFont : public virtual Font {
 		void visit (FontVisitor &visitor) const override;
 
 	protected:
-		virtual void assignChar (uint32_t c, DVIVector &&dvi) =0;
+		virtual void assignChar (uint32_t c, DVIVector dvi) =0;
 };
 
 
@@ -389,7 +389,7 @@ class VirtualFontRef : public VirtualFont {
 	protected:
 		VirtualFontRef (const VirtualFont *font, double ds, double ss) : _vf(font), _dsize(ds), _ssize(ss) {}
 		VirtualFontRef (const VirtualFontRef &ref, double ds, double ss) : _vf(ref._vf), _dsize(ds), _ssize(ss) {}
-		void assignChar (uint32_t c, DVIVector &&dvi) override {}
+		void assignChar (uint32_t c, DVIVector dvi) override {}
 
 	private:
 		const VirtualFont *_vf;
@@ -411,7 +411,7 @@ class VirtualFontImpl : public VirtualFont, public TFMFont {
 
 	protected:
 		VirtualFontImpl (const std::string &name, uint32_t checksum, double dsize, double ssize);
-		void assignChar (uint32_t c, DVIVector &&dvi) override;
+		void assignChar (uint32_t c, DVIVector dvi) override;
 
 	private:
 		std::unordered_map<uint32_t, DVIVector> _charDefs; ///< dvi subroutines defining the characters
