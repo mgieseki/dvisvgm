@@ -106,7 +106,7 @@ void RangeMap::addRange (uint32_t cmin, uint32_t cmax, uint32_t vmin) {
 					//split existing range
 					uint32_t itmax = it->max();
 					it->max(cmin-1);
-					it = _ranges.emplace(it+1, Range(cmax+1, itmax, it->valueAt(cmax+1)));
+					it = _ranges.emplace(it+1, cmax+1, itmax, it->valueAt(cmax+1));
 				}
 				else if (at_end)        // does new range overlap right side of last range in vector?
 					it = _ranges.end();  // => append new range at end of vector
