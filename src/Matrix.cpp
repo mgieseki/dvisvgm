@@ -364,7 +364,7 @@ static double getArgument (istream &is, const Calculator &calc, double def, bool
 	string expr;
 	while (!isupper(is.peek()) && is.peek() != ',' && is)
 		expr += (char)is.get();
-	if (expr.length() == 0) {
+	if (expr.empty()) {
 		if (optional)
 			return def;
 		else
