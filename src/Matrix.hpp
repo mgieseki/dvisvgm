@@ -42,7 +42,7 @@ class Matrix {
 	public:
 		Matrix () {set(0);}
 		Matrix (double d);
-		Matrix (const std::string &cmds, Calculator &calc);
+		Matrix (const std::string &cmds, const Calculator &calc);
 		explicit Matrix (const std::string &svgMatrix);
 		explicit Matrix (const double *v, unsigned size=9);
 		explicit Matrix (const std::vector<double> &v, int start=0);
@@ -50,7 +50,7 @@ class Matrix {
 		Matrix& set (double d);
 		Matrix& set (const double *v, unsigned size);
 		Matrix& set (const std::vector<double> &v, int start=0);
-		Matrix& set (const std::string &cmds, Calculator &calc);
+		Matrix& set (const std::string &cmds, const Calculator &calc);
 		double get (int row, int col) const {return _values[row][col];}
 		Matrix& transpose ();
 		Matrix& invert ();
@@ -76,8 +76,8 @@ class Matrix {
 		std::string toSVG () const;
 		std::ostream& write (std::ostream &os) const;
 
-		static Matrix parse (std::istream &is, Calculator &c);
-		static Matrix parse (const std::string &cmds, Calculator &c);
+		static Matrix parse (std::istream &is, const Calculator &c);
+		static Matrix parse (const std::string &cmds, const Calculator &c);
 		static Matrix parseSVGTransform (const std::string &transform);
 
 	private:

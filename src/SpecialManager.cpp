@@ -87,7 +87,7 @@ void SpecialManager::registerHandlers (vector<unique_ptr<SpecialHandler>> &handl
 /** Removes a handler and the corresponding prefixes. */
 void SpecialManager::unregisterHandler (const SpecialHandler *handler) {
 	if (handler) {
-		auto it = algo::find_if(_handlerPool, [&](unique_ptr<SpecialHandler> &h) {
+		auto it = algo::find_if(_handlerPool, [&](const unique_ptr<SpecialHandler> &h) {
 			return h.get() == handler;
 		});
 		if (it != _handlerPool.end()) {

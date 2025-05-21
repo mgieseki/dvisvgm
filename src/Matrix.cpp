@@ -95,7 +95,7 @@ Matrix::Matrix (const string &svgMatrix) {
 }
 
 
-Matrix::Matrix (const string &cmds, Calculator &calc) {
+Matrix::Matrix (const string &cmds, const Calculator &calc) {
 	*this = parse(cmds, calc);
 }
 
@@ -144,7 +144,7 @@ Matrix& Matrix::set (const vector<double> &v, int start) {
 }
 
 
-Matrix& Matrix::set (const string &cmds, Calculator &calc) {
+Matrix& Matrix::set (const string &cmds, const Calculator &calc) {
 	*this = parse(cmds, calc);
 	return *this;
 }
@@ -353,7 +353,7 @@ bool Matrix::isTranslation (double &tx, double &ty) const {
  *  @param[in] optional true if parameter is optional
  *  @param[in] leadingComma true if first non-blank must be a comma
  *  @return value of argument */
-static double getArgument (istream &is, Calculator &calc, double def, bool optional, bool leadingComma) {
+static double getArgument (istream &is, const Calculator &calc, double def, bool optional, bool leadingComma) {
 	is >> ws;
 	if (!optional && leadingComma && is.peek() != ',')
 		throw ParserException("',' expected");
@@ -374,7 +374,7 @@ static double getArgument (istream &is, Calculator &calc, double def, bool optio
 }
 
 
-Matrix Matrix::parse (istream &is, Calculator &calc) {
+Matrix Matrix::parse (istream &is, const Calculator &calc) {
 	Matrix ret(1);
 	while (is) {
 		is >> ws;
@@ -441,7 +441,7 @@ Matrix Matrix::parse (istream &is, Calculator &calc) {
 }
 
 
-Matrix Matrix::parse (const string &cmds, Calculator &calc) {
+Matrix Matrix::parse (const string &cmds, const Calculator &calc) {
 	istringstream iss;
 	iss.str(cmds);
 	return parse(iss, calc);
@@ -492,7 +492,7 @@ static void skip_comma_wsp (istream &is) {
 }
 
 
-static size_t parse_transform_cmd (istream &is, string cmd, size_t minparams, size_t maxparams, vector<double> &params) {
+static size_t parse_transform_cmd (istream &is, const string &cmd, size_t minparams, size_t maxparams, vector<double> &params) {
 	for (int i=0; i < int(cmd.length()); i++) {
 		if (is.get() != cmd[i]) {
 			is.seekg(-i-1, ios::cur);
