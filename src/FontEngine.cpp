@@ -156,8 +156,7 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) const {
 
 
 /** Returns a character map that maps from glyph indexes to character codes
- *  of the current encoding.
- *  @param[out] charmap the resulting charmap */
+ *  of the current encoding. */
 RangeMap FontEngine::buildGidToCharCodeMap () const {
 	RangeMap charmap;
 	FT_UInt gid;  // index of current glyph

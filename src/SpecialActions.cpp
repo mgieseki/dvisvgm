@@ -87,7 +87,8 @@ static void expand_constants (string &str, SpecialActions &actions) {
 
 /** Evaluates substrings of the form {?(expr)} where 'expr' is a math expression,
  *  and replaces the substring by the computed value.
- *  @param[in,out] str string to scan for expressions */
+ *  @param[in,out] str string to scan for expressions
+ *  @param[in] actions interface to external fuctionality available in special handlers */
 static void evaluate_expressions (string &str, const SpecialActions &actions) {
 	auto left = str.find("{?(");             // start position of expression macro
 	while (left != string::npos) {

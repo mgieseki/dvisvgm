@@ -47,8 +47,8 @@ unique_ptr<CMap> CMapReader::read (const string &fname) {
 
 
 /** Reads cmap data from a given stream and returns the corresponding CMap object.
- *  @param is[in] cmap data input stream
- *  @param is[in] name name of CMap to be read
+ *  @param[in] is cmap data input stream
+ *  @param[in] name name of CMap to be read
  *  @return CMap object representing the read data, or 0 if file could not be read */
 unique_ptr<CMap> CMapReader::read (std::istream& is, const string &name) {
 	_tokens.clear();

@@ -258,6 +258,7 @@ int CubicBezier::reduceDegree (double delta, vector<DPair> &p) const {
 
 /** Approximates the cubic Bézier curve by a sequence of quadratic ones.
  *  @param[in] precision specifies the precision of the approximation
+ *  @param[out] splitParams parameters t where the curve was split
  *  @return map containing the split parameters t_n together with the qudratic curves */
 vector<QuadBezier> CubicBezier::toQuadBeziers (double precision, vector<double> *splitParams) const {
 	vector<QuadBezier> qbeziers;
