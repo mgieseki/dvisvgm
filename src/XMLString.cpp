@@ -63,7 +63,7 @@ XMLString::XMLString (const char *str, bool plain) {
 
 
 XMLString::XMLString (int n, bool cast)
-	: string(cast ? to_string(n) : translate(n))
+	: std::string(cast ? to_string(n) : translate(n))
 {
 }
 
