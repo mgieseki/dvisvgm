@@ -576,7 +576,7 @@ void DVIToSVG::HashSettings::setParameters (const string &paramstr) {
 				_algo = name;
 			else if (!name.empty()) {
 				string msg = "invalid hash parameter '" + name + "' (supported algorithms: ";
-				for (string str: HashFunction::supportedAlgorithms())
+				for (const string &str: HashFunction::supportedAlgorithms())
 					msg += str + ", ";
 				msg.pop_back();
 				msg.back() = ')';
