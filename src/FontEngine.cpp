@@ -507,7 +507,7 @@ static bool trace_outline (FT_Face face, const Font *font, int index, Glyph &gly
 					FT_Outline_Embolden(&outline, style->bold/font->scaledSize()*face->units_per_EM);
 			}
 		}
-		const FT_Outline_Funcs funcs = {moveto, lineto, quadto, cubicto, 0, 0};
+		constexpr FT_Outline_Funcs funcs = {moveto, lineto, quadto, cubicto, 0, 0};
 		FT_Outline_Decompose(&outline, &funcs, &glyph);
 		return true;
 	}

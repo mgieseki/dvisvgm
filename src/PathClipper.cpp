@@ -29,7 +29,7 @@ using Polygon = ClipperLib::Path;
 using Polygons = ClipperLib::Paths;
 using CurvedPath = PathClipper::CurvedPath;
 
-const int SCALE_FACTOR = 1000;
+constexpr int SCALE_FACTOR = 1000;
 
 inline cInt to_cInt (double x) {
 	return static_cast<cInt>(lround(x*SCALE_FACTOR));

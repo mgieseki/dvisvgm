@@ -73,8 +73,8 @@ XMLString::XMLString (int n, bool cast)
  *  @param[in] n number of decimal places (must be between 1 and 6)
  *  @return rounded value */
 static inline double round (double x, int n) {
-	const long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
-	const double eps = 1e-7;
+	constexpr long pow10[] = {10L, 100L, 1000L, 10000L, 100000L, 1000000L};
+	constexpr double eps = 1e-7;
 	n--;
 	if (x >= 0)
 		return floor(x*pow10[n]+0.5+eps)/pow10[n];

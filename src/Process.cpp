@@ -85,7 +85,7 @@ string Subprocess::read (const SearchPattern &pattern, bool *error) {
 			matchendpos = it->position() + it->length();
 			matched = true;
 		}
-		const size_t MAX_OVERLAP=50;
+		constexpr size_t MAX_OVERLAP=50;
 		size_t overlappos;
 		if (matched)
 			overlappos = max(bufendpos - min(bufendpos, MAX_OVERLAP), matchendpos);

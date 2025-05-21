@@ -81,7 +81,7 @@ void PapersizeSpecialHandler::applyPaperSize (unsigned pageno, SpecialActions &a
 		Message::wstream(true) << "no valid papersize special found\n";
 	else {
 		DoublePair size = it->second;
-		const double border = -72;  // DVI standard: coordinates of upper left paper corner are (-72bp, -72bp)
+		constexpr double border = -72;  // DVI standard: coordinates of upper left paper corner are (-72bp, -72bp)
 		actions.bbox() = BoundingBox(border, border, size.first+border, size.second+border);
 	}
 }

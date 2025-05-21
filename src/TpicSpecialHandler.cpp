@@ -272,7 +272,7 @@ bool TpicSpecialHandler::process (const string &prefix, istream &is, SpecialActi
 	if (prefix.length() != 2)
 		return false;
 	_dviColor = actions.getFillColor();
-	const double mi2bp=0.072; // factor for milli-inch to PS points
+	constexpr double mi2bp=0.072; // factor for milli-inch to PS points
 	StreamInputBuffer ib(is);
 	BufferInputReader ir(ib);
 	switch (cmd_id(prefix.c_str())) {

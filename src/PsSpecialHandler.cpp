@@ -564,7 +564,7 @@ void PsSpecialHandler::dviEndPage (unsigned, SpecialActions &actions) {
 			if (!isBaselineHorizontal)
 				Message::mstream() << "can't determine height, width, and depth due to non-horizontal baseline\n";
 			else {
-				const double bp2pt = 72.27/72.0;
+				constexpr double bp2pt = 72.27/72.0;
 				Message::mstream() <<
 					"width=" << XMLString(w*bp2pt) << "pt, "
 					"height=" << XMLString(h*bp2pt) << "pt, "
@@ -665,7 +665,7 @@ void PsSpecialHandler::closepath (vector<double>&) {
 
 void PsSpecialHandler::setblendmode (vector<double> &p) {
 	int mode = static_cast<int>(p[0]);
-	static const Opacity::BlendMode blendmodes[] = {
+	static constexpr Opacity::BlendMode blendmodes[] = {
 		Opacity::BM_NORMAL, Opacity::BM_MULTIPLY, Opacity::BM_SCREEN, Opacity::BM_OVERLAY,
 		Opacity::BM_SOFTLIGHT, Opacity::BM_HARDLIGHT, Opacity::BM_COLORDODGE, Opacity::BM_COLORBURN,
 		Opacity::BM_DARKEN, Opacity::BM_LIGHTEN, Opacity::BM_DIFFERENCE, Opacity::BM_EXCLUSION,
