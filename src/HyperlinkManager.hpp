@@ -60,7 +60,7 @@ class HyperlinkManager {
 
 	protected:
 		HyperlinkManager () =default;
-		void markLinkedBox (SpecialActions &actions);
+		void markLinkedBox (SpecialActions &actions) const;
 
 		enum class MarkerType {NONE, LINE, BOX, BGCOLOR};
 		static MarkerType MARKER_TYPE;  ///< selects how to mark linked areas

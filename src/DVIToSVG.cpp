@@ -253,7 +253,7 @@ void DVIToSVG::enterBeginPage (unsigned pageno, const vector<int32_t> &c) {
 
 /** This template method is called by DVIReader::cmdEop() after
  *  executing the EOP actions. */
-void DVIToSVG::leaveEndPage (unsigned) {
+void DVIToSVG::leaveEndPage (unsigned) const {
 	if (!dynamic_cast<DVIToSVGActions*>(_actions.get()))
 		return;
 

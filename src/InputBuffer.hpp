@@ -50,7 +50,7 @@ class StreamInputBuffer : public InputBuffer {
 		void operator = (const StreamInputBuffer &ib) =delete;
 
 	protected:
-		size_t fillBuffer (std::vector<uint8_t> &buf);
+		size_t fillBuffer (std::vector<uint8_t> &buf) const;
 
 	private:
 		std::istream &_is;

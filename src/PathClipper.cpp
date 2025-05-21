@@ -265,7 +265,7 @@ static size_t find_segment_endpoint (const Polygon &polygon, size_t start, ZLabe
 /** Reconstructs a curved path from the set of polygons.
  *  @param[in] polygons set of polygons to reconstruct
  *  @param[out] path the reconstructed curved path */
-void PathClipper::reconstruct (const Polygons &polygons, CurvedPath &path) {
+void PathClipper::reconstruct (const Polygons &polygons, CurvedPath &path) const {
 	for (const Polygon &polygon : polygons)
 		reconstruct(polygon, path);
 }

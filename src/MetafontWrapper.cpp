@@ -48,7 +48,7 @@ MetafontWrapper::MetafontWrapper (string fname, string dir)
  *  @param[in] mode Metafont mode, e.g. "ljfour"
  *  @param[in] mag magnification factor
  *  @return true on success */
-bool MetafontWrapper::call (const string &mode, double mag) {
+bool MetafontWrapper::call (const string &mode, double mag) const {
 	if (!FileFinder::instance().lookup(_fontname+".mf"))
 		return false;     // mf file not available => no need to call the "slow" Metafont
 	FileSystem::remove(_fontname+".gf");
@@ -142,7 +142,7 @@ int MetafontWrapper::getResolution (const string &mfMessage) const {
  *  @param[in] mode Metafont mode to be used (e.g. 'ljfour')
  *  @param[in] mag magnification factor
  *  @return true on success */
-bool MetafontWrapper::make (const string &mode, double mag) {
+bool MetafontWrapper::make (const string &mode, double mag) const {
 	ifstream tfm(_dir+_fontname+".tfm");
 	ifstream gf(_dir+_fontname+".gf");
 	if (gf && tfm) // @@ distinguish between gf and tfm

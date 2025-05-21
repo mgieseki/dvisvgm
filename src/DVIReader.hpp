@@ -61,11 +61,11 @@ class DVIReader : public BasicDVIReader, public VFActions {
 
 	protected:
 		size_t numberOfPageBytes (int n) const {return _bopOffsets.size() > 1 ? _bopOffsets[n+1]-_bopOffsets[n] : 0;}
-		bool computePageHash (size_t pageno, HashFunction &hashFunc);
+		bool computePageHash (size_t pageno, HashFunction &hashFunc) const;
 		virtual void moveRight (double dx, MoveMode mode);
 		virtual void moveDown (double dy, MoveMode mode);
 		void putVFChar (Font *font, uint32_t c);
-		double putGlyphArray (bool xonly, std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs);
+		double putGlyphArray (bool xonly, std::vector<double> &dx, std::vector<double> &dy, std::vector<uint16_t> &glyphs) const;
 		const Font* defineFont (uint32_t fontnum, const std::string &name, uint32_t cs, double dsize, double ssize);
 		void setFont (int num, SetFontMode mode);
 		const DVIState& dviState() const {return _dviState;}

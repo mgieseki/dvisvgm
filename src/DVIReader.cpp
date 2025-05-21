@@ -82,7 +82,7 @@ bool DVIReader::executePage (unsigned n) {
  *  @param[in] pageno number of page to process (1-based)
  *  @param[in,out] hashFunc hash function to use
  *  @return true on success, hashFunc contains the resulting hash value */
-bool DVIReader::computePageHash (size_t pageno, HashFunction &hashFunc) {
+bool DVIReader::computePageHash (size_t pageno, HashFunction &hashFunc) const {
 	if (pageno == 0 || pageno > numberOfPages())
 		return false;
 
@@ -686,7 +686,7 @@ void DVIReader::cmdXTextAndGlyphs (int) {
  *  @param[out] dy relative vertical positions of each glyph
  *  @param[out] glyphs FreeType indices of the glyphs to typeset
  *  @return total width of the glyph array */
-double DVIReader::putGlyphArray (bool xonly, vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs) {
+double DVIReader::putGlyphArray (bool xonly, vector<double> &dx, vector<double> &dy, vector<uint16_t> &glyphs) const {
 	double strwidth = _dvi2bp*readSigned(4);
 	uint16_t num_glyphs = readUnsigned(2);
 	dx.resize(num_glyphs);

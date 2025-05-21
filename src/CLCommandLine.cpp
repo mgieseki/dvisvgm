@@ -93,7 +93,7 @@ static void type_error (const Option &option, bool shortname) {
 }
 
 
-void CommandLine::parseShortOption (istringstream &iss, int argc, char **argv, int &argn) {
+void CommandLine::parseShortOption (istringstream &iss, int argc, char **argv, int &argn) const {
 	bool combined = false;
 	do {
 		char shortname = static_cast<char>(iss.get());
@@ -122,7 +122,7 @@ void CommandLine::parseShortOption (istringstream &iss, int argc, char **argv, i
 }
 
 
-void CommandLine::parseLongOption (istream &is) {
+void CommandLine::parseLongOption (istream &is) const {
 	string optname;
 	while (isalnum(is.peek()) || (!optname.empty() && is.peek() == '-'))
 		optname += char(is.get());

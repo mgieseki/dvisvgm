@@ -109,12 +109,12 @@ Process::Process (string cmd, string paramstr)
  *  @return true if process terminated properly
  *  @throw SignalException if CTRL-C was pressed during execution */
 
-bool Process::run (string *out, PipeFlags flags) {
+bool Process::run (string *out, PipeFlags flags) const {
 	return run(out, SearchPattern(), flags);
 }
 
 
-bool Process::run (string *out, const SearchPattern &pattern, PipeFlags flags) {
+bool Process::run (string *out, const SearchPattern &pattern, PipeFlags flags) const {
 	Subprocess subprocess;
 	if (!subprocess.run(_cmd, _paramstr, flags))
 		return false;
@@ -136,7 +136,7 @@ bool Process::run (string *out, const SearchPattern &pattern, PipeFlags flags) {
  *  @param[out] out takes the output written to stdout by the executed process
  *  @return true if process terminated properly
  *  @throw SignalException if CTRL-C was pressed during execution */
-bool Process::run (const string &dir, string *out, PipeFlags flags) {
+bool Process::run (const string &dir, string *out, PipeFlags flags) const {
 	bool ret = false;
 	string cwd = FileSystem::getcwd();
 	if (FileSystem::chdir(dir)) {

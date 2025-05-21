@@ -143,7 +143,7 @@ void HyperlinkManager::checkNewLine (SpecialActions &actions) {
  *  a box so that it's noticeable by the user. Additionally, an invisible rectangle is
  *  placed over this area in order to avoid flickering of the mouse cursor when moving
  *  it over the hyperlinked area. */
-void HyperlinkManager::markLinkedBox (SpecialActions &actions) {
+void HyperlinkManager::markLinkedBox (SpecialActions &actions) const {
 	const BoundingBox &bbox = actions.bbox("{anchor}");
 	if (bbox.width() > 0 && bbox.height() > 0) {  // does the bounding box extend in both dimensions?
 		if (MARKER_TYPE != MarkerType::NONE) {

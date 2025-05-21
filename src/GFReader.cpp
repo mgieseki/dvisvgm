@@ -39,7 +39,7 @@ static inline double scaled2double (int32_t scaled) {
 }
 
 
-uint32_t GFReader::readUnsigned (int bytes) {
+uint32_t GFReader::readUnsigned (int bytes) const {
 	uint32_t ret = 0;
 	for (int i=bytes-1; i >= 0 && !_in.eof(); i--) {
 		uint32_t b = _in.get();
@@ -49,7 +49,7 @@ uint32_t GFReader::readUnsigned (int bytes) {
 }
 
 
-int32_t GFReader::readSigned (int bytes) {
+int32_t GFReader::readSigned (int bytes) const {
 	uint32_t ret = _in.get();
 	if (ret & 128)        // negative value?
 		ret |= 0xffffff00;
@@ -59,7 +59,7 @@ int32_t GFReader::readSigned (int bytes) {
 }
 
 
-string GFReader::readString (int bytes) {
+string GFReader::readString (int bytes) const {
 	bytes = max(0, bytes);
 	string str(bytes, '\0');
 	_in.read(&str[0], bytes);

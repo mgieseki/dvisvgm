@@ -69,7 +69,7 @@ int StreamInputBuffer::peek (size_t n) const {
 /** Fills the buffer by reading a sequence of characters from the assigned input stream.
  *  @param[in] buf buffer to be filled
  *  @return number of characters read */
-size_t StreamInputBuffer::fillBuffer (vector<uint8_t> &buf) {
+size_t StreamInputBuffer::fillBuffer (vector<uint8_t> &buf) const {
 	if (_is && !_is.eof()) {
 		_is.read(reinterpret_cast<char*>(buf.data()), streamsize(buf.size()));
 		return _is.gcount();
