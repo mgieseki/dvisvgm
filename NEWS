@@ -1,3 +1,16 @@
+dvisvgm-3.5 (2025-05-23)
+- fonts are now embedded in deterministic order (GH issue #288)
+- different glyphs are now always assigned to different Unicode code points
+  to prevent collisions (GH issue #287)
+- fixed font-related segmentation faults caused by malformed DVI files
+  (GH issue #289)
+- fixed a regression that led to incorrect results produced by the
+  SVG optimizer
+- DVI error messages now also mention the byte position where the
+  error occurred in the DVI file
+- simplified the evaluation of PostScript operators
+- many code refactorings and improvements
+
 dvisvgm-3.4.4 (2025-03-06)
 - extended computation of Unicode points by looking for known glyph names
 - added some common glyph names not yet covered by the AGL table
