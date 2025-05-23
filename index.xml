@@ -3,8 +3,26 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Thu, 06 Mar 2025 11:23:15 +0100</pubDate>
+    <pubDate>Fri, 23 May 2025 10:12:22 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.5 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#397f97060bd43bea3cacb5a7532e1f47</link>
+      <pubDate>Fri, 23 May 2025 09:57:33 +0200</pubDate>
+      <guid>397f97060bd43bea3cacb5a7532e1f47</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fonts are now embedded in deterministic rather than random order (<a href="https://github.com/mgieseki/dvisvgm/issues/288">issue #288</a>).</li>
+<li>Different glyphs now always get distinct Unicode code points to avoid collisions, even if they represent the same character (<a href="https://github.com/mgieseki/dvisvgm/issues/287">issue #287</a>).</li>
+<li>Fixed font-related segmentation faults caused by malformed DVI files (<a href="https://github.com/mgieseki/dvisvgm/issues/289">issue #289</a>).</li>
+<li>DVI error messages now also mention the byte position where the error occurred in the DVI file.</li>
+<li>The evaluation of PostScript operators has been improved and should be more stable.</li>
+<li>Many code refactorings and improvements.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.4.4 has been released</title>
@@ -162,7 +180,7 @@ This <em>dvisvgm</em> release replaces the involved operators and should fix the
     
     <item>
       <title>dvisvgm 3.2.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#4b3a0a78592ad4b8011c361e4b5b8918</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#4b3a0a78592ad4b8011c361e4b5b8918</link>
       <pubDate>Thu, 29 Feb 2024 09:57:09 +0100</pubDate>
       <guid>4b3a0a78592ad4b8011c361e4b5b8918</guid>
       <description>
@@ -309,7 +327,7 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
     
     <item>
       <title>dvisvgm 3.0.1 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#055cc2d49348a3d31480705a06485048</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#055cc2d49348a3d31480705a06485048</link>
       <pubDate>Tue, 10 Jan 2023 10:49:43 +0100</pubDate>
       <guid>055cc2d49348a3d31480705a06485048</guid>
       <description>
@@ -399,21 +417,6 @@ page numbers respectively.</li>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/182">issue #182</a>).</li>
 <li>Try to enable the old PDF interpreter when using Ghostscript &gt;= 9.56.0.
 <em>dvisvgm</em> does not work with Ghostscript&rsquo;s <a href="https://www.ghostscript.com/blog/pdfi.html">new PDF interpreter</a>.</li>
-</ul>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.13.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#25fddacdd30de997cedabdd597cd8d8d</link>
-      <pubDate>Sun, 27 Feb 2022 12:40:35 +0100</pubDate>
-      <guid>25fddacdd30de997cedabdd597cd8d8d</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added SVG optimizer module <code>reassign-clippaths</code> that searches for duplicate <code>clipPath</code> elements, removes them, and updates the <code>clip-path</code> references.</li>
-<li>Replaced the method used to clip embedded EPS/PDF graphics that now usually results in faster rendering of the affected SVG sections.</li>
-<li>Fixed a regression regarding transformations of embedded EPS/PDF graphics.</li>
 </ul>
 ]]>
       </description>

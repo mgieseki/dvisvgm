@@ -79,7 +79,20 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="a0ae434745fbef4eb6f0a67f50eaac00"></a>
+  <a name="397f97060bd43bea3cacb5a7532e1f47"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">23 May 2025: dvisvgm 3.5 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Fonts are now embedded in deterministic rather than random order (<a href="https://github.com/mgieseki/dvisvgm/issues/288">issue #288</a>).</li>
+<li>Different glyphs now always get distinct Unicode code points to avoid collisions, even if they represent the same character (<a href="https://github.com/mgieseki/dvisvgm/issues/287">issue #287</a>).</li>
+<li>Fixed font-related segmentation faults caused by malformed DVI files (<a href="https://github.com/mgieseki/dvisvgm/issues/289">issue #289</a>).</li>
+<li>DVI error messages now also mention the byte position where the error occurred in the DVI file.</li>
+<li>The evaluation of PostScript operators has been improved and should be more stable.</li>
+<li>Many code refactorings and improvements.</li>
+</ul>
+</div>
+  </section><a name="a0ae434745fbef4eb6f0a67f50eaac00"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">6 March 2025: dvisvgm 3.4.4 has been released</div>
     <div class="card-body">
@@ -197,18 +210,6 @@ Here&rsquo;s an example showing the results of the old (left) and the new CMYK t
       <p>Due to the <a href="https://git.ghostscript.com/?p=ghostpdl.git;a=commit;h=08d75b62ffd9ae89797f351aae608c288e61b33f">removal of some Ghostscript-specific operators</a>
 from GS version 10.02.1, <em>dvisvgm</em> fails to extract bitmaps embedded in PS/EPS files when using the latest Ghostscript releases (<a href="https://github.com/mgieseki/dvisvgm/issues/264">issue #264</a>). <br>
 This <em>dvisvgm</em> release replaces the involved operators and should fix the issue.</p>
-</div>
-  </section><a name="4b3a0a78592ad4b8011c361e4b5b8918"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">29 February 2024: dvisvgm 3.2.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>The Ghostscript library is now only loaded when the first PostScript special is processed.
-This slightly speeds up the conversion of DVI files that don&rsquo;t contain PS specials (<a href="https://github.com/mgieseki/dvisvgm/issues/262">issue #262</a>).</li>
-<li>Applied some changes required for TeX Live builds (patches by Karl Berry, <a href="https://github.com/mgieseki/dvisvgm/issues/259">issue #259</a>, <a href="https://github.com/mgieseki/dvisvgm/issues/260">issue #260</a>).</li>
-<li>Added more details to some DVI warning messages.</li>
-<li>Added some further information to the <a href="/Manpage/">manual page</a>.</li>
-</ul>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">

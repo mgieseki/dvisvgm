@@ -817,7 +817,7 @@ beginning, i.e. <code>-O-collapse-groups</code> is identical to <code>-Oall,-col
 <strong>collapse-groups</strong>
 </dt>
 <dd><p>
-  Combines nested group elements (<code>&lt;g&gt;</code>…<code>&lt;/g&gt;</code>) that contain only a single group each. If possible,
+  Combines nested group elements (<code>&lt;g&gt;</code>…<code>&lt;/g&gt;</code>) that contain only a single attribute each. If possible,
   the group attributes are moved to the outermost element of the processed subtree. This module also
   unwraps group elements that have no attributes at all.
 </p></dd>
@@ -861,7 +861,7 @@ beginning, i.e. <code>-O-collapse-groups</code> is identical to <code>-Oall,-col
 <dd><p>
   If a <code>text</code> element only contains whitespace nodes and <code>tspan</code> elements, all common inheritable
   attributes of the latter are moved to the enclosing text element. All <code>tspan</code> elements without
-  further attributes are unwrapped.
+  further attributes are unwrapped, i.e. the <code>tspan</code> tags are removed.
 </p></dd>
 </div>
 <a name="simplify-transform" class="linktarget"></a><div class="hdlist1">
@@ -1943,9 +1943,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.4.4</div>
+   <div class="col-md-6">Version 3.5</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2025-03-06</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2025-05-22</span>
    </div>
 </div>
 </div>
