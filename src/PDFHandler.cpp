@@ -440,16 +440,22 @@ static unique_ptr<SVGElement> create_path_element (XMLElement *srcPathElement, b
 }
 
 
+static const char* attribute_value (const string &attr, XMLElement *elem) {
+	const char *val = elem->getAttributeValue(attr);
+	if (val == nullptr) {
+		if (XMLElement *parent = elem->parent()->toElement())
+			val = parent->getAttributeValue(attr);
+	}
+	return val;
+}
+
+
 void PDFHandler::doFillPath (XMLElement *trcFillPathElement) {
 	if (auto pathElement = create_path_element(trcFillPathElement, false)) {
-		if (XMLElement *parent = trcFillPathElement->parent()->toElement()) {
-			if (parent->name() == "group") {
-				if (const char *valstr = parent->getAttributeValue("blendmode"))
-					pathElement->setFillOpacity(Opacity::blendMode(valstr));
-				if (const char *valstr = parent->getAttributeValue("alpha"))
-					pathElement->setFillOpacity(OpacityAlpha(parse_value<double>(valstr)));
-			}
-		}
+		if (const char *valstr = attribute_value("blendmode", trcFillPathElement))
+			pathElement->setFillOpacity(Opacity::blendMode(valstr));
+		if (const char *valstr = attribute_value("alpha", trcFillPathElement))
+			pathElement->setFillOpacity(OpacityAlpha(parse_value<double>(valstr)));
 		_svg->appendToPage(std::move(pathElement));
 	}
 }
@@ -457,16 +463,12 @@ void PDFHandler::doFillPath (XMLElement *trcFillPathElement) {
 
 void PDFHandler::doStrokePath (XMLElement *trcStrokePathElement) {
 	if (auto pathElement = create_path_element(trcStrokePathElement, true)) {
-		if (XMLElement *parent = trcStrokePathElement->parent()->toElement()) {
-			if (parent->name() == "group") {
-				Opacity opacity;
-				if (const char *valstr = parent->getAttributeValue("blendmode"))
-					opacity.setBlendMode(Opacity::blendMode(valstr));
-				if (const char *valstr = parent->getAttributeValue("alpha"))
-					opacity.strokealpha().setConstAlpha(parse_value<double>(valstr));
-				pathElement->setStrokeOpacity(opacity);
-			}
-		}
+		Opacity opacity;
+		if (const char *valstr = attribute_value("blendmode", trcStrokePathElement))
+			opacity.setBlendMode(Opacity::blendMode(valstr));
+		if (const char *valstr = attribute_value("alpha", trcStrokePathElement))
+			opacity.strokealpha().setConstAlpha(parse_value<double>(valstr));
+		pathElement->setStrokeOpacity(opacity);
 		_svg->appendToPage(std::move(pathElement));
 	}
 }
