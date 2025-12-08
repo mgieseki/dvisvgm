@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="055cc2d49348a3d31480705a06485048"></a>
+  <a name="fd435907f32df207055b82f8cdb77c5b"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">30 January 2023: dvisvgm 3.0.2 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release that addresses the following issues:</p>
+<ul>
+<li>Fixed the computation of font sizes performed by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/220">issue #220</a>).</li>
+<li>Fixed the <code>viewBox</code> coordinates determined by the new PDF handler (<a href="https://github.com/mgieseki/dvisvgm/issues/223">issue #223</a>).</li>
+<li>Improved the detection of font names used in PDF files (<a href="https://github.com/mgieseki/dvisvgm/issues/224">issue #224</a>).</li>
+<li>Minor code improvements, increased compatibility with older GCC versions.</li>
+</ul>
+</div>
+  </section><a name="055cc2d49348a3d31480705a06485048"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">10 January 2023: dvisvgm 3.0.1 has been released</div>
     <div class="card-body">
@@ -183,21 +195,6 @@ page numbers respectively.</li>
 <li>Fixed a regression concerning the positioning of PDF graphics with special <code>pdffile</code>
 (<a href="https://github.com/mgieseki/dvisvgm/issues/174">issue #174</a>).</li>
 <li>Fixed some build issues for older C++ compilers.</li>
-</ul>
-</div>
-  </section><a name="44794f1bf7aeef1aecbf496110744161"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 January 2022: dvisvgm 2.13 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Added the functionality to sequentially convert multiple EPS files given on the command-line.</li>
-<li>Added variables <code>n</code> and <code>N</code> to option <code>--output</code> that represent the number of the file currently being processed and the total number of input files given on the command-line, respectively.</li>
-<li>Fixed the selection of the hash algorithm set by option <code>--page-hashes</code>.</li>
-<li>Improved the computation of glyph heights and depths.</li>
-<li>The SVG optimizer now also simplifies <code>transform</code> attributes when collapsing group elements.</li>
-<li>Extended several paragraphs of the manual page with more detailed information on the corresponding topics.</li>
-<li>Updated the bundled <a href="https://github.com/Cyan4973/xxHash">xxHash</a> library to version 0.8.1.</li>
-<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> framework to version 1.11.0.</li>
 </ul>
 </div>
   </section>

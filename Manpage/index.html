@@ -929,7 +929,7 @@ a hyphen, e.g. 5-12. Thus, a page sequence might look like this: 2-4,6,9-12,15. 
 if a page is given more than once or if page ranges overlap. dvisvgm always extracts the page
 numbers in ascending order and converts them only once.
 </p>
-<p>In order to stay compatible with previous versions, the default page sequence is 1. dvisvgm
+<p>In order to stay compatible with previous versions, the default page sequence is <code>1</code>. dvisvgm
 therefore converts only the first page and not the whole document if option <strong>--page</strong> is omitted.
 Usually, page ranges consist of two numbers denoting the first and last page to be converted.
 If the conversion should start at page 1, or if it should continue up to the last DVI page, the
@@ -938,6 +938,13 @@ pages up to page 10, <code>--page=10-</code> converts all pages starting with pa
 Please consider that the page values don’t refer to the page numbers printed on the
 corresponding page. Instead, the physical page count is expected, where the first page always
 gets number 1.</p>
+<p>To select the last page, expression <code>%P</code> can be used instead of an explicit page number. It’s
+replaced by the number of the last page. For example, <code>--page=1,%P</code> converts the first and the
+last page of the document.</p>
+<p>Additionally, arithmetic expressions of the form <code>%(</code><em>expr</em><code>)</code> in place of numbers are valid too.
+The resulting values are always rounded down to the nearest integer. See option <strong>--output</strong> for
+more information about the syntax and the supported arithmetic operators.
+Example: <code>--page=%(P-2)-</code> converts the last three pages.</p>
 <p>At the end of the range sequence an optional filter specifier can be appended in order to remove
 certain page numbers from the sequence. Currently, the two filters <code>:even</code> and <code>:odd</code> are supported
 which restrict the preceding values to even and odd numbers, respectively. For example,
@@ -1943,9 +1950,9 @@ or, (at your option) any later version.</p></div></section>
 
 <hr>
 <div class="row">
-   <div class="col-md-6">Version 3.5</div>
+   <div class="col-md-6">Version 3.6</div>
    <div class="col-md-6">
-      <span class="pull-right" style="padding-bottom:1em">Last updated: 2025-05-22</span>
+      <span class="pull-right" style="padding-bottom:1em">Last updated: 2025-10-28</span>
    </div>
 </div>
 </div>

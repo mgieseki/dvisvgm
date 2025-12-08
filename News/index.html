@@ -79,7 +79,24 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="397f97060bd43bea3cacb5a7532e1f47"></a>
+  <a name="2ddc8c78995223385cf393fbf47a799f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">8 December 2025: dvisvgm 3.6 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Removed the restriction to process PDF-1.x files only (<a href="https://github.com/mgieseki/dvisvgm/issues/291">issue #291</a>).</li>
+<li>Option <code>--page</code>: added evaluation of <code>%P</code> which expands to the maximum page number.
+Also, <code>%(expr)</code> is supported to evaluate arithmetic expressions, like <code>%(P-1)</code>.
+See the <a href="/Manpage/#opt-page">manual page</a> for further information.</li>
+<li>Option <code>--page</code>: page numbers greater than the maximum page number are no longer replaced by the maximum page number but ignored.</li>
+<li>PDF handler: the computation of opacity values has been extended (<a href="https://github.com/mgieseki/dvisvgm/issues/292">issue #292</a>).</li>
+<li>Fixed the  lookup of character code 0 in character maps (<a href="https://github.com/mgieseki/dvisvgm/issues/294">issue #294</a>).</li>
+<li>Fixed the height and depth values shown when processing data created by the <code>preview</code> package.</li>
+<li>Updated the bundled <a href="https://github.com/google/brotli">brotli library</a> to version 1.2.0.</li>
+<li>Some code improvements.</li>
+</ul>
+</div>
+  </section><a name="397f97060bd43bea3cacb5a7532e1f47"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">23 May 2025: dvisvgm 3.5 has been released</div>
     <div class="card-body">
@@ -202,14 +219,6 @@ Here&rsquo;s an example showing the results of the old (left) and the new CMYK t
 <li>Fixed the computation of internal Coons tensor points.</li>
 <li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> to version 1.12.1.</li>
 </ul>
-</div>
-  </section><a name="551d5d5d67b811ac7d4fbf99b11a1d68"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">7 March 2024: dvisvgm 3.2.2 has been released</div>
-    <div class="card-body">
-      <p>Due to the <a href="https://git.ghostscript.com/?p=ghostpdl.git;a=commit;h=08d75b62ffd9ae89797f351aae608c288e61b33f">removal of some Ghostscript-specific operators</a>
-from GS version 10.02.1, <em>dvisvgm</em> fails to extract bitmaps embedded in PS/EPS files when using the latest Ghostscript releases (<a href="https://github.com/mgieseki/dvisvgm/issues/264">issue #264</a>). <br>
-This <em>dvisvgm</em> release replaces the involved operators and should fix the issue.</p>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">
