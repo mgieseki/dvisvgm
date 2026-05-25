@@ -146,8 +146,7 @@ bool FontEngine::setCharMap (const CharMapID &charMapID) const {
 		for (int i = 0; i < _currentFace->num_charmaps; i++) {
 			FT_CharMap ft_cmap = _currentFace->charmaps[i];
 			if (ft_cmap->platform_id == charMapID.platform_id && ft_cmap->encoding_id == charMapID.encoding_id) {
-				FT_Set_Charmap(_currentFace, ft_cmap);
-				return true;
+				return FT_Set_Charmap(_currentFace, ft_cmap) == 0;
 			}
 		}
 	}
@@ -290,7 +289,9 @@ unique_ptr<const RangeMap> FontEngine::createCustomToUnicodeMap () const {
 	set<uint32_t> assignedCodePoints;
 	RangeMap gidToUnicodeMap = build_gid_to_unicode_map(_currentFace, assignedGIDs, assignedCodePoints);
 
-	FT_Set_Charmap(_currentFace, ftcharmap);  // reassign initially active character map
+	// reassign initially active character map
+	if (FT_Set_Charmap(_currentFace, ftcharmap) != 0)
+		return nullptr;
 
 	// assign remaining GIDs to code points from a Private Use Area (PUA)
 	const NumericRanges<uint32_t> pua({{0xE000, 0xF8FF}, {0xF0000, 0xFFFFD}, {0x100000, 0x10FFFD}});
