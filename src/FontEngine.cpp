@@ -56,7 +56,6 @@ static inline FT_Fixed to_16dot16 (int val) {
 FontEngine::FontEngine () {
     if (FT_Init_FreeType(&_library)) {
         Message::estream(true) << "failed to initialize FreeType library\n";
-        _library = nullptr;
     }
 }
 
