@@ -54,17 +54,16 @@ static inline FT_Fixed to_16dot16 (int val) {
 
 
 FontEngine::FontEngine () {
-    if (FT_Init_FreeType(&_library)) {
-        Message::estream(true) << "failed to initialize FreeType library\n";
-    }
+	if (FT_Init_FreeType(&_library))
+		Message::estream(true) << "failed to initialize FreeType library\n";
 }
 
 
 FontEngine::~FontEngine () {
-    if (_currentFace && FT_Done_Face(_currentFace))
-        Message::estream(true) << "failed to release font\n";
-    if (_library && FT_Done_FreeType(_library))
-        Message::estream(true) << "failed to release FreeType library\n";
+	if (_currentFace && FT_Done_Face(_currentFace))
+		Message::estream(true) << "failed to release font\n";
+	if (_library && FT_Done_FreeType(_library))
+		Message::estream(true) << "failed to release FreeType library\n";
 }
 
 
