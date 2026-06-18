@@ -62,7 +62,7 @@ FontEngine::FontEngine () {
 FontEngine::~FontEngine () {
 	if (_currentFace && FT_Done_Face(_currentFace))
 		Message::estream(true) << "failed to release font\n";
-	if (FT_Done_FreeType(_library))
+	if (_library && FT_Done_FreeType(_library))
 		Message::estream(true) << "failed to release FreeType library\n";
 }
 
