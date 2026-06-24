@@ -307,10 +307,9 @@ int FontManager::registerFont (uint32_t fontnum, const string &filename, int fon
 	else {
 		if (!FileSystem::exists(path)) {
 			const char *fontFormats[] = {nullptr, "otf", "ttf"};
-			auto it = algo::find_if(fontFormats, [&](const char *format) {
-				return FileFinder::instance().lookup(filename, format, false) != nullptr;
+			algo::find_if(fontFormats, [&](const char *format) {
+				return (path = FileFinder::instance().lookup(filename, format, false)) != nullptr;
 			});
-			path = it != end(fontFormats) ? *it : nullptr;
 		}
 		if (path) {
 			newfont.reset(new NativeFontImpl(path, fontIndex, ptsize, style, color));
