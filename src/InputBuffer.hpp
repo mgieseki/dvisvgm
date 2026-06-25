@@ -96,12 +96,12 @@ class CharInputBuffer : public InputBuffer {
 
 		void assign (const char *buf, size_t size) {
 			_pos = buf;
-			_size = size;
+			_size = buf ? size : 0;
 		}
 
 		void assign (const char *buf)      {assign(buf, std::strlen(buf));}
 		int peek () const override         {return _size > 0 ? *_pos : -1;}
-		int peek (size_t n) const override {return _size >= n ? _pos[n] : -1;}
+		int peek (size_t n) const override {return _size > n ? _pos[n] : -1;}
 		bool eof () const override         {return _size == 0;}
 		void invalidate () override        {_size = 0;}
 
