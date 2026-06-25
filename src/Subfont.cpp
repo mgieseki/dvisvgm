@@ -184,7 +184,9 @@ static int skip_mapping_data (istream &is) {
 		is.getline(buf, 1024);
 		if (is.gcount() > 1)
 			lines++;
-		const char *p = buf+is.gcount()-2;
+		const char *p = buf;
+		if (is.gcount() >= 2)
+			p = buf+is.gcount()-2;
 		while (p >= buf && isspace(*p))
 			p--;
 		complete = (p < buf || *p != '\\');  // line doesn't end with backslash
