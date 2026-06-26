@@ -136,3 +136,12 @@ TEST(UnicodeTest, aglNameToCodepoint2) {
 	EXPECT_EQ(Unicode::aglNameToCodepoint("uD7FF"), 0xd7ff);
 	EXPECT_EQ(Unicode::aglNameToCodepoint("uD800"), 0);
 }
+
+
+TEST(UnicodeTest, toLigature) {
+	EXPECT_EQ(Unicode::toLigature("ffi"), 0xFB03u);
+	EXPECT_EQ(Unicode::toLigature("\u0254e"), 0xAB62u);
+	EXPECT_EQ(Unicode::toLigature("Tz"), 0xA728u);
+	EXPECT_EQ(Unicode::toLigature("\u0254ex"), 0u);
+	EXPECT_EQ(Unicode::toLigature(""), 0u);
+}
