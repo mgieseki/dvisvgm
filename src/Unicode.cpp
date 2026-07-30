@@ -229,9 +229,9 @@ uint32_t Unicode::toLigature (const string &nonlig) {
 static int32_t extract_codepoint_from_name (const string &name) {
 	size_t offset=1;
 	auto is_hex_digit = [](char c) {return isdigit(c) || (c >= 'A' && c <= 'F');};
-	if (name.substr(0, 3) == "uni" && is_hex_digit(name[4]) && name.length() >= 7)
+	if (name.length() >= 7 && name.substr(0, 3) == "uni" && is_hex_digit(name[4]))
 		offset = 3;
-	else if (name[0] != 'u' || !is_hex_digit(name[1]) || name.length() < 5)
+	else if (name.length() < 5 || name[0] != 'u' || !is_hex_digit(name[1]))
 		return 0;
 
 	string::const_iterator it = name.begin()+offset;
