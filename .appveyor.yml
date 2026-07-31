@@ -18,7 +18,7 @@ install:
   - set TTFA_REV=1
   - cd vc
   - cd freetype
-  - appveyor DownloadFile http://download.savannah.gnu.org/releases/freetype/freetype-%FREETYPE_VER%.tar.gz
+  - appveyor DownloadFile https://downloads.sourceforge.net/freetype/freetype2/%FREETYPE_VER%/freetype-%FREETYPE_VER%.tar.gz
   - tar xzf freetype-%FREETYPE_VER%.tar.gz --strip-components=1
   - del freetype-%FREETYPE_VER%.tar.gz
   - cd ..\zlib
