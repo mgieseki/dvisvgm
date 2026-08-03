@@ -9,7 +9,6 @@
 \RequirePackage[english]{babel}
 \RequirePackage[shortcuts]{extdash}
 \RequirePackage{underscore}
-\renewcommand*{\arraystretch}{-0.4}
 \AtBeginDocument{%
   \thispagestyle{empty}
   \lhead[]{\refmiscinfomanual}
