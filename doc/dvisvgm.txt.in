@@ -22,7 +22,7 @@ Martin Gieseking <@PACKAGE_BUGREPORT@>
 :man source: dvisvgm
 :man version: @VERSION@
 :man manual: dvisvgm Manual
-:revdate: 2025-10-28 09:58 +0100
+:revdate: 2026-08-03 16:24 +0200
 
 Name
 ----
@@ -72,8 +72,8 @@ compatible SVG files, command-line option *--no-fonts* can be given to replace t
 by plain graphics paths. Most web browsers (but only few external SVG renderers) also support
 WOFF and WOFF2 fonts that can be used instead of the default SVG fonts. Option *--font-format*
 offers the functionality to change the format applied to the fonts being embedded. This, however,
-only works when converting DVI files. Text present in PDF and PostScript files is always
-converted to path elements.
+only works for DVI files or PDF files converted via the new mutool-based PDF handler (see below).
+Text present in PostScript files is always converted to path elements.
 
 
 Options
