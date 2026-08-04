@@ -1,3 +1,8 @@
+dvisvgm-3.6.1 (2026-08-04)
+- fixed Unicode mapping of some ligatures
+- fixed several potential memory issues
+- changed some parts of the code to be compatible with C++ standard >= 20
+
 dvisvgm-3.6 (2025-12-08)
 - removed the restriction to process PDF-1.x files only (GH issue #291)
 - option --page: added evaluation of %P which expands to the maximum page
