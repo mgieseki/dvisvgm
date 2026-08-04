@@ -79,7 +79,21 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="5651dc6a7c24b18f3867668516712587"></a>
+  <a name="7d856da14b815b8a8abea3cdae767d76"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">21 March 2020: dvisvgm 2.9.1 has been released</div>
+    <div class="card-body">
+      <p>This is a small maintenance release with the following changes:</p>
+<ul>
+<li>Added macro <code>{?(expr)}</code> to enable the evaluation of math expressions in raw SVG fragments
+(<a href="https://github.com/mgieseki/dvisvgm/issues/130">issue #130</a>).</li>
+<li>Multiplication operator <code>*</code> preceding an opening parentheses can now be omitted in math expressions.</li>
+<li>Fixed the evaluation of transformation command <code>scale(c)</code> which is now correctly treated as <code>scale(c,c)</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/131">issue #131</a>).</li>
+<li>Minor layout optimizations of the <a href="/Manpage/dvisvgm.pdf">PDF version of the manual page</a>.</li>
+</ul>
+</div>
+  </section><a name="5651dc6a7c24b18f3867668516712587"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">13 March 2020: dvisvgm 2.9 has been released</div>
     <div class="card-body">
@@ -208,17 +222,6 @@ the public interface leads to an error message when processing PDF files with
 <p>The changes in Ghostscript 9.27 also break the PDF functionality of
 <a href="http://www.ghostgum.com.au/software/gsview.htm">GSview 5.0</a> by Russell Lang.
 An unofficial, fixed version can be downloaded <a href="https://github.com/mgieseki/gsview/releases">here</a>.</p>
-</div>
-  </section><a name="132ffe0d1afe073c5693a47e91aed30f"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">20 May 2019: dvisvgm 2.7.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Fixed a bug in PostScript operator <code>setmatrix</code> (<a href="https://github.com/mgieseki/dvisvgm/issues/106">issue #106</a>).</li>
-<li>Fixed a build issue <a href="https://trac.macports.org/ticket/58347">reported on MacPorts</a>.</li>
-<li>Added the source files required to access the MiKTeX session object as the MiKTeX SDK has been deprecated.</li>
-</ul>
 </div>
   </section>
   <nav><ul class="pagination pagination-sm">

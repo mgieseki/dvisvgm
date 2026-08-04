@@ -79,7 +79,23 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="961cdf56e376338f85ce3cc3a86b6327"></a>
+  <a name="17a86fddd2d683a5caf8ec5239a5433f"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">18 July 2018: dvisvgm 2.4.2 has been released</div>
+    <div class="card-body">
+      <p>This is another small maintenance release.</p>
+<ul>
+<li>Fixed the height and depth values computed when using the <a href="https://ctan.org/pkg/preview">preview package</a>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/89">issue #89</a>).</li>
+<li>Slightly reduced the size of the bounding boxes applied to hyperlinked areas to obtain tight bounds.</li>
+<li>No longer print warnings if special <code>psfile</code> is called with argument <code>/dev/null</code>.
+For example, option <code>psfixbb</code> of the preview package adds these specials in order to help
+<a href="https://www.tug.org/texinfohtml/dvips.html"><em>dvips</em></a> to compute correct bounding boxes.
+Those DVI files used to produce a couple of redundant warnings when processed with <em>dvisvgm</em>.</li>
+<li><code>make install</code> no longer fails if the <a href="/Manpage/">manual page</a> can&rsquo;t be created due to missing conversion utilities.</li>
+</ul>
+</div>
+  </section><a name="961cdf56e376338f85ce3cc3a86b6327"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">7 July 2018: dvisvgm 2.4.1 has been released</div>
     <div class="card-body">
@@ -186,17 +202,6 @@ allowed according to the EPS specification.</li>
 (patch by Hironobu Yamashita).</li>
 <li>Fixed a build error occurred if the Ghostscript development files were missing.</li>
 <li>Fixed a potential memory error regarding option <code>--cache</code>.</li>
-</ul>
-</div>
-  </section><a name="8d864b9b45e4e2c3d8a34361b5086d24"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">12 January 2018: dvisvgm 2.3.1 has been released</div>
-    <div class="card-body">
-      <ul>
-<li>Fixed the width of characters slanted by a mapfile entry (<a href="https://github.com/mgieseki/dvisvgm/issues/82">issue #82</a>).</li>
-<li>If <a href="https://www.freetype.org/ttfautohint">ttfautohint</a> fails for a font, <em>dvisvgm</em> now uses the unhinted font and
-prints a corresponding warning message.</li>
-<li>Some code cleanup.</li>
 </ul>
 </div>
   </section>

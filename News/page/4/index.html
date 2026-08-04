@@ -79,7 +79,19 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="44794f1bf7aeef1aecbf496110744161"></a>
+  <a name="cac0a6dd77a51a4ac4ebe47b653b4442"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">26 January 2022: dvisvgm 2.13.1 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Enabled the evaluation of expression <code>{?(...)}</code> in special <code>dvisvgm:rawdef</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/175">issue #175</a>).</li>
+<li>Fixed a regression concerning the positioning of PDF graphics with special <code>pdffile</code>
+(<a href="https://github.com/mgieseki/dvisvgm/issues/174">issue #174</a>).</li>
+<li>Fixed some build issues for older C++ compilers.</li>
+</ul>
+</div>
+  </section><a name="44794f1bf7aeef1aecbf496110744161"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">20 January 2022: dvisvgm 2.13 has been released</div>
     <div class="card-body">
@@ -178,20 +190,6 @@ with GS 9.52 to implement PDF operators <code>B</code> and <code>B*</code> (<a h
 <li>Fixed error message about unmatched closing tags in XML parser.</li>
 <li>Updated bundled <a href="https://www.freetype.org">FreeType</a> library to version 2.10.2.</li>
 <li>Updated bundled <a href="https://www.xxhash.com">xxHash</a> library to version 0.8.</li>
-</ul>
-</div>
-  </section><a name="7d856da14b815b8a8abea3cdae767d76"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">21 March 2020: dvisvgm 2.9.1 has been released</div>
-    <div class="card-body">
-      <p>This is a small maintenance release with the following changes:</p>
-<ul>
-<li>Added macro <code>{?(expr)}</code> to enable the evaluation of math expressions in raw SVG fragments
-(<a href="https://github.com/mgieseki/dvisvgm/issues/130">issue #130</a>).</li>
-<li>Multiplication operator <code>*</code> preceding an opening parentheses can now be omitted in math expressions.</li>
-<li>Fixed the evaluation of transformation command <code>scale(c)</code> which is now correctly treated as <code>scale(c,c)</code>
-(<a href="https://github.com/mgieseki/dvisvgm/issues/131">issue #131</a>).</li>
-<li>Minor layout optimizations of the <a href="/Manpage/dvisvgm.pdf">PDF version of the manual page</a>.</li>
 </ul>
 </div>
   </section>

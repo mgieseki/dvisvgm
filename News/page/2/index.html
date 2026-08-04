@@ -79,7 +79,30 @@
         <p class="rsslink">
     <a href="https://dvisvgm.de/index.xml"><i class="fa fa-rss"></i> RSS feed</a>
   </p>
-  <a name="551d5d5d67b811ac7d4fbf99b11a1d68"></a>
+  <a name="f3047466c5139b2a690ccf34f9404a61"></a>
+  <section class="card border-primary" style="margin-top:1.33em">
+    <div class="card-header bg-primary text-white">10 April 2024: dvisvgm 3.3 has been released</div>
+    <div class="card-body">
+      <ul>
+<li>Added file <code>dvisvgm.map</code> to the default font map files being looked up automatically. It can be used to add font mappings
+which should always be taken into account when <em>dvisvgm</em> is called.</li>
+<li>Added evaluation of <code>#include</code> and <code>#includefirst</code> present in font map files to allow for including the contents of other map files.</li>
+<li>The conversion of CMYK colors to RGB has been modified so that the resulting colors are now close to those created by Ghostscript
+and most PDF viewers. Previously, a simple mapping of the color components, like cmyk(1,0,1,0)=rgb(0,1,0) for <em>green</em>,
+was used. Ghostscript, in contrast, applies ICC profiles to display colors as produced by a designated printer.<br>
+Here&rsquo;s an example showing the results of the old (left) and the new CMYK to RGB color conversion applied to a Coons shading patch:</li>
+</ul>
+<p style="text-align:center">
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/66254d2e-f599-4076-8da8-33f27efa880f"/>
+<img src="https://github.com/mgieseki/dvisvgm/assets/3620467/7410de82-4767-4326-9043-5265cace6d12"/>
+</p>
+<ul>
+<li>Fixed the initialization of a transformation matrix which led to invalid bounding boxes when converting a sequence of DVI pages (<a href="https://github.com/mgieseki/dvisvgm/issues/268">issue #268</a>).</li>
+<li>Fixed the computation of internal Coons tensor points.</li>
+<li>Updated the bundled <a href="https://github.com/google/googletest">GoogleTest</a> to version 1.12.1.</li>
+</ul>
+</div>
+  </section><a name="551d5d5d67b811ac7d4fbf99b11a1d68"></a>
   <section class="card border-primary" style="margin-top:1.33em">
     <div class="card-header bg-primary text-white">7 March 2024: dvisvgm 3.2.2 has been released</div>
     <div class="card-body">
@@ -170,16 +193,6 @@ the currently active color with CSS variable <a href="https://www.w3.org/TR/css-
 due to the deprecation of its MD5 functions. Instead, the bundled MD5 function is always used now.</li>
 <li>Added TeX Live conditionals to the build system (patch by Karl Berry).</li>
 <li>Small code and manpage improvements.</li>
-</ul>
-</div>
-  </section><a name="a9638fb710d7e1ddd1fa29ebd520f1a4"></a>
-  <section class="card border-primary" style="margin-top:1.33em">
-    <div class="card-header bg-primary text-white">21 February 2023: dvisvgm 3.0.3 has been released</div>
-    <div class="card-body">
-      <p>This is a small bugfix release addressing these issues:</p>
-<ul>
-<li>Fixed resetting the character context that could lead to invalid character positions and properties (<a href="https://github.com/mgieseki/dvisvgm/issues/227">issue #227</a>).</li>
-<li>Added missing <code>#include</code> directives required for GCC 13.</li>
 </ul>
 </div>
   </section>

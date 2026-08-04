@@ -3,8 +3,23 @@
     <title>dvisvgm News</title>
     <description>News about the DVI to SVG converter dvisvgm.</description>
     <link>https://dvisvgm.de/News</link>
-    <pubDate>Mon, 08 Dec 2025 15:33:41 +0100</pubDate>
+    <pubDate>Tue, 04 Aug 2026 09:52:20 +0200</pubDate>
     <language>en</language>
+    
+    <item>
+      <title>dvisvgm 3.6.1 has been released</title>
+      <link>https://mgieseki.github.io/dvisvgm/News/#116669cc5b8ff13a55145e760c05a42a</link>
+      <pubDate>Tue, 04 Aug 2026 09:49:41 +0200</pubDate>
+      <guid>116669cc5b8ff13a55145e760c05a42a</guid>
+      <description>
+        <![CDATA[<ul>
+<li>Fixed the Unicode mapping of some ligatures.</li>
+<li>Fixed several potential memory issues.</li>
+<li>Changed some parts of the code to be compatible with C++ standard &gt;= 20.</li>
+</ul>
+]]>
+      </description>
+    </item>
     
     <item>
       <title>dvisvgm 3.6 has been released</title>
@@ -161,7 +176,7 @@ TeX&rsquo;s &ldquo;big points&rdquo; equal SVG, PostScript, and PDF points (1in 
     
     <item>
       <title>dvisvgm 3.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/#f3047466c5139b2a690ccf34f9404a61</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#f3047466c5139b2a690ccf34f9404a61</link>
       <pubDate>Wed, 10 Apr 2024 15:59:07 +0200</pubDate>
       <guid>f3047466c5139b2a690ccf34f9404a61</guid>
       <description>
@@ -317,7 +332,7 @@ due to the deprecation of its MD5 functions. Instead, the bundled MD5 function i
     
     <item>
       <title>dvisvgm 3.0.3 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/2/#a9638fb710d7e1ddd1fa29ebd520f1a4</link>
+      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#a9638fb710d7e1ddd1fa29ebd520f1a4</link>
       <pubDate>Tue, 21 Feb 2023 12:20:06 +0100</pubDate>
       <guid>a9638fb710d7e1ddd1fa29ebd520f1a4</guid>
       <description>
@@ -406,24 +421,6 @@ SVG files. By default the SVG only contains a reference to the image.</li>
 page numbers respectively.</li>
 </ul>
 <p>You can download the sources and pre-built binaries for MiKTeX from the <a href="https://github.com/mgieseki/dvisvgm/releases">project page at GitHub</a>.</p>
-]]>
-      </description>
-    </item>
-    
-    <item>
-      <title>dvisvgm 2.14 has been released</title>
-      <link>https://mgieseki.github.io/dvisvgm/News/page/3/#4468f9499cd26017882826f25736c181</link>
-      <pubDate>Fri, 12 Aug 2022 09:48:19 +0200</pubDate>
-      <guid>4468f9499cd26017882826f25736c181</guid>
-      <description>
-        <![CDATA[<ul>
-<li>Added processing of SVG <code>path</code> elements inserted by &ldquo;raw&rdquo; specials in order to treat them similar to generated ones.</li>
-<li>Added support for native font references lacking a file name suffix.</li>
-<li>Improved the lookup of native fonts.</li>
-<li>Improved the removal of redundant SVG group elements.</li>
-<li>Fixed the conversion of empty glyphs to TTF/WOFF data.</li>
-<li>Updated the bundled <a href="https://github.com/google/woff2">WOFF2 library</a>.</li>
-</ul>
 ]]>
       </description>
     </item>
