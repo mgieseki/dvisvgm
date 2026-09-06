@@ -29,7 +29,7 @@ using namespace std;
 /** Constructs a COM object representing a MiKTeX session. */
 MiKTeXCom::MiKTeXCom () : _session() {
 	if (FAILED(CoInitialize(nullptr)))
-		throw MessageException("COM library could not be initialized\n");
+		throw MessageException("COM library could not be initialized");
 	// try to initialize the MiKTeX session object
 #ifdef _MSC_VER
 	HRESULT hres = _session.CreateInstance(L"MiKTeX.Session");
