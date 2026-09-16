@@ -394,7 +394,7 @@ static vector<string> extract_prefixes (const string &ignorelist) {
 				return !isalnum(c);
 			});
 			if (left != ignorelist.end())
-				prefixes.emplace_back(left-ignorelist.begin(), right-left);
+				prefixes.emplace_back(left, right);
 			left = right;
 		}
 	}

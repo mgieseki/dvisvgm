@@ -21,6 +21,8 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include "CommandLine.hpp"
+#include "DVIToSVG.hpp"
+#include "SpecialManager.hpp"
 
 using namespace std;
 
@@ -203,6 +205,21 @@ TEST(CommandLineTest, error) {
 	EXPECT_FALSE(cmd.traceAllOpt.given());
 }
 
+TEST(CommandLineTest, no_specials_disables_only_named_handlers) {
+  CommandLine cmd;
+  const char *args[] = {"dvisvgm", "--no-specials=dvisvgm,html"};
+  cmd.parse(2, const_cast<char**>(args));
+
+  auto &manager = SpecialManager::instance();
+  manager.unregisterHandlers();
+  DVIToSVG::setProcessSpecials(cmd.noSpecialsOpt.value());
+
+  EXPECT_EQ(manager.findHandlerByName("dvisvgm"), nullptr);
+  EXPECT_EQ(manager.findHandlerByName("html"), nullptr);
+  EXPECT_NE(manager.findHandlerByName("color"), nullptr);
+
+  manager.unregisterHandlers();
+}
 
 TEST(CommandLineTest, file) {
 	CommandLine cmd;
