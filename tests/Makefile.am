@@ -107,7 +107,7 @@ TESTS += CommandLineTest
 check_PROGRAMS += CommandLineTest
 CommandLineTest_SOURCES = CommandLineTest.cpp testutil.hpp
 CommandLineTest_CPPFLAGS = -I$(dvisvgm_srcdir)/tests/gtest/include $(LIBS_CFLAGS)
-CommandLineTest_LDADD = $(TESTLIBS)
+CommandLineTest_LDADD = $(TESTLIBS) ../libs/clipper/libclipper.a
 
 TESTS += DependencyGraphTest
 check_PROGRAMS += DependencyGraphTest
