@@ -285,7 +285,7 @@ class NativeFont : public PhysicalFont {
 		Color color () const override                    {return _color;}
 		const FontMap::Entry* fontMapEntry () const override {return nullptr;}
 		virtual void mapCharToUnicode (uint32_t c, uint32_t codepoint) =0;
-		static std::string uniqueName (const std::string &path, const FontStyle &style);
+		static std::string uniqueName (const std::string &path, int fontIndex, const FontStyle &style);
 		void visit (FontVisitor &visitor) override;
 		void visit (FontVisitor &visitor) const override;
 
