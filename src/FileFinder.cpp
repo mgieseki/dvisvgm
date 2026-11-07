@@ -29,6 +29,8 @@
 	#ifdef KPSE_CXX_UNSAFE
 	}
 	#endif
+	// libc++ defines std::isblank in __locale.
+	#undef isblank
 #endif
 
 #include <cstdlib>
