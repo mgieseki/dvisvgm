@@ -295,7 +295,7 @@ int FontManager::registerFont (uint32_t fontnum, const string &filename, int fon
 	if (id >= 0)
 		return id;
 
-	string fontname = NativeFont::uniqueName(filename, style);
+	string fontname = NativeFont::uniqueName(filename, fontIndex, style);
 	const char *path = filename.c_str();
 	unique_ptr<Font> newfont;
 	const int newid = _fonts.size();   // the new font gets this ID

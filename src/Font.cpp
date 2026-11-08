@@ -581,10 +581,11 @@ void PhysicalFontImpl::tidy () const {
 
 //////////////////////////////////////////////////////////////////////////////
 
-string NativeFont::uniqueName (const string &path, const FontStyle &style) {
+string NativeFont::uniqueName (const string &path, int fontIndex, const FontStyle &style) {
 	static unordered_map<string, int> ids;
 	ostringstream oss;
-	oss << path << "b" << style.bold << "e" << style.extend << "s" << style.slant;
+	// the face index is part of the key: the faces of a collection (TTC) share one path
+	oss << path << "i" << fontIndex << "b" << style.bold << "e" << style.extend << "s" << style.slant;
 	auto it = ids.find(oss.str());
 	int id = ids.size();
 	if (it == ids.end())
@@ -598,7 +599,7 @@ string NativeFont::uniqueName (const string &path, const FontStyle &style) {
 
 
 string NativeFont::name () const {
-	return uniqueName(path(), _style);
+	return uniqueName(path(), fontIndex(), _style);
 }
 
 
