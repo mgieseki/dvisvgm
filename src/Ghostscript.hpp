@@ -55,6 +55,7 @@ struct Ghostscript {
 	int run_string_continue (const char *str, unsigned int length, int user_errors, int *pexit_code) {return 0;}
 	int run_string_end (int user_errors, int *pexit_code) {return 0;}
 	int exit () {return 0;}
+	void finalize () {}
 	const char* error_name (int code) {return 0;}
 };
 
